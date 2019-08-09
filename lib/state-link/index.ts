@@ -1,4 +1,5 @@
 /** @format */
+
 // #region Imports NPM
 import merge from 'lodash/merge';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -14,5 +15,4 @@ export const stateLinkResolvers = {
   ...merge(StateLinkAuthentication /* , StateLinkNetworkStatus */),
 };
 
-export const apolloStateLink = (cache: InMemoryCache): ApolloLink =>
-  withClientState({ cache, ...stateLinkResolvers });
+export const apolloStateLink = (cache: InMemoryCache): ApolloLink => withClientState({ cache, ...stateLinkResolvers });

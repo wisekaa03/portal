@@ -21,14 +21,8 @@ import { ApolloError } from 'apollo-client';
 import { GQLError } from './gql-error';
 import { Loading } from './loading';
 import LogoComponent from '../static/assets/svg/logo.svg';
-import { getStorage } from '../lib/session-storage';
+import { getStorage, setStorage } from '../lib/session-storage';
 // #endregion
-
-interface LoginProps {
-  error?: ApolloError;
-  loading: boolean;
-  login: MutationFunction;
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -116,25 +110,41 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+interface LoginProps {
+  error?: ApolloError;
+  loading: boolean;
+  login: MutationFunction;
+}
+
 export const LoginComponent = (props: LoginProps): React.ReactElement => {
   const { error, loading, login } = props;
 
   const classes = useStyles({});
 
-  const [username, setUsername] = useState(getStorage('user.name'));
+  const [saveChecked, setSave] = useState(getStorage('user.save') === 'true');
+  const [username, setUsername] = useState(saveChecked ? getStorage('user.name') : '');
   const [usernameLabelWidth, setUsernameLabelWidth] = useState(0);
-  const [password, setPassword] = useState(getStorage('user.pass'));
+  const [password, setPassword] = useState(saveChecked ? getStorage('user.pass') : '');
   const [passwordLabelWidth, setPasswordLabelWidth] = useState(0);
-  const [saveChecked, setSave] = useState(true);
 
   const usernameLabelRef = useRef<HTMLLabelElement | any>({});
   const passwordLabelRef = useRef<HTMLLabelElement | any>({});
+  const saveLabelRef = useRef<HTMLLabelElement | any>({});
   useEffect(() => setUsernameLabelWidth(usernameLabelRef.current.offsetWidth), []);
   useEffect(() => setPasswordLabelWidth(passwordLabelRef.current.offsetWidth), []);
 
-  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>): void => setUsername(e.target.value);
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => setPassword(e.target.value);
-  const handleSaveChecked = (e: React.ChangeEvent<HTMLInputElement>): void => setSave(e.target.checked);
+  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setStorage('user.name', e.target.value);
+    setUsername(e.target.value);
+  };
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setStorage('user.pass', e.target.value);
+    setPassword(e.target.value);
+  };
+  const handleSaveChecked = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setStorage('user.save', e.target.checked.toString());
+    setSave(e.target.checked);
+  };
 
   return (
     <div className={classes.root}>
@@ -164,6 +174,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                   className={classes.labelForFormControl}
                   ref={usernameLabelRef}
                   disabled={loading}
+                  // shrink={!!!username}
                 >
                   Пользователь
                 </InputLabel>
@@ -185,6 +196,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                   className={classes.labelForFormControl}
                   ref={passwordLabelRef}
                   disabled={loading}
+                  // shrink={!!!password}
                 >
                   Пароль
                 </InputLabel>
@@ -202,6 +214,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
 
               <FormControlLabel
                 className={classes.labelForCheckbox}
+                ref={saveLabelRef}
                 control={
                   <Checkbox
                     checked={saveChecked}
@@ -209,6 +222,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                     value="save"
                     color="primary"
                     disabled={loading}
+                    inputRef={saveLabelRef}
                   />
                 }
                 label="Запомнить меня на этом компьютере"
