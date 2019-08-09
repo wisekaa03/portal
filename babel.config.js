@@ -10,10 +10,7 @@ module.exports = function(api) {
   api.cache(true);
 
   const devProd = {
-    presets: [
-      'next/babel',
-      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
-    ],
+    presets: ['next/babel', ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }]],
     plugins: [
       '@babel/proposal-class-properties',
       '@babel/proposal-object-rest-spread',
@@ -106,10 +103,7 @@ module.exports = function(api) {
 
       test: {
         ...devProd,
-        presets: [
-          ['next/babel', { 'preset-env': { modules: 'commonjs' } }],
-          '@zeit/next-typescript/babel',
-        ],
+        presets: [['next/babel', { 'preset-env': { modules: 'commonjs' } }], '@zeit/next-typescript/babel'],
       },
     },
   };
@@ -147,10 +141,7 @@ module.exports = function(api) {
 
     config.plugins.push('minify-guarded-expressions');
     config.plugins.push('minify-infinity');
-    config.plugins.push([
-      'minify-mangle-names',
-      { exclude: { foo: true, bar: true } },
-    ]);
+    config.plugins.push(['minify-mangle-names', { exclude: { foo: true, bar: true } }]);
     config.plugins.push('minify-numeric-literals');
     config.plugins.push('minify-type-constructors');
     config.plugins.push('transform-node-env-inline');
