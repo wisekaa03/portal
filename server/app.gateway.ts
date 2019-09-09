@@ -2,12 +2,7 @@
 
 // #region Imports NPM
 import { Logger } from '@nestjs/common';
-import {
-  WebSocketGateway,
-  WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 // #endregion
 
 @WebSocketGateway(4001, { transports: ['websocket'] })

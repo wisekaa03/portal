@@ -15,9 +15,7 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { UserService } from './user.service';
-import {
-  UserResponseDTO,
-} from './models/user.dto';
+import { UserResponseDTO } from './models/user.dto';
 import { AuthenticationGuard } from '../guards/auth-guard.guard';
 // #endregion
 
@@ -28,7 +26,7 @@ export class UserResolver {
   @Query()
   @UseGuards(AuthenticationGuard)
   async me(@Context('req') req: Request): Promise<UserResponseDTO | null> {
-    return req.user;
+    return req.user as UserResponseDTO;
   }
 
   @Mutation()

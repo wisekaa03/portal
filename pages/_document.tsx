@@ -18,8 +18,9 @@ import theme from '../lib/theme';
 // We have found that clean-css is faster than cssnano but the output is larger.
 // Waiting for https://github.com/cssinjs/jss/issues/279
 // 4% slower but 12% smaller output than doing it in a single step.
-const prefixer = postcss([autoprefixer]);
-const minifier = postcss([cssnano]);
+// TODO: what?!
+// const prefixer = postcss([autoprefixer]);
+// const minifier = postcss([cssnano]);
 
 class MainDocument extends Document {
   render(): React.ReactElement {
@@ -27,10 +28,7 @@ class MainDocument extends Document {
       <html lang="en" dir="ltr">
         <Head>
           <meta charSet="utf-8" />
-          <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-          />
+          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           <meta name="theme-color" content={theme.palette.primary.main} />
         </Head>
         <body>
@@ -55,10 +53,12 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps) => {
 
   let minifiedStyles: string;
   if (process.env.NODE_ENV === 'production') {
-    minifiedStyles = await prefixer
-      .process(sheets.toString())
-      .then((result) => minifier.process(result.css))
-      .then((result) => result.css);
+    minifiedStyles = sheets.toString();
+    // TODO: what ?!
+    // minifiedStyles = await prefixer
+    //   .process(sheets.toString())
+    //   .then((result: any) => minifier.process(result.css))
+    //   .then((result: any) => result.css);
   } else {
     minifiedStyles = sheets.toString();
   }

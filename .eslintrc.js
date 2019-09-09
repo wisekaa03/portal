@@ -70,6 +70,8 @@ module.exports = {
         proseWrap: 'never',
       },
     ],
+    // TODO: what ?!
+    'react/jsx-props-no-spreading': 0,
     'no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true }],
     'no-confusing-arrow': ['error', { allowParens: true }],
     'max-len': ['error', { code: 120, ignoreUrls: true }],

@@ -32,32 +32,30 @@ class MainApp extends App<ApolloAppProps> {
     // debugger;
 
     return (
-      <Container>
-        <ApolloProvider client={apolloClient}>
-          <Head>
-            <title>Portal</title>
-          </Head>
-          {/* MuiThemeProvider makes the theme available down the React
-                tree thanks to React context. */}
-          <CssBaseline />
-          <ThemeProvider theme={theme}>
-            <Query query={CURRENT_USER}>
-              {({ data }: { data: any }) => {
-                const user = data;
+      <ApolloProvider client={apolloClient}>
+        <Head>
+          <title>Portal</title>
+        </Head>
+        {/* MuiThemeProvider makes the theme available down the React
+              tree thanks to React context. */}
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <Query query={CURRENT_USER}>
+            {({ data }: { data: any }) => {
+              const user = data;
 
-                // eslint-disable-next-line no-debugger
-                // debugger;
+              // eslint-disable-next-line no-debugger
+              // debugger;
 
-                return (
-                  <UserContext.Provider value={user}>
-                    <Component {...pageProps} />
-                  </UserContext.Provider>
-                );
-              }}
-            </Query>
-          </ThemeProvider>
-        </ApolloProvider>
-      </Container>
+              return (
+                <UserContext.Provider value={user}>
+                  <Component {...pageProps} />
+                </UserContext.Provider>
+              );
+            }}
+          </Query>
+        </ThemeProvider>
+      </ApolloProvider>
     );
   }
 }
