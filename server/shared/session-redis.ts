@@ -7,17 +7,16 @@ import redis from 'redis';
 import { ConfigService } from '../config/config.service';
 // #endregion
 
-export const sessionRedis = (configService: ConfigService): any => {
-  const RedisStore = redisSessionStore(session);
-  const client = redis.createClient({
-    host: configService.get('REDIS_HOST'),
-    port: parseInt(configService.get('REDIS_PORT'), 10),
-    db: parseInt(configService.get('REDIS_DB'), 10),
-  });
-
-  return session({
+export const sessionRedis = (configService: ConfigService): any =>
+  session({
     secret: configService.get('SESSION_SECRET'),
-    store: new RedisStore({ client }),
+    store: new (redisSessionStore(session))({
+      client: redis.createClient({
+        host: configService.get('REDIS_HOST'),
+        port: parseInt(configService.get('REDIS_PORT'), 10),
+        db: parseInt(configService.get('REDIS_DB'), 10),
+      }),
+    }),
     resave: false,
     saveUninitialized: false,
     rolling: true,
@@ -26,4 +25,3 @@ export const sessionRedis = (configService: ConfigService): any => {
       maxAge: 60 * 60 * 1000, // msec
     },
   });
-};

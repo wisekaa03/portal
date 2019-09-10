@@ -18,9 +18,7 @@ import theme from '../lib/theme';
 // We have found that clean-css is faster than cssnano but the output is larger.
 // Waiting for https://github.com/cssinjs/jss/issues/279
 // 4% slower but 12% smaller output than doing it in a single step.
-// TODO: what?!
-// const prefixer = postcss([autoprefixer]);
-// const minifier = postcss([cssnano]);
+const prefixer = postcss([autoprefixer, cssnano] as postcss.AcceptedPlugin[]);
 
 class MainDocument extends Document {
   render(): React.ReactElement {
@@ -52,16 +50,12 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps) => {
   const initialProps = await Document.getInitialProps(ctx);
 
   let minifiedStyles: string;
-  if (process.env.NODE_ENV === 'production') {
-    minifiedStyles = sheets.toString();
-    // TODO: what ?!
-    // minifiedStyles = await prefixer
-    //   .process(sheets.toString())
-    //   .then((result: any) => minifier.process(result.css))
-    //   .then((result: any) => result.css);
-  } else {
-    minifiedStyles = sheets.toString();
-  }
+  minifiedStyles = '';
+  // if (process.env.NODE_ENV === 'production') {
+  minifiedStyles = await prefixer.process(sheets.toString()).then((result: any) => result.css);
+  // } else {
+  //   minifiedStyles = sheets.toString();
+  // }
 
   return {
     apolloClient,
