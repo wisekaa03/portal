@@ -49,13 +49,9 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps) => {
 
   const initialProps = await Document.getInitialProps(ctx);
 
-  let minifiedStyles: string;
-  minifiedStyles = '';
-  // if (process.env.NODE_ENV === 'production') {
-  minifiedStyles = await prefixer.process(sheets.toString()).then((result: any) => result.css);
-  // } else {
-  //   minifiedStyles = sheets.toString();
-  // }
+  const minifiedStyles = await prefixer
+    .process(sheets.toString(), { from: undefined })
+    .then((result: any) => result.css);
 
   return {
     apolloClient,
