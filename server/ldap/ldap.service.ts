@@ -7,7 +7,6 @@ import { EventEmitter } from 'events';
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { ECONNRESET } from 'constants';
 import { LdapModuleOptions, LdapResponeUser } from './interfaces/ldap.interface';
 import { LDAP_MODULE_OPTIONS } from './ldap.constants';
 // #endregion
@@ -128,7 +127,7 @@ export class LdapService extends EventEmitter {
    * @returns {void}
    */
   private handleError(err: Ldap.Error): void {
-    if (err.code !== ECONNRESET) {
+    if (`${err.code}` !== 'ECONNRESET') {
       this.logger.error(`emitted error: [${err.code}] "${err}"`);
     }
     this.adminBound = false;

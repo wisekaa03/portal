@@ -123,15 +123,7 @@
         "backgroundColor": "transparent"
       }
     ],
-    "todo-tree.defaultHighlight": {
-      "icon": "check",
-      "type": "line",
-      "foreground": "red",
-      "background": "white",
-      "opacity": 10,
-      "iconColour": "#FF8C00"
-    },
-    "todo-tree.customHighlight": {
+    "todo-tree.highlights.customHighlight": {
       "TODO": {
         "icon": "issue-opened",
         "foreground": "#FF8C00",
@@ -147,6 +139,14 @@
         "foreground": "#FFD666",
         "iconColour": "#FFD666"
       }
+    },
+    "todo-tree.highlights.defaultHighlight": {
+      "icon": "check",
+      "type": "line",
+      "foreground": "red",
+      "background": "white",
+      "opacity": 10,
+      "iconColour": "#FF8C00"
     }
   }
 }
