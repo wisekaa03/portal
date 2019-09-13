@@ -93,8 +93,8 @@ npmlist.json
 .dynamodb/
 
 # Lock files
-package-lock.json
-yarn.lock
+# package-lock.json
+# yarn.lock
 
 # Jest
 *.snap

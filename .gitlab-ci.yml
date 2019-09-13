@@ -12,7 +12,7 @@ bundle:
   image: node:latest
   stage: bundle
   script:
-    - npm install yarn
+    - npm install -g yarn
     - yarn
     - yarn dev
   artifacts:
@@ -23,7 +23,7 @@ test:
   image: node:alpine
   stage: test
   script:
-    - npm install yarn
+    - npm install -g yarn
     - yarn
     - yarn test
 
