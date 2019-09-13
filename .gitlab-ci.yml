@@ -9,6 +9,8 @@ default:
   services:
     - postgres:10
     - redis:latest
+  before_script:
+    - npm install -g yarn
 
 variables:
   POSTGRES_DB: portaldb
@@ -22,7 +24,6 @@ cache:
 bundle:
   stage: bundle
   script:
-    - npm install -g yarn
     - yarn
     - yarn jwt:cert
   artifacts:
