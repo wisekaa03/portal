@@ -4,12 +4,22 @@ stages:
   - build
   # - deploy
 
+default:
+  image: node:10.16-buster
+  services:
+    - postgres:10
+    - redis:latest
+
+variables:
+  POSTGRES_DB: portaldb
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: VbNfGhRtY321
+  
 cache:
   paths:
     - node_modules/
 
 bundle:
-  image: node:10
   stage: bundle
   script:
     - npm install -g yarn
@@ -20,7 +30,6 @@ bundle:
       - node_modules/
 
 test:
-  image: node:10
   stage: test
   script:
     - npm install -g yarn
