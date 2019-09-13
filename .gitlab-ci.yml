@@ -1,7 +1,7 @@
 stages:
   - bundle
   - test
-  # - build
+  - build
   # - deploy
 
 cache:
@@ -13,7 +13,7 @@ bundle:
   stage: bundle
   script:
     - npm install
-    - npm run build
+    - npm run dev
   artifacts:
     paths:
       - node_modules/
