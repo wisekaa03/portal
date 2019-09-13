@@ -9,7 +9,7 @@ cache:
     - node_modules/
 
 bundle:
-  image: node:latest
+  image: node:10
   stage: bundle
   script:
     - npm install -g yarn
@@ -20,7 +20,7 @@ bundle:
       - node_modules/
 
 test:
-  image: node:alpine
+  image: node:10
   stage: test
   script:
     - npm install -g yarn
