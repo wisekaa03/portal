@@ -24,7 +24,7 @@ bundle:
   script:
     - npm install -g yarn
     - yarn
-    - yarn secret
+    - yarn secrets
     - yarn dev
   artifacts:
     paths:
@@ -35,7 +35,7 @@ test:
   script:
     - npm install -g yarn
     - yarn
-    - yarn secret
+    - yarn secrets
     - yarn test
   artifacts:
     paths:
