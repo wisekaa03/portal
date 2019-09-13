@@ -24,6 +24,7 @@ bundle:
   script:
     - npm install -g yarn
     - yarn
+    - yarn secret
     - yarn dev
   artifacts:
     paths:
@@ -34,7 +35,11 @@ test:
   script:
     - npm install -g yarn
     - yarn
+    - yarn secret
     - yarn test
+  artifacts:
+    paths:
+      - node_modules/
 
 build:
   image: docker:stable
