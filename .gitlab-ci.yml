@@ -1,0 +1,13 @@
+stages:
+  - build
+  - test
+
+build_job:
+  stage: build
+  script:
+    - yarn dev
+
+test_job:
+  stage: test
+  script:
+    - yarn test
