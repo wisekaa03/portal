@@ -20,15 +20,9 @@ export class ConfigService {
     const config = dotenv.parse(readFileSync(filePath));
     this.envConfig = this.validateInput(config);
 
-    this.jwtPrivateKey = readFileSync(
-      `${__dirname}/../../jwt.private.pem`,
-      'utf8',
-    );
+    this.jwtPrivateKey = readFileSync(`${__dirname}/../../jwt.private.pem`, 'utf8');
 
-    this.jwtPublicKey = readFileSync(
-      `${__dirname}/../../jwt.public.pem`,
-      'utf8',
-    );
+    this.jwtPublicKey = readFileSync(`${__dirname}/../../jwt.public.pem`, 'utf8');
 
     this.jwtStrategyOptions = {
       ...this.jwtStrategyOptions,
@@ -77,7 +71,7 @@ export class ConfigService {
   private validateInput(envConfig: EnvConfig): EnvConfig {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.string()
-        .valid(['development', 'production', 'test', 'provision'])
+        // .valid(['development', 'production', 'test', 'provision'])
         .default('development'),
       PORT: Joi.number()
         .default(4000)
@@ -143,16 +137,11 @@ export class ConfigService {
         .default('DC=example,DC=local')
         .required(),
       LDAP_SEARCH_FILTER: Joi.string()
-        .default(
-          '(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))',
-        )
+        .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
         .required(),
     });
 
-    const { error, value: validatedEnvConfig } = Joi.validate(
-      envConfig,
-      envVarsSchema,
-    );
+    const { error, value: validatedEnvConfig } = Joi.validate(envConfig, envVarsSchema);
     if (error) {
       throw new Error(`Config validation error: ${error.message}`);
     }
