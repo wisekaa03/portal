@@ -1,13 +1,38 @@
 stages:
+  - bundle
   - test
-  - build
+  # - build
+  # - deploy
 
-test_job:
+cache:
+  paths:
+    - node_modules/
+
+bundle:
+  image: node:latest
+  stage: bundle
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - node_modules/
+
+test:
+  image: node:alpine
   stage: test
   script:
-    - yarn test
+    - npm install
+    - npm test
 
-build_job:
+build:
+  image: docker:stable
   stage: build
+  services:
+    - docker:dind
   script:
-    - yarn dev
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
