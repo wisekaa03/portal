@@ -25,7 +25,6 @@ bundle:
     - npm install -g yarn
     - yarn
     - yarn jwt:cert
-    - yarn dev
   artifacts:
     paths:
       - node_modules/
@@ -33,13 +32,7 @@ bundle:
 test:
   stage: test
   script:
-    - npm install -g yarn
-    - yarn
-    - yarn jwt:cert
     - yarn test
-  artifacts:
-    paths:
-      - node_modules/
 
 build:
   image: docker:stable
