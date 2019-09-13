@@ -12,8 +12,9 @@ bundle:
   image: node:latest
   stage: bundle
   script:
-    - npm install
-    - npm run dev
+    - npm install yarn
+    - yarn
+    - yarn dev
   artifacts:
     paths:
       - node_modules/
@@ -22,8 +23,9 @@ test:
   image: node:alpine
   stage: test
   script:
-    - npm install
-    - npm test
+    - npm install yarn
+    - yarn
+    - yarn test
 
 build:
   image: docker:stable
