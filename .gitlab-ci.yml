@@ -32,7 +32,7 @@ bundle:
     - ls -l
     - yarn jwt:cert
   artifacts:
-    path:
+    paths:
       - jwt.public.pem
       - jwt.private.pem
 
