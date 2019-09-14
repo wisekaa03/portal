@@ -23,6 +23,7 @@ cache:
 
 before_script:
   - uname -a
+  - env
   - npm install -g yarn
   - yarn
 
