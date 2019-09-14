@@ -9,6 +9,7 @@ module.exports = {
   },
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.svg$': 'jest-svg-transformer',
   },
   testMatch: ['**/__tests__/*.(ts|tsx)'],
   setupFiles: ['./jest.setup.ts'],

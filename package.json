@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.1.23",
+  "version": "4.1.24",
   "scripts": {
     "clean": "rimraf .next node_modules",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@hapi/address": "^2.1.1",
-    "@hapi/joi": "^15.0.4",
+    "@hapi/joi": "^16.0.1",
     "@material-ui/core": "^4.4.2",
     "@material-ui/styles": "^4.4.1",
     "@nestjs/common": "^6.6.7",
@@ -83,6 +83,7 @@
     "helmet": "^3.21.0",
     "image-webpack-loader": "^6.0.0",
     "isomorphic-fetch": "^2.2.1",
+    "jest-svg-transformer": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "ldapjs": "^1.0.2",
     "lodash": "^4.17.15",
@@ -112,7 +113,7 @@
     "@babel/core": "^7.6.0",
     "@nestjs/swagger": "^3.1.0",
     "@nestjs/testing": "^6.6.7",
-    "@storybook/react": "^5.1.11",
+    "@storybook/react": "^5.2.0",
     "@types/autoprefixer": "^9.6.1",
     "@types/bcrypt": "^3.0.0",
     "@types/bcryptjs": "^2.4.2",
@@ -152,7 +153,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.4.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-typescript": "^4.0.1",
     "eslint-config-prettier": "^6.3.0",

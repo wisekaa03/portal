@@ -70,24 +70,13 @@ export class ConfigService {
    */
   private validateInput(envConfig: EnvConfig): EnvConfig {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
-      NODE_ENV: Joi.string()
-        // .valid(['development', 'production', 'test', 'provision'])
-        .default('development'),
+      NODE_ENV: Joi.any().default('development'),
       PORT: Joi.number()
         .default(4000)
         .required(),
       HOST: Joi.string()
         .default('http://localhost')
         .required(),
-      // DATABASE_ADMIN: Joi.string()
-      //   .default('postgres://postgres:postgres@localhost:5432/portaldb')
-      //   .required(),
-      // DATABASE_URL: Joi.string()
-      //   .default('postgres://portal:portalpwd@localhost:5432/portaldb')
-      //   .required(),
-      // DATABASE_SCHEMA: Joi.string()
-      //   .default('app_public,app_private,app_jobs')
-      //   .required(),
       DATABASE_HOST: Joi.string()
         .default('localhost')
         .required(),
@@ -141,7 +130,7 @@ export class ConfigService {
         .required(),
     });
 
-    const { error, value: validatedEnvConfig } = Joi.validate(envConfig, envVarsSchema);
+    const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);
     if (error) {
       throw new Error(`Config validation error: ${error.message}`);
     }

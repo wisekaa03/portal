@@ -34,14 +34,14 @@ export class AuthenticationGuard extends AuthGuard('jwt') implements CanActivate
     return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;
   }
 
-  handleRequest(err: Error, user: any, info: any, context: any): any {
+  handleRequest(err: Error, user: any /* , info: any, context: any */): any {
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
     return user;
   }
 
-  getResponse = () => undefined;
+  getResponse = (): any => undefined;
 
   getRequest(context: ExecutionContext): IncomingMessage {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
