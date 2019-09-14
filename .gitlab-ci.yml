@@ -1,14 +1,14 @@
+image: node:10.16-buster
+
 stages:
   - bundle
   - test
   - build
   - deploy
 
-default:
-  image: node:10.16-buster
-  services:
-    - postgres:10
-    - redis:latest
+services:
+  - postgres:10
+  - redis:latest
 
 variables:
   POSTGRES_DB: portaldb
@@ -29,16 +29,23 @@ before_script:
 bundle:
   stage: bundle
   script:
+    - ls -l
     - yarn jwt:cert
+  artifacts:
+    path:
+      - jwt.public.pem
+      - jwt.private.pem
 
 test:
   stage: test
   script:
+    - ls -l
     - yarn test -u
 
 build:
   stage: build
   script:
+    - ls -l
     - yarn build
   artifacts:
     paths:
