@@ -36,6 +36,7 @@ bundle:
     - yarn jwt:cert
   artifacts:
     paths:
+      - node_modules/
       - jwt.public.pem
       - jwt.private.pem
 
