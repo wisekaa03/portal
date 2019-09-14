@@ -24,7 +24,6 @@ cache:
 before_script:
   - uname -a
   # - env
-  - ls -l /cache
   - npm install -g yarn
 
 bundle:
