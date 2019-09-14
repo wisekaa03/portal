@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
 
-import App from '..';
+import App from '../pages';
 
 describe('App', () => {
   let wrapperShallow: typeof shallow;

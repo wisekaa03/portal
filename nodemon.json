@@ -1,6 +1,9 @@
 {
   "watch": ["server"],
   "execMap": {
-    "ts": "TS_NODE_PROJECT='tsconfig.server.json' node -r ts-node/register"
+    "ts": "node -r ts-node/register"
+  },
+  "env": {
+    "TS_NODE_PROJECT": "tsconfig.server.json"
   }
 }

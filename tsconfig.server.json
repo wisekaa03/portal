@@ -4,7 +4,10 @@
     "module": "commonjs",
     "sourceMap": true,
     "noEmit": false,
-    "outDir": ".next/production-server/"
+    "outDir": ".next/production-server/",
+    "paths": {
+      "global": ["typings/global.d.ts"]
+    }
   },
-  "include": ["typings/global.d.ts", "server/**/*"]
+  "include": ["server/**/*"]
 }

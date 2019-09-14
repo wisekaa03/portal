@@ -110,7 +110,7 @@ module.exports = function(api) {
 
   // console.warn('process.env:', process.env);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (0 && process.env.NODE_ENV === 'production') {
     config.plugins.push('transform-inline-consecutive-adds');
     config.plugins.push('transform-inline-environment-variables');
     config.plugins.push('transform-member-expression-literals');

@@ -1,14 +1,14 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.1.24",
+  "version": "4.1.25",
   "scripts": {
     "clean": "rimraf .next node_modules",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "jwt:cert": "openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost'",
     "dev": "nodemon --inspect server/main.ts",
-    "build": "next build && tsc --project tsconfig.server.json",
-    "start": "cross-env NODE_ENV=production node .next/production-server/main.js",
+    "build": "next build && TS_NODE_PROJECT=tsconfig.server.json NODE_ENV=production tsc server/main.ts",
+    "start": "TS_NODE_PROJECT=tsconfig.server.json NODE_ENV=production node -r ts-node/register server/main.ts",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,server}/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "start-storybook",

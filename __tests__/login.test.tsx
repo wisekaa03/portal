@@ -4,7 +4,7 @@ import { createShallow } from '@material-ui/core/test-utils';
 import { InputLabel, Button } from '@material-ui/core';
 import React from 'react';
 
-import Login from '../auth/login';
+import Login from '../pages/auth/login';
 
 describe('Login', () => {
   let wrapperShallow: any;
