@@ -1,4 +1,5 @@
 stages:
+  - bundle
   - test
   - build
   - deploy
@@ -8,11 +9,6 @@ default:
   services:
     - postgres:10
     - redis:latest
-  before_script:
-    - uname -a
-    - npm install -g yarn
-    - yarn
-    - yarn jwt:cert
 
 variables:
   POSTGRES_DB: portaldb
@@ -20,9 +16,20 @@ variables:
   POSTGRES_PASSWORD: VbNfGhRtY321
 
 cache:
-  paths:
-    - node_modules/
-  untracked: true
+  key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    untracked: true
+
+before_script:
+  - uname -a
+  - npm install -g yarn
+  - yarn
+
+bundle:
+  stage: bundle
+  script:
+    - yarn jwt:cert
 
 test:
   stage: test
@@ -33,9 +40,13 @@ build:
   stage: build
   script:
     - yarn build
+  artifacts:
+    paths:
+      - .nest/
+      - .next/
 
 deploy:
   stage: deploy
   script:
-    - docker
+    - echo TEST SUCCEDED
 
