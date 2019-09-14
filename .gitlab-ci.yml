@@ -25,6 +25,7 @@ before_script:
   - uname -a
   - env
   - npm install -g yarn
+  - ls -l
   - yarn
 
 bundle:
