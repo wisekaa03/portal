@@ -16,7 +16,7 @@ variables:
   POSTGRES_PASSWORD: VbNfGhRtY321
 
 cache:
-  key: ${CI_COMMIT_REF_SLUG}
+  key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
   untracked: true
   paths:
     - node_modules/
@@ -34,7 +34,7 @@ bundle:
     - yarn
     - yarn jwt:cert
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
     untracked: true
     paths:
       - node_modules/
@@ -46,7 +46,7 @@ bundle:
 test:
   stage: test
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
     untracked: true
     paths:
       - node_modules/
@@ -58,7 +58,7 @@ test:
 build:
   stage: build
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
     untracked: true
     paths:
       - node_modules/
@@ -75,7 +75,7 @@ build:
 deploy:
   stage: deploy
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
     untracked: true
     paths:
       - node_modules/
@@ -83,4 +83,3 @@ deploy:
   script:
     - ls -l
     - echo TEST SUCCEDED
-
