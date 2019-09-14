@@ -1,7 +1,7 @@
 stages:
   - test
   - build
-  # - deploy
+  - deploy
 
 default:
   image: node:10.16-buster
@@ -32,4 +32,10 @@ test:
 build:
   stage: build
   script:
-    - yarn 
+    - yarn build
+
+deploy:
+  stage: deploy
+  script:
+    - docker
+
