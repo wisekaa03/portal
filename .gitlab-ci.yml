@@ -15,11 +15,16 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: VbNfGhRtY321
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  untracked: true
+  paths:
+    - node_modules/
+
 before_script:
   - uname -a
-  - env
+  # - env
   - npm install -g yarn
-  - ls -l
 
 bundle:
   stage: bundle
@@ -29,6 +34,7 @@ bundle:
     - yarn jwt:cert
   cache:
     key: ${CI_COMMIT_REF_SLUG}
+    untracked: true
     paths:
       - node_modules/
   artifacts:
@@ -40,6 +46,7 @@ test:
   stage: test
   cache:
     key: ${CI_COMMIT_REF_SLUG}
+    untracked: true
     paths:
       - node_modules/
     policy: pull
@@ -51,6 +58,7 @@ build:
   stage: build
   cache:
     key: ${CI_COMMIT_REF_SLUG}
+    untracked: true
     paths:
       - node_modules/
     policy: pull
@@ -67,6 +75,7 @@ deploy:
   stage: deploy
   cache:
     key: ${CI_COMMIT_REF_SLUG}
+    untracked: true
     paths:
       - node_modules/
     policy: pull
