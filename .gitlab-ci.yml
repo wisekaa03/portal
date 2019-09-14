@@ -26,9 +26,6 @@ bundle:
   script:
     - yarn
     - yarn jwt:cert
-  artifacts:
-    paths:
-      - node_modules/
 
 test:
   stage: test
