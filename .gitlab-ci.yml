@@ -20,6 +20,7 @@ cache:
   paths:
     - node_modules/
   untracked: true
+  policy: pull-push
 
 before_script:
   - uname -a
