@@ -77,33 +77,30 @@ export class ConfigService {
       HOST: Joi.string()
         .default('http://localhost')
         .required(),
-      DATABASE_HOST: Joi.string()
-        .default('localhost')
-        .required(),
-      DATABASE_PORT: Joi.number()
-        .default(5432)
-        .required(),
-      DATABASE_USERNAME: Joi.string()
-        .default('portal')
-        .required(),
-      DATABASE_PASSWORD: Joi.string()
-        .default('portalpwd')
-        .required(),
-      DATABASE_NAME: Joi.string()
-        .default('portaldb')
-        .required(),
-      DATABASE_SCHEMA: Joi.string()
-        .default('public')
-        .required(),
-      REDIS_HOST: Joi.string()
-        .default('localhost')
-        .required(),
+      DATABASE_CONNECTION: Joi.string().default('postgres'),
+      DATABASE_HOST: Joi.string().default('localhost'),
+      DATABASE_PORT: Joi.number().default(5432),
+      DATABASE_USERNAME: Joi.string().default('portal'),
+      DATABASE_PASSWORD: Joi.string().default('portalpwd'),
+      DATABASE_DATABASE: Joi.string().default('portaldb'),
+      DATABASE_SCHEMA: Joi.string().default('public'),
+      DATABASE_SYNCHRONIZE: Joi.string()
+        .default('true')
+        .empty(),
+      DATABASE_DROP_SCHEMA: Joi.string()
+        .default('true')
+        .empty(),
+      DATABASE_LOGGING: Joi.string()
+        .default('true')
+        .empty(),
+      DATABASE_CACHE: Joi.string()
+        .default('true')
+        .empty(),
+      REDIS_HOST: Joi.string().default('localhost'),
       REDIS_PORT: Joi.number()
         .default(6379)
         .empty(),
-      REDIS_DB: Joi.number()
-        .default(0)
-        .required(),
+      REDIS_DB: Joi.number().default(0),
       REDIS_PASSWORD: Joi.string()
         .allow('')
         .empty(),

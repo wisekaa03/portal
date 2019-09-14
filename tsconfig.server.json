@@ -4,7 +4,8 @@
     "module": "commonjs",
     "sourceMap": true,
     "noEmit": false,
-    "outDir": ".next/production-server/",
+    "outDir": ".nest/",
+    "baseUrl": ".",
     "paths": {
       "global": ["typings/global.d.ts"]
     }

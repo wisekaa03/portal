@@ -12,8 +12,6 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-// import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-// import passport from 'passport';
 // #endregion
 // #region Imports Local
 import { sessionRedis } from './shared/session-redis';
@@ -62,20 +60,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region production ready session store
   app.use(sessionRedis(configService));
-  // #endregion
-
-  // #region Swagger module - for development
-  // if (process.env.NODE_ENV !== 'production') {
-  //   const options = new DocumentBuilder()
-  //     .setTitle('Authentication')
-  //     .setDescription('The authentication API')
-  //     .setVersion('1.0')
-  //     .addTag('auth')
-  //     .addBearerAuth()
-  //     .build();
-  //   const document = SwaggerModule.createDocument(app, options);
-  //   SwaggerModule.setup('api/auth', app, document);
-  // }
   // #endregion
 
   // #region Static files
