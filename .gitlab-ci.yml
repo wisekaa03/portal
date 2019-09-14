@@ -50,6 +50,7 @@ build:
   script:
     - ls -l
     - yarn build
+    - ls -l
   artifacts:
     paths:
       - .nest/
