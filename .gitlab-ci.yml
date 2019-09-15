@@ -27,7 +27,7 @@ bundle:
     - yarn
     - yarn jwt:cert
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
     policy: push
     paths:
@@ -41,7 +41,7 @@ bundle:
 test:
   stage: test
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
     paths:
       - node_modules/
@@ -53,7 +53,7 @@ test:
 build:
   stage: build
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
     paths:
       - node_modules/
@@ -70,7 +70,7 @@ build:
 deploy:
   stage: deploy
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
     paths:
       - node_modules/
