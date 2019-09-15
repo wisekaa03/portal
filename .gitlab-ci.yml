@@ -16,17 +16,17 @@ variables:
   POSTGRES_PASSWORD: VbNfGhRtY321
 
 before_script:
-  - uname -a
-  - env
   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 
 bundle:
   stage: bundle
   script:
-    - ls -la
+    - uname -a
+    - env
     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
     - yarn
     - yarn jwt:cert
+    - ls -la
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
