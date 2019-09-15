@@ -8,7 +8,7 @@ stages:
   - deploy
 
 services:
-  - postgres:stable
+  - postgres:latest
   # 10
   - redis:latest
 
