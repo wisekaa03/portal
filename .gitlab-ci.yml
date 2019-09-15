@@ -1,4 +1,5 @@
-image: node:10.16-buster
+image: node:latest
+# 10.16-buster
 
 stages:
   - bundle
@@ -7,7 +8,8 @@ stages:
   - deploy
 
 services:
-  - postgres:10
+  - postgres:stable
+  # 10
   - redis:latest
 
 variables:
@@ -39,6 +41,7 @@ bundle:
       - .env
       - jwt.public.pem
       - jwt.private.pem
+    expire_in: 1 days
 
 test:
   stage: test
@@ -68,6 +71,7 @@ build:
     paths:
       - .nest/
       - .next/
+    expire_in: 1 days
 
 deploy:
   stage: deploy
