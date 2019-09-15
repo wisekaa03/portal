@@ -17,7 +17,7 @@ variables:
 
 before_script:
   - uname -a
-  # - env
+  - env
   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 
 bundle:
@@ -34,6 +34,7 @@ bundle:
       - node_modules/
   artifacts:
     paths:
+      - node_modules/
       - jwt.public.pem
       - jwt.private.pem
 
