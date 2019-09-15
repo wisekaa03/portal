@@ -19,6 +19,7 @@ before_script:
   - uname -a
   - env
   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
+  - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
 
 bundle:
   stage: bundle
@@ -35,6 +36,7 @@ bundle:
   artifacts:
     paths:
       - node_modules/
+      - .env
       - jwt.public.pem
       - jwt.private.pem
 
