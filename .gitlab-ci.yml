@@ -23,7 +23,7 @@ before_script:
 bundle:
   stage: bundle
   script:
-    - ls -l
+    - ls -la
     - yarn
     - yarn jwt:cert
   cache:
@@ -47,7 +47,7 @@ test:
       - node_modules/
     policy: pull
   script:
-    - ls -l
+    - ls -la
     - yarn test -u
 
 build:
@@ -59,9 +59,9 @@ build:
       - node_modules/
     policy: pull
   script:
-    - ls -l
+    - ls -la
     - yarn build
-    - ls -l
+    - ls -la
   artifacts:
     paths:
       - .nest/
@@ -76,5 +76,5 @@ deploy:
       - node_modules/
     policy: pull
   script:
-    - ls -l
+    - ls -la
     - echo TEST SUCCEDED
