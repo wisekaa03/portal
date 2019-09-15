@@ -15,16 +15,10 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: VbNfGhRtY321
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
-  untracked: true
-  paths:
-    - node_modules/
-
 before_script:
   - uname -a
   # - env
-  - npm install -g yarn
+  - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 
 bundle:
   stage: bundle
@@ -35,6 +29,7 @@ bundle:
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_DIR}
     untracked: true
+    policy: push
     paths:
       - node_modules/
   artifacts:
