@@ -19,12 +19,12 @@ before_script:
   - uname -a
   - env
   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
-  - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
 
 bundle:
   stage: bundle
   script:
     - ls -la
+    - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
     - yarn
     - yarn jwt:cert
   cache:
