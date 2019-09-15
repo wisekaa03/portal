@@ -37,7 +37,6 @@ bundle:
       - node_modules/
   artifacts:
     paths:
-      - node_modules/
       - .env
       - jwt.public.pem
       - jwt.private.pem
