@@ -7,16 +7,6 @@ stages:
   - build
   - deploy
 
-services:
-  - postgres:latest
-  # 10
-  - redis:latest
-
-variables:
-  POSTGRES_DB: portaldb
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: VbNfGhRtY321
-
 before_script:
   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 
@@ -25,6 +15,7 @@ bundle:
   script:
     - uname -a
     - env
+    - docker info
     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
     - yarn
     - yarn jwt:cert
@@ -41,7 +32,7 @@ bundle:
       - .env
       - jwt.public.pem
       - jwt.private.pem
-    expire_in: 1 days
+    expire_in: 12 hours
 
 test:
   stage: test
@@ -71,7 +62,7 @@ build:
     paths:
       - .nest/
       - .next/
-    expire_in: 1 days
+    expire_in: 12 hours
 
 deploy:
   stage: deploy
@@ -83,4 +74,5 @@ deploy:
     policy: pull
   script:
     - ls -la
-    - echo TEST SUCCEDED
+    - docker build -t portal .
+    - docker run portal .
