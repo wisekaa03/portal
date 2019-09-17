@@ -73,6 +73,7 @@ deploy:
     policy: pull
   script:
     # - ls -la
-    # - docker info
+    - service docker start
+    - docker info
     - docker build -t portal .
     - docker run -d -p4000:4000 --name=portal portal
