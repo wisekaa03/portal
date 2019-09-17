@@ -1,10 +1,11 @@
-# Stage 0
-# =======
 FROM node:12
 
 WORKDIR /app
 
-COPY package*.json yarn.lock jwt.private.pem jwt.public.pem ./
+COPY package*.json ./
+COPY yarn.lock ./
+COPY jwt.private.pem ./
+COPY jwt.public.pem ./
 RUN yarn
 RUN yarn jwt:cert
 
