@@ -68,7 +68,7 @@ services:
 #     expire_in: 12 hours
 
 deploy:
-  image: docker:latest
+  image: docker:dind
   stage: deploy
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
