@@ -19,7 +19,7 @@ bundle:
     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
     - yarn
     - yarn jwt:cert
-    - ls -la
+    # - ls -la
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
@@ -43,7 +43,7 @@ test:
       - node_modules/
     policy: pull
   script:
-    - ls -la
+    # - ls -la
     - yarn test -u
 
 build:
@@ -55,9 +55,9 @@ build:
       - node_modules/
     policy: pull
   script:
-    - ls -la
+    # - ls -la
     - yarn build
-    - ls -la
+    # - ls -la
   artifacts:
     paths:
       - .nest/
@@ -73,6 +73,6 @@ deploy:
       - node_modules/
     policy: pull
   script:
-    - ls -la
+    # - ls -la
     - docker build -t portal .
-    - docker run -d -p4000:4000 portal
+    - docker run -p4000:4000 portal
