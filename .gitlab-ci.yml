@@ -73,7 +73,7 @@ deploy:
     policy: pull
   script:
     # - ls -la
-    - systemctl docker start
+    - docker run --privileged --name some-docker -d --network some-network --network-alias docker -e DOCKER_TLS_CERTDIR=/certs -v some-docker-certs-ca:/certs/ca -v some-docker-certs-client:/certs/client docker:dind
     - docker info
     - docker build -t portal .
     - docker run -d -p4000:4000 --name=portal portal
