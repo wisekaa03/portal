@@ -1,4 +1,4 @@
-image: node:latest
+image: node:12
 # 10.16-buster
 
 stages:
@@ -6,6 +6,9 @@ stages:
   - test
   - build
   - deploy
+
+services:
+  - docker:latest
 
 before_script:
   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
