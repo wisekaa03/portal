@@ -10,5 +10,6 @@
       "global": ["typings/global.d.ts"]
     }
   },
-  "include": ["server/**/*"]
+  "exclude": ["__tests__/**/*","server/**/*.spec.ts","server/**/*.test.ts"],
+  "include": ["server/**/*.ts"]
 }

@@ -58,10 +58,7 @@ const svgoLoader = {
 function withCustomWebpack(conf = {}) {
   const { webpack } = conf;
 
-  conf.webpack = (
-    config,
-    { /* buildId, */ dev, isServer /* , defaultLoaders */, ...rest },
-  ) => {
+  conf.webpack = (config, { /* buildId, */ dev, isServer /* , defaultLoaders */, ...rest }) => {
     config.plugins = [
       ...(config.plugins || []),
       new Webpack.DefinePlugin({

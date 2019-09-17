@@ -9,5 +9,6 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "target": "es5"
-  }
+  },
+  "include": ["server/**/*.ts"]
 }
