@@ -13,7 +13,8 @@ services:
 bundle:
   stage: bundle
   script:
-    - ls -la /var/run/docker.sock
+    - ls -la /run/docker.sock
+    - ls -la /var/lib/docker
     # - uname -a
     # - env
     # - yarn
@@ -73,6 +74,7 @@ deploy:
       - node_modules/
     policy: pull
   script:
-    - ls -la /var/run/docker.sock
+    - ls -la /run/docker.sock
+    - ls -la /var/lib/docker
     - docker build -t portal .
     - docker run -d -p4000:4000 --name=portal portal
