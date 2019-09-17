@@ -1,10 +1,10 @@
 # Stage 0
 # =======
-FROM node:latest
+FROM node:12
 
 WORKDIR /app
 
-COPY package*.json yarn.lock ./
+COPY package*.json yarn.lock jwt.private.pem jwt.public.pem node_modules/ ./
 RUN yarn
 RUN yarn jwt:cert
 
