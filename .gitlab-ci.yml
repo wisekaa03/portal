@@ -63,7 +63,7 @@ bundle:
 #     expire_in: 12 hours
 
 deploy:
-  image: docker:dind
+  image: docker:latest
   stage: deploy
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
