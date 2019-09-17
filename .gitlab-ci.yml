@@ -75,4 +75,4 @@ deploy:
   script:
     # - ls -la
     - docker build -t portal .
-    - docker run -p4000:4000 portal
+    - docker run -d -p4000:4000 --name=portal portal
