@@ -18,3 +18,4 @@ target
 .editorconfig
 jest.config.js
 jest.setup.ts
+ecosystem.config.js
