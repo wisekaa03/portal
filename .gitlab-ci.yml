@@ -1,73 +1,69 @@
 image: node:12
-# 10.16-buster
 
 stages:
-  - bundle
-  - test
-  - build
+  # - bundle
+  # - test
+  # - build
   - deploy
 
-services:
-  - docker:latest
+# before_script:
+#   - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 
-before_script:
-  - (! test -f /usr/local/bin/yarn) && npm install -g yarn
+# bundle:
+#   stage: bundle
+#   script:
+#     - uname -a
+#     - env
+#     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
+#     - yarn
+#     - yarn jwt:cert
+#     # - ls -la
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+#     untracked: true
+#     policy: push
+#     paths:
+#       - node_modules/
+#   artifacts:
+#     paths:
+#       - node_modules/
+#       - .env
+#       - jwt.public.pem
+#       - jwt.private.pem
+#     expire_in: 12 hours
 
-bundle:
-  stage: bundle
-  script:
-    - uname -a
-    - env
-    - docker info
-    - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
-    - yarn
-    - yarn jwt:cert
-    # - ls -la
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    untracked: true
-    policy: push
-    paths:
-      - node_modules/
-  artifacts:
-    paths:
-      - node_modules/
-      - .env
-      - jwt.public.pem
-      - jwt.private.pem
-    expire_in: 12 hours
+# test:
+#   stage: test
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+#     untracked: true
+#     paths:
+#       - node_modules/
+#     policy: pull
+#   script:
+#     # - ls -la
+#     - yarn test -u
 
-test:
-  stage: test
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    untracked: true
-    paths:
-      - node_modules/
-    policy: pull
-  script:
-    # - ls -la
-    - yarn test -u
-
-build:
-  stage: build
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    untracked: true
-    paths:
-      - node_modules/
-    policy: pull
-  script:
-    # - ls -la
-    - yarn build
-    # - ls -la
-  artifacts:
-    paths:
-      - .nest/
-      - .next/
-    expire_in: 12 hours
+# build:
+#   stage: build
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+#     untracked: true
+#     paths:
+#       - node_modules/
+#     policy: pull
+#   script:
+#     # - ls -la
+#     - yarn build
+#     # - ls -la
+#   artifacts:
+#     paths:
+#       - .nest/
+#       - .next/
+#     expire_in: 12 hours
 
 deploy:
+  image: docker:latest
   stage: deploy
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
@@ -77,5 +73,6 @@ deploy:
     policy: pull
   script:
     # - ls -la
+    - docker info
     - docker build -t portal .
     - docker run -d -p4000:4000 --name=portal portal
