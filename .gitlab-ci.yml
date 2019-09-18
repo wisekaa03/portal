@@ -10,7 +10,7 @@ stages:
 #   - redis:5.0.5
 
 variables:
-  KUBECONFIG: /etc/kubernetes
+  KUBECONFIG: /etc/kubernetes/kubelet.conf
   PRODUCTION_NAMESPACE: default
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2    
@@ -75,10 +75,11 @@ production:
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
+    policy: pull
     paths:
       - node_modules/
-    policy: pull
   script:
+    - ls -la /var/lib/docker
     - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
 
 deploy:
@@ -87,9 +88,9 @@ deploy:
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
+    policy: pull
     paths:
       - node_modules/
-    policy: pull
   before_script:
     - mkdir -p /etc/deploy
     - cp --remove-destination "${CI_KUBELET_CONFIG}" "${KUBECONFIG}"
@@ -100,3 +101,4 @@ deploy:
     - kubectl get pods --all-namespaces
   script:
     - ls -la
+    - ls -la /var/lib/docker
