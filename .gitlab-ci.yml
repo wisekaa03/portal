@@ -68,9 +68,8 @@ production:
     paths:
       - node_modules/
   script:
-    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
-    - docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
-    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
+    - export DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
+    - test DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
     - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
     - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
 
