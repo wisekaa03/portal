@@ -74,9 +74,10 @@ production:
     - docker:dind
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    untracked: true
-    policy: pull
+    # untracked: true
+    policy: pull-push
     paths:
+      - /var/lib/docker
       - node_modules/
   script:
     - ls -la /var/lib/docker
@@ -87,13 +88,13 @@ deploy:
   image: dtzar/helm-kubectl
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    untracked: true
+    # untracked: true
     policy: pull
     paths:
       - node_modules/
   before_script:
     - mkdir -p /etc/deploy
-    - cp --remove-destination "${CI_KUBELET_CONFIG}" "${KUBECONFIG}"
+    # - cp --remove-destination "${CI_KUBELET_CONFIG}" "${KUBECONFIG}"
     - helm init --client-only
     - helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     - helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
