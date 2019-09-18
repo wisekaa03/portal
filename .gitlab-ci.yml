@@ -9,7 +9,8 @@ variables:
   KUBECONFIG: /etc/kubernetes/kubelet.conf
   PRODUCTION_NAMESPACE: default
   DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_DRIVER: overlay2    
+  DOCKER_DRIVER: overlay2
+  PREFIX_NAME: kngk-
 
 bundle:
   image: node:12
@@ -67,10 +68,11 @@ production:
     paths:
       - node_modules/
   script:
-    - docker images $CI_PROJECT_NAME
-    - docker image rm $CI_PROJECT_NAME:latest
-    - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
-    - docker images $CI_PROJECT_NAME
+    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
+    - docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
+    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
+    - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
+    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
 
 deploy:
   stage: deploy
