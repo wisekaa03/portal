@@ -71,7 +71,7 @@ deploy:
       - node_modules/
     policy: pull
   script:
-    - ls -la /run
-    - ls -la /var/lib/docker
+    # - ls -la /run
+    # - ls -la /var/lib/docker
     - docker build -t portal .
     - docker run -d -p4000:4000 --name=portal portal
