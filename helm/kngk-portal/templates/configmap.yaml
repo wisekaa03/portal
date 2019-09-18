@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kngk-portal-configmap
+  labels:
+{{ include "portal.labels" . | indent 4 }}
+    app_name: kngk-portal
+{{- if .Chart.AppVersion }}
+    app_version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+data:
+  myvalue: "Hello World"
