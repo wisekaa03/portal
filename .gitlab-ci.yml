@@ -21,12 +21,9 @@ bundle:
   stage: bundle
   script:
     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
-    # - ls -la
     # - yarn
-    # - ls -la
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    # untracked: true
     policy: pull-push
     paths:
       - node_modules/
@@ -38,25 +35,25 @@ bundle:
     expire_in: 12 hours
 
 # test:
+#   image: node:12-slim
 #   stage: test
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     untracked: true
+#     policy: pull
 #     paths:
 #       - node_modules/
-#     policy: pull
 #   script:
 #     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 #     - yarn test -u
 
 # build:
+#   image: node:12-slim
 #   stage: build
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     untracked: true
+#     policy: pull
 #     paths:
 #       - node_modules/
-#     policy: pull
 #   script:
 #     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 #     - yarn build
@@ -73,30 +70,24 @@ production:
     - docker:dind
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    # untracked: true
-    policy: pull-push
+    policy: pull
     paths:
-      - /var/lib/docker
       - node_modules/
   script:
     - docker images
     - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
+    - docker images
 
 deploy:
   stage: deploy
   image: dtzar/helm-kubectl
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-    # untracked: true
     policy: pull
     paths:
       - node_modules/
   before_script:
-    # - mkdir -p /etc/deploy
-    # - cp --remove-destination "${CI_KUBELET_CONFIG}" "${KUBECONFIG}"
     - helm init --client-only
-    - helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    - helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
     - helm repo update
     - kubectl get pods --all-namespaces
   script:
