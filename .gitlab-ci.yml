@@ -84,6 +84,7 @@ deploy:
     - helm init --client-only
     - helm repo update
     - kubectl get pods --all-namespaces
+    - helm install --name=kngk-portal --debug helm/kngk-portal
   script:
     - ls -la
     - ls -la /var/lib/docker
