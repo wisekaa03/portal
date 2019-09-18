@@ -9,6 +9,7 @@ services:
   - redis:5.0.5
 
 before_script:
+  - git clone https://git.kngk.org/Project/portal.git
   - docker info
 
 bundle:
