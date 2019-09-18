@@ -8,16 +8,22 @@ stages:
 #   - postgres:11.5
 #   - redis:5.0.5
 
+variables:
+  KUBECONFIG: /etc/deploy/config
+  PRODUCTION_NAMESPACE: default
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_DRIVER: overlay2    
+
 bundle:
   image: node:12
   stage: bundle
   script:
-    - uname -a
-    - env
     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
+    - ls -la
     - yarn
     - yarn jwt:cert
+    - ls -la
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
@@ -26,7 +32,6 @@ bundle:
       - node_modules/
   artifacts:
     paths:
-      # - node_modules/
       - .env
       - jwt.public.pem
       - jwt.private.pem
@@ -63,20 +68,21 @@ bundle:
 
 deploy:
   stage: deploy
-  image: docker:stable
-  services:
-    - docker:dind
+  image: lwolf/helm-kubectl-docker
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
     paths:
       - node_modules/
     policy: pull
-  variables:
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_DRIVER: overlay2    
+  before_script:
+    - mkdir -p /etc/deploy
+    - cp --remove-destination "${CI_KUBELET_CONFIG}" "${KUBECONFIG}"
+    # - kubectl config use-context homekube
+    - helm init --client-only
+    - helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    - helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+    - helm repo update
   script:
-    # - ls -la /run
-    # - ls -la /var/lib/docker
+    - ls -la
     - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
-    - docker run -d -p4000:4000 --name=portal portal
