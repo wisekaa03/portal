@@ -17,10 +17,9 @@ before_script:
   - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
 
 bundle:
-  image: node:12-slim
+  image: node:12-alpine
   stage: bundle
   script:
-    - (! test -f /usr/local/bin/yarn) && npm install -g yarn
     # - yarn
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
@@ -35,7 +34,7 @@ bundle:
     expire_in: 12 hours
 
 # test:
-#   image: node:12-slim
+#   image: node:12-alpine
 #   stage: test
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
@@ -43,11 +42,10 @@ bundle:
 #     paths:
 #       - node_modules/
 #   script:
-#     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 #     - yarn test -u
 
 # build:
-#   image: node:12-slim
+#   image: node:12-alpine
 #   stage: build
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
@@ -55,7 +53,6 @@ bundle:
 #     paths:
 #       - node_modules/
 #   script:
-#     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
 #     - yarn build
 #   artifacts:
 #     paths:
@@ -74,9 +71,10 @@ production:
     paths:
       - node_modules/
   script:
-    - docker images
+    - docker images -f $CI_PROJECT_NAME
+    - docker image rm $CI_PROJECT_NAME:latest
     - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
-    - docker images
+    - docker images -f $CI_PROJECT_NAME
 
 deploy:
   stage: deploy
