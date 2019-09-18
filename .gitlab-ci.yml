@@ -14,9 +14,9 @@ bundle:
   script:
     - uname -a
     - env
-    # - yarn
     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
+    - yarn
     - yarn jwt:cert
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
@@ -26,7 +26,7 @@ bundle:
       - node_modules/
   artifacts:
     paths:
-      - node_modules/
+      # - node_modules/
       - .env
       - jwt.public.pem
       - jwt.private.pem
@@ -78,5 +78,5 @@ deploy:
   script:
     # - ls -la /run
     # - ls -la /var/lib/docker
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+    - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
     - docker run -d -p4000:4000 --name=portal portal
