@@ -12,7 +12,7 @@ variables:
   DOCKER_DRIVER: overlay2    
 
 bundle:
-  image: node:12-alpine
+  image: node:12
   stage: bundle
   script:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
@@ -32,7 +32,7 @@ bundle:
     expire_in: 12 hours
 
 # test:
-#   image: node:12-alpine
+#   image: node:12
 #   stage: test
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
@@ -43,7 +43,7 @@ bundle:
 #     - yarn test -u
 
 # build:
-#   image: node:12-alpine
+#   image: node:12
 #   stage: build
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
