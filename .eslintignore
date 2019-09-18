@@ -95,3 +95,6 @@ yarn.lock
 
 # Jest
 *.snap
+
+# Helm
+kubelet.conf

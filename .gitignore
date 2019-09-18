@@ -101,3 +101,6 @@ npmlist.json
 
 # Jest
 *.snap
+
+# Helm
+kubelet.conf

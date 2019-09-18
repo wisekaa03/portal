@@ -22,6 +22,15 @@
     "prettier.eslintIntegration": true,
     "files.autoSave": "onWindowChange",
     "editor.formatOnSave": true,
+    "[html]": {
+      "editor.formatOnSave": false
+    },
+    "[md]": {
+      "editor.formatOnSave": false
+    },
+    "[yaml]": {
+      "editor.formatOnSave": false
+    },
     "[javascript]": {
       "editor.formatOnSave": false
     },
