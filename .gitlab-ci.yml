@@ -68,7 +68,8 @@ production:
     paths:
       - node_modules/
   script:
-    - export DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
+    - DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
+    - env
     - test DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
     - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
     - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
@@ -83,9 +84,6 @@ deploy:
       - node_modules/
   before_script:
     - helm init --client-only
-    - helm repo update
     - kubectl get pods --all-namespaces
-    - helm install --name=kngk-portal --debug helm/kngk-portal
   script:
-    - ls -la
-    - ls -la /var/lib/docker
+    - helm install --tiller-namespace=gitlab-managed-apps --name=kngk-portal --debug helm/kngk-portal
