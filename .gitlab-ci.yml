@@ -11,17 +11,19 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2    
 
+before_script:
+  - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
+  - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
+  - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
+
 bundle:
-  image: node:12
+  image: node:12-slim
   stage: bundle
   script:
     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
-    - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
-    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
-    - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
-    - ls -la
+    # - ls -la
     # - yarn
-    - ls -la
+    # - ls -la
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     # untracked: true
@@ -90,7 +92,7 @@ deploy:
     paths:
       - node_modules/
   before_script:
-    - mkdir -p /etc/deploy
+    # - mkdir -p /etc/deploy
     # - cp --remove-destination "${CI_KUBELET_CONFIG}" "${KUBECONFIG}"
     - helm init --client-only
     - helm repo add stable https://kubernetes-charts.storage.googleapis.com/
