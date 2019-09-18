@@ -13,10 +13,8 @@ services:
 bundle:
   stage: bundle
   script:
-    - ls -la /run
-    - ls -la /var/lib/docker
-    # - uname -a
-    # - env
+    - uname -a
+    - env
     # - yarn
     - (! test -f /usr/local/bin/yarn) && npm install -g yarn
     - cp --remove-destination "${CI_ENVIRONMENT_VARIABLES}" .env
@@ -65,7 +63,6 @@ bundle:
 #     expire_in: 12 hours
 
 deploy:
-  image: docker:latest
   stage: deploy
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
