@@ -61,18 +61,16 @@ bundle:
 production:
   stage: production
   image: docker:latest
-  services:
-    - docker:dind
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     policy: pull
     paths:
       - node_modules/
   script:
-    - docker images -f $CI_PROJECT_NAME
+    - docker images $CI_PROJECT_NAME
     - docker image rm $CI_PROJECT_NAME:latest
     - docker build --cache-from $CI_PROJECT_NAME:latest --tag $CI_PROJECT_NAME:$CI_COMMIT_SHA --tag $CI_PROJECT_NAME:latest .
-    - docker images -f $CI_PROJECT_NAME
+    - docker images $CI_PROJECT_NAME
 
 deploy:
   stage: deploy
