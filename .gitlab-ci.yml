@@ -4,12 +4,11 @@ stages:
   # - build
   - deploy
 
-services:
-  - postgres:11.5
-  - redis:5.0.5
+# services:
+#   - postgres:11.5
+#   - redis:5.0.5
 
 before_script:
-  - git clone https://git.kngk.org/Project/portal.git
   - docker info
 
 bundle:
@@ -67,14 +66,20 @@ bundle:
 
 deploy:
   stage: deploy
+  image: docker:stable
+  services:
+    - docker:dind
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     untracked: true
     paths:
       - node_modules/
     policy: pull
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_DRIVER: overlay2    
   script:
     # - ls -la /run
     # - ls -la /var/lib/docker
-    - docker build -t portal .
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
     - docker run -d -p4000:4000 --name=portal portal
