@@ -92,4 +92,4 @@ deploy:
     # - cat $HOME/.kube/config
     # - kubectl get pods --all-namespaces --v=5
   script:
-    - helm install --name=kngk-portal --debug helm/kngk-portal
+    - helm install --replace --namespace=KNGK-productiuon --verify --name=kngk-portal --debug helm/kngk-portal
