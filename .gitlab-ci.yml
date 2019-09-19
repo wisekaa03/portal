@@ -6,7 +6,7 @@ stages:
   - deploy
 
 variables:
-  KUBECONFIG: /etc/kubernetes/kubelet.conf
+  KUBECONFIG: helm/kubelet.conf
   PRODUCTION_NAMESPACE: default
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
@@ -83,6 +83,7 @@ deploy:
     paths:
       - node_modules/
   before_script:
+    - cp "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init --client-only
     - kubectl get pods --all-namespaces
   script:
