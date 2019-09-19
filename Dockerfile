@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . ./
 
 # TODO: when production, turn off comments
-# RUN yarn
+RUN yarn
 # RUN yarn jwt:cert
 # RUN yarn build
 

@@ -44,6 +44,8 @@ test:
   #   policy: pull
   #   paths:
   #     - node_modules/
+  before_script:
+    - yarn
   script:
     - yarn test -u
 
@@ -55,6 +57,8 @@ build:
   #   policy: pull
   #   paths:
   #     - node_modules/
+  before_script:
+    - yarn
   script:
     - yarn build
   artifacts:
