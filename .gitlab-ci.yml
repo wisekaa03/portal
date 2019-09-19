@@ -23,27 +23,26 @@ bundle:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
     - yarn
-  # cache:
-  #   key: ${CI_COMMIT_REF_SLUG}
-  #   policy: pull-push
-  #   paths:
-  #     - node_modules/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    policy: pull-push
+    paths:
+      - node_modules/
   artifacts:
     paths:
       - .env
       - jwt.public.pem
       - jwt.private.pem
-      - node_modules/
     expire_in: 12 hours
 
 test:
   image: node:12
   stage: test
-  # cache:
-  #   key: ${CI_COMMIT_REF_SLUG}
-  #   policy: pull
-  #   paths:
-  #     - node_modules/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
   before_script:
     - yarn
   script:
@@ -52,11 +51,11 @@ test:
 build:
   image: node:12
   stage: build
-  # cache:
-  #   key: ${CI_COMMIT_REF_SLUG}
-  #   policy: pull
-  #   paths:
-  #     - node_modules/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
   before_script:
     - yarn
   script:
@@ -70,11 +69,11 @@ build:
 production:
   stage: production
   image: docker:latest
-  # cache:
-  #   key: ${CI_COMMIT_REF_SLUG}
-  #   policy: pull
-  #   paths:
-  #     - node_modules/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
   script:
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
@@ -82,11 +81,11 @@ production:
 deploy:
   stage: deploy
   image: dtzar/helm-kubectl
-  # cache:
-  #   key: ${CI_COMMIT_REF_SLUG}
-  #   policy: pull
-  #   paths:
-  #     - node_modules/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
   before_script:
     - helm init
   script:
