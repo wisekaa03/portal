@@ -83,10 +83,10 @@ production:
 deploy:
   stage: deploy
   image: dtzar/helm-kubectl
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   paths:
+  #     - node_modules/
   before_script:
     - helm init
   script:
