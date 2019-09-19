@@ -22,7 +22,9 @@ bundle:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
+    - ls -la
     - yarn
+    - ls -la
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -42,7 +44,9 @@ bundle:
 #     paths:
 #       - node_modules/
 #   before_script:
+#     - ls -la
 #     - yarn
+#     - ls -la
 #   script:
 #     - yarn test -u
 
@@ -54,7 +58,9 @@ build:
     paths:
       - node_modules/
   before_script:
+    - ls -la
     - yarn
+    - ls -la
   script:
     - yarn build
   artifacts:
