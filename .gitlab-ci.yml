@@ -1,8 +1,8 @@
 stages:
-  # - bundle
+  - bundle
   # - test
   # - build
-  # - production
+  - production
   - deploy
 
 variables:
@@ -12,25 +12,25 @@ variables:
   DOCKER_DRIVER: overlay2
   PREFIX_NAME: kngk-
 
-# bundle:
-#   image: node:12
-#   stage: bundle
-#   script:
-#     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
-#     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
-#     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
-#     # - yarn
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     policy: pull-push
-#     paths:
-#       - node_modules/
-#   artifacts:
-#     paths:
-#       - .env
-#       - jwt.public.pem
-#       - jwt.private.pem
-#     expire_in: 12 hours
+bundle:
+  image: node:12
+  stage: bundle
+  script:
+    - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
+    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
+    - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
+    # - yarn
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    policy: pull-push
+    paths:
+      - node_modules/
+  artifacts:
+    paths:
+      - .env
+      - jwt.public.pem
+      - jwt.private.pem
+    expire_in: 12 hours
 
 # test:
 #   image: node:12
@@ -59,20 +59,20 @@ variables:
 #       - .next/
 #     expire_in: 12 hours
 
-# production:
-#   stage: production
-#   image: docker:latest
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     policy: pull
-#     paths:
-#       - node_modules/
-#   script:
-#     - env
-#     - export DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
-#     - test $DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
-#     - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
-#     - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
+production:
+  stage: production
+  image: docker:latest
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
+  script:
+    - env
+    - export DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
+    - test $DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
+    - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
+    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
 
 deploy:
   stage: deploy
