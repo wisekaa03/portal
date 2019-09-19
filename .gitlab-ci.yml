@@ -1,12 +1,11 @@
 stages:
   - bundle
-  # - test
-  # - build
+  - test
+  - build
   - production
   - deploy
 
 variables:
-  # KUBECONFIG: helm/kubelet.conf
   PRODUCTION_NAMESPACE: default
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
@@ -23,7 +22,7 @@ bundle:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
-    # - yarn
+    - yarn
   cache:
     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
     policy: pull-push
@@ -34,34 +33,35 @@ bundle:
       - .env
       - jwt.public.pem
       - jwt.private.pem
+      - node_modules/
     expire_in: 12 hours
 
-# test:
-#   image: node:12
-#   stage: test
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     policy: pull
-#     paths:
-#       - node_modules/
-#   script:
-#     - yarn test -u
+test:
+  image: node:12
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
+  script:
+    - yarn test -u
 
-# build:
-#   image: node:12
-#   stage: build
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     policy: pull
-#     paths:
-#       - node_modules/
-#   script:
-#     - yarn build
-#   artifacts:
-#     paths:
-#       - .nest/
-#       - .next/
-#     expire_in: 12 hours
+build:
+  image: node:12
+  stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    policy: pull
+    paths:
+      - node_modules/
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - .nest/
+      - .next/
+    expire_in: 12 hours
 
 production:
   stage: production
@@ -72,8 +72,6 @@ production:
     paths:
       - node_modules/
   script:
-    # - export DOCKER_IMAGES=`docker images ${RELEASE_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
-    # - test $DOCKER_IMAGES -eq 1 && docker image rm ${RELEASE_NAME}
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
 

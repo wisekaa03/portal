@@ -3,7 +3,6 @@
 .eslintignore
 .prettierignore
 prettier.config.js
-node_modules
 npm-debug.log
 Dockerfile*
 docker-compose*
@@ -11,8 +10,6 @@ README.md
 LICENSE
 __tests__
 __mocks__
-.nest
-.next
 .vscode
 target
 .editorconfig
@@ -20,3 +17,6 @@ jest.config.js
 jest.setup.ts
 ecosystem.config.js
 helm
+node_modules
+.nest
+.next
