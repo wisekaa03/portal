@@ -85,6 +85,7 @@ deploy:
   before_script:
     # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init --client-only
+    - nslookup kube-master1
     - kubectl get pods --all-namespaces
   script:
     - helm install --tiller-namespace=gitlab-managed-apps --name=kngk-portal --debug helm/kngk-portal
