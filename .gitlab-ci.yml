@@ -1,6 +1,6 @@
 stages:
   - bundle
-  # - test
+  - test
   - build
   - production
   - deploy
@@ -22,13 +22,12 @@ bundle:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
-    - rm -rf yarn.lock
     - yarn
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    policy: pull-push
-    paths:
-      - node_modules/
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   policy: pull-push
+  #   paths:
+  #     - node_modules/
   artifacts:
     paths:
       - .env
@@ -37,25 +36,25 @@ bundle:
       - node_modules/
     expire_in: 12 hours
 
-# test:
-#   image: node:12
-#   stage: test
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
-#     policy: pull
-#     paths:
-#       - node_modules/
-#   script:
-#     - yarn test -u
+test:
+  image: node:12
+  stage: test
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   policy: pull
+  #   paths:
+  #     - node_modules/
+  script:
+    - yarn test -u
 
 build:
   image: node:12
   stage: build
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    policy: pull
-    paths:
-      - node_modules/
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   policy: pull
+  #   paths:
+  #     - node_modules/
   script:
     - yarn build
   artifacts:
@@ -67,11 +66,11 @@ build:
 production:
   stage: production
   image: docker:latest
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    policy: pull
-    paths:
-      - node_modules/
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   policy: pull
+  #   paths:
+  #     - node_modules/
   script:
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
@@ -79,11 +78,11 @@ production:
 deploy:
   stage: deploy
   image: dtzar/helm-kubectl
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    policy: pull
-    paths:
-      - node_modules/
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   policy: pull
+  #   paths:
+  #     - node_modules/
   before_script:
     - helm init
   script:
