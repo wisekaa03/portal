@@ -4,9 +4,10 @@ WORKDIR /app
 
 COPY . ./
 
-RUN yarn
-RUN yarn jwt:cert
-RUN yarn build
+# TODO: when production, turn off comments
+# RUN yarn
+# RUN yarn jwt:cert
+# RUN yarn build
 
 EXPOSE 4000
 

@@ -6,7 +6,7 @@ stages:
   - deploy
 
 variables:
-  KUBECONFIG: helm/kubelet.conf
+  # KUBECONFIG: helm/kubelet.conf
   PRODUCTION_NAMESPACE: default
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
@@ -68,9 +68,9 @@ production:
     paths:
       - node_modules/
   script:
-    - DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
     - env
-    - test DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
+    - export DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
+    - test $DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
     - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
     - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
 
@@ -83,7 +83,7 @@ deploy:
     paths:
       - node_modules/
   before_script:
-    - cp "${KUBECONFIG}" "${KUBECONFIG}"
+    # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init --client-only
     - kubectl get pods --all-namespaces
   script:
