@@ -84,7 +84,7 @@ deploy:
       - node_modules/
   before_script:
     # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
-    - helm init --client-only
+    - helm init
     # - cat /etc/resolv.conf
     # - mkdir $HOME/.kube
     # - cp -i "${KUBECONFIG}" $HOME/.kube/config
@@ -92,4 +92,4 @@ deploy:
     # - cat $HOME/.kube/config
     # - kubectl get pods --all-namespaces --v=5
   script:
-    - helm install --tiller-namespace=gitlab-managed-apps --name=kngk-portal --debug helm/kngk-portal
+    - helm install --name=kngk-portal --debug helm/kngk-portal
