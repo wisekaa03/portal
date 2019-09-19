@@ -1,11 +1,11 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.1.124",
+  "version": "4.1.125",
   "scripts": {
     "clean": "rimraf .next .nest",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
-    "jwt:cert": "(! test -f jwt.public.pem || ! test -f jwt.private.pem) && openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost' || echo 'JWT deployed'",
+    "jwt:cert": "(! test -f jwt.public.pem || ! test -f jwt.private.pem) && openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost' && echo 'JWT deployed !' || echo 'JWT already placed...'",
     "dev": "yarn clean && nodemon --inspect server/main.ts",
     "build": "yarn clean && NODE_ENV=production tsc -P tsconfig.server.json && cp -r static .nest && next build",
     "start": "NODE_ENV=production node .nest/main.js",
