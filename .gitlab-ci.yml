@@ -86,6 +86,6 @@ deploy:
     # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init --client-only
     - cat /etc/resolv.conf
-    - kubectl get pods --all-namespaces
+    - kubectl get pods --all-namespaces --v=5
   script:
     - helm install --tiller-namespace=gitlab-managed-apps --name=kngk-portal --debug helm/kngk-portal
