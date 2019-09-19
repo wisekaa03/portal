@@ -25,7 +25,6 @@ bundle:
     - yarn
   cache:
     key: ${CI_COMMIT_REF_SLUG}
-    policy: pull-push
     paths:
       - node_modules/
   artifacts:
@@ -40,7 +39,6 @@ bundle:
 #   stage: test
 #   cache:
 #     key: ${CI_COMMIT_REF_SLUG}
-#     policy: pull
 #     paths:
 #       - node_modules/
 #   before_script:
@@ -53,7 +51,6 @@ build:
   stage: build
   cache:
     key: ${CI_COMMIT_REF_SLUG}
-    policy: pull
     paths:
       - node_modules/
   before_script:
@@ -71,7 +68,6 @@ production:
   image: docker:latest
   cache:
     key: ${CI_COMMIT_REF_SLUG}
-    policy: pull
     paths:
       - node_modules/
   script:
@@ -83,7 +79,6 @@ deploy:
   image: dtzar/helm-kubectl
   cache:
     key: ${CI_COMMIT_REF_SLUG}
-    policy: pull
     paths:
       - node_modules/
   before_script:
