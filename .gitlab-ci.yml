@@ -85,11 +85,11 @@ deploy:
   before_script:
     # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init --client-only
-    - cat /etc/resolv.conf
-    - mkdir $HOME/.kube
-    - cp -i "${KUBECONFIG}" $HOME/.kube/config
-    - chown $(id -u):$(id -g) $HOME/.kube/config
-    - cat $HOME/.kube/config
-    - kubectl get pods --all-namespaces --v=5
+    # - cat /etc/resolv.conf
+    # - mkdir $HOME/.kube
+    # - cp -i "${KUBECONFIG}" $HOME/.kube/config
+    # - chown $(id -u):$(id -g) $HOME/.kube/config
+    # - cat $HOME/.kube/config
+    # - kubectl get pods --all-namespaces --v=5
   script:
     - helm install --tiller-namespace=gitlab-managed-apps --name=kngk-portal --debug helm/kngk-portal
