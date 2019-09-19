@@ -2,7 +2,7 @@
 
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'eslint-comments', 'jest', 'promise', 'unicorn', 'prettier'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'eslint-comments', 'jest', 'promise', 'prettier'],
   settings: {
     'react': {
       version: 'detect',
@@ -30,7 +30,6 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'plugin:promise/recommended',
-    'plugin:unicorn/recommended',
     'prettier',
     'prettier/@typescript-eslint',
     'prettier/babel',

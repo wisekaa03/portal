@@ -22,9 +22,10 @@ bundle:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
+    - rm -rf yarn.lock
     - yarn
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}
     policy: pull-push
     paths:
       - node_modules/
@@ -51,7 +52,7 @@ build:
   image: node:12
   stage: build
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}
     policy: pull
     paths:
       - node_modules/
@@ -67,7 +68,7 @@ production:
   stage: production
   image: docker:latest
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}
     policy: pull
     paths:
       - node_modules/
@@ -79,7 +80,7 @@ deploy:
   stage: deploy
   image: dtzar/helm-kubectl
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-${CI_PROJECT_PATH_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}
     policy: pull
     paths:
       - node_modules/

@@ -4,7 +4,7 @@
 import { Res, Req, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import next from 'next';
-import Server from 'next-server/dist/server/next-server';
+import Server from 'next/dist/next-server/server/next-server';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
