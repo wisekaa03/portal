@@ -9,4 +9,3 @@ metadata:
     app_version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 data:
-  myvalue: "Hello World"

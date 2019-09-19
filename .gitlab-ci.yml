@@ -10,7 +10,10 @@ variables:
   PRODUCTION_NAMESPACE: default
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_DRIVER: overlay2
-  PREFIX_NAME: kngk-
+  RELEASE_NAME: kngk-${CI_PROJECT_NAME}
+  PRODUCTION_NAMESPACE: production
+  CONTAINER_IMAGE: ${RELEASE_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
+  CONTAINER_IMAGE_LATEST: ${RELEASE_NAME}:latest
 
 bundle:
   image: node:12
@@ -68,11 +71,10 @@ production:
     paths:
       - node_modules/
   script:
-    - env
-    - export DOCKER_IMAGES=`docker images ${PREFIX_NAME}${CI_PROJECT_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
-    - test $DOCKER_IMAGES -eq 1 && docker image rm ${PREFIX_NAME}${CI_PROJECT_NAME}:latest
-    - docker build --cache-from ${PREFIX_NAME}${CI_PROJECT_NAME}:latest --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:$CI_COMMIT_SHA --tag ${PREFIX_NAME}${CI_PROJECT_NAME}:latest .
-    - docker images ${PREFIX_NAME}${CI_PROJECT_NAME}
+    # - export DOCKER_IMAGES=`docker images ${RELEASE_NAME} | awk '{if(a>0){b=1};a++} END{if(b==1){print 1}else{print 0}}'`
+    # - test $DOCKER_IMAGES -eq 1 && docker image rm ${RELEASE_NAME}
+    - docker build --tag ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
 
 deploy:
   stage: deploy
@@ -83,13 +85,8 @@ deploy:
     paths:
       - node_modules/
   before_script:
-    # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init
-    # - cat /etc/resolv.conf
-    # - mkdir $HOME/.kube
-    # - cp -i "${KUBECONFIG}" $HOME/.kube/config
-    # - chown $(id -u):$(id -g) $HOME/.kube/config
-    # - cat $HOME/.kube/config
-    # - kubectl get pods --all-namespaces --v=5
   script:
-    - helm install --replace --namespace=KNGK-productiuon --name=kngk-portal --debug helm/kngk-portal
+    - export DEPLOYS=$(helm ls | grep ${RELEASE_NAME} | wc -l)
+    - if [ ${DEPLOYS} -eq 0 ]; then helm install --replace --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} --debug helm/kngk-portal; else helm upgrade --namespace=${PRODUCTION_NAMESPACE} --debug ${RELEASE_NAME} helm/kngk-portal; fi
+    
