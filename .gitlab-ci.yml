@@ -85,6 +85,7 @@ deploy:
   before_script:
     # - cp --remove-destination "${KUBECONFIG}" "${KUBECONFIG}"
     - helm init --client-only
+    - cat /etc/resolv.conf
     - nslookup kube-master1
     - kubectl get pods --all-namespaces
   script:
