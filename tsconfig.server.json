@@ -5,11 +5,8 @@
     "sourceMap": true,
     "noEmit": false,
     "outDir": ".nest/",
-    "baseUrl": ".",
-    "paths": {
-      "global": ["typings/global.d.ts"]
-    }
+    "baseUrl": "."
   },
-  "exclude": ["__tests__/**/*","server/**/*.spec.ts","server/**/*.test.ts"],
-  "include": ["server/**/*.ts"]
+  "exclude": ["__tests__/**/*", "server/**/*.spec.ts", "server/**/*.test.ts"],
+  "include": ["typings/global.d.ts", "server/**/*.ts"]
 }

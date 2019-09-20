@@ -23,6 +23,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "exclude": ["__tests__/**/*","**/*.spec.ts","**/*.test.ts"],
+  "exclude": ["__tests__/**/*", "**/*.spec.ts", "**/*.test.ts"],
   "include": ["**/*.ts"]
 }

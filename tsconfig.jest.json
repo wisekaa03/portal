@@ -10,5 +10,5 @@
     "sourceMap": true,
     "target": "es5"
   },
-  "include": ["server/**/*.ts"]
+  "include": ["typings/global.d.ts", "server/**/*.ts"]
 }
