@@ -15,8 +15,14 @@ variables:
   CONTAINER_IMAGE: ${PREFIX}-${CI_PROJECT_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}-${CI_PROJECT_NAME}:latest
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  untracked: true
+  paths:
+    - node_modules/
+
 bundle:
-  image: node:10
+  image: node:12
   stage: bundle
   script:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
@@ -25,10 +31,6 @@ bundle:
     - ls -la
     - yarn
     - ls -la
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
   artifacts:
     paths:
       - .env
@@ -37,12 +39,8 @@ bundle:
     expire_in: 3 hours
 
 # test:
-#   image: node:10
+#   image: node:12
 #   stage: test
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}
-#     paths:
-#       - node_modules/
 #   before_script:
 #     - ls -la
 #     - yarn
@@ -51,12 +49,8 @@ bundle:
 #     - yarn test -u
 
 build:
-  image: node:10
+  image: node:12
   stage: build
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
   before_script:
     - ls -la
     - yarn
@@ -72,10 +66,6 @@ build:
 production:
   stage: production
   image: docker:latest
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
   script:
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
@@ -83,10 +73,6 @@ production:
 deploy:
   stage: deploy
   image: dtzar/helm-kubectl
-  # cache:
-  #   key: ${CI_COMMIT_REF_SLUG}
-  #   paths:
-  #     - node_modules/
   before_script:
     - helm init
   script:
