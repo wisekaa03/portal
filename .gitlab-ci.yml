@@ -7,8 +7,8 @@ stages:
 
 variables:
   PRODUCTION_NAMESPACE: default
-  DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_DRIVER: overlay2
+  # DOCKER_TLS_CERTDIR: "/certs"
+  # DOCKER_DRIVER: overlay2
   PRODUCTION_NAMESPACE: production
   PREFIX: kngk
   RELEASE_NAME: ${PREFIX}-${CI_PROJECT_NAME}
