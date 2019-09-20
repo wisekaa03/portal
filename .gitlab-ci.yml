@@ -29,6 +29,7 @@ bundle:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
     - ls -la
+    - rm -rf node_modules/
     - yarn
     - ls -la
     - ls -la node_modules/@types
