@@ -25,11 +25,13 @@ bundle:
   image: node:12
   stage: bundle
   before_script:
+    - df -h
     - ls -la
     - rm -rf yarn.lock
     - yarn
     - ls -la node_modules/
     - ls -la node_modules/@types
+    - df -h
   script:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
@@ -45,9 +47,11 @@ test:
   image: node:12
   stage: test
   before_script:
+    - df -h
     - ls -la
     - yarn
     - ls -la
+    - df -h
   script:
     - yarn test -u
 
@@ -55,9 +59,11 @@ build:
   image: node:12
   stage: build
   before_script:
+    - df -h
     - ls -la
     - yarn
     - ls -la
+    - df -h
   script:
     - yarn build
   artifacts:
