@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.1.137",
+  "version": "4.1.138",
   "scripts": {
     "clean": "rimraf .next .nest",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
