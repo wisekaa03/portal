@@ -7,7 +7,7 @@ COPY . ./
 # TODO: when production, turn off comments
 RUN yarn
 # RUN yarn jwt:cert
-# RUN yarn build
+RUN yarn build
 
 EXPOSE 4000
 
