@@ -130,7 +130,7 @@ export class UserService {
    */
   async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO | null> {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     let user = await this.userRepository.findOne({ where: { username } });
     user = await this.userLdapLogin({ username, password, user });
@@ -150,7 +150,7 @@ export class UserService {
    */
   async register(data: UserRegisterDTO): Promise<UserResponseDTO | null> {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     // #region Check if a user exists
     const { username } = data;

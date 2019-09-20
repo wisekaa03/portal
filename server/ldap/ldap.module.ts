@@ -7,11 +7,7 @@ import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
 import { LDAP_MODULE_OPTIONS } from './ldap.constants';
 import { createLdapProvider } from './ldap.providers';
 import { LdapService } from './ldap.service';
-import {
-  LdapModuleOptions,
-  LdapModuleAsyncOptions,
-  LdapOptionsFactory,
-} from './interfaces/ldap.interface';
+import { LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './interfaces/ldap.interface';
 // #endregion
 
 @Module({
@@ -34,9 +30,7 @@ export class LdapModule {
     };
   }
 
-  private static createAsyncProviders(
-    options: LdapModuleAsyncOptions,
-  ): Provider[] {
+  private static createAsyncProviders(options: LdapModuleAsyncOptions): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
@@ -49,9 +43,7 @@ export class LdapModule {
     ];
   }
 
-  private static createAsyncOptionsProvider(
-    options: LdapModuleAsyncOptions,
-  ): Provider {
+  private static createAsyncOptionsProvider(options: LdapModuleAsyncOptions): Provider {
     if (options.useFactory) {
       return {
         provide: LDAP_MODULE_OPTIONS,
@@ -61,12 +53,8 @@ export class LdapModule {
     }
     return {
       provide: LDAP_MODULE_OPTIONS,
-      useFactory: async (optionsFactory: LdapOptionsFactory) =>
-        optionsFactory.createLdapOptions(),
-      inject: [
-        (options.useExisting as Type<LdapOptionsFactory>) ||
-          (options.useClass as Type<LdapOptionsFactory>),
-      ],
+      useFactory: async (optionsFactory: LdapOptionsFactory) => optionsFactory.createLdapOptions(),
+      inject: [(options.useExisting as Type<LdapOptionsFactory>) || (options.useClass as Type<LdapOptionsFactory>)],
     };
   }
 }
