@@ -17,9 +17,9 @@ variables:
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
-  untracked: true
-  # paths:
-  #   - node_modules/
+  # untracked: true
+  paths:
+    - node_modules/
 
 bundle:
   image: node:12
