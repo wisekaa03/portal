@@ -24,15 +24,16 @@ cache:
 bundle:
   image: node:12
   stage: bundle
+  before_script:
+    - ls -la
+    # - rm -rf node_modules/
+    - yarn
+    - ls -la node_modules/
+    - ls -la node_modules/@types
   script:
     - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
-    - ls -la
-    - rm -rf node_modules/
-    - yarn
-    - ls -la node_modules/
-    - ls -la node_modules/@types
   artifacts:
     paths:
       - .env
@@ -40,15 +41,15 @@ bundle:
       - jwt.private.pem
     expire_in: 3 hours
 
-# test:
-#   image: node:12
-#   stage: test
-#   before_script:
-#     - ls -la
-#     - yarn
-#     - ls -la
-#   script:
-#     - yarn test -u
+test:
+  image: node:12
+  stage: test
+  before_script:
+    - ls -la
+    - yarn
+    - ls -la
+  script:
+    - yarn test -u
 
 build:
   image: node:12
