@@ -17,7 +17,7 @@ variables:
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
-  # untracked: true
+  untracked: true
   paths:
     - node_modules/
 
@@ -27,7 +27,6 @@ bundle:
   before_script:
     - df -h
     - ls -la
-    - rm -rf yarn.lock
     - yarn
     - ls -la node_modules/
     - ls -la node_modules/@types
