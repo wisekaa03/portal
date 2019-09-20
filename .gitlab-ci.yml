@@ -26,7 +26,7 @@ bundle:
   stage: bundle
   before_script:
     - ls -la
-    # - rm -rf node_modules/
+    - rm -rf yarn.lock
     - yarn
     - ls -la node_modules/
     - ls -la node_modules/@types
