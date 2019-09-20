@@ -32,6 +32,7 @@ bundle:
     - rm -rf node_modules/
     - yarn
     - ls -la
+    - ls -la node_modules/
     - ls -la node_modules/@types
   artifacts:
     paths:
