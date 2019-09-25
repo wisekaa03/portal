@@ -72,6 +72,7 @@ production:
     - docker images
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
+    - docker images
 
 deploy:
   image: dtzar/helm-kubectl
