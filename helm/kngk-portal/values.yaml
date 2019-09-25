@@ -19,6 +19,9 @@ service:
   port: 80
   nodePort: 30300
 
+tls:
+  enabled: false
+
 ingress:
   enabled: false
   annotations: {}
