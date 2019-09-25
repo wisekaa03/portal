@@ -10,6 +10,6 @@ LABEL version="4"
 
 COPY . ./
 
-EXPOSE 80
+EXPOSE 4000
 
 CMD ["yarn", "start"]
