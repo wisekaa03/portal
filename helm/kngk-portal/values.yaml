@@ -14,8 +14,10 @@ nameOverride: "kngk-portal"
 fullnameOverride: "kngk-portal"
 
 service:
-  type: ClusterIP
-  port: 4000
+  # type: ClusterIP
+  type: NodePort
+  port: 80
+  nodePort: 30300
 
 ingress:
   enabled: false
@@ -31,6 +33,21 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## Liveness and Readiness probe values.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+livenessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 30
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 15
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -41,7 +58,7 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128Mi
+  #   memory: 1024Mi
 
 nodeSelector: {}
 
