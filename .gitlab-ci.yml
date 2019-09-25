@@ -32,34 +32,21 @@ bundle:
   script:
     - df -h
     - ls -la
-    - npm install
-    - ls -la node_modules/
-    - ls -la node_modules/@types
+    - yarn install --verbose --production=false
+    - ls -la
     - df -h
 
 test:
   image: node:12
   stage: test
-  before_script:
-    - df -h
-    - ls -la
-    - npm install
-    - ls -la
-    - df -h
   script:
-    - npm run test -u
+    - yarn test -u
 
 build:
   image: node:12
   stage: build
-  before_script:
-    - df -h
-    - ls -la
-    - npm install
-    - ls -la
-    - df -h
   script:
-    - npm run build
+    - yarn build
   artifacts:
     paths:
       - .nest/

@@ -1,17 +1,20 @@
 FROM node:12
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package*.json ./
-COPY yarn.lock ./
-COPY jwt.private.pem ./
-COPY jwt.public.pem ./
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+
+COPY package*.json /usr/src/app
+COPY yarn.lock /usr/src/app
+COPY jwt.private.pem /usr/src/app
+COPY jwt.public.pem /usr/src/app
 
 # TODO: when production, turn off comments
-# RUN yarn
+RUN yarn install --verbose --production=true
 # RUN yarn jwt:cert
 
-COPY . ./
+COPY . /usr/src/app
 
 RUN yarn build
 
