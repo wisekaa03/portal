@@ -16,6 +16,7 @@ ecosystem.config.js
 jest.config.js
 jest.setup.ts
 
+loader.html
 README.md
 LICENSE
 
@@ -25,6 +26,7 @@ yarn.lock
 
 npm-debug.log
 Dockerfile*
+.dockerignore
 docker-compose*
 .vscode
 .editorconfig
@@ -41,3 +43,4 @@ pages/
 server/
 static/
 target/
+typings/
