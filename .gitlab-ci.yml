@@ -28,12 +28,16 @@ before_script:
 bundle:
   image: node:12
   stage: bundle
+  cache: &global_cache
+    policy: pull-push
   script:
     - yarn install --production=false
 
 test:
   image: node:12
   stage: test
+  cache: &global_cache
+    policy: pull
   script:
     - yarn test -u
 
@@ -51,8 +55,8 @@ build:
     expire_in: 3 hours
 
 production:
-  stage: production
   image: docker:latest
+  stage: production
   cache: &global_cache
     policy: pull
   script:
@@ -60,8 +64,8 @@ production:
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
 
 deploy:
-  stage: deploy
   image: dtzar/helm-kubectl
+  stage: deploy
   cache: &global_cache
     policy: pull
   before_script:
