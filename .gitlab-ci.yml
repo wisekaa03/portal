@@ -69,10 +69,10 @@ production:
       - node_modules/
     policy: pull
   script:
-    - docker images
+    - docker images ${RELEASE_NAME}
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
-    - docker images
+    - docker images ${RELEASE_NAME}
 
 deploy:
   image: dtzar/helm-kubectl
