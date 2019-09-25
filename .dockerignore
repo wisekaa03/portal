@@ -17,6 +17,13 @@ jest.config.js
 jest.setup.ts
 ecosystem.config.js
 helm
-node_modules
-.nest
-.next
+
+static
+server
+pages
+lib
+components
+
+# node_modules
+# .nest
+# .next

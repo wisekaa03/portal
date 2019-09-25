@@ -13,7 +13,6 @@ COPY yarn.lock ./
 COPY .env ./
 COPY jwt.private.pem ./
 COPY jwt.public.pem ./
-RUN ls -la
 COPY node_modules/ ./
 COPY .next/ ./
 COPY .nest/ ./
