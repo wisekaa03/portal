@@ -10,7 +10,7 @@ COPY yarn.lock /usr/src/app/
 COPY .env /usr/src/app/
 COPY jwt.private.pem /usr/src/app/
 COPY jwt.public.pem /usr/src/app/
-COPY node_modules/ /usr/src/app/
+# COPY node_modules/ /usr/src/app/
 COPY .next/ /usr/src/app/
 COPY .nest/ /usr/src/app/
 COPY . /usr/src/app

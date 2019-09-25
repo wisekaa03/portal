@@ -27,6 +27,7 @@ bundle:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
       - node_modules/
+    untracked: true
     policy: pull-push
   script:
     - yarn install --production=false
