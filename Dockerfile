@@ -6,7 +6,7 @@ ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
 COPY package.json /usr/src/app/
-COPY yarn.lock /usr/src/app/
+# COPY yarn.lock /usr/src/app/
 COPY .env /usr/src/app/
 COPY jwt.private.pem /usr/src/app/
 COPY jwt.public.pem /usr/src/app/

@@ -40,6 +40,8 @@ test:
 build:
   image: node:12
   stage: build
+  cache: &global_cache
+    policy: pull
   script:
     - yarn build
   artifacts:
@@ -51,6 +53,8 @@ build:
 production:
   stage: production
   image: docker:latest
+  cache: &global_cache
+    policy: pull
   script:
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
@@ -58,6 +62,8 @@ production:
 deploy:
   stage: deploy
   image: dtzar/helm-kubectl
+  cache: &global_cache
+    policy: pull
   before_script:
     - helm init
   script:
