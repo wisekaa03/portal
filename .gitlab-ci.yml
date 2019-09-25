@@ -36,7 +36,7 @@ build:
   image: node:12
   stage: build
   before_script:
-    - yarn install --production=false
+    - yarn install
   script:
     - yarn build
   artifacts:
