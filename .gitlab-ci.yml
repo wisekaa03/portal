@@ -24,19 +24,21 @@ before_script:
   - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
   - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
 
+bundle:
+  image: node:12
+  stage: bundle
+  script:
+    - yarn install --production=false
+
 test:
   image: node:12
   stage: test
-  before_script:
-    - yarn install --production=false
   script:
     - yarn test -u
 
 build:
   image: node:12
   stage: build
-  before_script:
-    - yarn install
   script:
     - yarn build
   artifacts:
