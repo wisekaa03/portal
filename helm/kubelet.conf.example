@@ -16,5 +16,5 @@ preferences: {}
 users:
 - name: default-auth
   user:
-    client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
-    client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
+    client-certificate: <CERTIFICATE>
+    client-key: <CERTIFICATE-KEY>
