@@ -77,13 +77,9 @@ production:
 deploy:
   image: dtzar/helm-kubectl
   stage: deploy
-  # cache:
-  #   key: "${CI_COMMIT_REF_SLUG}"
-  #   paths:
-  #     - node_modules/
-  #   policy: pull
-  before_script:
-    - helm init --client-only
+  dependencies: []
   script:
+    - helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
+    - if [ ! ${DEPLOYS} -eq 0 ]; then helm del --purge ${RELEASE_NAME}; fi
     - if [ ${DEPLOYS} -eq 0 ]; then helm install --replace --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} --debug helm/kngk-portal; else helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} --debug ${RELEASE_NAME} helm/kngk-portal; fi
