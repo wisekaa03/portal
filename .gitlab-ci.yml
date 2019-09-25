@@ -1,5 +1,4 @@
 stages:
-  - bundle
   - test
   - build
   - production
@@ -25,21 +24,19 @@ before_script:
   - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
   - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
 
-bundle:
-  image: node:12
-  stage: bundle
-  script:
-    - yarn install --production=false
-
 test:
   image: node:12
   stage: test
+  before_script:
+    - yarn install --production=false
   script:
     - yarn test -u
 
 build:
   image: node:12
   stage: build
+  before_script:
+    - yarn install --production=false
   script:
     - yarn build
   artifacts:
@@ -63,4 +60,3 @@ deploy:
   script:
     - export DEPLOYS=$(helm ls | grep ${RELEASE_NAME} | wc -l)
     - if [ ${DEPLOYS} -eq 0 ]; then helm install --replace --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} --debug helm/kngk-portal; else helm upgrade --namespace=${PRODUCTION_NAMESPACE} --debug ${RELEASE_NAME} helm/kngk-portal; fi
-    
