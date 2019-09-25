@@ -8,12 +8,16 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
       {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
       protocol: TCP
       name: http
+  {{- with .Values.service.externalIPs }}
+  externalIPs:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "portal.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
