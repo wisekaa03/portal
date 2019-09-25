@@ -15,11 +15,6 @@ variables:
   CONTAINER_IMAGE: ${PREFIX}-${CI_PROJECT_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}-${CI_PROJECT_NAME}:latest
 
-cache:
-  key: "${CI_COMMIT_REF_SLUG}"
-  paths:
-    - node_modules/
-
 before_script:
   - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
   - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
@@ -28,7 +23,10 @@ before_script:
 bundle:
   image: node:12
   stage: bundle
-  cache: &global_cache
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
     policy: pull-push
   script:
     - yarn install --production=false
@@ -36,7 +34,10 @@ bundle:
 test:
   image: node:12
   stage: test
-  cache: &global_cache
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
     policy: pull
   script:
     - yarn test -u
@@ -44,7 +45,10 @@ test:
 build:
   image: node:12
   stage: build
-  cache: &global_cache
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
     policy: pull
   script:
     - yarn build
@@ -57,7 +61,10 @@ build:
 production:
   image: docker:latest
   stage: production
-  cache: &global_cache
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
     policy: pull
   script:
     - docker build --tag ${CONTAINER_IMAGE} .
@@ -66,7 +73,10 @@ production:
 deploy:
   image: dtzar/helm-kubectl
   stage: deploy
-  cache: &global_cache
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
     policy: pull
   before_script:
     - helm init
