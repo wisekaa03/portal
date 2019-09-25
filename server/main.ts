@@ -32,7 +32,6 @@ const nestjsOptions: NestApplicationOptions = {
 
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region create NestJS server
-  // eslint-disable-next-line prettier/prettier
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   app.useLogger(app.get(AppLogger));
   // #endregion
