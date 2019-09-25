@@ -1,29 +1,43 @@
 .git
 .gitignore
+
 .eslintignore
+.eslintrc.js
+
+.gitlab-ci.yml
+
 .prettierignore
 prettier.config.js
+
+apollo.client.js
+babel.config.js
+ecosystem.config.js
+
+jest.config.js
+jest.setup.ts
+
+README.md
+LICENSE
+
+nodemon.json
+
+yarn.lock
+
 npm-debug.log
 Dockerfile*
 docker-compose*
-README.md
-LICENSE
-__tests__
-__mocks__
 .vscode
-target
 .editorconfig
-jest.config.js
-jest.setup.ts
-ecosystem.config.js
-helm
 
-static
-server
-pages
-lib
-components
+.env.example
+.env.test
 
-# node_modules
-# .nest
-# .next
+__mocks__/
+__tests__/
+components/
+helm/
+lib/
+pages/
+server/
+static/
+target/
