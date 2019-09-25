@@ -31,7 +31,6 @@ bundle:
     policy: pull-push
   script:
     - yarn install --production=false
-    - npx next telemetry --disable
 
 test:
   image: node:12
@@ -53,6 +52,7 @@ build:
       - node_modules/
     policy: pull
   script:
+    - npx next telemetry --disable
     - yarn build
   artifacts:
     paths:
