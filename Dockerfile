@@ -14,7 +14,7 @@ COPY node_modules/ /usr/src/app/
 COPY .next/ /usr/src/app/
 COPY .nest/ /usr/src/app/
 # TODO: when production, turn off
-RUN yarn install --production=true
+# RUN yarn install
 
 COPY . /usr/src/app
 # RUN yarn build

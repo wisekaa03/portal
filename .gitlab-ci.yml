@@ -15,7 +15,7 @@ variables:
   CONTAINER_IMAGE_LATEST: ${PREFIX}-${CI_PROJECT_NAME}:latest
 
 cache:
-  key: ${CI_COMMIT_REF_SLUG}
+  key: "${CI_COMMIT_REF_SLUG}"
   paths:
     - node_modules/
 
