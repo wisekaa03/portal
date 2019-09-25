@@ -30,11 +30,7 @@ bundle:
   image: node:12
   stage: bundle
   script:
-    - df -h
-    - ls -la
     - yarn install --production=false
-    - ls -la
-    - df -h
 
 test:
   image: node:12
