@@ -10,7 +10,7 @@
 prettier.config.js
 
 apollo.client.js
-babel.config.js
+# babel.config.js
 ecosystem.config.js
 
 jest.config.js
@@ -21,6 +21,7 @@ README.md
 LICENSE
 
 nodemon.json
+# next-env.d.ts
 
 yarn.lock
 
@@ -36,11 +37,11 @@ docker-compose*
 
 __mocks__/
 __tests__/
-components/
-helm/
-lib/
-pages/
-server/
-static/
-target/
-typings/
+# components/
+# helm/
+# lib/
+# pages/
+# server/
+# static/
+# target/
+# typings/

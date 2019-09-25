@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.2.27",
+  "version": "4.2.28",
   "scripts": {
     "clean": "rimraf .next .nest",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
@@ -109,7 +109,7 @@
     "dotenv-webpack": "^1.7.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "graphql": "^14.5.7",
+    "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "graphql-tag-pluck": "^0.8.5",
     "graphql-tools": "^4.0.5",
