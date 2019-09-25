@@ -69,6 +69,7 @@ production:
       - node_modules/
     policy: pull
   script:
+    - ls -la
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
 
