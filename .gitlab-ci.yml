@@ -47,7 +47,7 @@ test:
     - ls -la
     - df -h
   script:
-    - yarn test -u
+    - npm run test -u
 
 build:
   image: node:12
@@ -59,7 +59,7 @@ build:
     - ls -la
     - df -h
   script:
-    - yarn build
+    - npm run build
   artifacts:
     paths:
       - .nest/
