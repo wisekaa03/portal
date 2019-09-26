@@ -4,7 +4,6 @@
 // import { IncomingMessage } from 'http';
 import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
 import responseTime from 'response-time';
@@ -12,6 +11,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import morgan from 'morgan';
 // #endregion
 // #region Imports Local
 import { sessionRedis } from './shared/session-redis';
@@ -21,11 +21,12 @@ import { AppLogger } from './logger/logger.service';
 // #endregion
 
 // #region NestJS options
+const logger = new AppLogger();
 const nestjsOptions: NestApplicationOptions = {
   cors: {
     credentials: true,
   },
-  logger: new Logger('Portal', true),
+  logger,
   // httpsOptions: {},
 };
 // #endregion
@@ -34,6 +35,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region create NestJS server
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   app.useLogger(app.get(AppLogger));
+  // Morgan: request/response logging
+  app.use(morgan('dev'));
   // #endregion
 
   // #region X-Response-Time
@@ -67,7 +70,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region start server
   await app.listen(configService.get('PORT'), configService.get('HOST'));
-  Logger.log(`Server running on ${configService.get('HOST')}:${configService.get('PORT')}`, 'Bootstrap');
+  logger.log(`Server running on ${configService.get('HOST')}:${configService.get('PORT')}`, 'Bootstrap');
   // #endregion
 }
 
