@@ -13,17 +13,17 @@ apollo.client.js
 # babel.config.js
 ecosystem.config.js
 
-jest.config.js
-jest.setup.ts
+# jest.config.js
+# jest.setup.ts
 
 loader.html
 README.md
 LICENSE
 
-nodemon.json
+# nodemon.json
 # next-env.d.ts
 
-yarn.lock
+# yarn.lock
 
 npm-debug.log
 Dockerfile*
@@ -35,13 +35,13 @@ docker-compose*
 .env.example
 .env.test
 
-__mocks__/
-__tests__/
-# components/
-# helm/
-# lib/
-# pages/
-# server/
-# static/
-# target/
-# typings/
+# __mocks__/
+# __tests__/
+components/
+helm/
+lib/
+pages/
+server/
+static/
+target/
+typings/
