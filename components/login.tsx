@@ -1,18 +1,19 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import {
+  Typography,
+  Button,
+  Checkbox,
+  Card,
+  CardContent,
+  FormControl,
+  FormControlLabel,
+  TextField,
+} from '@material-ui/core';
 
 import { MutationFunction } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
@@ -27,22 +28,23 @@ import { getStorage, setStorage } from '../lib/session-storage';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     '@global': {
-      'html': {
+      html: {
         height: '100%',
         width: '100%',
       },
-      'body': {
-        height: '100%',
-        width: '100%',
-        backgroundImage: 'url("/assets/svg/background.svg")',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        backgroundPosition: 'bottom left',
-      },
-      'body > div': {
-        height: '100%',
-        width: '100%',
+      body: {
+        'height': '100%',
+        'width': '100%',
+        'backgroundImage': 'url("/assets/svg/background.svg")',
+        'backgroundSize': 'cover',
+        'backgroundRepeat': 'no-repeat',
+        'backgroundAttachment': 'fixed',
+        'backgroundPosition': 'bottom left',
+
+        '& > div': {
+          height: '100%',
+          width: '100%',
+        },
       },
     },
     'root': {
@@ -67,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     'container': {
       width: 600,
+      maxWidth: '95vw',
       margin: `${theme.spacing(2)}px auto`,
     },
     'card': {
@@ -80,6 +83,7 @@ const useStyles = makeStyles((theme: Theme) =>
     'typoAuthorization': {
       color: '#2c4373',
       textAlign: 'left',
+      marginBottom: theme.spacing(1),
     },
     'labelForFormControl': {
       borderColor: 'rgba(44, 67, 115, 0.4)',
@@ -89,23 +93,29 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     'formControl': {
-      minWidth: 320,
       margin: `${theme.spacing(1)}px 0`,
+
+      [theme.breakpoints.up('sm')]: {
+        minWidth: 320,
+      },
     },
     'submitButtonContainer': {
-      textAlign: 'left',
+      width: '100%',
     },
     'submitButton': {
-      borderRadius: 24,
-      marginTop: `${theme.spacing(1)}px`,
-    },
-    'submitButton:disabled': {
-      color: '#2c4373',
-      borderRadius: 24,
-      marginTop: `${theme.spacing(1)}px`,
-    },
-    'submitButton:hover': {
-      color: '#2c4373',
+      'borderRadius': 24,
+      'width': 'fit-content',
+      'marginTop': `${theme.spacing(1)}px`,
+
+      '&:disabled': {
+        color: '#2c4373',
+        borderRadius: 24,
+        marginTop: `${theme.spacing(1)}px`,
+      },
+
+      '&:hover': {
+        color: '#2c4373',
+      },
     },
   }),
 );
@@ -116,35 +126,42 @@ interface LoginProps {
   login: MutationFunction;
 }
 
+interface State {
+  save: boolean;
+  name: string;
+  pass: string;
+}
+
 export const LoginComponent = (props: LoginProps): React.ReactElement => {
   const { error, loading, login } = props;
 
-  const classes = useStyles({});
+  const classes: any = useStyles({});
 
-  const [saveChecked, setSave] = useState(getStorage('user.save') === 'true');
-  const [username, setUsername] = useState(saveChecked ? getStorage('user.name') : '');
-  const [usernameLabelWidth, setUsernameLabelWidth] = useState(0);
-  const [password, setPassword] = useState(saveChecked ? getStorage('user.pass') : '');
-  const [passwordLabelWidth, setPasswordLabelWidth] = useState(0);
+  const [values, setValues] = useState<State>({
+    save: false,
+    name: '',
+    pass: '',
+  });
 
-  const usernameLabelRef = useRef<HTMLLabelElement | any>({});
-  const passwordLabelRef = useRef<HTMLLabelElement | any>({});
-  const saveLabelRef = useRef<HTMLLabelElement | any>({});
-  useEffect(() => setUsernameLabelWidth(usernameLabelRef.current.offsetWidth), []);
-  useEffect(() => setPasswordLabelWidth(passwordLabelRef.current.offsetWidth), []);
+  const handleChange = (name: keyof State) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const el: EventTarget & HTMLInputElement = e.target;
+    const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
 
-  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setStorage('user.name', e.target.value);
-    setUsername(e.target.value);
+    setValues({ ...values, [name]: value });
+    setStorage(`user.${name}`, value.toString());
   };
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setStorage('user.pass', e.target.value);
-    setPassword(e.target.value);
-  };
-  const handleSaveChecked = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setStorage('user.save', e.target.checked.toString());
-    setSave(e.target.checked);
-  };
+
+  useEffect(() => {
+    const save: string = getStorage('user.save');
+
+    if (save === 'true') {
+      setValues({
+        save: true,
+        name: getStorage('user.name'),
+        pass: getStorage('user.pass'),
+      });
+    }
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -155,7 +172,13 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
         <form
           onSubmit={async (e: any): Promise<void> => {
             e.preventDefault();
-            login({ variables: { username, password } });
+
+            login({
+              variables: {
+                username: values.name,
+                password: values.pass,
+              },
+            });
           }}
           className={classes.container}
           autoComplete="off"
@@ -166,73 +189,44 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
               <Typography className={classes.typoAuthorization} variant="h4">
                 Авторизация
               </Typography>
-              <br />
-
               <FormControl className={classes.formControl} fullWidth variant="outlined">
-                <InputLabel
-                  htmlFor="username"
-                  className={classes.labelForFormControl}
-                  ref={usernameLabelRef}
-                  disabled={loading}
-                  // shrink={!!!username}
-                >
-                  Пользователь
-                </InputLabel>
-                <OutlinedInput
-                  id="username"
-                  name="username"
+                <TextField
                   type="username"
-                  value={username}
-                  onChange={handleUsername}
-                  labelWidth={usernameLabelWidth}
+                  value={values.name}
+                  onChange={handleChange('name')}
                   disabled={loading}
-                />
-              </FormControl>
-              <br />
-
-              <FormControl className={classes.formControl} fullWidth variant="outlined">
-                <InputLabel
-                  htmlFor="password"
+                  label="Пользователь"
+                  variant="outlined"
                   className={classes.labelForFormControl}
-                  ref={passwordLabelRef}
-                  disabled={loading}
-                  // shrink={!!!password}
-                >
-                  Пароль
-                </InputLabel>
-                <OutlinedInput
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={handlePassword}
-                  labelWidth={passwordLabelWidth}
-                  disabled={loading}
                 />
               </FormControl>
-              <br />
-
+              <FormControl className={classes.formControl} fullWidth variant="outlined">
+                <TextField
+                  type="password"
+                  value={values.pass}
+                  onChange={handleChange('pass')}
+                  disabled={loading}
+                  label="Пароль"
+                  variant="outlined"
+                  className={classes.labelForFormControl}
+                />
+              </FormControl>
               <FormControlLabel
                 className={classes.labelForCheckbox}
-                ref={saveLabelRef}
                 control={
                   <Checkbox
-                    checked={saveChecked}
-                    onChange={handleSaveChecked}
+                    checked={values.save}
+                    onChange={handleChange('save')}
                     value="save"
                     color="primary"
                     disabled={loading}
-                    inputRef={saveLabelRef}
                   />
                 }
                 label="Запомнить меня на этом компьютере"
               />
-
               {loading && <Loading />}
               {error && <GQLError error={error} />}
-              <br />
-
-              <div className={classes.submitButtonContainer}>
+              <FormControl className={classes.submitButtonContainer}>
                 <Button
                   className={classes.submitButton}
                   type="submit"
@@ -243,7 +237,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                 >
                   Вход
                 </Button>
-              </div>
+              </FormControl>
             </CardContent>
           </Card>
         </form>

@@ -31,61 +31,65 @@ const theme = createMuiTheme({
   shape: {
     borderRadius: 0,
   },
-  overrides: {
-    MuiOutlinedInput: {
-      root: {
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-          borderColor: 'rgba(44, 67, 115, 0.9)',
-        },
-      },
-      notchedOutline: {
-        'borderColor': 'rgba(44, 67, 115, 0.5)',
-        'borderWidth': 2,
-        '&$disabled': {
-          borderColor: 'rgba(0, 0, 0, 0.3)',
-        },
+});
+
+theme.overrides = {
+  MuiOutlinedInput: {
+    root: {
+      '&:hover $notchedOutline': {
+        borderColor: 'rgba(44, 67, 115, 0.9)',
       },
     },
-    MuiCheckbox: {
-      root: {
-        color: '#2c4373',
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        color: 'rgba(44, 67, 115, 0.7)',
-      },
-    },
-    MuiInputBase: {
-      root: {
-        borderColor: 'rgba(44, 67, 115, 0.7)',
-      },
-    },
-    MuiCard: {
-      root: {},
-    },
-    MuiCardContent: {
-      root: {
-        'padding': '8px 46px 8px 46px',
-        '&:last-child': {
-          paddingBottom: 8,
-        },
-      },
-    },
-    MuiButton: {
-      outlinedPrimary: {
-        'color': '#fff',
-        'backgroundColor': '#2c4373',
-        '&:hover': {
-          color: '#2c4373',
-        },
-        '&:disabled': {
-          color: 'rgba(0, 0, 0, 0.5)',
-          backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        },
+    notchedOutline: {
+      'borderColor': 'rgba(44, 67, 115, 0.5)',
+      'borderWidth': 2,
+      '&$disabled': {
+        borderColor: 'rgba(0, 0, 0, 0.3)',
       },
     },
   },
-});
+  MuiCheckbox: {
+    root: {
+      color: '#2c4373',
+    },
+  },
+  MuiFormLabel: {
+    root: {
+      color: 'rgba(44, 67, 115, 0.7)',
+    },
+  },
+  MuiInputBase: {
+    root: {
+      borderColor: 'rgba(44, 67, 115, 0.7)',
+    },
+  },
+  MuiCard: {
+    root: {},
+  },
+  MuiCardContent: {
+    root: {
+      'padding': 0,
+      [theme.breakpoints.up('sm')]: {
+        padding: '8px 46px',
+      },
+      '&:last-child': {
+        paddingBottom: 8,
+      },
+    },
+  },
+  MuiButton: {
+    outlinedPrimary: {
+      'color': '#fff',
+      'backgroundColor': '#2c4373',
+      '&:hover': {
+        color: '#2c4373',
+      },
+      '&:disabled': {
+        color: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      },
+    },
+  },
+};
 
 export default theme;
