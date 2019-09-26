@@ -13,10 +13,7 @@ export class HomeController {
   constructor(private readonly nextService: NextService) {}
 
   @Get()
-  public async showHome(
-    @Req() req: Request,
-    @Res() res: Response,
-  ): Promise<void> {
+  public async showHome(@Req() req: Request, @Res() res: Response): Promise<void> {
     if (req.user) {
       return this.nextService.render(req, res, '/index');
     }

@@ -7,7 +7,10 @@
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "jwt:cert": "(! test -f jwt.public.pem || ! test -f jwt.private.pem) && openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost' && echo 'JWT deployed !' || echo 'JWT already placed...'",
     "dev": "yarn clean && nodemon --inspect server/main.ts",
-    "build": "yarn clean && NODE_ENV=production tsc -P tsconfig.server.json && cp -r static .nest && next build",
+    "build": "yarn clean && yarn nest:build && yarn copy && yarn next:build",
+    "copy": "cp -r static .nest",
+    "nest:build": "NODE_ENV=production tsc -P tsconfig.server.json",
+    "next:build": "next build",
     "start": "NODE_ENV=production node .nest/main.js",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",
@@ -26,7 +29,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn version --patch --no-git-tag-version && lint-staged"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
@@ -69,7 +72,8 @@
     "@types/joi": "^14.3.3",
     "@types/ldapjs": "^0.0.1",
     "@types/lodash": "^4.14.139",
-    "@types/node": "^12.7.7",
+    "@types/morgan": "^1.7.37",
+    "@types/node": "^12.7.8",
     "@types/passport": "^1.0.1",
     "@types/passport-jwt": "^3.0.2",
     "@types/passport-local": "^1.0.33",
@@ -121,6 +125,7 @@
     "jsonwebtoken": "^8.5.1",
     "ldapjs": "^1.0.2",
     "lodash": "^4.17.15",
+    "morgan": "^1.9.1",
     "next": "^9.0.6",
     "next-compose-plugins": "^2.2.0",
     "next-fonts": "^0.18.0",
@@ -169,10 +174,10 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
-    "eslint-plugin-unicorn": "^12.0.0",
+    "eslint-plugin-unicorn": "^12.0.1",
     "husky": "^3.0.5",
     "jest": "^24.9.0",
-    "lint-staged": "^9.3.0",
+    "lint-staged": "^9.4.0",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0",
     "stylelint": "^11.0.0",

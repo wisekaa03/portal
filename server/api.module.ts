@@ -11,6 +11,8 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
 import { UserModule } from './user/user.module';
 import { NextModule } from './next/next.module';
 import { AuthModule } from './auth/auth.module';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerService } from './logger/logger.service';
 // #endregion
 
 @Module({
@@ -26,14 +28,18 @@ import { AuthModule } from './auth/auth.module';
     // #region NextModule
     NextModule,
     // #endregion
+
+    // #region LoggerModule
+    LoggerModule,
+    // #endregion
   ],
   providers: [
     // #region Errors: ExceptionFilter
     {
       provide: APP_FILTER,
-      inject: [NextService],
-      useFactory: (nextService: NextService) => {
-        return new HttpErrorFilter(nextService);
+      inject: [NextService, LoggerService],
+      useFactory: (nextService: NextService, loggerService: LoggerService) => {
+        return new HttpErrorFilter(nextService, loggerService);
       },
     },
     // #endregion
