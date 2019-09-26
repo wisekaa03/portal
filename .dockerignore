@@ -16,7 +16,6 @@ ecosystem.config.js
 # jest.config.js
 # jest.setup.ts
 
-loader.html
 README.md
 LICENSE
 
@@ -37,11 +36,11 @@ docker-compose*
 
 # __mocks__/
 # __tests__/
-components/
-helm/
-lib/
-pages/
-server/
-static/
-target/
-typings/
+# components/
+# helm/
+# lib/
+# pages/
+# server/
+# static/
+# target/
+# typings/
