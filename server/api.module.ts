@@ -12,7 +12,7 @@ import { UserModule } from './user/user.module';
 import { NextModule } from './next/next.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
-import { LoggerService } from '../../../../../../wisekaa03/Документы/KNGK/Portal/portal/server/logger/logger.service';
+import { LoggerService } from './logger/logger.service';
 // #endregion
 
 @Module({
