@@ -6,6 +6,9 @@ import { Request, Response } from 'express';
 import next from 'next';
 import Server from 'next/dist/next-server/server/next-server';
 // #endregion
+// #region Imports Local
+import { LoggerService } from '../logger/logger.service';
+// #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -13,6 +16,8 @@ export class NextService {
   private app!: Server;
 
   private handler: any;
+
+  constructor(private readonly loggerService: LoggerService) {}
 
   public async getApp(): Promise<Server> {
     if (!this.app) {
@@ -22,7 +27,7 @@ export class NextService {
 
         await this.app.prepare();
       } catch (error) {
-        console.error('Next service error (getApp):', error);
+        this.loggerService.error('Next service error (getApp):', error);
       }
     }
     return this.app;
@@ -34,7 +39,7 @@ export class NextService {
         const app = await this.getApp();
         this.handler = app.getRequestHandler();
       } catch (error) {
-        console.error('Next service error (getRequestHandler):', error);
+        this.loggerService.error('Next service error (getRequestHandler):', error);
       }
     }
     return this.handler;
@@ -51,7 +56,7 @@ export class NextService {
       const message = exception instanceof HttpException ? exception.toString() : 'Internal server error';
       return app.renderError(new Error(message), req, res, req.url, req.query);
     } catch (error) {
-      console.error('Next service error:', error);
+      this.loggerService.error('Next service error:', error);
       throw error;
     }
   }
@@ -61,7 +66,7 @@ export class NextService {
       const app = await this.getApp();
       return app.render(req, res, page, req.query);
     } catch (error) {
-      console.error('Next service error (render):', error);
+      this.loggerService.error('Next service error (render):', error);
       throw error;
     }
   }

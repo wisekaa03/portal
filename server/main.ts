@@ -17,11 +17,11 @@ import morgan from 'morgan';
 import { sessionRedis } from './shared/session-redis';
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
-import { AppLogger } from './logger/logger.service';
+import { LoggerService } from './logger/logger.service';
 // #endregion
 
 // #region NestJS options
-const logger = new AppLogger();
+const logger = new LoggerService();
 const nestjsOptions: NestApplicationOptions = {
   cors: {
     credentials: true,
@@ -34,9 +34,9 @@ const nestjsOptions: NestApplicationOptions = {
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region create NestJS server
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
-  app.useLogger(app.get(AppLogger));
+  app.useLogger(app.get(LoggerService));
   // Morgan: request/response logging
-  app.use(morgan('dev'));
+  app.use(morgan('dev', { stream: logger }));
   // #endregion
 
   // #region X-Response-Time

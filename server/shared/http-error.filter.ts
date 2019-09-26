@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { ExceptionFilter, Catch, Logger, HttpException, HttpStatus, ExecutionContext } from '@nestjs/common';
+import { ExceptionFilter, Catch, HttpException, HttpStatus, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
@@ -9,11 +9,12 @@ import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 // #region Imports Local
 import { NextService } from '../next/next.service';
 import { AppGraphQLExecutionContext } from './logging.interceptor';
+import { LoggerService } from '../logger/logger.service';
 // #endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-  constructor(private readonly nextService: NextService) {}
+  constructor(private readonly nextService: NextService, private readonly loggerService: LoggerService) {}
 
   catch(exception: Error | HttpException | JsonWebTokenError | TokenExpiredError, host: ExecutionContext): void {
     const ctx = host.switchToHttp();
@@ -44,9 +45,9 @@ export class HttpErrorFilter implements ExceptionFilter {
       };
 
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-        Logger.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
+        this.loggerService.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
       } else {
-        Logger.error(`${request.method} ${request.url}`, JSON.stringify(errorResponse), 'ExceptionFilter');
+        this.loggerService.error(`${request.method} ${request.url}`, JSON.stringify(errorResponse), 'ExceptionFilter');
       }
 
       response.status(status);
@@ -62,7 +63,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       const context: AppGraphQLExecutionContext = GqlExecutionContext.create(host);
       const info = context.getInfo();
 
-      Logger.error(`${info.parentType.name} "${info.fieldName}": ${message}`, undefined, 'ExceptionFilter', true);
+      this.loggerService.error(`${info.parentType.name} "${info.fieldName}": ${message}`, undefined, 'ExceptionFilter');
       // #endregion
     }
   }

@@ -12,7 +12,7 @@ import { ConfigService } from '../config/config.service';
 // eslint-disable-next-line import/no-cycle
 import { AuthService } from '../auth/auth.service';
 import { LdapService } from '../ldap/ldap.service';
-import { AppLogger } from '../logger/logger.service';
+import { LoggerService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 
 // #endregion
@@ -34,7 +34,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly ldapService: LdapService,
-    private readonly logger: AppLogger,
+    private readonly logger: LoggerService,
   ) {}
 
   /**

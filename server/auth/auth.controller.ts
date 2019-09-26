@@ -1,12 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import {
-  Controller,
-  Get,
-  Req,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local

@@ -6,7 +6,7 @@ import { Logger } from '@nestjs/common';
 
 const dev = process.env.NODE_ENV !== 'production';
 
-export class AppLogger extends Logger {
+export class LoggerService extends Logger {
   locale = 'en-US';
 
   format = {
@@ -14,15 +14,12 @@ export class AppLogger extends Logger {
     timeStyle: 'short',
     hour12: false,
     hourCycle: 'h24',
-    // weekday: 'short',
-    // era: 'short',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    // timeZoneName: 'short',
   };
 
   log(message: any, context?: string): void {
@@ -63,5 +60,14 @@ export class AppLogger extends Logger {
     } else {
       console.info(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
     }
+  }
+
+  /**
+   * From app.use(morgan('dev', { stream: logger })) - the request/response logging
+   *
+   * @param message Message string
+   */
+  write(message: string): void {
+    this.verbose(message, 'Request');
   }
 }
