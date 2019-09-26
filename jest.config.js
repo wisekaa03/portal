@@ -11,7 +11,7 @@ module.exports = {
     '^.+\\.(ts|tsx)$': 'ts-jest',
     '^.+\\.svg$': 'jest-svg-transformer',
   },
-  testMatch: ['**/__tests__/*.(ts|tsx)', '**/*.spec.ts'],
+  testMatch: ['**/__tests__/*.(ts|tsx)', '**/*.test.(ts|tsx)', '**/*.spec.(ts|tsx)'],
   setupFiles: ['./jest.setup.ts'],
   testPathIgnorePatterns: ['./.next/', './node_modules/'],
   snapshotSerializers: ['enzyme-to-json/serializer'],
