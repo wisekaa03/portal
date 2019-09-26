@@ -17,7 +17,7 @@ service:
   type: LoadBalancer
   port: 4000
   targetPort: 4000
-  # nodePort: 30300
+  nodePort: 30300
   externalIPs:
     - 10.10.5.70
     - 10.10.5.71
