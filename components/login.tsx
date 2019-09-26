@@ -28,44 +28,25 @@ import { getStorage, setStorage } from '../lib/session-storage';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     '@global': {
-      html: {
-        height: '100%',
-        width: '100%',
-      },
       body: {
-        'height': '100%',
-        'width': '100%',
-        'backgroundImage': 'url("/assets/svg/background.svg")',
-        'backgroundSize': 'cover',
-        'backgroundRepeat': 'no-repeat',
-        'backgroundAttachment': 'fixed',
-        'backgroundPosition': 'bottom left',
-
-        '& > div': {
-          height: '100%',
-          width: '100%',
-        },
+        backgroundImage: 'url("/assets/svg/background.svg")',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'bottom left',
       },
-    },
-    'root': {
-      height: '100%',
-      margin: 'auto',
-    },
-    'logoContainer': {
-      height: '11%',
-      textAlign: 'center',
     },
     'logo': {
-      marginTop: '10px',
-      height: '100%',
+      height: '11vh',
+      margin: '10px auto',
+      width: '100%',
     },
     'loginContainer': {
+      height: '70vh',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
-      height: '89%',
-      width: '100%',
     },
     'container': {
       width: 600,
@@ -164,7 +145,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
   }, []);
 
   return (
-    <div className={classes.root}>
+    <div>
       <div className={classes.logoContainer}>
         <LogoComponent className={classes.logo} />
       </div>
