@@ -93,6 +93,9 @@ export class ConfigService {
       DATABASE_LOGGING: Joi.string()
         .default('true')
         .empty(),
+      DATABASE_MIGRATIONS_RUN: Joi.string()
+        .default('false')
+        .empty(),
       DATABASE_CACHE: Joi.string()
         .default('true')
         .empty(),

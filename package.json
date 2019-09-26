@@ -6,7 +6,7 @@
     "clean": "rimraf .next .nest",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "jwt:cert": "(! test -f jwt.public.pem || ! test -f jwt.private.pem) && openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost' && echo 'JWT deployed !' || echo 'JWT already placed...'",
-    "dev": "yarn clean && nodemon --inspect server/main.ts",
+    "dev": "nodemon --inspect server/main.ts",
     "build": "yarn clean && yarn nest:build && yarn copy && yarn next:build",
     "copy": "cp -r static .nest",
     "nest:build": "NODE_ENV=production tsc -P tsconfig.server.json",
