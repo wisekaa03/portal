@@ -8,6 +8,9 @@ LABEL maintainer="webmaster@kngk-group.ru"
 LABEL "org.kngk.vendor"="KNGK"
 LABEL version="4"
 
+RUN apt-get update
+RUN apt-get install -y telnet dnsutils
+
 COPY . ./
 
 EXPOSE 4000
