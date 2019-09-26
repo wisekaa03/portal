@@ -12,7 +12,6 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
-
 // #endregion
 // #region Imports Local
 import { sessionRedis } from './shared/session-redis';
@@ -37,7 +36,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   app.useLogger(app.get(LoggerService));
   // Morgan: request/response logging
-  app.use(morgan('dev', { stream: logger }));
+  app.use(morgan('tiny', { stream: logger }));
   // #endregion
 
   // #region X-Response-Time

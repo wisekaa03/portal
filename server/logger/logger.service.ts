@@ -68,6 +68,6 @@ export class LoggerService extends Logger {
    * @param message Message string
    */
   write(message: string): void {
-    this.verbose(message, 'Request');
+    this.verbose(message.replace(/\n/, ''), 'Request');
   }
 }
