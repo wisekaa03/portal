@@ -14,6 +14,13 @@ spec:
       {{- end }}
       protocol: TCP
       name: http
+    - port: {{ .Values.service.port_debugger }}
+      targetPort: {{ .Values.service.targetPort_debugger }}
+      {{- if .Values.service.nodePort_debugger }}
+      nodePort: {{ .Values.service.nodePort_debugger }}
+      {{- end }}
+      protocol: TCP
+      name: http-debugger
   {{- with .Values.service.externalIPs }}
   externalIPs:
     {{- toYaml . | nindent 8 }}

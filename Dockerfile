@@ -13,6 +13,6 @@ RUN apt-get install -y telnet dnsutils nano
 
 COPY . ./
 
-EXPOSE 4000
+EXPOSE 4000 9229
 
 CMD ["yarn", "start"]
