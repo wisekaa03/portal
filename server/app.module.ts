@@ -3,6 +3,7 @@
 /// <reference types="../typings/global" />
 
 // #region Imports NPM
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule, forwardRef } from '@nestjs/common';
 
 import { GraphQLModule } from '@nestjs/graphql';
@@ -11,13 +12,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import redisCacheStore from 'cache-manager-redis';
 // #endregion
 // #region Imports Local
+import { NextService } from './next/next.service';
+import { HttpErrorFilter } from './filters/http-error.filter';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerService } from './logger/logger.service';
 import { ConfigModule } from './config/config.module';
 import { NextModule } from './next/next.module';
 import { HomeModule } from './home/home.module';
 import { NextMiddleware } from './next/next.middleware';
 import { NextAssetsMiddleware } from './next/next.assets.middleware';
 import { ConfigService } from './config/config.service';
-import { ApiModule } from './api.module';
 import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -26,6 +31,10 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule,
+
+    // #region Loggin module
+    LoggerModule,
+    // #endregion
 
     // #region Cache Manager - Redis
     CacheModule.register({
@@ -62,14 +71,10 @@ import { UserModule } from './user/user.module';
     // #endregion
 
     // #region Authentication
-    forwardRef(() => AuthModule),
+    AuthModule,
     // #endregion
     // #region Users
-    forwardRef(() => UserModule),
-    // #endregion
-
-    // #region API module
-    ApiModule,
+    UserModule,
     // #endregion
 
     // #region Home page
@@ -78,6 +83,23 @@ import { UserModule } from './user/user.module';
   ],
 
   providers: [
+    // #region Errors: ExceptionFilter
+    {
+      provide: APP_FILTER,
+      inject: [NextService, LoggerService],
+      useFactory: (nextService: NextService, loggerService: LoggerService) => {
+        return new HttpErrorFilter(nextService, loggerService);
+      },
+    },
+    // #endregion
+
+    // #region Logging interceptor
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    // #endregion
+
     // #region GraphQL
     DateScalar,
     // #endregion

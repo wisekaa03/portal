@@ -1,6 +1,6 @@
 stages:
   - bundle
-  # - test
+  - test
   - build
   - production
   - deploy
@@ -26,16 +26,16 @@ bundle:
   script:
     - yarn install --production=false
 
-# test:
-#   image: node:12
-#   stage: test
-#   cache:
-#     key: "${CI_COMMIT_REF_SLUG}"
-#     paths:
-#       - node_modules/
-#     policy: pull
-#   script:
-#     - yarn test -u
+test:
+  image: node:12
+  stage: test
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
+    policy: pull
+  script:
+    - yarn test -u
 
 build:
   image: node:12

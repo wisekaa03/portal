@@ -14,7 +14,6 @@ import { AuthService } from '../auth/auth.service';
 import { LdapService } from '../ldap/ldap.service';
 import { LoggerService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
-
 // #endregion
 
 @Injectable()

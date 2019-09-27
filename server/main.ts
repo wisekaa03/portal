@@ -35,7 +35,9 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region create NestJS server
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   app.useLogger(app.get(LoggerService));
-  // Morgan: request/response logging
+  // #endregion
+
+  // #region Morgan: request/response logging
   app.use(morgan('tiny', { stream: logger }));
   // #endregion
 

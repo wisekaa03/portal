@@ -23,12 +23,25 @@ import { AuthenticationGuard } from '../guards/auth-guard.guard';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  /**
+   * GraphQL query: me
+   *
+   * @param req - request.User
+   * @returns {UserResponseDTO}
+   */
   @Query()
   @UseGuards(AuthenticationGuard)
   async me(@Context('req') req: Request): Promise<UserResponseDTO | null> {
     return req.user as UserResponseDTO;
   }
 
+  /**
+   * GraphQL mutation: login
+   *
+   * @param username - username
+   * @param password - password
+   * @returns {UserResponseDTO}
+   */
   @Mutation()
   async login(@Args('username') username: string, @Args('password') password: string): Promise<UserResponseDTO | null> {
     return this.userService.login({ username, password });

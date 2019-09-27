@@ -37,6 +37,7 @@
 - Server
   - [nest](https://nestjs.com) - A progressive Node.js framework for building efficient, reliable and scalable server-side applications
     - internally using [Express](https://expressjs.com) - Fast, unopinionated, minimalist web framework for Node.js
+    - [Nest.JS WebSockets](https://github.com/nestjs/nest/tree/master/packages/platform-ws)
   - [Next.js](https://nextjs.org) - The React Framework
 - Environment variables
   - [dotenv](https://github.com/motdotla/dotenv) - Loads environment variables from .env for nodejs projects
@@ -209,10 +210,11 @@ module.exports = {
 - [x] Security: custom auth guards
 - [x] Server: integration between [Nest](https://nestjs.com) and [Next.js](https://nextjs.org)
 - [x] UI: integration between [Next.js](https://nextjs.org) and [Material UI](https://material-ui.com)
-- [x] Test: unit tests
-- [x] Test: e2e tests
 - [x] Authentication with LDAP
-- [ ] WebSockets - [Apollo Link WS](https://www.apollographql.com/docs/link/links/ws/)
+- [ ] Test: unit tests
+- [ ] Test: e2e tests
+- [ ] [Nest.JS WebSockets](https://github.com/nestjs/nest/tree/master/packages/platform-ws)
+- [ ] [Apollo Link WebSockets](https://www.apollographql.com/docs/link/links/ws/)
 
 ## Trouble Shootings
 
