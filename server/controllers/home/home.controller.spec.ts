@@ -4,9 +4,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
-import { NextModule } from '../../next/next.module';
+import { NextService } from '../../next/next.service';
 import { HomeController } from './home.controller';
-import { LoggerModule } from '../../logger/logger.module';
+import { LoggerService } from '../../logger/logger.service';
+import { LoggerServiceMock } from '../../../__mocks__/logger.service.mock';
+import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 // #endregion
 
 describe('Home Controller', () => {
@@ -14,8 +16,11 @@ describe('Home Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [NextModule, LoggerModule],
       controllers: [HomeController],
+      providers: [
+        { provide: NextService, useClass: NextServiceMock },
+        { provide: LoggerService, useClass: LoggerServiceMock },
+      ],
     }).compile();
 
     controller = module.get<HomeController>(HomeController);

@@ -10,10 +10,7 @@ export class LoggerService extends Logger {
   locale = undefined;
 
   format = {
-    // dateStyle: 'short',
-    // timeStyle: 'short',
-    // hour12: false,
-    // hourCycle: 'h24',
+    hour12: false,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
