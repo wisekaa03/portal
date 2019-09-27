@@ -16,7 +16,7 @@ export default function Login(): React.ReactElement {
     <Mutation
       mutation={LOGIN}
       onError={() => {}}
-      onCompleted={({ login }) => {
+      onCompleted={({ login }: any) => {
         sessionStorage.setItem('token', login.token);
       }}
     >

@@ -7,7 +7,7 @@ import { Typography, Button, Card, CardContent } from '@material-ui/core';
 // #endregion
 
 // #region Imports Local
-import AppBar from '../components/app-bar.tsx';
+import AppBar from '../components/app-bar';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
