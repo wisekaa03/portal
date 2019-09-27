@@ -1,7 +1,7 @@
 /** @format */
 
 module.exports = {
-  testTimeout: 10000,
+  testTimeout: 100000,
   preset: 'ts-jest', // 'ts-jest/presets/js-with-ts',
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
