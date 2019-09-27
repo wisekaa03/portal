@@ -1,8 +1,11 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.2.42",
+  "version": "4.2.43",
   "scripts": {
+    "v": "yarn version --patch",
+    "v:major": "yarn version --major",
+    "v:minor": "yarn version --minor",
     "clean": "rimraf .next .nest",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "jwt:cert": "(! test -f jwt.public.pem || ! test -f jwt.private.pem) && openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost' && echo 'JWT deployed !' || echo 'JWT already placed...'",
