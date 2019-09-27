@@ -265,12 +265,9 @@ export interface LdapOptionsFactory {
   createLdapOptions(): Promise<LdapModuleOptions> | LdapModuleOptions;
 }
 
-export interface LdapModuleAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface LdapModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   useExisting?: Type<LdapOptionsFactory>;
   useClass?: Type<LdapOptionsFactory>;
-  useFactory?: (
-    ...args: any[]
-  ) => Promise<LdapModuleOptions> | LdapModuleOptions;
+  useFactory?: (...args: any[]) => Promise<LdapModuleOptions> | LdapModuleOptions;
   inject?: any[];
 }
