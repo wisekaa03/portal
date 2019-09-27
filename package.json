@@ -18,7 +18,7 @@
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "start-storybook",
-    "test": "jest"
+    "test": "jest --bail --coverage"
   },
   "browserslist": [
     "last 3 version",
@@ -39,6 +39,7 @@
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
       "eslint --fix",
+      "jest --bail --coverage --findRelatedTests",
       "git add"
     ]
   },

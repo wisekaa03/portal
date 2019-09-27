@@ -16,7 +16,6 @@ describe('Phonebook Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
       controllers: [PhonebookController],
       providers: [
         { provide: NextService, useClass: NextServiceMock },
