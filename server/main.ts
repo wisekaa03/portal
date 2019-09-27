@@ -26,7 +26,7 @@ const nestjsOptions: NestApplicationOptions = {
   cors: {
     credentials: true,
   },
-  // logger,
+  logger,
   // httpsOptions: {},
 };
 // #endregion
@@ -34,9 +34,9 @@ const nestjsOptions: NestApplicationOptions = {
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region create NestJS server
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
-  // app.useLogger(app.get(LoggerService));
+  app.useLogger(app.get(LoggerService));
   // Morgan: request/response logging
-  // app.use(morgan('tiny', { stream: logger }));
+  app.use(morgan('tiny', { stream: logger }));
   // #endregion
 
   // #region X-Response-Time
