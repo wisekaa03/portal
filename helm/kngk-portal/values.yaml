@@ -15,9 +15,15 @@ fullnameOverride: "kngk-portal"
 
 service:
   type: LoadBalancer
+
   port: 4000
   targetPort: 4000
   nodePort: 30300
+
+  port_debugger: 9229
+  targetPort_debugger: 9229
+  nodePort_debugger: 30301
+
   externalIPs:
     - 10.10.5.70
     - 10.10.5.71

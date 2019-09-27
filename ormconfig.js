@@ -25,5 +25,6 @@ module.exports = {
   dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
   logging: configService.get('DATABASE_LOGGING'),
   entities,
+  migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
   cache: configService.get('DATABASE_CACHE'),
 };
