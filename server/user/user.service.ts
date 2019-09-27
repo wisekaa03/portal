@@ -34,7 +34,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly ldapService: LdapService,
-    private readonly logger: LoggerService,
+    private readonly loggerService: LoggerService,
   ) {}
 
   /**
@@ -129,8 +129,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO | null> {
-    // eslint-disable-next-line no-debugger
-    // debugger;
+    this.loggerService.debug(`UserService: user login: username = "${username}", password = "${password}"`);
 
     let user = await this.userRepository.findOne({ where: { username } });
     user = await this.userLdapLogin({ username, password, user });
@@ -149,8 +148,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async register(data: UserRegisterDTO): Promise<UserResponseDTO | null> {
-    // eslint-disable-next-line no-debugger
-    // debugger;
+    this.loggerService.debug(`UserService: register new user: ${JSON.stringify(data)}`);
 
     // #region Check if a user exists
     const { username } = data;

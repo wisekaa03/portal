@@ -18,6 +18,10 @@ import { NextModule } from '../next/next.module';
 
 @Module({
   imports: [
+    // #region Users module
+    forwardRef(() => UserModule),
+    // #endregion
+
     // #region Config module, Next module
     NextModule,
     ConfigModule,
@@ -37,10 +41,6 @@ import { NextModule } from '../next/next.module';
         } as JwtModuleOptions;
       },
     }),
-    // #endregion
-
-    // #region Users module
-    forwardRef(() => UserModule),
     // #endregion
   ],
   controllers: [AuthController],

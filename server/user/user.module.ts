@@ -20,6 +20,10 @@ import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
+    // #region Authentication
+    forwardRef(() => AuthModule),
+    // #endregion
+
     // #region Config module
     ConfigModule,
     LoggerModule,
@@ -46,10 +50,6 @@ import { LoggerModule } from '../logger/logger.module';
         };
       },
     }),
-    // #endregion
-
-    // #region Authentication
-    forwardRef(() => AuthModule),
     // #endregion
   ],
   controllers: [],

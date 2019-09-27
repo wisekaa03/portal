@@ -7,13 +7,13 @@ import { Logger } from '@nestjs/common';
 const dev = process.env.NODE_ENV !== 'production';
 
 export class LoggerService extends Logger {
-  locale = 'en-US';
+  locale = undefined;
 
   format = {
-    dateStyle: 'short',
-    timeStyle: 'short',
-    hour12: false,
-    hourCycle: 'h24',
+    // dateStyle: 'short',
+    // timeStyle: 'short',
+    // hour12: false,
+    // hourCycle: 'h24',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
