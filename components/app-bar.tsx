@@ -12,7 +12,6 @@ import {
   IconButton,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-// import HttpClient from '../lib/http-client';
 
 const useStyles = makeStyles((/* theme: Theme */) =>
   createStyles({
@@ -26,10 +25,10 @@ const useStyles = makeStyles((/* theme: Theme */) =>
   }));
 
 export default function AppBar(): React.ReactElement {
-  const classes = useStyles();
+  const classes = useStyles({});
 
   return (
-    <AppBarMaterial position="static" className={classes.root}>
+    <AppBarMaterial id="header" position="static" className={classes.root}>
       <Toolbar>
         <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
           <MenuIcon />
