@@ -31,6 +31,11 @@ const theme = createMuiTheme({
   shape: {
     borderRadius: 0,
   },
+  props: {
+    MuiButtonBase: {
+      disableRipple: true,
+    },
+  },
 });
 
 theme.overrides = {

@@ -54,11 +54,15 @@ export const apolloClient = (
     //   },
     // });
 
+    const token = sessionStorage.getItem('token');
     // Create an http link:
     const httpLink = new HttpLink({
       uri: `${window.location.origin}/graphql`,
       credentials: 'same-origin',
       fetch,
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+      },
     });
 
     link = ApolloLink.from([

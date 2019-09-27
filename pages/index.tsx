@@ -1,19 +1,18 @@
 /** @format */
 
+// #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-// import HttpClient from '../lib/http-client';
+import { Typography, Button, Card, CardContent } from '@material-ui/core';
+// #endregion
+
+// #region Imports Local
+import AppBar from '../components/app-bar.tsx';
+// #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      textAlign: 'center',
-      paddingTop: theme.spacing(8),
-    },
+    root: {},
     container: {
       width: 480,
       margin: `${theme.spacing(2)}px auto`,
@@ -25,25 +24,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function App(): React.ReactElement {
-  // const client: HttpClient = new HttpClient();
-
-  const classes = useStyles({});
-
-  const handleClick = async (e: React.MouseEvent): Promise<void> => {
-    e.preventDefault();
-
-    // const { data: loggedOut } = await client.get('auth/logout');
-    // if (loggedOut) {
-    //   window.location.href = '/auth/login';
-    // } else {
-    //   // eslint-disable-next-line no-alert, no-undef
-    //   alert('Failed to log out!');
-    // }
-  };
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Typography variant="h2">Portal</Typography>
+      <AppBar />
       <div className={classes.container}>
         <Card className={classes.card}>
           <CardContent>

@@ -13,7 +13,13 @@ import { LoginComponent } from '../../components/login';
 
 export default function Login(): React.ReactElement {
   return (
-    <Mutation mutation={LOGIN} onError={() => {}}>
+    <Mutation
+      mutation={LOGIN}
+      onError={() => {}}
+      onCompleted={({ login }) => {
+        sessionStorage.setItem('token', login.token);
+      }}
+    >
       {(login: MutationFunction, { loading, error, data }: MutationResult<any>) => {
         return data ? (
           <Typography>{JSON.stringify(data)}</Typography>

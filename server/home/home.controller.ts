@@ -14,9 +14,9 @@ export class HomeController {
 
   @Get()
   public async showHome(@Req() req: Request, @Res() res: Response): Promise<void> {
-    if (req.user) {
-      return this.nextService.render(req, res, '/index');
-    }
-    return res.redirect('auth/login');
+    // if (req.user) {
+    return this.nextService.render(req, res, '/index');
+    // }
+    // return res.redirect('auth/login');
   }
 }
