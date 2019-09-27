@@ -3,7 +3,7 @@
 /// <reference types="../typings/global" />
 
 // #region Imports NPM
-import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule, forwardRef } from '@nestjs/common';
 
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,6 +20,7 @@ import { ConfigService } from './config/config.service';
 import { ApiModule } from './api.module';
 import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 // #endregion
 
 @Module({
@@ -61,7 +62,10 @@ import { AuthModule } from './auth/auth.module';
     // #endregion
 
     // #region Authentication
-    AuthModule,
+    forwardRef(() => AuthModule),
+    // #endregion
+    // #region Users
+    forwardRef(() => UserModule),
     // #endregion
 
     // #region API module

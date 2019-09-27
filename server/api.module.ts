@@ -2,28 +2,19 @@
 
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { Module /* , forwardRef */ } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 import { NextService } from './next/next.service';
 import { HttpErrorFilter } from './filters/http-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
-// import { UserModule } from './user/user.module';
 import { NextModule } from './next/next.module';
-// import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerService } from './logger/logger.service';
 // #endregion
 
 @Module({
   imports: [
-    // // #region Authentication
-    // forwardRef(() => AuthModule),
-    // // #endregion
-    // // #region Users
-    // forwardRef(() => UserModule),
-    // // #endregion
-
     // #region NextModule
     NextModule,
     // #endregion
@@ -49,6 +40,6 @@ import { LoggerService } from './logger/logger.service';
     },
     // #endregion
   ],
-  exports: [/* UserModule, AuthModule, */ NextModule, LoggerModule],
+  exports: [NextModule, LoggerModule],
 })
 export class ApiModule {}
