@@ -26,16 +26,10 @@ describe('Auth Controller', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({}),
-        TypeOrmModule.forFeature([UserEntity]),
         PassportModule.register({ defaultStrategy: 'jwt', session: true }),
         JwtModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => {
-            return {
-              ...configService.jwtModuleOptions,
-            } as JwtModuleOptions;
+          useFactory: async () => {
+            return {} as JwtModuleOptions;
           },
         }),
       ],
