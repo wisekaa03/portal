@@ -14,13 +14,15 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 // eslint-disable-next-line import/no-cycle
 import { UserModule } from '../user/user.module';
 import { NextModule } from '../next/next.module';
+// import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
 @Module({
   imports: [
     // #region Config module, Next module
-    NextModule,
     ConfigModule,
+    // LoggerModule,
+    NextModule,
     // #endregion
 
     // #region Passport module
@@ -45,6 +47,6 @@ import { NextModule } from '../next/next.module';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [PassportModule, AuthService],
+  exports: [PassportModule, JwtModule, AuthService],
 })
 export class AuthModule {}

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.2.40",
+  "version": "4.2.41",
   "scripts": {
     "clean": "rimraf .next .nest",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
@@ -72,7 +72,7 @@
     "@types/jest": "^24.0.18",
     "@types/joi": "^14.3.3",
     "@types/ldapjs": "^0.0.1",
-    "@types/lodash": "^4.14.139",
+    "@types/lodash": "^4.14.140",
     "@types/morgan": "^1.7.37",
     "@types/node": "^12.7.8",
     "@types/passport": "^1.0.1",

@@ -8,7 +8,7 @@ import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 // #endregion
 // #region Imports Local
 import { NextService } from '../next/next.service';
-import { AppGraphQLExecutionContext } from './logging.interceptor';
+import { AppGraphQLExecutionContext } from '../interceptors/logging.interceptor';
 import { LoggerService } from '../logger/logger.service';
 // #endregion
 
