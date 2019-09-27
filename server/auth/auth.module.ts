@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Module, forwardRef } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 // #endregion
@@ -13,6 +14,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 // eslint-disable-next-line import/no-cycle
 import { UserModule } from '../user/user.module';
 import { NextModule } from '../next/next.module';
+import { UserEntity } from '../user/user.entity';
 // import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
@@ -22,6 +24,7 @@ import { NextModule } from '../next/next.module';
     ConfigModule,
     // LoggerModule,
     NextModule,
+    TypeOrmModule.forFeature([UserEntity]),
     // #endregion
 
     // #region Passport module
