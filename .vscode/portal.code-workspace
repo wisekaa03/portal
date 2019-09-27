@@ -5,6 +5,7 @@
     }
   ],
   "settings": {
+    "browser-preview.chromeExecutable": "/opt/brave.com/brave/brave",
     // "editor.fontFamily": "Fira Code",
     "editor.fontFamily": "Fira Code Retina",
     "editor.fontLigatures": true,
@@ -19,7 +20,7 @@
     "typescript.format.enable": false,
     "eslint.autoFixOnSave": true,
     "eslint.enable": true,
-    "prettier.eslintIntegration": true,
+    // "prettier.eslintIntegration": true,
     "files.autoSave": "onWindowChange",
     "editor.formatOnSave": true,
     "[html]": {
@@ -67,7 +68,8 @@
     "less.lint.float": "warning",
     "eslint.alwaysShowStatus": true,
     "eslint.packageManager": "yarn",
-    "eslint.provideLintTask": true,
+    // "eslint.provideLintTask": true,
+    "eslint.lintTasks.enable": true,
     "eslint.run": "onType",
     "editor.tabSize": 2,
     "scss.lint.boxModel": "warning",
