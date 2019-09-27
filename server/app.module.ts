@@ -19,7 +19,7 @@ import { LoggerModule } from './logger/logger.module';
 import { LoggerService } from './logger/logger.service';
 import { ConfigModule } from './config/config.module';
 import { NextModule } from './next/next.module';
-import { HomeModule } from './home/home.module';
+import { HomeModule } from './controllers/controllers.module';
 import { NextMiddleware } from './next/next.middleware';
 import { NextAssetsMiddleware } from './next/next.assets.middleware';
 import { ConfigService } from './config/config.service';

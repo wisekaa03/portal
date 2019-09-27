@@ -8,7 +8,6 @@ import { PassportModule } from '@nestjs/passport';
 // #region Imports Local
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 // eslint-disable-next-line import/no-cycle
@@ -45,7 +44,6 @@ import { NextModule } from '../next/next.module';
     forwardRef(() => UserModule),
     // #endregion
   ],
-  controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [PassportModule, JwtModule, AuthService],
 })

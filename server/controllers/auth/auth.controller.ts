@@ -5,7 +5,7 @@ import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local
-import { NextService } from '../next/next.service';
+import { NextService } from '../../next/next.service';
 // #endregion
 
 // @ApiUseTags('auth')
