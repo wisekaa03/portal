@@ -4,11 +4,11 @@
 import { Module } from '@nestjs/common';
 // #endregion
 // #region Imports Local
-import { LoggerService } from './logger.service';
+import { LogService } from './logger.service';
 // #endregion
 
 @Module({
-  providers: [LoggerService],
-  exports: [LoggerService],
+  providers: [LogService],
+  exports: [LogService],
 })
 export class LoggerModule {}

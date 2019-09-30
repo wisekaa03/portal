@@ -1,3 +1,3 @@
 /** @format */
 
-export class LoggerServiceMock {}
+export class LogServiceMock {}

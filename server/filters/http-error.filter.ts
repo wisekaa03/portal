@@ -9,12 +9,12 @@ import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 // #region Imports Local
 import { NextService } from '../next/next.service';
 import { AppGraphQLExecutionContext } from '../interceptors/logging.interceptor';
-import { LoggerService } from '../logger/logger.service';
+import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-  constructor(private readonly nextService: NextService, private readonly loggerService: LoggerService) {}
+  constructor(private readonly nextService: NextService, private readonly logService: LogService) {}
 
   catch(exception: Error | HttpException | JsonWebTokenError | TokenExpiredError, host: ExecutionContext): void {
     const ctx = host.switchToHttp();
@@ -45,9 +45,9 @@ export class HttpErrorFilter implements ExceptionFilter {
       };
 
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-        this.loggerService.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
+        this.logService.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
       } else {
-        this.loggerService.error(`${request.method} ${request.url}`, JSON.stringify(errorResponse), 'ExceptionFilter');
+        this.logService.error(`${request.method} ${request.url}`, JSON.stringify(errorResponse), 'ExceptionFilter');
       }
 
       response.status(status);
@@ -63,7 +63,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       const context: AppGraphQLExecutionContext = GqlExecutionContext.create(host);
       const info = context.getInfo();
 
-      this.loggerService.error(`${info.parentType.name} "${info.fieldName}": ${message}`, undefined, 'ExceptionFilter');
+      this.logService.error(`${info.parentType.name} "${info.fieldName}": ${message}`, undefined, 'ExceptionFilter');
       // #endregion
     }
   }

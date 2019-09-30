@@ -1,12 +1,14 @@
 /** @format */
 
 // #region Imports NPM
-import { Logger } from '@nestjs/common';
+import { Logger, LoggerService } from '@nestjs/common';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
 
-export class LoggerService extends Logger {
+export class LogService extends Logger {
+  logger: Logger;
+
   locale = undefined;
 
   format = {
@@ -19,8 +21,16 @@ export class LoggerService extends Logger {
     second: '2-digit',
   };
 
+  constructor(context?: string, isTimestampEnabled?: boolean) {
+    super();
+    // if (dev) {
+    //   this.logger = new Logger(context, isTimestampEnabled);
+    // }
+  }
+
   log(message: any, context?: string): void {
     if (dev) {
+      // this.logger.log(message, context);
       super.log(message, context);
     } else {
       console.log(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -29,6 +39,7 @@ export class LoggerService extends Logger {
 
   error(message: any, trace?: string, context?: string): void {
     if (dev) {
+      // this.logger.error(message, trace, context);
       super.error(message, trace, context);
     } else {
       console.error(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message, trace);
@@ -37,6 +48,7 @@ export class LoggerService extends Logger {
 
   warn(message: any, context?: string): void {
     if (dev) {
+      // this.logger.warn(message, context);
       super.warn(message, context);
     } else {
       console.warn(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -45,6 +57,7 @@ export class LoggerService extends Logger {
 
   debug(message: any, context?: string): void {
     if (dev) {
+      // this.logger.debug(message, context);
       super.debug(message, context);
     } else {
       console.debug(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -53,6 +66,7 @@ export class LoggerService extends Logger {
 
   verbose(message: any, context?: string): void {
     if (dev) {
+      // this.logger.verbose(message, context);
       super.verbose(message, context);
     } else {
       console.info(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);

@@ -16,7 +16,7 @@ import { NextService } from './next/next.service';
 import { HttpErrorFilter } from './filters/http-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { LoggerModule } from './logger/logger.module';
-import { LoggerService } from './logger/logger.service';
+import { LogService } from './logger/logger.service';
 import { ConfigModule } from './config/config.module';
 import { NextModule } from './next/next.module';
 import { HomeModule } from './controllers/controllers.module';
@@ -88,9 +88,9 @@ import { UserModule } from './user/user.module';
     // #region Errors: ExceptionFilter
     {
       provide: APP_FILTER,
-      inject: [NextService, LoggerService],
-      useFactory: (nextService: NextService, loggerService: LoggerService) => {
-        return new HttpErrorFilter(nextService, loggerService);
+      inject: [NextService, LogService],
+      useFactory: (nextService: NextService, logService: LogService) => {
+        return new HttpErrorFilter(nextService, logService);
       },
     },
     // #endregion

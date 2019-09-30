@@ -2,19 +2,19 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
 import { AuthController } from './auth.controller';
-import { ConfigModule } from '../../config/config.module';
-import { UserEntity } from '../../user/user.entity';
+// import { ConfigModule } from '../../config/config.module';
+// import { UserEntity } from '../../user/user.entity';
 import { ConfigService } from '../../config/config.service';
 import { UserService } from '../../user/user.service';
 import { NextService } from '../../next/next.service';
-import { LoggerService } from '../../logger/logger.service';
-import { LoggerServiceMock } from '../../../__mocks__/logger.service.mock';
+// import { LogService } from '../../logger/logger.service';
+// import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 import { ConfigServiceMock } from '../../../__mocks__/config.service.mock';
 import { UserServiceMock } from '../../../__mocks__/user.service.mock';
@@ -37,8 +37,6 @@ describe('Auth Controller', () => {
       providers: [
         { provide: ConfigService, useClass: ConfigServiceMock },
         { provide: NextService, useClass: NextServiceMock },
-        { provide: LoggerService, useClass: LoggerServiceMock },
-        { provide: UserService, useClass: UserServiceMock },
       ],
     }).compile();
 

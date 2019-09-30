@@ -12,7 +12,7 @@ import { ConfigService } from '../config/config.service';
 // eslint-disable-next-line import/no-cycle
 import { AuthService } from '../auth/auth.service';
 import { LdapService } from '../ldap/ldap.service';
-import { LoggerService } from '../logger/logger.service';
+import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 // #endregion
 
@@ -33,7 +33,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly ldapService: LdapService,
-    private readonly loggerService: LoggerService,
+    private readonly logService: LogService,
   ) {}
 
   /**
@@ -128,7 +128,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO | null> {
-    this.loggerService.debug(`UserService: user login: username = "${username}", password = "${password}"`);
+    this.logService.debug(`UserService: user login: username = "${username}", password = "${password}"`);
 
     let user = await this.userRepository.findOne({ where: { username } });
     user = await this.userLdapLogin({ username, password, user });
@@ -147,7 +147,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async register(data: UserRegisterDTO): Promise<UserResponseDTO | null> {
-    this.loggerService.debug(`UserService: register new user: ${JSON.stringify(data)}`);
+    this.logService.debug(`UserService: register new user: ${JSON.stringify(data)}`);
 
     // #region Check if a user exists
     const { username } = data;

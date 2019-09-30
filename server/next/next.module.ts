@@ -5,11 +5,11 @@ import { Module } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 import { NextService } from './next.service';
-import { LoggerService } from '../logger/logger.service';
+import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Module({
-  imports: [LoggerService],
+  imports: [LogService],
   providers: [NextService],
   exports: [NextService],
 })

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
-import { LoggerService } from '../logger/logger.service';
+import { LogService } from '../logger/logger.service';
 // #endregion
 
 export interface AppGraphQLExecutionContext extends GraphQLExecutionContext {
@@ -16,7 +16,7 @@ export interface AppGraphQLExecutionContext extends GraphQLExecutionContext {
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly loggerService: LoggerService) {}
+  constructor(private readonly logService: LogService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
@@ -27,7 +27,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
       return next
         .handle()
-        .pipe(tap(() => this.loggerService.log(`${method} ${url} ${Date.now() - now}ms`, context.getClass().name)));
+        .pipe(tap(() => this.logService.log(`${method} ${url} ${Date.now() - now}ms`, context.getClass().name)));
     }
 
     const ctx: AppGraphQLExecutionContext = GqlExecutionContext.create(context);
@@ -38,7 +38,7 @@ export class LoggingInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         tap(() =>
-          this.loggerService.log(`${info.parentType.name} "${info.fieldName}" ${Date.now() - now}ms`, resolverName),
+          this.logService.log(`${info.parentType.name} "${info.fieldName}" ${Date.now() - now}ms`, resolverName),
         ),
       );
   }

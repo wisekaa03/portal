@@ -6,8 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { NextService } from '../../next/next.service';
 import { HomeController } from './home.controller';
-import { LoggerService } from '../../logger/logger.service';
-import { LoggerServiceMock } from '../../../__mocks__/logger.service.mock';
+import { LogService } from '../../logger/logger.service';
+import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 // #endregion
 
@@ -19,7 +19,7 @@ describe('Home Controller', () => {
       controllers: [HomeController],
       providers: [
         { provide: NextService, useClass: NextServiceMock },
-        { provide: LoggerService, useClass: LoggerServiceMock },
+        { provide: LogService, useClass: LogServiceMock },
       ],
     }).compile();
 
