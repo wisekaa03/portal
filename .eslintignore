@@ -33,7 +33,7 @@ coverage
 .grunt
 
 # Bower dependency directory (https://bower.io/)
-bower_components
+# bower_components
 
 # node-waf configuration
 .lock-wscript
@@ -42,7 +42,10 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules
+# node_modules
+# **/node_modules/**
+# node_modules/**
+# /node_modules/
 jspm_packages
 
 # TypeScript cache
@@ -66,6 +69,7 @@ npmlist.json
 
 # dotenv environment variables file
 .env
+.env.example
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
