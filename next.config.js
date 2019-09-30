@@ -4,9 +4,9 @@
 const { join, resolve } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 
-const withSass = require('@zeit/next-sass');
 // const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const withCSS = require('@zeit/next-css');
+const withSass = require('@zeit/next-sass');
 const withFonts = require('next-fonts');
 const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
@@ -127,15 +127,44 @@ function withCustomWebpack(conf = {}) {
   return conf;
 }
 
+function HACKremoveMinimizeOptionFromCssLoaders(config) {
+  config.module.rules.forEach((rule) => {
+    if (Array.isArray(rule.use)) {
+      rule.use.forEach((m) => {
+        if (m.loader === 'css-loader' && m.options) {
+          console.warn('HACK: Removing `minimize` option from `css-loader` entries in Webpack config');
+          delete m.options.minimize;
+        }
+      });
+    }
+  });
+}
+
 const plugins = [
-  [withCSS, { cssModules: true }],
-  [withSass],
+  [
+    withCSS,
+    {
+      // cssModules: true,
+      // cssLoaderOptions: {
+      //   importLoaders: true,
+      // },
+      postcssLoaderOptions: {},
+      webpack(config) {
+        HACKremoveMinimizeOptionFromCssLoaders(config);
+        return config;
+      },
+    },
+  ],
+  [withSass /* , { cssModules: true } */],
   [withFonts, { enableSvg: true }],
   // [withBundleAnalyzer],
   [withCustomWebpack],
 ];
 
 const config = {
+  devIndicators: {
+    autoPrerender: false,
+  },
   poweredByHeader: false,
   analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
   analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
