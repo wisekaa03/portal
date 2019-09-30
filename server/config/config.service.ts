@@ -75,7 +75,7 @@ export class ConfigService {
         .default(4000)
         .required(),
       HOST: Joi.string()
-        .default('http://localhost')
+        .default('0.0.0.0')
         .required(),
       DATABASE_CONNECTION: Joi.string().default('postgres'),
       DATABASE_HOST: Joi.string().default('localhost'),

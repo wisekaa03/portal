@@ -19,7 +19,7 @@ describe('Phonebook Controller', () => {
       controllers: [PhonebookController],
       providers: [
         { provide: NextService, useClass: NextServiceMock },
-        { provide: LogService, useClass: LogServiceMock },
+        // { provide: LogService, useClass: LogServiceMock },
       ],
     }).compile();
 

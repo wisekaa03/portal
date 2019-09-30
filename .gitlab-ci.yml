@@ -63,7 +63,6 @@ production:
       - node_modules/
     policy: pull
   before_script:
-    - cp --remove-destination "${ENVIRONMENT_VARIABLES}" .env
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:

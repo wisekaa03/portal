@@ -1,13 +1,13 @@
 /** @format */
 
 // #region Imports NPM
-import { Logger, LoggerService } from '@nestjs/common';
+import { Logger /* , LoggerService, LoggerService */ } from '@nestjs/common';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
 
-export class LogService extends Logger {
-  logger: Logger;
+export class LogService extends Logger /* implements LoggerService  */ {
+  // logger: Logger;
 
   locale = undefined;
 
@@ -21,12 +21,12 @@ export class LogService extends Logger {
     second: '2-digit',
   };
 
-  constructor(context?: string, isTimestampEnabled?: boolean) {
-    super();
-    // if (dev) {
-    //   this.logger = new Logger(context, isTimestampEnabled);
-    // }
-  }
+  // constructor(context?: string, isTimestampEnabled?: boolean) {
+  //   super(context, isTimestampEnabled);
+  //   if (dev) {
+  //     this.logger = new Logger(context, isTimestampEnabled);
+  //   }
+  // }
 
   log(message: any, context?: string): void {
     if (dev) {

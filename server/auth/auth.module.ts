@@ -20,10 +20,6 @@ import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
-    // #region Users module
-    forwardRef(() => UserModule),
-    // #endregion
-
     // #region Logger module, Config module, Next module
     LoggerModule,
     ConfigModule,
@@ -48,6 +44,10 @@ import { LoggerModule } from '../logger/logger.module';
         } as JwtModuleOptions;
       },
     }),
+    // #endregion
+
+    // #region Users module
+    forwardRef(() => UserModule),
     // #endregion
   ],
   providers: [AuthService, JwtStrategy],
