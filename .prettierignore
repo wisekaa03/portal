@@ -1,6 +1,9 @@
 /.git
 /.vscode
 
+# 
+*.json
+
 # Logs
 logs
 *.log

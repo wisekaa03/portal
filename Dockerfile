@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:10
 WORKDIR /kngk-portal/
 
 ARG NODE_ENV

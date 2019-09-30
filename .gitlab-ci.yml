@@ -15,7 +15,7 @@ variables:
   CONTAINER_IMAGE_LATEST: ${PREFIX}-${CI_PROJECT_NAME}:latest
 
 bundle:
-  image: node:12
+  image: node:10
   stage: bundle
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
@@ -27,7 +27,7 @@ bundle:
     - yarn install --production=false
 
 test:
-  image: node:12
+  image: node:10
   stage: test
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
@@ -38,7 +38,7 @@ test:
     - yarn test -u
 
 build:
-  image: node:12
+  image: node:10
   stage: build
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
