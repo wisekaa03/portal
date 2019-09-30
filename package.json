@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.2.43",
+  "version": "4.2.44",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
