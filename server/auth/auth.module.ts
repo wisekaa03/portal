@@ -15,16 +15,23 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { NextModule } from '../next/next.module';
 import { UserEntity } from '../user/user.entity';
-// import { LoggerModule } from '../logger/logger.module';
+import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
 @Module({
   imports: [
-    // #region Config module, Next module
+    // #region Users module
+    // forwardRef(() => UserModule),
+    // #endregion
+
+    // #region Logger module, Config module, Next module
+    LoggerModule,
     ConfigModule,
-    // LoggerModule,
     NextModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    // #endregion
+
+    // #region TypeOrmModule
+    // TypeOrmModule.forFeature([UserEntity]),
     // #endregion
 
     // #region Passport module
@@ -41,10 +48,6 @@ import { UserEntity } from '../user/user.entity';
         } as JwtModuleOptions;
       },
     }),
-    // #endregion
-
-    // #region Users module
-    forwardRef(() => UserModule),
     // #endregion
   ],
   providers: [AuthService, JwtStrategy],

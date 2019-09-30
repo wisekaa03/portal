@@ -30,10 +30,12 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    ConfigModule,
-
-    // #region Loggin module
+    // #region Logging module
     LoggerModule,
+    // #endregion
+
+    // #region Config module
+    ConfigModule,
     // #endregion
 
     // #region Cache Manager - Redis
@@ -53,10 +55,6 @@ import { UserModule } from './user/user.module';
     }),
     // #endregion
 
-    // #region TypeORM
-    TypeOrmModule.forRoot({}),
-    // #endregion
-
     // #region GraphQL
     GraphQLModule.forRoot({
       debug: process.env.NODE_ENV !== 'production',
@@ -66,15 +64,19 @@ import { UserModule } from './user/user.module';
     }),
     // #endregion
 
-    // #region Next
-    NextModule,
+    // #region TypeORM
+    TypeOrmModule.forRoot({}),
     // #endregion
 
-    // #region Authentication
-    AuthModule,
-    // #endregion
     // #region Users
-    UserModule,
+    forwardRef(() => UserModule),
+    // #endregion
+    // #region Authentication
+    forwardRef(() => AuthModule),
+    // #endregion
+
+    // #region Next
+    NextModule,
     // #endregion
 
     // #region Home page

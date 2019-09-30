@@ -50,7 +50,7 @@ export class ConfigService {
   };
 
   public jwtStrategyOptions: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: /* ExtractJwt.fromAuthHeaderAsBearerToken() */ ExtractJwt.fromHeader('cookie'),
     secretOrKey: undefined, // Public Key
     ...this.jwtVerifyOptions,
   };

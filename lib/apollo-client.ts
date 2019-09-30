@@ -62,6 +62,7 @@ export const apolloClient = (
       fetch,
       headers: {
         authorization: token ? `Bearer ${token}` : '',
+        cookie: `${token}`,
       },
     });
 
