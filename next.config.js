@@ -131,8 +131,8 @@ function HACKremoveMinimizeOptionFromCssLoaders(config) {
   config.module.rules.forEach((rule) => {
     if (Array.isArray(rule.use)) {
       rule.use.forEach((m) => {
-        if (m.loader === 'css-loader' && m.options) {
-          console.warn('HACK: Removing `minimize` option from `css-loader` entries in Webpack config');
+        if (m.loader === 'css-loader' && m.options && Object.keys(m.options).includes('minimize')) {
+          // console.warn('HACK: Removing `minimize` option from `css-loader` entries in Webpack config');
           delete m.options.minimize;
         }
       });

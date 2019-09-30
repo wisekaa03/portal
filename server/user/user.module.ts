@@ -20,7 +20,7 @@ import { LoggerModule } from '../logger/logger.module';
 @Module({
   imports: [
     // #region Authentication
-    // forwardRef(() => AuthModule),
+    forwardRef(() => AuthModule),
     // #endregion
 
     // #region Config module

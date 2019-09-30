@@ -21,7 +21,7 @@ import { LoggerModule } from '../logger/logger.module';
 @Module({
   imports: [
     // #region Users module
-    // forwardRef(() => UserModule),
+    forwardRef(() => UserModule),
     // #endregion
 
     // #region Logger module, Config module, Next module
