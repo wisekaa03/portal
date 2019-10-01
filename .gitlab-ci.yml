@@ -22,7 +22,7 @@ bundle:
     paths:
       - node_modules/
     # untracked: true
-    policy: pull-push
+    # policy: pull-push
   script:
     - yarn install --production=false
 
@@ -71,10 +71,10 @@ production:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
     - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
-    - export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l)
     - |
+      export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
       if [ ! ${DEPLOYS} -eq 1 ]; then \
-        docker image rm ${RELEASE_NAME} \
+        docker image rm ${RELEASE_NAME}; \
       fi
     - docker images ${RELEASE_NAME}
     - docker build --tag ${CONTAINER_IMAGE} .
