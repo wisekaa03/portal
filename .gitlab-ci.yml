@@ -1,7 +1,7 @@
 stages:
-  - bundle
-  - test
-  - build
+  - bundle_test_build
+  # - test
+  # - build
   - production
   - deploy
 
@@ -14,7 +14,7 @@ variables:
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
-bundle:
+bundle_test_build:
   image: node:10
   stage: bundle
   cache:
@@ -25,39 +25,45 @@ bundle:
     # policy: pull-push
   script:
     - yarn install --production=false
-
-test:
-  image: node:10
-  stage: test
-  cache:
-    key: "${CI_COMMIT_REF_SLUG}"
-    paths:
-      - node_modules/
-    policy: pull
-  script:
     - yarn test -u
-  only:
-    changes:
-      - "package.json"
-      - "**/*.js"
-      - "**/*.ts"
-
-build:
-  image: node:10
-  stage: build
-  cache:
-    key: "${CI_COMMIT_REF_SLUG}"
-    paths:
-      - node_modules/
-    policy: pull
-  script:
-    - bash entrypoint.sh
-    - npx next telemetry --disable && yarn build
+    - bash entrypoint.sh && npx next telemetry --disable && yarn build
   artifacts:
     paths:
       - .nest/
       - .next/
     expire_in: 3 hours
+
+# test:
+#   image: node:10
+#   stage: test
+#   cache:
+#     key: "${CI_COMMIT_REF_SLUG}"
+#     paths:
+#       - node_modules/
+#     policy: pull
+#   script:
+#     - yarn test -u
+#   only:
+#     changes:
+#       - "package.json"
+#       - "**/*.js"
+#       - "**/*.ts"
+
+# build:
+#   image: node:10
+#   stage: build
+#   cache:
+#     key: "${CI_COMMIT_REF_SLUG}"
+#     paths:
+#       - node_modules/
+#     policy: pull
+#   script:
+#     - bash entrypoint.sh && npx next telemetry --disable && yarn build
+#   artifacts:
+#     paths:
+#       - .nest/
+#       - .next/
+#     expire_in: 3 hours
 
 production:
   image: docker:latest
@@ -94,7 +100,7 @@ deploy:
         sleep 1; \
       fi
     - |
-      if [ ${DEPLOYS} -eq 0 ]; then \
+      if [ ${DEPLOYS} -eq 0 ]; then; \
         helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV=${NODE_ENV} \
@@ -125,7 +131,7 @@ deploy:
           --set LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE} \
           --set LDAP_SEARCH_FILTER=${LDAP_SEARCH_FILTER} \
           helm/portal; \
-      else \
+      else; \
         helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV=${NODE_ENV} \
