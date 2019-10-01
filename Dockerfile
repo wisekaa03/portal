@@ -83,3 +83,4 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 
 # YARN START
 ENTRYPOINT [ "./entrypoint.sh" ]
+CMD ["yarn", "start"]
