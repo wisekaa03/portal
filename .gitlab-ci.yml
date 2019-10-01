@@ -79,4 +79,4 @@ deploy:
     - helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
     - if [ ! ${DEPLOYS} -eq 0 ]; then helm del --purge ${RELEASE_NAME}; sleep 1; fi
-    - if [ ${DEPLOYS} -eq 0 ]; then helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} --debug helm/kngk-portal; else helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} --debug ${RELEASE_NAME} helm/kngk-portal; fi
+    - if [ ${DEPLOYS} -eq 0 ]; then helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} --debug helm/portal; else helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} --debug ${RELEASE_NAME} helm/portal; fi

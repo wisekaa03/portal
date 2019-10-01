@@ -58,25 +58,25 @@ spec:
             - name: NODE_ENV
               value: production
             - name: HOST
-              value: {{ .Values.default.HOST }}
+              value: {{ .Values.default.HOST | quote }}
             - name: PORT
-              value: {{ .Values.default.PORT }}
+              value: {{ .Values.default.PORT | quote }}
             - name: PORT_DEBUG
-              value: {{ .Values.default.PORT_DEBUG }}
+              value: {{ .Values.default.PORT_DEBUG | quote }}
             - name: DATABASE_CONNECTION
-              value: {{ .Values.default.DATABASE_CONNECTION }}
+              value: {{ .Values.default.DATABASE_CONNECTION | quote }}
             - name: DATABASE_HOST
-              value: {{ .Values.default.DATABASE_HOST }}
+              value: {{ .Values.default.DATABASE_HOST | quote }}
             - name: DATABASE_PORT
-              value: {{ .Values.default.DATABASE_PORT }}
+              value: {{ .Values.default.DATABASE_PORT | quote }}
             - name: DATABASE_USERNAME
-              value: {{ .Values.default.DATABASE_USERNAME }}
+              value: {{ .Values.default.DATABASE_USERNAME | quote }}
             - name: DATABASE_PASSWORD
-              value: {{ .Values.default.DATABASE_PASSWORD }}
+              value: {{ .Values.default.DATABASE_PASSWORD | quote }}
             - name: DATABASE_DATABASE
-              value: {{ .Values.default.DATABASE_DATABASE }}
+              value: {{ .Values.default.DATABASE_DATABASE | quote }}
             - name: DATABASE_SCHEMA
-              value: {{ .Values.default.DATABASE_SCHEMA }}
+              value: {{ .Values.default.DATABASE_SCHEMA | quote }}
             - name: DATABASE_SYNCHRONIZE
               value: {{ .Values.default.DATABASE_SYNCHRONIZE }}
             - name: DATABASE_DROP_SCHEMA
@@ -88,27 +88,27 @@ spec:
             - name: DATABASE_CACHE
               value: {{ .Values.default.DATABASE_CACHE }}
             - name: REDIS_HOST
-              value: {{ .Values.default.REDIS_HOST }}
+              value: {{ .Values.default.REDIS_HOST | quote }}
             - name: REDIS_PORT
-              value: {{ .Values.default.REDIS_PORT }}
+              value: {{ .Values.default.REDIS_PORT | quote }}
             - name: REDIS_DB
-              value: {{ .Values.default.REDIS_DB }}
+              value: {{ .Values.default.REDIS_DB | quote }}
             - name: REDIS_PASSWORD
-              value: {{ .Values.default.REDIS_PASSWORD }}
+              value: {{ .Values.default.REDIS_PASSWORD | quote }}
             - name: REDIS_PREFIX
-              value: {{ .Values.default.REDIS_PREFIX }}
+              value: {{ .Values.default.REDIS_PREFIX | quote }}
             - name: SESSION_SECRET
-              value: {{ .Values.default.SESSION_SECRET }}
+              value: {{ .Values.default.SESSION_SECRET | quote }}
             - name: LDAP_URL
-              value: {{ .Values.default.LDAP_URL }}
+              value: {{ .Values.default.LDAP_URL | quote }}
             - name: LDAP_BIND_DN
-              value: {{ .Values.default.LDAP_BIND_DN }}
+              value: {{ .Values.default.LDAP_BIND_DN | quote }}
             - name: LDAP_BIND_PW
-              value: {{ .Values.default.LDAP_BIND_PW }}
+              value: {{ .Values.default.LDAP_BIND_PW | quote }}
             - name: LDAP_SEARCH_BASE
-              value: {{ .Values.default.LDAP_SEARCH_BASE }}
+              value: {{ .Values.default.LDAP_SEARCH_BASE | quote }}
             - name: LDAP_SEARCH_FILTER
-              value: {{ .Values.default.LDAP_SEARCH_FILTER }}
+              value: {{ .Values.default.LDAP_SEARCH_FILTER | quote }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
