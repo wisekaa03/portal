@@ -5,13 +5,47 @@
 replicaCount: 1
 
 image:
-  repository: kngk-portal
+  repository: portal
   tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: "kngk-portal"
 fullnameOverride: "kngk-portal"
+
+default:
+  # DB
+  DATABASE_CONNECTION: postgres
+  DATABASE_HOST: postgresql.default.svc.cluster.local
+  DATABASE_PORT: 5432
+  DATABASE_USERNAME: postgres
+  DATABASE_PASSWORD: 
+  DATABASE_DATABASE: portaldb
+  DATABASE_SCHEMA: app_public
+  DATABASE_SYNCHRONIZE: true
+  DATABASE_DROP_SCHEMA: true
+  DATABASE_MIGRATIONS_RUN: true
+  DATABASE_LOGGING: true
+  DATABASE_CACHE: true
+
+  # Redis
+  REDIS_HOST: redis-ha.default.svc.cluster.local
+  REDIS_PORT: 6379
+  REDIS_DB: 0
+  REDIS_PASSWORD:
+  REDIS_PREFIX:
+
+  # App
+  HOST: 0.0.0.0
+  PORT: 4000
+  SESSION_SECRET: supersecret
+
+  # LDAP
+  LDAP_URL: ldap://example.local:389
+  LDAP_BIND_DN: CN=user,DC=khgk,DC=local
+  LDAP_BIND_PW:
+  LDAP_SEARCH_BASE: DC=example,DC=local
+  LDAP_SEARCH_FILTER: (sAMAccountName={{username}})
 
 service:
   type: LoadBalancer

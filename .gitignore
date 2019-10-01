@@ -104,3 +104,4 @@ npmlist.json
 
 # Helm
 kubelet.conf
+values.yaml
