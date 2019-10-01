@@ -82,7 +82,6 @@ production:
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
       fi
-    - docker images ${RELEASE_NAME}
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker images ${RELEASE_NAME}
@@ -100,7 +99,7 @@ deploy:
         sleep 1; \
       fi
     - |
-      if [ ${DEPLOYS} -eq 0 ]; then; \
+      if [ ${DEPLOYS} -eq 0 ]; then \
         helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV=${NODE_ENV} \
