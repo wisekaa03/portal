@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: portal
+  repository: kngk-portal
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -13,49 +13,46 @@ imagePullSecrets: []
 nameOverride: "portal"
 fullnameOverride: "portal"
 
-default:
-  # DB
-  DATABASE_CONNECTION: postgres
-  DATABASE_HOST: postgresql.default.svc.cluster.local
-  DATABASE_PORT: 5432
-  DATABASE_USERNAME: postgres
-  DATABASE_PASSWORD: 
-  DATABASE_DATABASE: portaldb
-  DATABASE_SCHEMA: public
-  DATABASE_SYNCHRONIZE: true
-  DATABASE_DROP_SCHEMA: true
-  DATABASE_MIGRATIONS_RUN: true
-  DATABASE_LOGGING: true
-  DATABASE_CACHE: true
+NODE_ENV: production
 
-  # Redis
-  REDIS_HOST: redis-ha.default.svc.cluster.local
-  REDIS_PORT: 6379
-  REDIS_DB: 0
-  REDIS_PASSWORD:
-  REDIS_PREFIX:
+# App
+HOST: 0.0.0.0
+PORT: 4000
+PORT_DEBUGGER: 9229
+SESSION_SECRET: supersecret
 
-  # App
-  HOST: 0.0.0.0
-  PORT: 4000
-  SESSION_SECRET: supersecret
+# DB
+DATABASE_CONNECTION: postgres
+DATABASE_HOST: postgresql.default.svc.cluster.local
+DATABASE_PORT: 5432
+DATABASE_USERNAME: postgres
+DATABASE_PASSWORD: ""
+DATABASE_DATABASE: portaldb
+DATABASE_SCHEMA: public
+DATABASE_SYNCHRONIZE: true
+DATABASE_DROP_SCHEMA: true
+DATABASE_MIGRATIONS_RUN: true
+DATABASE_LOGGING: true
+DATABASE_CACHE: true
 
-  # LDAP
-  LDAP_URL: ldap://example.local:389
-  LDAP_BIND_DN: CN=user,DC=khgk,DC=local
-  LDAP_BIND_PW:
-  LDAP_SEARCH_BASE: DC=example,DC=local
-  LDAP_SEARCH_FILTER: (sAMAccountName={{username}})
+# Redis
+REDIS_HOST: redis-ha.default.svc.cluster.local
+REDIS_PORT: 6379
+REDIS_DB: 0
+REDIS_PASSWORD: ""
+REDIS_PREFIX: ""
+
+# LDAP
+LDAP_URL: ldap://activedirectory:389
+LDAP_BIND_DN: CN=user,DC=example,DC=local
+LDAP_BIND_PW: ""
+LDAP_SEARCH_BASE: DC=example,DC=local
+LDAP_SEARCH_FILTER: (sAMAccountName={{username}})
 
 service:
   type: LoadBalancer
 
-  port: 4000
-  targetPort: 4000
   nodePort: 30300
-
-  port_debugger: 9229
-  targetPort_debugger: 9229
   nodePort_debugger: 30301
 
   externalIPs:
@@ -71,7 +68,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: portal.default.svc.cluster.local
+    - host: portal.production.svc.cluster.local
       paths: []
 
   tls: []
