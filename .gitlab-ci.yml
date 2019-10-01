@@ -16,7 +16,7 @@ variables:
 
 bundle_test_build:
   image: node:10
-  stage: bundle
+  stage: bundle_test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
