@@ -130,7 +130,7 @@ deploy:
           --set LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE} \
           --set LDAP_SEARCH_FILTER=${LDAP_SEARCH_FILTER} \
           helm/portal; \
-      else; \
+      else \
         helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV=${NODE_ENV} \
