@@ -36,6 +36,11 @@ test:
     policy: pull
   script:
     - yarn test -u
+  only:
+    changes:
+      - "package.json"
+      - "**/*.js"
+      - "**/*.ts"
 
 build:
   image: node:10
@@ -79,64 +84,65 @@ deploy:
     - helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
     - if [ ! ${DEPLOYS} -eq 0 ]; then helm del --purge ${RELEASE_NAME}; sleep 1; fi
-    - if [ ${DEPLOYS} -eq 0 ]; then \
-    - helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
-    - --debug --values helm/portal/values.yaml helm/portal \
-    - --set NODE_ENV=${NODE_ENV} \
-    - --set HOST=${HOST} \
-    - --set PORT=${PORT} \
-    - --set PORT_DEBUGGER=${PORT_DEBUGGER} \
-    - --set DATABASE_CONNECTION=${DATABASE_CONNECTION} \
-    - --set DATABASE_HOST=${DATABASE_HOST} \
-    - --set DATABASE_PORT=${DATABASE_PORT} \
-    - --set DATABASE_USERNAME=${DATABASE_USERNAME} \
-    - --set DATABASE_PASSWORD=${DATABASE_PASSWORD} \
-    - --set DATABASE_DATABASE=${DATABASE_DATABASE} \
-    - --set DATABASE_SCHEMA=${DATABASE_SCHEMA} \
-    - --set DATABASE_SYNCHRONIZE=${DATABASE_SYNCHRONIZE} \
-    - --set DATABASE_DROP_SCHEMA=${DATABASE_DROP_SCHEMA} \
-    - --set DATABASE_MIGRATIONS_RUN=${DATABASE_MIGRATIONS_RUN} \
-    - --set DATABASE_LOGGING=${DATABASE_LOGGING} \
-    - --set DATABASE_CACHE=${DATABASE_CACHE} \
-    - --set REDIS_HOST=${REDIS_HOST} \
-    - --set REDIS_PORT=${REDIS_PORT} \
-    - --set REDIS_DB=${REDIS_DB} \
-    - --set REDIS_PASSWORD=${REDIS_PASSWORD} \
-    - --set REDIS_PREFIX=${REDIS_PREFIX} \
-    - --set SESSION_SECRET=${SESSION_SECRET} \
-    - --set LDAP_URL=${LDAP_URL} \
-    - --set LDAP_BIND_DN=${LDAP_BIND_DN} \
-    - --set LDAP_BIND_PW=${LDAP_BIND_PW} \
-    - --set LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE} \
-    - --set LDAP_SEARCH_FILTER=${LDAP_SEARCH_FILTER} \
-    - ; else \
-    - helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
-    - --debug --values helm/portal/values.yaml ${RELEASE_NAME} helm/portal \
-    - --set NODE_ENV=${NODE_ENV} \
-    - --set HOST=${HOST} \
-    - --set PORT=${PORT} \
-    - --set PORT_DEBUGGER=${PORT_DEBUGGER} \
-    - --set DATABASE_CONNECTION=${DATABASE_CONNECTION} \
-    - --set DATABASE_HOST=${DATABASE_HOST} \
-    - --set DATABASE_PORT=${DATABASE_PORT} \
-    - --set DATABASE_USERNAME=${DATABASE_USERNAME} \
-    - --set DATABASE_PASSWORD=${DATABASE_PASSWORD} \
-    - --set DATABASE_DATABASE=${DATABASE_DATABASE} \
-    - --set DATABASE_SCHEMA=${DATABASE_SCHEMA} \
-    - --set DATABASE_SYNCHRONIZE=${DATABASE_SYNCHRONIZE} \
-    - --set DATABASE_DROP_SCHEMA=${DATABASE_DROP_SCHEMA} \
-    - --set DATABASE_MIGRATIONS_RUN=${DATABASE_MIGRATIONS_RUN} \
-    - --set DATABASE_LOGGING=${DATABASE_LOGGING} \
-    - --set DATABASE_CACHE=${DATABASE_CACHE} \
-    - --set REDIS_HOST=${REDIS_HOST} \
-    - --set REDIS_PORT=${REDIS_PORT} \
-    - --set REDIS_DB=${REDIS_DB} \
-    - --set REDIS_PASSWORD=${REDIS_PASSWORD} \
-    - --set REDIS_PREFIX=${REDIS_PREFIX} \
-    - --set SESSION_SECRET=${SESSION_SECRET} \
-    - --set LDAP_URL=${LDAP_URL} \
-    - --set LDAP_BIND_DN=${LDAP_BIND_DN} \
-    - --set LDAP_BIND_PW=${LDAP_BIND_PW} \
-    - --set LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE} \
-    - --set LDAP_SEARCH_FILTER=${LDAP_SEARCH_FILTER} \
-    - ; fi
+    - |
+      if [ ${DEPLOYS} -eq 0 ]; then \
+      helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
+      --debug --values helm/portal/values.yaml helm/portal \
+      set NODE_ENV=${NODE_ENV} \
+      set HOST=${HOST} \
+      set PORT=${PORT} \
+      set PORT_DEBUGGER=${PORT_DEBUGGER} \
+      set DATABASE_CONNECTION=${DATABASE_CONNECTION} \
+      set DATABASE_HOST=${DATABASE_HOST} \
+      set DATABASE_PORT=${DATABASE_PORT} \
+      set DATABASE_USERNAME=${DATABASE_USERNAME} \
+      set DATABASE_PASSWORD=${DATABASE_PASSWORD} \
+      set DATABASE_DATABASE=${DATABASE_DATABASE} \
+      set DATABASE_SCHEMA=${DATABASE_SCHEMA} \
+      set DATABASE_SYNCHRONIZE=${DATABASE_SYNCHRONIZE} \
+      set DATABASE_DROP_SCHEMA=${DATABASE_DROP_SCHEMA} \
+      set DATABASE_MIGRATIONS_RUN=${DATABASE_MIGRATIONS_RUN} \
+      set DATABASE_LOGGING=${DATABASE_LOGGING} \
+      set DATABASE_CACHE=${DATABASE_CACHE} \
+      set REDIS_HOST=${REDIS_HOST} \
+      set REDIS_PORT=${REDIS_PORT} \
+      set REDIS_DB=${REDIS_DB} \
+      set REDIS_PASSWORD=${REDIS_PASSWORD} \
+      set REDIS_PREFIX=${REDIS_PREFIX} \
+      set SESSION_SECRET=${SESSION_SECRET} \
+      set LDAP_URL=${LDAP_URL} \
+      set LDAP_BIND_DN=${LDAP_BIND_DN} \
+      set LDAP_BIND_PW=${LDAP_BIND_PW} \
+      set LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE} \
+      set LDAP_SEARCH_FILTER=${LDAP_SEARCH_FILTER} \
+      ; else \
+      helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
+      debug --values helm/portal/values.yaml ${RELEASE_NAME} helm/portal \
+      set NODE_ENV=${NODE_ENV} \
+      set HOST=${HOST} \
+      set PORT=${PORT} \
+      set PORT_DEBUGGER=${PORT_DEBUGGER} \
+      set DATABASE_CONNECTION=${DATABASE_CONNECTION} \
+      set DATABASE_HOST=${DATABASE_HOST} \
+      set DATABASE_PORT=${DATABASE_PORT} \
+      set DATABASE_USERNAME=${DATABASE_USERNAME} \
+      set DATABASE_PASSWORD=${DATABASE_PASSWORD} \
+      set DATABASE_DATABASE=${DATABASE_DATABASE} \
+      set DATABASE_SCHEMA=${DATABASE_SCHEMA} \
+      set DATABASE_SYNCHRONIZE=${DATABASE_SYNCHRONIZE} \
+      set DATABASE_DROP_SCHEMA=${DATABASE_DROP_SCHEMA} \
+      set DATABASE_MIGRATIONS_RUN=${DATABASE_MIGRATIONS_RUN} \
+      set DATABASE_LOGGING=${DATABASE_LOGGING} \
+      set DATABASE_CACHE=${DATABASE_CACHE} \
+      set REDIS_HOST=${REDIS_HOST} \
+      set REDIS_PORT=${REDIS_PORT} \
+      set REDIS_DB=${REDIS_DB} \
+      set REDIS_PASSWORD=${REDIS_PASSWORD} \
+      set REDIS_PREFIX=${REDIS_PREFIX} \
+      set SESSION_SECRET=${SESSION_SECRET} \
+      set LDAP_URL=${LDAP_URL} \
+      set LDAP_BIND_DN=${LDAP_BIND_DN} \
+      set LDAP_BIND_PW=${LDAP_BIND_PW} \
+      set LDAP_SEARCH_BASE=${LDAP_SEARCH_BASE} \
+      set LDAP_SEARCH_FILTER=${LDAP_SEARCH_FILTER} \
+      ; fi
