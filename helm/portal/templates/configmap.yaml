@@ -9,30 +9,30 @@ metadata:
     app_version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 data:
-  NODE_ENV: {{ .Values.NODE_ENV | quote }}
-  HOST: {{ .Values.HOST | quote }}
-  PORT: {{ .Values.PORT }}
-  PORT_DEBUGER: {{ .Values.PORT_DEBUGER }}
-  DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | quote }}
-  DATABASE_HOST: {{ .Values.DATABASE_HOST | quote }}
-  DATABASE_PORT: {{ .Values.DATABASE_PORT }}
-  DATABASE_USERNAME: {{ .Values.DATABASE_USERNAME | quote }}
-  DATABASE_PASSWORD: {{ .Values.DATABASE_PASSWORD | quote }}
-  DATABASE_DATABASE: {{ .Values.DATABASE_DATABASE | quote }}
-  DATABASE_SCHEMA: {{ .Values.DATABASE_SCHEMA | quote }}
-  DATABASE_SYNCHRONIZE: {{ .Values.DATABASE_SYNCHRONIZE }}
-  DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA }}
-  DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN }}
-  DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING }}
-  DATABASE_CACHE: {{ .Values.DATABASE_CACHE }}
-  REDIS_HOST: {{ .Values.REDIS_HOST | quote }}
-  REDIS_PORT: {{ .Values.REDIS_PORT }}
-  REDIS_DB: {{ .Values.REDIS_DB | quote }}
-  REDIS_PASSWORD: {{ .Values.REDIS_PASSWORD | quote }}
-  REDIS_PREFIX: {{ .Values.REDIS_PREFIX | quote }}
-  SESSION_SECRET: {{ .Values.SESSION_SECRET | quote }}
-  LDAP_URL: {{ .Values.LDAP_URL | quote }}
-  LDAP_BIND_DN: {{ .Values.LDAP_BIND_DN | quote }}
-  LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | quote }}
-  LDAP_SEARCH_BASE: {{ .Values.LDAP_SEARCH_BASE | quote }}
-  LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | quote }}
+  NODE_ENV: {{ .Values.NODE_ENV | default "production" | quote }}
+  HOST: {{ .Values.HOST | default "localhost" | quote }}
+  PORT: {{ .Values.PORT | default "4000" | quote }}
+  PORT_DEBUGGER: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
+  DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | default "postgres" | quote }}
+  DATABASE_HOST: {{ .Values.DATABASE_HOST | default "localhost" | quote }}
+  DATABASE_PORT: {{ .Values.DATABASE_PORT | default "5432" | quote }}
+  DATABASE_USERNAME: {{ .Values.DATABASE_USERNAME | default "postgres" | quote }}
+  DATABASE_PASSWORD: {{ .Values.DATABASE_PASSWORD | default "supersecret" | quote }}
+  DATABASE_DATABASE: {{ .Values.DATABASE_DATABASE | default "postgres" | quote }}
+  DATABASE_SCHEMA: {{ .Values.DATABASE_SCHEMA | default "public" | quote }}
+  DATABASE_SYNCHRONIZE: {{ .Values.DATABASE_SYNCHRONIZE | default "true" | quote }}
+  DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}
+  DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
+  DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING | default "true" | quote }}
+  DATABASE_CACHE: {{ .Values.DATABASE_CACHE | default "true" | quote }}
+  REDIS_HOST: {{ .Values.REDIS_HOST | default "localhost" | quote }}
+  REDIS_PORT: {{ .Values.REDIS_PORT | default "6379" | quote }}
+  REDIS_DB: {{ .Values.REDIS_DB | default "0" | quote }}
+  REDIS_PASSWORD: {{ .Values.REDIS_PASSWORD | default "" | quote }}
+  REDIS_PREFIX: {{ .Values.REDIS_PREFIX | default "" | quote }}
+  SESSION_SECRET: {{ .Values.SESSION_SECRET | default "sessionsecret" | quote }}
+  LDAP_URL: {{ .Values.LDAP_URL | default "ldap://activedirectory:389" | quote }}
+  LDAP_BIND_DN: {{ .Values.LDAP_BIND_DN | default "CN=user,DC=example,DC=local" | quote }}
+  LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | default "supersecret" | quote }}
+  LDAP_SEARCH_BASE: {{ .Values.LDAP_SEARCH_BASE | default "DC=example,DC=local" | quote }}
+  LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | default "" | quote }}
