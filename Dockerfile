@@ -1,5 +1,5 @@
 FROM node:10
-WORKDIR /kngk-portal/
+WORKDIR /portal/
 
 # LABELS
 LABEL maintainer="webmaster@kngk-group.ru"

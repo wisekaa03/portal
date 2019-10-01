@@ -7,15 +7,15 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.PORT }}
+      targetPort: {{ .Values.PORT }}
       {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
       protocol: TCP
       name: http
-    - port: {{ .Values.service.port_debugger }}
-      targetPort: {{ .Values.service.targetPort_debugger }}
+    - port: {{ .Values.PORT_DEBUGGER }}
+      targetPort: {{ .Values.PORT_DEBUGGER }}
       {{- if .Values.service.nodePort_debugger }}
       nodePort: {{ .Values.service.nodePort_debugger }}
       {{- end }}

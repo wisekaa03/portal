@@ -12,6 +12,8 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "portal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -26,7 +28,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.PORT }}
               protocol: TCP
           # livenessProbe:
           #   httpGet:
@@ -56,59 +58,140 @@ spec:
           #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: NODE_ENV
-              value: production
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: NODE_ENV
             - name: HOST
-              value: {{ .Values.default.HOST | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HOST
             - name: PORT
-              value: {{ .Values.default.PORT | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: PORT
             - name: PORT_DEBUG
-              value: {{ .Values.default.PORT_DEBUG | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: PORT_DEBUG
             - name: DATABASE_CONNECTION
-              value: {{ .Values.default.DATABASE_CONNECTION | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_CONNECTION
             - name: DATABASE_HOST
-              value: {{ .Values.default.DATABASE_HOST | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_HOST
             - name: DATABASE_PORT
-              value: {{ .Values.default.DATABASE_PORT | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_PORT
             - name: DATABASE_USERNAME
-              value: {{ .Values.default.DATABASE_USERNAME | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_USERNAME
             - name: DATABASE_PASSWORD
-              value: {{ .Values.default.DATABASE_PASSWORD | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_PASSWORD
             - name: DATABASE_DATABASE
-              value: {{ .Values.default.DATABASE_DATABASE | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_DATABASE
             - name: DATABASE_SCHEMA
-              value: {{ .Values.default.DATABASE_SCHEMA | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_SCHEMA
             - name: DATABASE_SYNCHRONIZE
-              value: {{ .Values.default.DATABASE_SYNCHRONIZE }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_SYNCHRONIZE
             - name: DATABASE_DROP_SCHEMA
-              value: {{ .Values.default.DATABASE_DROP_SCHEMA }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_DROP_SCHEMA
             - name: DATABASE_MIGRATIONS_RUN
-              value: {{ .Values.default.DATABASE_MIGRATIONS_RUN }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_MIGRATIONS_RUN
             - name: DATABASE_LOGGING
-              value: {{ .Values.default.DATABASE_LOGGING }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_LOGGING
             - name: DATABASE_CACHE
-              value: {{ .Values.default.DATABASE_CACHE }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_CACHE
             - name: REDIS_HOST
-              value: {{ .Values.default.REDIS_HOST | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: REDIS_HOST
             - name: REDIS_PORT
-              value: {{ .Values.default.REDIS_PORT | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: REDIS_PORT
             - name: REDIS_DB
-              value: {{ .Values.default.REDIS_DB | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: REDIS_DB
             - name: REDIS_PASSWORD
-              value: {{ .Values.default.REDIS_PASSWORD | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: REDIS_PASSWORD
             - name: REDIS_PREFIX
-              value: {{ .Values.default.REDIS_PREFIX | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: REDIS_PREFIX
             - name: SESSION_SECRET
-              value: {{ .Values.default.SESSION_SECRET | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_SECRET
             - name: LDAP_URL
-              value: {{ .Values.default.LDAP_URL | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_URL
             - name: LDAP_BIND_DN
-              value: {{ .Values.default.LDAP_BIND_DN | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_BIND_DN
             - name: LDAP_BIND_PW
-              value: {{ .Values.default.LDAP_BIND_PW | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_BIND_PW
             - name: LDAP_SEARCH_BASE
-              value: {{ .Values.default.LDAP_SEARCH_BASE | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_BASE
             - name: LDAP_SEARCH_FILTER
-              value: {{ .Values.default.LDAP_SEARCH_FILTER | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_FILTER
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

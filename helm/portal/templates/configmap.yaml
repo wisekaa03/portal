@@ -1,11 +1,38 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kngk-portal-configmap
+  name: {{ .Release.Name }}-configmap
   labels:
 {{ include "portal.labels" . | indent 4 }}
-    app_name: kngk-portal
+    app_name: portal
 {{- if .Chart.AppVersion }}
     app_version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 data:
+  NODE_ENV: {{ .Values.NODE_ENV | quote }}
+  HOST: {{ .Values.HOST | quote }}
+  PORT: {{ .Values.PORT }}
+  PORT_DEBUGER: {{ .Values.PORT_DEBUGER }}
+  DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | quote }}
+  DATABASE_HOST: {{ .Values.DATABASE_HOST | quote }}
+  DATABASE_PORT: {{ .Values.DATABASE_PORT }}
+  DATABASE_USERNAME: {{ .Values.DATABASE_USERNAME | quote }}
+  DATABASE_PASSWORD: {{ .Values.DATABASE_PASSWORD | quote }}
+  DATABASE_DATABASE: {{ .Values.DATABASE_DATABASE | quote }}
+  DATABASE_SCHEMA: {{ .Values.DATABASE_SCHEMA | quote }}
+  DATABASE_SYNCHRONIZE: {{ .Values.DATABASE_SYNCHRONIZE }}
+  DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA }}
+  DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN }}
+  DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING }}
+  DATABASE_CACHE: {{ .Values.DATABASE_CACHE }}
+  REDIS_HOST: {{ .Values.REDIS_HOST | quote }}
+  REDIS_PORT: {{ .Values.REDIS_PORT }}
+  REDIS_DB: {{ .Values.REDIS_DB | quote }}
+  REDIS_PASSWORD: {{ .Values.REDIS_PASSWORD | quote }}
+  REDIS_PREFIX: {{ .Values.REDIS_PREFIX | quote }}
+  SESSION_SECRET: {{ .Values.SESSION_SECRET | quote }}
+  LDAP_URL: {{ .Values.LDAP_URL | quote }}
+  LDAP_BIND_DN: {{ .Values.LDAP_BIND_DN | quote }}
+  LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | quote }}
+  LDAP_SEARCH_BASE: {{ .Values.LDAP_SEARCH_BASE | quote }}
+  LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | quote }}

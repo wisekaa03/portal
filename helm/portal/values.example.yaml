@@ -10,8 +10,8 @@ image:
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
-nameOverride: "kngk-portal"
-fullnameOverride: "kngk-portal"
+nameOverride: "portal"
+fullnameOverride: "portal"
 
 default:
   # DB
@@ -21,7 +21,7 @@ default:
   DATABASE_USERNAME: postgres
   DATABASE_PASSWORD: 
   DATABASE_DATABASE: portaldb
-  DATABASE_SCHEMA: app_public
+  DATABASE_SCHEMA: public
   DATABASE_SYNCHRONIZE: true
   DATABASE_DROP_SCHEMA: true
   DATABASE_MIGRATIONS_RUN: true
@@ -71,7 +71,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: kngk-portal.default.svc.cluster.local
+    - host: portal.default.svc.cluster.local
       paths: []
 
   tls: []
