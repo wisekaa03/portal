@@ -14,6 +14,8 @@
     "copy": "cp -r static .nest",
     "nest:build": "NODE_ENV=production tsc -P tsconfig.server.json",
     "next:build": "next build",
+    "helm": "helm install --namespace=production --name=kngk-portal --debug helm/kngk-portal",
+    "helm:del": "helm del --purge kngk-portal",
     "start": "NODE_ENV=production node .nest/main.js",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",

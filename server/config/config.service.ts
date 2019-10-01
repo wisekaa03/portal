@@ -70,20 +70,36 @@ export class ConfigService {
    */
   private validateInput(envConfig: EnvConfig): EnvConfig {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
-      NODE_ENV: Joi.any().default('development'),
+      NODE_ENV: Joi.any()
+        .default('development')
+        .empty(),
       PORT: Joi.number()
         .default(4000)
-        .required(),
+        .empty(),
       HOST: Joi.string()
         .default('0.0.0.0')
-        .required(),
-      DATABASE_CONNECTION: Joi.string().default('postgres'),
-      DATABASE_HOST: Joi.string().default('localhost'),
-      DATABASE_PORT: Joi.number().default(5432),
-      DATABASE_USERNAME: Joi.string().default('portal'),
-      DATABASE_PASSWORD: Joi.string().default('portalpwd'),
-      DATABASE_DATABASE: Joi.string().default('portaldb'),
-      DATABASE_SCHEMA: Joi.string().default('public'),
+        .empty(),
+      DATABASE_CONNECTION: Joi.string()
+        .default('postgres')
+        .empty(),
+      DATABASE_HOST: Joi.string()
+        .default('localhost')
+        .empty(),
+      DATABASE_PORT: Joi.number()
+        .default(5432)
+        .empty(),
+      DATABASE_USERNAME: Joi.string()
+        .default('portal')
+        .empty(),
+      DATABASE_PASSWORD: Joi.string()
+        .default('portalpwd')
+        .empty(),
+      DATABASE_DATABASE: Joi.string()
+        .default('portaldb')
+        .empty(),
+      DATABASE_SCHEMA: Joi.string()
+        .default('public')
+        .empty(),
       DATABASE_SYNCHRONIZE: Joi.string()
         .default('true')
         .empty(),
@@ -99,11 +115,15 @@ export class ConfigService {
       DATABASE_CACHE: Joi.string()
         .default('true')
         .empty(),
-      REDIS_HOST: Joi.string().default('localhost'),
+      REDIS_HOST: Joi.string()
+        .default('localhost')
+        .empty(),
       REDIS_PORT: Joi.number()
         .default(6379)
         .empty(),
-      REDIS_DB: Joi.number().default(0),
+      REDIS_DB: Joi.number()
+        .default(0)
+        .empty(),
       REDIS_PASSWORD: Joi.string()
         .allow('')
         .empty(),
@@ -112,22 +132,22 @@ export class ConfigService {
         .empty(),
       SESSION_SECRET: Joi.string()
         .default('portal')
-        .required(),
+        .empty(),
       LDAP_URL: Joi.string()
         .default('ldap://activedirectory:389')
-        .required(),
+        .empty(),
       LDAP_BIND_DN: Joi.string()
         .default('CN=Administrator,DC=example,DC=local')
-        .required(),
+        .empty(),
       LDAP_BIND_PW: Joi.string()
         .default('PaSsWoRd123')
-        .required(),
+        .empty(),
       LDAP_SEARCH_BASE: Joi.string()
         .default('DC=example,DC=local')
-        .required(),
+        .empty(),
       LDAP_SEARCH_FILTER: Joi.string()
-        .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
-        .required(),
+        .default('(sAMAccountName={{username}})')
+        .empty(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);
