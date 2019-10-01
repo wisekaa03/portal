@@ -72,11 +72,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: PORT
-            - name: PORT_DEBUG
+            - name: PORT_DEBUGGER
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: PORT_DEBUG
+                  key: PORT_DEBUGGER
             - name: DATABASE_CONNECTION
               valueFrom:
                 configMapKeyRef:
