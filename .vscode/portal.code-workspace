@@ -18,9 +18,6 @@
     "jest.restartJestOnSnapshotUpdate": true,
     "javascript.format.enable": false,
     "typescript.format.enable": false,
-    "eslint.autoFixOnSave": true,
-    "eslint.enable": true,
-    // "prettier.eslintIntegration": true,
     "files.autoSave": "onWindowChange",
     "editor.formatOnSave": true,
     "[html]": {
@@ -44,7 +41,39 @@
     "[typescriptreact]": {
       "editor.formatOnSave": false
     },
-    "eslint.trace.server": "messages",
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "less.lint.duplicateProperties": "warning",
+    "less.lint.float": "warning",
+    "eslint.enable": true,
+    "eslint.lintTask.enable": true,
+    // "eslint.options": {
+      // "useEslintrc": true,
+      // "ignore": true,
+      // "ignorePattern": ["**/node_modules/", "node_modules/"],
+      // "ignorePath": ".eslintignore",
+      // "cache": true,
+      // "reportUnusedDisableDirectives": true,
+      // "baseConfig": {
+      //   "extends": [".eslintrc.js"]
+      // },
+      // "configFile": ".eslintrc.js",
+    // },
+    // "eslint.nodePath": "node_modules/",
+    "eslint.autoFixOnSave": true,
+    "eslint.alwaysShowStatus": true,
+    "eslint.packageManager": "yarn",
+    // "eslint.workingDirectories": [
+    //   {"directory": "./__tests__", "changeProcessCWD": true},
+    //   {"directory": "./__mocks__", "changeProcessCWD": true},
+    //   {"directory": "./components", "changeProcessCWD": true}
+    //   {"directory": "./layouts", "changeProcessCWD": true}
+    //   {"directory": "./lib", "changeProcessCWD": true}
+    //   {"directory": "./pages", "changeProcessCWD": true}
+    //   {"directory": "./server", "changeProcessCWD": true}
+    //   {"directory": "./typings", "changeProcessCWD": true}
+    // ],
+    // "eslint.run": "onType",
+    // "eslint.trace.server": "verbose",
     "eslint.validate": [
       {
         "language": "javascript",
@@ -63,14 +92,10 @@
         "autoFix": true
       }
     ],
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "less.lint.duplicateProperties": "warning",
-    "less.lint.float": "warning",
-    "eslint.alwaysShowStatus": true,
-    "eslint.packageManager": "yarn",
-    // "eslint.provideLintTask": true,
-    "eslint.lintTasks.enable": true,
-    "eslint.run": "onType",
+    "prettier.printWidth": 120,
+    "prettier.disableLanguages": [
+      "vue"
+    ],
     "editor.tabSize": 2,
     "scss.lint.boxModel": "warning",
     "scss.lint.compatibleVendorPrefixes": "warning",
@@ -83,7 +108,6 @@
     "scss.lint.universalSelector": "warning",
     "scss.lint.unknownVendorSpecificProperties": "warning",
     "scss.lint.zeroUnits": "warning",
-    "prettier.printWidth": 120,
     "better-comments.tags": [
       {
         "tag": "!",
