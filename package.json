@@ -16,6 +16,7 @@
     "next:build": "next build",
     "helm": "helm install --namespace=production --name=kngk-portal --debug helm/kngk-portal",
     "helm:del": "helm del --purge kngk-portal",
+    "docker": "docker build --tag kngk-portal:master . && docker tag kngk-portal:master kngk-portal:latest",
     "start": "NODE_ENV=production node .nest/main.js",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",
