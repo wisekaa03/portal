@@ -116,6 +116,7 @@
     "cache-manager-redis": "^0.6.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.1",
+    "clsx": "^1.0.4",
     "compression": "^1.7.4",
     "connect-redis": "^4.0.3",
     "cookie-parser": "^1.4.4",
