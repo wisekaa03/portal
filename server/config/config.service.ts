@@ -76,6 +76,9 @@ export class ConfigService {
       PORT: Joi.number()
         .default(4000)
         .empty(),
+      PORT_DEBUGGER: Joi.number()
+        .default(9229)
+        .empty(),
       HOST: Joi.string()
         .default('0.0.0.0')
         .empty(),
