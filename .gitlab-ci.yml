@@ -1,7 +1,5 @@
 stages:
   - bundle_test_build
-  # - test
-  # - build
   - production
   - deploy
 
@@ -21,49 +19,17 @@ bundle_test_build:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
       - node_modules/
-    # untracked: true
-    # policy: pull-push
   script:
     - yarn install --production=false
     - yarn test -u
-    - bash entrypoint.sh && npx next telemetry --disable && yarn build
+    - bash entrypoint.sh true
+    - npx next telemetry --disable
+    - yarn build
   artifacts:
     paths:
       - .nest/
       - .next/
     expire_in: 3 hours
-
-# test:
-#   image: node:10
-#   stage: test
-#   cache:
-#     key: "${CI_COMMIT_REF_SLUG}"
-#     paths:
-#       - node_modules/
-#     policy: pull
-#   script:
-#     - yarn test -u
-#   only:
-#     changes:
-#       - "package.json"
-#       - "**/*.js"
-#       - "**/*.ts"
-
-# build:
-#   image: node:10
-#   stage: build
-#   cache:
-#     key: "${CI_COMMIT_REF_SLUG}"
-#     paths:
-#       - node_modules/
-#     policy: pull
-#   script:
-#     - bash entrypoint.sh && npx next telemetry --disable && yarn build
-#   artifacts:
-#     paths:
-#       - .nest/
-#       - .next/
-#     expire_in: 3 hours
 
 production:
   image: docker:latest
