@@ -33,6 +33,10 @@ bundle_build:
 bundle_test:
   image: node:12
   stage: bundle_test_build
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}-test"
+    paths:
+      - node_modules/
   script:
     - time yarn install --production=false
     - time yarn test -u
