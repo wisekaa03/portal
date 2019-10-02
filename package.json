@@ -7,6 +7,7 @@
     "v:major": "yarn version --major",
     "v:minor": "yarn version --minor",
     "clean": "rimraf .next .nest",
+    "clean:all": "rimraf .next .nest node_modules yarn.lock package.lock ~/.npm ~/.node-gyp ~/.cache/node-gyp ~/.cache/yarn ~/.config/yarn ~/.yarn",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "jwt:cert": "(! test -f jwt.public.pem || ! test -f jwt.private.pem) && openssl req -x509 -newkey rsa:4096 -keyout jwt.private.pem -out jwt.public.pem -nodes -days 3650 -subj '/CN=localhost' && echo 'JWT deployed !' || echo 'JWT already placed...'",
     "dev": "nodemon --inspect=0.0.0.0 server/main.ts",
