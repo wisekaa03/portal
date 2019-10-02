@@ -3,8 +3,6 @@ stages:
   - production
   - deploy
 
-# TODO: сделать чтобы tests запускалось в контейнере с yarn install --production=false,
-# TODO: а production в котрейнере с yarn install --production=true
 variables:
   PRODUCTION_NAMESPACE: default
   DOCKER_DRIVER: overlay2
@@ -14,7 +12,7 @@ variables:
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
-bundle_test_build:
+bundle_build:
   image: node:12
   stage: bundle_test_build
   cache:
@@ -22,8 +20,7 @@ bundle_test_build:
     paths:
       - node_modules/
   script:
-    - time yarn install --production=false
-    - time yarn test -u
+    - time yarn install --production=true
     - time bash entrypoint.sh true
     - time npx next telemetry --disable
     - time yarn build
@@ -32,6 +29,13 @@ bundle_test_build:
       - .nest/
       - .next/
     expire_in: 3 hours
+
+bundle_test:
+  image: node:12
+  stage: bundle_test_build
+  script:
+    - time yarn install --production=false
+    - time yarn test -u
 
 production:
   image: docker:latest
