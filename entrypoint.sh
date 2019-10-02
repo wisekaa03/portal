@@ -35,3 +35,7 @@ LDAP_BIND_PW = "${LDAP_BIND_PW}"
 LDAP_SEARCH_BASE = "${LDAP_SEARCH_BASE}"
 LDAP_SEARCH_FILTER = "${LDAP_SEARCH_FILTER}"
 EOF
+
+if [ -z "$1" ]; then
+  yarn start
+fi
