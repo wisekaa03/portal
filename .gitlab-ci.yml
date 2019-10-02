@@ -3,6 +3,8 @@ stages:
   - production
   - deploy
 
+# TODO: сделать чтобы tests запускалось в контейнере с yarn install --production=false,
+# TODO: а production в котрейнере с yarn install --production=true
 variables:
   PRODUCTION_NAMESPACE: default
   DOCKER_DRIVER: overlay2
@@ -20,11 +22,11 @@ bundle_test_build:
     paths:
       - node_modules/
   script:
-    - yarn install --production=false
-    - yarn test -u
-    - bash entrypoint.sh true
-    - npx next telemetry --disable
-    - yarn build
+    - time yarn install --production=false
+    - time yarn test -u
+    - time bash entrypoint.sh true
+    - time npx next telemetry --disable
+    - time yarn build
   artifacts:
     paths:
       - .nest/
@@ -40,17 +42,16 @@ production:
       - node_modules/
     policy: pull
   before_script:
-    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem
-    - cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
+    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
     - |
-      if [ ! (-d "node_modules" && -x "node_modules") ]; then echo "!! CACHE NOT EXIST !!"; exit SIGINT; fi
+      if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     - |
       export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
       fi
-    - docker build --tag ${CONTAINER_IMAGE} .
+    - time docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker images ${RELEASE_NAME}
 
@@ -59,16 +60,16 @@ deploy:
   stage: deploy
   dependencies: []
   script:
-    - helm init --client-only
+    - time helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
     - |
       if [ ! ${DEPLOYS} -eq 0 ]; then \
-        helm del --purge ${RELEASE_NAME}; \
+        time helm del --purge ${RELEASE_NAME}; \
         sleep 1; \
       fi
     - |
       if [ ${DEPLOYS} -eq 0 ]; then \
-        helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
+        time helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV="${NODE_ENV}" \
           --set HOST="${HOST}" \
@@ -99,7 +100,7 @@ deploy:
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
           helm/portal; \
       else \
-        helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
+        time helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV="${NODE_ENV}" \
           --set HOST="${HOST}" \
