@@ -135,6 +135,12 @@ $ yarn start
 The `.env` file is like this:
 
 ```bash
+# App
+HOST = http://localhost
+PORT = 4000
+PORT_DEBUGGER = 9229
+SESSION_SECRET = supersecret
+
 # DB
 DATABASE_CONNECTION = postgres
 DATABASE_HOST = localhost
@@ -156,17 +162,12 @@ REDIS_DB = 0
 REDIS_PASSWORD =
 REDIS_PREFIX =
 
-# App
-HOST = http://localhost
-PORT = 4000
-SESSION_SECRET = portal
-
 # LDAP
 LDAP_URL = ldap://activedirectory:389
 LDAP_BIND_DN = CN=Administrator,DC=example,DC=local
 LDAP_BIND_PW = PaSsWoRd123
 LDAP_SEARCH_BASE = DC=example,DC=local
-LDAP_SEARCH_FILTER = (&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))
+LDAP_SEARCH_FILTER = (sAMAccountName={{username}})
 ```
 
 ## Production Deployment
