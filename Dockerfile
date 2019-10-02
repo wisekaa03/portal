@@ -82,5 +82,4 @@ COPY . ./
 EXPOSE ${PORT} ${PORT_DEBUG}
 
 # YARN START
-ENTRYPOINT [ "./entrypoint.sh" ]
-CMD ["yarn", "start"]
+ENTRYPOINT "source ./entrypoint.sh && yarn start"
