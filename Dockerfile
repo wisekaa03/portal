@@ -79,7 +79,7 @@ RUN apt-get update && apt-get install -y \
 COPY . ./
 
 # EXPOSE
-EXPOSE ${PORT} ${PORT_DEBUG}
+EXPOSE ${PORT} ${PORT_DEBUGGER}
 
 # YARN START
 CMD [ "./entrypoint.sh" ]
