@@ -53,8 +53,9 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps) => {
   const initialProps = await Document.getInitialProps(ctx);
 
   let minifiedStyles: string;
-  // TODO:
-  if (process.env.NODE_ENV === '1-production') {
+  // FIXME: это добавляет порядка 350мс к ответу сервера
+  // TODO: подумать как сократить это время
+  if (0 && process.env.NODE_ENV === 'production') {
     minifiedStyles = await prefixer.process(sheets.toString(), { from: undefined }).then((result: any) => result.css);
   } else {
     minifiedStyles = sheets.toString();

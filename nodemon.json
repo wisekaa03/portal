@@ -1,5 +1,5 @@
 {
-  "watch": ["server"],
+  "watch": ["server", ".env"],
   "execMap": {
     "ts": "node -r ts-node/register"
   },

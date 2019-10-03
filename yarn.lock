@@ -1079,7 +1079,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5":
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.2.tgz#c3d6e41b304ef10dcf13777a33e7694ec4a9a6dd"
   integrity sha512-EXxN64agfUqqIGeEjI5dL5z0Sw0ZwWo1mLTi4mQowCZ42O59b7DRpZAnTC6OqdF28wMBMFKNb/4uFGrVaigSpg==
@@ -2506,10 +2506,10 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
-"@types/ldapjs@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@types/ldapjs/-/ldapjs-0.0.1.tgz#f8967c7db45a9937dfc7a38636c65b1b4ded32e2"
-  integrity sha512-9oFhM9b2rUcvOFAr24CUM9rvOBRZQAhAZbPhBk0eNOozLcz6TVapH1jO09SPxMc2hRIE08OOn3GGt25QD9bEgQ==
+"@types/ldapjs@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@types/ldapjs/-/ldapjs-0.0.2.tgz#301dcd1d15c16e5b5a58f3172994ceaba3232dd3"
+  integrity sha512-PmbuwVgzbkf6Y4auN/nKnc9LPSf0+0LKw6xeDfmCCfVayajuFd2siw/JACHsnCaa3ThftJ5kVNVbLVUhJev6LQ==
   dependencies:
     "@types/node" "*"
 
@@ -5642,12 +5642,11 @@ create-react-context@^0.3.0:
     gud "^1.0.0"
     warning "^4.0.3"
 
-cross-env@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-6.0.2.tgz#2ec3c4b9b90cc074fed375415fc229cb7d6ce612"
-  integrity sha512-lA44HlqWCzrv7/l2pY3sfLDvMhXXhx8oztvD6rg34PdCIcP0yk77UwOL2nacsZXlrzPUMtbfagVbK6Itx8pwng==
+cross-env@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-6.0.3.tgz#4256b71e49b3a40637a0ce70768a6ef5c72ae941"
+  integrity sha512-+KqxF6LCvfhWvADcDPqo64yVIB31gv/jQulX2NGzKS/g3GEVz6/pt4wjHFtFWsHMddebWD/sDthJemzM4MaAag==
   dependencies:
-    "@babel/runtime" "^7.6.2"
     cross-spawn "^7.0.0"
 
 cross-fetch@^3.0.4:
@@ -6777,10 +6776,10 @@ enzyme-adapter-utils@^1.12.0:
     prop-types "^15.7.2"
     semver "^5.6.0"
 
-enzyme-to-json@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/enzyme-to-json/-/enzyme-to-json-3.4.0.tgz#2b6330a784a57ba68298e3c0d6cef17ee4fedc0e"
-  integrity sha512-gbu8P8PMAtb+qtKuGVRdZIYxWHC03q1dGS3EKRmUzmTDIracu3o6cQ0d4xI2YWojbelbxjYOsmqM5EgAL0WgIA==
+enzyme-to-json@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/enzyme-to-json/-/enzyme-to-json-3.4.1.tgz#bd54b7fd545384e71491b67ebd8d9f456e12c02b"
+  integrity sha512-9W8fRlpDBf0hAsGnKP4OnhjkfYAyPt1ernypGg8FuIJMBv3rtshTEOPYBQCVEENrrXxsc9YbrDmk+RbhKarLcw==
   dependencies:
     lodash "^4.17.12"
 
@@ -11878,10 +11877,10 @@ next-compose-plugins@^2.2.0:
   resolved "https://registry.yarnpkg.com/next-compose-plugins/-/next-compose-plugins-2.2.0.tgz#95cd8eb40ab0652070d76572fb648354191628b0"
   integrity sha512-ChUlpT9tWfJ7YxqGw/WQ2T1gf8EeX93n1XqeQw0lkvGa7seszahvF4eOZUJoq7Hetsbzg4UHVnPoCXfXTyQR3g==
 
-next-fonts@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/next-fonts/-/next-fonts-0.18.0.tgz#6079f091d7036471bc8cc3d044a4bb09e5831826"
-  integrity sha512-ILY2hsiQXL3UaCd9gfLZB6i6MvHYfSRKa2Ad6V0iMuwuyarkuahDACFRRyzYc7GpdNgJSEuWnJ30W6dAdIGWhA==
+next-fonts@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/next-fonts/-/next-fonts-0.19.0.tgz#0a6d7d8235579d419e55e75a960c17cf19169f51"
+  integrity sha512-1/1GVBtxTEzGA/WYCWetegnVVzSp3tF0aacRY5mc973R6uPogMfid/nkLLlBgFBrFUy8wtv87Sag7vhNNzuSnA==
   dependencies:
     file-loader "^2.0.0"
     url-loader "^1.1.1"
