@@ -18,14 +18,12 @@ export default function Login(): React.ReactElement {
       onError={() => {}}
       onCompleted={({ login }: any) => {
         sessionStorage.setItem('token', login.token);
+        // TODO: разобраться куда пользователь шел
+        document.location.href = '/';
       }}
     >
       {(login: MutationFunction, { loading, error, data }: MutationResult<any>) => {
-        return data ? (
-          <Typography>{JSON.stringify(data)}</Typography>
-        ) : (
-          <LoginComponent error={error} loading={loading} login={login} />
-        );
+        return <LoginComponent error={error} loading={loading} login={login} />;
       }}
     </Mutation>
   );

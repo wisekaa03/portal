@@ -24,6 +24,9 @@ export class AuthenticationGuard extends AuthGuard('jwt') implements CanActivate
 
     let canActivate: boolean | Observable<boolean>;
 
+    // eslint-disable-next-line no-debugger
+    // debugger;
+
     if (gqlCtx instanceof Function) {
       canActivate = await super.canActivate(context);
     } else {
@@ -45,6 +48,10 @@ export class AuthenticationGuard extends AuthGuard('jwt') implements CanActivate
 
   getRequest(context: ExecutionContext): IncomingMessage {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+
+    // eslint-disable-next-line no-debugger
+    // debugger;
+
     if (gqlContext.getContext() instanceof Function) {
       return context.switchToHttp().getRequest();
     }
