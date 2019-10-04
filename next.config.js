@@ -5,6 +5,7 @@ const { join, resolve } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 
 // const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withImages = require('next-images');
 const optimizedImages = require('next-optimized-images');
 const withCSS = require('@zeit/next-css');
 const withSass = require('@zeit/next-sass');
@@ -121,6 +122,7 @@ function withCustomWebpack(conf = {}) {
 
     // eslint-disable-next-line no-debugger
     // debugger;
+    // console.log(isServer ? 'Server' : 'Client', config);
 
     return webpack(config, { isServer, ...rest });
   };
@@ -150,7 +152,7 @@ const plugins = [
       inlineImageLimit: 8192,
       imagesFolder: 'images',
       imagesName: '[name]-[hash].[ext]',
-      handleImages: ['jpeg', 'png', 'svg', 'webp', 'gif'],
+      handleImages: ['jpeg', 'jpg', 'png', 'svg', 'webp', 'gif'],
       optimizeImages: true,
       optimizeImagesInDev: false,
       mozjpeg: {

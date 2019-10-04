@@ -12,7 +12,7 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
       },
     },
-    'import/ignore': ['.coffee$', '.(scss|less|css)$', '.svg$'],
+    'import/ignore': ['.coffee$', '.(scss|less|css)$', '.(svg|png|jpe?g|webp|gif)$'],
   },
   globals: {
     window: true,

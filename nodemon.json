@@ -1,5 +1,5 @@
 {
-  "watch": ["server", ".env"],
+  "watch": ["server", ".env", "next.config.js"],
   "execMap": {
     "ts": "node -r ts-node/register"
   },

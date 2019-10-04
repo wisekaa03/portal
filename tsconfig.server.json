@@ -8,5 +8,5 @@
     "baseUrl": "."
   },
   "exclude": ["__tests__/**/*", "server/**/*.spec.ts", "server/**/*.test.ts"],
-  "include": ["typings/global.d.ts", "server/**/*.ts"]
+  "include": ["typings/global.d.ts", "server/**/*.ts", "server/**/*.tsx"]
 }

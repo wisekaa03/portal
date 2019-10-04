@@ -14,5 +14,35 @@ declare namespace NodeJS {
 
 declare module '*.svg' {
   const content: any;
+  const className: any;
+  export = content;
+}
+
+declare module '*.png' {
+  const content: any;
+  const className: any;
+  export = content;
+}
+
+declare module '*.webp' {
+  const content: any;
+  const className: any;
+  export = content;
+}
+declare module '*.jpg' {
+  const content: any;
+  const className: any;
+  export = content;
+}
+
+declare module '*.jpeg' {
+  const content: any;
+  const className: any;
+  export = content;
+}
+
+declare module '*.gif' {
+  const content: any;
+  const className: any;
   export default content;
 }

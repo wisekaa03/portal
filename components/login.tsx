@@ -21,8 +21,9 @@ import { ApolloError } from 'apollo-client';
 // #region Imports Local
 import { GQLError } from './gql-error';
 import { Loading } from './loading';
-import LogoComponent from '../static/assets/svg/logo.svg';
 import { getStorage, setStorage } from '../lib/session-storage';
+import LogoComponent from '../static/images/svg/logo.svg';
+import Logo from '../static/images/jpeg/yarovaya.jpeg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -147,6 +148,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
   return (
     <div>
       <div>
+        <img src={`${Logo}`} alt="Yarovaya" />
         <LogoComponent className={classes.logo} />
       </div>
       <div className={classes.loginContainer}>

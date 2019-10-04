@@ -73,7 +73,7 @@
     //   {"directory": "./typings", "changeProcessCWD": true}
     // ],
     // "eslint.run": "onType",
-    // "eslint.trace.server": "verbose",
+    "eslint.trace.server": "verbose",
     "eslint.validate": [
       {
         "language": "javascript",
