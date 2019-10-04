@@ -16,6 +16,7 @@ import { UserModule } from '../user/user.module';
 import { NextModule } from '../next/next.module';
 import { UserEntity } from '../user/user.entity';
 import { LoggerModule } from '../logger/logger.module';
+import { CookieSerializer } from './cookie.serializer';
 // #endregion
 
 @Module({
@@ -50,7 +51,7 @@ import { LoggerModule } from '../logger/logger.module';
     forwardRef(() => UserModule),
     // #endregion
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, CookieSerializer],
   exports: [PassportModule, JwtModule, AuthService],
 })
 export class AuthModule {}

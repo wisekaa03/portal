@@ -16,7 +16,7 @@ import { Request } from 'express';
 // #region Imports Local
 import { UserService } from './user.service';
 import { UserResponseDTO } from './models/user.dto';
-import { AuthenticationGuard } from '../guards/auth-guard.guard';
+import { AuthenticationGuard } from '../guards/auth.guard';
 // #endregion
 
 @Resolver()

@@ -6,6 +6,7 @@ import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
+import passport from 'passport';
 import responseTime from 'response-time';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -64,6 +65,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region production ready session store
   app.use(sessionRedis(configService));
+  // #endregion
+
+  // #region Passport initialization
+  app.use(passport.initialize());
+  app.use(passport.session());
   // #endregion
 
   // #region Static files

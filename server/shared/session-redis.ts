@@ -17,8 +17,8 @@ export const sessionRedis = (configService: ConfigService): any =>
         db: parseInt(configService.get('REDIS_DB'), 10),
       }),
     }),
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     rolling: true,
     cookie: {
       httpOnly: false,

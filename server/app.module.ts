@@ -60,7 +60,7 @@ import { UserModule } from './user/user.module';
       debug: process.env.NODE_ENV !== 'production',
       playground: process.env.NODE_ENV !== 'production',
       typePaths: ['./**/*.graphql'],
-      context: ({ req }) => ({ req, user: req.user }),
+      context: ({ req }) => ({ req, user: req._passport.session.user }),
     }),
     // #endregion
 
