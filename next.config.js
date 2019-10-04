@@ -1,61 +1,25 @@
 /** @format */
-/* eslint no-param-reassign: 0 */
+/* eslint no-param-reassign: 0, @typescript-eslint/explicit-function-return-type: 0 */
 
-const { join, resolve } = require('path');
+// #region Imports NPM
+const { join } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 
 // const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
-const withImages = require('next-images');
+
+// const withImages = require('next-images');
 const optimizedImages = require('next-optimized-images');
+
 const withCSS = require('@zeit/next-css');
 const withSass = require('@zeit/next-sass');
+
 const withFonts = require('next-fonts');
+
 const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
-
-const svgoLoader = {
-  loader: 'svgo-loader',
-  options: {
-    plugins: [
-      {
-        removeAttrs: {
-          attrs: '(data-name)',
-        },
-      },
-      // {
-      //   cleanupIDs: true,
-      // },
-      // {
-      //   removeXMLNS: true,
-      // },
-      // {
-      //   removeEmptyAttrs: true,
-      // },
-      // {
-      //   removeComments: true,
-      // },
-      // {
-      //   removeTitle: true,
-      // },
-      // {
-      //   removeEditorsNSData: true,
-      // },
-      // {
-      //   minifyStyles: {
-      //     ids: true,
-      //     classes: true,
-      //     tags: true,
-      //   },
-      // },
-      // {
-      //   removeViewBox: true,
-      // },
-      // {
-      //   convertColors: true,
-      // },
-    ],
-  },
-};
+// #endregion
+// #region Imports Local
+// #endregion
 
 function withCustomWebpack(conf = {}) {
   const { webpack } = conf;
@@ -73,19 +37,6 @@ function withCustomWebpack(conf = {}) {
     config.module.rules = [
       ...(config.module.rules || []),
       ...[
-        // {
-        //   test: /\.(svg)$/,
-        //   use: [
-        //     {
-        //       loader: 'react-svg-loader',
-        //       options: {
-        //         svgo: {
-        //           ...svgoLoader.options,
-        //         },
-        //       },
-        //     },
-        //   ],
-        // },
         // {
         //   test: /\.(gif|png|jpe?g|svg)$/i,
         //   use: [
@@ -120,6 +71,17 @@ function withCustomWebpack(conf = {}) {
       ],
     ];
 
+    config.module.rules.forEach((rule) => {
+      if (Array.isArray(rule.use)) {
+        rule.use.forEach((m) => {
+          if (m.loader === 'css-loader' && m.options && Object.keys(m.options).includes('minimize')) {
+            // console.warn('HACK: Removing `minimize` option from `css-loader` entries in Webpack config');
+            delete m.options.minimize;
+          }
+        });
+      }
+    });
+
     // eslint-disable-next-line no-debugger
     // debugger;
     // console.log(isServer ? 'Server' : 'Client', config);
@@ -128,19 +90,6 @@ function withCustomWebpack(conf = {}) {
   };
 
   return conf;
-}
-
-function HACKremoveMinimizeOptionFromCssLoaders(config) {
-  config.module.rules.forEach((rule) => {
-    if (Array.isArray(rule.use)) {
-      rule.use.forEach((m) => {
-        if (m.loader === 'css-loader' && m.options && Object.keys(m.options).includes('minimize')) {
-          // console.warn('HACK: Removing `minimize` option from `css-loader` entries in Webpack config');
-          delete m.options.minimize;
-        }
-      });
-    }
-  });
 }
 
 const plugins = [
@@ -152,9 +101,9 @@ const plugins = [
       inlineImageLimit: 8192,
       imagesFolder: 'images',
       imagesName: '[name]-[hash].[ext]',
-      handleImages: ['jpeg', 'jpg', 'png', 'svg', 'webp', 'gif'],
+      handleImages: ['jpeg', 'png', 'svg', 'webp', 'gif'],
       optimizeImages: true,
-      optimizeImagesInDev: false,
+      optimizeImagesInDev: true,
       mozjpeg: {
         quality: 80,
       },
@@ -183,10 +132,6 @@ const plugins = [
       //   importLoaders: true,
       // },
       postcssLoaderOptions: {},
-      webpack(config) {
-        HACKremoveMinimizeOptionFromCssLoaders(config);
-        return config;
-      },
     },
   ],
   [withSass /* , { cssModules: true } */],
