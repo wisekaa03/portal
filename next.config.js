@@ -104,9 +104,9 @@ const plugins = [
           {
             removeDesc: true,
           },
-          {
-            removeXMLNS: true,
-          },
+          // {
+          //   removeXMLNS: true,
+          // },
           {
             removeEditorsNSData: true,
           },
@@ -116,21 +116,21 @@ const plugins = [
           {
             removeUnusedNS: true,
           },
-          //   {
-          //     cleanupIDs: true,
-          //   },
-          //   {
-          //     convertColors: true,
-          //   },
-          //   {
-          //     sortDefsChildren: true,
-          //   },
-          //   {
-          //     minifyStyles: true,
-          //   },
-          //   {
-          //     collapseGroups: true,
-          //   },
+          {
+            cleanupIDs: true,
+          },
+          {
+            convertColors: true,
+          },
+          {
+            sortDefsChildren: true,
+          },
+          {
+            minifyStyles: true,
+          },
+          {
+            collapseGroups: true,
+          },
         ],
       },
       webp: {
