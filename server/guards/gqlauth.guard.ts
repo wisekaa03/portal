@@ -6,41 +6,40 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
-// import { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 // #endregion
 // #region Imports Local
-// import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 // #endregion
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
-  constructor(/* private readonly authService: AuthService */) {
+  constructor(private readonly authService: AuthService) {
     super({ session: false });
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
-    // const gqlCtx: any = gqlContext.getContext();
-    // const request = this.getRequest(context);
+    const gqlCtx: any = gqlContext.getContext();
+
+    let canActivate: boolean | Observable<boolean>;
 
     // eslint-disable-next-line no-debugger
     debugger;
 
-    gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
-    const canActivate = (await super.canActivate(gqlContext)) as boolean;
+    if (gqlCtx instanceof Function) {
+      canActivate = await super.canActivate(context);
+    } else {
+      gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
+      canActivate = await super.canActivate(gqlContext);
+    }
 
-    // eslint-disable-next-line no-debugger
-    debugger;
+    await super.logIn(gqlContext.switchToHttp().getRequest());
 
-    // await super.logIn(gqlContext.switchToHttp().getRequest());
-
-    return canActivate;
+    return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;
   }
 
   handleRequest(err: Error, user: any /* , info: any, context: any */): any {
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
@@ -50,9 +49,14 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
   getResponse = (): any => undefined;
 
   getRequest(context: ExecutionContext): IncomingMessage {
+    const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+
     // eslint-disable-next-line no-debugger
     // debugger;
 
-    return GqlExecutionContext.create(context).getContext().req;
+    if (gqlContext.getContext() instanceof Function) {
+      return context.switchToHttp().getRequest();
+    }
+    return gqlContext.getContext().req;
   }
 }

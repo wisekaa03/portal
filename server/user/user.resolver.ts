@@ -16,7 +16,7 @@ import { Request } from 'express';
 // #region Imports Local
 import { UserService } from './user.service';
 import { UserResponseDTO } from './models/user.dto';
-import { AuthenticationGuard } from '../guards/auth.guard';
+import { GqlAuthGuard } from '../guards/gqlauth.guard';
 // #endregion
 
 @Resolver()
@@ -30,7 +30,7 @@ export class UserResolver {
    * @returns {UserResponseDTO}
    */
   @Query()
-  @UseGuards(AuthenticationGuard)
+  @UseGuards(GqlAuthGuard)
   async me(@Context('req') req: Request): Promise<UserResponseDTO | null> {
     return req.user as UserResponseDTO;
   }

@@ -50,17 +50,17 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(helmet());
   // #endregion
 
-  // #region improve performance
-  app.use(compression());
-  // #endregion
-
-  // #region enable cookie
-  app.use(cookieParser());
+  // #region improve performance - this is done by Nginx reverse-proxy, do not need
+  // app.use(compression());
   // #endregion
 
   // #region enable json response
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  // #endregion
+
+  // #region enable cookie
+  // app.use(cookieParser());
   // #endregion
 
   // #region production ready session store
@@ -69,7 +69,13 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Passport initialization
   app.use(passport.initialize());
-  app.use(passport.session());
+
+  // eslint-disable-next-line no-debugger
+  debugger;
+
+  const session = passport.session();
+
+  app.use(session);
   // #endregion
 
   // #region Static files

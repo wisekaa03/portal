@@ -66,7 +66,7 @@ const plugins = [
       inlineImageLimit: 8000,
       imagesFolder: 'images',
       imagesName: '[name]-[hash].[ext]',
-      handleImages: ['jpeg', 'png', /* 'svg', */ 'webp', 'gif'],
+      handleImages: ['jpeg', 'png', 'svg', 'webp', 'gif'],
       optimizeImages: true,
       optimizeImagesInDev: true,
       mozjpeg: {
@@ -82,6 +82,56 @@ const plugins = [
       },
       svgo: {
         // enable/disable svgo plugins here
+        js2svg: {
+          pretty: false,
+        },
+        plugins: [
+          {
+            removeAttrs: { attrs: ['(data-name)', 'g:(id)'] },
+          },
+          {
+            removeTitle: true,
+          },
+          {
+            removeEmptyAttrs: true,
+          },
+          {
+            removeEmptyText: true,
+          },
+          {
+            removeViewBox: true,
+          },
+          {
+            removeDesc: true,
+          },
+          {
+            removeXMLNS: true,
+          },
+          {
+            removeEditorsNSData: true,
+          },
+          {
+            removeComments: true,
+          },
+          {
+            removeUnusedNS: true,
+          },
+          //   {
+          //     cleanupIDs: true,
+          //   },
+          //   {
+          //     convertColors: true,
+          //   },
+          //   {
+          //     sortDefsChildren: true,
+          //   },
+          //   {
+          //     minifyStyles: true,
+          //   },
+          //   {
+          //     collapseGroups: true,
+          //   },
+        ],
       },
       webp: {
         preset: 'default',

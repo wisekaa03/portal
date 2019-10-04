@@ -22,7 +22,7 @@ export default function Login(): React.ReactElement {
           debugger;
 
           // TODO: разобраться куда пользователь шел
-          window.location.href = '/';
+          window.location.pathname = '/';
         }
       }}
     >

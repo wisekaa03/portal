@@ -21,7 +21,11 @@ export const sessionRedis = (configService: ConfigService): any =>
     saveUninitialized: true,
     rolling: true,
     cookie: {
+      path: '/',
+      // domain: '',
+      // secure: process.env.PROTOCOL === 'https',
+      expires: false,
       httpOnly: false,
-      maxAge: 60 * 60 * 1000, // msec
+      maxAge: 60 * 60 * 1000, // msec, 1 hour
     },
   });

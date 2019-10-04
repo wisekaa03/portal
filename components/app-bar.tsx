@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 // #endregion
 // #region Imports Local
+import HeaderBg from '../static/images/jpeg/header_bg.jpg';
 import LogoMin from '../static/images/png/logo-min.png';
 // #endregion
 
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       zIndex: theme.zIndex.drawer + 1,
-      background: 'url(/images/jpeg/header_bg.jpg) no-repeat center left',
+      background: `url(${HeaderBg}) no-repeat center left`,
       // backgroundSize: '100px 200px',
     },
     menuButton: {

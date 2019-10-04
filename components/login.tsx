@@ -22,14 +22,15 @@ import { ApolloError } from 'apollo-client';
 import { GQLError } from './gql-error';
 import { Loading } from './loading';
 import { getStorage, setStorage } from '../lib/session-storage';
-import LogoComponent from '../static/images/svg/logo.svg';
+import Background2 from '../static/images/svg/background2.svg';
+import Logo from '../static/images/svg/logo.svg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundSize: 'cover',
-      backgroundImage: 'url(/images/svg/background2.svg)',
+      backgroundImage: `url(${Background2})`,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'bottom center',
       height: '100vh',
@@ -145,7 +146,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
   return (
     <div className={classes.root}>
       <div>
-        <LogoComponent alt="Logo" className={classes.logo} />
+        <img src={Logo} alt="Logo" className={classes.logo} />
       </div>
       <div className={classes.loginContainer}>
         <form

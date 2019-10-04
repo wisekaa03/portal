@@ -1,46 +1,62 @@
 /** @format */
 
 // #region Imports NPM
-// import { IncomingMessage } from 'http';
+import { IncomingMessage } from 'http';
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-// import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
 import { AuthGuard } from '@nestjs/passport';
+import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 // #endregion
 // #region Imports Local
-// import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 // #endregion
 
 @Injectable()
 export class SessionAuthGuard extends AuthGuard('jwt') implements CanActivate {
-  constructor(/* private readonly authService: AuthService */) {
+  constructor(private readonly authService: AuthService) {
     super({ session: true });
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+    const gqlCtx: any = gqlContext.getContext();
+
+    let canActivate: boolean | Observable<boolean>;
+
     // eslint-disable-next-line no-debugger
     debugger;
 
-    const httpContext = context.switchToHttp();
-    const request = httpContext.getRequest();
-
-    const result = (await super.canActivate(context)) as boolean;
-    await super.logIn(request);
-
-    if (request.session && request.session.passport && request.session.passport.user) {
-      return true;
+    if (gqlCtx instanceof Function) {
+      canActivate = await super.canActivate(context);
+    } else {
+      gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
+      canActivate = await super.canActivate(gqlContext);
     }
 
-    return result;
+    await super.logIn(gqlContext.switchToHttp().getRequest());
+
+    return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;
   }
 
   handleRequest(err: Error, user: any /* , info: any, context: any */): any {
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
     return user;
+  }
+
+  getResponse = (): any => undefined;
+
+  getRequest(context: ExecutionContext): IncomingMessage {
+    const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+
+    // eslint-disable-next-line no-debugger
+    // debugger;
+
+    if (gqlContext.getContext() instanceof Function) {
+      return context.switchToHttp().getRequest();
+    }
+    return gqlContext.getContext().req;
   }
 }

@@ -25,7 +25,7 @@ export class AuthenticationGuard extends AuthGuard('jwt') implements CanActivate
     let canActivate: boolean | Observable<boolean>;
 
     // eslint-disable-next-line no-debugger
-    // debugger;
+    debugger;
 
     if (gqlCtx instanceof Function) {
       canActivate = await super.canActivate(context);
