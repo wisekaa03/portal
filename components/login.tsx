@@ -27,33 +27,31 @@ import LogoComponent from '../static/images/svg/logo.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    '@global': {
-      body: {
-        backgroundImage: 'url("/images/svg/background.svg")',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        backgroundPosition: 'bottom left',
-      },
+    root: {
+      backgroundSize: 'cover',
+      backgroundImage: 'url(/assets/svg/background2.svg)',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'bottom center',
+      height: '100vh',
     },
-    'logo': {
+    logo: {
       height: '11vh',
       margin: '10px auto',
       width: '100%',
     },
-    'loginContainer': {
+    loginContainer: {
       height: '70vh',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
     },
-    'container': {
+    container: {
       width: 600,
       maxWidth: '95vw',
       margin: `${theme.spacing(2)}px auto`,
     },
-    'card': {
+    card: {
       padding: theme.spacing(4),
       backgroundColor: 'rgba(255,255,255,0.5)',
       color: '#2c4373',
@@ -61,29 +59,29 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 16,
       paddingLeft: 24,
     },
-    'typoAuthorization': {
+    typoAuthorization: {
       color: '#2c4373',
       textAlign: 'left',
       marginBottom: theme.spacing(1),
     },
-    'labelForFormControl': {
+    labelForFormControl: {
       borderColor: 'rgba(44, 67, 115, 0.4)',
     },
-    'labelForCheckbox': {
+    labelForCheckbox: {
       borderColor: 'rgba(44, 67, 115, 0.4)',
       width: '100%',
     },
-    'formControl': {
+    formControl: {
       margin: `${theme.spacing(1)}px 0`,
 
       [theme.breakpoints.up('sm')]: {
         minWidth: 320,
       },
     },
-    'submitButtonContainer': {
+    submitButtonContainer: {
       width: '100%',
     },
-    'submitButton': {
+    submitButton: {
       'borderRadius': 24,
       'width': 'fit-content',
       'marginTop': `${theme.spacing(1)}px`,
@@ -145,7 +143,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
   }, []);
 
   return (
-    <div>
+    <div className={classes.root}>
       <div>
         <img src={LogoComponent} alt="Logo" className={classes.logo} />
       </div>
