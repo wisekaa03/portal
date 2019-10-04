@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     '@global': {
       body: {
-        backgroundImage: 'url("/assets/svg/background.svg")',
+        backgroundImage: 'url("/images/svg/background.svg")',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
