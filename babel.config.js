@@ -22,68 +22,68 @@ module.exports = function(api) {
           alias: {},
         },
       ],
-      [
-        'inline-react-svg',
-        {
-          svgo: {
-            js2svg: {
-              commentStart: '',
-              commentEnd: '',
-              pretty: true,
-            },
-            plugins: [
-              {
-                removeAttrs: { attrs: ['(data-name)', 'g:(id)'] },
-              },
-              {
-                removeTitle: true,
-              },
-              {
-                removeEmptyAttrs: true,
-              },
-              {
-                removeEmptyText: true,
-              },
-              {
-                removeViewBox: true,
-              },
-              {
-                removeDesc: true,
-              },
-              {
-                removeXMLNS: true,
-              },
-              {
-                removeEditorsNSData: true,
-                // {
-                // additionalNamespaces: ['http://www.w3.org/1999/xlink'],
-                // },
-              },
-              {
-                removeComments: true,
-              },
-              {
-                removeUnusedNS: true,
-              },
-              {
-                cleanupIDs: true,
-              },
-              {
-                convertColors: true,
-              },
-              {
-                sortDefsChildren: true,
-              },
-              {
-                minifyStyles: true,
-              },
-              {
-                collapseGroups: true,
-              },
-            ],
-          },
-        },
-      ],
+      // [
+      //   'inline-react-svg',
+      //   {
+      //     svgo: {
+      //       js2svg: {
+      //         commentStart: '',
+      //         commentEnd: '',
+      //         pretty: true,
+      //       },
+      //       plugins: [
+      //         {
+      //           removeAttrs: { attrs: ['(data-name)', 'g:(id)'] },
+      //         },
+      //         {
+      //           removeTitle: true,
+      //         },
+      //         {
+      //           removeEmptyAttrs: true,
+      //         },
+      //         {
+      //           removeEmptyText: true,
+      //         },
+      //         {
+      //           removeViewBox: true,
+      //         },
+      //         {
+      //           removeDesc: true,
+      //         },
+      //         {
+      //           removeXMLNS: true,
+      //         },
+      //         {
+      //           removeEditorsNSData: true,
+      //           // {
+      //           // additionalNamespaces: ['http://www.w3.org/1999/xlink'],
+      //           // },
+      //         },
+      //         {
+      //           removeComments: true,
+      //         },
+      //         {
+      //           removeUnusedNS: true,
+      //         },
+      //         {
+      //           cleanupIDs: true,
+      //         },
+      //         {
+      //           convertColors: true,
+      //         },
+      //         {
+      //           sortDefsChildren: true,
+      //         },
+      //         {
+      //           minifyStyles: true,
+      //         },
+      //         {
+      //           collapseGroups: true,
+      //         },
+      //       ],
+      //     },
+      //   },
+      // ],
       // [
       //   'styled-components',
       //   { ssr: true, displayName: true, preprocess: false },

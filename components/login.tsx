@@ -147,7 +147,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
   return (
     <div>
       <div>
-        <LogoComponent className={classes.logo} />
+        <img src={LogoComponent} alt="Logo" className={classes.logo} />
       </div>
       <div className={classes.loginContainer}>
         <form
