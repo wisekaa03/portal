@@ -63,10 +63,10 @@ const plugins = [
     {
       // these are the default values so you don't have to provide them if they are good enough for your use-case.
       // but you can overwrite them here with any valid value you want.
-      inlineImageLimit: 13000,
+      inlineImageLimit: 8000,
       imagesFolder: 'images',
       imagesName: '[name]-[hash].[ext]',
-      handleImages: ['jpeg', 'png', 'svg', 'webp', 'gif'],
+      handleImages: ['jpeg', 'png', /* 'svg', */ 'webp', 'gif'],
       optimizeImages: true,
       optimizeImagesInDev: true,
       mozjpeg: {
@@ -82,61 +82,6 @@ const plugins = [
       },
       svgo: {
         // enable/disable svgo plugins here
-        js2svg: {
-          commentStart: '',
-          commentEnd: '',
-          pretty: false,
-        },
-        plugins: [
-          {
-            removeAttrs: { attrs: ['(data-name)', 'g:(id)'] },
-          },
-          {
-            removeTitle: true,
-          },
-          {
-            removeEmptyAttrs: true,
-          },
-          {
-            removeEmptyText: true,
-          },
-          {
-            removeViewBox: true,
-          },
-          {
-            removeDesc: true,
-          },
-          {
-            removeXMLNS: true,
-          },
-          {
-            removeEditorsNSData: true,
-            // {
-            // additionalNamespaces: ['http://www.w3.org/1999/xlink'],
-            // },
-          },
-          {
-            removeComments: true,
-          },
-          {
-            removeUnusedNS: true,
-          },
-          {
-            cleanupIDs: true,
-          },
-          {
-            convertColors: true,
-          },
-          {
-            sortDefsChildren: true,
-          },
-          {
-            minifyStyles: true,
-          },
-          {
-            collapseGroups: true,
-          },
-        ],
       },
       webp: {
         preset: 'default',
@@ -155,7 +100,7 @@ const plugins = [
     },
   ],
   [withSass /* , { cssModules: true } */],
-  [withFonts, { enableSvg: true }],
+  [withFonts, { enableSvg: false }],
   // [withBundleAnalyzer],
   [withCustomWebpack],
 ];

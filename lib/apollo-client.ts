@@ -13,6 +13,7 @@ import { HttpLink } from 'apollo-link-http';
 // #region Imports Local
 import { NodeIdGetterObj } from './types';
 import { apolloStateLink } from './state-link';
+import { getStorage } from './session-storage';
 // #endregion
 
 let apollo: ApolloClient<NormalizedCacheObject>;
@@ -54,7 +55,7 @@ export const apolloClient = (
     //   },
     // });
 
-    const token = sessionStorage.getItem('token');
+    const token = getStorage('token');
     // Create an http link:
     const httpLink = new HttpLink({
       uri: `${window.location.origin}/graphql`,
