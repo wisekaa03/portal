@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundSize: 'cover',
-      backgroundImage: 'url(/assets/svg/background2.svg)',
+      backgroundImage: 'url(/images/svg/background2.svg)',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'bottom center',
       height: '100vh',

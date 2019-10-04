@@ -83,12 +83,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function desc<T>(a: T, b: T, orderBy: ColumnNames): number {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
+  // if (b[orderBy] < a[orderBy]) {
+  //   return -1;
+  // }
+  // if (b[orderBy] > a[orderBy]) {
+  //   return 1;
+  // }
   return 0;
 }
 

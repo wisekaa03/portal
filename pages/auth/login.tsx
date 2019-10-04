@@ -2,7 +2,6 @@
 
 // #region Imports NPM
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
 import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
@@ -16,16 +15,18 @@ export default function Login(): React.ReactElement {
       mutation={LOGIN}
       onError={() => {}}
       onCompleted={({ login }: any) => {
-        sessionStorage.setItem('token', login.token);
+        if (login) {
+          sessionStorage.setItem('token', login.token);
 
-        // eslint-disable-next-line no-debugger
-        debugger;
+          // eslint-disable-next-line no-debugger
+          debugger;
 
-        // TODO: разобраться куда пользователь шел
-        window.location.href = '/';
+          // TODO: разобраться куда пользователь шел
+          window.location.href = '/';
+        }
       }}
     >
-      {(login: MutationFunction, { loading, error, data }: MutationResult<any>) => {
+      {(login: MutationFunction, { loading, error /* , data */ }: MutationResult<any>) => {
         return <LoginComponent error={error} loading={loading} login={login} />;
       }}
     </Mutation>

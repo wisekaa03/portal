@@ -19,23 +19,18 @@ import { apolloClient } from './apollo-client';
 import { ApolloAppProps, WithApolloState, ApolloInitialProps } from './types';
 // #endregion
 
-export const withApolloClient = (
-  MainApp: any /* typeof NextApp */,
-): Function => {
+export const withApolloClient = (MainApp: any /* typeof NextApp */): Function => {
   return class ApolloClass extends React.Component<ApolloAppProps> {
-    public static displayName = 'withApolloClient(MainApp)';
-
     private apolloClient: ApolloClient<NormalizedCacheObject>;
 
-    public static async getInitialProps(
-      appCtx: AppContext,
-    ): Promise<ApolloInitialProps> {
+    // eslint-disable-next-line react/static-property-placement
+    public static displayName = 'withApolloClient(MainApp)';
+
+    public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
       // const { Component, router, ctx } = appCtx;
       const apolloState: WithApolloState = {};
 
-      const appProps = MainApp.getInitialProps
-        ? await MainApp.getInitialProps(appCtx)
-        : { pageProps: {} };
+      const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
@@ -43,9 +38,7 @@ export const withApolloClient = (
 
       if (__SERVER__) {
         try {
-          await getDataFromTree(
-            <MainApp {...appProps} {...appCtx} apolloClient={apollo} />,
-          );
+          await getDataFromTree(<MainApp {...appProps} {...appCtx} apolloClient={apollo} />);
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:

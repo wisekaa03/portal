@@ -1,12 +1,15 @@
 /** @format */
 
+// #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Hidden, Button, Card, CardContent, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
-
-// import Logo from '../static/assets/logo-min.png';
+// #endregion
+// #region Imports Local
+import LogoMin from '../static/images/png/logo-min.png';
+// #endregion
 
 export const appBarHeight = 64;
 
@@ -15,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       zIndex: theme.zIndex.drawer + 1,
-      background: 'url(assets/header_bg.jpg) no-repeat center left',
+      background: 'url(/images/jpeg/header_bg.jpg) no-repeat center left',
       // backgroundSize: '100px 200px',
     },
     menuButton: {
@@ -56,7 +59,7 @@ export default (props: AppBarProps): React.ReactElement => {
           </IconButton>
         </Hidden>
         <div className={classes.logo}>
-          <img alt="logo" src="/assets/logo-min.png" />
+          <img src={LogoMin} alt="logo" />
         </div>
 
         <Button color="inherit">

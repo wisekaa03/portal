@@ -1,12 +1,15 @@
 /** @format */
 
+// #region Imports NPM
 import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Divider, List, ListItem, ListItemText, Hidden, Drawer } from '@material-ui/core';
 // import MenuIcon from '@material-ui/icons/Menu';
 // import Link from 'next/link';
-
+// #endregion
+// #region Imports Local
 import { appBarHeight } from './app-bar';
+// #endregion
 
 export const drawerWidth = 256;
 
