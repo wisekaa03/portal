@@ -2,42 +2,69 @@
 
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  AppBar as AppBarMaterial,
-  Toolbar,
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  IconButton,
-} from '@material-ui/core';
+import { AppBar, Toolbar, Hidden, Button, Card, CardContent, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import Link from 'next/link';
 
-const useStyles = makeStyles((/* theme: Theme */) =>
+// import Logo from '../static/assets/logo-min.png';
+
+export const appBarHeight = 64;
+
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      zIndex: theme.zIndex.drawer + 1,
+      background: 'url(assets/header_bg.jpg) no-repeat center left',
+      // backgroundSize: '100px 200px',
     },
-    menuButton: {},
+    menuButton: {
+      color: '#000',
+    },
+    logo: {
+      'flexGrow': 1,
+      '& > img': {
+        height: '64px',
+      },
+    },
     title: {
       flexGrow: 1,
     },
-  }));
+  }),
+);
 
-export default function AppBar(): React.ReactElement {
+interface AppBarProps {
+  handleDrawerOpen(): void;
+}
+
+export default (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
+  const { handleDrawerOpen } = props;
 
   return (
-    <AppBarMaterial id="header" position="static" className={classes.root}>
+    <AppBar id="header" position="sticky" className={classes.root}>
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          Portal
-        </Typography>
-        <Button color="inherit">Login</Button>
+        <Hidden mdUp implementation="css">
+          <IconButton
+            edge="start"
+            onClick={handleDrawerOpen}
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
+        <div className={classes.logo}>
+          <img alt="logo" src="/assets/logo-min.png" />
+        </div>
+
+        <Button color="inherit">
+          <Link href="/auth/login">
+            <a>Login</a>
+          </Link>
+        </Button>
       </Toolbar>
-    </AppBarMaterial>
+    </AppBar>
   );
-}
+};

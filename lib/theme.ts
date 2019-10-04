@@ -39,6 +39,11 @@ const theme = createMuiTheme({
 });
 
 theme.overrides = {
+  MuiToolbar: {
+    root: {
+      height: '64px',
+    },
+  },
   MuiOutlinedInput: {
     root: {
       '&:hover $notchedOutline': {
@@ -93,6 +98,19 @@ theme.overrides = {
         color: 'rgba(0, 0, 0, 0.5)',
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
       },
+    },
+  },
+  MuiIconButton: {
+    root: {
+      'color': 'inherit',
+      '&:hover': {
+        backgroundColor: 'inherit',
+      },
+    },
+  },
+  MuiTypography: {
+    body1: {
+      fontSize: 'inherit',
     },
   },
 };
