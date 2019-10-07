@@ -177,7 +177,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                   value={values.name}
                   onChange={handleChange('name')}
                   disabled={loading}
-                  label="Пользователь"
+                  label={t('login:username')}
                   variant="outlined"
                   className={classes.labelForFormControl}
                 />
@@ -188,7 +188,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                   value={values.pass}
                   onChange={handleChange('pass')}
                   disabled={loading}
-                  label="Пароль"
+                  label={t('login:password')}
                   variant="outlined"
                   className={classes.labelForFormControl}
                 />
@@ -204,7 +204,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                     disabled={loading}
                   />
                 }
-                label="Запомнить меня на этом компьютере"
+                label={t('login:remember')}
               />
               {loading && <Loading />}
               {error && <GQLError error={error} />}
@@ -217,7 +217,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                   size="large"
                   disabled={loading}
                 >
-                  Вход
+                  {t('login:signIn')}
                 </Button>
               </FormControl>
             </CardContent>

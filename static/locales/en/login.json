@@ -1,3 +1,7 @@
 {
-  "authorization": "Authorization"
+  "authorization": "Authorization",
+  "username": "Username",
+  "password": "Password",
+  "remember": "Remember me on this computer",
+  "signIn": "Sign in"
 }

@@ -1,3 +1,7 @@
 {
-  "authorization": "Авторизация"
+  "authorization": "Авторизация",
+  "username": "Пользователь",
+  "password": "Пароль",
+  "remember": "Запомнить меня на этом компьютере",
+  "signIn": "Вход"
 }

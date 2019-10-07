@@ -7,12 +7,10 @@ import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
 import { LoginComponent } from '../../components/login';
-import { useTranslation, includeDefaultNamespaces } from '../../lib/i18n-client';
+import { includeDefaultNamespaces } from '../../lib/i18n-client';
 // #endregion
 
 const Login = (): React.ReactElement => {
-  const { t, i18n } = useTranslation();
-
   return (
     <Mutation
       mutation={LOGIN}
