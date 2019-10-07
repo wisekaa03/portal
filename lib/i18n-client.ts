@@ -32,6 +32,6 @@ export type I18n = i18n.i18n;
 export type TFunction = i18n.TFunction;
 export type I18nPage<P = {}> = NextComponentType<
   NextPageContext,
-  { namespacesRequired: string[] },
-  P & { namespacesRequired: string[] }
+  { namespacesRequired: string[]; statusCode?: number; errorCode?: number },
+  P & { namespacesRequired: string[]; statusCode?: number; errorCode?: number }
 >;
