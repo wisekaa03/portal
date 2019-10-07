@@ -79,6 +79,9 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '87px',
       backgroundColor: '#DEECEC',
     },
+    popper: {
+      zIndex: theme.zIndex.drawer + 1,
+    },
   }),
 );
 interface Column {
@@ -188,7 +191,11 @@ export default function PhoneBook(): React.ReactElement {
   };
 
   const handleProfile = (event: React.MouseEvent<HTMLElement>): void => {
-    // document.getElementById('phonebook-wrap').onscroll = profileEl ? null : () => setProfileEl(null);
+    const wrap = document.getElementById('phonebook-wrap');
+
+    if (wrap) {
+      wrap.onscroll = profileEl ? null : () => setProfileEl(null);
+    }
 
     setProfileEl(profileEl ? null : event.currentTarget);
   };
@@ -300,7 +307,7 @@ export default function PhoneBook(): React.ReactElement {
           </div>
         </div>
       </Page>
-      <Popper id={profileId} open={profileOpen} anchorEl={profileEl} style={{ zIndex: 1 }}>
+      <Popper id={profileId} open={profileOpen} anchorEl={profileEl} className={classes.popper}>
         <ProfileComponent handleClose={() => setProfileEl(null)} />
       </Popper>
     </>
