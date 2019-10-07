@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       backgroundColor: '#F7FBFA',
       padding: '28px 25px',
+      width: 'max-content',
     },
     noPadding: {
       padding: 0,
@@ -100,14 +101,14 @@ interface ProfileProps {
   handleClose(): void;
 }
 
-export const ProfileComponent = (props: ProfileProps): React.ReactElement => {
+export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
   const { handleClose } = props;
 
   const avatar = 'https://pickaface.net/gallery/avatar/unr_example_170227_1250_yq2lr.png';
 
   return (
-    <Card className={classes.root}>
+    <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
         <div className={clsx(classes.grid, classes.main)}>
           <div className={clsx(classes.grid, classes.column)}>
@@ -228,4 +229,4 @@ export const ProfileComponent = (props: ProfileProps): React.ReactElement => {
       </CardContent>
     </Card>
   );
-};
+});

@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Divider, List, ListItem, ListItemText, Hidden, Drawer } from '@material-ui/core';
+import { Divider, List, ListItem, ListItemText, Hidden, Drawer, useMediaQuery } from '@material-ui/core';
 // import MenuIcon from '@material-ui/icons/Menu';
 // import Link from 'next/link';
 // #endregion
@@ -44,6 +44,8 @@ interface DrawerProps {
 export default (props: DrawerProps): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
+  // TODO: продумать как узнать устройство на серверной стороне
+  // const mdUp = useMediaQuery(theme.breakpoints.up('md'));
   const { open, handleOpen } = props;
 
   const drawer = (
