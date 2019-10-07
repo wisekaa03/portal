@@ -7,9 +7,12 @@ import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
 import { LoginComponent } from '../../components/login';
+import { useTranslation, includeDefaultNamespaces } from '../../lib/i18n-client';
 // #endregion
 
-export default function Login(): React.ReactElement {
+const Login = (): React.ReactElement => {
+  const { t, i18n } = useTranslation();
+
   return (
     <Mutation
       mutation={LOGIN}
@@ -31,4 +34,12 @@ export default function Login(): React.ReactElement {
       }}
     </Mutation>
   );
-}
+};
+
+Login.getInitialProps = () => {
+  return {
+    namespacesRequired: includeDefaultNamespaces(['login']),
+  };
+};
+
+export default Login;

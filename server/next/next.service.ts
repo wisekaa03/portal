@@ -27,7 +27,14 @@ export class NextService {
 
         await this.app.prepare();
       } catch (error) {
-        this.logService.error('Next service error (getApp):', error);
+        // eslint-disable-next-line no-debugger
+        debugger;
+
+        if (this.logService) {
+          this.logService.error('Next service error (getApp):', error);
+        } else {
+          console.error('Error when starting Next.js', error);
+        }
       }
     }
     return this.app;
@@ -39,7 +46,11 @@ export class NextService {
         const app = await this.getApp();
         this.handler = app.getRequestHandler();
       } catch (error) {
-        this.logService.error('Next service error (getRequestHandler):', error);
+        if (this.logService) {
+          this.logService.error('Next service error (getRequestHandler):', error);
+        } else {
+          console.error('Error when starting Next.js', error);
+        }
       }
     }
     return this.handler;
@@ -56,7 +67,11 @@ export class NextService {
       const message = exception instanceof HttpException ? exception.toString() : 'Internal server error';
       return app.renderError(new Error(message), req, res, req.url, req.query);
     } catch (error) {
-      this.logService.error('Next service error:', error);
+      if (this.logService) {
+        this.logService.error('Next service error:', error);
+      } else {
+        console.error('Error when starting Next.js', error);
+      }
       throw error;
     }
   }
@@ -66,7 +81,11 @@ export class NextService {
       const app = await this.getApp();
       return app.render(req, res, page, req.query);
     } catch (error) {
-      this.logService.error('Next service error (render):', error);
+      if (this.logService) {
+        this.logService.error('Next service error (render):', error);
+      } else {
+        console.error('Error when starting Next.js', error);
+      }
       throw error;
     }
   }

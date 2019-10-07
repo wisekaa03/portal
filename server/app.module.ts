@@ -5,6 +5,7 @@
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule, forwardRef } from '@nestjs/common';
+import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -42,7 +43,7 @@ import { UserModule } from './user/user.module';
     CacheModule.register({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         store: redisCacheStore,
         ttl: 1, // seconds
         max: 60, // maximum number of items in cache
@@ -55,6 +56,19 @@ import { UserModule } from './user/user.module';
     }),
     // #endregion
 
+    // #region Locale I18n
+    I18nModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        path: configService.i18nPath,
+        filePattern: configService.i18nFilePattern,
+        fallbackLanguage: configService.fallbackLanguage,
+        resolvers: [new QueryResolver(['lang', 'locale', 'l']), new HeaderResolver()],
+      }),
+    }),
+    // #endregion
+
     // #region GraphQL
     GraphQLModule.forRoot({
       debug: process.env.NODE_ENV !== 'production',
@@ -62,7 +76,7 @@ import { UserModule } from './user/user.module';
       typePaths: ['./**/*.graphql'],
       context: ({ req }) => {
         // eslint-disable-next-line no-debugger
-        debugger;
+        // debugger;
 
         return { req, user: req._passport.session && req._passport.session.user };
       },

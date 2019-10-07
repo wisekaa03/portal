@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Inject, forwardRef, Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // #endregion
@@ -16,6 +17,12 @@ import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 // #endregion
 
+interface LdapAuthenticate {
+  user: UserEntity | undefined;
+  ldapUser: LdapResponeUser | undefined;
+  errorCode: any;
+}
+
 @Injectable()
 export class UserService {
   public ldapOnUserBeforeCreate: Function;
@@ -28,6 +35,7 @@ export class UserService {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly i18n: I18nService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
     @InjectRepository(UserEntity)
@@ -67,7 +75,7 @@ export class UserService {
     username: string;
     password: string;
     user?: UserEntity;
-  }): Promise<UserEntity | undefined> {
+  }): Promise<LdapAuthenticate> {
     try {
       // #region to LDAP database
       const ldapUser: LdapResponeUser = await this.ldapService.authenticate(username, password);
@@ -105,18 +113,31 @@ export class UserService {
       // #region User create/update
       if (!user) {
         const userLogin = await this.userRepository.create(data);
-        await this.userRepository.save(userLogin);
-        return userLogin;
+        try {
+          await this.userRepository.save(userLogin);
+        } catch (error) {
+          this.logService.error('Unable to create data in `user`');
+          return { user, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
+        }
+        return { user: userLogin, ldapUser, errorCode: HttpStatus.ACCEPTED };
       }
 
       data['id'] = user.id;
       await this.userRepository.save(data);
       // #endregion
 
-      return user;
+      return {
+        user,
+        ldapUser,
+        errorCode: HttpStatus.ACCEPTED,
+      };
     } catch (error) {
       // #region If in LDAP is not found, then we compare password
-      return user && (await user.comparePassword(password)) ? user : undefined;
+      return {
+        user,
+        ldapUser: undefined,
+        errorCode: HttpStatus.UNAUTHORIZED,
+      };
       // #endregion
     }
   }
@@ -130,14 +151,16 @@ export class UserService {
   async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO | null> {
     this.logService.debug(`UserService: user login: username = "${username}", password = "${password}"`);
 
-    let user = await this.userRepository.findOne({ where: { username } });
-    user = await this.userLdapLogin({ username, password, user });
+    const user = await this.userRepository.findOne({ where: { username } });
+    const { user: userDB, ldapUser, errorCode } = await this.userLdapLogin({ username, password, user });
 
-    if (!user) {
-      throw new HttpException('Invalid username/password', HttpStatus.FORBIDDEN);
+    if (errorCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+      throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), errorCode);
+    } else if (userDB === undefined || ldapUser === undefined) {
+      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), errorCode);
     }
 
-    return user.toResponseObject(this.authService.token({ id: user.id }));
+    return userDB.toResponseObject(this.authService.token({ id: userDB.id }));
   }
 
   /**
@@ -158,7 +181,7 @@ export class UserService {
     // #endregion
 
     // #region Create user
-    user = await this.userRepository.create(data);
+    user = this.userRepository.create(data);
     await this.userRepository.save(user);
     // #endregion
 

@@ -24,6 +24,7 @@ import { Loading } from './loading';
 import { getStorage, setStorage } from '../lib/session-storage';
 import Background2 from '../static/images/svg/background2.svg';
 import Logo from '../static/images/svg/logo.svg';
+import { I18nPage, includeDefaultNamespaces, useTranslation } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -114,6 +115,7 @@ interface State {
 
 export const LoginComponent = (props: LoginProps): React.ReactElement => {
   const { error, loading, login } = props;
+  const { t, i18n } = useTranslation();
 
   const classes: any = useStyles({});
 
@@ -167,7 +169,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
           <Card className={classes.card}>
             <CardContent>
               <Typography className={classes.typoAuthorization} variant="h4">
-                Авторизация
+                {t('login:authorization')}
               </Typography>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
@@ -224,4 +226,10 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
       </div>
     </div>
   );
+};
+
+LoginComponent.getInitialProps = () => {
+  return {
+    namespacesRequired: includeDefaultNamespaces(['login']),
+  };
 };

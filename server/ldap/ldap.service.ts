@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
 import * as bcrypt from 'bcrypt';

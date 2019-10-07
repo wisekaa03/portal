@@ -14,9 +14,6 @@ export class NextAssetsMiddleware implements NestMiddleware {
 
   // @Header('content-type', 'text/javascript')
   public async use(req: Request, res: Response): Promise<void> {
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     return (await this.nextService.getRequestHandler())(req, res);
   }
 }

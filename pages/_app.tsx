@@ -14,6 +14,7 @@ import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
 import { UserContext, ApolloAppProps } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
+import { appWithTranslation } from '../lib/i18n-client';
 // #endregion
 
 class MainApp extends App<ApolloAppProps> {
@@ -60,4 +61,4 @@ class MainApp extends App<ApolloAppProps> {
   }
 }
 
-export default withApolloClient(MainApp);
+export default withApolloClient(appWithTranslation(MainApp));

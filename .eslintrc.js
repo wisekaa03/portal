@@ -2,7 +2,17 @@
 
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'eslint-comments', 'jest', 'promise', 'prettier'],
+  plugins: [
+    '@typescript-eslint',
+    'graphql',
+    'json',
+    'react',
+    'react-hooks',
+    'eslint-comments',
+    'jest',
+    'promise',
+    'prettier',
+  ],
   settings: {
     'react': {
       version: 'detect',

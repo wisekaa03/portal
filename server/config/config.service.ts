@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import dotenv from 'dotenv';
+import { join } from 'path';
 import { readFileSync } from 'fs';
 import * as Joi from '@hapi/joi';
 import * as jwt from 'jsonwebtoken';
@@ -63,6 +64,15 @@ export class ConfigService {
   public jwtPrivateKey: string;
 
   public jwtPublicKey: string;
+
+  /**
+   * Language
+   */
+  public i18nPath = 'server/i18n';
+
+  public fallbackLanguage = 'ru';
+
+  i18nFilePattern = '*.json';
 
   /**
    * Ensures all needed variables are set, and returns the validated JavaScript object

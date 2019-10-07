@@ -9,8 +9,8 @@ import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-applicati
 import passport from 'passport';
 import responseTime from 'response-time';
 import helmet from 'helmet';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
+// import compression from 'compression';
+// import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 // #endregion
@@ -69,13 +69,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Passport initialization
   app.use(passport.initialize());
-
-  // eslint-disable-next-line no-debugger
-  debugger;
-
-  const session = passport.session();
-
-  app.use(session);
+  app.use(passport.session());
   // #endregion
 
   // #region Static files
