@@ -21,15 +21,15 @@ export class NextService {
 
   public async getApp(): Promise<Server> {
     if (!this.app) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
       try {
         this.app = next({ dev, quiet: !dev });
         this.handler = this.app.getRequestHandler();
 
         await this.app.prepare();
       } catch (error) {
-        // eslint-disable-next-line no-debugger
-        debugger;
-
         if (this.logService) {
           this.logService.error('Next service error (getApp):', error);
         } else {

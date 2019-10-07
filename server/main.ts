@@ -6,6 +6,7 @@ import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
+import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import responseTime from 'response-time';
 import helmet from 'helmet';
@@ -19,6 +20,7 @@ import { sessionRedis } from './shared/session-redis';
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
 import { LogService } from './logger/logger.service';
+import { nextI18next } from '../lib/i18n-client';
 // #endregion
 
 // #region NestJS options
@@ -74,6 +76,10 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Static files
   app.useStaticAssets(join(__dirname, '..', 'static'));
+  // #endregion
+
+  // #region Locale I18n
+  app.use(nextI18NextMiddleware(nextI18next));
   // #endregion
 
   // #region start server

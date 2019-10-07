@@ -17,6 +17,9 @@ export class NextMiddleware implements NestMiddleware {
   public async use(req: Request, res: Response, next: Function): Promise<void> {
     const app = await this.nextService.getApp();
 
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     // #region Locale I18n
     // app.use(nextI18NextMiddleware(nextI18next));
     // #endregion
