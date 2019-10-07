@@ -95,6 +95,7 @@ module.exports = {
     'no-underscore-dangle': 0,
     'import/no-unresolved': 0,
     'import/extensions': 0,
+    'react/prop-types': 0,
     'global-require': 1,
     'no-plusplus': [
       2,
