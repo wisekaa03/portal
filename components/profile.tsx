@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       backgroundColor: '#F7FBFA',
       padding: '28px 25px',
+      width: 'max-content',
     },
     noPadding: {
       padding: 0,

@@ -13,7 +13,9 @@ import {
   Button,
   InputBase,
   IconButton,
-  Popper,
+  Modal,
+  // Backdrop,
+  // Fade,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 // #endregion
@@ -79,8 +81,10 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '87px',
       backgroundColor: '#DEECEC',
     },
-    popper: {
-      zIndex: theme.zIndex.drawer + 1,
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   }),
 );
@@ -174,7 +178,7 @@ export default function PhoneBook(): React.ReactElement {
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
   const [search, setSearch] = useState<string>('');
   const [bookData, setBookData] = useState<BookProps[]>([]);
-  const [profileEl, setProfileEl] = useState<null | HTMLElement>(null);
+  const [profileOpen, setProfileOpen] = useState<boolean>(false);
 
   const handleRequestSort = (_event: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
@@ -190,21 +194,19 @@ export default function PhoneBook(): React.ReactElement {
     setSearch(event.target.value);
   };
 
-  const handleProfile = (event: React.MouseEvent<HTMLElement>): void => {
-    const wrap = document.getElementById('phonebook-wrap');
-
-    if (wrap) {
-      wrap.onscroll = profileEl ? null : () => setProfileEl(null);
-    }
-
-    setProfileEl(profileEl ? null : event.currentTarget);
+  const handleProfileOpen = (): void => {
+    setProfileOpen(true);
   };
 
-  const profileOpen = Boolean(profileEl);
+  const handleProfileClose = (): void => {
+    setProfileOpen(false);
+  };
+
+  // const profileOpen = Boolean(profileEl);
   const profileId = profileOpen ? 'profile' : undefined;
 
   const getRows = (a: BookProps): React.ReactNode => (
-    <TableRow hover key={a.id} onClick={handleProfile}>
+    <TableRow hover key={a.id} onClick={handleProfileOpen}>
       <TableCell>{a.photo}</TableCell>
       <TableCell>{a.name}</TableCell>
       <TableCell>{a.company}</TableCell>
@@ -307,9 +309,9 @@ export default function PhoneBook(): React.ReactElement {
           </div>
         </div>
       </Page>
-      <Popper id={profileId} open={profileOpen} anchorEl={profileEl} className={classes.popper}>
-        <ProfileComponent handleClose={() => setProfileEl(null)} />
-      </Popper>
+      <Modal id={profileId} open={profileOpen} onClose={handleProfileClose} className={classes.modal}>
+        <ProfileComponent handleClose={handleProfileClose} />
+      </Modal>
     </>
   );
 }
