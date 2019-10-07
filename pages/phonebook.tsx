@@ -309,7 +309,7 @@ export default function PhoneBook(): React.ReactElement {
           </div>
         </div>
       </Page>
-      <Modal id={profileId} open={profileOpen} onClose={handleProfileClose} className={classes.modal}>
+      <Modal id={profileId} disableAutoFocus open={profileOpen} onClose={handleProfileClose} className={classes.modal}>
         <ProfileComponent handleClose={handleProfileClose} />
       </Modal>
     </>
