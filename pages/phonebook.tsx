@@ -81,32 +81,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-function desc<T>(a: T, b: T, orderBy: ColumnNames): number {
-  // if (b[orderBy] < a[orderBy]) {
-  //   return -1;
-  // }
-  // if (b[orderBy] > a[orderBy]) {
-  //   return 1;
-  // }
-  return 0;
-}
-
-function getSorting<T>(order: Order, orderBy: ColumnNames): (a: T, b: T) => number {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
-function stableSort<T>(array: T[], fun: (a: T, b: T) => number): T[] {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = fun(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  return stabilizedThis.map((el) => el[0]);
-}
-
 interface Column {
   id: ColumnNames;
   label: string;
@@ -197,7 +171,7 @@ export default function PhoneBook(): React.ReactElement {
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
   const [search, setSearch] = useState<string>('');
   const [bookData, setBookData] = useState<BookProps[]>([]);
-  const [profileEl, setProfileEl] = useState<HTMLButtonElement | null>(null);
+  const [profileEl, setProfileEl] = useState<null | HTMLElement>(null);
 
   const handleRequestSort = (_event: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
@@ -213,17 +187,17 @@ export default function PhoneBook(): React.ReactElement {
     setSearch(event.target.value);
   };
 
-  // const handleProfile = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-  //   document.getElementById('phonebook-wrap').onscroll = profileEl ? null : () => setProfileEl(null);
+  const handleProfile = (event: React.MouseEvent<HTMLElement>): void => {
+    // document.getElementById('phonebook-wrap').onscroll = profileEl ? null : () => setProfileEl(null);
 
-  //   setProfileEl(profileEl ? null : event.currentTarget);
-  // };
+    setProfileEl(profileEl ? null : event.currentTarget);
+  };
 
   const profileOpen = Boolean(profileEl);
   const profileId = profileOpen ? 'profile' : undefined;
 
   const getRows = (a: BookProps): React.ReactNode => (
-    <TableRow hover key={a.id}>
+    <TableRow hover key={a.id} onClick={handleProfile}>
       <TableCell>{a.photo}</TableCell>
       <TableCell>{a.name}</TableCell>
       <TableCell>{a.company}</TableCell>
@@ -306,13 +280,27 @@ export default function PhoneBook(): React.ReactElement {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {bookData ? stableSort(bookData, getSorting(order, orderBy)).map((a) => getRows(a)) : null}
+                {bookData
+                  .sort((a, b) => {
+                    const asc = order === 'asc' ? 1 : -1;
+
+                    if (a[orderBy] > b[orderBy]) {
+                      return asc * 1;
+                    }
+
+                    if (a[orderBy] < b[orderBy]) {
+                      return asc * -1;
+                    }
+
+                    return 0;
+                  })
+                  .map((a) => getRows(a))}
               </TableBody>
             </Table>
           </div>
         </div>
       </Page>
-      <Popper id={profileId} open={profileOpen} anchorEl={profileEl}>
+      <Popper id={profileId} open={profileOpen} anchorEl={profileEl} style={{ zIndex: 1 }}>
         <ProfileComponent handleClose={() => setProfileEl(null)} />
       </Popper>
     </>
