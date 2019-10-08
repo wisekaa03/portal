@@ -168,11 +168,13 @@ export class UserService {
    *
    * @returns {UserResponseDTO} User response DTO
    */
-  async logout(): Promise<void> {
+  async logout(): Promise<boolean> {
     this.logService.debug(`UserService: user logout`);
 
     // eslint-disable-next-line no-debugger
     debugger;
+
+    return true;
   }
 
   /**

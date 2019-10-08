@@ -53,7 +53,7 @@ export class UserResolver {
    * @returns {UserResponseDTO}
    */
   @Mutation()
-  async logout(): Promise<void> {
+  async logout(): Promise<boolean> {
     return this.userService.logout();
   }
 }
