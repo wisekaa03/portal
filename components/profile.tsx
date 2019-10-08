@@ -26,8 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: '#F7FBFA',
-      padding: '28px 25px',
+      padding: '24px 21px',
       width: 'max-content',
+      maxWidth: '95vw',
     },
     noPadding: {
       padding: 0,
@@ -35,14 +36,19 @@ const useStyles = makeStyles((theme: Theme) =>
     wrap: {
       '&:last-child': {
         padding: 0,
+        maxHeight: '90vh',
+        overflow: 'auto',
       },
     },
     grid: {
       display: 'grid',
       gridGap: theme.spacing(2),
+      padding: theme.spacing() / 2,
     },
     main: {
-      gridTemplateColumns: 'auto minmax(auto, 420px)',
+      [theme.breakpoints.up('sm')]: {
+        gridTemplateColumns: 'auto minmax(auto, 420px)',
+      },
     },
     column: {
       gridTemplateRows: 'max-content',
