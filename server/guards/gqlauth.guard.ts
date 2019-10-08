@@ -23,7 +23,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     const gqlCtx: any = gqlContext.getContext();
 
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     if (gqlCtx.user) {
       return true;
@@ -39,7 +39,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
   handleRequest(err: Error, user: any /* , info: any, context: any */): any {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     if (err || !user) {
       throw err || new UnauthorizedException();
@@ -54,7 +54,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     const gqlCtx = gqlContext.getContext();
 
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     return gqlCtx.req;
   }
