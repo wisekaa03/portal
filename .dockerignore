@@ -39,14 +39,14 @@ __mocks__/
 __tests__/
 helm/
 
-# nodemon.json
-# components/
-# layouts/
-# lib/
-# pages/
-# server/
-# public/
-# target/
-# typings/
-# tsconfig.json
-# tsconfig.server.json
+nodemon.json
+components/
+layouts/
+lib/
+pages/
+server/
+public/
+target/
+typings/
+tsconfig.json
+tsconfig.server.json
