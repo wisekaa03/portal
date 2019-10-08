@@ -15,7 +15,7 @@ export class NextMiddleware implements NestMiddleware {
   constructor(private readonly nextService: NextService) {}
 
   public async use(req: Request, res: Response, next: Function): Promise<void> {
-    if (!req.baseUrl.match(/^\/(graphql|public)/)) {
+    if (!req.baseUrl.match(/^\/(graphql|public|locales)/)) {
       const app = await this.nextService.getApp();
 
       res.render = (page: string, data?: any) => {

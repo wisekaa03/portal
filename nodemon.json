@@ -1,5 +1,5 @@
 {
-  "watch": ["server", ".env", "next.config.js", "babel.config.js"],
+  "watch": ["server", ".env", "next.config.js", "babel.config.js", "lib/apollo-client.ts"],
   "execMap": {
     "ts": "node -r ts-node/register"
   },
