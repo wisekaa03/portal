@@ -8,21 +8,22 @@
 
 .prettierignore
 prettier.config.js
+postcss.config.js
 
 apollo.client.js
-# babel.config.js
+babel.config.js
 ecosystem.config.js
 
-# jest.config.js
-# jest.setup.ts
+jest.config.js
+jest.setup.ts
+tsconfig.jest.json
 
 README.md
 LICENSE
 
-# nodemon.json
-# next-env.d.ts
+next-env.d.ts
 
-# yarn.lock
+yarn.lock
 
 npm-debug.log
 Dockerfile*
@@ -34,13 +35,18 @@ docker-compose*
 .env.example
 .env.test
 
-# __mocks__/
-# __tests__/
+__mocks__/
+__tests__/
+helm/
+
+# nodemon.json
 # components/
-# helm/
+# layouts/
 # lib/
 # pages/
 # server/
-# static/
+# public/
 # target/
 # typings/
+# tsconfig.json
+# tsconfig.server.json
