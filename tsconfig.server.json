@@ -5,8 +5,22 @@
     "sourceMap": true,
     "noEmit": false,
     "outDir": ".nest/",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "experimentalDecorators": true
   },
-  "exclude": ["__tests__/**/*", "__mocks__/**/*", "server/**/*.spec.ts", "server/**/*.test.ts"],
-  "include": ["typings/global.d.ts", "server/**/*.ts", "server/**/*.tsx"]
+  "include": [
+    "server",
+    "typings",
+    "next-env.d.ts"
+  ],
+  "exclude": [
+    ".nest",
+    ".next",
+    "node_modules",
+    "__tests__",
+    "__mocks__",
+    "**/*.spec.*",
+    "**/*.test.*",
+    "jest.setup.ts"
+  ]
 }

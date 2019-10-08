@@ -10,5 +10,13 @@
     "sourceMap": true,
     "target": "es5"
   },
-  "include": ["typings/global.d.ts", "!jest.setup.ts|**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    ".nest",
+    ".next",
+    "node_modules"
+  ]
 }

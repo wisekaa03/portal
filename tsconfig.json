@@ -3,7 +3,10 @@
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
-    "lib": ["dom", "es2017"],
+    "lib": [
+      "dom",
+      "es2017"
+    ],
     "moduleResolution": "node",
     "noEmit": true,
     "sourceMap": true,
@@ -23,6 +26,18 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "exclude": ["__tests__/**/*", "__mocks__/**/*", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["typings/global.d.ts", "!jest.setup.ts|**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    ".nest",
+    ".next",
+    "node_modules",
+    "__tests__",
+    "__mocks__",
+    "**/*.spec.*",
+    "**/*.test.*",
+    "jest.setup.ts"
+  ]
 }
