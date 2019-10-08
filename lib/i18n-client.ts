@@ -13,13 +13,15 @@ import { NextComponentType, NextPageContext } from 'next';
 const detectionOrder: string[] = [];
 
 export const nextI18next = new NextI18Next({
-  // browserLanguageDetection: false,
+  browserLanguageDetection: true,
+  serverLanguageDetection: true,
   defaultLanguage: 'ru',
   defaultNS: 'common',
   detection: { order: detectionOrder },
   fallbackLng: 'ru',
   keySeparator: '###',
-  localePath: /* typeof window === 'undefined' ? 'locales' : */ 'static/locales',
+  ignoreRoutes: ['/_next/', '/public/'],
+  localePath: /* typeof window === 'undefined' ? 'locales' : */ 'public/locales',
   otherLanguages: ['en'],
 });
 

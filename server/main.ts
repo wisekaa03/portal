@@ -75,7 +75,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Static files
-  app.useStaticAssets(join(__dirname, '..', 'static'));
+  app.useStaticAssets(join(__dirname, '..', 'public'));
   // #endregion
 
   // #region Locale I18n

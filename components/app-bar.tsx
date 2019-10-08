@@ -8,8 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 // #endregion
 // #region Imports Local
-import HeaderBg from '../static/images/jpeg/header_bg.jpg';
-import LogoMin from '../static/images/png/logo-min.png';
+import HeaderBg from '../public/images/jpeg/header_bg.jpg';
+import LogoMin from '../public/images/png/logo-min.png';
 // #endregion
 
 export const appBarHeight = 64;

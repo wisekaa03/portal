@@ -6,7 +6,7 @@ const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
 const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
-const Config = require(`./${dev ? 'server/' : '.nest/'}config/config.service`);
+const Config = require(`./${dev ? 'server/' : '.nest/server/'}config/config.service`);
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));

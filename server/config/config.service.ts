@@ -14,6 +14,8 @@ export interface EnvConfig {
   [key: string]: string;
 }
 
+const dev = process.env.NODE_ENV !== 'production';
+
 export class ConfigService {
   private readonly envConfig: EnvConfig;
 
@@ -21,9 +23,9 @@ export class ConfigService {
     const config = dotenv.parse(readFileSync(filePath));
     this.envConfig = this.validateInput(config);
 
-    this.jwtPrivateKey = readFileSync(`${__dirname}/../../jwt.private.pem`, 'utf8');
+    this.jwtPrivateKey = readFileSync(join(__dirname, dev ? '../..' : '../../..', 'jwt.private.pem'), 'utf8');
 
-    this.jwtPublicKey = readFileSync(`${__dirname}/../../jwt.public.pem`, 'utf8');
+    this.jwtPublicKey = readFileSync(join(__dirname, dev ? '../..' : '../../..', 'jwt.public.pem'), 'utf8');
 
     this.jwtStrategyOptions = {
       ...this.jwtStrategyOptions,

@@ -4,7 +4,7 @@ module.exports = {
   apps: [
     {
       name: 'Portal',
-      script: '.nest/main.js',
+      script: '.nest/server/main.js',
       instances: 1,
       autorestart: true,
       watch: false,

@@ -22,8 +22,8 @@ import { ApolloError } from 'apollo-client';
 import { GQLError } from './gql-error';
 import { Loading } from './loading';
 import { getStorage, setStorage } from '../lib/session-storage';
-import Background2 from '../static/images/svg/background2.svg';
-import Logo from '../static/images/svg/logo.svg';
+import Background2 from '../public/images/svg/background2.svg';
+import Logo from '../public/images/svg/logo.svg';
 import { I18nPage, includeDefaultNamespaces, useTranslation } from '../lib/i18n-client';
 // #endregion
 
