@@ -11,14 +11,14 @@ import { PassportSerializer } from '@nestjs/passport';
 export class CookieSerializer extends PassportSerializer {
   serializeUser(user: any, done: Function): any {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     done(null, user);
   }
 
   deserializeUser(payload: any, done: Function): any {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     done(null, payload);
   }

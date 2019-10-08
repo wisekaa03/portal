@@ -164,6 +164,18 @@ export class UserService {
   }
 
   /**
+   * Logout a user
+   *
+   * @returns {UserResponseDTO} User response DTO
+   */
+  async logout(): Promise<void> {
+    this.logService.debug(`UserService: user logout`);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+  }
+
+  /**
    * Register a user
    *
    * @param {UserRegisterDTO} data User register data transfer object

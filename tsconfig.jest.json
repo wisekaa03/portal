@@ -10,5 +10,5 @@
     "sourceMap": true,
     "target": "es5"
   },
-  "include": ["typings/global.d.ts", "server/**/*.ts", "server/**/*.tsx", "pages/**/*.ts", "pages/**/*.tsx"]
+  "include": ["typings/global.d.ts", "!jest.setup.ts|**/*.ts", "**/*.tsx"]
 }

@@ -4,6 +4,9 @@
 import session from 'express-session';
 import redisSessionStore from 'connect-redis';
 import redis from 'redis';
+import genuuid from 'uuid/v1';
+// #endreion
+// #region Imports Local
 import { ConfigService } from '../config/config.service';
 // #endregion
 
@@ -18,13 +21,15 @@ export const sessionRedis = (configService: ConfigService): any =>
       }),
     }),
     resave: true,
-    saveUninitialized: true,
     rolling: true,
+    saveUninitialized: false,
+    name: 'portal',
+    genid: () => genuuid(),
     cookie: {
       path: '/',
       // domain: '',
       // secure: process.env.PROTOCOL === 'https',
-      expires: false,
+      // expires: false,
       httpOnly: false,
       maxAge: 60 * 60 * 1000, // msec, 1 hour
     },

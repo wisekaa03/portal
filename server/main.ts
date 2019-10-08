@@ -10,8 +10,7 @@ import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import responseTime from 'response-time';
 import helmet from 'helmet';
-// import compression from 'compression';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 // #endregion
@@ -62,7 +61,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region enable cookie
-  // app.use(cookieParser());
+  app.use(cookieParser());
   // #endregion
 
   // #region production ready session store

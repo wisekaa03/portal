@@ -23,6 +23,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "exclude": ["__tests__/**/*", "**/*.spec.ts", "**/*.test.ts"],
+  "exclude": ["__tests__/**/*", "__mocks__/**/*", "**/*.spec.ts", "**/*.test.ts"],
   "include": ["typings/global.d.ts", "!jest.setup.ts|**/*.ts", "**/*.tsx"]
 }

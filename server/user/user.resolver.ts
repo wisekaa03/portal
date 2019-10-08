@@ -46,4 +46,14 @@ export class UserResolver {
   async login(@Args('username') username: string, @Args('password') password: string): Promise<UserResponseDTO | null> {
     return this.userService.login({ username, password });
   }
+
+  /**
+   * GraphQL mutation: logout
+   *
+   * @returns {UserResponseDTO}
+   */
+  @Mutation()
+  async logout(): Promise<void> {
+    return this.userService.logout();
+  }
 }

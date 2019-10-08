@@ -13,7 +13,7 @@ import { NextComponentType, NextPageContext } from 'next';
 const detectionOrder: string[] = [];
 
 export const nextI18next = new NextI18Next({
-  browserLanguageDetection: true,
+  browserLanguageDetection: true, // Set-Cookie: next-i18next
   serverLanguageDetection: true,
   defaultLanguage: 'ru',
   defaultNS: 'common',

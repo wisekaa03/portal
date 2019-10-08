@@ -15,7 +15,7 @@ import { AuthService } from '../auth/auth.service';
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
   constructor(private readonly authService: AuthService) {
-    super({ session: false });
+    super({ session: true });
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -29,12 +29,12 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
     if (gqlCtx instanceof Function) {
       canActivate = await super.canActivate(context);
+      await super.logIn(gqlCtx.getRequest());
     } else {
       gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
       canActivate = await super.canActivate(gqlContext);
+      await super.logIn(gqlCtx.req);
     }
-
-    await super.logIn(gqlContext.switchToHttp().getRequest());
 
     return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;
   }
@@ -50,13 +50,14 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
   getRequest(context: ExecutionContext): IncomingMessage {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+    const gqlCtx = gqlContext.getContext();
 
     // eslint-disable-next-line no-debugger
-    // debugger;
+    debugger;
 
-    if (gqlContext.getContext() instanceof Function) {
+    if (gqlCtx instanceof Function) {
       return context.switchToHttp().getRequest();
     }
-    return gqlContext.getContext().req;
+    return gqlCtx.req;
   }
 }

@@ -15,17 +15,21 @@ export class AuthController {
 
   @Get('login')
   public async login(@Req() req: Request, @Res() res: Response): Promise<void> {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     if (req.user) {
-      // TODO: это выполняется до запроса в graphql, который идет следующим запросом
-      return res.redirect('/');
+      return res.redirect('/auth/logout');
     }
     return this.nextService.render(req, res, '/auth/login');
   }
 
   @Get('logout')
   public async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    if (req.user) {
-      // TODO: это выполняется до запроса в graphql, который идет следующим запросом
+    // eslint-disable-next-line no-debugger
+    debugger;
+
+    if (!req.user) {
       return res.redirect('/auth/login');
     }
     return this.nextService.render(req, res, '/auth/logout');

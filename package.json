@@ -91,6 +91,7 @@
     "@types/react": "^16.9.5",
     "@types/react-dom": "^16.9.1",
     "@types/response-time": "^2.3.4",
+    "@types/uuid": "^3.4.5",
     "@zeit/next-bundle-analyzer": "^0.1.2",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
@@ -182,6 +183,7 @@
     "typeface-roboto": "^0.0.75",
     "typeorm": "^0.2.19",
     "typescript": "^3.6.3",
+    "uuid": "^3.3.3",
     "webp-loader": "^0.5.0",
     "webpack": "4.41.0",
     "webpack-cli": "^3.3.9"

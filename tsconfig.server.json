@@ -7,6 +7,6 @@
     "outDir": ".nest/",
     "baseUrl": "."
   },
-  "exclude": ["__tests__/**/*", "server/**/*.spec.ts", "server/**/*.test.ts"],
+  "exclude": ["__tests__/**/*", "__mocks__/**/*", "server/**/*.spec.ts", "server/**/*.test.ts"],
   "include": ["typings/global.d.ts", "server/**/*.ts", "server/**/*.tsx"]
 }
