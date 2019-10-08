@@ -20,17 +20,11 @@ const Login = (): React.ReactElement => {
         }
 
         // eslint-disable-next-line no-debugger
-        debugger;
+        // debugger;
 
         sessionStorage.setItem('token', data.login.token);
-
-        const props = queryString.parse(window.location.search);
-
-        if (props.url) {
-          window.location.pathname = props.url as string;
-        } else {
-          window.location.pathname = '/phonebook';
-        }
+        const { redirect = '/' } = queryString.parse(window.location.search);
+        window.location.pathname = redirect as string;
 
         return null;
       }}
