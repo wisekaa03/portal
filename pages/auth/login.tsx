@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
+import queryString from 'query-string';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
@@ -19,11 +20,12 @@ const Login = (): React.ReactElement => {
         if (login) {
           sessionStorage.setItem('token', login.token);
 
-          // eslint-disable-next-line no-debugger
-          debugger;
+          const props = queryString.parse(window.location.search);
 
-          // TODO: разобраться куда пользователь шел
-          window.location.pathname = '/';
+          // TODO: разобраться как редиректить
+          // window.location.href = redirect;
+          // eslint-disable-next-line no-debugger
+          // debugger;
         }
       }}
     >

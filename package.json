@@ -166,6 +166,7 @@
     "passport-jwt": "^4.0.0",
     "pg": "^7.12.1",
     "postcss": "^7.0.18",
+    "query-string": "^6.8.3",
     "react": "^16.10.2",
     "react-apollo": "^3.1.2",
     "react-dom": "^16.10.2",
