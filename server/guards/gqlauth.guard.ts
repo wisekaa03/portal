@@ -22,24 +22,25 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
     const gqlCtx: any = gqlContext.getContext();
 
-    let canActivate: boolean | Observable<boolean>;
-
     // eslint-disable-next-line no-debugger
     debugger;
 
-    if (gqlCtx instanceof Function) {
-      canActivate = await super.canActivate(context);
-      await super.logIn(gqlCtx.getRequest());
-    } else {
-      gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
-      canActivate = await super.canActivate(gqlContext);
-      await super.logIn(gqlCtx.req);
+    if (gqlCtx.user) {
+      return true;
     }
+
+    gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
+
+    const canActivate = await super.canActivate(gqlContext);
+    await super.logIn(gqlCtx.req);
 
     return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;
   }
 
   handleRequest(err: Error, user: any /* , info: any, context: any */): any {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
@@ -55,9 +56,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     // eslint-disable-next-line no-debugger
     debugger;
 
-    if (gqlCtx instanceof Function) {
-      return context.switchToHttp().getRequest();
-    }
     return gqlCtx.req;
   }
 }

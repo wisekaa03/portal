@@ -32,6 +32,9 @@ export class UserResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async me(@Context('req') req: Request): Promise<UserResponseDTO | null> {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     return req.user as UserResponseDTO;
   }
 
@@ -44,6 +47,9 @@ export class UserResolver {
    */
   @Mutation()
   async login(@Args('username') username: string, @Args('password') password: string): Promise<UserResponseDTO | null> {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     return this.userService.login({ username, password });
   }
 
@@ -54,6 +60,9 @@ export class UserResolver {
    */
   @Mutation()
   async logout(): Promise<boolean> {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     return this.userService.logout();
   }
 }
