@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
+import queryString from 'query-string';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
@@ -23,8 +24,13 @@ const Login = (): React.ReactElement => {
 
         sessionStorage.setItem('token', data.login.token);
 
-        // TODO: разобраться куда пользователь шел
-        window.location.pathname = '/auth/logout';
+        const props = queryString.parse(window.location.search);
+
+        if (props.url) {
+          window.location.pathname = props.url as string;
+        } else {
+          window.location.pathname = '/phonebook';
+        }
 
         return null;
       }}

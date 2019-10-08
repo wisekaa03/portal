@@ -20,6 +20,7 @@ export class HomeController {
     if (req.user) {
       return this.nextService.render(req, res, req.url);
     }
-    return res.redirect('auth/login');
+    const redirect = 'redirect' in req.query ? req.query.redirect : req.url;
+    return res.redirect(`auth/login?redirect=${redirect}`);
   }
 }
