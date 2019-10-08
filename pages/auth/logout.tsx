@@ -21,7 +21,7 @@ const Logout = (): React.ReactElement => {
         // eslint-disable-next-line no-debugger
         debugger;
 
-        sessionStorage.setItem('token', '');
+        sessionStorage.removeItem('token');
         window.location.pathname = '/auth/login';
 
         return null;

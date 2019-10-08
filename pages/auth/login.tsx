@@ -12,23 +12,21 @@ import { includeDefaultNamespaces } from '../../lib/i18n-client';
 
 const Login = (): React.ReactElement => {
   return (
-    <Mutation
-      mutation={LOGIN}
-      onError={() => {}}
-      onCompleted={({ login }: any) => {
-        if (login) {
-          sessionStorage.setItem('token', login.token);
-
-          // eslint-disable-next-line no-debugger
-          debugger;
-
-          // TODO: разобраться куда пользователь шел
-          window.location.pathname = '/';
+    <Mutation mutation={LOGIN} onError={() => {}}>
+      {(login: MutationFunction, { loading, error, data }: MutationResult<any>): JSX.Element | null => {
+        if (!data) {
+          return <LoginComponent error={error} loading={loading} login={login} />;
         }
-      }}
-    >
-      {(login: MutationFunction, { loading, error /* , data */ }: MutationResult<any>) => {
-        return <LoginComponent error={error} loading={loading} login={login} />;
+
+        // eslint-disable-next-line no-debugger
+        debugger;
+
+        sessionStorage.setItem('token', data.login.token);
+
+        // TODO: разобраться куда пользователь шел
+        window.location.pathname = '/auth/logout';
+
+        return null;
       }}
     </Mutation>
   );
