@@ -10,12 +10,16 @@ import { Toolbar } from '@material-ui/core';
 import AppBar from '../components/app-bar';
 // #endregion
 
-describe('AppBar', () => {
+describe('AppBar component', () => {
   let component: ShallowWrapper;
   const props = { handleDrawerOpen: (): void => {} };
 
   beforeAll(() => {
     component = createShallow()(<AppBar {...props} />);
+  });
+
+  it('match snapshot', () => {
+    expect(component).toMatchSnapshot();
   });
 
   it('render component', () => {
