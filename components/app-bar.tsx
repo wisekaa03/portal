@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Hidden, Button, Card, CardContent, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Hidden, Button, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 // #endregion
