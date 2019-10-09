@@ -9,12 +9,11 @@ import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 // #endregion
 // #region Imports Local
-import { AuthService } from '../auth/auth.service';
 // #endregion
 
 @Injectable()
 export class SessionAuthGuard extends AuthGuard('jwt') implements CanActivate {
-  constructor(private readonly authService: AuthService) {
+  constructor() {
     super({ session: true });
   }
 

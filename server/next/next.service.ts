@@ -22,7 +22,7 @@ export class NextService {
   public async getApp(): Promise<Server> {
     if (!this.app) {
       // eslint-disable-next-line no-debugger
-      debugger;
+      // debugger;
 
       try {
         this.app = next({ dev, quiet: !dev });
@@ -31,9 +31,9 @@ export class NextService {
         await this.app.prepare();
       } catch (error) {
         if (this.logService) {
-          this.logService.error('Next service error (getApp):', error);
+          this.logService.error('Next.js service error (getApp method):', error);
         } else {
-          console.error('Error when starting Next.js', error);
+          console.error('Next.js service error (getApp method)', error);
         }
       }
     }
@@ -47,9 +47,9 @@ export class NextService {
         this.handler = app.getRequestHandler();
       } catch (error) {
         if (this.logService) {
-          this.logService.error('Next service error (getRequestHandler):', error);
+          this.logService.error('Next.js service error (getRequestHandler method):', error);
         } else {
-          console.error('Error when starting Next.js', error);
+          console.error('Next.js service error (getRequestHandler method)', error);
         }
       }
     }
@@ -68,9 +68,9 @@ export class NextService {
       return app.renderError(new Error(message), req, res, req.url, req.query);
     } catch (error) {
       if (this.logService) {
-        this.logService.error('Next service error:', error);
+        this.logService.error('Next.js service error (error method):', error);
       } else {
-        console.error('Error when starting Next.js', error);
+        console.error('Next.js service error (error method)', error);
       }
       throw error;
     }
@@ -82,9 +82,9 @@ export class NextService {
       return app.render(req, res, page, req.query);
     } catch (error) {
       if (this.logService) {
-        this.logService.error('Next service error (render):', error);
+        this.logService.error('Next.js service error (render method):', error);
       } else {
-        console.error('Error when starting Next.js', error);
+        console.error('Next.js service error (render method)', error);
       }
       throw error;
     }
