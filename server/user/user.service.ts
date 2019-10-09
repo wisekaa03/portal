@@ -149,7 +149,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO | null> {
-    this.logService.debug(`UserService: user login: username = "${username}", password = "${password}"`);
+    this.logService.debug(`UserService: user login: username = "${username}"`);
 
     const user = await this.userRepository.findOne({ where: { username } });
     const { user: userDB, ldapUser, errorCode } = await this.userLdapLogin({ username, password, user });
