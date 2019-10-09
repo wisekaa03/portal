@@ -47,8 +47,10 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(responseTime());
   // #endregion
 
-  // #region improve security
-  app.use(helmet());
+  // #region improve security - this is done by Nginx reverse-proxy, do not need
+  app.use(helmet.ieNoOpen());
+  app.use(helmet.noCache());
+  app.use(helmet.hidePoweredBy());
   // #endregion
 
   // #region improve performance - this is done by Nginx reverse-proxy, do not need
