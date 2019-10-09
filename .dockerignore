@@ -45,7 +45,7 @@ layouts/
 lib/
 pages/
 public/
-server/
+# server/
 target/
 typings/
 tsconfig.json
