@@ -5,7 +5,7 @@ import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Divider, List, ListItem, ListItemText, Hidden, Drawer /* , useMediaQuery */ } from '@material-ui/core';
 // import MenuIcon from '@material-ui/icons/Menu';
-// import Link from 'next/link';
+import Link from 'next/link';
 // #endregion
 // #region Imports Local
 import { appBarHeight } from './app-bar';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: drawerWidth,
     },
     item: {
-      paddingLeft: '80px',
+      paddingLeft: '60px',
     },
   }),
 );
@@ -48,22 +48,28 @@ export default (props: DrawerProps): React.ReactElement => {
   // const mdUp = useMediaQuery(theme.breakpoints.up('md'));
   const { open, handleOpen } = props;
 
+  const urls = [
+    { text: 'Адресная книга', link: '/phonebook' },
+    { text: 'Почта', link: '/' },
+    { text: 'Создать заявку', link: '/' },
+    { text: 'Календарь компании', link: '/' },
+    { text: 'База знаний', link: '/' },
+    { text: 'Переговорные', link: '/' },
+    { text: 'Сайты', link: '/' },
+    { text: 'Настройки', link: '/' },
+  ];
+
   const drawer = (
     <div className={classes.toolbar}>
       <List>
-        {[
-          'Адресная книга',
-          'Почта',
-          'Создать заявку',
-          'Календарь компании',
-          'База знаний',
-          'Переговорные',
-          'Сайты',
-          'Настройки',
-        ].map((text) => (
-          <ListItem button key={text} className={classes.item}>
-            <ListItemText primary={text} />
-          </ListItem>
+        {urls.map((url) => (
+          <li key={url.text} className={classes.item}>
+            <Link href={url.link} passHref>
+              <ListItem button component="a">
+                <ListItemText primary={url.text} />
+              </ListItem>
+            </Link>
+          </li>
         ))}
       </List>
     </div>
