@@ -24,6 +24,7 @@ import Page from '../layouts/main';
 import { ProfileComponent } from '../components/profile';
 import { UserContext } from '../lib/types';
 import { appBarHeight } from '../components/app-bar';
+import { includeDefaultNamespaces } from '../lib/i18n-client';
 // import useDebounce from '../lib/debounce';
 // #endregion
 
@@ -171,7 +172,7 @@ const createData = (): BookProps[] => {
   return arr;
 };
 
-export default function PhoneBook(): React.ReactElement {
+const PhoneBook = (): React.ReactElement => {
   const classes = useStyles({});
   // const user = useContext(UserContext);
   const [order, setOrder] = useState<Order>('asc');
@@ -314,4 +315,12 @@ export default function PhoneBook(): React.ReactElement {
       </Modal>
     </>
   );
-}
+};
+
+PhoneBook.getInitialProps = () => {
+  return {
+    namespacesRequired: includeDefaultNamespaces(['PhoneBook']),
+  };
+};
+
+export default PhoneBook;

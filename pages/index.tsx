@@ -8,6 +8,7 @@ import { Typography, Button, Card, CardContent } from '@material-ui/core';
 
 // #region Imports Local
 import Page from '../layouts/main';
+import { includeDefaultNamespaces } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function App(): React.ReactElement {
+const App = (): React.ReactElement => {
   const classes = useStyles({});
 
   return (
@@ -36,4 +37,12 @@ export default function App(): React.ReactElement {
       </div>
     </Page>
   );
-}
+};
+
+App.getInitialProps = () => {
+  return {
+    namespacesRequired: includeDefaultNamespaces(['App']),
+  };
+};
+
+export default App;
