@@ -76,7 +76,7 @@ $ brew services start postgresql
 $ createuser -P -l portal
 
 # [MUST] create database "portal" owened by "portal"
-$ createdb portal -O portal
+$ createdb portal -O portaldb
 ```
 
 #### For Windows Users
@@ -136,7 +136,7 @@ The `.env` file is like this:
 
 ```bash
 # App
-HOST = http://localhost
+HOST = 0.0.0.0
 PORT = 4000
 PORT_DEBUGGER = 9229
 SESSION_SECRET = supersecret
@@ -148,7 +148,7 @@ DATABASE_PORT = 5432
 DATABASE_USERNAME = portal
 DATABASE_PASSWORD = portalpwd
 DATABASE_DATABASE = portaldb
-DATABASE_SCHEMA = app_public
+DATABASE_SCHEMA = public
 DATABASE_SYNCHRONIZE = true
 DATABASE_DROP_SCHEMA = true
 DATABASE_MIGRATIONS_RUN = true
@@ -163,7 +163,7 @@ REDIS_PASSWORD =
 REDIS_PREFIX =
 
 # LDAP
-LDAP_URL = ldap://activedirectory:389
+LDAP_URL = ldap://pdc.example.local:389
 LDAP_BIND_DN = CN=Administrator,DC=example,DC=local
 LDAP_BIND_PW = PaSsWoRd123
 LDAP_SEARCH_BASE = DC=example,DC=local
@@ -189,7 +189,7 @@ module.exports = {
   apps: [
     {
       name: 'Portal',
-      script: '.next/production-server/main.js',
+      script: '.next/server/main.js',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -212,8 +212,8 @@ module.exports = {
 - [x] Server: integration between [Nest](https://nestjs.com) and [Next.js](https://nextjs.org)
 - [x] UI: integration between [Next.js](https://nextjs.org) and [Material UI](https://material-ui.com)
 - [x] Authentication with LDAP
-- [ ] Test: unit tests
-- [ ] Test: e2e tests
+- [-] Test: unit tests
+- [-] Test: e2e tests
 - [ ] [Nest.JS WebSockets](https://github.com/nestjs/nest/tree/master/packages/platform-ws)
 - [ ] [Apollo Link WebSockets](https://www.apollographql.com/docs/link/links/ws/)
 
