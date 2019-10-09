@@ -3,11 +3,12 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Hidden, Button, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Hidden, /* Button, */ IconButton, Avatar } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import Link from 'next/link';
+// import Link from 'next/link';
 // #endregion
 // #region Imports Local
+// import { UserContext } from '../lib/types';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import LogoMin from '../public/images/png/logo-min.png';
 // #endregion
@@ -43,6 +44,7 @@ interface AppBarProps {
 
 export default (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
+  // const user = useContext(UserContext);
   const { handleDrawerOpen } = props;
 
   return (
@@ -62,12 +64,7 @@ export default (props: AppBarProps): React.ReactElement => {
         <div className={classes.logo}>
           <img src={LogoMin} alt="logo" />
         </div>
-
-        <Button color="inherit">
-          <Link href="/auth/login">
-            <a>Login</a>
-          </Link>
-        </Button>
+        <Avatar />
       </Toolbar>
     </AppBar>
   );
