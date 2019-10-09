@@ -319,7 +319,7 @@ const PhoneBook = (): React.ReactElement => {
 
 PhoneBook.getInitialProps = () => {
   return {
-    namespacesRequired: includeDefaultNamespaces(['PhoneBook']),
+    namespacesRequired: includeDefaultNamespaces(['phoneBook']),
   };
 };
 

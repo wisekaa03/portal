@@ -41,7 +41,7 @@ const App = (): React.ReactElement => {
 
 App.getInitialProps = () => {
   return {
-    namespacesRequired: includeDefaultNamespaces(['App']),
+    namespacesRequired: includeDefaultNamespaces(['common']),
   };
 };
 
