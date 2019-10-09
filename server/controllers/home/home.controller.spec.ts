@@ -11,7 +11,7 @@ import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 // #endregion
 
-describe('Home Controller', () => {
+describe('HomeController', () => {
   let controller: HomeController;
 
   beforeEach(async () => {

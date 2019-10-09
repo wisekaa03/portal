@@ -5,9 +5,9 @@ import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { UserResolver } from './user.resolver';
+import { UserService } from './user.service';
 import { ConfigModule } from '../config/config.module';
 // eslint-disable-next-line import/no-cycle
 import { AuthModule } from '../auth/auth.module';

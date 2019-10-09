@@ -1,4 +1,5 @@
 /** @format */
+/* eslint max-classes-per-file:0 */
 
 // #region Imports NPM
 import { IsNotEmpty } from 'class-validator';
@@ -11,43 +12,21 @@ export enum LoginService {
   LDAP = 'ldap',
 }
 
-export enum Gender {
-  MAN,
-  WOMAN,
-  UNKNOWN,
-}
-
 // #region User
 export class UserDTO {
   id?: string;
 
+  username: string;
+
   password?: string;
+
+  email: string;
 
   loginService: LoginService;
 
   loginIdentificator: string;
 
-  username: string;
-
-  firstName: string;
-
-  lastName: string;
-
-  middleName: string;
-
-  birthday: Date;
-
-  gender: Gender;
-
-  addressPersonal: string;
-
   isAdmin: boolean;
-
-  company: string;
-
-  title: string;
-
-  thumbnailPhoto?: Buffer;
 
   createdAt?: Date;
 
@@ -75,26 +54,10 @@ export class UserLoginDTO {
 export class UserRegisterDTO {
   username: string;
 
+  email: string;
+
   password: string;
 
-  firstName: string;
-
-  lastName: string;
-
-  middleName: string;
-
-  birthday: Date;
-
-  gender: Gender;
-
-  addressPersonal: string;
-
   isAdmin: boolean;
-
-  company: string;
-
-  title: string;
-
-  thumbnailPhoto: Buffer;
 }
 // #endregion

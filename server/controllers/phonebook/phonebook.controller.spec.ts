@@ -6,12 +6,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { PhonebookController } from './phonebook.controller';
 import { NextService } from '../../next/next.service';
-import { LogService } from '../../logger/logger.service';
-import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
+// import { LogService } from '../../logger/logger.service';
+// import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 // #endregion
 
-describe('Phonebook Controller', () => {
+describe('PhonebookController', () => {
   let controller: PhonebookController;
 
   beforeEach(async () => {
