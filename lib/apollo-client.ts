@@ -48,6 +48,9 @@ export const apolloClient = (
   });
 
   const errorLink = onError(({ graphQLErrors, networkError }): any => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.map(({ message, locations, path }): any =>

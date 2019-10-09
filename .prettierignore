@@ -97,3 +97,6 @@ yarn.lock
 
 # Jest
 *.snap
+
+# GraphQL
+*.graphql

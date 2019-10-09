@@ -41,7 +41,8 @@ class MainApp extends App<ApolloAppProps> {
               tree thanks to React context. */}
         <CssBaseline />
         <ThemeProvider theme={theme}>
-          <Query query={CURRENT_USER}>
+          {/* TODO: разобраться с тем, что graphql запрос на сервере неавторизован, на клиенте нормально */}
+          <Query query={CURRENT_USER} ssr={false}>
             {({ data }: { data: any }) => {
               const user = data;
 
