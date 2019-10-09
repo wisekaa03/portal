@@ -4,6 +4,7 @@
 import React from 'react';
 import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
 import queryString from 'query-string';
+// import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
@@ -24,7 +25,8 @@ const Login = (): React.ReactElement => {
 
         sessionStorage.setItem('token', data.login.token);
         const { redirect = '/' } = queryString.parse(window.location.search);
-        window.location.pathname = redirect as string;
+        window.location.href = redirect as string;
+        // Router.push({ pathname: redirect as string });
 
         return null;
       }}
