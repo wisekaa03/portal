@@ -16,25 +16,27 @@ export interface WithApolloState<TCache = NormalizedCacheObject> {
   data?: TCache;
 }
 
-export interface ApolloInitialProps<TCache = NormalizedCacheObject>
-  extends AppInitialProps {
+export interface ApolloInitialProps<TCache = NormalizedCacheObject> extends AppInitialProps {
   apolloState: WithApolloState<TCache>;
+  currentLanguage?: string;
 }
 
-export interface ApolloAppProps<TCache = NormalizedCacheObject>
-  extends AppContext {
+export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppContext {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   apolloState: WithApolloState<TCache>;
+  currentLanguage?: string;
 }
 
 export interface ApolloDocumentProps extends DocumentContext {
   apolloClient: ApolloClient<NormalizedCacheObject>;
+  currentLanguage?: string;
 }
 
-export interface UserLoginParams {
+export interface ProfileParams {
   token?: string;
   user?: any; // User;
   email?: any; // UserEmail[];
+  language?: string;
 }
 
 /**
@@ -43,6 +45,4 @@ export interface UserLoginParams {
  * EVERY component that needs access to it. So we only do that once here, near
  * the top, then put the user object in React Context for ease of access.
  */
-export const UserContext = React.createContext<UserLoginParams | undefined>(
-  undefined,
-);
+export const ProfileContext = React.createContext<ProfileParams | undefined>(undefined);

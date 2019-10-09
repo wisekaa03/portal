@@ -12,7 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // #region Imports Local
 import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
-import { UserContext, ApolloAppProps } from '../lib/types';
+import { ProfileContext, ApolloAppProps } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 // #endregion
@@ -27,7 +27,7 @@ class MainApp extends App<ApolloAppProps> {
   }
 
   render(): React.ReactElement {
-    const { Component, apolloClient, pageProps } = this.props;
+    const { Component, apolloClient, pageProps, currentLanguage } = this.props;
 
     // eslint-disable-next-line no-debugger
     // debugger;
@@ -50,9 +50,9 @@ class MainApp extends App<ApolloAppProps> {
               // debugger;
 
               return (
-                <UserContext.Provider value={user}>
+                <ProfileContext.Provider value={{ ...user, language: currentLanguage }}>
                   <Component {...pageProps} />
-                </UserContext.Provider>
+                </ProfileContext.Provider>
               );
             }}
           </Query>

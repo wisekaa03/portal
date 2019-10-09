@@ -21,7 +21,12 @@ export const nextI18next = new NextI18Next({
   fallbackLng: 'ru',
   keySeparator: '###',
   ignoreRoutes: ['/_next/', '/public/'],
-  localePath: typeof window === 'undefined' ? 'public/locales' : 'locales',
+  localePath:
+    typeof window === 'undefined'
+      ? process.env.NODE_ENV === 'production'
+        ? '.nest/public/locales'
+        : 'public/locales'
+      : 'locales',
   otherLanguages: ['en'],
 });
 

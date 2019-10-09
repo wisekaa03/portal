@@ -2,7 +2,6 @@
 /* eslint @typescript-eslint/indent:0 */
 
 // #region Imports NPM
-// import * as http from 'http';
 import React from 'react';
 import { getDataFromTree } from 'react-apollo';
 
@@ -14,7 +13,7 @@ import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 // #endregion
 // #region Imports Local
-// import { FETCH_CURRENT_USER } from '@monorepo/shared';
+import { nextI18next } from './i18n-client';
 import { apolloClient } from './apollo-client';
 import { ApolloAppProps, WithApolloState, ApolloInitialProps } from './types';
 // #endregion
@@ -27,8 +26,13 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
     public static displayName = 'withApolloClient(MainApp)';
 
     public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
-      // const { Component, router, ctx } = appCtx;
+      const { ctx } = appCtx;
       const apolloState: WithApolloState = {};
+
+      const currentLanguage = ctx.req ? ((ctx.req as unknown) as Express.Request).lng : nextI18next.i18n.language;
+
+      // eslint-disable-next-line no-debugger
+      // debugger;
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
@@ -58,6 +62,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       // Client object over repeated calls, to preserve state.
       return {
         ...appProps,
+        currentLanguage,
         apolloState,
       };
     }
