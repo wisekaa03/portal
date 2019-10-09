@@ -16,7 +16,7 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { UserResponseDTO, LoginService, Gender } from './models/user.dto';
+import { UserResponseDTO, LoginService } from './models/user.dto';
 // #endregion
 
 @Entity('user')
@@ -49,43 +49,8 @@ export class UserEntity {
   })
   username: string;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-  })
-  firstName: string;
-
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-  })
-  lastName: string;
-
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-  })
-  middleName: string;
-
-  @Column({
-    type: 'date',
-    nullable: true,
-  })
-  birthday: Date;
-
-  @Column({
-    type: 'int',
-  })
-  gender: Gender;
-
-  @Column({
-    type: 'json',
-    nullable: true,
-  })
-  addressPersonal: string;
+  @Column('text')
+  password: string;
 
   @Column({
     type: 'boolean',
@@ -95,27 +60,10 @@ export class UserEntity {
 
   @Column({
     type: 'varchar',
-    nullable: true,
+    length: 100,
+    unique: true,
   })
-  company: string;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  title: string;
-
-  @Column('text')
-  password: string;
-
-  @Column({
-    type: 'bytea',
-    nullable: true,
-    update: true,
-    insert: true,
-    select: true,
-  })
-  thumbnailPhoto: Buffer;
+  email: string;
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

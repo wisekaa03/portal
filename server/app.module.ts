@@ -27,6 +27,7 @@ import { ConfigService } from './config/config.service';
 import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { ProfileModule } from './profile/profile.module';
 // #endregion
 
 @Module({
@@ -85,6 +86,10 @@ import { UserModule } from './user/user.module';
 
     // #region TypeORM
     TypeOrmModule.forRoot({}),
+    // #endregion
+
+    // #region Profile
+    ProfileModule,
     // #endregion
 
     // #region Users

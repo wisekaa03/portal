@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { UserEntity } from './user.entity';
-import { UserLoginDTO, UserResponseDTO, UserRegisterDTO, LoginService, Gender, UserDTO } from './models/user.dto';
+import { UserLoginDTO, UserResponseDTO, UserRegisterDTO, LoginService, UserDTO } from './models/user.dto';
 import { ConfigService } from '../config/config.service';
 // eslint-disable-next-line import/no-cycle
 import { AuthService } from '../auth/auth.service';
@@ -81,34 +81,36 @@ export class UserService {
       const ldapUser: LdapResponeUser = await this.ldapService.authenticate(username, password);
       // #endregion
 
-      let comment;
-      try {
-        comment = JSON.parse(ldapUser.comment);
-      } catch (error) {
-        comment = {};
-      }
-      const { companyeng, nameeng, departmenteng, otdeleng, positioneng, birthday, gender } = comment;
-
       const data: UserDTO = {
         username: ldapUser.sAMAccountName,
         password,
-        firstName: ldapUser.givenName,
-        lastName: ldapUser.sn,
-        middleName: ldapUser.middleName,
-        birthday,
-        gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
-        addressPersonal: JSON.stringify({
-          postalCode: ldapUser.postalCode,
-          region: ldapUser.st,
-          street: ldapUser.streetAddress,
-        }),
         isAdmin: false,
-        company: ldapUser.company,
-        title: ldapUser.title,
+        email: ldapUser.mail,
         loginService: LoginService.LDAP,
         loginIdentificator: ldapUser.objectGUID.toString(),
-        // thumbnailPhoto: ldapUser.thumbnailPhoto,
       };
+
+      // let comment;
+      // try {
+      //   comment = JSON.parse(ldapUser.comment);
+      // } catch (error) {
+      //   comment = {};
+      // }
+      // const { companyeng, nameeng, departmenteng, otdeleng, positioneng, birthday, gender } = comment;
+      //   firstName: ldapUser.givenName,
+      //   lastName: ldapUser.sn,
+      //   middleName: ldapUser.middleName,
+      //   birthday,
+      //   gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
+      //   addressPersonal: JSON.stringify({
+      //     postalCode: ldapUser.postalCode,
+      //     region: ldapUser.st,
+      //     street: ldapUser.streetAddress,
+      //   }),
+      //   company: ldapUser.company,
+      //   title: ldapUser.title,
+      //   // thumbnailPhoto: ldapUser.thumbnailPhoto,
+      // };
 
       // #region User create/update
       if (!user) {
