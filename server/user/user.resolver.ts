@@ -58,11 +58,11 @@ export class UserResolver {
    *
    * @returns {UserResponseDTO}
    */
-  // @Mutation()
-  // async logout(): Promise<boolean> {
-  //   // eslint-disable-next-line no-debugger
-  //   debugger;
+  @Mutation()
+  async logout(_: any, __: any): Promise<boolean> {
+    // eslint-disable-next-line no-debugger
+    debugger;
 
-  //   return this.userService.logout();
-  // }
+    return this.userService.logout();
+  }
 }
