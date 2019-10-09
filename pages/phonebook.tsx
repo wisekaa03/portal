@@ -22,7 +22,7 @@ import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/ico
 // #region Imports Local
 import Page from '../layouts/main';
 import { ProfileComponent } from '../components/profile';
-import { UserContext } from '../lib/types';
+import { ProfileContext } from '../lib/types';
 import { appBarHeight } from '../components/app-bar';
 import { includeDefaultNamespaces } from '../lib/i18n-client';
 // import useDebounce from '../lib/debounce';
