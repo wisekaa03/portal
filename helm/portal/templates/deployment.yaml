@@ -30,32 +30,32 @@ spec:
             - name: http
               containerPort: {{ .Values.PORT | default 4000 }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          #     {{- if .Values.tls.enabled }}
-          #     scheme: HTTPS
-          #     {{ else }}
-          #     scheme: HTTP
-          #     {{- end }}
-          #   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-          #   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-          #   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-          #   successThreshold: {{ .Values.livenessProbe.successThreshold }}
-          #   failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-          # readinessProbe:
-          #   httpGet:
-          #     {{- if .Values.tls.enabled }}
-          #     scheme: HTTPS
-          #     {{- end }}
-          #     path: /
-          #     port: http
-          #   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-          #   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-          #   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-          #   successThreshold: {{ .Values.readinessProbe.successThreshold }}
-          #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              {{- if .Values.tls.enabled }}
+              scheme: HTTPS
+              {{ else }}
+              scheme: HTTP
+              {{- end }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              {{- if .Values.tls.enabled }}
+              scheme: HTTPS
+              {{- end }}
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: NODE_ENV
               valueFrom:
