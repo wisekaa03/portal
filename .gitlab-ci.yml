@@ -1,5 +1,6 @@
 stages:
-  - bundle_test_build
+  - test
+  - build
   - production
   - deploy
 
@@ -12,17 +13,19 @@ variables:
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
-bundle_build:
+test:
   image: node:12
-  stage: bundle_test_build
+  stage: test
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
       - node_modules/
+  before_script:
+    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
     - yarn install --production=false
-    - ./entrypoint.sh
     - npx next telemetry --disable
+    - time ./entrypoint.sh test -u
     - time yarn build
   artifacts:
     paths:
@@ -30,25 +33,29 @@ bundle_build:
       - .next/
     expire_in: 3 hours
 
-bundle_test:
+build:
   image: node:12
-  stage: bundle_test_build
+  stage: build
   cache:
-    key: "${CI_COMMIT_REF_SLUG}-test"
+    key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
       - node_modules/
-  before_script:
-    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
-    - yarn install --production=false
-    - ./entrypoint.sh test -u
+    - yarn install --production=true
 
 production:
   image: docker:latest
   stage: production
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}-build"
+    paths:
+      - node_modules/
+    policy: pull
   before_script:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
+      - |
+      if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     - |
       export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
       if [ ! ${DEPLOYS} -eq 1 ]; then \
