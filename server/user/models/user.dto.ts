@@ -10,6 +10,10 @@ import { IsNotEmpty } from 'class-validator';
 export enum LoginService {
   LOCAL = 'local',
   LDAP = 'ldap',
+  GOOGLE = 'google',
+  TWITTER = 'twitter',
+  FACEBOOK = 'facebook',
+  GITHUB = 'github',
 }
 
 // #region User

@@ -20,13 +20,15 @@ export class ProfileEntity {
   updatedAt: Date;
 
   @Column({
-    type: 'varchar',
-    nullable: true,
+    type: 'char',
+    length: 10,
+    nullable: false,
   })
   loginService: LoginService;
 
   @Column({
     type: 'varchar',
+    length: 50,
     nullable: true,
   })
   loginIdentificator: string;
