@@ -12,7 +12,7 @@ variables:
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
-test:
+test_build:
   image: node:12
   stage: test_build
   cache:
@@ -32,7 +32,7 @@ test:
       - .next/
     expire_in: 3 hours
 
-build:
+prepare:
   image: node:12
   stage: test_build
   cache:
