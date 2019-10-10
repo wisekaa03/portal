@@ -1,6 +1,5 @@
 stages:
-  - test
-  - build
+  - test_build
   - production
   - deploy
 
@@ -15,7 +14,7 @@ variables:
 
 test:
   image: node:12
-  stage: test
+  stage: test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
@@ -35,7 +34,7 @@ test:
 
 build:
   image: node:12
-  stage: build
+  stage: test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
