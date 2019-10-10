@@ -10,7 +10,7 @@ LABEL version="4"
 ARG NODE_ENV=production
 ENV NODE_ENV ${NODE_ENV}
 
-ARG HOST=localhost
+ARG HOST=0.0.0.0
 ENV HOST ${HOST}
 ARG PORT=4000
 ENV PORT ${PORT}
@@ -71,12 +71,12 @@ ENV LDAP_SEARCH_BASE ${LDAP_SEARCH_BASE}
 ARG LDAP_SEARCH_FILTER="(sAMAccountName\={{username}})"
 ENV LDAP_SEARCH_FILTER ${LDAP_SEARCH_FILTER}
 
-# PREPARE
-RUN apt-get update && apt-get install -y \
-  telnet \
-  dnsutils \
-  nano \
-  && rm -rf /var/lib/apt/lists/*
+# PREPARE DEVELOPMENT
+#RUN apt-get update && apt-get install -y \
+#  telnet \
+#  dnsutils \
+#  nano \
+#  && rm -rf /var/lib/apt/lists/*
 
 # COPY
 COPY . ./
@@ -85,4 +85,4 @@ COPY . ./
 EXPOSE ${PORT} ${PORT_DEBUGGER}
 
 # YARN START
-ENTRYPOINT "./entrypoint.sh start"
+ENTRYPOINT [ "./entrypoint.sh", "start" ]

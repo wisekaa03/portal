@@ -38,6 +38,14 @@ docker-compose*
 __mocks__/
 __tests__/
 helm/
+coverage/
+
+package.json
+
+node_modules/@types/
+node_modules/**/*.ts
+node_modules/**/*.tsx
+node_modules/.yarn-integrity
 
 nodemon.json
 components/
