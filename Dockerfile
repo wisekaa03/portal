@@ -78,6 +78,9 @@ ENV LDAP_SEARCH_FILTER ${LDAP_SEARCH_FILTER}
 #  nano \
 #  && rm -rf /var/lib/apt/lists/*
 
+# RUN PRODUCTION
+RUN yarn install --production=true
+
 # COPY
 COPY . ./
 

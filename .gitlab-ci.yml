@@ -20,7 +20,7 @@ bundle_build:
     paths:
       - node_modules/
   script:
-    - yarn install --production=true
+    - yarn install --production=false
     - ./entrypoint.sh
     - npx next telemetry --disable
     - time yarn build
@@ -46,11 +46,6 @@ bundle_test:
 production:
   image: docker:latest
   stage: production
-  cache:
-    key: "${CI_COMMIT_REF_SLUG}"
-    paths:
-      - node_modules/
-    policy: pull
   before_script:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
