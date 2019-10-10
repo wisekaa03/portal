@@ -4,9 +4,9 @@ metadata:
   name: {{ .Release.Name }}-configmap
   labels:
 {{ include "portal.labels" . | indent 4 }}
-    app_name: portal
+    app_name: {{ .Values.image.repository }}:{{ .Values.image.tag }}
 {{- if .Chart.AppVersion }}
-    app_version: {{ .Chart.AppVersion | quote }}
+    chart_version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 data:
   NODE_ENV: {{ .Values.NODE_ENV | default "production" | quote }}
