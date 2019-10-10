@@ -85,4 +85,4 @@ COPY . ./
 EXPOSE ${PORT} ${PORT_DEBUGGER}
 
 # YARN START
-CMD [ "./entrypoint.sh" ]
+CMD [ "./entrypoint.sh start" ]

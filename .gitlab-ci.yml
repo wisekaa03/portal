@@ -20,9 +20,9 @@ bundle_build:
     paths:
       - node_modules/
   script:
-    - time yarn install --production=true
-    - time bash entrypoint.sh true
-    - time npx next telemetry --disable
+    - yarn install --production=true
+    - ./entrypoint.sh
+    - npx next telemetry --disable
     - time yarn build
   artifacts:
     paths:
@@ -38,8 +38,8 @@ bundle_test:
     paths:
       - node_modules/
   script:
-    - time yarn install --production=false
-    - time yarn test -u
+    - yarn install --production=false
+    - ./entrypoint.sh test -u
 
 production:
   image: docker:latest

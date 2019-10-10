@@ -23,7 +23,7 @@
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "start-storybook",
-    "test": "jest --bail",
+    "test": "jest",
     "coverage": "yarn test --coverage"
   },
   "browserslist": [
