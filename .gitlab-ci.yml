@@ -50,8 +50,6 @@ production:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
     - |
-      if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
-    - |
       export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
