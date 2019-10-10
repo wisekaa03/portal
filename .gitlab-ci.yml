@@ -63,7 +63,7 @@ production:
       fi
     - time docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
-    - docker image prune -f \
+    - docker image prune -f
     - docker images ${RELEASE_NAME}
 
 # TODO: сделать чтобы image распределялся по всем нодам, а не только в текущей ноде
