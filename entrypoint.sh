@@ -36,10 +36,12 @@ LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}"
 LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}"
 EOF
 
+export NODE=`which node`
+
 if [ -n "$*" -a "$1" = "test" ]; then
   export NODE_ENV=${NODE_ENV:=test}
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
   export NODE_ENV=${NODE_ENV:=production}
-  /usr/bin/node .nest/server/main.js
+  $NODE .nest/server/main.js
 fi
