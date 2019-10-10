@@ -64,6 +64,8 @@ production:
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker images ${RELEASE_NAME}
 
+# TODO: сделать чтобы image распределялся по всем нодам, а не только в текущей ноде
+# TODO: как это сделать-вопрос. в гугле результат по kubernetes pre-pulled images посмотрел. Нужно еще посмотреть.
 deploy:
   image: dtzar/helm-kubectl
   stage: deploy
@@ -71,11 +73,11 @@ deploy:
   script:
     - time helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
-    - |
-      if [ ! ${DEPLOYS} -eq 0 ]; then \
-        time helm del --purge ${RELEASE_NAME}; \
-        sleep 1; \
-      fi
+    # - |
+    #  if [ ! ${DEPLOYS} -eq 0 ]; then \
+    #    time helm del --purge ${RELEASE_NAME}; \
+    #    sleep 1; \
+    #  fi
     - |
       if [ ${DEPLOYS} -eq 0 ]; then \
         time helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \

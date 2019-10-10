@@ -7,7 +7,7 @@ replicaCount: 3
 image:
   repository: portal
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Never
 
 imagePullSecrets: []
 nameOverride: "portal"
