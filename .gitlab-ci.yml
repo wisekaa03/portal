@@ -37,6 +37,8 @@ bundle_test:
     key: "${CI_COMMIT_REF_SLUG}-test"
     paths:
       - node_modules/
+  before_script:
+    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
     - yarn install --production=false
     - ./entrypoint.sh test -u
