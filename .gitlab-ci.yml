@@ -57,13 +57,13 @@ production:
     - |
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     - |
-      docker image prune -f \
       export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
       fi
     - time docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
+    - docker image prune -f \
     - docker images ${RELEASE_NAME}
 
 # TODO: сделать чтобы image распределялся по всем нодам, а не только в текущей ноде
