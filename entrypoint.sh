@@ -38,8 +38,8 @@ EOF
 
 if [ -n "$*" -a "$1" = "test" ]; then
   export NODE_ENV=${NODE_ENV:=test}
-  jest $2 $3 $4 $5
+  node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
   export NODE_ENV=${NODE_ENV:=production}
-  node .nest/server/main.js
+  /usr/bin/node .nest/server/main.js
 fi
