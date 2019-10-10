@@ -40,6 +40,7 @@ prepare:
     paths:
       - node_modules/
   script:
+    - env
     - yarn install --production=true
 
 production:
@@ -56,6 +57,7 @@ production:
     - |
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     - |
+      docker image prune -f \
       export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
