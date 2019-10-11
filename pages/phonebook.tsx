@@ -14,6 +14,7 @@ import {
   InputBase,
   IconButton,
   Modal,
+  Avatar,
   // Backdrop,
   // Fade,
 } from '@material-ui/core';
@@ -158,7 +159,7 @@ const createData = (): BookProps[] => {
   for (let i = 0; i < 100; i++) {
     arr.push({
       id: i,
-      photo: 'photo',
+      photo: 'И',
       name: `Иванов Иван Иванович`,
       company: `Компания ${i}`,
       subdivision: `Подразделение ${i}`,
@@ -208,7 +209,9 @@ const PhoneBook = (): React.ReactElement => {
 
   const getRows = (a: BookProps): React.ReactNode => (
     <TableRow hover key={a.id} onClick={handleProfileOpen}>
-      <TableCell>{a.photo}</TableCell>
+      <TableCell>
+        <Avatar>{a.photo}</Avatar>
+      </TableCell>
       <TableCell>{a.name}</TableCell>
       <TableCell>{a.company}</TableCell>
       <TableCell>{a.subdivision}</TableCell>
