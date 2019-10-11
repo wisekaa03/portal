@@ -61,9 +61,9 @@ production:
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
       fi
+    - docker image prune -a -f --filter="label=vendor=KNGK"
     - time docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
-    - docker image prune -f
     - docker images ${RELEASE_NAME}
 
 # TODO: сделать чтобы image распределялся по всем нодам, а не только в текущей ноде
