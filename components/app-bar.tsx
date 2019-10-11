@@ -140,6 +140,7 @@ export default (props: AppBarProps): React.ReactElement => {
             horizontal: 'right',
           }}
           marginThreshold={0}
+          transitionDuration={0}
           disableRestoreFocus
         >
           <Typography className={classes.profileName}>Иванов Иван Иванович</Typography>
