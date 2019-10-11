@@ -61,8 +61,7 @@ production:
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
       fi
-    # TODO: удалять старые image, но кэш перестает существовать... нужно что-то делать...
-    # - docker image prune -a -f --filter="label=vendor=KNGK"
+    - docker image prune -a -f --filter="label=vendor=KNGK" --filter="until=24h"
     - time docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker images ${RELEASE_NAME}
