@@ -28,8 +28,7 @@ If release name contains chart name it will be used as a full name.
 Create chart name and version as used by the chart label.
 */}}
 {{- define "portal.chart" -}}
-{{/* - printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" - */}}
-{{- printf "%s" .Chart.Name | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "portal.chart_version" -}}
@@ -42,12 +41,9 @@ Common labels
 {{- define "portal.labels" -}}
 app.kubernetes.io/name: {{ include "portal.name" . }}
 helm.sh/chart: {{ include "portal.chart" . }}
-helm.sh/version: {{ include "portal.chart_version" . | quote }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Values.image.tag }}
+app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.image.tag }}
 app.kubernetes.io/version: {{ .Values.image.tag | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
-app_name: {{ .Values.image.repository }}
-version: {{ .Values.image.tag }}

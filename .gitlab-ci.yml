@@ -84,7 +84,7 @@ deploy:
     #  fi
     - |
       if [ ${DEPLOYS} -eq 0 ]; then \
-        time helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
+        helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV="${NODE_ENV}" \
           --set HOST="${HOST}" \
@@ -117,7 +117,7 @@ deploy:
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
       else \
-        time helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
+        helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
           --debug --values helm/portal/values.yaml \
           --set NODE_ENV="${NODE_ENV}" \
           --set HOST="${HOST}" \
