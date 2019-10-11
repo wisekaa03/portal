@@ -61,6 +61,7 @@ production:
       if [ ! ${DEPLOYS} -eq 1 ]; then \
         docker image rm ${RELEASE_NAME}; \
       fi
+    # TODO: удалять старые image, но кэш перестает существовать... нужно что-то делать...
     - docker image prune -a -f --filter="label=vendor=KNGK"
     - time docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
@@ -69,7 +70,7 @@ production:
 # TODO: сделать чтобы image распределялся по всем нодам, а не только в текущей ноде
 # TODO: как это сделать-вопрос. в гугле результат по kubernetes pre-pulled images посмотрел. Нужно еще посмотреть.
 deploy:
-  image: dtzar/helm-kubectl
+  image: alpine/helm
   stage: deploy
   dependencies: []
   when: manual
