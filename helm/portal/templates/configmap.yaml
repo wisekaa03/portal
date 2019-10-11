@@ -4,9 +4,10 @@ metadata:
   name: {{ .Release.Name }}-configmap
   labels:
 {{ include "portal.labels" . | indent 4 }}
-    app_name: {{ .Values.image.repository }}.{{ .Values.image.tag }}
+    app_name: {{ .Values.image.repository }}
+    version: {{ .Values.image.tag }}
 {{- if .Chart.AppVersion }}
-    chart_version: {{ .Chart.AppVersion | quote }}
+    helm.sh/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 data:
   NODE_ENV: {{ .Values.NODE_ENV | default "production" | quote }}

@@ -4,9 +4,10 @@ metadata:
   name: {{ include "portal.fullname" . }}
   labels:
 {{ include "portal.labels" . | indent 4 }}
-    app_name: {{ .Values.image.repository }}.{{ .Values.image.tag }}
+    app_name: {{ .Values.image.repository }}
+    version: {{ .Values.image.tag }}
 {{- if .Chart.AppVersion }}
-    chart_version: {{ .Chart.AppVersion | quote }}
+    helm.sh/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 spec:
   type: {{ .Values.service.type }}
