@@ -73,6 +73,7 @@ deploy:
   stage: deploy
   dependencies: []
   when: manual
+  allow_failure: false
   script:
     - time helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
