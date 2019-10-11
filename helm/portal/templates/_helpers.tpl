@@ -42,10 +42,12 @@ Common labels
 {{- define "portal.labels" -}}
 app.kubernetes.io/name: {{ include "portal.name" . }}
 helm.sh/chart: {{ include "portal.chart" . }}
-helm.sh/version: {{ include "portal.chart_version" . }}
+helm.sh/version: {{ include "portal.chart_version" . | quote }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if .Values.tag }}
-app.kubernetes.io/version: {{ .Values.tag | quote }}
+{{- if .Values.image.tag }}
+app.kubernetes.io/version: {{ .Values.image.tag | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+app_name: {{ .Values.image.repository }}
+version: {{ .Values.image.tag }}
