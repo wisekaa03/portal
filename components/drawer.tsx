@@ -3,8 +3,22 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Divider, List, ListItem, ListItemText, Hidden, Drawer /* , useMediaQuery */ } from '@material-ui/core';
-// import MenuIcon from '@material-ui/icons/Menu';
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Hidden,
+  Drawer /* , useMediaQuery */,
+} from '@material-ui/core';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import SettingsIcon from '@material-ui/icons/Settings';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import Link from 'next/link';
 // #endregion
 // #region Imports Local
@@ -31,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: drawerWidth,
     },
     item: {
-      paddingLeft: '60px',
+      // paddingLeft: theme.spacing(3),
     },
   }),
 );
@@ -49,14 +63,14 @@ export default (props: DrawerProps): React.ReactElement => {
   const { open, handleOpen } = props;
 
   const urls = [
-    { text: 'Адресная книга', link: '/phonebook' },
-    { text: 'Почта', link: '/' },
-    { text: 'Создать заявку', link: '/' },
-    { text: 'Календарь компании', link: '/' },
-    { text: 'База знаний', link: '/' },
-    { text: 'Переговорные', link: '/' },
-    { text: 'Сайты', link: '/' },
-    { text: 'Настройки', link: '/' },
+    { text: 'Адресная книга', link: '/phonebook', icon: <ImportContactsIcon /> },
+    { text: 'Почта', link: '/', icon: <MailOutlineIcon /> },
+    { text: 'Создать заявку', link: '/', icon: <HelpOutlineIcon /> },
+    { text: 'Календарь компании', link: '/', icon: <CalendarTodayIcon /> },
+    { text: 'База знаний', link: '/', icon: <QuestionAnswerIcon /> },
+    { text: 'Переговорные', link: '/', icon: <HelpOutlineIcon /> },
+    { text: 'Сайты', link: '/', icon: <LaptopMacIcon /> },
+    { text: 'Настройки', link: '/', icon: <SettingsIcon /> },
   ];
 
   const drawer = (
@@ -66,6 +80,7 @@ export default (props: DrawerProps): React.ReactElement => {
           <li key={url.text} className={classes.item}>
             <Link href={url.link} passHref>
               <ListItem button component="a">
+                {url.icon ? <ListItemIcon>{url.icon}</ListItemIcon> : null}
                 <ListItemText primary={url.text} />
               </ListItem>
             </Link>
