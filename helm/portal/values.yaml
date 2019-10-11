@@ -85,8 +85,8 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
 readinessProbe:
-  initialDelaySeconds: 10
-  periodSeconds: 15
+  initialDelaySeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 1
   successThreshold: 1
   failureThreshold: 3

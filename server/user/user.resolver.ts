@@ -46,10 +46,17 @@ export class UserResolver {
    * @returns {UserResponseDTO}
    */
   @Mutation()
-  async login(@Args('username') username: string, @Args('password') password: string): Promise<UserResponseDTO | null> {
+  async login(
+    @Args('username') username: string,
+    @Args('password') password: string,
+    @Context('req') req: Request,
+  ): Promise<UserResponseDTO | null> {
     // eslint-disable-next-line no-debugger
     debugger;
 
+    if (req.user) {
+      return req.user as UserResponseDTO;
+    }
     return this.userService.login({ username, password });
   }
 

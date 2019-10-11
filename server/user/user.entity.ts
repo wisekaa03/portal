@@ -31,7 +31,7 @@ export class UserEntity {
   updatedAt: Date;
 
   @Column({
-    type: 'char',
+    type: 'varchar',
     length: 10,
     nullable: false,
   })

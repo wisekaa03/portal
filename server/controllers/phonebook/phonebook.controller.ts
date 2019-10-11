@@ -14,6 +14,15 @@ export class PhonebookController {
 
   @Get()
   public async phonebook(@Req() req: Request, @Res() res: Response): Promise<void> {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
+    if (!req.user) {
+      if (req.session) {
+        req.session.lastPage = '/phonebook';
+      }
+      return res.redirect('/auth/login');
+    }
     return this.nextService.render(req, res, '/phonebook');
   }
 }

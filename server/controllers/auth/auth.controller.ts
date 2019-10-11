@@ -1,10 +1,12 @@
 /** @format */
+/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local
+import { FIRST_PAGE } from '../../../lib/constants';
 import { NextService } from '../../next/next.service';
 // #endregion
 
@@ -19,7 +21,13 @@ export class AuthController {
     debugger;
 
     if (req.user) {
-      return res.redirect('/auth/logout');
+      return res.redirect(
+        req.query && req.query.redirect
+          ? req.query.redirect
+          : req.session && req.session.lastPage
+            ? req.session.lastPage
+            : FIRST_PAGE,
+      );
     }
     return this.nextService.render(req, res, '/auth/login');
   }

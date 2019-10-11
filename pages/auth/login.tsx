@@ -10,6 +10,7 @@ import queryString from 'query-string';
 import { LOGIN } from '../../lib/queries';
 import { LoginComponent } from '../../components/login';
 import { includeDefaultNamespaces } from '../../lib/i18n-client';
+import { FIRST_PAGE } from '../../lib/constants';
 // #endregion
 
 const Login = (): React.ReactElement => {
@@ -21,10 +22,12 @@ const Login = (): React.ReactElement => {
         }
 
         // eslint-disable-next-line no-debugger
-        // debugger;
+        debugger;
 
+        // TODO: он не в куки сохраняет, а в tokene на клиенте
+        // TODO: разобраться как сделать чтобы в куки сохранял
         sessionStorage.setItem('token', data.login.token);
-        const { redirect = '/' } = queryString.parse(window.location.search);
+        const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
         window.location.href = redirect as string;
         // Router.push({ pathname: redirect as string });
 
