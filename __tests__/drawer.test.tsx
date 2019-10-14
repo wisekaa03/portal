@@ -10,6 +10,17 @@ import { Hidden } from '@material-ui/core';
 import Drawer from '../components/drawer';
 // #endregion
 
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      route: '/',
+      pathname: '',
+      query: '',
+      asPath: '',
+    };
+  },
+}));
+
 describe('Drawer component', () => {
   let component: ShallowWrapper;
   const props = { open: false, handleOpen: (): void => {} };

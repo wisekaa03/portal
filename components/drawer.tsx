@@ -15,9 +15,11 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import DvrIcon from '@material-ui/icons/Dvr';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 // #endregion
 // #region Imports Local
 import { appBarHeight } from './app-bar';
+
 // #endregion
 
 export const drawerWidth = 256;
@@ -67,6 +69,7 @@ interface DrawerProps {
 export default (props: DrawerProps): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
+  const { pathname = null } = useRouter();
   // TODO: продумать как узнать устройство на серверной стороне
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { open, handleOpen } = props;
@@ -89,7 +92,7 @@ export default (props: DrawerProps): React.ReactElement => {
         {urls.map((url) => (
           <li key={url.text} className={classes.item}>
             <Link href={url.link} passHref>
-              <ListItem button component="a">
+              <ListItem button selected={url.link === pathname} component="a" title={url.text}>
                 {url.icon ? <ListItemIcon>{url.icon}</ListItemIcon> : null}
                 <ListItemText primary={url.text} />
               </ListItem>
