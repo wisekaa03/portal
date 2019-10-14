@@ -2,15 +2,16 @@
 
 // #region Imports NPM
 import React, { useState, ReactNode } from 'react';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+// import { useMediaQuery } from '@material-ui/core';
+import { makeStyles, createStyles /* , useTheme */ } from '@material-ui/core/styles';
 // #endregion
 
 // #region Imports Local
 import AppBar, { appBarHeight } from '../components/app-bar';
-import Drawer, { drawerWidth } from '../components/drawer';
+import Drawer from '../components/drawer';
 // #endregion
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((/* theme: Theme */) =>
   createStyles({
     root: {},
     main: {
@@ -20,12 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       height: `calc(100vh - ${appBarHeight}px)`,
       overflow: 'auto',
-      // [theme.breakpoints.up('md')]: {
-      // marginLeft: drawerWidth,
-      // },
     },
-  }),
-);
+  }));
 
 interface Main {
   children: ReactNode;
@@ -33,7 +30,9 @@ interface Main {
 
 export default (props: Main): React.ReactElement => {
   const classes = useStyles({});
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  // const theme = useTheme();
+  const mdUp = false; // useMediaQuery(theme.breakpoints.up('md'));
+  const [drawerOpen, setDrawerOpen] = useState(mdUp);
 
   const handleDrawerOpen = (): void => {
     setDrawerOpen(!drawerOpen);

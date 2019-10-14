@@ -22,7 +22,7 @@ import { appBarHeight } from './app-bar';
 
 // #endregion
 
-export const drawerWidth = 256;
+const drawerWidth = 256;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,7 +69,7 @@ interface DrawerProps {
 export default (props: DrawerProps): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
-  const { pathname = null } = useRouter();
+  const router = useRouter();
   // TODO: продумать как узнать устройство на серверной стороне
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { open, handleOpen } = props;
@@ -85,6 +85,9 @@ export default (props: DrawerProps): React.ReactElement => {
     { text: 'Лента новостей', link: '/', icon: <DvrIcon /> },
     { text: 'Настройки', link: '/', icon: <SettingsIcon /> },
   ];
+
+  // TODO: подумать как правильнее разделять сервер и клиент при определении маршрута
+  const pathname = router && 'pathname' in router ? router.pathname : '';
 
   const drawer = (
     <div className={classes.toolbar}>
