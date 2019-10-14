@@ -114,10 +114,11 @@ export default (props: AppBarProps): React.ReactElement => {
         <div className={classes.logo}>
           <img src={LogoMin} alt="logo" />
         </div>
-        <Box className={classes.avatarWrap} onClick={handlePopoverOpen}>
+        <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
           <Avatar className={clsx(classes.avatar, classes.pointer)}>И</Avatar>
         </Box>
         <Popover
+          id="profile-popover"
           open={open}
           anchorEl={anchorEl}
           onClose={handlePopoverClose}
