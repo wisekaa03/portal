@@ -13,12 +13,16 @@ import Drawer, { drawerWidth } from '../components/drawer';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {},
+    main: {
+      display: 'flex',
+    },
     content: {
+      flexGrow: 1,
       height: `calc(100vh - ${appBarHeight}px)`,
       overflow: 'auto',
-      [theme.breakpoints.up('md')]: {
-        marginLeft: drawerWidth,
-      },
+      // [theme.breakpoints.up('md')]: {
+      // marginLeft: drawerWidth,
+      // },
     },
   }),
 );
@@ -38,9 +42,11 @@ export default (props: Main): React.ReactElement => {
   return (
     <div className={classes.root}>
       <AppBar handleDrawerOpen={handleDrawerOpen} />
-      <Drawer open={drawerOpen} handleOpen={handleDrawerOpen} />
-      <div id="content" className={classes.content}>
-        {props.children}
+      <div className={classes.main}>
+        <Drawer open={drawerOpen} handleOpen={handleDrawerOpen} />
+        <div id="content" className={classes.content}>
+          {props.children}
+        </div>
       </div>
     </div>
   );

@@ -3,17 +3,7 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Hidden,
-  Popover,
-  Paper,
-  Box,
-  /* Button, */ IconButton,
-  Avatar,
-  Typography,
-} from '@material-ui/core';
+import { AppBar, Toolbar, Popover, Paper, Box, /* Button, */ IconButton, Avatar, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -41,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundSize: 'cover',
     },
     menuButton: {
-      color: '#000',
+      color: 'rgba(0, 0, 0, 0.54)',
     },
     logo: {
       'flexGrow': 1,
@@ -109,17 +99,15 @@ export default (props: AppBarProps): React.ReactElement => {
   return (
     <AppBar id="header" position="sticky" className={classes.root}>
       <Toolbar>
-        <Hidden mdUp implementation="css">
-          <IconButton
-            edge="start"
-            onClick={handleDrawerOpen}
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
+        <IconButton
+          edge="start"
+          onClick={handleDrawerOpen}
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+        >
+          <MenuIcon />
+        </IconButton>
         <div className={classes.logo}>
           <img src={LogoMin} alt="logo" />
         </div>

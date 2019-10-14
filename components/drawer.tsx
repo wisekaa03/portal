@@ -3,22 +3,17 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Hidden,
-  Drawer /* , useMediaQuery */,
-} from '@material-ui/core';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import clsx from 'clsx';
+import { Divider, List, ListItem, ListItemText, ListItemIcon, Hidden, Drawer, useMediaQuery } from '@material-ui/core';
+import MailIcon from '@material-ui/icons/Mail';
 import SettingsIcon from '@material-ui/icons/Settings';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
+import DvrIcon from '@material-ui/icons/Dvr';
+import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import Link from 'next/link';
 // #endregion
 // #region Imports Local
@@ -29,6 +24,7 @@ export const drawerWidth = 256;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {},
     toolbar: {
       ...theme.mixins.toolbar,
       [theme.breakpoints.up('md')]: {
@@ -36,13 +32,26 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     drawer: {
-      [theme.breakpoints.up('md')]: {
-        width: drawerWidth,
-        flexShrink: 0,
-      },
-    },
-    drawerPaper: {
+      // [theme.breakpoints.up('md')]: {
       width: drawerWidth,
+      flexShrink: 0,
+      whiteSpace: 'nowrap',
+      // },
+    },
+    drawerOpen: {
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerClose: {
+      overflowX: 'hidden',
+      width: theme.spacing(7) + 1,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
     },
     item: {
       // paddingLeft: theme.spacing(3),
@@ -59,17 +68,18 @@ export default (props: DrawerProps): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   // TODO: продумать как узнать устройство на серверной стороне
-  // const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { open, handleOpen } = props;
 
   const urls = [
+    { text: 'Почта', link: '/', icon: <MailIcon /> },
     { text: 'Адресная книга', link: '/phonebook', icon: <ImportContactsIcon /> },
-    { text: 'Почта', link: '/', icon: <MailOutlineIcon /> },
-    { text: 'Создать заявку', link: '/', icon: <HelpOutlineIcon /> },
+    { text: 'Личный кабинет', link: '/', icon: <AssignmentIndIcon /> },
+    { text: 'Заявка в ИТ', link: '/', icon: <HelpOutlineIcon /> },
     { text: 'Календарь компании', link: '/', icon: <CalendarTodayIcon /> },
-    { text: 'База знаний', link: '/', icon: <QuestionAnswerIcon /> },
-    { text: 'Переговорные', link: '/', icon: <HelpOutlineIcon /> },
-    { text: 'Сайты', link: '/', icon: <LaptopMacIcon /> },
+    { text: 'База знаний', link: '/', icon: <LiveHelpIcon /> },
+    { text: 'Переговорные', link: '/', icon: <QuestionAnswerIcon /> },
+    { text: 'Лента новостей', link: '/', icon: <DvrIcon /> },
     { text: 'Настройки', link: '/', icon: <SettingsIcon /> },
   ];
 
@@ -91,15 +101,22 @@ export default (props: DrawerProps): React.ReactElement => {
   );
 
   return (
-    <nav className={classes.drawer}>
+    <nav className={classes.root}>
       <Hidden mdUp implementation="css">
         <Drawer
           variant="temporary"
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          open={open}
+          open={smDown && open}
           onClose={handleOpen}
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
           classes={{
-            paper: classes.drawerPaper,
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
           }}
           ModalProps={{ keepMounted: true }}
         >
@@ -109,9 +126,16 @@ export default (props: DrawerProps): React.ReactElement => {
       <Hidden smDown implementation="css">
         <Drawer
           variant="permanent"
-          open
+          open={open}
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
           classes={{
-            paper: classes.drawerPaper,
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
           }}
         >
           {drawer}
