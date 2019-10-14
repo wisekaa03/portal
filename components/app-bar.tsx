@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
       background: `url(${HeaderBg})`,
       backgroundSize: 'cover',
     },
+    toolbar: {
+      padding: `0 ${theme.spacing(2)}px`,
+    },
     menuButton: {
       color: 'rgba(0, 0, 0, 0.54)',
     },
@@ -98,7 +101,7 @@ export default (props: AppBarProps): React.ReactElement => {
 
   return (
     <AppBar id="header" position="sticky" className={classes.root}>
-      <Toolbar>
+      <Toolbar className={classes.toolbar}>
         <IconButton
           edge="start"
           onClick={handleDrawerOpen}

@@ -32,6 +32,8 @@ import { includeDefaultNamespaces } from '../lib/i18n-client';
 type Order = 'asc' | 'desc';
 type ColumnNames = 'photo' | 'name' | 'company' | 'subdivision' | 'position' | 'work_phone' | 'inside_phone' | 'email';
 
+const panelHeight = 48;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {},
@@ -39,10 +41,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       backgroundColor: '#F7FBFA',
-      height: '48px',
+      height: panelHeight,
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
-    table: { height: `calc(100vh - ${appBarHeight}px - 48px)`, overflow: 'auto' },
+    table: { height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`, overflow: 'auto' },
     search: {
       'flexGrow': 1,
       'position': 'relative',
