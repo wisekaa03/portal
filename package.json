@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "portal",
-  "version": "4.2.52",
+  "version": "4.2.53",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -25,7 +25,8 @@
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "start-storybook",
     "test": "jest",
-    "coverage": "yarn test --coverage"
+    "coverage": "yarn test --coverage",
+    "postversion": "git push --tags && yarn publish . --tag $npm_package_version && git push"
   },
   "browserslist": [
     "last 3 version",
@@ -83,8 +84,8 @@
     "body-parser": "^1.19.0",
     "cache-manager": "^2.10.0",
     "cache-manager-redis": "^0.6.0",
-    "class-validator": "^0.10.2",
     "class-transformer": "^0.2.3",
+    "class-validator": "^0.10.2",
     "clsx": "^1.0.4",
     "connect-redis": "^4.0.3",
     "cookie-parser": "^1.4.4",
