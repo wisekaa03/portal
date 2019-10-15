@@ -73,6 +73,7 @@ ENV LDAP_SEARCH_FILTER ${LDAP_SEARCH_FILTER}
 
 # PREPARE DEVELOPMENT
 #RUN apt-get update && apt-get install -y \
+#  net-tools \ip 
 #  telnet \
 #  dnsutils \
 #  nano \

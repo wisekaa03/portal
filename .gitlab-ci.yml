@@ -53,21 +53,17 @@ production:
     policy: pull
   before_script:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
+  # TODO: это все нужно сделать по-другому... но пока так, до 20 октября сделаю
   script:
     - |
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
-    - |
-      export DEPLOYS=$(docker images ${RELEASE_NAME} | wc -l); \
-      if [ ! ${DEPLOYS} -eq 1 ]; then \
-        docker image rm ${RELEASE_NAME}; \
-      fi
-    - docker image prune -a -f --filter="label=vendor=KNGK" --filter="until=24h"
-    - time docker build --tag ${CONTAINER_IMAGE} .
+    - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
-    - docker images ${RELEASE_NAME}
+    - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
+    # TODO: авторизация по логину, пока нету
+    # - docker login
+    - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
 
-# TODO: сделать чтобы image распределялся по всем нодам, а не только в текущей ноде
-# TODO: как это сделать-вопрос. в гугле результат по kubernetes pre-pulled images посмотрел. Нужно еще посмотреть.
 deploy:
   image: dtzar/helm-kubectl
   stage: deploy
@@ -77,11 +73,6 @@ deploy:
   script:
     - time helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
-    # - |
-    #  if [ ! ${DEPLOYS} -eq 0 ]; then \
-    #    time helm del --purge ${RELEASE_NAME}; \
-    #    sleep 1; \
-    #  fi
     - |
       if [ ${DEPLOYS} -eq 0 ]; then \
         helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
@@ -113,7 +104,7 @@ deploy:
           --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
           --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
-          --set image.repository="${RELEASE_NAME}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
       else \
@@ -146,7 +137,7 @@ deploy:
           --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
           --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
-          --set image.repository="${RELEASE_NAME}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \
       fi
