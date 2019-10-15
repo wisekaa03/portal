@@ -31,7 +31,7 @@ const App = (): React.ReactElement => {
       <div className={classes.root}>
         <Card className={classes.card}>
           <CardContent>
-            <Typography variant="body1">Hello, world !</Typography>
+            <Typography variant="body1">Данный модуль пока не доделан.</Typography>
           </CardContent>
         </Card>
       </div>
