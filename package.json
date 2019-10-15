@@ -25,8 +25,8 @@
     "lint": "eslint --fix \"{lib,pages,components,server}/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "start-storybook",
     "test": "jest",
-    "coverage": "yarn test --coverage",
-    "postversion": "git push --tags && yarn publish . --tag $npm_package_version && git push"
+    "coverage": "yarn test -u --coverage",
+    "preversion": "yarn test -u"
   },
   "browserslist": [
     "last 3 version",
@@ -225,7 +225,7 @@
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
     "webp-loader": "^0.5.0",
-    "webpack": "4.41.1",
+    "webpack": "4.41.2",
     "webpack-cli": "^3.3.9"
   }
 }
