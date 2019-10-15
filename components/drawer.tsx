@@ -4,13 +4,12 @@
 import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { Divider, List, ListItem, ListItemText, ListItemIcon, Hidden, Drawer, useMediaQuery } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemIcon, Hidden, Drawer, useMediaQuery } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import DvrIcon from '@material-ui/icons/Dvr';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
@@ -19,7 +18,8 @@ import { useRouter } from 'next/router';
 // #endregion
 // #region Imports Local
 import { appBarHeight } from './app-bar';
-
+import Icon from './icon';
+import ItIcon from '../public/images/svg/it-icon.svg';
 // #endregion
 
 const drawerWidth = 256;
@@ -78,7 +78,11 @@ export default (props: DrawerProps): React.ReactElement => {
     { text: 'Почта', link: '/', icon: <MailIcon /> },
     { text: 'Адресная книга', link: '/phonebook', icon: <ImportContactsIcon /> },
     { text: 'Личный кабинет', link: '/', icon: <AssignmentIndIcon /> },
-    { text: 'Заявка в ИТ', link: '/', icon: <HelpOutlineIcon /> },
+    {
+      text: 'Заявка в ИТ',
+      link: '/',
+      icon: <Icon src={ItIcon} />,
+    },
     { text: 'Календарь компании', link: '/', icon: <CalendarTodayIcon /> },
     { text: 'База знаний', link: '/', icon: <LiveHelpIcon /> },
     { text: 'Переговорные', link: '/', icon: <QuestionAnswerIcon /> },
