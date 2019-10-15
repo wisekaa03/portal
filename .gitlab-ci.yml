@@ -105,7 +105,7 @@ deploy:
           --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
-          --set image.tag="${CI_BUILD_REF}" \
+          --set image.tag="latest" \
           helm/portal; \
       else \
         helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
@@ -138,6 +138,6 @@ deploy:
           --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
-          --set image.tag="${CI_BUILD_REF}" \
+          --set image.tag="latest" \
           ${RELEASE_NAME} helm/portal; \
       fi
