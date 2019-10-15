@@ -23,7 +23,7 @@ test_build:
     - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
     - yarn install --production=false
-    - npx next telemetry --disable
+    - npx next telemetry disable
     - time ./entrypoint.sh test -u
     - time yarn build
   artifacts:
@@ -62,7 +62,7 @@ production:
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_LATEST}
-    # TODO: авторизация по логину, пока нету, так что у нас в открытом доступе по docker-
+    # TODO: авторизация по логину, пока нету, так что у нас в открытом доступе по docker-registry.kngk.org лежит куча portal-ов
     # - docker login
     - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
 
