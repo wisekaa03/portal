@@ -56,12 +56,13 @@ production:
   # TODO: это все нужно сделать по-другому... но пока так, до 20 октября сделаю
   script:
     - |
+      \
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_LATEST}
-    # TODO: авторизация по логину, пока нету
+    # TODO: авторизация по логину, пока нету, так что у нас в открытом доступе по docker-
     # - docker login
     - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
 
