@@ -36,9 +36,10 @@ class MainDocument extends Document<MainDocumentInitialProps> {
           <meta charSet="utf-8" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           <meta name="theme-color" content={theme.palette.primary.main} />
-          {/** TODO: This is fix, see typeface-roboto in _app */}
+          {/** TODO: This is fix, see typeface-roboto in _app
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          */}
         </Head>
         <body>
           <Main />

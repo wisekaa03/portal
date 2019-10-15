@@ -7,7 +7,7 @@ import Head from 'next/head';
 import { Query, ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import 'typeface-roboto'; // TODO: error in css-loader/locals
+import 'typeface-roboto'; // TODO: error in css-loader/locals
 // #endregion
 // #region Imports Local
 import theme from '../lib/theme';
