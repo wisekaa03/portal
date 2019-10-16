@@ -7,7 +7,7 @@ replicaCount: 3
 image:
   repository: docker-registry.kngk.org/portal
   tag: latest
-  pullPolicy: Never
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: "portal"
