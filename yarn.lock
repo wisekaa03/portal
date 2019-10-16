@@ -3109,6 +3109,11 @@
   resolved "https://registry.yarnpkg.com/@types/browserslist/-/browserslist-4.4.0.tgz#e2a5f7f8c7e97afb39f50812a77e5230d3ca2353"
   integrity sha512-hrIjWSu7Hh96/rKlpChe58qHEwIZ0+F5Zf4QNdvSVP5LUXbaJM04g9tBjo702VTNqPZr5znEJeqNR3nAV3vJPg==
 
+"@types/cache-manager@^2.10.0":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-2.10.0.tgz#48ed0a0ace70ad59c4165235e344a682c0981fa6"
+  integrity sha512-og4E9Mw/FsBz0A3NZbHrVmx49PW4hKnGvTmulWk8OgROJm9ti4n9x0inxsd6jJiaFMol4+MyMdB1l2aexxmrYw==
+
 "@types/cheerio@*":
   version "0.22.13"
   resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.13.tgz#5eecda091a24514185dcba99eda77e62bf6523e6"
@@ -5467,7 +5472,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^3.3.5, bluebird@^3.4.6, bluebird@^3.5.0, bluebird@^3.5.1, bluebird@^3.5.5:
+bluebird@^3.3.5, bluebird@^3.5.0, bluebird@^3.5.1, bluebird@^3.5.5:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.0.tgz#56a6a886e03f6ae577cffedeb524f8f2450293cf"
   integrity sha512-aBQ1FxIa7kSWCcmKHlcHFlT2jt6J/l4FzC7KcPELkOJOsPOb/bccdhmIrKDfXhwFrmc7vDoDrrepFvGqjyXGJg==
@@ -5811,16 +5816,14 @@ cache-base@^1.0.1:
     union-value "^1.0.0"
     unset-value "^1.0.0"
 
-cache-manager-redis@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/cache-manager-redis/-/cache-manager-redis-0.6.0.tgz#b364b8e855b287edae1b07780addb9bc9860ebce"
-  integrity sha512-i7grsVyuIppLyzKAAHM48Eo2YX51+D++Pp1MQiX/9GCBVr3ofayiBpLrz/k/IUpaU9HUZ56P+v5Ee7yJRkfk/w==
+cache-manager-redis-store@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/cache-manager-redis-store/-/cache-manager-redis-store-1.5.0.tgz#6f9a3a0ec31ca91a5c56cd9b75d6d62ab9a296ab"
+  integrity sha512-otbJO/q5tZa7Q5R6Xb9kG7oEqbuElpJ4Txq1rXGxK531RMkgYXDcFmbxvT4pFlOhuURCTYXJWRaPL3lPndrWig==
   dependencies:
-    cache-manager "^2.2.0"
-    redis-url "^1.2.1"
-    sol-redis-pool "^0.3.2"
+    redis "^2.7.1"
 
-cache-manager@^2.10.0, cache-manager@^2.2.0:
+cache-manager@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-2.10.0.tgz#278e9f8784e5d7e6617bfe350358c8ccd17387bf"
   integrity sha512-IuPx05r5L0uZyBDYicB2Llld1o+/1WYjoHUnrC0TNQejMAnkoYxYS9Y8Uwr+lIBytDiyu7dwwmBCup2M9KugwQ==
@@ -9493,11 +9496,6 @@ gaze@^1.0.0:
   integrity sha512-BRdNm8hbWzFzWHERTrejLqwHDfS4GibPoq5wjTPIoJHoBtKGPg3xAFfxmM+9ztbXelxcf2hwQcaz1PtmFeue8g==
   dependencies:
     globule "^1.0.0"
-
-generic-pool@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.2.1.tgz#750ac994eca4e7f87f616e2adff0253f64659ad6"
-  integrity sha1-dQrJlOyk5/h/YW4q3/AlP2RlmtY=
 
 get-caller-file@^1.0.1:
   version "1.0.3"
@@ -16743,14 +16741,7 @@ redis-parser@^2.6.0:
   resolved "https://registry.yarnpkg.com/redis-parser/-/redis-parser-2.6.0.tgz#52ed09dacac108f1a631c07e9b69941e7a19504b"
   integrity sha1-Uu0J2srBCPGmMcB+m2mUHnoZUEs=
 
-redis-url@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/redis-url/-/redis-url-1.2.1.tgz#18670095a38e989d379359dd4c6e4abff85e2eb1"
-  integrity sha1-GGcAlaOOmJ03k1ndTG5Kv/heLrE=
-  dependencies:
-    redis ">= 0.0.1"
-
-"redis@>= 0.0.1", "redis@>= 2.6.2", redis@^2.8.0:
+redis@^2.7.1, redis@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/redis/-/redis-2.8.0.tgz#202288e3f58c49f6079d97af7a10e1303ae14b02"
   integrity sha512-M1OkonEQwtRmZv4tEWF2VgpG0JWJ8Fv1PhlgT5+B+uNq2cA3Rt1Yt/ryoR+vQNOQcIEgdCdfH0jr3bDpihAw1A==
@@ -17708,15 +17699,6 @@ sockjs-client@1.4.0:
     inherits "^2.0.3"
     json3 "^3.3.2"
     url-parse "^1.4.3"
-
-sol-redis-pool@^0.3.2:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/sol-redis-pool/-/sol-redis-pool-0.3.3.tgz#a7111d6f8942413ba0ad4733566167052db74a6b"
-  integrity sha1-pxEdb4lCQTugrUczVmFnBS23Sms=
-  dependencies:
-    bluebird "^3.4.6"
-    generic-pool "2.2.1"
-    redis ">= 2.6.2"
 
 sort-keys-length@^1.0.0:
   version "1.0.1"

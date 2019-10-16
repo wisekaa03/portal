@@ -8,9 +8,12 @@ import { LDAP_MODULE_OPTIONS } from './ldap.constants';
 import { createLdapProvider } from './ldap.providers';
 import { LdapService } from './ldap.service';
 import { LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './interfaces/ldap.interface';
+import { ConfigModule } from '../config/config.module';
+import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
 @Module({
+  imports: [ConfigModule, LoggerModule],
   providers: [LdapService],
   exports: [LdapService],
 })

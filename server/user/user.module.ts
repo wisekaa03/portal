@@ -43,6 +43,7 @@ import { ProfileModule } from '../profile/profile.module';
           searchScope: 'sub' as Scope,
           searchAttributes: ['*'],
           reconnect: true,
+          cache: true,
         };
       },
     }),

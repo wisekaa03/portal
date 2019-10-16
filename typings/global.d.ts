@@ -3,7 +3,7 @@
 declare let __DEV__: boolean;
 declare let __SERVER__: boolean;
 
-declare module 'cache-manager-redis';
+declare module 'cache-manager-redis-store';
 declare module '@graphile-contrib/pgdbi';
 
 declare namespace NodeJS {

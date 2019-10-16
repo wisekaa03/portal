@@ -4,13 +4,21 @@
 
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule, forwardRef } from '@nestjs/common';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  RequestMethod,
+  CacheModule,
+  CacheInterceptor,
+  forwardRef,
+} from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import redisCacheStore from 'cache-manager-redis';
+import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local
 import { NextService } from './next/next.service';
@@ -42,18 +50,19 @@ import { ByteArrayScalar } from './shared/bytearray.scalar';
     // #endregion
 
     // #region Cache Manager - Redis
-    CacheModule.register({
+    CacheModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         store: redisCacheStore,
-        ttl: 1, // seconds
-        max: 60, // maximum number of items in cache
+        ttl: 3, // seconds
+        max: 200, // maximum number of items in cache
         host: configService.get('REDIS_HOST'),
         port: parseInt(configService.get('REDIS_PORT'), 10),
         db: configService.get('REDIS_DB') ? parseInt(configService.get('REDIS_DB'), 10) : undefined,
         password: configService.get('REDIS_PASSWORD') ? configService.get('REDIS_PASSWORD') : undefined,
         keyPrefix: configService.get('REDIS_PREFIX') ? configService.get('REDIS_PREFIX') : undefined,
+        // retry_strategy: (options) => {}
       }),
     }),
     // #endregion
@@ -124,6 +133,13 @@ import { ByteArrayScalar } from './shared/bytearray.scalar';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    // #endregion
+
+    // #region Cache interceptor
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
     // #endregion
 

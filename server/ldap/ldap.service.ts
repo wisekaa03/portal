@@ -2,20 +2,21 @@
 
 // #region Imports NPM
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
 import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
+import * as cacheManager from 'cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { LdapModuleOptions, LdapResponeUser } from './interfaces/ldap.interface';
 import { LDAP_MODULE_OPTIONS } from './ldap.constants';
+import { ConfigService } from '../config/config.service';
+import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Injectable()
 export class LdapService extends EventEmitter {
-  private readonly logger = new Logger('Ldap');
-
   private clientOpts: Ldap.ClientOptions;
 
   private bindDN: string;
@@ -30,10 +31,7 @@ export class LdapService extends EventEmitter {
 
   private getGroups: any;
 
-  // TODO: userCache through redis ?
   private userCache: any;
-
-  private salt: string;
 
   /**
    * Create an LDAP class.
@@ -41,15 +39,28 @@ export class LdapService extends EventEmitter {
    * @param {Object} opts - Config options
    * @constructor
    */
-  constructor(@Inject(LDAP_MODULE_OPTIONS) private readonly opts: LdapModuleOptions) {
+  constructor(
+    @Inject(LDAP_MODULE_OPTIONS) private readonly opts: LdapModuleOptions,
+    private readonly logger: LogService,
+    private readonly configService: ConfigService,
+  ) {
     super();
 
-    // if (opts.cache) {
-    // eslint-disable-next-line global-require
-    // let Cache = require('./cache');
-    // this.userCache = new Cache(100, 300, this.log, 'user');
-    // this.salt = bcrypt.genSaltSync();
-    // }
+    if (opts.cache) {
+      this.userCache = cacheManager.caching({
+        store: redisStore,
+        name: 'LDAP',
+        ttlInSeconds: 3,
+        ttl: 3, // seconds
+        max: 200, // maximum number of items in cache
+        host: configService.get('REDIS_HOST'),
+        port: parseInt(configService.get('REDIS_PORT'), 10),
+        db: configService.get('REDIS_DB') ? parseInt(configService.get('REDIS_DB'), 10) : undefined,
+        password: configService.get('REDIS_PASSWORD') ? configService.get('REDIS_PASSWORD') : undefined,
+        keyPrefix: configService.get('REDIS_PREFIX') ? configService.get('REDIS_PREFIX') : undefined,
+        logger,
+      });
+    }
 
     this.clientOpts = {
       url: opts.url,
@@ -147,17 +158,17 @@ export class LdapService extends EventEmitter {
       throw new Error('bindDN is undefined');
     }
 
-    this.logger.log(`bind: ${this.bindDN}`);
+    this.logger.log(`bind: ${this.bindDN} ...`);
 
     return new Promise((resolve, reject) =>
       this.adminClient.bind(this.bindDN, this.bindCredentials, (error: Ldap.Error) => {
         if (error) {
-          this.logger.error(`bind error: ${error}`);
+          this.logger.error('bind error:', error.toString());
           this.adminBound = false;
           return reject(error);
         }
 
-        this.logger.log('ldap: bind ok');
+        this.logger.log('bind ok');
         this.adminBound = true;
         if (this.opts.reconnect) {
           this.emit('installReconnectListener');
@@ -373,17 +384,11 @@ export class LdapService extends EventEmitter {
                 const userWithGroups = await this.getGroups(user);
 
                 if (this.opts.cache) {
-                  return bcrypt.hash(password, this.salt, (err, hash) => {
-                    if (err) {
-                      this.logger.error(`bcrypt error, not caching ${err}`);
-                    } else {
-                      this.userCache.set(username, {
-                        password: hash,
-                        user: userWithGroups,
-                      });
-                    }
-                    return resolve(userWithGroups as LdapResponeUser);
+                  this.userCache.set(username, {
+                    user: userWithGroups,
+                    password,
                   });
+                  return resolve(userWithGroups as LdapResponeUser);
                 }
 
                 return resolve(userWithGroups as LdapResponeUser);
