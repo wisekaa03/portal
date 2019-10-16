@@ -27,7 +27,14 @@ class MainApp extends App<ApolloAppProps> {
   }
 
   render(): React.ReactElement {
-    const { Component, apolloClient, pageProps, currentLanguage } = this.props;
+    const { Component, apolloClient, pageProps, currentLanguage, isMobile } = this.props;
+
+    // TODO: разобраться как isMobile прикрутить к теме
+    // const ssrMatchMedia = (query: any): any => ({
+    //   matches: mediaQuery.match(query, {
+    //     width: isMobile ? 0 : 1024,
+    //   }),
+    // });
 
     // eslint-disable-next-line no-debugger
     // debugger;
@@ -47,7 +54,7 @@ class MainApp extends App<ApolloAppProps> {
               const user = data;
 
               // eslint-disable-next-line no-debugger
-              // debugger;
+              debugger;
 
               return (
                 <ProfileContext.Provider value={{ ...user, language: currentLanguage }}>

@@ -25,6 +25,7 @@ export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppConte
   apolloClient: ApolloClient<NormalizedCacheObject>;
   apolloState: WithApolloState<TCache>;
   currentLanguage?: string;
+  isMobile?: boolean;
 }
 
 export interface ApolloDocumentProps extends DocumentContext {

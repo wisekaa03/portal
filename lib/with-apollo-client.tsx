@@ -11,6 +11,7 @@ import { AppContext, default as NextApp } from 'next/app';
 
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { isMobile as checkMobile } from 'is-mobile';
 // #endregion
 // #region Imports Local
 import { nextI18next } from './i18n-client';
@@ -31,6 +32,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       const currentLanguage = ctx.req ? ((ctx.req as unknown) as Express.Request).lng : nextI18next.i18n.language;
 
+      const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
       // eslint-disable-next-line no-debugger
       // debugger;
 
@@ -63,6 +65,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       return {
         ...appProps,
         currentLanguage,
+        isMobile,
         apolloState,
       };
     }

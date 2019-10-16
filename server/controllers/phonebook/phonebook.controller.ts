@@ -15,7 +15,7 @@ export class PhonebookController {
   @Get()
   public async phonebook(@Req() req: Request, @Res() res: Response): Promise<void> {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     if (!req.user) {
       if (req.session) {
