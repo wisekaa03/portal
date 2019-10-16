@@ -75,7 +75,7 @@ export default (props: DrawerProps): React.ReactElement => {
   const { open, handleOpen } = props;
 
   const urls = [
-    { text: 'Почта', link: '/', icon: <MailIcon /> },
+    { text: 'Почта', link: '/mail', icon: <MailIcon /> },
     { text: 'Адресная книга', link: '/phonebook', icon: <ImportContactsIcon /> },
     { text: 'Личный кабинет', link: '/', icon: <AssignmentIndIcon /> },
     {

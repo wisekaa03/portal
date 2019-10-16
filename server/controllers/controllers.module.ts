@@ -9,10 +9,11 @@ import { LoggerModule } from '../logger/logger.module';
 import { AuthController } from './auth/auth.controller';
 import { HomeController } from './home/home.controller';
 import { PhonebookController } from './phonebook/phonebook.controller';
+import { MailController } from './mail/mail.controller';
 // #endregion
 
 @Module({
   imports: [NextModule, LoggerModule],
-  controllers: [HomeController, AuthController, PhonebookController],
+  controllers: [HomeController, AuthController, PhonebookController, MailController],
 })
 export class HomeModule {}
