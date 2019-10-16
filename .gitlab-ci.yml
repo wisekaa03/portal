@@ -30,7 +30,7 @@ test_build:
     paths:
       - .nest/
       - .next/
-    expire_in: 3 hours
+    expire_in: 16 hours
 
 prepare:
   image: node:12
