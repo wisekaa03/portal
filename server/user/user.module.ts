@@ -15,6 +15,7 @@ import { LdapModule } from '../ldap/ldap.module';
 import { Scope } from '../ldap/interfaces/ldap.interface';
 import { ConfigService } from '../config/config.service';
 import { LoggerModule } from '../logger/logger.module';
+import { ProfileModule } from '../profile/profile.module';
 // #endregion
 
 @Module({
@@ -50,6 +51,8 @@ import { LoggerModule } from '../logger/logger.module';
     // #region Authentication
     forwardRef(() => AuthModule),
     // #endregion
+
+    ProfileModule,
   ],
   controllers: [],
   providers: [UserService, UserResolver],

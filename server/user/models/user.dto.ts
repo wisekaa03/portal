@@ -5,16 +5,8 @@
 import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
+import { ProfileDTO } from '../../profile/models/profile.dto';
 // #endregion
-
-export enum LoginService {
-  LOCAL = 'local',
-  LDAP = 'ldap',
-  GOOGLE = 'google',
-  TWITTER = 'twitter',
-  FACEBOOK = 'facebook',
-  GITHUB = 'github',
-}
 
 // #region User
 export class UserDTO {
@@ -26,11 +18,9 @@ export class UserDTO {
 
   email: string;
 
-  loginService: LoginService;
-
-  loginIdentificator: string;
-
   isAdmin: boolean;
+
+  profile?: ProfileDTO;
 
   createdAt?: Date;
 

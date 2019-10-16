@@ -4,8 +4,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { LoginService } from '../user/models/user.dto';
-import { ProfileResponseDTO, Gender } from './models/profile.dto';
+import { ProfileResponseDTO } from './models/profile.dto';
+import { LoginService, Gender } from '../shared/server';
 // #endregion
 
 @Entity('profile')

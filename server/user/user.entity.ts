@@ -8,15 +8,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
-  // DatabaseType,
-  // OneToMany,
-  // ManyToMany,
-  // JoinTable,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { UserResponseDTO, LoginService } from './models/user.dto';
+import { UserResponseDTO } from './models/user.dto';
+import { ProfileEntity } from '../profile/profile.entity';
 // #endregion
 
 @Entity('user')
@@ -29,20 +28,6 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column({
-    type: 'varchar',
-    length: 10,
-    nullable: false,
-  })
-  loginService: LoginService;
-
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: true,
-  })
-  loginIdentificator: string;
 
   @Column({
     type: 'varchar',
@@ -66,6 +51,10 @@ export class UserEntity {
     unique: true,
   })
   email: string;
+
+  @OneToOne((type: any) => ProfileEntity)
+  @JoinColumn()
+  profile: ProfileEntity;
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

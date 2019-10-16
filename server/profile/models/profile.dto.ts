@@ -4,14 +4,8 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { LoginService } from '../../user/models/user.dto';
+import { LoginService, Gender } from '../../shared/server';
 // #endregion
-
-export enum Gender {
-  MAN,
-  WOMAN,
-  UNKNOWN,
-}
 
 // #region User
 export class ProfileDTO {
@@ -21,7 +15,7 @@ export class ProfileDTO {
 
   loginIdentificator: string;
 
-  username: string;
+  username?: string;
 
   firstName: string;
 

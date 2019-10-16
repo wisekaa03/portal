@@ -2,17 +2,7 @@ type User {
   id: ID!
   token: String!
   username: String!
-  firstName: String
-  lastName: String
-  middleName: String
-  birthday: String
-  gender: Int
-  addressPersonal: String
-  loginService: String
-  loginIdentificator: String
-  company: String
-  title: String
-  thumbnailPhoto: String
+  profile: Profile
   createdAt: Date
   updatedAt: Date
 }

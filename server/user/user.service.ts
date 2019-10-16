@@ -8,31 +8,26 @@ import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { UserEntity } from './user.entity';
-import { UserLoginDTO, UserResponseDTO, UserRegisterDTO, LoginService, UserDTO } from './models/user.dto';
+import { UserLoginDTO, UserResponseDTO, UserRegisterDTO, UserDTO } from './models/user.dto';
 import { ConfigService } from '../config/config.service';
 // eslint-disable-next-line import/no-cycle
 import { AuthService } from '../auth/auth.service';
 import { LdapService } from '../ldap/ldap.service';
 import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
+import { ProfileService } from '../profile/profile.service';
+import { ProfileDTO } from '../profile/models/profile.dto';
 // #endregion
 
 interface LdapAuthenticate {
-  user: UserEntity | undefined;
-  ldapUser: LdapResponeUser | undefined;
+  user: UserEntity | void;
+  ldapUser?: LdapResponeUser;
+  profile: ProfileDTO | void;
   errorCode: any;
 }
 
 @Injectable()
 export class UserService {
-  public ldapOnUserBeforeCreate: Function;
-
-  public ldapOnUserAfterCreate: Function;
-
-  public ldapOnUserBeforeUpdate: Function;
-
-  public ldapOnUserAfterUpdate: Function;
-
   constructor(
     private readonly configService: ConfigService,
     private readonly i18n: I18nService,
@@ -40,6 +35,7 @@ export class UserService {
     private readonly authService: AuthService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly profileService: ProfileService,
     private readonly ldapService: LdapService,
     private readonly logService: LogService,
   ) {}
@@ -81,66 +77,49 @@ export class UserService {
       const ldapUser: LdapResponeUser = await this.ldapService.authenticate(username, password);
       // #endregion
 
-      const data: UserDTO = {
-        username: ldapUser.sAMAccountName,
-        password,
-        isAdmin: false,
-        email: ldapUser.mail,
-        loginService: LoginService.LDAP,
-        loginIdentificator: ldapUser.objectGUID.toString(),
-      };
+      try {
+        const profile = await this.profileService.create(ldapUser);
 
-      // let comment;
-      // try {
-      //   comment = JSON.parse(ldapUser.comment);
-      // } catch (error) {
-      //   comment = {};
-      // }
-      // const { companyeng, nameeng, departmenteng, otdeleng, positioneng, birthday, gender } = comment;
-      //   firstName: ldapUser.givenName,
-      //   lastName: ldapUser.sn,
-      //   middleName: ldapUser.middleName,
-      //   birthday,
-      //   gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
-      //   addressPersonal: JSON.stringify({
-      //     postalCode: ldapUser.postalCode,
-      //     region: ldapUser.st,
-      //     street: ldapUser.streetAddress,
-      //   }),
-      //   company: ldapUser.company,
-      //   title: ldapUser.title,
-      //   // thumbnailPhoto: ldapUser.thumbnailPhoto,
-      // };
+        // eslint-disable-next-line no-debugger
+        debugger;
 
-      // #region User create/update
-      if (!user) {
-        const userLogin = await this.userRepository.create(data);
-        try {
-          await this.userRepository.save(userLogin);
-        } catch (error) {
-          this.logService.error('Unable to create data in `user`');
-          return { user, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
+        const data: UserDTO = {
+          username: ldapUser.sAMAccountName,
+          password,
+          isAdmin: false,
+          email: ldapUser.mail,
+          profile,
+        };
+
+        // #region User create/update
+        if (!user) {
+          const userLogin = this.userRepository.create(data);
+          try {
+            await this.userRepository.save(userLogin);
+          } catch (error) {
+            this.logService.error('Unable to create data in `user`');
+            return { user, profile, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
+          }
+          return { user: userLogin, profile, ldapUser, errorCode: HttpStatus.ACCEPTED };
         }
-        return { user: userLogin, ldapUser, errorCode: HttpStatus.ACCEPTED };
+
+        return {
+          user,
+          profile,
+          ldapUser,
+          errorCode: HttpStatus.ACCEPTED,
+        };
+      } catch (error) {
+        this.logService.error('Unable to create data in `profile`');
+        return { user, profile: undefined, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
       }
-
-      data['id'] = user.id;
-      await this.userRepository.save(data);
-      // #endregion
-
-      return {
-        user,
-        ldapUser,
-        errorCode: HttpStatus.ACCEPTED,
-      };
     } catch (error) {
-      // #region If in LDAP is not found, then we compare password
       return {
         user,
+        profile: undefined,
         ldapUser: undefined,
         errorCode: HttpStatus.UNAUTHORIZED,
       };
-      // #endregion
     }
   }
 
@@ -154,11 +133,11 @@ export class UserService {
     this.logService.debug(`UserService: user login: username = "${username}"`);
 
     const user = await this.userRepository.findOne({ where: { username } });
-    const { user: userDB, ldapUser, errorCode } = await this.userLdapLogin({ username, password, user });
+    const { user: userDB, profile, errorCode } = await this.userLdapLogin({ username, password, user });
 
     if (errorCode === HttpStatus.INTERNAL_SERVER_ERROR) {
       throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), errorCode);
-    } else if (userDB === undefined || ldapUser === undefined) {
+    } else if (userDB === undefined || profile === undefined) {
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), errorCode);
     }
 

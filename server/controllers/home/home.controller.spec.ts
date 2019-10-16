@@ -9,6 +9,8 @@ import { HomeController } from './home.controller';
 import { LogService } from '../../logger/logger.service';
 import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
+import { NextModule } from '../../next/next.module';
+import { LoggerModule } from '../../logger/logger.module';
 // #endregion
 
 describe('HomeController', () => {
@@ -17,11 +19,14 @@ describe('HomeController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [HomeController],
-      providers: [
-        { provide: NextService, useClass: NextServiceMock },
-        { provide: LogService, useClass: LogServiceMock },
-      ],
-    }).compile();
+      imports: [NextModule, LoggerModule],
+      providers: [],
+    })
+      .overrideProvider(NextService)
+      .useValue(NextServiceMock)
+      .overrideProvider(LogService)
+      .useValue(LogServiceMock)
+      .compile();
 
     controller = module.get<HomeController>(HomeController);
   });

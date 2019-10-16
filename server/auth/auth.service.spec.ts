@@ -4,32 +4,31 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
-import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
-import { UserService } from './user.service';
 import { ConfigModule } from '../config/config.module';
-import { UserEntity } from './user.entity';
 import { LoggerModule } from '../logger/logger.module';
-import { LdapModule } from '../ldap/ldap.module';
-import { Scope } from '../ldap/interfaces/ldap.interface';
 import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 import { LogServiceMock } from '../../__mocks__/logger.service.mock';
-import { JwtServiceMock } from '../../__mocks__/jwt.service.mock';
 import { ProfileEntity } from '../profile/profile.entity';
-import { ProfileModule } from '../profile/profile.module';
-import { AuthModule } from '../auth/auth.module';
-import { AuthService } from '../auth/auth.service';
-import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
-import { CookieSerializer } from '../auth/cookie.serializer';
+import { AuthModule } from './auth.module';
+import { AuthService } from './auth.service';
+import { UserEntity } from '../user/user.entity';
+import { CookieSerializer } from './cookie.serializer';
 import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { UserModule } from '../user/user.module';
+import { UserService } from '../user/user.service';
+import { UserServiceMock } from '../../__mocks__/user.service.mock';
 import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
+import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 // #endregion
 
-describe('UserService', () => {
-  let service: UserService;
+describe('AuthService', () => {
+  let service: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -62,37 +61,22 @@ describe('UserService', () => {
           },
         }),
 
-        LdapModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => {
-            return {
-              url: configService.get('LDAP_URL'),
-              bindDN: configService.get('LDAP_BIND_DN'),
-              bindCredentials: configService.get('LDAP_BIND_PW'),
-              searchBase: configService.get('LDAP_SEARCH_BASE'),
-              searchFilter: configService.get('LDAP_SEARCH_FILTER'),
-              searchScope: 'sub' as Scope,
-              searchAttributes: ['*'],
-              reconnect: true,
-            };
-          },
-        }),
-
-        // AuthModule,
-        ProfileModule,
+        AuthModule,
+        UserModule,
       ],
-      providers: [
-        UserService,
-        { provide: AuthService, useValue: AuthServiceMock },
-        { provide: JwtService, useValue: JwtServiceMock },
-      ],
+      providers: [AuthService, { provide: UserService, useValue: UserServiceMock }],
     })
       .overrideProvider(LogService)
       .useValue(LogServiceMock)
+      .overrideProvider(JwtStrategy)
+      .useValue(JwtStrategyMock)
+      .overrideProvider(CookieSerializer)
+      .useValue(CookieSerializerMock)
+      .overrideGuard(GqlAuthGuard)
+      .useValue(GqlAuthGuardMock)
       .compile();
 
-    service = module.get<UserService>(UserService);
+    service = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {

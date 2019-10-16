@@ -1,0 +1,20 @@
+type Profile {
+  id: ID!
+
+  # username: String!
+  loginService: String
+  loginIdentificator: String
+
+  firstName: String
+  lastName: String
+  middleName: String
+  birthday: String
+  gender: Int
+  addressPersonal: String
+  company: String
+  title: String
+  thumbnailPhoto: String
+
+  createdAt: Date
+  updatedAt: Date
+}

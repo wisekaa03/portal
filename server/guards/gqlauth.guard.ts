@@ -21,9 +21,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
     const gqlCtx: any = gqlContext.getContext();
 
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     if (gqlCtx.user) {
       return true;
     }
@@ -31,6 +28,10 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
 
     const canActivate = await super.canActivate(gqlContext);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     await super.logIn(gqlCtx.req);
 
     return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;

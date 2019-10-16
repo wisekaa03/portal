@@ -10,15 +10,19 @@ export const CURRENT_USER = gql`
       token
       id
       username
-      firstName
-      lastName
-      middleName
-      birthday
-      gender
-      addressPersonal
-      thumbnailPhoto
       updatedAt
       createdAt
+      profile {
+        firstName
+        lastName
+        middleName
+        birthday
+        gender
+        addressPersonal
+        thumbnailPhoto
+        updatedAt
+        createdAt
+      }
     }
   }
 `;
@@ -29,15 +33,19 @@ export const LOGIN = gql`
       token
       id
       username
-      firstName
-      lastName
-      middleName
-      birthday
-      gender
-      addressPersonal
-      thumbnailPhoto
       updatedAt
       createdAt
+      profile {
+        firstName
+        lastName
+        middleName
+        birthday
+        gender
+        addressPersonal
+        thumbnailPhoto
+        updatedAt
+        createdAt
+      }
     }
   }
 `;
