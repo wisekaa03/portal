@@ -33,7 +33,7 @@ import { ProfileModule } from '../profile/profile.module';
     LdapModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
           url: configService.get('LDAP_URL'),
           bindDN: configService.get('LDAP_BIND_DN'),

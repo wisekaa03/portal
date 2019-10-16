@@ -18,7 +18,12 @@ export const CURRENT_USER = gql`
         middleName
         birthday
         gender
-        addressPersonal
+        addressPersonal {
+          country
+          postalCode
+          region
+          street
+        }
         thumbnailPhoto
         updatedAt
         createdAt
@@ -41,7 +46,12 @@ export const LOGIN = gql`
         middleName
         birthday
         gender
-        addressPersonal
+        addressPersonal {
+          country
+          postalCode
+          region
+          street
+        }
         thumbnailPhoto
         updatedAt
         createdAt

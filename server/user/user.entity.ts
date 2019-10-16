@@ -16,6 +16,7 @@ import * as bcrypt from 'bcrypt';
 // #region Imports Local
 import { UserResponseDTO } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
+import { LoginService } from '../shared/interfaces';
 // #endregion
 
 @Entity('user')
@@ -45,20 +46,14 @@ export class UserEntity {
   })
   isAdmin: boolean;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    unique: true,
-  })
-  email: string;
-
   @OneToOne((type: any) => ProfileEntity)
   @JoinColumn()
   profile: ProfileEntity;
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password =
+      this.password === `$${LoginService.LDAP}` ? `$${LoginService.LDAP}` : await bcrypt.hash(this.password, 10);
   }
 
   comparePassword = async (attempt: string | undefined): Promise<boolean> =>

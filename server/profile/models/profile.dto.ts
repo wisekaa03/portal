@@ -4,7 +4,7 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { LoginService, Gender } from '../../shared/server';
+import { LoginService, Gender, Address } from '../../shared/interfaces';
 // #endregion
 
 // #region User
@@ -29,11 +29,17 @@ export class ProfileDTO {
 
   gender: Gender;
 
-  addressPersonal: string;
+  addressPersonal: Address;
 
   company: string;
 
   title: string;
+
+  telephone: string;
+
+  workPhone: string;
+
+  mobile: string;
 
   thumbnailPhoto?: Buffer;
 

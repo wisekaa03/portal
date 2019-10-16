@@ -148,7 +148,7 @@ export interface LdapResponeUser {
   /**
    * Thumbnail photo
    */
-  thumbnailPhoto: Buffer;
+  thumbnailPhoto: string;
 
   /**
    * Work title

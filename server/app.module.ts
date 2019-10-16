@@ -28,6 +28,7 @@ import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
+import { ByteArrayScalar } from './shared/bytearray.scalar';
 // #endregion
 
 @Module({
@@ -128,6 +129,7 @@ import { ProfileModule } from './profile/profile.module';
 
     // #region GraphQL
     DateScalar,
+    ByteArrayScalar,
     // #endregion
   ],
 })

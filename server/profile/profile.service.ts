@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 // #region Imports Local
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileEntity } from './profile.entity';
-import { Gender, LoginService } from '../shared/server';
+import { Gender, LoginService } from '../shared/interfaces';
 import { ProfileDTO } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';
 // #endregion
@@ -23,6 +23,7 @@ export class ProfileService {
 
   async create(ldapUser: LdapResponeUser): Promise<ProfileDTO | undefined> {
     let comment;
+    let p;
 
     try {
       comment = JSON.parse(ldapUser.comment);
@@ -35,27 +36,41 @@ export class ProfileService {
     const profile = {
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID.toString(),
+      username: ldapUser.sAMAccountName,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName: ldapUser.middleName,
       birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
-      addressPersonal: JSON.stringify({
+      addressPersonal: {
+        country: ldapUser.co,
         postalCode: ldapUser.postalCode,
         region: ldapUser.st,
         street: ldapUser.streetAddress,
-      }),
+      },
       company: ldapUser.company,
       title: ldapUser.title,
       email: ldapUser.mail,
-      // thumbnailPhoto: ldapUser.thumbnailPhoto,
+      telephone: ldapUser.telephoneNumber,
+      workPhone: ldapUser.otherTelephone,
+      mobile: ldapUser.mobile,
+      thumbnailPhoto: Buffer.from(ldapUser.thumbnailPhoto),
     };
 
     try {
-      return this.profileRepository.create(profile);
+      p = this.profileRepository.create(profile);
     } catch (error) {
-      this.logService.error('Unable to create data in `profile`');
-      return undefined;
+      this.logService.error('Unable to create data in `profile`', error);
+
+      throw error;
+    }
+
+    try {
+      return await this.profileRepository.save(p);
+    } catch (error) {
+      this.logService.error('Unable to save data in `profile`', error);
+
+      throw error;
     }
   }
 }

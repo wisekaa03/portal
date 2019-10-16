@@ -54,7 +54,7 @@ class MainApp extends App<ApolloAppProps> {
               const user = data;
 
               // eslint-disable-next-line no-debugger
-              debugger;
+              // debugger;
 
               return (
                 <ProfileContext.Provider value={{ ...user, language: currentLanguage }}>

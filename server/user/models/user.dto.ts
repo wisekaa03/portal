@@ -16,8 +16,6 @@ export class UserDTO {
 
   password?: string;
 
-  email: string;
-
   isAdmin: boolean;
 
   profile?: ProfileDTO;
@@ -47,8 +45,6 @@ export class UserLoginDTO {
 // #region User register
 export class UserRegisterDTO {
   username: string;
-
-  email: string;
 
   password: string;
 

@@ -37,7 +37,7 @@ import { CookieSerializer } from './cookie.serializer';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
           ...configService.jwtModuleOptions,
         } as JwtModuleOptions;

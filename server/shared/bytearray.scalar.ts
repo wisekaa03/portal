@@ -5,26 +5,22 @@ import { Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
 // #endregion
 
-@Scalar('Date')
-export class DateScalar {
-  description = 'Date scalar type';
+@Scalar('ByteArray')
+export class ByteArrayScalar {
+  description = 'Byte array scalar type';
 
-  parseValue(value: any): {} {
+  parseValue(value: string): {} {
     // eslint-disable-next-line no-debugger
     // debugger;
 
-    return new Date(value);
+    return Buffer.from(value);
   }
 
-  serialize(value: Date | string): {} {
+  serialize(value: Buffer): {} {
     // eslint-disable-next-line no-debugger
     // debugger;
 
-    if (typeof value === 'string') {
-      return new Date(value);
-    }
-
-    return value.toISOString();
+    return value.toString();
   }
 
   parseLiteral(ast: any): any {

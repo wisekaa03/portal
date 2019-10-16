@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
+import { I18nModule, I18nService } from 'nestjs-i18n';
 import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
@@ -12,20 +12,23 @@ import { ConfigModule } from '../config/config.module';
 import { UserEntity } from './user.entity';
 import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { Scope } from '../ldap/interfaces/ldap.interface';
-import { ConfigService } from '../config/config.service';
+import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+// import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 import { LogServiceMock } from '../../__mocks__/logger.service.mock';
 import { JwtServiceMock } from '../../__mocks__/jwt.service.mock';
-import { ProfileEntity } from '../profile/profile.entity';
+// import { ProfileEntity } from '../profile/profile.entity';
 import { ProfileModule } from '../profile/profile.module';
-import { AuthModule } from '../auth/auth.module';
+// import { AuthModule } from '../auth/auth.module';
 import { AuthService } from '../auth/auth.service';
 import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
-import { CookieSerializer } from '../auth/cookie.serializer';
-import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
+// import { CookieSerializer } from '../auth/cookie.serializer';
+// import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
+// import { GqlAuthGuard } from '../guards/gqlauth.guard';
+// import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
+import { LdapService } from '../ldap/ldap.service';
+import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
+import { I18nServiceMock } from '../../__mocks__/i18n.service.mock';
 // #endregion
 
 describe('UserService', () => {
@@ -38,57 +41,43 @@ describe('UserService', () => {
         LoggerModule,
 
         I18nModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            path: configService.i18nPath,
-            filePattern: configService.i18nFilePattern,
-            fallbackLanguage: configService.fallbackLanguage,
-            resolvers: [new QueryResolver(['lang', 'locale', 'l']), new HeaderResolver()],
+          useFactory: () => ({
+            path: __dirname,
+            filePattern: '*.json',
+            fallbackLanguage: 'en',
           }),
         }),
 
         TypeOrmModule.forRoot({}),
         TypeOrmModule.forFeature([UserEntity]),
-        TypeOrmModule.forFeature([ProfileEntity]),
 
         JwtModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => {
-            return {
-              ...configService.jwtModuleOptions,
-            } as JwtModuleOptions;
+          useFactory: () => {
+            return {} as JwtModuleOptions;
           },
         }),
 
         LdapModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => {
-            return {
-              url: configService.get('LDAP_URL'),
-              bindDN: configService.get('LDAP_BIND_DN'),
-              bindCredentials: configService.get('LDAP_BIND_PW'),
-              searchBase: configService.get('LDAP_SEARCH_BASE'),
-              searchFilter: configService.get('LDAP_SEARCH_FILTER'),
-              searchScope: 'sub' as Scope,
-              searchAttributes: ['*'],
-              reconnect: true,
-            };
-          },
+          useFactory: () => ({} as LdapModuleOptions),
         }),
 
         ProfileModule,
       ],
       providers: [
         UserService,
+        I18nService,
         { provide: AuthService, useValue: AuthServiceMock },
-        { provide: JwtService, useValue: JwtServiceMock },
+        // { provide: JwtService, useValue: JwtServiceMock },
       ],
     })
       .overrideProvider(LogService)
       .useValue(LogServiceMock)
+      .overrideProvider(LdapService)
+      .useValue(LdapServiceMock)
+      .overrideProvider(JwtService)
+      .useValue(JwtServiceMock)
+      .overrideProvider(I18nService)
+      .useValue(I18nServiceMock)
       .compile();
 
     service = module.get<UserService>(UserService);

@@ -1,7 +1,14 @@
+type Address {
+  country: String
+  postalCode: String
+  region: String
+  street: String
+}
+
 type Profile {
   id: ID!
 
-  # username: String!
+  username: String
   loginService: String
   loginIdentificator: String
 
@@ -10,10 +17,17 @@ type Profile {
   middleName: String
   birthday: String
   gender: Int
-  addressPersonal: String
+
   company: String
   title: String
-  thumbnailPhoto: String
+
+  telephone: String
+  workPhone: String
+  mobile: String
+
+  addressPersonal: Address
+
+  thumbnailPhoto: ByteArray
 
   createdAt: Date
   updatedAt: Date

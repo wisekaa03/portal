@@ -19,3 +19,10 @@ export enum Gender {
   MAN = 1,
   WOMAN = 2,
 }
+
+export interface Address {
+  country: string;
+  postalCode: string;
+  region: string;
+  street: string;
+}

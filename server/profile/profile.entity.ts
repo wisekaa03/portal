@@ -1,11 +1,11 @@
 /** @format */
 
 // #region Imports NPM
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeepPartial } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { ProfileResponseDTO } from './models/profile.dto';
-import { LoginService, Gender } from '../shared/server';
+import { LoginService, Gender, Address } from '../shared/interfaces';
 // #endregion
 
 @Entity('profile')
@@ -83,7 +83,7 @@ export class ProfileEntity {
     type: 'json',
     nullable: true,
   })
-  addressPersonal: string;
+  addressPersonal: Address;
 
   @Column({
     type: 'varchar',
@@ -96,6 +96,24 @@ export class ProfileEntity {
     nullable: true,
   })
   title: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  telephone: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  workPhone: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  mobile: string;
 
   @Column({
     type: 'bytea',

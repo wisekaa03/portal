@@ -17,6 +17,7 @@ import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileDTO } from '../profile/models/profile.dto';
+import { LoginService } from '../shared/interfaces';
 // #endregion
 
 interface LdapAuthenticate {
@@ -48,6 +49,7 @@ export class UserService {
   async read(id: string): Promise<UserResponseDTO | null> {
     const user = (await this.userRepository.findOne({
       where: { id },
+      relations: ['profile'],
     })) as UserEntity;
 
     if (!user) {
@@ -78,42 +80,47 @@ export class UserService {
       // #endregion
 
       try {
-        const profile = await this.profileService.create(ldapUser);
-
-        // eslint-disable-next-line no-debugger
-        debugger;
-
-        const data: UserDTO = {
-          username: ldapUser.sAMAccountName,
-          password,
-          isAdmin: false,
-          email: ldapUser.mail,
-          profile,
-        };
-
         // #region User create/update
         if (!user) {
-          const userLogin = this.userRepository.create(data);
+          let userLogin;
+          const profile = await this.profileService.create(ldapUser);
+
+          // eslint-disable-next-line no-debugger
+          debugger;
+
+          const data: UserDTO = {
+            username: ldapUser.sAMAccountName,
+            password: `$${LoginService.LDAP}`,
+            // groups,
+            isAdmin: false,
+            profile,
+          };
+
           try {
-            await this.userRepository.save(userLogin);
+            userLogin = await this.userRepository.save(this.userRepository.create(data));
           } catch (error) {
-            this.logService.error('Unable to create data in `user`');
+            this.logService.error('Unable to create data in `user`', error);
+
             return { user, profile, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
           }
+
           return { user: userLogin, profile, ldapUser, errorCode: HttpStatus.ACCEPTED };
         }
 
         return {
           user,
-          profile,
+          profile: user.profile,
           ldapUser,
           errorCode: HttpStatus.ACCEPTED,
         };
       } catch (error) {
-        this.logService.error('Unable to create data in `profile`');
+        this.logService.error('Unable to create data in `profile`', error);
+
         return { user, profile: undefined, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
       }
     } catch (error) {
+      this.logService.error('Unable to save in user database', error);
+
       return {
         user,
         profile: undefined,
@@ -129,19 +136,21 @@ export class UserService {
    * @param {UserLoginDTO} data User login data transfer object
    * @returns {UserResponseDTO} User response DTO
    */
-  async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO | null> {
+  async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO> {
     this.logService.debug(`UserService: user login: username = "${username}"`);
 
-    const user = await this.userRepository.findOne({ where: { username } });
-    const { user: userDB, profile, errorCode } = await this.userLdapLogin({ username, password, user });
+    const user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
+    const { user: userDB, ldapUser, profile, errorCode } = await this.userLdapLogin({ username, password, user });
 
     if (errorCode === HttpStatus.INTERNAL_SERVER_ERROR) {
       throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), errorCode);
-    } else if (userDB === undefined || profile === undefined) {
+    } else if (userDB === undefined || ldapUser === undefined || profile === undefined) {
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), errorCode);
     }
 
-    return userDB.toResponseObject(this.authService.token({ id: userDB.id }));
+    const userFromDB = userDB.toResponseObject(this.authService.token({ id: userDB.id }));
+
+    return userFromDB;
   }
 
   /**
@@ -169,7 +178,7 @@ export class UserService {
 
     // #region Check if a user exists
     const { username } = data;
-    let user = await this.userRepository.findOne({ where: { username } });
+    let user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
     if (user) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
@@ -177,9 +186,9 @@ export class UserService {
 
     // #region Create user
     user = this.userRepository.create(data);
-    await this.userRepository.save(user);
+    const userDB = await this.userRepository.save(user);
     // #endregion
 
-    return user.toResponseObject(this.authService.token({ id: user.id }));
+    return userDB.toResponseObject(this.authService.token({ id: user.id }));
   }
 }
