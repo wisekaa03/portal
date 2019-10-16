@@ -7,8 +7,9 @@ declare module 'cache-manager-redis';
 declare module '@graphile-contrib/pgdbi';
 
 declare namespace NodeJS {
-  interface Global {
+  interface Global extends NodeJS.Global {
     fetch: any; // GlobalFetch;
+    __SERVER__?: boolean;
   }
 }
 

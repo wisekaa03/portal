@@ -1,19 +1,23 @@
 /** @format */
 // #region Imports NPM
-import { ShallowWrapper } from 'enzyme';
-import { createShallow } from '@material-ui/core/test-utils';
+import { shallow, ShallowWrapper } from 'enzyme';
 import { TextField, Button } from '@material-ui/core';
 import React from 'react';
+import { MutationFunction } from 'react-apollo';
 // #endregion
 // #region Imports Local
-import Login from '../pages/auth/login';
+import { LoginComponent } from '../components/login';
 // #endregion
 
 describe('Login page', () => {
   let component: ShallowWrapper;
+  const props = {
+    loading: false,
+    login: ((): void => {}) as MutationFunction,
+  };
 
   beforeAll(() => {
-    component = createShallow()(<Login />);
+    component = shallow(<LoginComponent {...props} />);
   });
 
   it('match snapshot', () => {
@@ -26,5 +30,19 @@ describe('Login page', () => {
 
   it('have textField', () => {
     expect(component.find(TextField)).toBeDefined();
+  });
+
+  it('test username input', () => {
+    const username = 'testuser';
+    component.find('[data-field-name="username"]').simulate('change', {
+      target: {
+        value: username,
+        type: 'input',
+        dataset: {
+          fieldName: 'username',
+        },
+      },
+    });
+    expect(true).toBeTruthy();
   });
 });

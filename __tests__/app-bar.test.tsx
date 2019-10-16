@@ -2,20 +2,20 @@
 
 // #region Imports NPM
 import React from 'react';
-import { ShallowWrapper } from 'enzyme';
-import { createShallow } from '@material-ui/core/test-utils';
-import { Toolbar, Popover } from '@material-ui/core';
+import { shallow, ShallowWrapper } from 'enzyme';
+import { Toolbar, Popover, IconButton } from '@material-ui/core';
 // #endregion
 // #region Imports Local
 import AppBar from '../components/app-bar';
 // #endregion
 
 describe('AppBar component', () => {
+  const mockOpen = jest.fn();
+  const props = { handleDrawerOpen: mockOpen };
   let component: ShallowWrapper;
-  const props = { handleDrawerOpen: (): void => {} };
 
   beforeAll(() => {
-    component = createShallow()(<AppBar {...props} />);
+    component = shallow(<AppBar {...props} />);
   });
 
   it('match snapshot', () => {
@@ -24,6 +24,10 @@ describe('AppBar component', () => {
 
   it('render component', () => {
     expect(component.find(AppBar)).toBeDefined();
+  });
+
+  it('find drawer icon', () => {
+    expect(component.find(IconButton)).toBeDefined();
   });
 
   it('find Toolbar', () => {
@@ -38,10 +42,10 @@ describe('AppBar component', () => {
     expect(component.find(Popover)).toBeDefined();
   });
 
-  // TODO: довести до ума (createMount вместо createShallow)
   // it('simulate open', () => {
-  //   expect(component.find('#profile-popover')).toHaveLength(0);
-  //   component.find('#profile-avatar').simulate('click');
-  //   expect(component.find('#profile-popover')).toHaveLength(1);
+  //   component.find('#profile-avatar').simulate('click', {
+  //     currentTarget: component.find('#profile-avatar'),
+  //   });
+  //   expect(component.state().anchorEl).toBeTruthy();
   // });
 });

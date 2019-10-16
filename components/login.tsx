@@ -173,6 +173,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
               </Typography>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
+                  data-field-name="username"
                   type="username"
                   value={values.name}
                   onChange={handleChange('name')}
@@ -184,6 +185,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
               </FormControl>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
+                  data-field-name="password"
                   type="password"
                   value={values.pass}
                   onChange={handleChange('pass')}

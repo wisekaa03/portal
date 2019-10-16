@@ -13,7 +13,8 @@ import { includeDefaultNamespaces } from '../lib/i18n-client';
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      display: 'flex',
+      display: 'block',
+      border: 'none',
       height: '100%',
       width: '100%',
     },
