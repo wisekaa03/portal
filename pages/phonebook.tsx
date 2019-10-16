@@ -264,9 +264,9 @@ const PhoneBook = (): React.ReactElement => {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
-            <Button variant="contained" className={classes.buttonExtended}>
+            {/* <Button variant="contained" className={classes.buttonExtended}>
               Расширенный поиск
-            </Button>
+              </Button> */}
             <IconButton>
               <SettingsIcon />
             </IconButton>

@@ -75,7 +75,7 @@ export default (props: DrawerProps): React.ReactElement => {
   const { open, handleOpen } = props;
 
   const urls = [
-    { text: 'Почта', link: '/mail', icon: <MailIcon /> },
+    { text: 'Почта', link: 'https://mail.kngk-group.ru', icon: <MailIcon /> },
     { text: 'Адресная книга', link: '/phonebook', icon: <ImportContactsIcon /> },
     { text: 'Личный кабинет', link: '/', icon: <AssignmentIndIcon /> },
     {
@@ -98,12 +98,26 @@ export default (props: DrawerProps): React.ReactElement => {
       <List>
         {urls.map((url) => (
           <li key={url.text} className={classes.item}>
-            <Link href={url.link} passHref>
-              <ListItem button selected={url.link === pathname} component="a" title={url.text}>
+            {url.link[0] !== '/' ? (
+              <ListItem
+                button
+                selected={url.link === pathname}
+                component="a"
+                href={url.link}
+                target="_blank"
+                title={url.text}
+              >
                 {url.icon ? <ListItemIcon>{url.icon}</ListItemIcon> : null}
                 <ListItemText primary={url.text} />
               </ListItem>
-            </Link>
+            ) : (
+              <Link href={url.link} passHref>
+                <ListItem button selected={url.link === pathname} component="a" title={url.text}>
+                  {url.icon ? <ListItemIcon>{url.icon}</ListItemIcon> : null}
+                  <ListItemText primary={url.text} />
+                </ListItem>
+              </Link>
+            )}
           </li>
         ))}
       </List>
