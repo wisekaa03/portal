@@ -50,9 +50,9 @@ export class LdapService extends EventEmitter {
       this.userCache = cacheManager.caching({
         store: redisStore,
         name: 'LDAP',
-        ttlInSeconds: 3,
-        ttl: 3, // seconds
-        max: 200, // maximum number of items in cache
+        ttlInSeconds: parseInt(configService.get('REDIS_TTL'), 10),
+        ttl: parseInt(configService.get('REDIS_TTL'), 10), // seconds
+        max: parseInt(configService.get('REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
         host: configService.get('REDIS_HOST'),
         port: parseInt(configService.get('REDIS_PORT'), 10),
         db: configService.get('REDIS_DB') ? parseInt(configService.get('REDIS_DB'), 10) : undefined,
