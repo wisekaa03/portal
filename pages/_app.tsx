@@ -33,7 +33,7 @@ class MainApp extends App<ApolloAppProps> {
     // TODO: разобраться как isMobile прикрутить к теме
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
-        width: isMobile ? 0 : 1280,
+        width: Boolean(isMobile) ? 0 : 1280,
       }),
     });
 
@@ -68,7 +68,7 @@ class MainApp extends App<ApolloAppProps> {
               // debugger;
 
               return (
-                <ProfileContext.Provider value={{ ...user, language: currentLanguage }}>
+                <ProfileContext.Provider value={{ ...user, language: currentLanguage, isMobile: Boolean(isMobile) }}>
                   <Component {...pageProps} />
                 </ProfileContext.Provider>
               );
