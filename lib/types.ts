@@ -38,6 +38,7 @@ export interface ProfileParams {
   user?: any; // User;
   email?: any; // UserEmail[];
   language?: string;
+  isMobile?: boolean;
 }
 
 /**

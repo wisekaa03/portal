@@ -1,10 +1,10 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useContext } from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { List, ListItem, ListItemText, ListItemIcon, Hidden, Drawer, useMediaQuery } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 // #endregion
 // #region Imports Local
+import { ProfileContext } from '../lib/types';
 import { appBarHeight } from './app-bar';
 import Icon from './icon';
 import ItIcon from '../public/images/svg/it-icon.svg';
@@ -70,7 +71,7 @@ export default (props: DrawerProps): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   const router = useRouter();
-  // TODO: продумать как узнать устройство на серверной стороне
+  const profile = useContext(ProfileContext);
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { open, handleOpen } = props;
 
@@ -126,11 +127,11 @@ export default (props: DrawerProps): React.ReactElement => {
 
   return (
     <nav className={classes.root}>
-      <Hidden mdUp implementation="css">
+      {(profile && profile.isMobile) || smDown ? (
         <Drawer
           variant="temporary"
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          open={smDown && open}
+          open={open}
           onClose={handleOpen}
           className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
@@ -146,8 +147,7 @@ export default (props: DrawerProps): React.ReactElement => {
         >
           {drawer}
         </Drawer>
-      </Hidden>
-      <Hidden smDown implementation="css">
+      ) : (
         <Drawer
           variant="permanent"
           open={open}
@@ -164,7 +164,7 @@ export default (props: DrawerProps): React.ReactElement => {
         >
           {drawer}
         </Drawer>
-      </Hidden>
+      )}
     </nav>
   );
 };
