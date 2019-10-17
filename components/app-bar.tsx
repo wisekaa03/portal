@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React, { useState } from 'react';
+import { Base64 } from 'js-base64';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Paper, Box, /* Button, */ IconButton, Avatar, Typography } from '@material-ui/core';
 import clsx from 'clsx';
@@ -126,7 +127,14 @@ export default (props: AppBarProps): React.ReactElement => {
                 </div>
                 <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
                   {/* Сделать чтобы отображалось изображение */}
-                  <Avatar className={clsx(classes.avatar, classes.pointer)}>И</Avatar>
+                  <Avatar
+                    className={clsx(classes.avatar, classes.pointer)}
+                    src={
+                      v.user.profile.thumbnailPhoto
+                        ? `data:image/gif;base64,${v.user.profile.thumbnailPhoto.toString()}`
+                        : '/public/images/jpg/unknown.jpg'
+                    }
+                  />
                 </Box>
                 <Popover
                   id="profile-popover"

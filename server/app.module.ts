@@ -48,13 +48,13 @@ import { ProfileModule } from './profile/profile.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         store: redisCacheStore,
-        ttl: parseInt(configService.get('REDIS_TTL'), 10), // seconds
-        max: parseInt(configService.get('REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
-        host: configService.get('REDIS_HOST'),
-        port: parseInt(configService.get('REDIS_PORT'), 10),
-        db: configService.get('REDIS_DB') ? parseInt(configService.get('REDIS_DB'), 10) : undefined,
-        password: configService.get('REDIS_PASSWORD') ? configService.get('REDIS_PASSWORD') : undefined,
-        keyPrefix: configService.get('REDIS_PREFIX') ? configService.get('REDIS_PREFIX') : undefined,
+        ttl: parseInt(configService.get('HTTP_REDIS_TTL'), 10), // seconds
+        max: parseInt(configService.get('HTTP_REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
+        host: configService.get('HTTP_REDIS_HOST'),
+        port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
+        db: configService.get('HTTP_REDIS_DB') ? parseInt(configService.get('HTTP_REDIS_DB'), 10) : undefined,
+        password: configService.get('REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
+        keyPrefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
         // retry_strategy: (options) => {}
       }),
     }),

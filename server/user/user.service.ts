@@ -148,9 +148,7 @@ export class UserService {
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), errorCode);
     }
 
-    const userFromDB = userDB.toResponseObject(this.authService.token({ id: userDB.id }));
-
-    return userFromDB;
+    return userDB.toResponseObject(this.authService.token({ id: userDB.id }));
   }
 
   /**

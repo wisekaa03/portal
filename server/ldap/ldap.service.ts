@@ -50,14 +50,11 @@ export class LdapService extends EventEmitter {
       this.userCache = cacheManager.caching({
         store: redisStore,
         name: 'LDAP',
-        ttlInSeconds: parseInt(configService.get('REDIS_TTL'), 10),
-        ttl: parseInt(configService.get('REDIS_TTL'), 10), // seconds
-        max: parseInt(configService.get('REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
-        host: configService.get('REDIS_HOST'),
-        port: parseInt(configService.get('REDIS_PORT'), 10),
-        db: configService.get('REDIS_DB') ? parseInt(configService.get('REDIS_DB'), 10) : undefined,
-        password: configService.get('REDIS_PASSWORD') ? configService.get('REDIS_PASSWORD') : undefined,
-        keyPrefix: configService.get('REDIS_PREFIX') ? configService.get('REDIS_PREFIX') : undefined,
+        ttl: parseInt(configService.get('LDAP_REDIS_TTL'), 10), // seconds
+        host: configService.get('LDAP_REDIS_HOST'),
+        port: parseInt(configService.get('LDAP_REDIS_PORT'), 10),
+        db: configService.get('LDAP_REDIS_DB') ? parseInt(configService.get('LDAP_REDIS_DB'), 10) : undefined,
+        password: configService.get('LDAP_REDIS_PASSWORD') ? configService.get('LDAP_REDIS_PASSWORD') : undefined,
         logger,
       });
     }

@@ -130,33 +130,64 @@ export class ConfigService {
       DATABASE_CACHE: Joi.string()
         .default('true')
         .empty(),
-      REDIS_HOST: Joi.string()
+
+      HTTP_REDIS_HOST: Joi.string()
         .default('localhost')
         .empty(),
-      REDIS_PORT: Joi.number()
+      HTTP_REDIS_PORT: Joi.number()
         .default(6379)
         .empty(),
-      REDIS_TTL: Joi.number()
+      HTTP_REDIS_TTL: Joi.number()
         .default(3)
         .empty(),
-      REDIS_MAX_OBJECTS: Joi.number()
+      HTTP_REDIS_MAX_OBJECTS: Joi.number()
         .default(200)
         .empty(),
-      REDIS_DB: Joi.number()
+      HTTP_REDIS_DB: Joi.number()
         .default(0)
         .empty(),
-      REDIS_PASSWORD: Joi.string()
+      HTTP_REDIS_PASSWORD: Joi.string()
         .allow('')
         .empty(),
-      REDIS_PREFIX: Joi.string()
+      HTTP_REDIS_PREFIX: Joi.string()
         .allow('')
         .empty(),
+
+      LDAP_REDIS_HOST: Joi.string()
+        .default('localhost')
+        .empty(),
+      LDAP_REDIS_PORT: Joi.number()
+        .default(6379)
+        .empty(),
+      LDAP_REDIS_TTL: Joi.number()
+        .default(3)
+        .empty(),
+      LDAP_REDIS_DB: Joi.number()
+        .default(0)
+        .empty(),
+      LDAP_REDIS_PASSWORD: Joi.string()
+        .allow('')
+        .empty(),
+
       SESSION_SECRET: Joi.string()
         .default('portal')
         .empty(),
-      COOKIE_TTL: Joi.string()
+      SESSION_REDIS_HOST: Joi.string()
+        .default('localhost')
+        .empty(),
+      SESSION_REDIS_PORT: Joi.number()
+        .default(6379)
+        .empty(),
+      SESSION_REDIS_DB: Joi.number()
+        .default(0)
+        .empty(),
+      SESSION_REDIS_PASSWORD: Joi.string()
+        .allow('')
+        .empty(),
+      SESSION_COOKIE_TTL: Joi.string()
         .default(24)
         .empty(),
+
       LDAP_URL: Joi.string()
         .default('ldap://activedirectory:389')
         .empty(),

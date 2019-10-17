@@ -17,7 +17,6 @@ import { ProfileContext, ApolloAppProps } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
-import { GQLError } from '../components/gql-error';
 // #endregion
 
 class MainApp extends App<ApolloAppProps> {
@@ -63,11 +62,12 @@ class MainApp extends App<ApolloAppProps> {
         >
           {/* TODO: разобраться с тем, что graphql запрос на сервере неавторизован, на клиенте нормально */}
           <Query query={CURRENT_USER} ssr={false}>
-            {({ data, loading, error }: QueryResult<any>) => {
+            {({ data, loading }: QueryResult<any>) => {
               // eslint-disable-next-line no-debugger
               debugger;
 
               if (loading) {
+                // TODO: какую-нибудь другую страницу...
                 return <Loading />;
               }
 

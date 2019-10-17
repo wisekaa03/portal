@@ -57,6 +57,7 @@ export class UserResolver {
     if (req.user) {
       return req.user as UserResponseDTO;
     }
+
     return this.userService.login({ username, password });
   }
 

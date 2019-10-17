@@ -4,7 +4,7 @@
 import React from 'react';
 import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
 import queryString from 'query-string';
-// import Router from 'next/router';
+import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
@@ -22,15 +22,15 @@ const Login = (): React.ReactElement => {
           return <LoginComponent error={error} loading={loading} login={login} />;
         }
 
-        // eslint-disable-next-line no-debugger
-        debugger;
-
         // TODO: он не в куки сохраняет, а в tokene на клиенте
         // TODO: разобраться как сделать чтобы в куки сохранял
         setStorage('token', data.login.token);
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
-        window.location.href = redirect as string;
-        // Router.push({ pathname: redirect as string });
+
+        // eslint-disable-next-line no-debugger
+        debugger;
+
+        Router.push({ pathname: redirect as string });
 
         return null;
       }}
