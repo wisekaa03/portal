@@ -4,7 +4,8 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { LoginService, Gender, Address } from '../../shared/interfaces';
+// eslint-disable-next-line import/no-cycle
+import { LoginService, Gender, Address } from '../../../lib/types';
 // #endregion
 
 // #region User

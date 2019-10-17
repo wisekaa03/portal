@@ -18,6 +18,9 @@ export const CURRENT_USER = gql`
         middleName
         birthday
         gender
+        telephone
+        workPhone
+        mobile
         addressPersonal {
           country
           postalCode
@@ -46,6 +49,9 @@ export const LOGIN = gql`
         middleName
         birthday
         gender
+        telephone
+        workPhone
+        mobile
         addressPersonal {
           country
           postalCode

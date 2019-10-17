@@ -152,11 +152,11 @@ export default (props: AppBarProps): React.ReactElement => {
                   <Avatar className={classes.avatar}>И</Avatar>
                   <Box className={classes.phoneBlock}>
                     <PhoneIcon />
-                    <Typography>{v.user.profile}</Typography>
+                    <Typography>{v.user.profile.telephone}</Typography>
                     <PhoneIphoneIcon />
-                    <Typography>+ 7 (999) 7654321</Typography>
+                    <Typography>{v.user.profile.mobile}</Typography>
                     <PhoneInTalkIcon />
-                    <Typography>1234</Typography>
+                    <Typography>{v.user.profile.workPhone}</Typography>
                   </Box>
                 </Popover>
               </>
