@@ -70,9 +70,6 @@ class MainApp extends App<ApolloAppProps> {
               if (loading) {
                 return <Loading />;
               }
-              if (error) {
-                return <GQLError error={error} />;
-              }
 
               return (
                 <ProfileContext.Provider
