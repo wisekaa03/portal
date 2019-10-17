@@ -1,9 +1,9 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, ReactNode } from 'react';
-// import { useMediaQuery } from '@material-ui/core';
-import { makeStyles, createStyles /* , useTheme */ } from '@material-ui/core/styles';
+import React, { useState, ReactNode, useEffect } from 'react';
+import { useMediaQuery } from '@material-ui/core';
+import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 
 // #region Imports Local
@@ -30,9 +30,13 @@ interface Main {
 
 export default (props: Main): React.ReactElement => {
   const classes = useStyles({});
-  // const theme = useTheme();
-  const mdUp = false; // useMediaQuery(theme.breakpoints.up('md'));
-  const [drawerOpen, setDrawerOpen] = useState(mdUp);
+  const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(lgUp);
+
+  useEffect(() => {
+    setDrawerOpen(lgUp);
+  }, [lgUp]);
 
   const handleDrawerOpen = (): void => {
     setDrawerOpen(!drawerOpen);
