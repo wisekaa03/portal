@@ -37,6 +37,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
 import { ByteArrayScalar } from './shared/bytearray.scalar';
+import { MyCacheInterceptor } from './interceptors/cache.interceptor';
 // #endregion
 
 @Module({
@@ -139,7 +140,7 @@ import { ByteArrayScalar } from './shared/bytearray.scalar';
     // #region Cache interceptor
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
+      useClass: MyCacheInterceptor,
     },
     // #endregion
 
