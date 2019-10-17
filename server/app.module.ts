@@ -55,8 +55,8 @@ import { ByteArrayScalar } from './shared/bytearray.scalar';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         store: redisCacheStore,
-        ttl: 3, // seconds
-        max: 200, // maximum number of items in cache
+        ttl: parseInt(configService.get('REDIS_TTL'), 10), // seconds
+        max: parseInt(configService.get('REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
         host: configService.get('REDIS_HOST'),
         port: parseInt(configService.get('REDIS_PORT'), 10),
         db: configService.get('REDIS_DB') ? parseInt(configService.get('REDIS_DB'), 10) : undefined,

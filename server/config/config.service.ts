@@ -136,6 +136,12 @@ export class ConfigService {
       REDIS_PORT: Joi.number()
         .default(6379)
         .empty(),
+      REDIS_TTL: Joi.number()
+        .default(3)
+        .empty(),
+      REDIS_MAX_OBJECTS: Joi.number()
+        .default(200)
+        .empty(),
       REDIS_DB: Joi.number()
         .default(0)
         .empty(),
