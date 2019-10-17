@@ -13,7 +13,7 @@ import { blue } from '@material-ui/core/colors';
 // import Link from 'next/link';
 // #endregion
 // #region Imports Local
-// import { UserContext } from '../lib/types';
+import { ProfileContext } from '../lib/types';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo-min.png';
@@ -102,50 +102,67 @@ export default (props: AppBarProps): React.ReactElement => {
   return (
     <AppBar id="header" position="sticky" className={classes.root}>
       <Toolbar className={classes.toolbar}>
-        <IconButton
-          edge="start"
-          onClick={handleDrawerOpen}
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-        >
-          <MenuIcon />
-        </IconButton>
-        <div className={classes.logo}>
-          <img src={LogoMin} alt="logo" />
-        </div>
-        <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
-          <Avatar className={clsx(classes.avatar, classes.pointer)}>И</Avatar>
-        </Box>
-        <Popover
-          id="profile-popover"
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handlePopoverClose}
-          classes={{ paper: classes.profile }}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+        <ProfileContext.Consumer>
+          {(v) => {
+            // Проверка на вшивость
+            if (!v || !v.user) {
+              window.location.href = '/auth/login';
+              return null;
+            }
+
+            return (
+              <>
+                <IconButton
+                  edge="start"
+                  onClick={handleDrawerOpen}
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="menu"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <div className={classes.logo}>
+                  <img src={LogoMin} alt="logo" />
+                </div>
+                <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
+                  {/* Сделать чтобы отображалось изображение */}
+                  <Avatar className={clsx(classes.avatar, classes.pointer)}>И</Avatar>
+                </Box>
+                <Popover
+                  id="profile-popover"
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handlePopoverClose}
+                  classes={{ paper: classes.profile }}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  marginThreshold={0}
+                  transitionDuration={0}
+                  disableRestoreFocus
+                >
+                  <Typography className={classes.profileName}>
+                    {v.user.profile.firstName} {v.user.profile.lastName} {v.user.profile.middleName}
+                  </Typography>
+                  <Avatar className={classes.avatar}>И</Avatar>
+                  <Box className={classes.phoneBlock}>
+                    <PhoneIcon />
+                    <Typography>+ 7 (999) 1234567</Typography>
+                    <PhoneIphoneIcon />
+                    <Typography>+ 7 (999) 7654321</Typography>
+                    <PhoneInTalkIcon />
+                    <Typography>1234</Typography>
+                  </Box>
+                </Popover>
+              </>
+            );
           }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          marginThreshold={0}
-          transitionDuration={0}
-          disableRestoreFocus
-        >
-          <Typography className={classes.profileName}>Иванов Иван Иванович</Typography>
-          <Avatar className={classes.avatar}>И</Avatar>
-          <Box className={classes.phoneBlock}>
-            <PhoneIcon />
-            <Typography>+ 7 (999) 1234567</Typography>
-            <PhoneIphoneIcon />
-            <Typography>+ 7 (999) 7654321</Typography>
-            <PhoneInTalkIcon />
-            <Typography>1234</Typography>
-          </Box>
-        </Popover>
+        </ProfileContext.Consumer>
       </Toolbar>
     </AppBar>
   );

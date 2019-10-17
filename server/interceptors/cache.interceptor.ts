@@ -1,38 +1,21 @@
 /** @format */
 
 // #region Imports NPM
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  Inject,
-  NestInterceptor,
-  CacheInterceptor,
-  CACHE_MANAGER,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { ExecutionContext, Injectable, CacheInterceptor as MainCacheInterceptor } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 // #endregion
 
-const REFLECTOR = 'Reflector';
-
 @Injectable()
-export class MyCacheInterceptor implements NestInterceptor {
-  public cacheInterceptor: CacheInterceptor;
-
-  // eslint-disable-next-line @typescript-eslint/no-parameter-properties
-  constructor(@Inject(CACHE_MANAGER) protected readonly cacheManager: any, @Inject(REFLECTOR) reflector: any) {
+export class CacheInterceptor extends MainCacheInterceptor {
+  trackBy(context: ExecutionContext): string | undefined {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
-    this.cacheInterceptor = new CacheInterceptor(cacheManager, reflector);
-  }
+    if (context.switchToHttp().getRequest()) {
+      return super.trackBy(context);
+    }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    // eslint-disable-next-line no-debugger
-    debugger;
-
-    return next.handle();
+    return undefined;
   }
 }

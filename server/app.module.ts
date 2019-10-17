@@ -4,15 +4,7 @@
 
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import {
-  Module,
-  NestModule,
-  MiddlewareConsumer,
-  RequestMethod,
-  CacheModule,
-  CacheInterceptor,
-  forwardRef,
-} from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule, forwardRef } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
 import { GraphQLModule } from '@nestjs/graphql';
@@ -24,6 +16,9 @@ import redisCacheStore from 'cache-manager-redis-store';
 import { NextService } from './next/next.service';
 import { HttpErrorFilter } from './filters/http-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { CacheInterceptor } from './interceptors/cache.interceptor';
+import { DateScalar } from './shared/date.scalar';
+import { ByteArrayScalar } from './shared/bytearray.scalar';
 import { LoggerModule } from './logger/logger.module';
 import { LogService } from './logger/logger.service';
 import { ConfigModule } from './config/config.module';
@@ -32,12 +27,9 @@ import { HomeModule } from './controllers/controllers.module';
 import { NextMiddleware } from './next/next.middleware';
 import { NextAssetsMiddleware } from './next/next.assets.middleware';
 import { ConfigService } from './config/config.service';
-import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
-import { ByteArrayScalar } from './shared/bytearray.scalar';
-import { MyCacheInterceptor } from './interceptors/cache.interceptor';
 // #endregion
 
 @Module({
@@ -140,7 +132,7 @@ import { MyCacheInterceptor } from './interceptors/cache.interceptor';
     // #region Cache interceptor
     {
       provide: APP_INTERCEPTOR,
-      useClass: MyCacheInterceptor,
+      useClass: CacheInterceptor,
     },
     // #endregion
 

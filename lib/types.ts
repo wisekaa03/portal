@@ -33,10 +33,37 @@ export interface ApolloDocumentProps extends DocumentContext {
   currentLanguage?: string;
 }
 
+export interface Address {
+  country: string;
+  postalCode: string;
+  region: string;
+  street: string;
+}
+
+export interface Profile {
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  birthday: string;
+  gender: string;
+  addressPersonal: Address;
+  thumbnailPhoto: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface User {
+  token: string;
+  id: string;
+  username: string;
+  updatedAt: string;
+  createdAt: string;
+  profile: Profile;
+}
+
 export interface ProfileParams {
   token?: string;
-  user?: any; // User;
-  email?: any; // UserEmail[];
+  user?: User;
   language?: string;
   isMobile?: boolean;
 }

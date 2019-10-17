@@ -62,13 +62,15 @@ class MainApp extends App<ApolloAppProps> {
           {/* TODO: разобраться с тем, что graphql запрос на сервере неавторизован, на клиенте нормально */}
           <Query query={CURRENT_USER} ssr={false}>
             {({ data }: { data: any }) => {
-              const user = data;
+              const { me } = data;
 
               // eslint-disable-next-line no-debugger
-              // debugger;
+              debugger;
 
               return (
-                <ProfileContext.Provider value={{ ...user, language: currentLanguage, isMobile: Boolean(isMobile) }}>
+                <ProfileContext.Provider
+                  value={{ user: { ...me }, language: currentLanguage, isMobile: Boolean(isMobile) }}
+                >
                   <Component {...pageProps} />
                 </ProfileContext.Provider>
               );

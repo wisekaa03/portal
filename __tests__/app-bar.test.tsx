@@ -34,9 +34,9 @@ describe('AppBar component', () => {
     expect(component.find(Toolbar)).toBeDefined();
   });
 
-  it('find logo', () => {
-    expect(component.find('img')).toHaveLength(1);
-  });
+  // it('find logo', () => {
+  //   expect(component.find('img')).toHaveLength(1);
+  // });
 
   it('find popover', () => {
     expect(component.find(Popover)).toBeDefined();

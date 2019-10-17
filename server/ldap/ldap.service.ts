@@ -88,7 +88,7 @@ export class LdapService extends EventEmitter {
 
     if (opts.reconnect) {
       this.once('installReconnectListener', () => {
-        this.logger.log('install reconnect listener');
+        this.logger.log('install reconnect listener', 'LDAP');
         this.adminClient.on('connect', () => this.onConnectAdmin());
       });
     }
@@ -140,7 +140,7 @@ export class LdapService extends EventEmitter {
    */
   private handleError(err: Ldap.Error): void {
     if (`${err.code}` !== 'ECONNRESET') {
-      this.logger.error(`emitted error: [${err.code}] "${err}"`);
+      this.logger.error(`emitted error: [${err.code}]`, err.toString(), 'LDAP');
     }
     this.adminBound = false;
   }
@@ -158,17 +158,17 @@ export class LdapService extends EventEmitter {
       throw new Error('bindDN is undefined');
     }
 
-    this.logger.log(`bind: ${this.bindDN} ...`);
+    this.logger.log(`bind: ${this.bindDN} ...`, 'LDAP');
 
     return new Promise((resolve, reject) =>
       this.adminClient.bind(this.bindDN, this.bindCredentials, (error: Ldap.Error) => {
         if (error) {
-          this.logger.error('bind error:', error.toString());
+          this.logger.error('bind error:', error.toString(), 'LDAP');
           this.adminBound = false;
           return reject(error);
         }
 
-        this.logger.log('bind ok');
+        this.logger.log('bind ok', 'LDAP');
         this.adminBound = true;
         if (this.opts.reconnect) {
           this.emit('installReconnectListener');
@@ -239,7 +239,7 @@ export class LdapService extends EventEmitter {
         );
       })
       .catch((error) => {
-        this.logger.error(`search error: ${error.code} ${error.name} ${error.message}`);
+        this.logger.error(`search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
         throw error;
       });
   }
@@ -300,7 +300,7 @@ export class LdapService extends EventEmitter {
           }),
       )
       .catch((error) => {
-        this.logger.error(`findUser: ${error.code} ${error.name} ${error.message}`);
+        this.logger.error(`findUser: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
         throw new Error(error);
       });
   }
@@ -331,11 +331,12 @@ export class LdapService extends EventEmitter {
 
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
       .then((result: Ldap.SearchCallBack) => {
+        // eslint-disable-next-line no-param-reassign
         user.groups = result;
         return user;
       })
       .catch((error) => {
-        this.logger.error(`group search error: ${error.code} ${error.name} ${error.message}`);
+        this.logger.error(`group search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
         throw error;
       });
   }
@@ -349,13 +350,13 @@ export class LdapService extends EventEmitter {
    */
   public async authenticate(username: string, password: string): Promise<any | LdapResponeUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
-      this.logger.error('no password given');
+      this.logger.error('no password given', 'LDAP');
       throw new Error('no password given');
     }
 
     if (this.opts.cache && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
-      const cached = this.userCache.get(username);
+      const cached = await this.userCache.get(username);
       if (cached && bcrypt.compareSync(password, cached.password)) {
         return cached.user as LdapResponeUser;
       }
@@ -375,7 +376,7 @@ export class LdapService extends EventEmitter {
             password,
             async (bindErr: Ldap.Error): Promise<any> => {
               if (bindErr) {
-                this.logger.error(`bind error: ${bindErr}`);
+                this.logger.error('bind error:', bindErr.toString(), 'LDAP');
                 return reject(bindErr);
               }
 
@@ -386,14 +387,14 @@ export class LdapService extends EventEmitter {
                 if (this.opts.cache) {
                   this.userCache.set(username, {
                     user: userWithGroups,
-                    password,
+                    password: bcrypt.hashSync(password, 4),
                   });
-                  return resolve(userWithGroups as LdapResponeUser);
                 }
 
                 return resolve(userWithGroups as LdapResponeUser);
               } catch (error) {
-                this.logger.error(`authenticate: ${error}`);
+                this.logger.error('authenticate:', error, 'LDAP');
+
                 throw error;
               }
             },
@@ -416,10 +417,10 @@ export class LdapService extends EventEmitter {
     // client has been bound (e.g. how ldapjs pool destroy does)
     return new Promise((resolve) => {
       this.adminClient.unbind(() => {
-        this.logger.log('adminClient: close');
+        this.logger.log('adminClient: close', 'LDAP');
 
         this.userClient.unbind(() => {
-          this.logger.log('userClient: close');
+          this.logger.log('userClient: close', 'LDAP');
 
           resolve(true);
         });
