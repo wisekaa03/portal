@@ -154,6 +154,9 @@ export class ConfigService {
       SESSION_SECRET: Joi.string()
         .default('portal')
         .empty(),
+      COOKIE_TTL: Joi.string()
+        .default(24)
+        .empty(),
       LDAP_URL: Joi.string()
         .default('ldap://activedirectory:389')
         .empty(),

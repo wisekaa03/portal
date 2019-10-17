@@ -8,6 +8,7 @@ import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
 import { LOGOUT } from '../../lib/queries';
 import { LogoutComponent } from '../../components/logout';
 import { includeDefaultNamespaces } from '../../lib/i18n-client';
+import { removeStorage } from '../../lib/session-storage';
 // #endregion
 
 const Logout = (): React.ReactElement => {
@@ -21,7 +22,7 @@ const Logout = (): React.ReactElement => {
         // eslint-disable-next-line no-debugger
         debugger;
 
-        sessionStorage.removeItem('token');
+        removeStorage('token');
         window.location.pathname = '/auth/login';
 
         return null;

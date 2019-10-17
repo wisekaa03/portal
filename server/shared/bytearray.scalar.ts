@@ -9,14 +9,14 @@ import { Kind } from 'graphql';
 export class ByteArrayScalar {
   description = 'Byte array scalar type';
 
-  parseValue(value: string): {} {
+  parseValue(value: string): Buffer {
     // eslint-disable-next-line no-debugger
     // debugger;
 
     return Buffer.from(value);
   }
 
-  serialize(value: Buffer): {} {
+  serialize(value: Buffer): string {
     // eslint-disable-next-line no-debugger
     // debugger;
 

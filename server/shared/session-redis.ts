@@ -31,6 +31,6 @@ export const sessionRedis = (configService: ConfigService): any =>
       // secure: process.env.PROTOCOL === 'https',
       // expires: false,
       httpOnly: false,
-      maxAge: 60 * 60 * 1000, // msec, 1 hour
+      maxAge: 60 * 60 * parseInt(configService.get('COOKIE_TTL'), 10), // msec, 1 hour
     },
   });

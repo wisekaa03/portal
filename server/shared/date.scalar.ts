@@ -9,14 +9,14 @@ import { Kind } from 'graphql';
 export class DateScalar {
   description = 'Date scalar type';
 
-  parseValue(value: any): {} {
+  parseValue(value: any): Date {
     // eslint-disable-next-line no-debugger
     // debugger;
 
     return new Date(value);
   }
 
-  serialize(value: Date | string): {} {
+  serialize(value: Date | string): Date | string {
     // eslint-disable-next-line no-debugger
     // debugger;
 
