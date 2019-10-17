@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { Query, ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto'; // TODO: error in css-loader/locals
 // #endregion
 // #region Imports Local
@@ -30,11 +31,11 @@ class MainApp extends App<ApolloAppProps> {
     const { Component, apolloClient, pageProps, currentLanguage, isMobile } = this.props;
 
     // TODO: разобраться как isMobile прикрутить к теме
-    // const ssrMatchMedia = (query: any): any => ({
-    //   matches: mediaQuery.match(query, {
-    //     width: isMobile ? 0 : 1024,
-    //   }),
-    // });
+    const ssrMatchMedia = (query: any): any => ({
+      matches: mediaQuery.match(query, {
+        width: isMobile ? 0 : 1280,
+      }),
+    });
 
     // eslint-disable-next-line no-debugger
     // debugger;
@@ -47,7 +48,17 @@ class MainApp extends App<ApolloAppProps> {
         {/* MuiThemeProvider makes the theme available down the React
               tree thanks to React context. */}
         <CssBaseline />
-        <ThemeProvider theme={theme}>
+        <ThemeProvider
+          theme={{
+            ...theme,
+            props: {
+              ...theme.props,
+              MuiUseMediaQuery: {
+                ssrMatchMedia,
+              },
+            },
+          }}
+        >
           {/* TODO: разобраться с тем, что graphql запрос на сервере неавторизован, на клиенте нормально */}
           <Query query={CURRENT_USER} ssr={false}>
             {({ data }: { data: any }) => {

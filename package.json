@@ -91,6 +91,7 @@
     "connect-redis": "^4.0.3",
     "cookie-parser": "^1.4.4",
     "cross-env": "^6.0.3",
+    "css-mediaquery": "^0.1.2",
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^1.7.0",
