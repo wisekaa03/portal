@@ -17,7 +17,7 @@ import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileDTO } from '../profile/models/profile.dto';
-import { LoginService } from '../shared/interfaces';
+import { LoginService } from '../../lib/types';
 // #endregion
 
 interface LdapAuthenticate {

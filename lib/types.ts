@@ -7,6 +7,10 @@ import { DocumentContext } from 'next/document';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
 // #endregion
+// #region Imports Local
+import { ProfileDTO } from '../server/profile/models/profile.dto';
+import { UserDTO } from '../server/user/models/user.dto';
+// #endregion
 
 export interface NodeIdGetterObj extends IdGetterObj {
   nodeId?: string;
@@ -33,6 +37,21 @@ export interface ApolloDocumentProps extends DocumentContext {
   currentLanguage?: string;
 }
 
+export enum LoginService {
+  LOCAL = 'local',
+  LDAP = 'ldap',
+  GOOGLE = 'google',
+  TWITTER = 'twitter',
+  FACEBOOK = 'facebook',
+  GITHUB = 'github',
+}
+
+export enum Gender {
+  UNKNOWN = 0,
+  MAN = 1,
+  WOMAN = 2,
+}
+
 export interface Address {
   country: string;
   postalCode: string;
@@ -40,26 +59,9 @@ export interface Address {
   street: string;
 }
 
-export interface Profile {
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  birthday: string;
-  gender: string;
-  addressPersonal: Address;
-  thumbnailPhoto: string;
-  updatedAt: string;
-  createdAt: string;
-}
+export interface Profile extends ProfileDTO {}
 
-export interface User {
-  token: string;
-  id: string;
-  username: string;
-  updatedAt: string;
-  createdAt: string;
-  profile: Profile;
-}
+export interface User extends UserDTO {}
 
 export interface ProfileParams {
   token?: string;

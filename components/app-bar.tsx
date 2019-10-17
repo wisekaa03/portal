@@ -105,8 +105,8 @@ export default (props: AppBarProps): React.ReactElement => {
         <ProfileContext.Consumer>
           {(v) => {
             // Проверка на вшивость
-            if (!v || !v.user) {
-              window.location.href = '/auth/login';
+            if (!v || !v.user || !v.user.profile) {
+              /* TODO: Вставить что-нибудь чтобы перенаправляло */
               return null;
             }
 
@@ -152,7 +152,7 @@ export default (props: AppBarProps): React.ReactElement => {
                   <Avatar className={classes.avatar}>И</Avatar>
                   <Box className={classes.phoneBlock}>
                     <PhoneIcon />
-                    <Typography>+ 7 (999) 1234567</Typography>
+                    <Typography>{v.user.profile}</Typography>
                     <PhoneIphoneIcon />
                     <Typography>+ 7 (999) 7654321</Typography>
                     <PhoneInTalkIcon />

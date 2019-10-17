@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 // #region Imports Local
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileEntity } from './profile.entity';
-import { Gender, LoginService } from '../shared/interfaces';
+import { Gender, LoginService } from '../../lib/types';
 import { ProfileDTO } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';
 // #endregion

@@ -4,7 +4,7 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import Head from 'next/head';
-import { Query, ApolloProvider } from 'react-apollo';
+import { Query, ApolloProvider, QueryResult } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -16,6 +16,8 @@ import { CURRENT_USER } from '../lib/queries';
 import { ProfileContext, ApolloAppProps } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
+import { Loading } from '../components/loading';
+import { GQLError } from '../components/gql-error';
 // #endregion
 
 class MainApp extends App<ApolloAppProps> {
@@ -61,15 +63,24 @@ class MainApp extends App<ApolloAppProps> {
         >
           {/* TODO: разобраться с тем, что graphql запрос на сервере неавторизован, на клиенте нормально */}
           <Query query={CURRENT_USER} ssr={false}>
-            {({ data }: { data: any }) => {
-              const { me } = data;
-
+            {({ data, loading, error }: QueryResult<any>) => {
               // eslint-disable-next-line no-debugger
               debugger;
 
+              if (loading) {
+                return <Loading />;
+              }
+              if (error) {
+                return <GQLError error={error} />;
+              }
+
               return (
                 <ProfileContext.Provider
-                  value={{ user: { ...me }, language: currentLanguage, isMobile: Boolean(isMobile) }}
+                  value={{
+                    user: { ...(data && data.me) },
+                    language: currentLanguage,
+                    isMobile: Boolean(isMobile),
+                  }}
                 >
                   <Component {...pageProps} />
                 </ProfileContext.Provider>

@@ -5,7 +5,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 // #endregion
 // #region Imports Local
 import { ProfileResponseDTO } from './models/profile.dto';
-import { LoginService, Gender, Address } from '../shared/interfaces';
+import { LoginService, Gender, Address } from '../../lib/types';
 // #endregion
 
 @Entity('profile')
