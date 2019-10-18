@@ -1,1 +1,28 @@
-{}
+{
+  "settings-header": "Address book - settings",
+  "fields": {
+    "name": "Ф.И.О.",
+    "name_en": "Ф.И.О. (на английском)",
+    "login": "Логин",
+    "photo": "Аватар",
+    "company": "Компания",
+    "company_en": "Компания (на английском)",
+    "department": "Департамент",
+    "department_en": "Департамент (на английском)",
+    "division": "Отдел",
+    "division_en": "Отдел (на английском)",
+    "position": "Должность",
+    "position_en": "Должность (на английском)",
+    "supervisor": "Руководитель",
+    "room": "Комната",
+    "telephone": "Телефон",
+    "fax": "Факс",
+    "mobile_phone": "Мобильный",
+    "inside_phone": "Внутренний телефон",
+    "email": "E-mail",
+    "country": "Страна",
+    "region": "Область",
+    "city": "Город",
+    "address": "Адрес"
+  }
+}

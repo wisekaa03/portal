@@ -21,6 +21,9 @@ import {
 } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 // #endregion
+// #region Imports Local
+import { ProfileProps } from './types';
+// #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,10 +105,6 @@ const useStyles = makeStyles((theme: Theme) =>
     // listItem: { 'flexWrap': 'nowrap', '& > .MuiGrid-item:first-child': { marginRight: '10px' } },
   }),
 );
-
-interface ProfileProps {
-  handleClose(): void;
-}
 
 export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});

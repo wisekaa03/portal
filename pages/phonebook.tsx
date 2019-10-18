@@ -10,27 +10,24 @@ import {
   TableSortLabel,
   TableHead,
   TableRow,
-  Button,
   InputBase,
   IconButton,
   Modal,
   Avatar,
-  // Backdrop,
-  // Fade,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
-import { ProfileComponent } from '../components/profile';
-import { ProfileContext } from '../lib/types';
+import { I18nPage, useTranslation, includeDefaultNamespaces } from '../lib/i18n-client';
+import { Order, ColumnNames, Column, BookProps } from '../components/phonebook/types';
+import { ProfileComponent } from '../components/phonebook/profile';
+import { SettingsComponent } from '../components/phonebook/settings';
+// import { ProfileContext } from '../lib/types';
 import { appBarHeight } from '../components/app-bar';
-import { includeDefaultNamespaces } from '../lib/i18n-client';
+
 // import useDebounce from '../lib/debounce';
 // #endregion
-
-type Order = 'asc' | 'desc';
-type ColumnNames = 'photo' | 'name' | 'company' | 'subdivision' | 'position' | 'work_phone' | 'inside_phone' | 'email';
 
 const panelHeight = 48;
 
@@ -92,68 +89,68 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-interface Column {
-  id: ColumnNames;
-  label: string;
-  minWidth?: number;
-  align?: 'right';
-  format?: (value: number) => string;
-}
 
-const columns: Column[] = [
-  {
-    id: 'photo',
-    label: '',
-    minWidth: 100,
-  },
-  {
-    id: 'name',
-    label: 'Ф.И.О.',
-    minWidth: 100,
-  },
-  {
-    id: 'company',
-    label: 'Компания',
-    minWidth: 100,
-  },
-  {
-    id: 'subdivision',
-    label: 'Подразделение',
-    minWidth: 100,
-  },
-  {
-    id: 'position',
-    label: 'Должность',
-    minWidth: 100,
-  },
-  {
-    id: 'work_phone',
-    label: 'Рабочий телефон',
-    minWidth: 100,
-  },
-  {
-    id: 'inside_phone',
-    label: 'Внут. тел.',
-    minWidth: 100,
-  },
-  {
-    id: 'email',
-    label: 'Электронная почта',
-    minWidth: 100,
-  },
+// const defaultColumns: Column[] = [
+//   {
+//     id: 'photo',
+//     label: '',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'name',
+//     label: 'Ф.И.О.',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'company',
+//     label: 'Компания',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'division',
+//     label: 'Подразделение',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'position',
+//     label: 'Должность',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'telephone',
+//     label: 'Рабочий телефон',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'inside_phone',
+//     label: 'Внут. тел.',
+//     minWidth: 100,
+//     show: true,
+//   },
+//   {
+//     id: 'email',
+//     label: 'Электронная почта',
+//     minWidth: 100,
+//     show: true,
+//   },
+// ];
+
+const defaultColumns: ColumnNames[] = [
+  'photo',
+  'name',
+  'company',
+  'department',
+  'position',
+  'telephone',
+  'inside_phone',
+  'email',
 ];
-
-interface BookProps {
-  id: number;
-  photo: string;
-  name: string;
-  company: string;
-  subdivision: string;
-  position: string;
-  work_phone: string;
-  inside_phone: string;
-  email: string;
-}
 
 const createData = (): BookProps[] => {
   const arr = [];
@@ -163,28 +160,51 @@ const createData = (): BookProps[] => {
       id: i,
       photo: 'И',
       name: `Иванов Иван Иванович`,
+      name_en: 'Ivanov Ivan Ivanovich',
+      login: 'ivanov',
       company: `Компания ${i}`,
-      subdivision: `Подразделение ${i}`,
-      position: 'Должность',
-      work_phone: '+7 918 1111111',
+      company_en: `Company ${i}`,
+      department: 'Департамент',
+      department_en: 'Department',
+      division: `Подразделение ${i}`,
+      division_en: `Division ${i}`,
+      position: 'Слесарь',
+      position_en: 'Mechanic',
+      supervisor: 'Петров Петр Петрович',
+      room: '111',
+      telephone: '+7 918 1111111',
+      fax: '+7 918 2222222',
+      mobile_phone: '+7 918 3333333',
       inside_phone: `00${i < 10 ? 0 : ''}${i}`,
       email: 'webmaster@kngk-group.ru',
+      country: 'Россия',
+      region: 'Краснодарский край',
+      city: 'Краснодар',
+      address: 'Красная',
     });
   }
 
   return arr;
 };
 
+const sortData = (order: Order, orderBy: ColumnNames) => (a: BookProps, b: BookProps) => {
+  const asc: number = order === 'asc' ? 1 : -1;
+
+  return a[orderBy] > b[orderBy] ? asc * 1 : a[orderBy] < b[orderBy] ? asc * -1 : 0;
+};
+
 const PhoneBook = (): React.ReactElement => {
   const classes = useStyles({});
-  // const user = useContext(UserContext);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
   const [search, setSearch] = useState<string>('');
   const [bookData, setBookData] = useState<BookProps[]>([]);
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
+  const { t, i18n } = useTranslation();
 
-  const handleRequestSort = (_event: React.MouseEvent<unknown>, property: ColumnNames): void => {
+  const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -206,8 +226,16 @@ const PhoneBook = (): React.ReactElement => {
     setProfileOpen(false);
   };
 
-  // const profileOpen = Boolean(profileEl);
+  const handleSettingsOpen = (): void => {
+    setSettingsOpen(true);
+  };
+
+  const handleSettingsClose = (): void => {
+    setSettingsOpen(false);
+  };
+
   const profileId = profileOpen ? 'profile' : undefined;
+  const settingsId = settingsOpen ? 'settings' : undefined;
 
   const getRows = (a: BookProps): React.ReactNode => (
     <TableRow hover key={a.id} onClick={handleProfileOpen}>
@@ -216,9 +244,9 @@ const PhoneBook = (): React.ReactElement => {
       </TableCell>
       <TableCell>{a.name}</TableCell>
       <TableCell>{a.company}</TableCell>
-      <TableCell>{a.subdivision}</TableCell>
+      <TableCell>{a.division}</TableCell>
       <TableCell>{a.position}</TableCell>
-      <TableCell>{a.work_phone}</TableCell>
+      <TableCell>{a.telephone}</TableCell>
       <TableCell>{a.inside_phone}</TableCell>
       <TableCell>{a.email}</TableCell>
     </TableRow>
@@ -267,7 +295,7 @@ const PhoneBook = (): React.ReactElement => {
             {/* <Button variant="contained" className={classes.buttonExtended}>
               Расширенный поиск
               </Button> */}
-            <IconButton>
+            <IconButton onClick={handleSettingsOpen}>
               <SettingsIcon />
             </IconButton>
           </div>
@@ -278,45 +306,33 @@ const PhoneBook = (): React.ReactElement => {
                   <TableCell />
                   {columns.slice(1).map((column) => (
                     <TableCell
-                      key={column.id}
-                      align={column.align}
-                      sortDirection={orderBy === column.id ? order : false}
-                      style={{ minWidth: column.minWidth }}
+                      key={column}
+                      // align={column.align}
+                      sortDirection={orderBy === column ? order : false}
                     >
-                      <TableSortLabel
-                        active={orderBy === column.id}
-                        direction={order}
-                        onClick={createSortHandler(column.id)}
-                      >
-                        {column.label}
+                      <TableSortLabel active={orderBy === column} direction={order} onClick={createSortHandler(column)}>
+                        {t(`phonebook:fields.${column}`)}
                       </TableSortLabel>
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {bookData
-                  .sort((a, b) => {
-                    const asc = order === 'asc' ? 1 : -1;
-
-                    if (a[orderBy] > b[orderBy]) {
-                      return asc * 1;
-                    }
-
-                    if (a[orderBy] < b[orderBy]) {
-                      return asc * -1;
-                    }
-
-                    return 0;
-                  })
-                  .map((a) => getRows(a))}
-              </TableBody>
+              <TableBody>{bookData.sort(sortData(order, orderBy)).map((a) => getRows(a))}</TableBody>
             </Table>
           </div>
         </div>
       </Page>
       <Modal id={profileId} disableAutoFocus open={profileOpen} onClose={handleProfileClose} className={classes.modal}>
         <ProfileComponent handleClose={handleProfileClose} />
+      </Modal>
+      <Modal
+        id={settingsId}
+        disableAutoFocus
+        open={settingsOpen}
+        onClose={handleSettingsClose}
+        className={classes.modal}
+      >
+        <SettingsComponent columns={columns} changeColumn={setColumns} handleClose={handleSettingsClose} />
       </Modal>
     </>
   );

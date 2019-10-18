@@ -17,12 +17,12 @@ export class PhonebookController {
     // eslint-disable-next-line no-debugger
     // debugger;
 
-    if (!req.user) {
-      if (req.session) {
-        req.session.lastPage = '/phonebook';
-      }
-      return res.redirect('/auth/login');
-    }
+    // if (!req.user) {
+    //   if (req.session) {
+    //     req.session.lastPage = '/phonebook';
+    //   }
+    //   return res.redirect('/auth/login');
+    // }
     return this.nextService.render(req, res, '/phonebook');
   }
 }
