@@ -4,11 +4,12 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import Head from 'next/head';
+import Router from 'next/router';
 import { Query, ApolloProvider, QueryResult } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
-import 'typeface-roboto'; // TODO: error in css-loader/locals
+import 'typeface-roboto';
 // #endregion
 // #region Imports Local
 import theme from '../lib/theme';
@@ -71,17 +72,25 @@ class MainApp extends App<ApolloAppProps> {
                 return <Loading />;
               }
 
-              return (
-                <ProfileContext.Provider
-                  value={{
-                    user: { ...(data && data.me) },
-                    language: currentLanguage,
-                    isMobile: Boolean(isMobile),
-                  }}
-                >
-                  <Component {...pageProps} />
-                </ProfileContext.Provider>
-              );
+              if (data && data.me) {
+                if (Router.pathname === '/auth/login') {
+                  Router.replace('/');
+                } else {
+                  return (
+                    <ProfileContext.Provider
+                      value={{
+                        user: { ...(data && data.me) },
+                        language: currentLanguage,
+                        isMobile: Boolean(isMobile),
+                      }}
+                    >
+                      <Component {...pageProps} />
+                    </ProfileContext.Provider>
+                  );
+                }
+              }
+
+              return <Component {...pageProps} />;
             }}
           </Query>
         </ThemeProvider>

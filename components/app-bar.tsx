@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React, { useState } from 'react';
+import Router from 'next/router';
 import { Base64 } from 'js-base64';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Paper, Box, /* Button, */ IconButton, Avatar, Typography } from '@material-ui/core';
@@ -108,6 +109,7 @@ export default (props: AppBarProps): React.ReactElement => {
             // Проверка на вшивость
             if (!v || !v.user || !v.user.profile) {
               /* TODO: Вставить что-нибудь чтобы перенаправляло */
+              Router.push('/auth/login');
               return null;
             }
 
@@ -131,7 +133,7 @@ export default (props: AppBarProps): React.ReactElement => {
                     className={clsx(classes.avatar, classes.pointer)}
                     src={
                       v.user.profile.thumbnailPhoto
-                        ? `data:image/gif;base64,${v.user.profile.thumbnailPhoto.toString()}`
+                        ? `data:image/png;base64,${v.user.profile.thumbnailPhoto}`
                         : '/public/images/jpg/unknown.jpg'
                     }
                   />
