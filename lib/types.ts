@@ -8,8 +8,12 @@ import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
 // #endregion
 // #region Imports Local
-import { ProfileDTO } from '../server/profile/models/profile.dto';
-import { UserDTO } from '../server/user/models/user.dto';
+// eslint-disable-next-line import/no-cycle
+import { User } from '../server/user/models/user.dto';
+// eslint-disable-next-line import/no-cycle
+export { User } from '../server/user/models/user.dto';
+// eslint-disable-next-line import/no-cycle
+export { Profile } from '../server/profile/models/profile.dto';
 // #endregion
 
 export interface NodeIdGetterObj extends IdGetterObj {
@@ -58,10 +62,6 @@ export interface Address {
   region: string;
   street: string;
 }
-
-export interface Profile extends ProfileDTO {}
-
-export interface User extends UserDTO {}
 
 export interface ProfileParams {
   token?: string;
