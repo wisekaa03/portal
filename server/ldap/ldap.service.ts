@@ -148,9 +148,6 @@ export class LdapService extends EventEmitter {
   private handleError(err: Ldap.Error): void {
     if (`${err.code}` !== 'ECONNRESET') {
       this.logger.error(`emitted error: [${err.code}]`, err.toString(), 'LDAP');
-    } else {
-      process.env.NODE_ENV !== 'production' &&
-        this.logger.debug(`emitted error: [${err.code}] ${err.toString()}`, 'LDAP');
     }
     this.adminBound = false;
   }
