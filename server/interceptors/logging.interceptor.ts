@@ -22,9 +22,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
     const req = context.switchToHttp().getRequest();
 
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     if (req) {
       const { method, url } = req;
 
