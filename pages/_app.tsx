@@ -73,24 +73,20 @@ class MainApp extends App<ApolloAppProps> {
               }
 
               if (data && data.me) {
-                if (Router.pathname === '/auth/login') {
-                  Router.replace('/');
-                } else {
-                  return (
-                    <ProfileContext.Provider
-                      value={{
-                        user: { ...(data && data.me) },
-                        language: currentLanguage,
-                        isMobile: Boolean(isMobile),
-                      }}
-                    >
-                      <Component {...pageProps} />
-                    </ProfileContext.Provider>
-                  );
-                }
+                return (
+                  <ProfileContext.Provider
+                    value={{
+                      user: { ...(data && data.me) },
+                      language: currentLanguage,
+                      isMobile: Boolean(isMobile),
+                    }}
+                  >
+                    <Component {...pageProps} />
+                  </ProfileContext.Provider>
+                );
               }
 
-              return <Component {...pageProps} />;
+              return <ProfileContext.Consumer>{() => <Component {...pageProps} />}</ProfileContext.Consumer>;
             }}
           </Query>
         </ThemeProvider>

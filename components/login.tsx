@@ -115,7 +115,7 @@ interface State {
 
 export const LoginComponent = (props: LoginProps): React.ReactElement => {
   const { error, loading, login } = props;
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('login');
 
   const classes: any = useStyles({});
 
@@ -206,7 +206,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                     disabled={loading}
                   />
                 }
-                label={t('login:remember')}
+                label={t('remember')}
               />
               {loading && <Loading />}
               {error && <GQLError error={error} />}
@@ -219,7 +219,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
                   size="large"
                   disabled={loading}
                 >
-                  {t('login:signIn')}
+                  {t('signIn')}
                 </Button>
               </FormControl>
             </CardContent>
@@ -228,10 +228,4 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
       </div>
     </div>
   );
-};
-
-LoginComponent.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['login']),
-  };
 };

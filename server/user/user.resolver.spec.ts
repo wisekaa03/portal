@@ -26,6 +26,7 @@ import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 // #endregion
 
+jest.mock('../logger/logger.service');
 jest.mock('../ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 

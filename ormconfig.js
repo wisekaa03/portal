@@ -7,9 +7,13 @@ const path = require('path');
 const dev = process.env.NODE_ENV !== 'production';
 const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
 const Config = require(`./${dev ? 'server/' : '.nest/server/'}config/config.service`);
+const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.service`);
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));
+const logger = new Logger.LogService();
+
+debugger;
 
 module.exports = {
   name: 'default',
@@ -21,6 +25,7 @@ module.exports = {
   database: configService.get('DATABASE_DATABASE'),
   schema: configService.get('DATABASE_SCHEMA'),
   uuidExtension: 'pgcrypto',
+  logger,
   synchronize: configService.get('DATABASE_SYNCHRONIZE'),
   dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
   logging: configService.get('DATABASE_LOGGING'),

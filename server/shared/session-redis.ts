@@ -12,18 +12,7 @@ import { LogService } from '../logger/logger.service';
 // #endregion
 
 export const sessionRedis = (configService: ConfigService, logService: LogService): any => {
-  logService.debug(
-    `install cache: ` +
-      `host="${configService.get('SESSION_REDIS_HOST')}" ` +
-      `port="${configService.get('SESSION_REDIS_PORT')}" ` +
-      `db="${configService.get('SESSION_REDIS_DB')}" ` +
-      `cookie ttl="${configService.get('SESSION_COOKIE_TTL')}" ` +
-      `secret="${configService.get('SESSION_SECRET') ? '{MASKED}' : ''}" ` +
-      `password="${configService.get('SESSION_PASSWORD') ? '{MASKED}' : ''}"`,
-    'Session',
-  );
-
-  return session({
+  const sess = session({
     secret: configService.get('SESSION_SECRET'),
     store: new (redisSessionStore(session))({
       client: redis.createClient({
@@ -47,4 +36,21 @@ export const sessionRedis = (configService: ConfigService, logService: LogServic
       maxAge: parseInt(configService.get('SESSION_COOKIE_TTL'), 10), // msec, 1 hour
     },
   });
+
+  if (sess) {
+    logService.debug(
+      `install cache: ` +
+        `host="${configService.get('SESSION_REDIS_HOST')}" ` +
+        `port="${configService.get('SESSION_REDIS_PORT')}" ` +
+        `db="${configService.get('SESSION_REDIS_DB')}" ` +
+        `cookie ttl="${configService.get('SESSION_COOKIE_TTL')}" ` +
+        `secret="${configService.get('SESSION_SECRET') ? '{MASKED}' : ''}" ` +
+        `password="${configService.get('SESSION_PASSWORD') ? '{MASKED}' : ''}"`,
+      'Session',
+    );
+
+    return sess;
+  }
+
+  return null;
 };

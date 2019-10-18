@@ -20,6 +20,8 @@ import { ConfigServiceMock } from '../../../__mocks__/config.service.mock';
 import { UserServiceMock } from '../../../__mocks__/user.service.mock';
 // #endregion
 
+jest.mock('../../logger/logger.service');
+
 describe('Auth Controller', () => {
   let controller: AuthController;
 

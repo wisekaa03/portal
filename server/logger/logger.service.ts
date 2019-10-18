@@ -81,4 +81,18 @@ export class LogService extends Logger /* implements LoggerService  */ {
   write(message: string): void {
     this.verbose(message.replace(/\n/, ''), 'Request');
   }
+
+  /**
+   * From TypeORM: logQuery
+   */
+  logQuery(message: any): void {
+    this.verbose(message, 'Database: Query');
+  }
+
+  /**
+   * From TypeORM: Schema build
+   */
+  logSchemaBuild(message: any): void {
+    this.verbose(message, 'Database: Schema build');
+  }
 }

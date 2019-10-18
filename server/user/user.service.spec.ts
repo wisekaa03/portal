@@ -31,6 +31,7 @@ import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { I18nServiceMock } from '../../__mocks__/i18n.service.mock';
 // #endregion
 
+jest.mock('../logger/logger.service');
 jest.mock('../guards/gqlauth.guard');
 
 describe('UserService', () => {

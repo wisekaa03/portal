@@ -115,20 +115,20 @@ export class ConfigService {
       DATABASE_SCHEMA: Joi.string()
         .default('public')
         .empty(),
-      DATABASE_SYNCHRONIZE: Joi.string()
-        .default('true')
+      DATABASE_SYNCHRONIZE: Joi.boolean()
+        .default(true)
         .empty(),
-      DATABASE_DROP_SCHEMA: Joi.string()
-        .default('true')
+      DATABASE_DROP_SCHEMA: Joi.boolean()
+        .default(true)
         .empty(),
-      DATABASE_LOGGING: Joi.string()
-        .default('true')
+      DATABASE_LOGGING: Joi.boolean()
+        .default(true)
         .empty(),
-      DATABASE_MIGRATIONS_RUN: Joi.string()
-        .default('false')
+      DATABASE_MIGRATIONS_RUN: Joi.boolean()
+        .default(false)
         .empty(),
-      DATABASE_CACHE: Joi.string()
-        .default('true')
+      DATABASE_CACHE: Joi.boolean()
+        .default(true)
         .empty(),
 
       HTTP_REDIS_HOST: Joi.string()

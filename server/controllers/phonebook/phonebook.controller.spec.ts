@@ -6,10 +6,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { PhonebookController } from './phonebook.controller';
 import { NextService } from '../../next/next.service';
-// import { LogService } from '../../logger/logger.service';
-// import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
+import { LogService } from '../../logger/logger.service';
+import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 // #endregion
+
+jest.mock('../../logger/logger.service');
 
 describe('PhonebookController', () => {
   let controller: PhonebookController;
@@ -19,7 +21,7 @@ describe('PhonebookController', () => {
       controllers: [PhonebookController],
       providers: [
         { provide: NextService, useClass: NextServiceMock },
-        // { provide: LogService, useClass: LogServiceMock },
+        { provide: LogService, useClass: LogServiceMock },
       ],
     }).compile();
 

@@ -23,6 +23,7 @@ import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } 
 // #endregion
 // #region Imports Local
 import { ProfileProps } from './types';
+import { I18nPage, includeDefaultNamespaces, useTranslation } from '../../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

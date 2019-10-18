@@ -23,7 +23,7 @@ import {
 // #endregion
 // #region Imports Local
 import { ColumnNames, SettingsProps } from './types';
-import { I18nPage, useTranslation } from '../../lib/i18n-client';
+import { I18nPage, useTranslation, includeDefaultNamespaces } from '../../lib/i18n-client';
 import HeaderBg from '../../public/images/jpeg/header_bg.jpg';
 // #endregion
 
@@ -104,7 +104,7 @@ export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: R
   const classes = useStyles({});
   const { columns, changeColumn, handleClose } = props;
   const [current, setCurrent] = useState<ColumnNames[]>(columns);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('phonebook');
 
   const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.checked) {

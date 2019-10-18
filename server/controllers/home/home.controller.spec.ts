@@ -13,6 +13,8 @@ import { NextModule } from '../../next/next.module';
 import { LoggerModule } from '../../logger/logger.module';
 // #endregion
 
+jest.mock('../../logger/logger.service');
+
 describe('HomeController', () => {
   let controller: HomeController;
 

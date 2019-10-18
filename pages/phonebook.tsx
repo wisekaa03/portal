@@ -202,7 +202,7 @@ const PhoneBook = (): React.ReactElement => {
   const [profileOpen, setProfileOpen] = useState<BookProps | null>(null);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('phonebook');
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
@@ -317,7 +317,7 @@ const PhoneBook = (): React.ReactElement => {
                           direction={order}
                           onClick={createSortHandler(column)}
                         >
-                          {t(`phonebook:fields.${column}`)}
+                          {t(`fields.${column}`)}
                         </TableSortLabel>
                       </TableCell>
                     ))}
@@ -348,12 +348,6 @@ const PhoneBook = (): React.ReactElement => {
       </Modal>
     </>
   );
-};
-
-PhoneBook.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['phonebook']),
-  };
 };
 
 export default PhoneBook;

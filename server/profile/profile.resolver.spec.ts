@@ -19,6 +19,7 @@ import { CookieSerializer } from '../auth/cookie.serializer';
 import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
 // #endregion
 
+jest.mock('../logger/logger.service');
 jest.mock('./profile.service');
 jest.mock('../ldap/ldap.service');
 
@@ -27,7 +28,7 @@ describe('ProfileResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ProfileModule, TypeOrmModule.forRoot(), TypeOrmModule.forFeature([ProfileEntity])],
+      imports: [ProfileModule, TypeOrmModule.forRoot({}), TypeOrmModule.forFeature([ProfileEntity])],
       providers: [ProfileService, ProfileResolver],
     })
       .overrideProvider(LogService)
