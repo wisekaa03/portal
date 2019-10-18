@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
 import { JwtPayload } from './models/jwt-payload.interface';
-import { UserResponseDTO } from '../user/models/user.dto';
+import { UserResponse } from '../user/models/user.dto';
 // eslint-disable-next-line import/no-cycle
 import { UserService } from '../user/user.service';
 // #endregion
@@ -22,7 +22,7 @@ export class AuthService {
   public token = (payload: JwtPayload): string => this.jwtService.sign(payload);
 
   // TODO: ненужно это... но пока оставим
-  public validate = async (payload: JwtPayload): Promise<UserResponseDTO | null> => {
+  public validate = async (payload: JwtPayload): Promise<UserResponse | null> => {
     // eslint-disable-next-line no-debugger
     debugger;
 

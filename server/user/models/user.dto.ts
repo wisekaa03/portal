@@ -2,7 +2,7 @@
 /* eslint max-classes-per-file:0 */
 
 // #region Imports NPM
-import { IsNotEmpty } from 'class-validator';
+// import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
@@ -35,10 +35,10 @@ export class UserResponse extends User {
 
 // #region User login
 export class UserLogin {
-  @IsNotEmpty()
+  // @IsNotEmpty()
   username: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   password: string;
 }
 // #endregion

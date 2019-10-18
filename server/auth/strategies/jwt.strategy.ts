@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '../../config/config.service';
 import { JwtPayload } from '../models/jwt-payload.interface';
 import { AuthService } from '../auth.service';
-import { UserResponseDTO } from '../../user/models/user.dto';
+import { UserResponse } from '../../user/models/user.dto';
 // #endregion
 
 @Injectable()
@@ -20,5 +20,5 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } as StrategyOptions);
   }
 
-  validate = async (payload: JwtPayload): Promise<UserResponseDTO | null> => this.authService.validate(payload);
+  validate = async (payload: JwtPayload): Promise<UserResponse | null> => this.authService.validate(payload);
 }

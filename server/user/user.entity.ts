@@ -14,7 +14,7 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { UserResponseDTO } from './models/user.dto';
+import { UserResponse } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
 import { LoginService } from '../../lib/types';
 // #endregion
@@ -59,5 +59,5 @@ export class UserEntity {
   comparePassword = async (attempt: string | undefined): Promise<boolean> =>
     bcrypt.compare(attempt || '', this.password);
 
-  toResponseObject = (token: string): UserResponseDTO => ({ token, ...this });
+  toResponseObject = (token: string): UserResponse => ({ token, ...this });
 }
