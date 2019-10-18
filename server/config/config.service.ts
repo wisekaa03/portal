@@ -184,7 +184,7 @@ export class ConfigService {
       SESSION_REDIS_PASSWORD: Joi.string()
         .allow('')
         .empty(),
-      SESSION_COOKIE_TTL: Joi.string()
+      SESSION_COOKIE_TTL: Joi.number()
         .default(24)
         .empty(),
 

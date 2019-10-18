@@ -136,36 +136,96 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: DATABASE_CACHE
-            - name: REDIS_HOST
+            - name: LDAP_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: REDIS_HOST
-            - name: REDIS_PORT
+                  key: LDAP_REDIS_HOST
+            - name: LDAP_REDIS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: REDIS_PORT
-            - name: REDIS_DB
+                  key: LDAP_REDIS_PORT
+            - name: LDAP_REDIS_DB
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: REDIS_DB
-            - name: REDIS_PASSWORD
+                  key: LDAP_REDIS_DB
+            - name: LDAP_REDIS_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: REDIS_PASSWORD
-            - name: REDIS_PREFIX
+                  key: LDAP_REDIS_PASSWORD
+            - name: LDAP_REDIS_TTL
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: REDIS_PREFIX
+                  key: LDAP_REDIS_TTL
             - name: SESSION_SECRET
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
                   key: SESSION_SECRET
+            - name: SESSION_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_HOST
+            - name: SESSION_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_PORT
+            - name: SESSION_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_DB
+            - name: SESSION_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_PASSWORD
+            - name: SESSION_COOKIE_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_COOKIE_TTL
+            - name: HTTP_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_HOST
+            - name: HTTP_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_PORT
+            - name: HTTP_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_DB
+            - name: HTTP_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_PASSWORD
+            - name: HTTP_REDIS_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_TTL
+            - name: HTTP_REDIS_MAX_OBJECTS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_MAX_OBJECTS
+            - name: HTTP_REDIS_PREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_PREFIX
             - name: LDAP_URL
               valueFrom:
                 configMapKeyRef:

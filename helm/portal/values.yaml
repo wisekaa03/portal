@@ -43,9 +43,10 @@ LDAP_REDIS_TTL: 51000
 
 # Session Redis
 SESSION_SECRET: supersecret
-SESSION_REDIS_HOST: postgresql.default.svc.cluster.local
+SESSION_REDIS_HOST: redis-ha.default.svc.cluster.local
 SESSION_REDIS_PORT: 6379
 SESSION_REDIS_DB: 1
+SESSION_REDIS_PASSWORD: ""
 SESSION_COOKIE_TTL: 51000
 
 # HTTP Redis
