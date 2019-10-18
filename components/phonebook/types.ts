@@ -64,6 +64,7 @@ export interface BookProps {
 }
 
 export interface ProfileProps {
+  profile: BookProps | null;
   handleClose(): void;
 }
 

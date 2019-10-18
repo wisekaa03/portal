@@ -199,7 +199,7 @@ const PhoneBook = (): React.ReactElement => {
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
   const [search, setSearch] = useState<string>('');
   const [bookData, setBookData] = useState<BookProps[]>([]);
-  const [profileOpen, setProfileOpen] = useState<boolean>(false);
+  const [profileOpen, setProfileOpen] = useState<BookProps | null>(null);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
   const { t, i18n } = useTranslation();
@@ -218,12 +218,12 @@ const PhoneBook = (): React.ReactElement => {
     setSearch(event.target.value);
   };
 
-  const handleProfileOpen = (): void => {
-    setProfileOpen(true);
+  const handleProfileOpen = (props: BookProps) => (): void => {
+    setProfileOpen(props);
   };
 
   const handleProfileClose = (): void => {
-    setProfileOpen(false);
+    setProfileOpen(null);
   };
 
   const handleSettingsOpen = (): void => {
@@ -237,18 +237,18 @@ const PhoneBook = (): React.ReactElement => {
   const profileId = profileOpen ? 'profile' : undefined;
   const settingsId = settingsOpen ? 'settings' : undefined;
 
-  const getRows = (a: BookProps): React.ReactNode => (
-    <TableRow hover key={a.id} onClick={handleProfileOpen}>
-      <TableCell>
-        <Avatar>{a.photo}</Avatar>
-      </TableCell>
-      <TableCell>{a.name}</TableCell>
-      <TableCell>{a.company}</TableCell>
-      <TableCell>{a.division}</TableCell>
-      <TableCell>{a.position}</TableCell>
-      <TableCell>{a.telephone}</TableCell>
-      <TableCell>{a.inside_phone}</TableCell>
-      <TableCell>{a.email}</TableCell>
+  const getRows = (a: BookProps, c: ColumnNames[]): React.ReactNode => (
+    <TableRow hover key={a.id} onClick={handleProfileOpen(a)}>
+      {c.includes('photo') ? (
+        <TableCell>
+          <Avatar>{a.photo}</Avatar>
+        </TableCell>
+      ) : null}
+      {c
+        .filter((col) => col !== 'photo')
+        .map((col) => (
+          <TableCell key={col}>{a[col]}</TableCell>
+        ))}
     </TableRow>
   );
 
@@ -303,27 +303,39 @@ const PhoneBook = (): React.ReactElement => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell />
-                  {columns.slice(1).map((column) => (
-                    <TableCell
-                      key={column}
-                      // align={column.align}
-                      sortDirection={orderBy === column ? order : false}
-                    >
-                      <TableSortLabel active={orderBy === column} direction={order} onClick={createSortHandler(column)}>
-                        {t(`phonebook:fields.${column}`)}
-                      </TableSortLabel>
-                    </TableCell>
-                  ))}
+                  {columns.includes('photo') ? <TableCell /> : null}
+                  {columns
+                    .filter((c) => c !== 'photo')
+                    .map((column) => (
+                      <TableCell
+                        key={column}
+                        // align={column.align}
+                        sortDirection={orderBy === column ? order : false}
+                      >
+                        <TableSortLabel
+                          active={orderBy === column}
+                          direction={order}
+                          onClick={createSortHandler(column)}
+                        >
+                          {t(`phonebook:fields.${column}`)}
+                        </TableSortLabel>
+                      </TableCell>
+                    ))}
                 </TableRow>
               </TableHead>
-              <TableBody>{bookData.sort(sortData(order, orderBy)).map((a) => getRows(a))}</TableBody>
+              <TableBody>{bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns))}</TableBody>
             </Table>
           </div>
         </div>
       </Page>
-      <Modal id={profileId} disableAutoFocus open={profileOpen} onClose={handleProfileClose} className={classes.modal}>
-        <ProfileComponent handleClose={handleProfileClose} />
+      <Modal
+        id={profileId}
+        disableAutoFocus
+        open={Boolean(profileOpen)}
+        onClose={handleProfileClose}
+        className={classes.modal}
+      >
+        <ProfileComponent profile={profileOpen} handleClose={handleProfileClose} />
       </Modal>
       <Modal
         id={settingsId}

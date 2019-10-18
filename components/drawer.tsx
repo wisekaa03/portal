@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 // #region Imports Local
 import { ProfileContext } from '../lib/types';
 import { appBarHeight } from './app-bar';
+import DrawerBg from '../public/images/jpeg/drawer_bg.jpg';
 import Icon from './icon';
 import ItIcon from '../public/images/svg/it-icon.svg';
 // #endregion
@@ -35,11 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     drawer: {
-      // [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       flexShrink: 0,
       whiteSpace: 'nowrap',
-      // },
+    },
+    paper: {
+      background: `url(${DrawerBg})`,
     },
     drawerOpen: {
       width: drawerWidth,
@@ -138,7 +140,7 @@ export default (props: DrawerProps): React.ReactElement => {
             [classes.drawerClose]: !open,
           })}
           classes={{
-            paper: clsx({
+            paper: clsx(classes.paper, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
             }),
@@ -156,7 +158,7 @@ export default (props: DrawerProps): React.ReactElement => {
             [classes.drawerClose]: !open,
           })}
           classes={{
-            paper: clsx({
+            paper: clsx(classes.paper, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
             }),
