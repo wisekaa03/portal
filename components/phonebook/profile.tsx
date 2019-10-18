@@ -108,9 +108,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
-  const { handleClose } = props;
+  const { profile, handleClose } = props;
 
-  const avatar = 'https://pickaface.net/gallery/avatar/unr_example_170227_1250_yq2lr.png';
+  if (!profile) return null;
+
+  const avatar = profile.photo ? 'photo' : undefined;
 
   return (
     <Card ref={ref} className={classes.root}>
@@ -126,26 +128,26 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
               </IconButton>
             </div>
             <div className={classes.center}>
-              <Avatar alt="Avatar" src={avatar} className={classes.avatar} />
+              <Avatar alt="Avatar" src={avatar} className={classes.avatar}>
+                {profile.name}
+              </Avatar>
             </div>
             <div className={classes.firstName}>
-              <h2>Иванова</h2>
-              <h2>Ивана</h2>
-              <h2>Ивановна</h2>
+              <h2>{profile.name}</h2>
             </div>
             <div className={classes.center}>
-              <span>ivanova.ii</span>
+              <span>{profile.name_en}</span>
             </div>
             <div className={classes.center}>
               <PhoneAndroidRounded />
-              <span>+7 (999) 123-45-67</span>
+              <span>{profile.telephone}</span>
             </div>
             <div className={classes.center}>
               <PhoneRounded />
-              <span>1234</span>
+              <span>{profile.inside_phone}</span>
             </div>
             <div className={classes.center}>
-              <span>mail-info@main-domain.com</span>
+              <span>{profile.email}</span>
             </div>
           </div>
           <div className={clsx(classes.grid, classes.column)}>
