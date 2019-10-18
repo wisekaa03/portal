@@ -21,12 +21,31 @@ data:
   DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
   DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING | default "true" | quote }}
   DATABASE_CACHE: {{ .Values.DATABASE_CACHE | default "true" | quote }}
-  REDIS_HOST: {{ .Values.REDIS_HOST | default "localhost" | quote }}
-  REDIS_PORT: {{ .Values.REDIS_PORT | default "6379" | quote }}
-  REDIS_DB: {{ .Values.REDIS_DB | default "0" | quote }}
-  REDIS_PASSWORD: {{ .Values.REDIS_PASSWORD | default "" | quote }}
-  REDIS_PREFIX: {{ .Values.REDIS_PREFIX | default "" | quote }}
+
+  # LDAP Redis
+  LDAP_REDIS_HOST: {{ .Values.LDAP_REDIS_HOST | default "localhost" | quote }}
+  LDAP_REDIS_PORT: {{ .Values.LDAP_REDIS_PORT | default "6379" | quote }}
+  LDAP_REDIS_DB: {{ .Values.LDAP_REDIS_DB | default "0" | quote }}
+  LDAP_REDIS_PASSWORD: {{ .Values.LDAP_REDIS_PASSWORD | default "" | quote }}
+  LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
+
+  # Session Redis
   SESSION_SECRET: {{ .Values.SESSION_SECRET | default "sessionsecret" | quote }}
+  SESSION_REDIS_HOST: {{ .Values.SESSION_REDIS_HOST | default "localhost" | quote }}
+  SESSION_REDIS_PORT: {{ .Values.SESSION_REDIS_PORT | default "6379" | quote }}
+  SESSION_REDIS_DB: {{ .Values.SESSION_REDIS_DB | default "1" | quote }}
+  SESSION_REDIS_PASSWORD: {{ .Values.SESSION_REDIS_PASSWORD | default "" | quote }}
+  SESSION_COOKIE_TTL: {{ .Values.SESSION_COOKIE_TTL | default "2400" | quote }}
+
+  # HTTP Redis
+  HTTP_REDIS_HOST: {{ .Values.HTTP_REDIS_HOST | default "localhost" | quote }}
+  HTTP_REDIS_PORT: {{ .Values.HTTP_REDIS_PORT | default "6379" | quote }}
+  HTTP_REDIS_DB: {{ .Values.HTTP_REDIS_DB | default "2" | quote }}
+  HTTP_REDIS_PASSWORD: {{ .Values.HTTP_REDIS_PASSWORD | default "" | quote }}
+  HTTP_REDIS_TTL: {{ .Values.HTTP_REDIS_TTL | default "60" | quote }}
+  HTTP_REDIS_MAX_OBJECTS: {{ .Values.HTTP_REDIS_MAX_OBJECTS | default "10000" | quote }}
+  HTTP_REDIS_PREFIX: {{ .Values.REDIS_PREFIX | default "" | quote }}
+
   LDAP_URL: {{ .Values.LDAP_URL | default "ldap://activedirectory:389" | quote }}
   LDAP_BIND_DN: {{ .Values.LDAP_BIND_DN | default "CN=user,DC=example,DC=local" | quote }}
   LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | default "supersecret" | quote }}
