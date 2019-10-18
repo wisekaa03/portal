@@ -4,7 +4,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeepPartial } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { ProfileResponseDTO } from './models/profile.dto';
+import { ProfileResponse } from './models/profile.dto';
 import { LoginService, Gender, Address } from '../../lib/types';
 // #endregion
 
@@ -20,7 +20,7 @@ export class ProfileEntity {
   updatedAt: Date;
 
   @Column({
-    type: 'char',
+    type: 'varchar',
     length: 10,
     nullable: false,
   })
@@ -124,5 +124,5 @@ export class ProfileEntity {
   })
   thumbnailPhoto: Buffer;
 
-  toResponseObject = (): ProfileResponseDTO => ({ ...this });
+  toResponseObject = (): ProfileResponse => ({ ...this });
 }

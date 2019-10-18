@@ -15,7 +15,7 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { UserService } from './user.service';
-import { UserResponseDTO } from './models/user.dto';
+import { UserResponse } from './models/user.dto';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 // #endregion
 
@@ -31,11 +31,11 @@ export class UserResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async me(@Context('req') req: Request): Promise<UserResponseDTO | null> {
+  async me(@Context('req') req: Request): Promise<UserResponse | null> {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
-    return req.user as UserResponseDTO;
+    return req.user as UserResponse;
   }
 
   /**
@@ -50,12 +50,12 @@ export class UserResolver {
     @Args('username') username: string,
     @Args('password') password: string,
     @Context('req') req: Request,
-  ): Promise<UserResponseDTO | null> {
+  ): Promise<UserResponse | null> {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     if (req.user) {
-      return req.user as UserResponseDTO;
+      return req.user as UserResponse;
     }
 
     return this.userService.login({ username, password });
@@ -69,7 +69,7 @@ export class UserResolver {
   @Mutation()
   async logout(_: any, __: any): Promise<boolean> {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     return this.userService.logout();
   }

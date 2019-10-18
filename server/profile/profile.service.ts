@@ -4,12 +4,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileEntity } from './profile.entity';
 import { Gender, LoginService } from '../../lib/types';
-import { ProfileDTO } from './models/profile.dto';
+import { Profile } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';
 // #endregion
 
@@ -21,7 +22,17 @@ export class ProfileService {
     private readonly logService: LogService,
   ) {}
 
-  async create(ldapUser: LdapResponeUser): Promise<ProfileDTO | undefined> {
+  async profiles(_req: Request): Promise<Profile[] | null> {
+    // TODO: группы к которым имеет доступ текущий пользователь, согласно req
+
+    const profiles = await this.profileRepository.find({
+      cache: true,
+    });
+
+    return profiles;
+  }
+
+  async create(ldapUser: LdapResponeUser): Promise<Profile | undefined> {
     let comment;
     let p;
 

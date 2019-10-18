@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { UserEntity } from './user.entity';
-import { UserLoginDTO, UserResponseDTO, UserRegisterDTO, UserDTO } from './models/user.dto';
+import { UserLogin, UserResponse, UserRegister, User } from './models/user.dto';
 import { ConfigService } from '../config/config.service';
 // eslint-disable-next-line import/no-cycle
 import { AuthService } from '../auth/auth.service';
@@ -16,14 +16,14 @@ import { LdapService } from '../ldap/ldap.service';
 import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
-import { ProfileDTO } from '../profile/models/profile.dto';
+import { Profile } from '../profile/models/profile.dto';
 import { LoginService } from '../../lib/types';
 // #endregion
 
 interface LdapAuthenticate {
   user: UserEntity | void;
   ldapUser?: LdapResponeUser;
-  profile: ProfileDTO | void;
+  profile: Profile | void;
   errorCode: any;
 }
 
@@ -46,10 +46,11 @@ export class UserService {
    *
    * @param id - User ID
    */
-  async read(id: string): Promise<UserResponseDTO | null> {
+  async read(id: string): Promise<UserResponse | null> {
     const user = (await this.userRepository.findOne({
       where: { id },
       relations: ['profile'],
+      cache: true,
     })) as UserEntity;
 
     if (!user) {
@@ -85,7 +86,7 @@ export class UserService {
           let userLogin;
           const profile = await this.profileService.create(ldapUser);
 
-          const data: UserDTO = {
+          const data: User = {
             username: ldapUser.sAMAccountName,
             password: `$${LoginService.LDAP}`,
             // groups,
@@ -130,10 +131,10 @@ export class UserService {
   /**
    * Login a user
    *
-   * @param {UserLoginDTO} data User login data transfer object
-   * @returns {UserResponseDTO} User response DTO
+   * @param {UserLogin} data User login data transfer object
+   * @returns {UserResponse} User response DTO
    */
-  async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO> {
+  async login({ username, password }: UserLogin): Promise<UserResponse> {
     this.logService.debug(`UserService: user login: username = "${username}"`, 'UserService');
 
     const user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
@@ -151,7 +152,7 @@ export class UserService {
   /**
    * Logout a user
    *
-   * @returns {UserResponseDTO} User response DTO
+   * @returns {UserResponse} User response DTO
    */
   async logout(): Promise<boolean> {
     this.logService.debug(`UserService: user logout`, 'UserService');
@@ -165,10 +166,10 @@ export class UserService {
   /**
    * Register a user
    *
-   * @param {UserRegisterDTO} data User register data transfer object
-   * @returns {UserResponseDTO} User response DTO
+   * @param {UserRegister} data User register data transfer object
+   * @returns {UserResponse} User response DTO
    */
-  async register(data: UserRegisterDTO): Promise<UserResponseDTO | null> {
+  async register(data: UserRegister): Promise<UserResponse | null> {
     this.logService.debug(`UserService: register new user: ${JSON.stringify(data)}`, 'UserService');
 
     // #region Check if a user exists

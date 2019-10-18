@@ -24,12 +24,14 @@ import { AuthService } from '../auth/auth.service';
 import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
 // import { CookieSerializer } from '../auth/cookie.serializer';
 // import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
-// import { GqlAuthGuard } from '../guards/gqlauth.guard';
-// import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
+import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { LdapService } from '../ldap/ldap.service';
 import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { I18nServiceMock } from '../../__mocks__/i18n.service.mock';
 // #endregion
+
+jest.mock('../guards/gqlauth.guard');
 
 describe('UserService', () => {
   let service: UserService;
@@ -78,6 +80,8 @@ describe('UserService', () => {
       .useValue(JwtServiceMock)
       .overrideProvider(I18nService)
       .useValue(I18nServiceMock)
+      .overrideGuard(GqlAuthGuard)
+      .useValue(GqlAuthGuardMock)
       .compile();
 
     service = module.get<UserService>(UserService);

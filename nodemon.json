@@ -1,7 +1,7 @@
 {
   "watch": ["server", ".env", "next.config.js", "babel.config.js", "lib/apollo-client.ts"],
   "ignore": ["server/**/*.spec.ts"],
-  "ext": "ts,tsx,json",
+  "ext": "ts,tsx,json,graphql",
   "execMap": {
     "ts": "node -r ts-node/register"
   },

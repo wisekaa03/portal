@@ -9,7 +9,7 @@ import { LoginService, Gender, Address } from '../../../lib/types';
 // #endregion
 
 // #region User
-export class ProfileDTO {
+export class Profile {
   id?: string;
 
   loginService: LoginService;
@@ -51,5 +51,5 @@ export class ProfileDTO {
 // #endregion
 
 // #region User response
-export class ProfileResponseDTO extends ProfileDTO {}
+export class ProfileResponse extends Profile {}
 // #endregion

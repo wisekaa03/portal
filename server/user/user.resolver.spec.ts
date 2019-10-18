@@ -27,6 +27,7 @@ import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 // #endregion
 
 jest.mock('../ldap/ldap.service');
+jest.mock('../guards/gqlauth.guard');
 
 describe('UserResolver', () => {
   let resolver: UserResolver;
@@ -71,8 +72,6 @@ describe('UserResolver', () => {
       .useValue(JwtStrategyMock)
       .overrideProvider(CookieSerializer)
       .useValue(CookieSerializerMock)
-      .overrideGuard(GqlAuthGuard)
-      .useValue(GqlAuthGuardMock)
       .compile();
 
     resolver = module.get<UserResolver>(UserResolver);

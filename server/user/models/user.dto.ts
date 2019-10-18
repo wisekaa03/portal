@@ -5,11 +5,12 @@
 import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
-import { ProfileDTO } from '../../profile/models/profile.dto';
+// eslint-disable-next-line import/no-cycle
+import { Profile } from '../../profile/models/profile.dto';
 // #endregion
 
 // #region User
-export class UserDTO {
+export class User {
   id?: string;
 
   username: string;
@@ -18,7 +19,7 @@ export class UserDTO {
 
   isAdmin: boolean;
 
-  profile?: ProfileDTO;
+  profile?: Profile;
 
   createdAt?: Date;
 
@@ -27,13 +28,13 @@ export class UserDTO {
 // #endregion
 
 // #region User response
-export class UserResponseDTO extends UserDTO {
+export class UserResponse extends User {
   token: string;
 }
 // #endregion
 
 // #region User login
-export class UserLoginDTO {
+export class UserLogin {
   @IsNotEmpty()
   username: string;
 
@@ -43,7 +44,7 @@ export class UserLoginDTO {
 // #endregion
 
 // #region User register
-export class UserRegisterDTO {
+export class UserRegister {
   username: string;
 
   password: string;
