@@ -89,7 +89,7 @@ export default (props: DrawerProps): React.ReactElement => {
     { text: 'Календарь компании', link: '/', icon: <CalendarTodayIcon /> },
     { text: 'База знаний', link: '/', icon: <LiveHelpIcon /> },
     { text: 'Переговорные', link: '/', icon: <QuestionAnswerIcon /> },
-    { text: 'Лента новостей', link: '/', icon: <DvrIcon /> },
+    { text: 'Лента новостей', link: '/news', icon: <DvrIcon /> },
     { text: 'Настройки', link: '/', icon: <SettingsIcon /> },
   ];
 
