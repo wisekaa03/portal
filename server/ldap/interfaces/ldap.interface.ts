@@ -6,6 +6,8 @@ import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ClientOptions } from 'ldapjs';
 // #endregion
 
+export const LDAP_MODULE_OPTIONS = 'LDAP_MODULE_OPTIONS';
+
 export type Scope = 'base' | 'one' | 'sub';
 
 export interface LdapResponeUser {

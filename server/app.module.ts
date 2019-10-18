@@ -46,7 +46,7 @@ import { ProfileModule } from './profile/profile.module';
     CacheModule.registerAsync({
       imports: [ConfigModule, LoggerModule],
       inject: [ConfigService, LogService],
-      useFactory: (configService: ConfigService, logService: LogService) => {
+      useFactory: async (configService: ConfigService, logService: LogService) => {
         logService.debug(
           `install cache: ` +
             `host="${configService.get('HTTP_REDIS_HOST')}" ` +
@@ -78,7 +78,7 @@ import { ProfileModule } from './profile/profile.module';
     I18nModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         path: configService.i18nPath,
         filePattern: configService.i18nFilePattern,
         fallbackLanguage: configService.fallbackLanguage,
@@ -126,7 +126,12 @@ import { ProfileModule } from './profile/profile.module';
   ],
 
   providers: [
-    // #region Errors: ExceptionFilter
+    // #region GraphQL
+    DateScalar,
+    ByteArrayScalar,
+    // #endregion
+
+    // #region Errors
     {
       provide: APP_FILTER,
       inject: [NextService, LogService],
@@ -150,9 +155,13 @@ import { ProfileModule } from './profile/profile.module';
     },
     // #endregion
 
-    // #region GraphQL
-    DateScalar,
-    ByteArrayScalar,
+    // #region GraphQL interceptor
+    // {
+    // TODO: сделать чтобы IntrospectionQuery блокировался до тех пор
+    // TODO: пока кто-либо не воспользуется login
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: GraphQLInterceptor,
+    // },
     // #endregion
   ],
 })

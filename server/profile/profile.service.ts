@@ -12,6 +12,7 @@ import { ProfileEntity } from './profile.entity';
 import { Gender, LoginService } from '../../lib/types';
 import { Profile } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';
+import { LdapService } from '../ldap/ldap.service';
 // #endregion
 
 @Injectable()
@@ -20,6 +21,7 @@ export class ProfileService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
     private readonly logService: LogService,
+    private readonly ldapService: LdapService,
   ) {}
 
   async profiles(_req: Request): Promise<Profile[] | null> {
@@ -30,6 +32,18 @@ export class ProfileService {
     });
 
     return profiles;
+  }
+
+  async synch(_req: Request): Promise<boolean | null> {
+    const users: LdapResponeUser[] = await this.ldapService.synchronization();
+
+    // TODO: обработка синхронизации - записать в базу все поля
+
+    if (users) {
+      return true;
+    }
+
+    return false;
   }
 
   async create(ldapUser: LdapResponeUser): Promise<Profile | undefined> {

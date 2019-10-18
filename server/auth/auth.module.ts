@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Module, forwardRef } from '@nestjs/common';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 // #endregion
 // #region Imports Local
@@ -37,7 +37,7 @@ import { CookieSerializer } from './cookie.serializer';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: async (configService: ConfigService) => {
         return {
           ...configService.jwtModuleOptions,
         } as JwtModuleOptions;

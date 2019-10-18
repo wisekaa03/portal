@@ -2,23 +2,38 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { LogService } from '../logger/logger.service';
 import { LogServiceMock } from '../../__mocks__/logger.service.mock';
+import { LdapModule } from '../ldap/ldap.module';
+import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { LdapService } from '../ldap/ldap.service';
+import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 // #endregion
+
+jest.mock('../logger/logger.service');
 
 describe('ProfileService', () => {
   let service: ProfileService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot({}), TypeOrmModule.forFeature([ProfileEntity])],
+      imports: [
+        TypeOrmModule.forRoot({}),
+        TypeOrmModule.forFeature([ProfileEntity]),
+        LdapModule.registerAsync({
+          useFactory: () => ({} as LdapModuleOptions),
+        }),
+      ],
       providers: [ProfileService, { provide: LogService, useClass: LogServiceMock }],
-    }).compile();
+    })
+      .overrideProvider(LdapService)
+      .useValue(LdapServiceMock)
+      .compile();
 
     service = module.get<ProfileService>(ProfileService);
   });

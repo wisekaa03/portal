@@ -8,11 +8,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
-import { ConfigModule } from '../config/config.module';
 // eslint-disable-next-line import/no-cycle
 import { AuthModule } from '../auth/auth.module';
 import { LdapModule } from '../ldap/ldap.module';
 import { Scope } from '../ldap/interfaces/ldap.interface';
+import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { LoggerModule } from '../logger/logger.module';
 import { ProfileModule } from '../profile/profile.module';
@@ -25,15 +25,11 @@ import { ProfileModule } from '../profile/profile.module';
     LoggerModule,
     // #endregion
 
-    // #region TypeORM
-    TypeOrmModule.forFeature([UserEntity]),
-    // #endregion
-
-    // #region LDAP
+    // #region LDAP Module
     LdapModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: async (configService: ConfigService) => {
         return {
           url: configService.get('LDAP_URL'),
           bindDN: configService.get('LDAP_BIND_DN'),
@@ -47,6 +43,10 @@ import { ProfileModule } from '../profile/profile.module';
         };
       },
     }),
+    // #endregion
+
+    // #region TypeORM
+    TypeOrmModule.forFeature([UserEntity]),
     // #endregion
 
     // #region Authentication

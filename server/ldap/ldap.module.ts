@@ -1,19 +1,23 @@
 /** @format */
 
 // #region Imports NPM
-import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
+import { DynamicModule, Module, Provider, Type, Global } from '@nestjs/common';
 // #endregion
 // #region Imports Local
-import { LDAP_MODULE_OPTIONS } from './ldap.constants';
-import { createLdapProvider } from './ldap.providers';
 import { LdapService } from './ldap.service';
-import { LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './interfaces/ldap.interface';
+import {
+  LDAP_MODULE_OPTIONS,
+  LdapModuleOptions,
+  LdapModuleAsyncOptions,
+  LdapOptionsFactory,
+} from './interfaces/ldap.interface';
 import { ConfigModule } from '../config/config.module';
 import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
+@Global()
 @Module({
-  imports: [ConfigModule, LoggerModule],
+  imports: [LoggerModule, ConfigModule],
   providers: [LdapService],
   exports: [LdapService],
 })
@@ -21,7 +25,7 @@ export class LdapModule {
   static register(options: LdapModuleOptions): DynamicModule {
     return {
       module: LdapModule,
-      providers: createLdapProvider(options),
+      providers: [{ provide: LDAP_MODULE_OPTIONS, useValue: options || {} }, LdapService],
     };
   }
 

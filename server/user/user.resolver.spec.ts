@@ -20,8 +20,8 @@ import { CookieSerializer } from '../auth/cookie.serializer';
 import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
 import { UserService } from './user.service';
 import { UserServiceMock } from '../../__mocks__/user.service.mock';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
+// import { GqlAuthGuard } from '../guards/gqlauth.guard';
+// import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 // #endregion

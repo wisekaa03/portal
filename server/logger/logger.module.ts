@@ -1,12 +1,13 @@
 /** @format */
 
 // #region Imports NPM
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 import { LogService } from './logger.service';
 // #endregion
 
+@Global()
 @Module({
   providers: [LogService],
   exports: [LogService],

@@ -9,8 +9,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { LdapModuleOptions, LdapResponeUser } from './interfaces/ldap.interface';
-import { LDAP_MODULE_OPTIONS } from './ldap.constants';
+import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser } from './interfaces/ldap.interface';
 import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 // #endregion
@@ -31,7 +30,9 @@ export class LdapService extends EventEmitter {
 
   private getGroups: any;
 
-  private userCache: any;
+  private userCache: cacheManager.Cache;
+
+  private ttl: number;
 
   /**
    * Create an LDAP class.
@@ -46,11 +47,16 @@ export class LdapService extends EventEmitter {
   ) {
     super();
 
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     if (opts.cache) {
+      this.ttl = parseInt(configService.get('LDAP_REDIS_TTL'), 10);
+
       this.userCache = cacheManager.caching({
         store: redisStore,
         name: 'LDAP',
-        ttl: parseInt(configService.get('LDAP_REDIS_TTL'), 10), // seconds
+        ttl: this.ttl, // seconds
         host: configService.get('LDAP_REDIS_HOST'),
         port: parseInt(configService.get('LDAP_REDIS_PORT'), 10),
         db: configService.get('LDAP_REDIS_DB') ? parseInt(configService.get('LDAP_REDIS_DB'), 10) : undefined,
@@ -63,7 +69,7 @@ export class LdapService extends EventEmitter {
           `host="${configService.get('LDAP_REDIS_HOST')}" ` +
           `port="${configService.get('LDAP_REDIS_PORT')}" ` +
           `db="${configService.get('LDAP_REDIS_DB')}" ` +
-          `ttl="${configService.get('LDAP_REDIS_TTL')}" ` +
+          `ttl="${this.ttl}" ` +
           `password="${configService.get('LDAP_REDIS_PASSWORD') ? '{MASKED}' : ''}"`,
         'LDAP',
       );
@@ -348,6 +354,11 @@ export class LdapService extends EventEmitter {
       });
   }
 
+  public async synchronization(): Promise<any | LdapResponeUser[]> {
+    // TODO: синхронизация
+    return undefined;
+  }
+
   /**
    * Authenticate given credentials against LDAP server
    *
@@ -394,10 +405,14 @@ export class LdapService extends EventEmitter {
 
                 if (this.opts.cache) {
                   this.logger.debug(`to cache: ${username}`, 'LDAP');
-                  this.userCache.set(username, {
-                    user: userWithGroups,
-                    password: bcrypt.hashSync(password, 4),
-                  });
+                  this.userCache.set<any>(
+                    username,
+                    {
+                      user: userWithGroups,
+                      password: bcrypt.hashSync(password, 4),
+                    },
+                    this.ttl,
+                  );
                 }
 
                 return resolve(userWithGroups as LdapResponeUser);

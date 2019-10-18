@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 // #region Imports Local
 import { UserEntity } from './user.entity';
 import { UserLogin, UserResponse, UserRegister, User } from './models/user.dto';
-import { ConfigService } from '../config/config.service';
+// import { ConfigService } from '../config/config.service';
 // eslint-disable-next-line import/no-cycle
 import { AuthService } from '../auth/auth.service';
 import { LdapService } from '../ldap/ldap.service';
@@ -30,7 +30,7 @@ interface LdapAuthenticate {
 @Injectable()
 export class UserService {
   constructor(
-    private readonly configService: ConfigService,
+    // private readonly configService: ConfigService,
     private readonly i18n: I18nService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,

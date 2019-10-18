@@ -16,10 +16,10 @@ export class ProfileResolver {
   constructor(private readonly profileService: ProfileService) {}
 
   /**
-   * GraphQL query: me
+   * GraphQL query: profiles
    *
    * @param req - request.User
-   * @returns {UserResponseDTO}
+   * @returns {Profiles[]}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -28,5 +28,20 @@ export class ProfileResolver {
     debugger;
 
     return this.profileService.profiles(req) || null;
+  }
+
+  /**
+   * GraphQL query: synch
+   *
+   * @param req
+   * @returns {Boolean}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async synch(@Context('req') req: Request): Promise<boolean | null> {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
+    return this.profileService.synch(req) || null;
   }
 }

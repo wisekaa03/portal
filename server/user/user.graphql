@@ -2,13 +2,13 @@ type User {
   id: ID!
   token: String!
   username: String!
-  profile: Profile
+  profile: Profile!
   createdAt: Date
   updatedAt: Date
 }
 
 type Query {
-  me: User
+  me: User!
 }
 
 type Mutation {

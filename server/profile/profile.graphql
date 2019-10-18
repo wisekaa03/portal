@@ -8,9 +8,9 @@ type Address {
 type Profile {
   id: ID!
 
-  username: String
-  loginService: String
-  loginIdentificator: String
+  username: String!
+  loginService: String!
+  loginIdentificator: String!
 
   firstName: String
   lastName: String
@@ -29,10 +29,14 @@ type Profile {
 
   thumbnailPhoto: ByteArray
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date!
+  updatedAt: Date!
 }
 
 type Query {
+
   profiles: [Profile!]!
+
+  synch: Boolean
+
 }
