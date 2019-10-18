@@ -85,9 +85,6 @@ export class UserService {
           let userLogin;
           const profile = await this.profileService.create(ldapUser);
 
-          // eslint-disable-next-line no-debugger
-          debugger;
-
           const data: UserDTO = {
             username: ldapUser.sAMAccountName,
             password: `$${LoginService.LDAP}`,
@@ -99,7 +96,7 @@ export class UserService {
           try {
             userLogin = await this.userRepository.save(this.userRepository.create(data));
           } catch (error) {
-            this.logService.error('Unable to create data in `user`', error);
+            this.logService.error('Unable to save data in `user`', JSON.stringify(error), 'UserService');
 
             return { user, profile, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
           }
@@ -114,12 +111,12 @@ export class UserService {
           errorCode: HttpStatus.ACCEPTED,
         };
       } catch (error) {
-        this.logService.error('Unable to create data in `profile`', error);
+        this.logService.error('Unable to create user in `profile`', JSON.stringify(error), 'UserService');
 
         return { user, profile: undefined, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
       }
     } catch (error) {
-      this.logService.error('Unable to save in user database', error);
+      this.logService.error('Unable to login in ldap', JSON.stringify(error), 'UserService');
 
       return {
         user,
@@ -137,7 +134,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async login({ username, password }: UserLoginDTO): Promise<UserResponseDTO> {
-    this.logService.debug(`UserService: user login: username = "${username}"`);
+    this.logService.debug(`UserService: user login: username = "${username}"`, 'UserService');
 
     const user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
     const { user: userDB, ldapUser, profile, errorCode } = await this.userLdapLogin({ username, password, user });
@@ -157,7 +154,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async logout(): Promise<boolean> {
-    this.logService.debug(`UserService: user logout`);
+    this.logService.debug(`UserService: user logout`, 'UserService');
 
     // eslint-disable-next-line no-debugger
     debugger;
@@ -172,7 +169,7 @@ export class UserService {
    * @returns {UserResponseDTO} User response DTO
    */
   async register(data: UserRegisterDTO): Promise<UserResponseDTO | null> {
-    this.logService.debug(`UserService: register new user: ${JSON.stringify(data)}`);
+    this.logService.debug(`UserService: register new user: ${JSON.stringify(data)}`, 'UserService');
 
     // #region Check if a user exists
     const { username } = data;

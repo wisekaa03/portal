@@ -25,7 +25,11 @@ import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
+import { LdapService } from '../ldap/ldap.service';
+import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 // #endregion
+
+jest.mock('../ldap/ldap.service');
 
 describe('AuthService', () => {
   let service: AuthService;

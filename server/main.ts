@@ -68,7 +68,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region production ready session store
-  app.use(sessionRedis(configService));
+  app.use(sessionRedis(configService, logger));
   // #endregion
 
   // #region Passport initialization

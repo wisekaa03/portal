@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
 import * as cacheManager from 'cache-manager';
@@ -57,6 +57,16 @@ export class LdapService extends EventEmitter {
         password: configService.get('LDAP_REDIS_PASSWORD') ? configService.get('LDAP_REDIS_PASSWORD') : undefined,
         logger,
       });
+
+      this.logger.debug(
+        `install cache: ` +
+          `host="${configService.get('LDAP_REDIS_HOST')}" ` +
+          `port="${configService.get('LDAP_REDIS_PORT')}" ` +
+          `db="${configService.get('LDAP_REDIS_DB')}" ` +
+          `ttl="${configService.get('LDAP_REDIS_TTL')}" ` +
+          `password="${configService.get('LDAP_REDIS_PASSWORD') ? '{MASKED}' : ''}"`,
+        'LDAP',
+      );
     }
 
     this.clientOpts = {
@@ -138,6 +148,9 @@ export class LdapService extends EventEmitter {
   private handleError(err: Ldap.Error): void {
     if (`${err.code}` !== 'ECONNRESET') {
       this.logger.error(`emitted error: [${err.code}]`, err.toString(), 'LDAP');
+    } else {
+      process.env.NODE_ENV !== 'production' &&
+        this.logger.debug(`emitted error: [${err.code}] ${err.toString()}`, 'LDAP');
     }
     this.adminBound = false;
   }
@@ -347,7 +360,7 @@ export class LdapService extends EventEmitter {
    */
   public async authenticate(username: string, password: string): Promise<any | LdapResponeUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
-      this.logger.error('no password given', 'LDAP');
+      this.logger.error('no password given', undefined, 'LDAP');
       throw new Error('no password given');
     }
 
@@ -355,6 +368,7 @@ export class LdapService extends EventEmitter {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached = await this.userCache.get(username);
       if (cached && bcrypt.compareSync(password, cached.password)) {
+        this.logger.debug(`from cache: ${JSON.stringify(cached.user.username)}`, 'LDAP');
         return cached.user as LdapResponeUser;
       }
     }
@@ -382,6 +396,7 @@ export class LdapService extends EventEmitter {
                 const userWithGroups = await this.getGroups(user);
 
                 if (this.opts.cache) {
+                  this.logger.debug(`to cache: ${username}`, 'LDAP');
                   this.userCache.set(username, {
                     user: userWithGroups,
                     password: bcrypt.hashSync(password, 4),

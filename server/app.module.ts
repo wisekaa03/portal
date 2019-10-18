@@ -44,19 +44,33 @@ import { ProfileModule } from './profile/profile.module';
 
     // #region Cache Manager - Redis
     CacheModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        store: redisCacheStore,
-        ttl: parseInt(configService.get('HTTP_REDIS_TTL'), 10), // seconds
-        max: parseInt(configService.get('HTTP_REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
-        host: configService.get('HTTP_REDIS_HOST'),
-        port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
-        db: configService.get('HTTP_REDIS_DB') ? parseInt(configService.get('HTTP_REDIS_DB'), 10) : undefined,
-        password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
-        keyPrefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
-        // retry_strategy: (options) => {}
-      }),
+      imports: [ConfigModule, LoggerModule],
+      inject: [ConfigService, LogService],
+      useFactory: (configService: ConfigService, logService: LogService) => {
+        logService.debug(
+          `install cache: ` +
+            `host="${configService.get('HTTP_REDIS_HOST')}" ` +
+            `port="${configService.get('HTTP_REDIS_PORT')}" ` +
+            `db="${configService.get('HTTP_REDIS_DB')}" ` +
+            `ttl="${configService.get('HTTP_REDIS_TTL')}" ` +
+            `max objects="${configService.get('HTTP_REDIS_MAX_OBJECTS')}" ` +
+            `prefix="${configService.get('HTTP_REDIS_PREFIX')}" ` +
+            `password="${configService.get('HTTP_REDIS_PASSWORD') ? '{MASKED}' : ''}" `,
+          'Cache',
+        );
+
+        return {
+          store: redisCacheStore,
+          ttl: parseInt(configService.get('HTTP_REDIS_TTL'), 10), // seconds
+          max: parseInt(configService.get('HTTP_REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
+          host: configService.get('HTTP_REDIS_HOST'),
+          port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
+          db: configService.get('HTTP_REDIS_DB') ? parseInt(configService.get('HTTP_REDIS_DB'), 10) : undefined,
+          password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
+          keyPrefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+          // retry_strategy: (options) => {}
+        };
+      },
     }),
     // #endregion
 

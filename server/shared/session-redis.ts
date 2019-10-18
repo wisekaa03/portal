@@ -8,16 +8,29 @@ import genuuid from 'uuid/v1';
 // #endreion
 // #region Imports Local
 import { ConfigService } from '../config/config.service';
+import { LogService } from '../logger/logger.service';
 // #endregion
 
-export const sessionRedis = (configService: ConfigService): any =>
-  session({
+export const sessionRedis = (configService: ConfigService, logService: LogService): any => {
+  logService.debug(
+    `install cache: ` +
+      `host="${configService.get('SESSION_REDIS_HOST')}" ` +
+      `port="${configService.get('SESSION_REDIS_PORT')}" ` +
+      `db="${configService.get('SESSION_REDIS_DB')}" ` +
+      `cookie ttl="${configService.get('SESSION_COOKIE_TTL')}" ` +
+      `secret="${configService.get('SESSION_SECRET') ? '{MASKED}' : ''}" ` +
+      `password="${configService.get('SESSION_PASSWORD') ? '{MASKED}' : ''}"`,
+    'Session',
+  );
+
+  return session({
     secret: configService.get('SESSION_SECRET'),
     store: new (redisSessionStore(session))({
       client: redis.createClient({
         host: configService.get('SESSION_REDIS_HOST'),
         port: parseInt(configService.get('SESSION_REDIS_PORT'), 10),
         db: parseInt(configService.get('SESSION_REDIS_DB'), 10),
+        password: configService.get('SESSION_REDIS_PASSWORD') ? configService.get('SESSION_REDIS_PASSWORD') : undefined,
       }),
     }),
     resave: true,
@@ -34,3 +47,4 @@ export const sessionRedis = (configService: ConfigService): any =>
       maxAge: parseInt(configService.get('SESSION_COOKIE_TTL'), 10), // msec, 1 hour
     },
   });
+};

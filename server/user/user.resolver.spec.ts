@@ -26,6 +26,8 @@ import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 // #endregion
 
+jest.mock('../ldap/ldap.service');
+
 describe('UserResolver', () => {
   let resolver: UserResolver;
 
