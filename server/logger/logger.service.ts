@@ -90,6 +90,13 @@ export class LogService extends Logger /* implements LoggerService  */ {
   }
 
   /**
+   * From TypeORM: logQueryError
+   */
+  logQueryError(message: any, query: any, parameters: any): void {
+    this.error(message, query);
+  }
+
+  /**
    * From TypeORM: Schema build
    */
   logSchemaBuild(message: any): void {

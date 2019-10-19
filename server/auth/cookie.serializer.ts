@@ -3,28 +3,28 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { User } from '../user/models/user.dto';
+import { User, UserToSave } from '../user/models/user.dto';
 // #endregion
 // #region Imports Local
 // #endregion
 
 @Injectable()
 export class CookieSerializer extends PassportSerializer {
-  serializeUser(user: User, done: Function): any {
-    const s: any = user;
+  serializeUser(user: any, done: Function): void {
+    const s: UserToSave = user;
 
-    if (s.profile && s.profile.thumbnailPhoto) {
-      s.profile.thumbnailPhoto = s.profile.thumbnailPhoto.toString('base64');
+    if (typeof s.profile === 'object' && s.profile.thumbnailPhoto) {
+      s.profile.thumbnailPhoto = ((s.profile.thumbnailPhoto as unknown) as Buffer).toString('base64');
     }
 
-    done(null, s);
+    done(null, JSON.stringify(s));
   }
 
-  deserializeUser(payload: any, done: Function): any {
-    const s = payload;
+  deserializeUser(payload: any, done: Function): void {
+    const s: User = JSON.parse(payload);
 
     if (s.profile && s.profile.thumbnailPhoto) {
-      s.profile.thumbnailPhoto = Buffer.from(s.profile.thumbnailPhoto, 'base64');
+      s.profile.thumbnailPhoto = Buffer.from((s.profile.thumbnailPhoto as unknown) as string, 'base64');
     }
 
     done(null, s);

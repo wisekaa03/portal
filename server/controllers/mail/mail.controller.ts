@@ -14,15 +14,6 @@ export class MailController {
 
   @Get()
   public async mail(@Req() req: Request, @Res() res: Response): Promise<void> {
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
-    if (!req.user) {
-      if (req.session) {
-        req.session.lastPage = '/mail';
-      }
-      return res.redirect('/auth/login');
-    }
     return this.nextService.render(req, res, '/mail');
   }
 }

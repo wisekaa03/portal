@@ -24,7 +24,7 @@ export class SessionAuthGuard extends AuthGuard('jwt') implements CanActivate {
     let canActivate: boolean | Observable<boolean>;
 
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     if (gqlCtx instanceof Function) {
       canActivate = await super.canActivate(context);
@@ -32,6 +32,9 @@ export class SessionAuthGuard extends AuthGuard('jwt') implements CanActivate {
       gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
       canActivate = await super.canActivate(gqlContext);
     }
+
+    // eslint-disable-next-line no-debugger
+    // debugger;
 
     await super.logIn(gqlContext.switchToHttp().getRequest());
 

@@ -13,8 +13,6 @@ const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.serv
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));
 const logger = new Logger.LogService();
 
-debugger;
-
 module.exports = {
   name: 'default',
   type: configService.get('DATABASE_CONNECTION'),

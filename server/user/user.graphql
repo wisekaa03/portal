@@ -6,18 +6,3 @@ type User {
   createdAt: Date
   updatedAt: Date
 }
-
-type Query {
-  me: User!
-}
-
-type Mutation {
-  login(username: String!, password: String!): User
-
-  logout: Boolean
-
-  # register(
-  #   username: String!,
-  #   password: String!,
-  # ): User
-}

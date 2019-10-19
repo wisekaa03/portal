@@ -16,9 +16,13 @@ export class ByteArrayScalar {
     return Buffer.from(value, 'base64');
   }
 
-  serialize(value: Buffer): string {
+  serialize(value: Buffer | string): string {
     // eslint-disable-next-line no-debugger
     // debugger;
+
+    if (typeof value === 'string') {
+      return value;
+    }
 
     return value.toString('base64');
   }

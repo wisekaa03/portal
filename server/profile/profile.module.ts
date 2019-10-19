@@ -10,6 +10,7 @@ import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
 import { ConfigModule } from '../config/config.module';
 import { LoggerModule } from '../logger/logger.module';
+import { LdapModule } from '../ldap/ldap.module';
 // #endregion
 
 @Module({
@@ -18,6 +19,8 @@ import { LoggerModule } from '../logger/logger.module';
     ConfigModule,
     LoggerModule,
     // #endregion
+
+    LdapModule,
 
     // #region TypeORM
     TypeOrmModule.forFeature([ProfileEntity]),

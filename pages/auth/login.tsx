@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
-import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
+import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import Router from 'next/router';
 // #endregion
@@ -15,27 +15,20 @@ import { setStorage } from '../../lib/session-storage';
 // #endregion
 
 const Login = (): React.ReactElement => {
-  return (
-    <Mutation mutation={LOGIN} onError={() => {}}>
-      {(login: MutationFunction, { loading, error, data }: MutationResult<any>): JSX.Element | null => {
-        if (!data) {
-          return <LoginComponent error={error} loading={loading} login={login} />;
-        }
+  const client = useApolloClient();
 
-        // TODO: он не в куки сохраняет, а в tokene на клиенте
-        // TODO: разобраться как сделать чтобы в куки сохранял
-        setStorage('token', data.login.token);
-        const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
+  const [login, { loading, error }] = useMutation(LOGIN, {
+    onCompleted(data) {
+      setStorage('token', data.login.token);
+      const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
+      client.resetStore();
+      client.writeData({ data: { isLoggedIn: true } });
 
-        // eslint-disable-next-line no-debugger
-        debugger;
+      Router.push({ pathname: redirect as string });
+    },
+  });
 
-        Router.push({ pathname: redirect as string });
-
-        return null;
-      }}
-    </Mutation>
-  );
+  return <LoginComponent error={error} loading={loading} login={login} />;
 };
 
 Login.getInitialProps = () => {

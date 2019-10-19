@@ -1,190 +1,97 @@
 /** @format */
 
 // #region Imports NPM
-import { Inject, forwardRef, Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { UserEntity } from './user.entity';
-import { UserLogin, UserResponse, UserRegister, User } from './models/user.dto';
+import { User } from './models/user.dto';
 // import { ConfigService } from '../config/config.service';
-// eslint-disable-next-line import/no-cycle
-import { AuthService } from '../auth/auth.service';
-import { LdapService } from '../ldap/ldap.service';
 import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
-import { Profile } from '../profile/models/profile.dto';
 import { LoginService } from '../../lib/types';
 // #endregion
-
-interface LdapAuthenticate {
-  user: UserEntity | void;
-  ldapUser?: LdapResponeUser;
-  profile: Profile | void;
-  errorCode: any;
-}
 
 @Injectable()
 export class UserService {
   constructor(
-    // private readonly configService: ConfigService,
-    private readonly i18n: I18nService,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
+    private readonly logService: LogService,
+    private readonly profileService: ProfileService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly profileService: ProfileService,
-    private readonly ldapService: LdapService,
-    private readonly logService: LogService,
   ) {}
 
   /**
-   * This is a call from authService.validate
+   * Reads by Username
    *
-   * @param id - User ID
+   * @param {string} username User ID
+   * @returns {UserEntity | undefined} The user
    */
-  async read(id: string): Promise<UserResponse | null> {
-    const user = (await this.userRepository.findOne({
+  async readByUsername(username: string): Promise<UserEntity | undefined> {
+    return this.userRepository.findOne({
+      where: { username },
+      relations: ['profile'],
+      cache: true,
+    });
+  }
+
+  /**
+   * Reads by ID
+   *
+   * @param {string} id User ID
+   * @returns {UserEntity | undefined} The user
+   */
+  async readById(id: string): Promise<UserEntity | undefined> {
+    return this.userRepository.findOne({
       where: { id },
       relations: ['profile'],
       cache: true,
-    })) as UserEntity;
-
-    if (!user) {
-      return null;
-    }
-
-    return user.toResponseObject(this.authService.token({ id: user.id }));
+    });
   }
 
   /**
-   * User LDAP login
+   * Create a User with Ldap params
    *
-   * @param {string, string, UserEntity} - User register data transfer object
-   * @returns {UserEntity} User response DTO
+   * @param {string} id - User ID
    */
-  async userLdapLogin({
-    username,
-    password,
-    user,
-  }: {
-    username: string;
-    password: string;
-    user?: UserEntity;
-  }): Promise<LdapAuthenticate> {
+  async createLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
+    let profile;
+
     try {
-      // #region to LDAP database
-      const ldapUser: LdapResponeUser = await this.ldapService.authenticate(username, password);
-      // #endregion
-
-      try {
-        // #region User create/update
-        if (!user) {
-          let userLogin;
-          const profile = await this.profileService.create(ldapUser);
-
-          const data: User = {
-            username: ldapUser.sAMAccountName,
-            password: `$${LoginService.LDAP}`,
-            // groups,
-            isAdmin: false,
-            profile,
-          };
-
-          try {
-            userLogin = await this.userRepository.save(this.userRepository.create(data));
-          } catch (error) {
-            this.logService.error('Unable to save data in `user`', JSON.stringify(error), 'UserService');
-
-            return { user, profile, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
-          }
-
-          return { user: userLogin, profile, ldapUser, errorCode: HttpStatus.ACCEPTED };
-        }
-
-        return {
-          user,
-          profile: user.profile,
-          ldapUser,
-          errorCode: HttpStatus.ACCEPTED,
-        };
-      } catch (error) {
-        this.logService.error('Unable to create user in `profile`', JSON.stringify(error), 'UserService');
-
-        return { user, profile: undefined, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
-      }
+      profile = await this.profileService.create(ldapUser, user);
     } catch (error) {
-      this.logService.error('Unable to login in ldap', JSON.stringify(error), 'UserService');
+      this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'UserService');
 
-      return {
-        user,
-        profile: undefined,
-        ldapUser: undefined,
-        errorCode: HttpStatus.UNAUTHORIZED,
-      };
-    }
-  }
-
-  /**
-   * Login a user
-   *
-   * @param {UserLogin} data User login data transfer object
-   * @returns {UserResponse} User response DTO
-   */
-  async login({ username, password }: UserLogin): Promise<UserResponse> {
-    this.logService.debug(`UserService: user login: username = "${username}"`, 'UserService');
-
-    const user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
-    const { user: userDB, ldapUser, profile, errorCode } = await this.userLdapLogin({ username, password, user });
-
-    if (errorCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), errorCode);
-    } else if (userDB === undefined || ldapUser === undefined || profile === undefined) {
-      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), errorCode);
+      throw error;
     }
 
-    return userDB.toResponseObject(this.authService.token({ id: userDB.id }));
-  }
+    if (!profile) {
+      this.logService.error('Unable to save data in `profile`. Unknown error.', '', 'UserService');
 
-  /**
-   * Logout a user
-   *
-   * @returns {UserResponse} User response DTO
-   */
-  async logout(): Promise<boolean> {
-    this.logService.debug(`UserService: user logout`, 'UserService');
-
-    // eslint-disable-next-line no-debugger
-    debugger;
-
-    return true;
-  }
-
-  /**
-   * Register a user
-   *
-   * @param {UserRegister} data User register data transfer object
-   * @returns {UserResponse} User response DTO
-   */
-  async register(data: UserRegister): Promise<UserResponse | null> {
-    this.logService.debug(`UserService: register new user: ${JSON.stringify(data)}`, 'UserService');
-
-    // #region Check if a user exists
-    const { username } = data;
-    let user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
-    if (user) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new Error('Unable to save data in `profile`. Unknown error.');
     }
-    // #endregion
 
-    // #region Create user
-    user = this.userRepository.create(data);
-    const userDB = await this.userRepository.save(user);
-    // #endregion
+    // TODO: сделать что-нибудь по поводу групп..
+    const data: User = {
+      id: user && user.id,
+      createdAt: user && user.createdAt,
+      updatedAt: user && user.updatedAt,
+      username: ldapUser.sAMAccountName,
+      password: `$${LoginService.LDAP}`,
+      // groups,
+      isAdmin: false,
+      profile,
+    };
 
-    return userDB.toResponseObject(this.authService.token({ id: user.id }));
+    try {
+      return this.userRepository.save(this.userRepository.create(data as User));
+    } catch (error) {
+      this.logService.error('Unable to save data in `user`', JSON.stringify(error), 'UserService');
+
+      throw error;
+    }
   }
 }

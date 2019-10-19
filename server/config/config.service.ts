@@ -43,7 +43,7 @@ export class ConfigService {
    * Reads JWT public and secret key
    */
   public jwtSignOptions: jwt.SignOptions = {
-    expiresIn: '1h',
+    // expiresIn: '1h',
     algorithm: 'RS256',
   };
 

@@ -16,6 +16,7 @@ import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
+jest.mock('../ldap/ldap.service');
 
 describe('ProfileService', () => {
   let service: ProfileService;
@@ -29,7 +30,11 @@ describe('ProfileService', () => {
           useFactory: () => ({} as LdapModuleOptions),
         }),
       ],
-      providers: [ProfileService, { provide: LogService, useClass: LogServiceMock }],
+      providers: [
+        ProfileService,
+        { provide: LogService, useClass: LogServiceMock },
+        { provide: LdapService, useValue: LdapServiceMock },
+      ],
     })
       .overrideProvider(LdapService)
       .useValue(LdapServiceMock)

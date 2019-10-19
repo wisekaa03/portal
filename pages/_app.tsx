@@ -9,6 +9,7 @@ import { Query, ApolloProvider, QueryResult } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
+import queryString from 'query-string';
 import 'typeface-roboto';
 // #endregion
 // #region Imports Local
@@ -18,6 +19,7 @@ import { ProfileContext, ApolloAppProps } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
+import { FIRST_PAGE } from '../lib/constants';
 // #endregion
 
 class MainApp extends App<ApolloAppProps> {
@@ -61,7 +63,6 @@ class MainApp extends App<ApolloAppProps> {
             },
           }}
         >
-          {/* TODO: разобраться с тем, что graphql запрос на сервере неавторизован, на клиенте нормально */}
           <Query query={CURRENT_USER} ssr={false}>
             {({ data, loading }: QueryResult<any>) => {
               // eslint-disable-next-line no-debugger
@@ -73,6 +74,13 @@ class MainApp extends App<ApolloAppProps> {
               }
 
               if (data && data.me) {
+                if (Router.pathname === '/auth/login') {
+                  const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
+                  Router.push({ pathname: redirect as string });
+
+                  return <Loading />;
+                }
+
                 return (
                   <ProfileContext.Provider
                     value={{
@@ -86,7 +94,13 @@ class MainApp extends App<ApolloAppProps> {
                 );
               }
 
-              return <ProfileContext.Consumer>{() => <Component {...pageProps} />}</ProfileContext.Consumer>;
+              if (Router.pathname !== '/auth/login') {
+                Router.push('/auth/login');
+
+                return <Loading />;
+              }
+
+              return <Component {...pageProps} />;
             }}
           </Query>
         </ThemeProvider>

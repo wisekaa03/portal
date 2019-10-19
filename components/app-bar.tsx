@@ -19,6 +19,7 @@ import { ProfileContext } from '../lib/types';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo-min.png';
+import { Loading } from './loading';
 // #endregion
 
 export const appBarHeight = 64;
@@ -108,9 +109,9 @@ export default (props: AppBarProps): React.ReactElement => {
           {(v) => {
             // Проверка на вшивость
             if (!v || !v.user || !v.user.profile) {
-              /* TODO: Вставить что-нибудь чтобы перенаправляло */
               Router.push('/auth/login');
-              return null;
+
+              return <Loading />;
             }
 
             return (
@@ -134,7 +135,7 @@ export default (props: AppBarProps): React.ReactElement => {
                     src={
                       v.user.profile.thumbnailPhoto
                         ? `data:image/png;base64,${v.user.profile.thumbnailPhoto}`
-                        : '/public/images/jpg/unknown.jpg'
+                        : '/public/images/jpeg/unknown.jpg'
                     }
                   />
                 </Box>

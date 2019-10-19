@@ -13,9 +13,9 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
-  constructor() {
-    super({ session: true });
-  }
+  // constructor() {
+  //   super({ session: true });
+  // }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
@@ -30,7 +30,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
     const canActivate = await super.canActivate(gqlContext);
 
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
 
     await super.logIn(gqlCtx.req);
 

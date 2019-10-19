@@ -7,31 +7,35 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { I18nModule } from 'nestjs-i18n';
-import { UserResolver } from './user.resolver';
-import { UserModule } from './user.module';
 import { LogService } from '../logger/logger.service';
 import { LogServiceMock } from '../../__mocks__/logger.service.mock';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from './auth.service';
 import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
 import { JwtServiceMock } from '../../__mocks__/jwt.service.mock';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { CookieSerializer } from '../auth/cookie.serializer';
+import { CookieSerializer } from './cookie.serializer';
 import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
-import { UserService } from './user.service';
 import { UserServiceMock } from '../../__mocks__/user.service.mock';
 // import { GqlAuthGuard } from '../guards/gqlauth.guard';
 // import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
-import { JwtStrategy } from '../auth/strategies/jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
+import { AuthResolver } from './auth.resolver';
+import { UserModule } from '../user/user.module';
+import { UserService } from '../user/user.service';
+import { LdapModule } from '../ldap/ldap.module';
+import { LdapService } from '../ldap/ldap.service';
+import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
+import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 // #endregion
 
 jest.mock('../logger/logger.service');
-jest.mock('../ldap/ldap.service');
+// jest.mock('../ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 
-describe('UserResolver', () => {
-  let resolver: UserResolver;
+describe('AuthResolver', () => {
+  let resolver: AuthResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -50,6 +54,10 @@ describe('UserResolver', () => {
 
         TypeOrmModule.forRoot({}),
 
+        LdapModule.registerAsync({
+          useFactory: () => ({} as LdapModuleOptions),
+        }),
+
         JwtModule.registerAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -61,9 +69,10 @@ describe('UserResolver', () => {
         }),
       ],
       providers: [
-        UserResolver,
+        AuthResolver,
         { provide: UserService, useValue: UserServiceMock },
         { provide: AuthService, useValue: AuthServiceMock },
+        { provide: LdapService, useValue: LdapServiceMock },
         { provide: JwtService, useValue: JwtServiceMock },
       ],
     })
@@ -73,9 +82,11 @@ describe('UserResolver', () => {
       .useValue(JwtStrategyMock)
       .overrideProvider(CookieSerializer)
       .useValue(CookieSerializerMock)
+      .overrideProvider(LdapService)
+      .useValue(LdapServiceMock)
       .compile();
 
-    resolver = module.get<UserResolver>(UserResolver);
+    resolver = module.get<AuthResolver>(AuthResolver);
   });
 
   it('should be defined', () => {

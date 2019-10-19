@@ -14,12 +14,6 @@ export class HomeController {
 
   @Get()
   public async showHome(@Req() req: Request, @Res() res: Response): Promise<void> {
-    // eslint-disable-next-line no-debugger
-    debugger;
-
-    if (req.user) {
-      return this.nextService.render(req, res, req.url);
-    }
-    return res.redirect(`auth/login`);
+    return this.nextService.render(req, res, req.url);
   }
 }

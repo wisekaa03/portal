@@ -6,11 +6,10 @@
 // #endregion
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
-import { Profile } from '../../profile/models/profile.dto';
+import { Profile, ProfileToSave } from '../../profile/models/profile.dto';
 // #endregion
 
-// #region User
-export class User {
+export interface BaseUser {
   id?: string;
 
   username: string;
@@ -19,22 +18,29 @@ export class User {
 
   isAdmin: boolean;
 
-  profile?: Profile;
-
   createdAt?: Date;
 
   updatedAt?: Date;
 }
+
+// #region User
+export interface User extends BaseUser {
+  profile: Profile;
+}
 // #endregion
 
+export interface UserToSave extends BaseUser {
+  profile: ProfileToSave | string;
+}
+
 // #region User response
-export class UserResponse extends User {
+export interface UserResponse extends User {
   token: string;
 }
 // #endregion
 
 // #region User login
-export class UserLogin {
+export interface UserLogin {
   // @IsNotEmpty()
   username: string;
 
@@ -44,7 +50,7 @@ export class UserLogin {
 // #endregion
 
 // #region User register
-export class UserRegister {
+export interface UserRegister {
   username: string;
 
   password: string;

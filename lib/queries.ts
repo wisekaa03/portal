@@ -39,29 +39,6 @@ export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       token
-      id
-      username
-      updatedAt
-      createdAt
-      profile {
-        firstName
-        lastName
-        middleName
-        birthday
-        gender
-        telephone
-        workPhone
-        mobile
-        addressPersonal {
-          country
-          postalCode
-          region
-          street
-        }
-        thumbnailPhoto
-        updatedAt
-        createdAt
-      }
     }
   }
 `;

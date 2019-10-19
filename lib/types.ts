@@ -11,9 +11,9 @@ import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
 // eslint-disable-next-line import/no-cycle
 import { User } from '../server/user/models/user.dto';
 // eslint-disable-next-line import/no-cycle
-export { User } from '../server/user/models/user.dto';
+export * from '../server/user/models/user.dto';
 // eslint-disable-next-line import/no-cycle
-export { Profile } from '../server/profile/models/profile.dto';
+export * from '../server/profile/models/profile.dto';
 // #endregion
 
 export interface NodeIdGetterObj extends IdGetterObj {

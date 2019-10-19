@@ -30,6 +30,7 @@ export class ProfileEntity {
     type: 'varchar',
     length: 50,
     nullable: true,
+    unique: true,
   })
   loginIdentificator: string;
 

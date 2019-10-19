@@ -96,7 +96,7 @@ import { ProfileModule } from './profile/profile.module';
         // eslint-disable-next-line no-debugger
         // debugger;
 
-        return { req, user: req._passport.session && req._passport.session.user };
+        return { req /* , user: req._passport.session && req._passport.session.user */ };
       },
     }),
     // #endregion
