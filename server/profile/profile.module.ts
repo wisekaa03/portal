@@ -20,8 +20,6 @@ import { LdapModule } from '../ldap/ldap.module';
     LoggerModule,
     // #endregion
 
-    LdapModule,
-
     // #region TypeORM
     TypeOrmModule.forFeature([ProfileEntity]),
     // #endregion
