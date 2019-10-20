@@ -6,3 +6,9 @@ type User {
   createdAt: Date
   updatedAt: Date
 }
+
+type Query {
+
+  synchronization: Boolean
+
+}

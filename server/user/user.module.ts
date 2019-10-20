@@ -10,6 +10,7 @@ import { UserService } from './user.service';
 import { ConfigModule } from '../config/config.module';
 import { LoggerModule } from '../logger/logger.module';
 import { ProfileModule } from '../profile/profile.module';
+import { UserResolver } from './user.resolver';
 // #endregion
 
 @Module({
@@ -26,7 +27,7 @@ import { ProfileModule } from '../profile/profile.module';
     ProfileModule,
   ],
   controllers: [],
-  providers: [UserService],
+  providers: [UserService, UserResolver],
   exports: [UserService],
 })
 export class UserModule {}

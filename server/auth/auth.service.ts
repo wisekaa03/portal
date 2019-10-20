@@ -89,9 +89,6 @@ export class AuthService {
   async logout(): Promise<boolean> {
     this.logService.debug(`User logout`, 'AuthService');
 
-    // eslint-disable-next-line no-debugger
-    debugger;
-
     return true;
   }
 

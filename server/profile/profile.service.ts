@@ -35,18 +35,6 @@ export class ProfileService {
     return profiles;
   }
 
-  async synch(_req: Request): Promise<boolean | null> {
-    const users = await this.ldapService.synchronization();
-
-    // TODO: обработка синхронизации - записать в базу все поля
-
-    if (users) {
-      return true;
-    }
-
-    return false;
-  }
-
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {
     let comment;
 

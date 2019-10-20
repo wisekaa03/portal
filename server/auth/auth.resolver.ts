@@ -9,6 +9,7 @@ import { Request } from 'express';
 import { UserResponse } from '../user/models/user.dto';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { AuthService } from './auth.service';
+import { ProfileService } from '../profile/profile.service';
 // #endregion
 
 @Resolver()

@@ -37,6 +37,4 @@ type Query {
 
   profiles: [Profile!]!
 
-  synch: Boolean
-
 }

@@ -4,6 +4,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { UserEntity } from './user.entity';
@@ -12,12 +13,14 @@ import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
 import { LoginService } from '../../lib/types';
+import { LdapService } from '../ldap/ldap.service';
 // #endregion
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly logService: LogService,
+    private readonly ldapService: LdapService,
     private readonly profileService: ProfileService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -92,5 +95,31 @@ export class UserService {
 
       throw error;
     }
+  }
+
+  /**
+   * Synchronization
+   *
+   * @param {req} Request
+   * @returns {boolean}
+   */
+  async synchronization(_req: Request): Promise<boolean | null> {
+    const users = await this.ldapService.synchronization();
+
+    if (users) {
+      users.forEach(async (ldapUser) => {
+        const user = await this.readByUsername(ldapUser.sAMAccountName);
+
+        this.createLdap(ldapUser, user).catch((error: Error) => {
+          this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
+
+          throw error;
+        });
+      });
+
+      return true;
+    }
+
+    return false;
   }
 }
