@@ -13,8 +13,6 @@ imagePullSecrets: []
 nameOverride: "portal"
 fullnameOverride: "portal"
 
-NODE_ENV: production
-
 # App
 HOST: 0.0.0.0
 PORT: 4000

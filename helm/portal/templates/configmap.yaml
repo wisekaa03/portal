@@ -5,12 +5,8 @@ metadata:
   labels:
 {{ include "portal.labels" . | indent 4 }}
 data:
-  # NODE_ENV: {{ .Values.NODE_ENV | default "production" | quote }}
-
   HOST: {{ .Values.HOST | default "localhost" | quote }}
   PORT: {{ .Values.PORT | default "4000" | quote }}
-
-  # PORT_DEBUGGER: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
 
   DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | default "postgres" | quote }}
   DATABASE_HOST: {{ .Values.DATABASE_HOST | default "localhost" | quote }}

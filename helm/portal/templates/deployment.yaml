@@ -56,11 +56,6 @@ spec:
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
-            - name: NODE_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: NODE_ENV
             - name: HOST
               valueFrom:
                 configMapKeyRef:
@@ -71,11 +66,6 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: PORT
-            - name: PORT_DEBUGGER
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: PORT_DEBUGGER
             - name: DATABASE_CONNECTION
               valueFrom:
                 configMapKeyRef:
