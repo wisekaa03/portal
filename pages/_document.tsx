@@ -2,9 +2,9 @@
 
 // #region Imports NPM
 import React from 'react';
-// import postcss from 'postcss';
+import postcss from 'postcss';
 // import autoprefixer from 'autoprefixer';
-// import cssnano from 'cssnano';
+import cssnano from 'cssnano';
 import Document, { Head, Main, NextScript, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 import { ApolloClient } from 'apollo-client';
@@ -15,6 +15,9 @@ import { ApolloDocumentProps } from '../lib/types';
 import theme from '../lib/theme';
 import { nextI18next } from '../lib/i18n-client';
 // #endregion
+
+const minifier = postcss([/* autoprefixer,  */ cssnano]);
+const postCssOptions = { from: undefined };
 
 interface MainDocumentInitialProps extends DocumentInitialProps {
   apolloClient: ApolloClient<NormalizedCacheObject>;
@@ -61,16 +64,12 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
 
   const initialProps = await Document.getInitialProps(ctx);
 
-  const minifiedStyles = sheets.toString();
-  // FIXME: это добавляет порядка 350мс к ответу сервера
-  // TODO: подумать как сократить это время
-  // if (process.env.NODE_ENV === 'production') {
-  //   minifiedStyles = await prefixer
-  //                            .process(sheets.toString(), { from: undefined })
-  //                            .then((result: any) => result.css);
-  // } else {
-  //   minifiedStyles = sheets.toString();
-  // }
+  let minifiedStyles;
+  if (1 || process.env.NODE_ENV === 'production') {
+    minifiedStyles = await minifier.process(sheets.toString(), postCssOptions).then((result: any) => result.css);
+  } else {
+    minifiedStyles = sheets.toString();
+  }
 
   const currentLanguage = nextI18next.i18n.language || nextI18next.config.defaultLanguage;
 
