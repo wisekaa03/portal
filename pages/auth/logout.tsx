@@ -2,7 +2,8 @@
 
 // #region Imports NPM
 import React from 'react';
-import { Mutation, MutationFunction, MutationResult } from 'react-apollo';
+import { useApolloClient, useMutation } from '@apollo/react-hooks';
+import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import { LOGOUT } from '../../lib/queries';
@@ -12,23 +13,18 @@ import { removeStorage } from '../../lib/session-storage';
 // #endregion
 
 const Logout = (): React.ReactElement => {
-  return (
-    <Mutation mutation={LOGOUT} onError={() => {}}>
-      {(logout: MutationFunction, { loading, error, data }: MutationResult<any>): JSX.Element | null => {
-        if (!data) {
-          return <LogoutComponent error={error} loading={loading} logout={logout} />;
-        }
+  const client = useApolloClient();
 
-        // eslint-disable-next-line no-debugger
-        debugger;
+  const [logout, { loading, error }] = useMutation(LOGOUT, {
+    onCompleted() {
+      removeStorage('token');
+      client.resetStore();
 
-        removeStorage('token');
-        window.location.pathname = '/auth/login';
+      Router.push({ pathname: '/auth/login' });
+    },
+  });
 
-        return null;
-      }}
-    </Mutation>
-  );
+  return <LogoutComponent error={error} loading={loading} logout={logout} />;
 };
 
 Logout.getInitialProps = () => {

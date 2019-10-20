@@ -1,19 +1,10 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Typography,
-  Button,
-  Checkbox,
-  Card,
-  CardContent,
-  FormControl,
-  FormControlLabel,
-  TextField,
-} from '@material-ui/core';
+import { Typography, Button, Card, CardContent, FormControl } from '@material-ui/core';
 
 import { MutationFunction } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
@@ -21,7 +12,6 @@ import { ApolloError } from 'apollo-client';
 // #region Imports Local
 import { GQLError } from './gql-error';
 import { Loading } from './loading';
-import { getStorage, setStorage } from '../lib/session-storage';
 import Background2 from '../public/images/svg/background2.svg';
 import Logo from '../public/images/svg/logo.svg';
 import { I18nPage, includeDefaultNamespaces, useTranslation } from '../lib/i18n-client';

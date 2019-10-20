@@ -41,9 +41,6 @@ class MainApp extends App<ApolloAppProps> {
       }),
     });
 
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     return (
       <ApolloProvider client={apolloClient}>
         <Head>
@@ -65,9 +62,6 @@ class MainApp extends App<ApolloAppProps> {
         >
           <Query query={CURRENT_USER} ssr={false}>
             {({ data, loading }: QueryResult<any>) => {
-              // eslint-disable-next-line no-debugger
-              debugger;
-
               if (loading) {
                 // TODO: какую-нибудь другую страницу...
                 return <Loading type="linear" variant="indeterminate" />;
