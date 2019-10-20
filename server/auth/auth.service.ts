@@ -139,8 +139,13 @@ export class AuthService {
   }): Promise<LdapAuthenticate> {
     try {
       // #region to LDAP database
-      const ldapUser: LdapResponeUser = await this.ldapService.authenticate(username, password);
+      const ldapUser: undefined | LdapResponeUser = await this.ldapService.authenticate(username, password);
       // #endregion
+
+      if (!ldapUser) {
+        this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
+        return { user, ldapUser: undefined, errorCode: HttpStatus.UNAUTHORIZED };
+      }
 
       try {
         return { user: await this.userService.createLdap(ldapUser, user), ldapUser, errorCode: HttpStatus.OK };

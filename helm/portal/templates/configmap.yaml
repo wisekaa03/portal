@@ -32,14 +32,6 @@ data:
   LDAP_REDIS_PASSWORD: {{ .Values.LDAP_REDIS_PASSWORD | default "" | quote }}
   LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
 
-  # Session Redis
-  SESSION_SECRET: {{ .Values.SESSION_SECRET | default "sessionsecret" | quote }}
-  SESSION_REDIS_HOST: {{ .Values.SESSION_REDIS_HOST | default "localhost" | quote }}
-  SESSION_REDIS_PORT: {{ .Values.SESSION_REDIS_PORT | default "6379" | quote }}
-  SESSION_REDIS_DB: {{ .Values.SESSION_REDIS_DB | default "1" | quote }}
-  SESSION_REDIS_PASSWORD: {{ .Values.SESSION_REDIS_PASSWORD | default "" | quote }}
-  SESSION_COOKIE_TTL: {{ .Values.SESSION_COOKIE_TTL | default "2400" | quote }}
-
   # HTTP Redis
   HTTP_REDIS_HOST: {{ .Values.HTTP_REDIS_HOST | default "localhost" | quote }}
   HTTP_REDIS_PORT: {{ .Values.HTTP_REDIS_PORT | default "6379" | quote }}
@@ -53,4 +45,6 @@ data:
   LDAP_BIND_DN: {{ .Values.LDAP_BIND_DN | default "CN=user,DC=example,DC=local" | quote }}
   LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | default "supersecret" | quote }}
   LDAP_SEARCH_BASE: {{ .Values.LDAP_SEARCH_BASE | default "DC=example,DC=local" | quote }}
-  LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | default "" | quote }}
+  LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | default "(sAMAccountName={{username}})" | quote }}
+  LDAP_SEARCH_BASE_ALL_USERS: {{ .Values.LDAP_SEARCH_BASE_ALL_USERS | default "DC=example,DC=local" | quote }}
+  LDAP_SEARCH_FILTER_ALL_USERS: {{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | default "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))" | quote }}

@@ -28,7 +28,7 @@ export class LdapService extends EventEmitter {
 
   private userClient: Ldap.Client;
 
-  private getGroups: any;
+  private getGroups: (user: Ldap.SearchEntryObject) => Promise<Ldap.SearchEntryObject>;
 
   private userCache: cacheManager.Cache;
 
@@ -46,9 +46,6 @@ export class LdapService extends EventEmitter {
     private readonly configService: ConfigService,
   ) {
     super();
-
-    // eslint-disable-next-line no-debugger
-    debugger;
 
     if (opts.cache) {
       this.ttl = parseInt(configService.get('LDAP_REDIS_TTL'), 10);
@@ -96,8 +93,8 @@ export class LdapService extends EventEmitter {
     this.adminClient = Ldap.createClient(this.clientOpts);
     this.adminBound = false;
     this.userClient = Ldap.createClient(this.clientOpts);
-    this.adminClient.on('error', this.handleError.bind(this));
-    this.userClient.on('error', this.handleError.bind(this));
+    this.adminClient.on('error', this.handleErrorAdmin.bind(this));
+    this.userClient.on('error', this.handleErrorUser.bind(this));
 
     if (opts.reconnect) {
       this.once('installReconnectListener', () => {
@@ -106,8 +103,8 @@ export class LdapService extends EventEmitter {
       });
     }
 
-    this.adminClient.on('connectTimeout', this.handleError.bind(this));
-    this.userClient.on('connectTimeout', this.handleError.bind(this));
+    this.adminClient.on('connectTimeout', this.handleErrorAdmin.bind(this));
+    this.userClient.on('connectTimeout', this.handleErrorUser.bind(this));
 
     if (opts.groupSearchBase && opts.groupSearchFilter) {
       if (typeof opts.groupSearchFilter === 'string') {
@@ -124,7 +121,7 @@ export class LdapService extends EventEmitter {
     } else {
       // Assign an async identity function so there is no need to branch
       // the authenticate function to have cache set up.
-      this.getGroups = async (user: any): Promise<any> => user;
+      this.getGroups = async (user) => user;
     }
   }
 
@@ -151,11 +148,25 @@ export class LdapService extends EventEmitter {
    * @param {Error} err - The error to be logged and emitted
    * @returns {void}
    */
-  private handleError(err: Ldap.Error): void {
+  private handleErrorAdmin(err: Ldap.Error): void {
     if (`${err.code}` !== 'ECONNRESET') {
-      this.logger.error(`emitted error: [${err.code}]`, err.toString(), 'LDAP');
+      this.logger.error(`admin emitted error: [${err.code}]`, err.toString(), 'LDAP');
     }
     this.adminBound = false;
+  }
+
+  /**
+   * Mark user client unbound so reconnect works as expected and re-emit the error
+   *
+   * @private
+   * @param {Error} err - The error to be logged and emitted
+   * @returns {void}
+   */
+  private handleErrorUser(err: Ldap.Error): void {
+    if (`${err.code}` !== 'ECONNRESET') {
+      this.logger.error(`user emitted error: [${err.code}]`, err.toString(), 'LDAP');
+    }
+    // this.adminBound = false;
   }
 
   /**
@@ -164,20 +175,22 @@ export class LdapService extends EventEmitter {
    * @private
    * @returns {boolean | Error}
    */
-  private async onConnectAdmin(): Promise<boolean | Error> {
+  private async onConnectAdmin(): Promise<boolean> {
     // Anonymous binding
     if (typeof this.bindDN === 'undefined' || this.bindDN === null) {
       this.adminBound = false;
+
       throw new Error('bindDN is undefined');
     }
 
     this.logger.log(`bind: ${this.bindDN} ...`, 'LDAP');
 
-    return new Promise((resolve, reject) =>
+    return new Promise<boolean>((resolve, reject) =>
       this.adminClient.bind(this.bindDN, this.bindCredentials, (error: Ldap.Error) => {
         if (error) {
           this.logger.error('bind error:', error.toString(), 'LDAP');
           this.adminBound = false;
+
           return reject(error);
         }
 
@@ -186,6 +199,7 @@ export class LdapService extends EventEmitter {
         if (this.opts.reconnect) {
           this.emit('installReconnectListener');
         }
+
         return resolve(true);
       }),
     );
@@ -198,7 +212,7 @@ export class LdapService extends EventEmitter {
    * @returns {boolean | Error}
    */
   // eslint-disable-next-line no-confusing-arrow
-  private adminBind = async (): Promise<boolean | Error> => (this.adminBound ? true : this.onConnectAdmin());
+  private adminBind = async (): Promise<boolean> => (this.adminBound ? true : this.onConnectAdmin());
 
   /**
    * Conduct a search using the admin client. Used for fetching both
@@ -210,19 +224,17 @@ export class LdapService extends EventEmitter {
    * @param {string} options.filter - LDAP search filter
    * @param {string} options.scope - LDAP search scope
    * @param {(string[]|undefined)} options.attributes - Attributes to fetch
-   * @returns {undefined}
+   * @returns {undefined | Ldap.SearchEntryObject | Ldap.SearchEntryObject[]}
    */
-  private async search(searchBase: string, options: Ldap.SearchOptions): Promise<any> {
-    return this.adminBind()
-      .then(() => {
-        return new Promise((resolve, reject) =>
+  private async search(searchBase: string, options: Ldap.SearchOptions): Promise<undefined | Ldap.SearchEntryObject[]> {
+    return this.adminBind().then(
+      () =>
+        new Promise<undefined | Ldap.SearchEntryObject[]>((resolve, reject) =>
           this.adminClient.search(
             searchBase,
             options,
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
-              if (searchErr) {
-                return reject(searchErr);
-              }
+              searchErr && reject(searchErr);
 
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {
@@ -246,15 +258,11 @@ export class LdapService extends EventEmitter {
                 return resolve(items);
               });
 
-              return true;
+              return undefined;
             },
           ),
-        );
-      })
-      .catch((error) => {
-        this.logger.error(`search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
-        throw error;
-      });
+        ),
+    );
   }
 
   /**
@@ -283,7 +291,7 @@ export class LdapService extends EventEmitter {
    * @param {string} username - Username to search for
    * @returns {undefined} - If user is not found but no error happened, result is undefined.
    */
-  private async findUser(username: string): Promise<any> {
+  private async findUser(username: string): Promise<undefined | Ldap.SearchEntryObject> {
     if (!username) {
       throw new Error('empty username');
     }
@@ -300,11 +308,15 @@ export class LdapService extends EventEmitter {
 
     return this.search(this.opts.searchBase, opts)
       .then(
-        (result: any) =>
-          new Promise((resolve, reject) => {
+        (result) =>
+          new Promise<undefined | Ldap.SearchEntryObject>((resolve, reject) => {
+            if (!result) {
+              throw new Error('No result from search.');
+            }
+
             switch (result.length) {
               case 0:
-                return resolve(false);
+                return resolve(undefined);
               case 1:
                 return resolve(result[0]);
               default:
@@ -312,9 +324,10 @@ export class LdapService extends EventEmitter {
             }
           }),
       )
-      .catch((error) => {
-        this.logger.error(`findUser: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
-        throw new Error(error);
+      .catch((error: Ldap.Error) => {
+        this.logger.error(`user search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
+
+        throw error;
       });
   }
 
@@ -325,7 +338,7 @@ export class LdapService extends EventEmitter {
    * @param {Object} user - The LDAP user object
    * @returns {void} - Result handling callback
    */
-  private async findGroups(user: any): Promise<any> {
+  private async findGroups(user: Ldap.SearchEntryObject): Promise<Ldap.SearchEntryObject> {
     if (!user) {
       throw new Error('no user');
     }
@@ -343,20 +356,54 @@ export class LdapService extends EventEmitter {
     }
 
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
-      .then((result: Ldap.SearchCallBack) => {
+      .then((result) => {
         // eslint-disable-next-line no-param-reassign
-        user.groups = result;
+        (user.groups as unknown) = result;
+
         return user;
       })
-      .catch((error) => {
+      .catch((error: Ldap.Error) => {
         this.logger.error(`group search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
+
         throw error;
       });
   }
 
-  public async synchronization(): Promise<any | LdapResponeUser[]> {
-    // TODO: синхронизация
-    return undefined;
+  /**
+   * Synchronize users
+   *
+   * @returns {undefined | LdapResponeUser[]} - User in LDAP
+   */
+  public async synchronization(): Promise<undefined | LdapResponeUser[]> {
+    if (this.opts.cache && this.userCache) {
+      // const cached = await this.userCache.get('SYNCHRONIZATION');
+      // if (cached && cached.user) {
+      //   this.logger.debug(`from cache: ${cached.user}`, 'LDAP');
+      //   return cached.user as LdapResponeUser;
+      // }
+    }
+
+    const opts = {
+      filter: this.opts.searchFilterAllUsers,
+      scope: this.opts.searchScopeAllUsers,
+      attributes: ['*'],
+    };
+    if (this.opts.searchAttributesAllUsers) {
+      opts.attributes = this.opts.searchAttributesAllUsers;
+    }
+
+    return this.search(this.opts.searchBaseAllUsers, opts)
+      .then(
+        (result) =>
+          new Promise<undefined | LdapResponeUser[]>((resolve, reject) => {
+            resolve(result as LdapResponeUser[]);
+          }),
+      )
+      .catch((error: Ldap.Error) => {
+        this.logger.error('Synchronize error:', error.toString(), 'LDAP');
+
+        return undefined;
+      });
   }
 
   /**
@@ -364,9 +411,9 @@ export class LdapService extends EventEmitter {
    *
    * @param {string} username - The username to authenticate
    * @param {string} password - The password to verify
-   * @returns {object} - User in LDAP
+   * @returns {undefined | LdapResponeUser} - User in LDAP
    */
-  public async authenticate(username: string, password: string): Promise<any | LdapResponeUser> {
+  public async authenticate(username: string, password: string): Promise<undefined | LdapResponeUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
       this.logger.error('no password given', undefined, 'LDAP');
       throw new Error('no password given');
@@ -377,57 +424,64 @@ export class LdapService extends EventEmitter {
       const cached = await this.userCache.get(username);
       if (cached && cached.user && cached.user.username && bcrypt.compareSync(password, cached.password)) {
         this.logger.debug(`from cache: ${cached.user.username}`, 'LDAP');
+
         return cached.user as LdapResponeUser;
       }
     }
 
     // 1. Find the user DN in question.
-    return this.findUser(username)
-      .then((user: any) => {
-        return new Promise((resolve, reject) => {
-          if (!user) {
-            return reject(new Error(`no such user: "${username}"`));
+    const foundUser = await this.findUser(username).catch((error: Ldap.Error) => {
+      this.logger.error(`Not found user: "${username}"`, error.toString(), 'LDAP');
+
+      throw error;
+    });
+    if (!foundUser) {
+      this.logger.error(`Not found user: "${username}"`, undefined, 'LDAP');
+
+      return undefined;
+    }
+
+    // 2. Attempt to bind as that user to check password.
+    return new Promise<undefined | LdapResponeUser>((resolve, reject) => {
+      this.userClient.bind(
+        foundUser[this.opts.bindProperty || 'dn'],
+        password,
+        async (bindErr: Ldap.Error): Promise<unknown | LdapResponeUser> => {
+          if (bindErr) {
+            this.logger.error('bind error:', bindErr.toString(), 'LDAP');
+
+            return reject(bindErr);
           }
 
-          // 2. Attempt to bind as that user to check password.
-          return this.userClient.bind(
-            user[this.opts.bindProperty || 'dn'],
-            password,
-            async (bindErr: Ldap.Error): Promise<any> => {
-              if (bindErr) {
-                this.logger.error('bind error:', bindErr.toString(), 'LDAP');
-                return reject(bindErr);
-              }
+          // 3. If requested, fetch user groups
+          try {
+            const userWithGroups = await this.getGroups(foundUser);
 
-              // 3. If requested, fetch user groups
-              try {
-                const userWithGroups = await this.getGroups(user);
+            if (this.opts.cache) {
+              this.logger.debug(`to cache: ${username}`, 'LDAP');
+              this.userCache.set<any>(
+                username,
+                {
+                  user: userWithGroups,
+                  password: bcrypt.hashSync(password, 4),
+                },
+                this.ttl,
+              );
+            }
 
-                if (this.opts.cache) {
-                  this.logger.debug(`to cache: ${username}`, 'LDAP');
-                  this.userCache.set<any>(
-                    username,
-                    {
-                      user: userWithGroups,
-                      password: bcrypt.hashSync(password, 4),
-                    },
-                    this.ttl,
-                  );
-                }
+            return resolve(userWithGroups as LdapResponeUser);
+          } catch (error) {
+            this.logger.error('authenticate:', error.toString(), 'LDAP');
 
-                return resolve(userWithGroups as LdapResponeUser);
-              } catch (error) {
-                this.logger.error('authenticate:', error, 'LDAP');
+            return undefined;
+          }
+        },
+      );
+    }).catch((error) => {
+      this.logger.error('authenticate:', error.toString(), 'LDAP');
 
-                throw error;
-              }
-            },
-          );
-        });
-      })
-      .catch((error) => {
-        throw error;
-      });
+      return undefined;
+    });
   }
 
   /**

@@ -37,6 +37,10 @@ import { AuthResolver } from './auth.resolver';
           searchFilter: configService.get('LDAP_SEARCH_FILTER'),
           searchScope: 'sub' as Scope,
           searchAttributes: ['*'],
+          searchBaseAllUsers: configService.get('LDAP_SEARCH_BASE_ALL_USERS'),
+          searchFilterAllUsers: configService.get('LDAP_SEARCH_FILTER_ALL_USERS'),
+          searchScopeAllUsers: 'sub' as Scope,
+          searchAttributesAllUsers: ['*'],
           reconnect: true,
           cache: true,
         };

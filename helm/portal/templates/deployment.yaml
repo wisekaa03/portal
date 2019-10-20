@@ -161,36 +161,6 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: LDAP_REDIS_TTL
-            - name: SESSION_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_SECRET
-            - name: SESSION_REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_HOST
-            - name: SESSION_REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_PORT
-            - name: SESSION_REDIS_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_DB
-            - name: SESSION_REDIS_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_PASSWORD
-            - name: SESSION_COOKIE_TTL
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_COOKIE_TTL
             - name: HTTP_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -251,6 +221,16 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: LDAP_SEARCH_FILTER
+            - name: LDAP_SEARCH_BASE_ALL_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_BASE_ALL_USERS
+            - name: LDAP_SEARCH_FILTER_ALL_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_FILTER_ALL_USERS
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

@@ -36,7 +36,7 @@ export class ProfileService {
   }
 
   async synch(_req: Request): Promise<boolean | null> {
-    const users: LdapResponeUser[] = await this.ldapService.synchronization();
+    const users = await this.ldapService.synchronization();
 
     // TODO: обработка синхронизации - записать в базу все поля
 

@@ -169,25 +169,6 @@ export class ConfigService {
         .allow('')
         .empty(),
 
-      SESSION_SECRET: Joi.string()
-        .default('portal')
-        .empty(),
-      SESSION_REDIS_HOST: Joi.string()
-        .default('localhost')
-        .empty(),
-      SESSION_REDIS_PORT: Joi.number()
-        .default(6379)
-        .empty(),
-      SESSION_REDIS_DB: Joi.number()
-        .default(0)
-        .empty(),
-      SESSION_REDIS_PASSWORD: Joi.string()
-        .allow('')
-        .empty(),
-      SESSION_COOKIE_TTL: Joi.number()
-        .default(24)
-        .empty(),
-
       LDAP_URL: Joi.string()
         .default('ldap://activedirectory:389')
         .empty(),
@@ -202,6 +183,12 @@ export class ConfigService {
         .empty(),
       LDAP_SEARCH_FILTER: Joi.string()
         .default('(sAMAccountName={{username}})')
+        .empty(),
+      LDAP_SEARCH_BASE_ALL_USERS: Joi.string()
+        .default('DC=example,DC=local')
+        .empty(),
+      LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
+        .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
         .empty(),
     });
 

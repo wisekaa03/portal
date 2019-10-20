@@ -148,8 +148,8 @@ DATABASE_USERNAME=portal
 DATABASE_PASSWORD=portalpwd
 DATABASE_DATABASE=portaldb
 DATABASE_SCHEMA=public
-DATABASE_SYNCHRONIZE=true
-DATABASE_DROP_SCHEMA=true
+DATABASE_SYNCHRONIZE=false
+DATABASE_DROP_SCHEMA=false
 DATABASE_MIGRATIONS_RUN=true
 DATABASE_LOGGING=true
 DATABASE_CACHE=true
@@ -170,20 +170,14 @@ LDAP_REDIS_DB="1"
 LDAP_REDIS_PASSWORD=""
 LDAP_REDIS_TTL="51000"
 
-# Session Redis
-SESSION_SECRET="supersecret"
-SESSION_REDIS_HOST="localhost"
-SESSION_REDIS_PORT="6379"
-SESSION_REDIS_DB="2"
-SESSION_REDIS_PASSWORD=""
-SESSION_COOKIE_TTL="51000"
-
 # LDAP
-LDAP_URL=ldap://pdc.example.local:389
-LDAP_BIND_DN=CN=Administrator,DC=example,DC=local
-LDAP_BIND_PW=PaSsWoRd123
-LDAP_SEARCH_BASE=DC=example,DC=local
-LDAP_SEARCH_FILTER=(sAMAccountName={{username}})
+LDAP_URL="ldap://pdc.example.local:389"
+LDAP_BIND_DN="CN=Administrator,DC=example,DC=local"
+LDAP_BIND_PW="PaSsWoRd123"
+LDAP_SEARCH_BASE="DC=example,DC=local"
+LDAP_SEARCH_FILTER="(sAMAccountName={{username}})"
+LDAP_SEARCH_BASE_ALL_USERS="DC=example,DC=local"
+LDAP_SEARCH_FILTER_ALL_USERS="(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
 ```
 
 ## Production Deployment

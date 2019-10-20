@@ -41,14 +41,6 @@ LDAP_REDIS_DB: 0
 LDAP_REDIS_PASSWORD: ""
 LDAP_REDIS_TTL: 51000
 
-# Session Redis
-SESSION_SECRET: supersecret
-SESSION_REDIS_HOST: redis-ha.default.svc.cluster.local
-SESSION_REDIS_PORT: 6379
-SESSION_REDIS_DB: 1
-SESSION_REDIS_PASSWORD: ""
-SESSION_COOKIE_TTL: 51000
-
 # HTTP Redis
 HTTP_REDIS_HOST: redis-ha.default.svc.cluster.local
 HTTP_REDIS_PORT: 6379
@@ -64,6 +56,8 @@ LDAP_BIND_DN: CN=user,DC=example,DC=local
 LDAP_BIND_PW: ""
 LDAP_SEARCH_BASE: DC=example,DC=local
 LDAP_SEARCH_FILTER: (sAMAccountName={{username}})
+LDAP_SEARCH_BASE_ALL_USERS: DC=example,DC=local
+LDAP_SEARCH_FILTER_ALL_USERS: (&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))
 
 service:
   type: LoadBalancer

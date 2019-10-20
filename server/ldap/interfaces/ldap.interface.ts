@@ -3,14 +3,14 @@
 // #region Imports NPM
 import { Logger } from '@nestjs/common';
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
-import { ClientOptions } from 'ldapjs';
+import { ClientOptions, SearchEntryObject } from 'ldapjs';
 // #endregion
 
 export const LDAP_MODULE_OPTIONS = 'LDAP_MODULE_OPTIONS';
 
 export type Scope = 'base' | 'one' | 'sub';
 
-export interface LdapResponeUser {
+export interface LdapResponeUser extends SearchEntryObject {
   /**
    * Country
    */
@@ -112,7 +112,7 @@ export interface LdapResponeUser {
   objectClass: string[];
 
   // Object GUID
-  objectGUID: Buffer;
+  objectGUID: string;
 
   // Other telephone
   otherTelephone: string;
@@ -162,11 +162,6 @@ export interface LdapResponeUser {
   wWWHomePage: string;
 
   userPrincipalName: string;
-
-  /**
-   * Some additional parameters
-   */
-  [key: string]: string | string[] | Buffer;
 }
 
 interface GroupSearchFilterFunction {
@@ -197,6 +192,12 @@ export interface LdapModuleOptions extends ClientOptions {
    */
   bindCredentials: string;
   /**
+   * Property of the LDAP user object to use when binding to verify
+   * the password. E.g. name, email. Default: dn
+   */
+  bindProperty?: 'dn';
+
+  /**
    * The base DN from which to search for users by username.
    * E.g. ou=users,dc=example,dc=org
    */
@@ -215,6 +216,24 @@ export interface LdapModuleOptions extends ClientOptions {
    * Array of attributes to fetch from LDAP server. Default: all
    */
   searchAttributes?: string[];
+
+  /**
+   * The base DN from which to search for synchronization.
+   * E.g. ou=users,dc=example,dc=org
+   */
+  searchBaseAllUsers: string;
+  /**
+   * LDAP search filter with synchronization.
+   */
+  searchFilterAllUsers: string;
+  /**
+   * Scope of the search. Default: 'sub'
+   */
+  searchScopeAllUsers?: Scope;
+  /**
+   * Array of attributes to fetch from LDAP server. Default: all
+   */
+  searchAttributesAllUsers?: string[];
 
   /**
    * The base DN from which to search for groups. If defined,
@@ -238,11 +257,6 @@ export interface LdapModuleOptions extends ClientOptions {
    */
   groupSearchAttributes?: string[];
 
-  /**
-   * Property of the LDAP user object to use when binding to verify
-   * the password. E.g. name, email. Default: dn
-   */
-  bindProperty?: string;
   /**
    * The property of user object to use in '{{dn}}' interpolation of
    * groupSearchFilter. Default: 'dn'
