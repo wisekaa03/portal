@@ -37,7 +37,7 @@ export class ProfileEntity {
   @Column({
     type: 'varchar',
     length: 100,
-    unique: true,
+    nullable: true,
   })
   username: string;
 
@@ -77,6 +77,8 @@ export class ProfileEntity {
 
   @Column({
     type: 'int',
+    nullable: true,
+    default: Gender.UNKNOWN,
   })
   gender: Gender;
 
@@ -119,9 +121,6 @@ export class ProfileEntity {
   @Column({
     type: 'bytea',
     nullable: true,
-    update: true,
-    insert: true,
-    select: true,
   })
   thumbnailPhoto: Buffer;
 

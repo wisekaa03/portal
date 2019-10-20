@@ -8,9 +8,10 @@ type Address {
 type Profile {
   id: ID!
 
-  username: String!
   loginService: String!
   loginIdentificator: String!
+
+  username: String
 
   firstName: String
   lastName: String

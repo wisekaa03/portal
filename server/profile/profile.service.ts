@@ -37,19 +37,28 @@ export class ProfileService {
 
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {
     let comment;
-
     try {
       comment = JSON.parse(ldapUser.comment);
     } catch (error) {
       comment = {};
     }
+    const {
+      companyeng = undefined,
+      nameeng = undefined,
+      departmenteng = undefined,
+      otdeleng = undefined,
+      positioneng = undefined,
+      gender = undefined,
+    } = comment;
 
-    const { companyeng, nameeng, departmenteng, otdeleng, positioneng, birthday, gender } = comment;
+    let { birthday } = comment;
+    if (!birthday || birthday === '') {
+      birthday = undefined;
+    } else {
+      birthday = new Date(Date.parse(birthday)).toLocaleDateString();
+    }
 
     let profile: Profile = {
-      id: user && user.profile && user.profile.id,
-      createdAt: user && user.profile && user.profile.createdAt,
-      updatedAt: user && user.profile && user.profile.updatedAt,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID.toString(),
       username: ldapUser.sAMAccountName,
@@ -72,6 +81,22 @@ export class ProfileService {
       mobile: ldapUser.mobile,
       thumbnailPhoto: Buffer.from(ldapUser.thumbnailPhoto, 'binary'),
     };
+
+    if (user && user.profile) {
+      profile.id = user.profile.id;
+      profile.createdAt = user.profile.createdAt;
+      profile.updatedAt = user.profile.updatedAt;
+    } else {
+      const profileSave = await this.profileRepository.findOne({
+        where: { loginIdentificator: ldapUser.objectGUID.toString() },
+      });
+
+      if (profileSave) {
+        profile.id = profileSave.id;
+        profile.createdAt = profileSave.createdAt;
+        profile.updatedAt = profileSave.updatedAt;
+      }
+    }
 
     try {
       profile = this.profileRepository.create(profile);

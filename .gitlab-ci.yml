@@ -107,17 +107,13 @@ deploy:
           --set HTTP_REDIS_PREFIX="${HTTP_REDIS_PREFIX}" \
           --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
           --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
-          --set SESSION_SECRET="${SESSION_SECRET}" \
-          --set SESSION_REDIS_HOST="${SESSION_REDIS_HOST}" \
-          --set SESSION_REDIS_PORT="${SESSION_REDIS_PORT}" \
-          --set SESSION_REDIS_DB="${SESSION_REDIS_DB}" \
-          --set SESSION_REDIS_PASSWORD="${SESSION_REDIS_PASSWORD}" \
-          --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
           --set LDAP_URL="${LDAP_URL}" \
           --set LDAP_BIND_DN="${LDAP_BIND_DN}" \
           --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
           --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
+          --set LDAP_SEARCH_BASE_ALL_USERS="${LDAP_SEARCH_BASE_ALL_USERS}" \
+          --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
@@ -152,17 +148,13 @@ deploy:
           --set HTTP_REDIS_PREFIX="${HTTP_REDIS_PREFIX}" \
           --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
           --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
-          --set SESSION_SECRET="${SESSION_SECRET}" \
-          --set SESSION_REDIS_HOST="${SESSION_REDIS_HOST}" \
-          --set SESSION_REDIS_PORT="${SESSION_REDIS_PORT}" \
-          --set SESSION_REDIS_DB="${SESSION_REDIS_DB}" \
-          --set SESSION_REDIS_PASSWORD="${SESSION_REDIS_PASSWORD}" \
-          --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
           --set LDAP_URL="${LDAP_URL}" \
           --set LDAP_BIND_DN="${LDAP_BIND_DN}" \
           --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
           --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
+          --set LDAP_SEARCH_BASE_ALL_USERS="${LDAP_SEARCH_BASE_ALL_USERS}" \
+          --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \

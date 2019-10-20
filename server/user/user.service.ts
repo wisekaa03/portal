@@ -76,6 +76,11 @@ export class UserService {
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
 
+    // Для контактов
+    if (!ldapUser.sAMAccountName) {
+      return undefined;
+    }
+
     // TODO: сделать что-нибудь по поводу групп..
     const data: User = {
       id: user && user.id,

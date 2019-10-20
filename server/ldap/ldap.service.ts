@@ -132,14 +132,14 @@ export class LdapService extends EventEmitter {
    * @param {string} objectGUID - GUID in AD
    * @returns {string} - string GUID
    */
-  public GUIDtoString(objectGUID: string): string {
-    const buf = Buffer.from(objectGUID, 'binary').toString('hex');
-    const rep = buf.replace(
-      /^(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)$/,
-      '$4$3$2$1-$6$5-$8$7-$10$9-$15$14$13$12$11',
-    );
-    return rep.toUpperCase();
-  }
+  GUIDtoString = (objectGUID: string): string =>
+    Buffer.from(objectGUID, 'binary')
+      .toString('hex')
+      .replace(
+        /^(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)$/,
+        '$4$3$2$1-$6$5-$8$7-$10$9-$15$14$13$12$11',
+      )
+      .toUpperCase();
 
   /**
    * Mark admin client unbound so reconnect works as expected and re-emit the error
@@ -211,7 +211,6 @@ export class LdapService extends EventEmitter {
    * @private
    * @returns {boolean | Error}
    */
-  // eslint-disable-next-line no-confusing-arrow
   private adminBind = async (): Promise<boolean> => (this.adminBound ? true : this.onConnectAdmin());
 
   /**
@@ -376,11 +375,13 @@ export class LdapService extends EventEmitter {
    */
   public async synchronization(): Promise<undefined | LdapResponeUser[]> {
     if (this.opts.cache && this.userCache) {
-      // const cached = await this.userCache.get('SYNCHRONIZATION');
-      // if (cached && cached.user) {
-      //   this.logger.debug(`from cache: ${cached.user}`, 'LDAP');
-      //   return cached.user as LdapResponeUser;
-      // }
+      const cached = await this.userCache.get('SYNCHRONIZATION');
+      // TODO: придумать что-нибудь половчее моих synchronization
+      if (cached && bcrypt.compareSync('synchronization', cached.hash) && cached.result) {
+        this.logger.debug(`synchronization from cache`, 'LDAP');
+
+        return cached.result as LdapResponeUser[];
+      }
     }
 
     const opts = {
@@ -393,12 +394,18 @@ export class LdapService extends EventEmitter {
     }
 
     return this.search(this.opts.searchBaseAllUsers, opts)
-      .then(
-        (result) =>
-          new Promise<undefined | LdapResponeUser[]>((resolve, reject) => {
-            resolve(result as LdapResponeUser[]);
-          }),
-      )
+      .then((result) => {
+        this.userCache.set<any>(
+          'SYNCHRONIZATION',
+          {
+            result,
+            hash: bcrypt.hashSync('synchronization', 10),
+          },
+          this.ttl,
+        );
+
+        return result as LdapResponeUser[];
+      })
       .catch((error: Ldap.Error) => {
         this.logger.error('Synchronize error:', error.toString(), 'LDAP');
 
@@ -459,11 +466,12 @@ export class LdapService extends EventEmitter {
 
             if (this.opts.cache) {
               this.logger.debug(`to cache: ${username}`, 'LDAP');
+
               this.userCache.set<any>(
                 username,
                 {
                   user: userWithGroups,
-                  password: bcrypt.hashSync(password, 4),
+                  password: bcrypt.hashSync(password, 10),
                 },
                 this.ttl,
               );
