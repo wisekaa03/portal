@@ -375,8 +375,8 @@ export class LdapService extends EventEmitter {
     if (this.opts.cache && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached = await this.userCache.get(username);
-      if (cached && cached.user && bcrypt.compareSync(password, cached.password)) {
-        this.logger.debug(`from cache: ${JSON.stringify(cached.user.username)}`, 'LDAP');
+      if (cached && cached.user && cached.user.username && bcrypt.compareSync(password, cached.password)) {
+        this.logger.debug(`from cache: ${cached.user.username}`, 'LDAP');
         return cached.user as LdapResponeUser;
       }
     }

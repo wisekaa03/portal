@@ -14,11 +14,7 @@ import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
 import { JwtServiceMock } from '../../__mocks__/jwt.service.mock';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { CookieSerializer } from './cookie.serializer';
-import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
 import { UserServiceMock } from '../../__mocks__/user.service.mock';
-// import { GqlAuthGuard } from '../guards/gqlauth.guard';
-// import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 import { AuthResolver } from './auth.resolver';
@@ -80,8 +76,6 @@ describe('AuthResolver', () => {
       .useValue(LogServiceMock)
       .overrideProvider(JwtStrategy)
       .useValue(JwtStrategyMock)
-      .overrideProvider(CookieSerializer)
-      .useValue(CookieSerializerMock)
       .overrideProvider(LdapService)
       .useValue(LdapServiceMock)
       .compile();

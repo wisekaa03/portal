@@ -15,7 +15,6 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 // #endregion
 // #region Imports Local
-import { sessionRedis } from './shared/session-redis';
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
 import { LogService } from './logger/logger.service';
@@ -67,13 +66,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(cookieParser());
   // #endregion
 
-  // #region production ready session store
-  // app.use(sessionRedis(configService, logger));
-  // #endregion
-
   // #region Passport initialization
   app.use(passport.initialize());
-  // app.use(passport.session());
   // #endregion
 
   // #region Static files

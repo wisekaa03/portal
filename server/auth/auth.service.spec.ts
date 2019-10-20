@@ -8,16 +8,14 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
 import { ConfigModule } from '../config/config.module';
-import { LoggerModule } from '../logger/logger.module';
 import { ConfigService } from '../config/config.service';
+import { LoggerModule } from '../logger/logger.module';
 import { LogService } from '../logger/logger.service';
 import { LogServiceMock } from '../../__mocks__/logger.service.mock';
 import { ProfileEntity } from '../profile/profile.entity';
 import { AuthModule } from './auth.module';
 import { AuthService } from './auth.service';
 import { UserEntity } from '../user/user.entity';
-import { CookieSerializer } from './cookie.serializer';
-import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 import { UserServiceMock } from '../../__mocks__/user.service.mock';
@@ -25,8 +23,6 @@ import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
-import { LdapService } from '../ldap/ldap.service';
-import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -75,8 +71,6 @@ describe('AuthService', () => {
       .useValue(LogServiceMock)
       .overrideProvider(JwtStrategy)
       .useValue(JwtStrategyMock)
-      .overrideProvider(CookieSerializer)
-      .useValue(CookieSerializerMock)
       .overrideGuard(GqlAuthGuard)
       .useValue(GqlAuthGuardMock)
       .compile();

@@ -15,8 +15,6 @@ import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
-import { CookieSerializer } from '../auth/cookie.serializer';
-import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -35,8 +33,6 @@ describe('ProfileResolver', () => {
       .useValue(LogServiceMock)
       .overrideProvider(JwtStrategy)
       .useValue(JwtStrategyMock)
-      .overrideProvider(CookieSerializer)
-      .useValue(CookieSerializerMock)
       .overrideGuard(GqlAuthGuard)
       .useValue(GqlAuthGuardMock)
       .compile();

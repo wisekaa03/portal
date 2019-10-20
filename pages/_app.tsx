@@ -70,7 +70,7 @@ class MainApp extends App<ApolloAppProps> {
 
               if (loading) {
                 // TODO: какую-нибудь другую страницу...
-                return <Loading />;
+                return <Loading type="linear" variant="indeterminate" />;
               }
 
               if (data && data.me) {
@@ -78,7 +78,7 @@ class MainApp extends App<ApolloAppProps> {
                   const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
                   Router.push({ pathname: redirect as string });
 
-                  return <Loading />;
+                  return <Loading type="linear" variant="indeterminate" />;
                 }
 
                 return (
@@ -97,7 +97,7 @@ class MainApp extends App<ApolloAppProps> {
               if (Router.pathname !== '/auth/login') {
                 Router.push('/auth/login');
 
-                return <Loading />;
+                return <Loading type="linear" variant="indeterminate" />;
               }
 
               return <Component {...pageProps} />;

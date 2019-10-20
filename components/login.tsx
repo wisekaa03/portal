@@ -101,20 +101,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface LoginProps {
-  error?: ApolloError;
-  loading: boolean;
-  login: MutationFunction;
-}
-
 interface State {
   save: boolean;
   name: string;
   pass: string;
 }
 
-export const LoginComponent = (props: LoginProps): React.ReactElement => {
-  const { error, loading, login } = props;
+export const LoginComponent: React.FC<{
+  error?: ApolloError;
+  loading: boolean;
+  login: MutationFunction;
+}> = ({ error, loading, login }) => {
   const { t, i18n } = useTranslation('login');
 
   const classes: any = useStyles({});
@@ -130,7 +127,7 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
     const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
 
     setValues({ ...values, [name]: value });
-    setStorage(`user.${name}`, value.toString());
+    name !== 'pass' && setStorage(`user.${name}`, value.toString());
   };
 
   useEffect(() => {
@@ -138,9 +135,9 @@ export const LoginComponent = (props: LoginProps): React.ReactElement => {
 
     if (save === 'true') {
       setValues({
-        save: true,
+        save: !!save,
         name: getStorage('user.name'),
-        pass: getStorage('user.pass'),
+        pass: '',
       });
     }
   }, []);

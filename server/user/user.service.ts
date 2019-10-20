@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 // #region Imports Local
 import { UserEntity } from './user.entity';
 import { User } from './models/user.dto';
-// import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';

@@ -4,7 +4,7 @@
 
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule, forwardRef } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
 import { GraphQLModule } from '@nestjs/graphql';
@@ -92,12 +92,7 @@ import { ProfileModule } from './profile/profile.module';
       debug: process.env.NODE_ENV !== 'production',
       playground: process.env.NODE_ENV !== 'production',
       typePaths: ['./**/*.graphql'],
-      context: ({ req }) => {
-        // eslint-disable-next-line no-debugger
-        // debugger;
-
-        return { req /* , user: req._passport.session && req._passport.session.user */ };
-      },
+      context: ({ req }) => ({ req }),
     }),
     // #endregion
 
@@ -109,11 +104,12 @@ import { ProfileModule } from './profile/profile.module';
     ProfileModule,
     // #endregion
 
-    // #region Users
-    forwardRef(() => UserModule),
-    // #endregion
     // #region Authentication
-    forwardRef(() => AuthModule),
+    AuthModule,
+    // #endregion
+
+    // #region Users
+    UserModule,
     // #endregion
 
     // #region Next

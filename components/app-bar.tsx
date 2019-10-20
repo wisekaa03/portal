@@ -162,12 +162,24 @@ export default (props: AppBarProps): React.ReactElement => {
                   </Typography>
                   <Avatar className={classes.avatar}>И</Avatar>
                   <Box className={classes.phoneBlock}>
-                    <PhoneIcon />
-                    <Typography>{v.user.profile.telephone}</Typography>
-                    <PhoneIphoneIcon />
-                    <Typography>{v.user.profile.mobile}</Typography>
-                    <PhoneInTalkIcon />
-                    <Typography>{v.user.profile.workPhone}</Typography>
+                    {v.user.profile.telephone ? (
+                      <>
+                        <PhoneIcon />
+                        <Typography>{v.user.profile.telephone}</Typography>
+                      </>
+                    ) : null}
+                    {v.user.profile.mobile ? (
+                      <>
+                        <PhoneIphoneIcon />
+                        <Typography>{v.user.profile.mobile}</Typography>
+                      </>
+                    ) : null}
+                    {v.user.profile.workPhone ? (
+                      <>
+                        <PhoneInTalkIcon />
+                        <Typography>{v.user.profile.workPhone}</Typography>
+                      </>
+                    ) : null}
                   </Box>
                 </Popover>
               </>

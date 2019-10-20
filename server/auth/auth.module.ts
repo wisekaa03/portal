@@ -10,10 +10,8 @@ import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
-// eslint-disable-next-line import/no-cycle
 import { UserModule } from '../user/user.module';
 import { LoggerModule } from '../logger/logger.module';
-import { CookieSerializer } from './cookie.serializer';
 import { LdapModule } from '../ldap/ldap.module';
 import { Scope } from '../ldap/interfaces/ldap.interface';
 import { AuthResolver } from './auth.resolver';
@@ -47,7 +45,7 @@ import { AuthResolver } from './auth.resolver';
     // #endregion
 
     // #region Passport module
-    PassportModule.register({ defaultStrategy: 'jwt', session: true }),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     // #endregion
 
     // #region Jwt module
@@ -66,7 +64,7 @@ import { AuthResolver } from './auth.resolver';
     UserModule,
     // #endregion
   ],
-  providers: [AuthService, AuthResolver, JwtStrategy, CookieSerializer],
+  providers: [AuthService, AuthResolver, JwtStrategy],
   exports: [PassportModule, JwtModule, AuthService],
 })
 export class AuthModule {}

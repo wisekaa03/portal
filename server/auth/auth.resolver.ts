@@ -9,12 +9,11 @@ import { Request } from 'express';
 import { UserResponse } from '../user/models/user.dto';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { AuthService } from './auth.service';
-import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService, private readonly logService: LogService) {}
+  constructor(private readonly authService: AuthService) {}
 
   /**
    * GraphQL query: me
@@ -36,21 +35,7 @@ export class AuthResolver {
    * @returns {UserResponseDTO}
    */
   @Mutation()
-  async login(
-    @Args('username') username: string,
-    @Args('password') password: string,
-    @Context() context: any,
-  ): Promise<UserResponse | null> {
+  async login(@Args('username') username: string, @Args('password') password: string): Promise<UserResponse | null> {
     return this.authService.login({ username, password });
   }
-
-  // /**
-  //  * GraphQL mutation: logout
-  //  *
-  //  * @returns {UserResponseDTO}
-  //  */
-  // @Mutation()
-  // async logout(_: any, __: any): Promise<boolean> {
-  //   return this.authService.logout();
-  // }
 }
