@@ -11,7 +11,8 @@ const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.serv
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));
-const logger = new Logger.LogService();
+const logging = configService.get('DATABASE_LOGGING');
+const logger = logging && new Logger.LogService();
 
 module.exports = {
   name: 'default',
@@ -26,7 +27,7 @@ module.exports = {
   logger,
   synchronize: configService.get('DATABASE_SYNCHRONIZE'),
   dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
-  logging: configService.get('DATABASE_LOGGING'),
+  logging,
   entities,
   migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
   cache: configService.get('DATABASE_CACHE'),
