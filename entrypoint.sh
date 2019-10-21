@@ -48,13 +48,13 @@ EOF
 
 export NODE=`which node`
 
-# TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
-# "Typically it is unsafe to use synchronize: true for schema synchronization on production
-# once you get data in your database. Here is where migrations come to help."
-TS_NODE_PROJECT="tsconfig.server.json" node_modules/.bin/ts-node ./node_modules/typeorm/cli.js schema:sync
-# TS_NODE_PROJECT="tsconfig.server.json" ts-node ./node_modules/typeorm/cli.js migration:run
-
 if [ -n "$*" -a "$1" = "test" ]; then
+  # TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
+  # "Typically it is unsafe to use synchronize: true for schema synchronization on production
+  # once you get data in your database. Here is where migrations come to help."
+  TS_NODE_PROJECT="tsconfig.server.json" node_modules/.bin/ts-node ./node_modules/typeorm/cli.js schema:sync
+  # TS_NODE_PROJECT="tsconfig.server.json" ts-node ./node_modules/typeorm/cli.js migration:run
+
   export NODE_ENV=${NODE_ENV:=test}
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then

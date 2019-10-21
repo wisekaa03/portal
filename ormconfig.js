@@ -9,7 +9,7 @@ const Config = require(`./${dev ? 'server/' : '.nest/server/'}config/config.serv
 const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.service`);
 
 const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
-const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
+// const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));
@@ -41,8 +41,8 @@ module.exports = {
   entities,
   migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
   cache: configService.get('DATABASE_CACHE'),
-  migrations,
-  cli: {
-    migrationsDir: 'migration',
-  },
+  // migrations,
+  // cli: {
+  //   migrationsDir: 'migration',
+  // },
 };
