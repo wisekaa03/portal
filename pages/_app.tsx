@@ -34,7 +34,6 @@ class MainApp extends App<ApolloAppProps> {
   render(): React.ReactElement {
     const { Component, apolloClient, pageProps, currentLanguage, isMobile } = this.props;
 
-    // TODO: разобраться как isMobile прикрутить к теме
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
         width: Boolean(isMobile) ? 0 : 1280,

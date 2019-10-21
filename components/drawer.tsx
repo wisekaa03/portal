@@ -9,7 +9,6 @@ import MailIcon from '@material-ui/icons/Mail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import DvrIcon from '@material-ui/icons/Dvr';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
@@ -21,7 +20,8 @@ import { ProfileContext } from '../lib/types';
 import { appBarHeight } from './app-bar';
 import DrawerBg from '../public/images/jpeg/drawer_bg.jpg';
 import Icon from './icon';
-import ItIcon from '../public/images/svg/it-icon.svg';
+import ItIcon from '../public/images/svg/icons/it.svg';
+import CalendarIcon from '../public/images/svg/icons/calendar.svg';
 // #endregion
 
 const drawerWidth = 256;
@@ -86,7 +86,7 @@ export default (props: DrawerProps): React.ReactElement => {
       link: '/',
       icon: <Icon src={ItIcon} />,
     },
-    { text: 'Календарь компании', link: '/', icon: <CalendarTodayIcon /> },
+    { text: 'Календарь компании', link: '/', icon: <Icon src={CalendarIcon} /> },
     { text: 'База знаний', link: '/', icon: <LiveHelpIcon /> },
     { text: 'Переговорные', link: '/', icon: <QuestionAnswerIcon /> },
     { text: 'Лента новостей', link: '/news', icon: <DvrIcon /> },
