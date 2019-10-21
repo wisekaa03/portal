@@ -1,10 +1,10 @@
 /** @format */
 
 // #region Imports NPM
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeepPartial } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { ProfileResponse } from './models/profile.dto';
+import { Profile } from './models/profile.dto';
 import { LoginService, Gender, Address } from '../../lib/types';
 // #endregion
 
@@ -158,7 +158,7 @@ export class ProfileEntity {
     type: 'bytea',
     nullable: true,
   })
-  thumbnailPhoto: string;
+  thumbnailPhoto: Buffer;
 
-  toResponseObject = (): ProfileResponse => ({ ...this });
+  toResponseObject = (): Profile => ({ ...this });
 }

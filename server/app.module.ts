@@ -124,7 +124,7 @@ import { ProfileModule } from './profile/profile.module';
   providers: [
     // #region GraphQL
     DateScalar,
-    // ByteArrayScalar,
+    ByteArrayScalar,
     // #endregion
 
     // #region Errors

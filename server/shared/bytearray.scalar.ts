@@ -9,13 +9,9 @@ import { Kind } from 'graphql';
 export class ByteArrayScalar {
   description = 'Byte array scalar type';
 
-  parseValue(value: string): Buffer {
-    return Buffer.from(value, 'base64');
-  }
+  parseValue = (value: string): Buffer => Buffer.from(value, 'base64');
 
-  serialize(value: Buffer): string {
-    return value.toString('base64');
-  }
+  serialize = (value: Buffer): string => value.toString('base64');
 
   parseLiteral(ast: any): any {
     if (ast.kind === Kind.STRING) {

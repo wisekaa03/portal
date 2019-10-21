@@ -8,7 +8,7 @@
 import { LoginService, Gender, Address } from '../../../lib/types';
 // #endregion
 
-export interface BaseProfile {
+export interface Profile {
   id?: string;
 
   loginService: LoginService;
@@ -53,21 +53,9 @@ export interface BaseProfile {
 
   positionEng: string;
 
+  thumbnailPhoto?: Buffer;
+
   createdAt?: Date;
 
   updatedAt?: Date;
 }
-
-// #region User
-export interface Profile extends BaseProfile {
-  thumbnailPhoto?: string;
-}
-// #endregion
-
-export interface ProfileToSave extends BaseProfile {
-  thumbnailPhoto?: string;
-}
-
-// #region User response
-export interface ProfileResponse extends Profile {}
-// #endregion

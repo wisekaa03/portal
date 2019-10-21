@@ -241,7 +241,9 @@ export class LdapService extends EventEmitter {
                 // TODO: разобраться с предупреждениями
                 // eslint-disable-next-line no-restricted-syntax, guard-for-in
                 for (const prop in object) {
-                  object[prop.replace(/;binary$/, '')] = object[prop];
+                  if (/;binary$/.test(prop)) {
+                    object[prop.replace(/;binary$/, '')] = object[prop];
+                  }
                 }
                 if (object.hasOwnProperty('objectGUID')) {
                   object.objectGUID = this.GUIDtoString(object.objectGUID as string);

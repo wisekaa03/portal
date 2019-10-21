@@ -6,7 +6,7 @@
 // #endregion
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
-import { Profile, ProfileToSave } from '../../profile/models/profile.dto';
+import { Profile } from '../../profile/models/profile.dto';
 // #endregion
 
 export interface BaseUser {
@@ -30,7 +30,7 @@ export interface User extends BaseUser {
 // #endregion
 
 export interface UserToSave extends BaseUser {
-  profile: ProfileToSave | string;
+  profile: Profile | string;
 }
 
 // #region User response

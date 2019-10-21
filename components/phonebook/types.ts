@@ -1,5 +1,11 @@
 /** @format */
 
+// #region Imports NPM
+// #endregion
+// #region Imports Local
+import { Profile } from '../../server/profile/models/profile.dto';
+// #endregion
+
 export type ColumnNames =
   | 'name'
   | 'nameEng'
@@ -36,38 +42,8 @@ export interface Column {
   show?: boolean;
 }
 
-export interface FetchProps {
-  birthday: string;
-  name: string;
-  company: string;
-  companyEng: string;
-  createdAt: string;
-  department: string;
-  departmentEng: string;
-  firstName: string;
-  gender: string;
-  id: string;
-  lastName: string;
-  middleName: string;
-  mobile: string;
-  nameEng: string;
-  otdelEng: string;
-  positionEng: string;
-  telephone: string;
-  thumbnailPhoto: string;
-  title: string;
-  updatedAt: string;
-  workPhone: string;
-  addressPersonal: {
-    country: string;
-    postalCode: string;
-    region: string;
-    street: string;
-  };
-}
-
 export interface ProfileProps {
-  profile: FetchProps | null;
+  profile: Profile | null;
   handleClose(): void;
 }
 

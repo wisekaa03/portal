@@ -87,7 +87,7 @@ export class ProfileService {
       departmentEng,
       otdelEng,
       positionEng,
-      thumbnailPhoto: ldapUser.thumbnailPhoto,
+      thumbnailPhoto: Buffer.from(ldapUser.thumbnailPhoto, 'base64'),
     };
 
     if (user && user.profile) {
