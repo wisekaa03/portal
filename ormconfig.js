@@ -5,13 +5,23 @@
 const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
-const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
 const Config = require(`./${dev ? 'server/' : '.nest/server/'}config/config.service`);
 const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.service`);
+
+const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
+const migrations = dev ? ['server/**/*.migration.ts'] : ['.nest/**/*.migration.js'];
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));
-const logging = configService.get('DATABASE_LOGGING');
+let logging = configService.get('DATABASE_LOGGING');
+
+if (logging === 'false') {
+  logging = false;
+} else if (logging === 'true') {
+  logging = true;
+} else {
+  logging = JSON.parse(logging);
+}
 const logger = logging && new Logger.LogService();
 
 module.exports = {
@@ -31,4 +41,8 @@ module.exports = {
   entities,
   migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
   cache: configService.get('DATABASE_CACHE'),
+  migrations,
+  cli: {
+    migrationsDir: 'migration',
+  },
 };

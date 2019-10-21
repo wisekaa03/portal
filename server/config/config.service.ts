@@ -121,7 +121,7 @@ export class ConfigService {
       DATABASE_DROP_SCHEMA: Joi.boolean()
         .default(true)
         .empty(),
-      DATABASE_LOGGING: Joi.boolean()
+      DATABASE_LOGGING: Joi.string()
         .default(true)
         .empty(),
       DATABASE_MIGRATIONS_RUN: Joi.boolean()

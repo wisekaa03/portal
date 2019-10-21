@@ -1,14 +1,13 @@
 /** @format */
 
 // #region Imports NPM
+import { Logger as TypeOrmLogger } from 'typeorm';
 import { Logger /* , LoggerService, LoggerService */ } from '@nestjs/common';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
 
-export class LogService extends Logger /* implements LoggerService  */ {
-  // logger: Logger;
-
+export class LogService extends Logger implements TypeOrmLogger {
   locale = undefined;
 
   format = {
@@ -20,13 +19,6 @@ export class LogService extends Logger /* implements LoggerService  */ {
     minute: '2-digit',
     second: '2-digit',
   };
-
-  // constructor(context?: string, isTimestampEnabled?: boolean) {
-  //   super(context, isTimestampEnabled);
-  //   if (dev) {
-  //     this.logger = new Logger(context, isTimestampEnabled);
-  //   }
-  // }
 
   log(message: any, context?: string): void {
     if (dev) {
@@ -93,7 +85,7 @@ export class LogService extends Logger /* implements LoggerService  */ {
    * From TypeORM: logQueryError
    */
   logQueryError(message: any, query: any, parameters: any): void {
-    this.error(message, query);
+    this.error(`${message} ${parameters}`, query);
   }
 
   /**
@@ -101,5 +93,13 @@ export class LogService extends Logger /* implements LoggerService  */ {
    */
   logSchemaBuild(message: any): void {
     this.verbose(message, 'Database: Schema build');
+  }
+
+  logMigration(message: any): void {
+    this.verbose(message, 'Database: Migration');
+  }
+
+  logQuerySlow(message: any): void {
+    this.verbose(message, 'Database: Slow query');
   }
 }

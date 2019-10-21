@@ -17,7 +17,7 @@ DATABASE_SCHEMA="${DATABASE_SCHEMA}"
 DATABASE_SYNCHRONIZE="${DATABASE_SYNCHRONIZE}"
 DATABASE_DROP_SCHEMA="${DATABASE_DROP_SCHEMA}"
 DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}"
-DATABASE_LOGGING="${DATABASE_LOGGING}"
+DATABASE_LOGGING=${DATABASE_LOGGING}
 DATABASE_CACHE="${DATABASE_CACHE}"
 
 # HTTP Redis
@@ -48,10 +48,18 @@ EOF
 
 export NODE=`which node`
 
+# TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
+# "Typically it is unsafe to use synchronize: true for schema synchronization on production
+# once you get data in your database. Here is where migrations come to help."
+TS_NODE_PROJECT="tsconfig.server.json" ts-node ./node_modules/typeorm/cli.js schema:sync
+# TS_NODE_PROJECT="tsconfig.server.json" ts-node ./node_modules/typeorm/cli.js migration:run
+
 if [ -n "$*" -a "$1" = "test" ]; then
   export NODE_ENV=${NODE_ENV:=test}
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
   export NODE_ENV=${NODE_ENV:=production}
   $NODE .nest/server/main.js
+elif [ -n "$*" ]; then
+  yarn dev
 fi
