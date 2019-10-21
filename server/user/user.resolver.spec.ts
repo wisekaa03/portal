@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { I18nModule } from 'nestjs-i18n';
@@ -28,6 +28,8 @@ import { ProfileModule } from '../profile/profile.module';
 import { UserEntity } from './user.entity';
 import { LoggerModule } from '../logger/logger.module';
 import { UserResolver } from './user.resolver';
+import { ProfileEntity } from '../profile/profile.entity';
+import { MockRepository } from '../../__mocks__/mockRepository.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -77,6 +79,8 @@ describe('UsersResolver', () => {
         { provide: AuthService, useValue: AuthServiceMock },
         { provide: LdapService, useValue: LdapServiceMock },
         { provide: JwtService, useValue: JwtServiceMock },
+        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
       .overrideProvider(LogService)

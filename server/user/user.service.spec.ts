@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule, I18nService } from 'nestjs-i18n';
 import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
@@ -13,22 +13,19 @@ import { UserEntity } from './user.entity';
 import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
-// import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 import { LogServiceMock } from '../../__mocks__/logger.service.mock';
 import { JwtServiceMock } from '../../__mocks__/jwt.service.mock';
-// import { ProfileEntity } from '../profile/profile.entity';
 import { ProfileModule } from '../profile/profile.module';
-// import { AuthModule } from '../auth/auth.module';
 import { AuthService } from '../auth/auth.service';
 import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
-// import { CookieSerializer } from '../auth/cookie.serializer';
-// import { CookieSerializerMock } from '../../__mocks__/cookie.serializer.mock';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { LdapService } from '../ldap/ldap.service';
 import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { I18nServiceMock } from '../../__mocks__/i18n.service.mock';
+import { MockRepository } from '../../__mocks__/mockRepository.mock';
+import { ProfileEntity } from '../profile/profile.entity';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -70,7 +67,8 @@ describe('UserService', () => {
         UserService,
         I18nService,
         { provide: AuthService, useValue: AuthServiceMock },
-        // { provide: JwtService, useValue: JwtServiceMock },
+        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
       .overrideProvider(LogService)

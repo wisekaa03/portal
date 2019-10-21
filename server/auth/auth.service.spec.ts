@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
@@ -23,6 +23,7 @@ import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
+import { MockRepository } from '../../__mocks__/mockRepository.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -65,7 +66,12 @@ describe('AuthService', () => {
         AuthModule,
         UserModule,
       ],
-      providers: [AuthService, { provide: UserService, useValue: UserServiceMock }],
+      providers: [
+        AuthService,
+        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+        { provide: UserService, useValue: UserServiceMock },
+      ],
     })
       .overrideProvider(LogService)
       .useValue(LogServiceMock)

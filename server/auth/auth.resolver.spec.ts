@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { I18nModule } from 'nestjs-i18n';
@@ -24,6 +24,9 @@ import { LdapModule } from '../ldap/ldap.module';
 import { LdapService } from '../ldap/ldap.service';
 import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { UserEntity } from '../user/user.entity';
+import { ProfileEntity } from '../profile/profile.entity';
+import { MockRepository } from '../../__mocks__/mockRepository.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -70,6 +73,8 @@ describe('AuthResolver', () => {
         { provide: AuthService, useValue: AuthServiceMock },
         { provide: LdapService, useValue: LdapServiceMock },
         { provide: JwtService, useValue: JwtServiceMock },
+        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
       .overrideProvider(LogService)

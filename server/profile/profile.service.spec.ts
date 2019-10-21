@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { ProfileService } from './profile.service';
@@ -13,6 +13,8 @@ import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { LdapService } from '../ldap/ldap.service';
 import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
+import { UserEntity } from '../user/user.entity';
+import { MockRepository } from '../../__mocks__/mockRepository.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -34,6 +36,8 @@ describe('ProfileService', () => {
         ProfileService,
         { provide: LogService, useClass: LogServiceMock },
         { provide: LdapService, useValue: LdapServiceMock },
+        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
       .overrideProvider(LdapService)

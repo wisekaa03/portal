@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { ProfileResolver } from './profile.resolver';
@@ -15,6 +15,8 @@ import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
+import { UserEntity } from '../user/user.entity';
+import { MockRepository } from '../../__mocks__/mockRepository.mock';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -27,7 +29,12 @@ describe('ProfileResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ProfileModule, TypeOrmModule.forRoot({}), TypeOrmModule.forFeature([ProfileEntity])],
-      providers: [ProfileService, ProfileResolver],
+      providers: [
+        ProfileService,
+        ProfileResolver,
+        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+      ],
     })
       .overrideProvider(LogService)
       .useValue(LogServiceMock)
