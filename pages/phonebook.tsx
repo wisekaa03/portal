@@ -21,13 +21,14 @@ import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/ico
 // #region Imports Local
 import Page from '../layouts/main';
 import { I18nPage, useTranslation, includeDefaultNamespaces } from '../lib/i18n-client';
-import { Order, ColumnNames, Column, FetchProps } from '../components/phonebook/types';
+import { Order, ColumnNames, Column } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import { PROFILES } from '../lib/queries';
 import { appBarHeight } from '../components/app-bar';
 
 // import useDebounce from '../lib/debounce';
+import { Profile } from '../server/profile/models/profile.dto';
 // #endregion
 
 const panelHeight = 48;
@@ -196,9 +197,9 @@ const defaultColumns: ColumnNames[] = [
 // };
 
 const getRows = (
-  profile: FetchProps,
+  profile: Profile,
   columns: ColumnNames[],
-  onClick: (fetchProps: FetchProps) => () => void,
+  onClick: (fetchProps: Profile) => () => void,
 ): React.ReactNode => (
   <TableRow key={profile.id} hover onClick={onClick(profile)}>
     {allColumns
@@ -246,7 +247,7 @@ const PhoneBook = (): React.ReactElement => {
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
   const [search, setSearch] = useState<string>('');
 
-  const [profileOpen, setProfileOpen] = useState<FetchProps | null>(null);
+  const [profileOpen, setProfileOpen] = useState<Profile | null>(null);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   const { loading, error, data, fetchMore } = useQuery(PROFILES, {
@@ -272,7 +273,7 @@ const PhoneBook = (): React.ReactElement => {
     setSearch(event.target.value);
   };
 
-  const handleProfileOpen = (props: FetchProps) => (): void => {
+  const handleProfileOpen = (props: Profile) => (): void => {
     setProfileOpen(props);
   };
 
@@ -360,7 +361,7 @@ const PhoneBook = (): React.ReactElement => {
               </TableHead>
               <TableBody>
                 {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
-                {!loading && data.profiles.map((p: FetchProps) => getRows(p, columns, handleProfileOpen))}
+                {!loading && data.profiles.map((p: Profile) => getRows(p, columns, handleProfileOpen))}
               </TableBody>
             </Table>
           </div>
