@@ -22,6 +22,7 @@ import { nextI18next } from '../lib/i18n-client';
 interface MainDocumentInitialProps extends DocumentInitialProps {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   currentLanguage: string;
+  nonce: string;
 }
 
 // You can find a benchmark of the available CSS minifiers under
@@ -38,11 +39,8 @@ class MainDocument extends Document<MainDocumentInitialProps> {
         <Head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+          <meta property="csp-nonce" content={this.props.nonce} />
           <meta name="theme-color" content={theme.palette.primary.main} />
-          {/** TODO: This is fix, see typeface-roboto in _app
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-          */}
         </Head>
         <body>
           <Main />
@@ -55,7 +53,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
 MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> => {
   const sheets = new ServerStyleSheets();
-  const { apolloClient, renderPage: originalRenderPage } = ctx;
+  const { apolloClient, renderPage: originalRenderPage, res } = ctx;
 
   ctx.renderPage = () =>
     originalRenderPage({
@@ -63,6 +61,10 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
     });
 
   const initialProps = await Document.getInitialProps(ctx);
+  const nonce = res && (res as any).locals && (res as any).locals.styleNonce;
+
+  // eslint-disable-next-line no-debugger
+  debugger;
 
   // let minifiedStyles;
   // if (process.env.NODE_ENV === 'production') {
@@ -78,6 +80,7 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
     apolloClient,
     ...initialProps,
     currentLanguage,
+    nonce,
     // Styles fragment is rendered after the app and page rendering finish.
     styles: [
       <React.Fragment key="styles">
@@ -85,6 +88,7 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
         <style
           id="jss"
           key="jss"
+          nonce={nonce}
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: minifiedStyles }}
         />

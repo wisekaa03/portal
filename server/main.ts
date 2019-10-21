@@ -6,6 +6,8 @@ import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
+import { Request, Response } from 'express';
+import uuidv4 from 'uuid/v4';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import responseTime from 'response-time';
@@ -50,6 +52,18 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(helmet.ieNoOpen());
   // TODO: продумать чтобы svg и js файлы сохранялись в кэш браузера
   // app.use(helmet.noCache());
+  app.use('*', (req: Request, res: Response, next: Function) => {
+    res.locals.styleNonce = Buffer.from(uuidv4()).toString('base64');
+    next();
+  });
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", (req, res) => `'nonce-${res.locals.styleNonce}'`],
+      },
+    }),
+  );
   app.use(helmet.hidePoweredBy());
   // #endregion
 

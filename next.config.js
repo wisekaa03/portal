@@ -165,6 +165,7 @@ const config = {
   devIndicators: {
     autoPrerender: false,
   },
+  crossOrigin: 'anonymous',
   poweredByHeader: false,
 };
 
