@@ -1,4 +1,5 @@
 /** @format */
+/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
@@ -29,6 +30,7 @@ import { appBarHeight } from '../components/app-bar';
 
 // import useDebounce from '../lib/debounce';
 import { Profile } from '../server/profile/models/profile.dto';
+import { Loading } from '../components/loading';
 // #endregion
 
 const panelHeight = 48;
@@ -209,7 +211,19 @@ const getRows = (
 
         switch (col) {
           case 'thumbnailPhoto': {
-            cellData = <Avatar>{profile.lastName && profile.lastName.charAt(0)}</Avatar>;
+            cellData = (
+              <Avatar
+                src={
+                  profile.thumbnailPhoto
+                    ? `data:image/png;base64,${profile.thumbnailPhoto}`
+                    : profile.gender === 1
+                      ? '/public/images/jpeg/photo/man.jpg'
+                      : profile.gender === 2
+                        ? '/public/images/jpeg/photo/woman.jpg'
+                        : '/public/images/jpeg/photo/alien.jpg'
+                }
+              />
+            );
             break;
           }
 
@@ -252,10 +266,14 @@ const PhoneBook = (): React.ReactElement => {
 
   const { loading, error, data, fetchMore } = useQuery(PROFILES, {
     variables: {
-      take: 10,
+      take: 1000,
       skip: 0,
     },
   });
+
+  if (loading) {
+    return <Loading type="linear" variant="indeterminate" />;
+  }
 
   console.log(data);
 

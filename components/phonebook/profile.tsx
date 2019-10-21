@@ -1,4 +1,5 @@
 /** @format */
+/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import React /* , { useState, useEffect } */ from 'react';
@@ -131,9 +132,19 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
               </IconButton>
             </div>
             <div className={classes.center}>
-              <Avatar {...avatarSrc} className={classes.avatar}>
-                {!avatarSrc && profile.lastName && profile.lastName.charAt(0)}
-              </Avatar>
+              <Avatar
+                {...avatarSrc}
+                className={classes.avatar}
+                src={
+                  profile.thumbnailPhoto
+                    ? `data:image/png;base64,${profile.thumbnailPhoto}`
+                    : profile.gender === 1
+                      ? '/public/images/jpeg/photo/man.jpg'
+                      : profile.gender === 2
+                        ? '/public/images/jpeg/photo/woman.jpg'
+                        : '/public/images/jpeg/photo/alien.jpg'
+                }
+              />
             </div>
             <div className={classes.firstName}>
               <h2>{profile.lastName}</h2>

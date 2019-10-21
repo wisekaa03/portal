@@ -12,6 +12,7 @@ import { LoginComponent } from '../../components/login';
 import { includeDefaultNamespaces } from '../../lib/i18n-client';
 import { FIRST_PAGE } from '../../lib/constants';
 import { setStorage } from '../../lib/session-storage';
+import { Loading } from '../../components/loading';
 // #endregion
 
 const Login = (): React.ReactElement => {
@@ -27,6 +28,10 @@ const Login = (): React.ReactElement => {
       Router.push({ pathname: redirect as string });
     },
   });
+
+  if (loading) {
+    return <Loading type="linear" variant="indeterminate" />;
+  }
 
   return <LoginComponent error={error} loading={loading} login={login} />;
 };
