@@ -60,21 +60,28 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
   const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
+  const styleSrc = ["'unsafe-inline'", "'self'"];
+  const imgSrc = ["'self'", 'data:'];
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
+    scriptSrc.push('https://cdn.jsdelivr.net');
+    styleSrc.push('https://fonts.googleapis.com');
+    styleSrc.push('https://cdn.jsdelivr.net');
+    imgSrc.push('https://cdn.jsdelivr.net');
   }
+
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
         baseUri: ["'none'"],
         objectSrc: ["'none'"],
-        imgSrc: ["'self'", 'data:'],
+        imgSrc,
         fontSrc: ["'self'", 'data:', 'https://i-npz.ru'],
         scriptSrc,
         frameSrc: ["'self'", 'https://i-npz.ru'],
-        styleSrc: ["'unsafe-inline'", "'self'"],
+        styleSrc,
         upgradeInsecureRequests: true,
       },
     }),

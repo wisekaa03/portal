@@ -9,7 +9,7 @@ const Config = require(`./${dev ? 'server/' : '.nest/server/'}config/config.serv
 const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.service`);
 
 const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
-const migrations = dev ? ['server/**/*.migration.ts'] : ['.nest/**/*.migration.js'];
+const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));
