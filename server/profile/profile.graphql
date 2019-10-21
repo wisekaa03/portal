@@ -26,6 +26,12 @@ type Profile {
   workPhone: String
   mobile: String
 
+  companyEng: String
+  nameEng: String
+  departmentEng: String
+  otdelEng: String
+  positionEng: String
+
   addressPersonal: Address
 
   thumbnailPhoto: ByteArray

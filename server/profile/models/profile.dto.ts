@@ -41,6 +41,16 @@ export interface BaseProfile {
 
   mobile: string;
 
+  companyEng: string;
+
+  nameEng: string;
+
+  departmentEng: string;
+
+  otdelEng: string;
+
+  positionEng: string;
+
   createdAt?: Date;
 
   updatedAt?: Date;

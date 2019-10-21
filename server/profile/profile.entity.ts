@@ -119,6 +119,36 @@ export class ProfileEntity {
   mobile: string;
 
   @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  companyEng: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  nameEng: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  departmentEng: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  otdelEng: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  positionEng: string;
+
+  @Column({
     type: 'bytea',
     nullable: true,
   })

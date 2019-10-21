@@ -45,11 +45,11 @@ export class ProfileService {
       comment = {};
     }
     const {
-      companyeng = undefined,
-      nameeng = undefined,
-      departmenteng = undefined,
-      otdeleng = undefined,
-      positioneng = undefined,
+      companyeng: companyEng = undefined,
+      nameeng: nameEng = undefined,
+      departmenteng: departmentEng = undefined,
+      otdeleng: otdelEng = undefined,
+      positioneng: positionEng = undefined,
       gender = undefined,
     } = comment;
 
@@ -81,6 +81,11 @@ export class ProfileService {
       telephone: ldapUser.telephoneNumber,
       workPhone: ldapUser.otherTelephone,
       mobile: ldapUser.mobile,
+      companyEng,
+      nameEng,
+      departmentEng,
+      otdelEng,
+      positionEng,
       thumbnailPhoto: Buffer.from(ldapUser.thumbnailPhoto, 'binary'),
     };
 
