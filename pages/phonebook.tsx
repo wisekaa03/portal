@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { useQuery } from '@apollo/react-hooks';
 import {
   Table,
   TableBody,
@@ -23,7 +24,7 @@ import { I18nPage, useTranslation, includeDefaultNamespaces } from '../lib/i18n-
 import { Order, ColumnNames, Column, BookProps } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent } from '../components/phonebook/settings';
-// import { ProfileContext } from '../lib/types';
+import { PROFILES } from '../lib/queries';
 import { appBarHeight } from '../components/app-bar';
 
 // import useDebounce from '../lib/debounce';
@@ -203,7 +204,13 @@ const PhoneBook = (): React.ReactElement => {
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
   const { t, i18n } = useTranslation('phonebook');
-
+  const { loading, error, data, fetchMore } = useQuery(PROFILES, {
+    variables: {
+      take: 10,
+      skip: 0,
+    },
+  });
+  console.log(data);
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');

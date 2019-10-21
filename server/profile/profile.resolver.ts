@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Query, Resolver, Context } from '@nestjs/graphql';
+import { Query, Resolver, Context, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 // #endregion
@@ -23,7 +23,7 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profiles(@Context('req') req: Request): Promise<Profile[] | null> {
-    return this.profileService.profiles(req) || null;
+  async profiles(@Args('take') take: number, @Args('skip') skip: number): Promise<Profile[] | null> {
+    return this.profileService.profiles(take, skip) || null;
   }
 }

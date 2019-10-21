@@ -48,3 +48,27 @@ export const LOGOUT = gql`
     logout @client
   }
 `;
+
+export const PROFILES = gql`
+  query Profiles($take: Int, $skip: Int) {
+    profiles(take: $take, skip: $skip) {
+      firstName
+      lastName
+      middleName
+      birthday
+      gender
+      telephone
+      workPhone
+      mobile
+      addressPersonal {
+        country
+        postalCode
+        region
+        street
+      }
+      thumbnailPhoto
+      updatedAt
+      createdAt
+    }
+  }
+`;
