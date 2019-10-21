@@ -113,7 +113,9 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
 
   if (!profile) return null;
 
-  const avatar = profile.photo ? 'photo' : undefined;
+  const avatarSrc = profile.thumbnailPhoto
+    ? { alt: 'Avatar', src: `data:image/png;base64,${profile.thumbnailPhoto}` }
+    : null;
 
   return (
     <Card ref={ref} className={classes.root}>
@@ -129,15 +131,17 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
               </IconButton>
             </div>
             <div className={classes.center}>
-              <Avatar alt="Avatar" src={avatar} className={classes.avatar}>
-                {profile.name}
+              <Avatar {...avatarSrc} className={classes.avatar}>
+                {!avatarSrc && profile.lastName && profile.lastName.charAt(0)}
               </Avatar>
             </div>
             <div className={classes.firstName}>
-              <h2>{profile.name}</h2>
+              <h2>{profile.lastName}</h2>
+              <h2>{profile.firstName}</h2>
+              <h2>{profile.middleName}</h2>
             </div>
             <div className={classes.center}>
-              <span>{profile.name_en}</span>
+              <span>{null /* profile.name_en */}</span>
             </div>
             <div className={classes.center}>
               <PhoneAndroidRounded />
@@ -145,10 +149,10 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
             </div>
             <div className={classes.center}>
               <PhoneRounded />
-              <span>{profile.inside_phone}</span>
+              <span>{profile.workPhone}</span>
             </div>
             <div className={classes.center}>
-              <span>{profile.email}</span>
+              <span>{null /* email */}</span>
             </div>
           </div>
           <div className={clsx(classes.grid, classes.column)}>

@@ -19,7 +19,6 @@ export const nextI18next = new NextI18Next({
   defaultNS: 'common',
   detection: { order: detectionOrder },
   fallbackLng: 'ru',
-  keySeparator: '###',
   ignoreRoutes: ['/_next/', '/public/'],
   localePath:
     typeof window === 'undefined'

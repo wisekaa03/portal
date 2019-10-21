@@ -76,6 +76,7 @@ export class ProfileService {
         street: ldapUser.streetAddress,
       },
       company: ldapUser.company,
+      department: ldapUser.department,
       title: ldapUser.title,
       email: ldapUser.mail,
       telephone: ldapUser.telephoneNumber,

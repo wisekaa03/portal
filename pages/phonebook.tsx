@@ -21,9 +21,9 @@ import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/ico
 // #region Imports Local
 import Page from '../layouts/main';
 import { I18nPage, useTranslation, includeDefaultNamespaces } from '../lib/i18n-client';
-import { Order, ColumnNames, Column, BookProps } from '../components/phonebook/types';
+import { Order, ColumnNames, Column, FetchProps } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
-import { SettingsComponent } from '../components/phonebook/settings';
+import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import { PROFILES } from '../lib/queries';
 import { appBarHeight } from '../components/app-bar';
 
@@ -79,10 +79,10 @@ const useStyles = makeStyles((theme: Theme) =>
         width: 200,
       },
     },
-    buttonExtended: {
-      borderRadius: '87px',
-      backgroundColor: '#DEECEC',
-    },
+    // buttonExtended: {
+    //   borderRadius: '87px',
+    //   backgroundColor: '#DEECEC',
+    // },
     modal: {
       display: 'flex',
       alignItems: 'center',
@@ -143,74 +143,121 @@ const useStyles = makeStyles((theme: Theme) =>
 // ];
 
 const defaultColumns: ColumnNames[] = [
-  'photo',
+  'thumbnailPhoto',
   'name',
   'company',
   'department',
-  'position',
+  'title',
+  'mobile',
   'telephone',
-  'inside_phone',
-  'email',
+  'workPhone',
 ];
 
-const createData = (): BookProps[] => {
-  const arr = [];
+// const createData = (profiles: FetchProps[]): BookProps[] => {
+//   if (!profiles || profiles.length === 0) return [];
+//   const result: BookProps[] = [];
 
-  for (let i = 0; i < 100; i++) {
-    arr.push({
-      id: i,
-      photo: 'И',
-      name: `Иванов Иван Иванович`,
-      name_en: 'Ivanov Ivan Ivanovich',
-      login: 'ivanov',
-      company: `Компания ${i}`,
-      company_en: `Company ${i}`,
-      department: 'Департамент',
-      department_en: 'Department',
-      division: `Подразделение ${i}`,
-      division_en: `Division ${i}`,
-      position: 'Слесарь',
-      position_en: 'Mechanic',
-      supervisor: 'Петров Петр Петрович',
-      room: '111',
-      telephone: '+7 918 1111111',
-      fax: '+7 918 2222222',
-      mobile_phone: '+7 918 3333333',
-      inside_phone: `00${i < 10 ? 0 : ''}${i}`,
-      email: 'webmaster@kngk-group.ru',
-      country: 'Россия',
-      region: 'Краснодарский край',
-      city: 'Краснодар',
-      address: 'Красная',
-    });
-  }
+//   profiles.forEach((p) => {
+//     result.push({
+//       id: p.id,
+//       name: `${p.lastName} ${p.firstName} ${p.middleName}`,
+//       name_en: '',
+//       login: 'ivanov',
+//       thumbnailPhoto: '',
+//       company: `Компания ${i}`,
+//       company_en: `Company ${i}`,
+//       department: 'Департамент',
+//       department_en: 'Department',
+//       division: `Подразделение ${i}`,
+//       division_en: `Division ${i}`,
+//       position: 'Слесарь',
+//       position_en: 'Mechanic',
+//       supervisor: 'Петров Петр Петрович',
+//       room: '111',
+//       telephone: '+7 918 1111111',
+//       fax: '+7 918 2222222',
+//       mobile_phone: '+7 918 3333333',
+//       inside_phone: `00${i < 10 ? 0 : ''}${i}`,
+//       email: 'webmaster@kngk-group.ru',
+//       country: 'Россия',
+//       region: 'Краснодарский край',
+//       city: 'Краснодар',
+//       address: 'Красная',
+//     });
+//   });
 
-  return arr;
-};
+//   return result;
+// };
 
-const sortData = (order: Order, orderBy: ColumnNames) => (a: BookProps, b: BookProps) => {
-  const asc: number = order === 'asc' ? 1 : -1;
+// const sortData = (order: Order, orderBy: ColumnNames) => (a: BookProps, b: BookProps) => {
+//   const asc: number = order === 'asc' ? 1 : -1;
 
-  return a[orderBy] > b[orderBy] ? asc * 1 : a[orderBy] < b[orderBy] ? asc * -1 : 0;
-};
+//   return a[orderBy] > b[orderBy] ? asc * 1 : a[orderBy] < b[orderBy] ? asc * -1 : 0;
+// };
+
+const getRows = (
+  profile: FetchProps,
+  columns: ColumnNames[],
+  onClick: (fetchProps: FetchProps) => () => void,
+): React.ReactNode => (
+  <TableRow key={profile.id} hover onClick={onClick(profile)}>
+    {allColumns
+      .filter((col) => columns.includes(col))
+      .map((col) => {
+        let cellData: React.ReactElement | string | null = null;
+
+        switch (col) {
+          case 'thumbnailPhoto': {
+            cellData = <Avatar>{profile.lastName && profile.lastName.charAt(0)}</Avatar>;
+            break;
+          }
+
+          case 'name': {
+            const { firstName, lastName, middleName } = profile;
+            cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
+            break;
+          }
+
+          case 'mobile':
+          case 'telephone':
+          case 'workPhone':
+          case 'company':
+          case 'department':
+          case 'title': {
+            cellData = profile[col];
+            break;
+          }
+
+          default: {
+            break;
+          }
+        }
+        return <TableCell key={col}>{cellData}</TableCell>;
+      })}
+  </TableRow>
+);
 
 const PhoneBook = (): React.ReactElement => {
   const classes = useStyles({});
+  const { t, i18n } = useTranslation();
+
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
-  const [search, setSearch] = useState<string>('');
-  const [bookData, setBookData] = useState<BookProps[]>([]);
-  const [profileOpen, setProfileOpen] = useState<BookProps | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
-  const { t, i18n } = useTranslation('phonebook');
+  const [search, setSearch] = useState<string>('');
+
+  const [profileOpen, setProfileOpen] = useState<FetchProps | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+
   const { loading, error, data, fetchMore } = useQuery(PROFILES, {
     variables: {
       take: 10,
       skip: 0,
     },
   });
+
   console.log(data);
+
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -225,7 +272,7 @@ const PhoneBook = (): React.ReactElement => {
     setSearch(event.target.value);
   };
 
-  const handleProfileOpen = (props: BookProps) => (): void => {
+  const handleProfileOpen = (props: FetchProps) => (): void => {
     setProfileOpen(props);
   };
 
@@ -244,26 +291,7 @@ const PhoneBook = (): React.ReactElement => {
   const profileId = profileOpen ? 'profile' : undefined;
   const settingsId = settingsOpen ? 'settings' : undefined;
 
-  const getRows = (a: BookProps, c: ColumnNames[]): React.ReactNode => (
-    <TableRow hover key={a.id} onClick={handleProfileOpen(a)}>
-      {c.includes('photo') ? (
-        <TableCell>
-          <Avatar>{a.photo}</Avatar>
-        </TableCell>
-      ) : null}
-      {c
-        .filter((col) => col !== 'photo')
-        .map((col) => (
-          <TableCell key={col}>{a[col]}</TableCell>
-        ))}
-    </TableRow>
-  );
-
   // const debouncedSearch = useDebounce(search, 500);
-
-  useEffect(() => {
-    setBookData(createData());
-  }, []);
 
   // useEffect(() => {
   //   setBookData(
@@ -310,9 +338,9 @@ const PhoneBook = (): React.ReactElement => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.includes('photo') ? <TableCell /> : null}
-                  {columns
-                    .filter((c) => c !== 'photo')
+                  {columns.includes('thumbnailPhoto') ? <TableCell /> : null}
+                  {allColumns
+                    .filter((c) => c !== 'thumbnailPhoto' && columns.includes(c))
                     .map((column) => (
                       <TableCell
                         key={column}
@@ -324,13 +352,16 @@ const PhoneBook = (): React.ReactElement => {
                           direction={order}
                           onClick={createSortHandler(column)}
                         >
-                          {t(`fields.${column}`)}
+                          {t(`phonebook:fields.${column}`)}
                         </TableSortLabel>
                       </TableCell>
                     ))}
                 </TableRow>
               </TableHead>
-              <TableBody>{bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns))}</TableBody>
+              <TableBody>
+                {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
+                {!loading && data.profiles.map((p: FetchProps) => getRows(p, columns, handleProfileOpen))}
+              </TableBody>
             </Table>
           </div>
         </div>
@@ -355,6 +386,12 @@ const PhoneBook = (): React.ReactElement => {
       </Modal>
     </>
   );
+};
+
+PhoneBook.getInitialProps = () => {
+  return {
+    namespacesRequired: includeDefaultNamespaces(['phonebook']),
+  };
 };
 
 export default PhoneBook;

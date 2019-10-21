@@ -33,6 +33,8 @@ export interface BaseProfile {
 
   company: string;
 
+  department: string;
+
   title: string;
 
   telephone: string;

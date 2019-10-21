@@ -2,23 +2,23 @@
 
 export type ColumnNames =
   | 'name'
-  | 'name_en'
+  | 'nameEng'
   | 'login'
-  | 'photo'
+  | 'thumbnailPhoto'
   | 'company'
-  | 'company_en'
+  | 'companyEng'
   | 'department'
-  | 'department_en'
-  | 'division'
-  | 'division_en'
-  | 'position'
-  | 'position_en'
+  | 'departmentEng'
+  | 'otdel'
+  | 'otdelEng'
+  | 'title'
+  | 'positionEng'
   | 'supervisor'
   | 'room'
   | 'telephone'
   | 'fax'
-  | 'mobile_phone'
-  | 'inside_phone'
+  | 'mobile'
+  | 'workPhone'
   | 'email'
   | 'country'
   | 'region'
@@ -36,35 +36,38 @@ export interface Column {
   show?: boolean;
 }
 
-export interface BookProps {
-  id: number;
+export interface FetchProps {
+  birthday: string;
   name: string;
-  name_en: string;
-  login: string;
-  photo: string;
   company: string;
-  company_en: string;
+  companyEng: string;
+  createdAt: string;
   department: string;
-  department_en: string;
-  division: string;
-  division_en: string;
-  position: string;
-  position_en: string;
-  supervisor: string;
-  room: string;
+  departmentEng: string;
+  firstName: string;
+  gender: string;
+  id: string;
+  lastName: string;
+  middleName: string;
+  mobile: string;
+  nameEng: string;
+  otdelEng: string;
+  positionEng: string;
   telephone: string;
-  fax: string;
-  mobile_phone: string;
-  inside_phone: string;
-  email: string;
-  country: string;
-  region: string;
-  city: string;
-  address: string;
+  thumbnailPhoto: string;
+  title: string;
+  updatedAt: string;
+  workPhone: string;
+  addressPersonal: {
+    country: string;
+    postalCode: string;
+    region: string;
+    street: string;
+  };
 }
 
 export interface ProfileProps {
-  profile: BookProps | null;
+  profile: FetchProps | null;
   handleClose(): void;
 }
 

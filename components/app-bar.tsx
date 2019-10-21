@@ -18,7 +18,7 @@ import { blue } from '@material-ui/core/colors';
 import { ProfileContext } from '../lib/types';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
-import LogoMin from '../public/images/png/logo-min.png';
+import LogoMin from '../public/images/png/logo_min.png';
 import { Loading } from './loading';
 // #endregion
 

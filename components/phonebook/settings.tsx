@@ -74,25 +74,25 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const allColumns: ColumnNames[] = [
+export const allColumns: ColumnNames[] = [
+  'thumbnailPhoto',
   'name',
-  'name_en',
+  'nameEng',
   'login',
-  'photo',
   'company',
-  'company_en',
+  'companyEng',
   'department',
-  'department_en',
-  'division',
-  'division_en',
-  'position',
-  'position_en',
+  'departmentEng',
+  'otdel',
+  'otdelEng',
+  'title',
+  'positionEng',
   'supervisor',
   'room',
   'telephone',
   'fax',
-  'mobile_phone',
-  'inside_phone',
+  'mobile',
+  'workPhone',
   'email',
   'country',
   'region',
@@ -104,14 +104,10 @@ export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: R
   const classes = useStyles({});
   const { columns, changeColumn, handleClose } = props;
   const [current, setCurrent] = useState<ColumnNames[]>(columns);
-  const { t, i18n } = useTranslation('phonebook');
+  const { t, i18n } = useTranslation();
 
   const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.checked) {
-      setCurrent([name, ...current]);
-    } else {
-      setCurrent(current.filter((el) => el !== name));
-    }
+    setCurrent(e.target.checked ? [name, ...current] : current.filter((el) => el !== name));
   };
 
   const handleAccept = (): void => {
@@ -123,7 +119,7 @@ export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: R
 
   return (
     <Card ref={ref} className={classes.root}>
-      <CardHeader className={classes.head} title={t('phonebook:settings-header')} />
+      <CardHeader className={classes.head} title={t('phonebook:settings.header')} />
       <CardContent className={classes.content}>
         {[...Array(blocks).keys()].map((i) => (
           <FormControl key={i} className={classes.group}>
