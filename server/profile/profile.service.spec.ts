@@ -35,7 +35,7 @@ describe('ProfileService', () => {
       providers: [
         ProfileService,
         { provide: LogService, useClass: LogServiceMock },
-        { provide: LdapService, useValue: LdapServiceMock },
+        // { provide: LdapService, useValue: LdapServiceMock },
         { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
         { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],

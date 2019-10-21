@@ -77,7 +77,7 @@ describe('UsersResolver', () => {
         UserResolver,
         { provide: UserService, useValue: UserServiceMock },
         { provide: AuthService, useValue: AuthServiceMock },
-        { provide: LdapService, useValue: LdapServiceMock },
+        // { provide: LdapService, useValue: LdapServiceMock },
         { provide: JwtService, useValue: JwtServiceMock },
         { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
         { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
