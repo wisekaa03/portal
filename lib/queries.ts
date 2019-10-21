@@ -16,8 +16,16 @@ export const CURRENT_USER = gql`
         firstName
         lastName
         middleName
+        nameEng
         birthday
         gender
+        company
+        companyEng
+        department
+        departmentEng
+        otdelEng
+        positionEng
+        title
         telephone
         workPhone
         mobile
@@ -52,11 +60,20 @@ export const LOGOUT = gql`
 export const PROFILES = gql`
   query Profiles($take: Int, $skip: Int) {
     profiles(take: $take, skip: $skip) {
+      id
       firstName
       lastName
       middleName
+      nameEng
       birthday
       gender
+      company
+      companyEng
+      department
+      departmentEng
+      otdelEng
+      positionEng
+      title
       telephone
       workPhone
       mobile

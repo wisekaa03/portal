@@ -98,6 +98,12 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
+  department: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   title: string;
 
   @Column({
