@@ -84,111 +84,148 @@ export class ConfigService {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any()
         .default('development')
+        .optional()
         .empty(),
       PORT: Joi.number()
+        .integer()
         .default(4000)
+        .optional()
         .empty(),
       PORT_DEBUGGER: Joi.number()
+        .integer()
         .default(9229)
+        .optional()
         .empty(),
       HOST: Joi.string()
         .default('0.0.0.0')
+        .optional()
         .empty(),
       DATABASE_CONNECTION: Joi.string()
         .default('postgres')
+        .optional()
         .empty(),
       DATABASE_HOST: Joi.string()
         .default('localhost')
+        .optional()
         .empty(),
       DATABASE_PORT: Joi.number()
         .default(5432)
+        .optional()
         .empty(),
       DATABASE_USERNAME: Joi.string()
         .default('portal')
+        .optional()
         .empty(),
       DATABASE_PASSWORD: Joi.string()
         .default('portalpwd')
+        .optional()
         .empty(),
       DATABASE_DATABASE: Joi.string()
         .default('portaldb')
+        .optional()
         .empty(),
       DATABASE_SCHEMA: Joi.string()
         .default('public')
+        .optional()
         .empty(),
       DATABASE_SYNCHRONIZE: Joi.boolean()
         .default(true)
+        .optional()
         .empty(),
       DATABASE_DROP_SCHEMA: Joi.boolean()
         .default(true)
+        .optional()
         .empty(),
       DATABASE_LOGGING: Joi.string()
         .default(true)
+        .optional()
         .empty(),
       DATABASE_MIGRATIONS_RUN: Joi.boolean()
         .default(false)
+        .optional()
         .empty(),
       DATABASE_CACHE: Joi.boolean()
         .default(true)
+        .optional()
         .empty(),
 
       HTTP_REDIS_HOST: Joi.string()
         .default('localhost')
+        .optional()
         .empty(),
       HTTP_REDIS_PORT: Joi.number()
         .default(6379)
+        .optional()
         .empty(),
       HTTP_REDIS_TTL: Joi.number()
-        .default(3)
+        .default(300)
+        .optional()
         .empty(),
       HTTP_REDIS_MAX_OBJECTS: Joi.number()
-        .default(200)
+        .default(10000)
+        .optional()
         .empty(),
       HTTP_REDIS_DB: Joi.number()
         .default(0)
+        .optional()
         .empty(),
       HTTP_REDIS_PASSWORD: Joi.string()
         .allow('')
+        .optional()
         .empty(),
       HTTP_REDIS_PREFIX: Joi.string()
         .allow('')
+        .optional()
         .empty(),
 
       LDAP_REDIS_HOST: Joi.string()
         .default('localhost')
+        .optional()
         .empty(),
       LDAP_REDIS_PORT: Joi.number()
         .default(6379)
+        .optional()
         .empty(),
       LDAP_REDIS_TTL: Joi.number()
-        .default(3)
+        .default(300)
+        .optional()
         .empty(),
       LDAP_REDIS_DB: Joi.number()
         .default(0)
+        .optional()
         .empty(),
       LDAP_REDIS_PASSWORD: Joi.string()
         .allow('')
+        .optional()
         .empty(),
 
       LDAP_URL: Joi.string()
         .default('ldap://activedirectory:389')
+        .optional()
         .empty(),
       LDAP_BIND_DN: Joi.string()
         .default('CN=Administrator,DC=example,DC=local')
+        .optional()
         .empty(),
       LDAP_BIND_PW: Joi.string()
         .default('PaSsWoRd123')
+        .optional()
         .empty(),
       LDAP_SEARCH_BASE: Joi.string()
         .default('DC=example,DC=local')
+        .optional()
         .empty(),
       LDAP_SEARCH_FILTER: Joi.string()
         .default('(sAMAccountName={{username}})')
+        .optional()
         .empty(),
       LDAP_SEARCH_BASE_ALL_USERS: Joi.string()
         .default('DC=example,DC=local')
+        .optional()
         .empty(),
       LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
         .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
+        .optional()
         .empty(),
     });
 
