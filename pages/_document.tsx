@@ -36,7 +36,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
   render(): React.ReactElement {
     return (
       <html lang={this.props.currentLanguage} dir="ltr">
-        <Head>
+        <Head nonce={this.props.nonce}>
           <meta charSet="utf-8" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           <meta property="csp-nonce" content={this.props.nonce} />
@@ -44,7 +44,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
         </Head>
         <body>
           <Main />
-          <NextScript />
+          <NextScript nonce={this.props.nonce} />
         </body>
       </html>
     );
@@ -62,9 +62,6 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
 
   const initialProps = await Document.getInitialProps(ctx);
   const nonce = res && (res as any).locals && (res as any).locals.styleNonce;
-
-  // eslint-disable-next-line no-debugger
-  debugger;
 
   // let minifiedStyles;
   // if (process.env.NODE_ENV === 'production') {

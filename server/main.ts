@@ -56,11 +56,21 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     res.locals.styleNonce = Buffer.from(uuidv4()).toString('base64');
     next();
   });
+  const scriptSrc = ["'self'"];
+  if (process.env.NODE_ENV !== 'production') {
+    scriptSrc.push("'unsafe-eval'", "'unsafe-inline'");
+  }
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        styleSrc: ["'self'", (req, res) => `'nonce-${res.locals.styleNonce}'`],
+        baseUri: ["'self'"],
+        imgSrc: ["'self'", 'data:'],
+        fontSrc: ["'self'", 'data:', 'https://i-npz.ru/'],
+        scriptSrc,
+        frameSrc: ["'self'", 'https://i-npz.ru/'],
+        styleSrc: [/* (req, res) => `'nonce-${res.locals.styleNonce}'`,  */ "'unsafe-inline'", "'self'"],
+        upgradeInsecureRequests: true,
       },
     }),
   );
