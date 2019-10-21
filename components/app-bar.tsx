@@ -1,11 +1,11 @@
 /** @format */
+/* eslint prettier/prettier: 0 */
 
 // #region Imports NPM
 import React, { useState } from 'react';
 import Router from 'next/router';
-import { Base64 } from 'js-base64';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Popover, Paper, Box, /* Button, */ IconButton, Avatar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Popover, Box, /* Button, */ IconButton, Avatar, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -129,13 +129,16 @@ export default (props: AppBarProps): React.ReactElement => {
                   <img src={LogoMin} alt="logo" />
                 </div>
                 <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
-                  {/* Сделать чтобы отображалось изображение */}
                   <Avatar
                     className={clsx(classes.avatar, classes.pointer)}
                     src={
                       v.user.profile.thumbnailPhoto
                         ? `data:image/png;base64,${v.user.profile.thumbnailPhoto}`
-                        : '/public/images/jpeg/unknown.jpg'
+                        : v.user.profile.gender === 1
+                          ? '/public/images/jpeg/photo/man.jpg'
+                          : v.user.profile.gender === 2
+                            ? '/public/images/jpeg/photo/woman.jpg'
+                            : '/public/images/jpeg/photo/alien.jpg'
                     }
                   />
                 </Box>
@@ -160,7 +163,18 @@ export default (props: AppBarProps): React.ReactElement => {
                   <Typography className={classes.profileName}>
                     {v.user.profile.firstName} {v.user.profile.lastName} {v.user.profile.middleName}
                   </Typography>
-                  <Avatar className={classes.avatar}>И</Avatar>
+                  <Avatar
+                    className={classes.avatar}
+                    src={
+                      v.user.profile.thumbnailPhoto
+                        ? `data:image/png;base64,${v.user.profile.thumbnailPhoto}`
+                        : v.user.profile.gender === 1
+                          ? '/public/images/jpeg/photo/man.jpg'
+                          : v.user.profile.gender === 2
+                            ? '/public/images/jpeg/photo/woman.jpg'
+                            : '/public/images/jpeg/photo/alien.jpg'
+                    }
+                  />
                   <Box className={classes.phoneBlock}>
                     {v.user.profile.telephone ? (
                       <>

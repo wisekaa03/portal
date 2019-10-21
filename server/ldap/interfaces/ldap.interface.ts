@@ -270,6 +270,8 @@ export interface LdapModuleOptions extends ClientOptions {
    */
   includeRaw?: boolean;
 
+  timeLimit?: number;
+
   /**
    * If true, then up to 100 credentials at a time will be cached for
    * 5 minutes.
@@ -287,3 +289,42 @@ export interface LdapModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> 
   useFactory?: (...args: any[]) => Promise<LdapModuleOptions> | LdapModuleOptions;
   inject?: any[];
 }
+
+export const ldapADattributes = [
+  'thumbnailPhoto;binary',
+  'objectGUID;binary',
+  'objectSid;binary',
+  'c',
+  'cn',
+  'co',
+  'codePage',
+  'comment',
+  'company',
+  'countryCode',
+  'department',
+  'description',
+  'displayName',
+  'distinguishedName',
+  'dn',
+  'employeeID',
+  'givenName',
+  'l',
+  'mail',
+  'memberOf',
+  'middleName',
+  'mobile',
+  'name',
+  'objectCategory',
+  'objectClass',
+  'otherMailbox',
+  'otherTelephone',
+  'postalCode',
+  'primaryGroupID',
+  'sAMAccountName',
+  'sAMAccountType',
+  'sn',
+  'st',
+  'streetAddress',
+  'title',
+  'wWWHomePage',
+];

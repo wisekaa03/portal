@@ -152,7 +152,7 @@ export class ProfileEntity {
     type: 'bytea',
     nullable: true,
   })
-  thumbnailPhoto: Buffer;
+  thumbnailPhoto: string;
 
   toResponseObject = (): ProfileResponse => ({ ...this });
 }

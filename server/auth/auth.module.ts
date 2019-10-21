@@ -13,7 +13,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { Scope } from '../ldap/interfaces/ldap.interface';
+import { Scope, ldapADattributes } from '../ldap/interfaces/ldap.interface';
 import { AuthResolver } from './auth.resolver';
 // #endregion
 
@@ -36,11 +36,11 @@ import { AuthResolver } from './auth.resolver';
           searchBase: configService.get('LDAP_SEARCH_BASE'),
           searchFilter: configService.get('LDAP_SEARCH_FILTER'),
           searchScope: 'sub' as Scope,
-          searchAttributes: ['*'],
+          searchAttributes: ldapADattributes,
           searchBaseAllUsers: configService.get('LDAP_SEARCH_BASE_ALL_USERS'),
           searchFilterAllUsers: configService.get('LDAP_SEARCH_FILTER_ALL_USERS'),
           searchScopeAllUsers: 'sub' as Scope,
-          searchAttributesAllUsers: ['*'],
+          searchAttributesAllUsers: ldapADattributes,
           reconnect: true,
           cache: true,
         };

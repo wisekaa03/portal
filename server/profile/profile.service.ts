@@ -86,7 +86,7 @@ export class ProfileService {
       departmentEng,
       otdelEng,
       positionEng,
-      thumbnailPhoto: Buffer.from(ldapUser.thumbnailPhoto, 'binary'),
+      thumbnailPhoto: ldapUser.thumbnailPhoto,
     };
 
     if (user && user.profile) {

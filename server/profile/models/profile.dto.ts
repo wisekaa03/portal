@@ -58,7 +58,7 @@ export interface BaseProfile {
 
 // #region User
 export interface Profile extends BaseProfile {
-  thumbnailPhoto?: Buffer;
+  thumbnailPhoto?: string;
 }
 // #endregion
 

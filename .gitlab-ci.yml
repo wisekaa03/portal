@@ -79,10 +79,8 @@ deploy:
       if [ ${DEPLOYS} -eq 0 ]; then \
         helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME} \
           --debug --values helm/portal/values.yaml \
-          --set NODE_ENV="${NODE_ENV}" \
           --set HOST="${HOST}" \
           --set PORT="${PORT}" \
-          --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
           --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
           --set DATABASE_HOST="${DATABASE_HOST}" \
           --set DATABASE_PORT="${DATABASE_PORT}" \
@@ -120,10 +118,8 @@ deploy:
       else \
         helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
           --debug --values helm/portal/values.yaml \
-          --set NODE_ENV="${NODE_ENV}" \
           --set HOST="${HOST}" \
           --set PORT="${PORT}" \
-          --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
           --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
           --set DATABASE_HOST="${DATABASE_HOST}" \
           --set DATABASE_PORT="${DATABASE_PORT}" \

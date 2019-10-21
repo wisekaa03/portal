@@ -133,7 +133,7 @@ export class LdapService extends EventEmitter {
    * @returns {string} - string GUID
    */
   GUIDtoString = (objectGUID: string): string =>
-    Buffer.from(objectGUID, 'binary')
+    Buffer.from(objectGUID, 'base64')
       .toString('hex')
       .replace(
         /^(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)$/,
@@ -238,6 +238,11 @@ export class LdapService extends EventEmitter {
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {
                 const { object } = entry;
+                // TODO: разобраться с предупреждениями
+                // eslint-disable-next-line no-restricted-syntax, guard-for-in
+                for (const prop in object) {
+                  object[prop.replace(/;binary$/, '')] = object[prop];
+                }
                 if (object.hasOwnProperty('objectGUID')) {
                   object.objectGUID = this.GUIDtoString(object.objectGUID as string);
                 }
@@ -300,6 +305,7 @@ export class LdapService extends EventEmitter {
       filter: searchFilter,
       scope: this.opts.searchScope,
       attributes: ['*'],
+      timeLimit: this.opts.timeLimit,
     };
     if (this.opts.searchAttributes) {
       opts.attributes = this.opts.searchAttributes;
@@ -349,6 +355,7 @@ export class LdapService extends EventEmitter {
       filter: searchFilter,
       scope: this.opts.groupSearchScope,
       attributes: ['*'],
+      timeLimit: this.opts.timeLimit,
     };
     if (this.opts.groupSearchAttributes) {
       opts.attributes = this.opts.groupSearchAttributes;
@@ -374,7 +381,7 @@ export class LdapService extends EventEmitter {
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
    */
   public async synchronization(): Promise<undefined | LdapResponeUser[]> {
-    if (this.opts.cache && this.userCache) {
+    if (process.env.NODE_ENV === 'production' && this.opts.cache && this.userCache) {
       const cached = await this.userCache.get('SYNCHRONIZATION');
       // TODO: придумать что-нибудь половчее моих synchronization
       if (cached && bcrypt.compareSync('synchronization', cached.hash) && cached.result) {
@@ -388,6 +395,7 @@ export class LdapService extends EventEmitter {
       filter: this.opts.searchFilterAllUsers,
       scope: this.opts.searchScopeAllUsers,
       attributes: ['*'],
+      timeLimit: this.opts.timeLimit,
     };
     if (this.opts.searchAttributesAllUsers) {
       opts.attributes = this.opts.searchAttributesAllUsers;
@@ -426,7 +434,7 @@ export class LdapService extends EventEmitter {
       throw new Error('no password given');
     }
 
-    if (this.opts.cache && this.userCache) {
+    if (process.env.NODE_ENV === 'production' && this.opts.cache && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached = await this.userCache.get(username);
       if (cached && cached.user && cached.user.username && bcrypt.compareSync(password, cached.password)) {
