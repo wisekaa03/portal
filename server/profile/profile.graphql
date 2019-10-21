@@ -36,6 +36,8 @@ type Profile {
 
 type Query {
 
-  profiles: [Profile!]!
+  profiles(take: Int, skip: Int): [Profile!]!
 
 }
+
+
