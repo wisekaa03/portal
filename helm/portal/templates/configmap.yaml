@@ -31,9 +31,9 @@ data:
   # HTTP Redis
   HTTP_REDIS_HOST: {{ .Values.HTTP_REDIS_HOST | default "localhost" | quote }}
   HTTP_REDIS_PORT: {{ .Values.HTTP_REDIS_PORT | default "6379" | quote }}
-  HTTP_REDIS_DB: {{ .Values.HTTP_REDIS_DB | default "2" | quote }}
+  HTTP_REDIS_DB: {{ .Values.HTTP_REDIS_DB | default "1" | quote }}
   HTTP_REDIS_PASSWORD: {{ .Values.HTTP_REDIS_PASSWORD | default "" | quote }}
-  HTTP_REDIS_TTL: {{ .Values.HTTP_REDIS_TTL | default "60" | quote }}
+  HTTP_REDIS_TTL: {{ .Values.HTTP_REDIS_TTL | default "300" | quote }}
   HTTP_REDIS_MAX_OBJECTS: {{ .Values.HTTP_REDIS_MAX_OBJECTS | default "10000" | quote }}
   HTTP_REDIS_PREFIX: {{ .Values.REDIS_PREFIX | default "" | quote }}
 
