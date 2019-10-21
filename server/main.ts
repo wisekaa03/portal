@@ -53,27 +53,33 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // TODO: продумать чтобы svg и js файлы сохранялись в кэш браузера
   // app.use(helmet.noCache());
   app.use('*', (req: Request, res: Response, next: Function) => {
-    res.locals.styleNonce = Buffer.from(uuidv4()).toString('base64');
+    res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     next();
   });
-  const scriptSrc = ["'self'"];
+
+  // TODO: Как сделать nonce ?
+  // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
+  const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
+  // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
-    scriptSrc.push("'unsafe-eval'", "'unsafe-inline'");
+    scriptSrc.push("'unsafe-eval'");
   }
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        baseUri: ["'self'"],
+        baseUri: ["'none'"],
+        objectSrc: ["'none'"],
         imgSrc: ["'self'", 'data:'],
-        fontSrc: ["'self'", 'data:', 'https://i-npz.ru/'],
+        fontSrc: ["'self'", 'data:', 'https://i-npz.ru'],
         scriptSrc,
-        frameSrc: ["'self'", 'https://i-npz.ru/'],
-        styleSrc: [/* (req, res) => `'nonce-${res.locals.styleNonce}'`,  */ "'unsafe-inline'", "'self'"],
+        frameSrc: ["'self'", 'https://i-npz.ru'],
+        styleSrc: ["'unsafe-inline'", "'self'"],
         upgradeInsecureRequests: true,
       },
     }),
   );
+
   app.use(helmet.hidePoweredBy());
   // #endregion
 
