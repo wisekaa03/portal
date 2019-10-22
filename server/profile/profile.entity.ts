@@ -1,7 +1,15 @@
 /** @format */
 
 // #region Imports NPM
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 // #endregion
 // #region Imports Local
 import { Profile } from './models/profile.dto';
@@ -159,6 +167,20 @@ export class ProfileEntity {
     nullable: true,
   })
   thumbnailPhoto: Buffer;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  thumbnailPhoto40: string | Promise<string>;
+
+  @BeforeUpdate()
+  @BeforeInsert()
+  async resizeImage(): Promise<void> {
+    if (typeof this.thumbnailPhoto40 === 'object' && typeof this.thumbnailPhoto40.then === 'function') {
+      this.thumbnailPhoto40 = await this.thumbnailPhoto40;
+    }
+  }
 
   toResponseObject = (): Profile => ({ ...this });
 }

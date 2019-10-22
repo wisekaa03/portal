@@ -55,6 +55,8 @@ export interface Profile {
 
   thumbnailPhoto?: Buffer;
 
+  thumbnailPhoto40?: string | Promise<string>;
+
   createdAt?: Date;
 
   updatedAt?: Date;

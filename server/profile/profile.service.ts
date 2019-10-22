@@ -4,7 +4,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Request } from 'express';
+import Sharp from 'sharp';
+// import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
@@ -43,6 +44,13 @@ export class ProfileService {
     return profile as Profile | null;
   }
 
+  // TODO: выделить это все в ImageService...
+  imageResize = async (originalImage: Buffer): Promise<string> =>
+    Sharp(originalImage)
+      .resize(40, 40)
+      .toBuffer()
+      .then((img) => img.toString('base64'));
+
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {
     let comment;
     try {
@@ -65,6 +73,8 @@ export class ProfileService {
     } else {
       birthday = new Date(Date.parse(birthday)).toLocaleDateString();
     }
+
+    const thumbnailPhoto = Buffer.from(ldapUser.thumbnailPhoto, 'base64');
 
     let profile: Profile = {
       loginService: LoginService.LDAP,
@@ -93,7 +103,8 @@ export class ProfileService {
       departmentEng,
       otdelEng,
       positionEng,
-      thumbnailPhoto: Buffer.from(ldapUser.thumbnailPhoto, 'base64'),
+      thumbnailPhoto,
+      thumbnailPhoto40: this.imageResize(thumbnailPhoto),
     };
 
     if (user && user.profile) {

@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  BeforeUpdate,
   JoinColumn,
   OneToOne,
 } from 'typeorm';
@@ -50,6 +51,7 @@ export class UserEntity {
   @JoinColumn()
   profile: ProfileEntity;
 
+  @BeforeUpdate()
   @BeforeInsert()
   async hashPassword(): Promise<void> {
     this.password =

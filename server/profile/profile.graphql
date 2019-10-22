@@ -36,6 +36,7 @@ type Profile {
   addressPersonal: Address
 
   thumbnailPhoto: ByteArray
+  thumbnailPhoto40: String
 
   createdAt: Date
   updatedAt: Date
