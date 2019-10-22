@@ -6,6 +6,7 @@ import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import clsx from 'clsx';
 // #endregion
 
 // #region Imports Local
@@ -14,8 +15,10 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     loading: {
-      margin: theme.spacing(2),
       color: 'red',
+    },
+    margin: {
+      margin: theme.spacing(2),
     },
   }),
 );
@@ -27,14 +30,17 @@ export const Loading: React.FC<{
   thickness?: number;
   color?: 'primary' | 'secondary' | 'inherit';
   type?: 'linear' | 'circular';
-}> = ({ variant, disableShrink, size, thickness, color, type }) => {
+  noMargin?: boolean;
+}> = ({ variant, disableShrink, size, thickness, color, type, noMargin }) => {
   const classes = useStyles({});
 
   if (type === 'linear') {
     return (
       <LinearProgress
         variant={(variant as 'determinate' | 'indeterminate' | 'buffer' | 'query') || 'indeterminate'}
-        className={classes.loading}
+        className={clsx(classes.loading, {
+          [classes.margin]: !noMargin,
+        })}
       />
     );
   }
@@ -46,7 +52,9 @@ export const Loading: React.FC<{
       disableShrink={disableShrink || false}
       size={size || 24}
       thickness={thickness || 4}
-      className={classes.loading}
+      className={clsx(classes.loading, {
+        [classes.margin]: !noMargin,
+      })}
     />
   );
 };

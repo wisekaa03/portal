@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import Sharp from 'sharp';
 // import { Request } from 'express';
 // #endregion
@@ -50,6 +50,21 @@ export class ProfileService {
       .resize(40, 40)
       .toBuffer()
       .then((img) => img.toString('base64'));
+
+  profilesSearch = async (search: string): Promise<Profile[]> =>
+    this.profileRepository.find({
+      cache: true,
+      where: [
+        { firstName: Like(`%${search}%`) },
+        { lastName: Like(`%${search}%`) },
+        { middleName: Like(`%${search}%`) },
+        { department: Like(`%${search}%`) },
+        { company: Like(`%${search}%`) },
+        { telephone: Like(`%${search}%`) },
+        { workPhone: Like(`%${search}%`) },
+        { mobile: Like(`%${search}%`) },
+      ],
+    });
 
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {
     let comment;

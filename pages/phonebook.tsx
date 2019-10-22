@@ -17,7 +17,7 @@ import {
   Modal,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
-import uuidv4 from 'uuid/v4';
+import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -26,11 +26,11 @@ import { Order, ColumnNames, Column } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import { appBarHeight } from '../components/app-bar';
-// import useDebounce from '../lib/debounce';
+import useDebounce from '../lib/debounce';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
-import { PROFILES } from '../lib/queries';
+import { PROFILES, PROFILES_SEARCH } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
@@ -42,8 +42,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       backgroundColor: '#F7FBFA',
-      height: panelHeight,
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    },
+    panelLoading: {
+      height: panelHeight - 4,
+      paddingBottom: 4,
+    },
+    panelNoLoading: {
+      height: panelHeight,
     },
     table: { height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`, overflow: 'auto' },
     search: {
@@ -268,21 +274,25 @@ const PhoneBook = (): React.ReactElement => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
-  const [search, setSearch] = useState<string>('');
+  const [tableData, setTableData] = useState<Profile[]>([]);
 
   const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-  const { loading, error, data, fetchMore } = useQuery(PROFILES(getColumns(columns)), {
-    variables: {
-      take: 20,
-      skip: 0,
-    },
-  });
+  const [search, setSearch] = useState<string>('');
+  const debouncedSearch = useDebounce(search, 1000);
 
-  if (loading) {
-    return <Loading type="linear" variant="indeterminate" />;
-  }
+  const { loading, error, data, fetchMore } = useQuery(
+    debouncedSearch.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
+    debouncedSearch.length <= 3
+      ? {
+        variables: {
+          take: 50,
+          skip: 0,
+        },
+      }
+      : { variables: { search: debouncedSearch } },
+  );
 
   console.log(data);
 
@@ -325,27 +335,22 @@ const PhoneBook = (): React.ReactElement => {
     setSettingsOpen(false);
   };
 
-  // const debouncedSearch = useDebounce(search, 500);
-
-  // useEffect(() => {
-  //   setBookData(
-  //     bookData.filter((data) => {
-  //       if (debouncedSearch.length <= 3) {
-  //         return true;
-  //       }
-  //       const s = debouncedSearch.toLocaleLowerCase();
-  //       const check = (c) => c.toLowerCase().includes(s);
-  //       console.log(debouncedSearch.length);
-  //       return check(data.name) || check(data.inside_phone);
-  //     }),
-  //   );
-  // }, [bookData, debouncedSearch]);
+  useEffect(() => {
+    const values = data ? ('profiles' in data ? data.profiles : data.profilesSearch) : [];
+    setTableData(values);
+  }, [data]);
 
   return (
     <>
       <Page>
         <div className={classes.root}>
-          <div className={classes.panel}>
+          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+          <div
+            className={clsx(classes.panel, {
+              [classes.panelLoading]: loading,
+              [classes.panelNoLoading]: !loading,
+            })}
+          >
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -394,7 +399,7 @@ const PhoneBook = (): React.ReactElement => {
               </TableHead>
               <TableBody>
                 {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
-                {!loading && data.profiles.map((p: Profile) => getRows(p, columns, handleProfileId))}
+                {!loading && tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}
               </TableBody>
             </Table>
           </div>
