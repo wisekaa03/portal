@@ -42,6 +42,7 @@ type Profile {
 }
 
 type Query {
+  profilesSearch(search: String): [Profile!]
   profiles(take: Int, skip: Int): [Profile!]!
   profile(id: ID): Profile
 }

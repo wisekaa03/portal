@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
@@ -41,6 +41,19 @@ export class ProfileService {
     const profile = await this.profileRepository.findOne(id, { cache: true });
 
     return profile as Profile | null;
+  }
+
+  async profilesSearch(search: string): Promise<Profile[]> {
+    const profiles = await this.profileRepository.find({
+      cache: true,
+      where: [
+        { firstName: Like(`%${search}%`) },
+        { lastName: Like(`%${search}%`) },
+        { middleName: Like(`%${search}%`) },
+      ],
+    });
+
+    return profiles;
   }
 
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {

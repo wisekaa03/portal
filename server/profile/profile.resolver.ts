@@ -39,4 +39,16 @@ export class ProfileResolver {
   async profile(@Args('id') id: string): Promise<Profile | null> {
     return this.profileService.profile(id) || null;
   }
+
+  /**
+   * GraphQL query: profilesSearch
+   *
+   * @param search
+   * @returns {Profiles[]}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async profilesSearch(@Args('search') search: string): Promise<Profile[] | null> {
+    return this.profileService.profilesSearch(search) || null;
+  }
 }

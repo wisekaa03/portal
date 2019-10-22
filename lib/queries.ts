@@ -66,6 +66,15 @@ export const PROFILES = (_columns: string): any => gql`
   }
 `;
 
+export const PROFILES_SEARCH = (_columns: string): any => gql`
+  query Profiles($search: String) {
+    profilesSearch(search: $search) {
+      id
+      ${_columns}
+    }
+  }
+`;
+
 export const PROFILE = gql`
   query Profile($id: ID) {
     profile(id: $id) {

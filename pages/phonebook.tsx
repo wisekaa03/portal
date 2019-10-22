@@ -30,7 +30,7 @@ import { appBarHeight } from '../components/app-bar';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
-import { PROFILES } from '../lib/queries';
+import { PROFILES, PROFILES_SEARCH } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
@@ -273,16 +273,23 @@ const PhoneBook = (): React.ReactElement => {
   const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-  const { loading, error, data, fetchMore } = useQuery(PROFILES(getColumns(columns)), {
-    variables: {
-      take: 20,
-      skip: 0,
-    },
-  });
+  const { loading, error, data, fetchMore } = useQuery(
+    search.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
+    search.length <= 3
+      ? {
+        variables: {
+          take: 50,
+          skip: 0,
+        },
+      }
+      : { variables: { search } },
+  );
 
-  if (loading) {
-    return <Loading type="linear" variant="indeterminate" />;
-  }
+  const responseFields = search.length <= 3 ? 'profiles' : 'profilesSearch';
+
+  // if (loading) {
+  //   return <Loading type="linear" variant="indeterminate" />;
+  // }
 
   console.log(data);
 
@@ -394,7 +401,7 @@ const PhoneBook = (): React.ReactElement => {
               </TableHead>
               <TableBody>
                 {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
-                {!loading && data.profiles.map((p: Profile) => getRows(p, columns, handleProfileId))}
+                {!loading && data[responseFields].map((p: Profile) => getRows(p, columns, handleProfileId))}
               </TableBody>
             </Table>
           </div>
