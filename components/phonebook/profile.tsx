@@ -23,8 +23,8 @@ import {
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
+import { useTranslation } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
-import { I18nPage, includeDefaultNamespaces, useTranslation } from '../../lib/i18n-client';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
 import { Loading } from '../loading';
@@ -113,6 +113,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
+  const { t, i18n } = useTranslation();
   const { profileId, handleClose } = props;
 
   if (!profileId) return null;
@@ -128,7 +129,7 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
   return (
     <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
-        {loading || !data ? (
+        {!profile ? (
           <Loading />
         ) : (
           <div className={clsx(classes.grid, classes.main)}>
@@ -150,19 +151,25 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                 <h2>{profile.middleName}</h2>
               </div>
               <div className={classes.center}>
-                <span>{null /* profile.name_en */}</span>
+                <span>{profile.nameEng}</span>
               </div>
-              <div className={classes.center}>
-                <PhoneAndroidRounded />
-                <span>{profile.telephone}</span>
-              </div>
-              <div className={classes.center}>
-                <PhoneRounded />
-                <span>{profile.workPhone}</span>
-              </div>
-              <div className={classes.center}>
-                <span>{null /* email */}</span>
-              </div>
+              {profile.telephone && (
+                <div className={classes.center}>
+                  <PhoneAndroidRounded />
+                  <span>{profile.telephone}</span>
+                </div>
+              )}
+              {profile.workPhone && (
+                <div className={classes.center}>
+                  <PhoneRounded />
+                  <span>{profile.workPhone}</span>
+                </div>
+              )}
+              {profile.email && (
+                <div className={classes.center}>
+                  <span>{profile.email}</span>
+                </div>
+              )}
             </div>
             <div className={clsx(classes.grid, classes.column)}>
               <div>
@@ -170,36 +177,36 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                   <List className={classes.list}>
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Компания" />
-                        <ListItemText primary="НКО Благотворительный фонд помощи детям 'Анастасия'" />
+                        <ListItemText primary={t(`phonebook:fields.company`)} />
+                        <ListItemText primary={profile.company} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Подразделение" />
-                        <ListItemText primary="Департамент соц. медийн. проектов и корпорат. делопроизводства" />
+                        <ListItemText primary={t(`phonebook:fields.department`)} />
+                        <ListItemText primary={profile.department} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Должность" />
-                        <ListItemText primary="Заместитель директора департамента по кредитованию и опер. на ФР" />
+                        <ListItemText primary={t(`phonebook:fields.title`)} />
+                        <ListItemText primary={profile.title} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Отдел" />
-                        <ListItemText primary="Отдел закуп. работ и услуг подрядных организаций" />
+                        <ListItemText primary={t(`phonebook:fields.otdel`)} />
+                        <ListItemText primary={profile.otdel} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Руководитель" />
-                        <ListItemText primary="Иванов Иван Иванович" />
+                        <ListItemText primary={t(`phonebook:fields.supervisor`)} />
+                        <ListItemText primary="" />
                       </div>
                     </ListItem>
                   </List>
@@ -210,36 +217,36 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                   <List className={classes.list}>
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Страна" />
-                        <ListItemText primary="Россия" />
+                        <ListItemText primary={t(`phonebook:fields.country`)} />
+                        <ListItemText primary={profile.addressPersonal.country} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Область" />
-                        <ListItemText primary="Новосибирская обл." />
+                        <ListItemText primary={t(`phonebook:fields.region`)} />
+                        <ListItemText primary={profile.addressPersonal.region} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Город" />
-                        <ListItemText primary="Звенигород" />
+                        <ListItemText primary={t(`phonebook:fields.city`)} />
+                        <ListItemText primary="" />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Адрес" />
-                        <ListItemText primary="Будённого 201" />
+                        <ListItemText primary={t(`phonebook:fields.street`)} />
+                        <ListItemText primary={profile.addressPersonal.street} />
                       </div>
                     </ListItem>
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary="Комната" />
-                        <ListItemText primary="105" />
+                        <ListItemText primary={t(`phonebook:fields.postalCode`)} />
+                        <ListItemText primary={profile.addressPersonal.postalCode} />
                       </div>
                     </ListItem>
                   </List>

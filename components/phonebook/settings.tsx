@@ -23,7 +23,7 @@ import {
 // #endregion
 // #region Imports Local
 import { ColumnNames, SettingsProps } from './types';
-import { I18nPage, useTranslation, includeDefaultNamespaces } from '../../lib/i18n-client';
+import { useTranslation } from '../../lib/i18n-client';
 import HeaderBg from '../../public/images/jpeg/header_bg.jpg';
 // #endregion
 

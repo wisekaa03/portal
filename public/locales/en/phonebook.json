@@ -25,6 +25,8 @@
     "country": "Страна",
     "region": "Область",
     "city": "Город",
-    "address": "Адрес"
+    "address": "Адрес",
+    "street": "Улица",
+    "postalCode": "Индекс"
   }
 }
