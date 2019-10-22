@@ -17,7 +17,7 @@ import {
   Modal,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
-import uuidv4 from 'uuid/v4';
+import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -42,8 +42,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       backgroundColor: '#F7FBFA',
-      height: panelHeight,
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    },
+    panelLoading: {
+      height: panelHeight - 4,
+      paddingBottom: 4,
+    },
+    panelNoLoading: {
+      height: panelHeight,
     },
     table: { height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`, overflow: 'auto' },
     search: {
@@ -288,10 +294,6 @@ const PhoneBook = (): React.ReactElement => {
       : { variables: { search: debouncedSearch } },
   );
 
-  // if (loading) {
-  //   return <Loading type="linear" variant="indeterminate" />;
-  // }
-
   console.log(data);
 
   const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
@@ -342,7 +344,13 @@ const PhoneBook = (): React.ReactElement => {
     <>
       <Page>
         <div className={classes.root}>
-          <div className={classes.panel}>
+          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+          <div
+            className={clsx(classes.panel, {
+              [classes.panelLoading]: loading,
+              [classes.panelNoLoading]: !loading,
+            })}
+          >
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
