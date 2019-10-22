@@ -17,6 +17,7 @@ import {
   Modal,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
+import uuidv4 from 'uuid/v4';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -24,13 +25,12 @@ import { I18nPage, useTranslation, includeDefaultNamespaces } from '../lib/i18n-
 import { Order, ColumnNames, Column } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
-import { PROFILES } from '../lib/queries';
 import { appBarHeight } from '../components/app-bar';
-
 // import useDebounce from '../lib/debounce';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
+import { PROFILE } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
@@ -198,12 +198,33 @@ const defaultColumns: ColumnNames[] = [
 //   return a[orderBy] > b[orderBy] ? asc * 1 : a[orderBy] < b[orderBy] ? asc * -1 : 0;
 // };
 
+const getColumns = (columns: ColumnNames[]): string => {
+  let result = '';
+  const addressColumns = ['country', 'postalCode', 'region', 'street'];
+
+  const addressPersonal = columns.filter((col) => addressColumns.includes(col));
+
+  columns.forEach((col) => {
+    if (col === 'name') {
+      result += 'firstName lastName middleName ';
+    } else if (!addressColumns.includes(col)) {
+      result += `${col} `;
+    }
+  });
+
+  if (addressPersonal.length > 0) {
+    result += `addressPersonal { ${addressPersonal.map((col) => `${col} `)} }`;
+  }
+
+  return result;
+};
+
 const getRows = (
   profile: Profile,
   columns: ColumnNames[],
   onClick: (fetchProps: Profile) => () => void,
 ): React.ReactNode => (
-  <TableRow key={profile.id} hover onClick={onClick(profile)}>
+  <TableRow key={uuidv4()} hover onClick={onClick(profile)}>
     {allColumns
       .filter((col) => columns.includes(col))
       .map((col) => {
@@ -252,9 +273,9 @@ const PhoneBook = (): React.ReactElement => {
   const [profileOpen, setProfileOpen] = useState<Profile | null>(null);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-  const { loading, error, data, fetchMore } = useQuery(PROFILES, {
+  const { loading, error, data, fetchMore } = useQuery(PROFILE(getColumns(columns)), {
     variables: {
-      take: 50,
+      take: 20,
       skip: 0,
     },
   });
