@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
 import { Query, ApolloProvider, QueryResult } from 'react-apollo';
@@ -62,7 +62,6 @@ class MainApp extends App<ApolloAppProps> {
           <Query query={CURRENT_USER} ssr={false}>
             {({ data, loading }: QueryResult<any>) => {
               if (loading) {
-                // TODO: какую-нибудь другую страницу...
                 return <Loading type="linear" variant="indeterminate" />;
               }
 
