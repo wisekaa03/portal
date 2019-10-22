@@ -6,7 +6,6 @@ import React /* , { useState, useEffect } */ from 'react';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
@@ -25,6 +24,7 @@ import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } 
 // #region Imports Local
 import { ProfileProps } from './types';
 import { I18nPage, includeDefaultNamespaces, useTranslation } from '../../lib/i18n-client';
+import { Avatar } from '../avatar';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -132,19 +132,7 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
               </IconButton>
             </div>
             <div className={classes.center}>
-              <Avatar
-                {...avatarSrc}
-                className={classes.avatar}
-                src={
-                  profile.thumbnailPhoto
-                    ? `data:image/png;base64,${profile.thumbnailPhoto}`
-                    : profile.gender === 1
-                      ? '/public/images/jpeg/photo/man.jpg'
-                      : profile.gender === 2
-                        ? '/public/images/jpeg/photo/woman.jpg'
-                        : '/public/images/jpeg/photo/alien.jpg'
-                }
-              />
+              <Avatar className={classes.avatar} profile={profile} />
             </div>
             <div className={classes.firstName}>
               <h2>{profile.lastName}</h2>

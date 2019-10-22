@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Popover, Box, /* Button, */ IconButton, Avatar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Popover, Box, /* Button, */ IconButton, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -20,6 +20,7 @@ import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo_min.png';
 import { Loading } from './loading';
+import { Avatar } from './avatar';
 // #endregion
 
 export const appBarHeight = 64;
@@ -129,18 +130,7 @@ export default (props: AppBarProps): React.ReactElement => {
                   <img src={LogoMin} alt="logo" />
                 </div>
                 <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
-                  <Avatar
-                    className={clsx(classes.avatar, classes.pointer)}
-                    src={
-                      v.user.profile.thumbnailPhoto
-                        ? `data:image/png;base64,${v.user.profile.thumbnailPhoto}`
-                        : v.user.profile.gender === 1
-                          ? '/public/images/jpeg/photo/man.jpg'
-                          : v.user.profile.gender === 2
-                            ? '/public/images/jpeg/photo/woman.jpg'
-                            : '/public/images/jpeg/photo/alien.jpg'
-                    }
-                  />
+                  <Avatar className={clsx(classes.avatar, classes.pointer)} profile={v.user.profile} />
                 </Box>
                 <Popover
                   id="profile-popover"
@@ -163,18 +153,7 @@ export default (props: AppBarProps): React.ReactElement => {
                   <Typography className={classes.profileName}>
                     {v.user.profile.firstName} {v.user.profile.lastName} {v.user.profile.middleName}
                   </Typography>
-                  <Avatar
-                    className={classes.avatar}
-                    src={
-                      v.user.profile.thumbnailPhoto
-                        ? `data:image/png;base64,${v.user.profile.thumbnailPhoto}`
-                        : v.user.profile.gender === 1
-                          ? '/public/images/jpeg/photo/man.jpg'
-                          : v.user.profile.gender === 2
-                            ? '/public/images/jpeg/photo/woman.jpg'
-                            : '/public/images/jpeg/photo/alien.jpg'
-                    }
-                  />
+                  <Avatar className={classes.avatar} profile={v.user.profile} />
                   <Box className={classes.phoneBlock}>
                     {v.user.profile.telephone ? (
                       <>

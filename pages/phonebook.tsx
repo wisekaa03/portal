@@ -15,7 +15,6 @@ import {
   InputBase,
   IconButton,
   Modal,
-  Avatar,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 // #endregion
@@ -31,6 +30,7 @@ import { appBarHeight } from '../components/app-bar';
 // import useDebounce from '../lib/debounce';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
+import { Avatar } from '../components/avatar';
 // #endregion
 
 const panelHeight = 48;
@@ -211,19 +211,7 @@ const getRows = (
 
         switch (col) {
           case 'thumbnailPhoto': {
-            cellData = (
-              <Avatar
-                src={
-                  profile.thumbnailPhoto
-                    ? `data:image/png;base64,${profile.thumbnailPhoto}`
-                    : profile.gender === 1
-                      ? '/public/images/jpeg/photo/man.jpg'
-                      : profile.gender === 2
-                        ? '/public/images/jpeg/photo/woman.jpg'
-                        : '/public/images/jpeg/photo/alien.jpg'
-                }
-              />
-            );
+            cellData = <Avatar profile={profile} />;
             break;
           }
 
@@ -266,7 +254,7 @@ const PhoneBook = (): React.ReactElement => {
 
   const { loading, error, data, fetchMore } = useQuery(PROFILES, {
     variables: {
-      take: 1000,
+      take: 50,
       skip: 0,
     },
   });
