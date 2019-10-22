@@ -50,6 +50,11 @@ export class ProfileService {
         { firstName: Like(`%${search}%`) },
         { lastName: Like(`%${search}%`) },
         { middleName: Like(`%${search}%`) },
+        { department: Like(`%${search}%`) },
+        { company: Like(`%${search}%`) },
+        { telephone: Like(`%${search}%`) },
+        { workPhone: Like(`%${search}%`) },
+        { mobile: Like(`%${search}%`) },
       ],
     });
 

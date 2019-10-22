@@ -26,7 +26,7 @@ import { Order, ColumnNames, Column } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import { appBarHeight } from '../components/app-bar';
-// import useDebounce from '../lib/debounce';
+import useDebounce from '../lib/debounce';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
@@ -268,24 +268,25 @@ const PhoneBook = (): React.ReactElement => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
-  const [search, setSearch] = useState<string>('');
+  const [tableData, setTableData] = useState<Profile[]>([]);
 
   const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
+  const [search, setSearch] = useState<string>('');
+  const debouncedSearch = useDebounce(search, 1000);
+
   const { loading, error, data, fetchMore } = useQuery(
-    search.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
-    search.length <= 3
+    debouncedSearch.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
+    debouncedSearch.length <= 3
       ? {
         variables: {
           take: 50,
           skip: 0,
         },
       }
-      : { variables: { search } },
+      : { variables: { search: debouncedSearch } },
   );
-
-  const responseFields = search.length <= 3 ? 'profiles' : 'profilesSearch';
 
   // if (loading) {
   //   return <Loading type="linear" variant="indeterminate" />;
@@ -332,21 +333,10 @@ const PhoneBook = (): React.ReactElement => {
     setSettingsOpen(false);
   };
 
-  // const debouncedSearch = useDebounce(search, 500);
-
-  // useEffect(() => {
-  //   setBookData(
-  //     bookData.filter((data) => {
-  //       if (debouncedSearch.length <= 3) {
-  //         return true;
-  //       }
-  //       const s = debouncedSearch.toLocaleLowerCase();
-  //       const check = (c) => c.toLowerCase().includes(s);
-  //       console.log(debouncedSearch.length);
-  //       return check(data.name) || check(data.inside_phone);
-  //     }),
-  //   );
-  // }, [bookData, debouncedSearch]);
+  useEffect(() => {
+    const values = data ? ('profiles' in data ? data.profiles : data.profilesSearch) : [];
+    setTableData(values);
+  }, [data]);
 
   return (
     <>
@@ -401,7 +391,7 @@ const PhoneBook = (): React.ReactElement => {
               </TableHead>
               <TableBody>
                 {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
-                {!loading && data[responseFields].map((p: Profile) => getRows(p, columns, handleProfileId))}
+                {!loading && tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}
               </TableBody>
             </Table>
           </div>
