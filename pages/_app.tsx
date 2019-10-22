@@ -68,8 +68,13 @@ class MainApp extends App<ApolloAppProps> {
 
               if (data && data.me) {
                 if (Router.pathname === '/auth/login') {
-                  const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
-                  Router.push({ pathname: redirect as string });
+                  let redirect: string | string[] | null | undefined;
+                  try {
+                    ({ redirect } = queryString.parse(window.location.search));
+                  } catch (error) {
+                    console.error('Redirect error:', redirect, error);
+                  }
+                  Router.push({ pathname: (redirect as string) || FIRST_PAGE });
 
                   return <Loading type="linear" variant="indeterminate" />;
                 }
