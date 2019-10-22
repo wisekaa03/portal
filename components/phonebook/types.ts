@@ -11,6 +11,7 @@ export type ColumnNames =
   | 'nameEng'
   | 'login'
   | 'thumbnailPhoto'
+  | 'thumbnailPhoto40'
   | 'company'
   | 'companyEng'
   | 'department'

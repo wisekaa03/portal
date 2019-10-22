@@ -15,7 +15,7 @@ export interface Profile {
 
   loginIdentificator: string;
 
-  username?: string;
+  username: string;
 
   firstName: string;
 
@@ -55,7 +55,7 @@ export interface Profile {
 
   thumbnailPhoto?: Buffer;
 
-  thumbnailPhoto40?: string | Promise<string>;
+  thumbnailPhoto40?: string | Promise<string | undefined>;
 
   createdAt?: Date;
 

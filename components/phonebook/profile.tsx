@@ -143,7 +143,7 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                 </IconButton>
               </div>
               <div className={classes.center}>
-                <Avatar className={classes.avatar} profile={profile} />
+                <Avatar fullSize className={classes.avatar} profile={profile} />
               </div>
               <div className={classes.firstName}>
                 <h2>{profile.lastName}</h2>

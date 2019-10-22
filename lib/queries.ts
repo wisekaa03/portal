@@ -35,7 +35,7 @@ export const CURRENT_USER = gql`
           region
           street
         }
-        thumbnailPhoto
+        thumbnailPhoto40
         updatedAt
         createdAt
       }

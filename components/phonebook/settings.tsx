@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const allColumns: ColumnNames[] = [
   'thumbnailPhoto',
+  'thumbnailPhoto40',
   'name',
   'nameEng',
   'login',

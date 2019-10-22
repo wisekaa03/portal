@@ -44,12 +44,17 @@ export class ProfileService {
     return profile as Profile | null;
   }
 
-  // TODO: выделить это все в ImageService...
-  imageResize = async (originalImage: Buffer): Promise<string> =>
+  // TODO: выделить это все в ImageService... Ж)
+  imageResize = async (originalImage: Buffer): Promise<string | undefined> =>
+    originalImage &&
     Sharp(originalImage)
-      .resize(40, 40)
+      .resize(48, 48)
       .toBuffer()
-      .then((img) => img.toString('base64'));
+      .then((img) => img.toString('base64'))
+      .catch((error) => {
+        this.logService.error('Error converting image:', error, 'ProfileService');
+        return undefined;
+      });
 
   profilesSearch = async (search: string): Promise<Profile[]> =>
     this.profileRepository.find({

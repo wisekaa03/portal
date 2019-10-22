@@ -166,13 +166,13 @@ export class ProfileEntity {
     type: 'bytea',
     nullable: true,
   })
-  thumbnailPhoto: Buffer;
+  thumbnailPhoto?: Buffer;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  thumbnailPhoto40: string | Promise<string>;
+  thumbnailPhoto40?: string | Promise<string | undefined>;
 
   @BeforeUpdate()
   @BeforeInsert()

@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme: Theme) =>
 // ];
 
 const defaultColumns: ColumnNames[] = [
-  'thumbnailPhoto',
+  'thumbnailPhoto40',
   'name',
   'company',
   'department',
@@ -237,6 +237,7 @@ const getRows = (
         let cellData: React.ReactElement | string | null = null;
 
         switch (col) {
+          case 'thumbnailPhoto40':
           case 'thumbnailPhoto': {
             cellData = <Avatar profile={profile} />;
             break;
@@ -377,9 +378,9 @@ const PhoneBook = (): React.ReactElement => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.includes('thumbnailPhoto') ? <TableCell /> : null}
+                  {columns.includes('thumbnailPhoto') || columns.includes('thumbnailPhoto40') ? <TableCell /> : null}
                   {allColumns
-                    .filter((c) => c !== 'thumbnailPhoto' && columns.includes(c))
+                    .filter((c) => c !== 'thumbnailPhoto' && c !== 'thumbnailPhoto40' && columns.includes(c))
                     .map((column) => (
                       <TableCell
                         key={column}
