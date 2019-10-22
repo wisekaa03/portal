@@ -327,4 +327,5 @@ export const ldapADattributes = [
   'streetAddress',
   'title',
   'wWWHomePage',
+  'userAccountControl',
 ];

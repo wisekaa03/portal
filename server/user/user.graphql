@@ -3,6 +3,7 @@ type User {
   token: String!
   username: String!
   profile: Profile!
+  disabled: Boolean
   createdAt: Date
   updatedAt: Date
 }

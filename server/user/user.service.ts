@@ -32,9 +32,9 @@ export class UserService {
    * @param {string} username User ID
    * @returns {UserEntity | undefined} The user
    */
-  async readByUsername(username: string): Promise<UserEntity | undefined> {
+  async readByUsername(username: string, disabled = true): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({
-      where: { username },
+      where: { username, disabled },
       relations: ['profile'],
       cache: true,
     });
@@ -46,9 +46,9 @@ export class UserService {
    * @param {string} id User ID
    * @returns {UserEntity | undefined} The user
    */
-  async readById(id: string): Promise<UserEntity | undefined> {
+  async readById(id: string, disabled = true): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({
-      where: { id },
+      where: { id, disabled },
       relations: ['profile'],
       cache: true,
     });
@@ -88,6 +88,8 @@ export class UserService {
       updatedAt: user && user.updatedAt,
       username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
+      // eslint-disable-next-line no-bitwise
+      disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       // groups,
       isAdmin: false,
       profile,

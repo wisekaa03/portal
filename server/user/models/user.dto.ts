@@ -16,6 +16,8 @@ export interface BaseUser {
 
   password?: string;
 
+  disabled: boolean;
+
   isAdmin: boolean;
 
   createdAt?: Date;

@@ -43,11 +43,17 @@ export class UserEntity {
 
   @Column({
     type: 'boolean',
+    nullable: false,
+  })
+  disabled: boolean;
+
+  @Column({
+    type: 'boolean',
     default: true,
   })
   isAdmin: boolean;
 
-  @OneToOne((type: any) => ProfileEntity)
+  @OneToOne((_type: any) => ProfileEntity)
   @JoinColumn()
   profile: ProfileEntity;
 
