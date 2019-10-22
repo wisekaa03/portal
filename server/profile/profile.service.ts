@@ -25,7 +25,7 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  async profiles(take: number, skip: number): Promise<Profile[] | null> {
+  async profiles(take: number, skip: number): Promise<Profile[]> {
     // TODO: группы к которым имеет доступ текущий пользователь, согласно username
 
     const profiles = await this.profileRepository.find({
@@ -35,6 +35,12 @@ export class ProfileService {
     });
 
     return profiles;
+  }
+
+  async profile(id: string): Promise<Profile | null> {
+    const profile = await this.profileRepository.findOne(id, { cache: true });
+
+    return profile as Profile | null;
   }
 
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {

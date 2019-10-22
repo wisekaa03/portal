@@ -57,10 +57,43 @@ export const LOGOUT = gql`
   }
 `;
 
-export const PROFILE = (_columns: string): any => gql`
+export const PROFILES = (_columns: string): any => gql`
   query Profiles($take: Int, $skip: Int) {
     profiles(take: $take, skip: $skip) {
+      id
       ${_columns}
+    }
+  }
+`;
+
+export const PROFILE = gql`
+  query Profile($id: ID) {
+    profile(id: $id) {
+      firstName
+      lastName
+      middleName
+      nameEng
+      birthday
+      gender
+      company
+      companyEng
+      department
+      departmentEng
+      otdelEng
+      positionEng
+      title
+      telephone
+      workPhone
+      mobile
+      addressPersonal {
+        country
+        postalCode
+        region
+        street
+      }
+      thumbnailPhoto
+      updatedAt
+      createdAt
     }
   }
 `;

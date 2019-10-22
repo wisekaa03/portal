@@ -4,6 +4,7 @@
 // #region Imports NPM
 import React /* , { useState, useEffect } */ from 'react';
 import clsx from 'clsx';
+import { useQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -25,6 +26,8 @@ import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } 
 import { ProfileProps } from './types';
 import { I18nPage, includeDefaultNamespaces, useTranslation } from '../../lib/i18n-client';
 import { Avatar } from '../avatar';
+import { PROFILE } from '../../lib/queries';
+import { Loading } from '../loading';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -110,133 +113,141 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
-  const { profile, handleClose } = props;
+  const { profileId, handleClose } = props;
 
-  if (!profile) return null;
+  if (!profileId) return null;
 
-  const avatarSrc = profile.thumbnailPhoto
-    ? { alt: 'Avatar', src: `data:image/png;base64,${profile.thumbnailPhoto}` }
-    : null;
+  const { loading, error, data } = useQuery(PROFILE, {
+    variables: {
+      id: profileId,
+    },
+  });
+
+  const profile = !loading && data.profile;
 
   return (
     <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
-        <div className={clsx(classes.grid, classes.main)}>
-          <div className={clsx(classes.grid, classes.column)}>
-            <div className={classes.topIcons}>
-              <IconButton className={classes.noPadding} onClick={handleClose}>
-                <ArrowBackRounded />
-              </IconButton>
-              <IconButton className={classes.noPadding}>
-                <MoreVertRounded />
-              </IconButton>
+        {loading || !data ? (
+          <Loading />
+        ) : (
+          <div className={clsx(classes.grid, classes.main)}>
+            <div className={clsx(classes.grid, classes.column)}>
+              <div className={classes.topIcons}>
+                <IconButton className={classes.noPadding} onClick={handleClose}>
+                  <ArrowBackRounded />
+                </IconButton>
+                <IconButton className={classes.noPadding}>
+                  <MoreVertRounded />
+                </IconButton>
+              </div>
+              <div className={classes.center}>
+                <Avatar className={classes.avatar} profile={profile} />
+              </div>
+              <div className={classes.firstName}>
+                <h2>{profile.lastName}</h2>
+                <h2>{profile.firstName}</h2>
+                <h2>{profile.middleName}</h2>
+              </div>
+              <div className={classes.center}>
+                <span>{null /* profile.name_en */}</span>
+              </div>
+              <div className={classes.center}>
+                <PhoneAndroidRounded />
+                <span>{profile.telephone}</span>
+              </div>
+              <div className={classes.center}>
+                <PhoneRounded />
+                <span>{profile.workPhone}</span>
+              </div>
+              <div className={classes.center}>
+                <span>{null /* email */}</span>
+              </div>
             </div>
-            <div className={classes.center}>
-              <Avatar className={classes.avatar} profile={profile} />
-            </div>
-            <div className={classes.firstName}>
-              <h2>{profile.lastName}</h2>
-              <h2>{profile.firstName}</h2>
-              <h2>{profile.middleName}</h2>
-            </div>
-            <div className={classes.center}>
-              <span>{null /* profile.name_en */}</span>
-            </div>
-            <div className={classes.center}>
-              <PhoneAndroidRounded />
-              <span>{profile.telephone}</span>
-            </div>
-            <div className={classes.center}>
-              <PhoneRounded />
-              <span>{profile.workPhone}</span>
-            </div>
-            <div className={classes.center}>
-              <span>{null /* email */}</span>
+            <div className={clsx(classes.grid, classes.column)}>
+              <div>
+                <Paper>
+                  <List className={classes.list}>
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Компания" />
+                        <ListItemText primary="НКО Благотворительный фонд помощи детям 'Анастасия'" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Подразделение" />
+                        <ListItemText primary="Департамент соц. медийн. проектов и корпорат. делопроизводства" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Должность" />
+                        <ListItemText primary="Заместитель директора департамента по кредитованию и опер. на ФР" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Отдел" />
+                        <ListItemText primary="Отдел закуп. работ и услуг подрядных организаций" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Руководитель" />
+                        <ListItemText primary="Иванов Иван Иванович" />
+                      </div>
+                    </ListItem>
+                  </List>
+                </Paper>
+              </div>
+              <div>
+                <Paper>
+                  <List className={classes.list}>
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Страна" />
+                        <ListItemText primary="Россия" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Область" />
+                        <ListItemText primary="Новосибирская обл." />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Город" />
+                        <ListItemText primary="Звенигород" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Адрес" />
+                        <ListItemText primary="Будённого 201" />
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary="Комната" />
+                        <ListItemText primary="105" />
+                      </div>
+                    </ListItem>
+                  </List>
+                </Paper>
+              </div>
             </div>
           </div>
-          <div className={clsx(classes.grid, classes.column)}>
-            <div>
-              <Paper>
-                <List className={classes.list}>
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Компания" />
-                      <ListItemText primary="НКО Благотворительный фонд помощи детям 'Анастасия'" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Подразделение" />
-                      <ListItemText primary="Департамент соц. медийн. проектов и корпорат. делопроизводства" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Должность" />
-                      <ListItemText primary="Заместитель директора департамента по кредитованию и опер. на ФР" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Отдел" />
-                      <ListItemText primary="Отдел закуп. работ и услуг подрядных организаций" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Руководитель" />
-                      <ListItemText primary="Иванов Иван Иванович" />
-                    </div>
-                  </ListItem>
-                </List>
-              </Paper>
-            </div>
-            <div>
-              <Paper>
-                <List className={classes.list}>
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Страна" />
-                      <ListItemText primary="Россия" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Область" />
-                      <ListItemText primary="Новосибирская обл." />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Город" />
-                      <ListItemText primary="Звенигород" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Адрес" />
-                      <ListItemText primary="Будённого 201" />
-                    </div>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary="Комната" />
-                      <ListItemText primary="105" />
-                    </div>
-                  </ListItem>
-                </List>
-              </Paper>
-            </div>
-          </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );

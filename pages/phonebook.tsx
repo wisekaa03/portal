@@ -30,7 +30,7 @@ import { appBarHeight } from '../components/app-bar';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
-import { PROFILE } from '../lib/queries';
+import { PROFILES } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
@@ -222,9 +222,9 @@ const getColumns = (columns: ColumnNames[]): string => {
 const getRows = (
   profile: Profile,
   columns: ColumnNames[],
-  onClick: (fetchProps: Profile) => () => void,
+  onClick: (id: string | undefined) => () => void,
 ): React.ReactNode => (
-  <TableRow key={uuidv4()} hover onClick={onClick(profile)}>
+  <TableRow key={profile.id} hover onClick={onClick(profile.id)}>
     {allColumns
       .filter((col) => columns.includes(col))
       .map((col) => {
@@ -270,10 +270,10 @@ const PhoneBook = (): React.ReactElement => {
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
   const [search, setSearch] = useState<string>('');
 
-  const [profileOpen, setProfileOpen] = useState<Profile | null>(null);
+  const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-  const { loading, error, data, fetchMore } = useQuery(PROFILE(getColumns(columns)), {
+  const { loading, error, data, fetchMore } = useQuery(PROFILES(getColumns(columns)), {
     variables: {
       take: 20,
       skip: 0,
@@ -285,6 +285,15 @@ const PhoneBook = (): React.ReactElement => {
   }
 
   console.log(data);
+
+  const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
+    const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
+    const needFetch = scrollHeight * 0.8 - offsetHeight;
+
+    if (scrollTop <= needFetch) return;
+
+    console.log('Need fetch!!!');
+  };
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
     const isAsc = orderBy === property && order === 'asc';
@@ -300,12 +309,12 @@ const PhoneBook = (): React.ReactElement => {
     setSearch(event.target.value);
   };
 
-  const handleProfileOpen = (props: Profile) => (): void => {
-    setProfileOpen(props);
+  const handleProfileId = (id: string | undefined) => (): void => {
+    setProfileId(id || false);
   };
 
   const handleProfileClose = (): void => {
-    setProfileOpen(null);
+    setProfileId(false);
   };
 
   const handleSettingsOpen = (): void => {
@@ -315,9 +324,6 @@ const PhoneBook = (): React.ReactElement => {
   const handleSettingsClose = (): void => {
     setSettingsOpen(false);
   };
-
-  const profileId = profileOpen ? 'profile' : undefined;
-  const settingsId = settingsOpen ? 'settings' : undefined;
 
   // const debouncedSearch = useDebounce(search, 500);
 
@@ -362,7 +368,7 @@ const PhoneBook = (): React.ReactElement => {
               <SettingsIcon />
             </IconButton>
           </div>
-          <div id="phonebook-wrap" className={classes.table}>
+          <div id="phonebook-wrap" className={classes.table} onScroll={handleScrollTable}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
@@ -388,28 +394,16 @@ const PhoneBook = (): React.ReactElement => {
               </TableHead>
               <TableBody>
                 {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
-                {!loading && data.profiles.map((p: Profile) => getRows(p, columns, handleProfileOpen))}
+                {!loading && data.profiles.map((p: Profile) => getRows(p, columns, handleProfileId))}
               </TableBody>
             </Table>
           </div>
         </div>
       </Page>
-      <Modal
-        id={profileId}
-        disableAutoFocus
-        open={Boolean(profileOpen)}
-        onClose={handleProfileClose}
-        className={classes.modal}
-      >
-        <ProfileComponent profile={profileOpen} handleClose={handleProfileClose} />
+      <Modal disableAutoFocus open={Boolean(profileId)} onClose={handleProfileClose} className={classes.modal}>
+        <ProfileComponent profileId={profileId} handleClose={handleProfileClose} />
       </Modal>
-      <Modal
-        id={settingsId}
-        disableAutoFocus
-        open={settingsOpen}
-        onClose={handleSettingsClose}
-        className={classes.modal}
-      >
+      <Modal disableAutoFocus open={settingsOpen} onClose={handleSettingsClose} className={classes.modal}>
         <SettingsComponent columns={columns} changeColumn={setColumns} handleClose={handleSettingsClose} />
       </Modal>
     </>

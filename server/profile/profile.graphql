@@ -42,9 +42,8 @@ type Profile {
 }
 
 type Query {
-
   profiles(take: Int, skip: Int): [Profile!]!
-
+  profile(id: ID): Profile
 }
 
 

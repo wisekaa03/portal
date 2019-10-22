@@ -43,7 +43,7 @@ export interface Column {
 }
 
 export interface ProfileProps {
-  profile: Profile | null;
+  profileId: string | boolean;
   handleClose(): void;
 }
 

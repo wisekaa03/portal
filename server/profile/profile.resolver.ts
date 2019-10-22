@@ -18,12 +18,25 @@ export class ProfileResolver {
   /**
    * GraphQL query: profiles
    *
-   * @param req - request.User
+   * @param take
+   * @param skip
    * @returns {Profiles[]}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profiles(@Args('take') take: number, @Args('skip') skip: number): Promise<Profile[] | null> {
-    return this.profileService.profiles(take, skip) || null;
+  async profiles(@Args('take') take: number, @Args('skip') skip: number): Promise<Profile[]> {
+    return this.profileService.profiles(take, skip);
+  }
+
+  /**
+   * GraphQL query: profile
+   *
+   * @param id
+   * @returns {Profiles[]}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async profile(@Args('id') id: string): Promise<Profile | null> {
+    return this.profileService.profile(id) || null;
   }
 }
