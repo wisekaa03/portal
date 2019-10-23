@@ -57,4 +57,4 @@ public/
 target/
 typings/
 tsconfig.json
-tsconfig.server.json
+# tsconfig.server.json
