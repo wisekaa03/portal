@@ -318,7 +318,7 @@ const PhoneBook = (): React.ReactElement => {
                   }, [])}
                 </TableRow>
               </TableHead>
-              <TableBody>{!loading && tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}</TableBody>
+              <TableBody>{tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}</TableBody>
             </Table>
           </div>
         </div>

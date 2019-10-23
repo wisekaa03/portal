@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, ReactNode, useEffect } from 'react';
+import React, { useState, ReactNode, useEffect, useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
@@ -9,6 +9,7 @@ import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #region Imports Local
 import AppBar, { appBarHeight } from '../components/app-bar';
 import Drawer from '../components/drawer';
+import { ProfileContext } from '../lib/types';
 // #endregion
 
 const useStyles = makeStyles((/* theme: Theme */) =>
@@ -31,8 +32,10 @@ interface Main {
 export default (props: Main): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
+  const profile = useContext(ProfileContext);
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(lgUp);
+  const defaultOpen = profile && profile.isMobile ? false : lgUp;
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(defaultOpen);
 
   useEffect(() => {
     setDrawerOpen(lgUp);
@@ -46,7 +49,7 @@ export default (props: Main): React.ReactElement => {
     <div className={classes.root}>
       <AppBar handleDrawerOpen={handleDrawerOpen} />
       <div className={classes.main}>
-        <Drawer open={drawerOpen} handleOpen={handleDrawerOpen} />
+        <Drawer open={drawerOpen} isMobile={profile && profile.isMobile} handleOpen={handleDrawerOpen} />
         <div id="content" className={classes.content}>
           {props.children}
         </div>
