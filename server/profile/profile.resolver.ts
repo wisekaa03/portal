@@ -23,8 +23,13 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profiles(@Args('take') take: number, @Args('skip') skip: number): Promise<Profile[]> {
-    return this.profileService.profiles(take, skip);
+  async profiles(
+    @Args('take') take: number,
+    @Args('skip') skip: number,
+    @Args('orderBy') orderBy: string,
+    @Args('order') order: string,
+  ): Promise<Profile[]> {
+    return this.profileService.profiles(take, skip, orderBy, order);
   }
 
   /**
@@ -47,7 +52,11 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profilesSearch(@Args('search') search: string): Promise<Profile[] | null> {
-    return this.profileService.profilesSearch(search) || null;
+  async profilesSearch(
+    @Args('search') search: string,
+    @Args('orderBy') orderBy: string,
+    @Args('order') order: string,
+  ): Promise<Profile[] | null> {
+    return this.profileService.profilesSearch(search, orderBy, order) || null;
   }
 }

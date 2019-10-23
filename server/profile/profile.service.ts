@@ -40,13 +40,16 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  async profiles(take: number, skip: number): Promise<Profile[]> {
+  async profiles(take: number, skip: number, orderBy: string, order: string): Promise<Profile[]> {
     // TODO: группы к которым имеет доступ текущий пользователь, согласно username
 
     const profiles = await this.profileRepository.find({
       cache: true,
       take,
       skip,
+      order: {
+        [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
+      },
     });
 
     return profiles;
@@ -58,9 +61,12 @@ export class ProfileService {
     return profile as Profile | null;
   }
 
-  profilesSearch = async (search: string): Promise<Profile[]> =>
+  profilesSearch = async (search: string, orderBy: string, order: string): Promise<Profile[]> =>
     this.profileRepository.find({
       cache: true,
+      order: {
+        [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
+      },
       where: [
         { firstName: Like(`%${search}%`) },
         { lastName: Like(`%${search}%`) },

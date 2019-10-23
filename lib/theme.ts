@@ -113,6 +113,11 @@ theme.overrides = {
       fontSize: 'inherit',
     },
   },
+  MuiTableCell: {
+    root: {
+      padding: theme.spacing(1.5),
+    },
+  },
 };
 
 export default theme;

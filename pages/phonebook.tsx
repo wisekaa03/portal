@@ -88,10 +88,6 @@ const useStyles = makeStyles((theme: Theme) =>
         width: 200,
       },
     },
-    // buttonExtended: {
-    //   borderRadius: '87px',
-    //   backgroundColor: '#DEECEC',
-    // },
     modal: {
       display: 'flex',
       alignItems: 'center',
@@ -99,57 +95,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-// const defaultColumns: Column[] = [
-//   {
-//     id: 'photo',
-//     label: '',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'name',
-//     label: 'Ф.И.О.',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'company',
-//     label: 'Компания',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'division',
-//     label: 'Подразделение',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'position',
-//     label: 'Должность',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'telephone',
-//     label: 'Рабочий телефон',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'inside_phone',
-//     label: 'Внут. тел.',
-//     minWidth: 100,
-//     show: true,
-//   },
-//   {
-//     id: 'email',
-//     label: 'Электронная почта',
-//     minWidth: 100,
-//     show: true,
-//   },
-// ];
 
 const defaultColumns: ColumnNames[] = [
   'thumbnailPhoto40',
@@ -161,42 +106,6 @@ const defaultColumns: ColumnNames[] = [
   'telephone',
   'workPhone',
 ];
-
-// const createData = (profiles: FetchProps[]): BookProps[] => {
-//   if (!profiles || profiles.length === 0) return [];
-//   const result: BookProps[] = [];
-
-//   profiles.forEach((p) => {
-//     result.push({
-//       id: p.id,
-//       name: `${p.lastName} ${p.firstName} ${p.middleName}`,
-//       name_en: '',
-//       login: 'ivanov',
-//       thumbnailPhoto: '',
-//       company: `Компания ${i}`,
-//       company_en: `Company ${i}`,
-//       department: 'Департамент',
-//       department_en: 'Department',
-//       division: `Подразделение ${i}`,
-//       division_en: `Division ${i}`,
-//       position: 'Слесарь',
-//       position_en: 'Mechanic',
-//       supervisor: 'Петров Петр Петрович',
-//       room: '111',
-//       telephone: '+7 918 1111111',
-//       fax: '+7 918 2222222',
-//       mobile_phone: '+7 918 3333333',
-//       inside_phone: `00${i < 10 ? 0 : ''}${i}`,
-//       email: 'webmaster@kngk-group.ru',
-//       country: 'Россия',
-//       region: 'Краснодарский край',
-//       city: 'Краснодар',
-//       address: 'Красная',
-//     });
-//   });
-
-//   return result;
-// };
 
 // const sortData = (order: Order, orderBy: ColumnNames) => (a: BookProps, b: BookProps) => {
 //   const asc: number = order === 'asc' ? 1 : -1;
@@ -290,12 +199,18 @@ const PhoneBook = (): React.ReactElement => {
         variables: {
           take: 50,
           skip: 0,
+          orderBy,
+          order,
         },
       }
-      : { variables: { search: debouncedSearch } },
+      : {
+        variables: {
+          search: debouncedSearch,
+          orderBy,
+          order,
+        },
+      },
   );
-
-  console.log(data);
 
   const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
     const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
@@ -337,9 +252,11 @@ const PhoneBook = (): React.ReactElement => {
   };
 
   useEffect(() => {
-    const values = data ? ('profiles' in data ? data.profiles : data.profilesSearch) : [];
-    setTableData(values);
-  }, [data]);
+    if (!loading) {
+      const values = data ? ('profiles' in data ? data.profiles : data.profilesSearch) : [];
+      setTableData(values);
+    }
+  }, [data, loading]);
 
   return (
     <>
@@ -367,9 +284,6 @@ const PhoneBook = (): React.ReactElement => {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
-            {/* <Button variant="contained" className={classes.buttonExtended}>
-              Расширенный поиск
-              </Button> */}
             <IconButton onClick={handleSettingsOpen}>
               <SettingsIcon />
             </IconButton>
@@ -404,10 +318,7 @@ const PhoneBook = (): React.ReactElement => {
                   }, [])}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {/* bookData.sort(sortData(order, orderBy)).map((a) => getRows(a, columns)) */ null}
-                {!loading && tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}
-              </TableBody>
+              <TableBody>{!loading && tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}</TableBody>
             </Table>
           </div>
         </div>

@@ -45,8 +45,8 @@ type Profile {
 }
 
 type Query {
-  profilesSearch(search: String): [Profile!]
-  profiles(take: Int, skip: Int): [Profile!]!
+  profilesSearch(search: String, orderBy: String, order: String): [Profile!]
+  profiles(take: Int, skip: Int, orderBy: String, order: String): [Profile!]!
   profile(id: ID): Profile
 }
 
