@@ -77,6 +77,7 @@ export class ProfileService {
         { telephone: Like(`%${search}%`) },
         { workPhone: Like(`%${search}%`) },
         { mobile: Like(`%${search}%`) },
+        { addressPersonal: Like(`%${search}%`) },
       ],
     });
 
