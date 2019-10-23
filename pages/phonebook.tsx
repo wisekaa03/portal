@@ -382,7 +382,7 @@ const PhoneBook = (): React.ReactElement => {
                     if (!columns.includes(column)) return result;
 
                     if (column === 'thumbnailPhoto40') {
-                      return [...result, <TableCell />];
+                      return [...result, <TableCell key={column} />];
                     }
 
                     return [
@@ -413,10 +413,14 @@ const PhoneBook = (): React.ReactElement => {
         </div>
       </Page>
       <Modal open={Boolean(profileId)} onClose={handleProfileClose} className={classes.modal}>
-        <ProfileComponent profileId={profileId} handleClose={handleProfileClose} />
+        <div>
+          <ProfileComponent profileId={profileId} handleClose={handleProfileClose} />
+        </div>
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose} className={classes.modal}>
-        <SettingsComponent columns={columns} changeColumn={setColumns} handleClose={handleSettingsClose} />
+        <div>
+          <SettingsComponent columns={columns} changeColumn={setColumns} handleClose={handleSettingsClose} />
+        </div>
       </Modal>
     </>
   );
