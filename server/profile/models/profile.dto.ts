@@ -55,7 +55,7 @@ export interface Profile {
 
   disabled: boolean;
 
-  thumbnailPhoto?: Buffer | Promise<Buffer | undefined>;
+  thumbnailPhoto?: string | Promise<string | undefined>;
 
   thumbnailPhoto40?: string | Promise<string | undefined>;
 
