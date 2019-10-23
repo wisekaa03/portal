@@ -1,6 +1,7 @@
 type Address {
   country: String
   postalCode: String
+  town: String
   region: String
   street: String
 }
@@ -22,6 +23,7 @@ type Profile {
   company: String
   title: String
   department: String
+  otdel: String
 
   telephone: String
   workPhone: String
