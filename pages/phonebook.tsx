@@ -143,7 +143,7 @@ const getRows = (
     {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
       if (!columns.includes(column)) return result;
 
-      let cellData: React.ReactElement | string | null = null;
+      let cellData: React.ReactElement | string | undefined | null = null;
 
       switch (column) {
         case 'thumbnailPhoto40': {

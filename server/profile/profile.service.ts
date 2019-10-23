@@ -102,17 +102,20 @@ export class ProfileService {
       birthday = new Date(Date.parse(birthday));
     }
 
-    const thumbnailPhotoBuffer = Buffer.from(ldapUser.thumbnailPhoto, 'base64');
-    const thumbnailPhoto = ldapUser.thumbnailPhoto
+    const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
+
+    const thumbnailPhoto = thumbnailPhotoBuffer
       ? this.imageService
         .imageResize(thumbnailPhotoBuffer, 250, 250)
         .then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
-    const thumbnailPhoto40 = ldapUser.thumbnailPhoto
+    const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
 
-    const [department, otdel] = ldapUser.department ? ldapUser.department.split(',', 1) : [undefined, undefined];
+    const [department, otdel] = ldapUser.department
+      ? ldapUser.department.split(/\s*(,)\s*/, 1)
+      : [undefined, undefined];
 
     let profile: Profile = {
       loginService: LoginService.LDAP,
