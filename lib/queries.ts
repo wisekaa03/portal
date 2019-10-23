@@ -65,8 +65,8 @@ export const LOGOUT = gql`
 `;
 
 export const PROFILES = (_columns: string): any => gql`
-  query Profiles($take: Int, $skip: Int) {
-    profiles(take: $take, skip: $skip) {
+  query Profiles($take: Int, $skip: Int, $orderBy: String, $order: String) {
+    profiles(take: $take, skip: $skip, orderBy: $orderBy, order: $order) {
       id
       ${_columns}
     }
@@ -74,8 +74,8 @@ export const PROFILES = (_columns: string): any => gql`
 `;
 
 export const PROFILES_SEARCH = (_columns: string): any => gql`
-  query Profiles($search: String) {
-    profilesSearch(search: $search) {
+  query Profiles($search: String, $orderBy: String, $order: String) {
+    profilesSearch(search: $search, orderBy: $orderBy, order: $order) {
       id
       ${_columns}
     }
