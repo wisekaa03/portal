@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 export const CURRENT_USER = gql`
   {
     me {
-      token
+      # token
       id
       username
       updatedAt
