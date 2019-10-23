@@ -59,6 +59,7 @@ export enum Gender {
 export interface Address {
   country: string;
   postalCode: string;
+  town: string;
   region: string;
   street: string;
 }

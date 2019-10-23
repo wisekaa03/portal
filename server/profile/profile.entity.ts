@@ -114,6 +114,12 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
+  otdel: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   title: string;
 
   @Column({

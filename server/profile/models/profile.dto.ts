@@ -35,6 +35,8 @@ export interface Profile {
 
   department: string;
 
+  otdel: string;
+
   title: string;
 
   telephone: string;

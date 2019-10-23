@@ -112,6 +112,8 @@ export class ProfileService {
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
 
+    const [department, otdel] = ldapUser.department.split(',', 1);
+
     let profile: Profile = {
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID.toString(),
@@ -124,11 +126,13 @@ export class ProfileService {
       addressPersonal: {
         country: ldapUser.co,
         postalCode: ldapUser.postalCode,
+        town: ldapUser.l,
         region: ldapUser.st,
         street: ldapUser.streetAddress,
       },
       company: ldapUser.company,
-      department: ldapUser.department,
+      department,
+      otdel,
       title: ldapUser.title,
       email: ldapUser.mail,
       telephone: ldapUser.telephoneNumber,

@@ -15,6 +15,7 @@ const PROFILE_FRAGMENT = gql`
     company
     companyEng
     department
+    otdel
     departmentEng
     otdelEng
     positionEng
@@ -26,6 +27,7 @@ const PROFILE_FRAGMENT = gql`
       country
       postalCode
       region
+      town
       street
     }
     updatedAt
