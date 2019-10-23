@@ -4,6 +4,35 @@
 import gql from 'graphql-tag';
 // #endregion
 
+const PROFILE_FRAGMENT = gql`
+  fragment ProfileProps on Profile {
+    firstName
+    lastName
+    middleName
+    nameEng
+    birthday
+    gender
+    company
+    companyEng
+    department
+    departmentEng
+    otdelEng
+    positionEng
+    title
+    telephone
+    workPhone
+    mobile
+    addressPersonal {
+      country
+      postalCode
+      region
+      street
+    }
+    updatedAt
+    createdAt
+  }
+`;
+
 export const CURRENT_USER = gql`
   {
     me {
@@ -13,34 +42,12 @@ export const CURRENT_USER = gql`
       updatedAt
       createdAt
       profile {
-        firstName
-        lastName
-        middleName
-        nameEng
-        birthday
-        gender
-        company
-        companyEng
-        department
-        departmentEng
-        otdelEng
-        positionEng
-        title
-        telephone
-        workPhone
-        mobile
-        addressPersonal {
-          country
-          postalCode
-          region
-          street
-        }
+        ...ProfileProps
         thumbnailPhoto40
-        updatedAt
-        createdAt
       }
     }
   }
+  ${PROFILE_FRAGMENT}
 `;
 
 export const LOGIN = gql`
@@ -78,31 +85,9 @@ export const PROFILES_SEARCH = (_columns: string): any => gql`
 export const PROFILE = gql`
   query Profile($id: ID) {
     profile(id: $id) {
-      firstName
-      lastName
-      middleName
-      nameEng
-      birthday
-      gender
-      company
-      companyEng
-      department
-      departmentEng
-      otdelEng
-      positionEng
-      title
-      telephone
-      workPhone
-      mobile
-      addressPersonal {
-        country
-        postalCode
-        region
-        street
-      }
+      ...ProfileProps
       thumbnailPhoto
-      updatedAt
-      createdAt
     }
   }
+  ${PROFILE_FRAGMENT}
 `;
