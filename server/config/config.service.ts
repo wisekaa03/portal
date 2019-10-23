@@ -10,14 +10,14 @@ import { ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 
-export interface EnvConfig {
-  [key: string]: string;
+export interface EnvConfig<T> {
+  [key: string]: T;
 }
 
 const dev = process.env.NODE_ENV !== 'production';
 
 export class ConfigService {
-  private readonly envConfig: EnvConfig;
+  private readonly envConfig: EnvConfig<any>;
 
   constructor(filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
@@ -80,7 +80,7 @@ export class ConfigService {
    * Ensures all needed variables are set, and returns the validated JavaScript object
    * including the applied default values.
    */
-  private validateInput(envConfig: EnvConfig): EnvConfig {
+  private validateInput(envConfig: EnvConfig<any>): EnvConfig<any> {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any()
         .default('development')
@@ -240,7 +240,7 @@ export class ConfigService {
     return validatedEnvConfig;
   }
 
-  get(key: string): string {
-    return this.envConfig[key];
+  get<T>(key: string): T {
+    return this.envConfig[key] as T;
   }
 }
