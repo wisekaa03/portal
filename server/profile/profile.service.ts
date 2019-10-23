@@ -112,7 +112,7 @@ export class ProfileService {
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
 
-    const [department, otdel] = ldapUser.department.split(',', 1);
+    const [department, otdel] = ldapUser.department ? ldapUser.department.split(',', 1) : [undefined, undefined];
 
     let profile: Profile = {
       loginService: LoginService.LDAP,

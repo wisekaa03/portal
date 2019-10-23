@@ -108,13 +108,13 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
-  department: string;
+  department?: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  otdel: string;
+  otdel?: string;
 
   @Column({
     type: 'varchar',

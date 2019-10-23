@@ -33,9 +33,9 @@ export interface Profile {
 
   company: string;
 
-  department: string;
+  department?: string;
 
-  otdel: string;
+  otdel?: string;
 
   title: string;
 
