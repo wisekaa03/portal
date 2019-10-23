@@ -61,6 +61,7 @@ export class ProfileService {
     return profile as Profile | null;
   }
 
+  // TODO: добавить disabled (хз как) и фильтрацию по addressPersonal??????
   profilesSearch = async (search: string, orderBy: string, order: string): Promise<Profile[]> =>
     this.profileRepository.find({
       cache: true,
