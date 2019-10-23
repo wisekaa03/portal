@@ -24,6 +24,8 @@ if (logging === 'false') {
 }
 const logger = logging && new Logger.LogService();
 
+logger.log('Using ORMconfig.js...', 'Database');
+
 module.exports = {
   name: 'default',
   type: configService.get('DATABASE_CONNECTION'),

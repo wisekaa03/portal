@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0 */
+/* eslint spaced-comment:0, prettier/prettier:0 */
 /// <reference types="../typings/global" />
 
 // #region Imports NPM
@@ -8,7 +8,7 @@ import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule } fr
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
@@ -31,6 +31,10 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
 // #endregion
+
+const dev = process.env.NODE_ENV !== 'production';
+const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
+// const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 
 @Module({
   imports: [
@@ -89,15 +93,46 @@ import { ProfileModule } from './profile/profile.module';
 
     // #region GraphQL
     GraphQLModule.forRoot({
-      debug: process.env.NODE_ENV !== 'production',
-      playground: process.env.NODE_ENV !== 'production',
+      debug: dev,
+      playground: dev,
       typePaths: ['./**/*.graphql'],
       context: ({ req }) => ({ req }),
     }),
     // #endregion
 
     // #region TypeORM
-    TypeOrmModule.forRoot({}),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule, LoggerModule],
+      inject: [ConfigService, LogService],
+      useFactory: async (configService: ConfigService, logger: LogService) =>
+        ({
+          name: 'default',
+          type: configService.get('DATABASE_CONNECTION'),
+          host: configService.get('DATABASE_HOST'),
+          port: configService.get('DATABASE_PORT'),
+          username: configService.get('DATABASE_USERNAME'),
+          password: configService.get('DATABASE_PASSWORD'),
+          database: configService.get('DATABASE_DATABASE'),
+          schema: configService.get('DATABASE_SCHEMA'),
+          uuidExtension: 'pgcrypto',
+          logger,
+          synchronize: Boolean(configService.get('DATABASE_SYNCHRONIZE')),
+          dropSchema: Boolean(configService.get('DATABASE_DROP_SCHEMA')),
+          logging:
+            configService.get('DATABASE_LOGGING') === 'false'
+              ? false
+              : configService.get('DATABASE_LOGGING') === 'true'
+                ? true
+                : JSON.parse(configService.get('DATABASE_LOGGING')),
+          entities,
+          migrationsRun: Boolean(configService.get('DATABASE_MIGRATIONS_RUN')),
+          cache: configService.get('DATABASE_CACHE'),
+          // migrations,
+          // cli: {
+          //   migrationsDir: 'migration',
+          // },
+        } as TypeOrmModuleOptions),
+    }),
     // #endregion
 
     // #region Profile
