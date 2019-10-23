@@ -231,39 +231,40 @@ const getRows = (
   onClick: (id: string | undefined) => () => void,
 ): React.ReactNode => (
   <TableRow key={profile.id} hover onClick={onClick(profile.id)}>
-    {allColumns
-      .filter((col) => columns.includes(col))
-      .map((col) => {
-        let cellData: React.ReactElement | string | null = null;
+    {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
+      if (!columns.includes(column)) return result;
 
-        switch (col) {
-          case 'thumbnailPhoto40': {
-            cellData = <Avatar profile={profile} />;
-            break;
-          }
+      let cellData: React.ReactElement | string | null = null;
 
-          case 'name': {
-            const { firstName, lastName, middleName } = profile;
-            cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
-            break;
-          }
-
-          case 'mobile':
-          case 'telephone':
-          case 'workPhone':
-          case 'company':
-          case 'department':
-          case 'title': {
-            cellData = profile[col];
-            break;
-          }
-
-          default: {
-            break;
-          }
+      switch (column) {
+        case 'thumbnailPhoto40': {
+          cellData = <Avatar profile={profile} />;
+          break;
         }
-        return <TableCell key={col}>{cellData}</TableCell>;
-      })}
+
+        case 'name': {
+          const { firstName, lastName, middleName } = profile;
+          cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
+          break;
+        }
+
+        case 'mobile':
+        case 'telephone':
+        case 'workPhone':
+        case 'company':
+        case 'department':
+        case 'title': {
+          cellData = profile[column];
+          break;
+        }
+
+        default: {
+          break;
+        }
+      }
+
+      return [...result, <TableCell key={column}>{cellData}</TableCell>];
+    }, [])}
   </TableRow>
 );
 
@@ -377,10 +378,15 @@ const PhoneBook = (): React.ReactElement => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.includes('thumbnailPhoto40') && <TableCell />}
-                  {allColumns
-                    .filter((c) => c !== 'thumbnailPhoto40' && columns.includes(c))
-                    .map((column) => (
+                  {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
+                    if (!columns.includes(column)) return result;
+
+                    if (column === 'thumbnailPhoto40') {
+                      return [...result, <TableCell />];
+                    }
+
+                    return [
+                      ...result,
                       <TableCell
                         key={column}
                         // align={column.align}
@@ -393,8 +399,9 @@ const PhoneBook = (): React.ReactElement => {
                         >
                           {t(`phonebook:fields.${column}`)}
                         </TableSortLabel>
-                      </TableCell>
-                    ))}
+                      </TableCell>,
+                    ];
+                  }, [])}
                 </TableRow>
               </TableHead>
               <TableBody>
