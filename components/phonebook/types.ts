@@ -29,7 +29,7 @@ export type ColumnNames =
   | 'email'
   | 'country'
   | 'region'
-  | 'city'
+  | 'town'
   | 'address';
 
 export type Order = 'asc' | 'desc';

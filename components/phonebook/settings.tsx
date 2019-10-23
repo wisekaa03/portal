@@ -117,7 +117,7 @@ export const allColumns: ColumnNames[] = [
   'email',
   'country',
   'region',
-  'city',
+  'town',
   'address',
 ];
 
