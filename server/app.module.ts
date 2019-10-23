@@ -65,11 +65,11 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
 
         return {
           store: redisCacheStore,
-          ttl: parseInt(configService.get('HTTP_REDIS_TTL'), 10), // seconds
-          max: parseInt(configService.get('HTTP_REDIS_MAX_OBJECTS'), 10), // maximum number of items in cache
+          ttl: configService.get('HTTP_REDIS_TTL'), // seconds
+          max: configService.get('HTTP_REDIS_MAX_OBJECTS'), // maximum number of items in cache
           host: configService.get('HTTP_REDIS_HOST'),
-          port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
-          db: configService.get('HTTP_REDIS_DB') ? parseInt(configService.get('HTTP_REDIS_DB'), 10) : undefined,
+          port: configService.get('HTTP_REDIS_PORT'),
+          db: configService.get('HTTP_REDIS_DB') ? configService.get('HTTP_REDIS_DB') : undefined,
           password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
           keyPrefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
           // retry_strategy: (options) => {}
@@ -116,8 +116,8 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
           schema: configService.get('DATABASE_SCHEMA'),
           uuidExtension: 'pgcrypto',
           logger,
-          synchronize: Boolean(configService.get('DATABASE_SYNCHRONIZE')),
-          dropSchema: Boolean(configService.get('DATABASE_DROP_SCHEMA')),
+          synchronize: configService.get('DATABASE_SYNCHRONIZE'),
+          dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
           logging:
             configService.get('DATABASE_LOGGING') === 'false'
               ? false
@@ -125,20 +125,18 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
                 ? true
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities,
-          migrationsRun: Boolean(configService.get('DATABASE_MIGRATIONS_RUN')),
+          migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
           cache: {
             type: 'redis',
             options: {
               host: configService.get('HTTP_REDIS_HOST'),
-              port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
+              port: configService.get('HTTP_REDIS_PORT'),
               // eslint-disable-next-line max-len
-              db: configService.get('DATABASE_REDIS_CACHE_DB')
-                ? parseInt(configService.get('DATABASE_REDIS_CACHE_DB'), 10)
-                : 0,
+              db: configService.get('DATABASE_REDIS_CACHE_DB') ? configService.get('DATABASE_REDIS_CACHE_DB') : 0,
               password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
               prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
             },
-            duration: parseInt(configService.get('HTTP_REDIS_TTL'), 10),
+            duration: configService.get('HTTP_REDIS_TTL'),
           },
           // migrations,
           // cli: {

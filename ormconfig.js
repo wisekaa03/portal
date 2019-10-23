@@ -24,6 +24,25 @@ if (logging === 'false') {
 }
 const logger = logging && new Logger.LogService();
 
+const isCache = Boolean(configService.get('DATABASE_CACHE'));
+let cache;
+if (isCache) {
+  cache = {
+    type: 'redis',
+    options: {
+      host: configService.get('HTTP_REDIS_HOST'),
+      port: configService.get('HTTP_REDIS_PORT'),
+      // eslint-disable-next-line max-len
+      db: configService.get('DATABASE_REDIS_CACHE_DB') ? parseInt(configService.get('DATABASE_REDIS_CACHE_DB'), 10) : 0,
+      password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
+      prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+    },
+    duration: configService.get('HTTP_REDIS_TTL'),
+  };
+} else {
+  cache = false;
+}
+
 logger.log('Using ORMconfig.js...', 'Database');
 
 module.exports = {
@@ -42,7 +61,7 @@ module.exports = {
   logging,
   entities,
   migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
-  cache: configService.get('DATABASE_CACHE'),
+  cache,
   // migrations,
   // cli: {
   //   migrationsDir: 'migration',

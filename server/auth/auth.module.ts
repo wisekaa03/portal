@@ -13,8 +13,9 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { Scope, ldapADattributes } from '../ldap/interfaces/ldap.interface';
+import { Scope, ldapADattributes, LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { AuthResolver } from './auth.resolver';
+
 // #endregion
 
 @Module({
@@ -43,7 +44,7 @@ import { AuthResolver } from './auth.resolver';
           searchAttributesAllUsers: ldapADattributes,
           reconnect: true,
           cache: true,
-        };
+        } as LdapModuleOptions;
       },
     }),
     // #endregion
