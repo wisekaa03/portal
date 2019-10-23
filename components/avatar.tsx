@@ -20,17 +20,11 @@ interface AvatarProps {
 
 export const Avatar = (props: AvatarProps): React.ReactElement => {
   const { profile, fullSize = false, ...rest } = props;
-  const { gender } = profile;
+  const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
 
-  const path = '/public/images/jpeg/photo';
-  const src =
-    (!fullSize && profile.thumbnailPhoto40) || profile.thumbnailPhoto
-      ? `data:image/png;base64,${(!fullSize && profile.thumbnailPhoto40) || profile.thumbnailPhoto}`
-      : gender === 1
-        ? Man
-        : gender === 2
-          ? Woman
-          : Alien;
+  const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
+
+  const src = photo ? `data:image/png;base64,${photo}` : gender === 1 ? Man : gender === 2 ? Woman : Alien;
 
   return <AvatarMui src={src} {...rest} />;
 };
