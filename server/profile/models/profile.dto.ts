@@ -53,7 +53,9 @@ export interface Profile {
 
   positionEng: string;
 
-  thumbnailPhoto?: Buffer;
+  disabled: boolean;
+
+  thumbnailPhoto?: Buffer | Promise<Buffer | undefined>;
 
   thumbnailPhoto40?: string | Promise<string | undefined>;
 

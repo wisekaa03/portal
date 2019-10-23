@@ -7,19 +7,13 @@ import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { JwtPayload } from './models/jwt-payload.interface';
-import { UserResponse, UserLogin, UserRegister } from '../user/models/user.dto';
+import { UserResponse, UserLogin, UserRegister, User } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/user.entity';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { LogService } from '../logger/logger.service';
 import { LdapService } from '../ldap/ldap.service';
 // #endregion
-
-interface LdapAuthenticate {
-  user: UserEntity | void;
-  ldapUser?: LdapResponeUser;
-  errorCode: any;
-}
 
 @Injectable()
 export class AuthService {
@@ -63,22 +57,16 @@ export class AuthService {
    * @param {UserLogin} data User login data transfer object
    * @returns {UserResponse} User response
    */
-  async login({ username, password }: UserLogin): Promise<UserResponse> {
+  async login({ username, password }: UserLogin): Promise<UserResponse | null> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
-    const { user, ldapUser, errorCode } = await this.userLdapLogin({
+    const user = await this.userLdapLogin({
       username,
       password,
       user: await this.userService.readByUsername(username),
     });
 
-    if (errorCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), errorCode);
-    } else if (user === undefined || ldapUser === undefined) {
-      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), errorCode);
-    }
-
-    return user.toResponseObject(this.token({ id: user.id }));
+    return user ? user.toResponseObject(this.token({ id: user.id })) : null;
   }
 
   /**
@@ -133,7 +121,7 @@ export class AuthService {
     username: string;
     password: string;
     user?: UserEntity;
-  }): Promise<LdapAuthenticate> {
+  }): Promise<UserEntity | undefined> {
     try {
       // #region to LDAP database
       const ldapUser: undefined | LdapResponeUser = await this.ldapService.authenticate(username, password);
@@ -141,24 +129,20 @@ export class AuthService {
 
       if (!ldapUser) {
         this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
-        return { user, ldapUser: undefined, errorCode: HttpStatus.UNAUTHORIZED };
+        return undefined;
       }
 
       try {
-        return { user: await this.userService.createLdap(ldapUser, user), ldapUser, errorCode: HttpStatus.OK };
+        return this.userService.createLdap(ldapUser, user);
       } catch (error) {
         this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
 
-        return { user, ldapUser, errorCode: HttpStatus.INTERNAL_SERVER_ERROR };
+        throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), error);
       }
     } catch (error) {
       this.logService.error('Unable to login in ldap', JSON.stringify(error), 'AuthService');
 
-      return {
-        user,
-        ldapUser: undefined,
-        errorCode: HttpStatus.UNAUTHORIZED,
-      };
+      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), error);
     }
   }
 }

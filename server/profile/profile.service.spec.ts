@@ -15,6 +15,7 @@ import { LdapService } from '../ldap/ldap.service';
 import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { UserEntity } from '../user/user.entity';
 import { MockRepository } from '../../__mocks__/mockRepository.mock';
+import { ImageModule } from '../image/image.module';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -26,6 +27,7 @@ describe('ProfileService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ImageModule,
         TypeOrmModule.forRoot({}),
         TypeOrmModule.forFeature([ProfileEntity]),
         LdapModule.registerAsync({

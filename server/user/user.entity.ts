@@ -44,6 +44,7 @@ export class UserEntity {
   @Column({
     type: 'boolean',
     nullable: false,
+    unique: false,
   })
   disabled: boolean;
 

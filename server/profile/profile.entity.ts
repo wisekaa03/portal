@@ -14,10 +14,14 @@ import {
 // #region Imports Local
 import { Profile } from './models/profile.dto';
 import { LoginService, Gender, Address } from '../../lib/types';
+import { ImageService } from '../image/image.service';
+// eslint-disable-next-line import/no-cycle
 // #endregion
 
 @Entity('profile')
 export class ProfileEntity {
+  constructor(private readonly imageService: ImageService) {}
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -163,10 +167,16 @@ export class ProfileEntity {
   positionEng: string;
 
   @Column({
+    type: 'boolean',
+    nullable: false,
+  })
+  disabled: boolean;
+
+  @Column({
     type: 'bytea',
     nullable: true,
   })
-  thumbnailPhoto?: Buffer;
+  thumbnailPhoto?: Buffer | Promise<Buffer | undefined>;
 
   @Column({
     type: 'varchar',
@@ -177,8 +187,14 @@ export class ProfileEntity {
   @BeforeUpdate()
   @BeforeInsert()
   async resizeImage(): Promise<void> {
-    if (typeof this.thumbnailPhoto40 === 'object' && typeof this.thumbnailPhoto40.then === 'function') {
-      this.thumbnailPhoto40 = await this.thumbnailPhoto40;
+    if (
+      typeof this.thumbnailPhoto === 'object' &&
+      typeof ((this.thumbnailPhoto as unknown) as Record<string, any>).then === 'function'
+    ) {
+      this.thumbnailPhoto = await this.thumbnailPhoto;
+      this.thumbnailPhoto40 = this.thumbnailPhoto
+        ? await this.imageService.imageResize(this.thumbnailPhoto).then((img) => img && img.toString('base64'))
+        : undefined;
     }
   }
 

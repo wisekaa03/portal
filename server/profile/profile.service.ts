@@ -4,7 +4,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
-import Sharp from 'sharp';
 // import { Request } from 'express';
 // #endregion
 // #region Imports Local
@@ -15,6 +14,7 @@ import { Profile } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';
 import { LdapService } from '../ldap/ldap.service';
 import { UserEntity } from '../user/user.entity';
+import { ImageService } from '../image/image.service';
 // #endregion
 
 @Injectable()
@@ -23,6 +23,7 @@ export class ProfileService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
     private readonly logService: LogService,
+    private readonly imageService: ImageService,
     private readonly ldapService: LdapService,
   ) {}
 
@@ -43,18 +44,6 @@ export class ProfileService {
 
     return profile as Profile | null;
   }
-
-  // TODO: выделить это все в ImageService... Ж)
-  imageResize = async (originalImage: Buffer): Promise<string | undefined> =>
-    originalImage &&
-    Sharp(originalImage)
-      .resize(48, 48)
-      .toBuffer()
-      .then((img) => img.toString('base64'))
-      .catch((error) => {
-        this.logService.error('Error converting image:', error, 'ProfileService');
-        return undefined;
-      });
 
   profilesSearch = async (search: string): Promise<Profile[]> =>
     this.profileRepository.find({
@@ -94,7 +83,9 @@ export class ProfileService {
       birthday = new Date(Date.parse(birthday)).toLocaleDateString();
     }
 
-    const thumbnailPhoto = Buffer.from(ldapUser.thumbnailPhoto, 'base64');
+    const thumbnailPhoto = ldapUser.thumbnailPhoto
+      ? this.imageService.imageResize(Buffer.from(ldapUser.thumbnailPhoto, 'base64'), 250, 250)
+      : undefined;
 
     let profile: Profile = {
       loginService: LoginService.LDAP,
@@ -123,8 +114,9 @@ export class ProfileService {
       departmentEng,
       otdelEng,
       positionEng,
+      // eslint-disable-next-line no-bitwise
+      disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       thumbnailPhoto,
-      thumbnailPhoto40: this.imageResize(thumbnailPhoto),
     };
 
     if (user && user.profile) {

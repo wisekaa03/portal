@@ -10,6 +10,7 @@ import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
 import { ConfigModule } from '../config/config.module';
 import { LoggerModule } from '../logger/logger.module';
+import { ImageModule } from '../image/image.module';
 // #endregion
 
 @Module({
@@ -17,6 +18,7 @@ import { LoggerModule } from '../logger/logger.module';
     // #region Config module
     ConfigModule,
     LoggerModule,
+    ImageModule,
     // #endregion
 
     // #region TypeORM

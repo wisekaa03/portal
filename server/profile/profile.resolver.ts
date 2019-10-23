@@ -1,9 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import { Query, Resolver, Context, Args } from '@nestjs/graphql';
+import { Query, Resolver, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';

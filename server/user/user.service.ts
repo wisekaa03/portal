@@ -32,9 +32,10 @@ export class UserService {
    * @param {string} username User ID
    * @returns {UserEntity | undefined} The user
    */
-  async readByUsername(username: string, disabled = true): Promise<UserEntity | undefined> {
+  async readByUsername(username: string, byDisabled = true): Promise<UserEntity | undefined> {
+    const where: Record<string, any> = { username, disabled: byDisabled ? false : undefined };
     return this.userRepository.findOne({
-      where: { username, disabled },
+      where,
       relations: ['profile'],
       cache: true,
     });
@@ -46,9 +47,10 @@ export class UserService {
    * @param {string} id User ID
    * @returns {UserEntity | undefined} The user
    */
-  async readById(id: string, disabled = true): Promise<UserEntity | undefined> {
+  async readById(id: string, byDisabled = true): Promise<UserEntity | undefined> {
+    const where: Record<string, any> = { id, disabled: byDisabled ? false : undefined };
     return this.userRepository.findOne({
-      where: { id, disabled },
+      where,
       relations: ['profile'],
       cache: true,
     });
@@ -115,7 +117,7 @@ export class UserService {
 
     if (users) {
       users.forEach(async (ldapUser) => {
-        const user = await this.readByUsername(ldapUser.sAMAccountName);
+        const user = await this.readByUsername(ldapUser.sAMAccountName, false);
 
         this.createLdap(ldapUser, user).catch((error: Error) => {
           this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');

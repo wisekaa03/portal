@@ -85,7 +85,7 @@ export class LogService extends Logger implements TypeOrmLogger {
    * From TypeORM: logQueryError
    */
   logQueryError(message: any, query: any, parameters: any): void {
-    this.error(`${message} ${parameters}`, query);
+    process.env.NODE_ENV !== 'production' && this.error(`${message} ${parameters}`, query);
   }
 
   /**

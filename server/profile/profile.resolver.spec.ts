@@ -17,6 +17,7 @@ import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 import { UserEntity } from '../user/user.entity';
 import { MockRepository } from '../../__mocks__/mockRepository.mock';
+import { ImageModule } from '../image/image.module';
 // #endregion
 
 jest.mock('../logger/logger.service');
@@ -28,7 +29,7 @@ describe('ProfileResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ProfileModule, TypeOrmModule.forRoot({}), TypeOrmModule.forFeature([ProfileEntity])],
+      imports: [ImageModule, ProfileModule, TypeOrmModule.forRoot({}), TypeOrmModule.forFeature([ProfileEntity])],
       providers: [
         ProfileService,
         ProfileResolver,

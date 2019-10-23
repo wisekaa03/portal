@@ -35,6 +35,8 @@ type Profile {
 
   addressPersonal: Address
 
+  disabled: Boolean
+
   thumbnailPhoto: ByteArray
   thumbnailPhoto40: String
 
