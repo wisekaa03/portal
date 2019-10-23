@@ -20,8 +20,6 @@ import { ImageService } from '../image/image.service';
 
 @Entity('profile')
 export class ProfileEntity {
-  constructor(private readonly imageService: ImageService) {}
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -173,10 +171,10 @@ export class ProfileEntity {
   disabled: boolean;
 
   @Column({
-    type: 'bytea',
+    type: 'varchar',
     nullable: true,
   })
-  thumbnailPhoto?: Buffer | Promise<Buffer | undefined>;
+  thumbnailPhoto?: string | Promise<string | undefined>;
 
   @Column({
     type: 'varchar',
@@ -191,10 +189,8 @@ export class ProfileEntity {
       typeof this.thumbnailPhoto === 'object' &&
       typeof ((this.thumbnailPhoto as unknown) as Record<string, any>).then === 'function'
     ) {
-      this.thumbnailPhoto = await this.thumbnailPhoto;
-      this.thumbnailPhoto40 = this.thumbnailPhoto
-        ? await this.imageService.imageResize(this.thumbnailPhoto).then((img) => img && img.toString('base64'))
-        : undefined;
+      this.thumbnailPhoto = this.thumbnailPhoto ? await this.thumbnailPhoto : undefined;
+      this.thumbnailPhoto40 = this.thumbnailPhoto ? await this.thumbnailPhoto40 : undefined;
     }
   }
 

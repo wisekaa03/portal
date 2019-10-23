@@ -1,4 +1,5 @@
 /** @format */
+/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
@@ -19,6 +20,18 @@ import { ImageService } from '../image/image.service';
 
 @Injectable()
 export class ProfileService {
+  locale = undefined;
+
+  format = {
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    // hour: '2-digit',
+    // minute: '2-digit',
+    // second: '2-digit',
+  };
+
   constructor(
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
@@ -80,11 +93,17 @@ export class ProfileService {
     if (!birthday || birthday === '') {
       birthday = undefined;
     } else {
-      birthday = new Date(Date.parse(birthday)).toLocaleDateString();
+      birthday = new Date(Date.parse(birthday));
     }
 
+    const thumbnailPhotoBuffer = Buffer.from(ldapUser.thumbnailPhoto, 'base64');
     const thumbnailPhoto = ldapUser.thumbnailPhoto
-      ? this.imageService.imageResize(Buffer.from(ldapUser.thumbnailPhoto, 'base64'), 250, 250)
+      ? this.imageService
+        .imageResize(thumbnailPhotoBuffer, 250, 250)
+        .then((img) => (img ? img.toString('base64') : undefined))
+      : undefined;
+    const thumbnailPhoto40 = ldapUser.thumbnailPhoto
+      ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
 
     let profile: Profile = {
@@ -117,6 +136,7 @@ export class ProfileService {
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       thumbnailPhoto,
+      thumbnailPhoto40,
     };
 
     if (user && user.profile) {
