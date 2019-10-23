@@ -148,6 +148,10 @@ export class ConfigService {
         .default(true)
         .optional()
         .empty(),
+      DATABASE_REDIS_CACHE_DB: Joi.number()
+        .default(0)
+        .optional()
+        .empty(),
 
       HTTP_REDIS_HOST: Joi.string()
         .default('localhost')

@@ -131,7 +131,10 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
             options: {
               host: configService.get('HTTP_REDIS_HOST'),
               port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
-              db: configService.get('HTTP_REDIS_DB') ? parseInt(configService.get('HTTP_REDIS_DB'), 10) : undefined,
+              // eslint-disable-next-line max-len
+              db: configService.get('DATABASE_REDIS_CACHE_DB')
+                ? parseInt(configService.get('DATABASE_REDIS_CACHE_DB'), 10)
+                : 0,
               password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
               prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
             },
