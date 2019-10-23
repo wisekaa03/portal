@@ -16,11 +16,11 @@ data:
   DATABASE_DATABASE: {{ .Values.DATABASE_DATABASE | default "postgres" | quote }}
   DATABASE_SCHEMA: {{ .Values.DATABASE_SCHEMA | default "public" | quote }}
   DATABASE_SYNCHRONIZE: {{ .Values.DATABASE_SYNCHRONIZE | default "true" | quote }}
-  DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" }}
+  DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}
   DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
   DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING | default "true" | quote }}
   DATABASE_CACHE: {{ .Values.DATABASE_CACHE | default "true" | quote }}
-  DATABASE_REDIS_CACHE_DB: {{ .Values.DATABASE_CACHE | default "0" | quote }}
+  DATABASE_REDIS_CACHE_DB: {{ .Values.DATABASE_REDIS_CACHE_DB | default "0" | quote }}
 
   # HTTP Redis
   HTTP_REDIS_HOST: {{ .Values.HTTP_REDIS_HOST | default "localhost" | quote }}
