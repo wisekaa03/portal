@@ -26,21 +26,15 @@ DATABASE_USERNAME: postgres
 DATABASE_PASSWORD: ""
 DATABASE_DATABASE: portaldb
 DATABASE_SCHEMA: public
-DATABASE_SYNCHRONIZE: "true"
-DATABASE_DROP_SCHEMA: "true"
-DATABASE_MIGRATIONS_RUN: "true"
-DATABASE_LOGGING: "true"
-DATABASE_CACHE: "true"
-
-# LDAP Redis
-LDAP_REDIS_HOST: redis-ha.default.svc.cluster.local
-LDAP_REDIS_PORT: 6379
-LDAP_REDIS_DB: 0
-LDAP_REDIS_PASSWORD: ""
-LDAP_REDIS_TTL: 300
+DATABASE_SYNCHRONIZE: true
+DATABASE_DROP_SCHEMA: true
+DATABASE_MIGRATIONS_RUN: true
+DATABASE_LOGGING: true
+DATABASE_CACHE: true
+DATABASE_REDIS_CACHE_DB: 0
 
 # HTTP Redis
-HTTP_REDIS_HOST: redis-ha.default.svc.cluster.local
+HTTP_REDIS_HOST: redis.default.svc.cluster.local
 HTTP_REDIS_PORT: 6379
 HTTP_REDIS_DB: 1
 HTTP_REDIS_PASSWORD: ""
@@ -56,6 +50,12 @@ LDAP_SEARCH_BASE: DC=example,DC=local
 LDAP_SEARCH_FILTER: (sAMAccountName={{username}})
 LDAP_SEARCH_BASE_ALL_USERS: DC=example,DC=local
 LDAP_SEARCH_FILTER_ALL_USERS: (&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))
+# LDAP Redis
+LDAP_REDIS_HOST: redis.default.svc.cluster.local
+LDAP_REDIS_PORT: 6379
+LDAP_REDIS_DB: 2
+LDAP_REDIS_PASSWORD: ""
+LDAP_REDIS_TTL: 300
 
 service:
   type: LoadBalancer

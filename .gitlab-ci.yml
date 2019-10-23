@@ -93,11 +93,7 @@ deploy:
           --set DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}" \
           --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
           --set DATABASE_CACHE="${DATABASE_CACHE}" \
-          --set LDAP_REDIS_HOST="${LDAP_REDIS_HOST}" \
-          --set LDAP_REDIS_PORT="${LDAP_REDIS_PORT}" \
-          --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
-          --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
-          --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
+          --set DATABASE_REDIS_CACHE_DB="${DATABASE_REDIS_CACHE_DB}" \
           --set HTTP_REDIS_HOST="${HTTP_REDIS_HOST}" \
           --set HTTP_REDIS_PORT="${HTTP_REDIS_PORT}" \
           --set HTTP_REDIS_DB="${HTTP_REDIS_DB}" \
@@ -112,6 +108,11 @@ deploy:
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
           --set LDAP_SEARCH_BASE_ALL_USERS="${LDAP_SEARCH_BASE_ALL_USERS}" \
           --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
+          --set LDAP_REDIS_HOST="${LDAP_REDIS_HOST}" \
+          --set LDAP_REDIS_PORT="${LDAP_REDIS_PORT}" \
+          --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
+          --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
+          --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
@@ -132,11 +133,7 @@ deploy:
           --set DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}" \
           --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
           --set DATABASE_CACHE="${DATABASE_CACHE}" \
-          --set LDAP_REDIS_HOST="${LDAP_REDIS_HOST}" \
-          --set LDAP_REDIS_PORT="${LDAP_REDIS_PORT}" \
-          --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
-          --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
-          --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
+          --set DATABASE_REDIS_CACHE_DB="${DATABASE_REDIS_CACHE_DB}" \
           --set HTTP_REDIS_HOST="${HTTP_REDIS_HOST}" \
           --set HTTP_REDIS_PORT="${HTTP_REDIS_PORT}" \
           --set HTTP_REDIS_DB="${HTTP_REDIS_DB}" \
@@ -151,6 +148,11 @@ deploy:
           --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
           --set LDAP_SEARCH_BASE_ALL_USERS="${LDAP_SEARCH_BASE_ALL_USERS}" \
           --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
+          --set LDAP_REDIS_HOST="${LDAP_REDIS_HOST}" \
+          --set LDAP_REDIS_PORT="${LDAP_REDIS_PORT}" \
+          --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
+          --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
+          --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \
