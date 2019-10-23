@@ -40,11 +40,32 @@ const useStyles = makeStyles((theme: Theme) =>
       background: `url(${HeaderBg})`,
       backgroundSize: 'cover',
     },
+    wrapContent: {
+      padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
+
+      [theme.breakpoints.up('sm')]: {
+        padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+      },
+    },
     content: {
-      padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+      padding: theme.spacing() / 2,
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr',
-      gridGap: `0 ${theme.spacing(4)}px`,
+
+      [theme.breakpoints.down('md')]: {
+        maxHeight: '75vh',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        gridGap: theme.spacing(),
+      },
+
+      [theme.breakpoints.up('sm')]: {
+        gridTemplateColumns: '1fr 1fr',
+        gridGap: `0 ${theme.spacing(4)}px`,
+      },
+
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '1fr 1fr 1fr',
+      },
     },
     group: {
       boxShadow: '0px 0px 2px rgba(0, 0, 0, 0.2)',
@@ -120,23 +141,25 @@ export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: R
   return (
     <Card ref={ref} className={classes.root}>
       <CardHeader className={classes.head} title={t('phonebook:settings.header')} />
-      <CardContent className={classes.content}>
-        {[...Array(blocks).keys()].map((i) => (
-          <FormControl key={i} className={classes.group}>
-            <FormGroup>
-              {allColumns.slice(i * 4, i * 4 + 4).map((column) => (
-                <FormControlLabel
-                  key={column}
-                  className={classes.item}
-                  label={t(`phonebook:fields.${column}`)}
-                  control={
-                    <Checkbox color="primary" onChange={handleCheckbox(column)} checked={current.includes(column)} />
-                  }
-                />
-              ))}
-            </FormGroup>
-          </FormControl>
-        ))}
+      <CardContent className={classes.wrapContent}>
+        <div className={classes.content}>
+          {[...Array(blocks).keys()].map((i) => (
+            <FormControl key={i} className={classes.group}>
+              <FormGroup>
+                {allColumns.slice(i * 4, i * 4 + 4).map((column) => (
+                  <FormControlLabel
+                    key={column}
+                    className={classes.item}
+                    label={t(`phonebook:fields.${column}`)}
+                    control={
+                      <Checkbox color="primary" onChange={handleCheckbox(column)} checked={current.includes(column)} />
+                    }
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+          ))}
+        </div>
       </CardContent>
       <CardActions className={classes.actions} disableSpacing>
         <Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
