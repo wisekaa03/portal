@@ -412,10 +412,10 @@ const PhoneBook = (): React.ReactElement => {
           </div>
         </div>
       </Page>
-      <Modal disableAutoFocus open={Boolean(profileId)} onClose={handleProfileClose} className={classes.modal}>
+      <Modal open={Boolean(profileId)} onClose={handleProfileClose} className={classes.modal}>
         <ProfileComponent profileId={profileId} handleClose={handleProfileClose} />
       </Modal>
-      <Modal disableAutoFocus open={settingsOpen} onClose={handleSettingsClose} className={classes.modal}>
+      <Modal open={settingsOpen} onClose={handleSettingsClose} className={classes.modal}>
         <SettingsComponent columns={columns} changeColumn={setColumns} handleClose={handleSettingsClose} />
       </Modal>
     </>
