@@ -237,8 +237,7 @@ const getRows = (
         let cellData: React.ReactElement | string | null = null;
 
         switch (col) {
-          case 'thumbnailPhoto40':
-          case 'thumbnailPhoto': {
+          case 'thumbnailPhoto40': {
             cellData = <Avatar profile={profile} />;
             break;
           }
@@ -378,9 +377,9 @@ const PhoneBook = (): React.ReactElement => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.includes('thumbnailPhoto') || columns.includes('thumbnailPhoto40') ? <TableCell /> : null}
+                  {columns.includes('thumbnailPhoto40') && <TableCell />}
                   {allColumns
-                    .filter((c) => c !== 'thumbnailPhoto' && c !== 'thumbnailPhoto40' && columns.includes(c))
+                    .filter((c) => c !== 'thumbnailPhoto40' && columns.includes(c))
                     .map((column) => (
                       <TableCell
                         key={column}

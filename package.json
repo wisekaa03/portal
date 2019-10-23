@@ -29,7 +29,9 @@
     "cli:synch": "curl -X POST -H 'content-type: application/json' -H 'Authorization: bearer '${TOKEN} -d '{\"query\":\"{ synchronization }\"}' ${HTTP:-http}://${HOST:-localhost}:${PORT:-4000}/graphql",
     "test": "jest",
     "coverage": "yarn test -u --coverage",
-    "preversion": "yarn test -u"
+    "preversion": "yarn test -u",
+    "typeorm": "TS_NODE_PROJECT=\"tsconfig.server.json\" ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync"
   },
   "browserslist": [
     "last 3 version",
