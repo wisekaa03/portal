@@ -119,6 +119,7 @@ export const allColumns: ColumnNames[] = [
   'region',
   'town',
   'address',
+  'disabled',
 ];
 
 export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {

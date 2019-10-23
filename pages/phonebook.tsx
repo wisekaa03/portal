@@ -141,9 +141,9 @@ const getRows = (
 ): React.ReactNode => (
   <TableRow key={profile.id} hover onClick={onClick(profile.id)}>
     {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
-      if (!columns.includes(column)) return result;
+      if (!columns.includes(column) || column === 'disabled') return result;
 
-      let cellData: React.ReactElement | string | undefined | null = null;
+      let cellData: React.ReactElement | string | null | undefined = null;
 
       switch (column) {
         case 'thumbnailPhoto40': {
@@ -293,7 +293,7 @@ const PhoneBook = (): React.ReactElement => {
               <TableHead>
                 <TableRow>
                   {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
-                    if (!columns.includes(column)) return result;
+                    if (!columns.includes(column) || column === 'disabled') return result;
 
                     if (column === 'thumbnailPhoto40') {
                       return [...result, <TableCell key={column} />];

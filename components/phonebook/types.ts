@@ -30,7 +30,8 @@ export type ColumnNames =
   | 'country'
   | 'region'
   | 'town'
-  | 'address';
+  | 'address'
+  | 'disabled';
 
 export type Order = 'asc' | 'desc';
 

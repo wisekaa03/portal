@@ -32,6 +32,7 @@ const PROFILE_FRAGMENT = gql`
     }
     updatedAt
     createdAt
+    disabled
   }
 `;
 

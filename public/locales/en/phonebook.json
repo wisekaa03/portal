@@ -28,6 +28,7 @@
     "town": "Город",
     "address": "Адрес",
     "street": "Улица",
-    "postalCode": "Индекс"
+    "postalCode": "Индекс",
+    "disabled": "Уволен"
   }
 }
