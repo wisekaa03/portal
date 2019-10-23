@@ -103,6 +103,9 @@ export interface LdapResponeUser extends SearchEntryObject {
   // Mobile phone
   mobile: string;
 
+  // Manager Profile ?
+  manager: string;
+
   // Name
   name: string;
 
@@ -312,6 +315,7 @@ export const ldapADattributes = [
   'mail',
   'memberOf',
   'middleName',
+  'manager',
   'mobile',
   'name',
   'objectCategory',

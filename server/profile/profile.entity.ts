@@ -126,6 +126,12 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
+  manager: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   telephone: string;
 
   @Column({

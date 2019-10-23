@@ -24,6 +24,7 @@ type Profile {
   title: String
   department: String
   otdel: String
+  manager: String
 
   telephone: String
   workPhone: String

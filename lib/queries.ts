@@ -23,6 +23,7 @@ const PROFILE_FRAGMENT = gql`
     telephone
     workPhone
     mobile
+    manager
     addressPersonal {
       country
       postalCode

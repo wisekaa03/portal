@@ -118,6 +118,8 @@ export class ProfileService {
       ? ldapUser.department.split(/\s*(,)\s*/, 1)
       : [undefined, undefined];
 
+    const { manager } = ldapUser;
+
     let profile: Profile = {
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID.toString(),
@@ -138,6 +140,7 @@ export class ProfileService {
       department,
       otdel,
       title: ldapUser.title,
+      manager,
       email: ldapUser.mail,
       telephone: ldapUser.telephoneNumber,
       workPhone: ldapUser.otherTelephone,

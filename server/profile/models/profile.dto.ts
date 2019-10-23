@@ -39,6 +39,8 @@ export interface Profile {
 
   title: string;
 
+  manager?: string;
+
   telephone: string;
 
   workPhone: string;
