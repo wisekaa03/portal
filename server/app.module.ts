@@ -126,7 +126,17 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities,
           migrationsRun: Boolean(configService.get('DATABASE_MIGRATIONS_RUN')),
-          cache: configService.get('DATABASE_CACHE'),
+          cache: {
+            type: 'redis',
+            options: {
+              host: configService.get('HTTP_REDIS_HOST'),
+              port: parseInt(configService.get('HTTP_REDIS_PORT'), 10),
+              db: configService.get('HTTP_REDIS_DB') ? parseInt(configService.get('HTTP_REDIS_DB'), 10) : undefined,
+              password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
+              prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+            },
+            duration: parseInt(configService.get('HTTP_REDIS_TTL'), 10),
+          },
           // migrations,
           // cli: {
           //   migrationsDir: 'migration',
