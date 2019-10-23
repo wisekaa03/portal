@@ -115,7 +115,7 @@ const defaultColumns: ColumnNames[] = [
 
 const getColumns = (columns: ColumnNames[]): string => {
   let result = '';
-  const addressColumns = ['country', 'postalCode', 'region', 'street'];
+  const addressColumns = ['country', 'postalCode', 'region', 'street', 'town'];
 
   const addressPersonal = columns.filter((col) => addressColumns.includes(col));
 

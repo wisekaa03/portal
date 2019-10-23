@@ -231,8 +231,8 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.city`)} />
-                        <ListItemText primary="" />
+                        <ListItemText primary={t(`phonebook:fields.town`)} />
+                        <ListItemText primary={profile.addressPersonal.town} />
                       </div>
                     </ListItem>
                     <Divider />
