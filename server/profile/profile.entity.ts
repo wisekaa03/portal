@@ -46,35 +46,30 @@ export class ProfileEntity {
 
   @Column({
     type: 'varchar',
-    length: 100,
     nullable: true,
   })
   username: string;
 
   @Column({
     type: 'varchar',
-    length: 100,
     nullable: true,
   })
   firstName: string;
 
   @Column({
     type: 'varchar',
-    length: 100,
     nullable: true,
   })
   lastName: string;
 
   @Column({
     type: 'varchar',
-    length: 100,
     nullable: true,
   })
   middleName: string;
 
   @Column({
     type: 'varchar',
-    length: 100,
     nullable: true,
   })
   email: string;
@@ -93,10 +88,34 @@ export class ProfileEntity {
   gender: Gender;
 
   @Column({
-    type: 'json',
+    type: 'varchar',
     nullable: true,
   })
-  addressPersonal: Address;
+  country: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  postalCode: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  region: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  town: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  street: string;
 
   @Column({
     type: 'varchar',
@@ -183,6 +202,12 @@ export class ProfileEntity {
   disabled: boolean;
 
   @Column({
+    type: 'boolean',
+    nullable: false,
+  })
+  notShowing: boolean;
+
+  @Column({
     type: 'varchar',
     nullable: true,
   })
@@ -202,6 +227,12 @@ export class ProfileEntity {
       typeof ((this.thumbnailPhoto as unknown) as Record<string, any>).then === 'function'
     ) {
       this.thumbnailPhoto = this.thumbnailPhoto ? await this.thumbnailPhoto : undefined;
+    }
+
+    if (
+      typeof this.thumbnailPhoto40 === 'object' &&
+      typeof ((this.thumbnailPhoto40 as unknown) as Record<string, any>).then === 'function'
+    ) {
       this.thumbnailPhoto40 = this.thumbnailPhoto ? await this.thumbnailPhoto40 : undefined;
     }
   }
