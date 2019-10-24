@@ -114,24 +114,12 @@ const defaultColumns: ColumnNames[] = [
 // };
 
 const getColumns = (columns: ColumnNames[]): string => {
-  let result = '';
-  const addressColumns = ['country', 'postalCode', 'region', 'street', 'town'];
-
-  const addressPersonal = columns.filter((col) => addressColumns.includes(col));
-
-  columns.forEach((col) => {
-    if (col === 'name') {
-      result += 'firstName lastName middleName ';
-    } else if (!addressColumns.includes(col)) {
-      result += `${col} `;
-    }
-  });
-
-  if (addressPersonal.length > 0) {
-    result += `addressPersonal { ${addressPersonal.map((col) => `${col} `)} }`;
+  let result = columns as string[];
+  if (columns.includes('name')) {
+    result = [...result.filter((col) => col !== 'name'), ...['firstName', 'lastName', 'middleName']];
   }
 
-  return result;
+  return result.join(' ');
 };
 
 const getRows = (

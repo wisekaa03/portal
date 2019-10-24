@@ -6,6 +6,7 @@ import React /* , { useState, useEffect } */ from 'react';
 import clsx from 'clsx';
 import { useQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import Skeleton from '@material-ui/lab/Skeleton';
 import {
   Button,
   Card,
@@ -129,132 +130,132 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
   return (
     <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
-        {!profile ? (
-          <Loading />
-        ) : (
-          <div className={clsx(classes.grid, classes.main)}>
-            <div className={clsx(classes.grid, classes.column)}>
-              <div className={classes.topIcons}>
-                <IconButton className={classes.noPadding} onClick={handleClose}>
-                  <ArrowBackRounded />
-                </IconButton>
-                <IconButton className={classes.noPadding}>
-                  <MoreVertRounded />
-                </IconButton>
-              </div>
-              <div className={classes.center}>
+        <div className={clsx(classes.grid, classes.main)}>
+          <div className={clsx(classes.grid, classes.column)}>
+            <div className={classes.topIcons}>
+              <IconButton className={classes.noPadding} onClick={handleClose}>
+                <ArrowBackRounded />
+              </IconButton>
+              <IconButton className={classes.noPadding}>
+                <MoreVertRounded />
+              </IconButton>
+            </div>
+            <div className={classes.center}>
+              {profile ? (
                 <Avatar fullSize className={classes.avatar} profile={profile} />
-              </div>
-              <div className={classes.firstName}>
-                <h2>{profile.lastName}</h2>
-                <h2>{profile.firstName}</h2>
-                <h2>{profile.middleName}</h2>
-              </div>
-              <div className={classes.center}>
-                <span>{profile.nameEng}</span>
-              </div>
-              {profile.telephone && (
-                <div className={classes.center}>
-                  <PhoneAndroidRounded />
-                  <span>{profile.telephone}</span>
-                </div>
-              )}
-              {profile.workPhone && (
-                <div className={classes.center}>
-                  <PhoneRounded />
-                  <span>{profile.workPhone}</span>
-                </div>
-              )}
-              {profile.email && (
-                <div className={classes.center}>
-                  <span>{profile.email}</span>
-                </div>
+              ) : (
+                <Skeleton className={classes.avatar} variant="circle" />
               )}
             </div>
-            <div className={clsx(classes.grid, classes.column)}>
-              <div>
-                <Paper>
-                  <List className={classes.list}>
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.company`)} />
-                        <ListItemText primary={profile.company} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.department`)} />
-                        <ListItemText primary={profile.department} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.title`)} />
-                        <ListItemText primary={profile.title} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.otdel`)} />
-                        <ListItemText primary={profile.otdel} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.manager`)} />
-                        <ListItemText primary={profile.manager} />
-                      </div>
-                    </ListItem>
-                  </List>
-                </Paper>
+            <div className={classes.firstName}>
+              <h2>{profile ? profile.lastName : <Skeleton />}</h2>
+              <h2>{profile ? profile.firstName : <Skeleton />}</h2>
+              <h2>{profile ? profile.middleName : <Skeleton />}</h2>
+            </div>
+            <div className={classes.center}>
+              <span>{profile && profile.nameEng}</span>
+            </div>
+            {profile && profile.telephone && (
+              <div className={classes.center}>
+                <PhoneAndroidRounded />
+                <span>{profile.telephone}</span>
               </div>
-              <div>
-                <Paper>
-                  <List className={classes.list}>
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.country`)} />
-                        <ListItemText primary={profile.addressPersonal.country} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.region`)} />
-                        <ListItemText primary={profile.addressPersonal.region} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.town`)} />
-                        <ListItemText primary={profile.addressPersonal.town} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.street`)} />
-                        <ListItemText primary={profile.addressPersonal.street} />
-                      </div>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.postalCode`)} />
-                        <ListItemText primary={profile.addressPersonal.postalCode} />
-                      </div>
-                    </ListItem>
-                  </List>
-                </Paper>
+            )}
+            {profile && profile.workPhone && (
+              <div className={classes.center}>
+                <PhoneRounded />
+                <span>{profile.workPhone}</span>
               </div>
+            )}
+            {profile && profile.email && (
+              <div className={classes.center}>
+                <span>{profile.email}</span>
+              </div>
+            )}
+          </div>
+          <div className={clsx(classes.grid, classes.column)}>
+            <div>
+              <Paper>
+                <List className={classes.list}>
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.company`)} />
+                      <ListItemText primary={profile && profile.company} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.department`)} />
+                      <ListItemText primary={profile && profile.department} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.title`)} />
+                      <ListItemText primary={profile && profile.title} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.otdel`)} />
+                      <ListItemText primary={profile && profile.otdel} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.manager`)} />
+                      <ListItemText primary={profile && profile.manager} />
+                    </div>
+                  </ListItem>
+                </List>
+              </Paper>
+            </div>
+            <div>
+              <Paper>
+                <List className={classes.list}>
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.country`)} />
+                      <ListItemText primary={profile && profile.country} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.region`)} />
+                      <ListItemText primary={profile && profile.region} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.town`)} />
+                      <ListItemText primary={profile && profile.town} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.street`)} />
+                      <ListItemText primary={profile && profile.street} />
+                    </div>
+                  </ListItem>
+                  <Divider />
+                  <ListItem>
+                    <div className={classes.listItem}>
+                      <ListItemText primary={t(`phonebook:fields.postalCode`)} />
+                      <ListItemText primary={profile && profile.postalCode} />
+                    </div>
+                  </ListItem>
+                </List>
+              </Paper>
             </div>
           </div>
-        )}
+        </div>
       </CardContent>
     </Card>
   );

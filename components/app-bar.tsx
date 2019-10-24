@@ -11,7 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
-import { blue } from '@material-ui/core/colors';
+import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
 // #endregion
 // #region Imports Local
@@ -19,7 +19,6 @@ import { ProfileContext } from '../lib/types';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo_min.png';
-import { Loading } from './loading';
 import { Avatar } from './avatar';
 // #endregion
 
@@ -50,7 +49,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     avatar: {
-      background: blue[400],
       height: avatarHeight,
       width: avatarHeight,
     },
@@ -107,31 +105,28 @@ export default (props: AppBarProps): React.ReactElement => {
     <AppBar id="header" position="sticky" className={classes.root}>
       <Toolbar className={classes.toolbar}>
         <ProfileContext.Consumer>
-          {(v) => {
-            // Проверка на вшивость
-            if (!v || !v.user || !v.user.profile) {
-              Router.push('/auth/login');
-
-              return <Loading />;
-            }
-
-            return (
-              <>
-                <IconButton
-                  edge="start"
-                  onClick={handleDrawerOpen}
-                  className={classes.menuButton}
-                  color="inherit"
-                  aria-label="menu"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <div className={classes.logo}>
-                  <img src={LogoMin} alt="logo" />
-                </div>
-                <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
-                  <Avatar className={clsx(classes.avatar, classes.pointer)} profile={v.user.profile} />
-                </Box>
+          {(context) => (
+            <>
+              <IconButton
+                edge="start"
+                onClick={context.user && handleDrawerOpen}
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="menu"
+              >
+                <MenuIcon />
+              </IconButton>
+              <div className={classes.logo}>
+                <img src={LogoMin} alt="logo" />
+              </div>
+              <Box id="profile-avatar" className={classes.avatarWrap} onClick={context.user && handlePopoverOpen}>
+                {context.user ? (
+                  <Avatar className={clsx(classes.avatar, classes.pointer)} profile={context.user.profile} />
+                ) : (
+                  <Skeleton className={classes.avatar} variant="circle" />
+                )}
+              </Box>
+              {context.user && (
                 <Popover
                   id="profile-popover"
                   open={open}
@@ -151,33 +146,33 @@ export default (props: AppBarProps): React.ReactElement => {
                   disableRestoreFocus
                 >
                   <Typography className={classes.profileName}>
-                    {v.user.profile.firstName} {v.user.profile.lastName} {v.user.profile.middleName}
+                    {context.user.profile.firstName} {context.user.profile.lastName} {context.user.profile.middleName}
                   </Typography>
-                  <Avatar className={classes.avatar} profile={v.user.profile} />
+                  <Avatar className={classes.avatar} profile={context.user.profile} />
                   <Box className={classes.phoneBlock}>
-                    {v.user.profile.telephone ? (
+                    {context.user.profile.telephone && (
                       <>
                         <PhoneIcon />
-                        <Typography>{v.user.profile.telephone}</Typography>
+                        <Typography>{context.user.profile.telephone}</Typography>
                       </>
-                    ) : null}
-                    {v.user.profile.mobile ? (
+                    )}
+                    {context.user.profile.mobile && (
                       <>
                         <PhoneIphoneIcon />
-                        <Typography>{v.user.profile.mobile}</Typography>
+                        <Typography>{context.user.profile.mobile}</Typography>
                       </>
-                    ) : null}
-                    {v.user.profile.workPhone ? (
+                    )}
+                    {context.user.profile.workPhone && (
                       <>
                         <PhoneInTalkIcon />
-                        <Typography>{v.user.profile.workPhone}</Typography>
+                        <Typography>{context.user.profile.workPhone}</Typography>
                       </>
-                    ) : null}
+                    )}
                   </Box>
                 </Popover>
-              </>
-            );
-          }}
+              )}
+            </>
+          )}
         </ProfileContext.Consumer>
       </Toolbar>
     </AppBar>

@@ -77,4 +77,4 @@ export interface ProfileParams {
  * EVERY component that needs access to it. So we only do that once here, near
  * the top, then put the user object in React Context for ease of access.
  */
-export const ProfileContext = React.createContext<ProfileParams | undefined>(undefined);
+export const ProfileContext = React.createContext<ProfileParams>({ user: undefined });

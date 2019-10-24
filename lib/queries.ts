@@ -25,13 +25,11 @@ const PROFILE_FRAGMENT = gql`
     workPhone
     mobile
     manager
-    addressPersonal {
-      country
-      postalCode
-      region
-      town
-      street
-    }
+    country
+    postalCode
+    region
+    town
+    street
     updatedAt
     createdAt
     disabled
