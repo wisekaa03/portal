@@ -37,7 +37,7 @@ const PROFILE_FRAGMENT = gql`
 `;
 
 export const CURRENT_USER = gql`
-  {
+  query CurrentUser {
     me {
       # token
       id
@@ -51,6 +51,12 @@ export const CURRENT_USER = gql`
     }
   }
   ${PROFILE_FRAGMENT}
+`;
+
+export const IS_LOGIN = gql`
+  query IsLogin {
+    isLogin @client(always: true)
+  }
 `;
 
 export const SYNC = gql`

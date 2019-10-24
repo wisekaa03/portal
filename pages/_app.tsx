@@ -14,7 +14,7 @@ import 'typeface-roboto';
 // #endregion
 // #region Imports Local
 import theme from '../lib/theme';
-import { CURRENT_USER } from '../lib/queries';
+import { CURRENT_USER, IS_LOGIN } from '../lib/queries';
 import { ProfileContext, ApolloAppProps } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
@@ -59,45 +59,55 @@ class MainApp extends App<ApolloAppProps> {
             },
           }}
         >
-          <Query query={CURRENT_USER} ssr={false}>
-            {({ data, loading }: QueryResult<any>) => {
-              if (loading) {
+          <Query query={IS_LOGIN} ssr={false}>
+            {({ data: loginData, loading: loginLoading }: QueryResult<any>) => {
+              if (loginLoading) {
                 return <Loading type="linear" variant="indeterminate" />;
               }
 
-              if (data && data.me) {
-                if (Router.pathname === '/auth/login') {
-                  let redirect: string | string[] | null | undefined;
-                  try {
-                    ({ redirect } = queryString.parse(window.location.search));
-                  } catch (error) {
-                    console.error('Redirect error:', redirect, error);
-                  }
-                  Router.push({ pathname: (redirect as string) || FIRST_PAGE });
-
-                  return <Loading type="linear" variant="indeterminate" />;
-                }
-
-                return (
-                  <ProfileContext.Provider
-                    value={{
-                      user: { ...(data && data.me) },
-                      language: currentLanguage,
-                      isMobile: Boolean(isMobile),
-                    }}
-                  >
-                    <Component {...pageProps} />
-                  </ProfileContext.Provider>
-                );
-              }
-
-              if (Router.pathname !== '/auth/login') {
+              if (!loginData.isLogin && Router.pathname !== '/auth/login') {
                 Router.push('/auth/login');
 
-                return <Loading type="linear" variant="indeterminate" />;
+                return null;
               }
 
-              return <Component {...pageProps} />;
+              return (
+                <Query query={CURRENT_USER} ssr={false}>
+                  {({ data, loading }: QueryResult<any>) => {
+                    if (loading) {
+                      return <Loading type="linear" variant="indeterminate" />;
+                    }
+
+                    if (data && data.me) {
+                      if (Router.pathname === '/auth/login') {
+                        let redirect: string | string[] | null | undefined;
+                        try {
+                          ({ redirect } = queryString.parse(window.location.search));
+                        } catch (error) {
+                          console.error('Redirect error:', redirect, error);
+                        }
+                        Router.push({ pathname: (redirect as string) || FIRST_PAGE });
+
+                        return <Loading type="linear" variant="indeterminate" />;
+                      }
+
+                      return (
+                        <ProfileContext.Provider
+                          value={{
+                            user: { ...(data && data.me) },
+                            language: currentLanguage,
+                            isMobile: Boolean(isMobile),
+                          }}
+                        >
+                          <Component {...pageProps} />
+                        </ProfileContext.Provider>
+                      );
+                    }
+
+                    return <Component {...pageProps} />;
+                  }}
+                </Query>
+              );
             }}
           </Query>
         </ThemeProvider>

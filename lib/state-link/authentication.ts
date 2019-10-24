@@ -3,10 +3,13 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
+import { getStorage } from '../session-storage';
 // #endregion
 
 export const StateLinkAuthentication = {
-  resolvers: {
-    Query: {},
+  Query: {
+    isLogin() {
+      return getStorage('token') !== '';
+    },
   },
 };
