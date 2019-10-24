@@ -37,70 +37,26 @@ module.exports = function(api) {
           },
         },
       ],
-      // [
-      //   'inline-react-svg',
-      //   {
-      //     svgo: {
-      //       js2svg: {
-      //         pretty: false,
-      //       },
-      //       plugins: [
-      //         {
-      //           removeAttrs: { attrs: ['(data-name)', 'g:(id)'] },
-      //         },
-      //         {
-      //           removeTitle: true,
-      //         },
-      //         {
-      //           removeEmptyAttrs: true,
-      //         },
-      //         {
-      //           removeEmptyText: true,
-      //         },
-      //         {
-      //           removeViewBox: true,
-      //         },
-      //         {
-      //           removeDesc: true,
-      //         },
-      //         {
-      //           removeXMLNS: true,
-      //         },
-      //         {
-      //           removeEditorsNSData: true,
-      //           // {
-      //           // additionalNamespaces: ['http://www.w3.org/1999/xlink'],
-      //           // },
-      //         },
-      //         {
-      //           removeComments: true,
-      //         },
-      //         {
-      //           removeUnusedNS: true,
-      //         },
-      //         {
-      //           cleanupIDs: true,
-      //         },
-      //         {
-      //           convertColors: true,
-      //         },
-      //         {
-      //           sortDefsChildren: true,
-      //         },
-      //         {
-      //           minifyStyles: true,
-      //         },
-      //         {
-      //           collapseGroups: true,
-      //         },
-      //       ],
-      //     },
-      //   },
-      // ],
-      // [
-      //   'styled-components',
-      //   { ssr: true, displayName: true, preprocess: false },
-      // ],
+      [
+        'babel-plugin-import',
+        {
+          libraryName: '@material-ui/core',
+          // Use "'libraryDirectory': ''," if your bundler does not support ES modules
+          libraryDirectory: 'esm',
+          camel2DashComponentName: false,
+        },
+        'core',
+      ],
+      [
+        'babel-plugin-import',
+        {
+          libraryName: '@material-ui/icons',
+          // Use "'libraryDirectory': ''," if your bundler does not support ES modules
+          libraryDirectory: 'esm',
+          camel2DashComponentName: false,
+        },
+        'icons',
+      ],
     ],
   };
 

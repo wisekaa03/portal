@@ -13,11 +13,6 @@ import {
   FormControlLabel,
   FormGroup,
   Checkbox,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   CardActions,
 } from '@material-ui/core';
 // #endregion

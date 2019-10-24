@@ -21,7 +21,10 @@ import {
   ListItemText,
   Divider,
 } from '@material-ui/core';
-import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
+import ArrowBackRounded from '@material-ui/icons/ArrowBackRounded';
+import MoreVertRounded from '@material-ui/icons/MoreVertRounded';
+import PhoneRounded from '@material-ui/icons/PhoneRounded';
+import PhoneAndroidRounded from '@material-ui/icons/PhoneAndroidRounded';
 // #endregion
 // #region Imports Local
 import { useTranslation } from '../../lib/i18n-client';
