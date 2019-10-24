@@ -44,12 +44,13 @@ export class UserEntity {
     type: 'boolean',
     nullable: false,
     unique: false,
+    default: false,
   })
   disabled: boolean;
 
   @Column({
     type: 'boolean',
-    default: true,
+    default: false,
   })
   isAdmin: boolean;
 

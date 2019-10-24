@@ -160,7 +160,7 @@ export class ProfileService {
       profile.updatedAt = user.profile.updatedAt;
     } else {
       const profileSave = await this.profileRepository.findOne({
-        where: { loginIdentificator: ldapUser.objectGUID.toString() },
+        where: { loginIdentificator: ldapUser.objectGUID },
       });
 
       if (profileSave) {

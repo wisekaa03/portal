@@ -5,7 +5,7 @@
 // #endregion
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
-import { LoginService, Gender, Address } from '../../../lib/types';
+import { LoginService, Gender } from '../../../lib/types';
 // #endregion
 
 export interface Profile {
