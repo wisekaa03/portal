@@ -1,5 +1,4 @@
 /** @format */
-/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
@@ -40,35 +39,34 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  async profiles(take: number, skip: number, orderBy: string, order: string): Promise<Profile[]> {
-    // TODO: группы к которым имеет доступ текущий пользователь, согласно username
-
-    const profiles = await this.profileRepository.find({
+  profiles = async (
+    take: number,
+    skip: number,
+    orderBy: string,
+    order: string,
+    isNotShowing = false,
+  ): Promise<Profile[]> =>
+    this.profileRepository.find({
       cache: true,
       take,
       skip,
+      where: { notShowing: !!isNotShowing },
       order: {
         [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
       },
     });
 
-    return profiles;
-  }
-
-  async profile(id: string): Promise<Profile | null> {
-    const profile = await this.profileRepository.findOne(id, { cache: true });
-
-    return profile as Profile | null;
-  }
+  profile = async (id: string): Promise<Profile | undefined> => this.profileRepository.findOne(id, { cache: true });
 
   // TODO: добавить disabled (хз как) и фильтрацию по addressPersonal??????
-  profilesSearch = async (search: string, orderBy: string, order: string): Promise<Profile[]> =>
+  profilesSearch = async (search: string, orderBy: string, order: string, isNotShowing = false): Promise<Profile[]> =>
     this.profileRepository.find({
       cache: true,
       order: {
         [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
       },
       where: [
+        { notShowing: !!isNotShowing },
         { firstName: Like(`%${search}%`) },
         { lastName: Like(`%${search}%`) },
         { middleName: Like(`%${search}%`) },
@@ -98,19 +96,17 @@ export class ProfileService {
     } = comment;
 
     let { birthday } = comment;
-    if (!birthday || birthday === '') {
-      birthday = undefined;
-    } else {
-      birthday = new Date(Date.parse(birthday));
-    }
+    birthday = !birthday || birthday === '' ? undefined : new Date(Date.parse(birthday));
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
+    /* eslint-disable prettier/prettier */
     const thumbnailPhoto = thumbnailPhotoBuffer
       ? this.imageService
         .imageResize(thumbnailPhotoBuffer, 250, 250)
         .then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
+    /* eslint-enable prettier/prettier */
     const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
@@ -119,6 +115,8 @@ export class ProfileService {
       ? ldapUser.department.split(/\s*(,)\s*/, 1)
       : [undefined, undefined];
 
+    // TODO: сделать что-нибудь с Manager, это поле указывает
+    // ссылку в AD типа (CN=manager,CN=Users,CN=example,CN=local)
     const { manager } = ldapUser;
 
     let profile: Profile = {
@@ -130,13 +128,11 @@ export class ProfileService {
       middleName: ldapUser.middleName,
       birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
-      addressPersonal: {
-        country: ldapUser.co,
-        postalCode: ldapUser.postalCode,
-        town: ldapUser.l,
-        region: ldapUser.st,
-        street: ldapUser.streetAddress,
-      },
+      country: ldapUser.co,
+      postalCode: ldapUser.postalCode,
+      town: ldapUser.l,
+      region: ldapUser.st,
+      street: ldapUser.streetAddress,
       company: ldapUser.company,
       department,
       otdel,
@@ -153,6 +149,7 @@ export class ProfileService {
       positionEng,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
+      notShowing: !!(parseInt(ldapUser.flags, 10) === 1),
       thumbnailPhoto,
       thumbnailPhoto40,
     };

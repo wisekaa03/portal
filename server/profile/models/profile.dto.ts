@@ -29,7 +29,11 @@ export interface Profile {
 
   gender: Gender;
 
-  addressPersonal: Address;
+  country: string;
+  postalCode: string;
+  region: string;
+  town: string;
+  street: string;
 
   company: string;
 
@@ -58,6 +62,8 @@ export interface Profile {
   positionEng: string;
 
   disabled: boolean;
+
+  notShowing: boolean;
 
   thumbnailPhoto?: string | Promise<string | undefined>;
 

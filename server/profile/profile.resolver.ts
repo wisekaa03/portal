@@ -40,7 +40,7 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profile(@Args('id') id: string): Promise<Profile | null> {
+  async profile(@Args('id') id: string): Promise<Profile | undefined> {
     return this.profileService.profile(id) || null;
   }
 
@@ -56,7 +56,7 @@ export class ProfileResolver {
     @Args('search') search: string,
     @Args('orderBy') orderBy: string,
     @Args('order') order: string,
-  ): Promise<Profile[] | null> {
+  ): Promise<Profile[] | undefined> {
     return this.profileService.profilesSearch(search, orderBy, order) || null;
   }
 }

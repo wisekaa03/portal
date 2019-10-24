@@ -1,11 +1,3 @@
-type Address {
-  country: String
-  postalCode: String
-  town: String
-  region: String
-  street: String
-}
-
 type Profile {
   id: ID!
 
@@ -36,9 +28,14 @@ type Profile {
   otdelEng: String
   positionEng: String
 
-  addressPersonal: Address
+  country: String
+  postalCode: String
+  region: String
+  town: String
+  street: String
 
   disabled: Boolean
+  notShowing: Boolean
 
   thumbnailPhoto: ByteArray
   thumbnailPhoto40: String

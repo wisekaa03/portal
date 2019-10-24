@@ -77,6 +77,11 @@ export interface LdapResponeUser extends SearchEntryObject {
   givenName: string;
 
   /**
+   * Additional flags
+   */
+  flags: string;
+
+  /**
    * Locality
    */
   l: string;
@@ -310,6 +315,7 @@ export const ldapADattributes = [
   'distinguishedName',
   'dn',
   'employeeID',
+  'flags',
   'givenName',
   'l',
   'mail',
