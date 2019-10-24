@@ -167,7 +167,7 @@ const getRows = (
 
 const PhoneBook = (): React.ReactElement => {
   const classes = useStyles({});
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('phonebook');
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');

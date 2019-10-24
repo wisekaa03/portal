@@ -1,27 +1,22 @@
 /** @format */
-/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
-import { Controller, Get, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Res } from '@nestjs/common';
+import { NextResponse } from 'nest-next-module';
 // #endregion
 // #region Imports Local
-import { FIRST_PAGE } from '../../../lib/constants';
-import { NextService } from '../../next/next.service';
 // #endregion
 
 // @ApiUseTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly nextService: NextService) {}
-
   @Get('login')
-  public async login(@Req() req: Request, @Res() res: Response): Promise<void> {
-    return this.nextService.render(req, res, '/auth/login');
+  public async login(@Res() res: NextResponse): Promise<void> {
+    return res.nextRender('/auth/login');
   }
 
   @Get('logout')
-  public async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    return this.nextService.render(req, res, '/auth/logout');
+  public async logout(@Res() res: NextResponse): Promise<void> {
+    return res.nextRender('/auth/logout');
   }
 }

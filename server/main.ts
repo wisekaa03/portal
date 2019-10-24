@@ -50,8 +50,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region improve security - this is done by Nginx reverse-proxy, do not need
   app.use(helmet.ieNoOpen());
-  // TODO: продумать чтобы svg и js файлы сохранялись в кэш браузера
-  // app.use(helmet.noCache());
   app.use('*', (req: Request, res: Response, next: Function) => {
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     next();

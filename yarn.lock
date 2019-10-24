@@ -13668,6 +13668,18 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
+nest-next-module@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/nest-next-module/-/nest-next-module-0.3.1.tgz#c33f91219beb490c823c4a91cbac43b33ecc01d5"
+  integrity sha512-Sw6RP+VPZ/8uoix+lWd4V2qkaM8+xfJNS+odbritfb39jkBgiR7rujs4PY5+UMZNVYQmn20yp10hIG2k+imciw==
+  dependencies:
+    "@nestjs/common" "^6.8.3"
+    "@nestjs/core" "^6.8.3"
+    cache-manager "^2.10.0"
+    express "^4.17.1"
+    next "^9.1.1"
+    rxjs "^6.5.3"
+
 nestjs-i18n@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/nestjs-i18n/-/nestjs-i18n-4.0.6.tgz#0508ca77e43c0f5c2bc064058aedbf540d27f7a3"

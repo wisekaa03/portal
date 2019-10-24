@@ -1,19 +1,16 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Res } from '@nestjs/common';
+import { NextResponse } from 'nest-next-module';
 // #endregion
 // #region Imports Local
-import { NextService } from '../../next/next.service';
 // #endregion
 
 @Controller('mail')
 export class MailController {
-  constructor(private readonly nextService: NextService) {}
-
   @Get()
-  public async mail(@Req() req: Request, @Res() res: Response): Promise<void> {
-    return this.nextService.render(req, res, '/mail');
+  public async mail(@Res() res: NextResponse): Promise<void> {
+    return res.nextRender('/mail');
   }
 }

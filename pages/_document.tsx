@@ -21,7 +21,7 @@ import { nextI18next } from '../lib/i18n-client';
 
 interface MainDocumentInitialProps extends DocumentInitialProps {
   apolloClient: ApolloClient<NormalizedCacheObject>;
-  currentLanguage: string;
+  currentLanguage: string | undefined;
   nonce: string;
 }
 
@@ -55,7 +55,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
 MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> => {
   const sheets = new ServerStyleSheets();
-  const { apolloClient, renderPage: originalRenderPage, res } = ctx;
+  const { apolloClient, renderPage: originalRenderPage, res, req } = ctx;
 
   ctx.renderPage = () =>
     originalRenderPage({
@@ -73,7 +73,11 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
   // }
   const minifiedStyles = sheets.toString();
 
-  const currentLanguage = nextI18next.i18n.language || nextI18next.config.defaultLanguage;
+  const currentLanguage = req
+    ? ((req as unknown) as Express.Request).lng
+      ? ((req as unknown) as Express.Request).lng
+      : nextI18next.i18n.language || nextI18next.config.defaultLanguage
+    : nextI18next.i18n.language || nextI18next.config.defaultLanguage;
 
   return {
     apolloClient,

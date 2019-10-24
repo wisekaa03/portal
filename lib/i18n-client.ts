@@ -29,8 +29,7 @@ export const nextI18next = new NextI18Next({
   otherLanguages: ['en'],
 });
 
-export const { appWithTranslation } = nextI18next;
-export const { Trans } = nextI18next;
+export const { appWithTranslation, Trans } = nextI18next;
 export const useTranslation = originalUseTranslation;
 export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common', 'error'].concat(namespaces);
 

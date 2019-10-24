@@ -14,6 +14,7 @@ declare namespace NodeJS {
   interface Global extends NodeJS.Global {
     fetch: any; // GlobalFetch;
     __SERVER__?: boolean;
+    __DEV__?: boolean;
   }
 }
 

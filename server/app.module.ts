@@ -4,8 +4,9 @@
 
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, NestModule, MiddlewareConsumer, RequestMethod, CacheModule } from '@nestjs/common';
+import { Module, CacheModule } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
+import { NestNextModule } from 'nest-next-module';
 
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
@@ -13,8 +14,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local
-import { NextService } from './next/next.service';
-import { HttpErrorFilter } from './filters/http-error.filter';
+// import { HttpErrorFilter } from './filters/http-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { DateScalar } from './shared/date.scalar';
@@ -22,10 +22,7 @@ import { ByteArrayScalar } from './shared/bytearray.scalar';
 import { LoggerModule } from './logger/logger.module';
 import { LogService } from './logger/logger.service';
 import { ConfigModule } from './config/config.module';
-import { NextModule } from './next/next.module';
 import { HomeModule } from './controllers/controllers.module';
-import { NextMiddleware } from './next/next.middleware';
-import { NextAssetsMiddleware } from './next/next.assets.middleware';
 import { ConfigService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -159,7 +156,7 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
     // #endregion
 
     // #region Next
-    NextModule,
+    NestNextModule.forRoot({ dev }),
     // #endregion
 
     // #region Home page
@@ -174,13 +171,13 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
     // #endregion
 
     // #region Errors
-    {
-      provide: APP_FILTER,
-      inject: [NextService, LogService],
-      useFactory: (nextService: NextService, logService: LogService) => {
-        return new HttpErrorFilter(nextService, logService);
-      },
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   inject: [NextService, LogService],
+    //   useFactory: (nextService: NextService, logService: LogService) => {
+    //     return new HttpErrorFilter(nextService, logService);
+    //   },
+    // },
     // #endregion
 
     // #region Logging interceptor
@@ -207,9 +204,4 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
     // #endregion
   ],
 })
-export class AppModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(NextAssetsMiddleware).forRoutes({ path: '_next*', method: RequestMethod.GET });
-    consumer.apply(NextMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}
