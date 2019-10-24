@@ -10,8 +10,6 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { LoggerModule } from '../logger/logger.module';
-import { LogService } from '../logger/logger.service';
-import { LogServiceMock } from '../../__mocks__/logger.service.mock';
 import { ProfileEntity } from '../profile/profile.entity';
 import { AuthModule } from './auth.module';
 import { AuthService } from './auth.service';
@@ -21,8 +19,6 @@ import { UserService } from '../user/user.service';
 import { UserServiceMock } from '../../__mocks__/user.service.mock';
 import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 import { MockRepository } from '../../__mocks__/mockRepository.mock';
 // #endregion
 
@@ -73,10 +69,6 @@ describe('AuthService', () => {
         { provide: UserService, useValue: UserServiceMock },
       ],
     })
-      .overrideProvider(LogService)
-      .useValue(LogServiceMock)
-      .overrideProvider(JwtStrategy)
-      .useValue(JwtStrategyMock)
       .overrideGuard(GqlAuthGuard)
       .useValue(GqlAuthGuardMock)
       .compile();

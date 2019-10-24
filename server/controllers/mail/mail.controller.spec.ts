@@ -6,8 +6,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { MailController } from './mail.controller';
 import { NextService } from '../../next/next.service';
-import { LogService } from '../../logger/logger.service';
-import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 import { NextModule } from '../../next/next.module';
 import { LoggerModule } from '../../logger/logger.module';
@@ -26,8 +24,6 @@ describe('MailController', () => {
     })
       .overrideProvider(NextService)
       .useValue(NextServiceMock)
-      .overrideProvider(LogService)
-      .useValue(LogServiceMock)
       .compile();
 
     controller = module.get<MailController>(MailController);

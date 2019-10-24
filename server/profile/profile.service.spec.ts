@@ -7,8 +7,6 @@ import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #region Imports Local
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
-import { LogService } from '../logger/logger.service';
-import { LogServiceMock } from '../../__mocks__/logger.service.mock';
 import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { LdapService } from '../ldap/ldap.service';
@@ -18,7 +16,6 @@ import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ImageModule } from '../image/image.module';
 // #endregion
 
-jest.mock('../logger/logger.service');
 jest.mock('../ldap/ldap.service');
 
 describe('ProfileService', () => {
@@ -36,8 +33,7 @@ describe('ProfileService', () => {
       ],
       providers: [
         ProfileService,
-        { provide: LogService, useClass: LogServiceMock },
-        // { provide: LdapService, useValue: LdapServiceMock },
+        { provide: LdapService, useValue: LdapServiceMock },
         { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
         { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],

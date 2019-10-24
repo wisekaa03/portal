@@ -9,20 +9,14 @@ import { ProfileResolver } from './profile.resolver';
 import { ProfileService } from './profile.service';
 import { ProfileModule } from './profile.module';
 import { ProfileEntity } from './profile.entity';
-import { LogService } from '../logger/logger.service';
-import { LogServiceMock } from '../../__mocks__/logger.service.mock';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
-import { JwtStrategy } from '../auth/strategies/jwt.strategy';
-import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 import { UserEntity } from '../user/user.entity';
 import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ImageModule } from '../image/image.module';
 // #endregion
 
-jest.mock('../logger/logger.service');
 jest.mock('./profile.service');
-jest.mock('../ldap/ldap.service');
 
 describe('ProfileResolver', () => {
   let resolver: ProfileResolver;
@@ -37,10 +31,6 @@ describe('ProfileResolver', () => {
         { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
-      .overrideProvider(LogService)
-      .useValue(LogServiceMock)
-      .overrideProvider(JwtStrategy)
-      .useValue(JwtStrategyMock)
       .overrideGuard(GqlAuthGuard)
       .useValue(GqlAuthGuardMock)
       .compile();

@@ -2,21 +2,14 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { I18nModule } from 'nestjs-i18n';
-import { LogService } from '../logger/logger.service';
-import { LogServiceMock } from '../../__mocks__/logger.service.mock';
-import { AuthService } from './auth.service';
-import { AuthServiceMock } from '../../__mocks__/auth.service.mock';
-import { JwtServiceMock } from '../../__mocks__/jwt.service.mock';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { UserServiceMock } from '../../__mocks__/user.service.mock';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtStrategyMock } from '../../__mocks__/jwt.strategy.mock';
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
@@ -27,10 +20,10 @@ import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { UserEntity } from '../user/user.entity';
 import { ProfileEntity } from '../profile/profile.entity';
 import { MockRepository } from '../../__mocks__/mockRepository.mock';
+import { AuthService } from '../../../../../../../wisekaa03/Документы/KNGK/Portal/portal/server/auth/auth.service';
 // #endregion
 
-jest.mock('../logger/logger.service');
-// jest.mock('../ldap/ldap.service');
+jest.mock('../ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 
 describe('AuthResolver', () => {
@@ -69,18 +62,13 @@ describe('AuthResolver', () => {
       ],
       providers: [
         AuthResolver,
+        AuthService,
         { provide: UserService, useValue: UserServiceMock },
-        { provide: AuthService, useValue: AuthServiceMock },
         { provide: LdapService, useValue: LdapServiceMock },
-        { provide: JwtService, useValue: JwtServiceMock },
         { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
         { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
-      .overrideProvider(LogService)
-      .useValue(LogServiceMock)
-      .overrideProvider(JwtStrategy)
-      .useValue(JwtStrategyMock)
       .overrideProvider(LdapService)
       .useValue(LdapServiceMock)
       .compile();
