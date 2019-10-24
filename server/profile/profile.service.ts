@@ -42,8 +42,8 @@ export class ProfileService {
   profiles = async (
     take: number,
     skip: number,
-    orderBy: string,
-    order: string,
+    orderBy = 'name',
+    order = 'ASC',
     isNotShowing = false,
   ): Promise<Profile[]> =>
     this.profileRepository.find({
