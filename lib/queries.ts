@@ -24,7 +24,9 @@ const PROFILE_FRAGMENT = gql`
     telephone
     workPhone
     mobile
-    manager
+    manager {
+      id
+    }
     country
     postalCode
     region
