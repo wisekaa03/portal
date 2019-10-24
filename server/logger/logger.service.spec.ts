@@ -2,22 +2,20 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { LogService } from './logger.service';
 // #endregion
 // #region Imports Local
-import { ImageService } from './image.service';
-import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
-describe('ImageService', () => {
-  let service: ImageService;
+describe('LogService', () => {
+  let service: LogService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule],
-      providers: [ImageService],
+      providers: [LogService],
     }).compile();
 
-    service = module.get<ImageService>(ImageService);
+    service = module.get<LogService>(LogService);
   });
 
   it('should be defined', () => {

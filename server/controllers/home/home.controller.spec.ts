@@ -6,14 +6,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { NextService } from '../../next/next.service';
 import { HomeController } from './home.controller';
-import { LogService } from '../../logger/logger.service';
-import { LogServiceMock } from '../../../__mocks__/logger.service.mock';
 import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 import { NextModule } from '../../next/next.module';
 import { LoggerModule } from '../../logger/logger.module';
 // #endregion
-
-jest.mock('../../logger/logger.service');
 
 describe('HomeController', () => {
   let controller: HomeController;
@@ -26,8 +22,6 @@ describe('HomeController', () => {
     })
       .overrideProvider(NextService)
       .useValue(NextServiceMock)
-      .overrideProvider(LogService)
-      .useValue(LogServiceMock)
       .compile();
 
     controller = module.get<HomeController>(HomeController);

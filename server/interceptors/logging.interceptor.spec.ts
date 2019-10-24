@@ -7,8 +7,6 @@ import { LoggingInterceptor } from './logging.interceptor';
 import { LogService } from '../logger/logger.service';
 // #endregion
 
-jest.mock('../logger/logger.service');
-
 const interceptor = new LoggingInterceptor(new LogService());
 
 describe('LoggingInterceptor', () => {
