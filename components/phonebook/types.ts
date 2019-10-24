@@ -20,7 +20,7 @@ export type ColumnNames =
   | 'otdelEng'
   | 'title'
   | 'positionEng'
-  | 'supervisor'
+  | 'manager'
   | 'room'
   | 'telephone'
   | 'fax'

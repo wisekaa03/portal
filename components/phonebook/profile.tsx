@@ -205,8 +205,8 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                     <Divider />
                     <ListItem>
                       <div className={classes.listItem}>
-                        <ListItemText primary={t(`phonebook:fields.supervisor`)} />
-                        <ListItemText primary="" />
+                        <ListItemText primary={t(`phonebook:fields.manager`)} />
+                        <ListItemText primary={profile.manager} />
                       </div>
                     </ListItem>
                   </List>
