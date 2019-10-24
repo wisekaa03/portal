@@ -21,11 +21,17 @@ export class LogService extends Logger implements TypeOrmLogger {
   };
 
   log(message: any, context?: string): void {
+    let m = message;
+    let c = context;
+    if (m === 'info') {
+      m = c;
+      c = 'Database: Log';
+    }
     if (dev) {
       // this.logger.log(message, context);
-      super.log(message, context);
+      super.log(m, c);
     } else {
-      console.log(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
+      console.log(`${new Date().toLocaleString(this.locale, this.format)} -`, `${c} -`, m);
     }
   }
 
