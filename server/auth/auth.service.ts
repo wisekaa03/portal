@@ -60,13 +60,30 @@ export class AuthService {
   async login({ username, password }: UserLogin): Promise<UserResponse | null> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
-    const user = await this.userLdapLogin({
-      username,
-      password,
-      user: await this.userService.readByUsername(username),
-    });
+    try {
+      const user = await this.userLdapLogin({
+        username,
+        password,
+        user: await this.userService.readByUsername(username),
+      });
+      if (user) {
+        try {
+          return user.toResponseObject(this.token({ id: user.id }));
+        } catch (error) {
+          this.logService.error('Error:', JSON.stringify(error), 'AuthService');
 
-    return user ? user.toResponseObject(this.token({ id: user.id })) : null;
+          throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
+        }
+      }
+
+      this.logService.error('Error: not found user', undefined, 'AuthService');
+
+      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
+    } catch (error) {
+      this.logService.error('Error:', JSON.stringify(error), 'AuthService');
+
+      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
+    }
   }
 
   /**
@@ -137,12 +154,12 @@ export class AuthService {
       } catch (error) {
         this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
 
-        throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), error);
+        throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), 500);
       }
     } catch (error) {
       this.logService.error('Unable to login in ldap', JSON.stringify(error), 'AuthService');
 
-      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), error);
+      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
     }
   }
 }
