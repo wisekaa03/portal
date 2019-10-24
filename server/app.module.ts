@@ -14,7 +14,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local
-// import { HttpErrorFilter } from './filters/http-error.filter';
+import { HttpErrorFilter } from './filters/http-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { DateScalar } from './shared/date.scalar';
@@ -171,13 +171,13 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
     // #endregion
 
     // #region Errors
-    // {
-    //   provide: APP_FILTER,
-    //   inject: [NextService, LogService],
-    //   useFactory: (nextService: NextService, logService: LogService) => {
-    //     return new HttpErrorFilter(nextService, logService);
-    //   },
-    // },
+    {
+      provide: APP_FILTER,
+      inject: [LogService],
+      useFactory: (logService: LogService) => {
+        return new HttpErrorFilter(logService);
+      },
+    },
     // #endregion
 
     // #region Logging interceptor

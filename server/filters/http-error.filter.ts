@@ -3,22 +3,22 @@
 // #region Imports NPM
 import { ExceptionFilter, Catch, HttpException, HttpStatus, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
+import { NextResponse } from 'nest-next-module';
 // #endregion
 // #region Imports Local
-import { NextService } from '../next/next.service';
 import { AppGraphQLExecutionContext } from '../interceptors/logging.interceptor';
 import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-  constructor(private readonly nextService: NextService, private readonly logService: LogService) {}
+  constructor(private readonly logService: LogService) {}
 
   catch(exception: Error | HttpException | JsonWebTokenError | TokenExpiredError, host: ExecutionContext): void {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
+    const response = ctx.getResponse<NextResponse>();
     const request = ctx.getRequest<Request>();
 
     let status: number;
@@ -51,12 +51,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       }
 
       response.status(status);
-
-      if (request.url.startsWith('/api/')) {
-        response.json(errorResponse);
-      } else {
-        this.nextService.error(request, response, status, exception);
-      }
+      response.nextRender('/_error');
       // #endregion
     } else {
       // #region GraphQL query
