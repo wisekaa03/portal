@@ -53,6 +53,12 @@ export const CURRENT_USER = gql`
   ${PROFILE_FRAGMENT}
 `;
 
+export const SYNC = gql`
+  mutation Synchronization {
+    synchronization
+  }
+`;
+
 export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {

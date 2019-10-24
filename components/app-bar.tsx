@@ -4,18 +4,24 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import Router from 'next/router';
+import { useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Popover, Box, /* Button, */ IconButton, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
+import { green, blue } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
 // #endregion
 // #region Imports Local
+import { ExecutionResult } from 'graphql';
+import { useTranslation } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/types';
+import { LOGOUT, SYNC } from '../lib/queries';
+import { removeStorage } from '../lib/session-storage';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo_min.png';
@@ -71,12 +77,23 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(),
       fontSize: '16px',
     },
-    phoneBlock: {
+    commonBlock: {
       display: 'grid',
-      gridTemplateColumns: '1fr 5fr',
+      gridColumn: '1 / 3',
       gridGap: theme.spacing(),
       padding: theme.spacing(),
+    },
+    phoneBlock: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 6fr',
+      gridGap: `${theme.spacing()}px 0`,
       alignItems: 'center',
+    },
+    buttonSync: {
+      backgroundColor: green[300],
+    },
+    buttonLogout: {
+      backgroundColor: blue[400],
     },
   }),
 );
@@ -87,9 +104,32 @@ interface AppBarProps {
 
 export default (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
+  const { t, i18n } = useTranslation();
+  const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  // const user = useContext(UserContext);
+
+  const [sync] = useMutation(SYNC, {
+    onCompleted() {
+      setSyncLoading(false);
+    },
+  });
+
+  const [logout] = useMutation(LOGOUT, {
+    onCompleted() {
+      removeStorage('token');
+      // TODO: Разрбраться как получить доступ к клиенту
+      // client.resetStore();
+
+      Router.push({ pathname: '/auth/login' });
+    },
+  });
+
   const { handleDrawerOpen } = props;
+
+  const handleSync = (): void => {
+    setSyncLoading(true);
+    sync();
+  };
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -149,25 +189,44 @@ export default (props: AppBarProps): React.ReactElement => {
                     {context.user.profile.firstName} {context.user.profile.lastName} {context.user.profile.middleName}
                   </Typography>
                   <Avatar className={classes.avatar} profile={context.user.profile} />
-                  <Box className={classes.phoneBlock}>
-                    {context.user.profile.telephone && (
-                      <>
-                        <PhoneIcon />
-                        <Typography>{context.user.profile.telephone}</Typography>
-                      </>
+                  <Box className={classes.commonBlock}>
+                    <Box className={classes.phoneBlock}>
+                      {context.user.profile.telephone && (
+                        <>
+                          <PhoneIcon />
+                          <Typography>{context.user.profile.telephone}</Typography>
+                        </>
+                      )}
+                      {context.user.profile.mobile && (
+                        <>
+                          <PhoneIphoneIcon />
+                          <Typography>{context.user.profile.mobile}</Typography>
+                        </>
+                      )}
+                      {context.user.profile.workPhone && (
+                        <>
+                          <PhoneInTalkIcon />
+                          <Typography>{context.user.profile.workPhone}</Typography>
+                        </>
+                      )}
+                    </Box>
+                    {true /* context.user.isAdmin */ && (
+                      <Button
+                        disabled={syncLoading}
+                        variant="contained"
+                        className={classes.buttonSync}
+                        onClick={handleSync}
+                      >
+                        {!syncLoading ? 'Синхронизация' : '...'}
+                      </Button>
                     )}
-                    {context.user.profile.mobile && (
-                      <>
-                        <PhoneIphoneIcon />
-                        <Typography>{context.user.profile.mobile}</Typography>
-                      </>
-                    )}
-                    {context.user.profile.workPhone && (
-                      <>
-                        <PhoneInTalkIcon />
-                        <Typography>{context.user.profile.workPhone}</Typography>
-                      </>
-                    )}
+                    <Button
+                      variant="contained"
+                      className={classes.buttonLogout}
+                      onClick={(): Promise<ExecutionResult<any>> => logout()}
+                    >
+                      {t('logout:signOut')}
+                    </Button>
                   </Box>
                 </Popover>
               )}
