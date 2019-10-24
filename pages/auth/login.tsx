@@ -23,15 +23,15 @@ const Login = (): React.ReactElement => {
       setStorage('token', data.login.token);
       const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
       client.resetStore();
-      client.writeData({ data: { isLoggedIn: true } });
+      // client.writeData({ data: { isLogin: true } });
 
       Router.push({ pathname: redirect as string });
     },
   });
 
-  if (loading) {
-    return <Loading type="linear" variant="indeterminate" />;
-  }
+  // if (loading) {
+  //   return <Loading type="linear" variant="indeterminate" />;
+  // }
 
   return <LoginComponent error={error} loading={loading} login={login} />;
 };
