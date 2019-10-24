@@ -14,7 +14,9 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
+// eslint-disable-next-line import/no-cycle
 import { Profile } from './models/profile.dto';
+// eslint-disable-next-line import/no-cycle
 import { LoginService, Gender } from '../../lib/types';
 // #endregion
 
@@ -241,7 +243,7 @@ export class ProfileEntity {
       typeof this.manager === 'object' &&
       typeof ((this.manager as unknown) as Record<string, any>).then === 'function'
     ) {
-      this.manager = await this.manager;
+      ((this.manager as unknown) as ProfileEntity | undefined) = await this.manager;
     }
   }
 

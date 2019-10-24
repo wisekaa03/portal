@@ -107,7 +107,7 @@ export class ProfileService {
    * @returns ProfileEntity
    */
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {
-    const manager = ldapUser.manager ? this.createLdapDN(ldapUser.manager).then((m) => m) : undefined;
+    const manager = ldapUser.manager ? await this.createLdapDN(ldapUser.manager) : undefined;
 
     let comment;
     try {
