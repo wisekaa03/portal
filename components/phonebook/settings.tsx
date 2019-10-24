@@ -17,8 +17,8 @@ import {
 } from '@material-ui/core';
 // #endregion
 // #region Imports Local
+import { nextI18next } from '../../lib/i18n-client';
 import { ColumnNames, SettingsProps } from './types';
-import { useTranslation } from '../../lib/i18n-client';
 import HeaderBg from '../../public/images/jpeg/header_bg.jpg';
 // #endregion
 
@@ -117,11 +117,10 @@ export const allColumns: ColumnNames[] = [
   'disabled',
 ];
 
-export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
+export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
-  const { columns, changeColumn, handleClose } = props;
+  const { t, columns, changeColumn, handleClose } = props;
   const [current, setCurrent] = useState<ColumnNames[]>(columns);
-  const { t, i18n } = useTranslation();
 
   const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
     setCurrent(e.target.checked ? [name, ...current] : current.filter((el) => el !== name));
@@ -168,3 +167,5 @@ export const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: R
     </Card>
   );
 });
+
+export const SettingsComponent = nextI18next.withTranslation('phonebbok')(BaseSettingsComponent);

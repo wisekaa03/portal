@@ -1,5 +1,4 @@
 /** @format */
-/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import React /* , { useState, useEffect } */ from 'react';
@@ -7,24 +6,11 @@ import clsx from 'clsx';
 import { useQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
-import {
-  Button,
-  Card,
-  CardContent,
-  FormControl,
-  FormControlLabel,
-  TextField,
-  IconButton,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-} from '@material-ui/core';
+import { Card, CardContent, Paper, List, ListItem, ListItemText, Divider, IconButton } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
-import { useTranslation } from '../../lib/i18n-client';
+import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
@@ -111,10 +97,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
+export const BaseProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
-  const { t, i18n } = useTranslation();
-  const { profileId, handleClose } = props;
+  const { t, profileId, handleClose } = props;
 
   if (!profileId) return null;
 
@@ -279,3 +264,5 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
     </Card>
   );
 });
+
+export const ProfileComponent = nextI18next.withTranslation('phonebook')(BaseProfileComponent);

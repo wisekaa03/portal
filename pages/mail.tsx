@@ -7,7 +7,7 @@ import Iframe from 'react-iframe';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
-import { includeDefaultNamespaces } from '../lib/i18n-client';
+import { includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles(() =>
@@ -38,4 +38,4 @@ Mail.getInitialProps = () => {
   };
 };
 
-export default Mail;
+export default nextI18next.withTranslation('mail')(Mail);

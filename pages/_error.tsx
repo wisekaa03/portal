@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 // #endregion
 // #region Imports Local
 import Typography from '@material-ui/core/Typography';
-import { I18nPage, Trans, includeDefaultNamespaces, useTranslation } from '../lib/i18n-client';
+import { I18nPage, Trans, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme) => ({
@@ -18,16 +18,19 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     height: '100vh',
     flexGrow: 1,
+    padding: '50px',
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(16),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  statusCode: {
+    padding: theme.spacing(5),
+  },
 }));
 
-const ErrorPage: I18nPage = ({ statusCode, errorCode }) => {
-  const { t } = useTranslation('error');
+const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
   const classes = useStyles();
 
   return (
@@ -38,8 +41,12 @@ const ErrorPage: I18nPage = ({ statusCode, errorCode }) => {
       <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
         <Grid item>
           <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              {t('error:description')} : {statusCode}
+            <Typography variant="h3" component="h3">
+              {t('error:description')}
+            </Typography>
+
+            <Typography variant="h1" component="h1" className={classes.statusCode}>
+              {statusCode}
             </Typography>
 
             <Typography component="p">
@@ -54,12 +61,9 @@ const ErrorPage: I18nPage = ({ statusCode, errorCode }) => {
   );
 };
 
-ErrorPage.getInitialProps = ({ res, err }) => {
-  return {
-    statusCode: res ? res.statusCode : 200,
-    errorCode: err ? err.statusCode : 404,
-    namespacesRequired: includeDefaultNamespaces([]),
-  };
-};
+ErrorPage.getInitialProps = async ({ res, err }) => ({
+  statusCode: res ? res.statusCode : err ? err.statusCode : 404,
+  namespacesRequired: includeDefaultNamespaces(['error']),
+});
 
-export default ErrorPage;
+export default nextI18next.withTranslation('error')(ErrorPage);

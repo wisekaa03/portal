@@ -4,7 +4,8 @@
 // #region Imports NPM
 import i18n from 'i18next';
 import NextI18Next from 'next-i18next';
-import { useTranslation as originalUseTranslation } from 'react-i18next';
+// eslint-disable-next-line import/named
+import { useTranslation as originalUseTranslation, WithTranslation } from 'react-i18next';
 import { NextComponentType, NextPageContext } from 'next';
 // #endregion
 // #region Imports Local
@@ -31,12 +32,14 @@ export const nextI18next = new NextI18Next({
 
 export const { appWithTranslation, Trans } = nextI18next;
 export const useTranslation = originalUseTranslation;
-export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common', 'error'].concat(namespaces);
+export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common'].concat(namespaces);
 
 export type I18n = i18n.i18n;
 export type TFunction = i18n.TFunction;
 export type I18nPage<P = {}> = NextComponentType<
   NextPageContext,
-  { namespacesRequired: string[]; statusCode?: number; errorCode?: number },
-  P & { namespacesRequired: string[]; statusCode?: number; errorCode?: number }
+  { namespacesRequired: string[] },
+  WithTranslation & P & { namespacesRequired: string[] }
 >;
+
+export default nextI18next;

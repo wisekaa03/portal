@@ -21,7 +21,7 @@ import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
-import { I18nPage, useTranslation, includeDefaultNamespaces } from '../lib/i18n-client';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 import { Order, ColumnNames, Column } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
@@ -165,9 +165,8 @@ const getRows = (
   </TableRow>
 );
 
-const PhoneBook = (): React.ReactElement => {
+const PhoneBook: I18nPage = ({ t }): React.ReactElement => {
   const classes = useStyles({});
-  const { t, i18n } = useTranslation('phonebook');
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
@@ -331,4 +330,4 @@ PhoneBook.getInitialProps = () => {
   };
 };
 
-export default PhoneBook;
+export default nextI18next.withTranslation('phonebook')(PhoneBook);

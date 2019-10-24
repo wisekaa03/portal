@@ -8,7 +8,7 @@ import { Typography, Button, Card, CardContent } from '@material-ui/core';
 
 // #region Imports Local
 import Page from '../layouts/main';
-import { includeDefaultNamespaces } from '../lib/i18n-client';
+import { includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,4 +45,4 @@ App.getInitialProps = () => {
   };
 };
 
-export default App;
+export default nextI18next.withTranslation('common')(App);

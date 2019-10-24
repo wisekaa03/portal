@@ -1,9 +1,11 @@
 /** @format */
 
 // #region Imports NPM
+// eslint-disable-next-line import/named
+import { WithTranslation } from 'react-i18next';
 // #endregion
 // #region Imports Local
-import { Profile } from '../../server/profile/models/profile.dto';
+// import { Profile } from '../../server/profile/models/profile.dto';
 // #endregion
 
 export type ColumnNames =
@@ -44,12 +46,12 @@ export interface Column {
   show?: boolean;
 }
 
-export interface ProfileProps {
+export interface ProfileProps extends WithTranslation {
   profileId: string | boolean;
   handleClose(): void;
 }
 
-export interface SettingsProps {
+export interface SettingsProps extends WithTranslation {
   columns: ColumnNames[];
   handleClose(): void;
   changeColumn(columns: ColumnNames[]): void;

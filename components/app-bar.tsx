@@ -1,5 +1,4 @@
 /** @format */
-/* eslint prettier/prettier: 0 */
 
 // #region Imports NPM
 import React, { useState } from 'react';
@@ -15,10 +14,12 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import { green, blue } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
+import { ExecutionResult } from 'graphql';
+// eslint-disable-next-line import/named
+import { WithTranslation } from 'react-i18next';
 // #endregion
 // #region Imports Local
-import { ExecutionResult } from 'graphql';
-import { useTranslation } from '../lib/i18n-client';
+import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/types';
 import { LOGOUT, SYNC } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
@@ -98,13 +99,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppBarProps {
+interface AppBarProps extends WithTranslation {
   handleDrawerOpen(): void;
 }
 
-export default (props: AppBarProps): React.ReactElement => {
+const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
-  const { t, i18n } = useTranslation();
   const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -124,7 +124,7 @@ export default (props: AppBarProps): React.ReactElement => {
     },
   });
 
-  const { handleDrawerOpen } = props;
+  const { handleDrawerOpen, t } = props;
 
   const handleSync = (): void => {
     setSyncLoading(true);
@@ -217,7 +217,7 @@ export default (props: AppBarProps): React.ReactElement => {
                         className={classes.buttonSync}
                         onClick={handleSync}
                       >
-                        {!syncLoading ? 'Синхронизация' : '...'}
+                        {!syncLoading ? t('common:synch') : '...'}
                       </Button>
                     )}
                     <Button
@@ -225,7 +225,7 @@ export default (props: AppBarProps): React.ReactElement => {
                       className={classes.buttonLogout}
                       onClick={(): Promise<ExecutionResult<any>> => logout()}
                     >
-                      {t('logout:signOut')}
+                      {t('common:signOut')}
                     </Button>
                   </Box>
                 </Popover>
@@ -237,3 +237,5 @@ export default (props: AppBarProps): React.ReactElement => {
     </AppBar>
   );
 };
+
+export default nextI18next.withTranslation('common')(BaseAppBar);

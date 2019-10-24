@@ -1,4 +1,7 @@
 {
   "accept": "Accept",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "authorization": "Authorization",
+  "synch": "Synchronization",
+  "signOut": "Sign out"
 }
