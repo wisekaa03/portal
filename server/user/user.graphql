@@ -8,7 +8,7 @@ type User {
   updatedAt: Date
 }
 
-type Query {
+type Mutation {
 
   synchronization: Boolean
 

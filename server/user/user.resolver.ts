@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Resolver, Query, Context } from '@nestjs/graphql';
+import { Resolver, Context, Mutation } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 // #endregion
@@ -20,7 +20,7 @@ export class UserResolver {
    * @param req
    * @returns {Boolean}
    */
-  @Query()
+  @Mutation()
   @UseGuards(GqlAuthGuard)
   async synchronization(@Context('req') req: Request): Promise<boolean | null> {
     return this.userService.synchronization(req) || null;
