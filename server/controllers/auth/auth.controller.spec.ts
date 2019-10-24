@@ -8,8 +8,6 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #region Imports Local
 import { AuthController } from './auth.controller';
 import { ConfigService } from '../../config/config.service';
-import { NextService } from '../../next/next.service';
-import { NextServiceMock } from '../../../__mocks__/next.service.mock';
 import { ConfigServiceMock } from '../../../__mocks__/config.service.mock';
 // #endregion
 
@@ -29,10 +27,7 @@ describe('Auth Controller', () => {
         }),
       ],
       controllers: [AuthController],
-      providers: [
-        { provide: ConfigService, useClass: ConfigServiceMock },
-        { provide: NextService, useClass: NextServiceMock },
-      ],
+      providers: [{ provide: ConfigService, useClass: ConfigServiceMock }],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

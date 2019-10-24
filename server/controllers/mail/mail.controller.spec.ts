@@ -5,9 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
 import { MailController } from './mail.controller';
-import { NextService } from '../../next/next.service';
-import { NextServiceMock } from '../../../__mocks__/next.service.mock';
-import { NextModule } from '../../next/next.module';
 import { LoggerModule } from '../../logger/logger.module';
 // #endregion
 
@@ -19,12 +16,9 @@ describe('MailController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MailController],
-      imports: [NextModule, LoggerModule],
+      imports: [LoggerModule],
       providers: [],
-    })
-      .overrideProvider(NextService)
-      .useValue(NextServiceMock)
-      .compile();
+    }).compile();
 
     controller = module.get<MailController>(MailController);
   });
