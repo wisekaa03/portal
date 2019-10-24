@@ -21,10 +21,7 @@ import {
   ListItemText,
   Divider,
 } from '@material-ui/core';
-import ArrowBackRounded from '@material-ui/icons/ArrowBackRounded';
-import MoreVertRounded from '@material-ui/icons/MoreVertRounded';
-import PhoneRounded from '@material-ui/icons/PhoneRounded';
-import PhoneAndroidRounded from '@material-ui/icons/PhoneAndroidRounded';
+import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
 import { useTranslation } from '../../lib/i18n-client';
@@ -158,10 +155,10 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
             <div className={classes.center}>
               <span>{profile && profile.nameEng}</span>
             </div>
-            {profile && profile.telephone && (
+            {profile && profile.mobile && (
               <div className={classes.center}>
                 <PhoneAndroidRounded />
-                <span>{profile.telephone}</span>
+                <span>{profile.mobile}</span>
               </div>
             )}
             {profile && profile.workPhone && (
