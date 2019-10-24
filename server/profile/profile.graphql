@@ -1,8 +1,8 @@
 type Profile {
-  id: ID!
+  id: ID
 
-  loginService: String!
-  loginIdentificator: String!
+  loginService: String
+  loginIdentificator: String
 
   username: String
 
@@ -16,7 +16,8 @@ type Profile {
   title: String
   department: String
   otdel: String
-  manager: String
+
+  manager: Profile
 
   telephone: String
   workPhone: String
@@ -37,7 +38,7 @@ type Profile {
   disabled: Boolean
   notShowing: Boolean
 
-  thumbnailPhoto: ByteArray
+  thumbnailPhoto: String
   thumbnailPhoto40: String
 
   createdAt: Date
@@ -45,9 +46,13 @@ type Profile {
 }
 
 type Query {
+
   profilesSearch(search: String, orderBy: String, order: String): [Profile!]
+
   profiles(take: Int, skip: Int, orderBy: String, order: String): [Profile!]!
+
   profile(id: ID): Profile
+
 }
 
 

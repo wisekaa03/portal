@@ -56,6 +56,12 @@ export class ProfileService {
       },
     });
 
+  /**
+   * Profile by ID
+   *
+   * @param id string
+   * @return Profile
+   */
   profile = async (id: string): Promise<Profile | undefined> => this.profileRepository.findOne(id, { cache: true });
 
   // TODO: добавить disabled (хз как) и фильтрацию по addressPersonal??????
@@ -78,7 +84,31 @@ export class ProfileService {
       ],
     });
 
+  /**
+   * Create or update by user DN
+   * @param userByDN string
+   * @returns string
+   */
+  async createLdapDN(userByDN: string): Promise<ProfileEntity | undefined> {
+    const ldapUser = await this.ldapService.searchByDN(userByDN);
+
+    if (ldapUser) {
+      return this.create(ldapUser, undefined);
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Create or Update user profiles
+   *
+   * @param ldapUser LdapResponseUser
+   * @param user UserEntity
+   * @returns ProfileEntity
+   */
   async create(ldapUser: LdapResponeUser, user?: UserEntity): Promise<ProfileEntity | undefined> {
+    const manager = ldapUser.manager ? this.createLdapDN(ldapUser.manager).then((m) => m) : undefined;
+
     let comment;
     try {
       comment = JSON.parse(ldapUser.comment);
@@ -110,13 +140,7 @@ export class ProfileService {
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
 
-    const [department, otdel] = ldapUser.department
-      ? ldapUser.department.split(/\s*(,)\s*/, 1)
-      : [undefined, undefined];
-
-    // TODO: сделать что-нибудь с Manager, это поле указывает
-    // ссылку в AD типа (CN=manager,CN=Users,CN=example,CN=local)
-    const { manager } = ldapUser;
+    const [department, otdel] = ldapUser.department ? ldapUser.department.split(/\s*,\s*/, 2) : [undefined, undefined];
 
     let profile: Profile = {
       loginService: LoginService.LDAP,

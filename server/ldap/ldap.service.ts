@@ -378,6 +378,46 @@ export class LdapService extends EventEmitter {
   }
 
   /**
+   * Search user by DN
+   *
+   * @returns {undefined | LdapResponeUser[]} - User in LDAP
+   */
+  public async searchByDN(userByDN: string): Promise<undefined | LdapResponeUser> {
+    const opts = {
+      scope: this.opts.searchScope,
+      attributes: ['*'],
+      timeLimit: this.opts.timeLimit,
+    };
+    if (this.opts.searchAttributes) {
+      opts.attributes = this.opts.searchAttributes;
+    }
+
+    return this.search(userByDN, opts)
+      .then(
+        (result) =>
+          new Promise<undefined | LdapResponeUser>((resolve, reject) => {
+            if (!result) {
+              throw new Error('No result from search.');
+            }
+
+            switch (result.length) {
+              case 0:
+                return resolve(undefined);
+              case 1:
+                return resolve(result[0] as LdapResponeUser);
+              default:
+                return reject(new Error(`unexpected number of matches (${result.length}) for "${userByDN}" user DN`));
+            }
+          }),
+      )
+      .catch((error: Ldap.Error) => {
+        this.logger.error('Search by DN error:', error.toString(), 'LDAP');
+
+        return undefined;
+      });
+  }
+
+  /**
    * Synchronize users
    *
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
