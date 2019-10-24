@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ErrorPage: I18nPage = ({ statusCode, errorCode }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('error');
   const classes = useStyles();
 
   return (

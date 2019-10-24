@@ -14,7 +14,6 @@ import responseTime from 'response-time';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import morgan from 'morgan';
 // #endregion
 // #region Imports Local
 import { AppModule } from './app.module';
@@ -38,10 +37,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region create NestJS server
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   app.useLogger(logger);
-  // #endregion
-
-  // #region Morgan: request/response logging
-  app.use(morgan('tiny', { stream: logger }));
   // #endregion
 
   // #region X-Response-Time

@@ -117,7 +117,6 @@
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "ldapjs": "^1.0.2",
-    "morgan": "^1.9.1",
     "nest-next-module": "^0.3.1",
     "nestjs-i18n": "^4.0.6",
     "next": "^9.1.1",

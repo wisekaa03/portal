@@ -1,8 +1,5 @@
 /** @format */
 
-// import { Express } from 'express';
-// import { UserEntity } from '../server/user/user.entity';
-
 declare let __DEV__: boolean;
 declare let __SERVER__: boolean;
 
@@ -17,13 +14,6 @@ declare namespace NodeJS {
     __DEV__?: boolean;
   }
 }
-
-// declare global {
-//   namespace Express {
-//     // eslint-disable-next-line @typescript-eslint/no-empty-interface
-//     interface User extends UserResponse {}
-//   }
-// }
 
 declare module '*.svg' {
   const content: any;
