@@ -9,14 +9,13 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  ManyToOne,
+  JoinTable,
 } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { Profile } from './models/profile.dto';
-import { LoginService, Gender, Address } from '../../lib/types';
-import { ImageService } from '../image/image.service';
-import { LdapService } from '../ldap/ldap.service';
-// eslint-disable-next-line import/no-cycle
+import { LoginService, Gender } from '../../lib/types';
 // #endregion
 
 @Entity('profile')
@@ -143,11 +142,9 @@ export class ProfileEntity {
   })
   title: string;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  manager: string;
+  @ManyToOne((_type: any) => ProfileEntity)
+  @JoinTable()
+  manager?: ProfileEntity | Promise<ProfileEntity | undefined>;
 
   @Column({
     type: 'varchar',
@@ -238,6 +235,13 @@ export class ProfileEntity {
       typeof ((this.thumbnailPhoto40 as unknown) as Record<string, any>).then === 'function'
     ) {
       this.thumbnailPhoto40 = this.thumbnailPhoto ? await this.thumbnailPhoto40 : undefined;
+    }
+
+    if (
+      typeof this.manager === 'object' &&
+      typeof ((this.manager as unknown) as Record<string, any>).then === 'function'
+    ) {
+      this.manager = await this.manager;
     }
   }
 

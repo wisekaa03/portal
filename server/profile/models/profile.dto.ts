@@ -43,7 +43,7 @@ export interface Profile {
 
   title: string;
 
-  manager?: string;
+  manager?: Profile | Promise<Profile | undefined>;
 
   telephone: string;
 
