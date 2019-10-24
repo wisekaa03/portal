@@ -108,7 +108,7 @@ export const allColumns: ColumnNames[] = [
   'otdelEng',
   'title',
   'positionEng',
-  'supervisor',
+  'manager',
   'room',
   'telephone',
   'fax',
