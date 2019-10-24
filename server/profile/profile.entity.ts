@@ -15,6 +15,7 @@ import {
 import { Profile } from './models/profile.dto';
 import { LoginService, Gender, Address } from '../../lib/types';
 import { ImageService } from '../image/image.service';
+import { LdapService } from '../ldap/ldap.service';
 // eslint-disable-next-line import/no-cycle
 // #endregion
 
@@ -33,6 +34,7 @@ export class ProfileEntity {
     type: 'varchar',
     length: 10,
     nullable: false,
+    default: LoginService.LOCAL,
   })
   loginService: LoginService;
 
@@ -198,12 +200,14 @@ export class ProfileEntity {
   @Column({
     type: 'boolean',
     nullable: false,
+    default: false,
   })
   disabled: boolean;
 
   @Column({
     type: 'boolean',
     nullable: false,
+    default: false,
   })
   notShowing: boolean;
 
