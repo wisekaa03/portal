@@ -2,11 +2,13 @@
 
 // #region Imports NPM
 import React from 'react';
+import { MockedProvider } from '@apollo/react-testing';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { Toolbar, Popover, IconButton } from '@material-ui/core';
 // #endregion
 // #region Imports Local
 import AppBar from '../components/app-bar';
+import { LOGOUT, SYNC } from '../lib/queries';
 // #endregion
 
 describe('AppBar component', () => {
@@ -14,8 +16,29 @@ describe('AppBar component', () => {
   const props = { handleDrawerOpen: mockOpen };
   let component: ShallowWrapper;
 
+  const mocks = [
+    {
+      request: {
+        query: LOGOUT,
+        variables: {},
+      },
+      result: {},
+    },
+    {
+      request: {
+        query: SYNC,
+        variables: {},
+      },
+      result: {},
+    },
+  ];
+
   beforeAll(() => {
-    component = shallow(<AppBar {...props} />);
+    component = shallow(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <AppBar {...props} />
+      </MockedProvider>,
+    );
   });
 
   it('match snapshot', () => {
@@ -33,10 +56,6 @@ describe('AppBar component', () => {
   it('find Toolbar', () => {
     expect(component.find(Toolbar)).toBeDefined();
   });
-
-  // it('find logo', () => {
-  //   expect(component.find('img')).toHaveLength(1);
-  // });
 
   it('find popover', () => {
     expect(component.find(Popover)).toBeDefined();

@@ -4,7 +4,7 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import Router from 'next/router';
-import { useMutation } from '@apollo/react-hooks';
+import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
 import clsx from 'clsx';
@@ -108,6 +108,7 @@ export default (props: AppBarProps): React.ReactElement => {
   const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const client = useApolloClient();
   const [sync] = useMutation(SYNC, {
     onCompleted() {
       setSyncLoading(false);
@@ -117,8 +118,7 @@ export default (props: AppBarProps): React.ReactElement => {
   const [logout] = useMutation(LOGOUT, {
     onCompleted() {
       removeStorage('token');
-      // TODO: Разрбраться как получить доступ к клиенту
-      // client.resetStore();
+      client.resetStore();
 
       Router.push({ pathname: '/auth/login' });
     },

@@ -28,7 +28,6 @@ import { useTranslation } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
-import { Loading } from '../loading';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
