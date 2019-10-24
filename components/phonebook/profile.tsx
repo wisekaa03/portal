@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
       'alignItems': 'center',
       '& > h2': {
-        margin: 0,
+        margin: theme.spacing() / 2,
         fontWeight: 500,
       },
     },
@@ -148,9 +148,9 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
               )}
             </div>
             <div className={classes.firstName}>
-              <h2>{profile ? profile.lastName : <Skeleton />}</h2>
-              <h2>{profile ? profile.firstName : <Skeleton />}</h2>
-              <h2>{profile ? profile.middleName : <Skeleton />}</h2>
+              <h2>{profile ? profile.lastName : <Skeleton variant="rect" width={120} />}</h2>
+              <h2>{profile ? profile.firstName : <Skeleton variant="rect" width={150} />}</h2>
+              <h2>{profile ? profile.middleName : <Skeleton variant="rect" width={120} />}</h2>
             </div>
             <div className={classes.center}>
               <span>{profile && profile.nameEng}</span>
@@ -180,35 +180,45 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.company`)} />
-                      <ListItemText primary={profile && profile.company} />
+                      <ListItemText
+                        primary={profile ? profile.company : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.department`)} />
-                      <ListItemText primary={profile && profile.department} />
+                      <ListItemText
+                        primary={profile ? profile.department : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.title`)} />
-                      <ListItemText primary={profile && profile.title} />
+                      <ListItemText
+                        primary={profile ? profile.title : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.otdel`)} />
-                      <ListItemText primary={profile && profile.otdel} />
+                      <ListItemText
+                        primary={profile ? profile.otdel : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
-                      <ListItemText primary={profile && profile.manager} />
+                      <ListItemText
+                        primary={profile ? profile.manager : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                 </List>
@@ -220,35 +230,45 @@ export const ProfileComponent = React.forwardRef((props: ProfileProps, ref?: Rea
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.country`)} />
-                      <ListItemText primary={profile && profile.country} />
+                      <ListItemText
+                        primary={profile ? profile.country : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.region`)} />
-                      <ListItemText primary={profile && profile.region} />
+                      <ListItemText
+                        primary={profile ? profile.region : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.town`)} />
-                      <ListItemText primary={profile && profile.town} />
+                      <ListItemText
+                        primary={profile ? profile.town : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.street`)} />
-                      <ListItemText primary={profile && profile.street} />
+                      <ListItemText
+                        primary={profile ? profile.street : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.postalCode`)} />
-                      <ListItemText primary={profile && profile.postalCode} />
+                      <ListItemText
+                        primary={profile ? profile.postalCode : <Skeleton variant="rect" width={250} height={25} />}
+                      />
                     </div>
                   </ListItem>
                 </List>
