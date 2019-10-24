@@ -32,7 +32,7 @@ export const nextI18next = new NextI18Next({
 export const { appWithTranslation } = nextI18next;
 export const { Trans } = nextI18next;
 export const useTranslation = originalUseTranslation;
-export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common', '_error'].concat(namespaces);
+export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common', 'error'].concat(namespaces);
 
 export type I18n = i18n.i18n;
 export type TFunction = i18n.TFunction;

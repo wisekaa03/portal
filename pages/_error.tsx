@@ -33,17 +33,17 @@ const ErrorPage: I18nPage = ({ statusCode, errorCode }) => {
   return (
     <div className={classes.root}>
       <Head>
-        <title>{t('_error:title')}</title>
+        <title>{t('error:title')}</title>
       </Head>
       <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
         <Grid item>
           <Paper className={classes.paper}>
             <Typography variant="h5" component="h3">
-              {t('_error:h1')} : {statusCode}
+              {t('error:description')} : {statusCode}
             </Typography>
 
             <Typography component="p">
-              <Trans i18nKey="_error:explanation">
+              <Trans i18nKey="error:explanation">
                 <a href="mailto:webmaster@kngk-group.ru">email</a>
               </Trans>
             </Typography>
