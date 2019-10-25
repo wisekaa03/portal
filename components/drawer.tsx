@@ -81,7 +81,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const { open, isMobile, handleOpen, t } = props;
 
   const urls = [
-    { text: t('common:mail'), link: 'https://mail.kngk-group.ru', icon: <MailIcon /> },
+    { text: t('common:mail'), link: 'https://roundcube.i-npz.ru', icon: <MailIcon /> },
     { text: t('common:phonebook'), link: '/phonebook', icon: <ImportContactsIcon /> },
     { text: t('common:profile'), link: '/profile', icon: <AssignmentIndIcon /> },
     {
