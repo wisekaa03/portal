@@ -15,11 +15,12 @@ import 'typeface-roboto';
 // #region Imports Local
 import theme from '../lib/theme';
 import { CURRENT_USER, IS_LOGIN } from '../lib/queries';
-import { ProfileContext, ApolloAppProps } from '../lib/types';
+import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
 import { FIRST_PAGE } from '../lib/constants';
+import { User } from '../server/user/models/user.dto';
 // #endregion
 
 class MainApp extends App<ApolloAppProps> {
@@ -60,12 +61,12 @@ class MainApp extends App<ApolloAppProps> {
           }}
         >
           <Query query={IS_LOGIN} ssr={false}>
-            {({ data: loginData, loading: loginLoading }: QueryResult<any>) => {
+            {({ data: loginData, loading: loginLoading }: QueryResult<Data<'isLogin', boolean>>) => {
               if (loginLoading) {
                 return <Loading type="linear" variant="indeterminate" />;
               }
 
-              if (!loginData.isLogin && Router.pathname !== '/auth/login') {
+              if (loginData && !loginData.isLogin && Router.pathname !== '/auth/login') {
                 Router.push('/auth/login');
 
                 return null;
@@ -73,7 +74,7 @@ class MainApp extends App<ApolloAppProps> {
 
               return (
                 <Query query={CURRENT_USER} ssr={false}>
-                  {({ data, loading }: QueryResult<any>) => {
+                  {({ data, loading }: QueryResult<Data<'me', User>>) => {
                     if (loading) {
                       return <Loading type="linear" variant="indeterminate" />;
                     }
