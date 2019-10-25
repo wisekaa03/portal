@@ -21,7 +21,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export const Mail: I18nPage = (props): React.ReactElement => {
+export default (props: any): React.ReactElement => {
   const classes = useStyles({});
   const url = 'https://roundcube.i-npz.ru';
 
