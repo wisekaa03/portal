@@ -33,12 +33,17 @@ export class UserService {
    * @param {string} username User ID
    * @returns {UserEntity | undefined} The user
    */
-  readByUsername = async (username: string, byDisabled = true): Promise<UserEntity | undefined> =>
-    this.userRepository.findOne({
-      where: { username, disabled: byDisabled ? false : undefined },
+  readByUsername = async (username: string, isDisabled = true): Promise<UserEntity | undefined> => {
+    const where: Record<any, any> = { username };
+    if (isDisabled) {
+      where.disabled = false;
+    }
+    return this.userRepository.findOne({
+      where,
       relations: ['profile'],
       cache: true,
     });
+  };
 
   /**
    * Reads by ID
@@ -46,12 +51,17 @@ export class UserService {
    * @param {string} id User ID
    * @returns {UserEntity | undefined} The user
    */
-  readById = async (id: string, byDisabled = true): Promise<UserEntity | undefined> =>
-    this.userRepository.findOne({
-      where: { id, disabled: byDisabled ? false : undefined },
+  readById = async (id: string, isDisabled = true): Promise<UserEntity | undefined> => {
+    const where: Record<any, any> = { id };
+    if (isDisabled) {
+      where.disabled = false;
+    }
+    return this.userRepository.findOne({
+      where,
       relations: ['profile'],
       cache: true,
     });
+  };
 
   /**
    * Create a User with Ldap params

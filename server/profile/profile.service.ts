@@ -44,17 +44,19 @@ export class ProfileService {
     skip: number,
     orderBy = 'name',
     order = 'ASC',
-    isNotShowing = false,
-  ): Promise<ProfileEntity[]> =>
-    this.profileRepository.find({
+    isNotShowing = true,
+  ): Promise<ProfileEntity[]> => {
+    const where = isNotShowing ? { notShowing: false } : undefined;
+    return this.profileRepository.find({
       cache: true,
       take,
       skip,
-      where: { notShowing: !!isNotShowing },
+      where,
       order: {
         [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
       },
     });
+  };
 
   /**
    * Profile by ID
@@ -70,25 +72,30 @@ export class ProfileService {
     search: string,
     orderBy: string,
     order: string,
-    isNotShowing = false,
-  ): Promise<ProfileEntity[]> =>
-    this.profileRepository.find({
+    isNotShowing = true,
+  ): Promise<ProfileEntity[]> => {
+    let where: Record<any, any> = [
+      { firstName: Like(`%${search}%`) },
+      { lastName: Like(`%${search}%`) },
+      { middleName: Like(`%${search}%`) },
+      { department: Like(`%${search}%`) },
+      { company: Like(`%${search}%`) },
+      { telephone: Like(`%${search}%`) },
+      { workPhone: Like(`%${search}%`) },
+      { mobile: Like(`%${search}%`) },
+    ];
+    if (isNotShowing) {
+      where = where.map((value: Record<any, any>) => ({ ...value, notShowing: false }));
+    }
+
+    return this.profileRepository.find({
       cache: true,
       order: {
         [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
       },
-      where: [
-        { firstName: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { lastName: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { middleName: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { department: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { company: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { telephone: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { workPhone: Like(`%${search}%`), notShowing: !!isNotShowing },
-        { mobile: Like(`%${search}%`), notShowing: !!isNotShowing },
-        // { addressPersonal: Like(`%${search}%`) },
-      ],
+      where,
     });
+  };
 
   /**
    * Create or update by user DN
