@@ -217,7 +217,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                         className={classes.buttonSync}
                         onClick={handleSync}
                       >
-                        {!syncLoading ? t('common:synch') : '...'}
+                        {!syncLoading ? t('common:synch') : t('common:synchWait')}
                       </Button>
                     )}
                     <Button

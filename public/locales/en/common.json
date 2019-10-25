@@ -3,6 +3,7 @@
   "cancel": "Cancel",
   "authorization": "Authorization",
   "synch": "Synchronization",
+  "synchWait": "... Synching ...",
   "signOut": "Sign out",
   "changeLanguage": "Language: Russian",
   "mail": "Mail",
@@ -13,5 +14,6 @@
   "faq": "FAQ",
   "meeting": "Meeting rooms",
   "timeline": "Timeline",
-  "applicationit": "IT Application"
+  "applicationit": "IT Application",
+  "adminPanel": "Admin panel"
 }

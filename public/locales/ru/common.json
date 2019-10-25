@@ -3,6 +3,7 @@
   "cancel": "Отмена",
   "authorization": "Авторизация",
   "synch": "Синхронизация",
+  "synchWait": "... Подождите ...",
   "signOut": "Выход",
   "changeLanguage": "Язык: English",
   "mail": "Почта",
@@ -13,5 +14,6 @@
   "faq": "База знаний",
   "meeting": "Переговорные",
   "timeline": "Лента новостей",
-  "applicationit": "Заявка в ИТ"
+  "applicationit": "Заявка в ИТ",
+  "adminPanel": "Администраторская панель"
 }

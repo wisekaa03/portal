@@ -82,17 +82,18 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const urls = [
     { text: t('common:mail'), link: 'https://mail.kngk-group.ru', icon: <MailIcon /> },
     { text: t('common:phonebook'), link: '/phonebook', icon: <ImportContactsIcon /> },
-    { text: t('common:profile'), link: '/', icon: <AssignmentIndIcon /> },
+    { text: t('common:profile'), link: '/profile', icon: <AssignmentIndIcon /> },
     {
       text: t('common:applicationit'),
-      link: '/',
+      link: '/itapplication',
       icon: <Icon src={ItIcon} />,
     },
-    { text: t('common:calendar'), link: '/', icon: <Icon src={CalendarIcon} /> },
-    { text: t('common:faq'), link: '/', icon: <LiveHelpIcon /> },
-    { text: t('common:meeting'), link: '/', icon: <QuestionAnswerIcon /> },
+    { text: t('common:calendar'), link: '/calendar', icon: <Icon src={CalendarIcon} /> },
+    { text: t('common:faq'), link: '/faq', icon: <LiveHelpIcon /> },
+    { text: t('common:meeting'), link: '/meeting', icon: <QuestionAnswerIcon /> },
     { text: t('common:timeline'), link: '/news', icon: <DvrIcon /> },
-    { text: t('common:settings'), link: '/', icon: <SettingsIcon /> },
+    { text: t('common:settings'), link: '/settings', icon: <SettingsIcon /> },
+    { text: t('common:adminPanel'), link: '/admin', icon: <SettingsIcon /> },
   ];
 
   // TODO: подумать как правильнее разделять сервер и клиент при определении маршрута
