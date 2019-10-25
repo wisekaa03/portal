@@ -168,4 +168,4 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
   );
 });
 
-export const SettingsComponent = nextI18next.withTranslation('phonebbok')(BaseSettingsComponent);
+export const SettingsComponent = nextI18next.withTranslation('phonebook')(BaseSettingsComponent);

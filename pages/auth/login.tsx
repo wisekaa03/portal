@@ -8,7 +8,7 @@ import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
-import { LoginComponent } from '../../components/login';
+import LoginComponent from '../../components/login';
 import { includeDefaultNamespaces } from '../../lib/i18n-client';
 import { FIRST_PAGE } from '../../lib/constants';
 import { setStorage } from '../../lib/session-storage';
