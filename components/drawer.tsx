@@ -91,7 +91,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
     },
     { text: t('common:calendar'), link: '/calendar', icon: <Icon src={CalendarIcon} /> },
     { text: t('common:faq'), link: '/faq', icon: <LiveHelpIcon /> },
-    { text: t('common:meeting'), link: '/meeting', icon: <QuestionAnswerIcon /> },
+    { text: t('common:meeting'), link: '/meetings', icon: <QuestionAnswerIcon /> },
     { text: t('common:timeline'), link: '/news', icon: <DvrIcon /> },
     { text: t('common:settings'), link: '/settings', icon: <SettingsIcon /> },
     { text: t('common:adminPanel'), link: '/admin', icon: <SupervisorAccountIcon /> },
