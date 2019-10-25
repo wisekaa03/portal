@@ -265,6 +265,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 placeholder="Быстрый поиск"
                 value={search}
                 onChange={handleSearch}
+                fullWidth
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
