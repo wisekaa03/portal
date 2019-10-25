@@ -6,8 +6,6 @@
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
 import { LoginService, Gender } from '../../../lib/types';
-// eslint-disable-next-line import/no-cycle
-import { ProfileEntity } from '../profile.entity';
 // #endregion
 
 export interface Profile {
@@ -45,7 +43,7 @@ export interface Profile {
 
   title: string;
 
-  manager?: ProfileEntity | Promise<ProfileEntity | undefined>;
+  manager?: Profile;
 
   telephone: string;
 
@@ -67,9 +65,9 @@ export interface Profile {
 
   notShowing: boolean;
 
-  thumbnailPhoto?: string | Promise<string | undefined>;
+  thumbnailPhoto?: string;
 
-  thumbnailPhoto40?: string | Promise<string | undefined>;
+  thumbnailPhoto40?: string;
 
   createdAt?: Date;
 

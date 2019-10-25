@@ -7,7 +7,7 @@ import { UseGuards } from '@nestjs/common';
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { ProfileService } from './profile.service';
-import { Profile } from './models/profile.dto';
+import { ProfileEntity } from './profile.entity';
 // #endregion
 
 @Resolver('Profile')
@@ -28,7 +28,7 @@ export class ProfileResolver {
     @Args('skip') skip: number,
     @Args('orderBy') orderBy: string,
     @Args('order') order: string,
-  ): Promise<Profile[]> {
+  ): Promise<ProfileEntity[]> {
     return this.profileService.profiles(take, skip, orderBy, order);
   }
 
@@ -40,7 +40,7 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profile(@Args('id') id: string): Promise<Profile | undefined> {
+  async profile(@Args('id') id: string): Promise<ProfileEntity | undefined> {
     return this.profileService.profile(id) || null;
   }
 
@@ -56,7 +56,7 @@ export class ProfileResolver {
     @Args('search') search: string,
     @Args('orderBy') orderBy: string,
     @Args('order') order: string,
-  ): Promise<Profile[] | undefined> {
+  ): Promise<ProfileEntity[] | undefined> {
     return this.profileService.profilesSearch(search, orderBy, order) || null;
   }
 }

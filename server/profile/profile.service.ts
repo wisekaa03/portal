@@ -45,7 +45,7 @@ export class ProfileService {
     orderBy = 'name',
     order = 'ASC',
     isNotShowing = false,
-  ): Promise<Profile[]> =>
+  ): Promise<ProfileEntity[]> =>
     this.profileRepository.find({
       cache: true,
       take,
@@ -62,10 +62,16 @@ export class ProfileService {
    * @param id string
    * @return Profile
    */
-  profile = async (id: string): Promise<Profile | undefined> => this.profileRepository.findOne(id, { cache: true });
+  profile = async (id: string): Promise<ProfileEntity | undefined> =>
+    this.profileRepository.findOne(id, { cache: true });
 
   // TODO: добавить disabled (хз как) и фильтрацию по addressPersonal??????
-  profilesSearch = async (search: string, orderBy: string, order: string, isNotShowing = false): Promise<Profile[]> =>
+  profilesSearch = async (
+    search: string,
+    orderBy: string,
+    order: string,
+    isNotShowing = false,
+  ): Promise<ProfileEntity[]> =>
     this.profileRepository.find({
       cache: true,
       order: {
@@ -142,7 +148,7 @@ export class ProfileService {
 
     const [department, otdel] = ldapUser.department ? ldapUser.department.split(/\s*,\s*/, 2) : [undefined, undefined];
 
-    let profile: Profile = {
+    const profile: Profile = {
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID.toString(),
       username: ldapUser.sAMAccountName,
@@ -160,7 +166,7 @@ export class ProfileService {
       department,
       otdel,
       title: ldapUser.title,
-      manager,
+      manager: (manager as unknown) as Profile | undefined,
       email: ldapUser.mail,
       telephone: ldapUser.telephoneNumber,
       workPhone: ldapUser.otherTelephone,
@@ -173,8 +179,8 @@ export class ProfileService {
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       notShowing: !!(parseInt(ldapUser.flags, 10) === 1),
-      thumbnailPhoto,
-      thumbnailPhoto40,
+      thumbnailPhoto: (thumbnailPhoto as unknown) as string,
+      thumbnailPhoto40: (thumbnailPhoto40 as unknown) as string,
     };
 
     if (user && user.profile) {
@@ -193,8 +199,9 @@ export class ProfileService {
       }
     }
 
+    let profileEnt;
     try {
-      profile = this.profileRepository.create(profile);
+      profileEnt = this.profileRepository.create(profile);
     } catch (error) {
       this.logService.error('Unable to create data in `profile`', error, 'ProfileService');
 
@@ -202,7 +209,7 @@ export class ProfileService {
     }
 
     try {
-      return await this.profileRepository.save(profile);
+      return await this.profileRepository.save(profileEnt);
     } catch (error) {
       this.logService.error('Unable to save data in `profile`', error, 'ProfileService');
 

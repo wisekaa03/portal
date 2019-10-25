@@ -247,5 +247,5 @@ export class ProfileEntity {
     }
   }
 
-  toResponseObject = (): Profile => ({ ...this });
+  toResponseObject = (): ProfileEntity => ({ ...this });
 }

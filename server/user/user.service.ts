@@ -14,6 +14,7 @@ import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
 import { LoginService } from '../../lib/types';
 import { LdapService } from '../ldap/ldap.service';
+import { Profile } from '../profile/models/profile.dto';
 // #endregion
 
 @Injectable()
@@ -90,7 +91,7 @@ export class UserService {
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       // groups,
       isAdmin: false,
-      profile,
+      profile: (profile as unknown) as Profile,
     };
 
     try {

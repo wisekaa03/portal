@@ -7,6 +7,8 @@
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
 import { Profile } from '../../profile/models/profile.dto';
+// eslint-disable-next-line import/no-cycle
+import { UserEntity } from '../user.entity';
 // #endregion
 
 export interface BaseUser {
@@ -36,7 +38,7 @@ export interface UserToSave extends BaseUser {
 }
 
 // #region User response
-export interface UserResponse extends User {
+export interface UserResponse extends UserEntity {
   token: string;
 }
 // #endregion
