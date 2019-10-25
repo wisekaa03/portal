@@ -56,6 +56,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   const styleSrc = ["'unsafe-inline'", "'self'"];
   const imgSrc = ["'self'", 'data:'];
   const fontSrc = ["'self'", 'data:', 'https://i-npz.ru'];
+  const frameSrc = ["'self", 'https://i-npz.ru', 'https://roundcube.i-npz.ru'];
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
@@ -76,7 +77,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
         imgSrc,
         fontSrc,
         scriptSrc,
-        frameSrc: ["'self'", 'https://i-npz.ru'],
+        frameSrc,
         styleSrc,
         upgradeInsecureRequests: true,
       },
