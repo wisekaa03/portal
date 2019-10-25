@@ -39,24 +39,29 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  profiles = async (
-    take: number,
-    skip: number,
-    orderBy = 'name',
-    order = 'ASC',
-    isNotShowing = true,
-  ): Promise<ProfileEntity[]> => {
-    const where = isNotShowing ? { notShowing: false } : undefined;
-    return this.profileRepository.find({
-      cache: true,
-      take,
-      skip,
-      where,
-      order: {
-        [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
-      },
-    });
-  };
+  repository = (): Repository<ProfileEntity> => this.profileRepository;
+
+  profiles = async (): Promise<ProfileEntity[]> =>
+    this.profileRepository.find({ cache: true, where: { notShowing: false } });
+
+  // profiles = async (
+  //   take: number,
+  //   skip: number,
+  //   orderBy = 'name',
+  //   order = 'ASC',
+  //   isNotShowing = true,
+  // ): Promise<ProfileEntity[]> => {
+  //   const where = isNotShowing ? { notShowing: false } : undefined;
+  //   return this.profileRepository.find({
+  //     cache: true,
+  //     take,
+  //     skip,
+  //     where,
+  //     order: {
+  //       [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
+  //     },
+  //   });
+  // };
 
   /**
    * Profile by ID

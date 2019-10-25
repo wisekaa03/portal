@@ -45,11 +45,60 @@ type Profile {
   updatedAt: Date
 }
 
+enum ProfileOrderField {
+  firstName
+  lastName
+  middleName
+  nameEng
+  company
+  companyEng
+  department
+  departmentEng
+  otdel
+  otdelEng
+  title
+  positionEng
+  telephone
+  mobile
+  workPhone
+  country
+  region
+  town
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+input ProfileOrder {
+  direction: OrderDirection
+  field: ProfileOrderField
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
+
+type ProfileEdge {
+  node: Profile
+  cursor: String
+}
+
+type ProfileConnection {
+  totalCount: Int
+  edges: [ProfileEdge]
+  pageInfo: PageInfo
+}
+
 type Query {
 
   profilesSearch(search: String, orderBy: String, order: String): [Profile!]
 
-  profiles(take: Int, skip: Int, orderBy: String, order: String): [Profile!]!
+  profiles(first: Int, after: String, orderBy: ProfileOrder): ProfileConnection!
 
   profile(id: ID): Profile
 

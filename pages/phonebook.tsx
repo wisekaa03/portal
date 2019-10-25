@@ -1,4 +1,5 @@
 /** @format */
+/* eslint-disable prettier/prettier */
 
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
@@ -173,6 +174,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnNames>('name');
+  const [after, setAfter] = useState<string>('');
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
   const [tableData, setTableData] = useState<Profile[]>([]);
 
@@ -182,16 +184,17 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 1000);
 
-  /* eslint-disable prettier/prettier */
   const { loading, error, data, fetchMore } = useQuery(
     debouncedSearch.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
     debouncedSearch.length <= 3
       ? {
         variables: {
-          take: 50,
-          skip: 0,
-          orderBy,
-          order,
+          first: 30,
+          after,
+          orderBy: {
+            direction: order.toUpperCase(),
+            field: orderBy === 'name' ? 'firstName' : orderBy,
+          },
         },
       }
       : {
@@ -202,7 +205,6 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         },
       },
   );
-  /* eslint-enable prettier/prettier */
 
   const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
     const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
@@ -210,7 +212,37 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
     if (scrollTop <= needFetch) return;
 
-    console.log('Need fetch!!!');
+    if (data && data.profiles && after !== data.profiles.pageInfo.endCursor) {
+      fetchMore({
+        query: PROFILES(getColumns(columns)),
+        variables: {
+          first: 30,
+          after,
+          orderBy: {
+            direction: order.toUpperCase(),
+            field: orderBy === 'name' ? 'firstName' : orderBy,
+          },
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const { pageInfo, edges, totalCount, __typename } = fetchMoreResult.profiles;
+
+          if (edges.length <= 0) return previousResult;
+
+          console.log(pageInfo);
+
+          setAfter(pageInfo.endCursor);
+          const result = previousResult ? [...previousResult.profiles.edges, ...edges] : edges;
+          return {
+            profiles: {
+              __typename,
+              totalCount,
+              edges: result,
+              pageInfo,
+            },
+          };
+        },
+      });
+    }
   };
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
@@ -244,8 +276,16 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   useEffect(() => {
+    !loading && data && data.profiles && after === '' && setAfter(data.profiles.pageInfo.endCursor);
+  }, [loading, data, after]);
+
+  useEffect(() => {
     if (!loading) {
-      const values = data ? ('profiles' in data ? data.profiles : data.profilesSearch) : [];
+      const values = data
+        ? 'profiles' in data && data.profiles.edges
+          ? data.profiles.edges
+          : data.profilesSearch
+        : [];
       setTableData(values);
     }
   }, [data, loading]);
@@ -311,7 +351,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   }, [])}
                 </TableRow>
               </TableHead>
-              <TableBody>{tableData.map((p: Profile) => getRows(p, columns, handleProfileId))}</TableBody>
+              <TableBody>{(tableData as any).map((p: any) => getRows(p.node, columns, handleProfileId))}</TableBody>
             </Table>
           </div>
         </div>
@@ -330,10 +370,9 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-PhoneBook.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['phonebook']),
-  };
-};
+PhoneBook.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['phonebook']),
+});
 
 export default nextI18next.withTranslation('phonebook')(PhoneBook);
+/* eslint-enable prettier/prettier */

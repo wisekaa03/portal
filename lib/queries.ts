@@ -85,10 +85,21 @@ export const LOGOUT = gql`
 `;
 
 export const PROFILES = (_columns: string): any => gql`
-  query Profiles($take: Int, $skip: Int, $orderBy: String, $order: String) {
-    profiles(take: $take, skip: $skip, orderBy: $orderBy, order: $order) {
-      id
-      ${_columns}
+  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder) {
+    profiles(first: $first, after: $after, orderBy: $orderBy) {
+      totalCount
+      edges {
+        node {
+          id
+          ${_columns}
+        }
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
     }
   }
 `;
