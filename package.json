@@ -144,6 +144,7 @@
     "ts-node": "^8.4.1",
     "typeface-roboto": "^0.0.75",
     "typeorm": "^0.2.20",
+    "typeorm-graphql-pagination": "^1.0.0",
     "uuid": "^3.3.3"
   },
   "devDependencies": {

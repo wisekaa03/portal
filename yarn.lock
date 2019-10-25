@@ -9957,6 +9957,11 @@ got@^8.3.1:
     url-parse-lax "^3.0.0"
     url-to-options "^1.0.1"
 
+gql-tag@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/gql-tag/-/gql-tag-1.0.1.tgz#25294dc23986db5b950b81a8bc8debfb0acf6140"
+  integrity sha512-eVxldTiOtJJ3ySNgYbfRwyIyDDMATJ/ykojlQng5ihX1V0Xpr4C7ZXSZuWo7tg+kf+GS8lzhlbZmKSDjbYGhyA==
+
 graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.2.tgz#6f0952605d0140c1cfdb138ed005775b92d67b02"
@@ -14376,6 +14381,11 @@ onetime@^5.1.0:
   integrity sha512-5NcSkPHhwTVFIQN+TUqXoS5+dlElHXdpAWu9I0HP20YOtIi+aZ0Ct82jdlILDxjLEAWwvm+qj1m6aEtsDVmm6Q==
   dependencies:
     mimic-fn "^2.1.0"
+
+opaqueid@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/opaqueid/-/opaqueid-1.1.0.tgz#8b1908e13b40ca92a6524791037e8b00831cd023"
+  integrity sha512-4u1YqkMXFYAe6/wOgU9zAA6zko7CPdlLcNv/B/JPeBNI6c/nEcSNzDwFU8QBXB3NQ8pXAs6jsH/zrBO8Eb589g==
 
 open@^6.1.0, open@^6.3.0:
   version "6.4.0"
@@ -19314,7 +19324,16 @@ typeface-roboto@^0.0.75:
   resolved "https://registry.yarnpkg.com/typeface-roboto/-/typeface-roboto-0.0.75.tgz#98d5ba35ec234bbc7172374c8297277099cc712b"
   integrity sha512-VrR/IiH00Z1tFP4vDGfwZ1esNqTiDMchBEXYY9kilT6wRGgFoCAlgkEUMHb1E3mB0FsfZhv756IF0+R+SFPfdg==
 
-typeorm@^0.2.20:
+typeorm-graphql-pagination@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/typeorm-graphql-pagination/-/typeorm-graphql-pagination-1.0.0.tgz#77e7392874feb17d516f9e14030d542add3f6f3b"
+  integrity sha512-qnO7DQ91tqLsxdym0Y2pDv485Qev1xe90vtaoGHAXBII2hIu0Z8qoTLntA9Ze7AOYtL8HYeTZ7kEnYoe6abpHA==
+  dependencies:
+    gql-tag "^1.0.1"
+    opaqueid "^1.0.0"
+    typeorm "^0.2.18"
+
+typeorm@^0.2.18, typeorm@^0.2.20:
   version "0.2.20"
   resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.20.tgz#efb60f2e55a7d08fc365f281ec2a71c87a9ebba5"
   integrity sha512-VxB+9qH8D+PM19MIx18Zs3Fqv/ZINnnQvUGmBEiLYDrB9etdSdamgSTCIhWdFNndeJ6ldH4jbD0Z6HWsepMPlA==
