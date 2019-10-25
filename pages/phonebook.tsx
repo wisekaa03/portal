@@ -118,6 +118,10 @@ const getColumns = (columns: ColumnNames[]): string => {
     result = [...result.filter((col) => col !== 'name'), ...['firstName', 'lastName', 'middleName']];
   }
 
+  if (columns.includes('manager')) {
+    return `${result.join(' ')} manager { id firstName lastName middleName }`;
+  }
+
   return result.join(' ');
 };
 

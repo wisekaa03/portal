@@ -26,6 +26,9 @@ const PROFILE_FRAGMENT = gql`
     mobile
     manager {
       id
+      firstName
+      lastName
+      middleName
     }
     country
     postalCode

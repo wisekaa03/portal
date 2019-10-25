@@ -111,6 +111,8 @@ export const BaseProfileComponent = React.forwardRef((props: ProfileProps, ref?:
 
   const profile = !loading && data.profile;
 
+  console.log(profile);
+
   return (
     <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
@@ -201,7 +203,17 @@ export const BaseProfileComponent = React.forwardRef((props: ProfileProps, ref?:
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
                       <ListItemText
-                        primary={profile ? profile.manager : <Skeleton variant="rect" width={250} height={25} />}
+                        primary={
+                          profile ? (
+                            profile.manager ? (
+                              `${profile.manager.lastName} ${profile.manager.firstName} ${profile.manager.moddleName}`
+                            ) : (
+                              ''
+                            )
+                          ) : (
+                            <Skeleton variant="rect" width={250} height={25} />
+                          )
+                        }
                       />
                     </div>
                   </ListItem>
