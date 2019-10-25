@@ -7,10 +7,10 @@ import { NextResponse } from 'nest-next-module';
 // #region Imports Local
 // #endregion
 
-@Controller('phonebook')
-export class PhonebookController {
+@Controller('itapplication')
+export class ItapplicationController {
   @Get()
-  public async phonebook(@Res() res: NextResponse): Promise<void> {
-    return res.nextRender('/phonebook');
+  public async itapplication(@Res() res: NextResponse): Promise<void> {
+    return res.nextRender('/itapplication');
   }
 }
