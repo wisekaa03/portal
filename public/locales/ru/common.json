@@ -3,5 +3,7 @@
   "cancel": "Отмена",
   "authorization": "Авторизация",
   "synch": "Синхронизация",
-  "signOut": "Выход"
+  "signOut": "Выход",
+  "changeLanguage": "Язык: English",
+  "mail": "Почта"
 }

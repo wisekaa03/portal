@@ -14,8 +14,11 @@ import DvrIcon from '@material-ui/icons/Dvr';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+// eslint-disable-next-line import/named
+import { WithTranslation } from 'react-i18next';
 // #endregion
 // #region Imports Local
+import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
 import { appBarHeight } from './app-bar';
 import DrawerBg from '../public/images/jpeg/drawer_bg.jpg';
 import Icon from './icon';
@@ -63,21 +66,21 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface DrawerProps {
+interface DrawerProps extends WithTranslation {
   open: boolean;
   isMobile?: boolean;
   handleOpen(): void;
 }
 
-export default (props: DrawerProps): React.ReactElement => {
+const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   const router = useRouter();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const { open, isMobile, handleOpen } = props;
+  const { open, isMobile, handleOpen, t } = props;
 
   const urls = [
-    { text: 'Почта', link: 'https://mail.kngk-group.ru', icon: <MailIcon /> },
+    { text: t('common:mail'), link: 'https://mail.kngk-group.ru', icon: <MailIcon /> },
     { text: 'Адресная книга', link: '/phonebook', icon: <ImportContactsIcon /> },
     { text: 'Личный кабинет', link: '/', icon: <AssignmentIndIcon /> },
     {
@@ -169,3 +172,9 @@ export default (props: DrawerProps): React.ReactElement => {
     </nav>
   );
 };
+
+BaseDrawer.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['common']),
+});
+
+export default nextI18next.withTranslation('common')(BaseDrawer);

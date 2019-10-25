@@ -1,5 +1,4 @@
 /** @format */
-/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
@@ -165,7 +164,7 @@ const getRows = (
   </TableRow>
 );
 
-const PhoneBook: I18nPage = ({ t }): React.ReactElement => {
+const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
 
   const [order, setOrder] = useState<Order>('asc');
@@ -179,6 +178,7 @@ const PhoneBook: I18nPage = ({ t }): React.ReactElement => {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 1000);
 
+  /* eslint-disable prettier/prettier */
   const { loading, error, data, fetchMore } = useQuery(
     debouncedSearch.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
     debouncedSearch.length <= 3
@@ -198,6 +198,7 @@ const PhoneBook: I18nPage = ({ t }): React.ReactElement => {
         },
       },
   );
+  /* eslint-enable prettier/prettier */
 
   const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
     const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
@@ -247,7 +248,7 @@ const PhoneBook: I18nPage = ({ t }): React.ReactElement => {
 
   return (
     <>
-      <Page>
+      <Page {...rest}>
         <div className={classes.root}>
           {loading && <Loading noMargin type="linear" variant="indeterminate" />}
           <div

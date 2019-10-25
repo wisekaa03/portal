@@ -1,5 +1,4 @@
 /** @format */
-/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import React from 'react';

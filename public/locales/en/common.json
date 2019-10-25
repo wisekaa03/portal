@@ -3,5 +3,7 @@
   "cancel": "Cancel",
   "authorization": "Authorization",
   "synch": "Synchronization",
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+  "changeLanguage": "Language: Russian",
+  "mail": "Mail"
 }

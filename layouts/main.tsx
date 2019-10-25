@@ -5,8 +5,8 @@ import React, { useState, ReactNode, useEffect, useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
-
 // #region Imports Local
+import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
 import AppBar, { appBarHeight } from '../components/app-bar';
 import Drawer from '../components/drawer';
 import { ProfileContext } from '../lib/types';
@@ -29,7 +29,7 @@ interface Main {
   children: ReactNode;
 }
 
-export default (props: Main): React.ReactElement => {
+const BaseMainTemplate: I18nPage<Main> = (props): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   const profile = useContext(ProfileContext);
@@ -49,7 +49,7 @@ export default (props: Main): React.ReactElement => {
     <div className={classes.root}>
       <AppBar handleDrawerOpen={handleDrawerOpen} />
       <div className={classes.main}>
-        <Drawer open={drawerOpen} isMobile={profile && profile.isMobile} handleOpen={handleDrawerOpen} />
+        <Drawer open={drawerOpen} isMobile={profile && profile.isMobile} handleOpen={handleDrawerOpen} {...props} />
         <div id="content" className={classes.content}>
           {props.children}
         </div>
@@ -57,3 +57,5 @@ export default (props: Main): React.ReactElement => {
     </div>
   );
 };
+
+export default nextI18next.withTranslation('common')(BaseMainTemplate);
