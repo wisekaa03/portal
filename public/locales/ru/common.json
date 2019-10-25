@@ -8,12 +8,12 @@
   "changeLanguage": "Язык: English",
   "mail": "Почта",
   "phonebook": "Адресная книга",
-  "settings": "Настройки",
+  "applicationit": "Заявка в ИТ",
   "profile": "Личный кабинет",
   "calendar": "Календарь компании",
   "faq": "База знаний",
   "meeting": "Переговорные",
   "timeline": "Лента новостей",
-  "applicationit": "Заявка в ИТ",
-  "adminPanel": "Администраторская панель"
+  "settings": "Настройки",
+  "adminPanel": "Панель управления"
 }
