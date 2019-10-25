@@ -104,6 +104,12 @@ class MainApp extends App<ApolloAppProps> {
                       );
                     }
 
+                    // if (loginData.isLogin) {
+                    //   Router.push('/auth/login');
+
+                    //   return null;
+                    // }
+
                     return <Component {...pageProps} />;
                   }}
                 </Query>
