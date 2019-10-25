@@ -7,8 +7,7 @@ import Iframe from '../components/iframe';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-
+import { /* includeDefaultNamespaces, nextI18next, */ I18nPage } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles(() =>
@@ -22,7 +21,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Mail: I18nPage = (props): React.ReactElement => {
+export const Mail: I18nPage = (props): React.ReactElement => {
   const classes = useStyles({});
   const url = 'https://roundcube.i-npz.ru';
 
@@ -32,11 +31,3 @@ const Mail: I18nPage = (props): React.ReactElement => {
     </Page>
   );
 };
-
-Mail.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['mail']),
-  };
-};
-
-export default nextI18next.withTranslation('mail')(Mail);

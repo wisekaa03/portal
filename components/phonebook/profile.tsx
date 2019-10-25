@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const BaseProfileComponent = React.forwardRef((props: ProfileProps, ref?: React.Ref<React.Component>) => {
+export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>((props, ref) => {
   const classes = useStyles({});
   const { t, profileId, handleClose } = props;
 
