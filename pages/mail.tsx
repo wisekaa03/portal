@@ -27,7 +27,7 @@ const Mail: I18nPage = (props): React.ReactElement => {
 
   return (
     <Page {...props}>
-      <Iframe className={classes.root} url={url} sandbox="allow-same-origin" />
+      <Iframe className={classes.root} url={url} sandbox="allow-scripts" />
     </Page>
   );
 };
