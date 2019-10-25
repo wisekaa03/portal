@@ -7,13 +7,13 @@ import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import { LOGOUT } from '../../lib/queries';
-import { LogoutComponent } from '../../components/logout';
-import { includeDefaultNamespaces } from '../../lib/i18n-client';
+import LogoutComponent from '../../components/logout';
+import { includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { removeStorage } from '../../lib/session-storage';
 import { Loading } from '../../components/loading';
 // #endregion
 
-const Logout = (): React.ReactElement => {
+const Logout: I18nPage = (props): React.ReactElement => {
   const client = useApolloClient();
 
   const [logout, { loading, error }] = useMutation(LOGOUT, {
@@ -29,7 +29,7 @@ const Logout = (): React.ReactElement => {
     return <Loading type="linear" variant="indeterminate" />;
   }
 
-  return <LogoutComponent error={error} loading={loading} logout={logout} />;
+  return <LogoutComponent error={error} loading={loading} logout={logout} {...props} />;
 };
 
 Logout.getInitialProps = () => {

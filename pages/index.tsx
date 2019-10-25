@@ -8,7 +8,7 @@ import { Typography, Button, Card, CardContent } from '@material-ui/core';
 
 // #region Imports Local
 import Page from '../layouts/main';
-import { includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const App = (): React.ReactElement => {
+const App: I18nPage = (props): React.ReactElement => {
   const classes = useStyles({});
 
   return (
-    <Page>
+    <Page {...props}>
       <div className={classes.root}>
         <Card className={classes.card}>
           <CardContent>

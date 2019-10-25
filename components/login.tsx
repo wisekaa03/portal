@@ -164,7 +164,7 @@ const LoginComponent: I18nPage<{
           <Card className={classes.card}>
             <CardContent>
               <Typography className={classes.typoAuthorization} variant="h4">
-                {t('login:authorization')}
+                {t('common:authorization')}
               </Typography>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
