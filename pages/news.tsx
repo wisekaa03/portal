@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Iframe from 'react-iframe';
+import Iframe from '../components/iframe';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -27,7 +27,7 @@ const News: I18nPage = (props): React.ReactElement => {
 
   return (
     <Page {...props}>
-      <Iframe className={classes.root} url={url} sandbox="allow-scripts" />
+      <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin" />
     </Page>
   );
 };
