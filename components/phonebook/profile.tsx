@@ -206,7 +206,7 @@ export const BaseProfileComponent = React.forwardRef((props: ProfileProps, ref?:
                         primary={
                           profile ? (
                             profile.manager ? (
-                              `${profile.manager.lastName} ${profile.manager.firstName} ${profile.manager.moddleName}`
+                              `${profile.manager.lastName} ${profile.manager.firstName} ${profile.manager.middleName}`
                             ) : (
                               ''
                             )
