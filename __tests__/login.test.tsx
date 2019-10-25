@@ -15,6 +15,7 @@ describe('Login page', () => {
     loading: false,
     login: ((): void => {}) as MutationFunction,
     namespacesRequired: [],
+    t: jest.fn().mock,
   };
 
   beforeAll(() => {

@@ -12,6 +12,7 @@ describe('App', () => {
   // let render: any;
   const props = {
     namespacesRequired: [],
+    t: jest.fn().mock,
   };
 
   beforeAll(() => {
