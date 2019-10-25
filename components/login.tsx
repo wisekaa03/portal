@@ -24,7 +24,7 @@ import { Loading } from './loading';
 import { getStorage, setStorage } from '../lib/session-storage';
 import Background2 from '../public/images/svg/background2.svg';
 import Logo from '../public/images/svg/logo.svg';
-import { I18nPage, includeDefaultNamespaces, useTranslation } from '../lib/i18n-client';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -107,13 +107,11 @@ interface State {
   pass: string;
 }
 
-export const LoginComponent: React.FC<{
+const LoginComponent: I18nPage<{
   error?: ApolloError;
   loading: boolean;
   login: MutationFunction;
-}> = ({ error, loading, login }) => {
-  const { t, i18n } = useTranslation('login');
-
+}> = ({ error, loading, login, t }) => {
   const classes: any = useStyles({});
 
   const [values, setValues] = useState<State>({
@@ -226,3 +224,11 @@ export const LoginComponent: React.FC<{
     </div>
   );
 };
+
+LoginComponent.getInitialProps = () => {
+  return {
+    namespacesRequired: includeDefaultNamespaces(['login']),
+  };
+};
+
+export default nextI18next.withTranslation('login')(LoginComponent);

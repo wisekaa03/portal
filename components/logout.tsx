@@ -14,7 +14,7 @@ import { GQLError } from './gql-error';
 import { Loading } from './loading';
 import Background2 from '../public/images/svg/background2.svg';
 import Logo from '../public/images/svg/logo.svg';
-import { I18nPage, includeDefaultNamespaces, useTranslation } from '../lib/i18n-client';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -103,10 +103,8 @@ interface State {
   pass: string;
 }
 
-export const LogoutComponent = (props: LogoutProps): React.ReactElement => {
-  const { error, loading, logout } = props;
-  const { t, i18n } = useTranslation();
-
+const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
+  const { error, loading, logout, t } = props;
   const classes: any = useStyles({});
 
   return (
@@ -156,3 +154,5 @@ LogoutComponent.getInitialProps = () => {
     namespacesRequired: includeDefaultNamespaces(['logout']),
   };
 };
+
+export default nextI18next.withTranslation('logout')(LogoutComponent);

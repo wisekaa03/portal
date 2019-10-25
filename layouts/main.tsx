@@ -29,7 +29,7 @@ interface Main {
   children: ReactNode;
 }
 
-const BaseMainTemplate: I18nPage<Main> = (props): React.ReactElement => {
+const MainTemplate: I18nPage<Main> = (props): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   const profile = useContext(ProfileContext);
@@ -58,4 +58,4 @@ const BaseMainTemplate: I18nPage<Main> = (props): React.ReactElement => {
   );
 };
 
-export default nextI18next.withTranslation('common')(BaseMainTemplate);
+export default nextI18next.withTranslation('common')(MainTemplate);
