@@ -78,3 +78,7 @@ export interface ProfileParams {
  * the top, then put the user object in React Context for ease of access.
  */
 export const ProfileContext = React.createContext<ProfileParams>({ user: undefined });
+
+export interface Data<K, T> {
+  [K: string]: T;
+}

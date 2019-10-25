@@ -8,12 +8,14 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, CardContent, Paper, List, ListItem, ListItemText, Divider, IconButton } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
+import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
+import { Data, Profile } from '../../lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -103,13 +105,13 @@ export const BaseProfileComponent = React.forwardRef((props: ProfileProps, ref?:
 
   if (!profileId) return null;
 
-  const { loading, error, data } = useQuery(PROFILE, {
+  const { loading, error, data }: QueryResult<Data<'profile', Profile>> = useQuery(PROFILE, {
     variables: {
       id: profileId,
     },
   });
 
-  const profile = !loading && data.profile;
+  const profile = !loading && data && data.profile;
 
   console.log(profile);
 
