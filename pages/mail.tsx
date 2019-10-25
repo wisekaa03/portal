@@ -23,7 +23,7 @@ const useStyles = makeStyles(() =>
 
 const Mail: I18nPage = (props): React.ReactElement => {
   const classes = useStyles({});
-  const url = 'https://mail.kngk-group.ru';
+  const url = 'https://roundcube.i-npz.ru';
 
   return (
     <Page {...props}>
