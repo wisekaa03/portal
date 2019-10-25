@@ -5,5 +5,13 @@
   "synch": "Синхронизация",
   "signOut": "Выход",
   "changeLanguage": "Язык: English",
-  "mail": "Почта"
+  "mail": "Почта",
+  "phonebook": "Адресная книга",
+  "settings": "Настройки",
+  "profile": "Личный кабинет",
+  "calendar": "Календарь компании",
+  "faq": "База знаний",
+  "meeting": "Переговорные",
+  "timeline": "Лента новостей",
+  "applicationit": "Заявка в ИТ"
 }

@@ -5,5 +5,13 @@
   "synch": "Synchronization",
   "signOut": "Sign out",
   "changeLanguage": "Language: Russian",
-  "mail": "Mail"
+  "mail": "Mail",
+  "phonebook": "Contacts",
+  "settings": "Settings",
+  "profile": "Profile",
+  "calendar": "Company calendar",
+  "faq": "FAQ",
+  "meeting": "Meeting rooms",
+  "timeline": "Timeline",
+  "applicationit": "IT Application"
 }
