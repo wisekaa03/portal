@@ -10,6 +10,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import DvrIcon from '@material-ui/icons/Dvr';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import Link from 'next/link';
@@ -93,7 +94,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
     { text: t('common:meeting'), link: '/meeting', icon: <QuestionAnswerIcon /> },
     { text: t('common:timeline'), link: '/news', icon: <DvrIcon /> },
     { text: t('common:settings'), link: '/settings', icon: <SettingsIcon /> },
-    { text: t('common:adminPanel'), link: '/admin', icon: <SettingsIcon /> },
+    { text: t('common:adminPanel'), link: '/admin', icon: <SupervisorAccountIcon /> },
   ];
 
   // TODO: подумать как правильнее разделять сервер и клиент при определении маршрута
