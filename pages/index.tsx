@@ -36,8 +36,8 @@ const HomePage: I18nPage = (props): React.ReactElement => {
 
 HomePage.getInitialProps = () => {
   return {
-    namespacesRequired: includeDefaultNamespaces(['common']),
+    namespacesRequired: includeDefaultNamespaces([]),
   };
 };
 
-export default nextI18next.withTranslation('common')(HomePage);
+export default nextI18next.withTranslation()(HomePage);

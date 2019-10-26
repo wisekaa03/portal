@@ -1,5 +1,4 @@
 /** @format */
-/* eslint-disable prettier/prettier */
 
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
@@ -184,6 +183,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 1000);
 
+  /* eslint-disable prettier/prettier */
   const { loading, error, data, fetchMore } = useQuery(
     debouncedSearch.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
     debouncedSearch.length <= 3
@@ -205,6 +205,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         },
       },
   );
+  /* eslint-enable prettier/prettier */
 
   const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
     const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
@@ -375,4 +376,3 @@ PhoneBook.getInitialProps = () => ({
 });
 
 export default nextI18next.withTranslation('phonebook')(PhoneBook);
-/* eslint-enable prettier/prettier */
