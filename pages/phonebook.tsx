@@ -19,6 +19,7 @@ import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/ico
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
+import Head from 'next/head';
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 import { Order, ColumnNames, Column } from '../components/phonebook/types';
@@ -293,6 +294,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   return (
     <>
+      <Head>{t('phonebook:title')}</Head>
       <Page {...rest}>
         <div className={classes.root}>
           {loading && <Loading noMargin type="linear" variant="indeterminate" />}
