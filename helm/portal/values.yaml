@@ -87,17 +87,17 @@ ingress:
 ## Liveness and Readiness probe values.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
 livenessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 60
-  timeoutSeconds: 5
-  successThreshold: 1
-  failureThreshold: 5
-readinessProbe:
   initialDelaySeconds: 120
   periodSeconds: 60
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 5
+readinessProbe:
+  initialDelaySeconds: 35
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
