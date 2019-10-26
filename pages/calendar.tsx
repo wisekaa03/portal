@@ -27,7 +27,7 @@ const Calendar: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, календарь компании пока не готов. Ожидайте.</Typography>
+          <Typography>Извините, календарь компании пока не готов.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

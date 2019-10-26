@@ -27,7 +27,7 @@ const Settings: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, настройки пока не готовы. Ожидайте.</Typography>
+          <Typography>Извините, настройки пока не готовы.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

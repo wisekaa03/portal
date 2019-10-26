@@ -27,7 +27,7 @@ const Meetings: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, бронирование переговорных пока не готово. Ожидайте.</Typography>
+          <Typography>Извините, бронирование переговорных пока не готово.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

@@ -27,7 +27,7 @@ const HomePage: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, данный модуль пока не готов. Ожидайте.</Typography>
+          <Typography>Извините, данный модуль пока не готов.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

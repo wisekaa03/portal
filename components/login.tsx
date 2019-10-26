@@ -110,8 +110,9 @@ interface State {
 const LoginComponent: I18nPage<{
   error?: ApolloError;
   loading: boolean;
+  called: boolean;
   login: MutationFunction;
-}> = ({ error, loading, login, t }) => {
+}> = ({ error, loading, login, called, t }) => {
   const classes: any = useStyles({});
 
   const [values, setValues] = useState<State>({
@@ -125,7 +126,7 @@ const LoginComponent: I18nPage<{
     const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
 
     setValues({ ...values, [name]: value });
-    name !== 'pass' && setStorage(`user.${name}`, value.toString());
+    /* name !== 'pass' &&  */ setStorage(`user.${name}`, value.toString());
   };
 
   useEffect(() => {
@@ -135,7 +136,8 @@ const LoginComponent: I18nPage<{
       setValues({
         save: !!save,
         name: getStorage('user.name'),
-        pass: '',
+        // TODO: секурити риск ! :)
+        pass: '' || getStorage('user.pass'),
       });
     }
   }, []);
@@ -172,7 +174,7 @@ const LoginComponent: I18nPage<{
                   type="username"
                   value={values.name}
                   onChange={handleChange('name')}
-                  disabled={loading}
+                  disabled={loading || called}
                   label={t('login:username')}
                   variant="outlined"
                   className={classes.labelForFormControl}
@@ -184,7 +186,7 @@ const LoginComponent: I18nPage<{
                   type="password"
                   value={values.pass}
                   onChange={handleChange('pass')}
-                  disabled={loading}
+                  disabled={loading || called}
                   label={t('login:password')}
                   variant="outlined"
                   className={classes.labelForFormControl}
@@ -198,7 +200,7 @@ const LoginComponent: I18nPage<{
                     onChange={handleChange('save')}
                     value="save"
                     color="primary"
-                    disabled={loading}
+                    disabled={loading || called}
                   />
                 }
                 label={t('remember')}
@@ -212,7 +214,7 @@ const LoginComponent: I18nPage<{
                   variant="outlined"
                   color="primary"
                   size="large"
-                  disabled={loading}
+                  disabled={loading || called}
                 >
                   {t('signIn')}
                 </Button>

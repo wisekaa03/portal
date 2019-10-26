@@ -27,7 +27,7 @@ const MyProfile: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, профиль пользователя пока не готов. Ожидайте.</Typography>
+          <Typography>Извините, профиль пользователя пока не готов.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

@@ -27,7 +27,7 @@ const ITApplication: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, заявки в ИТ пока не готовы. Ожидайте.</Typography>
+          <Typography>Извините, заявки в ИТ пока не готовы.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

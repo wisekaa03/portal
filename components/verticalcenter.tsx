@@ -28,12 +28,8 @@ interface VerticalCenterParams {
   horizontal?: boolean;
 }
 
-export const VerticalCenter: React.FC<VerticalCenterParams> = (props) => {
+export const VerticalCenter: React.FC<VerticalCenterParams> = ({ horizontal = true, children }) => {
   const classes: any = useStyles({});
 
-  return (
-    <div className={props.horizontal ? clsx(classes.horizontal, classes.vertical) : classes.vertical}>
-      {props.children}
-    </div>
-  );
+  return <div className={horizontal ? clsx(classes.horizontal, classes.vertical) : classes.vertical}>{children}</div>;
 };

@@ -27,7 +27,7 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, панель управления пока не готова. Ожидайте.</Typography>
+          <Typography>Извините, панель управления пока не готова.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>

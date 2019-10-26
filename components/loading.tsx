@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme: Theme) =>
     margin: {
       margin: theme.spacing(2),
     },
+    fixed: {
+      display: 'block',
+      position: 'fixed',
+      width: '100%',
+    },
   }),
 );
 
@@ -35,12 +40,15 @@ export const Loading: React.FC<{
   const classes = useStyles({});
 
   if (type === 'linear') {
+    const className = clsx(classes.loading, {
+      [classes.margin]: !noMargin,
+      [classes.fixed]: noMargin,
+    });
+
     return (
       <LinearProgress
         variant={(variant as 'determinate' | 'indeterminate' | 'buffer' | 'query') || 'indeterminate'}
-        className={clsx(classes.loading, {
-          [classes.margin]: !noMargin,
-        })}
+        className={className}
       />
     );
   }

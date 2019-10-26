@@ -27,7 +27,7 @@ const FAQ: I18nPage = (props): React.ReactElement => {
     <Page {...props}>
       <VerticalCenter horizontal>
         <Paper className={classes.root}>
-          <Typography>Извините, база знаний пока не готова. Ожидайте.</Typography>
+          <Typography>Извините, база знаний пока не готова.</Typography>
         </Paper>
       </VerticalCenter>
     </Page>
