@@ -110,7 +110,7 @@ interface State {
 const LoginComponent: I18nPage<{
   error?: ApolloError;
   loading: boolean;
-  called: boolean;
+  called?: boolean;
   login: MutationFunction;
 }> = ({ error, loading, login, called, t }) => {
   const classes: any = useStyles({});
@@ -174,7 +174,7 @@ const LoginComponent: I18nPage<{
                   type="username"
                   value={values.name}
                   onChange={handleChange('name')}
-                  disabled={loading || called}
+                  disabled={!!called || loading}
                   label={t('login:username')}
                   variant="outlined"
                   className={classes.labelForFormControl}
@@ -186,7 +186,7 @@ const LoginComponent: I18nPage<{
                   type="password"
                   value={values.pass}
                   onChange={handleChange('pass')}
-                  disabled={loading || called}
+                  disabled={!!called || loading}
                   label={t('login:password')}
                   variant="outlined"
                   className={classes.labelForFormControl}
@@ -200,7 +200,7 @@ const LoginComponent: I18nPage<{
                     onChange={handleChange('save')}
                     value="save"
                     color="primary"
-                    disabled={loading || called}
+                    disabled={!!called || loading}
                   />
                 }
                 label={t('remember')}
@@ -214,7 +214,7 @@ const LoginComponent: I18nPage<{
                   variant="outlined"
                   color="primary"
                   size="large"
-                  disabled={loading || called}
+                  disabled={!!called || loading}
                 >
                   {t('signIn')}
                 </Button>
