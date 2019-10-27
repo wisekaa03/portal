@@ -2,6 +2,7 @@
 
 // #region Import NPM
 import React from 'react';
+import { IncomingMessage } from 'http';
 import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext } from 'next/document';
 import { ApolloClient } from 'apollo-client';
@@ -34,6 +35,7 @@ export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppConte
   apolloState: WithApolloState<TCache>;
   currentLanguage?: string;
   isMobile?: boolean;
+  req?: IncomingMessage;
 }
 
 export interface ApolloDocumentProps extends DocumentContext {
