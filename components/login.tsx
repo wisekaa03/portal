@@ -174,7 +174,7 @@ const LoginComponent: I18nPage<{
                   type="username"
                   value={values.name}
                   onChange={handleChange('name')}
-                  disabled={!!called || loading}
+                  disabled={loading}
                   label={t('login:username')}
                   variant="outlined"
                   className={classes.labelForFormControl}
@@ -186,7 +186,7 @@ const LoginComponent: I18nPage<{
                   type="password"
                   value={values.pass}
                   onChange={handleChange('pass')}
-                  disabled={!!called || loading}
+                  disabled={loading}
                   label={t('login:password')}
                   variant="outlined"
                   className={classes.labelForFormControl}
@@ -200,7 +200,7 @@ const LoginComponent: I18nPage<{
                     onChange={handleChange('save')}
                     value="save"
                     color="primary"
-                    disabled={!!called || loading}
+                    disabled={loading}
                   />
                 }
                 label={t('remember')}
@@ -214,7 +214,7 @@ const LoginComponent: I18nPage<{
                   variant="outlined"
                   color="primary"
                   size="large"
-                  disabled={!!called || loading}
+                  disabled={loading}
                 >
                   {t('signIn')}
                 </Button>
