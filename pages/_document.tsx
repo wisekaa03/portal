@@ -6,7 +6,7 @@ import { IncomingMessage } from 'http';
 // import postcss from 'postcss';
 // import autoprefixer from 'autoprefixer';
 // import cssnano from 'cssnano';
-import Document, { Head, Main, NextScript, DocumentInitialProps } from 'next/document';
+import Document, { Html, Head, Main, NextScript, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
@@ -39,7 +39,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
     const { nonce } = this.props;
 
     return (
-      <html lang={this.props.currentLanguage} dir="ltr">
+      <Html lang={this.props.currentLanguage} dir="ltr">
         <Head nonce={nonce}>
           <meta charSet="utf-8" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
@@ -50,7 +50,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
           <Main />
           <NextScript nonce={nonce} />
         </body>
-      </html>
+      </Html>
     );
   }
 }
@@ -64,6 +64,7 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
       enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
     });
 
+  // Run the parent `getInitialProps` using `ctx` that now includes our custom `renderPage`
   const initialProps = await Document.getInitialProps(ctx);
   const nonce = res && (res as any).locals && (res as any).locals.nonce;
 
@@ -86,7 +87,6 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
     ...initialProps,
     currentLanguage,
     nonce,
-    req,
     // Styles fragment is rendered after the app and page rendering finish.
     styles: [
       <React.Fragment key="styles">
