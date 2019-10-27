@@ -2,27 +2,101 @@
 
 // #region Imports NPM
 import React from 'react';
+import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
+// import dynamic from 'next/dynamic';
 import { Query, ApolloProvider, QueryResult } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 import 'typeface-roboto';
 // #endregion
 // #region Imports Local
 import theme from '../lib/theme';
-import { CURRENT_USER, IS_LOGIN } from '../lib/queries';
+import { CURRENT_USER } from '../lib/queries';
 import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
-import { FIRST_PAGE } from '../lib/constants';
+// import { FIRST_PAGE } from '../lib/constants';
 import { User } from '../server/user/models/user.dto';
+import { getStorage } from '../lib/session-storage';
+
 // #endregion
 
+// const LoginPage = dynamic(() => import('./auth/login'));
+
+/**
+ * CurrentLogin
+ */
+const CurrentLogin: React.FC<{
+  pageProps: any;
+  isMobile: boolean;
+  language: string;
+  pathname: string;
+  Component: NextComponentType<NextPageContext, any, {}>;
+}> = ({ pageProps, isMobile, language, pathname, Component }): React.ReactElement | null => {
+  if (__SERVER__) {
+    // TODO: подумать все-таки над предложением Романа, cookie передаются в параметрах страничек,
+    // TODO: graphql -> login обрабатывает подключение, далее странички запрашивают через graphql.
+    // TODO: Eсли перезагрузить страничку то сначала появится Loading,
+    // TODO: нужно поменять поведение-через cookie показывать
+    // TODO: https://sergiodxa.com/articles/redirects-in-next-the-good-way/
+    if (pathname === '/auth/login') {
+      return <Component {...pageProps} />;
+    }
+
+    return <Loading noMargin type="linear" variant="indeterminate" />;
+  }
+
+  const token = getStorage('token');
+
+  if (!!token) {
+    return (
+      <Query query={CURRENT_USER} ssr={false} fetchPolicy="cache-and-network">
+        {({ data, loading }: QueryResult<Data<'me', User>>) => {
+          if (data && data.me) {
+            return (
+              <ProfileContext.Provider
+                value={{
+                  user: { ...(data && data.me) },
+                  language,
+                  isMobile,
+                }}
+              >
+                {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+                <Component {...pageProps} />
+              </ProfileContext.Provider>
+            );
+          }
+
+          return (
+            <>
+              {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+              <Component {...pageProps} />
+            </>
+          );
+        }}
+      </Query>
+    );
+  }
+
+  // TODO: изначальная страница на клиенте который не прошел token
+  if (Router.pathname !== '/auth/login') {
+    Router.push({ pathname: '/auth/login' });
+
+    return <Loading noMargin type="linear" variant="indeterminate" />;
+  }
+
+  return <Component {...pageProps} />;
+};
+
+/**
+ * App
+ */
 class MainApp extends App<ApolloAppProps> {
   componentDidMount(): void {
     // Remove the server-sie injectsed CSS
@@ -37,9 +111,11 @@ class MainApp extends App<ApolloAppProps> {
 
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
-        width: Boolean(isMobile) ? 0 : 1280,
+        width: !!isMobile ? 0 : 1280,
       }),
     });
+
+    const { pathname } = this.props.router;
 
     return (
       <ApolloProvider client={apolloClient}>
@@ -60,57 +136,13 @@ class MainApp extends App<ApolloAppProps> {
             },
           }}
         >
-          <Query query={IS_LOGIN} ssr={false}>
-            {({ data: loginData, loading: loginLoading }: QueryResult<Data<'isLogin', boolean>>) => {
-              if (loginLoading) {
-                return <Loading type="linear" variant="indeterminate" />;
-              }
-
-              if (loginData && !loginData.isLogin && Router.pathname !== '/auth/login') {
-                Router.push('/auth/login');
-
-                return null;
-              }
-
-              return (
-                <Query query={CURRENT_USER} ssr={false}>
-                  {({ data, loading }: QueryResult<Data<'me', User>>) => {
-                    if (loading) {
-                      return <Loading type="linear" variant="indeterminate" />;
-                    }
-
-                    if (data && data.me) {
-                      if (Router.pathname === '/auth/login') {
-                        let redirect: string | string[] | null | undefined;
-                        try {
-                          ({ redirect } = queryString.parse(window.location.search));
-                        } catch (error) {
-                          console.error('Redirect error:', redirect, error);
-                        }
-                        Router.push({ pathname: (redirect as string) || FIRST_PAGE });
-
-                        return <Loading type="linear" variant="indeterminate" />;
-                      }
-
-                      return (
-                        <ProfileContext.Provider
-                          value={{
-                            user: { ...(data && data.me) },
-                            language: currentLanguage,
-                            isMobile: Boolean(isMobile),
-                          }}
-                        >
-                          <Component {...pageProps} />
-                        </ProfileContext.Provider>
-                      );
-                    }
-
-                    return <Component {...pageProps} />;
-                  }}
-                </Query>
-              );
-            }}
-          </Query>
+          <CurrentLogin
+            pageProps={pageProps}
+            isMobile={!!isMobile}
+            language={currentLanguage || ''}
+            Component={Component}
+            pathname={pathname}
+          />
         </ThemeProvider>
       </ApolloProvider>
     );
