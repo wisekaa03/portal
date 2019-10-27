@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
+import { IncomingMessage } from 'http';
 // import postcss from 'postcss';
 // import autoprefixer from 'autoprefixer';
 // import cssnano from 'cssnano';
@@ -23,6 +24,7 @@ interface MainDocumentInitialProps extends DocumentInitialProps {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   currentLanguage: string | undefined;
   nonce: string;
+  req?: IncomingMessage;
 }
 
 // You can find a benchmark of the available CSS minifiers under
@@ -84,6 +86,7 @@ MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDoc
     ...initialProps,
     currentLanguage,
     nonce,
+    req,
     // Styles fragment is rendered after the app and page rendering finish.
     styles: [
       <React.Fragment key="styles">
