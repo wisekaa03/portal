@@ -53,54 +53,54 @@ class MainDocument extends Document<MainDocumentInitialProps> {
       </Html>
     );
   }
-}
 
-MainDocument.getInitialProps = async (ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> => {
-  const sheets = new ServerStyleSheets();
-  const { apolloClient, renderPage: originalRenderPage, res, req } = ctx;
+  static async getInitialProps(ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> {
+    const sheets = new ServerStyleSheets();
+    const { apolloClient, renderPage: originalRenderPage, res, req } = ctx;
 
-  ctx.renderPage = () =>
-    originalRenderPage({
-      enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
-    });
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+      });
 
-  // Run the parent `getInitialProps` using `ctx` that now includes our custom `renderPage`
-  const initialProps = await Document.getInitialProps(ctx);
-  const nonce = res && (res as any).locals && (res as any).locals.nonce;
+    // Run the parent `getInitialProps` using `ctx` that now includes our custom `renderPage`
+    const initialProps = await Document.getInitialProps(ctx);
+    const nonce = res && (res as any).locals && (res as any).locals.nonce;
 
-  // let minifiedStyles;
-  // if (process.env.NODE_ENV === 'production') {
-  //   minifiedStyles = await minifier.process(sheets.toString(), postCssOptions).then((result: any) => result.css);
-  // } else {
-  //   minifiedStyles = sheets.toString();
-  // }
-  const minifiedStyles = sheets.toString();
+    // let minifiedStyles;
+    // if (process.env.NODE_ENV === 'production') {
+    //   minifiedStyles = await minifier.process(sheets.toString(), postCssOptions).then((result: any) => result.css);
+    // } else {
+    //   minifiedStyles = sheets.toString();
+    // }
+    const minifiedStyles = sheets.toString();
 
-  const currentLanguage = req
-    ? ((req as unknown) as Express.Request).lng
+    const currentLanguage = req
       ? ((req as unknown) as Express.Request).lng
-      : nextI18next.i18n.language || nextI18next.config.defaultLanguage
-    : nextI18next.i18n.language || nextI18next.config.defaultLanguage;
+        ? ((req as unknown) as Express.Request).lng
+        : nextI18next.i18n.language || nextI18next.config.defaultLanguage
+      : nextI18next.i18n.language || nextI18next.config.defaultLanguage;
 
-  return {
-    apolloClient,
-    ...initialProps,
-    currentLanguage,
-    nonce,
-    // Styles fragment is rendered after the app and page rendering finish.
-    styles: [
-      <React.Fragment key="styles">
-        {initialProps.styles}
-        <style
-          id="jss"
-          key="jss"
-          nonce={nonce}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: minifiedStyles }}
-        />
-      </React.Fragment>,
-    ],
-  };
-};
+    return {
+      apolloClient,
+      ...initialProps,
+      currentLanguage,
+      nonce,
+      // Styles fragment is rendered after the app and page rendering finish.
+      styles: [
+        <React.Fragment key="styles">
+          {initialProps.styles}
+          <style
+            id="jss"
+            key="jss"
+            nonce={nonce}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: minifiedStyles }}
+          />
+        </React.Fragment>,
+      ],
+    };
+  }
+}
 
 export default MainDocument;
