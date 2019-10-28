@@ -62,13 +62,13 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
 
         return {
           store: redisCacheStore,
-          ttl: configService.get('HTTP_REDIS_TTL'), // seconds
-          max: configService.get('HTTP_REDIS_MAX_OBJECTS'), // maximum number of items in cache
-          host: configService.get('HTTP_REDIS_HOST'),
-          port: configService.get('HTTP_REDIS_PORT'),
-          db: configService.get('HTTP_REDIS_DB') ? configService.get('HTTP_REDIS_DB') : undefined,
-          password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
-          keyPrefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+          ttl: configService.get<number>('HTTP_REDIS_TTL'), // seconds
+          max: configService.get<number>('HTTP_REDIS_MAX_OBJECTS'), // maximum number of items in cache
+          host: configService.get<string>('HTTP_REDIS_HOST'),
+          port: configService.get<number>('HTTP_REDIS_PORT'),
+          db: configService.get<number>('HTTP_REDIS_DB'),
+          password: configService.get<string>('HTTP_REDIS_PASSWORD'),
+          keyPrefix: configService.get<string>('HTTP_REDIS_PREFIX'),
           // retry_strategy: (options) => {}
         };
       },
@@ -104,17 +104,17 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
       useFactory: async (configService: ConfigService, logger: LogService) =>
         ({
           name: 'default',
-          type: configService.get('DATABASE_CONNECTION'),
-          host: configService.get('DATABASE_HOST'),
-          port: configService.get('DATABASE_PORT'),
-          username: configService.get('DATABASE_USERNAME'),
-          password: configService.get('DATABASE_PASSWORD'),
-          database: configService.get('DATABASE_DATABASE'),
-          schema: configService.get('DATABASE_SCHEMA'),
+          type: configService.get<string>('DATABASE_CONNECTION'),
+          host: configService.get<string>('DATABASE_HOST'),
+          port: configService.get<number>('DATABASE_PORT'),
+          username: configService.get<string>('DATABASE_USERNAME'),
+          password: configService.get<string>('DATABASE_PASSWORD'),
+          database: configService.get<string>('DATABASE_DATABASE'),
+          schema: configService.get<string>('DATABASE_SCHEMA'),
           uuidExtension: 'pgcrypto',
           logger,
-          synchronize: configService.get('DATABASE_SYNCHRONIZE'),
-          dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
+          synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+          dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
           logging:
             configService.get('DATABASE_LOGGING') === 'false'
               ? false
@@ -122,18 +122,17 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
                 ? true
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities,
-          migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
+          migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {
             type: 'redis',
             options: {
-              host: configService.get('HTTP_REDIS_HOST'),
-              port: configService.get('HTTP_REDIS_PORT'),
-              // eslint-disable-next-line max-len
-              db: configService.get('DATABASE_REDIS_CACHE_DB') ? configService.get('DATABASE_REDIS_CACHE_DB') : 0,
-              password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
-              prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+              host: configService.get<string>('DATABASE_REDIS_HOST'),
+              port: configService.get<number>('DATABASE_REDIS_PORT'),
+              password: configService.get<string>('DATABASE_REDIS_PASSWORD'),
+              db: configService.get<number>('DATABASE_REDIS_DB'),
+              // prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
             },
-            duration: configService.get('HTTP_REDIS_TTL'),
+            duration: configService.get<number>('DATABASE_REDIS_TTL'),
           },
           // migrations,
           // cli: {
