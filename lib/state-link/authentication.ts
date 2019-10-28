@@ -6,9 +6,12 @@
 import { getStorage } from '../session-storage';
 // #endregion
 
-export const StateLinkAuthentication = {
-  Query: {
-    isLogin() {
+export default {
+  Me: {
+    isLoggedIn() {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
       return getStorage('token') !== '';
     },
   },

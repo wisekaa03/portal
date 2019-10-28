@@ -12,7 +12,7 @@ import { HttpLink, createHttpLink } from 'apollo-link-http';
 // #endregion
 // #region Imports Local
 import { NodeIdGetterObj } from './types';
-import { stateLinkResolvers } from './state-link';
+import stateResolvers from './state-link';
 import { getStorage } from './session-storage';
 // #endregion
 
@@ -36,9 +36,6 @@ export const apolloClient = (
   const authLink = setContext((_, { headers }) => {
     const token = getStorage('token');
 
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     return {
       headers: {
         ...headers,
@@ -48,9 +45,6 @@ export const apolloClient = (
   });
 
   const errorLink = onError(({ graphQLErrors, networkError }): any => {
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.map(({ message, locations, path }): any =>
@@ -62,7 +56,14 @@ export const apolloClient = (
     }
   });
 
-  if (!__SERVER__) {
+  let clientParams = {};
+  if (__SERVER__) {
+    global.fetch = fetch;
+
+    httpLink = createHttpLink({
+      uri: `http://${process.env.HOST}:${process.env.PORT}/graphql`,
+    });
+  } else {
     // const subscriptionsUri = `${window.location.origin.replace(
     //   'http',
     //   'ws',
@@ -86,12 +87,21 @@ export const apolloClient = (
     httpLink = createHttpLink({
       uri: `/graphql`,
     });
-  } else {
-    global.fetch = fetch;
 
-    httpLink = createHttpLink({
-      uri: `http://${process.env.HOST}:${process.env.PORT}/graphql`,
+    cache.writeData({
+      data: {
+        isLoggedIn: !!getStorage('token'),
+      },
     });
+
+    clientParams = {
+      resolvers: stateResolvers,
+      // typeDefs: gql`
+      //   type isLoggedIn {
+      //     isLoggedIn: Boolean
+      //   }
+      // `,
+    };
   }
 
   if (!apollo) {
@@ -100,7 +110,7 @@ export const apolloClient = (
       ssrMode: __SERVER__,
       link: concat(authLink.concat(errorLink), httpLink),
       cache,
-      resolvers: stateLinkResolvers,
+      ...clientParams,
     });
   }
 

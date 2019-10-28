@@ -31,10 +31,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       const apolloState: WithApolloState = {};
 
       const currentLanguage = ctx.req ? ((ctx.req as unknown) as Express.Request).lng : nextI18next.i18n.language;
-
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
-      // eslint-disable-next-line no-debugger
-      // debugger;
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
