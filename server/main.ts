@@ -35,7 +35,7 @@ const nestjsOptions: NestApplicationOptions = {
 // #endregion
 
 async function bootstrap(configService: ConfigService): Promise<void> {
-  // #region create NestJS server
+  // #region Create NestJS server
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   app.useLogger(logger);
   // #endregion
@@ -44,7 +44,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(responseTime());
   // #endregion
 
-  // #region improve security - this is done by Nginx reverse-proxy, do not need
+  // #region Improve security
   app.use(helmet.ieNoOpen());
   app.use('*', (req: Request, res: Response, next: Function) => {
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
@@ -88,20 +88,20 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(helmet.hidePoweredBy());
   // #endregion
 
-  // #region improve performance - this is done by Nginx reverse-proxy, do not need
+  // #region Improve performance - this is done by Nginx reverse-proxy, do not need
   // app.use(compression());
   // #endregion
 
-  // #region enable json response
+  // #region Enable json response
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   // #endregion
 
-  // #region enable cookie
+  // #region Enable cookie
   app.use(cookieParser());
   // #endregion
 
-  // #region Passport initialization
+  // #region Session and passport initialization
   app.use(sessionRedis(configService, logger));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -115,7 +115,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   app.use(nextI18NextMiddleware(nextI18next));
   // #endregion
 
-  // #region start server
+  // #region Start server
   await app.listen(configService.get('PORT'), configService.get('HOST'));
   logger.log(`Server running on ${configService.get('HOST')}:${configService.get('PORT')}`, 'Bootstrap');
   // #endregion
