@@ -67,7 +67,7 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
           host: configService.get<string>('HTTP_REDIS_HOST'),
           port: configService.get<number>('HTTP_REDIS_PORT'),
           db: configService.get<number>('HTTP_REDIS_DB'),
-          password: configService.get<string>('HTTP_REDIS_PASSWORD'),
+          password: configService.get<string>('HTTP_REDIS_PASSWORD') || undefined,
           keyPrefix: configService.get<string>('HTTP_REDIS_PREFIX'),
           // retry_strategy: (options) => {}
         };
@@ -128,7 +128,7 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
             options: {
               host: configService.get<string>('DATABASE_REDIS_HOST'),
               port: configService.get<number>('DATABASE_REDIS_PORT'),
-              password: configService.get<string>('DATABASE_REDIS_PASSWORD'),
+              password: configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
               db: configService.get<number>('DATABASE_REDIS_DB'),
               // prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
             },

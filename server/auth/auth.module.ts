@@ -15,7 +15,7 @@ import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
 import { Scope, ldapADattributes, LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { AuthResolver } from './auth.resolver';
-
+import { CookieSerializer } from './cookie.serializer';
 // #endregion
 
 @Module({
@@ -69,7 +69,7 @@ import { AuthResolver } from './auth.resolver';
     UserModule,
     // #endregion
   ],
-  providers: [AuthService, AuthResolver, JwtStrategy],
+  providers: [AuthService, AuthResolver, JwtStrategy, CookieSerializer],
   exports: [PassportModule, JwtModule, AuthService],
 })
 export class AuthModule {}

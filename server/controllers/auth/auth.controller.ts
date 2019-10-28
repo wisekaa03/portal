@@ -1,8 +1,9 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { NextResponse } from 'nest-next-module';
+import { SessionGuard } from '../../guards/session.guard';
 // #endregion
 // #region Imports Local
 // #endregion
@@ -15,6 +16,7 @@ export class AuthController {
     return res.nextRender('/auth/login');
   }
 
+  @UseGuards(SessionGuard)
   @Get('logout')
   public async logout(@Res() res: NextResponse): Promise<void> {
     return res.nextRender('/auth/logout');

@@ -18,7 +18,7 @@ export default (configService: ConfigService, logService: LogService): any => {
         host: configService.get<string>('SESSION_REDIS_HOST'),
         port: configService.get<number>('SESSION_REDIS_PORT'),
         db: configService.get<number>('SESSION_REDIS_DB'),
-        password: configService.get<string>('SESSION_REDIS_PASSWORD'),
+        password: configService.get<string>('SESSION_REDIS_PASSWORD') || undefined,
       }),
     }),
     resave: false,

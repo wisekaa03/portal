@@ -54,10 +54,10 @@ export class LdapService extends EventEmitter {
         store: redisStore,
         name: 'LDAP',
         ttl: this.ttl, // seconds
-        host: configService.get('LDAP_REDIS_HOST'),
-        port: parseInt(configService.get('LDAP_REDIS_PORT'), 10),
-        db: configService.get('LDAP_REDIS_DB') ? parseInt(configService.get('LDAP_REDIS_DB'), 10) : undefined,
-        password: configService.get('LDAP_REDIS_PASSWORD') ? configService.get('LDAP_REDIS_PASSWORD') : undefined,
+        host: configService.get<string>('LDAP_REDIS_HOST'),
+        port: configService.get<number>('LDAP_REDIS_PORT'),
+        db: configService.get<number>('LDAP_REDIS_DB'),
+        password: configService.get<string>('LDAP_REDIS_PASSWORD') || undefined,
         logger,
       });
 

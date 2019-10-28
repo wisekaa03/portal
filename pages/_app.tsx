@@ -6,12 +6,12 @@ import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
+import { NextRouter } from 'next/dist/next-server/lib/router/router';
 // import dynamic from 'next/dynamic';
 import { Query, ApolloProvider, QueryResult } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
-// import queryString from 'query-string';
 import 'typeface-roboto';
 // #endregion
 // #region Imports Local
@@ -21,10 +21,8 @@ import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
-// import { FIRST_PAGE } from '../lib/constants';
 import { User } from '../server/user/models/user.dto';
 import { getStorage } from '../lib/session-storage';
-
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));
@@ -36,20 +34,20 @@ const CurrentLogin: React.FC<{
   pageProps: any;
   isMobile: boolean;
   language: string;
-  pathname: string;
+  router: NextRouter;
   Component: NextComponentType<NextPageContext, any, {}>;
-}> = ({ pageProps, isMobile, language, pathname, Component }): React.ReactElement | null => {
+}> = ({ pageProps, isMobile, language, router, Component }): React.ReactElement | null => {
   if (__SERVER__) {
     // TODO: подумать все-таки над предложением Романа, cookie передаются в параметрах страничек,
     // TODO: graphql -> login обрабатывает подключение, далее странички запрашивают через graphql.
     // TODO: Eсли перезагрузить страничку то сначала появится Loading,
     // TODO: нужно поменять поведение-через cookie показывать
     // TODO: https://sergiodxa.com/articles/redirects-in-next-the-good-way/
-    if (pathname === '/auth/login') {
-      return <Component {...pageProps} />;
-    }
 
-    return <Loading noMargin type="linear" variant="indeterminate" />;
+    if (router.pathname !== '/auth/login') {
+      return <Loading noMargin type="linear" variant="indeterminate" />;
+    }
+    return <Component {...pageProps} />;
   }
 
   const token = getStorage('token');
@@ -107,15 +105,13 @@ class MainApp extends App<ApolloAppProps> {
   }
 
   render(): React.ReactElement {
-    const { Component, apolloClient, pageProps, currentLanguage, isMobile } = this.props;
+    const { Component, apolloClient, pageProps, currentLanguage, isMobile, router } = this.props;
 
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
         width: !!isMobile ? 0 : 1280,
       }),
     });
-
-    const { pathname } = this.props.router;
 
     return (
       <ApolloProvider client={apolloClient}>
@@ -141,7 +137,7 @@ class MainApp extends App<ApolloAppProps> {
             isMobile={!!isMobile}
             language={currentLanguage || ''}
             Component={Component}
-            pathname={pathname}
+            router={router}
           />
         </ThemeProvider>
       </ApolloProvider>
