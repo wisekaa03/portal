@@ -46,20 +46,21 @@ export class ProfileService {
   getProfiles = (search: string) => {
     // this.profileRepository.find({ cache: true, where: { notShowing: false } });
     const queryBuilder = this.profileRepository.createQueryBuilder('profile');
+    const params = { search: `%${search}%` };
 
     // TODO: потом разобраться как отсеивать уволенных
     return search === ''
       ? queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false })
       : queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false }).andWhere(
         new Brackets((qb) => {
-          qb.where("profile.firstName iLike '%:search%'", { search })
-            .orWhere("profile.lastName iLike '%:search%'", { search })
-            .orWhere("profile.middleName iLike '%:search%'", { search })
-            .orWhere("profile.department iLike '%:search%'", { search })
-            .orWhere("profile.company iLike '%:search%'", { search })
-            .orWhere("profile.telephone iLike '%:search%'", { search })
-            .orWhere("profile.workPhone iLike '%:search%'", { search })
-            .orWhere("profile.mobile iLike '%:search%'", { search });
+          qb.where('profile.firstName iLike :search', params)
+            .orWhere('profile.lastName iLike :search', params)
+            .orWhere('profile.middleName iLike :search', params)
+            .orWhere('profile.department iLike :search', params)
+            .orWhere('profile.company iLike :search', params)
+            .orWhere('profile.telephone iLike :search', params)
+            .orWhere('profile.workPhone iLike :search', params)
+            .orWhere('profile.mobile iLike :search', params);
         }),
       );
   };
