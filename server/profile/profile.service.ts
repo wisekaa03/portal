@@ -50,19 +50,22 @@ export class ProfileService {
 
     // TODO: потом разобраться как отсеивать уволенных
     return search === ''
-      ? queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false })
-      : queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false }).andWhere(
-        new Brackets((qb) => {
-          qb.where('profile.firstName iLike :search', params)
-            .orWhere('profile.lastName iLike :search', params)
-            .orWhere('profile.middleName iLike :search', params)
-            .orWhere('profile.department iLike :search', params)
-            .orWhere('profile.company iLike :search', params)
-            .orWhere('profile.telephone iLike :search', params)
-            .orWhere('profile.workPhone iLike :search', params)
-            .orWhere('profile.mobile iLike :search', params);
-        }),
-      );
+      ? queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false }).cache(true)
+      : queryBuilder
+        .where('profile.notShowing = :notShowing', { notShowing: false })
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where('profile.firstName iLike :search', params)
+              .orWhere('profile.lastName iLike :search', params)
+              .orWhere('profile.middleName iLike :search', params)
+              .orWhere('profile.department iLike :search', params)
+              .orWhere('profile.company iLike :search', params)
+              .orWhere('profile.telephone iLike :search', params)
+              .orWhere('profile.workPhone iLike :search', params)
+              .orWhere('profile.mobile iLike :search', params);
+          }),
+        )
+        .cache(true);
   };
   /* eslint-enable prettier/prettier */
 
