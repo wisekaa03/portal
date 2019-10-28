@@ -18,12 +18,20 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     height: '100vh',
     flexGrow: 1,
-    padding: '50px',
+    padding: theme.spacing(6),
+
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   paper: {
     padding: theme.spacing(16),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(3),
+    },
   },
   statusCode: {
     padding: theme.spacing(5),
