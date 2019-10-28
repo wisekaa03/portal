@@ -19,8 +19,10 @@ export class ProfileResolver {
   /**
    * GraphQL query: profiles
    *
-   * @param take
-   * @param skip
+   * @param first
+   * @param after
+   * @param orderBy
+   * @param search
    * @returns {Profiles[]}
    */
   @Query()
@@ -29,6 +31,7 @@ export class ProfileResolver {
     @Args('first') first: number,
     @Args('after') after: string,
     @Args('orderBy') orderBy: Order<string>,
+    @Args('search') search: string,
   ): Promise<Connection<ProfileEntity>> {
     return paginate(
       { first, after, orderBy },
@@ -38,8 +41,7 @@ export class ProfileResolver {
         validateCursor: true,
         orderFieldToKey: (field: string) => field,
         repository: this.profileService.repository(),
-        // TODO: разобраться как прикрутить запросы
-        // queryBuilder: await this.profileService.profiles(),
+        queryBuilder: this.profileService.getProfiles(search),
       },
     );
     // return this.profileService.profiles(take, orderBy, order);
@@ -55,21 +57,5 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   async profile(@Args('id') id: string): Promise<ProfileEntity | undefined> {
     return this.profileService.profile(id) || null;
-  }
-
-  /**
-   * GraphQL query: profilesSearch
-   *
-   * @param search
-   * @returns {Profiles[]}
-   */
-  @Query()
-  @UseGuards(GqlAuthGuard)
-  async profilesSearch(
-    @Args('search') search: string,
-    @Args('orderBy') orderBy: string,
-    @Args('order') order: string,
-  ): Promise<ProfileEntity[] | undefined> {
-    return this.profileService.profilesSearch(search, orderBy, order) || null;
   }
 }

@@ -3,7 +3,8 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like, Brackets } from 'typeorm';
+import { Order } from 'typeorm-graphql-pagination';
 // import { Request } from 'express';
 // #endregion
 // #region Imports Local
@@ -41,8 +42,28 @@ export class ProfileService {
 
   repository = (): Repository<ProfileEntity> => this.profileRepository;
 
-  profiles = async (): Promise<ProfileEntity[]> =>
-    this.profileRepository.find({ cache: true, where: { notShowing: false } });
+  /* eslint-disable prettier/prettier */
+  getProfiles = (search: string) => {
+    // this.profileRepository.find({ cache: true, where: { notShowing: false } });
+    const queryBuilder = this.profileRepository.createQueryBuilder('profile');
+
+    // TODO: потом разобраться как отсеивать уволенных
+    return search === ''
+      ? queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false })
+      : queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false }).andWhere(
+        new Brackets((qb) => {
+          qb.where("profile.firstName iLike '%:search%'", { search })
+            .orWhere("profile.lastName iLike '%:search%'", { search })
+            .orWhere("profile.middleName iLike '%:search%'", { search })
+            .orWhere("profile.department iLike '%:search%'", { search })
+            .orWhere("profile.company iLike '%:search%'", { search })
+            .orWhere("profile.telephone iLike '%:search%'", { search })
+            .orWhere("profile.workPhone iLike '%:search%'", { search })
+            .orWhere("profile.mobile iLike '%:search%'", { search });
+        }),
+      );
+  };
+  /* eslint-enable prettier/prettier */
 
   // profiles = async (
   //   take: number,
@@ -72,35 +93,29 @@ export class ProfileService {
   profile = async (id: string): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(id, { cache: true });
 
-  // TODO: добавить disabled (хз как) и фильтрацию по addressPersonal??????
-  profilesSearch = async (
-    search: string,
-    orderBy: string,
-    order: string,
-    isNotShowing = true,
-  ): Promise<ProfileEntity[]> => {
-    let where: Record<any, any> = [
-      { firstName: Like(`%${search}%`) },
-      { lastName: Like(`%${search}%`) },
-      { middleName: Like(`%${search}%`) },
-      { department: Like(`%${search}%`) },
-      { company: Like(`%${search}%`) },
-      { telephone: Like(`%${search}%`) },
-      { workPhone: Like(`%${search}%`) },
-      { mobile: Like(`%${search}%`) },
-    ];
-    if (isNotShowing) {
-      where = where.map((value: Record<any, any>) => ({ ...value, notShowing: false }));
-    }
+  // profilesSearch = async (search: string, orderBy: Order<string>, isNotShowing = true): Promise<ProfileEntity[]> => {
+  //   let where: Record<any, any> = [
+  //     { firstName: Like(`%${search}%`) },
+  //     { lastName: Like(`%${search}%`) },
+  //     { middleName: Like(`%${search}%`) },
+  //     { department: Like(`%${search}%`) },
+  //     { company: Like(`%${search}%`) },
+  //     { telephone: Like(`%${search}%`) },
+  //     { workPhone: Like(`%${search}%`) },
+  //     { mobile: Like(`%${search}%`) },
+  //   ];
+  //   if (isNotShowing) {
+  //     where = where.map((value: Record<any, any>) => ({ ...value, notShowing: false }));
+  //   }
 
-    return this.profileRepository.find({
-      cache: true,
-      order: {
-        [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
-      },
-      where,
-    });
-  };
+  //   return this.profileRepository.find({
+  //     cache: true,
+  //     order: {
+  //       [orderBy.field]: orderBy.direction,
+  //     },
+  //     where,
+  //   });
+  // };
 
   /**
    * Create or update by user DN

@@ -9,7 +9,7 @@ import { WithTranslation } from 'react-i18next';
 // #endregion
 
 export type ColumnNames =
-  | 'name'
+  | 'lastName'
   | 'nameEng'
   | 'login'
   | 'thumbnailPhoto'
@@ -32,10 +32,10 @@ export type ColumnNames =
   | 'country'
   | 'region'
   | 'town'
-  | 'address'
+  | 'street'
   | 'disabled';
 
-export type Order = 'asc' | 'desc';
+export type Order = 'ASC' | 'DESC';
 
 export interface Column {
   id: ColumnNames;

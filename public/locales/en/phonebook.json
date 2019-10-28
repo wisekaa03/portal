@@ -4,7 +4,7 @@
     "header": "Address book - settings"
   },
   "fields": {
-    "name": "Name",
+    "lastName": "Name",
     "nameEng": "Name (on english)",
     "login": "Username",
     "thumbnailPhoto": "Avatar",
@@ -27,7 +27,7 @@
     "country": "Country",
     "region": "Region",
     "town": "City",
-    "address": "Address",
+    "street": "Address",
     "street": "Street",
     "postalCode": "Postal code",
     "disabled": "Dismissed"

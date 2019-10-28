@@ -96,9 +96,9 @@ type ProfileConnection {
 
 type Query {
 
-  profilesSearch(search: String, orderBy: String, order: String): [Profile!]
+  # profilesSearch(search: String, orderBy: ProfileOrder): [Profile!]
 
-  profiles(first: Int, after: String, orderBy: ProfileOrder): ProfileConnection!
+  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String): ProfileConnection!
 
   profile(id: ID): Profile
 

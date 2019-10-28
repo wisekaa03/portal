@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const allColumns: ColumnNames[] = [
   'thumbnailPhoto40',
-  'name',
+  'lastName',
   'nameEng',
   'login',
   'company',
@@ -113,7 +113,7 @@ export const allColumns: ColumnNames[] = [
   'country',
   'region',
   'town',
-  'address',
+  'street',
   'disabled',
 ];
 
