@@ -126,31 +126,32 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: DATABASE_CACHE
-            - name: LDAP_REDIS_HOST
+            - name: DATABASE_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: LDAP_REDIS_HOST
-            - name: LDAP_REDIS_PORT
+                  key: DATABASE_REDIS_HOST
+            - name: DATABASE_REDIS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: LDAP_REDIS_PORT
-            - name: LDAP_REDIS_DB
+                  key: DATABASE_REDIS_PORT
+            - name: DATABASE_REDIS_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: LDAP_REDIS_DB
-            - name: LDAP_REDIS_PASSWORD
+                  key: DATABASE_REDIS_PASSWORD
+            - name: DATABASE_REDIS_TTL
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: LDAP_REDIS_PASSWORD
-            - name: LDAP_REDIS_TTL
+                  key: DATABASE_REDIS_TTL
+            - name: DATABASE_REDIS_DB
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: LDAP_REDIS_TTL
+                  key: DATABASE_REDIS_DB
+            # HTTP
             - name: HTTP_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -186,6 +187,38 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: HTTP_REDIS_PREFIX
+            # Session
+            - name: SESSION_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_HOST
+            - name: SESSION_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_PORT
+            - name: SESSION_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_DB
+            - name: SESSION_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_PASSWORD
+            - name: SESSION_COOKIE_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_COOKIE_TTL
+            - name: SESSION_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_SECRET
+            # LDAP
             - name: LDAP_URL
               valueFrom:
                 configMapKeyRef:
@@ -221,6 +254,32 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: LDAP_SEARCH_FILTER_ALL_USERS
+            # LDAP Redis
+            - name: LDAP_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_HOST
+            - name: LDAP_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_PORT
+            - name: LDAP_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_DB
+            - name: LDAP_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_PASSWORD
+            - name: LDAP_REDIS_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_TTL
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

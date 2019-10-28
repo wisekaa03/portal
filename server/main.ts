@@ -20,6 +20,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
 import { LogService } from './logger/logger.service';
 import { nextI18next } from '../lib/i18n-client';
+import sessionRedis from './shared/session-redis';
 // #endregion
 
 // #region NestJS options
@@ -101,7 +102,9 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Passport initialization
+  app.use(sessionRedis(configService, logger));
   app.use(passport.initialize());
+  app.use(passport.session());
   // #endregion
 
   // #region Static files

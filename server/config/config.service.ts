@@ -59,6 +59,7 @@ export class ConfigService {
   };
 
   public jwtModuleOptions: JwtModuleOptions = {
+    // TODO: добавить сюда expiresIn
     signOptions: { ...this.jwtSignOptions },
     verifyOptions: { ...this.jwtVerifyOptions },
   };
@@ -148,8 +149,24 @@ export class ConfigService {
         .default(true)
         .optional()
         .empty(),
-      DATABASE_REDIS_CACHE_DB: Joi.number()
+      DATABASE_REDIS_HOST: Joi.string()
+        .default('localhost')
+        .optional()
+        .empty(),
+      DATABASE_REDIS_PORT: Joi.number()
+        .default(6379)
+        .optional()
+        .empty(),
+      DATABASE_REDIS_PASSWORD: Joi.string()
+        .allow('')
+        .optional()
+        .empty(),
+      DATABASE_REDIS_DB: Joi.number()
         .default(0)
+        .optional()
+        .empty(),
+      DATABASE_REDIS_TTL: Joi.number()
+        .default(300)
         .optional()
         .empty(),
 
@@ -170,7 +187,7 @@ export class ConfigService {
         .optional()
         .empty(),
       HTTP_REDIS_DB: Joi.number()
-        .default(0)
+        .default(1)
         .optional()
         .empty(),
       HTTP_REDIS_PASSWORD: Joi.string()
@@ -179,6 +196,31 @@ export class ConfigService {
         .empty(),
       HTTP_REDIS_PREFIX: Joi.string()
         .allow('')
+        .optional()
+        .empty(),
+
+      SESSION_SECRET: Joi.string()
+        .default('portal')
+        .optional()
+        .empty(),
+      SESSION_REDIS_HOST: Joi.string()
+        .default('localhost')
+        .optional()
+        .empty(),
+      SESSION_REDIS_PORT: Joi.number()
+        .default(6379)
+        .optional()
+        .empty(),
+      SESSION_REDIS_DB: Joi.number()
+        .default(2)
+        .optional()
+        .empty(),
+      SESSION_REDIS_PASSWORD: Joi.string()
+        .allow('')
+        .optional()
+        .empty(),
+      SESSION_COOKIE_TTL: Joi.number()
+        .default(24)
         .optional()
         .empty(),
 
@@ -195,7 +237,7 @@ export class ConfigService {
         .optional()
         .empty(),
       LDAP_REDIS_DB: Joi.number()
-        .default(0)
+        .default(3)
         .optional()
         .empty(),
       LDAP_REDIS_PASSWORD: Joi.string()
