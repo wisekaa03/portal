@@ -1,9 +1,10 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
+import Head from 'next/head';
 import {
   Table,
   TableBody,
@@ -20,9 +21,8 @@ import clsx from 'clsx';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
-import Head from 'next/head';
 import Page from '../layouts/main';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+import { I18nPage, includeDefaultNamespaces, nextI18next, TFunction } from '../lib/i18n-client';
 import { ColumnNames } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
@@ -128,6 +128,37 @@ const getColumns = (columns: ColumnNames[]): string => {
   return result;
 };
 
+const getHeadRows = (
+  columns: ColumnNames[],
+  orderBy: Order<ColumnNames>,
+  handleRequestSort: (column: ColumnNames) => () => void,
+  t: TFunction,
+): React.ReactNode | null =>
+  allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
+    if (!columns.includes(column) || column === 'disabled') return result;
+
+    if (column === 'thumbnailPhoto40') {
+      return [...result, <TableCell key={column} />];
+    }
+
+    return [
+      ...result,
+      <TableCell
+        key={column}
+        // align={column.align}
+        sortDirection={orderBy.field === column ? (orderBy.direction.toLowerCase() as 'desc' | 'asc') : false}
+      >
+        <TableSortLabel
+          active={orderBy.field === column}
+          direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
+          onClick={handleRequestSort(column)}
+        >
+          {t(`phonebook:fields.${column}`)}
+        </TableSortLabel>
+      </TableCell>,
+    ];
+  }, []);
+
 const getRows = (
   data: any,
   columns: ColumnNames[],
@@ -195,7 +226,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { loading, error, data, fetchMore } = useQuery(PROFILES(getColumns(columns)), {
     variables: {
       orderBy,
-      first: 30,
+      first: search.length > 3 ? 100 : 50,
       after: '',
       search: search.length > 3 ? search : '',
     },
@@ -205,29 +236,29 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
     const needFetch = scrollHeight - offsetHeight * 2;
 
-    if (scrollTop <= needFetch || search.length > 3 || !data || !data.profiles || !ifFetch) return;
+    if (scrollTop <= needFetch || !data || !data.profiles || !ifFetch || !data.profiles.pageInfo.hasNextPage) return;
     setIfFetch(false);
 
     fetchMore({
       query: PROFILES(getColumns(columns)),
       variables: {
         orderBy,
-        after: data.profiles.pageInfo.endCursor,
-        first: 30,
+        after: data.profiles.edges[data.profiles.edges.length - 1].cursor,
+        first: search.length > 3 ? 100 : 50,
         search: search.length > 3 ? search : '',
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
         const { pageInfo, edges, totalCount, __typename } = fetchMoreResult.profiles;
 
-        if (edges.length <= 0) return previousResult;
+        if (edges.length === 0) return previousResult;
 
         setIfFetch(true);
-        const result = previousResult ? [...previousResult.profiles.edges, ...edges] : edges;
+
         return {
           profiles: {
             __typename,
             totalCount,
-            edges: result,
+            edges: [...previousResult.profiles.edges, ...edges],
             pageInfo,
           },
         };
@@ -235,16 +266,12 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     });
   };
 
-  const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
-    const isAsc = orderBy.field === property && orderBy.direction === OrderDirection.ASC;
+  const handleRequestSort = (column: ColumnNames) => (): void => {
+    const isAsc = orderBy.field === column && orderBy.direction === OrderDirection.ASC;
     setOrderBy({
       direction: isAsc ? OrderDirection.DESC : OrderDirection.ASC,
-      field: property,
+      field: column,
     });
-  };
-
-  const createSortHandler = (property: ColumnNames) => (event: React.MouseEvent<unknown>) => {
-    handleRequestSort(event, property);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -284,7 +311,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Быстрый поиск"
+                placeholder={t('phonebook:search')}
                 value={_search}
                 onChange={handleSearch}
                 fullWidth
@@ -302,34 +329,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
           <div id="phonebook-wrap" className={classes.table} onScroll={handleScrollTable}>
             <Table stickyHeader>
               <TableHead>
-                <TableRow>
-                  {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
-                    if (!columns.includes(column) || column === 'disabled') return result;
-
-                    if (column === 'thumbnailPhoto40') {
-                      return [...result, <TableCell key={column} />];
-                    }
-
-                    return [
-                      ...result,
-                      <TableCell
-                        key={column}
-                        // align={column.align}
-                        sortDirection={
-                          orderBy.field === column ? (orderBy.direction.toLowerCase() as 'desc' | 'asc') : false
-                        }
-                      >
-                        <TableSortLabel
-                          active={orderBy.field === column}
-                          direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
-                          onClick={createSortHandler(column)}
-                        >
-                          {t(`phonebook:fields.${column}`)}
-                        </TableSortLabel>
-                      </TableCell>,
-                    ];
-                  }, [])}
-                </TableRow>
+                <TableRow>{getHeadRows(columns, orderBy, handleRequestSort, t)}</TableRow>
               </TableHead>
               <TableBody>{getRows(data, columns, handleProfileId)}</TableBody>
             </Table>

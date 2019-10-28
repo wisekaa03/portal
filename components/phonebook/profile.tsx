@@ -279,4 +279,4 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   );
 });
 
-export const ProfileComponent = nextI18next.withTranslation('phonebook')(BaseProfileComponent);
+export const ProfileComponent = React.memo(nextI18next.withTranslation('phonebook')(BaseProfileComponent));
