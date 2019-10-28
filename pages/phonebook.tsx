@@ -17,12 +17,13 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 import clsx from 'clsx';
+import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
 import Head from 'next/head';
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
-import { Order, ColumnNames, Column } from '../components/phonebook/types';
+import { ColumnNames } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import { appBarHeight } from '../components/app-bar';
@@ -30,7 +31,7 @@ import useDebounce from '../lib/debounce';
 import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
-import { PROFILES, PROFILES_SEARCH } from '../lib/queries';
+import { PROFILES } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
@@ -98,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const defaultColumns: ColumnNames[] = [
   'thumbnailPhoto40',
-  'name',
+  'lastName',
   'company',
   'department',
   'title',
@@ -114,143 +115,132 @@ const defaultColumns: ColumnNames[] = [
 // };
 
 const getColumns = (columns: ColumnNames[]): string => {
-  let result = columns as string[];
-  if (columns.includes('name')) {
-    result = [...result.filter((col) => col !== 'name'), ...['firstName', 'lastName', 'middleName']];
+  let result = columns.join(' ');
+
+  if (columns.includes('lastName')) {
+    result += ' firstName middleName';
   }
 
   if (columns.includes('manager')) {
-    return `${result.join(' ')} manager { id firstName lastName middleName }`;
+    result += ' manager { id firstName lastName middleName }';
   }
 
-  return result.join(' ');
+  return result;
 };
 
 const getRows = (
-  profile: Profile,
+  data: any,
   columns: ColumnNames[],
   onClick: (id: string | undefined) => () => void,
-): React.ReactNode => (
-  <TableRow key={profile.id} hover onClick={onClick(profile.id)}>
-    {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
-      if (!columns.includes(column) || column === 'disabled') return result;
+): React.ReactNode | null => {
+  if (!data || !data.profiles) return null;
 
-      let cellData: React.ReactElement | string | null | undefined = null;
+  return data.profiles.edges.map((item: { node: Profile }) => (
+    <TableRow key={item.node.id} hover onClick={onClick(item.node.id)}>
+      {allColumns.reduce((result: JSX.Element[], column: ColumnNames): JSX.Element[] => {
+        if (!columns.includes(column) || column === 'disabled') return result;
 
-      switch (column) {
-        case 'thumbnailPhoto40': {
-          cellData = <Avatar profile={profile} />;
-          break;
+        let cellData: React.ReactElement | string | null | undefined = null;
+
+        switch (column) {
+          case 'thumbnailPhoto40': {
+            cellData = <Avatar profile={item.node} />;
+            break;
+          }
+
+          case 'lastName': {
+            const { firstName, lastName, middleName } = item.node;
+            cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
+            break;
+          }
+
+          case 'mobile':
+          case 'telephone':
+          case 'workPhone':
+          case 'company':
+          case 'department':
+          case 'title': {
+            cellData = item.node[column];
+            break;
+          }
+
+          default: {
+            break;
+          }
         }
 
-        case 'name': {
-          const { firstName, lastName, middleName } = profile;
-          cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
-          break;
-        }
-
-        case 'mobile':
-        case 'telephone':
-        case 'workPhone':
-        case 'company':
-        case 'department':
-        case 'title': {
-          cellData = profile[column];
-          break;
-        }
-
-        default: {
-          break;
-        }
-      }
-
-      return [...result, <TableCell key={column}>{cellData}</TableCell>];
-    }, [])}
-  </TableRow>
-);
+        return [...result, <TableCell key={column}>{cellData}</TableCell>];
+      }, [])}
+    </TableRow>
+  ));
+};
 
 const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
 
-  const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<ColumnNames>('name');
-  const [after, setAfter] = useState<string>('');
+  const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
+    direction: OrderDirection.ASC,
+    field: 'lastName',
+  });
   const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
-  const [tableData, setTableData] = useState<Profile[]>([]);
+  // const [tableData, setTableData] = useState<Profile[]>([]);
+  const [ifFetch, setIfFetch] = useState<boolean>(true);
 
   const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-  const [search, setSearch] = useState<string>('');
-  const debouncedSearch = useDebounce(search, 1000);
+  const [_search, setSearch] = useState<string>('');
+  const search = useDebounce(_search, 1000);
 
-  /* eslint-disable prettier/prettier */
-  const { loading, error, data, fetchMore } = useQuery(
-    debouncedSearch.length <= 3 ? PROFILES(getColumns(columns)) : PROFILES_SEARCH(getColumns(columns)),
-    debouncedSearch.length <= 3
-      ? {
-        variables: {
-          first: 30,
-          after,
-          orderBy: {
-            direction: order.toUpperCase(),
-            field: orderBy === 'name' ? 'firstName' : orderBy,
-          },
-        },
-      }
-      : {
-        variables: {
-          search: debouncedSearch,
-          orderBy,
-          order,
-        },
-      },
-  );
-  /* eslint-enable prettier/prettier */
+  const { loading, error, data, fetchMore } = useQuery(PROFILES(getColumns(columns)), {
+    variables: {
+      orderBy,
+      first: 30,
+      after: '',
+      search: search.length > 3 ? search : '',
+    },
+  });
 
   const handleScrollTable = (e: React.UIEvent<HTMLDivElement>): void => {
     const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
-    const needFetch = scrollHeight * 0.8 - offsetHeight;
+    const needFetch = scrollHeight - offsetHeight * 2;
 
-    if (scrollTop <= needFetch) return;
+    if (scrollTop <= needFetch || search.length > 3 || !data || !data.profiles || !ifFetch) return;
+    setIfFetch(false);
 
-    if (data && data.profiles && after !== data.profiles.pageInfo.endCursor) {
-      fetchMore({
-        query: PROFILES(getColumns(columns)),
-        variables: {
-          first: 30,
-          after,
-          orderBy: {
-            direction: order.toUpperCase(),
-            field: orderBy === 'name' ? 'firstName' : orderBy,
+    fetchMore({
+      query: PROFILES(getColumns(columns)),
+      variables: {
+        orderBy,
+        after: data.profiles.pageInfo.endCursor,
+        first: 30,
+        search: search.length > 3 ? search : '',
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const { pageInfo, edges, totalCount, __typename } = fetchMoreResult.profiles;
+
+        if (edges.length <= 0) return previousResult;
+
+        setIfFetch(true);
+        const result = previousResult ? [...previousResult.profiles.edges, ...edges] : edges;
+        return {
+          profiles: {
+            __typename,
+            totalCount,
+            edges: result,
+            pageInfo,
           },
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          const { pageInfo, edges, totalCount, __typename } = fetchMoreResult.profiles;
-
-          if (edges.length <= 0) return previousResult;
-
-          console.log(pageInfo);
-
-          setAfter(pageInfo.endCursor);
-          const result = previousResult ? [...previousResult.profiles.edges, ...edges] : edges;
-          return {
-            profiles: {
-              __typename,
-              totalCount,
-              edges: result,
-              pageInfo,
-            },
-          };
-        },
-      });
-    }
+        };
+      },
+    });
   };
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: ColumnNames): void => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+    const isAsc = orderBy.field === property && orderBy.direction === OrderDirection.ASC;
+    setOrderBy({
+      direction: isAsc ? OrderDirection.DESC : OrderDirection.ASC,
+      field: property,
+    });
   };
 
   const createSortHandler = (property: ColumnNames) => (event: React.MouseEvent<unknown>) => {
@@ -277,21 +267,6 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setSettingsOpen(false);
   };
 
-  useEffect(() => {
-    !loading && data && data.profiles && after === '' && setAfter(data.profiles.pageInfo.endCursor);
-  }, [loading, data, after]);
-
-  useEffect(() => {
-    if (!loading) {
-      const values = data
-        ? 'profiles' in data && data.profiles.edges
-          ? data.profiles.edges
-          : data.profilesSearch
-        : [];
-      setTableData(values);
-    }
-  }, [data, loading]);
-
   return (
     <>
       <Head>{t('phonebook:title')}</Head>
@@ -310,7 +285,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
               </div>
               <InputBase
                 placeholder="Быстрый поиск"
-                value={search}
+                value={_search}
                 onChange={handleSearch}
                 fullWidth
                 classes={{
@@ -340,11 +315,13 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <TableCell
                         key={column}
                         // align={column.align}
-                        sortDirection={orderBy === column ? order : false}
+                        sortDirection={
+                          orderBy.field === column ? (orderBy.direction.toLowerCase() as 'desc' | 'asc') : false
+                        }
                       >
                         <TableSortLabel
-                          active={orderBy === column}
-                          direction={order}
+                          active={orderBy.field === column}
+                          direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
                           onClick={createSortHandler(column)}
                         >
                           {t(`phonebook:fields.${column}`)}
@@ -354,7 +331,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   }, [])}
                 </TableRow>
               </TableHead>
-              <TableBody>{(tableData as any).map((p: any) => getRows(p.node, columns, handleProfileId))}</TableBody>
+              <TableBody>{getRows(data, columns, handleProfileId)}</TableBody>
             </Table>
           </div>
         </div>

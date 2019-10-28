@@ -78,33 +78,32 @@ export const LOGOUT = gql`
 `;
 
 export const PROFILES = (_columns: string): any => gql`
-  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder) {
-    profiles(first: $first, after: $after, orderBy: $orderBy) {
+  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String) {
+    profiles(first: $first, after: $after, orderBy: $orderBy, search: $search) {
       totalCount
       edges {
         node {
           id
           ${_columns}
         }
+        cursor
       }
       pageInfo {
-        startCursor
         endCursor
         hasNextPage
-        hasPreviousPage
       }
     }
   }
 `;
 
-export const PROFILES_SEARCH = (_columns: string): any => gql`
-  query Profiles($search: String, $orderBy: String, $order: String) {
-    profilesSearch(search: $search, orderBy: $orderBy, order: $order) {
-      id
-      ${_columns}
-    }
-  }
-`;
+// export const PROFILES_SEARCH = (_columns: string): any => gql`
+//   query Profiles($search: String, $orderBy: ProfileOrder) {
+//     profilesSearch(search: $search, orderBy: $orderBy) {
+//       id
+//       ${_columns}
+//     }
+//   }
+// `;
 
 export const PROFILE = gql`
   query Profile($id: ID) {
