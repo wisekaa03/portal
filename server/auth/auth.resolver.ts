@@ -56,4 +56,20 @@ export class AuthResolver {
 
     throw new UnauthorizedException();
   }
+
+  /**
+   * GraphQL mutation: logout
+   *
+   * @returns {boolean}
+   */
+  @Mutation()
+  async logout(@Context('req') req: Request): Promise<boolean | null> {
+    this.logService.debug(`User logout`, 'AuthResolvers');
+
+    if (req.session) {
+      req.logOut();
+    }
+
+    return true;
+  }
 }

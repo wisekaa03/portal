@@ -10,8 +10,8 @@ import { SessionGuard } from '../../guards/session.guard';
 
 @Controller('calendar')
 export class CalendarController {
-  @UseGuards(SessionGuard)
   @Get()
+  @UseGuards(SessionGuard)
   public async calendar(@Res() res: NextResponse): Promise<void> {
     return res.nextRender('/calendar');
   }

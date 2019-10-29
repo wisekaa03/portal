@@ -3,10 +3,10 @@
 // #region Imports NPM
 import { Inject, forwardRef, Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { Context } from '@nestjs/graphql';
-import { UserResponse, UserLogin, UserRegister, User } from '../user/models/user.dto';
+import { UserResponse, UserLogin } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/user.entity';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
@@ -74,44 +74,6 @@ export class AuthService {
 
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
     }
-  }
-
-  /**
-   * Logout a user
-   *
-   * @returns {UserResponse} User response DTO
-   */
-  async logout(): Promise<boolean> {
-    this.logService.debug(`User logout`, 'AuthService');
-
-    return true;
-  }
-
-  /**
-   * Register a user
-   *
-   * @param {UserRegister} data User register data transfer object
-   * @returns {UserResponse} User response DTO
-   */
-  async register(data: UserRegister): Promise<UserResponse | null> {
-    this.logService.debug(`Register new user: ${JSON.stringify(data)}`, 'AuthService');
-
-    // #region Check if a user exists
-    // const { username } = data;
-    // let user = await this.userRepository.findOne({ where: { username }, relations: ['profile'] });
-    // if (user) {
-    //   throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
-    // }
-    // #endregion
-
-    // #region Create user
-    // user = this.userRepository.create(data);
-    // const userDB = await this.userRepository.save(user);
-    // #endregion
-
-    // return userDB.toResponseObject(this.authService.token({ id: user.id }));
-
-    return null;
   }
 
   /**

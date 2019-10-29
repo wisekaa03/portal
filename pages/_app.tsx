@@ -37,60 +37,37 @@ const CurrentLogin: React.FC<{
   language: string;
   router: NextRouter;
   Component: NextComponentType<NextPageContext, any, {}>;
-}> = ({ pageProps, isMobile, language, router, Component }): React.ReactElement | null => {
-  if (__SERVER__) {
-    // TODO: подумать все-таки над предложением Романа, cookie передаются в параметрах страничек,
-    // TODO: graphql -> login обрабатывает подключение, далее странички запрашивают через graphql.
-    // TODO: Eсли перезагрузить страничку то сначала появится Loading,
-    // TODO: нужно поменять поведение-через cookie показывать
-    // TODO: https://sergiodxa.com/articles/redirects-in-next-the-good-way/
+}> = ({ pageProps, isMobile, language, Component }): React.ReactElement | null => {
+  return (
+    <Query query={CURRENT_USER} fetchPolicy="cache-and-network">
+      {({ data, loading }: QueryResult<Data<'me', User>>) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
 
-    if (router.pathname !== '/auth/login') {
-      return <Loading noMargin type="linear" variant="indeterminate" />;
-    }
-    return <Component {...pageProps} />;
-  }
-
-  const token = getStorage(SESSION);
-
-  if (!!token) {
-    return (
-      <Query query={CURRENT_USER} ssr={false} fetchPolicy="cache-and-network">
-        {({ data, loading }: QueryResult<Data<'me', User>>) => {
-          if (data && data.me) {
-            return (
-              <ProfileContext.Provider
-                value={{
-                  user: { ...(data && data.me) },
-                  language,
-                  isMobile,
-                }}
-              >
-                {loading && <Loading noMargin type="linear" variant="indeterminate" />}
-                <Component {...pageProps} />
-              </ProfileContext.Provider>
-            );
-          }
-
+        if (data && data.me) {
           return (
-            <>
+            <ProfileContext.Provider
+              value={{
+                user: { ...(data && data.me) },
+                language,
+                isMobile,
+              }}
+            >
               {loading && <Loading noMargin type="linear" variant="indeterminate" />}
               <Component {...pageProps} />
-            </>
+            </ProfileContext.Provider>
           );
-        }}
-      </Query>
-    );
-  }
+        }
 
-  // TODO: изначальная страница на клиенте который не прошел token
-  if (Router.pathname !== '/auth/login') {
-    Router.push({ pathname: '/auth/login' });
-
-    return <Loading noMargin type="linear" variant="indeterminate" />;
-  }
-
-  return <Component {...pageProps} />;
+        return (
+          <>
+            {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+            <Component {...pageProps} />
+          </>
+        );
+      }}
+    </Query>
+  );
 };
 
 /**
