@@ -1,6 +1,6 @@
 type User {
   id: ID!
-  token: String!
+  session: String!
   username: String!
   profile: Profile!
   disabled: Boolean

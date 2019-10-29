@@ -23,6 +23,7 @@ import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
 import { User } from '../server/user/models/user.dto';
 import { getStorage } from '../lib/session-storage';
+import { SESSION } from '../lib/constants';
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));
@@ -50,7 +51,7 @@ const CurrentLogin: React.FC<{
     return <Component {...pageProps} />;
   }
 
-  const token = getStorage('token');
+  const token = getStorage(SESSION);
 
   if (!!token) {
     return (

@@ -9,13 +9,12 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 @Injectable()
 export class SessionGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
-    const httpContext = context.switchToHttp();
-    const request = httpContext.getRequest();
+    const request = context.switchToHttp().getRequest<Express.Request>();
 
     if (request && request.session && request.session.passport && request.session.passport.user) {
       return true;
     }
 
-    throw new Error('Not found');
+    return false;
   }
 }

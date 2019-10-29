@@ -15,8 +15,11 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
+// eslint-disable-next-line import/no-cycle
 import { UserResponse } from './models/user.dto';
+// eslint-disable-next-line import/no-cycle
 import { ProfileEntity } from '../profile/profile.entity';
+// eslint-disable-next-line import/no-cycle
 import { LoginService } from '../../lib/types';
 // #endregion
 
@@ -68,5 +71,5 @@ export class UserEntity {
   comparePassword = async (attempt: string | undefined): Promise<boolean> =>
     bcrypt.compare(attempt || '', this.password);
 
-  toResponseObject = (token: string): UserResponse => ({ token, ...this });
+  toResponseObject = (session: string): UserResponse => ({ session, ...this });
 }

@@ -18,7 +18,7 @@ const Logout: I18nPage = (props): React.ReactElement => {
 
   const [logout, { loading, error }] = useMutation(LOGOUT, {
     onCompleted() {
-      removeStorage('token');
+      removeStorage('session');
       client.resetStore();
 
       Router.push({ pathname: '/auth/login' });

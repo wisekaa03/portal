@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
@@ -26,6 +26,23 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
+
+  /**
+   * Compare password
+   *
+   * @param {string} username User
+   * @param {string} password Password
+   * @returns {UserEntity | undefined} The user
+   */
+  comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
+    const user = await this.readByUsername(username);
+
+    if (user && user.comparePassword(password)) {
+      return user;
+    }
+
+    return undefined;
+  };
 
   /**
    * Reads by Username

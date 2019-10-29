@@ -2,19 +2,13 @@
 
 // #region Imports NPM
 import dotenv from 'dotenv';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 import * as Joi from '@hapi/joi';
-import * as jwt from 'jsonwebtoken';
-import { ExtractJwt, StrategyOptions } from 'passport-jwt';
-import { JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 
 export interface EnvConfig<T> {
   [key: string]: T;
 }
-
-const dev = process.env.NODE_ENV !== 'production';
 
 export class ConfigService {
   private readonly envConfig: EnvConfig<any>;
@@ -22,51 +16,7 @@ export class ConfigService {
   constructor(filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
     this.envConfig = this.validateInput(config);
-
-    this.jwtPrivateKey = readFileSync(join(__dirname, dev ? '../..' : '../../..', 'jwt.private.pem'), 'utf8');
-
-    this.jwtPublicKey = readFileSync(join(__dirname, dev ? '../..' : '../../..', 'jwt.public.pem'), 'utf8');
-
-    this.jwtStrategyOptions = {
-      ...this.jwtStrategyOptions,
-      secretOrKey: this.jwtPublicKey,
-    };
-
-    this.jwtModuleOptions = {
-      ...this.jwtModuleOptions,
-      privateKey: this.jwtPrivateKey,
-      publicKey: this.jwtPublicKey,
-    };
   }
-
-  /**
-   * Reads JWT public and secret key
-   */
-  public jwtSignOptions: jwt.SignOptions = {
-    // expiresIn: '1h',
-    algorithm: 'RS256',
-  };
-
-  public jwtVerifyOptions: any | jwt.VerifyOptions = {
-    algorithms: ['RS256'],
-    ignoreExpiration: false,
-  };
-
-  public jwtStrategyOptions: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() /* ExtractJwt.fromHeader('cookie')  */,
-    secretOrKey: undefined, // Public Key
-    ...this.jwtVerifyOptions,
-  };
-
-  public jwtModuleOptions: JwtModuleOptions = {
-    // TODO: добавить сюда expiresIn
-    signOptions: { ...this.jwtSignOptions },
-    verifyOptions: { ...this.jwtVerifyOptions },
-  };
-
-  public jwtPrivateKey: string;
-
-  public jwtPublicKey: string;
 
   /**
    * Language

@@ -2,19 +2,19 @@
 
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { UserResponse } from '../user/models/user.dto';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { UserResponse, User } from '../user/models/user.dto';
 import { AuthService } from './auth.service';
-import { ProfileService } from '../profile/profile.service';
+import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly logService: LogService) {}
 
   /**
    * GraphQL query: me
@@ -36,7 +36,24 @@ export class AuthResolver {
    * @returns {UserResponseDTO}
    */
   @Mutation()
-  async login(@Args('username') username: string, @Args('password') password: string): Promise<UserResponse | null> {
-    return this.authService.login({ username, password });
+  async login(
+    @Args('username') username: string,
+    @Args('password') password: string,
+    @Context('req') req: Request,
+  ): Promise<UserResponse | null> {
+    const user = await this.authService.login({ username, password }, req);
+
+    if (user) {
+      req.logIn(user as User, (err: any) => {
+        if (err) {
+          this.logService.error('Error when logging in:', err);
+        } else {
+          this.logService.log(`User is logged in: ${user}`, 'AuthResolvers');
+        }
+      });
+      return user;
+    }
+
+    throw new UnauthorizedException();
   }
 }

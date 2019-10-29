@@ -9,8 +9,8 @@ import { SessionGuard } from '../../guards/session.guard';
 
 @Controller('phonebook')
 export class PhonebookController {
-  @UseGuards(SessionGuard)
   @Get()
+  @UseGuards(SessionGuard)
   public async phonebook(@Res() res: NextResponse): Promise<void> {
     return res.nextRender('/phonebook');
   }

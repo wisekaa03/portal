@@ -6,3 +6,4 @@
 // #endregion
 
 export const FIRST_PAGE = '/';
+export const SESSION = 'session';

@@ -4,6 +4,7 @@
 // #endregion
 // #region Imports Local
 import { getStorage } from '../session-storage';
+import { SESSION } from '../constants';
 // #endregion
 
 export default {
@@ -12,7 +13,7 @@ export default {
       // eslint-disable-next-line no-debugger
       debugger;
 
-      return getStorage('token') !== '';
+      return getStorage(SESSION) !== '';
     },
   },
 };

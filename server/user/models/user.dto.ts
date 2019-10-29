@@ -39,7 +39,7 @@ export interface UserToSave extends BaseUser {
 
 // #region User response
 export interface UserResponse extends UserEntity {
-  token: string;
+  session: string;
 }
 // #endregion
 

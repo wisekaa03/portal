@@ -3,28 +3,27 @@
 // #region Imports NPM
 import { IncomingMessage } from 'http';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
-import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
-import { Observable } from 'rxjs';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
 // #endregion
 // #region Imports Local
 // #endregion
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard('jwt') implements CanActivate {
+export class GqlAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+    const request = this.getRequest(context);
 
-    gqlContext.switchToHttp = () => (this as unknown) as HttpArgumentsHost;
-    const canActivate = await super.canActivate(gqlContext);
+    if (request && request.session && request.session.passport && request.session.passport.user) {
+      return true;
+    }
 
-    return canActivate instanceof Observable ? canActivate.toPromise() : canActivate;
+    return false;
   }
 
   getResponse = (): any => undefined;
 
-  getRequest(context: ExecutionContext): IncomingMessage {
+  getRequest(context: ExecutionContext): Express.Session {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
     const gqlCtx = gqlContext.getContext();
 

@@ -27,6 +27,7 @@ import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo_min.png';
 import { Avatar } from './avatar';
+import { SESSION } from '../lib/constants';
 // #endregion
 
 export const appBarHeight = 64;
@@ -117,7 +118,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
 
   const [logout] = useMutation(LOGOUT, {
     onCompleted() {
-      removeStorage('token');
+      removeStorage(SESSION);
       client.resetStore();
 
       Router.push({ pathname: '/auth/login' });

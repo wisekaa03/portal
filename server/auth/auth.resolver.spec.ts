@@ -2,23 +2,21 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '../user/user.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { LdapService } from '../ldap/ldap.service';
-import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { AuthService } from './auth.service';
 // #endregion
 
-// jest.mock('../ldap/ldap.service');
+jest.mock('../ldap/ldap.service');
 jest.mock('./auth.service');
 jest.mock('../user/user.service');
 jest.mock('../guards/gqlauth.guard');
+jest.mock('../../__mocks__/ldap.service.mock');
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;
@@ -32,17 +30,10 @@ describe('AuthResolver', () => {
           useFactory: () => ({} as LdapModuleOptions),
         }),
 
-        JwtModule.registerAsync({
-          useFactory: () => ({} as JwtModuleOptions),
-        }),
-
         UserModule,
       ],
       providers: [AuthResolver, AuthService],
-    })
-      .overrideProvider(LdapService)
-      .useValue(LdapServiceMock)
-      .compile();
+    }).compile();
 
     resolver = module.get<AuthResolver>(AuthResolver);
   });

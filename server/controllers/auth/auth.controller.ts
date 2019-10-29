@@ -16,8 +16,8 @@ export class AuthController {
     return res.nextRender('/auth/login');
   }
 
-  @UseGuards(SessionGuard)
   @Get('logout')
+  @UseGuards(SessionGuard)
   public async logout(@Res() res: NextResponse): Promise<void> {
     return res.nextRender('/auth/logout');
   }

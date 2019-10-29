@@ -14,6 +14,7 @@ import { HttpLink, createHttpLink } from 'apollo-link-http';
 import { NodeIdGetterObj } from './types';
 import stateResolvers from './state-link';
 import { getStorage } from './session-storage';
+import { SESSION } from './constants';
 // #endregion
 
 let apollo: ApolloClient<NormalizedCacheObject>;
@@ -34,12 +35,12 @@ export const apolloClient = (
   let httpLink: ApolloLink;
 
   const authLink = setContext((_, { headers }) => {
-    const token = getStorage('token');
+    // const token = getStorage(SESSION);
 
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
+        // authorization: token ? `Bearer ${token}` : '',
       },
     };
   });
@@ -74,7 +75,7 @@ export const apolloClient = (
     //   options: {
     //     reconnect: true,
     //     // connectionParams: async () => {
-    //     //   return { token: localStorage.getItem('token') };
+    //     //   return { token: localStorage.getItem(SESSION) };
     //     // },
     //     connectionCallback: (errors: Error[], _result: any): any => {
     //       if (errors) {
@@ -90,7 +91,7 @@ export const apolloClient = (
 
     cache.writeData({
       data: {
-        isLoggedIn: !!getStorage('token'),
+        isLoggedIn: !!getStorage(SESSION),
       },
     });
 
