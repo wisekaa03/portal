@@ -34,7 +34,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       ({ message } = exception);
     }
 
-    if (response.status && request.method && request.url) {
+    if (response) {
       // #region HTTP query
       const errorResponse = {
         code: status,
@@ -44,6 +44,11 @@ export class HttpErrorFilter implements ExceptionFilter {
         message,
       };
 
+      if (status === 403) {
+        response.status(302);
+        response.redirect('/auth/login');
+        return;
+      }
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
         this.logService.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
       } else {

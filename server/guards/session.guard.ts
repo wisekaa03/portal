@@ -15,6 +15,11 @@ export class SessionGuard implements CanActivate {
       return true;
     }
 
+    context
+      .switchToHttp()
+      .getResponse()
+      .status(403);
+
     return false;
   }
 }
