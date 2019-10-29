@@ -132,6 +132,8 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
     sync();
   };
 
+  const handleLogout = (): Promise<ExecutionResult<any>> => logout();
+
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
@@ -230,11 +232,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                     >
                       {t('common:changeLanguage')}
                     </Button>
-                    <Button
-                      variant="contained"
-                      className={classes.buttonLogout}
-                      onClick={(): Promise<ExecutionResult<any>> => logout()}
-                    >
+                    <Button variant="contained" className={classes.buttonLogout} onClick={handleLogout}>
                       {t('common:signOut')}
                     </Button>
                   </Box>

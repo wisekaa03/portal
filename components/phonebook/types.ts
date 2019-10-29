@@ -39,7 +39,9 @@ export type Order = 'ASC' | 'DESC';
 
 export interface Column {
   name: ColumnNames;
-  width: number;
+  width?: number;
+  minWidth?: number;
+  maxWidth?: number;
 }
 
 export interface ProfileProps extends WithTranslation {

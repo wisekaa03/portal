@@ -166,36 +166,32 @@ const getHeadRows = (
   classes: any,
 ): React.ReactNode | null =>
   allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
-    if (!columns.includes(column.name) || column.name === 'disabled') return result;
+    const { name, ...rest } = column;
+    if (!columns.includes(name) || name === 'disabled') return result;
 
-    if (column.name === 'thumbnailPhoto40') {
+    if (name === 'thumbnailPhoto40') {
       return [
         ...result,
-        <TableCell
-          key={column.name}
-          className={classes.cell}
-          component="div"
-          style={{ minWidth: column.width, height: rowHeight }}
-        />,
+        <TableCell key={name} className={classes.cell} component="div" style={{ height: rowHeight, ...rest }} />,
       ];
     }
 
     return [
       ...result,
       <TableCell
-        key={column.name}
+        key={name}
         className={classes.cell}
         component="div"
         scope="col"
-        style={{ minWidth: column.width, height: rowHeight }}
-        sortDirection={orderBy.field === column.name ? (orderBy.direction.toLowerCase() as 'desc' | 'asc') : false}
+        style={{ height: rowHeight, ...rest }}
+        sortDirection={orderBy.field === name ? (orderBy.direction.toLowerCase() as 'desc' | 'asc') : false}
       >
         <TableSortLabel
-          active={orderBy.field === column.name}
+          active={orderBy.field === name}
           direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
-          onClick={handleRequestSort(column.name)}
+          onClick={handleRequestSort(name)}
         >
-          {t(`phonebook:fields.${column.name}`)}
+          {t(`phonebook:fields.${name}`)}
         </TableSortLabel>
       </TableCell>,
     ];
@@ -208,11 +204,12 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
   return (
     <TableRow component="div" className={classes.row} hover style={style} onClick={handleProfileId(item.id)}>
       {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
-        if (!columns.includes(column.name) || column.name === 'disabled') return result;
+        const { name, ...rest } = column;
+        if (!columns.includes(name) || name === 'disabled') return result;
 
         let cellData: React.ReactElement | string | null | undefined = null;
 
-        switch (column.name) {
+        switch (name) {
           case 'thumbnailPhoto40': {
             cellData = <Avatar profile={item} />;
             break;
@@ -231,7 +228,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
           case 'department':
           case 'email':
           case 'title': {
-            cellData = item[column.name];
+            cellData = item[name];
             break;
           }
 
@@ -243,9 +240,9 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
         return [
           ...result,
           <TableCell
-            key={column.name}
+            key={name}
             className={classes.cell}
-            style={{ minWidth: column.width, height: rowHeight }}
+            style={{ height: rowHeight, ...rest }}
             component="div"
             variant="body"
           >

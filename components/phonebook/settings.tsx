@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const allColumns: Column[] = [
-  { name: 'thumbnailPhoto40', width: 60 },
+  { name: 'thumbnailPhoto40', maxWidth: 60 },
   { name: 'lastName', width: 150 },
   { name: 'nameEng', width: 150 },
   { name: 'login', width: 100 },
@@ -105,10 +105,10 @@ export const allColumns: Column[] = [
   { name: 'positionEng', width: 150 },
   { name: 'manager', width: 150 },
   { name: 'room', width: 100 },
-  { name: 'telephone', width: 140 },
+  { name: 'telephone', maxWidth: 130 },
   { name: 'fax', width: 140 },
-  { name: 'mobile', width: 140 },
-  { name: 'workPhone', width: 100 },
+  { name: 'mobile', maxWidth: 130 },
+  { name: 'workPhone', maxWidth: 100 },
   { name: 'email', width: 100 },
   { name: 'country', width: 150 },
   { name: 'region', width: 150 },
