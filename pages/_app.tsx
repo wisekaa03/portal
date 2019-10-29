@@ -5,7 +5,6 @@ import React from 'react';
 import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
-import Router from 'next/router';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 // import dynamic from 'next/dynamic';
 import { Query, ApolloProvider, QueryResult } from 'react-apollo';
@@ -15,6 +14,8 @@ import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
 // #endregion
 // #region Imports Local
+import { ApolloClient } from 'apollo-client';
+import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
 import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
@@ -34,19 +35,44 @@ const CurrentLogin: React.FC<{
   isMobile: boolean;
   language: string;
   router: NextRouter;
+  ctx: NextPageContext;
+  apollo: ApolloClient<NormalizedCacheObject>;
   Component: NextComponentType<NextPageContext, any, {}>;
-}> = ({ pageProps, isMobile, language, Component }): React.ReactElement | null => {
+}> = ({ pageProps, isMobile, language, Component, ctx, apollo }): React.ReactElement | null => {
+  // eslint-disable-next-line no-debugger
+  debugger;
+
   return (
-    <Query query={CURRENT_USER}>
-      {({ data, loading }: QueryResult<Data<'me', User>>) => {
+    <Query query={CURRENT_USER} fetchPolicy="cache-first">
+      {({ data, loading, client }: QueryResult<Data<'me', User>>) => {
+        let me;
+
         // eslint-disable-next-line no-debugger
         debugger;
 
-        if (data && data.me) {
+        if (__SERVER__) {
+          const req = ctx && ((ctx.req as unknown) as Express.Request);
+          if (req) {
+            me = req && req.session && req.session.passport && req.session.passport.user;
+
+            me['__typename'] = 'User';
+            me.profile['__typename'] = 'Profile';
+            me.profile.manager['__typename'] = 'Profile';
+
+            // apollo.writeQuery({
+            //   query: CURRENT_USER,
+            //   data: { me: { ...me } },
+            // });
+          }
+        } else {
+          me = data && data.me;
+        }
+
+        if (me) {
           return (
             <ProfileContext.Provider
               value={{
-                user: { ...(data && data.me) },
+                user: { ...me },
                 language,
                 isMobile,
               }}
@@ -81,7 +107,7 @@ class MainApp extends App<ApolloAppProps> {
   }
 
   render(): React.ReactElement {
-    const { Component, apolloClient, pageProps, currentLanguage, isMobile, router } = this.props;
+    const { Component, apolloClient, pageProps, currentLanguage, isMobile, router, ctx } = this.props;
 
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
@@ -114,6 +140,8 @@ class MainApp extends App<ApolloAppProps> {
             language={currentLanguage || ''}
             Component={Component}
             router={router}
+            ctx={ctx}
+            apollo={apolloClient}
           />
         </ThemeProvider>
       </ApolloProvider>
