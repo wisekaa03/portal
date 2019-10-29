@@ -22,6 +22,7 @@ type Profile {
   telephone: String
   workPhone: String
   mobile: String
+  email: String
 
   companyEng: String
   nameEng: String
