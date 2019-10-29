@@ -23,6 +23,7 @@ const PROFILE_FRAGMENT = gql`
     title
     telephone
     workPhone
+    email
     mobile
     manager {
       id
