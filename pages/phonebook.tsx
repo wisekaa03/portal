@@ -38,7 +38,7 @@ import { PROFILES } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
-const rowHeight = 64;
+const rowHeight = 72;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,18 +50,10 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: '#F7FBFA',
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
-    // panelLoading: {
-    //   height: panelHeight - 4,
-    //   paddingBottom: 4,
-    // },
-    // panelNoLoading: {
-    //   height: panelHeight,
-    // },
     tableWrapper: {
       display: 'block',
       flex: 1,
       height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`,
-      overflow: 'auto',
     },
     table: {
       height: '100%',
@@ -278,7 +270,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { loading, error, data, fetchMore } = useQuery(PROFILES(getGraphQLColumns(columns)), {
     variables: {
       orderBy,
-      first: search.length > 3 ? 100 : 30,
+      first: search.length > 3 ? 100 : 50,
       after: '',
       search: search.length > 3 ? search : '',
     },
@@ -290,14 +282,14 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       : data.profiles.edges.length
     : 0;
   const isItemLoaded = (index: any): boolean =>
-    data && (data.profiles.pageInfo.hasNextPage || index < data.profiles.edges.length);
+    data && (!data.profiles.pageInfo.hasNextPage || index < data.profiles.edges.length);
   const fetchFuncion = (): any =>
     fetchMore({
       query: PROFILES(getGraphQLColumns(columns)),
       variables: {
         orderBy,
         after: data.profiles.pageInfo.endCursor,
-        first: search.length > 3 ? 100 : 30,
+        first: search.length > 3 ? 100 : 50,
         search: search.length > 3 ? search : '',
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
