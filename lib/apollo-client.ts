@@ -4,6 +4,8 @@
 import fetch from 'isomorphic-fetch';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { persistCache } from 'apollo-cache-persist';
+import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { concat, ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
@@ -16,9 +18,7 @@ import stateResolvers from './state-link';
 
 let apollo: ApolloClient<NormalizedCacheObject>;
 
-const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCacheObject> => {
-  const cache = new InMemoryCache();
-
+const create = async (initialState = {}, cookie?: string): Promise<ApolloClient<NormalizedCacheObject>> => {
   // Create an http link:
   let httpLink: ApolloLink;
 
@@ -44,6 +44,8 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
   });
 
   let clientParams = {};
+  const cache = new InMemoryCache().restore(initialState);
+
   if (__SERVER__) {
     global.fetch = fetch;
 
@@ -78,24 +80,37 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     clientParams = {
       resolvers: stateResolvers,
     };
+
+    try {
+      // See above for additional options, including other storage providers.
+      await persistCache({
+        cache,
+        storage: window.localStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
+      });
+    } catch (error) {
+      console.error('Error restoring Apollo cache', error);
+    }
   }
 
   return new ApolloClient({
     connectToDevTools: !__SERVER__,
     ssrMode: __SERVER__, // Disables forceFetch on the server (so queries are only run once)
     link: concat(authLink.concat(errorLink), httpLink),
-    cache: cache.restore(initialState),
+    cache,
     ...clientParams,
   });
 };
 
-export const apolloClient = (initialState = {}, cookie?: string): ApolloClient<NormalizedCacheObject> => {
+export const apolloClient = async (
+  initialState = {},
+  cookie?: string,
+): Promise<ApolloClient<NormalizedCacheObject>> => {
   if (__SERVER__) {
     return create(initialState, cookie);
   }
 
   if (!apollo) {
-    apollo = create(initialState);
+    apollo = await create(initialState);
   }
 
   return apollo;

@@ -36,13 +36,13 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       // eslint-disable-next-line no-debugger
       debugger;
 
-      const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
-
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
       const apollo = __SERVER__
-        ? apolloClient()
-        : apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
+        ? await apolloClient()
+        : await apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
+
+      const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       try {
         await getDataFromTree(
@@ -55,8 +55,6 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
             apolloClient={apollo}
             currentLanguage={currentLanguage}
             isMobile={isMobile}
-            {...appProps}
-            {...appCtx}
           />,
         );
       } catch (error) {
