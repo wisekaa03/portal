@@ -38,12 +38,8 @@ export type ColumnNames =
 export type Order = 'ASC' | 'DESC';
 
 export interface Column {
-  id: ColumnNames;
-  label: string;
-  minWidth?: number;
-  align?: 'right' | 'left';
-  format?: (value: number) => string;
-  show?: boolean;
+  name: ColumnNames;
+  width: number;
 }
 
 export interface ProfileProps extends WithTranslation {
