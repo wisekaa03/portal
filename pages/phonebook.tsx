@@ -50,16 +50,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     tableWrapper: {
       display: 'block',
-      flex: 1,
       height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`,
       overflowX: 'auto',
       overflowY: 'hidden',
     },
     table: {
+      display: 'block',
       height: '100%',
-      width: '100%',
+    },
+    thead: {
+      display: 'block',
     },
     tbody: {
+      display: 'block',
+      height: '100%',
       width: '100%',
     },
     row: {
@@ -148,7 +152,7 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
   }
 
   if (columns.includes('manager')) {
-    result += ' manager { id firstName lastName middleName }';
+    result = result.replace('manager', 'manager { id firstName lastName middleName }');
   }
 
   return result;
@@ -225,6 +229,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
           case 'workPhone':
           case 'company':
           case 'department':
+          case 'email':
           case 'title': {
             cellData = item[column.name];
             break;
@@ -366,8 +371,8 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
             </IconButton>
           </div>
           <div id="phonebook-wrap" className={classes.tableWrapper}>
-            <Table stickyHeader component="div" className={classes.table}>
-              <TableHead component="div">
+            <Table component="div" className={classes.table}>
+              <TableHead component="div" className={classes.thead}>
                 <TableRow component="div" className={classes.row}>
                   {getHeadRows(columns, orderBy, handleRequestSort, t, classes)}
                 </TableRow>
