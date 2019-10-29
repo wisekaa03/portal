@@ -115,7 +115,7 @@ theme.overrides = {
   },
   MuiTableCell: {
     root: {
-      padding: theme.spacing(1.5),
+      padding: theme.spacing(),
     },
   },
 };

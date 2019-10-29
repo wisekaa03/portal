@@ -18,7 +18,7 @@ import {
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
-import { ColumnNames, SettingsProps } from './types';
+import { Column, ColumnNames, SettingsProps } from './types';
 import HeaderBg from '../../public/images/jpeg/header_bg.jpg';
 // #endregion
 
@@ -90,31 +90,31 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const allColumns: ColumnNames[] = [
-  'thumbnailPhoto40',
-  'lastName',
-  'nameEng',
-  'login',
-  'company',
-  'companyEng',
-  'department',
-  'departmentEng',
-  'otdel',
-  'otdelEng',
-  'title',
-  'positionEng',
-  'manager',
-  'room',
-  'telephone',
-  'fax',
-  'mobile',
-  'workPhone',
-  'email',
-  'country',
-  'region',
-  'town',
-  'street',
-  'disabled',
+export const allColumns: Column[] = [
+  { name: 'thumbnailPhoto40', width: 0 },
+  { name: 'lastName', width: 150 },
+  { name: 'nameEng', width: 150 },
+  { name: 'login', width: 100 },
+  { name: 'company', width: 200 },
+  { name: 'companyEng', width: 200 },
+  { name: 'department', width: 200 },
+  { name: 'departmentEng', width: 200 },
+  { name: 'otdel', width: 200 },
+  { name: 'otdelEng', width: 200 },
+  { name: 'title', width: 150 },
+  { name: 'positionEng', width: 150 },
+  { name: 'manager', width: 150 },
+  { name: 'room', width: 100 },
+  { name: 'telephone', width: 80 },
+  { name: 'fax', width: 80 },
+  { name: 'mobile', width: 80 },
+  { name: 'workPhone', width: 80 },
+  { name: 'email', width: 80 },
+  { name: 'country', width: 100 },
+  { name: 'region', width: 100 },
+  { name: 'town', width: 100 },
+  { name: 'street', width: 100 },
+  { name: 'disabled', width: 100 },
 ];
 
 export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
@@ -141,13 +141,13 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
           {[...Array(blocks).keys()].map((i) => (
             <FormControl key={i} className={classes.group}>
               <FormGroup>
-                {allColumns.slice(i * 4, i * 4 + 4).map((column) => (
+                {allColumns.slice(i * 4, i * 4 + 4).map(({ name }) => (
                   <FormControlLabel
-                    key={column}
+                    key={name}
                     className={classes.item}
-                    label={t(`phonebook:fields.${column}`)}
+                    label={t(`phonebook:fields.${name}`)}
                     control={
-                      <Checkbox color="primary" onChange={handleCheckbox(column)} checked={current.includes(column)} />
+                      <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
                     }
                   />
                 ))}
