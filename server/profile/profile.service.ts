@@ -40,8 +40,6 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  repository = (): Repository<ProfileEntity> => this.profileRepository;
-
   /* eslint-disable prettier/prettier */
   getProfiles = (search: string) => {
     // this.profileRepository.find({ cache: true, where: { notShowing: false } });
@@ -69,25 +67,6 @@ export class ProfileService {
   };
   /* eslint-enable prettier/prettier */
 
-  // profiles = async (
-  //   take: number,
-  //   skip: number,
-  //   orderBy = 'name',
-  //   order = 'ASC',
-  //   isNotShowing = true,
-  // ): Promise<ProfileEntity[]> => {
-  //   const where = isNotShowing ? { notShowing: false } : undefined;
-  //   return this.profileRepository.find({
-  //     cache: true,
-  //     take,
-  //     skip,
-  //     where,
-  //     order: {
-  //       [orderBy === 'name' ? 'lastName' : orderBy]: order.toUpperCase(),
-  //     },
-  //   });
-  // };
-
   /**
    * Profile by ID
    *
@@ -96,30 +75,6 @@ export class ProfileService {
    */
   profile = async (id: string): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(id, { cache: true });
-
-  // profilesSearch = async (search: string, orderBy: Order<string>, isNotShowing = true): Promise<ProfileEntity[]> => {
-  //   let where: Record<any, any> = [
-  //     { firstName: Like(`%${search}%`) },
-  //     { lastName: Like(`%${search}%`) },
-  //     { middleName: Like(`%${search}%`) },
-  //     { department: Like(`%${search}%`) },
-  //     { company: Like(`%${search}%`) },
-  //     { telephone: Like(`%${search}%`) },
-  //     { workPhone: Like(`%${search}%`) },
-  //     { mobile: Like(`%${search}%`) },
-  //   ];
-  //   if (isNotShowing) {
-  //     where = where.map((value: Record<any, any>) => ({ ...value, notShowing: false }));
-  //   }
-
-  //   return this.profileRepository.find({
-  //     cache: true,
-  //     order: {
-  //       [orderBy.field]: orderBy.direction,
-  //     },
-  //     where,
-  //   });
-  // };
 
   /**
    * Create or update by user DN

@@ -40,7 +40,6 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: true,
         orderFieldToKey: (field: string) => field,
-        repository: this.profileService.repository(),
         queryBuilder: this.profileService.getProfiles(search),
       },
     );
