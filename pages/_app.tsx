@@ -22,8 +22,6 @@ import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
 import { User } from '../server/user/models/user.dto';
-import { getStorage } from '../lib/session-storage';
-import { SESSION } from '../lib/constants';
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));

@@ -11,36 +11,22 @@ import { HttpLink, createHttpLink } from 'apollo-link-http';
 // import { WebSocketLink } from 'apollo-link-ws';
 // #endregion
 // #region Imports Local
-import { NodeIdGetterObj } from './types';
 import stateResolvers from './state-link';
-import { getStorage } from './session-storage';
-import { SESSION } from './constants';
 // #endregion
 
 let apollo: ApolloClient<NormalizedCacheObject>;
 
-export const apolloClient = (
-  initialState = {},
-  _linkOptions: HttpLink.Options = {},
-): ApolloClient<NormalizedCacheObject> => {
-  if (apollo) {
-    return apollo;
-  }
-
-  const cache = new InMemoryCache({
-    dataIdFromObject: (object: NodeIdGetterObj) => object.nodeId || null,
-  }).restore(initialState);
+const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCacheObject> => {
+  const cache = new InMemoryCache();
 
   // Create an http link:
   let httpLink: ApolloLink;
 
   const authLink = setContext((_, { headers }) => {
-    // const token = getStorage(SESSION);
-
     return {
       headers: {
         ...headers,
-        // authorization: token ? `Bearer ${token}` : '',
+        Cookie: cookie,
       },
     };
   });
@@ -62,7 +48,7 @@ export const apolloClient = (
     global.fetch = fetch;
 
     httpLink = createHttpLink({
-      uri: `http://${process.env.HOST}:${process.env.PORT}/graphql`,
+      uri: `http://localhost:${process.env.PORT}/graphql`,
     });
   } else {
     // const subscriptionsUri = `${window.location.origin.replace(
@@ -89,30 +75,27 @@ export const apolloClient = (
       uri: `/graphql`,
     });
 
-    cache.writeData({
-      data: {
-        isLoggedIn: !!getStorage(SESSION),
-      },
-    });
-
     clientParams = {
       resolvers: stateResolvers,
-      // typeDefs: gql`
-      //   type isLoggedIn {
-      //     isLoggedIn: Boolean
-      //   }
-      // `,
     };
   }
 
+  return new ApolloClient({
+    connectToDevTools: !__SERVER__,
+    ssrMode: __SERVER__, // Disables forceFetch on the server (so queries are only run once)
+    link: concat(authLink.concat(errorLink), httpLink),
+    cache: cache.restore(initialState),
+    ...clientParams,
+  });
+};
+
+export const apolloClient = (initialState = {}, cookie?: string): ApolloClient<NormalizedCacheObject> => {
+  if (__SERVER__) {
+    return create(initialState, cookie);
+  }
+
   if (!apollo) {
-    apollo = new ApolloClient({
-      connectToDevTools: !__SERVER__,
-      ssrMode: __SERVER__,
-      link: concat(authLink.concat(errorLink), httpLink),
-      cache,
-      ...clientParams,
-    });
+    apollo = create(initialState);
   }
 
   return apollo;

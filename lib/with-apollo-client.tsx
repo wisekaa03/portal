@@ -27,33 +27,52 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
     public static displayName = 'withApolloClient(MainApp)';
 
     public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
-      const { ctx } = appCtx;
+      const { Component, router, ctx } = appCtx;
       const apolloState: WithApolloState = {};
 
       const currentLanguage = ctx.req ? ((ctx.req as unknown) as Express.Request).lng : nextI18next.i18n.language;
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
 
+      // eslint-disable-next-line no-debugger
+      debugger;
+
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
-      const apollo = apolloClient();
+      const apollo = __SERVER__
+        ? apolloClient()
+        : apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
+
+      try {
+        await getDataFromTree(
+          <MainApp
+            {...appProps}
+            {...appCtx}
+            Component={Component}
+            router={router}
+            apolloState={apolloState}
+            apolloClient={apollo}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+            {...appProps}
+            {...appCtx}
+          />,
+        );
+      } catch (error) {
+        // Prevent Apollo Client GraphQL errors from crashing SSR.
+        // Handle them in components via the data.error prop:
+        // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
+        console.error('Error while running `getDataFromTree`', error);
+      }
 
       if (__SERVER__) {
-        try {
-          await getDataFromTree(<MainApp {...appProps} {...appCtx} apolloClient={apollo} />);
-        } catch (error) {
-          // Prevent Apollo Client GraphQL errors from crashing SSR.
-          // Handle them in components via the data.error prop:
-          // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          console.error('Error while running `getDataFromTree`', error);
-        }
-
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
       }
 
+      // Extract query data from the Apollo store
       apolloState.data = apollo.cache.extract();
 
       // Extract query data from the Apollo store
@@ -72,7 +91,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       // `getDataFromTree` renders the component first, the client is passed off as a property.
       // After that rendering is done using Next's normal rendering pipeline
-      this.apolloClient = this.apolloClient || apolloClient(props.apolloState);
+      this.apolloClient = this.apolloClient || apolloClient(props.apolloState.data);
     }
 
     public render(): React.ReactElement {
