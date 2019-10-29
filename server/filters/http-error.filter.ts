@@ -4,7 +4,6 @@
 import { ExceptionFilter, Catch, HttpException, HttpStatus, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
-import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import { NextResponse } from 'nest-next-module';
 // #endregion
 // #region Imports Local
@@ -16,7 +15,7 @@ import { LogService } from '../logger/logger.service';
 export class HttpErrorFilter implements ExceptionFilter {
   constructor(private readonly logService: LogService) {}
 
-  catch(exception: Error | HttpException | JsonWebTokenError | TokenExpiredError, host: ExecutionContext): void {
+  catch(exception: Error | HttpException, host: ExecutionContext): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<NextResponse>();
     const request = ctx.getRequest<Request>();
