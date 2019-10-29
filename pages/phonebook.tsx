@@ -17,9 +17,8 @@ import {
   Modal,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
-import clsx from 'clsx';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
-import { FixedSizeList as List } from 'react-window';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 // #endregion
@@ -31,7 +30,6 @@ import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import { appBarHeight } from '../components/app-bar';
 import useDebounce from '../lib/debounce';
-import { Profile } from '../server/profile/models/profile.dto';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
 import { PROFILES } from '../lib/queries';
@@ -54,6 +52,8 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'block',
       flex: 1,
       height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`,
+      overflowX: 'auto',
+      overflowY: 'hidden',
     },
     table: {
       height: '100%',
@@ -197,7 +197,7 @@ const getHeadRows = (
     ];
   }, []);
 
-const Row = ({ index, style, data }: any): any => {
+const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
   const item = data.items[index].node;
   const { columns, handleProfileId, classes } = data;
 
@@ -283,7 +283,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     : 0;
   const isItemLoaded = (index: any): boolean =>
     data && (!data.profiles.pageInfo.hasNextPage || index < data.profiles.edges.length);
-  const fetchFuncion = (): any =>
+  const fetchFunction = (): any =>
     fetchMore({
       query: PROFILES(getGraphQLColumns(columns)),
       variables: {
@@ -308,7 +308,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       },
     });
 
-  const loadMoreItems = (_: number, __: number): any => !loading && fetchFuncion();
+  const loadMoreItems = (_: number, __: number): any => !loading && fetchFunction();
 
   const handleRequestSort = (column: ColumnNames) => (): void => {
     const isAsc = orderBy.field === column && orderBy.direction === OrderDirection.ASC;

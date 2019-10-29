@@ -21,7 +21,7 @@ const useStyles = makeStyles((/* theme: Theme */) =>
     content: {
       flexGrow: 1,
       height: `calc(100vh - ${appBarHeight}px)`,
-      overflow: 'auto',
+      overflow: 'hidden',
     },
   }));
 
