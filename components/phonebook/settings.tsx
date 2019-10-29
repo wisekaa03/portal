@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const allColumns: Column[] = [
-  { name: 'thumbnailPhoto40', width: 0 },
+  { name: 'thumbnailPhoto40', width: 60 },
   { name: 'lastName', width: 150 },
   { name: 'nameEng', width: 150 },
   { name: 'login', width: 100 },
