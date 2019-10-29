@@ -9,7 +9,7 @@ import { AuthController } from './auth.controller';
 import { ConfigService } from '../../config/config.service';
 // #endregion
 
-jest.mock('../../../__mocks__/config.service.mock');
+jest.mock('../../config/config.service');
 jest.mock('../../logger/logger.service');
 
 describe('Auth Controller', () => {

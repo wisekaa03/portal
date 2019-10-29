@@ -4,7 +4,6 @@
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule } from 'nestjs-i18n';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
 import { UserService } from './user.service';
@@ -14,14 +13,11 @@ import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { ProfileModule } from '../profile/profile.module';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { LdapService } from '../ldap/ldap.service';
-import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
-import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ProfileEntity } from '../profile/profile.entity';
 // #endregion
 
+jest.mock('../guards/gqlauth.guard');
 jest.mock('../ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 
@@ -45,12 +41,6 @@ describe('UserService', () => {
         TypeOrmModule.forRoot({}),
         TypeOrmModule.forFeature([UserEntity]),
 
-        JwtModule.registerAsync({
-          useFactory: () => {
-            return {} as JwtModuleOptions;
-          },
-        }),
-
         LdapModule.registerAsync({
           useFactory: () => ({} as LdapModuleOptions),
         }),
@@ -59,16 +49,11 @@ describe('UserService', () => {
       ],
       providers: [
         UserService,
-        { provide: LdapService, useValue: LdapServiceMock },
-        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+        LdapService,
+        // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        // { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
-    })
-      .overrideProvider(LdapService)
-      .useValue(LdapServiceMock)
-      .overrideGuard(GqlAuthGuard)
-      .useValue(GqlAuthGuardMock)
-      .compile();
+    }).compile();
 
     service = module.get<UserService>(UserService);
   });

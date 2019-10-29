@@ -3,7 +3,6 @@
 // #region Imports NPM
 import { Inject, forwardRef, Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
-import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { UserResponse, UserLogin } from '../user/models/user.dto';

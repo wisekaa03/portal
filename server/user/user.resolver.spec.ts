@@ -9,18 +9,16 @@ import { LdapModule } from '../ldap/ldap.module';
 import { LdapService } from '../ldap/ldap.service';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { ProfileModule } from '../profile/profile.module';
-import { UserEntity } from './user.entity';
+// import { UserEntity } from './user.entity';
 import { UserResolver } from './user.resolver';
-import { ProfileEntity } from '../profile/profile.entity';
+// import { ProfileEntity } from '../profile/profile.entity';
 import { UserService } from './user.service';
 // #endregion
 
 jest.mock('./user.entity');
-jest.mock('../profile/profile.entity');
-jest.mock('../guards/gqlauth.guard');
+jest.mock('../profile/profile.module');
 jest.mock('../ldap/ldap.service');
 jest.mock('./user.service');
-jest.mock('../../__mocks__/mockRepository.mock');
 
 describe('UsersResolver', () => {
   let resolver: UserResolver;
@@ -36,12 +34,11 @@ describe('UsersResolver', () => {
 
         // #region TypeORM
         TypeOrmModule.forRoot({}),
-        TypeOrmModule.forFeature([UserEntity]),
         // #endregion
 
         ProfileModule,
       ],
-      providers: [UserService, UserResolver, LdapService, UserEntity, ProfileEntity],
+      providers: [UserService, UserResolver, LdapService],
     }).compile();
 
     resolver = module.get<UserResolver>(UserResolver);
