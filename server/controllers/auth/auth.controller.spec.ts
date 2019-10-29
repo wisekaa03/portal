@@ -3,14 +3,13 @@
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
 import { AuthController } from './auth.controller';
 import { ConfigService } from '../../config/config.service';
-import { ConfigServiceMock } from '../../../__mocks__/config.service.mock';
 // #endregion
 
+jest.mock('../../../__mocks__/config.service.mock');
 jest.mock('../../logger/logger.service');
 
 describe('Auth Controller', () => {
@@ -18,16 +17,9 @@ describe('Auth Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        PassportModule.register({ defaultStrategy: 'jwt', session: true }),
-        JwtModule.registerAsync({
-          useFactory: async () => {
-            return {} as JwtModuleOptions;
-          },
-        }),
-      ],
+      imports: [PassportModule.register({ defaultStrategy: 'local', session: true })],
       controllers: [AuthController],
-      providers: [{ provide: ConfigService, useClass: ConfigServiceMock }],
+      providers: [ConfigService],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
