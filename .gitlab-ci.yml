@@ -19,8 +19,6 @@ test_build:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
       - node_modules/
-  before_script:
-    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   script:
     - yarn install --production=false
     - npx next telemetry disable
@@ -51,8 +49,6 @@ production:
     paths:
       - node_modules/
     policy: pull
-  before_script:
-    - cp --remove-destination "${JWT_PRIVATE_PEM}" jwt.private.pem && cp --remove-destination "${JWT_PUBLIC_PEM}" jwt.public.pem
   # TODO: это все нужно сделать по-другому... но пока так, до 20 октября сделаю
   script:
     - |
