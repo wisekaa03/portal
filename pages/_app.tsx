@@ -37,7 +37,7 @@ const CurrentLogin: React.FC<{
   Component: NextComponentType<NextPageContext, any, {}>;
 }> = ({ pageProps, isMobile, language, Component }): React.ReactElement | null => {
   return (
-    <Query query={CURRENT_USER} fetchPolicy="cache-and-network">
+    <Query query={CURRENT_USER}>
       {({ data, loading }: QueryResult<Data<'me', User>>) => {
         // eslint-disable-next-line no-debugger
         debugger;
