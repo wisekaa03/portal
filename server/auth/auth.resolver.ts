@@ -48,7 +48,7 @@ export class AuthResolver {
         if (err) {
           this.logService.error('Error when logging in:', err);
         } else {
-          this.logService.log(`User is logged in: ${user}`, 'AuthResolvers');
+          this.logService.log(`User is logged in: ${user.username}`, 'AuthResolvers');
         }
       });
       return user;
