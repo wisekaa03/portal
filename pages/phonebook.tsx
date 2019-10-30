@@ -21,10 +21,11 @@ import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
+import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
-import { I18nPage, includeDefaultNamespaces, nextI18next, TFunction } from '../lib/i18n-client';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 import { Column, ColumnNames } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
