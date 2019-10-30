@@ -60,6 +60,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
+    thead: {
+      // TODO: продумать отступ по размеру скролла
+      paddingRight: theme.spacing(2),
+    },
     tbody: {
       flex: 1,
     },
@@ -129,7 +133,6 @@ const defaultColumns: ColumnNames[] = [
   'department',
   'title',
   'mobile',
-  'telephone',
   'workPhone',
 ];
 
@@ -273,6 +276,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       after: '',
       search: search.length > 3 ? search : '',
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   const itemCount = data
@@ -291,16 +295,21 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         first: search.length > 3 ? 100 : 50,
         search: search.length > 3 ? search : '',
       },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        const { pageInfo, edges, totalCount, __typename } = fetchMoreResult.profiles;
+      updateQuery: (prev, { fetchMoreResult }) => {
+        const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
 
-        if (edges.length === 0) return previousResult;
+        if (edges.length === 0) return prev;
         debugger;
+        const clean: string[] = [];
+
         return {
+          ...prev,
           profiles: {
-            __typename,
+            ...prev.profiles,
             totalCount,
-            edges: [...previousResult.profiles.edges, ...edges],
+            edges: [...prev.profiles.edges, ...edges].filter(
+              (edge) => !clean.includes(edge.node.id) && clean.push(edge.node.id),
+            ),
             pageInfo,
           },
         };
@@ -366,7 +375,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
           </div>
           <div id="phonebook-wrap" className={classes.tableWrapper}>
             <Table component="div" className={classes.table}>
-              <TableHead component="div">
+              <TableHead component="div" className={classes.thead}>
                 <TableRow component="div" className={classes.row}>
                   {getHeadRows(columns, orderBy, handleRequestSort, t, classes)}
                 </TableRow>

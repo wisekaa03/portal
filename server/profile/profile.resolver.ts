@@ -38,7 +38,7 @@ export class ProfileResolver {
       {
         type: 'Profile',
         alias: 'profile',
-        validateCursor: true,
+        validateCursor: false,
         orderFieldToKey: (field: string) => field,
         queryBuilder: this.profileService.getProfiles(search),
       },
