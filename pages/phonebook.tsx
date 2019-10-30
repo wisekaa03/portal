@@ -29,7 +29,6 @@ import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-cli
 import { Column, ColumnNames } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
-import { appBarHeight } from '../components/app-bar';
 import useDebounce from '../lib/debounce';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
@@ -41,7 +40,11 @@ const rowHeight = 72;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      display: 'flex',
+      flex: 1,
+      flexDirection: 'column',
+    },
     panel: {
       height: panelHeight,
       display: 'flex',
@@ -50,22 +53,15 @@ const useStyles = makeStyles((theme: Theme) =>
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     tableWrapper: {
-      display: 'block',
-      height: `calc(100vh - ${appBarHeight}px - ${panelHeight}px)`,
-      overflowX: 'auto',
-      overflowY: 'hidden',
+      display: 'flex',
+      flex: 1,
     },
     table: {
-      display: 'block',
-      height: '100%',
-    },
-    thead: {
-      display: 'block',
+      display: 'flex',
+      flexDirection: 'column',
     },
     tbody: {
-      display: 'block',
-      height: '100%',
-      width: '100%',
+      flex: 1,
     },
     row: {
       width: '100%',
@@ -299,7 +295,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         const { pageInfo, edges, totalCount, __typename } = fetchMoreResult.profiles;
 
         if (edges.length === 0) return previousResult;
-
+        debugger;
         return {
           profiles: {
             __typename,
@@ -370,7 +366,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
           </div>
           <div id="phonebook-wrap" className={classes.tableWrapper}>
             <Table component="div" className={classes.table}>
-              <TableHead component="div" className={classes.thead}>
+              <TableHead component="div">
                 <TableRow component="div" className={classes.row}>
                   {getHeadRows(columns, orderBy, handleRequestSort, t, classes)}
                 </TableRow>
