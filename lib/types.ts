@@ -65,7 +65,6 @@ export interface Address {
 }
 
 export interface ProfileParams {
-  token?: string;
   user?: User;
   language?: string;
   isMobile?: boolean;
