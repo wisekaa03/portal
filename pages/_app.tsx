@@ -18,6 +18,7 @@ import 'typeface-roboto';
 // #region Imports Local
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { IncomingMessage } from 'http';
 import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
 import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
@@ -29,6 +30,53 @@ import { User } from '../server/user/models/user.dto';
 
 // const LoginPage = dynamic(() => import('./auth/login'));
 
+const InnerLogin: React.FC<{
+  Component: NextComponentType<NextPageContext, any, {}>;
+  pageProps: any;
+  isMobile: boolean;
+  language: string;
+  ctx: NextPageContext;
+  router: NextRouter;
+  apollo: ApolloClient<NormalizedCacheObject>;
+}> = ({ Component, pageProps, isMobile, language, ctx, apollo }): React.ReactElement | null => {
+  // let me;
+
+  const { loading, data, error, client }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+    fetchPolicy: 'cache-first',
+  });
+
+  // if (__SERVER__) {
+  //   const req = ctx && ((ctx.req as unknown) as Express.Request);
+  //   me = req && req.session && req.session.passport && req.session.passport.user;
+
+  //   if (me) {
+  //     me['__typename'] = 'User';
+  //     me.profile['__typename'] = 'Profile';
+  //     me.profile.manager['__typename'] = 'Profile';
+
+  //     apollo.writeQuery({
+  //       query: CURRENT_USER,
+  //       data: { me: { ...me } },
+  //     });
+  //   }
+  // } else {
+  const user = data ? data.me : undefined;
+  // }
+
+  return (
+    <ProfileContext.Provider
+      value={{
+        user,
+        language,
+        isMobile,
+      }}
+    >
+      {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+      <Component {...pageProps} />
+    </ProfileContext.Provider>
+  );
+};
+
 /**
  * CurrentLogin
  */
@@ -37,62 +85,63 @@ const CurrentLogin: React.FC<{
   pageProps: any;
   isMobile: boolean;
   language: string;
-  apollo: ApolloClient<NormalizedCacheObject>;
   ctx: NextPageContext;
   router: NextRouter;
-}> = ({ Component, pageProps, isMobile, language, apollo, ctx, router }): React.ReactElement | null => {
-  let me;
-
+  apollo: ApolloClient<NormalizedCacheObject>;
+}> = ({ Component, pageProps, isMobile, language, ctx, router, apollo }): React.ReactElement | null => {
   // eslint-disable-next-line no-debugger
   debugger;
 
-  const { loading, data, client }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
-    fetchPolicy: 'cache-first',
-  });
-
   if (__SERVER__) {
     const req = ctx && ((ctx.req as unknown) as Express.Request);
-    me = req && req.session && req.session.passport && req.session.passport.user;
+    if (!(req && req.session && req.session.passport && req.session.passport.user)) {
+      if ((ctx && ctx.pathname === '/auth/login') || (router && router.pathname === '/auth/login')) {
+        return (
+          <ProfileContext.Provider
+            value={{
+              user: undefined,
+              language,
+              isMobile,
+            }}
+          >
+            <Component {...pageProps} />
+          </ProfileContext.Provider>
+        );
+      }
 
-    if (me) {
-      me['__typename'] = 'User';
-      me.profile['__typename'] = 'Profile';
-      me.profile.manager['__typename'] = 'Profile';
+      if (ctx && ctx.res) {
+        (ctx.res as any).status(403);
+        (ctx.res as any).location = '/auth/login';
 
-      apollo.writeQuery({
-        query: CURRENT_USER,
-        data: { me: { ...me } },
-      });
-    } else if (ctx.res) {
-      (ctx.res as any).status(403);
-      (ctx.res as any).location = '/auth/login';
-
-      return <Loading noMargin type="linear" variant="indeterminate" />;
+        return <Loading noMargin type="linear" variant="indeterminate" />;
+      }
     }
-  } else {
-    me = data && data.me;
   }
 
-  if (me) {
+  if ((ctx && ctx.pathname !== '/auth/login') || (router && router.pathname !== '/auth/login')) {
     return (
-      <ProfileContext.Provider
-        value={{
-          user: { ...me },
-          language,
-          isMobile,
-        }}
-      >
-        {loading && <Loading noMargin type="linear" variant="indeterminate" />}
-        <Component {...pageProps} />
-      </ProfileContext.Provider>
+      <InnerLogin
+        Component={Component}
+        pageProps={pageProps}
+        isMobile={isMobile}
+        language={language}
+        ctx={ctx}
+        router={router}
+        apollo={apollo}
+      />
     );
   }
 
   return (
-    <>
-      {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+    <ProfileContext.Provider
+      value={{
+        user: undefined,
+        language,
+        isMobile,
+      }}
+    >
       <Component {...pageProps} />
-    </>
+    </ProfileContext.Provider>
   );
 };
 

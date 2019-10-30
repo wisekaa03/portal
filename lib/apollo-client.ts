@@ -18,7 +18,7 @@ import stateResolvers from './state-link';
 
 let apollo: ApolloClient<NormalizedCacheObject>;
 
-const create = async (initialState = {}, cookie?: string): Promise<ApolloClient<NormalizedCacheObject>> => {
+const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCacheObject> => {
   // Create an http link:
   let httpLink: ApolloLink;
 
@@ -83,7 +83,7 @@ const create = async (initialState = {}, cookie?: string): Promise<ApolloClient<
 
     try {
       // See above for additional options, including other storage providers.
-      await persistCache({
+      persistCache({
         cache,
         storage: window.localStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
       });
@@ -101,16 +101,13 @@ const create = async (initialState = {}, cookie?: string): Promise<ApolloClient<
   });
 };
 
-export const apolloClient = async (
-  initialState = {},
-  cookie?: string,
-): Promise<ApolloClient<NormalizedCacheObject>> => {
+export const apolloClient = (initialState = {}, cookie?: string): ApolloClient<NormalizedCacheObject> => {
   if (__SERVER__) {
     return create(initialState, cookie);
   }
 
   if (!apollo) {
-    apollo = await create(initialState);
+    apollo = create(initialState, cookie);
   }
 
   return apollo;

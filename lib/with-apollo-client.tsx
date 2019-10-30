@@ -39,8 +39,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
       const apollo = __SERVER__
-        ? await apolloClient()
-        : await apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
+        ? apolloClient()
+        : apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
