@@ -111,11 +111,13 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const client = useApolloClient();
+
   const [sync] = useMutation(SYNC, {
     onCompleted() {
       setSyncLoading(false);
     },
   });
+
   const [cache] = useMutation(CACHE, {
     onCompleted() {
       setCacheLoading(false);

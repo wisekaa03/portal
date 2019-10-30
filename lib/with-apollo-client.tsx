@@ -34,7 +34,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
 
       // eslint-disable-next-line no-debugger
-      debugger;
+      // debugger;
 
       // Run all GraphQL queries in the component tree
       // and extract the resulting data

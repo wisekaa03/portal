@@ -7,6 +7,7 @@ import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
+import { UnauthorizedException } from '@nestjs/common';
 // import dynamic from 'next/dynamic';
 import { ApolloProvider, QueryResult } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
@@ -16,9 +17,6 @@ import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
 // #endregion
 // #region Imports Local
-import { ApolloClient } from 'apollo-client';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { IncomingMessage } from 'http';
 import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
 import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
@@ -35,34 +33,14 @@ const InnerLogin: React.FC<{
   pageProps: any;
   isMobile: boolean;
   language: string;
-  ctx: NextPageContext;
-  router: NextRouter;
-  apollo: ApolloClient<NormalizedCacheObject>;
-}> = ({ Component, pageProps, isMobile, language, ctx, apollo }): React.ReactElement | null => {
+}> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
   // let me;
 
-  const { loading, data, error, client }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
 
-  // if (__SERVER__) {
-  //   const req = ctx && ((ctx.req as unknown) as Express.Request);
-  //   me = req && req.session && req.session.passport && req.session.passport.user;
-
-  //   if (me) {
-  //     me['__typename'] = 'User';
-  //     me.profile['__typename'] = 'Profile';
-  //     me.profile.manager['__typename'] = 'Profile';
-
-  //     apollo.writeQuery({
-  //       query: CURRENT_USER,
-  //       data: { me: { ...me } },
-  //     });
-  //   }
-  // } else {
   const user = data ? data.me : undefined;
-  // }
-
   return (
     <ProfileContext.Provider
       value={{
@@ -87,11 +65,7 @@ const CurrentLogin: React.FC<{
   language: string;
   ctx: NextPageContext;
   router: NextRouter;
-  apollo: ApolloClient<NormalizedCacheObject>;
-}> = ({ Component, pageProps, isMobile, language, ctx, router, apollo }): React.ReactElement | null => {
-  // eslint-disable-next-line no-debugger
-  debugger;
-
+}> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
   if (__SERVER__) {
     const req = ctx && ((ctx.req as unknown) as Express.Request);
     if (!(req && req.session && req.session.passport && req.session.passport.user)) {
@@ -113,23 +87,13 @@ const CurrentLogin: React.FC<{
         (ctx.res as any).status(403);
         (ctx.res as any).location = '/auth/login';
 
-        return <Loading noMargin type="linear" variant="indeterminate" />;
+        throw new UnauthorizedException();
       }
     }
   }
 
   if ((ctx && ctx.pathname !== '/auth/login') || (router && router.pathname !== '/auth/login')) {
-    return (
-      <InnerLogin
-        Component={Component}
-        pageProps={pageProps}
-        isMobile={isMobile}
-        language={language}
-        ctx={ctx}
-        router={router}
-        apollo={apollo}
-      />
-    );
+    return <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} />;
   }
 
   return (
@@ -192,7 +156,6 @@ class MainApp extends App<ApolloAppProps> {
             Component={Component}
             router={router}
             ctx={ctx}
-            apollo={apolloClient}
           />
         </ThemeProvider>
       </ApolloProvider>

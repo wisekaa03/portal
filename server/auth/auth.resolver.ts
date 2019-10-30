@@ -63,6 +63,7 @@ export class AuthResolver {
    * @returns {boolean}
    */
   @Mutation()
+  @UseGuards(GqlAuthGuard)
   async logout(@Context('req') req: Request): Promise<boolean | null> {
     this.logService.debug(`User logout`, 'AuthResolvers');
 
@@ -79,6 +80,7 @@ export class AuthResolver {
    * @returns {boolean}
    */
   @Mutation()
+  @UseGuards(GqlAuthGuard)
   async cacheReset(): Promise<boolean> {
     this.logService.debug(`Cache reset`, 'AuthResolvers');
 
