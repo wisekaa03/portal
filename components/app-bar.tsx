@@ -17,9 +17,10 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { ExecutionResult } from 'graphql';
 // eslint-disable-next-line import/named
 import { WithTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
-import { nextI18next, TFunction } from '../lib/i18n-client';
+import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/types';
 import { LOGOUT, SYNC } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
