@@ -2,7 +2,6 @@
 /* eslint @typescript-eslint/indent:0 */
 
 // #region Imports NPM
-import i18n from 'i18next';
 import NextI18Next from 'next-i18next';
 // eslint-disable-next-line import/named
 import { useTranslation as originalUseTranslation, WithTranslation } from 'react-i18next';
@@ -34,8 +33,6 @@ export const { appWithTranslation, Trans } = nextI18next;
 export const useTranslation = originalUseTranslation;
 export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common'].concat(namespaces);
 
-export type I18n = i18n.i18n;
-export type TFunction = i18n.TFunction;
 export type I18nPage<P = {}> = NextComponentType<
   NextPageContext,
   { namespacesRequired: string[] },
