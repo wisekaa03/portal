@@ -33,7 +33,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       ({ message } = exception);
     }
 
-    if (response) {
+    if (response.status && request.method && request.url) {
       // #region HTTP query
       const errorResponse = {
         code: status,
