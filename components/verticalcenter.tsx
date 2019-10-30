@@ -31,5 +31,13 @@ interface VerticalCenterParams {
 export const VerticalCenter: React.FC<VerticalCenterParams> = ({ horizontal = true, children }) => {
   const classes: any = useStyles({});
 
-  return <div className={horizontal ? clsx(classes.horizontal, classes.vertical) : classes.vertical}>{children}</div>;
+  return (
+    <div
+      className={clsx(classes.vertical, {
+        [classes.horizontal]: horizontal,
+      })}
+    >
+      {children}
+    </div>
+  );
 };
