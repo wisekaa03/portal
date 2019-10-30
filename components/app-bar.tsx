@@ -14,10 +14,8 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import { green, blue } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
-import { ExecutionResult } from 'graphql';
 // eslint-disable-next-line import/named
 import { WithTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../lib/i18n-client';
@@ -31,13 +29,11 @@ import { Avatar } from './avatar';
 import { SESSION } from '../lib/constants';
 // #endregion
 
-export const appBarHeight = 64;
 const avatarHeight = 48;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
       zIndex: theme.zIndex.drawer + 1,
       background: `url(${HeaderBg})`,
       backgroundSize: 'cover',

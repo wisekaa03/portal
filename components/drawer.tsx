@@ -20,7 +20,6 @@ import { WithTranslation } from 'react-i18next';
 // #endregion
 // #region Imports Local
 import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
-import { appBarHeight } from './app-bar';
 import DrawerBg from '../public/images/jpeg/drawer_bg.jpg';
 import Icon from './icon';
 import ItIcon from '../public/images/svg/icons/it.svg';
@@ -31,12 +30,11 @@ const drawerWidth = 256;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      display: 'flex',
+    },
     toolbar: {
       ...theme.mixins.toolbar,
-      [theme.breakpoints.up('md')]: {
-        marginTop: appBarHeight,
-      },
     },
     drawer: {
       width: drawerWidth,
@@ -48,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawerOpen: {
       width: drawerWidth,
+      position: 'relative',
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -56,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerClose: {
       overflowX: 'hidden',
       width: theme.spacing(7) + 1,
+      position: 'relative',
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
