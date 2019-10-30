@@ -21,6 +21,7 @@ import { ConfigService } from './config/config.service';
 import { LogService } from './logger/logger.service';
 import { nextI18next } from '../lib/i18n-client';
 import sessionRedis from './shared/session-redis';
+import session from './shared/session';
 // #endregion
 
 // #region NestJS options
@@ -46,10 +47,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Improve security
   app.use(helmet.ieNoOpen());
-  app.use('*', (req: Request, res: Response, next: Function) => {
-    res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
-    next();
-  });
 
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
@@ -102,7 +99,9 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Session and passport initialization
-  app.use(sessionRedis(configService, logger));
+  const store = sessionRedis(configService, logger);
+  app.use(session(configService, logger, store));
+
   app.use(passport.initialize());
   app.use(passport.session());
   // #endregion
@@ -113,6 +112,14 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Locale I18n
   app.use(nextI18NextMiddleware(nextI18next));
+  // #endregion
+
+  // #region Next.JS locals
+  app.use('*', (req: Request, res: Response, next: Function) => {
+    res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
+    res.locals.sessionStore = store;
+    next();
+  });
   // #endregion
 
   // #region Start server

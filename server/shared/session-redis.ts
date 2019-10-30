@@ -1,44 +1,28 @@
 /** @format */
 
 // #region Imports NPM
-import session from 'express-session';
-import redisSessionStore from 'connect-redis';
-import redis from 'redis';
-// #endreion
+import Session from 'express-session';
+import RedisSessionStore from 'connect-redis';
+import Redis from 'redis';
+// #endregion
 // #region Imports Local
 import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 // #endregion
 
-export default (configService: ConfigService, logService: LogService): any => {
-  const sess = session({
-    secret: configService.get<string>('SESSION_SECRET'),
-    store: new (redisSessionStore(session))({
-      client: redis.createClient({
+export default (configService: ConfigService, logService: LogService): Session.Store => {
+  try {
+    const sess = new (RedisSessionStore(Session))({
+      client: Redis.createClient({
         host: configService.get<string>('SESSION_REDIS_HOST'),
         port: configService.get<number>('SESSION_REDIS_PORT'),
         db: configService.get<number>('SESSION_REDIS_DB'),
         password: configService.get<string>('SESSION_REDIS_PASSWORD') || undefined,
       }),
-    }),
-    resave: false,
-    // rolling: true,
-    saveUninitialized: false,
-    name: 'portal',
-    // genid: () => genuuid(),
-    cookie: {
-      path: '/',
-      // domain: '',
-      // secure: process.env.PROTOCOL === 'https',
-      // expires: false,
-      httpOnly: false,
-      maxAge: configService.get<number>('SESSION_COOKIE_TTL'), // msec, 1 hour
-    },
-  });
+    });
 
-  if (sess) {
     logService.debug(
-      `install session cache: ` +
+      'session redis:' +
         `host="${configService.get<string>('SESSION_REDIS_HOST')}" ` +
         `port="${configService.get<number>('SESSION_REDIS_PORT')}" ` +
         `db="${configService.get<number>('SESSION_REDIS_DB')}" ` +
@@ -49,7 +33,9 @@ export default (configService: ConfigService, logService: LogService): any => {
     );
 
     return sess;
-  }
+  } catch (error) {
+    logService.error('Error when installing', error.toString(), 'Session');
 
-  return null;
+    throw error;
+  }
 };
