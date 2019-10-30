@@ -72,4 +72,16 @@ export class AuthResolver {
 
     return true;
   }
+
+  /**
+   * GraphQL mutation: cacheReset
+   *
+   * @returns {boolean}
+   */
+  @Mutation()
+  async cacheReset(): Promise<boolean> {
+    this.logService.debug(`Cache reset`, 'AuthResolvers');
+
+    return this.authService.cacheReset();
+  }
 }

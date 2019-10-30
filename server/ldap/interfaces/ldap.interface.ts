@@ -279,6 +279,7 @@ export interface LdapModuleOptions extends ClientOptions {
   includeRaw?: boolean;
 
   timeLimit?: number;
+  sizeLimit?: number;
 
   /**
    * If true, then up to 100 credentials at a time will be cached for

@@ -64,6 +64,12 @@ export const SYNC = gql`
   }
 `;
 
+export const CACHE = gql`
+  mutation CacheReset {
+    cacheReset
+  }
+`;
+
 export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {

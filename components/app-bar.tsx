@@ -22,7 +22,7 @@ import { TFunction } from 'i18next';
 // #region Imports Local
 import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/types';
-import { LOGOUT, SYNC } from '../lib/queries';
+import { LOGOUT, SYNC, CACHE } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
@@ -95,6 +95,9 @@ const useStyles = makeStyles((theme: Theme) =>
     buttonSync: {
       backgroundColor: green[300],
     },
+    buttonCache: {
+      backgroundColor: green[200],
+    },
     buttonLogout: {
       backgroundColor: blue[400],
     },
@@ -108,12 +111,18 @@ interface AppBarProps extends WithTranslation {
 const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
   const [syncLoading, setSyncLoading] = useState<boolean>(false);
+  const [cacheLoading, setCacheLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const client = useApolloClient();
   const [sync] = useMutation(SYNC, {
     onCompleted() {
       setSyncLoading(false);
+    },
+  });
+  const [cache] = useMutation(CACHE, {
+    onCompleted() {
+      setCacheLoading(false);
     },
   });
 
@@ -131,6 +140,11 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const handleSync = (): void => {
     setSyncLoading(true);
     sync();
+  };
+
+  const handleCache = (): void => {
+    setCacheLoading(true);
+    cache();
   };
 
   const handleLanguage = (): void => {
@@ -230,6 +244,14 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                         {!syncLoading ? t('common:synch') : t('common:synchWait')}
                       </Button>
                     )}
+                    <Button
+                      disabled={cacheLoading}
+                      variant="contained"
+                      className={classes.buttonCache}
+                      onClick={handleCache}
+                    >
+                      {!cacheLoading ? t('common:cache') : t('common:cacheWait')}
+                    </Button>
                     <Button variant="contained" className={classes.buttonLogout} onClick={handleLanguage}>
                       {t('common:changeLanguage')}
                     </Button>

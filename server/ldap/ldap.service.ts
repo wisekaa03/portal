@@ -48,7 +48,7 @@ export class LdapService extends EventEmitter {
     super();
 
     if (opts.cache) {
-      this.ttl = parseInt(configService.get('LDAP_REDIS_TTL'), 10);
+      this.ttl = configService.get<number>('LDAP_REDIS_TTL');
 
       this.userCache = cacheManager.caching({
         store: redisStore,
@@ -308,6 +308,7 @@ export class LdapService extends EventEmitter {
       scope: this.opts.searchScope,
       attributes: ['*'],
       timeLimit: this.opts.timeLimit,
+      sizeLimit: this.opts.sizeLimit,
     };
     if (this.opts.searchAttributes) {
       opts.attributes = this.opts.searchAttributes;
@@ -358,6 +359,7 @@ export class LdapService extends EventEmitter {
       scope: this.opts.groupSearchScope,
       attributes: ['*'],
       timeLimit: this.opts.timeLimit,
+      sizeLimit: this.opts.sizeLimit,
     };
     if (this.opts.groupSearchAttributes) {
       opts.attributes = this.opts.groupSearchAttributes;
@@ -387,6 +389,7 @@ export class LdapService extends EventEmitter {
       scope: this.opts.searchScope,
       attributes: ['*'],
       timeLimit: this.opts.timeLimit,
+      sizeLimit: this.opts.sizeLimit,
     };
     if (this.opts.searchAttributes) {
       opts.attributes = this.opts.searchAttributes;
@@ -438,6 +441,7 @@ export class LdapService extends EventEmitter {
       scope: this.opts.searchScopeAllUsers,
       attributes: ['*'],
       timeLimit: this.opts.timeLimit,
+      sizeLimit: this.opts.sizeLimit,
     };
     if (this.opts.searchAttributesAllUsers) {
       opts.attributes = this.opts.searchAttributesAllUsers;
@@ -445,14 +449,20 @@ export class LdapService extends EventEmitter {
 
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((result) => {
-        this.userCache.set<any>(
-          'SYNCHRONIZATION',
-          {
-            result,
-            hash: bcrypt.hashSync('synchronization', 10),
-          },
-          this.ttl,
-        );
+        if (this.userCache) {
+          redisStore.reset((error: any) => {
+            this.logger.error('LDAP error', error, 'LDAP');
+          });
+
+          this.userCache.set<any>(
+            'SYNCHRONIZATION',
+            {
+              result,
+              hash: bcrypt.hashSync('synchronization', 10),
+            },
+            this.ttl,
+          );
+        }
 
         return result as LdapResponeUser[];
       })
@@ -461,6 +471,20 @@ export class LdapService extends EventEmitter {
 
         return undefined;
       });
+  }
+
+  /**
+   * Resets LDAP cache
+   *
+   * @returns {} - User in LDAP
+   */
+  public async cacheReset(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      redisStore.reset((error: any) => {
+        resolve(true);
+        this.logger.error('LDAP error', error, 'LDAP');
+      });
+    });
   }
 
   /**

@@ -78,6 +78,12 @@ export class AuthService {
   /**
    * User LDAP login
    *
+   */
+  cacheReset = async (): Promise<boolean> => this.ldapService.cacheReset();
+
+  /**
+   * User LDAP login
+   *
    * @param {string, string, UserEntity} - User register data transfer object
    * @returns {UserEntity} User response DTO
    */
