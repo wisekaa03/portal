@@ -3,8 +3,8 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, Brackets } from 'typeorm';
-import { Order } from 'typeorm-graphql-pagination';
+import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
+import { Order, PaginateOptions } from 'typeorm-graphql-pagination';
 // import { Request } from 'express';
 // #endregion
 // #region Imports Local
@@ -40,32 +40,29 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  /* eslint-disable prettier/prettier */
-  getProfiles = (search: string) => {
-    // this.profileRepository.find({ cache: true, where: { notShowing: false } });
-    const queryBuilder = this.profileRepository.createQueryBuilder('profile');
-    const params = { search: `%${search}%` };
+  getProfiles = (search: string): SelectQueryBuilder<ProfileEntity> => {
+    // TODO: в дальнейшем продумать как отсеивать уволенных
+    let query = this.profileRepository.createQueryBuilder('profile').where('profile.notShowing = :notShowing');
 
-    // TODO: потом разобраться как отсеивать уволенных
-    return search === ''
-      ? queryBuilder.where('profile.notShowing = :notShowing', { notShowing: false }).cache(true)
-      : queryBuilder
-        .where('profile.notShowing = :notShowing', { notShowing: false })
-        .andWhere(
-          new Brackets((qb) => {
-            qb.where('profile.firstName iLike :search', params)
-              .orWhere('profile.lastName iLike :search', params)
-              .orWhere('profile.middleName iLike :search', params)
-              .orWhere('profile.department iLike :search', params)
-              .orWhere('profile.company iLike :search', params)
-              .orWhere('profile.telephone iLike :search', params)
-              .orWhere('profile.workPhone iLike :search', params)
-              .orWhere('profile.mobile iLike :search', params);
-          }),
-        )
-        .cache(true);
+    const parameters = { search: `%${search}%`, notShowing: false };
+
+    if (search !== '') {
+      query = query.andWhere(
+        new Brackets((qb) => {
+          qb.where('profile.firstName iLike :search')
+            .orWhere('profile.lastName iLike :search')
+            .orWhere('profile.middleName iLike :search')
+            .orWhere('profile.department iLike :search')
+            .orWhere('profile.company iLike :search')
+            .orWhere('profile.telephone iLike :search')
+            .orWhere('profile.workPhone iLike :search')
+            .orWhere('profile.mobile iLike :search');
+        }),
+      );
+    }
+
+    return query.setParameters(parameters).cache(true);
   };
-  /* eslint-enable prettier/prettier */
 
   /**
    * Profile by ID
