@@ -19,7 +19,7 @@ import { ExecutionResult } from 'graphql';
 import { WithTranslation } from 'react-i18next';
 // #endregion
 // #region Imports Local
-import { nextI18next, TFunction } from '../lib/i18n-client';
+import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/types';
 import { LOGOUT, SYNC } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
@@ -132,7 +132,13 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
     sync();
   };
 
-  const handleLogout = (): Promise<ExecutionResult<any>> => logout();
+  const handleLanguage = (): void => {
+    nextI18next.i18n.changeLanguage(nextI18next.i18n.language === 'ru' ? 'en' : 'ru');
+  };
+
+  const handleLogout = (): void => {
+    logout();
+  };
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -223,13 +229,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                         {!syncLoading ? t('common:synch') : t('common:synchWait')}
                       </Button>
                     )}
-                    <Button
-                      variant="contained"
-                      className={classes.buttonLogout}
-                      onClick={(): Promise<TFunction> =>
-                        nextI18next.i18n.changeLanguage(nextI18next.i18n.language === 'ru' ? 'en' : 'ru')
-                      }
-                    >
+                    <Button variant="contained" className={classes.buttonLogout} onClick={handleLanguage}>
                       {t('common:changeLanguage')}
                     </Button>
                     <Button variant="contained" className={classes.buttonLogout} onClick={handleLogout}>
