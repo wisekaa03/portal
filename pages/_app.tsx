@@ -1,13 +1,15 @@
 /** @format */
 
 // #region Imports NPM
+import { Express } from 'express';
 import React from 'react';
 import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 // import dynamic from 'next/dynamic';
-import { Query, ApolloProvider, QueryResult } from 'react-apollo';
+import { ApolloProvider, QueryResult } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -31,66 +33,66 @@ import { User } from '../server/user/models/user.dto';
  * CurrentLogin
  */
 const CurrentLogin: React.FC<{
+  Component: NextComponentType<NextPageContext, any, {}>;
   pageProps: any;
   isMobile: boolean;
   language: string;
-  router: NextRouter;
-  ctx: NextPageContext;
   apollo: ApolloClient<NormalizedCacheObject>;
-  Component: NextComponentType<NextPageContext, any, {}>;
-}> = ({ pageProps, isMobile, language, Component, ctx, apollo }): React.ReactElement | null => {
+  ctx: NextPageContext;
+  router: NextRouter;
+}> = ({ Component, pageProps, isMobile, language, apollo, ctx, router }): React.ReactElement | null => {
+  let me;
+
   // eslint-disable-next-line no-debugger
   debugger;
 
+  const { loading, data, client }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+    fetchPolicy: 'cache-first',
+  });
+
+  if (__SERVER__) {
+    const req = ctx && ((ctx.req as unknown) as Express.Request);
+    me = req && req.session && req.session.passport && req.session.passport.user;
+
+    if (me) {
+      me['__typename'] = 'User';
+      me.profile['__typename'] = 'Profile';
+      me.profile.manager['__typename'] = 'Profile';
+
+      apollo.writeQuery({
+        query: CURRENT_USER,
+        data: { me: { ...me } },
+      });
+    } else if (ctx.res) {
+      (ctx.res as any).status(403);
+      (ctx.res as any).location = '/auth/login';
+
+      return <Loading noMargin type="linear" variant="indeterminate" />;
+    }
+  } else {
+    me = data && data.me;
+  }
+
+  if (me) {
+    return (
+      <ProfileContext.Provider
+        value={{
+          user: { ...me },
+          language,
+          isMobile,
+        }}
+      >
+        {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+        <Component {...pageProps} />
+      </ProfileContext.Provider>
+    );
+  }
+
   return (
-    <Query query={CURRENT_USER} fetchPolicy="cache-first">
-      {({ data, loading, client }: QueryResult<Data<'me', User>>) => {
-        let me;
-
-        // eslint-disable-next-line no-debugger
-        debugger;
-
-        if (__SERVER__) {
-          const req = ctx && ((ctx.req as unknown) as Express.Request);
-          if (req) {
-            me = req && req.session && req.session.passport && req.session.passport.user;
-
-            me['__typename'] = 'User';
-            me.profile['__typename'] = 'Profile';
-            me.profile.manager['__typename'] = 'Profile';
-
-            // apollo.writeQuery({
-            //   query: CURRENT_USER,
-            //   data: { me: { ...me } },
-            // });
-          }
-        } else {
-          me = data && data.me;
-        }
-
-        if (me) {
-          return (
-            <ProfileContext.Provider
-              value={{
-                user: { ...me },
-                language,
-                isMobile,
-              }}
-            >
-              {loading && <Loading noMargin type="linear" variant="indeterminate" />}
-              <Component {...pageProps} />
-            </ProfileContext.Provider>
-          );
-        }
-
-        return (
-          <>
-            {loading && <Loading noMargin type="linear" variant="indeterminate" />}
-            <Component {...pageProps} />
-          </>
-        );
-      }}
-    </Query>
+    <>
+      {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+      <Component {...pageProps} />
+    </>
   );
 };
 
