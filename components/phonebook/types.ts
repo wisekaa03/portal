@@ -3,6 +3,8 @@
 // #region Imports NPM
 // eslint-disable-next-line import/named
 import { WithTranslation } from 'react-i18next';
+import { Order } from 'typeorm-graphql-pagination';
+import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
 // import { Profile } from '../../server/profile/models/profile.dto';
@@ -53,4 +55,12 @@ export interface SettingsProps extends WithTranslation {
   columns: ColumnNames[];
   handleClose(): void;
   changeColumn(columns: ColumnNames[]): void;
+}
+
+export interface HeaderProps {
+  columns: ColumnNames[];
+  orderBy: Order<ColumnNames>;
+  handleRequestSort: (column: ColumnNames) => () => void;
+  classes: any;
+  t: TFunction;
 }
