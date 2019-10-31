@@ -32,7 +32,39 @@ function withCustomWebpack(conf = {}) {
         __SERVER__: JSON.stringify(isServer),
       }),
       new DotenvWebpackPlugin({ path: join(__dirname, '.env') }),
+      new Webpack.IgnorePlugin({
+        checkResource(resource) {
+          const lazyImports = [
+            '@nestjs/microservices',
+            '@nestjs/platform-express',
+            'cache-manager',
+            'class-validator',
+            'class-transformer',
+          ];
+          if (!lazyImports.includes(resource)) {
+            return false;
+          }
+          try {
+            require.resolve(resource);
+          } catch (err) {
+            return true;
+          }
+          return false;
+        },
+      }),
     ];
+
+    config.stats = {
+      ...config.stats,
+      // This is optional, but it hides noisey warnings
+      warningsFilter: [
+        'node_modules/express/lib/view.js',
+        'node_modules/@nestjs/common/utils/load-package.util.js',
+        'node_modules/@nestjs/core/helpers/load-adapter.js',
+        'node_modules/optional/optional.js',
+        (warning) => false,
+      ],
+    };
 
     config.module.rules = [...(config.module.rules || []), ...[]];
 
@@ -49,6 +81,9 @@ function withCustomWebpack(conf = {}) {
 
     // eslint-disable-next-line no-debugger
     // debugger;
+
+    // config.externals = [...(config.externals || []), nodeExternals()];
+
     // console.log(isServer ? 'Server' : 'Client', config);
 
     return webpack(config, { isServer, ...rest });
