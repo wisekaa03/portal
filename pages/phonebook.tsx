@@ -1,11 +1,21 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, forwardRef, createContext } from 'react';
-import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import React, { useState, forwardRef, createContext, useEffect } from 'react';
+import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
-import { Table, TableBody, TableCell, TableSortLabel, TableRow, InputBase, IconButton, Modal } from '@material-ui/core';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableSortLabel,
+  TableRow,
+  InputBase,
+  IconButton,
+  Modal,
+  useMediaQuery,
+} from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
@@ -118,7 +128,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const defaultColumns: ColumnNames[] = [
+const defaultColumnsLG: ColumnNames[] = [
   'thumbnailPhoto40',
   'lastName',
   'company',
@@ -127,6 +137,9 @@ const defaultColumns: ColumnNames[] = [
   'mobile',
   'workPhone',
 ];
+const defaultColumnsMD: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'company', 'department', 'title', 'workPhone'];
+const defaultColumnsSM: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'title', 'workPhone'];
+const defaultColumnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
 
 // const sortData = (order: Order, orderBy: ColumnNames) => (a: BookProps, b: BookProps) => {
 //   const asc: number = order === 'asc' ? 1 : -1;
@@ -280,7 +293,16 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     direction: OrderDirection.ASC,
     field: 'lastName',
   });
-  const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
+  const [columns, setColumns] = useState<ColumnNames[]>(defaultColumnsLG);
+
+  const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+
+  useEffect(() => {
+    setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);
+  }, [lgUp, mdUp, smUp]);
 
   const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
