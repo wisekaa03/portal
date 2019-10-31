@@ -29,11 +29,11 @@ export default (configService: ConfigService, logService: LogService, store: Ses
       },
     });
 
-    logService.debug('install session ok', 'Session');
+    logService.debug('ok', 'Session');
 
     return sess;
   } catch (error) {
-    logService.error('cannot install session', error.toString(), 'Session');
+    logService.error('cannot install', error.toString(), 'Session');
 
     throw error;
   }

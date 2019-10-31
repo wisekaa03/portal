@@ -22,7 +22,7 @@ export default (configService: ConfigService, logService: LogService): Session.S
     });
 
     logService.debug(
-      'session redis:' +
+      'redis: ' +
         `host="${configService.get<string>('SESSION_REDIS_HOST')}" ` +
         `port="${configService.get<number>('SESSION_REDIS_PORT')}" ` +
         `db="${configService.get<number>('SESSION_REDIS_DB')}" ` +
