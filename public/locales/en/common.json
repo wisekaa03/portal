@@ -15,8 +15,8 @@
   "calendar": "Company calendar",
   "faq": "FAQ",
   "meeting": "Meeting rooms",
-  "timeline": "Timeline",
-  "applicationit": "IT Application",
+  "news": "Timeline",
+  "itapplication": "IT Application",
   "adminPanel": "Admin panel",
   "cache": "Erase cache",
   "cacheWait": "... Erase cache ..."
