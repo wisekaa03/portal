@@ -19,6 +19,7 @@ test_build:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
       - node_modules/
+      - .next/cache/
   script:
     - yarn install --production=false
     - npx next telemetry disable
