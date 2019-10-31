@@ -24,9 +24,11 @@ module.exports = {
         const lazyImports = [
           '@nestjs/microservices',
           '@nestjs/platform-express',
+          '@nestjs/grahpql',
           'cache-manager',
           'class-validator',
           'class-transformer',
+          'graphql',
         ];
         if (!lazyImports.includes(resource)) {
           return false;
@@ -49,16 +51,21 @@ module.exports = {
     plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.server.json' })],
   },
   module: {
-    rules: [{ test: /\.ts(x?)$/, loader: 'ts-loader', exclude: /node_modules/ }],
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        use: [{ loader: 'ts-loader' /* , options: { transpileOnly: true } */ }] /* exclude: /node_modules/  */,
+      },
+    ],
   },
-  stats: {
-    // This is optional, but it hides noisey warnings
-    // warningsFilter: [
-    //   'node_modules/express/lib/view.js',
-    //   'node_modules/@nestjs/common/utils/load-package.util.js',
-    //   'node_modules/@nestjs/core/helpers/load-adapter.js',
-    //   'node_modules/optional/optional.js',
-    //   (warning) => false,
-    // ],
-  },
+  // stats: {
+  //   // This is optional, but it hides noisey warnings
+  //   warningsFilter: [
+  //     'node_modules/express/lib/view.js',
+  //     'node_modules/@nestjs/common/utils/load-package.util.js',
+  //     'node_modules/@nestjs/core/helpers/load-adapter.js',
+  //     'node_modules/optional/optional.js',
+  //     (warning) => false,
+  //   ],
+  // },
 };
