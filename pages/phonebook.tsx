@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-      flex: 1,
       flexDirection: 'column',
     },
     panel: {

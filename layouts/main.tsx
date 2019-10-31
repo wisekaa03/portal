@@ -24,9 +24,14 @@ const useStyles = makeStyles((/* theme: Theme */) =>
       flex: 1,
     },
     content: {
-      flex: 1,
-      display: 'flex',
-      overflow: 'hidden',
+      'flex': 1,
+      'display': 'flex',
+      'overflow': 'hidden',
+
+      '& > div': {
+        width: '100%',
+        flex: 1,
+      },
     },
   }));
 
