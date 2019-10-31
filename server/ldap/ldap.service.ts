@@ -479,9 +479,13 @@ export class LdapService extends EventEmitter {
       .then((synch) => {
         if (synch) {
           if (this.userCache) {
-            redisStore.reset((error: any) => {
-              this.logger.error('LDAP error', error, 'LDAP');
-            });
+            if (this.userCacheStore.reset) {
+              this.userCacheStore.reset((error: any) => {
+                if (error) {
+                  this.logger.error('LDAP cache error', error, 'LDAP');
+                }
+              });
+            }
 
             this.userCache.set<LDAPCache>(
               'SYNCHRONIZATION',
