@@ -124,6 +124,12 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
+  room: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   company: string;
 
   @Column({
@@ -165,6 +171,12 @@ export class ProfileEntity {
     nullable: true,
   })
   mobile: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  fax: string;
 
   @Column({
     type: 'varchar',

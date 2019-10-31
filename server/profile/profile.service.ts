@@ -104,11 +104,11 @@ export class ProfileService {
       comment = {};
     }
     const {
-      companyeng: companyEng = undefined,
-      nameeng: nameEng = undefined,
-      departmenteng: departmentEng = undefined,
-      otdeleng: otdelEng = undefined,
-      positioneng: positionEng = undefined,
+      companyEng = undefined,
+      nameEng = undefined,
+      departmentEng = undefined,
+      otdelEng = undefined,
+      positionEng = undefined,
       gender = undefined,
     } = comment;
 
@@ -153,6 +153,8 @@ export class ProfileService {
       telephone: ldapUser.telephoneNumber,
       workPhone: ldapUser.otherTelephone,
       mobile: ldapUser.mobile,
+      fax: ldapUser.facsimileTelephoneNumber,
+      room: ldapUser.physicalDeliveryOfficeName,
       companyEng,
       nameEng,
       departmentEng,

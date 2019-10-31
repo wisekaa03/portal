@@ -34,6 +34,7 @@ export interface Profile {
   region: string;
   town: string;
   street: string;
+  room: string;
 
   company: string;
 
@@ -46,10 +47,9 @@ export interface Profile {
   manager?: Profile;
 
   telephone: string;
-
   workPhone: string;
-
   mobile: string;
+  fax: string;
 
   companyEng: string;
 

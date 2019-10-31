@@ -135,6 +135,11 @@ export interface LdapResponeUser extends SearchEntryObject {
   postalCode: string;
 
   /**
+   * Office name
+   */
+  physicalDeliveryOfficeName: string;
+
+  /**
    * SAM account name
    */
   sAMAccountName: string;
@@ -160,6 +165,11 @@ export interface LdapResponeUser extends SearchEntryObject {
    * Telephone number
    */
   telephoneNumber: string;
+
+  /**
+   * Fax number
+   */
+  facsimileTelephoneNumber: string;
 
   /**
    * Thumbnail photo

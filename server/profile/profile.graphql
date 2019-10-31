@@ -21,6 +21,7 @@ type Profile {
 
   telephone: String
   workPhone: String
+  fax: String
   mobile: String
   email: String
 
@@ -35,6 +36,7 @@ type Profile {
   region: String
   town: String
   street: String
+  room: String
 
   disabled: Boolean
   notShowing: Boolean
