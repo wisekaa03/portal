@@ -1,8 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
-import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import React, { useState, forwardRef, createContext, useEffect } from 'react';
+import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
 import {
@@ -10,23 +10,23 @@ import {
   TableBody,
   TableCell,
   TableSortLabel,
-  TableHead,
   TableRow,
   InputBase,
   IconButton,
   Modal,
+  useMediaQuery,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
-import { TFunction } from 'i18next';
+import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
-import { Column, ColumnNames } from '../components/phonebook/types';
+import { Column, ColumnNames, HeaderProps } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import useDebounce from '../lib/debounce';
@@ -60,12 +60,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
-    thead: {
-      // TODO: продумать отступ по размеру скролла
-      paddingRight: theme.spacing(2),
-    },
     tbody: {
       flex: 1,
+    },
+    header: {
+      position: 'sticky',
+      top: 0,
+      background: '#fff',
+      zIndex: 2,
     },
     row: {
       width: '100%',
@@ -126,7 +128,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const defaultColumns: ColumnNames[] = [
+const defaultColumnsLG: ColumnNames[] = [
   'thumbnailPhoto40',
   'lastName',
   'company',
@@ -135,6 +137,9 @@ const defaultColumns: ColumnNames[] = [
   'mobile',
   'workPhone',
 ];
+const defaultColumnsMD: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'company', 'department', 'title', 'workPhone'];
+const defaultColumnsSM: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'title', 'workPhone'];
+const defaultColumnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
 
 // const sortData = (order: Order, orderBy: ColumnNames) => (a: BookProps, b: BookProps) => {
 //   const asc: number = order === 'asc' ? 1 : -1;
@@ -158,51 +163,78 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
   return result;
 };
 
-const getHeadRows = (
-  columns: ColumnNames[],
-  orderBy: Order<ColumnNames>,
-  handleRequestSort: (column: ColumnNames) => () => void,
-  t: TFunction,
-  classes: any,
-): React.ReactNode | null =>
-  allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
-    const { name, ...rest } = column;
-    if (!columns.includes(name) || name === 'disabled') return result;
+const HeaderContext = createContext<HeaderProps | undefined>(undefined);
+HeaderContext.displayName = 'HeaderContext';
 
-    if (name === 'thumbnailPhoto40') {
-      return [
-        ...result,
-        <TableCell key={name} className={classes.cell} component="div" style={{ height: rowHeight, ...rest }} />,
-      ];
-    }
+const InnerElementList = forwardRef<React.Component, any>(({ children, ..._rest }, ref) => (
+  <HeaderContext.Consumer>
+    {(context) => (
+      <div ref={ref} {..._rest}>
+        <>
+          {context && (
+            <TableRow component="div" className={clsx(context.classes.row, context.classes.header)}>
+              {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
+                const { name, ...rest } = column;
+                if (!context.columns.includes(name) || name === 'disabled') return result;
 
-    return [
-      ...result,
-      <TableCell
-        key={name}
-        className={classes.cell}
-        component="div"
-        scope="col"
-        style={{ height: rowHeight, ...rest }}
-        sortDirection={orderBy.field === name ? (orderBy.direction.toLowerCase() as 'desc' | 'asc') : false}
-      >
-        <TableSortLabel
-          active={orderBy.field === name}
-          direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
-          onClick={handleRequestSort(name)}
-        >
-          {t(`phonebook:fields.${name}`)}
-        </TableSortLabel>
-      </TableCell>,
-    ];
-  }, []);
+                if (name === 'thumbnailPhoto40') {
+                  return [
+                    ...result,
+                    <TableCell
+                      key={name}
+                      className={context.classes.cell}
+                      component="div"
+                      style={{ height: rowHeight, ...rest }}
+                    />,
+                  ];
+                }
+
+                return [
+                  ...result,
+                  <TableCell
+                    key={name}
+                    className={context.classes.cell}
+                    component="div"
+                    scope="col"
+                    style={{ height: rowHeight, ...rest }}
+                    sortDirection={
+                      context.orderBy.field === name
+                        ? (context.orderBy.direction.toLowerCase() as 'desc' | 'asc')
+                        : false
+                    }
+                  >
+                    <TableSortLabel
+                      active={context.orderBy.field === name}
+                      direction={context.orderBy.direction.toLowerCase() as 'desc' | 'asc'}
+                      onClick={context.handleRequestSort(name)}
+                    >
+                      {context.t(`phonebook:fields.${name}`)}
+                    </TableSortLabel>
+                  </TableCell>,
+                ];
+              }, [])}
+            </TableRow>
+          )}
+          {children}
+        </>
+      </div>
+    )}
+  </HeaderContext.Consumer>
+));
+InnerElementList.displayName = 'InnerElementList';
 
 const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
   const item = data.items[index].node;
   const { columns, handleProfileId, classes } = data;
 
   return (
-    <TableRow component="div" className={classes.row} hover style={style} onClick={handleProfileId(item.id)}>
+    <TableRow
+      component="div"
+      className={classes.row}
+      hover
+      style={{ ...style, top: `${parseFloat(style.top as string) + rowHeight}px` }}
+      onClick={handleProfileId(item.id)}
+    >
       {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
         const { name, ...rest } = column;
         if (!columns.includes(name) || name === 'disabled') return result;
@@ -261,7 +293,16 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     direction: OrderDirection.ASC,
     field: 'lastName',
   });
-  const [columns, setColumns] = useState<ColumnNames[]>(defaultColumns);
+  const [columns, setColumns] = useState<ColumnNames[]>(defaultColumnsLG);
+
+  const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+
+  useEffect(() => {
+    setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);
+  }, [lgUp, mdUp, smUp]);
 
   const [profileId, setProfileId] = useState<string | boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -299,7 +340,6 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
 
         if (edges.length === 0) return prev;
-        debugger;
         const clean: string[] = [];
 
         return {
@@ -375,33 +415,31 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
           </div>
           <div id="phonebook-wrap" className={classes.tableWrapper}>
             <Table component="div" className={classes.table}>
-              <TableHead component="div" className={classes.thead}>
-                <TableRow component="div" className={classes.row}>
-                  {getHeadRows(columns, orderBy, handleRequestSort, t, classes)}
-                </TableRow>
-              </TableHead>
               <TableBody component="div" className={classes.tbody}>
                 <AutoSizer disableWidth>
                   {({ height }) => (
                     <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
                       {({ onItemsRendered, ref }) => (
-                        <List
-                          ref={ref}
-                          onItemsRendered={onItemsRendered}
-                          width="100%"
-                          height={height}
-                          itemCount={data ? data.profiles.edges.length : 0}
-                          itemSize={rowHeight}
-                          itemKey={itemKey}
-                          itemData={{
-                            classes,
-                            items: data ? data.profiles.edges : [],
-                            columns,
-                            handleProfileId,
-                          }}
-                        >
-                          {Row}
-                        </List>
+                        <HeaderContext.Provider value={{ columns, orderBy, handleRequestSort, t, classes }}>
+                          <List
+                            ref={ref}
+                            onItemsRendered={onItemsRendered}
+                            width="100%"
+                            height={height}
+                            itemCount={data ? data.profiles.edges.length : 0}
+                            itemSize={rowHeight}
+                            itemKey={itemKey}
+                            innerElementType={InnerElementList}
+                            itemData={{
+                              classes,
+                              items: data ? data.profiles.edges : [],
+                              columns,
+                              handleProfileId,
+                            }}
+                          >
+                            {Row}
+                          </List>
+                        </HeaderContext.Provider>
                       )}
                     </InfiniteLoader>
                   )}

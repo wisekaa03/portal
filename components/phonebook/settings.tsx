@@ -108,7 +108,7 @@ export const allColumns: Column[] = [
   { name: 'telephone', maxWidth: 130 },
   { name: 'fax', width: 140 },
   { name: 'mobile', maxWidth: 130 },
-  { name: 'workPhone', maxWidth: 100 },
+  { name: 'workPhone', maxWidth: 120 },
   { name: 'email', width: 100 },
   { name: 'country', width: 150 },
   { name: 'region', width: 150 },
