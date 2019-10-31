@@ -2,10 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
+    "removeComments": true,
     "sourceMap": true,
-    "noEmit": false,
+    // "noEmit": false,
     "outDir": ".nest/",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "experimentalDecorators": true
   },
   "include": [
