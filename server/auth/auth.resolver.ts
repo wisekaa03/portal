@@ -51,6 +51,7 @@ export class AuthResolver {
           this.logService.log(`User is logged in: ${user.username}`, 'AuthResolvers');
         }
       });
+
       return user;
     }
 

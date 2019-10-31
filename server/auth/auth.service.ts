@@ -1,14 +1,14 @@
 /** @format */
 
 // #region Imports NPM
-import { Inject, forwardRef, Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { UserResponse, UserLogin } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/user.entity';
-import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
+// import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { LogService } from '../logger/logger.service';
 import { LdapService } from '../ldap/ldap.service';
 // #endregion
@@ -16,7 +16,6 @@ import { LdapService } from '../ldap/ldap.service';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
     private readonly logService: LogService,
@@ -29,11 +28,11 @@ export class AuthService {
    * @param {username} Username
    * @returns {UserRespone | null}
    */
-  public validate = async (username: string, password: string): Promise<UserResponse | null> => {
+  public validate = async (username: string, password: string, req?: Express.Request): Promise<UserResponse | null> => {
     const user = await this.userService.comparePassword(username, password);
 
     if (user) {
-      return user.toResponseObject('');
+      return user.toResponseObject((req && req.sessionID) || '');
     }
 
     throw new UnauthorizedException();
@@ -45,7 +44,7 @@ export class AuthService {
    * @param {UserLogin} data User login data transfer object
    * @returns {UserResponse} User response
    */
-  async login({ username, password }: UserLogin, req: Express.Request): Promise<UserResponse | null> {
+  async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse | null> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
     try {
@@ -57,9 +56,9 @@ export class AuthService {
       if (user) {
         try {
           // TODO:
-          return user.toResponseObject(req.sessionID || '') as UserResponse;
+          return user.toResponseObject((req && req.sessionID) || '');
         } catch (error) {
-          this.logService.error('Error:', JSON.stringify(error), 'AuthService');
+          this.logService.error('Error:', error.toString(), 'AuthService');
 
           throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
         }
@@ -69,7 +68,7 @@ export class AuthService {
 
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
     } catch (error) {
-      this.logService.error('Error:', JSON.stringify(error), 'AuthService');
+      this.logService.error('Error:', error.toString(), 'AuthService');
 
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
     }
@@ -98,11 +97,12 @@ export class AuthService {
   }): Promise<UserEntity | undefined> {
     try {
       // #region to LDAP database
-      const ldapUser: undefined | LdapResponeUser = await this.ldapService.authenticate(username, password);
+      const ldapUser = await this.ldapService.authenticate(username, password);
       // #endregion
 
       if (!ldapUser) {
         this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
+
         return undefined;
       }
 

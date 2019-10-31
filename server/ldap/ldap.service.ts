@@ -458,7 +458,7 @@ export class LdapService extends EventEmitter {
       const cached: LDAPCache = await this.userCache.get<LDAPCache>('SYNCHRONIZATION');
       // TODO: придумать что-нибудь половчее моих synchronization
       if (cached && bcrypt.compareSync('synchronization', cached.password) && cached.synch) {
-        this.logger.debug(`synchronization from cache`, 'LDAP');
+        this.logger.debug(`Synchronization from cache`, 'LDAP');
 
         return cached.synch as LdapResponeUser[];
       }
@@ -486,6 +486,8 @@ export class LdapService extends EventEmitter {
                 }
               });
             }
+
+            this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
 
             this.userCache.set<LDAPCache>(
               'SYNCHRONIZATION',
@@ -582,7 +584,7 @@ export class LdapService extends EventEmitter {
           try {
             const userWithGroups = await this.getGroups(foundUser);
 
-            if (this.opts.cache) {
+            if (this.userCache) {
               this.logger.debug(`To cache: ${username}`, 'LDAP');
 
               this.userCache.set<LDAPCache>(
