@@ -92,12 +92,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const allColumns: Column[] = [
   { name: 'thumbnailPhoto40', maxWidth: 60, minWidth: 60 },
-  { name: 'lastName', minWidth: 150 },
-  { name: 'nameEng', minWidth: 150 },
-  { name: 'login', minWidth: 100 },
+  { name: 'lastName', minWidth: 160 },
+  { name: 'nameEng', minWidth: 160 },
+  { name: 'username', minWidth: 100, maxWidth: 120 },
   { name: 'company', minWidth: 200 },
   { name: 'companyEng', minWidth: 200 },
-  { name: 'department', minWidth: 200 },
+  { name: 'department', minWidth: 260 },
   { name: 'departmentEng', minWidth: 200 },
   { name: 'otdel', minWidth: 200 },
   { name: 'otdelEng', minWidth: 200 },

@@ -13,7 +13,7 @@ import { TFunction } from 'i18next';
 export type ColumnNames =
   | 'lastName'
   | 'nameEng'
-  | 'login'
+  | 'username'
   | 'thumbnailPhoto'
   | 'thumbnailPhoto40'
   | 'company'

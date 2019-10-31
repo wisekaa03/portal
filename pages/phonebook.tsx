@@ -165,10 +165,10 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
 const HeaderContext = createContext<HeaderProps | undefined>(undefined);
 HeaderContext.displayName = 'HeaderContext';
 
-const InnerElementList = forwardRef<React.Component, any>(({ children, ..._rest }, ref) => (
+const InnerElementList = forwardRef<React.Component, any>(({ children, style, ..._rest }, ref) => (
   <HeaderContext.Consumer>
     {(context) => (
-      <div ref={ref} {..._rest}>
+      <div ref={ref} {..._rest} style={{ height: style.height, flex: 1 }}>
         <>
           {context && (
             <TableRow component="div" className={clsx(context.classes.row, context.classes.header)}>
@@ -421,6 +421,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       {({ onItemsRendered, ref }) => (
                         <HeaderContext.Provider value={{ columns, orderBy, handleRequestSort, t, classes }}>
                           <List
+                            style={{ display: 'flex' }}
                             ref={ref}
                             onItemsRendered={onItemsRendered}
                             width="100%"
