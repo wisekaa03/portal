@@ -9,7 +9,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser } from './interfaces/ldap.interface';
+import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './interfaces/ldap.interface';
 import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 // #endregion
@@ -29,6 +29,8 @@ export class LdapService extends EventEmitter {
   private userClient: Ldap.Client;
 
   private getGroups: (user: Ldap.SearchEntryObject) => Promise<Ldap.SearchEntryObject>;
+
+  private userCacheStore: cacheManager.Store;
 
   private userCache: cacheManager.Cache;
 
@@ -50,15 +52,40 @@ export class LdapService extends EventEmitter {
     if (opts.cache) {
       this.ttl = configService.get<number>('LDAP_REDIS_TTL');
 
-      this.userCache = cacheManager.caching({
-        store: redisStore,
-        name: 'LDAP',
-        ttl: this.ttl, // seconds
-        host: configService.get<string>('LDAP_REDIS_HOST'),
-        port: configService.get<number>('LDAP_REDIS_PORT'),
-        db: configService.get<number>('LDAP_REDIS_DB'),
+      this.userCacheStore = redisStore.create({
+        // A string used to prefix all used keys (e.g. namespace:test).
+        // Please be aware that the keys command will not be prefixed.
+        prefix: 'LDAP',
+        host: configService.get<string>('LDAP_REDIS_HOST'), // IP address of the Redis server
+        port: configService.get<number>('LDAP_REDIS_PORT'), // Port of the Redis server
+        db: configService.get<number>('LDAP_REDIS_DB'), // If set, client will run Redis select command on connect.
+        // If set, client will run Redis auth command on connect.
         password: configService.get<string>('LDAP_REDIS_PASSWORD') || undefined,
-        logger,
+        // path - The UNIX socket string of the Redis server
+        // url - The URL of the Redis server.
+        // string_numbers
+        // return_buffers
+        // detect_buffers
+        // socket_keepalive
+        // socket_initialdelay
+        // no_ready_check
+        // enable_offline_queue
+        // retry_max_delay
+        // connect_timeout
+        // max_attempts
+        // retry_unfulfilled_commands
+        // family - IPv4
+        // disable_resubscribing
+        // rename_commands
+        // tls
+        // prefix
+        // retry_strategy
+      });
+
+      this.userCache = cacheManager.caching({
+        store: this.userCacheStore,
+        ttl: this.ttl,
+        // max: configService.get<number>('LDAP_REDIS_MAX'),
       });
 
       this.logger.debug(
@@ -66,6 +93,7 @@ export class LdapService extends EventEmitter {
           `host="${configService.get('LDAP_REDIS_HOST')}" ` +
           `port="${configService.get('LDAP_REDIS_PORT')}" ` +
           `db="${configService.get('LDAP_REDIS_DB')}" ` +
+          // `max="${configService.get('LDAP_REDIS_MAX')}" ` +
           `ttl="${this.ttl}" ` +
           `password="${configService.get('LDAP_REDIS_PASSWORD') ? '{MASKED}' : ''}"`,
         'LDAP',
@@ -448,23 +476,27 @@ export class LdapService extends EventEmitter {
     }
 
     return this.search(this.opts.searchBaseAllUsers, opts)
-      .then((result) => {
-        if (this.userCache) {
-          redisStore.reset((error: any) => {
-            this.logger.error('LDAP error', error, 'LDAP');
-          });
+      .then((synch) => {
+        if (synch) {
+          if (this.userCache) {
+            redisStore.reset((error: any) => {
+              this.logger.error('LDAP error', error, 'LDAP');
+            });
 
-          this.userCache.set<any>(
-            'SYNCHRONIZATION',
-            {
-              result,
-              hash: bcrypt.hashSync('synchronization', 10),
-            },
-            this.ttl,
-          );
+            this.userCache.set<LDAPCache>(
+              'SYNCHRONIZATION',
+              {
+                synch,
+                password: bcrypt.hashSync('synchronization', 10),
+              },
+              this.ttl,
+            );
+          }
+
+          return synch as LdapResponeUser[];
         }
 
-        return result as LdapResponeUser[];
+        return undefined;
       })
       .catch((error: Ldap.Error) => {
         this.logger.error('Synchronize error:', error.toString(), 'LDAP');
@@ -476,14 +508,22 @@ export class LdapService extends EventEmitter {
   /**
    * Resets LDAP cache
    *
-   * @returns {} - User in LDAP
+   * @returns {Promise<boolean>} - User in LDAP
    */
   public async cacheReset(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      redisStore.reset((error: any) => {
-        resolve(true);
-        this.logger.error('LDAP error', error, 'LDAP');
-      });
+      if (this.userCacheStore.reset) {
+        this.userCacheStore.reset((error: any) => {
+          if (error) {
+            this.logger.error('LDAP cache error', error, 'LDAP');
+            reject(error);
+          } else {
+            resolve(true);
+          }
+        });
+      } else {
+        reject(new Error('LDAP not initialized with cache.'));
+      }
     });
   }
 
@@ -496,15 +536,15 @@ export class LdapService extends EventEmitter {
    */
   public async authenticate(username: string, password: string): Promise<undefined | LdapResponeUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
-      this.logger.error('no password given', undefined, 'LDAP');
-      throw new Error('no password given');
+      this.logger.error('No password given', undefined, 'LDAP');
+      throw new Error('No password given');
     }
 
-    if (process.env.NODE_ENV === 'production' && this.opts.cache && this.userCache) {
+    if (process.env.NODE_ENV === 'production' && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
-      const cached = await this.userCache.get(username);
+      const cached: LDAPCache = await this.userCache.get<LDAPCache>(username);
       if (cached && cached.user && cached.user.username && bcrypt.compareSync(password, cached.password)) {
-        this.logger.debug(`from cache: ${cached.user.username}`, 'LDAP');
+        this.logger.debug(`From cache: ${cached.user.username}`, 'LDAP');
 
         return cached.user as LdapResponeUser;
       }
@@ -527,7 +567,7 @@ export class LdapService extends EventEmitter {
       this.userClient.bind(
         foundUser[this.opts.bindProperty || 'dn'],
         password,
-        async (bindErr: Ldap.Error): Promise<unknown | LdapResponeUser> => {
+        async (bindErr?: Ldap.Error): Promise<unknown | LdapResponeUser> => {
           if (bindErr) {
             this.logger.error('bind error:', bindErr.toString(), 'LDAP');
 
@@ -539,12 +579,12 @@ export class LdapService extends EventEmitter {
             const userWithGroups = await this.getGroups(foundUser);
 
             if (this.opts.cache) {
-              this.logger.debug(`to cache: ${username}`, 'LDAP');
+              this.logger.debug(`To cache: ${username}`, 'LDAP');
 
-              this.userCache.set<any>(
+              this.userCache.set<LDAPCache>(
                 username,
                 {
-                  user: userWithGroups,
+                  user: userWithGroups as LdapResponeUser,
                   password: bcrypt.hashSync(password, 10),
                 },
                 this.ttl,
@@ -553,14 +593,14 @@ export class LdapService extends EventEmitter {
 
             return resolve(userWithGroups as LdapResponeUser);
           } catch (error) {
-            this.logger.error('authenticate:', error.toString(), 'LDAP');
+            this.logger.error('Authenticate:', error.toString(), 'LDAP');
 
-            return undefined;
+            return reject(Error(`Authenticate: ${error.toString()}`));
           }
         },
       );
     }).catch((error) => {
-      this.logger.error('authenticate:', error.toString(), 'LDAP');
+      this.logger.error('Authenticate:', error.toString(), 'LDAP');
 
       return undefined;
     });

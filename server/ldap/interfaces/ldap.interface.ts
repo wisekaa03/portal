@@ -10,6 +10,12 @@ export const LDAP_MODULE_OPTIONS = 'LDAP_MODULE_OPTIONS';
 
 export type Scope = 'base' | 'one' | 'sub';
 
+export interface LDAPCache {
+  user?: LdapResponeUser;
+  synch?: SearchEntryObject[];
+  password: string;
+}
+
 export interface LdapResponeUser extends SearchEntryObject {
   /**
    * Country
