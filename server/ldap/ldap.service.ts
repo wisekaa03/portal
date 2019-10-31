@@ -454,13 +454,13 @@ export class LdapService extends EventEmitter {
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
    */
   public async synchronization(): Promise<undefined | LdapResponeUser[]> {
-    if (process.env.NODE_ENV === 'production' && this.opts.cache && this.userCache) {
-      const cached = await this.userCache.get('SYNCHRONIZATION');
+    if (process.env.NODE_ENV === 'production' && this.userCache) {
+      const cached: LDAPCache = await this.userCache.get<LDAPCache>('SYNCHRONIZATION');
       // TODO: придумать что-нибудь половчее моих synchronization
-      if (cached && bcrypt.compareSync('synchronization', cached.hash) && cached.result) {
+      if (cached && bcrypt.compareSync('synchronization', cached.password) && cached.synch) {
         this.logger.debug(`synchronization from cache`, 'LDAP');
 
-        return cached.result as LdapResponeUser[];
+        return cached.synch as LdapResponeUser[];
       }
     }
 
@@ -482,7 +482,7 @@ export class LdapService extends EventEmitter {
             if (this.userCacheStore.reset) {
               this.userCacheStore.reset((error: any) => {
                 if (error) {
-                  this.logger.error('LDAP cache error', error, 'LDAP');
+                  this.logger.error('LDAP cache error', error.toString(), 'LDAP');
                 }
               });
             }
