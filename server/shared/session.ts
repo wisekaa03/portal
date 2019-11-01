@@ -15,7 +15,7 @@ export default (configService: ConfigService, logService: LogService, store: Ses
       secret: configService.get<string>('SESSION_SECRET'),
       store,
       resave: false,
-      // rolling: true,
+      rolling: true,
       saveUninitialized: false,
       name: 'portal',
       // genid: () => genuuid(),

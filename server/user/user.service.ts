@@ -89,7 +89,7 @@ export class UserService {
     let profile;
 
     try {
-      profile = await this.profileService.create(ldapUser, user);
+      profile = await this.profileService.create(ldapUser, user, 1);
     } catch (error) {
       this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'UserService');
 
@@ -124,7 +124,7 @@ export class UserService {
     try {
       return this.userRepository.save(this.userRepository.create(data as User));
     } catch (error) {
-      this.logService.error('Unable to save data in `user`', JSON.stringify(error), 'UserService');
+      this.logService.error('Unable to save data in `user`', error.toString(), 'UserService');
 
       throw error;
     }
