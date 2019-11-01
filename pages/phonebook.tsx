@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
       boxShadow: '0px 0px 5px 2px rgba(0, 0, 0, 0.2)',
     },
     row: {
-      width: '100%',
+      width: 'auto',
       minWidth: '100%',
       boxSizing: 'border-box',
       display: 'flex',
@@ -79,11 +79,13 @@ const useStyles = makeStyles((theme: Theme) =>
       alignContent: 'stretch',
       justifyContent: 'space-between',
       flexWrap: 'nowrap',
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     cell: {
       flex: '1',
       display: 'flex',
       alignItems: 'center',
+      border: 'none',
     },
     disabled: {
       color: red[600],
@@ -216,7 +218,7 @@ const InnerElementList = forwardRef<React.Component, any>(({ children, style, ..
 ));
 InnerElementList.displayName = 'InnerElementList';
 
-const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
+const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ...style }, data }) => {
   const item = data.items[index].node;
   const { columns, handleProfileId, classes } = data;
 
@@ -225,7 +227,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
       component="div"
       className={classes.row}
       hover
-      style={{ ...style, top: `${parseFloat(style.top as string) + rowHeight}px` }}
+      style={{ ...style, top: `${parseFloat(top as string) + rowHeight}px` }}
       onClick={handleProfileId(item.id)}
     >
       {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
