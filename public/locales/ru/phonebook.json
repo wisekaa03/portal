@@ -7,7 +7,7 @@
   "fields": {
     "lastName": "Ф.И.О.",
     "nameEng": "Ф.И.О. (на английском)",
-    "login": "Логин",
+    "username": "Логин",
     "thumbnailPhoto": "Фотография",
     "thumbnailPhoto40": "Фотография",
     "company": "Компания",

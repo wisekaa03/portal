@@ -5,14 +5,6 @@ import React from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
-import MailIcon from '@material-ui/icons/Mail';
-import SettingsIcon from '@material-ui/icons/Settings';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import DvrIcon from '@material-ui/icons/Dvr';
-import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 // eslint-disable-next-line import/named
@@ -22,8 +14,24 @@ import { WithTranslation } from 'react-i18next';
 import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
 import DrawerBg from '../public/images/jpeg/drawer_bg.jpg';
 import Icon from './icon';
-import ItIcon from '../public/images/svg/icons/it.svg';
 import CalendarIcon from '../public/images/svg/icons/calendar.svg';
+import CalendarIconSelected from '../public/images/svg/icons/calendar_select.svg';
+import ItApplicationIcon from '../public/images/svg/icons/it_application.svg';
+import ItApplicationIconSelected from '../public/images/svg/icons/it_application_select.svg';
+import FaqIcon from '../public/images/svg/icons/faq.svg';
+import FaqIconSelected from '../public/images/svg/icons/faq_select.svg';
+import ProfileIcon from '../public/images/svg/icons/profile.svg';
+import ProfileIconSelected from '../public/images/svg/icons/profile_select.svg';
+import MailIcon from '../public/images/svg/icons/mail.svg';
+import MailIconSelected from '../public/images/svg/icons/mail_select.svg';
+import MeetingIcon from '../public/images/svg/icons/meeting.svg';
+import MeetingIconSelected from '../public/images/svg/icons/meeting_select.svg';
+import NewsIcon from '../public/images/svg/icons/news.svg';
+import NewsIconSelected from '../public/images/svg/icons/news_select.svg';
+import PhonebookIcon from '../public/images/svg/icons/phonebook.svg';
+import PhonebookIconSelected from '../public/images/svg/icons/phonebook_select.svg';
+import SettingsIcon from '../public/images/svg/icons/settings.svg';
+import SettingsIconSelected from '../public/images/svg/icons/settings_select.svg';
 // #endregion
 
 const drawerWidth = 256;
@@ -62,7 +70,87 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     item: {
-      // paddingLeft: theme.spacing(3),
+      '&:hover:not($itemSelected)': {
+        backgroundColor: '#5F9898',
+        color: '#fff',
+        opacity: 0.7,
+      },
+    },
+    itemSelected: {
+      backgroundColor: '#5F9898!important',
+      color: '#fff',
+    },
+    iconCalendar: {
+      '& img': {
+        content: `url(${CalendarIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${CalendarIconSelected})`,
+      },
+    },
+    iconFaq: {
+      '& img': {
+        content: `url(${FaqIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${FaqIconSelected})`,
+      },
+    },
+    iconItApplication: {
+      '& img': {
+        content: `url(${ItApplicationIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${ItApplicationIconSelected})`,
+      },
+    },
+    iconMail: {
+      '& img': {
+        content: `url(${MailIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${MailIconSelected})`,
+      },
+    },
+    iconMeeting: {
+      '& img': {
+        content: `url(${MeetingIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${MeetingIconSelected})`,
+      },
+    },
+    iconNews: {
+      '& img': {
+        content: `url(${NewsIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${NewsIconSelected})`,
+      },
+    },
+    iconPhonebook: {
+      '& img': {
+        content: `url(${PhonebookIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${PhonebookIconSelected})`,
+      },
+    },
+    iconProfile: {
+      '& img': {
+        content: `url(${ProfileIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${ProfileIconSelected})`,
+      },
+    },
+    iconSettings: {
+      '& img': {
+        content: `url(${SettingsIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${SettingsIconSelected})`,
+      },
     },
   }),
 );
@@ -73,28 +161,41 @@ interface DrawerProps extends WithTranslation {
   handleOpen(): void;
 }
 
+type IconStyle =
+  | 'iconCalendar'
+  | 'iconFaq'
+  | 'iconItApplication'
+  | 'iconMail'
+  | 'iconMeeting'
+  | 'iconNews'
+  | 'iconPhonebook'
+  | 'iconProfile'
+  | 'iconSettings';
+
+interface UrlProps {
+  icon: IconStyle;
+  text: any;
+  link: string;
+}
+
 const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
-  const classes = useStyles({});
+  const classes = useStyles();
   const theme = useTheme();
   const router = useRouter();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { open, isMobile, handleOpen, t } = props;
 
-  const urls = [
-    { text: t('common:mail'), link: '/mail', icon: <MailIcon /> },
-    { text: t('common:phonebook'), link: '/phonebook', icon: <ImportContactsIcon /> },
-    { text: t('common:profile'), link: '/profile', icon: <AssignmentIndIcon /> },
-    {
-      text: t('common:applicationit'),
-      link: '/itapplication',
-      icon: <Icon src={ItIcon} />,
-    },
-    { text: t('common:calendar'), link: '/calendar', icon: <Icon src={CalendarIcon} /> },
-    { text: t('common:faq'), link: '/faq', icon: <LiveHelpIcon /> },
-    { text: t('common:meeting'), link: '/meetings', icon: <QuestionAnswerIcon /> },
-    { text: t('common:timeline'), link: '/news', icon: <DvrIcon /> },
-    { text: t('common:settings'), link: '/settings', icon: <SettingsIcon /> },
-    { text: t('common:adminPanel'), link: '/admin', icon: <SupervisorAccountIcon /> },
+  const urls: UrlProps[] = [
+    { icon: 'iconMail', text: t('common:mail'), link: '/mail' },
+    { icon: 'iconPhonebook', text: t('common:phonebook'), link: '/phonebook' },
+    { icon: 'iconProfile', text: t('common:profile'), link: '/profile' },
+    { icon: 'iconItApplication', text: t('common:itapplication'), link: '/itapplication' },
+    { icon: 'iconCalendar', text: t('common:calendar'), link: '/calendar' },
+    { icon: 'iconFaq', text: t('common:faq'), link: '/faq' },
+    { icon: 'iconMeeting', text: t('common:meeting'), link: '/meetings' },
+    { icon: 'iconNews', text: t('common:news'), link: '/news' },
+    { icon: 'iconSettings', text: t('common:settings'), link: '/settings' },
+    { icon: 'iconSettings', text: t('common:adminPanel'), link: '/admin' },
   ];
 
   // TODO: подумать как правильнее разделять сервер и клиент при определении маршрута
@@ -103,30 +204,49 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const drawer = (
     <div className={classes.toolbar}>
       <List>
-        {urls.map((url) => (
-          <li key={url.text} className={classes.item}>
-            {url.link[0] !== '/' ? (
-              <ListItem
-                button
-                selected={url.link === pathname}
-                component="a"
-                href={url.link}
-                target="_blank"
-                title={url.text}
-              >
-                {url.icon ? <ListItemIcon>{url.icon}</ListItemIcon> : null}
-                <ListItemText primary={url.text} />
-              </ListItem>
-            ) : (
-              <Link href={url.link} passHref>
-                <ListItem button selected={url.link === pathname} component="a" title={url.text}>
-                  {url.icon ? <ListItemIcon>{url.icon}</ListItemIcon> : null}
+        {urls.map((url) => {
+          const selected = url.link === pathname;
+
+          return (
+            <li key={url.text}>
+              {url.link[0] !== '/' ? (
+                <ListItem
+                  button
+                  selected={selected}
+                  className={clsx(classes.item, classes[url.icon], {
+                    [classes.itemSelected]: selected,
+                  })}
+                  component="a"
+                  href={url.link}
+                  target="_blank"
+                  title={url.text}
+                >
+                  <ListItemIcon>
+                    <Icon />
+                  </ListItemIcon>
                   <ListItemText primary={url.text} />
                 </ListItem>
-              </Link>
-            )}
-          </li>
-        ))}
+              ) : (
+                <Link href={url.link} passHref>
+                  <ListItem
+                    button
+                    selected={selected}
+                    className={clsx(classes.item, classes[url.icon], {
+                      [classes.itemSelected]: selected,
+                    })}
+                    component="a"
+                    title={url.text}
+                  >
+                    <ListItemIcon>
+                      <Icon />
+                    </ListItemIcon>
+                    <ListItemText primary={url.text} />
+                  </ListItem>
+                </Link>
+              )}
+            </li>
+          );
+        })}
       </List>
     </div>
   );

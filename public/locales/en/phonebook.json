@@ -7,7 +7,7 @@
   "fields": {
     "lastName": "Name",
     "nameEng": "Name (on english)",
-    "login": "Username",
+    "username": "Username",
     "thumbnailPhoto": "Avatar",
     "thumbnailPhoto40": "Avatar",
     "company": "Company",

@@ -1,26 +1,37 @@
 /** @format */
 import React from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 
 const iconWidth = 24;
 
-const useStyles = makeStyles(() =>
+interface IconProps {
+  src?: string;
+  hover?: string;
+}
+
+const useStyles = makeStyles<Theme | undefined, IconProps>(() =>
   createStyles({
-    root: { width: iconWidth, height: iconWidth },
+    root: (props) => ({
+      'width': iconWidth,
+      'height': iconWidth,
+      'content': props.src ? `url(${props.src})` : undefined,
+
+      '&:hover': {
+        content: props.hover ? `url(${props.hover})` : undefined,
+      },
+    }),
   }),
 );
 
-interface IconProps {
-  src: any;
-}
-
-export default (props: IconProps): React.ReactElement => {
-  const classes = useStyles({});
+const BaseIcon = (props: IconProps): React.ReactElement => {
+  const classes = useStyles(props);
 
   return (
     <Icon>
-      <img className={classes.root} {...props} alt="icon" />
+      <img className={classes.root} alt="icon" />
     </Icon>
   );
 };
+
+export default BaseIcon;
