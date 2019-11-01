@@ -413,6 +413,16 @@ export class LdapService extends EventEmitter {
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
    */
   public async searchByDN(userByDN: string): Promise<undefined | LdapResponeUser> {
+    if (this.userCache) {
+      // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
+      const cached: LDAPCache = await this.userCache.get<LDAPCache>(userByDN);
+      if (cached && cached.user && cached.user.sAMAccountName) {
+        this.logger.debug(`From cache: ${cached.user.sAMAccountName}`, 'LDAP');
+
+        return cached.user as LdapResponeUser;
+      }
+    }
+
     const opts = {
       scope: this.opts.searchScope,
       attributes: ['*'],
@@ -441,6 +451,29 @@ export class LdapService extends EventEmitter {
             }
           }),
       )
+      .then((user) => {
+        if (user && this.userCache) {
+          this.logger.debug(`To cache: ${userByDN}`, 'LDAP');
+          this.userCache.set<LDAPCache>(
+            userByDN,
+            {
+              user,
+            },
+            this.ttl,
+          );
+
+          this.logger.debug(`To cache: ${user.sAMAccountName}`, 'LDAP');
+          this.userCache.set<LDAPCache>(
+            user.sAMAccountName,
+            {
+              user,
+            },
+            this.ttl,
+          );
+        }
+
+        return user;
+      })
       .catch((error: Ldap.Error) => {
         this.logger.error('Search by DN error:', error.toString(), 'LDAP');
 
@@ -454,10 +487,10 @@ export class LdapService extends EventEmitter {
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
    */
   public async synchronization(): Promise<undefined | LdapResponeUser[]> {
-    if (process.env.NODE_ENV === 'production' && this.userCache) {
+    if (this.userCache) {
       const cached: LDAPCache = await this.userCache.get<LDAPCache>('SYNCHRONIZATION');
       // TODO: придумать что-нибудь половчее моих synchronization
-      if (cached && bcrypt.compareSync('synchronization', cached.password) && cached.synch) {
+      if (cached && cached.synch) {
         this.logger.debug(`Synchronization from cache`, 'LDAP');
 
         return cached.synch as LdapResponeUser[];
@@ -493,7 +526,6 @@ export class LdapService extends EventEmitter {
               'SYNCHRONIZATION',
               {
                 synch,
-                password: bcrypt.hashSync('synchronization', 10),
               },
               this.ttl,
             );
@@ -546,11 +578,11 @@ export class LdapService extends EventEmitter {
       throw new Error('No password given');
     }
 
-    if (process.env.NODE_ENV === 'production' && this.userCache) {
+    if (this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(username);
-      if (cached && cached.user && cached.user.username && bcrypt.compareSync(password, cached.password)) {
-        this.logger.debug(`From cache: ${cached.user.username}`, 'LDAP');
+      if (cached && cached.user && cached.user.sAMAccountName) {
+        this.logger.debug(`From cache: ${cached.user.sAMAccountName}`, 'LDAP');
 
         return cached.user as LdapResponeUser;
       }
@@ -582,16 +614,15 @@ export class LdapService extends EventEmitter {
 
           // 3. If requested, fetch user groups
           try {
-            const userWithGroups = await this.getGroups(foundUser);
+            const userWithGroups = (await this.getGroups(foundUser)) as LdapResponeUser;
 
             if (this.userCache) {
-              this.logger.debug(`To cache: ${username}`, 'LDAP');
+              this.logger.debug(`To cache: ${userWithGroups.sAMAccountName}`, 'LDAP');
 
               this.userCache.set<LDAPCache>(
-                username,
+                userWithGroups.sAMAccountName,
                 {
                   user: userWithGroups as LdapResponeUser,
-                  password: bcrypt.hashSync(password, 10),
                 },
                 this.ttl,
               );

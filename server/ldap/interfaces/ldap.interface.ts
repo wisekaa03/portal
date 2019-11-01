@@ -13,7 +13,6 @@ export type Scope = 'base' | 'one' | 'sub';
 export interface LDAPCache {
   user?: LdapResponeUser;
   synch?: SearchEntryObject[];
-  password: string;
 }
 
 export interface LdapResponeUser extends SearchEntryObject {
