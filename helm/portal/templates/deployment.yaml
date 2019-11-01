@@ -31,7 +31,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /auth/login
               port: http
               {{- if .Values.tls.enabled }}
               scheme: HTTPS
@@ -48,7 +48,7 @@ spec:
               {{- if .Values.tls.enabled }}
               scheme: HTTPS
               {{- end }}
-              path: /
+              path: /auth/login
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
