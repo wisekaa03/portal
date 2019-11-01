@@ -5,10 +5,10 @@
 const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
-const Config = require(`./${dev ? 'server/' : '.nest/server/'}config/config.service`);
-const Logger = require(`./${dev ? 'server/' : '.nest/server/'}logger/logger.service`);
+const Config = require(`./${dev ? 'server/' : '.next/nest/server/'}config/config.service`);
+const Logger = require(`./${dev ? 'server/' : '.next/nest/server/'}logger/logger.service`);
 
-const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
+const entities = dev ? ['server/**/*.entity.ts'] : ['.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion
 
