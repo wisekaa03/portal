@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Controller, Get, Res, UseGuards } from '@nestjs/common';
-import { NextResponse } from 'nest-next-module';
+import { RenderableResponse } from 'nest-next';
 // #endregion
 // #region Imports Local
 import { SessionGuard } from '../../guards/session.guard';
@@ -12,7 +12,7 @@ import { SessionGuard } from '../../guards/session.guard';
 export class MeetingsController {
   @Get()
   @UseGuards(SessionGuard)
-  public async phonebook(@Res() res: NextResponse): Promise<void> {
-    return res.nextRender('/meetings');
+  public async phonebook(@Res() res: RenderableResponse): Promise<void> {
+    return res.render('meetings');
   }
 }

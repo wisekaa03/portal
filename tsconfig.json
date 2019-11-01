@@ -31,7 +31,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    ".nest",
     ".next",
     "node_modules",
     "__tests__",

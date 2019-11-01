@@ -1,8 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
-import { NextResponse } from 'nest-next-module';
+import { Controller, Get, UseGuards, Res } from '@nestjs/common';
+import { RenderableResponse } from 'nest-next';
 // #endregion
 // #region Imports Local
 import { SessionGuard } from '../../guards/session.guard';
@@ -12,7 +12,8 @@ import { SessionGuard } from '../../guards/session.guard';
 export class AdminController {
   @Get()
   @UseGuards(SessionGuard)
-  async admin(@Res() res: NextResponse): Promise<void> {
-    return res.nextRender('/admin');
+  admin(@Res() res: RenderableResponse): any {
+    // render = (view: string, initialProps?: any) => any
+    res.render('admin', {});
   }
 }

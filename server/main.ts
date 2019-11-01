@@ -14,6 +14,10 @@ import responseTime from 'response-time';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import { getConnection } from 'typeorm';
+import { RenderModule } from 'nest-next';
+import Next from 'next';
+import 'reflect-metadata';
 // #endregion
 // #region Imports Local
 import { AppModule } from './app.module';
@@ -36,17 +40,28 @@ const nestjsOptions: NestApplicationOptions = {
 // #endregion
 
 async function bootstrap(configService: ConfigService): Promise<void> {
+  // #region Next
+  const dev = process.env.NODE_ENV !== 'production';
+  const app = Next({ dev });
+  await app.prepare();
+  // #endregion
+
   // #region Create NestJS server
-  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
-  app.useLogger(logger);
+  const server: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
+  server.useLogger(logger);
+  // #endregion
+
+  // #region Next Render
+  const renderer = server.get(RenderModule);
+  renderer.register(server, app, { dev, viewsDir: '' });
   // #endregion
 
   // #region X-Response-Time
-  app.use(responseTime());
+  server.use(responseTime());
   // #endregion
 
   // #region Improve security
-  app.use(helmet.ieNoOpen());
+  server.use(helmet.ieNoOpen());
 
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
@@ -66,7 +81,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     fontSrc.push('https://fonts.gstatic.com');
   }
 
-  app.use(
+  server.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
@@ -82,40 +97,40 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     }),
   );
 
-  app.use(helmet.hidePoweredBy());
+  server.use(helmet.hidePoweredBy());
   // #endregion
 
   // #region Improve performance - this is done by Nginx reverse-proxy, do not need
-  // app.use(compression());
+  // server.use(compression());
   // #endregion
 
   // #region Enable json response
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+  server.use(bodyParser.urlencoded({ extended: true }));
+  server.use(bodyParser.json());
   // #endregion
 
   // #region Enable cookie
-  app.use(cookieParser());
+  server.use(cookieParser());
   // #endregion
 
   // #region Session and passport initialization
   const store = sessionRedis(configService, logger);
-  app.use(session(configService, logger, store));
+  server.use(session(configService, logger, store));
 
-  app.use(passport.initialize());
-  app.use(passport.session());
+  server.use(passport.initialize());
+  server.use(passport.session());
   // #endregion
 
   // #region Static files
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+  server.useStaticAssets(join(__dirname, '..', 'public'));
   // #endregion
 
   // #region Locale I18n
-  app.use(nextI18NextMiddleware(nextI18next));
+  server.use(nextI18NextMiddleware(nextI18next));
   // #endregion
 
   // #region Next.JS locals
-  app.use('*', (req: Request, res: Response, next: Function) => {
+  server.use('*', (req: Request, res: Response, next: Function) => {
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     res.locals.sessionStore = store;
     next();
@@ -123,8 +138,19 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Start server
-  await app.listen(configService.get('PORT'), configService.get('HOST'));
+  await server.listen(configService.get('PORT'), configService.get('HOST'));
   logger.log(`Server running on ${configService.get('HOST')}:${configService.get('PORT')}`, 'Bootstrap');
+  // #endregion
+
+  // #region Webpack-HMR
+  if (module.hot) {
+    const connection = getConnection();
+    if (connection.isConnected) {
+      await connection.close();
+    }
+    module.hot.accept();
+    module.hot.dispose(() => server.close());
+  }
   // #endregion
 }
 
