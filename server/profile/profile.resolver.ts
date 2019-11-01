@@ -23,6 +23,7 @@ export class ProfileResolver {
    * @param after
    * @param orderBy
    * @param search
+   * @param disabled
    * @returns {Profiles[]}
    */
   @Query()
@@ -32,6 +33,7 @@ export class ProfileResolver {
     @Args('after') after: string,
     @Args('orderBy') orderBy: Order<string>,
     @Args('search') search: string,
+    @Args('disabled') disabled: boolean,
   ): Promise<Connection<ProfileEntity>> {
     return paginate(
       { first, after, orderBy },
@@ -40,10 +42,9 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: false,
         orderFieldToKey: (field: string) => field,
-        queryBuilder: this.profileService.getProfiles(search),
+        queryBuilder: this.profileService.getProfiles(search, disabled),
       },
     );
-    // return this.profileService.profiles(take, orderBy, order);
   }
 
   /**

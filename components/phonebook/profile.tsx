@@ -8,6 +8,7 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, CardContent, Paper, List, ListItem, ListItemText, Divider, IconButton } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
+import { red } from '@material-ui/core/colors';
 import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
@@ -92,10 +93,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '180px',
       width: '180px',
     },
-
-    // column: { flex: 1 },
-    // list: { color: '#747474' },
-    // listItem: { 'flexWrap': 'nowrap', '& > .MuiGrid-item:first-child': { marginRight: '10px' } },
+    disabled: {
+      color: red[600],
+    },
   }),
 );
 
@@ -112,8 +112,6 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   });
 
   const profile = !loading && data && data.profile;
-
-  console.log(profile);
 
   return (
     <Card ref={ref} className={classes.root}>
@@ -140,9 +138,16 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
               <h2>{profile ? profile.firstName : <Skeleton variant="rect" width={150} />}</h2>
               <h2>{profile ? profile.middleName : <Skeleton variant="rect" width={120} />}</h2>
             </div>
-            <div className={classes.center}>
-              <span>{profile && profile.nameEng}</span>
-            </div>
+            {profile && profile.disabled && (
+              <div className={clsx(classes.center, classes.disabled)}>
+                <span>{t(`phonebook:fields.disabled`)}</span>
+              </div>
+            )}
+            {profile && profile.nameEng && (
+              <div className={classes.center}>
+                <span>{profile && profile.nameEng}</span>
+              </div>
+            )}
             {profile && profile.mobile && (
               <div className={classes.center}>
                 <PhoneAndroidRounded />

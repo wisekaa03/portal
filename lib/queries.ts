@@ -85,12 +85,13 @@ export const LOGOUT = gql`
 `;
 
 export const PROFILES = (_columns: string): any => gql`
-  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String) {
-    profiles(first: $first, after: $after, orderBy: $orderBy, search: $search) {
+  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String, $disabled: Boolean) {
+    profiles(first: $first, after: $after, orderBy: $orderBy, search: $search, disabled: $disabled) {
       totalCount
       edges {
         node {
           id
+          disabled
           ${_columns}
         }
         cursor

@@ -17,6 +17,7 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
+import { red } from '@material-ui/core/colors';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -82,6 +83,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: '1',
       display: 'flex',
       alignItems: 'center',
+    },
+    disabled: {
+      color: red[600],
     },
     search: {
       'flexGrow': 1,
@@ -149,7 +153,7 @@ const defaultColumnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
 const itemKey = (index: number, data: any): string => data.items[index].node.id;
 
 const getGraphQLColumns = (columns: ColumnNames[]): string => {
-  let result = columns.join(' ');
+  let result = columns.filter((col) => col !== 'disabled').join(' ');
 
   if (columns.includes('lastName')) {
     result += ' firstName middleName';
@@ -252,13 +256,26 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
             break;
           }
 
-          case 'mobile':
-          case 'telephone':
-          case 'workPhone':
+          case 'nameEng':
+          case 'username':
           case 'company':
+          case 'companyEng':
           case 'department':
+          case 'departmentEng':
+          case 'otdel':
+          case 'otdelEng':
+          case 'title':
+          case 'positionEng':
+          case 'room':
+          case 'telephone':
+          case 'fax':
+          case 'mobile':
+          case 'workPhone':
           case 'email':
-          case 'title': {
+          case 'country':
+          case 'region':
+          case 'town':
+          case 'street': {
             cellData = item[name];
             break;
           }
@@ -272,7 +289,9 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style, data }) => {
           ...result,
           <TableCell
             key={name}
-            className={classes.cell}
+            className={clsx(classes.cell, {
+              [classes.disabled]: item.disabled && name === 'lastName',
+            })}
             style={{ height: rowHeight, ...rest }}
             component="div"
             variant="body"
@@ -315,6 +334,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       first: search.length > 3 ? 100 : 50,
       after: '',
       search: search.length > 3 ? search : '',
+      disabled: columns.includes('disabled'),
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -334,6 +354,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         after: data.profiles.pageInfo.endCursor,
         first: search.length > 3 ? 100 : 50,
         search: search.length > 3 ? search : '',
+        disabled: columns.includes('disabled'),
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
