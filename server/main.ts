@@ -146,7 +146,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   if (module.hot) {
     const connection = getConnection();
     if (connection.isConnected) {
-      await connection.close();
+      try {
+        await connection.close();
+      } catch (error) {
+        logger.error('main.ts: getConnection() error', error.toString(), 'Bootstrap');
+      }
     }
     module.hot.accept();
     module.hot.dispose(() => server.close());

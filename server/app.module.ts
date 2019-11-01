@@ -57,7 +57,7 @@ const dev = process.env.NODE_ENV !== 'production';
             `db="${configService.get('HTTP_REDIS_DB')}" ` +
             `ttl="${configService.get('HTTP_REDIS_TTL')}" ` +
             `max objects="${configService.get('HTTP_REDIS_MAX_OBJECTS')}" ` +
-            `prefix="${configService.get('HTTP_REDIS_PREFIX')}" ` +
+            `prefix="${configService.get('HTTP_REDIS_PREFIX') || 'HTTP'}" ` +
             `password="${configService.get('HTTP_REDIS_PASSWORD') ? '{MASKED}' : ''}" `,
           'Cache',
         );
@@ -70,7 +70,7 @@ const dev = process.env.NODE_ENV !== 'production';
           port: configService.get<number>('HTTP_REDIS_PORT'),
           db: configService.get<number>('HTTP_REDIS_DB'),
           password: configService.get<string>('HTTP_REDIS_PASSWORD') || undefined,
-          keyPrefix: configService.get<string>('HTTP_REDIS_PREFIX'),
+          keyPrefix: configService.get<string>('HTTP_REDIS_PREFIX') || 'HTTP',
           // retry_strategy: (options) => {}
         };
       },
@@ -132,7 +132,7 @@ const dev = process.env.NODE_ENV !== 'production';
               port: configService.get<number>('DATABASE_REDIS_PORT'),
               password: configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
               db: configService.get<number>('DATABASE_REDIS_DB'),
-              // prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+              prefix: configService.get<string>('DATABASE_REDIS_PREFIX') || 'DB',
             },
             duration: configService.get<number>('DATABASE_REDIS_TTL'),
           },

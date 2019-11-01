@@ -18,6 +18,7 @@ export default (configService: ConfigService, logService: LogService): Session.S
         port: configService.get<number>('SESSION_REDIS_PORT'),
         db: configService.get<number>('SESSION_REDIS_DB'),
         password: configService.get<string>('SESSION_REDIS_PASSWORD') || undefined,
+        prefix: configService.get<string>('SESSION_REDIS_PREFIX') || 'SESSION',
       }),
     });
 
@@ -28,7 +29,8 @@ export default (configService: ConfigService, logService: LogService): Session.S
         `db="${configService.get<number>('SESSION_REDIS_DB')}" ` +
         `cookie ttl="${configService.get<number>('SESSION_COOKIE_TTL')}" ` +
         `secret="${configService.get<string>('SESSION_SECRET') ? '{MASKED}' : ''}" ` +
-        `password="${configService.get<string>('SESSION_PASSWORD') ? '{MASKED}' : ''}"`,
+        `password="${configService.get<string>('SESSION_REDIS_PASSWORD') ? '{MASKED}' : ''}" ` +
+        `prefix="${configService.get<string>('SESSION_REDIS_PREFIX') || 'SESSION'}"`,
       'Session',
     );
 
