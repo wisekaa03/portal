@@ -117,6 +117,8 @@ export const allColumns: Column[] = [
   { name: 'disabled', minWidth: 100 },
 ];
 
+const countInBlocks = 4;
+
 export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
   const { t, columns, changeColumn, handleClose } = props;
@@ -131,7 +133,7 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
     handleClose();
   };
 
-  const blocks = Math.ceil(allColumns.length / 4);
+  const blocks = Math.ceil(allColumns.length / countInBlocks);
 
   return (
     <Card ref={ref} className={classes.root}>
@@ -141,7 +143,7 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
           {[...Array(blocks).keys()].map((i) => (
             <FormControl key={i} className={classes.group}>
               <FormGroup>
-                {allColumns.slice(i * 4, i * 4 + 4).map(({ name }) => (
+                {allColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }) => (
                   <FormControlLabel
                     key={name}
                     className={classes.item}

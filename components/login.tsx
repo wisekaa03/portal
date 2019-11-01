@@ -207,7 +207,7 @@ const LoginComponent: I18nPage<{
                 }
                 label={t('remember')}
               />
-              {loading && <Loading />}
+              {(called || loading) && <Loading />}
               {error && <GQLError error={error} />}
               <FormControl className={classes.submitButtonContainer}>
                 <Button
