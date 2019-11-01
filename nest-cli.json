@@ -1,5 +1,10 @@
 {
   "language": "ts",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "server"
+  "sourceRoot": "server",
+  "compilerOptions": {
+    "tsConfigPath": "tsconfig.server.json",
+    "webpackConfigPath": "webpack.config.js",
+    "webpack": true
+  }
 }

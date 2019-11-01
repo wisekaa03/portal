@@ -3,8 +3,7 @@
 // #region Imports NPM
 import { ExceptionFilter, Catch, HttpException, HttpStatus, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Request } from 'express';
-import { NextResponse } from 'nest-next-module';
+import { Response, Request } from 'express';
 // #endregion
 // #region Imports Local
 import { AppGraphQLExecutionContext } from '../interceptors/logging.interceptor';
@@ -17,7 +16,7 @@ export class HttpErrorFilter implements ExceptionFilter {
 
   catch(exception: Error | HttpException, host: ExecutionContext): void {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<NextResponse>();
+    const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
     let status: number;
@@ -55,7 +54,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       }
 
       response.status(status);
-      response.nextRender('/_error');
+      response.render('/_error');
       // #endregion
     } else {
       // #region GraphQL query

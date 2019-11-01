@@ -27,7 +27,6 @@ test_build:
     - time yarn build
   artifacts:
     paths:
-      - .nest/
       - .next/
     expire_in: 16 hours
 

@@ -15,8 +15,6 @@ import {
 // #endregion
 // #region Imports Local
 // eslint-disable-next-line import/no-cycle
-import { Profile } from './models/profile.dto';
-// eslint-disable-next-line import/no-cycle
 import { LoginService, Gender } from '../../lib/types';
 // #endregion
 

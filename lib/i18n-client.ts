@@ -24,7 +24,7 @@ export const nextI18next = new NextI18Next({
     typeof window === 'undefined'
       ? process.env.NODE_ENV !== 'production'
         ? 'public/locales'
-        : '.nest/public/locales'
+        : '.next/nest/public/locales'
       : 'locales',
   otherLanguages: ['en'],
 });

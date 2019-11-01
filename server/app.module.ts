@@ -6,11 +6,9 @@
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module, CacheModule } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
-import { NestNextModule } from 'nest-next-module';
-
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-
+import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local
@@ -27,11 +25,11 @@ import { ConfigService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
+import { ProfileEntity } from './profile/profile.entity';
+import { UserEntity } from './user/user.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
-const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
-// const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 
 @Module({
   imports: [
@@ -41,6 +39,10 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
 
     // #region Config module
     ConfigModule,
+    // #endregion
+
+    // #region Next RenderModule
+    RenderModule,
     // #endregion
 
     // #region Cache Manager - Redis
@@ -93,7 +95,7 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
       debug: dev,
       playground: dev,
       typePaths: ['./**/*.graphql'],
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req }) => ({ req }),
     }),
     // #endregion
 
@@ -121,7 +123,7 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
               : configService.get('DATABASE_LOGGING') === 'true'
                 ? true
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
-          entities,
+          entities: [ProfileEntity, UserEntity],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {
             type: 'redis',
@@ -152,10 +154,6 @@ const entities = dev ? ['server/**/*.entity.ts'] : ['.nest/**/*.entity.js'];
 
     // #region Users
     UserModule,
-    // #endregion
-
-    // #region Next
-    NestNextModule.forRoot({ dev }),
     // #endregion
 
     // #region Home page

@@ -58,7 +58,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
         // Prevent Apollo Client GraphQL errors from crashing SSR.
         // Handle them in components via the data.error prop:
         // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-        console.error('Error while running `getDataFromTree`', error);
+        if (!(error && error.status === 401)) {
+          console.error('withApolloClient getDataFromTree:', error);
+        }
       }
 
       if (__SERVER__) {

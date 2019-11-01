@@ -9,11 +9,16 @@ import { ExecutionContext, Injectable, CacheInterceptor as MainCacheInterceptor 
 @Injectable()
 export class CacheInterceptor extends MainCacheInterceptor {
   trackBy(context: ExecutionContext): string | undefined {
-    // TODO: сделать чтобы cache по страницам с типом GET обрабатывался cache
-    // TODO: а все остальные, в частности graphql запросы нормально обрабатывались
-    // if (context.switchToHttp().getRequest()) {
-    //   return super.trackBy(context);
+    // const request = context.switchToHttp().getRequest();
+    // const { httpAdapter } = this.httpAdapterHost;
+    // const httpServer = httpAdapter.getHttpServer();
+
+    // const isGetRequest = httpServer.getRequestMethod(request) === 'GET';
+    // const excludePaths = ['/graphql'];
+    // if (!isGetRequest || (isGetRequest && excludePaths.includes(httpServer.getRequestUrl))) {
+    //   return undefined;
     // }
+    // return httpServer.getRequestUrl(request);
 
     return undefined;
   }
