@@ -32,6 +32,8 @@ import PhonebookIcon from '../public/images/svg/icons/phonebook.svg';
 import PhonebookIconSelected from '../public/images/svg/icons/phonebook_select.svg';
 import SettingsIcon from '../public/images/svg/icons/settings.svg';
 import SettingsIconSelected from '../public/images/svg/icons/settings_select.svg';
+import AdminIcon from '../public/images/svg/icons/admin.svg';
+import AdminIconSelected from '../public/images/svg/icons/admin_select.svg';
 // #endregion
 
 const drawerWidth = 256;
@@ -152,6 +154,14 @@ const useStyles = makeStyles((theme: Theme) =>
         content: `url(${SettingsIconSelected})`,
       },
     },
+    iconAdmin: {
+      '& img': {
+        content: `url(${AdminIcon})`,
+      },
+      '&:hover img, &$itemSelected img': {
+        content: `url(${AdminIconSelected})`,
+      },
+    },
   }),
 );
 
@@ -170,7 +180,8 @@ type IconStyle =
   | 'iconNews'
   | 'iconPhonebook'
   | 'iconProfile'
-  | 'iconSettings';
+  | 'iconSettings'
+  | 'iconAdmin';
 
 interface UrlProps {
   icon: IconStyle;
@@ -195,7 +206,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
     { icon: 'iconMeeting', text: t('common:meeting'), link: '/meetings' },
     { icon: 'iconNews', text: t('common:news'), link: '/news' },
     { icon: 'iconSettings', text: t('common:settings'), link: '/settings' },
-    { icon: 'iconSettings', text: t('common:adminPanel'), link: '/admin' },
+    { icon: 'iconAdmin', text: t('common:adminPanel'), link: '/admin' },
   ];
 
   // TODO: подумать как правильнее разделять сервер и клиент при определении маршрута
