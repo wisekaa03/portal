@@ -30,14 +30,14 @@ if (isCache) {
   cache = {
     type: 'redis',
     options: {
-      host: configService.get('HTTP_REDIS_HOST'),
-      port: configService.get('HTTP_REDIS_PORT'),
+      host: configService.get('DATABASE_REDIS_HOST'),
+      port: configService.get('DATABASE_REDIS_PORT'),
       // eslint-disable-next-line max-len
       db: configService.get('DATABASE_REDIS_CACHE_DB') ? parseInt(configService.get('DATABASE_REDIS_CACHE_DB'), 10) : 0,
-      password: configService.get('HTTP_REDIS_PASSWORD') ? configService.get('HTTP_REDIS_PASSWORD') : undefined,
-      prefix: configService.get('HTTP_REDIS_PREFIX') ? configService.get('HTTP_REDIS_PREFIX') : undefined,
+      password: configService.get('DATABASE_REDIS_PASSWORD') ? configService.get('DATABASE_REDIS_PASSWORD') : undefined,
+      prefix: configService.get('DATABASE_REDIS_PREFIX') ? configService.get('DATABASE_REDIS_PREFIX') : undefined,
     },
-    duration: configService.get('HTTP_REDIS_TTL'),
+    duration: configService.get('DATABASE_REDIS_TTL'),
   };
 } else {
   cache = false;

@@ -1,6 +1,8 @@
 .git
 .gitignore
 
+*.map
+
 .eslintignore
 .eslintrc.js
 
