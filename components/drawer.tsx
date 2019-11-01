@@ -209,7 +209,6 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
     { icon: 'iconAdmin', text: t('common:adminPanel'), link: '/admin' },
   ];
 
-  // TODO: подумать как правильнее разделять сервер и клиент при определении маршрута
   const pathname = router && 'pathname' in router ? router.pathname : '';
 
   const drawer = (

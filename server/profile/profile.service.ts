@@ -40,7 +40,6 @@ export class ProfileService {
   ) {}
 
   getProfiles = (search: string, disabled: boolean): SelectQueryBuilder<ProfileEntity> => {
-    // TODO: в дальнейшем продумать как отсеивать уволенных
     const query = this.profileRepository.createQueryBuilder('profile').where('profile.notShowing = :notShowing');
     const parameters = { search: `%${search}%`, notShowing: false, disabled };
     debugger;
