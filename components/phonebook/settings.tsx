@@ -101,7 +101,7 @@ export const allColumns: Column[] = [
   { name: 'departmentEng', minWidth: 200 },
   { name: 'otdel', minWidth: 200 },
   { name: 'otdelEng', minWidth: 200 },
-  { name: 'title', minWidth: 200 },
+  { name: 'title', minWidth: 240 },
   { name: 'positionEng', minWidth: 200 },
   { name: 'manager', minWidth: 150 },
   { name: 'room', minWidth: 100 },
