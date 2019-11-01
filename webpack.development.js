@@ -9,6 +9,10 @@ module.exports = {
   watch: true,
   target: 'node',
   externals: [nodeExternals({ whitelist: ['webpack/hot/poll?100'] })],
+  devServer: {
+    inline: true,
+    hot: true,
+  },
   plugins: [
     new webpack.IgnorePlugin({
       /**
