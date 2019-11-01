@@ -1,5 +1,13 @@
 {
-  "title": "Page not found",
-  "description": "Page not found",
+  "title": {
+    "server": "Server error !",
+    "notauthorized": "Not authorized",
+    "notfound": "Page not found"
+  },
+  "description": {
+    "server": "Server error !",
+    "notauthorized": "Not authorized",
+    "notfound": "Page not found"
+  },
   "explanation": "Looks like the page you were looking for was either removed or never existed. Please <0>send me an email</0> if you think that something is broken."
 }

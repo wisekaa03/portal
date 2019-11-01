@@ -142,6 +142,8 @@ const LoginComponent: I18nPage<{
     }
   }, []);
 
+  called = error ? false : called;
+
   return (
     <div className={classes.root}>
       <div>

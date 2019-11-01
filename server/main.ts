@@ -42,7 +42,7 @@ const nestjsOptions: NestApplicationOptions = {
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Next
   const dev = process.env.NODE_ENV !== 'production';
-  const app = Next({ dev });
+  const app = Next({ dev, quiet: false });
   await app.prepare();
   // #endregion
 
@@ -122,7 +122,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Static files
-  server.useStaticAssets(join(__dirname, '..', 'public'));
+  server.useStaticAssets(dev ? join(__dirname, '../..', 'public/') : join(__dirname, '..', 'public/'));
   // #endregion
 
   // #region Locale I18n

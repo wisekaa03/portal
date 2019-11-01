@@ -4,6 +4,7 @@
 import Head from 'next/head';
 import React from 'react';
 
+import { TFunction } from 'i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -38,19 +39,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const title = (t: TFunction, statusCode?: number): string => {
+  switch (statusCode) {
+    case 500:
+      return t('error:title:server');
+    case 403:
+      return t('error:title:notauthorized');
+    default:
+      return t('error:title:notfound');
+  }
+};
+
+const description = (t: TFunction, statusCode?: number): string => {
+  switch (statusCode) {
+    case 500:
+      return t('error:description:server');
+    case 403:
+      return t('error:description:notauthorized');
+    default:
+      return t('error:description:notfound');
+  }
+};
+
 const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Head>
-        <title>{t('error:title')}</title>
+        <title>{title(t, statusCode)}</title>
       </Head>
       <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
         <Grid item>
           <Paper className={classes.paper}>
             <Typography variant="h3" component="h3">
-              {t('error:description')}
+              {description(t, statusCode)}
             </Typography>
 
             <Typography variant="h1" component="h1" className={classes.statusCode}>

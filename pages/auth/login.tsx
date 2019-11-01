@@ -20,7 +20,7 @@ import { UserResponse } from '../../server/user/models/user.dto';
 const Login: I18nPage = (props): React.ReactElement => {
   const client = useApolloClient();
 
-  const [login, { loading, error }] = useMutation(LOGIN, {
+  const [login, { loading, error, called }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
       if (data && data.login) {
         setStorage(SESSION, data.login.session);
@@ -34,7 +34,7 @@ const Login: I18nPage = (props): React.ReactElement => {
     },
   });
 
-  return <LoginComponent error={error} loading={loading} login={login} {...props} />;
+  return <LoginComponent error={error} loading={loading} called={called} login={login} {...props} />;
 };
 
 Login.getInitialProps = () => {
