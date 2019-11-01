@@ -29,6 +29,7 @@ module.exports = {
           'cache-manager',
           'class-validator',
           'class-transformer',
+          'typeorm',
           'graphql',
         ];
         if (!lazyImports.includes(resource)) {

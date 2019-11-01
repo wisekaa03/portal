@@ -106,6 +106,7 @@ const dev = process.env.NODE_ENV !== 'production';
       useFactory: async (configService: ConfigService, logger: LogService) =>
         ({
           name: 'default',
+          keepConnectionAlive: true,
           type: configService.get<string>('DATABASE_CONNECTION'),
           host: configService.get<string>('DATABASE_HOST'),
           port: configService.get<number>('DATABASE_PORT'),

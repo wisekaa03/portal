@@ -144,16 +144,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Webpack-HMR
   if (module.hot) {
-    const connection = getConnection();
-    if (connection.isConnected) {
-      try {
-        await connection.close();
-      } catch (error) {
-        logger.error('main.ts: getConnection() error', error.toString(), 'Bootstrap');
-      }
-    }
     module.hot.accept();
-    module.hot.dispose(() => server.close());
+    module.hot.dispose(async () => server.close());
   }
   // #endregion
 }
