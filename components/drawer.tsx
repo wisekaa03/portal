@@ -82,86 +82,6 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: '#5F9898!important',
       color: '#fff',
     },
-    iconCalendar: {
-      '& img': {
-        content: `url(${CalendarIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${CalendarIconSelected})`,
-      },
-    },
-    iconFaq: {
-      '& img': {
-        content: `url(${FaqIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${FaqIconSelected})`,
-      },
-    },
-    iconItApplication: {
-      '& img': {
-        content: `url(${ItApplicationIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${ItApplicationIconSelected})`,
-      },
-    },
-    iconMail: {
-      '& img': {
-        content: `url(${MailIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${MailIconSelected})`,
-      },
-    },
-    iconMeeting: {
-      '& img': {
-        content: `url(${MeetingIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${MeetingIconSelected})`,
-      },
-    },
-    iconNews: {
-      '& img': {
-        content: `url(${NewsIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${NewsIconSelected})`,
-      },
-    },
-    iconPhonebook: {
-      '& img': {
-        content: `url(${PhonebookIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${PhonebookIconSelected})`,
-      },
-    },
-    iconProfile: {
-      '& img': {
-        content: `url(${ProfileIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${ProfileIconSelected})`,
-      },
-    },
-    iconSettings: {
-      '& img': {
-        content: `url(${SettingsIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${SettingsIconSelected})`,
-      },
-    },
-    iconAdmin: {
-      '& img': {
-        content: `url(${AdminIcon})`,
-      },
-      '&:hover img, &$itemSelected img': {
-        content: `url(${AdminIconSelected})`,
-      },
-    },
   }),
 );
 
@@ -171,20 +91,9 @@ interface DrawerProps extends WithTranslation {
   handleOpen(): void;
 }
 
-type IconStyle =
-  | 'iconCalendar'
-  | 'iconFaq'
-  | 'iconItApplication'
-  | 'iconMail'
-  | 'iconMeeting'
-  | 'iconNews'
-  | 'iconPhonebook'
-  | 'iconProfile'
-  | 'iconSettings'
-  | 'iconAdmin';
-
 interface UrlProps {
-  icon: IconStyle;
+  icon: any;
+  selected: any;
   text: any;
   link: string;
 }
@@ -197,16 +106,21 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const { open, isMobile, handleOpen, t } = props;
 
   const urls: UrlProps[] = [
-    { icon: 'iconMail', text: t('common:mail'), link: '/mail' },
-    { icon: 'iconPhonebook', text: t('common:phonebook'), link: '/phonebook' },
-    { icon: 'iconProfile', text: t('common:profile'), link: '/profile' },
-    { icon: 'iconItApplication', text: t('common:itapplication'), link: '/itapplication' },
-    { icon: 'iconCalendar', text: t('common:calendar'), link: '/calendar' },
-    { icon: 'iconFaq', text: t('common:faq'), link: '/faq' },
-    { icon: 'iconMeeting', text: t('common:meeting'), link: '/meetings' },
-    { icon: 'iconNews', text: t('common:news'), link: '/news' },
-    { icon: 'iconSettings', text: t('common:settings'), link: '/settings' },
-    { icon: 'iconAdmin', text: t('common:adminPanel'), link: '/admin' },
+    { icon: MailIcon, selected: MailIconSelected, text: t('common:mail'), link: '/mail' },
+    { icon: PhonebookIcon, selected: PhonebookIconSelected, text: t('common:phonebook'), link: '/phonebook' },
+    { icon: ProfileIcon, selected: ProfileIconSelected, text: t('common:profile'), link: '/profile' },
+    {
+      icon: ItApplicationIcon,
+      selected: ItApplicationIconSelected,
+      text: t('common:itapplication'),
+      link: '/itapplication',
+    },
+    { icon: CalendarIcon, selected: CalendarIconSelected, text: t('common:calendar'), link: '/calendar' },
+    { icon: FaqIcon, selected: FaqIconSelected, text: t('common:faq'), link: '/faq' },
+    { icon: MeetingIcon, selected: MeetingIconSelected, text: t('common:meeting'), link: '/meetings' },
+    { icon: NewsIcon, selected: NewsIconSelected, text: t('common:news'), link: '/news' },
+    { icon: SettingsIcon, selected: SettingsIconSelected, text: t('common:settings'), link: '/settings' },
+    { icon: AdminIcon, selected: AdminIconSelected, text: t('common:adminPanel'), link: '/admin' },
   ];
 
   const pathname = router && 'pathname' in router ? router.pathname : '';
@@ -217,43 +131,40 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
         {urls.map((url) => {
           const selected = url.link === pathname;
 
+          const handleEnter = (e: any): void => {
+            if (selected) return;
+
+            e.currentTarget.firstElementChild.firstElementChild.firstElementChild.src = url.selected;
+          };
+
+          const handleLeave = (e: any): void => {
+            if (selected) return;
+
+            e.currentTarget.firstElementChild.firstElementChild.firstElementChild.src = url.icon;
+          };
+
           return (
             <li key={url.text}>
-              {url.link[0] !== '/' ? (
+              <Link href={url.link} passHref>
                 <ListItem
                   button
+                  onMouseOver={handleEnter}
+                  onMouseOut={handleLeave}
+                  onFocus={handleEnter}
+                  onBlur={handleLeave}
                   selected={selected}
-                  className={clsx(classes.item, classes[url.icon], {
+                  className={clsx(classes.item, {
                     [classes.itemSelected]: selected,
                   })}
                   component="a"
-                  href={url.link}
-                  target="_blank"
                   title={url.text}
                 >
                   <ListItemIcon>
-                    <Icon />
+                    <Icon src={selected ? url.selected : url.icon} />
                   </ListItemIcon>
                   <ListItemText primary={url.text} />
                 </ListItem>
-              ) : (
-                <Link href={url.link} passHref>
-                  <ListItem
-                    button
-                    selected={selected}
-                    className={clsx(classes.item, classes[url.icon], {
-                      [classes.itemSelected]: selected,
-                    })}
-                    component="a"
-                    title={url.text}
-                  >
-                    <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={url.text} />
-                  </ListItem>
-                </Link>
-              )}
+              </Link>
             </li>
           );
         })}

@@ -7,29 +7,23 @@ const iconWidth = 24;
 
 interface IconProps {
   src?: string;
-  hover?: string;
 }
 
 const useStyles = makeStyles<Theme | undefined, IconProps>(() =>
   createStyles({
-    root: (props) => ({
-      'width': iconWidth,
-      'height': iconWidth,
-      'content': props.src ? `url(${props.src})` : undefined,
-
-      '&:hover': {
-        content: props.hover ? `url(${props.hover})` : undefined,
-      },
-    }),
+    root: {
+      width: iconWidth,
+      height: iconWidth,
+    },
   }),
 );
 
 const BaseIcon = (props: IconProps): React.ReactElement => {
-  const classes = useStyles(props);
+  const classes = useStyles({});
 
   return (
     <Icon>
-      <img className={classes.root} alt="icon" />
+      <img className={classes.root} alt="icon" {...props} />
     </Icon>
   );
 };
