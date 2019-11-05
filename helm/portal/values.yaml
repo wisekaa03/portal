@@ -100,9 +100,9 @@ ingress:
 ## Liveness and Readiness probe values.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
 livenessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 60
-  timeoutSeconds: 5
+  initialDelaySeconds: 300
+  periodSeconds: 300
+  timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 5
 readinessProbe:
