@@ -3,8 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { Paper } from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 // #endregion
 // #region Imports Local
 import Head from 'next/head';
