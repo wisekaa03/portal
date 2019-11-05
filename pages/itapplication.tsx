@@ -1,43 +1,78 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useState } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { Paper } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box } from '@material-ui/core';
+import SwipeableViews from 'react-swipeable-views';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { VerticalCenter } from '../components/verticalcenter';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(5),
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    header: {
+      '& button': {
+        padding: `${theme.spacing(2)}px ${theme.spacing(8)}px`,
+      },
+    },
+    contentWrap: {
+      display: 'flex',
+      flex: 1,
+    },
+    content: {
+      display: 'flex',
+    },
+    tab: {
+      flex: 1,
     },
   }),
 );
 
-const ITApplication: I18nPage = (props): React.ReactElement => {
+const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
+    setCurrentTab(newValue);
+  };
+
+  const handleChangeTabIndex = (index: number): void => {
+    setCurrentTab(index);
+  };
 
   return (
-    <Page {...props}>
-      <VerticalCenter horizontal>
-        <Paper className={classes.root}>
-          <Typography>Извините, заявки в ИТ пока не готовы.</Typography>
+    <Page {...rest}>
+      <div className={classes.root}>
+        <Paper square className={classes.header}>
+          <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
+            <Tab label={t('itapplication:tabs.tab1')} />
+            <Tab label={t('itapplication:tabs.tab2')} />
+          </Tabs>
         </Paper>
-      </VerticalCenter>
+        <SwipeableViews
+          index={currentTab}
+          className={classes.contentWrap}
+          containerStyle={{ flex: 1 }}
+          slideClassName={classes.content}
+          onChangeIndex={handleChangeTabIndex}
+        >
+          <Box className={classes.tab}>TAB 1</Box>
+          <Box className={classes.tab}>TAB 2</Box>
+        </SwipeableViews>
+      </div>
     </Page>
   );
 };
 
-ITApplication.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['itapplication']),
-  };
-};
+ITApplication.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['itapplication']),
+});
 
 export default nextI18next.withTranslation('itapplication')(ITApplication);
