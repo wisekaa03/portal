@@ -165,6 +165,8 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
   const [currentService, setCurrentService] = useState<number>(-1);
+  const [title, setTitle] = useState<string>('');
+  const [text, setText] = useState<string>('');
 
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
@@ -179,9 +181,22 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrentTab(1);
   };
 
+  const handleTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setTitle(event.target.value);
+  };
+
+  const handleText = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setText(event.target.value);
+  };
+
   const handleAccept = (): void => {};
 
-  const handleClose = (): void => {};
+  const handleClose = (): void => {
+    setCurrentService(-1);
+    setCurrentTab(0);
+    setTitle('');
+    setText('');
+  };
 
   return (
     <Page {...rest}>
@@ -241,6 +256,8 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
                   data-field-name="title"
+                  value={title}
+                  onChange={handleTitle}
                   type="text"
                   label={t('itapplication:form.title')}
                   variant="outlined"
@@ -250,6 +267,8 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
                   data-field-name="text"
+                  value={text}
+                  onChange={handleText}
                   multiline
                   rows={10}
                   type="text"
