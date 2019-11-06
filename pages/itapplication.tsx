@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Button } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Button, Typography } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import clsx from 'clsx';
@@ -74,14 +74,14 @@ const useStyles = makeStyles((theme: Theme) =>
       'alignItems': 'center',
 
       '& > div:not(:last-child)': {
-        marginBottom: theme.spacing(4),
+        marginBottom: theme.spacing(3),
       },
     },
     service: {
       'padding': theme.spacing(),
       'borderRadius': theme.spacing() / 2,
       'display': 'grid',
-      'gridTemplateColumns': '1fr 5fr',
+      'gridTemplateColumns': '60px 1fr',
       'gridGap': theme.spacing(),
       'cursor': 'pointer',
       '&:hover:not($currentService)': {
@@ -164,7 +164,7 @@ const services: ServicesProps[] = [
 const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
-  const [currentService, setCurrentService] = useState<number | boolean>(false);
+  const [currentService, setCurrentService] = useState<number>(-1);
 
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
@@ -189,7 +189,7 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <Paper square className={classes.header}>
           <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
             <Tab label={t('itapplication:tabs.tab1')} />
-            <Tab disabled={currentService === false} label={t('itapplication:tabs.tab2')} />
+            <Tab disabled={currentService < 0} label={t('itapplication:tabs.tab2')} />
           </Tabs>
         </Paper>
         <SwipeableViews
@@ -215,8 +215,10 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <BaseIcon src={service.icon} size={48} />
                       </div>
                       <div>
-                        <div>{service.title}</div>
-                        <div className={classes.subtitle}>{service.subtitle}</div>
+                        <Typography variant="subtitle1">{service.title}</Typography>
+                        <Typography className={classes.subtitle} variant="body1">
+                          {service.subtitle}
+                        </Typography>
                       </div>
                     </Box>
                   ))}
@@ -226,6 +228,16 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
           </Box>
           <Box display="flex" flexGrow={1}>
             <Container className={classes.container2}>
+              {currentService >= 0 && (
+                <Box className={clsx(classes.service, classes.formControl)}>
+                  <div>
+                    <BaseIcon src={services[currentService].icon} size={48} />
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1">{services[currentService].title}</Typography>
+                  </div>
+                </Box>
+              )}
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
                   data-field-name="title"
