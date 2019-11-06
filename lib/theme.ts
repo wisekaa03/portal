@@ -46,6 +46,7 @@ theme.overrides = {
   },
   MuiOutlinedInput: {
     root: {
+      'borderRadius': theme.spacing() / 2,
       '&:hover $notchedOutline': {
         borderColor: 'rgba(44, 67, 115, 0.9)',
       },
@@ -53,6 +54,7 @@ theme.overrides = {
     notchedOutline: {
       'borderColor': 'rgba(44, 67, 115, 0.5)',
       'borderWidth': 2,
+      'borderRadius': 'inherit',
       '&$disabled': {
         borderColor: 'rgba(0, 0, 0, 0.3)',
       },

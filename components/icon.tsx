@@ -7,19 +7,20 @@ const iconWidth = 24;
 
 interface IconProps {
   src?: string;
+  size?: number;
 }
 
 const useStyles = makeStyles<Theme | undefined, IconProps>(() =>
   createStyles({
-    root: {
-      width: iconWidth,
-      height: iconWidth,
-    },
+    root: (props) => ({
+      width: props.size ? props.size : iconWidth,
+      height: props.size ? props.size : iconWidth,
+    }),
   }),
 );
 
-const BaseIcon = (props: IconProps): React.ReactElement => {
-  const classes = useStyles({});
+const BaseIcon = ({ size, ...props }: IconProps): React.ReactElement => {
+  const classes = useStyles({ size });
 
   return (
     <Icon>

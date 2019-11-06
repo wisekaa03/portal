@@ -73,9 +73,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     item: {
       '&:hover:not($itemSelected)': {
-        backgroundColor: '#5F9898',
+        backgroundColor: '#5F9898aa',
         color: '#fff',
-        opacity: 0.7,
       },
     },
     itemSelected: {
