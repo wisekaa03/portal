@@ -41,29 +41,29 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       const apollo = apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
-      try {
-        await getDataFromTree(
-          <MainApp
-            {...appProps}
-            {...appCtx}
-            Component={Component}
-            router={router}
-            apolloState={apolloState}
-            apolloClient={apollo}
-            currentLanguage={currentLanguage}
-            isMobile={isMobile}
-          />,
-        );
-      } catch (error) {
-        // Prevent Apollo Client GraphQL errors from crashing SSR.
-        // Handle them in components via the data.error prop:
-        // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-        if (!(error && error.status === 401)) {
-          console.error('withApolloClient getDataFromTree:', error);
-        }
-      }
-
       if (__SERVER__) {
+        try {
+          await getDataFromTree(
+            <MainApp
+              {...appProps}
+              {...appCtx}
+              Component={Component}
+              router={router}
+              apolloState={apolloState}
+              apolloClient={apollo}
+              currentLanguage={currentLanguage}
+              isMobile={isMobile}
+            />,
+          );
+        } catch (error) {
+          // Prevent Apollo Client GraphQL errors from crashing SSR.
+          // Handle them in components via the data.error prop:
+          // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
+          if (!(error && error.status === 401)) {
+            console.error('withApolloClient getDataFromTree:', error);
+          }
+        }
+
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
