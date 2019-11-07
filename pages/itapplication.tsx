@@ -84,8 +84,9 @@ const useStyles = makeStyles((theme: Theme) =>
       'gridTemplateColumns': '60px 1fr',
       'gridGap': theme.spacing(),
       'cursor': 'pointer',
-      '&:hover:not($currentService)': {
+      '&:hover:not($currentService) p': {
         // border: '1px solid #5F9898aa', // TODO: Стили для выделения
+        borderBottom: '1px solid #5F9898',
       },
       [theme.breakpoints.down('xs')]: {
         '&:last-child': {
@@ -95,6 +96,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     currentService: {
       // border: '1px solid #5F9898', // TODO: Стили для выделения
+      '& p': {
+        borderBottom: '1px solid #5F9898',
+      },
     },
     subtitle: {
       color: '#757575',
@@ -139,26 +143,26 @@ interface ServicesProps {
 
 const services: ServicesProps[] = [
   { id: 0, icon: AppIcon1, title: '1C:Бухгалтерия', subtitle: 'текст' },
-  { id: 1, icon: AppIcon2, title: 'Печать и сканирование', subtitle: 'текст' },
-  { id: 2, icon: AppIcon3, title: '1C:Консолидация', subtitle: 'текст' },
-  { id: 3, icon: AppIcon4, title: 'Справочные системы', subtitle: 'текст' },
-  { id: 4, icon: AppIcon5, title: 'Дизайн и полиграфия', subtitle: 'текст' },
-  { id: 5, icon: AppIcon6, title: 'Доступ к информационным ресурсам', subtitle: 'текст' },
-  { id: 6, icon: AppIcon7, title: 'Телефония', subtitle: 'текст' },
+  { id: 1, icon: AppIcon2, title: 'Рабочее место', subtitle: 'текст' },
+  { id: 2, icon: AppIcon3, title: 'Печать и сканирование', subtitle: 'текст' },
+  { id: 3, icon: AppIcon4, title: 'Телефония', subtitle: 'текст' },
+  { id: 4, icon: AppIcon5, title: 'Расходные материалы', subtitle: 'текст' },
+  { id: 5, icon: AppIcon6, title: 'Электронная почта', subtitle: 'текст' },
+  { id: 6, icon: AppIcon7, title: 'Справочные системы', subtitle: 'текст' },
   { id: 7, icon: AppIcon8, title: 'Банк-Клиенты', subtitle: 'текст' },
-  { id: 8, icon: AppIcon9, title: 'Фотография', subtitle: 'текст' },
-  { id: 9, icon: AppIcon10, title: 'Брендирование', subtitle: 'текст' },
-  { id: 10, icon: AppIcon11, title: '1C:Документооборот', subtitle: 'текст' },
-  { id: 11, icon: AppIcon12, title: 'Заказать услугу', subtitle: 'текст' },
-  { id: 12, icon: AppIcon13, title: '1C:Автотранспорт', subtitle: 'текст' },
+  { id: 8, icon: AppIcon9, title: '1C:Документооборот', subtitle: 'текст' },
+  { id: 9, icon: AppIcon10, title: '1C:Зарплата', subtitle: 'текст' },
+  { id: 10, icon: AppIcon11, title: 'Доступ к информационным ресурсам', subtitle: 'текст' },
+  { id: 11, icon: AppIcon12, title: 'Новое рабочее место', subtitle: 'текст' },
+  { id: 12, icon: AppIcon13, title: '1C:КСУП', subtitle: 'текст' },
   { id: 13, icon: AppIcon14, title: 'Веб-сайты', subtitle: 'текст' },
-  { id: 14, icon: AppIcon15, title: 'Электронная почта', subtitle: 'текст' },
-  { id: 15, icon: AppIcon16, title: 'Расходные материалы', subtitle: 'текст' },
-  { id: 16, icon: AppIcon17, title: '1C:КСУП', subtitle: 'текст' },
-  { id: 17, icon: AppIcon18, title: 'Рабочее место', subtitle: 'текст' },
+  { id: 14, icon: AppIcon15, title: 'Фотография', subtitle: 'текст' },
+  { id: 15, icon: AppIcon16, title: 'Дизайн и полиграфия', subtitle: 'текст' },
+  { id: 16, icon: AppIcon17, title: '1C:Автотранспорт', subtitle: 'текст' },
+  { id: 17, icon: AppIcon18, title: 'Брендирование', subtitle: 'текст' },
   { id: 18, icon: AppIcon19, title: 'Создание макета', subtitle: 'текст' },
-  { id: 19, icon: AppIcon20, title: 'Новое рабочее место', subtitle: 'текст' },
-  { id: 20, icon: AppIcon21, title: '1C:Зарплата', subtitle: 'текст' },
+  { id: 19, icon: AppIcon20, title: '1C:Консолидация', subtitle: 'текст' },
+  { id: 20, icon: AppIcon21, title: 'Заказать услугу', subtitle: 'текст' },
 ];
 
 const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
