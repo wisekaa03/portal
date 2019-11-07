@@ -37,8 +37,6 @@ export type ColumnNames =
   | 'street'
   | 'disabled';
 
-export type Order = 'ASC' | 'DESC';
-
 export interface Column {
   name: ColumnNames;
   width?: number;
