@@ -85,7 +85,7 @@ const CurrentLogin: React.FC<{
 
       if (ctx && ctx.res) {
         (ctx.res as any).status(403);
-        (ctx.res as any).location = '/auth/login';
+        (ctx.res as any).redirect('/auth/login');
 
         throw new UnauthorizedException();
       }
