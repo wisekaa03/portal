@@ -49,6 +49,10 @@ export const CURRENT_USER = gql`
       username
       updatedAt
       createdAt
+      settings {
+        lng
+        drawer
+      }
       profile {
         ...ProfileProps
         thumbnailPhoto40

@@ -12,7 +12,7 @@ import { User } from './models/user.dto';
 import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
-import { LoginService } from '../../lib/types';
+import { LoginService, UserSettings } from '../../lib/types';
 import { LdapService } from '../ldap/ldap.service';
 import { Profile } from '../profile/models/profile.dto';
 // #endregion
@@ -88,6 +88,11 @@ export class UserService {
   async createLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
     let profile;
 
+    const defaultSettings: UserSettings = {
+      lng: 'ru',
+      drawer: true,
+    };
+
     try {
       profile = await this.profileService.create(ldapUser, user, 1);
     } catch (error) {
@@ -118,6 +123,7 @@ export class UserService {
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       // groups,
       isAdmin: false,
+      settings: user ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
 

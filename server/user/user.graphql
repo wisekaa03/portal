@@ -4,8 +4,14 @@ type User {
   username: String!
   profile: Profile!
   disabled: Boolean
+  settings: Settings!
   createdAt: Date
   updatedAt: Date
+}
+
+type Settings {
+  lng: String
+  drawer: Boolean
 }
 
 type Mutation {

@@ -9,6 +9,8 @@
 import { Profile } from '../../profile/models/profile.dto';
 // eslint-disable-next-line import/no-cycle
 import { UserEntity } from '../user.entity';
+// eslint-disable-next-line import/no-cycle
+import { UserSettings } from '../../../lib/types';
 // #endregion
 
 export interface BaseUser {
@@ -21,6 +23,8 @@ export interface BaseUser {
   disabled: boolean;
 
   isAdmin: boolean;
+
+  settings: UserSettings;
 
   createdAt?: Date;
 

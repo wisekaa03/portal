@@ -20,7 +20,7 @@ import { UserResponse } from './models/user.dto';
 // eslint-disable-next-line import/no-cycle
 import { ProfileEntity } from '../profile/profile.entity';
 // eslint-disable-next-line import/no-cycle
-import { LoginService } from '../../lib/types';
+import { LoginService, UserSettings } from '../../lib/types';
 // #endregion
 
 @Entity('user')
@@ -56,6 +56,11 @@ export class UserEntity {
     default: false,
   })
   isAdmin: boolean;
+
+  @Column({
+    type: 'jsonb',
+  })
+  settings: UserSettings;
 
   @OneToOne((_type: any) => ProfileEntity)
   @JoinColumn()

@@ -70,6 +70,11 @@ export interface ProfileParams {
   isMobile?: boolean;
 }
 
+export interface UserSettings {
+  lng?: 'ru' | 'en';
+  drawer?: boolean;
+}
+
 /**
  * Yes the user object is stored in Apollo state but we don't want to have to
  * use <Query query={FETCH_CURRENT_USER}></Query> plus render props for
