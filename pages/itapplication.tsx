@@ -215,7 +215,7 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
           onChangeIndex={handleChangeTabIndex}
         >
           <Box display="flex" flexGrow={1}>
-            <AutoSizer>
+            <AutoSizer style={{ flexGrow: 1 }}>
               {({ height, width }) => (
                 <Container className={classes.container1} style={{ height, width }}>
                   {services.map((service) => (
