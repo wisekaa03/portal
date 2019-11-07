@@ -161,4 +161,26 @@ export class UserService {
 
     return false;
   }
+
+  /**
+   * Settings
+   *
+   * @param {req} Request
+   * @param {string} value settings object
+   * @returns {boolean}
+   */
+  async settings(req: Request, value: any): Promise<boolean | null> {
+    const id = req && req.session && req.session.passport && req.session.passport.user.id;
+
+    if (!id) return false;
+
+    const user = await this.readById(id);
+
+    if (user) {
+      user.settings = { ...user.settings, ...value };
+      return !!this.userRepository.save(user);
+    }
+
+    return false;
+  }
 }

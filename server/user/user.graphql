@@ -4,12 +4,17 @@ type User {
   username: String!
   profile: Profile!
   disabled: Boolean
-  settings: Settings!
+  settings: ProfileSettings!
   createdAt: Date
   updatedAt: Date
 }
 
-type Settings {
+type ProfileSettings {
+  lng: String
+  drawer: Boolean
+}
+
+input ProfileSettingsInput {
   lng: String
   drawer: Boolean
 }
@@ -17,5 +22,7 @@ type Settings {
 type Mutation {
 
   synchronization: Boolean
+
+  userSettings(value: ProfileSettingsInput): Boolean
 
 }

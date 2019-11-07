@@ -126,3 +126,9 @@ export const PROFILE = gql`
   }
   ${PROFILE_FRAGMENT}
 `;
+
+export const USER_SETTINGS = gql`
+  mutation UserSettings($value: ProfileSettingsInput) {
+    userSettings(value: $value)
+  }
+`;
