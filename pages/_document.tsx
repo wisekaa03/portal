@@ -36,10 +36,10 @@ interface MainDocumentInitialProps extends DocumentInitialProps {
 
 class MainDocument extends Document<MainDocumentInitialProps> {
   render(): React.ReactElement {
-    const { nonce } = this.props;
+    const { nonce, currentLanguage } = this.props;
 
     return (
-      <Html lang={this.props.currentLanguage} dir="ltr">
+      <Html lang={currentLanguage} dir="ltr">
         <Head nonce={nonce}>
           <meta charSet="utf-8" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
