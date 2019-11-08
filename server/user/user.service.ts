@@ -8,13 +8,12 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { UserEntity } from './user.entity';
-import { User } from './models/user.dto';
+import { User, UserSettings } from './models/user.dto';
 import { LogService } from '../logger/logger.service';
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
-import { LoginService, UserSettings } from '../../lib/types';
 import { LdapService } from '../ldap/ldap.service';
-import { Profile } from '../profile/models/profile.dto';
+import { Profile, LoginService } from '../profile/models/profile.dto';
 // #endregion
 
 @Injectable()

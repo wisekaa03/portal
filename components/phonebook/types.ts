@@ -7,7 +7,6 @@ import { Order } from 'typeorm-graphql-pagination';
 import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
-// import { Profile } from '../../server/profile/models/profile.dto';
 // #endregion
 
 export type ColumnNames =

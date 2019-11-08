@@ -19,7 +19,8 @@ import 'typeface-roboto';
 // #region Imports Local
 import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
-import { ProfileContext, ApolloAppProps, Data } from '../lib/types';
+import { ProfileContext } from '../lib/context';
+import { ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
@@ -41,7 +42,9 @@ const InnerLogin: React.FC<{
   });
 
   const user = data ? data.me : undefined;
-  return (
+  return loading ? (
+    <Loading noMargin type="linear" variant="indeterminate" />
+  ) : (
     <ProfileContext.Provider
       value={{
         user,
@@ -49,7 +52,6 @@ const InnerLogin: React.FC<{
         isMobile,
       }}
     >
-      {loading && <Loading noMargin type="linear" variant="indeterminate" />}
       <Component {...pageProps} />
     </ProfileContext.Provider>
   );

@@ -14,8 +14,7 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
-// eslint-disable-next-line import/no-cycle
-import { LoginService, Gender } from '../../lib/types';
+import { Gender, LoginService } from './models/profile.dto';
 // #endregion
 
 @Entity('profile')

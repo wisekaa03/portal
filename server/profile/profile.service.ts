@@ -9,8 +9,7 @@ import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 // #region Imports Local
 import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileEntity } from './profile.entity';
-import { Gender, LoginService } from '../../lib/types';
-import { Profile } from './models/profile.dto';
+import { Profile, Gender, LoginService } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';
 import { LdapService } from '../ldap/ldap.service';
 import { UserEntity } from '../user/user.entity';

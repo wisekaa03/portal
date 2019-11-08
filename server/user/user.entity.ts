@@ -15,12 +15,9 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-// eslint-disable-next-line import/no-cycle
-import { UserResponse } from './models/user.dto';
-// eslint-disable-next-line import/no-cycle
+import { UserSettings } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
-// eslint-disable-next-line import/no-cycle
-import { LoginService, UserSettings } from '../../lib/types';
+import { LoginService } from '../profile/models/profile.dto';
 // #endregion
 
 @Entity('user')
@@ -78,3 +75,9 @@ export class UserEntity {
 
   toResponseObject = (session: string): UserResponse => ({ session, ...this });
 }
+
+// #region User response
+export interface UserResponse extends UserEntity {
+  session: string;
+}
+// #endregion

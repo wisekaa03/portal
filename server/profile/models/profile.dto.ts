@@ -4,10 +4,9 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-// eslint-disable-next-line import/no-cycle
-import { LoginService, Gender } from '../../../lib/types';
 // #endregion
 
+// #region Profile
 export interface Profile {
   id?: string;
 
@@ -30,10 +29,15 @@ export interface Profile {
   gender: Gender;
 
   country: string;
+
   postalCode: string;
+
   region: string;
+
   town: string;
+
   street: string;
+
   room: string;
 
   company: string;
@@ -47,8 +51,11 @@ export interface Profile {
   manager?: Profile;
 
   telephone: string;
+
   workPhone: string;
+
   mobile: string;
+
   fax: string;
 
   companyEng: string;
@@ -73,3 +80,23 @@ export interface Profile {
 
   updatedAt?: Date;
 }
+// #endregion
+
+// #region Gender
+export enum Gender {
+  UNKNOWN = 0,
+  MAN = 1,
+  WOMAN = 2,
+}
+// #endregion
+
+// #region Login service
+export enum LoginService {
+  LOCAL = 'local',
+  LDAP = 'ldap',
+  GOOGLE = 'google',
+  TWITTER = 'twitter',
+  FACEBOOK = 'facebook',
+  GITHUB = 'github',
+}
+// #endregion

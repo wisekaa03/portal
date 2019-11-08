@@ -5,12 +5,7 @@
 // import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
-// eslint-disable-next-line import/no-cycle
 import { Profile } from '../../profile/models/profile.dto';
-// eslint-disable-next-line import/no-cycle
-import { UserEntity } from '../user.entity';
-// eslint-disable-next-line import/no-cycle
-import { UserSettings } from '../../../lib/types';
 // #endregion
 
 export interface BaseUser {
@@ -41,12 +36,6 @@ export interface UserToSave extends BaseUser {
   profile: Profile | string;
 }
 
-// #region User response
-export interface UserResponse extends UserEntity {
-  session: string;
-}
-// #endregion
-
 // #region User login
 export interface UserLogin {
   // @IsNotEmpty()
@@ -64,5 +53,20 @@ export interface UserRegister {
   password: string;
 
   isAdmin: boolean;
+}
+// #endregion
+
+// #region User settings
+export interface UserSettings {
+  lng: 'ru' | 'en';
+  drawer?: boolean;
+}
+// #endregion
+
+// #region User context
+export interface UserContext {
+  user?: User;
+  language?: string;
+  isMobile?: boolean;
 }
 // #endregion

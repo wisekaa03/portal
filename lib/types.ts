@@ -8,12 +8,6 @@ import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
 // #endregion
 // #region Imports Local
-// eslint-disable-next-line import/no-cycle
-import { User } from '../server/user/models/user.dto';
-// eslint-disable-next-line import/no-cycle
-export * from '../server/user/models/user.dto';
-// eslint-disable-next-line import/no-cycle
-export * from '../server/profile/models/profile.dto';
 // #endregion
 
 export interface NodeIdGetterObj extends IdGetterObj {
@@ -41,21 +35,6 @@ export interface ApolloDocumentProps extends DocumentContext {
   currentLanguage?: string;
 }
 
-export enum LoginService {
-  LOCAL = 'local',
-  LDAP = 'ldap',
-  GOOGLE = 'google',
-  TWITTER = 'twitter',
-  FACEBOOK = 'facebook',
-  GITHUB = 'github',
-}
-
-export enum Gender {
-  UNKNOWN = 0,
-  MAN = 1,
-  WOMAN = 2,
-}
-
 export interface Address {
   country: string;
   postalCode: string;
@@ -63,25 +42,6 @@ export interface Address {
   region: string;
   street: string;
 }
-
-export interface ProfileParams {
-  user?: User;
-  language?: string;
-  isMobile?: boolean;
-}
-
-export interface UserSettings {
-  lng?: 'ru' | 'en';
-  drawer?: boolean;
-}
-
-/**
- * Yes the user object is stored in Apollo state but we don't want to have to
- * use <Query query={FETCH_CURRENT_USER}></Query> plus render props for
- * EVERY component that needs access to it. So we only do that once here, near
- * the top, then put the user object in React Context for ease of access.
- */
-export const ProfileContext = React.createContext<ProfileParams>({ user: undefined });
 
 export interface Data<K, T> {
   [K: string]: T;

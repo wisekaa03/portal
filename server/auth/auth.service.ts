@@ -5,9 +5,9 @@ import { Injectable, HttpException, UnauthorizedException } from '@nestjs/common
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { UserResponse, UserLogin } from '../user/models/user.dto';
+import { UserLogin } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity, UserResponse } from '../user/user.entity';
 // import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { LogService } from '../logger/logger.service';
 import { LdapService } from '../ldap/ldap.service';

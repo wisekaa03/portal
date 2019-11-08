@@ -19,7 +19,7 @@ import { WithTranslation } from 'react-i18next';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../lib/i18n-client';
-import { ProfileContext } from '../lib/types';
+import { ProfileContext } from '../lib/context';
 import { LOGOUT, SYNC, CACHE } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';

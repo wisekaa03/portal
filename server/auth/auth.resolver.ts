@@ -6,10 +6,11 @@ import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { UserResponse, User } from '../user/models/user.dto';
+import { User } from '../user/models/user.dto';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { LogService } from '../logger/logger.service';
+import { UserResponse } from '../user/user.entity';
 // #endregion
 
 @Resolver()

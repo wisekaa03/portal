@@ -16,7 +16,8 @@ import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
-import { Data, Profile } from '../../lib/types';
+import { Data } from '../../lib/types';
+import { Profile } from '../../server/profile/models/profile.dto';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
