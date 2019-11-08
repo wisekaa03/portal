@@ -56,6 +56,7 @@ export class UserEntity {
 
   @Column({
     type: 'jsonb',
+    nullable: true,
   })
   settings: UserSettings;
 
