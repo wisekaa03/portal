@@ -4,7 +4,7 @@ type User {
   username: String!
   profile: Profile!
   disabled: Boolean
-  settings: ProfileSettings!
+  settings: ProfileSettings
   createdAt: Date
   updatedAt: Date
 }
