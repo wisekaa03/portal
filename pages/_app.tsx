@@ -37,9 +37,7 @@ const InnerLogin: React.FC<{
 }> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
   // let me;
 
-  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
-    fetchPolicy: 'cache-first',
-  });
+  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER);
 
   const user = data ? data.me : undefined;
   return loading ? (

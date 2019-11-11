@@ -10,6 +10,7 @@ import Document, { Html, Head, Main, NextScript, DocumentInitialProps } from 'ne
 import { ServerStyleSheets } from '@material-ui/styles';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 // #endregion
 // #region Imports Local
 import { ApolloDocumentProps } from '../lib/types';
@@ -58,6 +59,8 @@ class MainDocument extends Document<MainDocumentInitialProps> {
     const sheets = new ServerStyleSheets();
     const { apolloClient, renderPage: originalRenderPage, res, req } = ctx;
 
+    const lng = req && lngFromReq(req);
+
     ctx.renderPage = () =>
       originalRenderPage({
         enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
@@ -75,11 +78,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
     // }
     const minifiedStyles = sheets.toString();
 
-    const currentLanguage = req
-      ? ((req as unknown) as Express.Request).lng
-        ? ((req as unknown) as Express.Request).lng
-        : nextI18next.i18n.language || nextI18next.config.defaultLanguage
-      : nextI18next.i18n.language || nextI18next.config.defaultLanguage;
+    const currentLanguage = lng || nextI18next.i18n.language || nextI18next.config.defaultLanguage;
 
     return {
       apolloClient,

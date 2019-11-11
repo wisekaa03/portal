@@ -35,7 +35,7 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async userSettings(@Context('req') req: Request, @Args('value') value: any): Promise<boolean | null> {
+  async userSettings(@Context('req') req: Request, @Args('value') value: any): Promise<any> {
     return this.userService.settings(req, value) || null;
   }
 }

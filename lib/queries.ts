@@ -129,6 +129,9 @@ export const PROFILE = gql`
 
 export const USER_SETTINGS = gql`
   mutation UserSettings($value: ProfileSettingsInput) {
-    userSettings(value: $value)
+    userSettings(value: $value) {
+      lng
+      drawer
+    }
   }
 `;

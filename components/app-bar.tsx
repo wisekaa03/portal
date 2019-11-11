@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import Router from 'next/router';
+import { QueryResult } from 'react-apollo';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
@@ -20,13 +21,15 @@ import { WithTranslation } from 'react-i18next';
 // #region Imports Local
 import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
-import { LOGOUT, SYNC, CACHE } from '../lib/queries';
+import { LOGOUT, SYNC, CACHE, USER_SETTINGS, CURRENT_USER } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo_min.png';
 import { Avatar } from './avatar';
 import { SESSION } from '../lib/constants';
+import { Data } from '../lib/types';
+import { User } from '../server/user/models/user.dto';
 // #endregion
 
 const avatarHeight = 48;
@@ -112,6 +115,27 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
 
   const client = useApolloClient();
 
+  const [userSettings] = useMutation(USER_SETTINGS, {
+    update(cache, { data: { userSettings: settings } }) {
+      const data: Data<'me', User> | null = cache.readQuery({ query: CURRENT_USER });
+
+      if (!data) return;
+
+      cache.writeQuery({
+        query: CURRENT_USER,
+        data: {
+          me: {
+            ...data.me,
+            settings: {
+              ...data.me.settings,
+              ...settings,
+            },
+          },
+        },
+      });
+    },
+  });
+
   const [sync] = useMutation(SYNC, {
     onCompleted() {
       setSyncLoading(false);
@@ -145,8 +169,16 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
     cache();
   };
 
-  const handleLanguage = (): void => {
-    nextI18next.i18n.changeLanguage(nextI18next.i18n.language === 'ru' ? 'en' : 'ru');
+  const handleLanguage = (prevLng: 'ru' | 'en' | undefined) => (): void => {
+    const currentLng = prevLng || nextI18next.i18n.language;
+    const lng = currentLng === 'ru' ? 'en' : 'ru';
+
+    nextI18next.i18n.changeLanguage(lng);
+    userSettings({
+      variables: {
+        value: { lng },
+      },
+    });
   };
 
   const handleLogout = (): void => {
@@ -250,7 +282,11 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                     >
                       {!cacheLoading ? t('common:cache') : t('common:cacheWait')}
                     </Button>
-                    <Button variant="contained" className={classes.buttonLogout} onClick={handleLanguage}>
+                    <Button
+                      variant="contained"
+                      className={classes.buttonLogout}
+                      onClick={handleLanguage(context.user.settings && context.user.settings.lng)}
+                    >
                       {t('common:changeLanguage')}
                     </Button>
                     <Button variant="contained" className={classes.buttonLogout} onClick={handleLogout}>

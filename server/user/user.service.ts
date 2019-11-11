@@ -168,7 +168,7 @@ export class UserService {
    * @param {string} value settings object
    * @returns {boolean}
    */
-  async settings(req: Request, value: any): Promise<boolean | null> {
+  async settings(req: Request, value: any): Promise<any> {
     const id = req && req.session && req.session.passport && req.session.passport.user.id;
 
     if (!id) return false;
@@ -177,7 +177,9 @@ export class UserService {
 
     if (user) {
       user.settings = { ...user.settings, ...value };
-      return !!this.userRepository.save(user);
+      this.userRepository.save(user);
+
+      return user.settings;
     }
 
     return false;
