@@ -83,10 +83,14 @@ const useStyles = makeStyles((theme: Theme) =>
       'display': 'grid',
       'gridTemplateColumns': '60px 1fr',
       'gridGap': theme.spacing(),
-      'cursor': 'pointer',
-      '&:hover:not($currentService) p': {
+      'justifyItems': 'flex-start',
+      'alignItems': 'center',
+      '&:not($formControl)': {
+        cursor: 'pointer',
+      },
+      '&:hover:not($currentService):not($formControl) h6': {
         // border: '1px solid #5F9898aa', // TODO: Стили для выделения
-        borderBottom: '1px solid #5F9898',
+        // fontWeight: 500,
       },
       [theme.breakpoints.down('xs')]: {
         '&:last-child': {
@@ -96,15 +100,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     currentService: {
       // border: '1px solid #5F9898', // TODO: Стили для выделения
-      '& p': {
-        borderBottom: '1px solid #5F9898',
+      '& h6': {
+        // fontWeight: 500,
       },
     },
-    subtitle: {
-      color: '#757575',
-      padding: `${theme.spacing()}px 0`,
-      borderBottom: '1px solid #C4C4C4',
-    },
+    // subtitle: {
+    //   color: '#757575',
+    //   padding: `${theme.spacing()}px 0`,
+    //   borderBottom: '1px solid #C4C4C4',
+    // },
     formControl: {
       [theme.breakpoints.up('sm')]: {
         minWidth: '50vw',
@@ -235,9 +239,6 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       </div>
                       <div>
                         <Typography variant="subtitle1">{service.title}</Typography>
-                        <Typography className={classes.subtitle} variant="body1">
-                          {service.subtitle}
-                        </Typography>
                       </div>
                     </Box>
                   ))}
