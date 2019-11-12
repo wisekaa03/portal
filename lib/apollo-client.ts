@@ -80,16 +80,6 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     clientParams = {
       resolvers: stateResolvers,
     };
-
-    try {
-      // See above for additional options, including other storage providers.
-      persistCache({
-        cache,
-        storage: window.localStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
-      });
-    } catch (error) {
-      console.error('Error restoring Apollo cache', error);
-    }
   }
 
   return new ApolloClient({
