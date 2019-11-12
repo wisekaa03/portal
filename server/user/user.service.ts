@@ -92,7 +92,6 @@ export class UserService {
 
     const defaultSettings: UserSettings = {
       lng: 'ru',
-      drawer: true,
     };
 
     try {
@@ -125,7 +124,7 @@ export class UserService {
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       // groups,
       isAdmin: false,
-      settings: user ? user.settings : defaultSettings,
+      settings: user && user.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
 

@@ -41,28 +41,31 @@ const MainTemplate: I18nPage<Main> = (props): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   const profile = useContext(ProfileContext);
-  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  // const defaultOpen = profile.user && profile.user.settings.drawer !== undefined
-  //   ? profile.user.settings.drawer
-  //   : lgUp;
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(!profile.isMobile && lgUp);
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const ifModal = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const drawer = (profile.user && profile.user.settings && profile.user.settings.drawer) as boolean | null;
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(!profile.isMobile && (drawer !== null ? drawer : lgUp));
 
   const [userSettings] = useMutation(USER_SETTINGS);
 
   useEffect(() => {
-    // TODO: продумать
-    // (!profile.user || profile.user.settings.drawer === undefined) && setDrawerOpen(lgUp);
-    setDrawerOpen(lgUp);
-  }, [lgUp]);
+    if (profile.isMobile || ifModal) {
+      setDrawerOpen(false);
+    } else {
+      setDrawerOpen(drawer === null ? lgUp : drawer);
+    }
+  }, [lgUp, drawer, profile.isMobile, ifModal]);
 
   const handleDrawerOpen = (): void => {
-    !profile.isMobile &&
+    if (!profile.isMobile && !ifModal) {
       userSettings({
         variables: {
           value: { drawer: !drawerOpen },
         },
       });
+    }
     setDrawerOpen(!drawerOpen);
   };
 

@@ -1,9 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Router from 'next/router';
-import { QueryResult } from 'react-apollo';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
@@ -21,15 +20,13 @@ import { WithTranslation } from 'react-i18next';
 // #region Imports Local
 import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
-import { LOGOUT, SYNC, CACHE, USER_SETTINGS, CURRENT_USER } from '../lib/queries';
+import { LOGOUT, SYNC, CACHE, USER_SETTINGS } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import HeaderBg from '../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../public/images/png/profile_popover_bg.png';
 import LogoMin from '../public/images/png/logo_min.png';
 import { Avatar } from './avatar';
 import { SESSION } from '../lib/constants';
-import { Data } from '../lib/types';
-import { User } from '../server/user/models/user.dto';
 // #endregion
 
 const avatarHeight = 48;
@@ -109,31 +106,30 @@ interface AppBarProps extends WithTranslation {
 
 const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
-  const profile = useContext(ProfileContext);
-  console.log(profile.user && profile.user.settings.lng);
   const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [cacheLoading, setCacheLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const client = useApolloClient();
 
-  const [userSettings] = useMutation(USER_SETTINGS, {
-    update(cache, { data: { userSettings: user } }) {
-      const data: Data<'me', User> | null = cache.readQuery({ query: CURRENT_USER });
+  // TODO: понаблюдать нужен ли апдейт
+  const [userSettings] = useMutation(USER_SETTINGS); // , {
+  //   update(cache, { data: { userSettings: user } }) {
+  //     const data: Data<'me', User> | null = cache.readQuery({ query: CURRENT_USER });
 
-      if (!data) return;
+  //     if (!data) return;
 
-      cache.writeQuery({
-        query: CURRENT_USER,
-        data: {
-          me: {
-            ...data.me,
-            ...user,
-          },
-        },
-      });
-    },
-  });
+  //     cache.writeQuery({
+  //       query: CURRENT_USER,
+  //       data: {
+  //         me: {
+  //           ...data.me,
+  //           ...user,
+  //         },
+  //       },
+  //     });
+  //   },
+  // });
 
   const [sync] = useMutation(SYNC, {
     onCompleted() {
@@ -168,7 +164,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
     cache();
   };
 
-  const handleLanguage = (prevLng: 'ru' | 'en' | undefined) => (): void => {
+  const handleLanguage = (prevLng: 'ru' | 'en' | null | undefined) => (): void => {
     const currentLng = prevLng || nextI18next.i18n.language;
     const lng = currentLng === 'ru' ? 'en' : 'ru';
 
