@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
+import passport from 'passport';
 import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { LogService } from '../logger/logger.service';
@@ -54,6 +55,7 @@ export class UserService {
     if (isDisabled) {
       where.disabled = false;
     }
+
     return this.userRepository.findOne({
       where,
       relations: ['profile'],
@@ -72,6 +74,7 @@ export class UserService {
     if (isDisabled) {
       where.disabled = false;
     }
+
     return this.userRepository.findOne({
       where,
       relations: ['profile'],
@@ -169,17 +172,16 @@ export class UserService {
    * @returns {boolean}
    */
   async settings(req: Request, value: any): Promise<User | boolean> {
-    const id = req && req.session && req.session.passport && req.session.passport.user.id;
+    if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
+      const user = await this.readById(req.session.passport.user.id);
 
-    if (!id) return false;
+      if (user) {
+        user.settings = { ...user.settings, ...value };
+        req.session.passport.user = user;
+        this.userRepository.save(user);
 
-    const user = await this.readById(id);
-
-    if (user) {
-      user.settings = { ...user.settings, ...value };
-      this.userRepository.save(user);
-
-      return user as User;
+        return user as User;
+      }
     }
 
     return false;
