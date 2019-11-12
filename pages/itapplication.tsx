@@ -88,9 +88,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:not($formControl)': {
         cursor: 'pointer',
       },
+      'color': '#484848',
       '&:hover:not($currentService):not($formControl) h6': {
-        // border: '1px solid #5F9898aa', // TODO: Стили для выделения
-        // fontWeight: 500,
+        color: '#000',
       },
       [theme.breakpoints.down('xs')]: {
         '&:last-child': {
@@ -99,9 +99,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     currentService: {
-      // border: '1px solid #5F9898', // TODO: Стили для выделения
       '& h6': {
-        // fontWeight: 500,
+        color: '#000',
       },
     },
     // subtitle: {
