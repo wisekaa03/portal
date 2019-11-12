@@ -81,7 +81,12 @@ export class AuthService {
    * User LDAP login
    *
    */
-  cacheReset = async (): Promise<boolean> => this.ldapService.cacheReset();
+  cacheReset = async (): Promise<boolean> => {
+    // TODO: тут будет DATABASE_CACHE и SESSION и LDAP_CACHE
+
+    // TODO: пока только LDAP_CACHE
+    return this.ldapService.cacheReset();
+  };
 
   /**
    * User LDAP login
