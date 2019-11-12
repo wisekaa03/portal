@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Router from 'next/router';
 import { QueryResult } from 'react-apollo';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
@@ -109,6 +109,8 @@ interface AppBarProps extends WithTranslation {
 
 const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
+  const profile = useContext(ProfileContext);
+  console.log(profile.user && profile.user.settings.lng);
   const [syncLoading, setSyncLoading] = useState<boolean>(false);
   const [cacheLoading, setCacheLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -116,7 +118,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const client = useApolloClient();
 
   const [userSettings] = useMutation(USER_SETTINGS, {
-    update(cache, { data: { userSettings: settings } }) {
+    update(cache, { data: { userSettings: user } }) {
       const data: Data<'me', User> | null = cache.readQuery({ query: CURRENT_USER });
 
       if (!data) return;
@@ -126,10 +128,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
         data: {
           me: {
             ...data.me,
-            settings: {
-              ...data.me.settings,
-              ...settings,
-            },
+            ...user,
           },
         },
       });
@@ -178,6 +177,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
       variables: {
         value: { lng },
       },
+      // refetchQueries: [{ query: CURRENT_USER, variables: {} }],
     });
   };
 

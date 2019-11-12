@@ -23,6 +23,6 @@ type Mutation {
 
   synchronization: Boolean
 
-  userSettings(value: ProfileSettingsInput): ProfileSettings
+  userSettings(value: ProfileSettingsInput): User
 
 }

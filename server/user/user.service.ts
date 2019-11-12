@@ -168,7 +168,7 @@ export class UserService {
    * @param {string} value settings object
    * @returns {boolean}
    */
-  async settings(req: Request, value: any): Promise<any> {
+  async settings(req: Request, value: any): Promise<User | boolean> {
     const id = req && req.session && req.session.passport && req.session.passport.user.id;
 
     if (!id) return false;
@@ -179,7 +179,7 @@ export class UserService {
       user.settings = { ...user.settings, ...value };
       this.userRepository.save(user);
 
-      return user.settings;
+      return user as User;
     }
 
     return false;
