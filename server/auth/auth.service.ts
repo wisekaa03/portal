@@ -29,6 +29,9 @@ export class AuthService {
    * @returns {UserRespone | null}
    */
   public validate = async (username: string, password: string, req?: Express.Request): Promise<UserResponse | null> => {
+    // TODO: сделать что-нибудь... постоянно опрашивается и база и ldap, согласно политики redis-а
+    // TODO: опрашивается redis, но у него есть время на удаление всех записей, настраивается через
+    // TODO: у базы - DATABASE_REDIS_TTL, у ldap - LDAP_REDIS_TTL
     const user = await this.userService.comparePassword(username, password);
 
     if (user) {
