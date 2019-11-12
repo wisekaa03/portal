@@ -58,8 +58,8 @@ export interface UserRegister {
 
 // #region User settings
 export interface UserSettings {
-  lng: 'ru' | 'en';
-  drawer?: boolean;
+  lng?: 'ru' | 'en' | null;
+  drawer?: boolean | null;
 }
 // #endregion
 
