@@ -3,13 +3,13 @@
 // #region Imports NPM
 import fetch from 'isomorphic-fetch';
 import { ApolloClient } from 'apollo-client';
+import { InStorageCache } from 'apollo-cache-instorage';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { persistCache } from 'apollo-cache-persist';
 import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { concat, ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
-import { HttpLink, createHttpLink } from 'apollo-link-http';
+import { createHttpLink } from 'apollo-link-http';
 // import { WebSocketLink } from 'apollo-link-ws';
 // #endregion
 // #region Imports Local
@@ -44,7 +44,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
   });
 
   let clientParams = {};
-  const cache = new InMemoryCache().restore(initialState);
+  let cache;
 
   if (__SERVER__) {
     global.fetch = fetch;
@@ -52,6 +52,8 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     httpLink = createHttpLink({
       uri: `http://localhost:${process.env.PORT}/graphql`,
     });
+
+    cache = new InMemoryCache().restore(initialState);
   } else {
     // const subscriptionsUri = `${window.location.origin.replace(
     //   'http',
@@ -80,6 +82,24 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     clientParams = {
       resolvers: stateResolvers,
     };
+
+    // TODO: лучшенный контроль за кешем (продумать)
+    cache = new InStorageCache({
+      storage: window.localStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
+      shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
+        // debugger;
+        return true;
+      },
+      denormalize: (value: any): any => {
+        // debugger;
+
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      },
+    }).restore(initialState);
   }
 
   return new ApolloClient({

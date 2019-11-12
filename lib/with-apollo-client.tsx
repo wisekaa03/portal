@@ -30,6 +30,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
     public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
       const { Component, router, ctx } = appCtx;
       const apolloState: WithApolloState = {};
+      let apollo: ApolloClient<NormalizedCacheObject>;
 
       const currentLanguage = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language;
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
@@ -39,10 +40,11 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
-      const apollo = apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       if (__SERVER__) {
+        apollo = apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
+
         try {
           await getDataFromTree(
             <MainApp
@@ -68,6 +70,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
+      } else {
+        apollo = apolloClient();
       }
 
       // Extract query data from the Apollo store
@@ -89,7 +93,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       // `getDataFromTree` renders the component first, the client is passed off as a property.
       // After that rendering is done using Next's normal rendering pipeline
-      this.apolloClient = this.apolloClient || apolloClient(props.apolloState.data);
+      this.apolloClient = props.apolloClient || apolloClient(props.apolloState.data);
     }
 
     public render(): React.ReactElement {

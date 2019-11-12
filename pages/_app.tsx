@@ -1,7 +1,6 @@
 /** @format */
 
 // #region Imports NPM
-import { Express } from 'express';
 import React from 'react';
 import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
@@ -15,12 +14,8 @@ import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
-import { persistCache } from 'apollo-cache-persist';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { PersistedData, PersistentStorage } from 'apollo-cache-persist/types';
 // #endregion
 // #region Imports Local
-import { ApolloClient } from 'apollo-client';
 import theme from '../lib/theme';
 import { CURRENT_USER } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
@@ -113,42 +108,20 @@ const CurrentLogin: React.FC<{
   );
 };
 
-interface AppState {
-  apollo: ApolloClient<NormalizedCacheObject> | null;
-}
-
 /**
  * App
  */
 class MainApp extends App<ApolloAppProps> {
-  state: AppState = {
-    apollo: null,
-  };
-
-  async componentDidMount(): Promise<void> {
+  componentDidMount(): void {
     // Remove the server-sie injectsed CSS
     const jssStyles = document.querySelector('#jss');
     if (jssStyles) {
       jssStyles.parentNode!.removeChild(jssStyles);
     }
-
-    const apollo = this.props.apolloClient;
-
-    try {
-      // See above for additional options, including other storage providers.
-      await persistCache({
-        cache: apollo.cache,
-        storage: window.localStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
-      });
-    } catch (error) {
-      console.error('Error restoring Apollo cache', error);
-    }
-
-    this.setState({ apollo });
   }
 
   render(): React.ReactElement {
-    const { Component, pageProps, currentLanguage, isMobile, router, ctx } = this.props;
+    const { Component, apolloClient, pageProps, currentLanguage, isMobile, router, ctx } = this.props;
 
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
@@ -156,10 +129,8 @@ class MainApp extends App<ApolloAppProps> {
       }),
     });
 
-    return this.state.apollo === null ? (
-      <Loading noMargin type="linear" variant="indeterminate" />
-    ) : (
-      <ApolloProvider client={this.state.apollo}>
+    return (
+      <ApolloProvider client={apolloClient}>
         <Head>
           <title>Portal</title>
         </Head>
