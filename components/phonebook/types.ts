@@ -35,11 +35,15 @@ export type ColumnNames =
   | 'street'
   | 'disabled';
 
-export interface Column {
-  name: ColumnNames;
+interface StyleProps {
   width?: number;
   minWidth?: number;
   maxWidth?: number;
+}
+export interface Column {
+  name: ColumnNames;
+  defaultStyle: StyleProps;
+  largeStyle: StyleProps;
 }
 
 export interface ProfileProps extends WithTranslation {
@@ -59,4 +63,5 @@ export interface HeaderProps {
   handleRequestSort: (column: ColumnNames) => () => void;
   classes: any;
   t: TFunction;
+  largeWidth: boolean;
 }

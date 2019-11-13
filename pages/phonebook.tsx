@@ -161,26 +161,23 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
 const HeaderContext = createContext<HeaderProps | undefined>(undefined);
 HeaderContext.displayName = 'HeaderContext';
 
-const InnerElementList = forwardRef<React.Component, any>(({ children, style, ..._rest }, ref) => (
+const InnerElementList = forwardRef<React.Component, any>(({ children, style, ...rest }, ref) => (
   <HeaderContext.Consumer>
     {(context) => (
-      <div ref={ref} {..._rest} style={{ height: style.height, flex: 1 }}>
+      <div ref={ref} {...rest} style={{ height: style.height, flex: 1 }}>
         <>
           {context && (
             <TableRow component="div" className={clsx(context.classes.row, context.classes.header)}>
               {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
-                const { name, ...rest } = column;
+                const { name, defaultStyle, largeStyle } = column;
+                const cellStyle = { height: rowHeight, ...(context.largeWidth ? largeStyle : defaultStyle) };
+
                 if (!context.columns.includes(name) || name === 'disabled') return result;
 
                 if (name === 'thumbnailPhoto40') {
                   return [
                     ...result,
-                    <TableCell
-                      key={name}
-                      className={context.classes.cell}
-                      component="div"
-                      style={{ height: rowHeight, ...rest }}
-                    />,
+                    <TableCell key={name} className={context.classes.cell} component="div" style={cellStyle} />,
                   ];
                 }
 
@@ -191,7 +188,7 @@ const InnerElementList = forwardRef<React.Component, any>(({ children, style, ..
                     className={context.classes.cell}
                     component="div"
                     scope="col"
-                    style={{ height: rowHeight, ...rest }}
+                    style={cellStyle}
                     sortDirection={
                       context.orderBy.field === name
                         ? (context.orderBy.direction.toLowerCase() as 'desc' | 'asc')
@@ -218,20 +215,22 @@ const InnerElementList = forwardRef<React.Component, any>(({ children, style, ..
 ));
 InnerElementList.displayName = 'InnerElementList';
 
-const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ...style }, data }) => {
+const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ...rest }, data }) => {
   const item = data.items[index].node;
-  const { columns, handleProfileId, classes } = data;
+  const { columns, handleProfileId, classes, largeWidth } = data;
 
   return (
     <TableRow
       component="div"
       className={classes.row}
       hover
-      style={{ ...style, top: `${parseFloat(top as string) + rowHeight}px` }}
+      style={{ ...rest, top: `${parseFloat(top as string) + rowHeight}px` }}
       onClick={handleProfileId(item.id)}
     >
       {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
-        const { name, ...rest } = column;
+        const { name, defaultStyle, largeStyle } = column;
+        const cellStyle = { height: rowHeight, ...(largeWidth ? largeStyle : defaultStyle) };
+
         if (!columns.includes(name) || name === 'disabled') return result;
 
         let cellData: React.ReactElement | string | null | undefined = null;
@@ -284,7 +283,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
             className={clsx(classes.cell, {
               [classes.disabled]: item.disabled && name === 'lastName',
             })}
-            style={{ height: rowHeight, ...rest }}
+            style={cellStyle}
             component="div"
             variant="body"
           >
@@ -309,6 +308,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const largeWidth = useMediaQuery('(min-width:1600px)');
 
   useEffect(() => {
     setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);
@@ -432,7 +432,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   {({ height }) => (
                     <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
                       {({ onItemsRendered, ref }) => (
-                        <HeaderContext.Provider value={{ columns, orderBy, handleRequestSort, t, classes }}>
+                        <HeaderContext.Provider value={{ columns, orderBy, handleRequestSort, t, classes, largeWidth }}>
                           <List
                             style={{ display: 'flex' }}
                             ref={ref}
@@ -448,6 +448,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                               items: data ? data.profiles.edges : [],
                               columns,
                               handleProfileId,
+                              largeWidth,
                             }}
                           >
                             {Row}
