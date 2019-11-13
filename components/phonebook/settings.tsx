@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
 
       [theme.breakpoints.down('md')]: {
-        maxHeight: '75vh',
+        maxHeight: '50vh',
         overflowX: 'hidden',
         overflowY: 'auto',
         gridGap: theme.spacing(),
