@@ -215,6 +215,7 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
           </Tabs>
         </Paper>
         <SwipeableViews
+          disabled={currentService < 0}
           index={currentTab}
           className={classes.contentWrap}
           containerStyle={{ flexGrow: 1 }}
