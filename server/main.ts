@@ -14,7 +14,7 @@ import responseTime from 'response-time';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import { getConnection } from 'typeorm';
+// import { getConnection } from 'typeorm';
 import { RenderModule } from 'nest-next';
 import Next from 'next';
 import 'reflect-metadata';
@@ -61,7 +61,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Improve security
-  server.use(helmet.ieNoOpen());
+  // server.use(helmet.ieNoOpen());
 
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
@@ -130,7 +130,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Next.JS locals
-  server.use('*', (req: Request, res: Response, next: Function) => {
+  server.use('*', (_req: Request, res: Response, next: Function) => {
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     res.locals.sessionStore = store;
     next();

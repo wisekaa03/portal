@@ -95,7 +95,7 @@ const dev = process.env.NODE_ENV !== 'production';
       debug: dev,
       playground: dev,
       typePaths: ['./**/*.graphql'],
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
     }),
     // #endregion
 

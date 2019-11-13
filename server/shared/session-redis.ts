@@ -3,12 +3,23 @@
 // #region Imports NPM
 import Session from 'express-session';
 import RedisSessionStore from 'connect-redis';
-import Redis from 'redis';
+import Redis, { ReplyError } from 'redis';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 // #endregion
+
+export async function resetSessionStore(store: Session.Store): Promise<boolean> {
+  return new Promise<boolean>((resolve, reject) => {
+    store.clear((error: ReplyError | Error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(true);
+    });
+  });
+}
 
 export default (configService: ConfigService, logService: LogService): Session.Store => {
   try {

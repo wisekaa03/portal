@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local
 import { User } from '../user/models/user.dto';
@@ -83,9 +83,9 @@ export class AuthResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async cacheReset(): Promise<boolean> {
+  async cacheReset(@Context('res') res: Response): Promise<boolean> {
     this.logService.debug(`Cache reset`, 'AuthResolvers');
 
-    return this.authService.cacheReset();
+    return this.authService.cacheReset(res);
   }
 }

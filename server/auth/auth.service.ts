@@ -3,6 +3,7 @@
 // #region Imports NPM
 import { Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
+import { Response } from 'express';
 // #endregion
 // #region Imports Local
 import { UserLogin } from '../user/models/user.dto';
@@ -11,6 +12,7 @@ import { UserEntity, UserResponse } from '../user/user.entity';
 // import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { LogService } from '../logger/logger.service';
 import { LdapService } from '../ldap/ldap.service';
+import { resetSessionStore } from '../shared/session-redis';
 // #endregion
 
 @Injectable()
@@ -81,11 +83,26 @@ export class AuthService {
    * User LDAP login
    *
    */
-  cacheReset = async (): Promise<boolean> => {
-    // TODO: тут будет DATABASE_CACHE и SESSION и LDAP_CACHE
+  cacheReset = async (res: Response): Promise<boolean> => {
+    let sessionStoreReset = false;
+    let ldapCacheReset = false;
 
-    // TODO: пока только LDAP_CACHE
-    return this.ldapService.cacheReset();
+    // TODO: DATABASE_CACHE
+    if (res.locals && res.locals.sessionStore) {
+      try {
+        sessionStoreReset = await resetSessionStore(res.locals.sessionStore);
+      } catch (error) {
+        this.logService.error('Error in cache reset, session store', error, 'AuthService');
+      }
+    }
+
+    ldapCacheReset = await this.ldapService.cacheReset();
+
+    if (sessionStoreReset && ldapCacheReset) {
+      return true;
+    }
+
+    return false;
   };
 
   /**
