@@ -95,7 +95,6 @@
         "autoFix": true
       }
     ],
-    "prettier.printWidth": 120,
     "prettier.disableLanguages": [
       "vue"
     ],
