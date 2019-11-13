@@ -45,7 +45,7 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /graphql
+              path: /auth/login
               port: http
               {{- if .Values.tls.enabled }}
               scheme: HTTPS
