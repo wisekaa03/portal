@@ -1,9 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import NextI18Next from 'next-i18next';
-// eslint-disable-next-line import/named
-import { useTranslation as originalUseTranslation, WithTranslation } from 'react-i18next';
+import NextI18Next, { WithTranslation } from 'next-i18next';
+import { useTranslation as originalUseTranslation } from 'react-i18next';
 import { NextComponentType, NextPageContext } from 'next';
 // #endregion
 // #region Imports Local

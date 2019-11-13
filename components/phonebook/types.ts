@@ -1,8 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-// eslint-disable-next-line import/named
-import { WithTranslation } from 'react-i18next';
+import { WithTranslation } from 'next-i18next';
 import { Order } from 'typeorm-graphql-pagination';
 import { TFunction } from 'i18next';
 // #endregion

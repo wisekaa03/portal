@@ -14,8 +14,7 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import { green, blue } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
-// eslint-disable-next-line import/named
-import { WithTranslation } from 'react-i18next';
+import { WithTranslation } from 'next-i18next';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../lib/i18n-client';

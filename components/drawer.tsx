@@ -7,8 +7,7 @@ import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-// eslint-disable-next-line import/named
-import { WithTranslation } from 'react-i18next';
+import { WithTranslation } from 'next-i18next';
 // #endregion
 // #region Imports Local
 import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
