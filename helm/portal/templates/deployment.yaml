@@ -31,7 +31,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /auth/login
+              path: /health
               port: http
               {{- if .Values.tls.enabled }}
               scheme: HTTPS
@@ -45,7 +45,7 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /auth/login
+              path: /health
               port: http
               {{- if .Values.tls.enabled }}
               scheme: HTTPS
