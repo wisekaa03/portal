@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React /* , { useState, useEffect } */ from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { useQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -76,6 +76,9 @@ const useStyles = makeStyles((theme: Theme) =>
         alignItems: 'center',
       },
     },
+    manager: {
+      cursor: 'pointer',
+    },
     topIcons: {
       justifyContent: 'space-between',
       display: 'flex',
@@ -106,11 +109,17 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
 
   if (!profileId) return null;
 
+  const [currentProfile, setCurrentProfile] = useState<string>(profileId);
+
   const { loading, error, data }: QueryResult<Data<'profile', Profile>> = useQuery(PROFILE, {
     variables: {
-      id: profileId,
+      id: currentProfile,
     },
   });
+
+  const handleManager = (id: string | false | undefined) => (): void => {
+    id && setCurrentProfile(id);
+  };
 
   const profile = !loading && data && data.profile;
 
@@ -211,6 +220,8 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
                       <ListItemText
+                        className={classes.manager}
+                        onClick={handleManager(profile && profile.manager && profile.manager.id)}
                         primary={
                           profile ? (
                             profile.manager ? (

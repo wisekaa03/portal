@@ -39,7 +39,11 @@ export class ProfileService {
   ) {}
 
   getProfiles = (search: string, disabled: boolean): SelectQueryBuilder<ProfileEntity> => {
-    const query = this.profileRepository.createQueryBuilder('profile').where('profile.notShowing = :notShowing');
+    const query = this.profileRepository
+      .createQueryBuilder('profile')
+      .leftJoinAndSelect('profile.manager', 'manager')
+      .where('profile.notShowing = :notShowing');
+
     const parameters = { search: `%${search}%`, notShowing: false, disabled };
 
     if (!disabled) {
@@ -71,7 +75,7 @@ export class ProfileService {
    * @return Profile
    */
   profile = async (id: string): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne(id, { cache: true });
+    this.profileRepository.findOne(id, { relations: ['manager'], cache: true });
 
   /**
    * Create or update by user DN

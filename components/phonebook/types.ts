@@ -47,7 +47,7 @@ export interface Column {
 }
 
 export interface ProfileProps extends WithTranslation {
-  profileId: string | boolean;
+  profileId: string | false;
   handleClose(): void;
 }
 

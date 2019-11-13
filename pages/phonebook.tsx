@@ -247,6 +247,16 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
             break;
           }
 
+          case 'manager': {
+            if (!item.manager) {
+              break;
+            }
+
+            const { firstName, lastName, middleName } = item.manager;
+            cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
+            break;
+          }
+
           case 'nameEng':
           case 'username':
           case 'company':
@@ -314,7 +324,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);
   }, [lgUp, mdUp, smUp]);
 
-  const [profileId, setProfileId] = useState<string | boolean>(false);
+  const [profileId, setProfileId] = useState<string | false>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   const [_search, setSearch] = useState<string>('');
