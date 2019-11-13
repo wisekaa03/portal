@@ -45,11 +45,13 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
+              path: /graphql
+              port: http
               {{- if .Values.tls.enabled }}
               scheme: HTTPS
+              {{ else }}
+              scheme: HTTP
               {{- end }}
-              path: /auth/login
-              port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}

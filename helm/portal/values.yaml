@@ -102,15 +102,15 @@ ingress:
 livenessProbe:
   initialDelaySeconds: 300
   periodSeconds: 300
-  timeoutSeconds: 3
+  timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 5
 readinessProbe:
-  initialDelaySeconds: 20
-  periodSeconds: 5
+  initialDelaySeconds: 10
+  periodSeconds: 300
   timeoutSeconds: 5
   successThreshold: 1
-  failureThreshold: 3
+  failureThreshold: 5
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
