@@ -416,7 +416,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const result = event.target.value;
     setSearch(result);
-    !suggestionsLoading && result.length >= 3 && setSearchSuggestionsOpen((prevOpen) => !prevOpen);
+    !suggestionsLoading && result.length >= 3 && setSearchSuggestionsOpen(true);
   };
 
   const handleProfileId = (id: string | undefined) => (): void => {
@@ -459,6 +459,11 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   };
 
+  const handleSuggestionsItemClick = (value: string) => (): void => {
+    value && setSearch(value);
+    setSearchSuggestionsOpen(false);
+  };
+
   return (
     <>
       <Head>{t('phonebook:title')}</Head>
@@ -495,7 +500,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <ClickAwayListener onClickAway={handleSearchSuggestionsClose}>
                       <MenuList onKeyDown={handleSuggestionsKeyDown}>
                         {suggestionsData.searchSuggestions.map((s: string) => (
-                          <MenuItem key={uuidv4()} onClick={handleSearchSuggestionsClose}>
+                          <MenuItem key={uuidv4()} onClick={handleSuggestionsItemClick(s)}>
                             {s}
                           </MenuItem>
                         ))}
