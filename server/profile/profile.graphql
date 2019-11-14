@@ -99,11 +99,11 @@ type ProfileConnection {
 
 type Query {
 
-  # profilesSearch(search: String, orderBy: ProfileOrder): [Profile!]
-
   profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean): ProfileConnection!
 
   profile(id: ID): Profile
+
+  searchSuggestions(search: String): String[]
 
 }
 

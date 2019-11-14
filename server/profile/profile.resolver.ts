@@ -48,6 +48,19 @@ export class ProfileResolver {
   }
 
   /**
+   * GraphQL query: searchSuggestions
+   *
+   * @param search
+   * @returns {string[]}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async searchSuggestions(@Args('search') search: string): Promise<string[]> {
+    // TODO: сделать предложения по поиску
+    return [search];
+  }
+
+  /**
    * GraphQL query: profile
    *
    * @param id
