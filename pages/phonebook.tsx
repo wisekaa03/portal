@@ -1,9 +1,9 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, forwardRef, createContext, useEffect } from 'react';
+import React, { useState, forwardRef, createContext, useEffect, useRef } from 'react';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
 import {
   Table,
@@ -15,6 +15,11 @@ import {
   IconButton,
   Modal,
   useMediaQuery,
+  Popper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+  Paper,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
@@ -23,6 +28,7 @@ import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import clsx from 'clsx';
+import uuidv4 from 'uuid/v4';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -33,7 +39,7 @@ import { SettingsComponent, allColumns } from '../components/phonebook/settings'
 import useDebounce from '../lib/debounce';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
-import { PROFILES } from '../lib/queries';
+import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
 // #endregion
 
 const panelHeight = 48;
@@ -119,6 +125,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    suggestionsPopper: {
+      zIndex: theme.zIndex.appBar,
+      marginLeft: theme.spacing(7),
     },
   }),
 );
@@ -326,6 +336,8 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [profileId, setProfileId] = useState<string | false>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [searchSuggestionsOpen, setSearchSuggestionsOpen] = useState<boolean>(false);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const [_search, setSearch] = useState<string>('');
   const search = useDebounce(_search, 1000);
@@ -340,6 +352,19 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     },
     fetchPolicy: 'cache-and-network',
   });
+
+  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData }] = useLazyQuery(
+    SEARCH_SUGGESTIONS,
+  );
+
+  useEffect(() => {
+    _search.length >= 3 &&
+      getSearchSuggestions({
+        variables: {
+          search: _search,
+        },
+      });
+  }, [_search, getSearchSuggestions]);
 
   const itemCount = data
     ? data.profiles.pageInfo.hasNextPage
@@ -389,7 +414,9 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearch(event.target.value);
+    const result = event.target.value;
+    setSearch(result);
+    !suggestionsLoading && result.length >= 3 && setSearchSuggestionsOpen((prevOpen) => !prevOpen);
   };
 
   const handleProfileId = (id: string | undefined) => (): void => {
@@ -408,6 +435,30 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setSettingsOpen(false);
   };
 
+  const prevOpen = useRef(searchSuggestionsOpen);
+  useEffect(() => {
+    if (prevOpen.current === true && searchSuggestionsOpen === false) {
+      searchRef.current!.focus();
+    }
+
+    prevOpen.current = searchSuggestionsOpen;
+  }, [searchSuggestionsOpen]);
+
+  const handleSearchSuggestionsClose = (event: React.MouseEvent<EventTarget>): void => {
+    if (searchRef.current && searchRef.current.contains(event.target as HTMLElement)) {
+      return;
+    }
+
+    setSearchSuggestionsOpen(false);
+  };
+
+  const handleSuggestionsKeyDown = (event: React.KeyboardEvent): void => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setSearchSuggestionsOpen(false);
+    }
+  };
+
   return (
     <>
       <Head>{t('phonebook:title')}</Head>
@@ -420,6 +471,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 <SearchIcon />
               </div>
               <InputBase
+                ref={searchRef}
                 placeholder={t('phonebook:search')}
                 value={_search}
                 onChange={handleSearch}
@@ -430,6 +482,28 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 }}
                 inputProps={{ 'aria-label': 'search' }}
               />
+              <Popper
+                id="search-suggestions"
+                placement="bottom-start"
+                className={classes.suggestionsPopper}
+                open={searchSuggestionsOpen}
+                anchorEl={searchRef.current}
+                disablePortal
+              >
+                <Paper>
+                  {suggestionsData && (
+                    <ClickAwayListener onClickAway={handleSearchSuggestionsClose}>
+                      <MenuList onKeyDown={handleSuggestionsKeyDown}>
+                        {suggestionsData.searchSuggestions.map((s: string) => (
+                          <MenuItem key={uuidv4()} onClick={handleSearchSuggestionsClose}>
+                            {s}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  )}
+                </Paper>
+              </Popper>
             </div>
             <IconButton onClick={handleSettingsOpen}>
               <SettingsIcon />
