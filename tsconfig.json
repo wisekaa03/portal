@@ -37,6 +37,7 @@
     "__mocks__",
     "**/*.spec.*",
     "**/*.test.*",
-    "jest.setup.ts"
+    "jest.setup.ts",
+    "target"
   ]
 }

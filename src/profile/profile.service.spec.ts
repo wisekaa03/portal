@@ -9,10 +9,10 @@ import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
-import { LdapService } from '../ldap/ldap.service';
-import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
+// import { LdapService } from '../ldap/ldap.service';
+// import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
 import { UserEntity } from '../user/user.entity';
-import { MockRepository } from '../../__mocks__/mockRepository.mock';
+// import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ImageModule } from '../image/image.module';
 // #endregion
 
@@ -33,13 +33,13 @@ describe('ProfileService', () => {
       ],
       providers: [
         ProfileService,
-        { provide: LdapService, useValue: LdapServiceMock },
-        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+        // { provide: LdapService, useValue: LdapServiceMock },
+        // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        // { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
-      .overrideProvider(LdapService)
-      .useValue(LdapServiceMock)
+      // .overrideProvider(LdapService)
+      // .useValue(LdapServiceMock)
       .compile();
 
     service = module.get<ProfileService>(ProfileService);

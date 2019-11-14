@@ -11,7 +11,7 @@
     "experimentalDecorators": true
   },
   "include": [
-    "server",
+    "src",
     "typings",
     "next-env.d.ts"
   ],
@@ -22,6 +22,7 @@
     "__mocks__",
     "**/*.spec.*",
     "**/*.test.*",
-    "jest.setup.ts"
+    "jest.setup.ts",
+    "target"
   ]
 }

@@ -23,7 +23,7 @@ import { ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
-import { User } from '../server/user/models/user.dto';
+import { User } from '../src/user/models/user.dto';
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));

@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: ['webpack/hot/poll?100', path.resolve(__dirname, 'server/main.ts')],
+  entry: ['webpack/hot/poll?100', path.resolve(__dirname, 'src/main.ts')],
   watch: true,
   target: 'node',
   externals: [nodeExternals({ whitelist: ['webpack/hot/poll?100'] })],

@@ -4,7 +4,7 @@
 import React from 'react';
 // #endregion
 // #region Imports Local
-import { UserContext } from '../server/user/models/user.dto';
+import { UserContext } from '../src/user/models/user.dto';
 // #endregion
 
 /**

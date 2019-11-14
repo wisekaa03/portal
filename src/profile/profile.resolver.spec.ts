@@ -9,13 +9,14 @@ import { ProfileResolver } from './profile.resolver';
 import { ProfileService } from './profile.service';
 import { ProfileModule } from './profile.module';
 import { ProfileEntity } from './profile.entity';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
+// import { GqlAuthGuard } from '../guards/gqlauth.guard';
+// import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
 import { UserEntity } from '../user/user.entity';
-import { MockRepository } from '../../__mocks__/mockRepository.mock';
+// import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ImageModule } from '../image/image.module';
 // #endregion
 
+jest.mock('../guards/gqlauth.guard');
 jest.mock('./profile.service');
 
 describe('ProfileResolver', () => {
@@ -27,12 +28,12 @@ describe('ProfileResolver', () => {
       providers: [
         ProfileService,
         ProfileResolver,
-        { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+        // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
+        // { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],
     })
-      .overrideGuard(GqlAuthGuard)
-      .useValue(GqlAuthGuardMock)
+      // .overrideGuard(GqlAuthGuard)
+      // .useValue(GqlAuthGuardMock)
       .compile();
 
     resolver = module.get<ProfileResolver>(ProfileResolver);

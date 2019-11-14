@@ -14,7 +14,7 @@ import { includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { setStorage, removeStorage } from '../../lib/session-storage';
 import { Data } from '../../lib/types';
 import { FIRST_PAGE, SESSION } from '../../lib/constants';
-import { UserResponse } from '../../server/user/user.entity';
+import { UserResponse } from '../../src/user/user.entity';
 // #endregion
 
 const Login: I18nPage = (props): React.ReactElement => {

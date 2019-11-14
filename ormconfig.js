@@ -5,11 +5,11 @@
 const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
-const Config = require(`./${dev ? 'server/' : '.next/nest/server/'}config/config.service`);
-const Logger = require(`./${dev ? 'server/' : '.next/nest/server/'}logger/logger.service`);
+const Config = require(`./${dev ? 'src/' : '.next/nest/src/'}config/config.service`);
+const Logger = require(`./${dev ? 'src/' : '.next/nest/src/'}logger/logger.service`);
 
-const entities = dev ? ['server/**/*.entity.ts'] : ['.next/nest/**/*.entity.js'];
-// const migrations = dev ? ['server/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
+const entities = dev ? ['src/**/*.entity.ts'] : ['.next/nest/**/*.entity.js'];
+// const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion
 
 const configService = new Config.ConfigService(path.join(process.cwd(), '.env'));

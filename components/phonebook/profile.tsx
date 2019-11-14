@@ -17,7 +17,7 @@ import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
 import { Data } from '../../lib/types';
-import { Profile } from '../../server/profile/models/profile.dto';
+import { Profile } from '../../src/profile/models/profile.dto';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

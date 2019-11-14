@@ -74,7 +74,7 @@ if [ -n "$*" -a "$1" = "test" ]; then
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
   export NODE_ENV=${NODE_ENV:=production}
-  $NODE .next/nest/server/main.js
+  $NODE .next/nest/src/main.js
 elif [ -n "$*" ]; then
   yarn dev
 fi
