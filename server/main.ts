@@ -4,6 +4,7 @@
 // import { IncomingMessage } from 'http';
 import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
+import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
 import { Request, Response } from 'express';
@@ -49,6 +50,12 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Create NestJS server
   const server: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   server.useLogger(logger);
+  // #endregion
+
+  // #region Create Microservices
+  // const microservice = server.connectMicroservice({
+  //   transport: Transport,
+  // });
   // #endregion
 
   // #region Next Render
