@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.server.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/portal"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}

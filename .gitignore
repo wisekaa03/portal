@@ -75,6 +75,7 @@ npmlist.json
 
 # nest.js build output
 .nest
+dist
 
 # nuxt.js build output
 .nuxt

@@ -24,7 +24,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {}
   },
   "include": [
     "**/*.ts",

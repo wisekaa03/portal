@@ -1,11 +1,33 @@
 {
   "language": "ts",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/portal/src",
   "compilerOptions": {
-    "tsConfigPath": "tsconfig.server.json",
+    "tsConfigPath": "apps/portal/tsconfig.app.json",
     "webpackConfigPath": "webpack.config.js",
     "webpack": true,
     "deleteOutDir": true
+  },
+  "monorepo": true,
+  "root": "apps/portal",
+  "projects": {
+    "portal": {
+      "type": "application",
+      "root": "apps/portal",
+      "entryFile": "main",
+      "sourceRoot": "apps/portal/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/portal/tsconfig.app.json"
+      }
+    },
+    "synchronization": {
+      "type": "application",
+      "root": "apps/synchronization",
+      "entryFile": "main",
+      "sourceRoot": "apps/synchronization/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/synchronization/tsconfig.app.json"
+      }
+    }
   }
 }

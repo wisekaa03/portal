@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: ['webpack/hot/poll?100', path.resolve(__dirname, 'src/main.ts')],
+  entry: ['webpack/hot/poll?100', path.resolve(__dirname, 'apps/portal/src/main.ts')],
   watch: true,
   target: 'node',
   externals: [nodeExternals({ whitelist: ['webpack/hot/poll?100'] })],
@@ -47,7 +47,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
   ],
   output: {
-    path: path.resolve(__dirname, '.next/nest'),
+    path: path.resolve(__dirname, 'dist/apps/portal'),
     filename: 'main.js',
   },
   stats: {
@@ -57,7 +57,7 @@ module.exports = {
       'node_modules/@nestjs/common/utils/load-package.util.js',
       'node_modules/@nestjs/core/helpers/load-adapter.js',
       'node_modules/optional/optional.js',
-      (warning) => false,
+      (/* warning */) => false,
     ],
   },
 };

@@ -5,8 +5,8 @@ const webpack = require('webpack');
 // const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: [path.resolve(__dirname, 'src/main.ts')],
-  watch: true,
+  entry: [path.resolve(__dirname, 'apps/portal/src/main.ts')],
+  watch: false,
   mode: 'production',
   target: 'node',
   plugins: [
@@ -41,7 +41,7 @@ module.exports = {
     }),
   ],
   output: {
-    path: path.resolve(__dirname, '.next/nest'),
+    path: path.resolve(__dirname, 'dist/apps/portal'),
     filename: 'main.js',
   },
 };
