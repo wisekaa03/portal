@@ -93,7 +93,14 @@ const dev = process.env.NODE_ENV !== 'production';
     // #region GraphQL
     GraphQLModule.forRoot({
       debug: dev,
-      playground: dev,
+      playground: dev
+        ? {
+          settings: {
+            // Когда в playground режиме, нажмите settings и добавте строку:
+            'request.credentials': 'same-origin',
+          },
+        }
+        : false,
       typePaths: ['./**/*.graphql'],
       context: ({ req, res }) => ({ req, res }),
     }),
