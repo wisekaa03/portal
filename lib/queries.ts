@@ -56,6 +56,7 @@ export const CURRENT_USER = gql`
       profile {
         ...ProfileProps
         thumbnailPhoto40
+        thumbnailPhoto
       }
     }
   }
@@ -136,5 +137,11 @@ export const USER_SETTINGS = gql`
         drawer
       }
     }
+  }
+`;
+
+export const SEARCH_SUGGESTIONS = gql`
+  query SearchSuggestions($search: String) {
+    searchSuggestions(search: $search)
   }
 `;
