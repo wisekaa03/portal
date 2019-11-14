@@ -2562,6 +2562,14 @@
   optionalDependencies:
     type-graphql "^0.17.3"
 
+"@nestjs/microservices@^6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-6.9.0.tgz#b8d43d628c5a71db650ebf76243ef9132ff6450b"
+  integrity sha512-HxnqnJFkXP0vuywzFrO/hhgAAi73hw0lg3yWQdxBKUsAwlP1my9tMmVxo4hr80ilLiTzgjWnoRuAus//bFytLg==
+  dependencies:
+    iterare "1.2.0"
+    json-socket "0.3.0"
+
 "@nestjs/passport@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.1.0.tgz#80da326cc976a82530648d8025b04c8e2d41c10e"
@@ -3512,10 +3520,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@^4.14.146":
-  version "4.14.146"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.146.tgz#de0d2c8610012f12a6a796455054cbc654f8fecf"
-  integrity sha512-JzJcmQ/ikHSv7pbvrVNKJU5j9jL9VLf3/gqs048CEnBVVVEv4kve3vLxoPHGvclutS+Il4SBIuQQ087m1eHffw==
+"@types/lodash@^4.14.147":
+  version "4.14.147"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.147.tgz#8ca5cfa9c67753dcb73e507d1bbf1c4f8ba6f029"
+  integrity sha512-+0zY1Axql6ru5T85Rh6aR6Zr0xT7c0USLqsHv01b3ID//dOrV3OvpXJGjm69+4QpxoZ0oMNEfmW1ltwXe2WVzQ==
 
 "@types/lodash@^4.14.53":
   version "4.14.144"
@@ -4626,10 +4634,10 @@ apollo-server-caching@^0.5.0:
   dependencies:
     lru-cache "^5.0.0"
 
-apollo-server-core@^2.9.8:
-  version "2.9.8"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.9.8.tgz#3f502b00d4c607e8c936c7551d8423b67c2a4d22"
-  integrity sha512-mVyl7b1zmN4RMbQGvwXVFhs9Qhh69RRnPyR6XkaLIYK0TzrduotGFgIW9avhyWzT9JTVw4Bh95lLmI4O951khw==
+apollo-server-core@^2.9.9:
+  version "2.9.9"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.9.9.tgz#73df4989ac0ad09d20c20ef3e06f8c816bc7a13f"
+  integrity sha512-JxtYDasqeem5qUwPrCVh2IsBOgSQF4MKrRgy8dpxd+ymWfaaVelCUows1VE8vghgRxqDExnM9ibOxcZeI6mO6g==
   dependencies:
     "@apollographql/apollo-tools" "^0.4.0"
     "@apollographql/graphql-playground-html" "1.6.24"
@@ -4666,10 +4674,10 @@ apollo-server-errors@^2.3.4:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-2.3.4.tgz#b70ef01322f616cbcd876f3e0168a1a86b82db34"
   integrity sha512-Y0PKQvkrb2Kd18d1NPlHdSqmlr8TgqJ7JQcNIfhNDgdb45CnqZlxL1abuIRhr8tiw8OhVOcFxz2KyglBi8TKdA==
 
-apollo-server-express@^2.9.8:
-  version "2.9.8"
-  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.9.8.tgz#941bed7e259b145fdb2e22cc64d6222fcfce9ae8"
-  integrity sha512-DXiSchswwTWfLVcyAzQsaj9l+7lQJgHgteJcaSx0n9sKdCZyKfm8nEtiRMMjpMFZF2uhLcLQIzZPQwI3qYGaMg==
+apollo-server-express@^2.9.9:
+  version "2.9.9"
+  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.9.9.tgz#2a379217d7a7be012f0329be8bf89a63e181d42e"
+  integrity sha512-qltC3ttGz8zvrut7HzrcqKOUg0vHpvVyYeeOy8jvghZpqXyWFuJhnw6uxAFcKNKCPl3mJ1psji83P1Um2ceJgg==
   dependencies:
     "@apollographql/graphql-playground-html" "1.6.24"
     "@types/accepts" "^1.3.5"
@@ -4677,7 +4685,7 @@ apollo-server-express@^2.9.8:
     "@types/cors" "^2.8.4"
     "@types/express" "4.17.1"
     accepts "^1.3.5"
-    apollo-server-core "^2.9.8"
+    apollo-server-core "^2.9.9"
     apollo-server-types "^0.2.5"
     body-parser "^1.18.3"
     cors "^2.8.4"
@@ -12351,6 +12359,11 @@ json-schema@0.2.3:
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
 
+json-socket@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/json-socket/-/json-socket-0.3.0.tgz#f4b953c685bb8e8bd0b72438f5208d9a0799ae07"
+  integrity sha512-jc8ZbUnYIWdxERFWQKVgwSLkGSe+kyzvmYxwNaRgx/c8NNyuHes4UHnPM3LUrAFXUx1BhNJ94n1h/KCRlbvV0g==
+
 json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
@@ -12666,10 +12679,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@^9.4.2:
-  version "9.4.2"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-9.4.2.tgz#14cb577a9512f520691f8b5aefce6a8f7ead6c04"
-  integrity sha512-OFyGokJSWTn2M6vngnlLXjaHhi8n83VIZZ5/1Z26SULRUWgR3ITWpAEQC9Pnm3MC/EpCxlwts/mQWDHNji2+zA==
+lint-staged@^9.4.3:
+  version "9.4.3"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-9.4.3.tgz#f55ad5f94f6e105294bfd6499b23142961f7b982"
+  integrity sha512-PejnI+rwOAmKAIO+5UuAZU9gxdej/ovSEOAY34yMfC3OS4Ac82vCBPzAWLReR9zCPOMqeVwQRaZ3bUBpAsaL2Q==
   dependencies:
     chalk "^2.4.2"
     commander "^2.20.0"
@@ -16817,10 +16830,10 @@ react-i18next@^11.0.0:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"
 
-react-i18next@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.1.0.tgz#94e298e1a115100bebbaa0245921aab69529b956"
-  integrity sha512-FxHNBA6ptW7cygTpbIz5GAN9lrsB89xqgwpD3AzwSB4CDQsd+9i9/Je3Hc3VF6joAb1khFmCUO3ETJFLSrmuwg==
+react-i18next@^11.2.1:
+  version "11.2.1"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.2.1.tgz#a56d9f1f52d003eb4fa8f1c7d6752123827160f0"
+  integrity sha512-F9uO4YMNgH5wnPzpyZo2NLaKJM8+JhrXSKUqe0gTRd79mRWVOq+mh/CjYeZuF8Wk+ocoOaJvfwE0lRjlfUNk9w==
   dependencies:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"
