@@ -103,7 +103,7 @@ type Query {
 
   profile(id: ID): Profile
 
-  searchSuggestions(search: String): [String]
+  searchSuggestions(search: String): [Profile]
 
 }
 

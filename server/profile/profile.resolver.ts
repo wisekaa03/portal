@@ -6,7 +6,6 @@ import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
-import { Repository } from 'typeorm';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
@@ -55,9 +54,9 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async searchSuggestions(@Args('search') search: string): Promise<string[]> {
+  async searchSuggestions(@Args('search') search: string): Promise<ProfileEntity[]> {
     // TODO: сделать предложения по поиску
-    return [search];
+    return this.profileService.searchSuggestions(search);
   }
 
   /**

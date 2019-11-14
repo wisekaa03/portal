@@ -58,6 +58,7 @@ export class ProfileService {
             .orWhere('profile.middleName iLike :search')
             .orWhere('profile.department iLike :search')
             .orWhere('profile.company iLike :search')
+            .orWhere('profile.title iLike :search')
             .orWhere('profile.telephone iLike :search')
             .orWhere('profile.workPhone iLike :search')
             .orWhere('profile.mobile iLike :search');
@@ -76,6 +77,44 @@ export class ProfileService {
    */
   profile = async (id: string): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(id, { relations: ['manager'], cache: true });
+
+  /**
+   * searchSuggestions
+   *
+   * @param search string
+   */
+  searchSuggestions = async (search: string): Promise<ProfileEntity[]> => {
+    // TODO: сейчас уникализация на клиенте, продумать или оставить так
+    return (
+      this.profileRepository
+        .createQueryBuilder('profile')
+        // .select(
+        // eslint-disable-next-line max-len
+        //   'DISTINCT profile.firstName, profile.lastName, profile.middleName, profile.department, profile.company, profile.title',
+        // )
+        .where('profile.notShowing = :notShowing')
+        .andWhere('profile.disabled = :disabled')
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where('profile.firstName iLike :search')
+              .orWhere('profile.lastName iLike :search')
+              .orWhere('profile.middleName iLike :search')
+              .orWhere('profile.department iLike :search')
+              .orWhere('profile.company iLike :search')
+              .orWhere('profile.title iLike :search');
+          }),
+        )
+        .orderBy('profile.lastName', 'ASC')
+        .setParameters({
+          search: `%${search}%`,
+          notShowing: false,
+          disabled: false,
+        })
+        // .limit(5)
+        .cache(true)
+        .getMany()
+    );
+  };
 
   /**
    * Create or update by user DN

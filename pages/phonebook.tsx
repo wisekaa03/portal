@@ -28,7 +28,6 @@ import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 import clsx from 'clsx';
-import uuidv4 from 'uuid/v4';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -414,9 +413,12 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const result = event.target.value;
-    setSearch(result);
-    !suggestionsLoading && result.length >= 3 && setSearchSuggestionsOpen(true);
+    const searchString = event.target.value;
+    setSearch(searchString);
+    !suggestionsLoading &&
+      setSearchSuggestionsOpen(
+        !!(suggestionsData && suggestionsData.searchSuggestions.length && searchString.length >= 3),
+      );
   };
 
   const handleProfileId = (id: string | undefined) => (): void => {
@@ -499,11 +501,36 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   {suggestionsData && (
                     <ClickAwayListener onClickAway={handleSearchSuggestionsClose}>
                       <MenuList onKeyDown={handleSuggestionsKeyDown}>
-                        {suggestionsData.searchSuggestions.map((s: string) => (
-                          <MenuItem key={uuidv4()} onClick={handleSuggestionsItemClick(s)}>
-                            {s}
-                          </MenuItem>
-                        ))}
+                        {suggestionsData.searchSuggestions.reduce((result: JSX.Element[], cur: any) => {
+                          if (result.length > 4) return result;
+
+                          const lower = _search.toLowerCase();
+                          let showing = '';
+
+                          if (
+                            (cur.lastName && cur.lastName.toLowerCase().includes(lower)) ||
+                            (cur.firstName && cur.firstName.toLowerCase().includes(lower)) ||
+                            (cur.middleName && cur.middleName.toLowerCase().includes(lower))
+                          ) {
+                            showing = `${cur.lastName || ''} ${cur.firstName || ''} ${cur.middleName || ''}`;
+                          } else if (cur.department && cur.department.toLowerCase().includes(lower)) {
+                            showing = cur.department;
+                          } else if (cur.company && cur.company.toLowerCase().includes(lower)) {
+                            showing = cur.company;
+                          } else if (cur.title && cur.title.toLowerCase().includes(lower)) {
+                            showing = cur.title;
+                          }
+                          showing = showing.trim();
+
+                          if (result.find((item) => item.key === showing) || showing === '') return result;
+
+                          return [
+                            ...result,
+                            <MenuItem key={showing} onClick={handleSuggestionsItemClick(showing)}>
+                              {showing}
+                            </MenuItem>,
+                          ];
+                        }, [])}
                       </MenuList>
                     </ClickAwayListener>
                   )}
