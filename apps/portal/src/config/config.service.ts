@@ -21,7 +21,7 @@ export class ConfigService {
   /**
    * Language
    */
-  public i18nPath = 'server/i18n';
+  public i18nPath = 'apps/portal/src/i18n';
 
   public fallbackLanguage = 'ru';
 
