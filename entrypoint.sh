@@ -63,6 +63,9 @@ EOF
 export NODE=`which node`
 export NODE_OPTIONS=--max_old_space_size=4096
 
+# Config file and entity files
+yarn nest:ormconfig
+
 # TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 # "Typically it is unsafe to use synchronize: true for schema synchronization on production
 # once you get data in your database. Here is where migrations come to help."
@@ -71,7 +74,6 @@ TS_NODE_PROJECT="tsconfig.server.json" node_modules/.bin/ts-node ./node_modules/
 
 if [ -n "$*" -a "$1" = "test" ]; then
   export NODE_ENV=${NODE_ENV:=test}
-  yarn nest:ormconfig
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
   export NODE_ENV=${NODE_ENV:=production}
