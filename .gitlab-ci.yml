@@ -22,8 +22,10 @@ test_build:
       - apps/portal/.next/cache/
   script:
     - yarn install --production=false
-    - cd apps/portal && npx next telemetry status
-    - cd apps/portal && npx next telemetry disable
+    - cd apps/portal
+    - npx next telemetry status
+    - npx next telemetry disable
+    - cd ../..
     - time ./entrypoint.sh test -u
     - time yarn build
   artifacts:
