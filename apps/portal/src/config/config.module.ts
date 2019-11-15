@@ -13,7 +13,7 @@ const dev = process.env.NODE_ENV !== 'production';
   providers: [
     {
       provide: ConfigService,
-      useValue: new ConfigService(dev ? `${__dirname}/../../.env` : `${__dirname}/../../.env`),
+      useValue: new ConfigService(dev ? `${__dirname}/../../../../.env` : `${__dirname}/../../.env`),
     },
   ],
   exports: [ConfigService],

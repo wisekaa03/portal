@@ -158,5 +158,5 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 }
 
-const configService = new ConfigService(dev ? `${__dirname}/../../.env` : `${__dirname}/../../.env`);
+const configService = new ConfigService(dev ? `${__dirname}/../../../../.env` : `${__dirname}/../../.env`);
 bootstrap(configService);
