@@ -17,13 +17,14 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { WithTranslation } from 'next-i18next';
 // #endregion
 // #region Imports Local
+import HeaderBg from '../../../public/images/jpeg/header_bg.jpg';
+import PopoverBg from '../../../public/images/png/profile_popover_bg.png';
+import LogoMin from '../../../public/images/png/logo_min.png';
+
 import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
 import { LOGOUT, SYNC, CACHE, USER_SETTINGS } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
-import HeaderBg from '../../../public/images/jpeg/header_bg.jpg';
-import PopoverBg from '../../../public/images/png/profile_popover_bg.png';
-import LogoMin from '../../../public/images/png/logo_min.png';
 import { Avatar } from './avatar';
 import { SESSION } from '../lib/constants';
 // #endregion

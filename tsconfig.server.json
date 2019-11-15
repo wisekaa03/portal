@@ -11,9 +11,7 @@
     "experimentalDecorators": true
   },
   "include": [
-    "src",
-    "typings",
-    "next-env.d.ts"
+    "apps"
   ],
   "exclude": [
     ".next",
