@@ -44,8 +44,9 @@ coverage/
 package.json
 
 node_modules/@types/
+!node_modules/@types/hapi__joi
 node_modules/**/*.ts
-!node_modules/**/*.d.ts
+!node_modules/dotenv/**/*.d.ts
 node_modules/**/*.tsx
 node_modules/.yarn-integrity
 
