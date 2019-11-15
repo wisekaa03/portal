@@ -12,7 +12,7 @@
     "dev": "nest start -d",
     "build": "yarn next:build && yarn copy && yarn nest:build",
     "build:dev": "nest start -d",
-    "copy": "mv -f apps/portal/.next .next",
+    "copy": "cp -r apps/portal/.next .next && rm -rf .next/cache",
     "clean:build": "rm -rf node_modules && yarn --production=false && yarn build && rm -rf node_modules && yarn --production=true && yarn start",
     "nest:build": "NODE_ENV=production nest build",
     "next:build": "cd apps/portal && NODE_ENV=production next build",

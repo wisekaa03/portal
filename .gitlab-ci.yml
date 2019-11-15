@@ -19,7 +19,7 @@ test_build:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
       - node_modules/
-      - .next/cache/
+      - apps/portal/.next/cache/
   script:
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status
