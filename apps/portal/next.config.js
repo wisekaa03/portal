@@ -62,7 +62,7 @@ function withCustomWebpack(conf = {}) {
         'node_modules/@nestjs/common/utils/load-package.util.js',
         'node_modules/@nestjs/core/helpers/load-adapter.js',
         'node_modules/optional/optional.js',
-        (warning) => false,
+        (/* warning */) => false,
       ],
     };
 

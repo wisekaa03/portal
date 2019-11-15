@@ -157,5 +157,5 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 }
 
-const configService = new ConfigService(join(process.cwd(), '.env'));
+const configService = new ConfigService(join(__dirname, '../../../.env'));
 bootstrap(configService);

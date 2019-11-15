@@ -12,7 +12,7 @@ import { ConfigService } from './config.service';
   providers: [
     {
       provide: ConfigService,
-      useValue: new ConfigService(join(process.cwd(), '../../.env')),
+      useValue: new ConfigService(join(__dirname, '../../../.env')),
     },
   ],
   exports: [ConfigService],
