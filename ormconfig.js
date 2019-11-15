@@ -2,10 +2,10 @@
 /* eslint import/no-dynamic-require:0 */
 
 // #region Imports NPM
-const Config = require('./apps/portal/src/config/config.service');
-const Logger = require('./apps/portal/src/logger/logger.service');
+const Config = require('./.next/nest/config/config.service');
 
-const entities = ['apps/portal/src/**/*.entity.ts'];
+const entities = ['./.next/nest/**/*.entity.js'];
+
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion
 
@@ -19,7 +19,6 @@ if (logging === 'false') {
 } else {
   logging = JSON.parse(logging);
 }
-const logger = logging && new Logger.LogService();
 
 const isCache = Boolean(configService.get('DATABASE_CACHE'));
 let cache;
@@ -40,7 +39,7 @@ if (isCache) {
   cache = false;
 }
 
-logger.log('Using ORMconfig.js...', 'Database');
+console.log('Database: Using ORMconfig.js...');
 
 module.exports = {
   name: 'default',
@@ -52,10 +51,10 @@ module.exports = {
   database: configService.get('DATABASE_DATABASE'),
   schema: configService.get('DATABASE_SCHEMA'),
   uuidExtension: 'pgcrypto',
-  logger,
   synchronize: configService.get('DATABASE_SYNCHRONIZE'),
   dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
   logging,
+  logger: 'simple-console',
   entities,
   migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
   cache,

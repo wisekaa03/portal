@@ -44,9 +44,7 @@ coverage/
 package.json
 
 node_modules/@types/
-!node_modules/@types/hapi__joi
 node_modules/**/*.ts
-!node_modules/dotenv/**/*.d.ts
 node_modules/**/*.tsx
 node_modules/.yarn-integrity
 
@@ -62,5 +60,6 @@ apps/portal/pages/
 # apps/synchronization/
 target/
 apps/portal/typings/
-# tsconfig.json
-# tsconfig.server.json
+tsconfig.json
+tsconfig.server.json
+tsconfig.ormconfig.json

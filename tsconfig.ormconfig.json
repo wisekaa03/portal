@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "removeComments": true,
+    "sourceMap": false,
+    "noEmit": false,
+    "allowJs": false,
+    "outDir": "./.next/nest",
+    "baseUrl": "./",
+    "experimentalDecorators": true
+  },
+  "include": [
+    "apps/portal/src/config/config.service.ts",
+    "apps/portal/src/**/*.entity.ts",
+    "typings"
+  ],
+  "exclude": [
+    ".next",
+    "node_modules",
+    "__tests__",
+    "__mocks__",
+    "**/*.spec.*",
+    "**/*.test.*",
+    "jest.setup.ts",
+    "target"
+  ]
+}
