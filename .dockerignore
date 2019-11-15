@@ -49,13 +49,14 @@ node_modules/**/*.ts
 node_modules/**/*.tsx
 node_modules/.yarn-integrity
 
-nodemon.json
 components/
 layouts/
 lib/
 pages/
-public/
-# server/
+# public/
+# src/
+# apps/portal/
+# apps/synchronization/
 target/
 typings/
 # tsconfig.json

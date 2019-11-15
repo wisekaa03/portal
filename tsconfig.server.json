@@ -6,7 +6,7 @@
     "sourceMap": true,
     "noEmit": false,
     "allowJs": false,
-    "outDir": "./dist/apps",
+    "outDir": "./.next/nest",
     "baseUrl": "./",
     "experimentalDecorators": true
   },

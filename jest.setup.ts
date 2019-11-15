@@ -1,6 +1,6 @@
 /** @format */
 /* eslint spaced-comment:0 */
-/// <reference types="./typings/global" />
+/// <reference types="./apps/portal/typings/global" />
 
 import * as enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';

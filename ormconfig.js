@@ -2,17 +2,14 @@
 /* eslint import/no-dynamic-require:0 */
 
 // #region Imports NPM
-const path = require('path');
+const Config = require('./apps/portal/src/config/config.service');
+const Logger = require('./apps/portal/src/logger/logger.service');
 
-const dev = process.env.NODE_ENV !== 'production';
-const Config = require(`./${dev ? 'src/' : '.next/nest/src/'}config/config.service`);
-const Logger = require(`./${dev ? 'src/' : '.next/nest/src/'}logger/logger.service`);
-
-const entities = dev ? ['src/**/*.entity.ts'] : ['.next/nest/**/*.entity.js'];
+const entities = ['apps/portal/src/**/*.entity.ts'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion
 
-const configService = new Config.ConfigService(path.join(process.cwd(), '../../.env'));
+const configService = new Config.ConfigService(`${__dirname}/.env`);
 let logging = configService.get('DATABASE_LOGGING');
 
 if (logging === 'false') {

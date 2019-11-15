@@ -16,7 +16,7 @@ module.exports = {
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/(*.)+(spec|test).[jt]s?(x)'],
   setupFiles: ['./jest.setup.ts'],
-  testPathIgnorePatterns: ['/.next/', '/.nest/', '/node_modules/', '/target/', '/dist/'],
+  testPathIgnorePatterns: ['/.next/', '/node_modules/', '/target/'],
   snapshotSerializers: ['enzyme-to-json/serializer'],
   globals: {
     'ts-jest': {

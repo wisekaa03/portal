@@ -47,7 +47,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
   ],
   output: {
-    path: path.resolve(__dirname, 'dist/apps/portal'),
+    path: path.resolve(__dirname, 'apps/portal/.next/nest'),
     filename: 'main.js',
   },
   stats: {

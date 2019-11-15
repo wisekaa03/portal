@@ -29,6 +29,8 @@ import sessionRedis from './shared/session-redis';
 import session from './shared/session';
 // #endregion
 
+const dev = process.env.NODE_ENV !== 'production';
+
 // #region NestJS options
 const logger = new LogService();
 const nestjsOptions: NestApplicationOptions = {
@@ -42,7 +44,6 @@ const nestjsOptions: NestApplicationOptions = {
 
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Next
-  const dev = process.env.NODE_ENV !== 'production';
   const app = Next({ dev, quiet: false });
   await app.prepare();
   // #endregion
@@ -129,7 +130,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Static files
-  server.useStaticAssets(dev ? join(__dirname, '../..', 'public/') : join(__dirname, '..', 'public/'));
+  server.useStaticAssets(dev ? `${__dirname}/../../public/` : `${__dirname}/../../public/`);
   // #endregion
 
   // #region Locale I18n
@@ -157,5 +158,5 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 }
 
-const configService = new ConfigService(join(__dirname, '../../../.env'));
+const configService = new ConfigService(dev ? `${__dirname}/../../.env` : `${__dirname}/../../.env`);
 bootstrap(configService);
