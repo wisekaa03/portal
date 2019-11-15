@@ -70,6 +70,7 @@ TS_NODE_PROJECT="tsconfig.server.json" node_modules/.bin/ts-node ./node_modules/
 # TS_NODE_PROJECT="tsconfig.server.json" ts-node ./node_modules/typeorm/cli.js migration:run
 
 if [ -n "$*" -a "$1" = "test" ]; then
+  yarn nest:ormconfig
   export NODE_ENV=${NODE_ENV:=test}
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
