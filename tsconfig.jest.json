@@ -11,8 +11,8 @@
     "target": "es2017"
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx"
+    "apps/**/*.ts",
+    "apps/**/*.tsx"
   ],
   "exclude": [
     ".nest",
