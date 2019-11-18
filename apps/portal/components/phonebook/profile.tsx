@@ -1,9 +1,9 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, CardContent, Paper, List, ListItem, ListItemText, Divider, IconButton } from '@material-ui/core';
@@ -109,16 +109,18 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
 
   if (!profileId) return null;
 
-  const [currentProfile, setCurrentProfile] = useState<string>(profileId);
+  const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
 
-  const { loading, error, data }: QueryResult<Data<'profile', Profile>> = useQuery(PROFILE, {
-    variables: {
-      id: currentProfile,
-    },
-  });
+  useEffect(() => {
+    getProfile({
+      variables: { id: profileId },
+    });
+  }, [getProfile, profileId]);
 
-  const handleManager = (id: string | false | undefined) => (): void => {
-    id && setCurrentProfile(id);
+  const handleProfile = (id: string) => (): void => {
+    getProfile({
+      variables: { id },
+    });
   };
 
   const profile = !loading && data && data.profile;
@@ -221,7 +223,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
                       <ListItemText
                         className={classes.manager}
-                        onClick={handleManager(profile && profile.manager && profile.manager.id)}
+                        onClick={handleProfile(profile && profile.manager && profile.manager.id)}
                         primary={
                           profile ? (
                             profile.manager ? (

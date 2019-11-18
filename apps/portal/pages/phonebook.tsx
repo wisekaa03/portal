@@ -335,11 +335,15 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [profileId, setProfileId] = useState<string | false>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
-  const [searchSuggestionsOpen, setSearchSuggestionsOpen] = useState<boolean>(false);
+  const [suggestionsFiltered, setSuggestionsFiltered] = useState<string[]>([]);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const [_search, setSearch] = useState<string>('');
   const search = useDebounce(_search, 1000);
+
+  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData }] = useLazyQuery(
+    SEARCH_SUGGESTIONS,
+  );
 
   const { loading, error, data, fetchMore } = useQuery(PROFILES(getGraphQLColumns(columns)), {
     variables: {
@@ -352,19 +356,39 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData }] = useLazyQuery(
-    SEARCH_SUGGESTIONS,
-  );
-
   useEffect(() => {
-    if (_search.length >= 3) {
-      getSearchSuggestions({
-        variables: {
-          search: _search,
-        },
-      });
+    if (!suggestionsLoading) {
+      if (suggestionsData && suggestionsData.searchSuggestions.length && _search.length >= 3) {
+        const filtered = suggestionsData.searchSuggestions.reduce((result: string[], cur: any) => {
+          if (result.length > 4) return result;
+
+          const lower = _search.toLowerCase().trim();
+          let showing = '';
+
+          const fullName = `${cur.lastName || ''} ${cur.firstName || ''} ${cur.middleName || ''}`;
+
+          if (fullName.toLowerCase().includes(lower)) {
+            showing = fullName;
+          } else if (cur.department && cur.department.toLowerCase().includes(lower)) {
+            showing = cur.department;
+          } else if (cur.company && cur.company.toLowerCase().includes(lower)) {
+            showing = cur.company;
+          } else if (cur.title && cur.title.toLowerCase().includes(lower)) {
+            showing = cur.title;
+          }
+          showing = showing.trim();
+
+          if (result.includes(showing) || showing === '') return result;
+
+          return [...result, showing];
+        }, []);
+
+        setSuggestionsFiltered(filtered.length === 1 && filtered[0] === _search ? [] : filtered);
+      } else {
+        setSuggestionsFiltered([]);
+      }
     }
-  }, [_search, getSearchSuggestions]);
+  }, [suggestionsLoading, suggestionsData, _search]);
 
   const itemCount = data
     ? data.profiles.pageInfo.hasNextPage
@@ -414,12 +438,15 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const searchString = event.target.value;
-    setSearch(searchString);
-    if (!suggestionsLoading) {
-      setSearchSuggestionsOpen(
-        !!(suggestionsData && suggestionsData.searchSuggestions.length && searchString.length >= 3),
-      );
+    const { value } = event.target;
+    setSearch(value);
+
+    if (value.length >= 3) {
+      getSearchSuggestions({
+        variables: {
+          search: value,
+        },
+      });
     }
   };
 
@@ -439,33 +466,23 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setSettingsOpen(false);
   };
 
-  const prevOpen = useRef(searchSuggestionsOpen);
-  useEffect(() => {
-    if (prevOpen.current === true && searchSuggestionsOpen === false) {
-      searchRef.current!.focus();
-    }
-
-    prevOpen.current = searchSuggestionsOpen;
-  }, [searchSuggestionsOpen]);
-
   const handleSearchSuggestionsClose = (event: React.MouseEvent<EventTarget>): void => {
     if (searchRef.current && searchRef.current.contains(event.target as HTMLElement)) {
       return;
     }
 
-    setSearchSuggestionsOpen(false);
+    setSuggestionsFiltered([]);
   };
 
   const handleSuggestionsKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Tab') {
       event.preventDefault();
-      setSearchSuggestionsOpen(false);
+      setSuggestionsFiltered([]);
     }
   };
 
   const handleSuggestionsItemClick = (value: string) => (): void => {
     setSearch(value);
-    setSearchSuggestionsOpen(false);
   };
 
   return (
@@ -495,7 +512,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 id="search-suggestions"
                 placement="bottom-start"
                 className={classes.suggestionsPopper}
-                open={searchSuggestionsOpen}
+                open={suggestionsFiltered.length > 0}
                 anchorEl={searchRef.current}
                 disablePortal
               >
@@ -503,36 +520,11 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   {suggestionsData && (
                     <ClickAwayListener onClickAway={handleSearchSuggestionsClose}>
                       <MenuList onKeyDown={handleSuggestionsKeyDown}>
-                        {suggestionsData.searchSuggestions.reduce((result: JSX.Element[], cur: any) => {
-                          if (result.length > 4) return result;
-
-                          const lower = _search.toLowerCase();
-                          let showing = '';
-
-                          if (
-                            (cur.lastName && cur.lastName.toLowerCase().includes(lower)) ||
-                            (cur.firstName && cur.firstName.toLowerCase().includes(lower)) ||
-                            (cur.middleName && cur.middleName.toLowerCase().includes(lower))
-                          ) {
-                            showing = `${cur.lastName || ''} ${cur.firstName || ''} ${cur.middleName || ''}`;
-                          } else if (cur.department && cur.department.toLowerCase().includes(lower)) {
-                            showing = cur.department;
-                          } else if (cur.company && cur.company.toLowerCase().includes(lower)) {
-                            showing = cur.company;
-                          } else if (cur.title && cur.title.toLowerCase().includes(lower)) {
-                            showing = cur.title;
-                          }
-                          showing = showing.trim();
-
-                          if (result.find((item) => item.key === showing) || showing === '') return result;
-
-                          return [
-                            ...result,
-                            <MenuItem key={showing} onClick={handleSuggestionsItemClick(showing)}>
-                              {showing}
-                            </MenuItem>,
-                          ];
-                        }, [])}
+                        {suggestionsFiltered.map((item) => (
+                          <MenuItem key={item} onClick={handleSuggestionsItemClick(item)}>
+                            {item}
+                          </MenuItem>
+                        ))}
                       </MenuList>
                     </ClickAwayListener>
                   )}
