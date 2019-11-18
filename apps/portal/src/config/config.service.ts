@@ -223,6 +223,19 @@ export class ConfigService {
         .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
         .optional()
         .empty(),
+
+      MICROSERVICE_URL: Joi.string()
+        .default('nats://nats-cluster.production:4222')
+        .optional()
+        .empty(),
+      MICROSERVICE_USER: Joi.string()
+        .default('admin')
+        .optional()
+        .empty(),
+      MICROSERVICE_PASS: Joi.string()
+        .default('supersecret')
+        .optional()
+        .empty(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);

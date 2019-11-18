@@ -6,7 +6,7 @@
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
     "v:minor": "yarn version --minor",
-    "clean": "rimraf .next",
+    "clean": "rimraf .next apps/portal/.next/nest",
     "clean:all": "rimraf dist .next apps/portal/.next node_modules yarn.lock package.lock ~/.npm ~/.node-gyp ~/.cache/node-gyp ~/.cache/yarn ~/.config/yarn ~/.yarn",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "dev": "nest start -d",
