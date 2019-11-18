@@ -6,7 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 // const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: [path.resolve(__dirname, 'apps/portal/src/main.ts')],
+  // entry: [path.resolve(__dirname, 'apps/portal/src/main.ts')],
   watch: false,
   mode: 'production',
   target: 'node',

@@ -20,13 +20,13 @@
         "tsConfigPath": "apps/portal/tsconfig.app.json"
       }
     },
-    "synchronization": {
+    "synch": {
       "type": "application",
-      "root": "apps/synchronization",
+      "root": "apps/synch",
       "entryFile": "main",
-      "sourceRoot": "apps/synchronization/src",
+      "sourceRoot": "apps/synch/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/synchronization/tsconfig.app.json"
+        "tsConfigPath": "apps/synch/tsconfig.app.json"
       }
     }
   }

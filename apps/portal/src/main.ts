@@ -2,7 +2,6 @@
 
 // #region Imports NPM
 // import { IncomingMessage } from 'http';
-import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -142,6 +141,17 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     res.locals.sessionStore = store;
     next();
+  });
+  // #endregion
+
+  // #region Microservice
+  server.connectMicroservice({
+    transport: Transport.NATS,
+    options: {
+      url: configService.get<string>('MICROSERVICE_URL'),
+      user: configService.get<string>('MICROSERVICE_USER'),
+      pass: configService.get<string>('MICROSERVICE_PASS'),
+    },
   });
   // #endregion
 

@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.server.json",
   "compilerOptions": {
     "declaration": false,
-    "outDir": "../../dist/apps/synchronization"
+    "outDir": "../../dist/apps/synch"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]

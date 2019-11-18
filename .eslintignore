@@ -1,6 +1,6 @@
 .git
 .vscode
-server/database/migrations
+apps/portal/src/database/migrations
 
 # Logs
 logs

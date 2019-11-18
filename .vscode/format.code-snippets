@@ -12,12 +12,10 @@
 			"/** @format */",
 			"",
 			"// #region Imports NPM",
-			"import React from 'react';",
+			"$0",
 			"// #endregion",
 			"// #region Imports Local",
-			"// #endregion",
-			"",
-			"$0"
+			"// #endregion"
 		],
 		"description": "format code snippet"
 	}

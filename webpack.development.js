@@ -1,11 +1,11 @@
 /** @format */
 
-const path = require('path');
+// const path = require('path');
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: ['webpack/hot/poll?100', path.resolve(__dirname, 'apps/portal/src/main.ts')],
+  // entry: ['webpack/hot/poll?100', path.resolve(__dirname, 'apps/portal/src/main.ts')],
   watch: true,
   target: 'node',
   externals: [nodeExternals({ whitelist: ['webpack/hot/poll?100'] })],
@@ -46,10 +46,10 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
-  output: {
-    path: path.resolve(__dirname, 'apps/portal/.next/nest'),
-    filename: 'main.js',
-  },
+  // output: {
+  //   path: path.resolve(__dirname, 'apps/portal/.next/nest'),
+  //   filename: 'main.js',
+  // },
   stats: {
     // This is optional, but it hides noisey warnings
     warningsFilter: [

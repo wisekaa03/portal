@@ -2,6 +2,7 @@
 
 .git
 .gitignore
+dist
 
 *.map
 
