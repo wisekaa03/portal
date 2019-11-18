@@ -53,9 +53,7 @@ export class ProfileService {
     if (search !== '') {
       query.andWhere(
         new Brackets((qb) => {
-          qb.where('profile.firstName iLike :search')
-            .orWhere('profile.lastName iLike :search')
-            .orWhere('profile.middleName iLike :search')
+          qb.where("profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike :search")
             .orWhere('profile.department iLike :search')
             .orWhere('profile.company iLike :search')
             .orWhere('profile.title iLike :search')
@@ -96,9 +94,7 @@ export class ProfileService {
         .andWhere('profile.disabled = :disabled')
         .andWhere(
           new Brackets((qb) => {
-            qb.where('profile.firstName iLike :search')
-              .orWhere('profile.lastName iLike :search')
-              .orWhere('profile.middleName iLike :search')
+            qb.where("profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike :search")
               .orWhere('profile.department iLike :search')
               .orWhere('profile.company iLike :search')
               .orWhere('profile.title iLike :search');
