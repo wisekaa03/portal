@@ -44,7 +44,7 @@ const nestjsOptions: NestApplicationOptions = {
 
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Next
-  const app = Next({ dev, quiet: false });
+  const app = Next({ dev, dir: `${__dirname}/../../../portal`, quiet: false });
   await app.prepare();
   // #endregion
 
