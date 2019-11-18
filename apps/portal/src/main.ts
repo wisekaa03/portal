@@ -153,6 +153,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
       pass: configService.get<string>('MICROSERVICE_PASS'),
     },
   });
+  await server.startAllMicroservicesAsync();
   // #endregion
 
   // #region Start server

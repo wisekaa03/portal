@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.server.json",
   "compilerOptions": {
     "declaration": false,
-    "outDir": "./.next/nest"
+    "outDir": "../../dist/apps/portal"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
