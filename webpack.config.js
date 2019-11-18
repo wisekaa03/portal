@@ -24,8 +24,8 @@ module.exports = (options) => {
     stats: { ...options.stats, ...config.stats },
   };
 
-  console.log('Options:', options);
-  console.log('Config:', c);
+  // console.log('Options:', options);
+  // console.log('Config:', c);
 
   return c;
 };
