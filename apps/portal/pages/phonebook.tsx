@@ -357,12 +357,13 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 
   useEffect(() => {
-    _search.length >= 3 &&
+    if (_search.length >= 3) {
       getSearchSuggestions({
         variables: {
           search: _search,
         },
       });
+    }
   }, [_search, getSearchSuggestions]);
 
   const itemCount = data
@@ -415,10 +416,11 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const searchString = event.target.value;
     setSearch(searchString);
-    !suggestionsLoading &&
+    if (!suggestionsLoading) {
       setSearchSuggestionsOpen(
         !!(suggestionsData && suggestionsData.searchSuggestions.length && searchString.length >= 3),
       );
+    }
   };
 
   const handleProfileId = (id: string | undefined) => (): void => {
@@ -462,7 +464,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleSuggestionsItemClick = (value: string) => (): void => {
-    value && setSearch(value);
+    setSearch(value);
     setSearchSuggestionsOpen(false);
   };
 
