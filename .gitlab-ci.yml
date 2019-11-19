@@ -80,6 +80,7 @@ deploy:
           --debug --values helm/portal/values.yaml \
           --set HOST="${HOST}" \
           --set PORT="${PORT}" \
+          --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
           --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
           --set DATABASE_HOST="${DATABASE_HOST}" \
           --set DATABASE_PORT="${DATABASE_PORT}" \
@@ -122,6 +123,9 @@ deploy:
           --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
           --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
           --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
+          --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
+          --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
+          --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
@@ -130,6 +134,7 @@ deploy:
           --debug --values helm/portal/values.yaml \
           --set HOST="${HOST}" \
           --set PORT="${PORT}" \
+          --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
           --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
           --set DATABASE_HOST="${DATABASE_HOST}" \
           --set DATABASE_PORT="${DATABASE_PORT}" \
@@ -172,6 +177,9 @@ deploy:
           --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
           --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
           --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
+          --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
+          --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
+          --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \
