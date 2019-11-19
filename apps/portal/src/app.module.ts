@@ -1,6 +1,6 @@
 /** @format */
 /* eslint spaced-comment:0, prettier/prettier:0 */
-/// <reference types="../typings/global" />
+/// <reference types="../../../typings/global" />
 
 // #region Imports NPM
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';

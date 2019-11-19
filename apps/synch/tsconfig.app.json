@@ -4,6 +4,6 @@
     "declaration": false,
     "outDir": "../../dist/apps/synch"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../typings/global.d.ts"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }

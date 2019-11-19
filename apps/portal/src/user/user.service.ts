@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, Transport, ClientNats } from '@nestjs/microservices';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 // #endregion
@@ -145,27 +145,8 @@ export class UserService {
    * @param {req} Request
    * @returns {boolean}
    */
-  async synchronization(_req: Request): Promise<boolean | null> {
-    const users = await this.ldapService.synchronization();
-
-    if (users) {
-      users.forEach(async (ldapUser) => {
-        const user = await this.readByUsername(ldapUser.sAMAccountName, false);
-
-        this.createLdap(ldapUser, user).catch((error: Error) => {
-          this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
-
-          throw error;
-        });
-      });
-
-      // return true;
-    }
-
-    // return false;
-
-    return this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
-  }
+  synchronization = async (_req: Request): Promise<boolean | null> =>
+    this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
 
   /**
    * Settings

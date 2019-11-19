@@ -121,7 +121,7 @@ ENV MICROSERVICE_PASS ${MICROSERVICE_PASS}
 
 # PREPARE DEVELOPMENT
 #RUN apt-get update && apt-get install -y \
-#  net-tools \ip 
+#  net-tools \ip
 #  telnet \
 #  dnsutils \
 #  nano \

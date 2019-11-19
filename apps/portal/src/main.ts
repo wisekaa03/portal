@@ -149,18 +149,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   });
   // #endregion
 
-  // #region Microservice
-  server.connectMicroservice({
-    transport: Transport.NATS,
-    options: {
-      url: configService.get<string>('MICROSERVICE_URL'),
-      user: configService.get<string>('MICROSERVICE_USER'),
-      pass: configService.get<string>('MICROSERVICE_PASS'),
-    },
-  });
-  await server.startAllMicroservicesAsync();
-  // #endregion
-
   // #region Start server
   await server.listen(configService.get('PORT'), configService.get('HOST'));
   logger.log(`Server running on ${configService.get('HOST')}:${configService.get('PORT')}`, 'Bootstrap');

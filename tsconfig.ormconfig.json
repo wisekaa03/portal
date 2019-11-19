@@ -13,7 +13,7 @@
   "include": [
     "apps/portal/src/config/config.service.ts",
     "apps/portal/src/**/*.entity.ts",
-    "typings"
+    "typings",
   ],
   "exclude": [
     ".next",

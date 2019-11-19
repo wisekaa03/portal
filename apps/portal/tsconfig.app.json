@@ -4,6 +4,6 @@
     "declaration": false,
     "outDir": "../../dist/apps/portal"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../typings/global.d.ts"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }

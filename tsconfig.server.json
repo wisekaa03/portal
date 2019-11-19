@@ -11,7 +11,8 @@
     "experimentalDecorators": true
   },
   "include": [
-    "apps"
+    "apps",
+    "typings/global.d.ts"
   ],
   "exclude": [
     ".next",

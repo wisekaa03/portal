@@ -14,7 +14,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern(SYNCHRONIZATION)
-  synchronization(): boolean {
+  async synchronization(): Promise<boolean> {
     return this.appService.synchronization();
   }
 }
