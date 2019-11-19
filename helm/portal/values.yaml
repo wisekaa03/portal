@@ -70,6 +70,10 @@ LDAP_REDIS_DB: 2
 LDAP_REDIS_PASSWORD: ""
 LDAP_REDIS_TTL: 300
 
+MICROSERVICE_URL: "nats://nats-cluster.production:4222"
+MICROSERVICE_USER: "admin"
+MICROSERVICE_PASS: "supersecret"
+
 service:
   type: LoadBalancer
 

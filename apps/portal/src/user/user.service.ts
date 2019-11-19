@@ -1,13 +1,13 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ClientProxy } from '@nestjs/microservices';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import passport from 'passport';
 import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { LogService } from '../logger/logger.service';
@@ -15,11 +15,13 @@ import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
 import { LdapService } from '../ldap/ldap.service';
 import { Profile, LoginService } from '../profile/models/profile.dto';
+import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
 // #endregion
 
 @Injectable()
 export class UserService {
   constructor(
+    @Inject(SYNCHRONIZATION_SERVICE) private readonly client: ClientProxy,
     private readonly logService: LogService,
     private readonly ldapService: LdapService,
     private readonly profileService: ProfileService,
@@ -157,10 +159,12 @@ export class UserService {
         });
       });
 
-      return true;
+      // return true;
     }
 
-    return false;
+    // return false;
+
+    return this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
   }
 
   /**

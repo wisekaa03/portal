@@ -282,6 +282,21 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: LDAP_REDIS_TTL
+            - name: MICROSERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MICROSERVICE_URL
+            - name: MICROSERVICE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MICROSERVICE_USER
+            - name: MICROSERVICE_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MICROSERVICE_PASS
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

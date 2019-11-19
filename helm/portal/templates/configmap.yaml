@@ -57,3 +57,7 @@ data:
   LDAP_REDIS_DB: {{ .Values.LDAP_REDIS_DB | default "2" | quote }}
   LDAP_REDIS_PASSWORD: {{ .Values.LDAP_REDIS_PASSWORD | default "" | quote }}
   LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
+
+  MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "nats://nats-cluster.production:4222" | quote }}
+  MICROSERVICE_USER: {{ .Values.MICROSERVICE_USER | default "admin" | quote }}
+  MICROSERVICE_PASS: {{ .Values.MICROSERVICE_PASS | default "supersecret" | quote }}
