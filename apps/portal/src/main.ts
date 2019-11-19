@@ -46,7 +46,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Next
   const app = Next({
     dev,
-    dir: resolve(__dirname, dev ? '../../..' : '../..', 'apps/portal'),
+    dir: resolve(__dirname, dev ? '../../../apps/portal' : '../..'),
     quiet: false,
   });
   await app.prepare();
