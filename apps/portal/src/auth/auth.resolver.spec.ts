@@ -12,11 +12,11 @@ import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { AuthService } from './auth.service';
 // #endregion
 
-jest.mock('../ldap/ldap.service');
-jest.mock('./auth.service');
-jest.mock('../user/user.service');
-jest.mock('../guards/gqlauth.guard');
-jest.mock('../../__mocks__/ldap.service.mock');
+jest.mock('../shared/session-redis.ts');
+jest.mock('../ldap/ldap.service.ts');
+jest.mock('./auth.service.ts');
+jest.mock('../user/user.service.ts');
+jest.mock('../guards/gqlauth.guard.ts');
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;

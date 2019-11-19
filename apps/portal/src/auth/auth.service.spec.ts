@@ -15,9 +15,10 @@ import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 // #endregion
 
-jest.mock('../user/user.service.ts');
-jest.mock('../logger/logger.service.ts');
-jest.mock('../ldap/ldap.service.ts');
+jest.mock('../shared/session-redis');
+jest.mock('../user/user.service');
+jest.mock('../logger/logger.service');
+jest.mock('../ldap/ldap.service');
 
 describe('AuthService', () => {
   let service: AuthService;

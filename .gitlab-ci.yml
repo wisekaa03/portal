@@ -26,8 +26,8 @@ test_build:
     - npx next telemetry status
     - npx next telemetry disable
     - cd ../..
-    - time ./entrypoint.sh test -u
     - time yarn build
+    - time ./entrypoint.sh test -u
   artifacts:
     paths:
       - .next/

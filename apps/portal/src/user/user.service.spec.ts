@@ -4,6 +4,7 @@
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule } from 'nestjs-i18n';
+import { ClientsModule, Transport, ClientProxy } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
 import { UserService } from './user.service';
@@ -14,10 +15,12 @@ import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
 import { ProfileModule } from '../profile/profile.module';
 import { LdapService } from '../ldap/ldap.service';
-import { ProfileEntity } from '../profile/profile.entity';
+// import { ProfileEntity } from '../profile/profile.entity';
+import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
 // #endregion
 
-jest.mock('../guards/gqlauth.guard');
+jest.mock('./user.entity');
+jest.mock('../profile/profile.entity');
 jest.mock('../ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 
@@ -45,11 +48,24 @@ describe('UserService', () => {
           useFactory: () => ({} as LdapModuleOptions),
         }),
 
+        ClientsModule.register([
+          {
+            name: SYNCHRONIZATION_SERVICE,
+            transport: Transport.NATS,
+            // options: {
+            //   url: configService.get<string>('MICROSERVICE_URL'),
+            //   user: configService.get<string>('MICROSERVICE_USER'),
+            //   pass: configService.get<string>('MICROSERVICE_PASS'),
+            // },
+          },
+        ]),
+
         ProfileModule,
       ],
       providers: [
         UserService,
         LdapService,
+        // { provide: ClientProxy, useValue: ClientProxy },
         // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
         // { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
       ],

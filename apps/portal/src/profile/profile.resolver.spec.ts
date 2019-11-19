@@ -1,8 +1,9 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { ProfileResolver } from './profile.resolver';
@@ -14,6 +15,8 @@ import { ProfileEntity } from './profile.entity';
 import { UserEntity } from '../user/user.entity';
 // import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ImageModule } from '../image/image.module';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 // #endregion
 
 jest.mock('../guards/gqlauth.guard');
@@ -26,6 +29,10 @@ describe('ProfileResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ImageModule, ProfileModule, TypeOrmModule.forRoot({}), TypeOrmModule.forFeature([ProfileEntity])],
       providers: [
+        {
+          provide: ConfigService,
+          useValue: new ConfigService(resolve(__dirname, '../../../..', '.env')),
+        },
         ProfileService,
         ProfileResolver,
         // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
