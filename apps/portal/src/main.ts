@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 // import { IncomingMessage } from 'http';
+import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -43,7 +44,11 @@ const nestjsOptions: NestApplicationOptions = {
 
 async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Next
-  const app = Next({ dev, dir: `${__dirname}/../../../portal`, quiet: false });
+  const app = Next({
+    dev,
+    dir: resolve(__dirname, dev ? '../../..' : '../..', 'apps/portal'),
+    quiet: false,
+  });
   await app.prepare();
   // #endregion
 
@@ -129,7 +134,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Static files
-  server.useStaticAssets(dev ? `${__dirname}/../../public/` : `${__dirname}/../../public/`);
+  server.useStaticAssets(resolve(__dirname, dev ? '../../../..' : '../..', 'public/'));
   // #endregion
 
   // #region Locale I18n
@@ -169,5 +174,5 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 }
 
-const configService = new ConfigService(dev ? `${__dirname}/../../../../.env` : `${__dirname}/../../.env`);
+const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../..', '.env'));
 bootstrap(configService);
