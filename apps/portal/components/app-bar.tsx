@@ -11,7 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
-import { green, blue } from '@material-ui/core/colors';
+import { blue } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
 import { WithTranslation } from 'next-i18next';
@@ -23,7 +23,7 @@ import LogoMin from '../../../public/images/png/logo_min.png';
 
 import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
-import { LOGOUT, SYNC, CACHE, USER_SETTINGS } from '../lib/queries';
+import { LOGOUT } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import { Avatar } from './avatar';
 import { SESSION } from '../lib/constants';
@@ -88,12 +88,6 @@ const useStyles = makeStyles((theme: Theme) =>
       gridGap: `${theme.spacing()}px 0`,
       alignItems: 'center',
     },
-    buttonSync: {
-      backgroundColor: green[300],
-    },
-    buttonCache: {
-      backgroundColor: green[200],
-    },
     buttonLogout: {
       backgroundColor: blue[400],
     },
@@ -106,42 +100,9 @@ interface AppBarProps extends WithTranslation {
 
 const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const classes = useStyles({});
-  const [syncLoading, setSyncLoading] = useState<boolean>(false);
-  const [cacheLoading, setCacheLoading] = useState<boolean>(false);
+  const { handleDrawerOpen, t } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const client = useApolloClient();
-
-  // TODO: понаблюдать нужен ли апдейт
-  const [userSettings] = useMutation(USER_SETTINGS); // , {
-  //   update(cache, { data: { userSettings: user } }) {
-  //     const data: Data<'me', User> | null = cache.readQuery({ query: CURRENT_USER });
-
-  //     if (!data) return;
-
-  //     cache.writeQuery({
-  //       query: CURRENT_USER,
-  //       data: {
-  //         me: {
-  //           ...data.me,
-  //           ...user,
-  //         },
-  //       },
-  //     });
-  //   },
-  // });
-
-  const [sync] = useMutation(SYNC, {
-    onCompleted() {
-      setSyncLoading(false);
-    },
-  });
-
-  const [cache] = useMutation(CACHE, {
-    onCompleted() {
-      setCacheLoading(false);
-    },
-  });
 
   const [logout] = useMutation(LOGOUT, {
     onCompleted() {
@@ -151,31 +112,6 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
       Router.push({ pathname: '/auth/login' });
     },
   });
-
-  const { handleDrawerOpen, t } = props;
-
-  const handleSync = (): void => {
-    setSyncLoading(true);
-    sync();
-  };
-
-  const handleCache = (): void => {
-    setCacheLoading(true);
-    cache();
-  };
-
-  const handleLanguage = (prevLng: 'ru' | 'en' | '' | null | undefined) => (): void => {
-    const currentLng = prevLng || nextI18next.i18n.language;
-    const lng = currentLng === 'ru' ? 'en' : 'ru';
-
-    nextI18next.i18n.changeLanguage(lng);
-    userSettings({
-      variables: {
-        value: { lng },
-      },
-      // refetchQueries: [{ query: CURRENT_USER, variables: {} }],
-    });
-  };
 
   const handleLogout = (): void => {
     logout();
@@ -260,31 +196,6 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                         </>
                       )}
                     </Box>
-                    {true /* context.user.isAdmin */ && (
-                      <Button
-                        disabled={syncLoading}
-                        variant="contained"
-                        className={classes.buttonSync}
-                        onClick={handleSync}
-                      >
-                        {!syncLoading ? t('common:synch') : t('common:synchWait')}
-                      </Button>
-                    )}
-                    <Button
-                      disabled={cacheLoading}
-                      variant="contained"
-                      className={classes.buttonCache}
-                      onClick={handleCache}
-                    >
-                      {!cacheLoading ? t('common:cache') : t('common:cacheWait')}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      className={classes.buttonLogout}
-                      onClick={handleLanguage(context.user.settings && context.user.settings.lng)}
-                    >
-                      {t('common:changeLanguage')}
-                    </Button>
                     <Button variant="contained" className={classes.buttonLogout} onClick={handleLogout}>
                       {t('common:signOut')}
                     </Button>
