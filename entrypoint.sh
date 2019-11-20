@@ -85,6 +85,9 @@ if [ -n "$*" -a "$1" = "test" ]; then
 elif [ -n "$*" -a "$1" = "start" ]; then
   export NODE_ENV=${NODE_ENV:=production}
   $NODE .next/nest/main.js
+elif [ -n "$*" -a "$1" = "start:synch" ]; then
+  export NODE_ENV=${NODE_ENV:=production}
+  $NODE dist/apps/synch/main.js
 elif [ -n "$*" ]; then
   yarn dev
 fi
