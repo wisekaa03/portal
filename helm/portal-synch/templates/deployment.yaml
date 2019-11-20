@@ -1,0 +1,318 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "portal.fullname" . }}
+  labels:
+{{ include "portal.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "portal.name" . }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "portal.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.image.tag }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: TCP
+              containerPort: {{ .Values.PORT | default 4000 }}
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: http
+          #     {{- if .Values.tls.enabled }}
+          #     scheme: HTTPS
+          #     {{ else }}
+          #     scheme: HTTP
+          #     {{- end }}
+          #   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          #   successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          #   failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: http
+          #     {{- if .Values.tls.enabled }}
+          #     scheme: HTTPS
+          #     {{ else }}
+          #     scheme: HTTP
+          #     {{- end }}
+          #   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          #   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          #   successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          env:
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HOST
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: PORT
+            - name: PORT_DEBUGGER
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: PORT_DEBUGGER
+            - name: DATABASE_CONNECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_CONNECTION
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_PORT
+            - name: DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_DATABASE
+            - name: DATABASE_SCHEMA
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_SCHEMA
+            - name: DATABASE_SYNCHRONIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_SYNCHRONIZE
+            - name: DATABASE_DROP_SCHEMA
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_DROP_SCHEMA
+            - name: DATABASE_MIGRATIONS_RUN
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_MIGRATIONS_RUN
+            - name: DATABASE_LOGGING
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_LOGGING
+            - name: DATABASE_CACHE
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_CACHE
+            - name: DATABASE_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_REDIS_HOST
+            - name: DATABASE_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_REDIS_PORT
+            - name: DATABASE_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_REDIS_PASSWORD
+            - name: DATABASE_REDIS_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_REDIS_TTL
+            - name: DATABASE_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DATABASE_REDIS_DB
+            # HTTP
+            - name: HTTP_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_HOST
+            - name: HTTP_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_PORT
+            - name: HTTP_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_DB
+            - name: HTTP_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_PASSWORD
+            - name: HTTP_REDIS_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_TTL
+            - name: HTTP_REDIS_MAX_OBJECTS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_MAX_OBJECTS
+            - name: HTTP_REDIS_PREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: HTTP_REDIS_PREFIX
+            # Session
+            - name: SESSION_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_HOST
+            - name: SESSION_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_PORT
+            - name: SESSION_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_DB
+            - name: SESSION_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_REDIS_PASSWORD
+            - name: SESSION_COOKIE_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_COOKIE_TTL
+            - name: SESSION_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_SECRET
+            # LDAP
+            - name: LDAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_URL
+            - name: LDAP_BIND_DN
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_BIND_DN
+            - name: LDAP_BIND_PW
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_BIND_PW
+            - name: LDAP_SEARCH_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_BASE
+            - name: LDAP_SEARCH_FILTER
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_FILTER
+            - name: LDAP_SEARCH_BASE_ALL_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_BASE_ALL_USERS
+            - name: LDAP_SEARCH_FILTER_ALL_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_FILTER_ALL_USERS
+            # LDAP Redis
+            - name: LDAP_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_HOST
+            - name: LDAP_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_PORT
+            - name: LDAP_REDIS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_DB
+            - name: LDAP_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_PASSWORD
+            - name: LDAP_REDIS_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_REDIS_TTL
+            - name: MICROSERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MICROSERVICE_URL
+            - name: MICROSERVICE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MICROSERVICE_USER
+            - name: MICROSERVICE_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MICROSERVICE_PASS
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
