@@ -115,6 +115,9 @@ export class UserService {
       return undefined;
     }
 
+    // TODO: временное решение
+    const admins = ['r.tikhiy', 'stas'];
+
     // TODO: сделать что-нибудь по поводу групп..
     const data: User = {
       id: user && user.id,
@@ -125,7 +128,7 @@ export class UserService {
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       // groups,
-      isAdmin: false,
+      isAdmin: admins.includes(ldapUser.sAMAccountName),
       settings: user && user.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
