@@ -2,6 +2,7 @@
 
 .git
 .gitignore
+doc/
 
 *.map
 
@@ -62,8 +63,7 @@ apps/portal/pages/
 # apps/portal/
 # apps/synchronization/
 target/
-apps/portal/typings/
+typings/
 
 tsconfig.json
-tsconfig.server.json
-tsconfig.ormconfig.json
+tsconfig.*.json

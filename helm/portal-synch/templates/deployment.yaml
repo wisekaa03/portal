@@ -26,8 +26,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: TCP
-              containerPort: {{ .Values.PORT | default 4000 }}
+            - name: microsvc
+              containerPort: {{ .Values.PORT | default 4222 }}
               protocol: TCP
           # livenessProbe:
           #   httpGet:

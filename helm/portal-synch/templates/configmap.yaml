@@ -6,7 +6,7 @@ metadata:
 {{ include "portal.labels" . | indent 4 }}
 data:
   HOST: {{ .Values.HOST | default "localhost" | quote }}
-  PORT: {{ .Values.PORT | default "4000" | quote }}
+  PORT: {{ .Values.PORT | default "4222" | quote }}
   PORT_DEBUGGER: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
 
   DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | default "postgres" | quote }}

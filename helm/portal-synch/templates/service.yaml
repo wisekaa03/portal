@@ -7,13 +7,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.PORT | default 4000 }}
-      targetPort: {{ .Values.PORT | default 4000 }}
+    - port: {{ .Values.PORT | default 4222 }}
+      targetPort: {{ .Values.PORT | default 4222 }}
       {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
       protocol: TCP
-      name: http
+      name: microsvc
     - port: {{ .Values.PORT_DEBUGGER | default 9229 }}
       targetPort: {{ .Values.PORT_DEBUGGER | default 9229 }}
       {{- if .Values.service.nodePort_debugger }}
