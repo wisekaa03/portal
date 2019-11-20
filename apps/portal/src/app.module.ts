@@ -98,11 +98,11 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
       debug: dev,
       playground: dev
         ? {
-            settings: {
-              // Когда в playground режиме, нажмите settings и добавте строку:
-              'request.credentials': 'same-origin',
-            },
-          }
+          settings: {
+            // Когда в playground режиме, нажмите settings и добавте строку:
+            'request.credentials': 'same-origin',
+          },
+        }
         : false,
       typePaths: ['./**/*.graphql'],
       context: ({ req, res }) => ({ req, res }),
@@ -132,8 +132,8 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
             configService.get('DATABASE_LOGGING') === 'false'
               ? false
               : configService.get('DATABASE_LOGGING') === 'true'
-              ? true
-              : JSON.parse(configService.get('DATABASE_LOGGING')),
+                ? true
+                : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities: [ProfileEntity, UserEntity],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {

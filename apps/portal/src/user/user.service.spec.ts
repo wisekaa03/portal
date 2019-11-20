@@ -1,8 +1,9 @@
 /** @format */
+/* eslint spaced-comment:0, prettier/prettier:0 */
 
 // #region Imports NPM
 import { resolve } from 'path';
-import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule } from 'nestjs-i18n';
 import { ClientsModule, Transport, ClientProxy } from '@nestjs/microservices';
@@ -16,9 +17,18 @@ import { LdapModule } from '../ldap/ldap.module';
 import { LdapModuleOptions } from '../ldap/ldap.interface';
 import { ProfileModule } from '../profile/profile.module';
 import { LdapService } from '../ldap/ldap.service';
-// import { ProfileEntity } from '../profile/profile.entity';
+import { ProfileEntity } from '../profile/profile.entity';
 import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
+import { ConfigService } from '../config/config.service';
+import { LogService } from '../logger/logger.service';
 // #endregion
+
+const mockRepository = jest.fn(() => ({
+  metadata: {
+    columns: [],
+    relations: [],
+  },
+}));
 
 jest.mock('./user.entity');
 jest.mock('../profile/profile.entity');
@@ -43,7 +53,7 @@ describe('UserService', () => {
         }),
 
         TypeOrmModule.forRoot({}),
-        TypeOrmModule.forFeature([UserEntity]),
+        // TypeOrmModule.forFeature([UserEntity]),
 
         LdapModule.registerAsync({
           useFactory: () => ({} as LdapModuleOptions),
@@ -67,8 +77,8 @@ describe('UserService', () => {
         UserService,
         LdapService,
         // { provide: ClientProxy, useValue: ClientProxy },
-        // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        // { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(UserEntity), useValue: mockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: mockRepository },
       ],
     }).compile();
 
