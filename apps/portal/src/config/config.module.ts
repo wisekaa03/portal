@@ -1,23 +1,20 @@
 /** @format */
 
 // #region Imports NPM
-import { resolve } from 'path';
-import { Module } from '@nestjs/common';
+import { Module, DynamicModule, Global } from '@nestjs/common';
 import { ConfigService } from './config.service';
 // #endregion
 // #region Imports Local
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV !== 'test';
-
-@Module({
-  providers: [
-    {
-      provide: ConfigService,
-      useValue: new ConfigService(resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../..', '.env')),
-    },
-  ],
-  exports: [ConfigService],
-})
-export class ConfigModule {}
+@Global()
+@Module({})
+export class ConfigModule {
+  static register(filepath: string): DynamicModule {
+    return {
+      module: ConfigModule,
+      providers: [{ provide: 'CONFIG_OPTIONS', useValue: filepath }, ConfigService],
+      exports: [ConfigService],
+    };
+  }
+}

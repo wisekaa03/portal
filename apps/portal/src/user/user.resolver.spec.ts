@@ -1,18 +1,18 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { LdapModule } from '../ldap/ldap.module';
 import { LdapService } from '../ldap/ldap.service';
-import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { LdapModuleOptions } from '../ldap/ldap.interface';
 import { ProfileModule } from '../profile/profile.module';
-// import { UserEntity } from './user.entity';
 import { UserResolver } from './user.resolver';
-// import { ProfileEntity } from '../profile/profile.entity';
 import { UserService } from './user.service';
+import { ConfigModule } from '../config/config.module';
 // #endregion
 
 jest.mock('./user.entity');
@@ -26,6 +26,8 @@ describe('UsersResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
+
         LdapModule.registerAsync({
           useFactory: () => {
             return {} as LdapModuleOptions;

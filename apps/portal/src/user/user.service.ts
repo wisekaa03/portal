@@ -11,7 +11,7 @@ import { Request } from 'express';
 import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { LogService } from '../logger/logger.service';
-import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
+import { LdapResponeUser } from '../ldap/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
 import { LdapService } from '../ldap/ldap.service';
 import { Profile, LoginService } from '../profile/models/profile.dto';

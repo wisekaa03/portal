@@ -1,6 +1,7 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
@@ -27,8 +28,8 @@ describe('AuthService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule,
         LoggerModule,
+        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
 
         I18nModule.forRootAsync({
           imports: [ConfigModule],

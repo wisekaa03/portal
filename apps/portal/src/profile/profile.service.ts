@@ -7,7 +7,7 @@ import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 // import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { LdapResponeUser } from '../ldap/interfaces/ldap.interface';
+import { LdapResponeUser } from '../ldap/ldap.interface';
 import { ProfileEntity } from './profile.entity';
 import { Profile, Gender, LoginService } from './models/profile.dto';
 import { LogService } from '../logger/logger.service';

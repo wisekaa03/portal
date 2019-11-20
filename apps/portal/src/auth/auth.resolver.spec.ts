@@ -1,6 +1,7 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
@@ -8,8 +9,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '../user/user.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { LdapModuleOptions } from '../ldap/ldap.interface';
 import { AuthService } from './auth.service';
+import { ConfigModule } from '../config/config.module';
 // #endregion
 
 jest.mock('../shared/session-redis.ts');
@@ -24,6 +26,8 @@ describe('AuthResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
+
         TypeOrmModule.forRoot({}),
 
         LdapModule.registerAsync({

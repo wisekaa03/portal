@@ -9,7 +9,6 @@
 	"Format code snippet": {
 		"prefix": "format",
 		"body": [
-			"/** @format */",
 			"",
 			"// #region Imports NPM",
 			"$0",

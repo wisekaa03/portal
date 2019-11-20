@@ -4,6 +4,9 @@
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 import * as Joi from '@hapi/joi';
+import { Inject } from '@nestjs/common';
+// #endregion
+// #region Imports Local
 // #endregion
 
 export interface EnvConfig<T> {
@@ -13,7 +16,7 @@ export interface EnvConfig<T> {
 export class ConfigService {
   private readonly envConfig: EnvConfig<any>;
 
-  constructor(filePath: string) {
+  constructor(@Inject('CONFIG_OPTIONS') private readonly filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
     this.envConfig = this.validateInput(config);
   }

@@ -1,6 +1,7 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transport, ClientProxyFactory } from '@nestjs/microservices';

@@ -6,10 +6,10 @@ import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
 import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './interfaces/ldap.interface';
+import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './ldap.interface';
 import { ConfigService } from '../config/config.service';
 import { LogService } from '../logger/logger.service';
 // #endregion
@@ -261,7 +261,9 @@ export class LdapService extends EventEmitter {
             searchBase,
             options,
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
-              searchErr && reject(searchErr);
+              if (searchErr) {
+                reject(searchErr);
+              }
 
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {

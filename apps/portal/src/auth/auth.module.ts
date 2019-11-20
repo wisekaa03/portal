@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { Scope, ldapADattributes, LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { Scope, ldapADattributes, LdapModuleOptions } from '../ldap/ldap.interface';
 import { AuthResolver } from './auth.resolver';
 import { CookieSerializer } from './cookie.serializer';
 import { LocalStrategy } from './strategies/local.strategy';

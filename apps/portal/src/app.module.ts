@@ -3,6 +3,7 @@
 /// <reference types="../../../typings/global" />
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module, CacheModule } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
@@ -30,6 +31,8 @@ import { UserEntity } from './user/user.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV !== 'test';
+const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../..', '.env');
 
 @Module({
   imports: [
@@ -38,7 +41,7 @@ const dev = process.env.NODE_ENV !== 'production';
     // #endregion
 
     // #region Config module
-    ConfigModule,
+    ConfigModule.register(env),
     // #endregion
 
     // #region Next RenderModule

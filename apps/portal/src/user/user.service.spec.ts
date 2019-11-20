@@ -1,6 +1,7 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule } from 'nestjs-i18n';
@@ -12,7 +13,7 @@ import { ConfigModule } from '../config/config.module';
 import { UserEntity } from './user.entity';
 import { LoggerModule } from '../logger/logger.module';
 import { LdapModule } from '../ldap/ldap.module';
-import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { LdapModuleOptions } from '../ldap/ldap.interface';
 import { ProfileModule } from '../profile/profile.module';
 import { LdapService } from '../ldap/ldap.service';
 // import { ProfileEntity } from '../profile/profile.entity';
@@ -30,8 +31,8 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule,
         LoggerModule,
+        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
 
         I18nModule.forRootAsync({
           useFactory: () => ({

@@ -3,13 +3,14 @@
 /// <reference types="../../../typings/global" />
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Scope, ldapADattributes, LdapModuleOptions } from '../../portal/src/ldap/interfaces/ldap.interface';
+import { Scope, ldapADattributes, LdapModuleOptions } from '../../portal/src/ldap/ldap.interface';
 import { UserModule } from '../../portal/src/user/user.module';
 import { ConfigModule } from '../../portal/src/config/config.module';
 import { LdapModule } from '../../portal/src/ldap/ldap.module';
@@ -20,10 +21,14 @@ import { LoggerModule } from '../../portal/src/logger/logger.module';
 import { LogService } from '../../portal/src/logger/logger.service';
 // #endregion
 
+const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV !== 'test';
+const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');
+
 @Module({
   imports: [
     // #region Config & Log module
-    ConfigModule,
+    ConfigModule.register(env),
     LoggerModule,
     // #endregion
 

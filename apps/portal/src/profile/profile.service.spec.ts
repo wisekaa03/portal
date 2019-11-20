@@ -8,10 +8,10 @@ import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { LdapModule } from '../ldap/ldap.module';
-import { LdapModuleOptions } from '../ldap/interfaces/ldap.interface';
+import { LdapModuleOptions } from '../ldap/ldap.interface';
 // import { LdapService } from '../ldap/ldap.service';
 // import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
-import { UserEntity } from '../user/user.entity';
+// import { UserEntity } from '../user/user.entity';
 // import { MockRepository } from '../../__mocks__/mockRepository.mock';
 import { ImageModule } from '../image/image.module';
 // #endregion
