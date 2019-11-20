@@ -193,13 +193,13 @@ deploy:
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \
       fi
-    - export DEPLOYS=$(helm ls ${RELEASE_NAME_SYNCH} | wc -l)
+    - export DEPLOYS_SYNCH=$(helm ls ${RELEASE_NAME_SYNCH} | wc -l)
     - |
-      if [ ${DEPLOYS} -eq 0 ]; then \
+      if [ ${DEPLOYS_SYNCH} -eq 0 ]; then \
         helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME_SYNCH} \
           --debug --values helm/portal-synch/values.yaml \
           --set HOST="${HOST}" \
-          --set PORT="${PORT}" \
+          --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
           --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
           --set DATABASE_HOST="${DATABASE_HOST}" \
@@ -253,7 +253,7 @@ deploy:
         helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
           --debug --values helm/portal-synch/values.yaml \
           --set HOST="${HOST}" \
-          --set PORT="${PORT}" \
+          --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
           --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
           --set DATABASE_HOST="${DATABASE_HOST}" \
