@@ -1,6 +1,7 @@
 .git
 .vscode
 apps/portal/src/database/migrations
+dist
 
 # Logs
 logs
