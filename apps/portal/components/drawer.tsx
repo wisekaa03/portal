@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useContext } from 'react';
 import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
@@ -33,6 +33,8 @@ import SettingsIcon from '../../../public/images/svg/icons/settings.svg';
 import SettingsIconSelected from '../../../public/images/svg/icons/settings_select.svg';
 import AdminIcon from '../../../public/images/svg/icons/admin.svg';
 import AdminIconSelected from '../../../public/images/svg/icons/admin_select.svg';
+import { ProfileContext } from '../lib/context';
+import { ADMIN_PAGES } from '../lib/constants';
 // #endregion
 
 const drawerWidth = 256;
@@ -94,6 +96,7 @@ interface UrlProps {
   selected: any;
   text: any;
   link: string;
+  admin: boolean;
 }
 
 const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
@@ -101,32 +104,44 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const theme = useTheme();
   const router = useRouter();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const profile = useContext(ProfileContext);
   const { open, isMobile, handleOpen, t } = props;
 
   const urls: UrlProps[] = [
-    { icon: MailIcon, selected: MailIconSelected, text: t('common:mail'), link: '/mail' },
-    { icon: PhonebookIcon, selected: PhonebookIconSelected, text: t('common:phonebook'), link: '/phonebook' },
-    { icon: ProfileIcon, selected: ProfileIconSelected, text: t('common:profile'), link: '/profile' },
+    { icon: MailIcon, selected: MailIconSelected, text: t('common:mail'), link: '/mail', admin: false },
+    {
+      icon: PhonebookIcon,
+      selected: PhonebookIconSelected,
+      text: t('common:phonebook'),
+      link: '/phonebook',
+      admin: false,
+    },
+    { icon: ProfileIcon, selected: ProfileIconSelected, text: t('common:profile'), link: '/profile', admin: false },
     {
       icon: ItApplicationIcon,
       selected: ItApplicationIconSelected,
       text: t('common:itapplication'),
       link: '/itapplication',
+      admin: false,
     },
-    { icon: CalendarIcon, selected: CalendarIconSelected, text: t('common:calendar'), link: '/calendar' },
-    { icon: FaqIcon, selected: FaqIconSelected, text: t('common:faq'), link: '/faq' },
-    { icon: MeetingIcon, selected: MeetingIconSelected, text: t('common:meeting'), link: '/meetings' },
-    { icon: NewsIcon, selected: NewsIconSelected, text: t('common:news'), link: '/news' },
-    { icon: SettingsIcon, selected: SettingsIconSelected, text: t('common:settings'), link: '/settings' },
-    { icon: AdminIcon, selected: AdminIconSelected, text: t('common:adminPanel'), link: '/admin' },
+    { icon: CalendarIcon, selected: CalendarIconSelected, text: t('common:calendar'), link: '/calendar', admin: false },
+    { icon: FaqIcon, selected: FaqIconSelected, text: t('common:faq'), link: '/faq', admin: false },
+    { icon: MeetingIcon, selected: MeetingIconSelected, text: t('common:meeting'), link: '/meetings', admin: false },
+    { icon: NewsIcon, selected: NewsIconSelected, text: t('common:news'), link: '/news', admin: false },
+    { icon: SettingsIcon, selected: SettingsIconSelected, text: t('common:settings'), link: '/settings', admin: false },
+    { icon: AdminIcon, selected: AdminIconSelected, text: t('common:adminPanel'), link: '/admin', admin: true },
   ];
 
-  const pathname = router && 'pathname' in router ? router.pathname : '';
+  const pathname = router ? router.pathname : '';
 
   const drawer = (
     <div className={classes.toolbar}>
       <List>
-        {urls.map((url) => {
+        {urls.reduce((result: JSX.Element[], url: UrlProps) => {
+          if (ADMIN_PAGES.includes(url.link) && (!profile.user || (profile.user && !profile.user.isAdmin))) {
+            return result;
+          }
+
           const selected = url.link === pathname;
 
           const handleEnter = (e: any): void => {
@@ -141,7 +156,8 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
             e.currentTarget.firstElementChild.firstElementChild.firstElementChild.src = url.icon;
           };
 
-          return (
+          return [
+            ...result,
             <li key={url.text}>
               <Link href={url.link} passHref>
                 <ListItem
@@ -163,9 +179,9 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
                   <ListItemText primary={url.text} />
                 </ListItem>
               </Link>
-            </li>
-          );
-        })}
+            </li>,
+          ];
+        }, [])}
       </List>
     </div>
   );
