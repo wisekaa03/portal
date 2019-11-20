@@ -4,14 +4,13 @@
 // import { IncomingMessage } from 'http';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
 import { Request, Response } from 'express';
 import uuidv4 from 'uuid/v4';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
-import responseTime from 'response-time';
+// import responseTime from 'response-time';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -69,7 +68,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region X-Response-Time
-  server.use(responseTime());
+  // server.use(responseTime());
+  server.use();
   // #endregion
 
   // #region Improve security
@@ -143,6 +143,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Next.JS locals
   server.use('*', (_req: Request, res: Response, next: Function) => {
+    // res.set('X-Server-ID', );
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     res.locals.sessionStore = store;
     next();
