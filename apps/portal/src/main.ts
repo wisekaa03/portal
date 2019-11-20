@@ -69,7 +69,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region X-Response-Time
   // server.use(responseTime());
-  server.use();
   // #endregion
 
   // #region Improve security
