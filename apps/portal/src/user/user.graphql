@@ -4,6 +4,7 @@ type User {
   username: String!
   profile: Profile!
   disabled: Boolean
+  isAdmin: Boolean
   settings: ProfileSettings
   createdAt: Date
   updatedAt: Date

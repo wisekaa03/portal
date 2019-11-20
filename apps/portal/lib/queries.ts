@@ -49,6 +49,7 @@ export const CURRENT_USER = gql`
       username
       updatedAt
       createdAt
+      isAdmin
       settings {
         lng
         drawer

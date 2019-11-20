@@ -7,3 +7,4 @@
 
 export const FIRST_PAGE = '/';
 export const SESSION = 'session';
+export const ADMIN_PAGES = ['/admin'];
