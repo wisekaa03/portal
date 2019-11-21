@@ -2,7 +2,7 @@
 /* eslint import/no-dynamic-require:0 */
 
 // #region Imports NPM
-const Config = require('./.next/nest/config/config.service');
+const Config = require('./.next/nest/libs/config/src/config.service');
 
 const entities = ['./.next/nest/**/*.entity.js'];
 

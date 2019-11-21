@@ -17,7 +17,7 @@ describe('LdapService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
+        ConfigModule.register(resolve(__dirname, '../../..', '.env')),
 
         LdapModule.registerAsync({
           imports: [ConfigModule],

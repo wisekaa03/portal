@@ -15,8 +15,8 @@ import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 // #endregion
 
-jest.mock('@app/logger');
-jest.mock('@app/ldap');
+jest.mock('@app/logger/logger.service');
+jest.mock('@app/ldap/ldap.service');
 jest.mock('../shared/session-redis');
 jest.mock('../user/user.service');
 

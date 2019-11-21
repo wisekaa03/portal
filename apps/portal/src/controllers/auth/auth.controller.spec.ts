@@ -9,8 +9,8 @@ import { ConfigService } from '@app/config';
 import { AuthController } from './auth.controller';
 // #endregion
 
-jest.mock('@app/config');
-jest.mock('@app/logger');
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/logger.service');
 
 describe('Auth Controller', () => {
   let controller: AuthController;

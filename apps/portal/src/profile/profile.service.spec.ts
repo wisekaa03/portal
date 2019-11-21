@@ -11,7 +11,7 @@ import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 // #endregion
 
-jest.mock('@app/ldap');
+jest.mock('@app/ldap/ldap.service');
 
 describe('ProfileService', () => {
   let service: ProfileService;

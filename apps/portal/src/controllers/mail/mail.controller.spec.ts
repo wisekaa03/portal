@@ -8,7 +8,7 @@ import { LoggerModule } from '@app/logger';
 import { MailController } from './mail.controller';
 // #endregion
 
-jest.mock('@app/logger');
+jest.mock('@app/logger/logger.service');
 
 describe('MailController', () => {
   let controller: MailController;

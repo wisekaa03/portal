@@ -26,7 +26,7 @@ const mockRepository = jest.fn(() => ({
   },
 }));
 
-jest.mock('@app/ldap');
+jest.mock('@app/ldap/ldap.service');
 jest.mock('./user.entity');
 jest.mock('../profile/profile.entity');
 jest.mock('../guards/gqlauth.guard');

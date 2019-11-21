@@ -11,7 +11,7 @@
     "experimentalDecorators": true
   },
   "include": [
-    "apps/portal/src/config/config.service.ts",
+    "libs/config/src/config.service.ts",
     "apps/portal/src/**/*.entity.ts",
     "typings",
   ],

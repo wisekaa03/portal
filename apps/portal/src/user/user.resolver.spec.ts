@@ -13,7 +13,7 @@ import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 // #endregion
 
-jest.mock('@app/ldap');
+jest.mock('@app/ldap/ldap.service');
 jest.mock('./user.entity');
 jest.mock('../profile/profile.module');
 jest.mock('./user.service');

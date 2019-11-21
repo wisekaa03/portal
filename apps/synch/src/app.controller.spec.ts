@@ -14,8 +14,9 @@ import { AppService } from './app.service';
 import { UserModule } from '../../portal/src/user/user.module';
 // #endregion
 
-jest.mock('@app/logger');
-jest.mock('@app/ldap');
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/logger.service');
+jest.mock('@app/ldap/ldap.service');
 jest.mock('../../portal/src/user/user.service');
 
 describe('AppController', () => {

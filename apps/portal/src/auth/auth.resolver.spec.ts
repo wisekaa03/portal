@@ -13,7 +13,7 @@ import { UserModule } from '../user/user.module';
 import { AuthService } from './auth.service';
 // #endregion
 
-jest.mock('@app/ldap');
+jest.mock('@app/ldap/ldap.service');
 jest.mock('../shared/session-redis');
 jest.mock('./auth.service');
 jest.mock('../user/user.service');
