@@ -9,9 +9,9 @@ import * as redisStore from 'cache-manager-redis-store';
 // import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './ldap.interface';
-import { ConfigService } from '../config/config.service';
-import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Injectable()

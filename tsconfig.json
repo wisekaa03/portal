@@ -25,7 +25,48 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@app/portal": [
+        "apps/portal/src"
+      ],
+      "@app/synch": [
+        "apps/synch/src"
+      ],
+      "@app/soap1c": [
+        "apps/soap1c/src"
+      ],
+      "@app/soap": [
+        "libs/soap/src"
+      ],
+      "@app/soap/*": [
+        "libs/soap/src/*"
+      ],
+      "@app/config": [
+        "libs/config/src"
+      ],
+      "@app/config/*": [
+        "libs/config/src/*"
+      ],
+      "@app/ldap": [
+        "libs/ldap/src"
+      ],
+      "@app/ldap/*": [
+        "libs/ldap/src/*"
+      ],
+      "@app/logger": [
+        "libs/logger/src"
+      ],
+      "@app/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@app/image": [
+        "libs/image/src"
+      ],
+      "@app/image/*": [
+        "libs/image/src/*"
+      ]
+    }
   },
   "include": [
     "**/*.ts",

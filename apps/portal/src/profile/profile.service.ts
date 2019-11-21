@@ -7,13 +7,13 @@ import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 // import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { LdapResponeUser } from '../ldap/ldap.interface';
+import { LogService } from '@app/logger';
+import { LdapResponeUser } from '../../../../libs/ldap/src/ldap.interface';
 import { ProfileEntity } from './profile.entity';
 import { Profile, Gender, LoginService } from './models/profile.dto';
-import { LogService } from '../logger/logger.service';
-import { LdapService } from '../ldap/ldap.service';
+import { LdapService } from '../../../../libs/ldap/src/ldap.service';
 import { UserEntity } from '../user/user.entity';
-import { ImageService } from '../image/image.service';
+import { ImageService } from '../../../../libs/image/src/image.service';
 // #endregion
 
 @Injectable()
@@ -167,8 +167,8 @@ export class ProfileService {
     /* eslint-disable prettier/prettier */
     const thumbnailPhoto = thumbnailPhotoBuffer
       ? this.imageService
-          .imageResize(thumbnailPhotoBuffer, 250, 250)
-          .then((img) => (img ? img.toString('base64') : undefined))
+        .imageResize(thumbnailPhotoBuffer, 250, 250)
+        .then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
     /* eslint-enable prettier/prettier */
     const thumbnailPhoto40 = thumbnailPhotoBuffer

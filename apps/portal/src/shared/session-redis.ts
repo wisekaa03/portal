@@ -6,8 +6,8 @@ import RedisSessionStore from 'connect-redis';
 import Redis, { ReplyError } from 'redis';
 // #endregion
 // #region Imports Local
-import { ConfigService } from '../config/config.service';
-import { LogService } from '../logger/logger.service';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 // #endregion
 
 export async function resetSessionStore(store: Session.Store): Promise<boolean> {

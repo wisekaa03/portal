@@ -4,11 +4,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
+import { LoggerModule } from '@app/logger';
 import { MailController } from './mail.controller';
-import { LoggerModule } from '../../logger/logger.module';
 // #endregion
 
-jest.mock('../../logger/logger.service');
+jest.mock('@app/logger');
 
 describe('MailController', () => {
   let controller: MailController;

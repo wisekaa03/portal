@@ -6,18 +6,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
+import { LoggerModule } from '@app/logger';
+import { ConfigModule } from '@app/config';
+import { LdapModule, LdapModuleOptions } from '@app/ldap';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LoggerModule } from '../../portal/src/logger/logger.module';
-import { LdapModule } from '../../portal/src/ldap/ldap.module';
-import { LdapModuleOptions } from '../../portal/src/ldap/ldap.interface';
 import { UserModule } from '../../portal/src/user/user.module';
-import { ConfigModule } from '../../portal/src/config/config.module';
 // #endregion
 
+jest.mock('@app/logger');
+jest.mock('@app/ldap');
 jest.mock('../../portal/src/user/user.service');
-jest.mock('../../portal/src/logger/logger.service');
-jest.mock('../../portal/src/ldap/ldap.service');
 
 describe('AppController', () => {
   let appController: AppController;

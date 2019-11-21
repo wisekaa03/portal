@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Logger as TypeOrmLogger } from 'typeorm';
-import { Logger /* , LoggerService, LoggerService */ } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -28,7 +28,6 @@ export class LogService extends Logger implements TypeOrmLogger {
       c = 'Database: Log';
     }
     if (dev) {
-      // this.logger.log(message, context);
       super.log(m, c);
     } else {
       console.log(`${new Date().toLocaleString(this.locale, this.format)} -`, `${c} -`, m);
@@ -37,7 +36,6 @@ export class LogService extends Logger implements TypeOrmLogger {
 
   error(message: any, trace?: string, context?: string): void {
     if (dev) {
-      // this.logger.error(message, trace, context);
       super.error(message, trace, context);
     } else {
       console.error(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message, trace);
@@ -46,7 +44,6 @@ export class LogService extends Logger implements TypeOrmLogger {
 
   warn(message: any, context?: string): void {
     if (dev) {
-      // this.logger.warn(message, context);
       super.warn(message, context);
     } else {
       console.warn(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -55,7 +52,6 @@ export class LogService extends Logger implements TypeOrmLogger {
 
   debug(message: any, context?: string): void {
     if (dev) {
-      // this.logger.debug(message, context);
       super.debug(message, context);
     } else {
       console.debug(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -64,7 +60,6 @@ export class LogService extends Logger implements TypeOrmLogger {
 
   verbose(message: any, context?: string): void {
     if (dev) {
-      // this.logger.verbose(message, context);
       super.verbose(message, context);
     } else {
       console.info(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -84,7 +79,9 @@ export class LogService extends Logger implements TypeOrmLogger {
    * From TypeORM: logQuery
    */
   logQuery(message: any): void {
-    process.env.NODE_ENV !== 'production' && this.verbose(message, 'Database: Query');
+    if (dev) {
+      this.verbose(message, 'Database: Query');
+    }
   }
 
   /**

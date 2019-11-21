@@ -4,9 +4,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
+import { LoggerModule } from '@app/logger';
 import { HomeController } from './home.controller';
-import { LoggerModule } from '../../logger/logger.module';
-
 // #endregion
 
 describe('HomeController', () => {

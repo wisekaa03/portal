@@ -5,8 +5,8 @@ import Session from 'express-session';
 import Express from 'express';
 // #endreion
 // #region Imports Local
-import { ConfigService } from '../config/config.service';
-import { LogService } from '../logger/logger.service';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 // #endregion
 
 export default (configService: ConfigService, logService: LogService, store: Session.Store): Express.RequestHandler => {

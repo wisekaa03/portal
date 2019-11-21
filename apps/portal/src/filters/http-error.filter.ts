@@ -6,8 +6,8 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { AppGraphQLExecutionContext } from '../interceptors/logging.interceptor';
-import { LogService } from '../logger/logger.service';
 // #endregion
 
 @Catch()

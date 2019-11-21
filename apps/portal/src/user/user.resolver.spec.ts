@@ -6,18 +6,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { LdapModule } from '../ldap/ldap.module';
-import { LdapService } from '../ldap/ldap.service';
-import { LdapModuleOptions } from '../ldap/ldap.interface';
+import { ConfigModule } from '@app/config';
+import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
 import { ProfileModule } from '../profile/profile.module';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
-import { ConfigModule } from '../config/config.module';
 // #endregion
 
+jest.mock('@app/ldap');
 jest.mock('./user.entity');
 jest.mock('../profile/profile.module');
-jest.mock('../ldap/ldap.service');
 jest.mock('./user.service');
 
 describe('UsersResolver', () => {

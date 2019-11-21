@@ -20,9 +20,9 @@ import Next from 'next';
 import 'reflect-metadata';
 // #endregion
 // #region Imports Local
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { AppModule } from './app.module';
-import { ConfigService } from './config/config.service';
-import { LogService } from './logger/logger.service';
 import { nextI18next } from '../lib/i18n-client';
 import sessionRedis from './shared/session-redis';
 import session from './shared/session';

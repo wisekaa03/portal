@@ -7,19 +7,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
-import { LoggerModule } from '../logger/logger.module';
+import { ConfigModule, ConfigService } from '@app/config';
+import { LoggerModule } from '@app/logger';
 import { AuthModule } from './auth.module';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 // #endregion
 
+jest.mock('@app/logger');
+jest.mock('@app/ldap');
 jest.mock('../shared/session-redis');
 jest.mock('../user/user.service');
-jest.mock('../logger/logger.service');
-jest.mock('../ldap/ldap.service');
 
 describe('AuthService', () => {
   let service: AuthService;

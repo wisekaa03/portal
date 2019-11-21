@@ -1,4 +1,5 @@
 /** @format */
+/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
@@ -6,10 +7,10 @@ import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { User } from '../user/models/user.dto';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { LogService } from '../logger/logger.service';
 import { UserResponse } from '../user/user.entity';
 // #endregion
 
@@ -39,8 +40,8 @@ export class AuthResolver {
   @Mutation()
   async login(
     @Args('username') username: string,
-    @Args('password') password: string,
-    @Context('req') req: Request,
+      @Args('password') password: string,
+      @Context('req') req: Request,
   ): Promise<UserResponse | null> {
     const user = await this.authService.login({ username, password }, req);
 

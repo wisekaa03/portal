@@ -5,12 +5,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PassportModule } from '@nestjs/passport';
 // #endregion
 // #region Imports Local
+import { ConfigService } from '@app/config';
 import { AuthController } from './auth.controller';
-import { ConfigService } from '../../config/config.service';
 // #endregion
 
-jest.mock('../../config/config.service');
-jest.mock('../../logger/logger.service');
+jest.mock('@app/config');
+jest.mock('@app/logger');
 
 describe('Auth Controller', () => {
   let controller: AuthController;

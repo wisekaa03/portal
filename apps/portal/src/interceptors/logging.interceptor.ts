@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
-import { LogService } from '../logger/logger.service';
+import { LogService } from '@app/logger';
 // #endregion
 
 export interface AppGraphQLExecutionContext extends GraphQLExecutionContext {

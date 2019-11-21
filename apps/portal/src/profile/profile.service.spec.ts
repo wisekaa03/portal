@@ -2,21 +2,16 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
+import { LdapModule, LdapModuleOptions } from '@app/ldap';
+import { ImageModule } from '@app/image';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
-import { LdapModule } from '../ldap/ldap.module';
-import { LdapModuleOptions } from '../ldap/ldap.interface';
-// import { LdapService } from '../ldap/ldap.service';
-// import { LdapServiceMock } from '../../__mocks__/ldap.service.mock';
-// import { UserEntity } from '../user/user.entity';
-// import { MockRepository } from '../../__mocks__/mockRepository.mock';
-import { ImageModule } from '../image/image.module';
 // #endregion
 
-jest.mock('../ldap/ldap.service');
+jest.mock('@app/ldap');
 
 describe('ProfileService', () => {
   let service: ProfileService;

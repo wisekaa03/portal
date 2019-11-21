@@ -8,17 +8,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
+import { ConfigModule, ConfigService } from '@app/config';
+import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
+import { LoggerModule, LogService } from '@app/logger';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Scope, ldapADattributes, LdapModuleOptions } from '../../portal/src/ldap/ldap.interface';
 import { UserModule } from '../../portal/src/user/user.module';
-import { ConfigModule } from '../../portal/src/config/config.module';
-import { LdapModule } from '../../portal/src/ldap/ldap.module';
-import { ConfigService } from '../../portal/src/config/config.service';
 import { UserEntity } from '../../portal/src/user/user.entity';
 import { ProfileEntity } from '../../portal/src/profile/profile.entity';
-import { LoggerModule } from '../../portal/src/logger/logger.module';
-import { LogService } from '../../portal/src/logger/logger.service';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';

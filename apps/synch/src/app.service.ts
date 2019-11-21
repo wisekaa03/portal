@@ -2,11 +2,11 @@
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
-import { LogService } from '../../portal/src/logger/logger.service';
-import { LdapService } from '../../portal/src/ldap/ldap.service';
-import { UserService } from '../../portal/src/user/user.service';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
+import { LdapService } from '@app/ldap';
+import { UserService } from '../../portal/src/user/user.service';
 // #endregion
 
 @Injectable()

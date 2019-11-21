@@ -4,7 +4,7 @@
 import { Module, Global } from '@nestjs/common';
 // #endregion
 // #region Imports Local
-import { LoggerModule } from '../logger/logger.module';
+import { LoggerModule } from '@app/logger';
 import { ImageService } from './image.service';
 // #endregion
 

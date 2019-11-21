@@ -8,14 +8,13 @@ import { Repository } from 'typeorm';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
+import { LdapService, LdapResponeUser } from '@app/ldap';
+import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
 import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
-import { LogService } from '../logger/logger.service';
-import { LdapResponeUser } from '../ldap/ldap.interface';
 import { ProfileService } from '../profile/profile.service';
-import { LdapService } from '../ldap/ldap.service';
 import { Profile, LoginService } from '../profile/models/profile.dto';
-import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
 // #endregion
 
 @Injectable()

@@ -6,17 +6,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
+import { ImageModule } from '@app/image';
+import { ConfigModule, ConfigService } from '@app/config';
 import { ProfileResolver } from './profile.resolver';
 import { ProfileService } from './profile.service';
 import { ProfileModule } from './profile.module';
 import { ProfileEntity } from './profile.entity';
-// import { GqlAuthGuard } from '../guards/gqlauth.guard';
-// import { GqlAuthGuardMock } from '../../__mocks__/gqlauth.guard.mock';
-import { UserEntity } from '../user/user.entity';
-// import { MockRepository } from '../../__mocks__/mockRepository.mock';
-import { ImageModule } from '../image/image.module';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
 // #endregion
 
 jest.mock('../guards/gqlauth.guard');

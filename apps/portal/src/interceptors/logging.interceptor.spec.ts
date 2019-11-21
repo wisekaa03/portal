@@ -3,8 +3,8 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { LoggingInterceptor } from './logging.interceptor';
-import { LogService } from '../logger/logger.service';
 // #endregion
 
 const interceptor = new LoggingInterceptor(new LogService());

@@ -1,20 +1,18 @@
 /** @format */
 
 // #region Imports NPM
-import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transport, ClientProxyFactory } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
+import { ConfigModule, ConfigService } from '@app/config';
+import { LoggerModule } from '@app/logger';
+import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
-import { ConfigModule } from '../config/config.module';
-import { LoggerModule } from '../logger/logger.module';
 import { ProfileModule } from '../profile/profile.module';
 import { UserResolver } from './user.resolver';
-import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
-import { ConfigService } from '../config/config.service';
 // #endregion
 
 @Module({

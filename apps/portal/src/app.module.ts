@@ -13,16 +13,14 @@ import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local
+import { ConfigModule, ConfigService } from '@app/config';
+import { LoggerModule, LogService } from '@app/logger';
 import { HttpErrorFilter } from './filters/http-error.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { DateScalar } from './shared/date.scalar';
 import { ByteArrayScalar } from './shared/bytearray.scalar';
-import { LoggerModule } from './logger/logger.module';
-import { LogService } from './logger/logger.service';
-import { ConfigModule } from './config/config.module';
 import { HomeModule } from './controllers/controllers.module';
-import { ConfigService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';

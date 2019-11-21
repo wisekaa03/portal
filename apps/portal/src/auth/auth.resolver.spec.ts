@@ -6,19 +6,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
+import { ConfigModule } from '@app/config';
+import { LdapModule, LdapModuleOptions } from '@app/ldap';
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '../user/user.module';
-import { LdapModule } from '../ldap/ldap.module';
-import { LdapModuleOptions } from '../ldap/ldap.interface';
 import { AuthService } from './auth.service';
-import { ConfigModule } from '../config/config.module';
 // #endregion
 
-jest.mock('../shared/session-redis.ts');
-jest.mock('../ldap/ldap.service.ts');
-jest.mock('./auth.service.ts');
-jest.mock('../user/user.service.ts');
-jest.mock('../guards/gqlauth.guard.ts');
+jest.mock('@app/ldap');
+jest.mock('../shared/session-redis');
+jest.mock('./auth.service');
+jest.mock('../user/user.service');
+jest.mock('../guards/gqlauth.guard');
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;

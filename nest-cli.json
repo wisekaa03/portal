@@ -28,6 +28,60 @@
       "compilerOptions": {
         "tsConfigPath": "apps/synch/tsconfig.app.json"
       }
+    },
+    "soap1c": {
+      "type": "application",
+      "root": "apps/soap1c",
+      "entryFile": "main",
+      "sourceRoot": "apps/soap1c/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/soap1c/tsconfig.app.json"
+      }
+    },
+    "soap": {
+      "type": "library",
+      "root": "libs/soap",
+      "entryFile": "index",
+      "sourceRoot": "libs/soap/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/soap/tsconfig.lib.json"
+      }
+    },
+    "config": {
+      "type": "library",
+      "root": "libs/config",
+      "entryFile": "index",
+      "sourceRoot": "libs/config/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
+    "ldap": {
+      "type": "library",
+      "root": "libs/ldap",
+      "entryFile": "index",
+      "sourceRoot": "libs/ldap/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ldap/tsconfig.lib.json"
+      }
+    },
+    "logger": {
+      "type": "library",
+      "root": "libs/logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+      }
+    },
+    "image": {
+      "type": "library",
+      "root": "libs/image",
+      "entryFile": "index",
+      "sourceRoot": "libs/image/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/image/tsconfig.lib.json"
+      }
     }
   }
 }

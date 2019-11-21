@@ -9,18 +9,14 @@ import { I18nModule } from 'nestjs-i18n';
 import { ClientsModule, Transport, ClientProxy } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
-import { UserService } from './user.service';
-import { ConfigModule } from '../config/config.module';
-import { UserEntity } from './user.entity';
-import { LoggerModule } from '../logger/logger.module';
-import { LdapModule } from '../ldap/ldap.module';
-import { LdapModuleOptions } from '../ldap/ldap.interface';
-import { ProfileModule } from '../profile/profile.module';
-import { LdapService } from '../ldap/ldap.service';
-import { ProfileEntity } from '../profile/profile.entity';
+import { ConfigModule, ConfigService } from '@app/config';
+import { LoggerModule, LogService } from '@app/logger';
+import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
-import { ConfigService } from '../config/config.service';
-import { LogService } from '../logger/logger.service';
+import { UserService } from './user.service';
+import { UserEntity } from './user.entity';
+import { ProfileModule } from '../profile/profile.module';
+import { ProfileEntity } from '../profile/profile.entity';
 // #endregion
 
 const mockRepository = jest.fn(() => ({
@@ -30,9 +26,9 @@ const mockRepository = jest.fn(() => ({
   },
 }));
 
+jest.mock('@app/ldap');
 jest.mock('./user.entity');
 jest.mock('../profile/profile.entity');
-jest.mock('../ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 
 describe('UserService', () => {

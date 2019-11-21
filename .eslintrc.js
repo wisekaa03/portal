@@ -12,6 +12,7 @@ module.exports = {
     'jest',
     'promise',
     'prettier',
+    'jsx-a11y'
   ],
   settings: {
     'react': {
@@ -44,11 +45,13 @@ module.exports = {
     'prettier/@typescript-eslint',
     'prettier/babel',
     'prettier/react',
+    'plugin:jsx-a11y/recommended'
   ],
   parserOptions: {
     sourceType: 'module',
     jsx: true,
     useJSXTextNode: true,
+    ecmaVersion: 2018,
     ecmaFeatures: {
       jsx: true,
     },
@@ -108,7 +111,7 @@ module.exports = {
       2,
       {
         flatTernaryExpressions: false,
-        ignoreComments: false,
+        ignoreComments: true,
         SwitchCase: 1,
         VariableDeclarator: {
           var: 2,

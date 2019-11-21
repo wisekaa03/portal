@@ -4,8 +4,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
+import { LoggerModule } from '@app/logger';
 import { NewsController } from './news.controller';
-import { LoggerModule } from '../../logger/logger.module';
 // #endregion
 
 describe('NewsController', () => {

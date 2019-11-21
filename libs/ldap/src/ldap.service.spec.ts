@@ -5,11 +5,10 @@ import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
+import { ConfigModule, ConfigService } from '@app/config';
 import { LdapService } from './ldap.service';
 import { LdapModule } from './ldap.module';
 import { LdapModuleOptions, Scope, ldapADattributes } from './ldap.interface';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
 // #endregion
 
 describe('LdapService', () => {

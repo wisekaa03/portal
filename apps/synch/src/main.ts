@@ -4,11 +4,11 @@
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/common/enums/transport.enum';
-import { AppModule } from './app.module';
 // #endregion
 // #region Imports Local
-import { ConfigService } from '../../portal/src/config/config.service';
-import { LogService } from '../../portal/src/logger/logger.service';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
+import { AppModule } from './app.module';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';

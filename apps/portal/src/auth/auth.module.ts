@@ -5,13 +5,11 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 // #endregion
 // #region Imports Local
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
+import { ConfigModule, ConfigService } from '@app/config';
+import { LoggerModule } from '@app/logger';
+import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
-import { LoggerModule } from '../logger/logger.module';
-import { LdapModule } from '../ldap/ldap.module';
-import { Scope, ldapADattributes, LdapModuleOptions } from '../ldap/ldap.interface';
 import { AuthResolver } from './auth.resolver';
 import { CookieSerializer } from './cookie.serializer';
 import { LocalStrategy } from './strategies/local.strategy';

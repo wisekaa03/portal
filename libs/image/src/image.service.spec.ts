@@ -4,8 +4,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
+import { LoggerModule } from '@app/logger';
 import { ImageService } from './image.service';
-import { LoggerModule } from '../logger/logger.module';
 // #endregion
 
 describe('ImageService', () => {
