@@ -9,12 +9,10 @@
 	"Format code snippet": {
 		"prefix": "format",
 		"body": [
-			"",
 			"// #region Imports NPM",
-			"$0",
 			"// #endregion",
 			"// #region Imports Local",
-			"// #endregion"
+			"$0// #endregion",
 		],
 		"description": "format code snippet"
 	}

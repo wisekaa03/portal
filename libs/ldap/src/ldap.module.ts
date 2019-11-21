@@ -7,7 +7,7 @@ import { DynamicModule, Module, Provider, Type, Global } from '@nestjs/common';
 import { ConfigModule } from '@app/config';
 import { LoggerModule } from '@app/logger';
 import { LdapService } from './ldap.service';
-import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './ldap.interface';
+import { LDAP_OPTIONS, LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './ldap.interface';
 // #endregion
 
 @Global()
@@ -20,7 +20,7 @@ export class LdapModule {
   static register(options: LdapModuleOptions): DynamicModule {
     return {
       module: LdapModule,
-      providers: [{ provide: LDAP_MODULE_OPTIONS, useValue: options || {} }, LdapService],
+      providers: [{ provide: LDAP_OPTIONS, useValue: options || {} }, LdapService],
     };
   }
 
@@ -48,13 +48,13 @@ export class LdapModule {
   private static createAsyncOptionsProvider(options: LdapModuleAsyncOptions): Provider {
     if (options.useFactory) {
       return {
-        provide: LDAP_MODULE_OPTIONS,
+        provide: LDAP_OPTIONS,
         useFactory: options.useFactory,
         inject: options.inject || [],
       };
     }
     return {
-      provide: LDAP_MODULE_OPTIONS,
+      provide: LDAP_OPTIONS,
       useFactory: async (optionsFactory: LdapOptionsFactory) => optionsFactory.createLdapOptions(),
       inject: [(options.useExisting as Type<LdapOptionsFactory>) || (options.useClass as Type<LdapOptionsFactory>)],
     };

@@ -239,6 +239,11 @@ export class ConfigService {
         .default('supersecret')
         .optional()
         .empty(),
+
+      SOAP_URL: Joi.string()
+        .default('https://server1c')
+        .optional()
+        .empty(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);

@@ -152,6 +152,7 @@
     "response-time": "^2.3.2",
     "rxjs": "^6.5.3",
     "sharp": "^0.23.3",
+    "soap": "^0.30.0",
     "subscriptions-transport-ws": "^0.9.16",
     "ts-node": "^8.5.2",
     "typeface-roboto": "^0.0.75",
