@@ -27,7 +27,13 @@ export class SoapService {
   ) {}
 
   async connect(): Promise<soap.Client> {
-    this.client = await soap.createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
+    try {
+      this.client = await soap.createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
+    } catch (error) {
+      this.logger.error('SOAP connect error: ', error, 'SOAP Service');
+
+      throw error;
+    }
 
     return this.client;
   }
