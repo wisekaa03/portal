@@ -11,13 +11,17 @@ import { LdapModule } from './ldap.module';
 import { LdapModuleOptions, Scope, ldapADattributes } from './ldap.interface';
 // #endregion
 
+const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV !== 'test';
+const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');
+
 describe('LdapService', () => {
   let ldap: LdapService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.register(resolve(__dirname, '../../..', '.env')),
+        ConfigModule.register(env),
 
         LdapModule.registerAsync({
           imports: [ConfigModule],

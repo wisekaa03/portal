@@ -11,7 +11,7 @@ import * as redisStore from 'cache-manager-redis-store';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
-import { LDAP_MODULE_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './ldap.interface';
+import { LDAP_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './ldap.interface';
 // #endregion
 
 @Injectable()
@@ -43,7 +43,7 @@ export class LdapService extends EventEmitter {
    * @constructor
    */
   constructor(
-    @Inject(LDAP_MODULE_OPTIONS) private readonly opts: LdapModuleOptions,
+    @Inject(LDAP_OPTIONS) private readonly opts: LdapModuleOptions,
     private readonly logger: LogService,
     private readonly configService: ConfigService,
   ) {

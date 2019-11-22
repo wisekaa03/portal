@@ -6,7 +6,7 @@ import { resolve } from 'path';
 import { TypeOrmModule, getRepositoryToken, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nModule } from 'nestjs-i18n';
-import { ClientsModule, Transport, ClientProxy } from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -27,9 +27,11 @@ const mockRepository = jest.fn(() => ({
 }));
 
 jest.mock('@app/ldap/ldap.service');
-jest.mock('./user.entity');
-jest.mock('../profile/profile.entity');
 jest.mock('../guards/gqlauth.guard');
+
+const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV === 'test';
+const env = resolve(__dirname, dev ? (test ? '../../../..' : '../../..') : '../../..', '.env');
 
 describe('UserService', () => {
   let service: UserService;
@@ -38,7 +40,7 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         LoggerModule,
-        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
+        ConfigModule.register(env),
 
         I18nModule.forRootAsync({
           useFactory: () => ({
@@ -48,8 +50,31 @@ describe('UserService', () => {
           }),
         }),
 
-        TypeOrmModule.forRoot({}),
-        // TypeOrmModule.forFeature([UserEntity]),
+        TypeOrmModule.forRootAsync({
+          imports: [ConfigModule, LoggerModule],
+          inject: [ConfigService, LogService],
+          useFactory: async (configService: ConfigService, logger: LogService) =>
+            ({
+              name: 'default',
+              keepConnectionAlive: true,
+              type: configService.get<string>('DATABASE_CONNECTION'),
+              host: configService.get<string>('DATABASE_HOST'),
+              port: configService.get<number>('DATABASE_PORT'),
+              username: configService.get<string>('DATABASE_USERNAME'),
+              password: configService.get<string>('DATABASE_PASSWORD'),
+              database: configService.get<string>('DATABASE_DATABASE'),
+              schema: configService.get<string>('DATABASE_SCHEMA'),
+              uuidExtension: 'pgcrypto',
+              logger,
+              synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+              dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
+              logging: true,
+              entities: [ProfileEntity, UserEntity],
+              migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
+              cache: false,
+            } as TypeOrmModuleOptions),
+        }),
+        TypeOrmModule.forFeature([UserEntity]),
 
         LdapModule.registerAsync({
           useFactory: () => ({} as LdapModuleOptions),

@@ -8,12 +8,11 @@ import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { LdapResponeUser } from '../../../../libs/ldap/src/ldap.interface';
+import { ImageService } from '@app/image';
+import { LdapService, LdapResponeUser } from '@app/ldap';
 import { ProfileEntity } from './profile.entity';
 import { Profile, Gender, LoginService } from './models/profile.dto';
-import { LdapService } from '../../../../libs/ldap/src/ldap.service';
 import { UserEntity } from '../user/user.entity';
-import { ImageService } from '../../../../libs/image/src/image.service';
 // #endregion
 
 @Injectable()

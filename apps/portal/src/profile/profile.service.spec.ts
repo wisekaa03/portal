@@ -1,17 +1,35 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { LdapModule, LdapModuleOptions } from '@app/ldap';
+import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
 import { ImageModule } from '@app/image';
+import { ConfigModule, ConfigService } from '@app/config';
+import { LoggerModule, LogService } from '@app/logger';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 // #endregion
 
+const mockRepository = jest.fn(() => ({
+  metadata: {
+    columns: [],
+    relations: [],
+  },
+}));
+
+const LdapServiceMock = jest.fn(() => ({}));
+
+// jest.mock('@nestjs/typeorm/dist/typeorm.module');
 jest.mock('@app/ldap/ldap.service');
+jest.mock('../guards/gqlauth.guard');
+
+const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV === 'test';
+const env = resolve(__dirname, dev ? (test ? '../../../..' : '../../..') : '../../..', '.env');
 
 describe('ProfileService', () => {
   let service: ProfileService;
@@ -19,23 +37,48 @@ describe('ProfileService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        LoggerModule,
+        ConfigModule.register(env),
+
         ImageModule,
-        TypeOrmModule.forRoot({}),
+
+        TypeOrmModule.forRootAsync({
+          imports: [ConfigModule, LoggerModule],
+          inject: [ConfigService, LogService],
+          useFactory: async (configService: ConfigService, logger: LogService) =>
+            ({
+              name: 'default',
+              keepConnectionAlive: true,
+              type: configService.get<string>('DATABASE_CONNECTION'),
+              host: configService.get<string>('DATABASE_HOST'),
+              port: configService.get<number>('DATABASE_PORT'),
+              username: configService.get<string>('DATABASE_USERNAME'),
+              password: configService.get<string>('DATABASE_PASSWORD'),
+              database: configService.get<string>('DATABASE_DATABASE'),
+              schema: configService.get<string>('DATABASE_SCHEMA'),
+              uuidExtension: 'pgcrypto',
+              logger,
+              synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+              dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
+              logging: true,
+              entities: [ProfileEntity /* UserEntity */],
+              migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
+              cache: false,
+            } as TypeOrmModuleOptions),
+        }),
         TypeOrmModule.forFeature([ProfileEntity]),
+
         LdapModule.registerAsync({
           useFactory: () => ({} as LdapModuleOptions),
         }),
       ],
       providers: [
         ProfileService,
-        // { provide: LdapService, useValue: LdapServiceMock },
+        { provide: LdapService, useValue: LdapServiceMock },
         // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        // { provide: getRepositoryToken(ProfileEntity), useValue: MockRepository },
+        { provide: getRepositoryToken(ProfileEntity), useValue: mockRepository },
       ],
-    })
-      // .overrideProvider(LdapService)
-      // .useValue(LdapServiceMock)
-      .compile();
+    }).compile();
 
     service = module.get<ProfileService>(ProfileService);
   });

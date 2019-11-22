@@ -4,7 +4,7 @@
 // #region Imports NPM
 const Config = require('./.next/nest/libs/config/src/config.service');
 
-const entities = ['./.next/nest/**/*.entity.js'];
+const entities = ['./.next/nest/apps/src/**/*.entity.js'];
 
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 // #endregion

@@ -13,10 +13,16 @@ import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 // #endregion
 
+jest.mock('@nestjs/typeorm/dist/typeorm.module');
 jest.mock('@app/ldap/ldap.service');
 jest.mock('./user.entity');
 jest.mock('../profile/profile.module');
+jest.mock('../profile/profile.service');
 jest.mock('./user.service');
+
+const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV === 'test';
+const env = resolve(__dirname, dev ? (test ? '../../../..' : '../../..') : '../../..', '.env');
 
 describe('UsersResolver', () => {
   let resolver: UserResolver;
@@ -24,7 +30,7 @@ describe('UsersResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.register(resolve(__dirname, '../../../..', '.env')),
+        ConfigModule.register(env),
 
         LdapModule.registerAsync({
           useFactory: () => {
@@ -33,7 +39,7 @@ describe('UsersResolver', () => {
         }),
 
         // #region TypeORM
-        TypeOrmModule.forRoot({}),
+        // TypeOrmModule.forRoot({}),
         // #endregion
 
         ProfileModule,
