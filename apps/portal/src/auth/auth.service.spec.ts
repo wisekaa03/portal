@@ -15,12 +15,9 @@ import { UserService } from '../user/user.service';
 
 const UserServiceMock = jest.fn(() => ({}));
 
-// jest.mock('@nestjs/typeorm/dist/typeorm.module');
 jest.mock('@app/logger/logger.service');
 jest.mock('@app/ldap/ldap.service');
-jest.mock('../shared/session-redis');
 jest.mock('../user/user.service');
-// jest.mock('../profile/profile.service');
 
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV === 'test';
@@ -51,13 +48,9 @@ describe('AuthService', () => {
         }),
       ],
       providers: [AuthService, { provide: UserService, useValue: UserServiceMock }],
-    })
-      .overrideProvider(UserService)
-      .useValue(UserServiceMock)
-      .compile();
+    }).compile();
 
     service = module.get<AuthService>(AuthService);
-    // repositoryMock = module.get(getRepositoryToken(UserEntity));
   });
 
   it('should be defined', () => {

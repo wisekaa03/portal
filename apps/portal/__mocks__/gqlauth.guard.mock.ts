@@ -1,3 +1,0 @@
-/** @format */
-
-export class GqlAuthGuardMock {}
