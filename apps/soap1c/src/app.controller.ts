@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UnauthorizedException } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
@@ -15,6 +15,10 @@ export class AppController {
 
   @MessagePattern(SOAP1C)
   async getHello(): Promise<string> {
-    return this.appService.getHello();
+    try {
+      return this.appService.getHello();
+    } catch (error) {
+      return '';
+    }
   }
 }

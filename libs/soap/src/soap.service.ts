@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
-import soap from 'soap';
+import { createClientAsync, Client } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -12,7 +12,7 @@ import { SoapOptions, SOAP_OPTIONS } from './soap.interface';
 
 @Injectable()
 export class SoapService {
-  private client: soap.Client;
+  private client: Client;
 
   /**
    * Create an LDAP class.
@@ -26,13 +26,13 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(): Promise<soap.Client> {
+  async connect(): Promise<Client | Error> {
     try {
-      this.client = await soap.createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
+      this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
     } catch (error) {
       this.logger.error('SOAP connect error: ', error, 'SOAP Service');
 
-      throw error;
+      return error;
     }
 
     return this.client;
