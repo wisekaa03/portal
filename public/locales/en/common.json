@@ -3,8 +3,6 @@
   "accept": "Accept",
   "cancel": "Cancel",
   "authorization": "Authorization",
-  "synch": "Synchronization",
-  "synchWait": "... Synching ...",
   "wait": "Wait...",
   "signOut": "Sign out",
   "changeLanguage": "Language: Russian",
@@ -17,7 +15,5 @@
   "meeting": "Meeting rooms",
   "news": "Timeline",
   "itapplication": "IT Application",
-  "adminPanel": "Admin panel",
-  "cache": "Erase cache",
-  "cacheWait": "... Erase cache ..."
+  "adminPanel": "Admin panel"
 }

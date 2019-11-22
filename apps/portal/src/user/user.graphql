@@ -26,4 +26,6 @@ type Mutation {
 
   userSettings(value: ProfileSettingsInput): User
 
+  soap1csynch: Boolean
+
 }

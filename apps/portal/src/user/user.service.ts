@@ -11,6 +11,7 @@ import { Request } from 'express';
 import { LogService } from '@app/logger';
 import { LdapService, LdapResponeUser } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
+import { SOAP1C } from '../../../soap1c/src/app.constants';
 import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { ProfileService } from '../profile/profile.service';
@@ -149,6 +150,14 @@ export class UserService {
    */
   synchronization = async (_req: Request): Promise<boolean | null> =>
     this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
+
+  /**
+   * Synchronization
+   *
+   * @param {req} Request
+   * @returns {boolean}
+   */
+  soap1csynch = async (_req: Request): Promise<boolean | null> => this.client.send<boolean>(SOAP1C, []).toPromise();
 
   /**
    * Settings

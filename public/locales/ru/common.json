@@ -3,8 +3,6 @@
   "accept": "Применить",
   "cancel": "Отмена",
   "authorization": "Авторизация",
-  "synch": "Синхронизация",
-  "synchWait": "... Подождите ...",
   "wait": "Подождите...",
   "signOut": "Выход",
   "changeLanguage": "Язык: English",
@@ -17,7 +15,5 @@
   "meeting": "Переговорные",
   "news": "Лента новостей",
   "settings": "Настройки",
-  "adminPanel": "Панель управления",
-  "cache": "Обновить cache",
-  "cacheWait": "... Обновляю cache ..."
+  "adminPanel": "Панель управления"
 }

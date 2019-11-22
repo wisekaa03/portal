@@ -76,6 +76,12 @@ export const CACHE = gql`
   }
 `;
 
+export const SOAP1CSYNCH = gql`
+  mutation Soap1cSynch {
+    soap1csynch
+  }
+`;
+
 export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {

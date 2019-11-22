@@ -1,1 +1,14 @@
-{}
+{
+  "soap1c": {
+    "synch": "Synchroniziting SOAP",
+    "wait": "... Synching ..."
+  },
+  "synch": {
+    "synch": "Synchronization",
+    "wait": "... Synching ..."
+  },
+  "cache": {
+    "cache": "Erase cache",
+    "wait": "... Erase cache ..."
+  }
+}
