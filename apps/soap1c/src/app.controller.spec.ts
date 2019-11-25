@@ -44,8 +44,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should be defined', () => {
-      expect(appController.getHello()).toBeDefined();
+    it('"synchronization" should be defined', () => {
+      expect(appController.synchronization()).toBeDefined();
     });
   });
 });

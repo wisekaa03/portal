@@ -30,14 +30,15 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
           user: configService.get<string>('SOAP_USER'),
           pass: configService.get<string>('SOAP_PASS'),
           options: {
-            ntlm: {
-              username: configService.get<string>('SOAP_USER'),
-              password: configService.get<string>('SOAP_PASS'),
-              domain: 'KHGK',
-              workstation: 'MASTER',
-            },
             wsdl_headers: {
               connection: 'keep-alive',
+            },
+            wsdl_options: {
+              ntlm: true,
+              username: configService.get<string>('SOAP_USER'),
+              password: configService.get<string>('SOAP_PASS'),
+              // domain: 'KHGK',
+              // workstation: 'MAIL',
             },
           },
         };

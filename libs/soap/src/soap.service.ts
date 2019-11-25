@@ -29,30 +29,8 @@ export class SoapService {
   ) {}
 
   async connect(): Promise<Client | Error> {
-    if (this.opts.user && this.opts.pass) {
-      try {
-        // this.security = `Basic ${Buffer.from(`${this.opts.user}:${this.opts.pass}`).toString('base64')}`;
-        // this.security = new NTLMSecurity(this.opts.user, this.opts.pass, this.opts.domain, this.opts.workstation);
-      } catch (error) {
-        this.logger.error('SOAP connect error: ', error, 'SOAP Service');
-
-        return error;
-      }
-    }
-
-    this.opts.options = {
-      ...this.opts.options,
-      wsdl_headers: { ...(this.opts.options && this.opts.options.wsdl_headers), Authorization: this.security },
-    };
-
     try {
-      this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint).then(
-        (err: Error, client: Client) => {
-          client.setSecurity(this.security);
-
-          return client;
-        },
-      );
+      this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
     } catch (error) {
       this.logger.error('SOAP connect error: ', error, 'SOAP Service');
 

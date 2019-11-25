@@ -11,7 +11,9 @@ import { SoapService } from '@app/soap';
 export class AppService {
   constructor(private readonly soapService: SoapService) {}
 
-  async getHello(): Promise<any> {
-    return this.soapService.connect();
+  async synchronization(): Promise<any> {
+    const client = await this.soapService.connect();
+
+    return true;
   }
 }

@@ -14,11 +14,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern(SOAP1C)
-  async getHello(): Promise<string> {
-    try {
-      return this.appService.getHello();
-    } catch (error) {
-      return '';
-    }
+  async synchronization(): Promise<string> {
+    return this.appService.synchronization();
   }
 }
