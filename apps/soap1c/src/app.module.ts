@@ -27,8 +27,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
       useFactory: async (configService: ConfigService) => {
         return {
           url: configService.get<string>('SOAP_URL'),
-          user: configService.get<string>('SOAP_USER'),
-          pass: configService.get<string>('SOAP_PASS'),
           options: {
             wsdl_headers: {
               connection: 'keep-alive',
@@ -37,8 +35,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
               ntlm: true,
               username: configService.get<string>('SOAP_USER'),
               password: configService.get<string>('SOAP_PASS'),
-              // domain: 'KHGK',
-              // workstation: 'MAIL',
             },
           },
         };

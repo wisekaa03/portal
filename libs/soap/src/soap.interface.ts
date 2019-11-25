@@ -12,8 +12,6 @@ export const SOAP_OPTIONS = 'SOAP_OPTIONS';
 
 export interface SoapOptions {
   url: string;
-  user: string;
-  pass: string;
   options?: IOptions;
   endpoint?: string;
 }
