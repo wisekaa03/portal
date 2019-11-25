@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
-import { createClientAsync, Client } from 'soap';
+import { BasicAuthSecurity, createClientAsync, Client, NTLMSecurity } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -13,6 +13,8 @@ import { SoapOptions, SOAP_OPTIONS } from './soap.interface';
 @Injectable()
 export class SoapService {
   private client: Client;
+
+  private security: NTLMSecurity;
 
   /**
    * Create an LDAP class.
@@ -27,12 +29,34 @@ export class SoapService {
   ) {}
 
   async connect(): Promise<Client | Error> {
+    if (this.opts.user && this.opts.pass) {
+      try {
+        // this.security = `Basic ${Buffer.from(`${this.opts.user}:${this.opts.pass}`).toString('base64')}`;
+        // this.security = new NTLMSecurity(this.opts.user, this.opts.pass, this.opts.domain, this.opts.workstation);
+      } catch (error) {
+        this.logger.error('SOAP connect error: ', error, 'SOAP Service');
+
+        return error;
+      }
+    }
+
+    this.opts.options = {
+      ...this.opts.options,
+      wsdl_headers: { ...(this.opts.options && this.opts.options.wsdl_headers), Authorization: this.security },
+    };
+
     try {
-      this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
+      this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint).then(
+        (err: Error, client: Client) => {
+          client.setSecurity(this.security);
+
+          return client;
+        },
+      );
     } catch (error) {
       this.logger.error('SOAP connect error: ', error, 'SOAP Service');
 
-      return error;
+      throw error;
     }
 
     return this.client;

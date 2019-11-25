@@ -51,7 +51,7 @@ export class SoapModule {
     }
     return {
       provide: SOAP_OPTIONS,
-      useFactory: async (optionsFactory: SoapOptionsFactory) => optionsFactory.createLdapOptions(),
+      useFactory: async (optionsFactory: SoapOptionsFactory) => optionsFactory.createSoapOptions(),
       inject: [(options.useExisting as Type<SoapOptionsFactory>) || (options.useClass as Type<SoapOptionsFactory>)],
     };
   }

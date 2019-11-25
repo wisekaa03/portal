@@ -27,8 +27,20 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
       useFactory: async (configService: ConfigService) => {
         return {
           url: configService.get<string>('SOAP_URL'),
-          options: { disableCache: true },
-        } as SoapOptions;
+          user: configService.get<string>('SOAP_USER'),
+          pass: configService.get<string>('SOAP_PASS'),
+          options: {
+            ntlm: {
+              username: configService.get<string>('SOAP_USER'),
+              password: configService.get<string>('SOAP_PASS'),
+              domain: 'KHGK',
+              workstation: 'MASTER',
+            },
+            wsdl_headers: {
+              connection: 'keep-alive',
+            },
+          },
+        };
       },
     }),
   ],

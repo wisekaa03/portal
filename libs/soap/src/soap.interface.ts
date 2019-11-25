@@ -12,12 +12,14 @@ export const SOAP_OPTIONS = 'SOAP_OPTIONS';
 
 export interface SoapOptions {
   url: string;
+  user: string;
+  pass: string;
   options?: IOptions;
   endpoint?: string;
 }
 
 export interface SoapOptionsFactory {
-  createLdapOptions(): Promise<SoapOptions> | SoapOptions;
+  createSoapOptions(): Promise<SoapOptions> | SoapOptions;
 }
 
 export interface SoapModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {

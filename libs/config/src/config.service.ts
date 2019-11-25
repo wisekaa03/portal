@@ -244,6 +244,14 @@ export class ConfigService {
         .default('https://server1c')
         .optional()
         .empty(),
+      SOAP_USER: Joi.string()
+        .default('admin')
+        .optional()
+        .empty(),
+      SOAP_PASS: Joi.string()
+        .default('supersecret')
+        .optional()
+        .empty(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);
