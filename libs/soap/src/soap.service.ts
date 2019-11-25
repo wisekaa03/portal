@@ -39,8 +39,4 @@ export class SoapService {
 
     return this.client;
   }
-
-  async method(): Promise<any> {
-    // return this.client.
-  }
 }
