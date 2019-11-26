@@ -71,7 +71,7 @@ SOAP_PASS="${SOAP_PASS}"
 EOF
 
 export NODE=`which node`
-export NODE_OPTIONS=--max_old_space_size=4096
+export NODE_OPTIONS=--max_old_space_size=2048
 
 # Config file and entity files
 if [ -n "$*" -a "$1" = "test" ]; then
@@ -88,12 +88,15 @@ if [ -n "$*" -a "$1" = "test" ]; then
   export NODE_ENV=${NODE_ENV:=test}
   node_modules/.bin/jest $2 $3 $4 $5
 elif [ -n "$*" -a "$1" = "start" ]; then
+  export NODE_OPTIONS=--max_old_space_size=2048
   export NODE_ENV=${NODE_ENV:=production}
   $NODE .next/nest/main.js
 elif [ -n "$*" -a "$1" = "start:synch" ]; then
+  export NODE_OPTIONS=--max_old_space_size=8192
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch/main.js
 elif [ -n "$*" -a "$1" = "start:soap1c" ]; then
+  export NODE_OPTIONS=--max_old_space_size=2048
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/soap1c/main.js
 elif [ -n "$*" ]; then

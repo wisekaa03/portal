@@ -1,5 +1,5 @@
 FROM node:12
-WORKDIR /portal-synch/
+WORKDIR /portal-soap1c/
 
 # LABELS
 LABEL maintainer="webmaster@kngk-group.ru"
