@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print "../../portal/templates/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "../../portal/templates/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "portal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.image.tag }}
