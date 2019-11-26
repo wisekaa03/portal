@@ -11203,10 +11203,10 @@ image-size@^0.5.1:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
 
-image-trace-loader@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/image-trace-loader/-/image-trace-loader-1.0.1.tgz#5d12bfbffee0cb073d423aeddf7f85a21629a221"
-  integrity sha512-jZ0gM7gzZsx3NUPY/DoeSTg0fE9NPS+zUWIh4cTL1+3tTg6rQCqfNh9qKJb7hn/6UHi4Alp1jO9rWZaT7pjZXw==
+image-trace-loader@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/image-trace-loader/-/image-trace-loader-1.0.2.tgz#d4ae7094f72a6c77b7e42b8c73add9adb851e14a"
+  integrity sha512-VitEb2W97fcYLfnWxSRYQQcxax54xe7NS1bIOkQktiePLtbIL6Hl2kFAnjcn8D9dkUZ63XAz+ba/RWFHYODiHQ==
   dependencies:
     loader-utils "^1.2.3"
     node-vibrant "^3.1.4"
