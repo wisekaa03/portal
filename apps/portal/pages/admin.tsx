@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       padding: theme.spacing(2),
       display: 'grid',
-      gridTemplateColumns: '300px',
+      gridTemplateColumns: '450px',
       height: 'fit-content',
       gridGap: theme.spacing(),
     },
@@ -27,7 +27,10 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: green[300],
     },
     buttonCache: {
-      backgroundColor: green[200],
+      backgroundColor: green[300],
+    },
+    buttonSoap: {
+      backgroundColor: green[300],
     },
   }),
 );
@@ -82,7 +85,7 @@ const AdminPanel: I18nPage = ({ t, ...rest }): React.ReactElement => {
           {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
         </Button>
         {errorsCache && <GQLError error={errorsCache} />}
-        <Button disabled={soap1cLoading} variant="contained" className={classes.buttonCache} onClick={handleSoap1c}>
+        <Button disabled={soap1cLoading} variant="contained" className={classes.buttonSoap} onClick={handleSoap1c}>
           {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
         </Button>
         {errorsSoap1c && <GQLError error={errorsSoap1c} />}
