@@ -10,12 +10,9 @@ variables:
   PREFIX: ""
   RELEASE_NAME: ${PREFIX}${CI_PROJECT_NAME}
   RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
+  RELEASE_NAME_SOAP1C: ${PREFIX}${CI_PROJECT_NAME}-soap1c
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
-  CONTAINER_IMAGE_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch:${CI_BUILD_REF}
-  CONTAINER_IMAGE_SYNCH_LATEST: ${PREFIX}${CI_PROJECT_NAME}-synch:latest
-  CONTAINER_IMAGE_SOAP1C: ${PREFIX}${CI_PROJECT_NAME}-soap1c:${CI_BUILD_REF}
-  CONTAINER_IMAGE_SOAP1C_LATEST: ${PREFIX}${CI_PROJECT_NAME}-soap1c:latest
 
 test_build:
   image: node:12
@@ -67,21 +64,11 @@ production:
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     # TODO: авторизация по логину, пока нету, так что у нас в открытом доступе по docker-registry.kngk.org лежит куча portal-ов
     # - docker login
-    - docker build --tag ${CONTAINER_IMAGE} --file Dockerfile.portal .
+    - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_LATEST}
     - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
-    - docker build --tag ${CONTAINER_IMAGE_SYNCH} --file Dockerfile.synch .
-    - docker tag ${CONTAINER_IMAGE_SYNCH} ${CONTAINER_IMAGE_SYNCH_LATEST}
-    - docker tag ${CONTAINER_IMAGE_SYNCH} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SYNCH}
-    - docker tag ${CONTAINER_IMAGE_SYNCH} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SYNCH_LATEST}
-    - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SYNCH}
-    - docker build --tag ${CONTAINER_IMAGE_SOAP1C} --file Dockerfile.soap1c .
-    - docker tag ${CONTAINER_IMAGE_SOAP1C} ${CONTAINER_IMAGE_SOAP1C_LATEST}
-    - docker tag ${CONTAINER_IMAGE_SOAP1C} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SOAP1C}
-    - docker tag ${CONTAINER_IMAGE_SOAP1C} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SOAP1C_LATEST}
-    - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SOAP1C}
 
 deploy:
   image: dtzar/helm-kubectl:2.16.1
@@ -219,7 +206,7 @@ deploy:
           --set HOST="${HOST}" \
           --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SYNCH}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal-synch; \
       else \
@@ -228,7 +215,7 @@ deploy:
           --set HOST="${HOST}" \
           --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SYNCH}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME_SYNCH} helm/portal-synch; \
       fi
@@ -241,7 +228,7 @@ deploy:
           --set HOST="${HOST}" \
           --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SOAP1C}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal-soap1c; \
       else \
@@ -250,7 +237,7 @@ deploy:
           --set HOST="${HOST}" \
           --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SOAP1C}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME_SOAP1C} helm/portal-soap1c; \
       fi

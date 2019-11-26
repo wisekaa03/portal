@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: docker-registry.kngk.org/portal-synch
+  repository: docker-registry.kngk.org/portal
   tag: latest
   pullPolicy: Always
 
