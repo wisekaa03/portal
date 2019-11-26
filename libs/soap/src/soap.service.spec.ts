@@ -45,7 +45,7 @@ describe('SoapService', () => {
           },
         }),
       ],
-      providers: [],
+      providers: [SoapService],
     }).compile();
 
     service = module.get<SoapService>(SoapService);
