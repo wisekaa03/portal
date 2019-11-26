@@ -11,6 +11,16 @@ import { LdapModule } from './ldap.module';
 import { LdapModuleOptions, Scope, ldapADattributes } from './ldap.interface';
 // #endregion
 
+jest.mock('cache-manager');
+jest.mock('cache-manager-redis-store', () => ({
+  create: jest.fn(),
+}));
+jest.mock('ldapjs', () => ({
+  createClient: () => ({
+    on: jest.fn(),
+  }),
+}));
+
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV !== 'test';
 const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');
