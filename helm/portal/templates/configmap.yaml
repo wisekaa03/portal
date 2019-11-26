@@ -1,14 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-configmap
+  name: portal-configmap
   labels:
 {{ include "portal.labels" . | indent 4 }}
 data:
-  HOST: {{ .Values.HOST | default "localhost" | quote }}
-  PORT: {{ .Values.PORT | default "4000" | quote }}
-  PORT_DEBUGGER: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
-
   DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | default "postgres" | quote }}
   DATABASE_HOST: {{ .Values.DATABASE_HOST | default "localhost" | quote }}
   DATABASE_PORT: {{ .Values.DATABASE_PORT | default "5432" | quote }}
@@ -62,3 +58,7 @@ data:
   MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "nats://nats-cluster.production:4222" | quote }}
   MICROSERVICE_USER: {{ .Values.MICROSERVICE_USER | default "admin" | quote }}
   MICROSERVICE_PASS: {{ .Values.MICROSERVICE_PASS | default "supersecret" | quote }}
+
+  SOAP_URL: {{ .Values.SOAP_URL | default "https://soap1c" | quote }}
+  SOAP_USER: {{ .Values.SOAP_USER | default "admin" | quote }}
+  SOAP_PASS: {{ .Values.SOAP_PASS | default "supersecret" | quote }}

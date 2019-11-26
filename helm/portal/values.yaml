@@ -74,6 +74,10 @@ MICROSERVICE_URL: "nats://nats-cluster.production:4222"
 MICROSERVICE_USER: "admin"
 MICROSERVICE_PASS: "supersecret"
 
+SOAP_URL: "https://soap1c"
+SOAP_USER: "admin"
+SOAP_PASS: "supersecret"
+
 service:
   type: LoadBalancer
 

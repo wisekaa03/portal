@@ -59,20 +59,11 @@ spec:
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: HOST
+              value: {{ .Values.HOST | default "0.0.0.0" }}
             - name: PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: PORT
+              value: {{ .Values.HOST | default 4000 }}
             - name: PORT_DEBUGGER
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: PORT_DEBUGGER
+              value: {{ .Values.HOST | default 9229 }}
             - name: DATABASE_CONNECTION
               valueFrom:
                 configMapKeyRef:
@@ -302,6 +293,21 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: MICROSERVICE_PASS
+            - name: SOAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SOAP_URL
+            - name: SOAP_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SOAP_USER
+            - name: SOAP_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SOAP_PASS
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
