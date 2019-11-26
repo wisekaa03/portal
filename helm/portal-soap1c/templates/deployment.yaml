@@ -61,9 +61,9 @@ spec:
             - name: HOST
               value: {{ .Values.HOST | default "0.0.0.0" }}
             - name: PORT
-              value: {{ .Values.HOST | default 4222 }}
+              value: {{ .Values.PORT | default 4222 }}
             - name: PORT_DEBUGGER
-              value: {{ .Values.HOST | default 9229 }}
+              value: {{ .Values.PORT_DEBUGGER | default 9229 }}
             - name: DATABASE_CONNECTION
               valueFrom:
                 configMapKeyRef:
