@@ -2622,7 +2622,7 @@
     webpack "4.41.2"
     webpack-node-externals "1.7.2"
 
-"@nestjs/common@^6.0", "@nestjs/common@^6.10.1":
+"@nestjs/common@^6.0":
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-6.10.1.tgz#5df052415984e20df459f1dc3743638f5928a0d0"
   integrity sha512-eLKKFQqrQFxE3ipbmdXJHQV24ngkbq1ZFjDjvK+0qDbU/90OsYIU4a0U476Hi23QSgo9qGggMIJeLoadLRIxig==
@@ -2631,10 +2631,30 @@
     cli-color "2.0.0"
     uuid "3.3.3"
 
-"@nestjs/core@^6.0", "@nestjs/core@^6.10.1":
+"@nestjs/common@^6.10.2":
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-6.10.2.tgz#629329bb36dde8e9d9820de36df0b16257a1f7e0"
+  integrity sha512-v1FaympATrYiymi1PVmOBJcXUo8iFb+cdb0kMsvHW2Bzf99SMeRQFOAa3pb+xylxGxJMtePY0JaFzmhQaXPI8Q==
+  dependencies:
+    axios "0.19.0"
+    cli-color "2.0.0"
+    uuid "3.3.3"
+
+"@nestjs/core@^6.0":
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-6.10.1.tgz#ffa708a2f20494d0234ad0d9c80385421bd8cfd0"
   integrity sha512-X6W+pgzShSuUXEd+jSLYYgZywt0GvTlWF46zXf5CWJMJesc7+TP/FeKqa11gIz9h1GFUMPs0tbXzIpgKVXSmcA==
+  dependencies:
+    "@nuxtjs/opencollective" "0.2.2"
+    fast-safe-stringify "2.0.7"
+    iterare "1.2.0"
+    object-hash "2.0.0"
+    uuid "3.3.3"
+
+"@nestjs/core@^6.10.2":
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-6.10.2.tgz#51c36f66abc059a39383a97221ed5b4424b15794"
+  integrity sha512-iHlifKN66gwi7K+0t55Qduwemew5N7eC2PinWiHspc14o8BrgVGu9C25YXfDoqUtMXzu6IHKw5yq3vlFMpsUxA==
   dependencies:
     "@nuxtjs/opencollective" "0.2.2"
     fast-safe-stringify "2.0.7"
@@ -2659,10 +2679,18 @@
   optionalDependencies:
     type-graphql "^0.17.3"
 
-"@nestjs/microservices@6.10.1", "@nestjs/microservices@^6.10.1":
+"@nestjs/microservices@6.10.1":
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-6.10.1.tgz#17a0a67a0d6f96ba6e19819ad2f4c5edcad6a341"
   integrity sha512-GZLCuYRpOLE+ECZ39WcrQ4O2CiCmlKRLj/Xczo0cC5VyGTFnwWp3wxKvU1i3qJXsfLIw0dnlT/kVOMbzljeMkA==
+  dependencies:
+    iterare "1.2.0"
+    json-socket "0.3.0"
+
+"@nestjs/microservices@^6.10.2":
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-6.10.2.tgz#4d5558a279cdd0061889fa466196154c4688a543"
+  integrity sha512-tpnR93fYeAFP2kvzrZ30mz6BkCTQtOCshnxLcm3J7eJTOoRHJ4z7vggypPREy7B7yci6sKzC4ADP7lbGVCT6FQ==
   dependencies:
     iterare "1.2.0"
     json-socket "0.3.0"
@@ -2677,10 +2705,20 @@
   resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.1.0.tgz#80da326cc976a82530648d8025b04c8e2d41c10e"
   integrity sha512-V4KdtFFLsdZQ/HlIECpiK6byzGz57Y12TAc+Iatykk8jWuVFE1jq8RJbpTfB0zG0PTfcGm9crQ6Ut2Rwdmis4Q==
 
-"@nestjs/platform-express@6.10.1", "@nestjs/platform-express@^6.10.1":
+"@nestjs/platform-express@6.10.1":
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-6.10.1.tgz#12cfa39e0651048ac7f526c2f1b0f73171af8acb"
   integrity sha512-Tm5jRoPKhWj2VloM9fGkgR9S/yLQnDDfgPE9dvJX89hVQHS8RA7ub9kKfXF1iJjV+nAjk4XpPj8yGoUpYrC31g==
+  dependencies:
+    body-parser "1.19.0"
+    cors "2.8.5"
+    express "4.17.1"
+    multer "1.4.2"
+
+"@nestjs/platform-express@^6.10.2":
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-6.10.2.tgz#6c5599654595da73074f8c9f90ff1bb4c5bbd7c0"
+  integrity sha512-Lf2VaMz8drkcz+eZAq+DKcZyrGleRzyPQcrVDCz7yDeUOieUtLbH2guXUayyh5hBE4nZDCocPrYTDFDRdnAZvw==
   dependencies:
     body-parser "1.19.0"
     cors "2.8.5"
@@ -2730,10 +2768,10 @@
     redis "2.8.0"
     typeorm "0.2.20"
 
-"@nestjs/testing@^6.10.1":
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.10.1.tgz#b55675ab8e76b230320248b5f32e50961d6154c3"
-  integrity sha512-voEyayvSjlz3SIV0bLfsEJG9DBmTZsEWgqAeQ/zuaIVLfAclHovtGMyxf+nEbfFAuylHGiHy3H5e8Hv58uX0Ow==
+"@nestjs/testing@^6.10.2":
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.10.2.tgz#e988cecc29bf389be4f5634aef0a25f97bfe4290"
+  integrity sha512-EYIjKXx+CwjF7EmoYkUNkK2bsP31X8SwCDmiF96nWd4Q4qMGxUz3IXY0WuX1OEIwxYS/JamKi7eyZU7KubEWwg==
   dependencies:
     optional "0.1.4"
 
@@ -2744,10 +2782,10 @@
   dependencies:
     uuid "3.3.3"
 
-"@nestjs/websockets@^6.10.1":
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-6.10.1.tgz#271e0770ff7d33f85d8efd0ca338a45221b4e685"
-  integrity sha512-Gw/lztcu27Y1uTqUkds3IB12sT4kp59HxUCC5IhYqFnz3oGZkvI8+gX+LC33VDuorRXH+9DB338LoVJNZTyXbQ==
+"@nestjs/websockets@^6.10.2":
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-6.10.2.tgz#bac199b15ee1697b5fc274c0dfaad1e3bd429df8"
+  integrity sha512-uts2nGUKICJTVX54h/qks0ldMums78n7bW1FSgldTiYQHtiA8k01BxD3x45UvsANHN46dGXCQQzqSqtrP2SfJQ==
   dependencies:
     iterare "1.2.0"
 
@@ -4478,16 +4516,6 @@ ajv@6.10.2, ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.5.5, ajv@^6.9.1:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
-
-ajv@^5.0.0:
-  version "5.5.2"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
-  integrity sha1-c7Xuyj+rZT49P5Qis0GtQiBdyWU=
-  dependencies:
-    co "^4.6.0"
-    fast-deep-equal "^1.0.0"
-    fast-json-stable-stringify "^2.0.0"
-    json-schema-traverse "^0.3.0"
 
 alphanum-sort@^1.0.0:
   version "1.0.2"
@@ -9289,11 +9317,6 @@ fast-decode-uri-component@^1.0.0:
   resolved "https://registry.yarnpkg.com/fast-decode-uri-component/-/fast-decode-uri-component-1.0.1.tgz#46f8b6c22b30ff7a81357d4f59abfae938202543"
   integrity sha512-WKgKWg5eUxvRZGwW8FvfbaH7AXSh2cL+3j5fMGzUMCxWBJ3dV3a7Wz8y2f/uQ0e3B6WmodD3oS54jTQ9HVTIIg==
 
-fast-deep-equal@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"
-  integrity sha1-wFNHeBfIa1HaqFPIHgWbcz0CNhQ=
-
 fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
@@ -11180,16 +11203,16 @@ image-size@^0.5.1:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
 
-image-trace-loader@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/image-trace-loader/-/image-trace-loader-0.1.0.tgz#0c0a9a52f3ae56402c47ff492ac009c5b0b1c28e"
-  integrity sha512-QKV0Vfwj1ssmJjvtu1jQsis08SiM3Zx4jAS10NpQgTdhs13pDA7bk7zK4XeLpE6TM8mipqKuWDyOPDIFnAtg4w==
+image-trace-loader@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/image-trace-loader/-/image-trace-loader-1.0.1.tgz#5d12bfbffee0cb073d423aeddf7f85a21629a221"
+  integrity sha512-jZ0gM7gzZsx3NUPY/DoeSTg0fE9NPS+zUWIh4cTL1+3tTg6rQCqfNh9qKJb7hn/6UHi4Alp1jO9rWZaT7pjZXw==
   dependencies:
-    loader-utils "^1.1.0"
-    node-vibrant "^3.0.0-alpha.2"
-    potrace "^2.1.1"
-    schema-utils "^0.3.0"
-    svgo "^0.7.2"
+    loader-utils "^1.2.3"
+    node-vibrant "^3.1.4"
+    potrace "^2.1.2"
+    schema-utils "^2.5.0"
+    svgo "^1.3.2"
 
 image-webpack-loader@^6.0.0:
   version "6.0.0"
@@ -12679,11 +12702,6 @@ json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
   integrity sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==
-
-json-schema-traverse@^0.3.0:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.3.1.tgz#349a6d44c53a51de89b40805c5d5e59b417d3340"
-  integrity sha1-NJptRMU6Ud6JtAgFxdXlm0F9M0A=
 
 json-schema-traverse@^0.4.1:
   version "0.4.1"
@@ -14648,7 +14666,7 @@ node-sass@^4.13.0:
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
 
-node-vibrant@^3.0.0-alpha.2:
+node-vibrant@^3.0.0-alpha.2, node-vibrant@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/node-vibrant/-/node-vibrant-3.1.4.tgz#6d3ec01bb5e3e45f05cd6d81e1ed7da3d429f594"
   integrity sha512-6z33ItA+hKW96kV/qRxxJraHlLacB0vlGW8QKKbYYIiMs0pZxeMNl2iEnR6ZepqD86PnmWCnKGHxzndBaZoc8g==
@@ -16637,7 +16655,7 @@ posthtml@^0.9.2:
     posthtml-parser "^0.2.0"
     posthtml-render "^1.0.5"
 
-potrace@^2.1.1:
+potrace@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/potrace/-/potrace-2.1.2.tgz#61473a326be1e734abac6d14d54e1880eed35471"
   integrity sha512-dNcUBapRgPkiv3j+70+rSlf0whtJJqEszC04g9a/Ll3p6kA7QVRV1Vsi3jg22voJr2jA9x9fjPbz5MdD+ngbUg==
@@ -18252,13 +18270,6 @@ scheduler@^0.18.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-schema-utils@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.3.0.tgz#f5877222ce3e931edae039f17eb3716e7137f8cf"
-  integrity sha1-9YdyIs4+kx7a4DnxfrNxbnE3+M8=
-  dependencies:
-    ajv "^5.0.0"
-
 schema-utils@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-1.0.0.tgz#0b79a93204d7b600d4b2850d1f66c2a34951c770"
@@ -19458,7 +19469,7 @@ svgo@^0.7.2:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
-svgo@^1.0.0, svgo@^1.0.5, svgo@^1.2.2:
+svgo@^1.0.0, svgo@^1.0.5, svgo@^1.2.2, svgo@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-1.3.2.tgz#b6dc511c063346c9e415b81e43401145b96d4167"
   integrity sha512-yhy/sQYxR5BkC98CY7o31VGsg014AKLEPxdfhora76l36hD9Rdy5NZA/Ocn6yayNPgSamYdtX2rFJdcv07AYVw==
