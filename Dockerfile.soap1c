@@ -143,4 +143,4 @@ EXPOSE ${PORT} ${PORT_DEBUGGER}
 
 # YARN START
 ENTRYPOINT [ "./entrypoint.sh" ]
-CMD [ "start:synch" ]
+CMD [ "start:soap1c" ]

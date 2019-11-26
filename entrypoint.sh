@@ -93,6 +93,9 @@ elif [ -n "$*" -a "$1" = "start" ]; then
 elif [ -n "$*" -a "$1" = "start:synch" ]; then
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch/main.js
+elif [ -n "$*" -a "$1" = "start:soap1c" ]; then
+  export NODE_ENV=${NODE_ENV:=production}
+  $NODE dist/apps/soap1c/main.js
 elif [ -n "$*" ]; then
   yarn dev
 fi

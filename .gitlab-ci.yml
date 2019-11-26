@@ -14,6 +14,8 @@ variables:
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
   CONTAINER_IMAGE_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch:${CI_BUILD_REF}
   CONTAINER_IMAGE_SYNCH_LATEST: ${PREFIX}${CI_PROJECT_NAME}-synch:latest
+  CONTAINER_IMAGE_SOAP1C: ${PREFIX}${CI_PROJECT_NAME}-soap1c:${CI_BUILD_REF}
+  CONTAINER_IMAGE_SOAP1C_LATEST: ${PREFIX}${CI_PROJECT_NAME}-soap1c:latest
 
 test_build:
   image: node:12
@@ -74,6 +76,11 @@ production:
     - docker tag ${CONTAINER_IMAGE_SYNCH} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SYNCH}
     - docker tag ${CONTAINER_IMAGE_SYNCH} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SYNCH_LATEST}
     - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SYNCH}
+    - docker build --tag ${CONTAINER_IMAGE_SOAP1C} --file Dockerfile.soap1c .
+    - docker tag ${CONTAINER_IMAGE_SOAP1C} ${CONTAINER_IMAGE_SOAP1C_LATEST}
+    - docker tag ${CONTAINER_IMAGE_SOAP1C} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SOAP1C}
+    - docker tag ${CONTAINER_IMAGE_SOAP1C} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SOAP1C_LATEST}
+    - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_SOAP1C}
 
 deploy:
   image: dtzar/helm-kubectl:2.16.1
@@ -84,6 +91,7 @@ deploy:
   script:
     - env
     - time helm init --client-only
+    # Portal
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
     - |
       if [ ${DEPLOYS} -eq 0 ]; then \
@@ -137,6 +145,9 @@ deploy:
           --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
           --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
           --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
+          --set SOAP_URL="${SOAP_URL}" \
+          --set SOAP_USER="${SOAP_USER}" \
+          --set SOAP_PASS="${SOAP_PASS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
@@ -191,63 +202,22 @@ deploy:
           --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
           --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
           --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
+          --set SOAP_URL="${SOAP_URL}" \
+          --set SOAP_USER="${SOAP_USER}" \
+          --set SOAP_PASS="${SOAP_PASS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \
       fi
-    - export DEPLOYS_SYNCH=$(helm ls ${RELEASE_NAME_SYNCH} | wc -l)
+    # Portal-synch
+    - export DEPLOYS=$(helm ls ${RELEASE_NAME_SYNCH} | wc -l)
     - |
-      if [ ${DEPLOYS_SYNCH} -eq 0 ]; then \
+      if [ ${DEPLOYS} -eq 0 ]; then \
         helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME_SYNCH} \
           --debug --values helm/portal-synch/values.yaml \
           --set HOST="${HOST}" \
           --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-          --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
-          --set DATABASE_HOST="${DATABASE_HOST}" \
-          --set DATABASE_PORT="${DATABASE_PORT}" \
-          --set DATABASE_USERNAME="${DATABASE_USERNAME}" \
-          --set DATABASE_PASSWORD="${DATABASE_PASSWORD}" \
-          --set DATABASE_DATABASE="${DATABASE_DATABASE}" \
-          --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
-          --set DATABASE_SYNCHRONIZE="${DATABASE_SYNCHRONIZE}" \
-          --set DATABASE_DROP_SCHEMA="${DATABASE_DROP_SCHEMA}" \
-          --set DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}" \
-          --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
-          --set DATABASE_CACHE="${DATABASE_CACHE}" \
-          --set DATABASE_REDIS_HOST="${DATABASE_REDIS_HOST}" \
-          --set DATABASE_REDIS_PORT="${DATABASE_REDIS_PORT}" \
-          --set DATABASE_REDIS_PASSWORD="${DATABASE_REDIS_PASSWORD}" \
-          --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
-          --set DATABASE_REDIS_DB="${DATABASE_REDIS_DB}" \
-          --set HTTP_REDIS_HOST="${HTTP_REDIS_HOST}" \
-          --set HTTP_REDIS_PORT="${HTTP_REDIS_PORT}" \
-          --set HTTP_REDIS_DB="${HTTP_REDIS_DB}" \
-          --set HTTP_REDIS_PASSWORD="${HTTP_REDIS_PASSWORD}" \
-          --set HTTP_REDIS_PREFIX="${HTTP_REDIS_PREFIX}" \
-          --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
-          --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
-          --set SESSION_REDIS_HOST="${SESSION_REDIS_HOST}" \
-          --set SESSION_REDIS_PORT="${SESSION_REDIS_PORT}" \
-          --set SESSION_REDIS_DB="${SESSION_REDIS_DB}" \
-          --set SESSION_REDIS_PASSWORD="${SESSION_REDIS_PASSWORD}" \
-          --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
-          --set SESSION_SECRET="${SESSION_SECRET}" \
-          --set LDAP_URL="${LDAP_URL}" \
-          --set LDAP_BIND_DN="${LDAP_BIND_DN}" \
-          --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
-          --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
-          --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
-          --set LDAP_SEARCH_BASE_ALL_USERS="${LDAP_SEARCH_BASE_ALL_USERS}" \
-          --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
-          --set LDAP_REDIS_HOST="${LDAP_REDIS_HOST}" \
-          --set LDAP_REDIS_PORT="${LDAP_REDIS_PORT}" \
-          --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
-          --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
-          --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
-          --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
-          --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
-          --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SYNCH}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal-synch; \
@@ -257,52 +227,29 @@ deploy:
           --set HOST="${HOST}" \
           --set PORT="${PORT_MICROSERVICE}" \
           --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-          --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
-          --set DATABASE_HOST="${DATABASE_HOST}" \
-          --set DATABASE_PORT="${DATABASE_PORT}" \
-          --set DATABASE_USERNAME="${DATABASE_USERNAME}" \
-          --set DATABASE_PASSWORD="${DATABASE_PASSWORD}" \
-          --set DATABASE_DATABASE="${DATABASE_DATABASE}" \
-          --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
-          --set DATABASE_SYNCHRONIZE="${DATABASE_SYNCHRONIZE}" \
-          --set DATABASE_DROP_SCHEMA="${DATABASE_DROP_SCHEMA}" \
-          --set DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}" \
-          --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
-          --set DATABASE_CACHE="${DATABASE_CACHE}" \
-          --set DATABASE_REDIS_HOST="${DATABASE_REDIS_HOST}" \
-          --set DATABASE_REDIS_PORT="${DATABASE_REDIS_PORT}" \
-          --set DATABASE_REDIS_PASSWORD="${DATABASE_REDIS_PASSWORD}" \
-          --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
-          --set DATABASE_REDIS_DB="${DATABASE_REDIS_DB}" \
-          --set HTTP_REDIS_HOST="${HTTP_REDIS_HOST}" \
-          --set HTTP_REDIS_PORT="${HTTP_REDIS_PORT}" \
-          --set HTTP_REDIS_DB="${HTTP_REDIS_DB}" \
-          --set HTTP_REDIS_PASSWORD="${HTTP_REDIS_PASSWORD}" \
-          --set HTTP_REDIS_PREFIX="${HTTP_REDIS_PREFIX}" \
-          --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
-          --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
-          --set SESSION_REDIS_HOST="${SESSION_REDIS_HOST}" \
-          --set SESSION_REDIS_PORT="${SESSION_REDIS_PORT}" \
-          --set SESSION_REDIS_DB="${SESSION_REDIS_DB}" \
-          --set SESSION_REDIS_PASSWORD="${SESSION_REDIS_PASSWORD}" \
-          --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
-          --set SESSION_SECRET="${SESSION_SECRET}" \
-          --set LDAP_URL="${LDAP_URL}" \
-          --set LDAP_BIND_DN="${LDAP_BIND_DN}" \
-          --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
-          --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
-          --set LDAP_SEARCH_FILTER="${LDAP_SEARCH_FILTER}" \
-          --set LDAP_SEARCH_BASE_ALL_USERS="${LDAP_SEARCH_BASE_ALL_USERS}" \
-          --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
-          --set LDAP_REDIS_HOST="${LDAP_REDIS_HOST}" \
-          --set LDAP_REDIS_PORT="${LDAP_REDIS_PORT}" \
-          --set LDAP_REDIS_DB="${LDAP_REDIS_DB}" \
-          --set LDAP_REDIS_PASSWORD="${LDAP_REDIS_PASSWORD}" \
-          --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
-          --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
-          --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
-          --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SYNCH}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME_SYNCH} helm/portal-synch; \
+      fi
+    # Portal-soap1c
+    - export DEPLOYS=$(helm ls ${RELEASE_NAME_SOAP1C} | wc -l)
+    - |
+      if [ ${DEPLOYS} -eq 0 ]; then \
+        helm install --namespace=${PRODUCTION_NAMESPACE} --name=${RELEASE_NAME_SOAP1C} \
+          --debug --values helm/portal-soap1c/values.yaml \
+          --set HOST="${HOST}" \
+          --set PORT="${PORT_MICROSERVICE}" \
+          --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SOAP1C}" \
+          --set image.tag="${CI_BUILD_REF}" \
+          helm/portal-soap1c; \
+      else \
+        helm upgrade --install --namespace=${PRODUCTION_NAMESPACE} \
+          --debug --values helm/portal-soap1c/values.yaml \
+          --set HOST="${HOST}" \
+          --set PORT="${PORT_MICROSERVICE}" \
+          --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
+          --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME_SOAP1C}" \
+          --set image.tag="${CI_BUILD_REF}" \
+          ${RELEASE_NAME_SOAP1C} helm/portal-soap1c; \
       fi

@@ -13,6 +13,11 @@ imagePullSecrets: []
 nameOverride: "portal-soap1c"
 fullnameOverride: "portal-soap1c"
 
+# App
+HOST: 0.0.0.0
+PORT: 4222
+PORT_DEBUGGER: 9229
+
 service:
   type: LoadBalancer
 
