@@ -11,8 +11,6 @@ spec:
       app.kubernetes.io/name: {{ include "portal.name" . }}
   template:
     metadata:
-      # annotations:
-      #   checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "portal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.image.tag }}
