@@ -34,6 +34,7 @@ test_build:
     - cd ../..
     - time yarn build
     - time yarn build:synch
+    - time yarn build:soap1c
     - time ./entrypoint.sh test -u
   artifacts:
     paths:
