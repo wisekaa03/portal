@@ -24,6 +24,7 @@ test_build:
       - node_modules/
       - apps/portal/.next/cache/
   script:
+    - env
     - yarn install --production=false
     - cd apps/portal
     - npx next telemetry status
@@ -46,7 +47,7 @@ prepare:
     paths:
       - node_modules/
   script:
-    # - env
+    - env
     - yarn install --production=true
 
 production:
@@ -81,6 +82,7 @@ deploy:
   when: manual
   allow_failure: false
   script:
+    - env
     - time helm init --client-only
     - export DEPLOYS=$(helm ls ${RELEASE_NAME} | wc -l)
     - |
