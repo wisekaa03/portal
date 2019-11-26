@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
-import { BasicAuthSecurity, createClientAsync, Client, NTLMSecurity } from 'soap';
+import { createClientAsync, Client, NTLMSecurity } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';

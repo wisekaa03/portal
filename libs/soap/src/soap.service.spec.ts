@@ -31,8 +31,17 @@ describe('SoapService', () => {
           useFactory: async (configService: ConfigService) => {
             return {
               url: configService.get<string>('SOAP_URL'),
-              options: { disableCache: true },
-            } as SoapOptions;
+              options: {
+                wsdl_headers: {
+                  connection: 'keep-alive',
+                },
+                wsdl_options: {
+                  ntlm: true,
+                  username: configService.get<string>('SOAP_USER'),
+                  password: configService.get<string>('SOAP_PASS'),
+                },
+              },
+            };
           },
         }),
       ],
