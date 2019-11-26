@@ -59,11 +59,11 @@ spec:
           #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: HOST
-              value: {{ .Values.HOST | default "0.0.0.0" }}
+              value: {{ .Values.HOST | default "0.0.0.0" | quote }}
             - name: PORT
-              value: {{ .Values.PORT | default 4222 }}
+              value: {{ .Values.PORT | default "4000" | quote }}
             - name: PORT_DEBUGGER
-              value: {{ .Values.PORT_DEBUGGER | default 9229 }}
+              value: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
             - name: DATABASE_CONNECTION
               valueFrom:
                 configMapKeyRef:
