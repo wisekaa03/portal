@@ -12,6 +12,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 // #endregion
 
+jest.mock('@app/soap/soap.service');
+
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV === 'test';
 const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');

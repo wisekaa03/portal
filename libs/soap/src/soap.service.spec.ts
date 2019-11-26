@@ -9,8 +9,12 @@ import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule } from '@app/logger';
 import { SoapModule } from './soap.module';
 import { SoapService } from './soap.service';
-import { SoapOptions } from './soap.interface';
+// import { SoapOptions } from './soap.interface';
 // #endregion
+
+jest.mock('soap', () => ({
+  createClientAsync: () => undefined,
+}));
 
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV !== 'test';
