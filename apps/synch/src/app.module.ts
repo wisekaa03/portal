@@ -108,6 +108,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService,LoggingInterceptorProvider],
+  providers: [AppService, LoggingInterceptorProvider],
 })
 export class AppModule {}
