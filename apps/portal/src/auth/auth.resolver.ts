@@ -50,7 +50,7 @@ export class AuthResolver {
         if (err) {
           this.logService.error('Error when logging in:', err);
         } else {
-          this.logService.log(`User is logged in: ${user.username}`, 'AuthResolvers');
+          this.logService.log(`User is logged in: ${user.username}`, 'AuthResolver');
         }
       });
 
@@ -68,7 +68,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') req: Request): Promise<boolean | null> {
-    this.logService.debug(`User logout`, 'AuthResolvers');
+    this.logService.debug(`User logout`, 'AuthResolver');
 
     if (req.session) {
       req.logOut();
@@ -85,7 +85,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async cacheReset(@Context('res') res: Response): Promise<boolean> {
-    this.logService.debug(`Cache reset`, 'AuthResolvers');
+    this.logService.debug(`Cache reset`, 'AuthResolver');
 
     return this.authService.cacheReset(res);
   }

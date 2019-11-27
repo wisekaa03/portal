@@ -7,7 +7,7 @@ import { Response, Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { AppGraphQLExecutionContext } from '../interceptors/logging.interceptor';
+import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 // #endregion
 
 @Catch()

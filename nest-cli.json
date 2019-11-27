@@ -82,6 +82,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/image/tsconfig.lib.json"
       }
+    },
+    "logging.interceptor": {
+      "type": "library",
+      "root": "libs/logging.interceptor",
+      "entryFile": "index",
+      "sourceRoot": "libs/logging.interceptor/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logging.interceptor/tsconfig.lib.json"
+      }
+    },
+    "cache.interceptor": {
+      "type": "library",
+      "root": "libs/cache.interceptor",
+      "entryFile": "index",
+      "sourceRoot": "libs/cache.interceptor/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cache.interceptor/tsconfig.lib.json"
+      }
     }
   }
 }

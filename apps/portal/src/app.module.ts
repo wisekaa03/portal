@@ -4,7 +4,7 @@
 
 // #region Imports NPM
 import { resolve } from 'path';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER } from '@nestjs/core';
 import { Module, CacheModule } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -15,9 +15,9 @@ import redisCacheStore from 'cache-manager-redis-store';
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule, LogService } from '@app/logger';
+import { LoggingInterceptorProvider } from '@app/logging.interceptor';
+import { CacheInterceptorProvider } from '@app/cache.interceptor';
 import { HttpErrorFilter } from './filters/http-error.filter';
-import { LoggingInterceptor } from './interceptors/logging.interceptor';
-import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { DateScalar } from './shared/date.scalar';
 import { ByteArrayScalar } from './shared/bytearray.scalar';
 import { HomeModule } from './controllers/controllers.module';
@@ -186,19 +186,9 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     },
     // #endregion
 
-    // #region Logging interceptor
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-    // #endregion
+    LoggingInterceptorProvider,
 
-    // #region Cache interceptor
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-    // #endregion
+    CacheInterceptorProvider,
 
     // #region GraphQL interceptor
     // {

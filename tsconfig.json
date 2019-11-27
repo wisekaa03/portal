@@ -30,11 +30,20 @@
       "@app/portal": [
         "apps/portal/src"
       ],
+      "@app/portal/*": [
+        "apps/portal/src/*"
+      ],
       "@app/synch": [
         "apps/synch/src"
       ],
+      "@app/synch/*": [
+        "apps/synch/src/*"
+      ],
       "@app/soap1c": [
         "apps/soap1c/src"
+      ],
+      "@app/soap1c/*": [
+        "apps/soap1c/src/*"
       ],
       "@app/soap": [
         "libs/soap/src"
@@ -65,6 +74,18 @@
       ],
       "@app/image/*": [
         "libs/image/src/*"
+      ],
+      "@app/logging.interceptor": [
+        "libs/logging.interceptor/src"
+      ],
+      "@app/logging.interceptor/*": [
+        "libs/logging.interceptor/src/*"
+      ],
+      "@app/cache.interceptor": [
+        "libs/cache.interceptor/src"
+      ],
+      "@app/cache.interceptor/*": [
+        "libs/cache.interceptor/src/*"
       ]
     }
   },

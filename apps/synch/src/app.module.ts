@@ -11,6 +11,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { LoggerModule, LogService } from '@app/logger';
+import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from '../../portal/src/user/user.module';
@@ -107,6 +108,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,LoggingInterceptorProvider],
 })
 export class AppModule {}

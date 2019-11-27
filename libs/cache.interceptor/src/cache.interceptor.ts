@@ -1,6 +1,7 @@
 /** @format */
 
 // #region Imports NPM
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ExecutionContext, Injectable, CacheInterceptor as MainCacheInterceptor } from '@nestjs/common';
 // #endregion
 // #region Imports Local
@@ -23,3 +24,11 @@ export class CacheInterceptor extends MainCacheInterceptor {
     return undefined;
   }
 }
+
+export const CacheInterceptorProvider =
+  // #region Cache interceptor
+  {
+    provide: APP_INTERCEPTOR,
+    useClass: CacheInterceptor,
+  };
+// #endregion

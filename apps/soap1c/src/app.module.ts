@@ -8,6 +8,7 @@ import { Module } from '@nestjs/common';
 import { LoggerModule } from '@app/logger';
 import { ConfigModule, ConfigService } from '@app/config';
 import { SoapOptions, SoapModule } from '@app/soap';
+import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 // #endregion
@@ -44,6 +45,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
 
   controllers: [AppController],
 
-  providers: [AppService],
+  providers: [AppService, LoggingInterceptorProvider],
 })
 export class AppModule {}

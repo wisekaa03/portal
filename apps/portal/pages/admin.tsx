@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       padding: theme.spacing(2),
       display: 'grid',
-      gridTemplateColumns: '450px',
+      gridTemplateColumns: '500px',
       height: 'fit-content',
       gridGap: theme.spacing(),
     },

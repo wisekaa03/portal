@@ -27,6 +27,6 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "../../libs/image/src/image.module.ts", "../../libs/image/src/image.service.spec.ts", "../../libs/image/src/image.service.ts", "../../libs/ldap/src/ldap.module.ts", "../../libs/ldap/src/ldap.service.ts", "../../libs/ldap/src/ldap.service.spec.ts", "../../libs/ldap/src/ldap.interface.ts"
+    "**/*.tsx"
   ]
 }
