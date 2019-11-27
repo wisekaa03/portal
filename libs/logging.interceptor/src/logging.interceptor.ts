@@ -10,6 +10,7 @@ import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config/config.service';
 // #endregion
 
 export interface AppGraphQLExecutionContext extends GraphQLExecutionContext {
@@ -18,7 +19,11 @@ export interface AppGraphQLExecutionContext extends GraphQLExecutionContext {
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly logService: LogService) {}
+  microserviceUrl: string;
+
+  constructor(private readonly logService: LogService, private readonly configService: ConfigService) {
+    this.microserviceUrl = configService.get<string>('MICROSERVICE_URL');
+  }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
@@ -33,7 +38,7 @@ export class LoggingInterceptor implements NestInterceptor {
           .pipe(
             tap(() =>
               this.logService.log(
-                `${JSON.stringify(info.args)} - 127.0.0.1 - ${Date.now() - now}ms`,
+                `${JSON.stringify(info.args)} - ${this.microserviceUrl} - ${Date.now() - now}ms`,
                 'NestMicroservice',
               ),
             ),
@@ -46,13 +51,15 @@ export class LoggingInterceptor implements NestInterceptor {
 
         if (req) {
           const { method, url, client } = req;
-          const address = this.getAddress(client);
 
           return next
             .handle()
             .pipe(
               tap(() =>
-                this.logService.log(`${method} ${url} - ${address} - ${Date.now() - now}ms`, context.getClass().name),
+                this.logService.log(
+                  `${method} ${url} - ${client.remoteAddress} - ${Date.now() - now}ms`,
+                  context.getClass().name,
+                ),
               ),
             );
         }
@@ -61,7 +68,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const resolverName = ctx.constructorRef && ctx.constructorRef.name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        const address = this.getAddress(gqlCtx.req && gqlCtx.req.client);
+        const address = gqlCtx.req && gqlCtx.req.client && gqlCtx.req.client.remoteAddress;
 
         const values = info.variableValues;
         if (values['password']) {
@@ -81,20 +88,6 @@ export class LoggingInterceptor implements NestInterceptor {
           );
       }
     }
-  }
-
-  public getAddress(socket: Socket): string {
-    let address: string | AddressInfo;
-    if (socket instanceof Socket) {
-      address = socket.address();
-      if (typeof address === 'object') {
-        return address.address;
-      }
-
-      return address;
-    }
-
-    return 'unknown';
   }
 }
 
