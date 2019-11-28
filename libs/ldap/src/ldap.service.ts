@@ -6,7 +6,6 @@ import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
 import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
-// import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';

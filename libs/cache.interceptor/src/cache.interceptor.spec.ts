@@ -2,7 +2,6 @@
 
 // #region Imports NPM
 import * as CacheManager from 'cache-manager';
-// import { CacheInterceptor as MainCacheInterceptor } from '@nestjs/common/cache/interceptors/cache.interceptor';
 // #endregion
 // #region Imports Local
 import { CacheInterceptor } from './cache.interceptor';

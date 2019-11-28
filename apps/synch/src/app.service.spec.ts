@@ -12,7 +12,6 @@ import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule, LogService } from '@app/logger';
 import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
 import { UserModule } from '../../portal/src/user/user.module';
-import { UserService } from '../../portal/src/user/user.service';
 import { SynchService } from './app.service';
 // #endregion
 
