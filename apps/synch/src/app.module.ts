@@ -97,7 +97,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
           // cli: {
           //   migrationsDir: 'migration',
           // },
-        }),
+        } as TypeOrmModuleOptions),
     }),
     // #endregion
 

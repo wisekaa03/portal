@@ -5,14 +5,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
 import { SoapModule, SoapOptions } from '@app/soap';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 // #endregion
 
 jest.mock('@app/soap/soap.service');
 
-describe('AppController', () => {
-  let appController: AppController;
+describe('AppService', () => {
+  let appService: AppService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -21,16 +20,16 @@ describe('AppController', () => {
           useFactory: () => ({} as SoapOptions),
         }),
       ],
-      controllers: [AppController],
+      controllers: [],
       providers: [AppService],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appService = app.get<AppService>(AppService);
   });
 
   describe('root', () => {
     it('"synchronization" should be defined', () => {
-      expect(appController.synchronization()).toBeDefined();
+      expect(appService.synchronization()).toBeDefined();
     });
   });
 });
