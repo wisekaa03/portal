@@ -339,7 +339,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const searchRef = useRef<HTMLInputElement>(null);
 
   const [_search, setSearch] = useState<string>('');
-  const search = useDebounce(_search, 1000);
+  const search = useDebounce(_search, 300);
 
   const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData }] = useLazyQuery(
     SEARCH_SUGGESTIONS,
@@ -575,7 +575,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Page>
       <Modal open={Boolean(profileId)} onClose={handleProfileClose} className={classes.modal}>
         <div>
-          <ProfileComponent profileId={profileId} handleClose={handleProfileClose} />
+          <ProfileComponent profileId={profileId} handleClose={handleProfileClose} handleSearch={setSearch} />
         </div>
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose} className={classes.modal}>

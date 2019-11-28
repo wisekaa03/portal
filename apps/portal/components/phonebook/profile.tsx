@@ -9,15 +9,12 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, CardContent, Paper, List, ListItem, ListItemText, Divider, IconButton } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
-import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
-import { Data } from '../../lib/types';
-import { Profile } from '../../src/profile/models/profile.dto';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
         alignItems: 'center',
       },
     },
-    manager: {
+    pointer: {
       cursor: 'pointer',
     },
     topIcons: {
@@ -105,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>((props, ref) => {
   const classes = useStyles({});
-  const { t, profileId, handleClose } = props;
+  const { t, profileId, handleClose, handleSearch } = props;
 
   if (!profileId) return null;
 
@@ -121,6 +118,13 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
     getProfile({
       variables: { id },
     });
+  };
+
+  const handleSearchClose = (text: string | undefined) => (): void => {
+    if (!text) return;
+
+    handleSearch(text);
+    handleClose();
   };
 
   const profile = !loading && data && data.profile;
@@ -186,6 +190,8 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.company`)} />
                       <ListItemText
+                        className={profile && profile.company && classes.pointer}
+                        onClick={handleSearchClose(profile && profile.company)}
                         primary={profile ? profile.company : <Skeleton variant="rect" width={250} height={25} />}
                       />
                     </div>
@@ -195,6 +201,8 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.department`)} />
                       <ListItemText
+                        className={profile && profile.department && classes.pointer}
+                        onClick={handleSearchClose(profile && profile.department)}
                         primary={profile ? profile.department : <Skeleton variant="rect" width={250} height={25} />}
                       />
                     </div>
@@ -204,6 +212,8 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.title`)} />
                       <ListItemText
+                        className={profile && profile.title && classes.pointer}
+                        onClick={handleSearchClose(profile && profile.title)}
                         primary={profile ? profile.title : <Skeleton variant="rect" width={250} height={25} />}
                       />
                     </div>
@@ -222,7 +232,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
                       <ListItemText
-                        className={classes.manager}
+                        className={classes.pointer}
                         onClick={handleProfile(profile && profile.manager && profile.manager.id)}
                         primary={
                           profile ? (
