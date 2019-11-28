@@ -1,3 +1,7 @@
 /** @format */
 
-export class News {}
+export class News {
+  id: string;
+
+  content: string;
+}
