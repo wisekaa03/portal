@@ -1,7 +1,15 @@
 /** @format */
+interface Rendered {
+  rendered: string;
+  protected?: boolean;
+}
 
 export class News {
   id: string;
 
-  content: string;
+  title: Rendered;
+
+  content: Rendered;
+
+  excerpt: Rendered;
 }

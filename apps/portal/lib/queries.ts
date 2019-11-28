@@ -164,6 +164,15 @@ export const NEWS = gql`
   query News {
     news {
       id
+      title {
+        rendered
+      }
+      content {
+        rendered
+      }
+      excerpt {
+        rendered
+      }
     }
   }
 `;
