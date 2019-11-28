@@ -3,13 +3,11 @@
 // #region Imports NPM
 import { Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { AxiosResponse } from 'axios';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { NewsService } from './news.service';
-// import { NewsEntity } from './news.entity';
+import { News } from './news.interface';
 // #endregion
 
 @Resolver('News')
@@ -23,7 +21,9 @@ export class NewsResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async news(): Promise<AxiosResponse<any>> {
-    return this.newsService.news();
+  async news(): Promise<News[]> {
+    return this.newsService.news().then((entries) => {
+      return entries.data;
+    });
   }
 }

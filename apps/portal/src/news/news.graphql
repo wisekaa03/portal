@@ -1,5 +1,6 @@
 type News {
   id: ID
+  data: String
 }
 
 type Query {
