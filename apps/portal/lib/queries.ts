@@ -159,3 +159,11 @@ export const SEARCH_SUGGESTIONS = gql`
     }
   }
 `;
+
+export const NEWS = gql`
+  query News {
+    news {
+      id
+    }
+  }
+`;

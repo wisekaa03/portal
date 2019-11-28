@@ -95,7 +95,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   server.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'"],
+        defaultSrc: ["'self'", 'https://i-npz.ru'],
         baseUri: ["'none'"],
         objectSrc: ["'none'"],
         imgSrc,

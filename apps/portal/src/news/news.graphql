@@ -1,0 +1,7 @@
+type News {
+  id: ID
+}
+
+type Query {
+  news: [News]
+}
