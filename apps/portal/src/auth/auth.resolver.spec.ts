@@ -11,6 +11,13 @@ import { AuthService } from './auth.service';
 
 jest.mock('./auth.service');
 jest.mock('../guards/gqlauth.guard');
+jest.mock('@app/logger/logger.service', () => ({
+  LogService: jest.fn().mockImplementation(() => ({
+    error: jest.fn(),
+    debug: jest.fn(),
+  })),
+}));
+// jest.mock('@app/config/config.service');
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;

@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.server.json",
   "compilerOptions": {
     "declaration": false,
+    "experimentalDecorators": true,
     "outDir": "../../dist/apps/synch"
   },
   "include": ["src/**/*", "../../typings/global.d.ts"],

@@ -8,6 +8,13 @@ import { LoggerModule } from '@app/logger';
 import { ImageService } from './image.service';
 // #endregion
 
+jest.mock('@app/logger/logger.service', () => ({
+  LogService: jest.fn().mockImplementation(() => ({
+    debug: jest.fn(),
+  })),
+}));
+jest.mock('sharp');
+
 describe('ImageService', () => {
   let service: ImageService;
 

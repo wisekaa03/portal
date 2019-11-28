@@ -10,7 +10,7 @@ import { UserService } from '../../portal/src/user/user.service';
 // #endregion
 
 @Injectable()
-export class AppService {
+export class SynchService {
   constructor(
     private readonly logService: LogService,
     private readonly ldapService: LdapService,

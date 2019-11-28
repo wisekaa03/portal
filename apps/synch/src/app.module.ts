@@ -13,7 +13,7 @@ import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/lda
 import { LoggerModule, LogService } from '@app/logger';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { SynchService } from './app.service';
 import { UserModule } from '../../portal/src/user/user.module';
 import { UserEntity } from '../../portal/src/user/user.entity';
 import { ProfileEntity } from '../../portal/src/profile/profile.entity';
@@ -97,7 +97,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
           // cli: {
           //   migrationsDir: 'migration',
           // },
-        } as TypeOrmModuleOptions),
+        }),
     }),
     // #endregion
 
@@ -108,6 +108,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, LoggingInterceptorProvider],
+  providers: [SynchService, LoggingInterceptorProvider],
 })
 export class AppModule {}

@@ -16,9 +16,12 @@ jest.mock('soap', () => ({
   createClientAsync: () => undefined,
 }));
 
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV !== 'test';
-const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');
+jest.mock('@app/logger/logger.service', () => ({
+  LogService: jest.fn().mockImplementation(() => ({
+    debug: jest.fn(),
+  })),
+}));
+jest.mock('@app/config/config.service');
 
 describe('SoapService', () => {
   let service: SoapService;
@@ -26,7 +29,7 @@ describe('SoapService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.register(env),
+        ConfigModule.register(resolve('.env')),
         LoggerModule,
 
         SoapModule.registerAsync({

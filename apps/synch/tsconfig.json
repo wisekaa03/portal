@@ -1,9 +1,9 @@
 {
-  "extends": "../../tsconfig.server.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "outDir": "../../dist/apps/portal",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "outDir": "../../dist/apps/synch"
   },
   "include": ["src/**/*", "../../typings/global.d.ts"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]

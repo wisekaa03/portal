@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@app/config';
 import { LdapService } from './ldap.service';
 import { LdapModule } from './ldap.module';
 import { LdapModuleOptions, Scope, ldapADattributes } from './ldap.interface';
+import { LoggerModule } from '../../logger/src/logger.module';
 // #endregion
 
 jest.mock('cache-manager');
@@ -21,9 +22,12 @@ jest.mock('ldapjs', () => ({
   }),
 }));
 
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV !== 'test';
-const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');
+jest.mock('@app/logger/logger.service', () => ({
+  LogService: jest.fn().mockImplementation(() => ({
+    debug: jest.fn(),
+  })),
+}));
+jest.mock('@app/config/config.service');
 
 describe('LdapService', () => {
   let ldap: LdapService;
@@ -31,7 +35,8 @@ describe('LdapService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.register(env),
+        LoggerModule,
+        ConfigModule.register(resolve('.env')),
 
         LdapModule.registerAsync({
           imports: [ConfigModule],
@@ -52,7 +57,7 @@ describe('LdapService', () => {
               queueSize: 100,
               reconnect: true,
               cache: true,
-            } as LdapModuleOptions;
+            };
           },
         }),
       ],
