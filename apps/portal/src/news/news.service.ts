@@ -27,7 +27,7 @@ export class NewsService {
    *
    * @return News
    */
-  news = (): Observable<AxiosResponse<any>> =>
-    this.httpService.get('https://i-npz.ru/wp/index.php/wp-json/wp/v2/posts');
+  news = async (): Promise<AxiosResponse<any>> =>
+    this.httpService.get('https://i-npz.ru/wp/index.php/wp-json/wp/v2/posts').toPromise();
   // this.profileRepository.findOne(id, { relations: ['manager'], cache: true });
 }

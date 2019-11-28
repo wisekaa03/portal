@@ -23,7 +23,7 @@ export class NewsResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  profile(): Observable<AxiosResponse<any>> {
+  async news(): Promise<AxiosResponse<any>> {
     return this.newsService.news();
   }
 }
