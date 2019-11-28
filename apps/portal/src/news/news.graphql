@@ -5,6 +5,7 @@ type Rendered {
 
 type News {
   id: ID
+  date: String
   title: Rendered
   content: Rendered
   excerpt: Rendered

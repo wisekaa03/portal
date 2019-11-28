@@ -164,6 +164,7 @@ export const NEWS = gql`
   query News {
     news {
       id
+      date
       title {
         rendered
       }

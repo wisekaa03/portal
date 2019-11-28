@@ -5,6 +5,7 @@ import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
 import { Card, CardActionArea, CardMedia, Typography, CardContent, CardActions, Button } from '@material-ui/core';
+import moment from 'moment';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -31,9 +32,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
     },
     action: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      alignItems: 'flex-end',
+      'flex': 1,
+      'justifyContent': 'space-between',
+      'alignItems': 'flex-end',
+      '& p': {
+        padding: theme.spacing() / 2,
+      },
     },
   }),
 );
@@ -41,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const { loading, data, error } = useQuery(NEWS);
+  moment.locale('ru');
 
   return (
     <Page {...rest}>
@@ -64,6 +69,9 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     </CardContent>
                   </CardActionArea>
                   <CardActions className={classes.action}>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      {moment(news.date).format('MMMM DD, YYYY')}
+                    </Typography>
                     <Button size="small" color="secondary">
                       {t('news:more')}
                     </Button>
