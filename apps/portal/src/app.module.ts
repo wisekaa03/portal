@@ -23,6 +23,7 @@ import { ByteArrayScalar } from './shared/bytearray.scalar';
 import { HomeModule } from './controllers/controllers.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { NewsModule } from './news/news.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProfileEntity } from './profile/profile.entity';
 import { UserEntity } from './user/user.entity';
@@ -163,6 +164,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
 
     // #region Users
     UserModule,
+    // #endregion
+
+    // #region News
+    NewsModule,
     // #endregion
 
     // #region Home page
