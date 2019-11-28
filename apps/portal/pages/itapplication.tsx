@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Button, Typography } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Typography } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import clsx from 'clsx';
@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import BaseIcon from '../components/icon';
+import Button from '../components/button';
 import AppIcon1 from '../../../public/images/svg/itapps/app_1.svg';
 import AppIcon2 from '../../../public/images/svg/itapps/app_2.svg';
 import AppIcon3 from '../../../public/images/svg/itapps/app_3.svg';
@@ -122,18 +123,11 @@ const useStyles = makeStyles((theme: Theme) =>
       'flexDirection': 'row',
       'justifyContent': 'flex-end',
 
-      '& button': {
-        borderRadius: theme.spacing(3),
+      '& button:not(:last-child)': {
+        marginRight: theme.spacing(),
       },
     },
     textField: {},
-    buttonAccept: {
-      backgroundColor: '#DEECEC',
-    },
-    buttonCancel: {
-      backgroundColor: '#ECDEDE',
-      marginRight: theme.spacing(),
-    },
   }),
 );
 
@@ -283,10 +277,10 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 />
               </FormControl>
               <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                <Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
+                <Button actionType="cancel" onClick={handleClose}>
                   {t('common:cancel')}
                 </Button>
-                <Button variant="contained" className={classes.buttonAccept} onClick={handleAccept}>
+                <Button actionType="accept" onClick={handleAccept}>
                   {t('common:accept')}
                 </Button>
               </FormControl>

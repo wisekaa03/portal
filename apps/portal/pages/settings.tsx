@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       gridGap: theme.spacing(),
     },
     buttonLang: {
-      backgroundColor: blue[400],
+      // backgroundColor: blue[400],
     },
   }),
 );
@@ -55,6 +55,7 @@ const Settings: I18nPage = ({ t, ...rest }): React.ReactElement => {
               {context.user && (
                 <>
                   <Button
+                    color="primary"
                     variant="contained"
                     className={classes.buttonLang}
                     onClick={handleLanguage(context.user.settings && context.user.settings.lng)}

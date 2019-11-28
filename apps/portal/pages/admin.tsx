@@ -24,13 +24,13 @@ const useStyles = makeStyles((theme: Theme) =>
       gridGap: theme.spacing(),
     },
     buttonSync: {
-      backgroundColor: green[300],
+      // backgroundColor: green[300],
     },
     buttonCache: {
-      backgroundColor: green[300],
+      // backgroundColor: green[300],
     },
     buttonSoap: {
-      backgroundColor: green[300],
+      // backgroundColor: green[300],
     },
   }),
 );
@@ -77,15 +77,33 @@ const AdminPanel: I18nPage = ({ t, ...rest }): React.ReactElement => {
   return (
     <Page {...rest}>
       <div className={classes.root}>
-        <Button disabled={syncLoading} variant="contained" className={classes.buttonSync} onClick={handleSync}>
+        <Button
+          disabled={syncLoading}
+          variant="contained"
+          color="secondary"
+          className={classes.buttonSync}
+          onClick={handleSync}
+        >
           {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
         </Button>
         {errorsSynch && <GQLError error={errorsSynch} />}
-        <Button disabled={cacheLoading} variant="contained" className={classes.buttonCache} onClick={handleCache}>
+        <Button
+          disabled={cacheLoading}
+          variant="contained"
+          color="secondary"
+          className={classes.buttonCache}
+          onClick={handleCache}
+        >
           {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
         </Button>
         {errorsCache && <GQLError error={errorsCache} />}
-        <Button disabled={soap1cLoading} variant="contained" className={classes.buttonSoap} onClick={handleSoap1c}>
+        <Button
+          disabled={soap1cLoading}
+          variant="contained"
+          color="secondary"
+          className={classes.buttonSoap}
+          onClick={handleSoap1c}
+        >
           {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
         </Button>
         {errorsSoap1c && <GQLError error={errorsSoap1c} />}

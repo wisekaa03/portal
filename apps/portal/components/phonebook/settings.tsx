@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 // import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
-  Button,
   CardHeader,
   Card,
   CardContent,
@@ -19,6 +18,7 @@ import {
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
 import { Column, ColumnNames, SettingsProps } from './types';
+import Button from '../button';
 import HeaderBg from '../../../../public/images/jpeg/header_bg.jpg';
 // #endregion
 
@@ -76,9 +76,8 @@ const useStyles = makeStyles((theme: Theme) =>
       'padding': `0 ${theme.spacing(4)}px ${theme.spacing(2)}px ${theme.spacing(4)}px`,
       'display': 'flex',
       'justifyContent': 'flex-end',
-      '& > button': {
-        borderRadius: '87px',
-        marginLeft: theme.spacing(),
+      '& button:not(:last-child)': {
+        marginRight: theme.spacing(),
       },
     },
     buttonAccept: {
@@ -167,10 +166,10 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
         </div>
       </CardContent>
       <CardActions className={classes.actions} disableSpacing>
-        <Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
+        <Button actionType="cancel" onClick={handleClose}>
           {t('common:cancel')}
         </Button>
-        <Button variant="contained" className={classes.buttonAccept} onClick={handleAccept}>
+        <Button actionType="accept" onClick={handleAccept}>
           {t('common:accept')}
         </Button>
       </CardActions>

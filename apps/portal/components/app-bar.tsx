@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
     },
     buttonLogout: {
-      backgroundColor: blue[400],
+      // backgroundColor: blue[300],
     },
   }),
 );
@@ -196,7 +196,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                         </>
                       )}
                     </Box>
-                    <Button variant="contained" className={classes.buttonLogout} onClick={handleLogout}>
+                    <Button variant="contained" color="primary" className={classes.buttonLogout} onClick={handleLogout}>
                       {t('common:signOut')}
                     </Button>
                   </Box>
