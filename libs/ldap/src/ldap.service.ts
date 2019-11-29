@@ -10,7 +10,7 @@ import * as redisStore from 'cache-manager-redis-store';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
-import { LDAP_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache } from './ldap.interface';
+import { LDAP_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache, LDAP_SYNCH } from './ldap.interface';
 // #endregion
 
 @Injectable()
@@ -489,7 +489,7 @@ export class LdapService extends EventEmitter {
    */
   public async synchronization(): Promise<undefined | LdapResponeUser[]> {
     if (this.userCache) {
-      const cached: LDAPCache = await this.userCache.get<LDAPCache>('SYNCHRONIZATION');
+      const cached: LDAPCache = await this.userCache.get<LDAPCache>(LDAP_SYNCH);
       // TODO: придумать что-нибудь половчее моих synchronization
       if (cached && cached.synch) {
         this.logger.debug(`Synchronization from cache`, 'LDAP');
@@ -524,7 +524,7 @@ export class LdapService extends EventEmitter {
             this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
 
             this.userCache.set<LDAPCache>(
-              'SYNCHRONIZATION',
+              LDAP_SYNCH,
               {
                 synch,
               },
@@ -542,6 +542,39 @@ export class LdapService extends EventEmitter {
 
         return undefined;
       });
+  }
+
+  /**
+   * Modify using the admin client.
+   *
+   * @private
+   * @param {string} dn - LDAP Distiguished Name
+   * @param {Object} data - LDAP modify data
+   * @returns {undefined | boolean}
+   */
+  public async modify(dn: string, data: Ldap.Change, username?: string): Promise<undefined | boolean> {
+    return this.adminBind().then(
+      () =>
+        new Promise<undefined | boolean>((resolve, reject) =>
+          this.adminClient.modify(dn, data, async (searchErr: Ldap.Error | null) => {
+            if (searchErr) {
+              this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
+
+              return reject(searchErr);
+            }
+
+            this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
+
+            if (this.userCache) {
+              this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
+
+              await this.userCache.del(username);
+            }
+
+            return resolve(true);
+          }),
+        ),
+    );
   }
 
   /**
