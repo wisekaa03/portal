@@ -74,7 +74,7 @@ export class ProfileResolver {
   }
 
   /**
-   * GraphQL mutation: hideProfile
+   * GraphQL mutation: changeProfile
    *
    * @param id
    * @param value
@@ -83,7 +83,7 @@ export class ProfileResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
-  async hideProfile(@Args('id') id: string, @Args('value') value: any): Promise<boolean | null> {
-    return this.profileService.hideProfile(id, value) || null;
+  async changeProfile(@Args('id') id: string, @Args('value') value: any): Promise<boolean | null> {
+    return this.profileService.changeProfile(id, value) || null;
   }
 }

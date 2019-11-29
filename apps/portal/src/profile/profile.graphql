@@ -112,7 +112,7 @@ type Query {
 }
 
 type Mutation {
-  hideProfile(id: String): Boolean
+  changeProfile(id: String): Boolean
 }
 
 

@@ -248,12 +248,12 @@ export class ProfileService {
   }
 
   /**
-   * hideProfile
+   * changeProfile
    * @param id string
    * @param value any
    * @returns boolean | null
    */
-  async hideProfile(id: string, value: any): Promise<boolean | null> {
+  async changeProfile(id: string, value: any): Promise<boolean | null> {
     return null;
   }
 }
