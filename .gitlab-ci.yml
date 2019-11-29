@@ -15,7 +15,7 @@ variables:
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
 test_build:
-  image: node:12
+  image: node:13
   stage: test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
@@ -40,7 +40,7 @@ test_build:
     expire_in: 16 hours
 
 prepare:
-  image: node:12
+  image: node:13
   stage: test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
