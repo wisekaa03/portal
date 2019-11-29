@@ -38,6 +38,7 @@ import { LocalStrategy } from './strategies/local.strategy';
           groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
           groupSearchScope: 'sub' as Scope,
           groupDnProperty: 'dn',
+          groupSearchAttributes: ldapADattributes,
           searchAttributes: ldapADattributes,
           searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE_ALL_USERS'),
           searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
