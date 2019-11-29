@@ -28,9 +28,9 @@
     "country": "Страна",
     "region": "Область",
     "town": "Город",
-    "street": "Адрес",
     "street": "Улица",
     "postalCode": "Индекс",
-    "disabled": "Уволен"
+    "disabled": "Уволен",
+    "notShowing": "Не показывать"
   }
 }

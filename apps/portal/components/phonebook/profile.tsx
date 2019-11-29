@@ -99,6 +99,9 @@ const useStyles = makeStyles((theme: Theme) =>
     disabled: {
       color: red[600],
     },
+    notShowing: {
+      color: red[600],
+    },
   }),
 );
 
@@ -159,6 +162,11 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             {profile && profile.disabled && (
               <div className={clsx(classes.center, classes.disabled)}>
                 <span>{t(`phonebook:fields.disabled`)}</span>
+              </div>
+            )}
+            {profile && profile.notShowing && (
+              <div className={clsx(classes.center, classes.notShowing)}>
+                <span>{t(`phonebook:fields.notShowing`)}</span>
               </div>
             )}
             {profile && profile.nameEng && (

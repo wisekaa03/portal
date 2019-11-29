@@ -25,6 +25,7 @@ export class ProfileResolver {
    * @param disabled
    * @returns {Profiles[]}
    */
+  /* eslint @typescript-eslint/indent:0 */
   @Query()
   @UseGuards(GqlAuthGuard)
   async profiles(
@@ -33,6 +34,7 @@ export class ProfileResolver {
     @Args('orderBy') orderBy: Order<string>,
     @Args('search') search: string,
     @Args('disabled') disabled: boolean,
+    @Args('notShowing') notShowing: boolean,
   ): Promise<Connection<ProfileEntity>> {
     return paginate(
       { first, after, orderBy },
@@ -41,7 +43,7 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: false,
         orderFieldToKey: (field: string) => field,
-        queryBuilder: this.profileService.getProfiles(search, disabled),
+        queryBuilder: this.profileService.getProfiles(search, disabled, notShowing),
       },
     );
   }

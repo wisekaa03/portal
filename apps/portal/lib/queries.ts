@@ -1,4 +1,5 @@
 /** @format */
+/* eslint max-len:0 */
 
 // #region Imports NPM
 import gql from 'graphql-tag';
@@ -39,6 +40,7 @@ const PROFILE_FRAGMENT = gql`
     updatedAt
     createdAt
     disabled
+    notShowing
   }
 `;
 
@@ -97,13 +99,14 @@ export const LOGOUT = gql`
 `;
 
 export const PROFILES = (_columns: string): any => gql`
-  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String, $disabled: Boolean) {
-    profiles(first: $first, after: $after, orderBy: $orderBy, search: $search, disabled: $disabled) {
+  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String, $disabled: Boolean, $notShowing: Boolean) {
+    profiles(first: $first, after: $after, orderBy: $orderBy, search: $search, disabled: $disabled, notShowing: $notShowing) {
       totalCount
       edges {
         node {
           id
           disabled
+          notShowing
           ${_columns}
         }
         cursor

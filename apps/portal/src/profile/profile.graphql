@@ -99,7 +99,7 @@ type ProfileConnection {
 
 type Query {
 
-  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean): ProfileConnection!
+  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean): ProfileConnection!
 
   profile(id: ID): Profile
 

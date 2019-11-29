@@ -37,13 +37,13 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
-  getProfiles = (search: string, disabled: boolean): SelectQueryBuilder<ProfileEntity> => {
+  getProfiles = (search: string, disabled: boolean, notShowing: boolean): SelectQueryBuilder<ProfileEntity> => {
     const query = this.profileRepository
       .createQueryBuilder('profile')
       .leftJoinAndSelect('profile.manager', 'manager')
       .where('profile.notShowing = :notShowing');
 
-    const parameters = { search: `%${search}%`, notShowing: false, disabled };
+    const parameters = { search: `%${search}%`, notShowing, disabled };
 
     if (!disabled) {
       query.andWhere('profile.disabled = :disabled');
