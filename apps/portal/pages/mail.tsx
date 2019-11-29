@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import queryString from 'query-string';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -22,7 +23,8 @@ const useStyles = makeStyles(() =>
 
 export default (props: any): React.ReactElement => {
   const classes = useStyles({});
-  const url = 'https://roundcube.i-npz.ru/';
+  const { to } = queryString.parse(window.location.search);
+  const url = `https://roundcube.i-npz.ru/${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 
   return (
     <Page {...props}>

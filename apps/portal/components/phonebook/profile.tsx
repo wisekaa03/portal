@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useEffect } from 'react';
 import clsx from 'clsx';
+import Link from 'next/link';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -15,6 +16,7 @@ import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE } from '../../lib/queries';
+
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -178,7 +180,9 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             )}
             {profile && profile.email && (
               <div className={classes.center}>
-                <span>{profile.email}</span>
+                <Link href={{ pathname: '/mail', query: { to: profile.email } }}>
+                  <a>{profile.email}</a>
+                </Link>
               </div>
             )}
           </div>
