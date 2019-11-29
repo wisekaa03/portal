@@ -27,6 +27,7 @@ import { NewsModule } from './news/news.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProfileEntity } from './profile/profile.entity';
 import { UserEntity } from './user/user.entity';
+import { GroupModule } from './group/group.module';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -160,6 +161,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
 
     // #region Authentication
     AuthModule,
+    // #endregion
+
+    // #region Groups
+    GroupModule,
     // #endregion
 
     // #region Users
