@@ -218,6 +218,10 @@ export class ConfigService {
         .default('(sAMAccountName={{username}})')
         .optional()
         .empty(),
+      LDAP_SEARCH_GROUP: Joi.string()
+        .default('(objectClass=group)')
+        .optional()
+        .empty(),
       LDAP_SEARCH_BASE_ALL_USERS: Joi.string()
         .default('DC=example,DC=local')
         .optional()

@@ -241,6 +241,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: LDAP_SEARCH_FILTER
+            - name: LDAP_SEARCH_GROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LDAP_SEARCH_GROUP
             - name: LDAP_SEARCH_BASE_ALL_USERS
               valueFrom:
                 configMapKeyRef:

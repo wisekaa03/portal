@@ -395,12 +395,15 @@ export class LdapService extends EventEmitter {
     }
 
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
-      .then((result) => {
-        // eslint-disable-next-line no-param-reassign
-        (user.groups as unknown) = result;
+      .then(
+        (result) =>
+          new Promise<Ldap.SearchEntryObject>((resolve) => {
+            // eslint-disable-next-line no-param-reassign
+            (user.groups as unknown) = result;
 
-        return user;
-      })
+            return resolve(user);
+          }),
+      )
       .catch((error: Ldap.Error) => {
         this.logger.error(`group search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
 

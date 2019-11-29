@@ -46,6 +46,7 @@ data:
   LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | default "supersecret" | quote }}
   LDAP_SEARCH_BASE: {{ .Values.LDAP_SEARCH_BASE | default "DC=example,DC=local" | quote }}
   LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | default "(sAMAccountName={{username}})" | quote }}
+  LDAP_SEARCH_GROUP: {{ .Values.LDAP_SEARCH_GROUP | default "(&(objectClass=group)(member={{dn}}))" | quote }}
   LDAP_SEARCH_BASE_ALL_USERS: {{ .Values.LDAP_SEARCH_BASE_ALL_USERS | default "DC=example,DC=local" | quote }}
   LDAP_SEARCH_FILTER_ALL_USERS: {{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | default "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))" | quote }}
   # LDAP Redis

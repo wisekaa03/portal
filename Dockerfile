@@ -94,6 +94,8 @@ ARG LDAP_SEARCH_BASE="DC\=example\,DC\=local"
 ENV LDAP_SEARCH_BASE ${LDAP_SEARCH_BASE}
 ARG LDAP_SEARCH_FILTER="(sAMAccountName\={{username}})"
 ENV LDAP_SEARCH_FILTER ${LDAP_SEARCH_FILTER}
+ARG LDAP_SEARCH_GROUP="(&(objectClass=group)(member={{dn}}))"
+ENV LDAP_SEARCH_GROUP ${LDAP_SEARCH_GROUP}
 ARG LDAP_SEARCH_BASE_ALL_USERS="DC\=example\,DC\=local"
 ENV LDAP_SEARCH_BASE_ALL_USERS ${LDAP_SEARCH_BASE_ALL_USERS}
 ARG LDAP_SEARCH_FILTER_ALL_USERS="(\&(\&(\|(\&(objectClass\=user)(objectCategory\=person))(&(objectClass\=contact)(objectCategory\=person)))))"
