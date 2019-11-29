@@ -178,6 +178,7 @@ export class ProfileService {
     const [department, otdel] = ldapUser.department ? ldapUser.department.split(/\s*,\s*/, 2) : [undefined, undefined];
 
     const profile: Profile = {
+      dn: ldapUser.dn,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID.toString(),
       username: ldapUser.sAMAccountName,

@@ -3,6 +3,7 @@ type Profile {
 
   loginService: String
   loginIdentificator: String
+  dn: String
 
   username: String
 

@@ -11,6 +11,7 @@ import {
   BeforeUpdate,
   JoinColumn,
   OneToOne,
+  ManyToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 // #endregion
@@ -18,6 +19,7 @@ import * as bcrypt from 'bcrypt';
 import { UserSettings } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
 import { LoginService } from '../profile/models/profile.dto';
+import { GroupEntity } from '../group/group.entity';
 // #endregion
 
 @Entity('user')
@@ -40,6 +42,11 @@ export class UserEntity {
   @Column('text')
   password: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  @ManyToMany((type) => GroupEntity)
+  @JoinColumn()
+  groups: GroupEntity[];
+
   @Column({
     type: 'boolean',
     nullable: false,
@@ -60,7 +67,8 @@ export class UserEntity {
   })
   settings: UserSettings;
 
-  @OneToOne((_type: any) => ProfileEntity)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  @OneToOne((type: any) => ProfileEntity)
   @JoinColumn()
   profile: ProfileEntity;
 

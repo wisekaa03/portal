@@ -51,6 +51,12 @@ export class ProfileEntity {
   username: string;
 
   @Column({
+    type: 'text',
+    nullable: true,
+  })
+  dn: string;
+
+  @Column({
     type: 'varchar',
     nullable: true,
   })

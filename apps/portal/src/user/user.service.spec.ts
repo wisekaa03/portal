@@ -9,14 +9,12 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-// import { ConfigModule, ConfigService } from '@app/config';
-import { LoggerModule, LogService } from '@app/logger';
+import { LoggerModule } from '@app/logger';
 import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
 import { UserService } from './user.service';
-// import { UserEntity } from './user.entity';
 import { ProfileModule } from '../profile/profile.module';
-// import { ProfileEntity } from '../profile/profile.entity';
+import { GroupModule } from '../group/group.module';
 // #endregion
 
 @Entity()
@@ -37,6 +35,15 @@ class ProfileEntity {
   name?: string;
 }
 
+@Entity()
+class GroupEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
 jest.mock('@app/ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 // jest.mock('@app/config/config.service');
@@ -50,21 +57,13 @@ describe('UserService', () => {
         LoggerModule,
         // ConfigModule.register('.env'),
 
-        I18nModule.forRootAsync({
-          useFactory: () => ({
-            path: __dirname,
-            filePattern: '*.json',
-            fallbackLanguage: 'en',
-          }),
-        }),
-
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [ProfileEntity, UserEntity],
+              entities: [ProfileEntity, GroupEntity, UserEntity],
               synchronize: true,
               logging: false
             } as TypeOrmModuleOptions),
@@ -82,6 +81,7 @@ describe('UserService', () => {
           },
         ]),
 
+        GroupModule,
         ProfileModule,
       ],
       providers: [

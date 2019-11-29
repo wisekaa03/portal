@@ -13,6 +13,7 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { ProfileModule } from '../profile/profile.module';
 import { UserResolver } from './user.resolver';
+import { GroupModule } from '../group/group.module';
 // #endregion
 
 @Module({
@@ -26,6 +27,7 @@ import { UserResolver } from './user.resolver';
     TypeOrmModule.forFeature([UserEntity]),
     // #endregion
 
+    GroupModule,
     ProfileModule,
   ],
   controllers: [],

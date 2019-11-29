@@ -16,6 +16,9 @@ import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { ProfileService } from '../profile/profile.service';
 import { Profile, LoginService } from '../profile/models/profile.dto';
+import { GroupService } from '../group/group.service';
+import { GroupEntity } from '../group/group.entity';
+import { ProfileEntity } from '../profile/profile.entity';
 // #endregion
 
 @Injectable()
@@ -25,6 +28,7 @@ export class UserService {
     private readonly logService: LogService,
     private readonly ldapService: LdapService,
     private readonly profileService: ProfileService,
+    private readonly groupService: GroupService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
@@ -90,14 +94,15 @@ export class UserService {
    * @param {string} id - User ID
    */
   async createLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
-    let profile;
+    let profile: ProfileEntity | undefined;
+    let groups: GroupEntity[] | undefined;
 
     const defaultSettings: UserSettings = {
       lng: 'ru',
     };
 
     try {
-      profile = await this.profileService.create(ldapUser, user, 1);
+      profile = await this.profileService.create(ldapUser, user);
     } catch (error) {
       this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'UserService');
 
@@ -108,6 +113,18 @@ export class UserService {
       this.logService.error('Unable to save data in `profile`. Unknown error.', '', 'UserService');
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
+    }
+
+    try {
+      groups = await this.groupService.createFromUser(ldapUser, user);
+    } catch (error) {
+      this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'UserService');
+
+      throw error;
+    }
+
+    if (!groups) {
+      this.logService.error('Unable to save data in `group`. Unknown error.', '', 'UserService');
     }
 
     // Для контактов
@@ -127,7 +144,7 @@ export class UserService {
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
-      // groups,
+      groups,
       isAdmin: admins.includes(ldapUser.sAMAccountName),
       settings: user && user.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
@@ -168,7 +185,7 @@ export class UserService {
    */
   async settings(req: Request, value: any): Promise<User | boolean> {
     if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
-      const user = await this.readById(req.session.passport.user.id);
+      const user: UserEntity | undefined = await this.readById(req.session.passport.user.id);
 
       if (user) {
         user.settings = { ...user.settings, ...value };

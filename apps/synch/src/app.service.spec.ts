@@ -33,6 +33,15 @@ class ProfileEntity {
   name?: string;
 }
 
+@Entity()
+class GroupEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
 jest.mock('@app/ldap/ldap.service');
 jest.mock('../../portal/src/user/user.service');
 
@@ -72,7 +81,7 @@ describe('Synch service', () => {
             type: 'sqlite',
             database: ':memory:',
             dropSchema: true,
-            entities: [ProfileEntity, UserEntity],
+            entities: [ProfileEntity, GroupEntity, UserEntity],
             synchronize: true,
             logging: false
           } as TypeOrmModuleOptions),

@@ -6,6 +6,7 @@
 // #endregion
 // #region Imports Local
 import { Profile } from '../../profile/models/profile.dto';
+import { Group } from '../../group/models/group.dto';
 // #endregion
 
 export interface BaseUser {
@@ -16,6 +17,8 @@ export interface BaseUser {
   password?: string;
 
   disabled: boolean;
+
+  groups?: Group[];
 
   isAdmin: boolean;
 
