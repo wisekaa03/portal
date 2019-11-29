@@ -20,6 +20,7 @@ import { nextI18next } from '../../lib/i18n-client';
 import { Column, ColumnNames, SettingsProps } from './types';
 import Button from '../button';
 import HeaderBg from '../../../../public/images/jpeg/header_bg.jpg';
+import { ProfileContext } from '../../lib/context';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -92,44 +93,161 @@ const useStyles = makeStyles((theme: Theme) =>
 export const allColumns: Column[] = [
   {
     name: 'thumbnailPhoto40',
+    admin: false,
     defaultStyle: { minWidth: 60, maxWidth: 60 },
     largeStyle: { minWidth: 60, maxWidth: 60 },
   },
-  { name: 'lastName', defaultStyle: { minWidth: 160, maxWidth: 160 }, largeStyle: { minWidth: 200, maxWidth: 200 } },
-  { name: 'nameEng', defaultStyle: { minWidth: 160, maxWidth: 160 }, largeStyle: { minWidth: 200, maxWidth: 200 } },
-  { name: 'username', defaultStyle: { minWidth: 110, maxWidth: 110 }, largeStyle: { minWidth: 110, maxWidth: 110 } },
-  { name: 'company', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 350, maxWidth: 350 } },
-  { name: 'companyEng', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 350, maxWidth: 350 } },
-  { name: 'department', defaultStyle: { minWidth: 260, maxWidth: 260 }, largeStyle: { minWidth: 350, maxWidth: 350 } },
   {
-    name: 'departmentEng',
+    name: 'lastName',
+    admin: false,
+    defaultStyle: { minWidth: 160, maxWidth: 160 },
+    largeStyle: { minWidth: 200, maxWidth: 200 },
+  },
+  {
+    name: 'nameEng',
+    admin: false,
+    defaultStyle: { minWidth: 160, maxWidth: 160 },
+    largeStyle: { minWidth: 200, maxWidth: 200 },
+  },
+  {
+    name: 'username',
+    admin: false,
+    defaultStyle: { minWidth: 110, maxWidth: 110 },
+    largeStyle: { minWidth: 110, maxWidth: 110 },
+  },
+  {
+    name: 'company',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 350, maxWidth: 350 },
+  },
+  {
+    name: 'companyEng',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 350, maxWidth: 350 },
+  },
+  {
+    name: 'department',
+    admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 350, maxWidth: 350 },
   },
-  { name: 'otdel', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 300, maxWidth: 300 } },
-  { name: 'otdelEng', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 300, maxWidth: 300 } },
-  { name: 'title', defaultStyle: { minWidth: 240, maxWidth: 240 }, largeStyle: { minWidth: 280, maxWidth: 280 } },
-  { name: 'positionEng', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 250, maxWidth: 250 } },
-  { name: 'manager', defaultStyle: { minWidth: 160, maxWidth: 160 }, largeStyle: { minWidth: 200, maxWidth: 200 } },
-  { name: 'room', defaultStyle: { minWidth: 110, maxWidth: 110 }, largeStyle: { minWidth: 110, maxWidth: 110 } },
-  { name: 'telephone', defaultStyle: { minWidth: 130, maxWidth: 130 }, largeStyle: { minWidth: 150, maxWidth: 150 } },
-  { name: 'fax', defaultStyle: { minWidth: 140, maxWidth: 140 }, largeStyle: { minWidth: 160, maxWidth: 160 } },
-  { name: 'mobile', defaultStyle: { minWidth: 130, maxWidth: 130 }, largeStyle: { minWidth: 150, maxWidth: 150 } },
-  { name: 'workPhone', defaultStyle: { minWidth: 120, maxWidth: 120 }, largeStyle: { minWidth: 150, maxWidth: 150 } },
-  { name: 'email', defaultStyle: { minWidth: 150, maxWidth: 150 }, largeStyle: { minWidth: 180, maxWidth: 180 } },
-  { name: 'country', defaultStyle: { minWidth: 150, maxWidth: 150 }, largeStyle: { minWidth: 180, maxWidth: 180 } },
-  { name: 'region', defaultStyle: { minWidth: 150, maxWidth: 150 }, largeStyle: { minWidth: 180, maxWidth: 180 } },
-  { name: 'town', defaultStyle: { minWidth: 150, maxWidth: 150 }, largeStyle: { minWidth: 180, maxWidth: 180 } },
-  { name: 'street', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 250, maxWidth: 250 } },
-  { name: 'disabled', defaultStyle: { minWidth: 100, maxWidth: 100 }, largeStyle: { minWidth: 100, maxWidth: 100 } },
-  { name: 'notShowing', defaultStyle: { minWidth: 100, maxWidth: 100 }, largeStyle: { minWidth: 100, maxWidth: 100 } },
+  {
+    name: 'departmentEng',
+    admin: false,
+    defaultStyle: { minWidth: 260, maxWidth: 260 },
+    largeStyle: { minWidth: 350, maxWidth: 350 },
+  },
+  {
+    name: 'otdel',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 300, maxWidth: 300 },
+  },
+  {
+    name: 'otdelEng',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 300, maxWidth: 300 },
+  },
+  {
+    name: 'title',
+    admin: false,
+    defaultStyle: { minWidth: 240, maxWidth: 240 },
+    largeStyle: { minWidth: 280, maxWidth: 280 },
+  },
+  {
+    name: 'positionEng',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 250, maxWidth: 250 },
+  },
+  {
+    name: 'manager',
+    admin: false,
+    defaultStyle: { minWidth: 160, maxWidth: 160 },
+    largeStyle: { minWidth: 200, maxWidth: 200 },
+  },
+  {
+    name: 'room',
+    admin: false,
+    defaultStyle: { minWidth: 110, maxWidth: 110 },
+    largeStyle: { minWidth: 110, maxWidth: 110 },
+  },
+  {
+    name: 'telephone',
+    admin: false,
+    defaultStyle: { minWidth: 130, maxWidth: 130 },
+    largeStyle: { minWidth: 150, maxWidth: 150 },
+  },
+  {
+    name: 'fax',
+    admin: false,
+    defaultStyle: { minWidth: 140, maxWidth: 140 },
+    largeStyle: { minWidth: 160, maxWidth: 160 },
+  },
+  {
+    name: 'mobile',
+    admin: false,
+    defaultStyle: { minWidth: 130, maxWidth: 130 },
+    largeStyle: { minWidth: 150, maxWidth: 150 },
+  },
+  {
+    name: 'workPhone',
+    admin: false,
+    defaultStyle: { minWidth: 120, maxWidth: 120 },
+    largeStyle: { minWidth: 150, maxWidth: 150 },
+  },
+  {
+    name: 'email',
+    admin: false,
+    defaultStyle: { minWidth: 150, maxWidth: 150 },
+    largeStyle: { minWidth: 180, maxWidth: 180 },
+  },
+  {
+    name: 'country',
+    admin: false,
+    defaultStyle: { minWidth: 150, maxWidth: 150 },
+    largeStyle: { minWidth: 180, maxWidth: 180 },
+  },
+  {
+    name: 'region',
+    admin: false,
+    defaultStyle: { minWidth: 150, maxWidth: 150 },
+    largeStyle: { minWidth: 180, maxWidth: 180 },
+  },
+  {
+    name: 'town',
+    admin: false,
+    defaultStyle: { minWidth: 150, maxWidth: 150 },
+    largeStyle: { minWidth: 180, maxWidth: 180 },
+  },
+  {
+    name: 'street',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 250, maxWidth: 250 },
+  },
+  {
+    name: 'disabled',
+    admin: false,
+    defaultStyle: { minWidth: 100, maxWidth: 100 },
+    largeStyle: { minWidth: 100, maxWidth: 100 },
+  },
+  {
+    name: 'notShowing',
+    admin: true,
+    defaultStyle: { minWidth: 100, maxWidth: 100 },
+    largeStyle: { minWidth: 100, maxWidth: 100 },
+  },
 ];
 
 const countInBlocks = 4;
 
 export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
-  const { t, columns, changeColumn, handleClose } = props;
+  const { t, columns, changeColumn, handleClose, isAdmin } = props;
   const [current, setCurrent] = useState<ColumnNames[]>(columns);
 
   const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -151,16 +269,23 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
           {[...Array(blocks).keys()].map((i) => (
             <FormControl key={i} className={classes.group}>
               <FormGroup>
-                {allColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }) => (
-                  <FormControlLabel
-                    key={name}
-                    className={classes.item}
-                    label={t(`phonebook:fields.${name}`)}
-                    control={
-                      <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
-                    }
-                  />
-                ))}
+                {allColumns
+                  .slice(i * countInBlocks, i * countInBlocks + countInBlocks)
+                  .reduce((result: JSX.Element[], { admin, name }: Column) => {
+                    if (!isAdmin && admin) return result;
+
+                    return [
+                      ...result,
+                      <FormControlLabel
+                        key={name}
+                        className={classes.item}
+                        label={t(`phonebook:fields.${name}`)}
+                        control={
+                          <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
+                        }
+                      />,
+                    ];
+                  }, [])}
               </FormGroup>
             </FormControl>
           ))}

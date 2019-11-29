@@ -43,6 +43,7 @@ interface StyleProps {
 }
 export interface Column {
   name: ColumnNames;
+  admin: boolean;
   defaultStyle: StyleProps;
   largeStyle: StyleProps;
 }
@@ -57,6 +58,7 @@ export interface SettingsProps extends WithTranslation {
   columns: ColumnNames[];
   handleClose(): void;
   changeColumn(columns: ColumnNames[]): void;
+  isAdmin: boolean;
 }
 
 export interface HeaderProps {

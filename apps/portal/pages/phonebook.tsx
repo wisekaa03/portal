@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, forwardRef, createContext, useEffect, useRef } from 'react';
+import React, { useState, forwardRef, createContext, useContext, useEffect, useRef } from 'react';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
@@ -22,7 +22,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
-import { red } from '@material-ui/core/colors';
+import { red, blueGrey } from '@material-ui/core/colors';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -39,6 +39,7 @@ import useDebounce from '../lib/debounce';
 import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
+import { ProfileContext } from '../lib/context';
 // #endregion
 
 const panelHeight = 48;
@@ -94,6 +95,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     disabled: {
       color: red[600],
+    },
+    notShowing: {
+      color: blueGrey[200],
     },
     search: {
       'flex': 1,
@@ -181,7 +185,7 @@ const InnerElementList = forwardRef<React.Component, any>(({ children, style, ..
                 const { name, defaultStyle, largeStyle } = column;
                 const cellStyle = { height: rowHeight, ...(context.largeWidth ? largeStyle : defaultStyle) };
 
-                if (!context.columns.includes(name) || name === 'disabled') return result;
+                if (!context.columns.includes(name) || name === 'disabled' || name === 'notShowing') return result;
 
                 if (name === 'thumbnailPhoto40') {
                   return [
@@ -302,6 +306,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
             key={name}
             className={clsx(classes.cell, {
               [classes.disabled]: item.disabled && name === 'lastName',
+              [classes.notShowing]: item.notShowing && name === 'lastName',
             })}
             style={cellStyle}
             component="div"
@@ -338,6 +343,8 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<string[]>([]);
   const searchRef = useRef<HTMLInputElement>(null);
+  const profile = useContext(ProfileContext);
+  const isAdmin = Boolean(profile && profile.user && profile.user.isAdmin);
 
   const [_search, setSearch] = useState<string>('');
   const search = useDebounce(_search, 300);
@@ -349,12 +356,12 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { loading, error, data, fetchMore } = useQuery(PROFILES(getGraphQLColumns(columns)), {
     variables: {
       orderBy,
-      first: search.length > 3 ? 100 : 50,
+      first: 50,
       after: '',
       search: search.length > 3 ? search : '',
       disabled: columns.includes('disabled'),
       // TODO: для админов
-      notShowing: false,
+      notShowing: isAdmin && columns.includes('notShowing'),
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -406,10 +413,10 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       variables: {
         orderBy,
         after: data.profiles.pageInfo.endCursor,
-        first: search.length > 3 ? 100 : 50,
+        first: 50,
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
-        notShowing: false,
+        notShowing: isAdmin && columns.includes('notShowing'),
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
@@ -584,7 +591,12 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose} className={classes.modal}>
         <div>
-          <SettingsComponent columns={columns} changeColumn={setColumns} handleClose={handleSettingsClose} />
+          <SettingsComponent
+            columns={columns}
+            changeColumn={setColumns}
+            handleClose={handleSettingsClose}
+            isAdmin={isAdmin}
+          />
         </div>
       </Modal>
     </>

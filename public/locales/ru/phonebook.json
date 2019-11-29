@@ -31,7 +31,7 @@
     "street": "Улица",
     "postalCode": "Индекс",
     "disabled": "Уволен",
-    "notShowing": "Не показывать"
+    "notShowing": "Скрытый"
   },
   "profile": {
     "hide": "Скрыть профиль"

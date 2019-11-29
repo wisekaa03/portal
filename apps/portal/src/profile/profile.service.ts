@@ -38,15 +38,16 @@ export class ProfileService {
   ) {}
 
   getProfiles = (search: string, disabled: boolean, notShowing: boolean): SelectQueryBuilder<ProfileEntity> => {
-    const query = this.profileRepository
-      .createQueryBuilder('profile')
-      .leftJoinAndSelect('profile.manager', 'manager')
-      .where('profile.notShowing = :notShowing');
+    const query = this.profileRepository.createQueryBuilder('profile').leftJoinAndSelect('profile.manager', 'manager');
 
     const parameters = { search: `%${search}%`, notShowing, disabled };
 
     if (!disabled) {
       query.andWhere('profile.disabled = :disabled');
+    }
+
+    if (!notShowing) {
+      query.andWhere('profile.notShowing = :notShowing');
     }
 
     if (search !== '') {
