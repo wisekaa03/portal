@@ -23,6 +23,8 @@ jest.mock('ldapjs', () => ({
 
 jest.mock('@app/logger/logger.service', () => ({
   LogService: jest.fn().mockImplementation(() => ({
+    log: jest.fn(),
+    error: jest.fn(),
     debug: jest.fn(),
   })),
 }));

@@ -565,7 +565,7 @@ export class LdapService extends EventEmitter {
 
             this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
 
-            if (this.userCache) {
+            if (username && this.userCache) {
               this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
 
               await this.userCache.del(username);
