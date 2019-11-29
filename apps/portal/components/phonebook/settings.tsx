@@ -122,6 +122,7 @@ export const allColumns: Column[] = [
   { name: 'town', defaultStyle: { minWidth: 150, maxWidth: 150 }, largeStyle: { minWidth: 180, maxWidth: 180 } },
   { name: 'street', defaultStyle: { minWidth: 200, maxWidth: 200 }, largeStyle: { minWidth: 250, maxWidth: 250 } },
   { name: 'disabled', defaultStyle: { minWidth: 100, maxWidth: 100 }, largeStyle: { minWidth: 100, maxWidth: 100 } },
+  { name: 'notShowing', defaultStyle: { minWidth: 100, maxWidth: 100 }, largeStyle: { minWidth: 100, maxWidth: 100 } },
 ];
 
 const countInBlocks = 4;

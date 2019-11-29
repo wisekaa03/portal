@@ -33,7 +33,8 @@ export type ColumnNames =
   | 'region'
   | 'town'
   | 'street'
-  | 'disabled';
+  | 'disabled'
+  | 'notShowing';
 
 interface StyleProps {
   width?: number;

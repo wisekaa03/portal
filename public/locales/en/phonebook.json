@@ -32,8 +32,11 @@
     "postalCode": "Postal code",
     "disabled": "Dismissed",
     "notShowing": "Show"
+<<<<<<< HEAD
   },
   "profile": {
     "hide": "Hide profile"
+=======
+>>>>>>> bb106c9832ccbb35826dacf00d0100324e262654
   }
 }

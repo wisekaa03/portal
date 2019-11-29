@@ -154,7 +154,7 @@ const defaultColumnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
 const itemKey = (index: number, data: any): string => data.items[index].node.id;
 
 const getGraphQLColumns = (columns: ColumnNames[]): string => {
-  let result = columns.filter((col) => col !== 'disabled').join(' ');
+  let result = columns.filter((col) => col !== 'disabled' && col !== 'notShowing').join(' ');
 
   if (columns.includes('lastName')) {
     result += ' firstName middleName';
@@ -241,6 +241,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
         const cellStyle = { height: rowHeight, ...(largeWidth ? largeStyle : defaultStyle) };
 
         if (!columns.includes(name) || name === 'disabled') return result;
+        if (!columns.includes(name) || name === 'notShowing') return result;
 
         let cellData: React.ReactElement | string | null | undefined = null;
 
@@ -352,6 +353,8 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       after: '',
       search: search.length > 3 ? search : '',
       disabled: columns.includes('disabled'),
+      // TODO: для админов
+      notShowing: false,
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -406,6 +409,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         first: search.length > 3 ? 100 : 50,
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
+        notShowing: false,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
