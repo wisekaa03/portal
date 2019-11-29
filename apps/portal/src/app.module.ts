@@ -28,6 +28,7 @@ import { ProfileModule } from './profile/profile.module';
 import { ProfileEntity } from './profile/profile.entity';
 import { UserEntity } from './user/user.entity';
 import { GroupModule } from './group/group.module';
+import { GroupEntity } from './group/group.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -134,7 +135,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
               : configService.get('DATABASE_LOGGING') === 'true'
                 ? true
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
-          entities: [ProfileEntity, UserEntity],
+          entities: [ProfileEntity, GroupEntity, UserEntity],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {
             type: 'redis',

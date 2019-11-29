@@ -5,7 +5,7 @@ type User {
   profile: Profile!
   disabled: Boolean
   isAdmin: Boolean
-  groups: Group[]
+  groups: [Group]
   settings: UserSettings
   createdAt: Date
   updatedAt: Date
