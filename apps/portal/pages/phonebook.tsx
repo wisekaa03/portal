@@ -409,6 +409,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
         first: search.length > 3 ? 100 : 50,
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
+        notShowing: false,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
