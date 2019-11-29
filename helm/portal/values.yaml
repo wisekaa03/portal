@@ -78,6 +78,8 @@ SOAP_URL: "https://soap1c"
 SOAP_USER: "admin"
 SOAP_PASS: "supersecret"
 
+NEWS_URL: "https://news"
+
 service:
   type: LoadBalancer
 

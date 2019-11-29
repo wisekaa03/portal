@@ -136,6 +136,7 @@ deploy:
           --set SOAP_URL="${SOAP_URL}" \
           --set SOAP_USER="${SOAP_USER}" \
           --set SOAP_PASS="${SOAP_PASS}" \
+          --set NEWS_URL="${NEWS_URL}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
@@ -193,6 +194,7 @@ deploy:
           --set SOAP_URL="${SOAP_URL}" \
           --set SOAP_USER="${SOAP_USER}" \
           --set SOAP_PASS="${SOAP_PASS}" \
+          --set NEWS_URL="${NEWS_URL}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \

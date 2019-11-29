@@ -252,6 +252,11 @@ export class ConfigService {
         .default('supersecret')
         .optional()
         .empty(),
+
+      NEWS_URL: Joi.string()
+        .default('https://news')
+        .optional()
+        .empty(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);

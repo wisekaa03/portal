@@ -308,6 +308,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: SOAP_PASS
+            - name: NEWS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: NEWS_URL
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
