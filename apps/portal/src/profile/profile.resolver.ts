@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Query, Resolver, Args } from '@nestjs/graphql';
+import { Query, Mutation, Resolver, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 // #endregion
@@ -80,7 +80,7 @@ export class ProfileResolver {
    * @param value
    * @returns {Boolean}
    */
-  @Query()
+  @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async changeProfile(@Args('id') id: string, @Args('value') value: any): Promise<boolean | null> {
