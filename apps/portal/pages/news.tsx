@@ -6,6 +6,7 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
 import { Card, CardActionArea, CardMedia, Typography, CardContent, CardActions, Button } from '@material-ui/core';
 import moment from 'moment';
+import AutoSizer from 'react-virtualized-auto-sizer';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -21,11 +22,16 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
     },
     container: {
-      display: 'grid',
-      padding: theme.spacing(6),
-      gridGap: theme.spacing(4),
-      gridTemplateColumns: '1fr 1fr 1fr',
-      gridAutoRows: 'minmax(300px, 1fr)',
+      'display': 'grid',
+      'padding': theme.spacing(6),
+      'gridGap': theme.spacing(4),
+      'gridTemplateColumns': '1fr 1fr 1fr',
+      'gridAutoRows': 'max-content',
+      'overflowX': 'hidden',
+      'overflowY': 'auto',
+      '& > div:last-child': {
+        marginBottom: theme.spacing(6),
+      },
     },
     card: {
       display: 'flex',
@@ -53,33 +59,37 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
         {loading || !data || !data.news ? (
           <Loading noMargin type="linear" variant="indeterminate" />
         ) : (
-          <div className={classes.container}>
-            {data.news.map((news) => {
-              // TODO: regexp может быть улучшен
-              const images = news.content.rendered.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
+          <AutoSizer style={{ flexGrow: 1 }}>
+            {({ height, width }) => (
+              <div className={classes.container} style={{ height, width }}>
+                {data.news.map((news) => {
+                  // TODO: regexp может быть улучшен
+                  const images = news.content.rendered.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
 
-              return (
-                <Card key={news.id} className={classes.card}>
-                  <CardActionArea>
-                    <CardMedia component="img" height={200} image={images ? images[0] : null} />
-                    <CardContent>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        {news.title.rendered}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                  <CardActions className={classes.action}>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      {moment(news.date).format('MMMM DD, YYYY')}
-                    </Typography>
-                    <Button size="small" color="secondary">
-                      {t('news:more')}
-                    </Button>
-                  </CardActions>
-                </Card>
-              );
-            })}
-          </div>
+                  return (
+                    <Card key={news.id} className={classes.card}>
+                      <CardActionArea>
+                        <CardMedia component="img" height={200} image={images ? images[0] : null} />
+                        <CardContent>
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            {news.title.rendered}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                      <CardActions className={classes.action}>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {moment(news.date).format('MMMM DD, YYYY')}
+                        </Typography>
+                        <Button size="small" color="secondary">
+                          {t('news:more')}
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </AutoSizer>
         )}
       </div>
     </Page>
