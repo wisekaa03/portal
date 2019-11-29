@@ -16,6 +16,8 @@ export interface Profile {
 
   username: string;
 
+  dn: string;
+
   firstName: string;
 
   lastName: string;

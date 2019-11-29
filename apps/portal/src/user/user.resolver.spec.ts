@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { ConfigModule } from '@app/config';
