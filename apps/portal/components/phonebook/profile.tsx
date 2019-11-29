@@ -29,8 +29,7 @@ import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
-import { ProfileContext } from '../../lib/context';
-
+import IsAdmin from '../isAdmin';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -129,7 +128,6 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   if (!profileId) return null;
 
   const [settingsEl, setSettingsEl] = useState<HTMLElement | null>(null);
-  const profileSelf = useContext(ProfileContext);
 
   const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
   const [changeProfile] = useMutation(CHANGE_PROFILE);
@@ -170,6 +168,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
         },
       });
     }
+    handleClose();
   };
 
   const openSettings = Boolean(settingsEl);
@@ -184,7 +183,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
               <IconButton className={classes.noPadding} onClick={handleClose}>
                 <ArrowBackRounded />
               </IconButton>
-              {profileSelf && profileSelf.user && profileSelf.user.isAdmin && (
+              <IsAdmin>
                 <IconButton className={classes.noPadding} onClick={handleSettings}>
                   <MoreVertRounded />
                   <Popper
@@ -206,7 +205,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     </Paper>
                   </Popper>
                 </IconButton>
-              )}
+              </IsAdmin>
             </div>
             <div className={classes.center}>
               {profile ? (

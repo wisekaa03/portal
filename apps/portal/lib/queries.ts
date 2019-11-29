@@ -132,6 +132,7 @@ export const PROFILE = gql`
   query Profile($id: ID) {
     profile(id: $id) {
       ...ProfileProps
+      id
       thumbnailPhoto
     }
   }
