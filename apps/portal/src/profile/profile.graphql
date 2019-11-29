@@ -97,14 +97,22 @@ type ProfileConnection {
   pageInfo: PageInfo
 }
 
+input ProfileSettingsInput {
+  flags: Boolean
+}
+
 type Query {
 
-  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean): ProfileConnection!
+  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean): ProfileConnection!
 
   profile(id: ID): Profile
 
   searchSuggestions(search: String): [Profile]
 
+}
+
+type Mutation {
+  hideProfile(id: String): Boolean
 }
 
 

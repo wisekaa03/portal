@@ -1,13 +1,26 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Card, CardContent, Paper, List, ListItem, ListItemText, Divider, IconButton } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  IconButton,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+  Popper,
+} from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 // #endregion
@@ -15,7 +28,8 @@ import { red } from '@material-ui/core/colors';
 import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
-import { PROFILE } from '../../lib/queries';
+import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
+import { ProfileContext } from '../../lib/context';
 
 // #endregion
 
@@ -99,6 +113,12 @@ const useStyles = makeStyles((theme: Theme) =>
     disabled: {
       color: red[600],
     },
+    settingsPopper: {
+      zIndex: 1300,
+    },
+    notShowing: {
+      color: red[600],
+    },
   }),
 );
 
@@ -108,7 +128,11 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
 
   if (!profileId) return null;
 
+  const [settingsEl, setSettingsEl] = useState<HTMLElement | null>(null);
+  const profileSelf = useContext(ProfileContext);
+
   const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
+  const [changeProfile] = useMutation(CHANGE_PROFILE);
 
   useEffect(() => {
     getProfile({
@@ -129,6 +153,26 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
     handleClose();
   };
 
+  const handleSettings = (event: React.MouseEvent<HTMLElement>): void => {
+    setSettingsEl(event.currentTarget);
+  };
+
+  const handleCloseSettings = (): void => {
+    setSettingsEl(null);
+  };
+
+  const handleChangeProfile = (id: string | undefined) => (): void => {
+    if (id) {
+      changeProfile({
+        variables: {
+          id,
+          value: { flags: true },
+        },
+      });
+    }
+  };
+
+  const openSettings = Boolean(settingsEl);
   const profile = !loading && data && data.profile;
 
   return (
@@ -140,9 +184,29 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
               <IconButton className={classes.noPadding} onClick={handleClose}>
                 <ArrowBackRounded />
               </IconButton>
-              <IconButton className={classes.noPadding}>
-                <MoreVertRounded />
-              </IconButton>
+              {profileSelf && profileSelf.user && profileSelf.user.isAdmin && (
+                <IconButton className={classes.noPadding} onClick={handleSettings}>
+                  <MoreVertRounded />
+                  <Popper
+                    id="profile-setting"
+                    placement="bottom-end"
+                    className={classes.settingsPopper}
+                    open={openSettings}
+                    anchorEl={settingsEl}
+                    transition
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleCloseSettings}>
+                        <MenuList>
+                          <MenuItem onClick={handleChangeProfile(profile && profile.id)}>
+                            {t('phonebook:profile.hide')}
+                          </MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Popper>
+                </IconButton>
+              )}
             </div>
             <div className={classes.center}>
               {profile ? (
@@ -159,6 +223,11 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             {profile && profile.disabled && (
               <div className={clsx(classes.center, classes.disabled)}>
                 <span>{t(`phonebook:fields.disabled`)}</span>
+              </div>
+            )}
+            {profile && profile.notShowing && (
+              <div className={clsx(classes.center, classes.notShowing)}>
+                <span>{t(`phonebook:fields.notShowing`)}</span>
               </div>
             )}
             {profile && profile.nameEng && (

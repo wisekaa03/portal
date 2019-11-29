@@ -5,17 +5,17 @@ type User {
   profile: Profile!
   disabled: Boolean
   isAdmin: Boolean
-  settings: ProfileSettings
+  settings: UserSettings
   createdAt: Date
   updatedAt: Date
 }
 
-type ProfileSettings {
+type UserSettings {
   lng: String
   drawer: Boolean
 }
 
-input ProfileSettingsInput {
+input UserSettingsInput {
   lng: String
   drawer: Boolean
 }
@@ -24,7 +24,7 @@ type Mutation {
 
   synchronization: Boolean
 
-  userSettings(value: ProfileSettingsInput): User
+  userSettings(value: UserSettingsInput): User
 
   soap1csynch: Boolean
 

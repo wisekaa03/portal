@@ -7,6 +7,7 @@ import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { IsAdminGuard } from '../guards/admin.guard';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 // #endregion
@@ -25,6 +26,7 @@ export class ProfileResolver {
    * @param disabled
    * @returns {Profiles[]}
    */
+  /* eslint @typescript-eslint/indent:0 */
   @Query()
   @UseGuards(GqlAuthGuard)
   async profiles(
@@ -33,6 +35,7 @@ export class ProfileResolver {
     @Args('orderBy') orderBy: Order<string>,
     @Args('search') search: string,
     @Args('disabled') disabled: boolean,
+    @Args('notShowing') notShowing: boolean,
   ): Promise<Connection<ProfileEntity>> {
     return paginate(
       { first, after, orderBy },
@@ -41,7 +44,7 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: false,
         orderFieldToKey: (field: string) => field,
-        queryBuilder: this.profileService.getProfiles(search, disabled),
+        queryBuilder: this.profileService.getProfiles(search, disabled, notShowing),
       },
     );
   }
@@ -55,7 +58,6 @@ export class ProfileResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async searchSuggestions(@Args('search') search: string): Promise<ProfileEntity[]> {
-    // TODO: сделать предложения по поиску
     return this.profileService.searchSuggestions(search);
   }
 
@@ -69,5 +71,19 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   async profile(@Args('id') id: string): Promise<ProfileEntity | undefined> {
     return this.profileService.profile(id) || null;
+  }
+
+  /**
+   * GraphQL mutation: hideProfile
+   *
+   * @param id
+   * @param value
+   * @returns {Boolean}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  @UseGuards(IsAdminGuard)
+  async hideProfile(@Args('id') id: string, @Args('value') value: any): Promise<boolean | null> {
+    return this.profileService.hideProfile(id, value) || null;
   }
 }

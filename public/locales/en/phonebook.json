@@ -28,9 +28,12 @@
     "country": "Country",
     "region": "Region",
     "town": "City",
-    "street": "Address",
     "street": "Street",
     "postalCode": "Postal code",
-    "disabled": "Dismissed"
+    "disabled": "Dismissed",
+    "notShowing": "Show"
+  },
+  "profile": {
+    "hide": "Hide profile"
   }
 }
