@@ -44,6 +44,17 @@
     rxjs "6.4.0"
     source-map "0.7.3"
 
+"@angular-devkit/core@8.3.20":
+  version "8.3.20"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-8.3.20.tgz#8a9e17e706905efab9875c16690e1d9328c9d5dd"
+  integrity sha512-UCfW/BJBJnioJU34QennQhA4o+rLoCXWiSrI2LM7yw8/MEM9I8KbqRETP1My3HjHkQnvP+Qh3noedpcu3Nnt8A==
+  dependencies:
+    ajv "6.10.2"
+    fast-json-stable-stringify "2.0.0"
+    magic-string "0.25.3"
+    rxjs "6.4.0"
+    source-map "0.7.3"
+
 "@angular-devkit/schematics-cli@0.803.19":
   version "0.803.19"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics-cli/-/schematics-cli-0.803.19.tgz#b827771adaa2c87f97f99ea0f8d8922c1c2edca7"
@@ -63,6 +74,14 @@
   integrity sha512-sHZMRypW5ZMvla8uMOTsAYHwPiBpShz31tJzd7F07gs9hpj3J05FZ3nL+ZVdt25YzdCUPaFPQKyVx2YfjGyJAw==
   dependencies:
     "@angular-devkit/core" "8.3.19"
+    rxjs "6.4.0"
+
+"@angular-devkit/schematics@8.3.20":
+  version "8.3.20"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-8.3.20.tgz#80e7c31ebfd8f7f8500bfa1cae5c39980b962d6a"
+  integrity sha512-sDHZakh4e3A5WenR9zr1x6Va9GNRqQlRhqT3xcbkG88v2M0YqEt7dHB7YwnOhm7zSxiWQM8PdWEQHiQ4iu9NyQ==
+  dependencies:
+    "@angular-devkit/core" "8.3.20"
     rxjs "6.4.0"
 
 "@apollo/protobufjs@^1.0.3":
@@ -2623,10 +2642,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nestjs/cli@^6.12.3":
-  version "6.12.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-6.12.3.tgz#39673c4c2a4b3ee510d497bce92ebb4235863ef0"
-  integrity sha512-hYrI6P3mNtfvRruGaoK2HQ0keJHRT4yYxrXxQr9WfDuSBfutZEeEMSLUO7FD0htUylpE4THFZSOk7gzBLPqZIQ==
+"@nestjs/cli@^6.12.4":
+  version "6.12.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-6.12.4.tgz#1d4c8c1046aa9229fa59f9cae122cd650b40533b"
+  integrity sha512-WX2wXNxnQZofajzo/wsHWld8hXi0xd08RrEsHxUVMm9AdIULakmQYT0vGq934qyE83UxhQQgEwtwNqWjzZeX8A==
   dependencies:
     "@angular-devkit/core" "8.3.19"
     "@angular-devkit/schematics" "8.3.19"
@@ -2727,10 +2746,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mongoose/-/mongoose-6.1.2.tgz#fe1c227f5c1fd0f5c9be5c4e37b2897f744bc0b0"
   integrity sha512-BkbkguvaPPGbL/41lK6P22DaQodBC9Yv9rUAmNlQVShChtwss7/cGj68AKC3jEoidrx75wCyDO3P8Tp6pggE4w==
 
-"@nestjs/passport@^6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.1.0.tgz#80da326cc976a82530648d8025b04c8e2d41c10e"
-  integrity sha512-V4KdtFFLsdZQ/HlIECpiK6byzGz57Y12TAc+Iatykk8jWuVFE1jq8RJbpTfB0zG0PTfcGm9crQ6Ut2Rwdmis4Q==
+"@nestjs/passport@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.1.1.tgz#991b8736c0ebffabb85a6455f0288055e5b52755"
+  integrity sha512-wMhvi3Ru965nftCLUhFUqWNwyzSxVDmGgTEYVyWbOOmHFjNg5US47jzV2NresuUP2vjgg8J8S6DviKTVuLfkRw==
 
 "@nestjs/platform-express@6.10.1":
   version "6.10.1"
@@ -2762,13 +2781,24 @@
     fastify-formbody "3.1.0"
     path-to-regexp "3.2.0"
 
-"@nestjs/schematics@^6.6.3", "@nestjs/schematics@^6.7.3":
+"@nestjs/schematics@^6.6.3":
   version "6.7.3"
   resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-6.7.3.tgz#8e00c3aa86061def5abc9e37ee6f0d061fd6c3b8"
   integrity sha512-86MBFWOProHEXcV8eDz6bU5A9FIRKL2C/zd61y9D1iowgo22XhscYh/9275Heqnkyx1cdjQGKMwUWjakO13DZg==
   dependencies:
     "@angular-devkit/core" "8.3.19"
     "@angular-devkit/schematics" "8.3.19"
+    fs-extra "^8.1.0"
+    ts-morph "^4.0.0"
+    typescript "3.4.5"
+
+"@nestjs/schematics@^6.7.4":
+  version "6.7.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-6.7.4.tgz#55c5812b1215249f32a63c835cdc0b4f4f402b15"
+  integrity sha512-laE7gRVCql0fEwEnBqupv9r/42wn+urzEDf7s3ky60Nkm6XhMbF/9js/UDBKNlpSjVlcxxaGY5fwBTM1wh6X8g==
+  dependencies:
+    "@angular-devkit/core" "8.3.20"
+    "@angular-devkit/schematics" "8.3.20"
     fs-extra "^8.1.0"
     ts-morph "^4.0.0"
     typescript "3.4.5"
@@ -11339,19 +11369,7 @@ imagemin-webp@5.1.0, imagemin-webp@^5.1.0:
     exec-buffer "^3.0.0"
     is-cwebp-readable "^2.0.1"
 
-imagemin@6.1.0, imagemin@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/imagemin/-/imagemin-6.1.0.tgz#62508b465728fea36c03cdc07d915fe2d8cf9e13"
-  integrity sha512-8ryJBL1CN5uSHpiBMX0rJw79C9F9aJqMnjGnrd/1CafegpNuA81RBAAru/jQQEOWlOJJlpRnlcVFF6wq+Ist0A==
-  dependencies:
-    file-type "^10.7.0"
-    globby "^8.0.1"
-    make-dir "^1.0.0"
-    p-pipe "^1.1.0"
-    pify "^4.0.1"
-    replace-ext "^1.0.0"
-
-imagemin@^7.0.0:
+imagemin@7.0.1, imagemin@^7.0.0:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/imagemin/-/imagemin-7.0.1.tgz#f6441ca647197632e23db7d971fffbd530c87dbf"
   integrity sha512-33AmZ+xjZhg2JMCe+vDf6a9mzWukE7l+wAtesjE7KyteqqKjzxv7aVQeWnul1Ve26mWvEQqyPwl0OctNBfSR9w==
@@ -11362,6 +11380,18 @@ imagemin@^7.0.0:
     junk "^3.1.0"
     make-dir "^3.0.0"
     p-pipe "^3.0.0"
+    replace-ext "^1.0.0"
+
+imagemin@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/imagemin/-/imagemin-6.1.0.tgz#62508b465728fea36c03cdc07d915fe2d8cf9e13"
+  integrity sha512-8ryJBL1CN5uSHpiBMX0rJw79C9F9aJqMnjGnrd/1CafegpNuA81RBAAru/jQQEOWlOJJlpRnlcVFF6wq+Ist0A==
+  dependencies:
+    file-type "^10.7.0"
+    globby "^8.0.1"
+    make-dir "^1.0.0"
+    p-pipe "^1.1.0"
+    pify "^4.0.1"
     replace-ext "^1.0.0"
 
 img-loader@^3.0.1:
@@ -20102,10 +20132,10 @@ ts-nkeys@^1.0.8:
   dependencies:
     tweetnacl "^1.0.1"
 
-ts-node@^8.5.3:
-  version "8.5.3"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.3.tgz#f0bcacbfda8a70188f3a5c561b2dab546cb0abbb"
-  integrity sha512-B4dYs62o9ioIilzh7Npby5grYvw3lLwttTSIzf7QObf1FWUCzt+ELtyZJd+xYgxJ/n3A5nQJ2oG6VaZgwMMcjA==
+ts-node@^8.5.4:
+  version "8.5.4"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.4.tgz#a152add11fa19c221d0b48962c210cf467262ab2"
+  integrity sha512-izbVCRV68EasEPQ8MSIGBNK9dc/4sYJJKYA+IarMQct1RtEot6Xp0bXuClsbUSnKpg50ho+aOAx8en5c+y4OFw==
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
@@ -20863,12 +20893,12 @@ webidl-conversions@^4.0.2:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
   integrity sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==
 
-webp-loader@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/webp-loader/-/webp-loader-0.5.0.tgz#d7185324770182ab6d55fe0bd6addfd13c89d01e"
-  integrity sha512-Hh1XkSHnvnZoIqDJyGxWJABjU/KLQrmCQD/XA39N4ECbiz26CMAURmwBJsdtHA84dusZ7delOTOJZh2IP0UU7Q==
+webp-loader@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/webp-loader/-/webp-loader-0.6.0.tgz#f9086777bb02ec653d046634014e95212e627032"
+  integrity sha512-+3k/ojbdh6U74G8nKFB4syaXxjx294xOt+WAVlN84w/7ew6jJCS6DCoGzK8P/giRR4FiSVisKWIydGlb6EXOFQ==
   dependencies:
-    imagemin "6.1.0"
+    imagemin "7.0.1"
     imagemin-webp "5.1.0"
     loader-utils "1.2.3"
 
