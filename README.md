@@ -194,6 +194,19 @@ LDAP_REDIS_DB="1"
 LDAP_REDIS_PASSWORD=""
 # time in milliseconds, 600000 ms = 1000 * 60 * 10 minutes
 LDAP_REDIS_TTL="300"
+
+# MICROSERVICE
+MICROSERVICE_URL="nats://nats-cluster.production:4222"
+MICROSERVICE_USER="admin"
+MICROSERVICE_PASS="QweAsdZxc321"
+
+# SOAP
+SOAP_URL="https://server1c"
+SOAP_USER="admin"
+SOAP_PASS="supersecret"
+
+# NEWS
+NEWS_URL="https://news"
 ```
 
 ## Production Deployment
