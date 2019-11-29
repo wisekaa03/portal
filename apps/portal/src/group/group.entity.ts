@@ -24,7 +24,7 @@ export class GroupEntity {
   name: string;
 
   @Column({
-    type: 'text',
+    type: 'varchar',
     nullable: true,
   })
   dn: string;

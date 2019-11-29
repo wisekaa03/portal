@@ -51,7 +51,7 @@ export class ProfileEntity {
   username: string;
 
   @Column({
-    type: 'text',
+    type: 'varchar',
     nullable: true,
   })
   dn: string;
@@ -153,7 +153,7 @@ export class ProfileEntity {
   })
   title: string;
 
-  @ManyToOne((_type: any) => ProfileEntity)
+  @ManyToOne((type: any) => ProfileEntity)
   @JoinTable()
   manager?: ProfileEntity | Promise<ProfileEntity | undefined>;
 

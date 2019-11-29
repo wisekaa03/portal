@@ -12,6 +12,7 @@ import {
   JoinColumn,
   OneToOne,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 // #endregion
@@ -43,8 +44,10 @@ export class UserEntity {
   password: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToMany((type) => GroupEntity)
-  @JoinColumn()
+  @ManyToMany((type) => GroupEntity, { eager: true, cascade: ['update'], nullable: true })
+  @JoinTable({
+    name: 'user_groups',
+  })
   groups: GroupEntity[];
 
   @Column({
