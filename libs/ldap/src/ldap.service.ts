@@ -10,7 +10,7 @@ import * as redisStore from 'cache-manager-redis-store';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
-import { LDAP_OPTIONS, LdapModuleOptions, LdapResponeUser, LDAPCache, LDAP_SYNCH } from './ldap.interface';
+import { LDAP_OPTIONS, LdapModuleOptions, LDAPCache, LDAP_SYNCH, LdapResponseUser } from './ldap.interface';
 // #endregion
 
 @Injectable()
@@ -27,7 +27,7 @@ export class LdapService extends EventEmitter {
 
   private userClient: Ldap.Client;
 
-  private getGroups: (user: Ldap.SearchEntryObject) => Promise<Ldap.SearchEntryObject>;
+  private getGroups: (user: Ldap.SearchEntryObject) => Promise<LdapResponseUser>;
 
   private userCacheStore: cacheManager.Store;
 
@@ -148,7 +148,7 @@ export class LdapService extends EventEmitter {
     } else {
       // Assign an async identity function so there is no need to branch
       // the authenticate function to have cache set up.
-      this.getGroups = async (user) => user;
+      this.getGroups = async (user) => user as LdapResponseUser;
     }
   }
 
@@ -375,7 +375,7 @@ export class LdapService extends EventEmitter {
    * @param {Object} user - The LDAP user object
    * @returns {void} - Result handling callback
    */
-  private async findGroups(user: Ldap.SearchEntryObject): Promise<Ldap.SearchEntryObject> {
+  private async findGroups(user: Ldap.SearchEntryObject): Promise<LdapResponseUser> {
     if (!user) {
       throw new Error('no user');
     }
@@ -397,11 +397,11 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
       .then(
         (result) =>
-          new Promise<Ldap.SearchEntryObject>((resolve) => {
+          new Promise<LdapResponseUser>((resolve) => {
             // eslint-disable-next-line no-param-reassign
             (user.groups as unknown) = result;
 
-            return resolve(user);
+            return resolve(user as LdapResponseUser);
           }),
       )
       .catch((error: Ldap.Error) => {
@@ -416,14 +416,14 @@ export class LdapService extends EventEmitter {
    *
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
    */
-  public async searchByDN(userByDN: string): Promise<undefined | LdapResponeUser> {
+  public async searchByDN(userByDN: string): Promise<undefined | LdapResponseUser> {
     if (this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(userByDN);
       if (cached && cached.user && cached.user.sAMAccountName) {
         this.logger.debug(`From cache: ${cached.user.sAMAccountName}`, 'LDAP');
 
-        return cached.user as LdapResponeUser;
+        return cached.user as LdapResponseUser;
       }
     }
 
@@ -440,7 +440,7 @@ export class LdapService extends EventEmitter {
     return this.search(userByDN, opts)
       .then(
         (result) =>
-          new Promise<undefined | LdapResponeUser>((resolve, reject) => {
+          new Promise<undefined | LdapResponseUser>((resolve, reject) => {
             if (!result) {
               throw new Error('No result from search.');
             }
@@ -449,7 +449,7 @@ export class LdapService extends EventEmitter {
               case 0:
                 return resolve(undefined);
               case 1:
-                return resolve(result[0] as LdapResponeUser);
+                return resolve(result[0] as LdapResponseUser);
               default:
                 return reject(new Error(`unexpected number of matches (${result.length}) for "${userByDN}" user DN`));
             }
@@ -490,14 +490,14 @@ export class LdapService extends EventEmitter {
    *
    * @returns {undefined | LdapResponeUser[]} - User in LDAP
    */
-  public async synchronization(): Promise<undefined | LdapResponeUser[]> {
+  public async synchronization(): Promise<undefined | LdapResponseUser[]> {
     if (this.userCache) {
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(LDAP_SYNCH);
       // TODO: придумать что-нибудь половчее моих synchronization
       if (cached && cached.synch) {
         this.logger.debug(`Synchronization from cache`, 'LDAP');
 
-        return cached.synch as LdapResponeUser[];
+        return cached.synch as LdapResponseUser[];
       }
     }
 
@@ -515,7 +515,7 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          return new Promise<undefined | LdapResponeUser[]>((resolve) => {
+          return new Promise<undefined | LdapResponseUser[]>((resolve) => {
             if (this.userCache) {
               if (this.userCacheStore.reset) {
                 this.userCacheStore.reset((error: any) => {
@@ -536,7 +536,9 @@ export class LdapService extends EventEmitter {
               );
             }
 
-            return resolve(synch.map((foundUser) => this.getGroups(foundUser)));
+            const s = synch.map((u) => this.getGroups(u));
+
+            return resolve((s as unknown) as LdapResponseUser[]);
           });
         }
 
@@ -611,7 +613,7 @@ export class LdapService extends EventEmitter {
    * @param {string} password - The password to verify
    * @returns {undefined | LdapResponeUser} - User in LDAP
    */
-  public async authenticate(username: string, password: string): Promise<undefined | LdapResponeUser> {
+  public async authenticate(username: string, password: string): Promise<undefined | LdapResponseUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
       this.logger.error('No password given', undefined, 'LDAP');
       throw new Error('No password given');
@@ -623,7 +625,7 @@ export class LdapService extends EventEmitter {
       if (cached && cached.user && cached.user.sAMAccountName) {
         this.logger.debug(`From cache: ${cached.user.sAMAccountName}`, 'LDAP');
 
-        return cached.user as LdapResponeUser;
+        return cached.user as LdapResponseUser;
       }
     }
 
@@ -640,11 +642,11 @@ export class LdapService extends EventEmitter {
     }
 
     // 2. Attempt to bind as that user to check password.
-    return new Promise<undefined | LdapResponeUser>((resolve, reject) => {
+    return new Promise<undefined | LdapResponseUser>((resolve, reject) => {
       this.userClient.bind(
         foundUser[this.opts.bindProperty || 'dn'],
         password,
-        async (bindErr?: Ldap.Error): Promise<unknown | LdapResponeUser> => {
+        async (bindErr?: Ldap.Error): Promise<unknown | LdapResponseUser> => {
           if (bindErr) {
             this.logger.error('bind error:', bindErr.toString(), 'LDAP');
 
@@ -653,7 +655,7 @@ export class LdapService extends EventEmitter {
 
           // 3. If requested, fetch user groups
           try {
-            const userWithGroups = (await this.getGroups(foundUser)) as LdapResponeUser;
+            const userWithGroups = (await this.getGroups(foundUser)) as LdapResponseUser;
 
             if (this.userCache) {
               this.logger.debug(`To cache: ${userWithGroups.sAMAccountName}`, 'LDAP');
@@ -661,13 +663,13 @@ export class LdapService extends EventEmitter {
               this.userCache.set<LDAPCache>(
                 userWithGroups.sAMAccountName,
                 {
-                  user: userWithGroups as LdapResponeUser,
+                  user: userWithGroups as LdapResponseUser,
                 },
                 this.ttl,
               );
             }
 
-            return resolve(userWithGroups as LdapResponeUser);
+            return resolve(userWithGroups as LdapResponseUser);
           } catch (error) {
             this.logger.error('Authenticate:', error.toString(), 'LDAP');
 

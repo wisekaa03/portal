@@ -9,7 +9,7 @@ import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
-import { LdapService, LdapResponeUser } from '@app/ldap';
+import { LdapService, LdapResponseUser } from '@app/ldap';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
 import { UserEntity } from '../user/user.entity';
@@ -139,7 +139,7 @@ export class ProfileService {
    * @param user UserEntity
    * @returns ProfileEntity
    */
-  async createFromLdap(ldapUser: LdapResponeUser, user?: UserEntity, count = 1): Promise<ProfileEntity | undefined> {
+  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, count = 1): Promise<ProfileEntity | undefined> {
     const manager =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager
         ? await this.createLdapDN(ldapUser.manager, count)

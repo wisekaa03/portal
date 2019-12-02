@@ -12,7 +12,7 @@ export const LDAP_OPTIONS = 'LDAP_OPTIONS';
 export type Scope = 'base' | 'one' | 'sub';
 
 export interface LDAPCache {
-  user?: LdapResponeUser;
+  user?: LdapResponseUser;
   synch?: SearchEntryObject[];
 }
 
@@ -20,7 +20,7 @@ export interface LdapResonseGroup extends SearchEntryObject {
   objectGUID: string;
 }
 
-export interface LdapResponeUser extends SearchEntryObject {
+export interface LdapResponseUser extends SearchEntryObject {
   /**
    * Ldap response groups
    */

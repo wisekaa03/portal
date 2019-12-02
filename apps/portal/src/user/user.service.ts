@@ -9,7 +9,7 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { LdapService, LdapResponeUser } from '@app/ldap';
+import { LdapService, LdapResponseUser } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
 import { SOAP1C } from '../../../soap1c/src/app.constants';
 import { UserEntity } from './user.entity';
@@ -94,7 +94,7 @@ export class UserService {
    *
    * @param {string} id - User ID
    */
-  async createFromLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
+  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity): Promise<UserEntity | undefined> {
     let profile: ProfileEntity | undefined;
 
     const defaultSettings: UserSettings = {

@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { LdapResponeUser, LdapResonseGroup } from '@app/ldap';
+import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
 import { UserEntity } from '../user/user.entity';
 import { GroupEntity } from './group.entity';
 import { Group } from './models/group.dto';
@@ -22,7 +22,7 @@ export class GroupService {
     private readonly groupRepository: Repository<GroupEntity>,
   ) {}
 
-  async createFromUser(ldap: LdapResponeUser, user?: UserEntity): Promise<GroupEntity[] | undefined> {
+  async createFromUser(ldap: LdapResponseUser, user?: UserEntity): Promise<GroupEntity[] | undefined> {
     const groups: GroupEntity[] = [];
 
     if (ldap.groups) {

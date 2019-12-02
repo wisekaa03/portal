@@ -61,7 +61,6 @@ export class AuthService {
       });
       if (user) {
         try {
-          this.loginEmail(user, password);
           // TODO:
           return user.toResponseObject((req && req.sessionID) || '');
         } catch (error) {

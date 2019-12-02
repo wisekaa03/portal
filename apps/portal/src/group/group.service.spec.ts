@@ -3,10 +3,11 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { LoggerModule } from '@app/logger';
 import { GroupService } from './group.service';
 // #endregion
 
@@ -50,6 +51,8 @@ describe('GroupService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        LoggerModule,
+
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
