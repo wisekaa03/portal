@@ -263,7 +263,7 @@ export class ConfigService {
         .empty(),
 
       MAIL_LOGIN_URL: Joi.string()
-        .default('https://roundcube.i-npz.ru/login/index.php')
+        .default('https://roundcube.production/login/index.php')
         .optional()
         .empty(),
     });
