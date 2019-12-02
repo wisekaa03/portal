@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Module } from '@nestjs/common';
+import { Module, HttpService } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 // #endregion
 // #region Imports Local
@@ -18,6 +18,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 @Module({
   imports: [
     // #region Logger module, Config module, Next module
+    HttpService,
     LoggerModule,
     ConfigModule,
     // #endregion

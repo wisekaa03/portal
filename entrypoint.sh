@@ -72,6 +72,9 @@ SOAP_PASS="${SOAP_PASS}"
 
 # NEWS
 NEWS_URL="${NEWS_URL}"
+
+# MAIL
+MAIL_LOGIN_URL="${MAIL_LOGIN_URL}"
 EOF
 
 export NODE=`which node`

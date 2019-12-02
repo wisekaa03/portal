@@ -261,6 +261,11 @@ export class ConfigService {
         .default('https://news')
         .optional()
         .empty(),
+
+      MAIL_LOGIN_URL: Joi.string()
+        .default('https://roundcube.i-npz.ru/login/index.php')
+        .optional()
+        .empty(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);

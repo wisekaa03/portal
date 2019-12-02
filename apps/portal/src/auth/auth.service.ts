@@ -1,13 +1,14 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, HttpException, UnauthorizedException, HttpService } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { Response } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
+import { ConfigService } from '@app/config';
 import { UserLogin } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
 import { UserEntity, UserResponse } from '../user/user.entity';
@@ -20,6 +21,8 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
     private readonly logService: LogService,
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
     private readonly i18n: I18nService,
   ) {}
 
@@ -59,6 +62,7 @@ export class AuthService {
       });
       if (user) {
         try {
+          this.loginEmail(user, password);
           // TODO:
           return user.toResponseObject((req && req.sessionID) || '');
         } catch (error) {
@@ -143,4 +147,17 @@ export class AuthService {
       throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
     }
   }
+
+  loginEmail = (user: UserEntity, password: string): void => {
+    if (user.profile && user.profile.email) {
+      this.httpService.post(
+        this.configService.get<string>('MAIL_LOGIN_URL'),
+        {
+          email: user.profile.email,
+          password,
+        },
+        { headers: { 'Content-Type': 'application/json' }, method: 'POST', data: null },
+      );
+    }
+  };
 }

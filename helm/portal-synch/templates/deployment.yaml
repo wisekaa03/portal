@@ -317,6 +317,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: NEWS_URL
+            - name: MAIL_LOGIN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MAIL_LOGIN_URL
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

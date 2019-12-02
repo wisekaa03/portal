@@ -207,6 +207,9 @@ SOAP_PASS="supersecret"
 
 # NEWS
 NEWS_URL="https://news"
+
+#MAIL
+MAIL_LOGIN_URL="https://roundcube.i-npz.ru/login/index.php"
 ```
 
 ## Production Deployment

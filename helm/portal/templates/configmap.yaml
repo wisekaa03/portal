@@ -65,3 +65,5 @@ data:
   SOAP_PASS: {{ .Values.SOAP_PASS | default "supersecret" | quote }}
 
   NEWS_URL: {{ .Values.NEWS_URL | default "https://news" | quote }}
+
+  MAIL_LOGIN_URL: {{ .Values.MAIL_LOGIN_URL | default "https://roundcube.i-npz.ru/login/index.php" | quote }}
