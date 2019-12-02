@@ -144,7 +144,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   server.use('*', (_req: Request, res: Response, next: Function) => {
     // res.set('X-Server-ID', );
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
-    res.locals.sessionStore = store;
     next();
   });
   // #endregion

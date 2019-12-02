@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable, HttpException, UnauthorizedException, HttpService } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
-import { Response } from 'express';
+import Redis from 'redis';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -12,7 +12,6 @@ import { ConfigService } from '@app/config';
 import { UserLogin } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
 import { UserEntity, UserResponse } from '../user/user.entity';
-import { resetSessionStore } from '../shared/session-redis';
 // #endregion
 
 @Injectable()
@@ -86,22 +85,79 @@ export class AuthService {
    * User LDAP login
    *
    */
-  cacheReset = async (res: Response): Promise<boolean> => {
+  cacheReset = async (): Promise<boolean> => {
     let sessionStoreReset = false;
+    let databaseStoreReset = false;
     let ldapCacheReset = false;
 
-    // TODO: DATABASE_CACHE
-    if (res.locals && res.locals.sessionStore) {
+    if (this.configService.get<string>('DATABASE_REDIS_HOST')) {
+      const redisDatabase = Redis.createClient({
+        host: this.configService.get<string>('DATABASE_REDIS_HOST'),
+        port: this.configService.get<number>('DATABASE_REDIS_PORT'),
+        password: this.configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
+        db: this.configService.get<number>('DATABASE_REDIS_DB'),
+        prefix: this.configService.get<string>('DATABASE_REDIS_PREFIX'),
+      });
+
       try {
-        sessionStoreReset = await resetSessionStore(res.locals.sessionStore);
+        redisDatabase.flushdb();
+
+        this.logService.log('Reset database cache.', 'AuthService');
+
+        databaseStoreReset = true;
       } catch (error) {
-        this.logService.error('Error in cache reset, session store', error, 'AuthService');
+        this.logService.error('Unable to reset database cache:', error, 'AuthService');
       }
+
+      redisDatabase.quit();
     }
 
-    ldapCacheReset = await this.ldapService.cacheReset();
+    if (this.configService.get<string>('LDAP_REDIS_HOST')) {
+      const redisLdap = Redis.createClient({
+        host: this.configService.get<string>('LDAP_REDIS_HOST'),
+        port: this.configService.get<number>('LDAP_REDIS_PORT'),
+        password: this.configService.get<string>('LDAP_REDIS_PASSWORD') || undefined,
+        db: this.configService.get<number>('LDAP_REDIS_DB'),
+      });
 
-    if (sessionStoreReset && ldapCacheReset) {
+      try {
+        redisLdap.flushdb();
+
+        this.logService.log('Reset LDAP cache.', 'AuthService');
+
+        ldapCacheReset = true;
+      } catch (error) {
+        this.logService.error('Unable to reset LDAP cache:', error, 'AuthService');
+      }
+
+      redisLdap.quit();
+    }
+
+    try {
+      const redisSession = Redis.createClient({
+        host: this.configService.get<string>('SESSION_REDIS_HOST'),
+        port: this.configService.get<number>('SESSION_REDIS_PORT'),
+        password: this.configService.get<string>('SESSION_REDIS_PASSWORD') || undefined,
+        db: this.configService.get<number>('SESSION_REDIS_DB'),
+        prefix: this.configService.get<string>('SESSION_REDIS_PREFIX') || 'SESSION',
+      });
+
+      try {
+        redisSession.flushdb();
+
+        this.logService.log('Reset session cache.', 'AuthService');
+      } catch (error) {
+        this.logService.error('Unable to reset session cache:', error, 'AuthService');
+      }
+
+      redisSession.quit();
+
+      sessionStoreReset = true;
+    } catch (error) {
+      this.logService.error('Error in cache reset, session store', error, 'AuthService');
+    }
+
+    if (databaseStoreReset && sessionStoreReset && ldapCacheReset) {
       return true;
     }
 
@@ -135,7 +191,7 @@ export class AuthService {
       }
 
       try {
-        return this.userService.createLdap(ldapUser, user);
+        return this.userService.createFromLdap(ldapUser, user);
       } catch (error) {
         this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
 

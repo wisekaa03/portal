@@ -82,9 +82,9 @@ export class AuthResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async cacheReset(@Context('res') res: Response): Promise<boolean> {
+  async cacheReset(): Promise<boolean> {
     this.logService.debug(`Cache reset`, 'AuthResolver');
 
-    return this.authService.cacheReset(res);
+    return this.authService.cacheReset();
   }
 }

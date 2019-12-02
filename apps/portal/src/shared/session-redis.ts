@@ -10,17 +10,6 @@ import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 // #endregion
 
-export async function resetSessionStore(store: Session.Store): Promise<boolean> {
-  return new Promise<boolean>((resolve, reject) => {
-    store.clear((error: ReplyError | Error) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(true);
-    });
-  });
-}
-
 export default (configService: ConfigService, logService: LogService): Session.Store => {
   try {
     const sess = new (RedisSessionStore(Session))({
