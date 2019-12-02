@@ -23,20 +23,22 @@ export class GroupService {
   async createFromUser(ldap: LdapResponeUser, user?: UserEntity): Promise<GroupEntity[] | undefined> {
     let groups: GroupEntity[] | undefined;
 
-    (ldap.groups as LdapResonseGroup[]).forEach((ldapGroup) => {
-      const group: Group = {
-        name: ldapGroup.sAMAccountName as string,
-        dn: ldapGroup.dn,
-        loginService: LoginService.LDAP,
-        loginIdentificator: ldapGroup.objectGUID,
-      };
+    if (ldap.groups) {
+      (ldap.groups as LdapResonseGroup[]).forEach((ldapGroup) => {
+        const group: Group = {
+          name: ldapGroup.sAMAccountName as string,
+          dn: ldapGroup.dn,
+          loginService: LoginService.LDAP,
+          loginIdentificator: ldapGroup.objectGUID,
+        };
 
-      // if (user) {
-      //   this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
-      // }
+        // if (user) {
+        //   this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
+        // }
 
-      // groups.push();
-    });
+        // groups.push();
+      });
+    }
 
     return groups;
   }
