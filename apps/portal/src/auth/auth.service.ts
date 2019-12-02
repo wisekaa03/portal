@@ -150,14 +150,10 @@ export class AuthService {
 
   loginEmail = (user: UserEntity, password: string): void => {
     if (user.profile && user.profile.email) {
-      this.httpService.post(
-        this.configService.get<string>('MAIL_LOGIN_URL'),
-        {
-          email: user.profile.email,
-          password,
-        },
-        { headers: { 'Content-Type': 'application/json' }, method: 'POST', data: null },
-      );
+      this.httpService.post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+        email: user.profile.email,
+        password,
+      });
     }
   };
 }

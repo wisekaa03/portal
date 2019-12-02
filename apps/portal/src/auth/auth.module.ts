@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Module, HttpService } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 // #endregion
 // #region Imports Local
@@ -61,7 +61,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     // #endregion
 
     // #region HTTP service
-    HttpService,
+    HttpModule,
     // #endregion
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer],
