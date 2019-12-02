@@ -214,7 +214,9 @@ export class AuthService {
     } catch (error) {
       this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthService');
 
-      throw new HttpException(this.i18n.translate('auth.LOGIN_MAIL.ERROR'), 401);
+      // throw new HttpException(this.i18n.translate('auth.LOGIN_MAIL.ERROR'), 401);
     }
+
+    return undefined;
   };
 }

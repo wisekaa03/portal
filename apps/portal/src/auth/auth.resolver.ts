@@ -1,5 +1,4 @@
 /** @format */
-/* eslint prettier/prettier:0 */
 
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
@@ -39,9 +38,11 @@ export class AuthResolver {
    */
   @Mutation()
   async login(
+  /* eslint-disable prettier/prettier */
     @Args('username') username: string,
       @Args('password') password: string,
       @Context('req') req: Request,
+  /* eslint-enable prettier/prettier */
   ): Promise<UserResponse | null> {
     const user = await this.authService.login({ username, password }, req);
 
@@ -52,7 +53,11 @@ export class AuthResolver {
         }
       });
 
-      user.email = await this.authService.loginEmail(user && user.profile && user.profile.email, password);
+      try {
+        user.email = await this.authService.loginEmail(user && user.profile && user.profile.email, password);
+      } catch (error) {
+        this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
+      }
 
       return user;
     }
