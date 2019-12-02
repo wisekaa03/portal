@@ -19,8 +19,8 @@ import * as bcrypt from 'bcrypt';
 // #region Imports Local
 import { UserSettings } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
-import { LoginService } from '../profile/models/profile.dto';
 import { GroupEntity } from '../group/group.entity';
+import { LoginService } from '../shared/interfaces';
 // #endregion
 
 @Entity('user')

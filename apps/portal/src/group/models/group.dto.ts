@@ -1,9 +1,11 @@
 /** @format */
-/* eslint max-classes-per-file:0 */
+
+/** @format */
 
 // #region Imports NPM
 // #endregion
 // #region Imports Local
+import { LoginService } from '../../shared/interfaces';
 // #endregion
 
 // #region Group
@@ -13,6 +15,11 @@ export interface Group {
   name: string;
 
   dn: string;
+
+  loginService: LoginService;
+
+  // in ldap, we store a GUID entry
+  loginIdentificator: string;
 
   createdAt?: Date;
 

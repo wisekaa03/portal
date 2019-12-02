@@ -49,8 +49,6 @@ export class AuthResolver {
       req.logIn(user as User, (err: any) => {
         if (err) {
           this.logService.error('Error when logging in:', err);
-        } else {
-          this.logService.log(`User is logged in: ${user.username}`, 'AuthResolver');
         }
       });
 

@@ -219,7 +219,7 @@ export class ConfigService {
         .optional()
         .empty(),
       LDAP_SEARCH_GROUP: Joi.string()
-        .default('(objectClass=group)')
+        .default('(&(objectClass=group)(member={{dn}}))')
         .optional()
         .empty(),
       LDAP_SEARCH_BASE_ALL_USERS: Joi.string()

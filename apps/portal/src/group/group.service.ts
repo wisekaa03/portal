@@ -4,13 +4,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import Ldap from 'ldapjs';
 // #endregion
 // #region Imports Local
-import { LdapResponeUser } from '@app/ldap';
+import { LdapResponeUser, LdapResonseGroup } from '@app/ldap';
 import { UserEntity } from '../user/user.entity';
 import { GroupEntity } from './group.entity';
 import { Group } from './models/group.dto';
+import { LoginService } from '../shared/interfaces';
 // #endregion
 
 @Injectable()
@@ -21,13 +21,23 @@ export class GroupService {
   ) {}
 
   async createFromUser(ldap: LdapResponeUser, user?: UserEntity): Promise<GroupEntity[] | undefined> {
-    ((ldap.groups as unknown) as Ldap.SearchEntryObject[]).forEach(async (ldapGroup) => {
+    let groups: GroupEntity[] | undefined;
+
+    (ldap.groups as LdapResonseGroup[]).forEach((ldapGroup) => {
       const group: Group = {
         name: ldapGroup.sAMAccountName as string,
         dn: ldapGroup.dn,
+        loginService: LoginService.LDAP,
+        loginIdentificator: ldapGroup.objectGUID,
       };
+
+      // if (user) {
+      //   this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
+      // }
+
+      // groups.push();
     });
 
-    return undefined;
+    return groups;
   }
 }

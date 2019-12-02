@@ -1,9 +1,9 @@
 /** @format */
-/* eslint max-classes-per-file:0 */
 
 // #region Imports NPM
 // #endregion
 // #region Imports Local
+import { LoginService, Gender } from '../../shared/interfaces';
 // #endregion
 
 // #region Profile
@@ -12,6 +12,7 @@ export interface Profile {
 
   loginService: LoginService;
 
+  // in ldap, we store a GUID entry
   loginIdentificator: string;
 
   username: string;
@@ -81,24 +82,5 @@ export interface Profile {
   createdAt?: Date;
 
   updatedAt?: Date;
-}
-// #endregion
-
-// #region Gender
-export enum Gender {
-  UNKNOWN = 0,
-  MAN = 1,
-  WOMAN = 2,
-}
-// #endregion
-
-// #region Login service
-export enum LoginService {
-  LOCAL = 'local',
-  LDAP = 'ldap',
-  GOOGLE = 'google',
-  TWITTER = 'twitter',
-  FACEBOOK = 'facebook',
-  GITHUB = 'github',
 }
 // #endregion

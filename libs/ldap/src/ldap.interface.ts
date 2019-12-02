@@ -16,7 +16,16 @@ export interface LDAPCache {
   synch?: SearchEntryObject[];
 }
 
+export interface LdapResonseGroup extends SearchEntryObject {
+  objectGUID: string;
+}
+
 export interface LdapResponeUser extends SearchEntryObject {
+  /**
+   * Ldap response groups
+   */
+  groups: any | LdapResonseGroup[];
+
   /**
    * Country
    */

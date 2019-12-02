@@ -4,6 +4,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { LoginService } from '../shared/interfaces';
 // #endregion
 
 @Entity('group')
@@ -28,6 +29,22 @@ export class GroupEntity {
     nullable: true,
   })
   dn: string;
+
+  @Column({
+    type: 'varchar',
+    length: 10,
+    nullable: false,
+    default: LoginService.LOCAL,
+  })
+  loginService: LoginService;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true,
+    unique: true,
+  })
+  loginIdentificator: string;
 
   toResponseObject = (): GroupEntity => ({ ...this });
 }

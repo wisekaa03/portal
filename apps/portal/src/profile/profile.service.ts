@@ -11,8 +11,9 @@ import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
 import { LdapService, LdapResponeUser } from '@app/ldap';
 import { ProfileEntity } from './profile.entity';
-import { Profile, Gender, LoginService } from './models/profile.dto';
+import { Profile } from './models/profile.dto';
 import { UserEntity } from '../user/user.entity';
+import { LoginService, Gender } from '../shared/interfaces';
 // #endregion
 
 @Injectable()

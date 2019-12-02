@@ -4,7 +4,7 @@
 // #region Imports NPM
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nModule } from 'nestjs-i18n';
+// import { I18nModule } from 'nestjs-i18n';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion

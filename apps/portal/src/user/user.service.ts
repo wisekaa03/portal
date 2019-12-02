@@ -15,10 +15,11 @@ import { SOAP1C } from '../../../soap1c/src/app.constants';
 import { UserEntity } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { ProfileService } from '../profile/profile.service';
-import { Profile, LoginService } from '../profile/models/profile.dto';
+import { Profile } from '../profile/models/profile.dto';
 import { GroupService } from '../group/group.service';
 import { GroupEntity } from '../group/group.entity';
 import { ProfileEntity } from '../profile/profile.entity';
+import { LoginService } from '../shared/interfaces';
 // #endregion
 
 @Injectable()
@@ -95,7 +96,6 @@ export class UserService {
    */
   async createLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
     let profile: ProfileEntity | undefined;
-    let groups: GroupEntity[] | undefined;
 
     const defaultSettings: UserSettings = {
       lng: 'ru',
@@ -115,16 +115,9 @@ export class UserService {
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
 
-    try {
-      groups = await this.groupService.createFromUser(ldapUser, user);
-    } catch (error) {
-      this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'UserService');
-
-      throw error;
-    }
-
+    const groups = await this.groupService.createFromUser(ldapUser, user);
     if (!groups) {
-      this.logService.error('Unable to save data in `group`. Unknown error.', '', 'UserService');
+      this.logService.error('Unable to save data in `group`. Unknown error.', undefined, 'UserService');
     }
 
     // Для контактов
