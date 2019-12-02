@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { LdapResponeUser, LdapResonseGroup } from '@app/ldap';
 import { UserEntity } from '../user/user.entity';
 import { GroupEntity } from './group.entity';
@@ -16,12 +17,13 @@ import { LoginService } from '../shared/interfaces';
 @Injectable()
 export class GroupService {
   constructor(
+    private readonly logService: LogService,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {}
 
   async createFromUser(ldap: LdapResponeUser, user?: UserEntity): Promise<GroupEntity[] | undefined> {
-    let groups: GroupEntity[] | undefined;
+    const groups: GroupEntity[] = [];
 
     if (ldap.groups) {
       await (ldap.groups as LdapResonseGroup[]).forEach(async (ldapGroup) => {
@@ -33,13 +35,33 @@ export class GroupService {
         };
 
         if (user) {
-          const groupBase = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
-          if (groupBase) {
-            group.id = groupBase.id;
+          const gb = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
+          if (gb) {
+            group.id = gb.id;
           }
         }
 
-        // groups.push();
+        let gb;
+        let g;
+        try {
+          gb = this.groupRepository.create(group);
+        } catch (error) {
+          this.logService.error('Group create error:', error, 'GroupService');
+
+          throw error;
+        }
+
+        try {
+          g = await this.groupRepository.save(gb);
+        } catch (error) {
+          this.logService.error('Unable to save data in `group`', error, 'GroupService');
+
+          throw error;
+        }
+
+        if (g) {
+          groups.push(g);
+        }
       });
     }
 

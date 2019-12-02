@@ -24,7 +24,7 @@ export class SynchService {
       users.forEach(async (ldapUser) => {
         const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false);
 
-        this.userService.createLdap(ldapUser, user).catch((error: Error) => {
+        this.userService.createFromLdap(ldapUser, user).catch((error: Error) => {
           this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
 
           throw error;

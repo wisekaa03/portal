@@ -515,27 +515,29 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          if (this.userCache) {
-            if (this.userCacheStore.reset) {
-              this.userCacheStore.reset((error: any) => {
-                if (error) {
-                  this.logger.error('LDAP cache error', error.toString(), 'LDAP');
-                }
-              });
+          return new Promise<undefined | LdapResponeUser[]>((resolve) => {
+            if (this.userCache) {
+              if (this.userCacheStore.reset) {
+                this.userCacheStore.reset((error: any) => {
+                  if (error) {
+                    this.logger.error('LDAP cache error', error.toString(), 'LDAP');
+                  }
+                });
+              }
+
+              this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
+
+              this.userCache.set<LDAPCache>(
+                LDAP_SYNCH,
+                {
+                  synch,
+                },
+                this.ttl,
+              );
             }
 
-            this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
-
-            this.userCache.set<LDAPCache>(
-              LDAP_SYNCH,
-              {
-                synch,
-              },
-              this.ttl,
-            );
-          }
-
-          return synch as LdapResponeUser[];
+            return resolve(synch.map((foundUser) => this.getGroups(foundUser)));
+          });
         }
 
         return undefined;
