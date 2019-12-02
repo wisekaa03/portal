@@ -85,8 +85,7 @@ fi
 # TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 # "Typically it is unsafe to use synchronize: true for schema synchronization on production
 # once you get data in your database. Here is where migrations come to help."
-./node_modules/typeorm/cli.js schema:sync
-# ./node_modules/typeorm/cli.js migration:run
+$NODE ./node_modules/typeorm/cli.js schema:sync
 
 if [ -n "$*" -a "$1" = "test" ]; then
   export NODE_ENV=${NODE_ENV:=test}

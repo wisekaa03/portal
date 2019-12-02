@@ -17,6 +17,7 @@ import { SynchService } from './app.service';
 import { UserModule } from '../../portal/src/user/user.module';
 import { UserEntity } from '../../portal/src/user/user.entity';
 import { ProfileEntity } from '../../portal/src/profile/profile.entity';
+import { GroupEntity } from '../../portal/src/group/group.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -85,7 +86,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
               : configService.get('DATABASE_LOGGING') === 'true'
                 ? true
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
-          entities: [ProfileEntity, UserEntity],
+          entities: [ProfileEntity, GroupEntity, UserEntity],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {
             type: 'redis',
@@ -107,7 +108,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     // #endregion
 
     // #region TypeORM
-    TypeOrmModule.forFeature([ProfileEntity, UserEntity]),
+    TypeOrmModule.forFeature([ProfileEntity, GroupEntity, UserEntity]),
     // #endregion
 
     UserModule,
