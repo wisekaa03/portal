@@ -24,7 +24,7 @@ export class GroupService {
     let groups: GroupEntity[] | undefined;
 
     if (ldap.groups) {
-      (ldap.groups as LdapResonseGroup[]).forEach((ldapGroup) => {
+      await (ldap.groups as LdapResonseGroup[]).forEach(async (ldapGroup) => {
         const group: Group = {
           name: ldapGroup.sAMAccountName as string,
           dn: ldapGroup.dn,
@@ -32,9 +32,12 @@ export class GroupService {
           loginIdentificator: ldapGroup.objectGUID,
         };
 
-        // if (user) {
-        //   this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
-        // }
+        if (user) {
+          const groupBase = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
+          if (groupBase) {
+            group.id = groupBase.id;
+          }
+        }
 
         // groups.push();
       });

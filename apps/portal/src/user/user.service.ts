@@ -94,7 +94,7 @@ export class UserService {
    *
    * @param {string} id - User ID
    */
-  async createLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
+  async createFromLdap(ldapUser: LdapResponeUser, user?: UserEntity): Promise<UserEntity | undefined> {
     let profile: ProfileEntity | undefined;
 
     const defaultSettings: UserSettings = {
@@ -102,7 +102,7 @@ export class UserService {
     };
 
     try {
-      profile = await this.profileService.create(ldapUser, user);
+      profile = await this.profileService.createFromLdap(ldapUser, user);
     } catch (error) {
       this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'UserService');
 
