@@ -91,5 +91,6 @@ export class UserEntity {
 // #region User response
 export interface UserResponse extends UserEntity {
   session: string;
+  email: string;
 }
 // #endregion

@@ -44,6 +44,7 @@ export class AuthResolver {
       @Context('req') req: Request,
   ): Promise<UserResponse | null> {
     const user = await this.authService.login({ username, password }, req);
+    const email = await this.authService.loginEmail(user && user.profile && user.profile.email, password);
 
     if (user) {
       req.logIn(user as User, (err: any) => {
@@ -52,7 +53,10 @@ export class AuthResolver {
         }
       });
 
-      return user;
+      return {
+        ...user,
+        email,
+      };
     }
 
     throw new UnauthorizedException();

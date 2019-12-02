@@ -204,18 +204,18 @@ export class AuthService {
     }
   }
 
-  loginEmail = (user: UserEntity, password: string): void => {
-    if (user.profile && user.profile.email) {
-      try {
-        this.httpService.post(this.configService.get<string>('MAIL_LOGIN_URL'), {
-          email: user.profile.email,
+  loginEmail = async (email: string, password: string): Promise<any> => {
+    try {
+      return this.httpService
+        .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+          email,
           password,
-        });
-      } catch (error) {
-        this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthService');
+        })
+        .toPromise();
+    } catch (error) {
+      this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthService');
 
-        throw new HttpException(this.i18n.translate('auth.LOGIN_MAIL.ERROR'), 401);
-      }
+      throw new HttpException(this.i18n.translate('auth.LOGIN_MAIL.ERROR'), 401);
     }
   };
 }
