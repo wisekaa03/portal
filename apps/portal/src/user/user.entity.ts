@@ -88,9 +88,15 @@ export class UserEntity {
   toResponseObject = (session: string): UserResponse => ({ session, ...this });
 }
 
+interface EmailSessionProps {
+  error?: string;
+  sessid?: string;
+  sessauth?: string;
+}
+
 // #region User response
 export interface UserResponse extends UserEntity {
   session: string;
-  email?: string;
+  emailSession?: EmailSessionProps;
 }
 // #endregion

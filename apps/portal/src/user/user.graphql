@@ -1,6 +1,7 @@
 type User {
   id: ID!
   session: String!
+  emailSession: EmailSession
   username: String!
   profile: Profile!
   disabled: Boolean
@@ -9,6 +10,12 @@ type User {
   settings: UserSettings
   createdAt: Date
   updatedAt: Date
+}
+
+type EmailSession {
+  error: String
+  sessid: String
+  sessauth: String
 }
 
 type UserSettings {

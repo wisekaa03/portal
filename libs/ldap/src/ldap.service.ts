@@ -414,7 +414,7 @@ export class LdapService extends EventEmitter {
   /**
    * Search user by DN
    *
-   * @returns {undefined | LdapResponeUser[]} - User in LDAP
+   * @returns {undefined | LdapResponseUser[]} - User in LDAP
    */
   public async searchByDN(userByDN: string): Promise<undefined | LdapResponseUser> {
     if (this.userCache) {
@@ -488,7 +488,7 @@ export class LdapService extends EventEmitter {
   /**
    * Synchronize users
    *
-   * @returns {undefined | LdapResponeUser[]} - User in LDAP
+   * @returns {undefined | LdapResponseUser[]} - User in LDAP
    */
   public async synchronization(): Promise<undefined | LdapResponseUser[]> {
     if (this.userCache) {
@@ -611,7 +611,7 @@ export class LdapService extends EventEmitter {
    *
    * @param {string} username - The username to authenticate
    * @param {string} password - The password to verify
-   * @returns {undefined | LdapResponeUser} - User in LDAP
+   * @returns {undefined | LdapResponseUser} - User in LDAP
    */
   public async authenticate(username: string, password: string): Promise<undefined | LdapResponseUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
