@@ -9,6 +9,7 @@ import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LdapModule, LdapModuleOptions } from '@app/ldap';
 import { LoggerModule } from '@app/logger';
+import { HttpModule } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 // #endregion
@@ -31,6 +32,8 @@ describe('AuthService', () => {
       imports: [
         LoggerModule,
         ConfigModule.register(env),
+
+        HttpModule,
 
         I18nModule.forRootAsync({
           imports: [ConfigModule],

@@ -17,8 +17,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
-    // #region Logger module, Config module, Next module
-    HttpService,
+    // #region Logger module, Config module
     LoggerModule,
     ConfigModule,
     // #endregion
@@ -59,6 +58,10 @@ import { LocalStrategy } from './strategies/local.strategy';
 
     // #region Users module
     UserModule,
+    // #endregion
+
+    // #region HTTP service
+    HttpService,
     // #endregion
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer],
