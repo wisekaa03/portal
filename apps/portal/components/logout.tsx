@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
+import Head from 'next/head';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Button, Card, CardContent, FormControl } from '@material-ui/core';
@@ -108,44 +109,49 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
   const classes: any = useStyles({});
 
   return (
-    <div className={classes.root}>
-      <div>
-        <img src={Logo} alt="Logo" className={classes.logo} />
+    <>
+      <Head>
+        <title>{t('logout:title')}</title>
+      </Head>
+      <div className={classes.root}>
+        <div>
+          <img src={Logo} alt="Logo" className={classes.logo} />
+        </div>
+        <div className={classes.logoutContainer}>
+          <form
+            onSubmit={async (e: any): Promise<void> => {
+              e.preventDefault();
+              logout();
+            }}
+            className={classes.container}
+            autoComplete="off"
+            noValidate
+          >
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography className={classes.typoAuthorization} variant="h4">
+                  {t('logout:authorization')}
+                </Typography>
+                {loading && <Loading />}
+                {error && <GQLError error={error} />}
+                <FormControl className={classes.submitButtonContainer}>
+                  <Button
+                    className={classes.submitButton}
+                    type="submit"
+                    variant="outlined"
+                    color="primary"
+                    size="large"
+                    disabled={loading}
+                  >
+                    {t('logout:signOut')}
+                  </Button>
+                </FormControl>
+              </CardContent>
+            </Card>
+          </form>
+        </div>
       </div>
-      <div className={classes.logoutContainer}>
-        <form
-          onSubmit={async (e: any): Promise<void> => {
-            e.preventDefault();
-            logout();
-          }}
-          className={classes.container}
-          autoComplete="off"
-          noValidate
-        >
-          <Card className={classes.card}>
-            <CardContent>
-              <Typography className={classes.typoAuthorization} variant="h4">
-                {t('logout:authorization')}
-              </Typography>
-              {loading && <Loading />}
-              {error && <GQLError error={error} />}
-              <FormControl className={classes.submitButtonContainer}>
-                <Button
-                  className={classes.submitButton}
-                  type="submit"
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  disabled={loading}
-                >
-                  {t('logout:signOut')}
-                </Button>
-              </FormControl>
-            </CardContent>
-          </Card>
-        </form>
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
@@ -145,87 +146,93 @@ const LoginComponent: I18nPage<{
   called = error ? false : called;
 
   return (
-    <div className={classes.root}>
-      <div>
-        <img src={Logo} alt="Logo" className={classes.logo} />
-      </div>
-      <div className={classes.loginContainer}>
-        <form
-          onSubmit={async (e: any): Promise<void> => {
-            e.preventDefault();
+    <>
+      <Head>
+        <title>{t('login:title')}</title>
+      </Head>
 
-            login({
-              variables: {
-                username: values.name,
-                password: values.pass,
-              },
-            });
-          }}
-          className={classes.container}
-          autoComplete="off"
-          noValidate
-        >
-          <Card className={classes.card}>
-            <CardContent>
-              <Typography className={classes.typoAuthorization} variant="h4">
-                {t('common:authorization')}
-              </Typography>
-              <FormControl className={classes.formControl} fullWidth variant="outlined">
-                <TextField
-                  data-field-name="username"
-                  type="username"
-                  value={values.name}
-                  onChange={handleChange('name')}
-                  disabled={called || loading}
-                  label={t('login:username')}
-                  variant="outlined"
-                  className={classes.labelForFormControl}
-                />
-              </FormControl>
-              <FormControl className={classes.formControl} fullWidth variant="outlined">
-                <TextField
-                  data-field-name="password"
-                  type="password"
-                  value={values.pass}
-                  onChange={handleChange('pass')}
-                  disabled={called || loading}
-                  label={t('login:password')}
-                  variant="outlined"
-                  className={classes.labelForFormControl}
-                />
-              </FormControl>
-              <FormControlLabel
-                className={classes.labelForCheckbox}
-                control={
-                  <Checkbox
-                    checked={values.save}
-                    onChange={handleChange('save')}
-                    value="save"
-                    color="primary"
+      <div className={classes.root}>
+        <div>
+          <img src={Logo} alt="Logo" className={classes.logo} />
+        </div>
+        <div className={classes.loginContainer}>
+          <form
+            onSubmit={async (e: any): Promise<void> => {
+              e.preventDefault();
+
+              login({
+                variables: {
+                  username: values.name,
+                  password: values.pass,
+                },
+              });
+            }}
+            className={classes.container}
+            autoComplete="off"
+            noValidate
+          >
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography className={classes.typoAuthorization} variant="h4">
+                  {t('common:authorization')}
+                </Typography>
+                <FormControl className={classes.formControl} fullWidth variant="outlined">
+                  <TextField
+                    data-field-name="username"
+                    type="username"
+                    value={values.name}
+                    onChange={handleChange('name')}
                     disabled={called || loading}
+                    label={t('login:username')}
+                    variant="outlined"
+                    className={classes.labelForFormControl}
                   />
-                }
-                label={t('remember')}
-              />
-              {(called || loading) && <Loading />}
-              {error && <GQLError error={error} />}
-              <FormControl className={classes.submitButtonContainer}>
-                <Button
-                  className={classes.submitButton}
-                  type="submit"
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  disabled={called || loading}
-                >
-                  {t('signIn')}
-                </Button>
-              </FormControl>
-            </CardContent>
-          </Card>
-        </form>
+                </FormControl>
+                <FormControl className={classes.formControl} fullWidth variant="outlined">
+                  <TextField
+                    data-field-name="password"
+                    type="password"
+                    value={values.pass}
+                    onChange={handleChange('pass')}
+                    disabled={called || loading}
+                    label={t('login:password')}
+                    variant="outlined"
+                    className={classes.labelForFormControl}
+                  />
+                </FormControl>
+                <FormControlLabel
+                  className={classes.labelForCheckbox}
+                  control={
+                    <Checkbox
+                      checked={values.save}
+                      onChange={handleChange('save')}
+                      value="save"
+                      color="primary"
+                      disabled={called || loading}
+                    />
+                  }
+                  label={t('remember')}
+                />
+                {(called || loading) && <Loading />}
+                {error && <GQLError error={error} />}
+                <FormControl className={classes.submitButtonContainer}>
+                  <Button
+                    className={classes.submitButton}
+                    type="submit"
+                    variant="outlined"
+                    color="primary"
+                    size="large"
+                    disabled={called || loading}
+                  >
+                    {t('signIn')}
+                  </Button>
+                </FormControl>
+              </CardContent>
+            </Card>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

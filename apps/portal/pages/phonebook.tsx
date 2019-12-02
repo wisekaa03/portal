@@ -353,7 +353,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
     SEARCH_SUGGESTIONS,
   );
 
-  const { loading, error, data, fetchMore } = useQuery(PROFILES(getGraphQLColumns(columns)), {
+  const { loading, data, fetchMore } = useQuery(PROFILES(getGraphQLColumns(columns)), {
     variables: {
       orderBy,
       first: 50,

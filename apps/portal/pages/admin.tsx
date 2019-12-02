@@ -1,11 +1,10 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Button, Paper, Typography } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
-import { green } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
