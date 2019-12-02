@@ -498,7 +498,9 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   return (
     <>
-      <Head>{t('phonebook:title')}</Head>
+      <Head>
+        <title>{t('phonebook:title')}</title>
+      </Head>
       <Page {...rest}>
         <div className={classes.root}>
           {loading && <Loading noMargin type="linear" variant="indeterminate" />}
