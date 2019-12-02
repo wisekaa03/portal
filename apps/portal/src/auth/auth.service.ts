@@ -206,10 +206,16 @@ export class AuthService {
 
   loginEmail = (user: UserEntity, password: string): void => {
     if (user.profile && user.profile.email) {
-      this.httpService.post(this.configService.get<string>('MAIL_LOGIN_URL'), {
-        email: user.profile.email,
-        password,
-      });
+      try {
+        this.httpService.post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+          email: user.profile.email,
+          password,
+        });
+      } catch (error) {
+        this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthService');
+
+        throw new HttpException(this.i18n.translate('auth.LOGIN_MAIL.ERROR'), 401);
+      }
     }
   };
 }
