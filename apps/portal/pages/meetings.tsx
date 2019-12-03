@@ -2,41 +2,42 @@
 
 // #region Imports NPM
 import React from 'react';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Typography } from '@material-ui/core';
+import Head from 'next/head';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
+import Iframe from '../components/iframe';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { VerticalCenter } from '../components/verticalcenter';
 // #endregion
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      padding: theme.spacing(5),
+      display: 'block',
+      border: 'none',
+      height: '100%',
+      width: '100%',
     },
   }),
 );
 
-const Meetings: I18nPage = (props): React.ReactElement => {
+const Meetings: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
+  const url = 'https://ww.kngk-group.ru/site3/';
 
   return (
-    <Page {...props}>
-      <VerticalCenter horizontal>
-        <Paper className={classes.root}>
-          <Typography>Извините, бронирование переговорных пока не готово.</Typography>
-        </Paper>
-      </VerticalCenter>
+    <Page {...rest}>
+      <Head>
+        <title>{t('mail:title')}</title>
+      </Head>
+      <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
     </Page>
   );
 };
 
-Meetings.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['meeting']),
-  };
-};
+Meetings.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['meeting']),
+});
 
 export default nextI18next.withTranslation('meeting')(Meetings);
