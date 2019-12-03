@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'grid',
-      // flexDirection: 'column',
     },
     rootSelected: {
       [`@media (min-width:${LARGE_RESOLUTION}px)`]: {
@@ -43,23 +42,17 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     container: {
-      'display': 'grid',
-      'padding': theme.spacing(6),
-      'gridGap': theme.spacing(4),
-      'gridTemplateColumns': '1fr 1fr 1fr',
-      'gridAutoRows': 'max-content',
-      'overflowX': 'hidden',
-      'overflowY': 'auto',
-      '& > div:last-child': {
-        marginBottom: theme.spacing(6),
-      },
+      display: 'grid',
+      padding: theme.spacing(6),
+      gridGap: theme.spacing(4),
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gridAutoRows: 'max-content',
+      overflowX: 'hidden',
+      overflowY: 'auto',
     },
     containerSelected: {
-      'gridTemplateColumns': '1fr',
-      'padding': theme.spacing(4),
-      '& > div:last-child': {
-        marginBottom: theme.spacing(4),
-      },
+      gridTemplateColumns: '1fr',
+      padding: theme.spacing(4),
     },
     leftSide: {
       [`@media (max-width:${LARGE_RESOLUTION}px)`]: {
@@ -70,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       overflowX: 'hidden',
       overflowY: 'auto',
-      // flexGrow: 1,
       padding: theme.spacing(4),
     },
     card: {
@@ -91,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       '& img': {
-        width: '100%',
+        maxWidth: '100%',
         height: 'auto',
       },
     },
@@ -144,40 +136,41 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
           >
             <AutoSizer style={{ flexGrow: 1 }}>
               {({ height, width }) => (
-                <div
-                  className={clsx(classes.container, {
-                    [classes.containerSelected]: current,
-                  })}
-                  style={{ height, width }}
-                >
-                  {data.news.map((news: NewsProps) => {
-                    // TODO: regexp может быть улучшен
-                    const images = news.content.rendered.match(
-                      /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi,
-                    );
-                    const anchor = `news-${news.id}`;
+                <div style={{ height, width, overflow: 'auto' }}>
+                  <div
+                    className={clsx(classes.container, {
+                      [classes.containerSelected]: current,
+                    })}
+                  >
+                    {data.news.map((news: NewsProps) => {
+                      // TODO: regexp может быть улучшен
+                      const images = news.content.rendered.match(
+                        /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi,
+                      );
+                      const anchor = `news-${news.id}`;
 
-                    return (
-                      <Card id={anchor} key={news.id} className={classes.card}>
-                        <CardActionArea onClick={handleCurrent(news)}>
-                          <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
-                          <CardContent>
+                      return (
+                        <Card id={anchor} key={news.id} className={classes.card}>
+                          <CardActionArea onClick={handleCurrent(news)}>
+                            <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
+                            <CardContent>
+                              <Typography variant="body2" color="textSecondary" component="p">
+                                {news.title.rendered}
+                              </Typography>
+                            </CardContent>
+                          </CardActionArea>
+                          <CardActions className={classes.action}>
                             <Typography variant="body2" color="textSecondary" component="p">
-                              {news.title.rendered}
+                              {moment(news.date).format(DATE_FORMAT)}
                             </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <CardActions className={classes.action}>
-                          <Typography variant="body2" color="textSecondary" component="p">
-                            {moment(news.date).format(DATE_FORMAT)}
-                          </Typography>
-                          <Button size="small" color="secondary" onClick={handleCurrent(news)}>
-                            {t('news:more')}
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    );
-                  })}
+                            <Button size="small" color="secondary" onClick={handleCurrent(news)}>
+                              {t('news:more')}
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </AutoSizer>

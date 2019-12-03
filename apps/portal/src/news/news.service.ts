@@ -26,5 +26,9 @@ export class NewsService {
    * @return News
    */
   news = async (): Promise<AxiosResponse<any>> =>
-    this.httpService.get(this.configService.get<string>('NEWS_URL')).toPromise();
+    this.httpService
+      .get(this.configService.get<string>('NEWS_URL'), {
+        params: { per_page: 20 },
+      })
+      .toPromise();
 }
