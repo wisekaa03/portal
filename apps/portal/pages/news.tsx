@@ -43,12 +43,18 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container: {
       display: 'grid',
+      gridTemplateColumns: '1fr',
       padding: theme.spacing(6),
       gridGap: theme.spacing(4),
-      gridTemplateColumns: '1fr 1fr 1fr',
       gridAutoRows: 'max-content',
       overflowX: 'hidden',
       overflowY: 'auto',
+      [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: '1fr 1fr',
+      },
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '1fr 1fr 1fr',
+      },
     },
     containerSelected: {
       gridTemplateColumns: '1fr',
@@ -82,6 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     content: {
+      'padding': theme.spacing(),
       '& img': {
         maxWidth: '100%',
         height: 'auto',
