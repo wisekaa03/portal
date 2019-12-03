@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(4),
     },
     leftSide: {
-      [`@media (max-width:${LARGE_RESOLUTION}px)`]: {
+      [`@media (max-width:${LARGE_RESOLUTION - 1}px)`]: {
         display: 'none',
       },
     },

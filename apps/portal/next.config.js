@@ -17,6 +17,8 @@ const withFonts = require('next-fonts');
 
 const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
+
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 // #endregion
 // #region Imports Local
 // #endregion
@@ -51,6 +53,9 @@ function withCustomWebpack(conf = {}) {
           }
           return false;
         },
+      }),
+      new MomentLocalesPlugin({
+        localesToKeep: ['ru'],
       }),
     ];
 
