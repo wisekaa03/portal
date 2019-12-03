@@ -17,7 +17,7 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { UserSettings } from './models/user.dto';
+import { UserSettings, EmailSessionProps } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
 import { GroupEntity } from '../group/group.entity';
 import { LoginService } from '../shared/interfaces';
@@ -86,12 +86,6 @@ export class UserEntity {
     bcrypt.compare(attempt || '', this.password);
 
   toResponseObject = (session: string): UserResponse => ({ session, ...this });
-}
-
-interface EmailSessionProps {
-  error?: string;
-  sessid?: string;
-  sessauth?: string;
 }
 
 // #region User response
