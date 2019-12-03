@@ -29,6 +29,7 @@ import moment from '../lib/moment';
 // #endregion
 
 const DATE_FORMAT = 'MMMM DD, YYYY';
+const LARGE_RESOLUTION = 1440;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
       // flexDirection: 'column',
     },
     rootSelected: {
-      gridTemplateColumns: '2fr 5fr',
+      [`@media (min-width:${LARGE_RESOLUTION}px)`]: {
+        gridTemplateColumns: '2fr 5fr',
+      },
     },
     container: {
       'display': 'grid',
@@ -56,6 +59,11 @@ const useStyles = makeStyles((theme: Theme) =>
       'padding': theme.spacing(4),
       '& > div:last-child': {
         marginBottom: theme.spacing(4),
+      },
+    },
+    leftSide: {
+      [`@media (max-width:${LARGE_RESOLUTION}px)`]: {
+        display: 'none',
       },
     },
     containerCurrent: {
@@ -131,7 +139,11 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
             [classes.rootSelected]: current,
           })}
         >
-          <div>
+          <div
+            className={clsx({
+              [classes.leftSide]: current,
+            })}
+          >
             <AutoSizer style={{ flexGrow: 1 }}>
               {({ height, width }) => (
                 <div
