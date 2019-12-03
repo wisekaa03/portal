@@ -124,8 +124,6 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrent(null);
   };
 
-  console.log(current);
-
   return (
     <Page {...rest}>
       <Head>
