@@ -22,13 +22,16 @@ export class SynchService {
 
     if (users) {
       users.forEach(async (ldapUser) => {
-        const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false);
+        try {
+          const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false);
 
-        this.userService.createFromLdap(ldapUser, user).catch((error: Error) => {
+          this.userService.createFromLdap(ldapUser, user).catch((error: Error) => {
+            this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
+            throw error;
+          });
+        } catch (error) {
           this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
-
-          throw error;
-        });
+        }
       });
 
       return true;

@@ -27,7 +27,7 @@ export class LdapService extends EventEmitter {
 
   private userClient: Ldap.Client;
 
-  private getGroups: (user: Ldap.SearchEntryObject) => Promise<LdapResponseUser>;
+  private getGroups: (user: Ldap.SearchEntryObject) => Promise<Ldap.SearchEntryObject>;
 
   private userCacheStore: cacheManager.Store;
 
@@ -148,7 +148,7 @@ export class LdapService extends EventEmitter {
     } else {
       // Assign an async identity function so there is no need to branch
       // the authenticate function to have cache set up.
-      this.getGroups = async (user) => user as LdapResponseUser;
+      this.getGroups = async (user) => user;
     }
   }
 
@@ -375,7 +375,7 @@ export class LdapService extends EventEmitter {
    * @param {Object} user - The LDAP user object
    * @returns {void} - Result handling callback
    */
-  private async findGroups(user: Ldap.SearchEntryObject): Promise<LdapResponseUser> {
+  private async findGroups(user: Ldap.SearchEntryObject): Promise<Ldap.SearchEntryObject> {
     if (!user) {
       throw new Error('no user');
     }
@@ -397,11 +397,11 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
       .then(
         (result) =>
-          new Promise<LdapResponseUser>((resolve) => {
+          new Promise<Ldap.SearchEntryObject>((resolve) => {
             // eslint-disable-next-line no-param-reassign
             (user.groups as unknown) = result;
 
-            return resolve(user as LdapResponseUser);
+            return resolve(user);
           }),
       )
       .catch((error: Ldap.Error) => {
@@ -515,32 +515,37 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          return new Promise<undefined | LdapResponseUser[]>((resolve) => {
-            if (this.userCache) {
-              if (this.userCacheStore.reset) {
-                this.userCacheStore.reset((error: any) => {
-                  if (error) {
-                    this.logger.error('LDAP cache error', error.toString(), 'LDAP');
-                  }
-                });
-              }
-
-              this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
-
-              this.userCache.set<LDAPCache>(
-                LDAP_SYNCH,
-                {
-                  synch,
-                },
-                this.ttl,
-              );
+          if (this.userCache) {
+            if (this.userCacheStore.reset) {
+              this.userCacheStore.reset((error: any) => {
+                if (error) {
+                  this.logger.error('LDAP cache error', error.toString(), 'LDAP');
+                }
+              });
             }
 
-            const s = synch.map((u) => this.getGroups(u));
+            this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
 
-            return resolve((s as unknown) as LdapResponseUser[]);
+            this.userCache.set<LDAPCache>(
+              LDAP_SYNCH,
+              {
+                synch,
+              },
+              this.ttl,
+            );
+          }
+
+          synch.forEach(async (u) => {
+            // eslint-disable-next-line no-debugger
+            debugger;
+
+            return this.getGroups(u);
           });
+
+          return synch as LdapResponseUser[];
         }
+
+        this.logger.error('Synchronize unknown error.', undefined, 'LDAP');
 
         return undefined;
       })

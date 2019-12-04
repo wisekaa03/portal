@@ -203,20 +203,11 @@ export class AuthService {
     }
   }
 
-  loginEmail = async (email: string, password: string): Promise<any> => {
-    try {
-      return this.httpService
-        .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
-          email,
-          password,
-        })
-        .toPromise();
-    } catch (error) {
-      this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthService');
-
-      // throw new HttpException(this.i18n.translate('auth.LOGIN_MAIL.ERROR'), 401);
-    }
-
-    return undefined;
-  };
+  loginEmail = async (email: string, password: string): Promise<any> =>
+    this.httpService
+      .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+        email,
+        password,
+      })
+      .toPromise();
 }
