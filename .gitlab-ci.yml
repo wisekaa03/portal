@@ -25,10 +25,9 @@ test_build:
   script:
     - env && node -v && yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
-    - time yarn build
+    - time ./entrypoint.sh test -u && yarn build
     - time yarn build:synch
     - time yarn build:soap1c
-    - time ./entrypoint.sh test -u
   artifacts:
     paths:
       - .next/
