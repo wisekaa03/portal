@@ -17,7 +17,7 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { UserSettings, EmailSessionProps } from './models/user.dto';
+import { UserSettings, MailSessionProps } from './models/user.dto';
 import { ProfileEntity } from '../profile/profile.entity';
 import { GroupEntity } from '../group/group.entity';
 import { LoginService } from '../shared/interfaces';
@@ -91,6 +91,6 @@ export class UserEntity {
 // #region User response
 export interface UserResponse extends UserEntity {
   session: string;
-  emailSession?: EmailSessionProps;
+  mailSession?: MailSessionProps;
 }
 // #endregion
