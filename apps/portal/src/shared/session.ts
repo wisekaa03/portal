@@ -14,8 +14,15 @@ export default (configService: ConfigService, logService: LogService, store: Ses
     const sess = Session({
       secret: configService.get<string>('SESSION_SECRET'),
       store,
+      // resave:
+      // Save the session to store even if it hasn't changed
       resave: false,
+      // rolling:
+      // Force the session identifier cookie to be set on every response.
+      // The expiration is reset to the original maxAge, resetting the expiration countdown.
+      // Reset the cookie Max-Age on every request
       rolling: true,
+      // Don't create a session for anonymous users
       saveUninitialized: false,
       name: 'portal',
       // genid: () => genuuid(),
@@ -25,7 +32,8 @@ export default (configService: ConfigService, logService: LogService, store: Ses
         // secure: process.env.PROTOCOL === 'https',
         // expires: false,
         httpOnly: false,
-        maxAge: configService.get<number>('SESSION_COOKIE_TTL'), // msec, 1 hour
+        // в миллисекундах, 1000 * 60 - минута
+        maxAge: configService.get<number>('SESSION_COOKIE_TTL'),
       },
     });
 
