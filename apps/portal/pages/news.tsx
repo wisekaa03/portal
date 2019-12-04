@@ -110,7 +110,8 @@ interface NewsProps {
   excerpt: Rendered;
 }
 
-const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const News: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
   const { loading, data, error } = useQuery(NEWS);
   const [current, setCurrent] = useState(null);
@@ -124,7 +125,7 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   return (
-    <Page {...rest}>
+    <Page {...props}>
       <Head>
         <title>{t('news:title')}</title>
       </Head>
@@ -200,6 +201,7 @@ const News: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <CardContent>
                         <div
                           className={classes.content}
+                          // eslint-disable-next-line react/no-danger
                           dangerouslySetInnerHTML={{ __html: current.content.rendered }}
                         />
                       </CardContent>

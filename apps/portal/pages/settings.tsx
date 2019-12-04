@@ -2,10 +2,11 @@
 
 // #region Imports NPM
 import React from 'react';
+import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
-import { blue } from '@material-ui/core/colors';
+// import { blue } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Settings: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const Settings: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
 
   const [userSettings] = useMutation(USER_SETTINGS);
@@ -47,28 +49,33 @@ const Settings: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   return (
-    <Page {...rest}>
-      <div className={classes.root}>
-        <ProfileContext.Consumer>
-          {(context) => (
-            <>
-              {context.user && (
-                <>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    className={classes.buttonLang}
-                    onClick={handleLanguage(context.user.settings && context.user.settings.lng)}
-                  >
-                    {t('common:changeLanguage')}
-                  </Button>
-                </>
-              )}
-            </>
-          )}
-        </ProfileContext.Consumer>
-      </div>
-    </Page>
+    <>
+      <Head>
+        <title>{t('setting:title')}</title>
+      </Head>
+      <Page {...props}>
+        <div className={classes.root}>
+          <ProfileContext.Consumer>
+            {(context) => (
+              <>
+                {context.user && (
+                  <>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      className={classes.buttonLang}
+                      onClick={handleLanguage(context.user.settings && context.user.settings.lng)}
+                    >
+                      {t('common:changeLanguage')}
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
+          </ProfileContext.Consumer>
+        </div>
+      </Page>
+    </>
   );
 };
 

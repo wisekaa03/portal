@@ -23,18 +23,21 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Mail: I18nPage = ({ t, ...rest }: any): React.ReactElement => {
+const Mail: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
   const { to } = __SERVER__ ? { to: false } : queryString.parse(window.location.search);
   const url = `https://roundcube.i-npz.ru/${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 
   return (
-    <Page {...rest}>
+    <>
       <Head>
         <title>{t('mail:title')}</title>
       </Head>
-      <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
-    </Page>
+      <Page {...props}>
+        <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+      </Page>
+    </>
   );
 };
 

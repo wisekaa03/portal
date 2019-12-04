@@ -22,17 +22,20 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Meetings: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const Meetings: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
   const url = 'https://ww.kngk-group.ru/site3/';
 
   return (
-    <Page {...rest}>
+    <>
       <Head>
-        <title>{t('mail:title')}</title>
+        <title>{t('meeting:title')}</title>
       </Head>
-      <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
-    </Page>
+      <Page {...props}>
+        <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+      </Page>
+    </>
   );
 };
 

@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
+import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 // #endregion
@@ -20,16 +21,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const MyProfile: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
 
   return (
-    <Page {...props}>
-      <VerticalCenter horizontal>
-        <Paper className={classes.root}>
-          <Typography>Извините, профиль пользователя пока не готов.</Typography>
-        </Paper>
-      </VerticalCenter>
-    </Page>
+    <>
+      <Head>
+        <title>{t('profile:title')}</title>
+      </Head>
+      <Page {...props}>
+        <VerticalCenter horizontal>
+          <Paper className={classes.root}>
+            <Typography>Извините, профиль пользователя пока не готов.</Typography>
+          </Paper>
+        </VerticalCenter>
+      </Page>
+    </>
   );
 };
 

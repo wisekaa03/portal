@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React, { useState } from 'react';
+import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Typography } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
@@ -162,7 +163,8 @@ const services: ServicesProps[] = [
   { id: 20, icon: AppIcon21, title: 'Заказать услугу', subtitle: 'текст' },
 ];
 
-const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ITApplication: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
   const [currentService, setCurrentService] = useState<number>(-1);
@@ -200,95 +202,100 @@ const ITApplication: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   return (
-    <Page {...rest}>
-      <div className={classes.root}>
-        <Paper square className={classes.header}>
-          <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
-            <Tab label={t('itapplication:tabs.tab1')} />
-            <Tab disabled={currentService < 0} label={t('itapplication:tabs.tab2')} />
-          </Tabs>
-        </Paper>
-        <SwipeableViews
-          disabled={currentService < 0}
-          index={currentTab}
-          className={classes.contentWrap}
-          containerStyle={{ flexGrow: 1 }}
-          slideClassName={classes.content}
-          onChangeIndex={handleChangeTabIndex}
-        >
-          <Box display="flex" flexGrow={1}>
-            <AutoSizer style={{ flexGrow: 1 }}>
-              {({ height, width }) => (
-                <Container className={classes.container1} style={{ height, width }}>
-                  {services.map((service) => (
-                    <Box
-                      key={service.id}
-                      onClick={handleCurrentService(service.id)}
-                      className={clsx(classes.service, {
-                        [classes.currentService]: currentService === service.id,
-                      })}
-                    >
-                      <div>
-                        <BaseIcon src={service.icon} size={48} />
-                      </div>
-                      <div>
-                        <Typography variant="subtitle1">{service.title}</Typography>
-                      </div>
-                    </Box>
-                  ))}
-                </Container>
-              )}
-            </AutoSizer>
-          </Box>
-          <Box display="flex" flexGrow={1}>
-            <Container className={classes.container2}>
-              {currentService >= 0 && (
-                <Box className={clsx(classes.service, classes.formControl)}>
-                  <div>
-                    <BaseIcon src={services[currentService].icon} size={48} />
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1">{services[currentService].title}</Typography>
-                  </div>
-                </Box>
-              )}
-              <FormControl className={classes.formControl} variant="outlined">
-                <TextField
-                  data-field-name="title"
-                  value={title}
-                  onChange={handleTitle}
-                  type="text"
-                  label={t('itapplication:form.title')}
-                  variant="outlined"
-                  className={classes.textField}
-                />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <TextField
-                  data-field-name="text"
-                  value={text}
-                  onChange={handleText}
-                  multiline
-                  rows={10}
-                  type="text"
-                  label={t('itapplication:form.text')}
-                  variant="outlined"
-                  className={classes.textField}
-                />
-              </FormControl>
-              <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                <Button actionType="cancel" onClick={handleClose}>
-                  {t('common:cancel')}
-                </Button>
-                <Button actionType="accept" onClick={handleAccept}>
-                  {t('common:accept')}
-                </Button>
-              </FormControl>
-            </Container>
-          </Box>
-        </SwipeableViews>
-      </div>
-    </Page>
+    <>
+      <Head>
+        <title>{t('itapplication:title')}</title>
+      </Head>
+      <Page {...props}>
+        <div className={classes.root}>
+          <Paper square className={classes.header}>
+            <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
+              <Tab label={t('itapplication:tabs.tab1')} />
+              <Tab disabled={currentService < 0} label={t('itapplication:tabs.tab2')} />
+            </Tabs>
+          </Paper>
+          <SwipeableViews
+            disabled={currentService < 0}
+            index={currentTab}
+            className={classes.contentWrap}
+            containerStyle={{ flexGrow: 1 }}
+            slideClassName={classes.content}
+            onChangeIndex={handleChangeTabIndex}
+          >
+            <Box display="flex" flexGrow={1}>
+              <AutoSizer style={{ flexGrow: 1 }}>
+                {({ height, width }) => (
+                  <Container className={classes.container1} style={{ height, width }}>
+                    {services.map((service) => (
+                      <Box
+                        key={service.id}
+                        onClick={handleCurrentService(service.id)}
+                        className={clsx(classes.service, {
+                          [classes.currentService]: currentService === service.id,
+                        })}
+                      >
+                        <div>
+                          <BaseIcon src={service.icon} size={48} />
+                        </div>
+                        <div>
+                          <Typography variant="subtitle1">{service.title}</Typography>
+                        </div>
+                      </Box>
+                    ))}
+                  </Container>
+                )}
+              </AutoSizer>
+            </Box>
+            <Box display="flex" flexGrow={1}>
+              <Container className={classes.container2}>
+                {currentService >= 0 && (
+                  <Box className={clsx(classes.service, classes.formControl)}>
+                    <div>
+                      <BaseIcon src={services[currentService].icon} size={48} />
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1">{services[currentService].title}</Typography>
+                    </div>
+                  </Box>
+                )}
+                <FormControl className={classes.formControl} variant="outlined">
+                  <TextField
+                    data-field-name="title"
+                    value={title}
+                    onChange={handleTitle}
+                    type="text"
+                    label={t('itapplication:form.title')}
+                    variant="outlined"
+                    className={classes.textField}
+                  />
+                </FormControl>
+                <FormControl className={classes.formControl} variant="outlined">
+                  <TextField
+                    data-field-name="text"
+                    value={text}
+                    onChange={handleText}
+                    multiline
+                    rows={10}
+                    type="text"
+                    label={t('itapplication:form.text')}
+                    variant="outlined"
+                    className={classes.textField}
+                  />
+                </FormControl>
+                <FormControl className={clsx(classes.formControl, classes.formAction)}>
+                  <Button actionType="cancel" onClick={handleClose}>
+                    {t('common:cancel')}
+                  </Button>
+                  <Button actionType="accept" onClick={handleAccept}>
+                    {t('common:accept')}
+                  </Button>
+                </FormControl>
+              </Container>
+            </Box>
+          </SwipeableViews>
+        </div>
+      </Page>
+    </>
   );
 };
 

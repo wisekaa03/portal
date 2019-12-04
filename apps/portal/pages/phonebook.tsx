@@ -320,7 +320,8 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
   );
 };
 
-const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const PhoneBook: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
 
   const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
@@ -501,7 +502,7 @@ const PhoneBook: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('phonebook:title')}</title>
       </Head>
-      <Page {...rest}>
+      <Page {...props}>
         <div className={classes.root}>
           {loading && <Loading noMargin type="linear" variant="indeterminate" />}
           <div className={classes.panel}>

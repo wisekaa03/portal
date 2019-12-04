@@ -5,6 +5,7 @@ import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
+import Head from 'next/head';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -34,7 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const AdminPanel: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const AdminPanel: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
   // const [syncLoading, setSyncLoading] = useState<boolean>(false);
   // const [soap1cLoading, setSoap1cLoading] = useState<boolean>(false);
@@ -74,40 +76,45 @@ const AdminPanel: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   return (
-    <Page {...rest}>
-      <div className={classes.root}>
-        <Button
-          disabled={syncLoading}
-          variant="contained"
-          color="secondary"
-          className={classes.buttonSync}
-          onClick={handleSync}
-        >
-          {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
-        </Button>
-        {errorsSynch && <GQLError error={errorsSynch} />}
-        <Button
-          disabled={cacheLoading}
-          variant="contained"
-          color="secondary"
-          className={classes.buttonCache}
-          onClick={handleCache}
-        >
-          {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
-        </Button>
-        {errorsCache && <GQLError error={errorsCache} />}
-        <Button
-          disabled={soap1cLoading}
-          variant="contained"
-          color="secondary"
-          className={classes.buttonSoap}
-          onClick={handleSoap1c}
-        >
-          {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
-        </Button>
-        {errorsSoap1c && <GQLError error={errorsSoap1c} />}
-      </div>
-    </Page>
+    <>
+      <Head>
+        <title>{t('admin:title')}</title>
+      </Head>
+      <Page {...props}>
+        <div className={classes.root}>
+          <Button
+            disabled={syncLoading}
+            variant="contained"
+            color="secondary"
+            className={classes.buttonSync}
+            onClick={handleSync}
+          >
+            {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
+          </Button>
+          {errorsSynch && <GQLError error={errorsSynch} />}
+          <Button
+            disabled={cacheLoading}
+            variant="contained"
+            color="secondary"
+            className={classes.buttonCache}
+            onClick={handleCache}
+          >
+            {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
+          </Button>
+          {errorsCache && <GQLError error={errorsCache} />}
+          <Button
+            disabled={soap1cLoading}
+            variant="contained"
+            color="secondary"
+            className={classes.buttonSoap}
+            onClick={handleSoap1c}
+          >
+            {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
+          </Button>
+          {errorsSoap1c && <GQLError error={errorsSoap1c} />}
+        </div>
+      </Page>
+    </>
   );
 };
 

@@ -4,6 +4,7 @@
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
+import Head from 'next/head';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -20,16 +21,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FAQ: I18nPage = (props): React.ReactElement => {
+  const { t } = props;
   const classes = useStyles({});
 
   return (
-    <Page {...props}>
-      <VerticalCenter horizontal>
-        <Paper className={classes.root}>
-          <Typography>Извините, база знаний пока не готова.</Typography>
-        </Paper>
-      </VerticalCenter>
-    </Page>
+    <>
+      <Head>
+        <title>{t('faq:title')}</title>
+      </Head>
+      <Page {...props}>
+        <VerticalCenter horizontal>
+          <Paper className={classes.root}>
+            <Typography>Извините, база знаний пока не готова.</Typography>
+          </Paper>
+        </VerticalCenter>
+      </Page>
+    </>
   );
 };
 
