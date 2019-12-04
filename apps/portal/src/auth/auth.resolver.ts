@@ -54,7 +54,9 @@ export class AuthResolver {
       });
 
       try {
-        user.email = await this.authService.loginEmail(user && user.profile && user.profile.email, password);
+        if (user.profile && user.profile.email) {
+          user.emailSession = (await this.authService.loginEmail(user.profile.email, password)).data;
+        }
       } catch (error) {
         this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
       }
