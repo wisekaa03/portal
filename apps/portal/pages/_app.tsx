@@ -114,7 +114,7 @@ const CurrentLogin: React.FC<{
   } else {
     // CLIENT
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
   }
 
   if (pathname !== '/auth/login') {

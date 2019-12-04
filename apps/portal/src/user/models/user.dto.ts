@@ -75,7 +75,7 @@ export interface UserContext {
 // #endregion
 
 // #region Email Session Props
-export interface EmailSessionProps {
+export interface MailSessionProps {
   error?: string;
   sessid?: string;
   sessauth?: string;

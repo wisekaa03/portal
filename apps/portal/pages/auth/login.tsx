@@ -29,6 +29,13 @@ const Login: I18nPage = (props): React.ReactElement => {
         setStorage(SESSION, data.login.session);
         client.resetStore();
 
+        const { mailSession } = data.login;
+
+        if (mailSession.sessauth && mailSession.sessid) {
+          document.cookie = `roundcube_sessid=${mailSession.sessid}`;
+          document.cookie = `roundcube_sessauth=${mailSession.sessauth}`;
+        }
+
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
         Router.push(redirect as string);
       } else {
