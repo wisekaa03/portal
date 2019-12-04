@@ -15,7 +15,7 @@ variables:
   CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
 test_build:
-  image: node:13.1
+  image: node:13
   stage: test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
@@ -23,12 +23,8 @@ test_build:
       - node_modules/
       - apps/portal/.next/cache/
   script:
-    - env
-    - yarn install --production=false
-    - cd apps/portal
-    - npx next telemetry status
-    - npx next telemetry disable
-    - cd ../..
+    - env && node -v && yarn install --production=false
+    - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - time yarn build
     - time yarn build:synch
     - time yarn build:soap1c
@@ -40,15 +36,14 @@ test_build:
     expire_in: 16 hours
 
 prepare:
-  image: node:13.1
+  image: node:13
   stage: test_build
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
       - node_modules/
   script:
-    - env
-    - yarn install --production=true
+    - env && node -v && yarn install --production=true
 
 production:
   image: docker:latest
