@@ -32,8 +32,8 @@ const Login: I18nPage = (props): React.ReactElement => {
         const { mailSession } = data.login;
 
         if (mailSession.sessauth && mailSession.sessid) {
-          document.cookie = `roundcube_sessid=${mailSession.sessid}`;
-          document.cookie = `roundcube_sessauth=${mailSession.sessauth}`;
+          document.cookie = `roundcube_sessid=${mailSession.sessid}; path=/; max-age=1800`; // 15 минут
+          document.cookie = `roundcube_sessauth=${mailSession.sessauth}; path=/; max-age=1800`;
         }
 
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
