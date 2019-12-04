@@ -90,6 +90,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
+    frameSrc.push('http://localhost');
   }
 
   server.use(
