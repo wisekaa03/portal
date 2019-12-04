@@ -66,4 +66,5 @@ data:
 
   NEWS_URL: {{ .Values.NEWS_URL | default "https://news" | quote }}
 
+  MAIL_URL: {{ .Values.MAIL_URL | default "/roundcube/" | quote }}
   MAIL_LOGIN_URL: {{ .Values.MAIL_LOGIN_URL | default "https://roundcube.production/login/index.php" | quote }}

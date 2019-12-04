@@ -81,6 +81,7 @@ SOAP_PASS: "supersecret"
 
 NEWS_URL: "https://news"
 
+MAIL_URL: "/roundcube/"
 MAIL_LOGIN_URL: "https://roundcube.production/login/index.php"
 
 service:

@@ -262,6 +262,10 @@ export class ConfigService {
         .optional()
         .empty(),
 
+      MAIL_URL: Joi.string()
+        .default('https://portal')
+        .optional()
+        .empty(),
       MAIL_LOGIN_URL: Joi.string()
         .default('https://roundcube.production/login/index.php')
         .optional()

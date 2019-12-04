@@ -318,6 +318,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: NEWS_URL
+            - name: MAIL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: MAIL_URL
             - name: MAIL_LOGIN_URL
               valueFrom:
                 configMapKeyRef:

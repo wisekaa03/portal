@@ -129,6 +129,17 @@ ENV SOAP_USER ${SOAP_USER}
 ARG SOAP_PASS="supersecret"
 ENV SOAP_PASS ${SOAP_PASS}
 
+# News
+ARG NEWS_URL="https://news"
+ENV NEWS_URL ${NEWS_URL}
+
+# Mail
+ARG MAIL_URL="https://portal"
+ENV MAIL_URL ${MAIL_URL}
+ARG MAIL_LOGIN_URL="https://roundcube.production/login/index.php"
+ENV MAIL_LOGIN_URL ${MAIL_LOGIN_URL}
+
+
 # PREPARE DEVELOPMENT
 #RUN apt-get update && apt-get install -y \
 #  net-tools \ip
