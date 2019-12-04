@@ -27,7 +27,7 @@ const Mail: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
   const { to } = __SERVER__ ? { to: false } : queryString.parse(window.location.search);
-  const url = `https://portal.i-npz.ru/roundcube/${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
+  const url = `/roundcube/${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 
   return (
     <>
