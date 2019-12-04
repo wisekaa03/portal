@@ -73,3 +73,11 @@ export interface UserContext {
   isMobile?: boolean;
 }
 // #endregion
+
+// #region Email Session Props
+export interface EmailSessionProps {
+  error?: string;
+  sessid?: string;
+  sessauth?: string;
+}
+// #endregion
