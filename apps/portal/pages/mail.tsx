@@ -35,7 +35,12 @@ const Mail: I18nPage = (props): React.ReactElement => {
         <title>{t('mail:title')}</title>
       </Head>
       <Page {...props}>
-        <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+        <Iframe
+          className={classes.root}
+          url={url}
+          // eslint-disable-next-line max-len
+          sandbox="allow-scripts allow-same-origin allow-top-navigation allow-forms allow-popups allow-pointer-lock allow-popups-to-escape-sandbox"
+        />
       </Page>
     </>
   );

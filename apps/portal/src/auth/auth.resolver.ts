@@ -42,6 +42,7 @@ export class AuthResolver {
     @Args('username') username: string,
       @Args('password') password: string,
       @Context('req') req: Request,
+      @Context('res') res: Response,
   /* eslint-enable prettier/prettier */
   ): Promise<UserResponse | null> {
     const user = await this.authService.login({ username, password }, req);
@@ -56,6 +57,10 @@ export class AuthResolver {
       try {
         if (user.profile && user.profile.email) {
           user.emailSession = (await this.authService.loginEmail(user.profile.email, password)).data;
+          if (user.emailSession) {
+            res.set('Cookie', `roundcube_sessauth=${user.emailSession.sessauth}`);
+            res.set('Cookie', `roundcube_sessid=${user.emailSession.sessid}`);
+          }
         }
       } catch (error) {
         this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');

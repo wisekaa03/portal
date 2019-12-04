@@ -22,7 +22,9 @@ const Login: I18nPage = (props): React.ReactElement => {
 
   const [login, { loading, error, called }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
+      // eslint-disable-next-line no-debugger
       debugger;
+
       if (data && data.login) {
         setStorage(SESSION, data.login.session);
         client.resetStore();
