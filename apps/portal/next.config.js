@@ -205,6 +205,9 @@ const config = {
   devIndicators: {
     autoPrerender: false,
   },
+  typescript: {
+    ignoreDevErrors: true,
+  },
   dist: '../../dist/apps/portal',
   compress: false,
   // crossOrigin: 'anonymous',
