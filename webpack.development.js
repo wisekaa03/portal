@@ -27,8 +27,8 @@ module.exports = function(original) {
             '@nestjs/platform-express',
             '@nestjs/graphql',
             'cache-manager',
-            // 'class-validator',
-            // 'class-transformer',
+            'class-validator',
+            'class-transformer',
             'typeorm',
             'graphql',
           ];

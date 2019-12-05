@@ -219,6 +219,8 @@
     "babel-plugin-inline-react-svg": "^1.1.0",
     "babel-plugin-module-resolver": "^3.2.0",
     "babel-plugin-transform-imports": "^2.0.0",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.11.0",
     "cross-env": "^6.0.3",
     "css-loader": "^3.2.1",
     "enzyme": "^3.10.0",
