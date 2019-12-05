@@ -98,7 +98,7 @@ const CurrentLogin: React.FC<{
 
       if (res) {
         res.status(403);
-        res.redirect('/auth/login');
+        res.redirect(`/auth/login?redirect=${pathname}`);
 
         throw new UnauthorizedException();
       }

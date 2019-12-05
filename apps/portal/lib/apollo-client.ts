@@ -38,7 +38,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
       graphQLErrors.map(({ message, locations, path }): any => {
         switch ((message as any).statusCode) {
           case 403:
-            Router.push({ pathname: '/auth/login' });
+            Router.push({ pathname: '/auth/login', query: { redirect: window.location.pathname } });
             break;
           default:
             break;
