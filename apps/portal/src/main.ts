@@ -78,9 +78,9 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
   const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
   const styleSrc = ["'unsafe-inline'", "'self'"];
-  const imgSrc = ["'self'", 'data:', 'https://i-npz.ru'];
-  const fontSrc = ["'self'", 'data:', 'https://i-npz.ru'];
-  const frameSrc = ["'self'", 'https://i-npz.ru', 'https://roundcube.i-npz.ru', 'https://ww.kngk-group.ru/site3/'];
+  const imgSrc = ["'self'", 'data:', configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
+  const fontSrc = ["'self'", 'data:', configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
+  const frameSrc = ["'self'", configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
@@ -90,13 +90,13 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push('http://localhost');
+    frameSrc.push('http://localhost:4000');
   }
 
   server.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'", 'https://i-npz.ru', 'https://portal.i-npz.ru'],
+        defaultSrc: ["'self'", configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')],
         baseUri: ["'none'"],
         objectSrc: ["'none'"],
         imgSrc,
