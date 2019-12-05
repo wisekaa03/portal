@@ -11,6 +11,11 @@ module.exports = function(original) {
     watch: false,
     mode: 'production',
     target: 'node',
+    // resolve: {
+    //   alias: {
+    //     'google-libphonenumber': path.resolve(__dirname, 'apps/portal/libphonenumber-stub.js'),
+    //   },
+    // },
     optimization: {
       namedModules: false,
       namedChunks: false,
@@ -104,35 +109,37 @@ module.exports = function(original) {
       ],
     },
     plugins: [
-      // new webpack.IgnorePlugin({
-      //   /**
-      //    * There is a small problem with Nest's idea of lazy require() calls,
-      //    * Webpack tries to load these lazy imports that you may not be using,
-      //    * so we must explicitly handle the issue.
-      //    * Refer to: https://github.com/nestjs/nest/issues/1706
-      //    */
-      //   checkResource(resource) {
-      //     const lazyImports = [
-      //       '@nestjs/microservices',
-      //       '@nestjs/platform-express',
-      //       '@nestjs/graphql',
-      //       'next',
-      //       'cache-manager',
-      //       'class-validator',
-      //       'class-transformer',
-      //       'graphql',
-      //     ];
-      //     if (!lazyImports.includes(resource)) {
-      //       return false;
-      //     }
-      //     try {
-      //       require.resolve(resource);
-      //     } catch (err) {
-      //       return true;
-      //     }
-      //     return false;
-      //   },
-      // }),
+      ...(original.plugins || []),
+      new webpack.IgnorePlugin({
+        /**
+         * There is a small problem with Nest's idea of lazy require() calls,
+         * Webpack tries to load these lazy imports that you may not be using,
+         * so we must explicitly handle the issue.
+         * Refer to: https://github.com/nestjs/nest/issues/1706
+         */
+        checkResource(resource) {
+          const lazyImports = [
+            '@nestjs/microservices',
+            '@nestjs/platform-express',
+            'class-validator',
+            'class-transformer',
+            'google-libphonenumber',
+            // '@nestjs/graphql',
+            // 'next',
+            // 'cache-manager',
+            // 'graphql',
+          ];
+          if (!lazyImports.includes(resource)) {
+            return false;
+          }
+          try {
+            require.resolve(resource);
+          } catch (err) {
+            return true;
+          }
+          return false;
+        },
+      }),
     ],
   };
 

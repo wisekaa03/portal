@@ -14,6 +14,7 @@ module.exports = function(original) {
       hot: true,
     },
     plugins: [
+      ...(original.plugins || []),
       new webpack.IgnorePlugin({
         /**
          * There is a small problem with Nest's idea of lazy require() calls,
@@ -25,12 +26,13 @@ module.exports = function(original) {
           const lazyImports = [
             '@nestjs/microservices',
             '@nestjs/platform-express',
-            '@nestjs/graphql',
-            'cache-manager',
             'class-validator',
             'class-transformer',
-            'typeorm',
-            'graphql',
+            'google-libphonenumber',
+            // '@nestjs/graphql',
+            // 'cache-manager',
+            // 'typeorm',
+            // 'graphql',
           ];
           if (!lazyImports.includes(resource)) {
             return false;

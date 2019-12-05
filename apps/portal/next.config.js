@@ -2,7 +2,7 @@
 /* eslint no-param-reassign: 0, @typescript-eslint/explicit-function-return-type: 0 */
 
 // #region Imports NPM
-const { join } = require('path');
+const { resolve } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
@@ -27,21 +27,29 @@ function withCustomWebpack(conf = {}) {
   const { webpack } = conf;
 
   conf.webpack = (config, { /* buildId, */ dev, isServer /* , defaultLoaders */, ...rest }) => {
+    config.resolve = {
+      ...(config.resolve || []),
+      // alias: {
+      //   'google-libphonenumber': resolve(''),
+      // },
+    };
+
     config.plugins = [
       ...(config.plugins || []),
       new Webpack.DefinePlugin({
         __DEV__: JSON.stringify(dev),
         __SERVER__: JSON.stringify(isServer),
       }),
-      new DotenvWebpackPlugin({ path: join(__dirname, '../../.env') }),
+      new DotenvWebpackPlugin({ path: resolve(__dirname, '../../.env') }),
       new Webpack.IgnorePlugin({
         checkResource(resource) {
           const lazyImports = [
             '@nestjs/microservices',
             '@nestjs/platform-express',
-            'cache-manager',
             'class-validator',
             'class-transformer',
+            'google-libphonenumber',
+            // 'cache-manager',
           ];
           if (!lazyImports.includes(resource)) {
             return false;
