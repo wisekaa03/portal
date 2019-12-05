@@ -215,7 +215,7 @@ export class AuthService {
     ).data;
 
     if (mailSession.sessid && mailSession.sessauth) {
-      const maxAge = parseInt(this.configService.get<string>('SESSION_COOKIE_TTL'), 10) / 1000;
+      const maxAge = parseInt(this.configService.get<string>('SESSION_COOKIE_TTL'), 10);
       const options = { httpOnly: true, path: '/', maxAge };
 
       res.cookie('roundcube_sessid', mailSession.sessid, options);

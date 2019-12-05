@@ -196,7 +196,12 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                         </>
                       )}
                     </Box>
-                    <Button variant="contained" color="primary" className={classes.buttonLogout} onClick={handleLogout}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.buttonLogout}
+                      onClick={handleLogout}
+                    >
                       {t('common:signOut')}
                     </Button>
                   </Box>
