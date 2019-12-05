@@ -4,6 +4,7 @@
 import { Injectable, HttpException, UnauthorizedException, HttpService } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
+import { Response } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -203,11 +204,22 @@ export class AuthService {
     }
   }
 
-  loginEmail = async (email: string, password: string): Promise<any> =>
-    this.httpService
-      .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
-        email,
-        password,
-      })
-      .toPromise();
+  loginEmail = async (email: string, password: string, res: Response): Promise<void> => {
+    const mailSession = (
+      await this.httpService
+        .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+          email,
+          password,
+        })
+        .toPromise()
+    ).data;
+
+    if (mailSession.sessid && mailSession.sessauth) {
+      const maxAge = parseInt(this.configService.get<string>('SESSION_COOKIE_TTL'), 10) / 1000;
+      const options = { httpOnly: true, path: '/', maxAge };
+
+      res.cookie('roundcube_sessid', mailSession.sessid, options);
+      res.cookie('roundcube_sessauth', mailSession.sessauth, options);
+    }
+  };
 }

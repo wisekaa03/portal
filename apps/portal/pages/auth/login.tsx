@@ -6,7 +6,6 @@ import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { FetchResult } from 'apollo-link';
 import queryString from 'query-string';
 import Router from 'next/router';
-import setCookie from 'set-cookie';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
@@ -27,15 +26,6 @@ const Login: I18nPage = (props): React.ReactElement => {
         setStorage(SESSION, data.login.session);
         client.resetStore();
 
-        const { mailSession } = data.login;
-
-        if (mailSession && mailSession.sessauth && mailSession.sessid) {
-          const maxAge = process.env.SESSION_COOKIE_TTL ? parseInt(process.env.SESSION_COOKIE_TTL, 10) / 1000 : 1800;
-
-          setCookie('roundcube_sessid', mailSession.sessid, { path: '/', maxAge });
-          setCookie('roundcube_sessauth', mailSession.sessauth, { path: '/', maxAge });
-        }
-
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
         Router.push(redirect as string);
       } else {
@@ -47,10 +37,8 @@ const Login: I18nPage = (props): React.ReactElement => {
   return <LoginComponent error={error} loading={loading} called={called} login={login} {...props} />;
 };
 
-Login.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['login']),
-  };
-};
+Login.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['login']),
+});
 
 export default Login;

@@ -56,11 +56,7 @@ export class AuthResolver {
 
       try {
         if (user.profile && user.profile.email) {
-          user.mailSession = (await this.authService.loginEmail(user.profile.email, password)).data;
-          if (user.mailSession) {
-            res.set('Cookie', `roundcube_sessauth=${user.mailSession.sessauth}`);
-            res.set('Cookie', `roundcube_sessid=${user.mailSession.sessid}`);
-          }
+          await this.authService.loginEmail(user.profile.email, password, res);
         }
       } catch (error) {
         this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
