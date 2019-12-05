@@ -10,6 +10,7 @@ import { concat, ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
+import Router from 'next/router';
 // import { WebSocketLink } from 'apollo-link-ws';
 // #endregion
 // #region Imports Local
@@ -34,9 +35,17 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
   const errorLink = onError(({ graphQLErrors, networkError }): any => {
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
-      graphQLErrors.map(({ message, locations, path }): any =>
-        console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations),
-      );
+      graphQLErrors.map(({ message, locations, path }): any => {
+        switch (message.statusCode) {
+          case 403:
+            Router.push({ pathname: '/auth/login' });
+            break;
+          default:
+            break;
+        }
+
+        return console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
+      });
     }
     if (networkError) {
       console.error('[Network error]:', networkError);
