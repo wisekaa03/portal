@@ -40,8 +40,8 @@ function withCustomWebpack(conf = {}) {
             '@nestjs/microservices',
             '@nestjs/platform-express',
             'cache-manager',
-            'class-validator',
-            'class-transformer',
+            // 'class-validator',
+            // 'class-transformer',
           ];
           if (!lazyImports.includes(resource)) {
             return false;
