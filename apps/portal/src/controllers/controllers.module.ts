@@ -9,7 +9,7 @@ import { AuthController } from './auth/auth.controller';
 import { CalendarController } from './calendar/calendar.controller';
 import { FaqController } from './faq/faq.controller';
 import { HomeController } from './home/home.controller';
-import { ItapplicationController } from './itapplication/itapplication.controller';
+import { ServicesController } from './services/services.controller';
 import { MailController } from './mail/mail.controller';
 import { MeetingsController } from './meetings/meetings.controller';
 import { NewsController } from './news/news.controller';
@@ -27,7 +27,7 @@ import { HealthController } from './health/health.controller';
     CalendarController,
     FaqController,
     HomeController,
-    ItapplicationController,
+    ServicesController,
     MailController,
     MeetingsController,
     NewsController,

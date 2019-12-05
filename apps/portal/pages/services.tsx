@@ -163,7 +163,7 @@ const services: ServicesProps[] = [
   { id: 20, icon: AppIcon21, title: 'Заказать услугу', subtitle: 'текст' },
 ];
 
-const ITApplication: I18nPage = (props): React.ReactElement => {
+const Services: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
@@ -204,14 +204,14 @@ const ITApplication: I18nPage = (props): React.ReactElement => {
   return (
     <>
       <Head>
-        <title>{t('itapplication:title')}</title>
+        <title>{t('services:title')}</title>
       </Head>
       <Page {...props}>
         <div className={classes.root}>
           <Paper square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
-              <Tab label={t('itapplication:tabs.tab1')} />
-              <Tab disabled={currentService < 0} label={t('itapplication:tabs.tab2')} />
+              <Tab label={t('services:tabs.tab1')} />
+              <Tab disabled={currentService < 0} label={t('services:tabs.tab2')} />
             </Tabs>
           </Paper>
           <SwipeableViews
@@ -264,7 +264,7 @@ const ITApplication: I18nPage = (props): React.ReactElement => {
                     value={title}
                     onChange={handleTitle}
                     type="text"
-                    label={t('itapplication:form.title')}
+                    label={t('services:form.title')}
                     variant="outlined"
                     className={classes.textField}
                   />
@@ -277,7 +277,7 @@ const ITApplication: I18nPage = (props): React.ReactElement => {
                     multiline
                     rows={10}
                     type="text"
-                    label={t('itapplication:form.text')}
+                    label={t('services:form.text')}
                     variant="outlined"
                     className={classes.textField}
                   />
@@ -299,8 +299,8 @@ const ITApplication: I18nPage = (props): React.ReactElement => {
   );
 };
 
-ITApplication.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['itapplication']),
+Services.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['services']),
 });
 
-export default nextI18next.withTranslation('itapplication')(ITApplication);
+export default nextI18next.withTranslation('services')(Services);

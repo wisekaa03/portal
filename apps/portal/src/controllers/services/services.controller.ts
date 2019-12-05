@@ -8,11 +8,11 @@ import { RenderableResponse } from 'nest-next';
 import { SessionGuard } from '../../guards/session.guard';
 // #endregion
 
-@Controller('itapplication')
-export class ItapplicationController {
+@Controller('services')
+export class ServicesController {
   @Get()
   @UseGuards(SessionGuard)
-  public async itapplication(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('itapplication');
+  public async services(@Res() res: RenderableResponse): Promise<void> {
+    return res.render('services');
   }
 }

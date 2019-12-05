@@ -15,8 +15,8 @@ import DrawerBg from '../../../public/images/jpeg/drawer_bg.jpg';
 import Icon from './icon';
 import CalendarIcon from '../../../public/images/svg/icons/calendar.svg';
 import CalendarIconSelected from '../../../public/images/svg/icons/calendar_select.svg';
-import ItApplicationIcon from '../../../public/images/svg/icons/it_application.svg';
-import ItApplicationIconSelected from '../../../public/images/svg/icons/it_application_select.svg';
+import ServicesIcon from '../../../public/images/svg/icons/services.svg';
+import ServicesIconSelected from '../../../public/images/svg/icons/services_select.svg';
 import FaqIcon from '../../../public/images/svg/icons/faq.svg';
 import FaqIconSelected from '../../../public/images/svg/icons/faq_select.svg';
 import ProfileIcon from '../../../public/images/svg/icons/profile.svg';
@@ -118,10 +118,10 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
     },
     { icon: ProfileIcon, selected: ProfileIconSelected, text: t('common:profile'), link: '/profile', admin: false },
     {
-      icon: ItApplicationIcon,
-      selected: ItApplicationIconSelected,
-      text: t('common:itapplication'),
-      link: '/itapplication',
+      icon: ServicesIcon,
+      selected: ServicesIconSelected,
+      text: t('common:services'),
+      link: '/services',
       admin: false,
     },
     { icon: CalendarIcon, selected: CalendarIconSelected, text: t('common:calendar'), link: '/calendar', admin: false },
