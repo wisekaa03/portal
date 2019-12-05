@@ -29,9 +29,10 @@ const Login: I18nPage = (props): React.ReactElement => {
 
         const { mailSession } = data.login;
 
-        if (mailSession.sessauth && mailSession.sessid) {
-          setCookie('roundcube_sessid', mailSession.sessid, { path: '/', maxAge: 1800 });
-          setCookie('roundcube_sessauth', mailSession.sessauth, { path: '/', maxAge: 1800 });
+        if (mailSession && mailSession.sessauth && mailSession.sessid) {
+          const maxAge = process.env.SESSION_COOKIE_TTL ? parseInt(process.env.SESSION_COOKIE_TTL, 10) / 1000 : 1800;
+          setCookie('roundcube_sessid', mailSession.sessid, { path: '/', maxAge });
+          setCookie('roundcube_sessauth', mailSession.sessauth, { path: '/', maxAge });
         }
 
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
