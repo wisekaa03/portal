@@ -36,7 +36,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.map(({ message, locations, path }): any => {
-        switch (message.statusCode) {
+        switch ((message as any).statusCode) {
           case 403:
             Router.push({ pathname: '/auth/login' });
             break;
