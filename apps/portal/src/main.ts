@@ -78,7 +78,13 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
   const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
   const styleSrc = ["'unsafe-inline'", "'self'"];
-  const imgSrc = ["'self'", 'data:', configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
+  const imgSrc = [
+    "'self'",
+    'data:',
+    'blob:',
+    configService.get<string>('MAIL_URL'),
+    configService.get<string>('NEWS_URL'),
+  ];
   const fontSrc = ["'self'", 'data:', configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
   const frameSrc = ["'self'", configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP

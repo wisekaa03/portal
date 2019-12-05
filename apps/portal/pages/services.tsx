@@ -8,6 +8,7 @@ import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Typography } 
 import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import clsx from 'clsx';
+import DropzoneArea from 'react-dropzone-material-ui';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -163,13 +164,13 @@ const services: ServicesProps[] = [
   { id: 20, icon: AppIcon21, title: 'Заказать услугу', subtitle: 'текст' },
 ];
 
-const Services: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
   const [currentService, setCurrentService] = useState<number>(-1);
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
@@ -206,7 +207,7 @@ const Services: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('services:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <div className={classes.root}>
           <Paper square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
@@ -280,6 +281,19 @@ const Services: I18nPage = (props): React.ReactElement => {
                     label={t('services:form.text')}
                     variant="outlined"
                     className={classes.textField}
+                  />
+                </FormControl>
+                <FormControl className={classes.formControl} variant="outlined">
+                  <DropzoneArea
+                    acceptedFiles={['image/*']}
+                    dropzoneText={t('services:form.attach')}
+                    onChange={setFiles}
+                    filesLimit={5}
+                    errorMessages={{
+                      acceptedFiles: t('services:form.acceptedFiles'),
+                      filesLimit: t('services:form.filesLimit'),
+                      maxFileSize: t('services:form.maxFileSize'),
+                    }}
                   />
                 </FormControl>
                 <FormControl className={clsx(classes.formControl, classes.formAction)}>
