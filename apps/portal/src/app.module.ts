@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0 */
+/* eslint spaced-comment:0 */
 /// <reference types="../../../typings/global" />
 
 // #region Imports NPM
@@ -97,6 +97,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #region GraphQL
     GraphQLModule.forRoot({
       debug: dev,
+      /* eslint-disable prettier/prettier */
       playground: dev
         ? {
           settings: {
@@ -105,6 +106,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           },
         }
         : false,
+      /* eslint-enable prettier/prettier */
       typePaths: ['./**/*.graphql'],
       context: ({ req, res }) => ({ req, res }),
     }),
@@ -129,12 +131,15 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           logger,
           synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
           dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-          logging:
-            configService.get('DATABASE_LOGGING') === 'false'
+          /* eslint-disable prettier/prettier */
+          logging: dev
+            ? true
+            : configService.get('DATABASE_LOGGING') === 'false'
               ? false
               : configService.get('DATABASE_LOGGING') === 'true'
                 ? true
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
+          /* eslint-enable prettier/prettier */
           entities: [ProfileEntity, GroupEntity, UserEntity],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {

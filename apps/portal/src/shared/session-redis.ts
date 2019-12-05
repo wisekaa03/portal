@@ -3,7 +3,7 @@
 // #region Imports NPM
 import Session from 'express-session';
 import RedisSessionStore from 'connect-redis';
-import Redis, { ReplyError } from 'redis';
+import Redis from 'redis';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
