@@ -6612,6 +6612,11 @@ cookie@0.4.0, cookie@^0.4.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.0.tgz#beb437e7022b3b6d49019d088665303ebe9c14ba"
   integrity sha512-+Hp8fLp57wnUSt0tY0tHEXh4voZRDnoIrZPqlo3DPiI4y9lwg/jqx+1Om94/W6ZaPDOUbnjOt/99w66zk+l1Xg==
 
+cookie@^0.1.2:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.1.5.tgz#6ab9948a4b1ae21952cd2588530a4722d4044d7c"
+  integrity sha1-armUiksa4hlSzSWIUwpHItQETXw=
+
 cookiejar@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/cookiejar/-/cookiejar-2.1.2.tgz#dd8a235530752f988f9a0844f3fc589e3111125c"
@@ -17979,6 +17984,13 @@ set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
   integrity sha1-BF+XgtARrppoA93TgrJDkrPYkPc=
+
+set-cookie@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/set-cookie/-/set-cookie-0.0.4.tgz#ef551a581e1599fca81d9e5a8a26c5499b4f5875"
+  integrity sha1-71UaWB4VmfyoHZ5aiibFSZtPWHU=
+  dependencies:
+    cookie "^0.1.2"
 
 set-value@^2.0.0, set-value@^2.0.1:
   version "2.0.1"

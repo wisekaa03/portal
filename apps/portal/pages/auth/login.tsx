@@ -6,6 +6,7 @@ import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { FetchResult } from 'apollo-link';
 import queryString from 'query-string';
 import Router from 'next/router';
+import setCookie from 'set-cookie';
 // #endregion
 // #region Imports Local
 import { LOGIN } from '../../lib/queries';
@@ -22,9 +23,6 @@ const Login: I18nPage = (props): React.ReactElement => {
 
   const [login, { loading, error, called }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
       if (data && data.login) {
         setStorage(SESSION, data.login.session);
         client.resetStore();
@@ -32,8 +30,8 @@ const Login: I18nPage = (props): React.ReactElement => {
         const { mailSession } = data.login;
 
         if (mailSession.sessauth && mailSession.sessid) {
-          document.cookie = `roundcube_sessid=${mailSession.sessid}; path=/; max-age=1800`; // 15 минут
-          document.cookie = `roundcube_sessauth=${mailSession.sessauth}; path=/; max-age=1800`;
+          setCookie('roundcube_sessid', mailSession.sessid, { path: '/', maxAge: 1800 });
+          setCookie('roundcube_sessauth', mailSession.sessauth, { path: '/', maxAge: 1800 });
         }
 
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
