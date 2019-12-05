@@ -27,7 +27,8 @@ const Mail: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
   const { to } = __SERVER__ ? { to: false } : queryString.parse(window.location.search);
-  const url = `${process.env.MAIL_URL}${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
+  const mailUrl = process.env.MAIL_URL;
+  const url = `${mailUrl}${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 
   return (
     <>
