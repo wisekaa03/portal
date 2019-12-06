@@ -2091,7 +2091,7 @@
     react-is "^16.8.0"
     react-transition-group "^4.3.0"
 
-"@material-ui/icons@^4.2.1", "@material-ui/icons@^4.5.1":
+"@material-ui/icons@^4.5.1":
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.5.1.tgz#6963bad139e938702ece85ca43067688018f04f8"
   integrity sha512-YZ/BgJbXX4a0gOuKWb30mBaHaoXRqPanlePam83JQPZ/y4kl+3aW0Wv9tlR70hB5EGAkEJGW5m4ktJwMgxQAeA==
@@ -16806,15 +16806,7 @@ react-draggable@^4.0.3:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-dropzone-material-ui@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/react-dropzone-material-ui/-/react-dropzone-material-ui-0.1.7.tgz#8258e31f01fa0525523068d7e86660c029e23e4d"
-  integrity sha512-pT3xj35vmucpWaRLU7P+A0SMK34jFQgq9VzjV4wrhaWihAh4ZdtfU53LIqss2Ns50ViPEE+I3zt3GGom4+gz7Q==
-  dependencies:
-    "@material-ui/icons" "^4.2.1"
-    react-dropzone "^10.1.5"
-
-react-dropzone@^10.1.5, react-dropzone@^10.2.1:
+react-dropzone@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.2.1.tgz#b7520124c4a3b66f96d49f7879027c7a475eaa20"
   integrity sha512-Me5nOu8hK9/Xyg5easpdfJ6SajwUquqYR/2YTdMotsCUgJ1pHIIwNsv0n+qcIno0tWR2V2rVQtj2r/hXYs2TnQ==

@@ -8,9 +8,9 @@ import { Paper, Tabs, Tab, Box, Container, FormControl, TextField, Typography } 
 import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import clsx from 'clsx';
-import DropzoneArea from 'react-dropzone-material-ui';
 // #endregion
 // #region Imports Local
+import Dropzone from '../components/dropzone';
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import BaseIcon from '../components/icon';
@@ -200,6 +200,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrentTab(0);
     setTitle('');
     setText('');
+    setFiles([]);
   };
 
   return (
@@ -284,17 +285,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   />
                 </FormControl>
                 <FormControl className={classes.formControl} variant="outlined">
-                  <DropzoneArea
-                    acceptedFiles={['image/*']}
-                    dropzoneText={t('services:form.attach')}
-                    onChange={setFiles}
-                    filesLimit={5}
-                    errorMessages={{
-                      acceptedFiles: t('services:form.acceptedFiles'),
-                      filesLimit: t('services:form.filesLimit'),
-                      maxFileSize: t('services:form.maxFileSize'),
-                    }}
-                  />
+                  <Dropzone setFiles={setFiles} files={files} {...rest} />
                 </FormControl>
                 <FormControl className={clsx(classes.formControl, classes.formAction)}>
                   <Button actionType="cancel" onClick={handleClose}>
