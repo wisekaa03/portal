@@ -44,7 +44,7 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: false,
         orderFieldToKey: (field: string) => field,
-        queryBuilder: this.profileService.getProfiles(search, disabled, notShowing),
+        queryBuilder: this.profileService.getProfiles(search, disabled, notShowing) as any,
       },
     );
   }
