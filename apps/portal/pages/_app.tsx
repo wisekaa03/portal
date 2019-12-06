@@ -24,7 +24,7 @@ import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
 import { User } from '../src/user/models/user.dto';
-import { FIRST_PAGE, ADMIN_PAGES } from '../lib/constants';
+import { FIRST_PAGE, ADMIN_PAGES, NO_REDIRECT_PAGES } from '../lib/constants';
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));
@@ -97,8 +97,10 @@ const CurrentLogin: React.FC<{
       }
 
       if (res) {
+        const redirect = NO_REDIRECT_PAGES.includes(pathname) ? FIRST_PAGE : pathname;
+
         res.status(403);
-        res.redirect(`/auth/login?redirect=${pathname}`);
+        res.redirect(`/auth/login?redirect=${redirect}`);
 
         throw new UnauthorizedException();
       }
