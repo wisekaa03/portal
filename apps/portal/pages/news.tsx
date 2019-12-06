@@ -25,7 +25,7 @@ import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import { NEWS } from '../lib/queries';
 import { Loading } from '../components/loading';
-import moment from '../lib/moment';
+import dayjs from '../lib/dayjs';
 // #endregion
 
 const DATE_FORMAT = 'MMMM DD, YYYY';
@@ -169,7 +169,7 @@ const News: I18nPage = (props): React.ReactElement => {
                           </CardActionArea>
                           <CardActions className={classes.action}>
                             <Typography variant="body2" color="textSecondary" component="p">
-                              {moment(news.date).format(DATE_FORMAT)}
+                              {dayjs(news.date).format(DATE_FORMAT)}
                             </Typography>
                             <Button size="small" color="secondary" onClick={handleCurrent(news)}>
                               {t('news:more')}
@@ -196,7 +196,7 @@ const News: I18nPage = (props): React.ReactElement => {
                           </IconButton>
                         }
                         title={current.title.rendered}
-                        subheader={moment(current.date).format(DATE_FORMAT)}
+                        subheader={dayjs(current.date).format(DATE_FORMAT)}
                       />
                       <CardContent>
                         <div

@@ -17,8 +17,6 @@ const withFonts = require('next-fonts');
 
 const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
-
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 // #endregion
 // #region Imports Local
 // #endregion
@@ -29,9 +27,10 @@ function withCustomWebpack(conf = {}) {
   conf.webpack = (config, { /* buildId, */ dev, isServer /* , defaultLoaders */, ...rest }) => {
     config.resolve = {
       ...(config.resolve || []),
-      // alias: {
-      //   'google-libphonenumber': resolve(''),
-      // },
+      alias: {
+        ...config.resolve.alias,
+        'google-libphonenumber': resolve(__dirname, './libphonenumber-stub.js'),
+      },
     };
 
     config.plugins = [
@@ -61,9 +60,6 @@ function withCustomWebpack(conf = {}) {
           }
           return false;
         },
-      }),
-      new MomentLocalesPlugin({
-        localesToKeep: ['ru'],
       }),
     ];
 
