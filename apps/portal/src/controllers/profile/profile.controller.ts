@@ -15,4 +15,16 @@ export class ProfileController {
   public async profile(@Res() res: RenderableResponse): Promise<void> {
     return res.render('profile');
   }
+
+  @Get('view')
+  @UseGuards(SessionGuard)
+  public async view(@Res() res: RenderableResponse): Promise<void> {
+    return res.render('profile/view');
+  }
+
+  @Get('equipment')
+  @UseGuards(SessionGuard)
+  public async equipment(@Res() res: RenderableResponse): Promise<void> {
+    return res.render('profile/equipment');
+  }
 }
