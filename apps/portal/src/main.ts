@@ -76,23 +76,19 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
+  let mailUrl = configService.get<string>('MAIL_URL');
+  if (!mailUrl.match(/http/)) {
+    mailUrl = '';
+  }
+  let newsUrl = configService.get<string>('NEWS_URL');
+  if (!newsUrl.match(/http/)) {
+    newsUrl = '';
+  }
   const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
   const styleSrc = ["'unsafe-inline'", "'self'"];
-  const imgSrc = [
-    "'self'",
-    'data:',
-    'blob:',
-    configService.get<string>('MAIL_URL'),
-    configService.get<string>('NEWS_URL'),
-    'https://i-npz.ru',
-  ];
-  const fontSrc = ["'self'", 'data:', configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
-  const frameSrc = [
-    "'self'",
-    configService.get<string>('MAIL_URL'),
-    configService.get<string>('NEWS_URL'),
-    'https://ww.kngk-group.ru/site3/',
-  ];
+  const imgSrc = ["'self'", 'data:', 'blob:', mailUrl, newsUrl];
+  const fontSrc = ["'self'", 'data:', mailUrl, newsUrl];
+  const frameSrc = ["'self'", mailUrl, newsUrl];
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
@@ -108,7 +104,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   server.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'", configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')],
+        defaultSrc: ["'self'", mailUrl, newsUrl],
         baseUri: ["'none'"],
         objectSrc: ["'none'"],
         imgSrc,
