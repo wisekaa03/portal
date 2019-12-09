@@ -216,10 +216,10 @@ export class AuthService {
 
     if (mailSession.sessid && mailSession.sessauth) {
       const maxAge = parseInt(this.configService.get<string>('SESSION_COOKIE_TTL'), 10);
-      const options = { httpOnly: true, path: '/' };
+      const options = { httpOnly: true, path: '/', domain: '.portal.i-npz.ru' };
 
-      res.clearCookie('roundcube_sessauth', options).status(200);
-      res.clearCookie('roundcube_sessid', options).status(200);
+      // res.clearCookie('roundcube_sessauth', options).status(200);
+      // res.clearCookie('roundcube_sessid', options).status(200);
 
       res.cookie('roundcube_sessid', mailSession.sessid, { ...options, maxAge });
       res.cookie('roundcube_sessauth', mailSession.sessauth, { ...options, maxAge });
