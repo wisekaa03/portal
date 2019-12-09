@@ -7,6 +7,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BaseDropzone, { DropzoneState } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
+import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { DropzoneFile, DropzoneProps } from './types';
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dropzone: {
       'alignItems': 'center',
-      'backgroundColor': '#fff',
+      'backgroundColor': '#fafafa',
       'borderColor': 'rgba(44, 67, 115, 0.5)',
       'borderRadius': '2px',
       'borderStyle': 'dashed',
@@ -32,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
       'display': 'flex',
       'flex': '1',
       'flexDirection': 'column',
-      'marginBottom': theme.spacing(3),
       'outline': 'none',
       'padding': '20px',
       'transition':
@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) =>
         borderColor: 'rgba(44, 67, 115, 0.9)',
         color: 'rgba(44, 67, 115, 0.9)',
       },
+    },
+    marginBottom: {
+      marginBottom: theme.spacing(3),
     },
     img: {
       display: 'block',
@@ -170,7 +173,13 @@ const Dropzone: I18nPage<DropzoneProps> = ({
     >
       {(state: DropzoneState) => (
         <section className={classes.container}>
-          <div {...state.getRootProps({ className: classes.dropzone })}>
+          <div
+            {...state.getRootProps({
+              className: clsx(classes.dropzone, {
+                [classes.marginBottom]: files.length > 0,
+              }),
+            })}
+          >
             <input {...state.getInputProps()} />
             <p>{t('services:form.attach')}</p>
           </div>

@@ -120,6 +120,13 @@ theme.overrides = {
       padding: theme.spacing(),
     },
   },
+  MuiListItem: {
+    root: {
+      '&$selected, &$selected:hover': {
+        backgroundColor: 'rgba(146, 159, 183, 0.3)',
+      },
+    },
+  },
 };
 
 export default theme;
