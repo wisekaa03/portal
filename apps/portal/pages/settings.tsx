@@ -6,7 +6,6 @@ import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
-// import { blue } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
 import Page from '../layouts/main';
@@ -23,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: '200px',
       height: 'fit-content',
       gridGap: theme.spacing(),
-    },
-    buttonLang: {
-      // backgroundColor: blue[400],
     },
   }),
 );
@@ -63,7 +59,6 @@ const Settings: I18nPage = (props): React.ReactElement => {
                     <Button
                       color="primary"
                       variant="contained"
-                      className={classes.buttonLang}
                       onClick={handleLanguage(context.user.settings && context.user.settings.lng)}
                     >
                       {t('common:changeLanguage')}
