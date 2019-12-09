@@ -84,9 +84,15 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     'blob:',
     configService.get<string>('MAIL_URL'),
     configService.get<string>('NEWS_URL'),
+    'https://i-npz.ru',
   ];
   const fontSrc = ["'self'", 'data:', configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
-  const frameSrc = ["'self'", configService.get<string>('MAIL_URL'), configService.get<string>('NEWS_URL')];
+  const frameSrc = [
+    "'self'",
+    configService.get<string>('MAIL_URL'),
+    configService.get<string>('NEWS_URL'),
+    'https://ww.kngk-group.ru/site3/',
+  ];
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
