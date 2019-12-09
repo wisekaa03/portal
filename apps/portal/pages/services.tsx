@@ -140,7 +140,6 @@ const useStyles = makeStyles((theme: Theme) =>
       'display': 'flex',
       'flexDirection': 'row',
       'justifyContent': 'flex-end',
-
       '& button:not(:last-child)': {
         marginRight: theme.spacing(),
       },

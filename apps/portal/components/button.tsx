@@ -2,8 +2,9 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Button, { ButtonProps } from '@material-ui/core/Button';
-import { green, deepOrange } from '@material-ui/core/colors';
 import clsx from 'clsx';
+import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
+import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 
 interface ButtonBaseProps extends ButtonProps {
   actionType: 'accept' | 'cancel';
@@ -12,19 +13,19 @@ interface ButtonBaseProps extends ButtonProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     accept: {
-      'color': theme.palette.getContrastText(green[200]),
-      'backgroundColor': green[200],
-      'borderRadius': theme.spacing(),
+      'color': theme.palette.getContrastText('#DEECEC'),
+      'backgroundColor': '#DEECEC',
+      'borderRadius': theme.spacing(3),
       '&:hover': {
-        backgroundColor: green[300],
+        backgroundColor: '#BECDCD',
       },
     },
     cancel: {
-      'color': theme.palette.getContrastText(deepOrange[200]),
-      'backgroundColor': deepOrange[200],
-      'borderRadius': theme.spacing(),
+      'color': theme.palette.getContrastText('#ECDEDE'),
+      'backgroundColor': '#ECDEDE',
+      'borderRadius': theme.spacing(3),
       '&:hover': {
-        backgroundColor: deepOrange[300],
+        backgroundColor: '#D9C0C0',
       },
     },
   }),
@@ -32,9 +33,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const BaseButton = ({ actionType, children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
   const classes = useStyles({});
+  const Icon = actionType === 'accept' ? <CheckCircleIcon /> : <HighlightOffIcon />;
 
   return (
-    <Button {...rest} variant="contained" className={clsx(classes[actionType], className)}>
+    <Button {...rest} variant="contained" startIcon={Icon} className={clsx(classes[actionType], className)}>
       {children}
     </Button>
   );
