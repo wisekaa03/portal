@@ -27,7 +27,7 @@ export class ProfileController {
   @UseGuards(SessionGuard)
   @UseGuards(IsAdminGuard)
   public async edit(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
-    return res.render(`profile/edit/${id}`);
+    return res.render(`profile/edit`, { id });
   }
 
   @Get('equipment')
