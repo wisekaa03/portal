@@ -80,9 +80,12 @@ SOAP_USER: "admin"
 SOAP_PASS: "supersecret"
 
 NEWS_URL: "https://news"
+NEWS_API_URL: "https://news/api"
 
 MAIL_URL: "/roundcube/"
 MAIL_LOGIN_URL: "https://roundcube.production/login/index.php"
+
+MEETING_URL: "https://meeting"
 
 service:
   type: LoadBalancer

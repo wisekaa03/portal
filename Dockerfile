@@ -132,12 +132,18 @@ ENV SOAP_PASS ${SOAP_PASS}
 # News
 ARG NEWS_URL="https://news"
 ENV NEWS_URL ${NEWS_URL}
+ARG NEWS_API_URL="https://news/api"
+ENV NEWS_API_URL ${NEWS_API_URL}
 
 # Mail
 ARG MAIL_URL="https://portal"
 ENV MAIL_URL ${MAIL_URL}
 ARG MAIL_LOGIN_URL="https://roundcube.production/login/index.php"
 ENV MAIL_LOGIN_URL ${MAIL_LOGIN_URL}
+
+# Meeting
+ARG MEETING_URL="https://meeting"
+ENV MEETING_URL ${MEETING_URL}
 
 
 # PREPARE DEVELOPMENT

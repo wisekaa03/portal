@@ -261,6 +261,10 @@ export class ConfigService {
         .default('https://news')
         .optional()
         .empty(),
+      NEWS_API_URL: Joi.string()
+        .default('https://news/api')
+        .optional()
+        .empty(),
 
       MAIL_URL: Joi.string()
         .default('https://portal')
@@ -268,6 +272,11 @@ export class ConfigService {
         .empty(),
       MAIL_LOGIN_URL: Joi.string()
         .default('https://roundcube.production/login/index.php')
+        .optional()
+        .empty(),
+
+      MEETING_URL: Joi.string()
+        .default('https://meeting')
         .optional()
         .empty(),
     });

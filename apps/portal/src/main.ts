@@ -76,20 +76,40 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
-  const mailUrl = configService.get<string>('MAIL_URL');
-  // TODO: пустая строка недопустима, потом пофиксить
-  // if (!mailUrl.match(/http/)) {
-  //   mailUrl = '';
-  // }
-  const newsUrl = configService.get<string>('NEWS_URL');
-  // if (!newsUrl.match(/http/)) {
-  //   newsUrl = '';
-  // }
+
   const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
   const styleSrc = ["'unsafe-inline'", "'self'"];
-  const imgSrc = ["'self'", 'data:', 'blob:', mailUrl, newsUrl];
-  const fontSrc = ["'self'", 'data:', mailUrl, newsUrl];
-  const frameSrc = ["'self'", mailUrl, newsUrl];
+  const imgSrc = ["'self'", 'data:', 'blob:'];
+  const fontSrc = ["'self'", 'data:'];
+  const frameSrc = ["'self'"];
+  const defaultSrc = ["'self'"];
+
+  const mailUrl = configService.get<string>('MAIL_URL');
+  if (mailUrl.match(/http/)) {
+    imgSrc.push(mailUrl);
+    fontSrc.push(mailUrl);
+    frameSrc.push(mailUrl);
+    defaultSrc.push(mailUrl);
+  }
+
+  const newsUrl = configService.get<string>('NEWS_URL');
+  if (newsUrl.match(/http/)) {
+    imgSrc.push(newsUrl);
+    fontSrc.push(newsUrl);
+    frameSrc.push(newsUrl);
+    defaultSrc.push(newsUrl);
+  }
+
+  const newsApiUrl = configService.get<string>('NEWS_API_URL');
+  if (newsApiUrl.match(/http/)) {
+    imgSrc.push(newsApiUrl);
+  }
+
+  const meetingUrl = configService.get<string>('MEETING_URL');
+  if (meetingUrl.match(/http/)) {
+    frameSrc.push(meetingUrl);
+  }
+
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
@@ -105,7 +125,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   server.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'", mailUrl, newsUrl],
+        defaultSrc,
         baseUri: ["'none'"],
         objectSrc: ["'none'"],
         imgSrc,

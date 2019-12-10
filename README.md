@@ -207,9 +207,13 @@ SOAP_PASS="supersecret"
 
 # NEWS
 NEWS_URL="https://news"
+NEWS_API_URL="https://news/api"
 
 #MAIL
 MAIL_LOGIN_URL="https://roundcube.production/login/index.php"
+
+# MEETING
+MEETING_URL="https://meeting"
 ```
 
 ## Production Deployment

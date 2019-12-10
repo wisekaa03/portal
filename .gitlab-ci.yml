@@ -133,8 +133,10 @@ deploy:
           --set SOAP_USER="${SOAP_USER}" \
           --set SOAP_PASS="${SOAP_PASS}" \
           --set NEWS_URL="${NEWS_URL}" \
+          --set NEWS_API_URL="${NEWS_API_URL}" \
           --set MAIL_URL="${MAIL_URL}" \
           --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
+          --set MEETING_URL="${MEETING_URL}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           helm/portal; \
@@ -194,8 +196,10 @@ deploy:
           --set SOAP_USER="${SOAP_USER}" \
           --set SOAP_PASS="${SOAP_PASS}" \
           --set NEWS_URL="${NEWS_URL}" \
+          --set NEWS_API_URL="${NEWS_API_URL}" \
           --set MAIL_URL="${MAIL_URL}" \
           --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
+          --set MEETING_URL="${MEETING_URL}" \
           --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
           --set image.tag="${CI_BUILD_REF}" \
           ${RELEASE_NAME} helm/portal; \

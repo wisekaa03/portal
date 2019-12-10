@@ -27,14 +27,21 @@ const useStyles = makeStyles((theme: Theme) =>
     firstBlock: {
       display: 'grid',
       gridGap: theme.spacing(2),
-      gridTemplateColumns: '1fr 1fr',
       width: '100%',
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '1fr 1fr',
+      },
     },
     secondBlock: {
       display: 'grid',
       gridGap: theme.spacing(2),
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
       width: '100%',
+      [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: '1fr 1fr',
+      },
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      },
     },
     avatar: {
       height: 150,
