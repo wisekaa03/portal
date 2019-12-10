@@ -142,7 +142,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
             return result;
           }
 
-          const selected = url.link === pathname;
+          const selected = pathname.startsWith(url.link);
 
           const handleEnter = (e: any): void => {
             if (selected) return;
