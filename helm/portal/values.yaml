@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 3
 
 image:
-  repository: docker-registry.kngk.org/portal
+  repository: docker.kube.i-npz.ru/portal
   tag: latest
   pullPolicy: Always
 
@@ -71,7 +71,7 @@ LDAP_REDIS_DB: 2
 LDAP_REDIS_PASSWORD: ""
 LDAP_REDIS_TTL: 300
 
-MICROSERVICE_URL: "nats://nats-cluster.production:4222"
+MICROSERVICE_URL: "nats://nats-cluster.nats-io:4222"
 MICROSERVICE_USER: "admin"
 MICROSERVICE_PASS: "supersecret"
 
