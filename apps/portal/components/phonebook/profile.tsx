@@ -201,7 +201,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                             {t('phonebook:profile.hide')}
                           </MenuItem>
                           <Link href={{ pathname: '/profile/edit', query: { id: profile && profile.id } }} passHref>
-                            <MenuItem component="a">{t('phonebook:profile.edit')}</MenuItem>
+                            <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
                           </Link>
                         </MenuList>
                       </ClickAwayListener>

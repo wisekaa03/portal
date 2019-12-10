@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     personal: {
       flex: 1,
-      background: '#5f98981f',
+      background: fade(theme.palette.secondary.main, 0.15),
       padding: theme.spacing(),
       color: theme.palette.secondary.main,
       borderRadius: theme.spacing() / 2,
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 300,
       maxWidth: 300,
       borderRadius: theme.spacing() / 2,
-      background: '#5f98981f',
+      background: fade(theme.palette.secondary.main, 0.15),
       marginRight: theme.spacing(2),
       marginBottom: theme.spacing(2),
     },
