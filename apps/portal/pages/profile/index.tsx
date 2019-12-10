@@ -39,14 +39,6 @@ const DATE_FORMAT = 'DD.MM.YYYY г.';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      // 'padding': theme.spacing(),
-      // 'display': 'flex',
-      // 'flexDirection': 'column',
-      // '& > div:last-child': {
-      //   flex: 1,
-      // },
-    },
     avatar: {
       width: avatarHeight,
       height: avatarHeight,
@@ -175,7 +167,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         {profile && profile.user && (
-          <Box display="flex" flexDirection="column" p={1} className={classes.root}>
+          <Box display="flex" flexDirection="column" p={1}>
             <Box display="flex" flexWrap="wrap">
               <Box mr={1} mb={1}>
                 <Avatar fullSize className={classes.avatar} profile={profile.user.profile} />
@@ -187,9 +179,9 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   {profile.user.profile.middleName && <span>{profile.user.profile.middleName}</span>}
                 </Box>
                 <div className={classes.links}>
-                  <Link href={{ pathname: '/profile/view' }} passHref>
+                  <Link href={{ pathname: '/profile/edit' }} passHref>
                     <Button color="secondary" component="a" variant="contained">
-                      {t('profile:btnView')}
+                      {t('profile:btnEdit')}
                     </Button>
                   </Link>
                   <Link href={{ pathname: '/profile/equipment' }} passHref>

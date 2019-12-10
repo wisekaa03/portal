@@ -1,6 +1,6 @@
 {
   "title": "Portal: Profile",
-  "btnView": "Анкета",
+  "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
   "tickets": {
