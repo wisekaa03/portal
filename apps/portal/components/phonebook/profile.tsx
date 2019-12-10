@@ -200,6 +200,9 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                           <MenuItem onClick={handleChangeProfile(profile && profile.id)}>
                             {t('phonebook:profile.hide')}
                           </MenuItem>
+                          <Link href={{ pathname: '/profile/edit', query: { id: profile && profile.id } }} passHref>
+                            <MenuItem component="a">{t('phonebook:profile.edit')}</MenuItem>
+                          </Link>
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>
