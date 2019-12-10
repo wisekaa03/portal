@@ -26,7 +26,7 @@ export class GroupService {
     const groups: GroupEntity[] = [];
 
     if (ldap.groups) {
-      await (ldap.groups as LdapResonseGroup[]).forEach(async (ldapGroup) => {
+      (ldap.groups as LdapResonseGroup[]).forEach(async (ldapGroup) => {
         const group: Group = {
           name: ldapGroup.sAMAccountName as string,
           dn: ldapGroup.dn,

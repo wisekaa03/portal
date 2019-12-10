@@ -53,6 +53,8 @@ const LdapServiceMock = jest.fn(() => ({}));
 // jest.mock('@nestjs/typeorm/dist/typeorm.module');
 jest.mock('@app/ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/logger.service');
 
 describe('ProfileService', () => {
   let service: ProfileService;
