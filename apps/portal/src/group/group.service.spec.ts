@@ -11,12 +11,12 @@ import { LoggerModule } from '@app/logger';
 import { GroupService } from './group.service';
 // #endregion
 
-const mockRepository = jest.fn(() => ({
-  metadata: {
-    columns: [],
-    relations: [],
-  },
-}));
+// const mockRepository = jest.fn(() => ({
+//   metadata: {
+//     columns: [],
+//     relations: [],
+//   },
+// }));
 
 @Entity()
 class UserEntity {
