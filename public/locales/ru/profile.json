@@ -1,6 +1,6 @@
 {
   "title": "Портал: Личный кабинет",
-  "btnView": "Анкета",
+  "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
   "tickets": {
