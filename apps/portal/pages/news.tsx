@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     rootSelected: {
       [`@media (min-width:${LARGE_RESOLUTION}px)`]: {
-        gridTemplateColumns: '2fr 5fr',
+        gridTemplateColumns: '5fr 2fr',
       },
     },
     container: {
@@ -137,6 +137,34 @@ const News: I18nPage = (props): React.ReactElement => {
             [classes.rootSelected]: current,
           })}
         >
+          {current && (
+            <div>
+              <AutoSizer style={{ flexGrow: 1 }}>
+                {({ height, width }) => (
+                  <div className={classes.containerCurrent} style={{ height, width }}>
+                    <Card className={classes.cardCurrent}>
+                      <CardHeader
+                        action={
+                          <IconButton aria-label="close" onClick={handleCloseCurrent}>
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={current.title.rendered}
+                        subheader={dayjs(current.date).format(DATE_FORMAT)}
+                      />
+                      <CardContent>
+                        <div
+                          className={classes.content}
+                          // eslint-disable-next-line react/no-danger
+                          dangerouslySetInnerHTML={{ __html: current.content.rendered }}
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+              </AutoSizer>
+            </div>
+          )}
           <div
             className={clsx({
               [classes.leftSide]: current,
@@ -183,34 +211,6 @@ const News: I18nPage = (props): React.ReactElement => {
               )}
             </AutoSizer>
           </div>
-          {current && (
-            <div>
-              <AutoSizer style={{ flexGrow: 1 }}>
-                {({ height, width }) => (
-                  <div className={classes.containerCurrent} style={{ height, width }}>
-                    <Card className={classes.cardCurrent}>
-                      <CardHeader
-                        action={
-                          <IconButton aria-label="close" onClick={handleCloseCurrent}>
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        title={current.title.rendered}
-                        subheader={dayjs(current.date).format(DATE_FORMAT)}
-                      />
-                      <CardContent>
-                        <div
-                          className={classes.content}
-                          // eslint-disable-next-line react/no-danger
-                          dangerouslySetInnerHTML={{ __html: current.content.rendered }}
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-              </AutoSizer>
-            </div>
-          )}
         </div>
       )}
     </Page>
