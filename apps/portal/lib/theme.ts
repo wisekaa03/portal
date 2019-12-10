@@ -1,6 +1,6 @@
 /** @format */
 
-import { createMuiTheme } from '@material-ui/core/styles';
+import { fade, createMuiTheme } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 
 const theme = createMuiTheme({
@@ -47,17 +47,28 @@ theme.overrides = {
   MuiOutlinedInput: {
     root: {
       'borderRadius': theme.spacing() / 2,
-      '&:hover $notchedOutline': {
-        borderColor: 'rgba(44, 67, 115, 0.9)',
+      '&:hover:not($focused):not($disabled) $notchedOutline': {
+        borderColor: fade(theme.palette.primary.main, 0.75),
+      },
+      '&$focused $notchedOutline': {
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    colorSecondary: {
+      '&, & $notchedOutline': {
+        borderColor: fade(theme.palette.secondary.main, 0.5),
+      },
+      '&:hover:not($focused):not($disabled) $notchedOutline': {
+        borderColor: fade(theme.palette.secondary.main, 0.75),
+      },
+      '&$focused $notchedOutline': {
+        borderColor: theme.palette.secondary.main,
       },
     },
     notchedOutline: {
-      'borderColor': 'rgba(44, 67, 115, 0.5)',
-      'borderWidth': 2,
-      'borderRadius': 'inherit',
-      '&$disabled': {
-        borderColor: 'rgba(0, 0, 0, 0.3)',
-      },
+      borderWidth: 2,
+      borderRadius: 'inherit',
+      borderColor: fade(theme.palette.primary.main, 0.5),
     },
   },
   MuiCheckbox: {
@@ -67,12 +78,18 @@ theme.overrides = {
   },
   MuiFormLabel: {
     root: {
-      color: 'rgba(44, 67, 115, 0.7)',
+      'color:not($disabled)': theme.palette.primary.main,
+      '&$colorSecondary:not($disabled)': {
+        color: theme.palette.secondary.main,
+      },
     },
   },
   MuiInputBase: {
     root: {
-      borderColor: 'rgba(44, 67, 115, 0.7)',
+      'borderColor': theme.palette.primary.main,
+      '&$colorSecondary': {
+        borderColor: theme.palette.secondary.main,
+      },
     },
   },
   MuiCard: {
