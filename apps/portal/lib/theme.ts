@@ -73,7 +73,7 @@ theme.overrides = {
   },
   MuiCheckbox: {
     root: {
-      color: '#2c4373',
+      color: theme.palette.primary.main,
     },
   },
   MuiFormLabel: {
@@ -109,9 +109,9 @@ theme.overrides = {
   MuiButton: {
     outlinedPrimary: {
       'color': '#fff',
-      'backgroundColor': '#2c4373',
+      'backgroundColor': theme.palette.primary.main,
       '&:hover': {
-        color: '#2c4373',
+        color: theme.palette.primary.main,
       },
       '&:disabled': {
         color: 'rgba(0, 0, 0, 0.5)',
