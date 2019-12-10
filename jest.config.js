@@ -6,10 +6,9 @@ const { pathsToModuleNameMapper } = require('ts-jest/utils');
 const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
-  testTimeout: 240000,
+  testTimeout: 180000,
   verbose: true,
-  // maxRetries: 10,
-  preset: 'ts-jest', // 'ts-jest/presets/js-with-ts',
+  preset: 'ts-jest',
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   moduleNameMapper: {
@@ -27,7 +26,6 @@ module.exports = {
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/target/'],
   snapshotSerializers: ['enzyme-to-json/serializer'],
   globals: {
-    '__DEV__': true,
     'ts-jest': {
       tsConfig: 'tsconfig.jest.json',
     },
