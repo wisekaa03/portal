@@ -6,7 +6,7 @@ const { pathsToModuleNameMapper } = require('ts-jest/utils');
 const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
-  // testTimeout: 180000,
+  testTimeout: 240000,
   verbose: true,
   // maxRetries: 10,
   preset: 'ts-jest', // 'ts-jest/presets/js-with-ts',
