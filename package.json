@@ -36,7 +36,7 @@
     "storybook": "start-storybook",
     "cli:login": "curl -X POST -H 'content-type: application/json' -d '{\"query\":\"mutation{login(username:\\\"'${LOGIN}'\\\",password:\\\"'${PASSWORD}'\\\"){token}}\"}' ${HTTP:-http}://${HOST:-localhost}:${PORT:-4000}/graphql",
     "cli:synch": "curl -X POST -H 'content-type: application/json' -H 'Authorization: bearer '${TOKEN} -d '{\"query\":\"mutation { synchronization }\"}' ${HTTP:-http}://${HOST:-localhost}:${PORT:-4000}/graphql",
-    "test": "jest --runInBand",
+    "test": "jest --maxWorkers=4",
     "coverage": "yarn test -u --coverage",
     "preversion": "yarn test -u",
     "typeorm": "TS_NODE_PROJECT=\"tsconfig.server.json\" ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
