@@ -2286,19 +2286,19 @@
     webpack "4.41.2"
     webpack-node-externals "1.7.2"
 
-"@nestjs/common@^6.0", "@nestjs/common@^6.10.8":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-6.10.8.tgz#25efb8d206f544b0a61088b2c950cd24e8fa2a2c"
-  integrity sha512-9XLRiQytVdK6Qa+CD4B0ePt43ye9TnCp04l/IrWiGFIbxfq8X3izdVHWp682rqmJv70GYsfUv7XCEww1+DuwsQ==
+"@nestjs/common@^6.0", "@nestjs/common@^6.10.9":
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-6.10.9.tgz#535c6a77b2661960ad36d1a260ebb70f40369004"
+  integrity sha512-grCipqJDnSvwBG21ALoCwh0S7ACJG0NVIEqKCOwyzQ0jBwZPwT1kZHvRfFIdp+Pksm4Ysk71bl6PlUN0N26u1Q==
   dependencies:
     axios "0.19.0"
     cli-color "2.0.0"
     uuid "3.3.3"
 
-"@nestjs/core@^6.0", "@nestjs/core@^6.10.8":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-6.10.8.tgz#f26c81172702311914cd6d027d31cd111c6e005d"
-  integrity sha512-Tt9xJJDi1KdDiTF+weBjotcc3KPUZwL7aoOdKoItkW/9eft6h16Igz/FLhrU6ceJjx3lTXEjWINyFLW6ttyfuA==
+"@nestjs/core@^6.0", "@nestjs/core@^6.10.9":
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-6.10.9.tgz#290558922968128bbc315f68b59cf47e01a79dc4"
+  integrity sha512-pw+sQIFFvaxr3yhoZvie6zyBGagoLXMQlqgGiAGcuJxmcQMLzGD+YTLre8/V+u5dGzi+elhEQc8NQrVRJzjGhQ==
   dependencies:
     "@nuxtjs/opencollective" "0.2.2"
     fast-safe-stringify "2.0.7"
@@ -2331,10 +2331,10 @@
     iterare "1.2.0"
     json-socket "0.3.0"
 
-"@nestjs/microservices@^6.10.8":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-6.10.8.tgz#d79f95cb96970929939a8f9838e3dd07aab249b8"
-  integrity sha512-Sn3hA+f6NLwLbnkXVxusMM6bWwHLodT7SPGBnqT87+ha3Mjk/UNbr/XxfZzSaSGBDA7MsfwWJsvNfDttUBhCwA==
+"@nestjs/microservices@^6.10.9":
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-6.10.9.tgz#115d78449b4c82161d2c0de4d38c28275674412e"
+  integrity sha512-Xz6lqQdX7Knd5gwML0Guc1dDPJhDXNA3vIVPBMNVtBLIPafm62NZiKR+DBhy09cmH5Y1tmpCfXfft2G5PcKNZg==
   dependencies:
     iterare "1.2.0"
     json-socket "0.3.0"
@@ -2359,10 +2359,10 @@
     express "4.17.1"
     multer "1.4.2"
 
-"@nestjs/platform-express@^6.10.8":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-6.10.8.tgz#0cdd98a0cacd78992744e95d23e713fd16590b03"
-  integrity sha512-NNVnUgn0C5IfON55/RuK/kxKgpXw/2Cxocc0omyJTn8e1bmzHKCHxjtQGWGnoj+BR7Ddk5Al3mBqBB4ITlYE8g==
+"@nestjs/platform-express@^6.10.9":
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-6.10.9.tgz#a0fb31e8b432b781ba12f7c4d17350bbd0cf2557"
+  integrity sha512-jb0LP4TdyS88/0ZiNFnDe/zn9H2OMFrQJ4d5sVQTIfM27na8oz9V6BFqjK8EYNHyxB388R0I/COTI0v9Ay4wkA==
   dependencies:
     body-parser "1.19.0"
     cors "2.8.5"
@@ -2380,19 +2380,19 @@
     path-to-regexp "3.2.0"
 
 "@nestjs/platform-fastify@^6.0":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-6.10.8.tgz#ac625e82b8c665f4267e65476c1b3dcf1fbd0d3b"
-  integrity sha512-XZOAJ5wdQLb61Q2QkiR0vfXwW2ESe7J9dH7/NWx7mx2glv2wrB6OSx3ENc2aFlAmSpp0G80ax9k6x+mi+ctLfA==
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-6.10.9.tgz#be66470e6eae7a68076ccc738a5877ea8aaa35e6"
+  integrity sha512-ejVbnDNr1uyO3K/P6hjmgNxU7E7EbdW0jR5+kTxlunCFwr2IPJQXF7FzepuIp3HP3tXRiYDZzBsdTKZxFHl6Zw==
   dependencies:
     fastify "2.10.0"
     fastify-cors "3.0.0"
     fastify-formbody "3.1.0"
     path-to-regexp "3.2.0"
 
-"@nestjs/schematics@^6.6.3", "@nestjs/schematics@^6.7.5":
-  version "6.7.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-6.7.5.tgz#03d7c3623de5df296d3b3334d07b4588c11a0682"
-  integrity sha512-L49Q1VRR/0BCM7eD6gpTDxe827epQMgxQLUfTRhMMfw8A0goyqsckeycuvMisvnJq6HOd2e6ogiUr94Bz26BBg==
+"@nestjs/schematics@^6.6.3", "@nestjs/schematics@^6.7.6":
+  version "6.7.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-6.7.6.tgz#2abe0726d01cfdc8e255e24a2511dc7ad24235ee"
+  integrity sha512-axpso5vWjbmwWx9Hd0BRYmporKTCpPvogU7DgfkVBm8HPjasRoMIuBsr69B606DHRgvdhnajrYbDUJHKA+Ksbg==
   dependencies:
     "@angular-devkit/core" "8.3.20"
     "@angular-devkit/schematics" "8.3.20"
@@ -2422,10 +2422,10 @@
     redis "2.8.0"
     typeorm "0.2.20"
 
-"@nestjs/testing@^6.10.8":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.10.8.tgz#f7d15db8143c031bb2aef95cdabff109ab9716a1"
-  integrity sha512-Tz2wCZbtJF9Ra0wBMGtYMC2QuT3/4xtTA1k0TrzI/8RFxL9nLtTQMJVkC296vLjQ7suEMZeOdhasisHoB1rsIQ==
+"@nestjs/testing@^6.10.9":
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.10.9.tgz#08a3af8ef9b6568fe29d055963af90995fd841c5"
+  integrity sha512-jQr74g6KJTsaH2fqt2odUb+3iJ/jifW1UM0cxuSlRYTRaEnT4Qmzo5gA5hQfTFs9TjLFJ0feP256BnJ/r4ChIg==
   dependencies:
     optional "0.1.4"
 
@@ -2436,10 +2436,10 @@
   dependencies:
     uuid "3.3.3"
 
-"@nestjs/websockets@^6.10.8":
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-6.10.8.tgz#76f750427674943fa36554291c0a8592d2946781"
-  integrity sha512-EXCJtIpwCxJB5LwKxtWasTkTBVz8Rc8xczBuA4t1tDf5VndjzMAMuEzC9Zcf7ZtFCYRrflcpwfF9G2pPTj2q6g==
+"@nestjs/websockets@^6.10.9":
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-6.10.9.tgz#9b2f3c42608113011a35aa34e05d128fad13d29a"
+  integrity sha512-p95X8qBTn7u6gZc2HMN1ac9GPSzoZYOqssPIHLQ6eKmBBPpocHIZLiN2UofABPsYEsTsmahugfQqXNKlmpmldA==
   dependencies:
     iterare "1.2.0"
 
@@ -9778,9 +9778,9 @@ get-caller-file@^2.0.1:
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
 
 get-own-enumerable-property-symbols@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/get-own-enumerable-property-symbols/-/get-own-enumerable-property-symbols-3.0.1.tgz#6f7764f88ea11e0b514bd9bd860a132259992ca4"
-  integrity sha512-09/VS4iek66Dh2bctjRkowueRJbY1JDGR1L/zRxO1Qk8Uxs6PnqaNSqalpizPT+CDjre3hnEsuzvhgomz9qYrA==
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/get-own-enumerable-property-symbols/-/get-own-enumerable-property-symbols-3.0.2.tgz#b5fde77f22cbe35f390b4e089922c50bce6ef664"
+  integrity sha512-I0UBV/XOz1XkIJHEUDMZAbzCThU/H8DxmSfmdGcKPnVhu2VfFqr34jr9777IyaTYvxjedWhqVIilEDsCdP5G6g==
 
 get-proxy@^2.0.0:
   version "2.1.0"
