@@ -186,9 +186,9 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       if (item === 'manager') {
                         const { manager } = current;
 
-                        if (manager) {
-                          value = `${manager.lastName || ''} ${manager.firstName || ''} ${manager.middleName || ''}`;
-                        }
+                        value = manager
+                          ? `${manager.lastName || ''} ${manager.firstName || ''} ${manager.middleName || ''}`
+                          : '';
                       }
 
                       return [
