@@ -83,7 +83,7 @@ MEETING_URL="${MEETING_URL}"
 EOF
 
 export NODE=`which node`
-export NODE_OPTIONS=--max_old_space_size=2048
+export NODE_OPTIONS=--max_old_space_size=4096
 
 # TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 # "Typically it is unsafe to use synchronize: true for schema synchronization on production
@@ -97,7 +97,7 @@ if [ -n "$*" -a "$1" = "test" ]; then
 
 elif [ -n "$*" -a "$1" = "start" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_OPTIONS=--max_old_space_size=2048
+  export NODE_OPTIONS=--max_old_space_size=4096
   export NODE_ENV=${NODE_ENV:=production}
   $NODE .next/nest/main.js
 
@@ -109,7 +109,7 @@ elif [ -n "$*" -a "$1" = "start:synch" ]; then
 
 elif [ -n "$*" -a "$1" = "start:soap1c" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_OPTIONS=--max_old_space_size=2048
+  export NODE_OPTIONS=--max_old_space_size=4096
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/soap1c/main.js
 
