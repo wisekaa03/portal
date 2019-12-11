@@ -3,7 +3,8 @@
 // #region Imports NPM
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
-import { shallow, ShallowWrapper } from 'enzyme';
+import { ShallowWrapper } from 'enzyme';
+import { createShallow } from '@material-ui/core/test-utils';
 import { Toolbar, Popover, IconButton } from '@material-ui/core';
 // #endregion
 // #region Imports Local
@@ -34,7 +35,7 @@ describe('AppBar component', () => {
   ];
 
   beforeAll(() => {
-    component = shallow(
+    component = createShallow()(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AppBar {...props} />
       </MockedProvider>,
