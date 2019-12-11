@@ -61,6 +61,11 @@ export const CURRENT_USER = gql`
         thumbnailPhoto40
         thumbnailPhoto
       }
+      groups {
+        id
+        name
+        dn
+      }
     }
   }
   ${PROFILE_FRAGMENT}
