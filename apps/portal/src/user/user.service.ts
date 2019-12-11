@@ -65,7 +65,7 @@ export class UserService {
 
     return this.userRepository.findOne({
       where,
-      relations: ['profile'],
+      relations: ['profile', 'groups'],
       cache: true,
     });
   };
@@ -84,7 +84,7 @@ export class UserService {
 
     return this.userRepository.findOne({
       where,
-      relations: ['profile'],
+      relations: ['profile', 'groups'],
       cache: true,
     });
   };
@@ -96,6 +96,7 @@ export class UserService {
    */
   async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity): Promise<UserEntity | undefined> {
     let profile: ProfileEntity | undefined;
+    let groups: GroupEntity[];
 
     const defaultSettings: UserSettings = {
       lng: 'ru',
@@ -110,14 +111,23 @@ export class UserService {
     }
 
     if (!profile) {
-      this.logService.error('Unable to save data in `profile`. Unknown error.', '', 'UserService');
+      this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
 
-    const groups = await this.groupService.createFromUser(ldapUser, user);
+    try {
+      groups = await this.groupService.createFromUser(ldapUser);
+    } catch (error) {
+      this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'UserService');
+
+      throw error;
+    }
+
     if (!groups) {
       this.logService.error('Unable to save data in `group`. Unknown error.', undefined, 'UserService');
+
+      throw new Error('Unable to save data in `group`. Unknown error.');
     }
 
     // Для контактов

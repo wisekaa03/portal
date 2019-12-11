@@ -22,29 +22,24 @@ export class GroupService {
     private readonly groupRepository: Repository<GroupEntity>,
   ) {}
 
-  async createFromUser(ldap: LdapResponseUser, user?: UserEntity): Promise<GroupEntity[] | undefined> {
-    const groups: GroupEntity[] = [];
+  async createFromUser(ldap: LdapResponseUser): Promise<GroupEntity[]> {
+    let groups: GroupEntity[] = [];
 
     if (ldap.groups) {
-      (ldap.groups as LdapResonseGroup[]).forEach(async (ldapGroup) => {
+      const promises = (ldap.groups as LdapResonseGroup[]).map(async (ldapGroup) => {
+        const updateAt = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
+
         const group: Group = {
+          ...updateAt,
+          loginIdentificator: ldapGroup.objectGUID,
           name: ldapGroup.sAMAccountName as string,
           dn: ldapGroup.dn,
           loginService: LoginService.LDAP,
-          loginIdentificator: ldapGroup.objectGUID,
         };
 
-        if (user) {
-          const gb = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
-          if (gb) {
-            group.id = gb.id;
-          }
-        }
-
-        let gb;
-        let g;
+        let update: GroupEntity;
         try {
-          gb = this.groupRepository.create(group);
+          update = this.groupRepository.create(group);
         } catch (error) {
           this.logService.error('Group create error:', error, 'GroupService');
 
@@ -52,17 +47,15 @@ export class GroupService {
         }
 
         try {
-          g = await this.groupRepository.save(gb);
+          return this.groupRepository.save(update);
         } catch (error) {
           this.logService.error('Unable to save data in `group`', error, 'GroupService');
 
           throw error;
         }
-
-        if (g) {
-          groups.push(g);
-        }
       });
+
+      groups = await Promise.all(promises);
     }
 
     return groups;

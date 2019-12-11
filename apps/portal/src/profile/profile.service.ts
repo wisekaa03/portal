@@ -241,7 +241,7 @@ export class ProfileService {
     }
 
     try {
-      return await this.profileRepository.save(profileEnt);
+      return this.profileRepository.save(profileEnt);
     } catch (error) {
       this.logService.error('Unable to save data in `profile`', error, 'ProfileService');
 
