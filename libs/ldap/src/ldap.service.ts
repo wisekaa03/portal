@@ -491,16 +491,6 @@ export class LdapService extends EventEmitter {
    * @returns {undefined | LdapResponseUser[]} - User in LDAP
    */
   public async synchronization(): Promise<undefined | LdapResponseUser[]> {
-    if (this.userCache) {
-      const cached: LDAPCache = await this.userCache.get<LDAPCache>(LDAP_SYNCH);
-      // TODO: придумать что-нибудь половчее моих synchronization
-      if (cached && cached.synch) {
-        this.logger.debug(`Synchronization from cache`, 'LDAP');
-
-        return cached.synch as LdapResponseUser[];
-      }
-    }
-
     const opts = {
       filter: this.opts.searchFilterAllUsers,
       scope: this.opts.searchScopeAllUsers,
@@ -515,33 +505,7 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          if (this.userCache) {
-            if (this.userCacheStore.reset) {
-              this.userCacheStore.reset((error: any) => {
-                if (error) {
-                  this.logger.error('LDAP cache error', error.toString(), 'LDAP');
-                }
-              });
-            }
-
-            this.logger.debug(`To cache: SYNCHRONIZATION`, 'LDAP');
-
-            this.userCache.set<LDAPCache>(
-              LDAP_SYNCH,
-              {
-                synch,
-              },
-              this.ttl,
-            );
-          }
-
-          synch.forEach(async (u) => {
-            // eslint-disable-next-line no-debugger
-            debugger;
-
-            return this.getGroups(u);
-          });
-
+          synch.forEach(async (u) => this.getGroups(u));
           return synch as LdapResponseUser[];
         }
 
