@@ -20,6 +20,7 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
     '^.+\\.svg$': 'jest-svg-transformer',
+    '^.+\\.js$': 'babel-jest',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/(*.)+(spec|test).[jt]s?(x)'],
   setupFiles: ['./jest.setup.ts'],
