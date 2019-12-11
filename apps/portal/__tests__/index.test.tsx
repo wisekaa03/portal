@@ -1,6 +1,6 @@
 /** @format */
 
-import { shallow } from 'enzyme';
+import { ShallowWrapper } from 'enzyme';
 import { Button } from '@material-ui/core';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
@@ -8,7 +8,7 @@ import React from 'react';
 import App from '../pages';
 
 describe('App', () => {
-  let wrapperShallow: typeof shallow;
+  let component: ShallowWrapper;
   // let render: any;
   const props = {
     namespacesRequired: [],
@@ -16,16 +16,14 @@ describe('App', () => {
   };
 
   beforeAll(() => {
-    wrapperShallow = createShallow();
+    component = createShallow()(<App {...props} />);
   });
 
   it('app: render correctly', () => {
-    const app = wrapperShallow(<App {...props} />);
-    expect(app).toMatchSnapshot();
+    expect(component).toMatchSnapshot();
   });
 
   it('app page: Logout button', () => {
-    const app = wrapperShallow(<App {...props} />);
-    expect(app.find(Button)).toBeDefined();
+    expect(component.find(Button)).toBeDefined();
   });
 });
