@@ -37,14 +37,16 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.map(({ message, locations, path }): any => {
-        const redirect = NO_REDIRECT_PAGES.includes(window.location.pathname) ? FIRST_PAGE : window.location.pathname;
+        if (!__SERVER__) {
+          const redirect = NO_REDIRECT_PAGES.includes(window.location.pathname) ? FIRST_PAGE : window.location.pathname;
 
-        switch ((message as any).statusCode) {
-          case 403:
-            Router.push({ pathname: '/auth/login', query: { redirect } });
-            break;
-          default:
-            break;
+          switch ((message as any).statusCode) {
+            case 403:
+              Router.push({ pathname: '/auth/login', query: { redirect } });
+              break;
+            default:
+              break;
+          }
         }
 
         return console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
