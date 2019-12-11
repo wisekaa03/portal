@@ -1,8 +1,9 @@
 /** @format */
 // #region Imports NPM
-import { shallow, ShallowWrapper } from 'enzyme';
-import { TextField, Button } from '@material-ui/core';
 import React from 'react';
+import { ShallowWrapper } from 'enzyme';
+import { createShallow } from '@material-ui/core/test-utils';
+import { TextField, Button } from '@material-ui/core';
 import { MutationFunction } from 'react-apollo';
 // #endregion
 // #region Imports Local
@@ -19,7 +20,7 @@ describe('Login page', () => {
   };
 
   beforeAll(() => {
-    component = shallow(<LoginComponent {...props} />);
+    component = createShallow()(<LoginComponent {...props} />);
   });
 
   it('match snapshot', () => {
