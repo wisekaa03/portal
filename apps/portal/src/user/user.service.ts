@@ -20,6 +20,7 @@ import { GroupService } from '../group/group.service';
 import { GroupEntity } from '../group/group.entity';
 import { ProfileEntity } from '../profile/profile.entity';
 import { LoginService } from '../shared/interfaces';
+import { ADMIN_GROUP } from '../../lib/constants';
 // #endregion
 
 @Injectable()
@@ -135,10 +136,6 @@ export class UserService {
       return undefined;
     }
 
-    // TODO: временное решение
-    const admins = ['r.tikhiy', 'stas'];
-
-    // TODO: сделать что-нибудь по поводу групп..
     const data: User = {
       id: user && user.id,
       createdAt: user && user.createdAt,
@@ -148,7 +145,7 @@ export class UserService {
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       groups,
-      isAdmin: admins.includes(ldapUser.sAMAccountName),
+      isAdmin: Boolean(groups.find((group) => group.name === ADMIN_GROUP)),
       settings: user && user.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };

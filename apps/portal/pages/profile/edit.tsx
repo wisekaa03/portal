@@ -122,6 +122,16 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   }, [loading, data, isAdmin, error, profile.user.profile]);
 
   // console.log(current);
+  const InputProps = {
+    readOnly: true,
+    ...(isAdmin && {
+      endAdornment: (
+        <InputAdornment position="end">
+          <EditIcon color="secondary" />
+        </InputAdornment>
+      ),
+    }),
+  };
 
   return (
     <>
@@ -166,14 +176,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           value={current[item] || ''}
                           label={t(`phonebook:fields.${item}`)}
                           variant="outlined"
-                          InputProps={{
-                            readOnly: true,
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <EditIcon color="secondary" />
-                              </InputAdornment>
-                            ),
-                          }}
+                          InputProps={InputProps}
                         />
                       </div>
                     ))}
@@ -200,14 +203,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                             value={value || ''}
                             label={t(`phonebook:fields.${item}`)}
                             variant="outlined"
-                            InputProps={{
-                              readOnly: true,
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <EditIcon color="secondary" />
-                                </InputAdornment>
-                              ),
-                            }}
+                            InputProps={InputProps}
                           />
                         </div>,
                       ];
