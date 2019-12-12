@@ -30,6 +30,7 @@ import { SESSION } from '../lib/constants';
 // #endregion
 
 const avatarHeight = 48;
+export const appBarHeight = 64;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     logo: {
       'flexGrow': 1,
       '& > img': {
-        height: '64px',
+        height: appBarHeight,
       },
     },
     title: {

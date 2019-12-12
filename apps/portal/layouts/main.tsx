@@ -8,7 +8,7 @@ import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
 import { I18nPage, nextI18next } from '../lib/i18n-client';
-import AppBar from '../components/app-bar';
+import AppBar, { appBarHeight } from '../components/app-bar';
 import Drawer from '../components/drawer';
 import { ProfileContext } from '../lib/context';
 import { USER_SETTINGS } from '../lib/queries';
@@ -25,6 +25,7 @@ const useStyles = makeStyles((/* theme: Theme */) =>
       'flex': 1,
       'display': 'flex',
       'overflow': 'hidden',
+      'height': `calc(100vh - ${appBarHeight}px)`,
 
       '& > div': {
         width: '100%',
