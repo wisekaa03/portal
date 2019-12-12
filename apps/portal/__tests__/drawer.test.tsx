@@ -6,9 +6,9 @@ import { ShallowWrapper } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 // #endregion
 // #region Imports Local
-// import { UserContext } from '@app/portal/user/models/user.dto';
 import Drawer from '../components/drawer';
-// import { ProfileContext } from '../lib/context';
+import { ProfileContext } from '../lib/context';
+import { MOCK_PROFILE } from '../lib/constants';
 // #endregion
 
 jest.mock('next/router', () => ({
@@ -31,7 +31,7 @@ describe('Drawer component', () => {
     namespacesRequired: [],
   };
   const linkCount = 9;
-  // const linkAdminCount = 10;
+  const linkAdminCount = 10;
 
   describe('Without context', () => {
     beforeAll(() => {
@@ -51,14 +51,16 @@ describe('Drawer component', () => {
     });
   });
 
+  // TODO: почему то контекст не пробрасывается
   // describe('With context', () => {
   //   beforeAll(() => {
   //     component = createShallow({ dive: true })(
-  //       <ProfileContext.Provider value={jest.mock('profile') as UserContext}>
+  //       <ProfileContext.Provider value={MOCK_PROFILE}>
   //         <Drawer {...props} />
   //       </ProfileContext.Provider>,
   //     );
   //   });
+
   //   it('count links correctly', () => {
   //     expect(
   //       component
