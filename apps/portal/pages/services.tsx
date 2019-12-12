@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     contentWrap: {
       display: 'flex',
+      flexDirection: 'column',
       flex: 1,
     },
     content: {
@@ -83,16 +84,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container2: {
       'flex': 1,
-      'display': 'grid',
-      'gridAutoRows': 'minmax(120px, 1fr) min-content min-content min-content min-content',
+      'display': 'flex',
+      'flexDirection': 'column',
+      'justifyContent': 'center',
+      'alignItems': 'center',
       '& > div': {
-        'marginBottom': theme.spacing(3),
-        '&:first-child': {
-          alignSelf: 'end',
-        },
-        '&:last-child': {
-          alignSelf: 'start',
-        },
+        marginBottom: theme.spacing(3),
       },
     },
     service: {
@@ -110,11 +107,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover:not($serviceIndex):not($formControl) h6': {
         color: '#000',
       },
-      [theme.breakpoints.down('xs')]: {
-        '&:last-child': {
-          marginBottom: theme.spacing(),
-        },
-      },
     },
     serviceIndex: {
       '& h6': {
@@ -122,13 +114,13 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     formControl: {
-      [theme.breakpoints.up('sm')]: {
-        minWidth: '50%',
+      minWidth: '90%',
+      [theme.breakpoints.up('md')]: {
+        minWidth: '80%',
       },
-      [theme.breakpoints.down('sm')]: {
-        minWidth: '90%',
+      [theme.breakpoints.up('lg')]: {
+        minWidth: '60%',
       },
-      margin: '0 auto',
     },
     formAction: {
       'display': 'flex',
