@@ -3,7 +3,6 @@
 import { ShallowWrapper } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
-import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 
 import ButtonComponent, { ButtonBaseProps } from '../components/button';
 
