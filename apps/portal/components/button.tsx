@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 
-interface ButtonBaseProps extends ButtonProps {
+export interface ButtonBaseProps extends ButtonProps {
   actionType: 'accept' | 'cancel';
 }
 

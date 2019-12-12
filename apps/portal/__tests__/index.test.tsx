@@ -9,10 +9,8 @@ import App from '../pages';
 
 describe('App', () => {
   let component: ShallowWrapper;
-  // let render: any;
   const props = {
     namespacesRequired: [],
-    t: jest.fn().mock,
   };
 
   beforeAll(() => {

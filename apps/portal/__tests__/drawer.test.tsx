@@ -23,7 +23,7 @@ jest.mock('next/router', () => ({
 
 describe('Drawer component', () => {
   let component: ShallowWrapper;
-  const props = { open: false, handleOpen: (): void => {}, namespacesRequired: [], t: jest.fn().mock };
+  const props = { open: false, handleOpen: (): void => {}, namespacesRequired: [] };
 
   beforeAll(() => {
     component = createShallow()(<Drawer {...props} />);
