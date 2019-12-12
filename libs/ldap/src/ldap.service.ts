@@ -105,13 +105,13 @@ export class LdapService extends EventEmitter {
       socketPath: opts.socketPath,
       log: opts.logger,
       timeout: opts.timeout,
-      connectTimeout: opts.connectTimeout,
+      connectTimeout: opts.connectTimeout || 30,
       idleTimeout: opts.idleTimeout,
       reconnect: opts.reconnect,
       strictDN: opts.strictDN,
-      queueSize: opts.queueSize,
-      queueTimeout: opts.queueTimeout,
-      queueDisable: opts.queueDisable,
+      queueSize: opts.queueSize || 100,
+      queueTimeout: opts.queueTimeout || 30,
+      queueDisable: opts.queueDisable || false,
     };
 
     this.bindDN = opts.bindDN;
@@ -120,6 +120,10 @@ export class LdapService extends EventEmitter {
     this.adminClient = Ldap.createClient(this.clientOpts);
     this.adminBound = false;
     this.userClient = Ldap.createClient(this.clientOpts);
+
+    this.adminClient.on('connectError', this.handleConnectError.bind(this));
+    this.userClient.on('connectError', this.handleConnectError.bind(this));
+
     this.adminClient.on('error', this.handleErrorAdmin.bind(this));
     this.userClient.on('error', this.handleErrorUser.bind(this));
 
@@ -194,6 +198,17 @@ export class LdapService extends EventEmitter {
       this.logger.error(`user emitted error: [${err.code}]`, err.toString(), 'LDAP');
     }
     // this.adminBound = false;
+  }
+
+  /**
+   * Connect error handler
+   *
+   * @private
+   * @param {Error} err - The error to be logged and emitted
+   * @returns {void}
+   */
+  private handleConnectError(err: Ldap.Error): void {
+    this.logger.error(`emitted error: [${err.code}]`, err.toString(), 'LDAP');
   }
 
   /**
