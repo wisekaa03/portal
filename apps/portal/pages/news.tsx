@@ -15,7 +15,6 @@ import {
   Button,
   IconButton,
 } from '@material-ui/core';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import Head from 'next/head';
 import clsx from 'clsx';
 import CloseIcon from '@material-ui/icons/Close';
@@ -40,29 +39,34 @@ const useStyles = makeStyles((theme: Theme) =>
       [`@media (min-width:${LARGE_RESOLUTION}px)`]: {
         gridTemplateColumns: '5fr 2fr',
       },
+      '& $container': {
+        'display': 'grid',
+        'flex': 1,
+        '& > div': {
+          gridTemplateColumns: '1fr',
+          padding: theme.spacing(4),
+          [`@media (max-width:${LARGE_RESOLUTION - 1}px)`]: {
+            display: 'none',
+          },
+        },
+      },
     },
     container: {
-      display: 'grid',
-      gridTemplateColumns: '1fr',
-      padding: theme.spacing(6),
-      gridGap: theme.spacing(4),
-      gridAutoRows: 'max-content',
-      overflowX: 'hidden',
-      overflowY: 'auto',
-      [theme.breakpoints.up('md')]: {
-        gridTemplateColumns: '1fr 1fr',
-      },
-      [theme.breakpoints.up('lg')]: {
-        gridTemplateColumns: '1fr 1fr 1fr',
-      },
-    },
-    containerSelected: {
-      gridTemplateColumns: '1fr',
-      padding: theme.spacing(4),
-    },
-    leftSide: {
-      [`@media (max-width:${LARGE_RESOLUTION - 1}px)`]: {
-        display: 'none',
+      'overflow': 'auto',
+      '& > div': {
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        padding: theme.spacing(6),
+        gridGap: theme.spacing(4),
+        gridAutoRows: 'max-content',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        [theme.breakpoints.up('md')]: {
+          gridTemplateColumns: '1fr 1fr',
+        },
+        [theme.breakpoints.up('lg')]: {
+          gridTemplateColumns: '1fr 1fr 1fr',
+        },
       },
     },
     containerCurrent: {
@@ -138,78 +142,56 @@ const News: I18nPage = (props): React.ReactElement => {
           })}
         >
           {current && (
-            <div>
-              <AutoSizer style={{ flexGrow: 1 }}>
-                {({ height, width }) => (
-                  <div className={classes.containerCurrent} style={{ height, width }}>
-                    <Card className={classes.cardCurrent}>
-                      <CardHeader
-                        action={
-                          <IconButton aria-label="close" onClick={handleCloseCurrent}>
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        title={current.title.rendered}
-                        subheader={dayjs(current.date).format(DATE_FORMAT)}
-                      />
-                      <CardContent>
-                        <div
-                          className={classes.content}
-                          // eslint-disable-next-line react/no-danger
-                          dangerouslySetInnerHTML={{ __html: current.content.rendered }}
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-              </AutoSizer>
+            <div className={classes.containerCurrent}>
+              <Card className={classes.cardCurrent}>
+                <CardHeader
+                  action={
+                    <IconButton aria-label="close" onClick={handleCloseCurrent}>
+                      <CloseIcon />
+                    </IconButton>
+                  }
+                  title={current.title.rendered}
+                  subheader={dayjs(current.date).format(DATE_FORMAT)}
+                />
+                <CardContent>
+                  <div
+                    className={classes.content}
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: current.content.rendered }}
+                  />
+                </CardContent>
+              </Card>
             </div>
           )}
-          <div
-            className={clsx({
-              [classes.leftSide]: current,
-            })}
-          >
-            <AutoSizer style={{ flexGrow: 1 }}>
-              {({ height, width }) => (
-                <div style={{ height, width, overflow: 'auto' }}>
-                  <div
-                    className={clsx(classes.container, {
-                      [classes.containerSelected]: current,
-                    })}
-                  >
-                    {data.news.map((news: NewsProps) => {
-                      // TODO: regexp может быть улучшен
-                      const images = news.content.rendered.match(
-                        /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi,
-                      );
-                      const anchor = `news-${news.id}`;
+          <div className={classes.container}>
+            <div>
+              {data.news.map((news: NewsProps) => {
+                // TODO: regexp может быть улучшен
+                const images = news.content.rendered.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
+                const anchor = `news-${news.id}`;
 
-                      return (
-                        <Card id={anchor} key={news.id} className={classes.card}>
-                          <CardActionArea onClick={handleCurrent(news)}>
-                            <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
-                            <CardContent>
-                              <Typography variant="body2" color="textSecondary" component="p">
-                                {news.title.rendered}
-                              </Typography>
-                            </CardContent>
-                          </CardActionArea>
-                          <CardActions className={classes.action}>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                              {dayjs(news.date).format(DATE_FORMAT)}
-                            </Typography>
-                            <Button size="small" color="secondary" onClick={handleCurrent(news)}>
-                              {t('news:more')}
-                            </Button>
-                          </CardActions>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </AutoSizer>
+                return (
+                  <Card id={anchor} key={news.id} className={classes.card}>
+                    <CardActionArea onClick={handleCurrent(news)}>
+                      <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
+                      <CardContent>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {news.title.rendered}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions className={classes.action}>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        {dayjs(news.date).format(DATE_FORMAT)}
+                      </Typography>
+                      <Button size="small" color="secondary" onClick={handleCurrent(news)}>
+                        {t('news:more')}
+                      </Button>
+                    </CardActions>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

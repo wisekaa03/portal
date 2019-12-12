@@ -9,7 +9,6 @@ import {
   Tabs,
   Tab,
   Box,
-  Container,
   FormControl,
   TextField,
   Typography,
@@ -18,7 +17,6 @@ import {
   InputLabel,
 } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
@@ -70,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container1: {
       display: 'grid',
+      flex: 1,
       gridGap: `${theme.spacing()}px ${theme.spacing(4)}px`,
       padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
 
@@ -83,8 +82,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     container2: {
+      'flex': 1,
       'display': 'grid',
-      'justifyContent': 'center',
       'gridAutoRows': 'minmax(120px, 1fr) min-content min-content min-content min-content',
       '& > div': {
         'marginBottom': theme.spacing(3),
@@ -122,19 +121,14 @@ const useStyles = makeStyles((theme: Theme) =>
         color: '#000',
       },
     },
-    // subtitle: {
-    //   color: '#757575',
-    //   padding: `${theme.spacing()}px 0`,
-    //   borderBottom: '1px solid #C4C4C4',
-    // },
     formControl: {
       [theme.breakpoints.up('sm')]: {
-        minWidth: '50vw',
+        minWidth: '50%',
       },
-
       [theme.breakpoints.down('sm')]: {
-        minWidth: '90vw',
+        minWidth: '90%',
       },
+      margin: '0 auto',
     },
     formAction: {
       'display': 'flex',
@@ -341,101 +335,89 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             slideClassName={classes.content}
             onChangeIndex={handleChangeTabIndex}
           >
-            <Box display="flex" flexGrow={1}>
-              <AutoSizer style={{ flexGrow: 1 }}>
-                {({ height, width }) => (
-                  <Container className={classes.container1} style={{ height, width }}>
-                    {services.map((service) => (
-                      <Box
-                        key={service.id}
-                        onClick={handleCurrentService(service.id)}
-                        className={clsx(classes.service, {
-                          [classes.serviceIndex]: serviceIndex === service.id,
-                        })}
-                      >
-                        <div>
-                          <BaseIcon src={service.icon} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{service.title}</Typography>
-                        </div>
-                      </Box>
+            <div className={classes.container1}>
+              {services.map((service) => (
+                <Box
+                  key={service.id}
+                  onClick={handleCurrentService(service.id)}
+                  className={clsx(classes.service, {
+                    [classes.serviceIndex]: serviceIndex === service.id,
+                  })}
+                >
+                  <div>
+                    <BaseIcon src={service.icon} size={48} />
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1">{service.title}</Typography>
+                  </div>
+                </Box>
+              ))}
+            </div>
+            <div className={classes.container2}>
+              {currentService && (
+                <Box className={clsx(classes.service, classes.formControl)}>
+                  <div>
+                    <BaseIcon src={currentService.icon} size={48} />
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1">{currentService.title}</Typography>
+                  </div>
+                </Box>
+              )}
+              {currentService && (
+                <FormControl className={classes.formControl} variant="outlined">
+                  <InputLabel ref={inputLabel}>{t('services:form.category')}</InputLabel>
+                  <Select
+                    data-field-name="category"
+                    value={category}
+                    onChange={handleCategory}
+                    className={classes.textField}
+                    labelWidth={labelWidth}
+                  >
+                    {currentService.categories.map((cur, index) => (
+                      <MenuItem key={cur} value={index}>
+                        {cur}
+                      </MenuItem>
                     ))}
-                  </Container>
-                )}
-              </AutoSizer>
-            </Box>
-            <Box display="flex" flexGrow={1}>
-              <AutoSizer style={{ flexGrow: 1 }}>
-                {({ height, width }) => (
-                  <Container className={classes.container2} style={{ height, width }}>
-                    {currentService && (
-                      <Box className={clsx(classes.service, classes.formControl)}>
-                        <div>
-                          <BaseIcon src={currentService.icon} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{currentService.title}</Typography>
-                        </div>
-                      </Box>
-                    )}
-                    {currentService && (
-                      <FormControl className={classes.formControl} variant="outlined">
-                        <InputLabel ref={inputLabel}>{t('services:form.category')}</InputLabel>
-                        <Select
-                          data-field-name="category"
-                          value={category}
-                          onChange={handleCategory}
-                          className={classes.textField}
-                          labelWidth={labelWidth}
-                        >
-                          {currentService.categories.map((cur, index) => (
-                            <MenuItem key={cur} value={index}>
-                              {cur}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    )}
-                    <FormControl className={classes.formControl} variant="outlined">
-                      <TextField
-                        data-field-name="title"
-                        value={title}
-                        onChange={handleTitle}
-                        type="text"
-                        label={t('services:form.title')}
-                        variant="outlined"
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                    <FormControl className={classes.formControl} variant="outlined">
-                      <TextField
-                        data-field-name="text"
-                        value={text}
-                        onChange={handleText}
-                        multiline
-                        rows={10}
-                        type="text"
-                        label={t('services:form.text')}
-                        variant="outlined"
-                        className={classes.textField}
-                      />
-                    </FormControl>
-                    <FormControl className={classes.formControl} variant="outlined">
-                      <Dropzone setFiles={setFiles} files={files} {...rest} />
-                    </FormControl>
-                    <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                      <Button actionType="cancel" onClick={handleClose}>
-                        {t('common:cancel')}
-                      </Button>
-                      <Button actionType="accept" onClick={handleAccept}>
-                        {t('common:accept')}
-                      </Button>
-                    </FormControl>
-                  </Container>
-                )}
-              </AutoSizer>
-            </Box>
+                  </Select>
+                </FormControl>
+              )}
+              <FormControl className={classes.formControl} variant="outlined">
+                <TextField
+                  data-field-name="title"
+                  value={title}
+                  onChange={handleTitle}
+                  type="text"
+                  label={t('services:form.title')}
+                  variant="outlined"
+                  className={classes.textField}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl} variant="outlined">
+                <TextField
+                  data-field-name="text"
+                  value={text}
+                  onChange={handleText}
+                  multiline
+                  rows={10}
+                  type="text"
+                  label={t('services:form.text')}
+                  variant="outlined"
+                  className={classes.textField}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl} variant="outlined">
+                <Dropzone setFiles={setFiles} files={files} {...rest} />
+              </FormControl>
+              <FormControl className={clsx(classes.formControl, classes.formAction)}>
+                <Button actionType="cancel" onClick={handleClose}>
+                  {t('common:cancel')}
+                </Button>
+                <Button actionType="accept" onClick={handleAccept}>
+                  {t('common:accept')}
+                </Button>
+              </FormControl>
+            </div>
           </SwipeableViews>
         </div>
       </Page>
