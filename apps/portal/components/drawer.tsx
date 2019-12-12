@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React, { useContext } from 'react';
-import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { fade, Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
 import Link from 'next/link';
@@ -73,15 +73,17 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     item: {
-      '&:hover:not($itemSelected)': {
-        backgroundColor: '#5F9898aa',
+      '&$itemSelected, &:hover': {
         color: '#fff',
       },
+      '&$itemSelected, &:hover$itemSelected': {
+        backgroundColor: theme.palette.secondary.main,
+      },
+      '&:hover': {
+        backgroundColor: fade(theme.palette.secondary.main, 0.75),
+      },
     },
-    itemSelected: {
-      backgroundColor: '#5F9898!important',
-      color: '#fff',
-    },
+    itemSelected: {},
   }),
 );
 
@@ -167,9 +169,10 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
                   onFocus={handleEnter}
                   onBlur={handleLeave}
                   selected={selected}
-                  className={clsx(classes.item, {
-                    [classes.itemSelected]: selected,
-                  })}
+                  classes={{
+                    root: classes.item,
+                    selected: classes.itemSelected,
+                  }}
                   component="a"
                   title={url.text}
                 >
