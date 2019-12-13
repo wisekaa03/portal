@@ -11,4 +11,5 @@ export interface DropzoneProps {
   filesLimit?: number;
   acceptedFiles?: string[];
   maxFileSize?: number;
+  color?: 'primary' | 'secondary';
 }

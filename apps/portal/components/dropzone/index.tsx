@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
 import { Badge, Typography, Fab } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BaseDropzone, { DropzoneState } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
@@ -23,14 +23,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
-    dropzone: {
+    dropzone: (props: any) => ({
       'alignItems': 'center',
       'backgroundColor': '#fafafa',
-      'borderColor': 'rgba(44, 67, 115, 0.5)',
+      'borderColor': fade(theme.palette[props.color].main, 0.5),
       'borderRadius': '2px',
       'borderStyle': 'dashed',
       'borderWidth': '2px',
-      'color': 'rgba(44, 67, 115, 0.5)',
+      'color': fade(theme.palette[props.color].main, 0.5),
       'display': 'flex',
       'flex': '1',
       'flexDirection': 'column',
@@ -40,10 +40,10 @@ const useStyles = makeStyles((theme: Theme) =>
         `border-color 200ms ${theme.transitions.easing.easeOut} 0ms,` +
         `color 200ms ${theme.transitions.easing.easeOut} 0ms`,
       '&:hover': {
-        borderColor: 'rgba(44, 67, 115, 0.9)',
-        color: 'rgba(44, 67, 115, 0.9)',
+        borderColor: fade(theme.palette[props.color].main, 0.9),
+        color: fade(theme.palette[props.color].main, 0.9),
       },
-    },
+    }),
     marginBottom: {
       marginBottom: theme.spacing(3),
     },
@@ -52,10 +52,10 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 'auto',
       height: '100%',
     },
-    thumb: {
+    thumb: (props: any) => ({
       'display': 'inline-flex',
       'borderRadius': 2,
-      'border': '1px solid rgba(44, 67, 115, 0.5)',
+      'border': `1px solid ${fade(theme.palette[props.color].main, 0.5)}`,
       'marginBottom': theme.spacing(),
       'marginRight': theme.spacing(),
       'width': thumbHeight,
@@ -64,9 +64,9 @@ const useStyles = makeStyles((theme: Theme) =>
       'boxSizing': 'border-box',
       'transition': `border 200ms ${theme.transitions.easing.easeOut} 0ms`,
       '&:hover': {
-        border: '1px solid rgba(44, 67, 115, 0.9)',
+        border: `1px solid ${fade(theme.palette[props.color].main, 0.9)}`,
       },
-    },
+    }),
     thumbsContainer: {
       'display': 'flex',
       'flexDirection': 'row',
@@ -113,9 +113,10 @@ const Dropzone: I18nPage<DropzoneProps> = ({
   filesLimit,
   acceptedFiles,
   maxFileSize,
+  color = 'primary',
   ...rest
 }): React.ReactElement => {
-  const classes = useStyles({});
+  const classes = useStyles({ color });
   const [error, setError] = useState<string[]>([]);
 
   const updateError = (value?: string): void => setError(value ? [...error, value] : []);
