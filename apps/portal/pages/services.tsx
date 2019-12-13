@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
@@ -21,6 +21,8 @@ import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import Dropzone from '../components/dropzone';
+import { DropzoneFile } from '../components/dropzone/types';
+import { appBarHeight } from '../components/app-bar';
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import BaseIcon from '../components/icon';
@@ -64,12 +66,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       flex: 1,
     },
-    content: {
-      display: 'flex',
-    },
     container1: {
       display: 'grid',
-      flex: 1,
       gridGap: `${theme.spacing()}px ${theme.spacing(4)}px`,
       padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
 
@@ -83,7 +81,6 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     container2: {
-      'flex': 1,
       'display': 'flex',
       'flexDirection': 'column',
       'justifyContent': 'center',
@@ -257,7 +254,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [category, setCategory] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
@@ -295,16 +292,28 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCategory(0);
   };
 
-  const inputLabel = React.useRef<HTMLLabelElement>(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
+  const inputLabel = useRef<HTMLLabelElement>(null);
+  const [labelWidth, setLabelWidth] = useState(0);
 
   const currentService = serviceIndex >= 0 ? services[serviceIndex] : false;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (inputLabel.current) {
       setLabelWidth(inputLabel.current!.offsetWidth);
     }
   }, [inputLabel, currentService]);
+
+  const swipeableViews = useRef(null);
+
+  useEffect(() => {
+    if (swipeableViews && swipeableViews.current) {
+      swipeableViews.current.updateHeight();
+    }
+  }, [swipeableViews, files]);
+
+  const tabHeader = useRef(null);
+  const containerHeight =
+    tabHeader && tabHeader.current ? `calc(100vh - ${appBarHeight}px - ${tabHeader.current.clientHeight}px)` : '100%';
 
   return (
     <>
@@ -313,21 +322,22 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
-          <Paper square className={classes.header}>
+          <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />
               <Tab disabled={!currentService} label={t('services:tabs.tab2')} />
             </Tabs>
           </Paper>
           <SwipeableViews
+            ref={swipeableViews}
+            animateHeight
             disabled={!currentService}
             index={currentTab}
             className={classes.contentWrap}
             containerStyle={{ flexGrow: 1 }}
-            slideClassName={classes.content}
             onChangeIndex={handleChangeTabIndex}
           >
-            <div className={classes.container1}>
+            <div style={{ minHeight: containerHeight }} className={classes.container1}>
               {services.map((service) => (
                 <Box
                   key={service.id}
@@ -345,7 +355,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </Box>
               ))}
             </div>
-            <div className={classes.container2}>
+            <div style={{ minHeight: containerHeight }} className={classes.container2}>
               {currentService && (
                 <Box className={clsx(classes.service, classes.formControl)}>
                   <div>
