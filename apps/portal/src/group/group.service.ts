@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
-import { UserEntity } from '../user/user.entity';
 import { GroupEntity } from './group.entity';
 import { Group } from './models/group.dto';
 import { LoginService } from '../shared/interfaces';
@@ -26,7 +25,7 @@ export class GroupService {
     let groups: GroupEntity[] = [];
 
     if (ldap.groups) {
-      const promises = (ldap.groups as LdapResonseGroup[]).map(async (ldapGroup) => {
+      const promises = (ldap.groups as LdapResonseGroup[]).map(async (ldapGroup: LdapResonseGroup) => {
         const updateAt = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
 
         const group: Group = {
