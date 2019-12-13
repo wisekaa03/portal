@@ -8,6 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import BaseDropzone, { DropzoneState } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
 import clsx from 'clsx';
+import uuidv4 from 'uuid/v4';
 // #endregion
 // #region Imports Local
 import { DropzoneFile, DropzoneProps } from './types';
@@ -128,19 +129,19 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 
     updateError();
 
-    // TODO: почему-то в es6 не работает
-    setFiles(
-      newFiles.map(function(file) {
-        return Object.assign(file, {
-          preview: file.type.includes('image') ? URL.createObjectURL(file) : NO_PREVIEW,
-        });
-      }),
-    );
+    setFiles((state) => [
+      ...state,
+      ...newFiles.map((file) => ({
+        ...file,
+        id: uuidv4(),
+        preview: file.type.includes('image') ? URL.createObjectURL(file) : NO_PREVIEW,
+      })),
+    ]);
   };
 
-  const handleDelete = (index: number) => (): void => {
+  const handleDelete = (index: string) => (): void => {
     updateError();
-    onDrop(files.filter((_, i) => i !== index));
+    setFiles(files.filter((file) => file.id !== index));
   };
 
   const handleDropRejected = (rejectedFiles: DropzoneFile[]): void => {
@@ -157,11 +158,11 @@ const Dropzone: I18nPage<DropzoneProps> = ({
     });
   };
 
-  useEffect(() => {
-    return () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
-    };
-  }, [files]);
+  // useEffect(() => {
+  //   return () => {
+  //     files.forEach((file) => URL.revokeObjectURL(file.preview));
+  //   };
+  // }, [files]);
 
   return (
     <BaseDropzone
@@ -186,10 +187,10 @@ const Dropzone: I18nPage<DropzoneProps> = ({
           <aside className={classes.thumbsContainer}>
             {files.map((file, index) => (
               <Badge
-                key={file.name}
+                key={file.id}
                 className={classes.badge}
                 badgeContent={
-                  <Fab size="small" className={classes.removeBtn} onClick={handleDelete(index)}>
+                  <Fab size="small" className={classes.removeBtn} onClick={handleDelete(file.id)}>
                     <DeleteIcon />
                   </Fab>
                 }
