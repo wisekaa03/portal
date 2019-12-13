@@ -224,38 +224,40 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <Box display="flex" flexGrow={1} flexWrap="wrap">
                 <Card className={classes.ticket}>
                   <CardActionArea>
-                    <CardContent className={classes.ticketContent}>
-                      <div className={classes.ticketLabel}>
-                        <div>
-                          <BaseIcon src={AppIcon1} size={36} />
+                    <Link href={{ pathname: '/profile/ticket', query: { id: '12345' } }}>
+                      <CardContent className={classes.ticketContent}>
+                        <div className={classes.ticketLabel}>
+                          <div>
+                            <BaseIcon src={AppIcon1} size={36} />
+                          </div>
+                          <div>
+                            <Typography variant="subtitle2" noWrap>
+                              Печать и сканирование
+                            </Typography>
+                          </div>
+                          <div>
+                            <Typography variant="body1">Заменить картридж в принтере на 7 этаже</Typography>
+                          </div>
                         </div>
-                        <div>
-                          <Typography variant="subtitle2" noWrap>
-                            Печать и сканирование
-                          </Typography>
-                        </div>
-                        <div>
-                          <Typography variant="body1">Заменить картридж в принтере на 7 этаже</Typography>
-                        </div>
-                      </div>
-                      <Divider />
-                      <div className={classes.ticketInformation}>
-                        <span>
-                          {t('profile:tickets.status')}:{' '}
-                          <span
-                            className={clsx({
-                              [classes.ticketRegistered]: true,
-                            })}
-                          >
-                            Зарегистрирована
+                        <Divider />
+                        <div className={classes.ticketInformation}>
+                          <span>
+                            {t('profile:tickets.status')}:{' '}
+                            <span
+                              className={clsx({
+                                [classes.ticketRegistered]: true,
+                              })}
+                            >
+                              Зарегистрирована
+                            </span>
                           </span>
-                        </span>
-                        <span>
-                          {t('profile:tickets.date')}: {dayjs(new Date()).format(DATE_FORMAT)}
-                        </span>
-                        <span>{t('profile:tickets.id')}: 14234234</span>
-                      </div>
-                    </CardContent>
+                          <span>
+                            {t('profile:tickets.date')}: {dayjs(new Date()).format(DATE_FORMAT)}
+                          </span>
+                          <span>{t('profile:tickets.id')}: 14234234</span>
+                        </div>
+                      </CardContent>
+                    </Link>
                   </CardActionArea>
                 </Card>
               </Box>

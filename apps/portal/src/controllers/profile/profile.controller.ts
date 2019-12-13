@@ -22,6 +22,12 @@ export class ProfileController {
     return res.render(`profile/edit`, { id });
   }
 
+  @Get('ticket')
+  @UseGuards(SessionGuard)
+  public async ticket(@Res() res: RenderableResponse, @Query('id') id: string): Promise<void> {
+    return res.render(`profile/ticket`, { id });
+  }
+
   @Get('equipment')
   @UseGuards(SessionGuard)
   public async equipment(@Res() res: RenderableResponse): Promise<void> {
