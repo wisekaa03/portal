@@ -17,7 +17,45 @@ export interface LDAPCache {
 }
 
 export interface LdapResonseGroup extends SearchEntryObject {
+  /**
+   * Common name
+   */
+  cn: string;
+
+  /**
+   * Description
+   */
+  description: string;
+
+  /**
+   * DN
+   */
+  dn: string;
+
+  /**
+   * Distinguished name
+   */
+  distinguishedName: string;
+
+  // Name
+  name: string;
+
+  /**
+   * SAM account name
+   */
+  sAMAccountName: string;
+
+  sAMAccountType: string;
+
+  // Object category
+  objectCategory: string;
+  objectClass: string[];
+
+  // Object GUID - ID in ldap
   objectGUID: string;
+
+  whenChanged: string;
+  whenCreated: string;
 }
 
 export interface LdapResponseUser extends SearchEntryObject {
@@ -134,7 +172,7 @@ export interface LdapResponseUser extends SearchEntryObject {
 
   objectClass: string[];
 
-  // Object GUID
+  // Object GUID - ID in ldap
   objectGUID: string;
 
   // Other telephone
@@ -195,6 +233,9 @@ export interface LdapResponseUser extends SearchEntryObject {
   wWWHomePage: string;
 
   userPrincipalName: string;
+
+  whenChanged: string;
+  whenCreated: string;
 }
 
 interface GroupSearchFilterFunction {

@@ -10,7 +10,14 @@ import * as redisStore from 'cache-manager-redis-store';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
-import { LDAP_OPTIONS, LdapModuleOptions, LDAPCache, LDAP_SYNCH, LdapResponseUser } from './ldap.interface';
+import {
+  LDAP_OPTIONS,
+  LdapModuleOptions,
+  LDAPCache,
+  LDAP_SYNCH,
+  LdapResponseUser,
+  ldapADattributes,
+} from './ldap.interface';
 // #endregion
 
 @Injectable()
@@ -105,12 +112,12 @@ export class LdapService extends EventEmitter {
       socketPath: opts.socketPath,
       log: opts.logger,
       timeout: opts.timeout,
-      connectTimeout: opts.connectTimeout || 30,
+      connectTimeout: opts.connectTimeout || 60,
       idleTimeout: opts.idleTimeout,
       reconnect: opts.reconnect,
       strictDN: opts.strictDN,
       queueSize: opts.queueSize || 100,
-      queueTimeout: opts.queueTimeout || 30,
+      queueTimeout: opts.queueTimeout || 60,
       queueDisable: opts.queueDisable || false,
     };
 
@@ -350,7 +357,7 @@ export class LdapService extends EventEmitter {
     const opts = {
       filter: searchFilter,
       scope: this.opts.searchScope,
-      attributes: ['*'],
+      attributes: ldapADattributes,
       timeLimit: this.opts.timeLimit,
       sizeLimit: this.opts.sizeLimit,
     };
@@ -401,7 +408,7 @@ export class LdapService extends EventEmitter {
     const opts = {
       filter: searchFilter,
       scope: this.opts.groupSearchScope,
-      attributes: ['*'],
+      attributes: ldapADattributes,
       timeLimit: this.opts.timeLimit,
       sizeLimit: this.opts.sizeLimit,
     };
@@ -509,7 +516,7 @@ export class LdapService extends EventEmitter {
     const opts = {
       filter: this.opts.searchFilterAllUsers,
       scope: this.opts.searchScopeAllUsers,
-      attributes: ['*'],
+      attributes: ldapADattributes,
       timeLimit: this.opts.timeLimit,
       sizeLimit: this.opts.sizeLimit,
     };
