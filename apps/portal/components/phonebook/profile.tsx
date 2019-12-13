@@ -14,7 +14,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider,
   IconButton,
   ClickAwayListener,
   MenuList,
@@ -261,7 +260,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             <div>
               <Paper>
                 <List className={classes.list}>
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.company`)} />
                       <ListItemText
@@ -271,8 +270,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.department`)} />
                       <ListItemText
@@ -282,8 +280,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.title`)} />
                       <ListItemText
@@ -293,8 +290,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.otdel`)} />
                       <ListItemText
@@ -302,7 +298,6 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
@@ -329,7 +324,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             <div>
               <Paper>
                 <List className={classes.list}>
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.country`)} />
                       <ListItemText
@@ -337,8 +332,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.region`)} />
                       <ListItemText
@@ -346,8 +340,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.town`)} />
                       <ListItemText
@@ -355,8 +348,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
-                  <ListItem>
+                  <ListItem divider>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.street`)} />
                       <ListItemText
@@ -364,7 +356,6 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                       />
                     </div>
                   </ListItem>
-                  <Divider />
                   <ListItem>
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.postalCode`)} />

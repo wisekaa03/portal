@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 0,
       background: '#fff',
       zIndex: 2,
-      boxShadow: '0px 0px 5px 2px rgba(0, 0, 0, 0.2)',
+      boxShadow: theme.shadows[3],
     },
     row: {
       width: 'auto',
