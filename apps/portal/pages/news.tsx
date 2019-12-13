@@ -25,10 +25,10 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-cli
 import { NEWS } from '../lib/queries';
 import { Loading } from '../components/loading';
 import dayjs from '../lib/dayjs';
+import { LARGE_RESOLUTION } from '../lib/constants';
 // #endregion
 
 const DATE_FORMAT = 'MMMM DD, YYYY';
-const LARGE_RESOLUTION = 1440;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
