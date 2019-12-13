@@ -127,7 +127,6 @@ const useStyles = makeStyles((theme: Theme) =>
         marginRight: theme.spacing(),
       },
     },
-    textField: {},
   }),
 );
 
@@ -369,13 +368,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
               {currentService && (
                 <FormControl className={classes.formControl} variant="outlined">
                   <InputLabel ref={inputLabel}>{t('services:form.category')}</InputLabel>
-                  <Select
-                    data-field-name="category"
-                    value={category}
-                    onChange={handleCategory}
-                    className={classes.textField}
-                    labelWidth={labelWidth}
-                  >
+                  <Select value={category} onChange={handleCategory} labelWidth={labelWidth}>
                     {currentService.categories.map((cur, index) => (
                       <MenuItem key={cur} value={index}>
                         {cur}
@@ -386,18 +379,15 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
               )}
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
-                  data-field-name="title"
                   value={title}
                   onChange={handleTitle}
                   type="text"
                   label={t('services:form.title')}
                   variant="outlined"
-                  className={classes.textField}
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
-                  data-field-name="text"
                   value={text}
                   onChange={handleText}
                   multiline
@@ -405,7 +395,6 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   type="text"
                   label={t('services:form.text')}
                   variant="outlined"
-                  className={classes.textField}
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
