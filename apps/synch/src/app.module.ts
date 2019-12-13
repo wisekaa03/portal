@@ -53,7 +53,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
           searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
           searchScopeAllUsers: 'sub' as Scope,
           searchAttributesAllUsers: ldapADattributes,
-          queueSize: 100,
           reconnect: true,
           cache: true,
         } as LdapModuleOptions;
