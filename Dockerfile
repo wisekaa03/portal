@@ -2,8 +2,8 @@ FROM node:13
 WORKDIR /portal/
 
 # LABELS
-LABEL maintainer="webmaster@kngk-group.ru"
-LABEL vendor="KNGK"
+LABEL maintainer="webmaster@i-npz.ru"
+LABEL vendor="INPZ"
 
 # APPLICATION PARAMETERS
 ARG NODE_ENV=production
