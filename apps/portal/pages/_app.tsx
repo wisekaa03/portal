@@ -35,7 +35,6 @@ const InnerLogin: React.FC<{
   pageProps: any;
   isMobile: boolean;
   language: string;
-  router: NextRouter;
 }> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
   const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER);
   const user = data ? data.me : undefined;
