@@ -220,7 +220,8 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 };
 
 Dropzone.defaultProps = {
-  acceptedFiles: ['image/*'],
+  // не только картинки, но еще и документы...
+  acceptedFiles: ['*'],
   filesLimit: 5,
   maxFileSize: 3000000,
 };
