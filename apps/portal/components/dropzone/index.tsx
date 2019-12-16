@@ -183,7 +183,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
             })}
           >
             <input {...state.getInputProps()} />
-            <p>{t('services:form.attach')}</p>
+            <p>{t('dropzone:attach')}</p>
           </div>
           <aside className={classes.thumbsContainer}>
             {files.map((file, index) => (
