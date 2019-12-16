@@ -159,6 +159,9 @@ class MainApp extends App<ApolloAppProps> {
       }),
     });
 
+    // eslint-disable-next-line no-debugger
+    // debugger;
+
     return (
       <ApolloProvider client={apolloClient}>
         <Head>
