@@ -49,20 +49,6 @@
     "less.lint.float": "warning",
     "eslint.enable": true,
     "eslint.lintTask.enable": true,
-    // "eslint.options": {
-      // "useEslintrc": true,
-      // "ignore": true,
-      // "ignorePattern": ["**/node_modules/", "node_modules/"],
-      // "ignorePath": ".eslintignore",
-      // "cache": true,
-      // "reportUnusedDisableDirectives": true,
-      // "baseConfig": {
-      //   "extends": [".eslintrc.js"]
-      // },
-      // "configFile": ".eslintrc.js",
-    // },
-    // "eslint.nodePath": "node_modules/",
-    "eslint.autoFixOnSave": true,
     "eslint.alwaysShowStatus": true,
     "eslint.packageManager": "yarn",
     // "eslint.workingDirectories": [
@@ -184,6 +170,9 @@
       "background": "white",
       "opacity": 10,
       "iconColour": "#FF8C00"
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
     }
   }
 }

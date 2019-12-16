@@ -65,9 +65,9 @@ const CurrentLogin: React.FC<{
   ctx: NextPageContext;
   router: NextRouter;
 }> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
-  const pathname = (ctx && ctx.pathname) || (router && router.pathname);
+  const pathname = (ctx && ctx.asPath) || (router && router.asPath);
   const redirect = NO_REDIRECT_PAGES.includes(pathname) ? FIRST_PAGE : pathname;
-
+  debugger;
   if (__SERVER__) {
     // SERVER
     const req = ctx && ((ctx.req as unknown) as Express.Request);
@@ -75,7 +75,7 @@ const CurrentLogin: React.FC<{
     const user = req && req.session && req.session.passport && req.session.passport.user;
 
     if (!user) {
-      if (pathname === '/auth/login') {
+      if (pathname.startsWith('/auth/login')) {
         return (
           <ProfileContext.Provider
             value={{
@@ -95,7 +95,7 @@ const CurrentLogin: React.FC<{
 
         throw new UnauthorizedException();
       }
-    } else if (ADMIN_PAGES.includes(pathname) && (!user || (user && !user.isAdmin))) {
+    } else if (ADMIN_PAGES.some((page) => pathname.startsWith(page)) && (!user || (user && !user.isAdmin))) {
       if (res) {
         res.status(404);
         res.redirect(FIRST_PAGE);
@@ -107,12 +107,12 @@ const CurrentLogin: React.FC<{
   } else {
     // CLIENT
     // eslint-disable-next-line no-lonely-if
-    if (!getCookie() && pathname !== '/auth/login') {
+    if (!getCookie() && !pathname.startsWith('/auth/login')) {
       router.push({ pathname: '/auth/login', query: { redirect } });
     }
   }
 
-  if (pathname !== '/auth/login') {
+  if (!pathname.startsWith('/auth/login')) {
     return <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} />;
   }
 
