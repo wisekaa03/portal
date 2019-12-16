@@ -138,7 +138,7 @@ ENV NEWS_API_URL ${NEWS_API_URL}
 # Mail
 ARG MAIL_URL="https://portal"
 ENV MAIL_URL ${MAIL_URL}
-ARG MAIL_LOGIN_URL="https://roundcube.production/login/index.php"
+ARG MAIL_LOGIN_URL="https://roundcube.mail/login/index.php"
 ENV MAIL_LOGIN_URL ${MAIL_LOGIN_URL}
 
 # Meeting
