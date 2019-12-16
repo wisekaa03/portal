@@ -40,7 +40,7 @@ interface Main {
   children: ReactNode;
 }
 
-const MainTemplate: I18nPage<Main> = (props): React.ReactElement => {
+const MainTemplate: I18nPage<Main> = ({ children, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
   const profile = useContext(ProfileContext);
@@ -84,9 +84,9 @@ const MainTemplate: I18nPage<Main> = (props): React.ReactElement => {
     <div className={classes.root}>
       <AppBar handleDrawerOpen={handleDrawerOpen} />
       <Box display="flex" flexGrow={1}>
-        <Drawer open={drawerOpen} isMobile={profile.isMobile} handleOpen={handleDrawerOpen} {...props} />
+        <Drawer open={drawerOpen} isMobile={profile.isMobile} handleOpen={handleDrawerOpen} {...rest} />
         <div id="content" className={classes.content}>
-          {props.children}
+          {children}
         </div>
       </Box>
     </div>

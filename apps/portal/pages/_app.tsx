@@ -25,6 +25,7 @@ import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
 import { User } from '../src/user/models/user.dto';
 import { FIRST_PAGE, ADMIN_PAGES, NO_REDIRECT_PAGES } from '../lib/constants';
+import getCookie from '../lib/get-cookie';
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));
@@ -35,17 +36,9 @@ const InnerLogin: React.FC<{
   isMobile: boolean;
   language: string;
   router: NextRouter;
-}> = ({ Component, pageProps, isMobile, language, router }): React.ReactElement | null => {
-  // let me;
-
+}> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
   const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER);
-
   const user = data ? data.me : undefined;
-
-  // TODO: продумать как на клиенте запрещать админ панель
-  // if (ADMIN_PAGES.includes(router.pathname) && (!user || (user && !user.isAdmin))) {
-  //   router.push(FIRST_PAGE);
-  // }
 
   return loading ? (
     <Loading noMargin type="linear" variant="indeterminate" />
@@ -74,6 +67,7 @@ const CurrentLogin: React.FC<{
   router: NextRouter;
 }> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
   const pathname = (ctx && ctx.pathname) || (router && router.pathname);
+  const redirect = NO_REDIRECT_PAGES.includes(pathname) ? FIRST_PAGE : pathname;
 
   if (__SERVER__) {
     // SERVER
@@ -97,8 +91,6 @@ const CurrentLogin: React.FC<{
       }
 
       if (res) {
-        const redirect = NO_REDIRECT_PAGES.includes(pathname) ? FIRST_PAGE : pathname;
-
         res.status(403);
         res.redirect(`/auth/login?redirect=${redirect}`);
 
@@ -115,14 +107,14 @@ const CurrentLogin: React.FC<{
     }
   } else {
     // CLIENT
-    // eslint-disable-next-line no-debugger
-    // debugger;
+    // eslint-disable-next-line no-lonely-if
+    if (!getCookie() && pathname !== '/auth/login') {
+      router.push({ pathname: '/auth/login', query: { redirect } });
+    }
   }
 
   if (pathname !== '/auth/login') {
-    return (
-      <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} router={router} />
-    );
+    return <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} />;
   }
 
   return (
