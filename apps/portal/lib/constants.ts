@@ -12,6 +12,7 @@ export const SESSION = 'session';
 export const ADMIN_PAGES = ['/admin'];
 export const NO_REDIRECT_PAGES = ['/_error'];
 export const LARGE_RESOLUTION = 1440;
+export const AUTO_COLLAPSE_ROUTES = ['/mail'];
 
 export const ADMIN_GROUP = 'Web Master';
 

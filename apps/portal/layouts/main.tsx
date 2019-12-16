@@ -7,11 +7,13 @@ import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
+import { useRouter } from 'next/router';
 import { I18nPage, nextI18next } from '../lib/i18n-client';
 import AppBar, { appBarHeight } from '../components/app-bar';
 import Drawer from '../components/drawer';
 import { ProfileContext } from '../lib/context';
 import { USER_SETTINGS } from '../lib/queries';
+import { AUTO_COLLAPSE_ROUTES } from '../lib/constants';
 // #endregion
 
 const useStyles = makeStyles((/* theme: Theme */) =>
@@ -43,21 +45,29 @@ const MainTemplate: I18nPage<Main> = (props): React.ReactElement => {
   const theme = useTheme();
   const profile = useContext(ProfileContext);
 
+  const router = useRouter();
+  const isCollapse = router && router.pathname && AUTO_COLLAPSE_ROUTES.some((r) => router.pathname.startsWith(r));
+
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const ifModal = useMediaQuery(theme.breakpoints.down('sm'));
 
   const drawer = (profile.user && profile.user.settings && profile.user.settings.drawer) as boolean | null;
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(!profile.isMobile && (drawer !== null ? drawer : lgUp));
+  const defaultDrawer = !profile.isMobile && !ifModal && !isCollapse && (drawer !== null ? drawer : lgUp);
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(defaultDrawer);
 
   const [userSettings] = useMutation(USER_SETTINGS);
 
   useEffect(() => {
     if (profile.isMobile || ifModal) {
       setDrawerOpen(false);
-    } else {
+    }
+  }, [profile.isMobile, ifModal]);
+
+  useEffect(() => {
+    if (!profile.isMobile && !ifModal && !isCollapse) {
       setDrawerOpen(drawer === null ? lgUp : drawer);
     }
-  }, [lgUp, drawer, profile.isMobile, ifModal]);
+  }, [lgUp, drawer, profile.isMobile, ifModal, isCollapse]);
 
   const handleDrawerOpen = (): void => {
     if (!profile.isMobile && !ifModal) {
