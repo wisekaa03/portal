@@ -184,6 +184,9 @@
       "background": "white",
       "opacity": 10,
       "iconColour": "#FF8C00"
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
     }
   }
 }
