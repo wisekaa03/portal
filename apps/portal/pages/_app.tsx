@@ -67,7 +67,7 @@ const CurrentLogin: React.FC<{
 }> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
   const pathname = (ctx && ctx.asPath) || (router && router.asPath);
   const redirect = NO_REDIRECT_PAGES.includes(pathname) ? FIRST_PAGE : pathname;
-  debugger;
+
   if (__SERVER__) {
     // SERVER
     const req = ctx && ((ctx.req as unknown) as Express.Request);
