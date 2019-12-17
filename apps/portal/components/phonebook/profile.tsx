@@ -24,6 +24,7 @@ import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } 
 import { red } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
+import { Profile } from '@app/portal/profile/models/profile.dto';
 import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
@@ -137,10 +138,14 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
     });
   }, [getProfile, profileId]);
 
-  const handleProfile = (id: string) => (): void => {
-    getProfile({
-      variables: { id },
-    });
+  const handleProfile = (profile: Profile) => (): void => {
+    if (!profile.disabled && !profile.notShowing) {
+      getProfile({
+        variables: {
+          id: profile.id,
+        },
+      });
+    }
   };
 
   const handleSearchClose = (text: string | undefined) => (): void => {
@@ -302,8 +307,14 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
                       <ListItemText
-                        className={classes.pointer}
-                        onClick={handleProfile(profile && profile.manager && profile.manager.id)}
+                        className={clsx(
+                          profile &&
+                            profile.manager &&
+                            !profile.manager.disabled &&
+                            !profile.manager.notShowing &&
+                            classes.pointer,
+                        )}
+                        onClick={handleProfile(profile && profile.manager)}
                         primary={
                           profile ? (
                             profile.manager ? (

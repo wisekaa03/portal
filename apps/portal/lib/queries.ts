@@ -31,6 +31,8 @@ const PROFILE_FRAGMENT = gql`
       firstName
       lastName
       middleName
+      disabled
+      notShowing
     }
     country
     postalCode
