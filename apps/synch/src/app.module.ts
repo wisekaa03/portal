@@ -72,8 +72,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
           keepConnectionAlive: true,
           type: 'postgres',
           replication: {
-            master: configService.get<string>('DATABASE_URI'),
-            slaves: [configService.get<string>('DATABASE_URI_RD')],
+            master: {
+              url: configService.get<string>('DATABASE_URI')
+            },
+            slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
           },
           schema: configService.get<string>('DATABASE_SCHEMA'),
           uuidExtension: 'pgcrypto',
