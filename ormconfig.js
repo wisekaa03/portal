@@ -15,8 +15,12 @@ console.log('Database: Using ORMconfig.js...');
 
 module.exports = {
   name: 'default',
-  type: configService.get('DATABASE_CONNECTION'),
-  host: configService.get('DATABASE_HOST'),
+  type: 'postgres',
+  replication: {
+    master: { url: configService.get('DATABASE_URI') },
+    slaves: [{ url: configService.get('DATABASE_URI_RD') }],
+  },
+  url: configService.get('DATABASE_URI'),
   port: configService.get('DATABASE_PORT'),
   username: configService.get('DATABASE_USERNAME'),
   password: configService.get('DATABASE_PASSWORD'),
