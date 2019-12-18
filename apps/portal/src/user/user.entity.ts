@@ -13,6 +13,7 @@ import {
   OneToOne,
   ManyToMany,
   JoinTable,
+  RelationId,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 // #endregion
@@ -50,6 +51,9 @@ export class UserEntity {
   })
   groups: GroupEntity[];
 
+  @RelationId((user: UserEntity) => user.groups)
+  groupIds: string[];
+
   @Column({
     type: 'boolean',
     nullable: false,
@@ -69,6 +73,9 @@ export class UserEntity {
     nullable: true,
   })
   settings: UserSettings;
+
+  @RelationId((user: UserEntity) => user.profile)
+  profileId: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @OneToOne((type: any) => ProfileEntity)

@@ -16,7 +16,9 @@ import { AppController } from './app.controller';
 import { SynchService } from './app.service';
 import { UserModule } from '../../portal/src/user/user.module';
 import { UserEntity } from '../../portal/src/user/user.entity';
+import { ProfileModule } from '../../portal/src/profile/profile.module';
 import { ProfileEntity } from '../../portal/src/profile/profile.entity';
+import { GroupModule } from '../../portal/src/group/group.module';
 import { GroupEntity } from '../../portal/src/group/group.entity';
 // #endregion
 
@@ -111,6 +113,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     // #endregion
 
     UserModule,
+
+    ProfileModule,
+
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [SynchService, LoggingInterceptorProvider],

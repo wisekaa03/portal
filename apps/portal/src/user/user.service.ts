@@ -58,15 +58,18 @@ export class UserService {
    * @param {string} username User ID
    * @returns {UserEntity | undefined} The user
    */
-  readByUsername = async (username: string, isDisabled = true): Promise<UserEntity | undefined> => {
+  readByUsername = async (username: string, isDisabled = true, isRelations = true): Promise<UserEntity | undefined> => {
     const where: Record<any, any> = { username };
+
     if (isDisabled) {
       where.disabled = false;
     }
 
+    const relations = isRelations ? ['profile', 'groups'] : [];
+
     return this.userRepository.findOne({
       where,
-      relations: ['profile', 'groups'],
+      relations,
       cache: true,
     });
   };
@@ -150,13 +153,7 @@ export class UserService {
       profile: (profile as unknown) as Profile,
     };
 
-    try {
-      return this.userRepository.save(this.userRepository.create(data as User));
-    } catch (error) {
-      this.logService.error('Unable to save data in `user`', error.toString(), 'UserService');
-
-      throw error;
-    }
+    return this.save(this.create(data));
   }
 
   /**
@@ -177,6 +174,54 @@ export class UserService {
   soap1csynch = async (_req: Request): Promise<boolean | null> => this.client.send<boolean>(SOAP1C, []).toPromise();
 
   /**
+   * Create
+   *
+   * @param {User} The user
+   * @returns {UserEntity} The user entity
+   */
+  create = (user: User): UserEntity => {
+    try {
+      return this.userRepository.create(user);
+    } catch (error) {
+      this.logService.error('Unable to create data in `user`', error, 'UserService');
+
+      throw error;
+    }
+  };
+
+  /**
+   * Save
+   *
+   * @param {UserEntity[]} The users
+   * @returns {UserEntity[] | undefined} The users
+   */
+  bulkSave = async (user: UserEntity[]): Promise<UserEntity[] | undefined> => {
+    try {
+      return this.userRepository.save(user);
+    } catch (error) {
+      this.logService.error('Unable to save data in `user`', error.toString(), 'UserService');
+
+      throw error;
+    }
+  };
+
+  /**
+   * Save
+   *
+   * @param {UserEntity} The user
+   * @returns {UserEntity | undefined} The user
+   */
+  save = async (user: UserEntity): Promise<UserEntity | undefined> => {
+    try {
+      return this.userRepository.save(user);
+    } catch (error) {
+      this.logService.error('Unable to save data in `user`', error.toString(), 'UserService');
+
+      throw error;
+    }
+  };
+
+  /**
    * Settings
    *
    * @param {req} Request
@@ -190,7 +235,7 @@ export class UserService {
       if (user) {
         user.settings = { ...user.settings, ...value };
         req.session.passport.user = user;
-        this.userRepository.save(user);
+        this.save(user);
 
         return user as User;
       }
