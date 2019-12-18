@@ -24,7 +24,7 @@ test_build:
       - apps/portal/.next/cache/
   script:
     - env && echo -n "node version " && node -v
-    - apt-get upgrade && apt-get install -y libpq-dev
+    # - apt-get upgrade && apt-get install -y openssl libpq-dev
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u
@@ -46,7 +46,7 @@ prepare:
       - node_modules/
   script:
     - env && echo -n "node version " && node -v
-    - apt-get upgrade && apt-get install -y libpq-dev
+    # - apt-get upgrade && apt-get install -y openssl libpq-dev
     - yarn install --production=true
 
 production:

@@ -84,6 +84,7 @@ EOF
 
 export NODE=`which node`
 export NODE_OPTIONS=--max_old_space_size=4096
+export NODE_PG_FORCE_NATIVE=true
 
 # TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 # "Typically it is unsafe to use synchronize: true for schema synchronization on production
