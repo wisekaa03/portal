@@ -33,7 +33,7 @@ export interface BaseUser {
 
 // #region User
 export interface User extends BaseUser {
-  profile?: Profile;
+  profile: Profile;
   profileId?: string;
 }
 // #endregion
