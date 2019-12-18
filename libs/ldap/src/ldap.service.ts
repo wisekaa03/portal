@@ -289,11 +289,11 @@ export class LdapService extends EventEmitter {
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {
                 const { object } = entry;
-                // TODO: разобраться с предупреждениями
-                // eslint-disable-next-line no-restricted-syntax, guard-for-in
+                // eslint-disable-next-line no-restricted-syntax
                 for (const prop in object) {
                   if (/;binary$/.test(prop)) {
                     object[prop.replace(/;binary$/, '')] = object[prop];
+                    delete object[prop];
                   }
                 }
                 if (object.hasOwnProperty('objectGUID')) {
@@ -537,7 +537,9 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          synch.forEach(async (u) => this.getGroups(u));
+          synch.forEach(async (u) => {
+            await this.getGroups(u);
+          });
           return synch as LdapResponseUser[];
         }
 

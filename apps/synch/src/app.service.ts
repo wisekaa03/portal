@@ -17,26 +17,43 @@ export class SynchService {
     private readonly userService: UserService,
   ) {}
 
-  async synchronization(): Promise<boolean> {
-    const users = await this.ldapService.synchronization();
+  synchronization = async (): Promise<boolean> => {
+    const ldapUsers = await this.ldapService.synchronization().catch((error: Error) => {
+      this.logService.error('Unable to synchronize LDAP', error.toString(), 'Synch Microservice');
 
-    if (users) {
-      users.forEach(async (ldapUser) => {
-        try {
-          const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false);
+      throw error;
+    });
 
-          this.userService.createFromLdap(ldapUser, user).catch((error: Error) => {
-            this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
-            throw error;
-          });
-        } catch (error) {
-          this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
-        }
-      });
-
-      return true;
+    if (!ldapUsers) {
+      return false;
     }
 
-    return false;
-  }
+    ldapUsers.forEach((ldapUser) => {
+      this.userService
+        .readByUsername(ldapUser.sAMAccountName, false)
+        .then((user) =>
+          // eslint-disable-next-line promise/no-nesting
+          this.userService.createFromLdap(ldapUser, user).catch((error: Error) => {
+            this.logService.error(
+              `Unable to save data in synchronization: "${ldapUser.sAMAccountName}"`,
+              error.toString(),
+              'Synch Microservice',
+            );
+
+            throw error;
+          }),
+        )
+        .catch((error: Error) => {
+          this.logService.error(
+            `Unable to find user: "${ldapUser.sAMAccountName}"`,
+            error.toString(),
+            'Synch Microservice',
+          );
+
+          throw error;
+        });
+    });
+
+    return true;
+  };
 }
