@@ -54,28 +54,12 @@ export class ConfigService {
         .default('0.0.0.0')
         .optional()
         .empty(),
-      DATABASE_CONNECTION: Joi.string()
-        .default('postgres')
-        .optional()
-        .empty(),
-      DATABASE_HOST: Joi.string()
+      DATABASE_URI: Joi.string()
         .default('localhost')
         .optional()
         .empty(),
-      DATABASE_PORT: Joi.number()
-        .default(5432)
-        .optional()
-        .empty(),
-      DATABASE_USERNAME: Joi.string()
-        .default('portal')
-        .optional()
-        .empty(),
-      DATABASE_PASSWORD: Joi.string()
-        .default('portalpwd')
-        .optional()
-        .empty(),
-      DATABASE_DATABASE: Joi.string()
-        .default('portaldb')
+      DATABASE_URI_RD: Joi.string()
+        .default('localhost')
         .optional()
         .empty(),
       DATABASE_SCHEMA: Joi.string()

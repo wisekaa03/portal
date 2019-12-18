@@ -70,12 +70,11 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
         ({
           name: 'default',
           keepConnectionAlive: true,
-          type: configService.get<string>('DATABASE_CONNECTION'),
-          host: configService.get<string>('DATABASE_HOST'),
-          port: configService.get<number>('DATABASE_PORT'),
-          username: configService.get<string>('DATABASE_USERNAME'),
-          password: configService.get<string>('DATABASE_PASSWORD'),
-          database: configService.get<string>('DATABASE_DATABASE'),
+          type: 'postgres',
+          replication: {
+            master: configService.get<string>('DATABASE_URI'),
+            slaves: [configService.get<string>('DATABASE_URI_RD')],
+          },
           schema: configService.get<string>('DATABASE_SCHEMA'),
           uuidExtension: 'pgcrypto',
           logger,
@@ -100,10 +99,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
             },
             duration: configService.get<number>('DATABASE_REDIS_TTL'),
           },
-          // migrations,
-          // cli: {
-          //   migrationsDir: 'migration',
-          // },
         } as TypeOrmModuleOptions),
     }),
     // #endregion

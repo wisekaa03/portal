@@ -85,12 +85,8 @@ deploy:
         --set HOST="${HOST}" \
         --set PORT="${PORT}" \
         --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-        --set DATABASE_CONNECTION="${DATABASE_CONNECTION}" \
-        --set DATABASE_HOST="${DATABASE_HOST}" \
-        --set DATABASE_PORT="${DATABASE_PORT}" \
-        --set DATABASE_USERNAME="${DATABASE_USERNAME}" \
-        --set DATABASE_PASSWORD="${DATABASE_PASSWORD}" \
-        --set DATABASE_DATABASE="${DATABASE_DATABASE}" \
+        --set DATABASE_URI="${DATABASE_URI}" \
+        --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
         --set DATABASE_SYNCHRONIZE="${DATABASE_SYNCHRONIZE}" \
         --set DATABASE_DROP_SCHEMA="${DATABASE_DROP_SCHEMA}" \

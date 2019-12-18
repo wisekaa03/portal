@@ -5,12 +5,8 @@ metadata:
   labels:
 {{ include "portal.labels" . | indent 4 }}
 data:
-  DATABASE_CONNECTION: {{ .Values.DATABASE_CONNECTION | default "postgres" | quote }}
-  DATABASE_HOST: {{ .Values.DATABASE_HOST | default "localhost" | quote }}
-  DATABASE_PORT: {{ .Values.DATABASE_PORT | default "5432" | quote }}
-  DATABASE_USERNAME: {{ .Values.DATABASE_USERNAME | default "postgres" | quote }}
-  DATABASE_PASSWORD: {{ .Values.DATABASE_PASSWORD | default "supersecret" | quote }}
-  DATABASE_DATABASE: {{ .Values.DATABASE_DATABASE | default "postgres" | quote }}
+  DATABASE_URI: {{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
+  DATABASE_URI_RD: {{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
   DATABASE_SCHEMA: {{ .Values.DATABASE_SCHEMA | default "public" | quote }}
   DATABASE_SYNCHRONIZE: {{ .Values.DATABASE_SYNCHRONIZE | default "true" | quote }}
   DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}

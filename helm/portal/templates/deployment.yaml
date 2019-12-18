@@ -64,36 +64,16 @@ spec:
               value: {{ .Values.PORT | default "4000" | quote }}
             - name: PORT_DEBUGGER
               value: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
-            - name: DATABASE_CONNECTION
+            - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: DATABASE_CONNECTION
-            - name: DATABASE_HOST
+                  key: DATABASE_URI
+            - name: DATABASE_URI_RD
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: DATABASE_HOST
-            - name: DATABASE_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_PORT
-            - name: DATABASE_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_USERNAME
-            - name: DATABASE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_PASSWORD
-            - name: DATABASE_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_DATABASE
+                  key: DATABASE_URI_RD
             - name: DATABASE_SCHEMA
               valueFrom:
                 configMapKeyRef:

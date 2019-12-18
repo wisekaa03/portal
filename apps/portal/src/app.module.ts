@@ -95,9 +95,9 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #endregion
 
     // #region GraphQL
+    /* eslint-disable prettier/prettier */
     GraphQLModule.forRoot({
       debug: dev,
-      /* eslint-disable prettier/prettier */
       playground: dev
         ? {
           settings: {
@@ -106,7 +106,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           },
         }
         : false,
-      /* eslint-enable prettier/prettier */
       typePaths: ['./**/*.graphql'],
       context: ({ req, res }) => ({ req, res }),
     }),
@@ -119,23 +118,16 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
       useFactory: async (configService: ConfigService, logger: LogService) => ({
         name: 'default',
         keepConnectionAlive: true,
-        type: configService.get<string>('DATABASE_CONNECTION'),
-        host: configService.get<string>('DATABASE_HOST'),
-        port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        // database: configService.get<string>('DATABASE_DATABASE'),
+        type: 'postgres',
         replication: {
-          master: configService.get<string>('DATABASE_DATABASE'),
-          // slaves: [
-          // ]
+          master: configService.get<string>('DATABASE_URI'),
+          slaves: [configService.get<string>('DATABASE_URI_RD')],
         },
         schema: configService.get<string>('DATABASE_SCHEMA'),
         uuidExtension: 'pgcrypto',
         logger,
         synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
         dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-        /* eslint-disable prettier/prettier */
         logging: dev
           ? true
           : configService.get('DATABASE_LOGGING') === 'false'
@@ -143,7 +135,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
             : configService.get('DATABASE_LOGGING') === 'true'
               ? true
               : JSON.parse(configService.get('DATABASE_LOGGING')),
-        /* eslint-enable prettier/prettier */
         entities: [ProfileEntity, GroupEntity, UserEntity],
         migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
         cache: {
@@ -157,8 +148,9 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           },
           duration: configService.get<number>('DATABASE_REDIS_TTL'),
         },
-      }),
+      } as TypeOrmModuleOptions),
     }),
+    /* eslint-enable prettier/prettier */
     // #endregion
 
     // #region Profile
