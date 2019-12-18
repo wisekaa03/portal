@@ -116,48 +116,48 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, LoggerModule],
       inject: [ConfigService, LogService],
-      useFactory: async (configService: ConfigService, logger: LogService) =>
-        ({
-          name: 'default',
-          keepConnectionAlive: true,
-          type: configService.get<string>('DATABASE_CONNECTION'),
-          host: configService.get<string>('DATABASE_HOST'),
-          port: configService.get<number>('DATABASE_PORT'),
-          username: configService.get<string>('DATABASE_USERNAME'),
-          password: configService.get<string>('DATABASE_PASSWORD'),
-          database: configService.get<string>('DATABASE_DATABASE'),
-          schema: configService.get<string>('DATABASE_SCHEMA'),
-          uuidExtension: 'pgcrypto',
-          logger,
-          synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
-          dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-          /* eslint-disable prettier/prettier */
-          logging: dev
-            ? true
-            : configService.get('DATABASE_LOGGING') === 'false'
-              ? false
-              : configService.get('DATABASE_LOGGING') === 'true'
-                ? true
-                : JSON.parse(configService.get('DATABASE_LOGGING')),
-          /* eslint-enable prettier/prettier */
-          entities: [ProfileEntity, GroupEntity, UserEntity],
-          migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-          cache: {
-            type: 'redis',
-            options: {
-              host: configService.get<string>('DATABASE_REDIS_HOST'),
-              port: configService.get<number>('DATABASE_REDIS_PORT'),
-              password: configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
-              db: configService.get<number>('DATABASE_REDIS_DB'),
-              prefix: configService.get<string>('DATABASE_REDIS_PREFIX') || 'DB',
-            },
-            duration: configService.get<number>('DATABASE_REDIS_TTL'),
+      useFactory: async (configService: ConfigService, logger: LogService) => ({
+        name: 'default',
+        keepConnectionAlive: true,
+        type: configService.get<string>('DATABASE_CONNECTION'),
+        host: configService.get<string>('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        // database: configService.get<string>('DATABASE_DATABASE'),
+        replication: {
+          master: configService.get<string>('DATABASE_DATABASE'),
+          // slaves: [
+          // ]
+        },
+        schema: configService.get<string>('DATABASE_SCHEMA'),
+        uuidExtension: 'pgcrypto',
+        logger,
+        synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+        dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
+        /* eslint-disable prettier/prettier */
+        logging: dev
+          ? true
+          : configService.get('DATABASE_LOGGING') === 'false'
+            ? false
+            : configService.get('DATABASE_LOGGING') === 'true'
+              ? true
+              : JSON.parse(configService.get('DATABASE_LOGGING')),
+        /* eslint-enable prettier/prettier */
+        entities: [ProfileEntity, GroupEntity, UserEntity],
+        migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
+        cache: {
+          type: 'redis',
+          options: {
+            host: configService.get<string>('DATABASE_REDIS_HOST'),
+            port: configService.get<number>('DATABASE_REDIS_PORT'),
+            password: configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
+            db: configService.get<number>('DATABASE_REDIS_DB'),
+            prefix: configService.get<string>('DATABASE_REDIS_PREFIX') || 'DB',
           },
-          // migrations,
-          // cli: {
-          //   migrationsDir: 'migration',
-          // },
-        } as TypeOrmModuleOptions),
+          duration: configService.get<number>('DATABASE_REDIS_TTL'),
+        },
+      }),
     }),
     // #endregion
 
