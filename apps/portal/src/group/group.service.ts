@@ -22,10 +22,12 @@ export class GroupService {
   ) {}
 
   async createFromUser(ldap: LdapResponseUser): Promise<GroupEntity[]> {
-    let groups: GroupEntity[] = [];
+    const groups: GroupEntity[] = [];
 
     if (ldap.groups) {
-      const promises = (ldap.groups as LdapResonseGroup[]).map(async (ldapGroup: LdapResonseGroup) => {
+      /* eslint-disable no-restricted-syntax */
+      /* eslint-disable no-await-in-loop */
+      for (const ldapGroup of ldap.groups as LdapResonseGroup[]) {
         const updateAt = await this.groupByIdentificator(ldapGroup.objectGUID);
 
         const group: Group = {
@@ -36,11 +38,12 @@ export class GroupService {
           loginService: LoginService.LDAP,
         };
 
-        return this.create(group);
-      });
+        groups.push(this.create(group));
+      }
 
-      groups = await Promise.all(promises);
       await this.bulkSave(groups);
+      /* eslint-enable no-restricted-syntax */
+      /* eslint-enable no-await-in-loop */
     }
 
     return groups;
