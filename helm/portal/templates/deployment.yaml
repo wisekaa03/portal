@@ -99,36 +99,16 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: DATABASE_LOGGING
-            - name: DATABASE_CACHE
+            - name: DATABASE_REDIS_URI
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: DATABASE_CACHE
-            - name: DATABASE_REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_REDIS_HOST
-            - name: DATABASE_REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_REDIS_PORT
-            - name: DATABASE_REDIS_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_REDIS_PASSWORD
+                  key: DATABASE_REDIS_URI
             - name: DATABASE_REDIS_TTL
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
                   key: DATABASE_REDIS_TTL
-            - name: DATABASE_REDIS_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: DATABASE_REDIS_DB
             # HTTP
             - name: HTTP_REDIS_HOST
               valueFrom:

@@ -140,10 +140,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
         cache: {
           type: 'redis',
           options: {
-            host: configService.get<string>('DATABASE_REDIS_HOST'),
-            port: configService.get<number>('DATABASE_REDIS_PORT'),
-            password: configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
-            db: configService.get<number>('DATABASE_REDIS_DB'),
+            url: configService.get<string>('DATABASE_REDIS_URI'),
             prefix: configService.get<string>('DATABASE_REDIS_PREFIX') || 'DB',
           },
           duration: configService.get<number>('DATABASE_REDIS_TTL'),

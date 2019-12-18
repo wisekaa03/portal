@@ -12,12 +12,8 @@ data:
   DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}
   DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
   DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING | default "true" | quote }}
-  DATABASE_CACHE: {{ .Values.DATABASE_CACHE | default "true" | quote }}
-  DATABASE_REDIS_HOST: {{ .Values.DATABASE_REDIS_HOST | default "localhost" | quote }}
-  DATABASE_REDIS_PORT: {{ .Values.DATABASE_REDIS_PORT | default "6379" | quote }}
-  DATABASE_REDIS_PASSWORD: {{ .Values.DATABASE_REDIS_PASSWORD | default "" | quote }}
+  DATABASE_REDIS_URI: {{ .Values.DATABASE_REDIS_URI | default "redis://localhost:6379/0" | quote }}
   DATABASE_REDIS_TTL: {{ .Values.DATABASE_REDIS_TTL | default "300" | quote }}
-  DATABASE_REDIS_DB: {{ .Values.DATABASE_REDIS_DB | default "0" | quote }}
 
   # HTTP Redis
   HTTP_REDIS_HOST: {{ .Values.HTTP_REDIS_HOST | default "localhost" | quote }}

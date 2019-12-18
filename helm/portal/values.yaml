@@ -28,11 +28,8 @@ DATABASE_MIGRATIONS_RUN: "true"
 DATABASE_LOGGING: "true"
 DATABASE_CACHE: "true"
 # DB Redis
-DATABASE_REDIS_HOST: "redis.default.svc.cluster.local"
-DATABASE_REDIS_PORT: 6379
-DATABASE_REDIS_PASSWORD: ""
+DATABASE_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/0"
 DATABASE_REDIS_TTL: 300
-DATABASE_REDIS_DB: 0
 
 # HTTP Redis
 HTTP_REDIS_HOST: "redis.default.svc.cluster.local"

@@ -82,24 +82,8 @@ export class ConfigService {
         .default(false)
         .optional()
         .empty(),
-      DATABASE_CACHE: Joi.boolean()
-        .default(true)
-        .optional()
-        .empty(),
-      DATABASE_REDIS_HOST: Joi.string()
+      DATABASE_REDIS_URI: Joi.string()
         .default('localhost')
-        .optional()
-        .empty(),
-      DATABASE_REDIS_PORT: Joi.number()
-        .default(6379)
-        .optional()
-        .empty(),
-      DATABASE_REDIS_PASSWORD: Joi.string()
-        .allow('')
-        .optional()
-        .empty(),
-      DATABASE_REDIS_DB: Joi.number()
-        .default(0)
         .optional()
         .empty(),
       DATABASE_REDIS_TTL: Joi.number()
