@@ -47,12 +47,7 @@ export class SynchService {
           let currentProfile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID);
 
           if (!currentProfile) {
-            currentProfile = await this.createProfile(ldapUser);
-
-            if (!currentProfile.id) {
-              currentProfile = (await this.profileService.save(currentProfile)) as ProfileEntity;
-            }
-
+            currentProfile = (await this.profileService.save(await this.createProfile(ldapUser))) as ProfileEntity;
             updatedProfiles.push(currentProfile);
           }
 
@@ -61,12 +56,7 @@ export class SynchService {
               let group = updatedGroups.find((g) => g.loginIdentificator === ldapGroup.objectGUID);
 
               if (!group) {
-                group = await this.createGroup(ldapGroup);
-
-                if (!group.id) {
-                  group = (await this.groupService.save(group)) as GroupEntity;
-                }
-
+                group = (await this.groupService.save(await this.createGroup(ldapGroup))) as GroupEntity;
                 updatedGroups.push(group);
               }
 
@@ -83,7 +73,7 @@ export class SynchService {
       /* eslint-enable no-await-in-loop */
 
       // eslint-disable-next-line no-debugger
-      debugger;
+      // debugger;
 
       await this.userService.bulkSave(updatedUsers);
 

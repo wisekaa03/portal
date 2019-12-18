@@ -293,7 +293,8 @@ export class LdapService extends EventEmitter {
                 for (const prop in object) {
                   if (/;binary$/.test(prop)) {
                     object[prop.replace(/;binary$/, '')] = object[prop];
-                    delete object[prop];
+                    // TODO: разобраться почему удаляются поля не по маске
+                    // delete object[prop];
                   }
                 }
                 if (object.hasOwnProperty('objectGUID')) {
