@@ -44,6 +44,9 @@ class GroupEntity {
 
 jest.mock('@app/ldap/ldap.service');
 jest.mock('../../portal/src/user/user.service');
+jest.mock('../../portal/src/profile/profile.service');
+jest.mock('../../portal/src/group/group.service');
+jest.mock('../../portal/src/image/image.service');
 
 jest.mock('@app/logger/logger.service', () => ({
   LogService: jest.fn().mockImplementation(() => ({
