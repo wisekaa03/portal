@@ -368,7 +368,7 @@ export interface LdapModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> 
 export const ldapADattributes = [
   'thumbnailPhoto;binary',
   'objectGUID;binary',
-  'objectSid;binary',
+  // 'objectSid;binary',
   'c',
   'cn',
   'co',

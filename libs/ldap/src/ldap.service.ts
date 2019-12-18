@@ -112,12 +112,12 @@ export class LdapService extends EventEmitter {
       socketPath: opts.socketPath,
       log: opts.logger,
       timeout: opts.timeout,
-      connectTimeout: opts.connectTimeout || 60,
+      connectTimeout: opts.connectTimeout || 90,
       idleTimeout: opts.idleTimeout,
       reconnect: opts.reconnect,
       strictDN: opts.strictDN,
-      queueSize: opts.queueSize || 100,
-      queueTimeout: opts.queueTimeout || 60,
+      queueSize: opts.queueSize || 200,
+      queueTimeout: opts.queueTimeout || 90,
       queueDisable: opts.queueDisable || false,
     };
 
@@ -272,7 +272,7 @@ export class LdapService extends EventEmitter {
    * @param {string} options.filter - LDAP search filter
    * @param {string} options.scope - LDAP search scope
    * @param {(string[]|undefined)} options.attributes - Attributes to fetch
-   * @returns {undefined | Ldap.SearchEntryObject | Ldap.SearchEntryObject[]}
+   * @returns {undefined | Ldap.SearchEntryObject[]}
    */
   private async search(searchBase: string, options: Ldap.SearchOptions): Promise<undefined | Ldap.SearchEntryObject[]> {
     return this.adminBind().then(
@@ -289,11 +289,11 @@ export class LdapService extends EventEmitter {
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {
                 const { object } = entry;
-                // TODO: разобраться с предупреждениями
-                // eslint-disable-next-line no-restricted-syntax, guard-for-in
+                // eslint-disable-next-line no-restricted-syntax
                 for (const prop in object) {
                   if (/;binary$/.test(prop)) {
                     object[prop.replace(/;binary$/, '')] = object[prop];
+                    delete object[prop];
                   }
                 }
                 if (object.hasOwnProperty('objectGUID')) {
@@ -351,6 +351,16 @@ export class LdapService extends EventEmitter {
   private async findUser(username: string): Promise<undefined | Ldap.SearchEntryObject> {
     if (!username) {
       throw new Error('empty username');
+    }
+
+    if (this.userCache) {
+      // Check cache. 'cached' is `{user: <user>}`.
+      const cached: LDAPCache = await this.userCache.get<LDAPCache>(username);
+      if (cached && cached.user && cached.user.sAMAccountName) {
+        this.logger.debug(`From cache: ${cached.user.sAMAccountName}`, 'LDAP');
+
+        return cached.user as Ldap.SearchEntryObject;
+      }
     }
 
     const searchFilter = this.opts.searchFilter.replace(/{{username}}/g, this.sanitizeInput(username));
@@ -527,7 +537,9 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          synch.forEach(async (u) => this.getGroups(u));
+          synch.forEach(async (u) => {
+            await this.getGroups(u);
+          });
           return synch as LdapResponseUser[];
         }
 
