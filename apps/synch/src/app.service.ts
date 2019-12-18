@@ -52,44 +52,57 @@ export class SynchService {
     // }
 
     if (users) {
+      /* eslint-disable no-restricted-syntax */
+      /* eslint-disable no-await-in-loop */
       const updatedUsers: UserEntity[] = [];
       const updatedProfiles: ProfileEntity[] = [];
       const updatedGroups: GroupEntity[] = [];
 
-      // eslint-disable-next-line no-restricted-syntax
       for (const ldapUser of users) {
         if (!updatedUsers.find((u) => u.username === ldapUser.sAMAccountName)) {
-          let groups: GroupEntity[] = [];
-          let profile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID.toString());
+          const currentGroups: GroupEntity[] = [];
+          let currentProfile = updatedProfiles.find((g) => g.loginIdentificator === ldapUser.objectGUID);
 
-          if (!profile) {
-            // eslint-disable-next-line no-await-in-loop
-            profile = await this.createProfile(ldapUser);
-            updatedProfiles.push(profile);
+          if (!currentProfile) {
+            currentProfile = await this.createProfile(ldapUser);
+
+            if (!currentProfile.id) {
+              currentProfile = (await this.profileService.save(currentProfile)) as ProfileEntity;
+            }
+
+            updatedProfiles.push(currentProfile);
           }
 
-          if (ldapUser.groups.length) {
-            const groupsPromises = ldapUser.groups.map(async (ldapGroup: LdapResonseGroup) => {
-              let createdGroup = updatedGroups.find((g) => g.loginIdentificator === ldapGroup.objectGUID);
+          if (ldapUser.groups && ldapUser.groups.length) {
+            for (const ldapGroup of ldapUser.groups) {
+              let group = updatedGroups.find((g) => g.loginIdentificator === ldapGroup.objectGUID);
 
-              if (!createdGroup) {
-                createdGroup = await this.createGroup(ldapGroup);
-                updatedGroups.push(createdGroup);
+              if (!group) {
+                group = await this.createGroup(ldapGroup);
+
+                if (!group.id) {
+                  group = (await this.groupService.save(group)) as GroupEntity;
+                }
+
+                updatedGroups.push(group);
               }
 
-              return createdGroup;
-            });
-
-            // eslint-disable-next-line no-await-in-loop
-            groups = await Promise.all(groupsPromises);
+              currentGroups.push(group);
+            }
           }
 
-          // eslint-disable-next-line no-await-in-loop
-          updatedUsers.push(await this.createUser(ldapUser, profile, groups));
+          if (ldapUser.sAMAccountName) {
+            updatedUsers.push(await this.createUser(ldapUser, currentProfile, currentGroups));
+          }
         }
       }
+      /* eslint-enable no-restricted-syntax */
+      /* eslint-enable no-await-in-loop */
 
-      console.log(updatedUsers);
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      await this.userService.bulkSave(updatedUsers);
 
       return true;
     }

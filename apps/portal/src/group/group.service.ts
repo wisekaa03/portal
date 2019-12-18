@@ -40,7 +40,7 @@ export class GroupService {
       });
 
       groups = await Promise.all(promises);
-      await this.save(groups);
+      await this.bulkSave(groups);
     }
 
     return groups;
@@ -72,12 +72,28 @@ export class GroupService {
   };
 
   /**
-   * Save
+   * Bulk Save
    *
    * @param {GroupEntity[]} The groups
    * @returns {GroupEntity[] | undefined} The groups
    */
-  save = async (group: GroupEntity[]): Promise<GroupEntity[] | undefined> => {
+  bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[] | undefined> => {
+    try {
+      return this.groupRepository.save(group);
+    } catch (error) {
+      this.logService.error('Unable to save data in `group`', error.toString(), 'GroupService');
+
+      throw error;
+    }
+  };
+
+  /**
+   * Save
+   *
+   * @param {GroupEntity} The group
+   * @returns {GroupEntity | undefined} The group
+   */
+  save = async (group: GroupEntity): Promise<GroupEntity | undefined> => {
     try {
       return this.groupRepository.save(group);
     } catch (error) {
