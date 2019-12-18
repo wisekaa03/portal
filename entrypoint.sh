@@ -95,7 +95,7 @@ elif [ -n "$*" -a "$1" = "start" ]; then
 
 elif [ -n "$*" -a "$1" = "start:synch" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_OPTIONS=--max_old_space_size=8192
+  export NODE_OPTIONS=--max_old_space_size=4096
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch/main.js
 
