@@ -8,9 +8,9 @@ import { LogService } from '@app/logger';
 import { LdapService, LdapResponseUser, LdapResonseGroup } from '@app/ldap';
 import { User, UserSettings } from '@app/portal/user/models/user.dto';
 import { LoginService, Gender } from '@app/portal/shared/interfaces';
-import { ADMIN_GROUP } from 'apps/portal/lib/constants';
 import { ImageService } from '@app/image';
 import { Group } from '@app/portal/group/models/group.dto';
+import { ADMIN_GROUP } from '../../portal/lib/constants';
 import { GroupEntity } from '../../portal/src/group/group.entity';
 import { UserService } from '../../portal/src/user/user.service';
 import { ProfileService } from '../../portal/src/profile/profile.service';
@@ -34,23 +34,6 @@ export class SynchService {
   synchronization = async (): Promise<boolean> => {
     const users = await this.ldapService.synchronization();
 
-    // if (users) {
-    //   users.forEach(async (ldapUser) => {
-    //     try {
-    //       const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false);
-
-    //       this.userService.createFromLdap(ldapUser, user).catch((error: Error) => {
-    //         this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
-    //         throw error;
-    //       });
-    //     } catch (error) {
-    //       this.logService.error('Unable to save data in `synchronization`', error.toString(), 'UsersService');
-    //     }
-    //   });
-
-    //   return true;
-    // }
-
     if (users) {
       /* eslint-disable no-restricted-syntax */
       /* eslint-disable no-await-in-loop */
@@ -61,7 +44,7 @@ export class SynchService {
       for (const ldapUser of users) {
         if (!updatedUsers.find((u) => u.username === ldapUser.sAMAccountName)) {
           const currentGroups: GroupEntity[] = [];
-          let currentProfile = updatedProfiles.find((g) => g.loginIdentificator === ldapUser.objectGUID);
+          let currentProfile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID);
 
           if (!currentProfile) {
             currentProfile = await this.createProfile(ldapUser);
@@ -128,9 +111,9 @@ export class SynchService {
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
-      groupIds: groups.map((g) => g.id),
+      groups: groups.map((g) => ({ id: g.id })) as any,
       isAdmin: Boolean(groups.find((group) => group.name === ADMIN_GROUP)),
-      profileId: profile.id,
+      profile: { id: profile.id } as any,
     };
 
     return this.userService.create(userEntity);
@@ -201,7 +184,7 @@ export class SynchService {
       department,
       otdel,
       title: ldapUser.title,
-      managerId: manager && (manager as Profile).id,
+      manager: (manager && { id: (manager as Profile).id }) as any,
       email: ldapUser.mail,
       telephone: ldapUser.telephoneNumber,
       workPhone: ldapUser.otherTelephone,
