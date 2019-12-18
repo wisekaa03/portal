@@ -83,7 +83,7 @@ export class ConfigService {
         .optional()
         .empty(),
       DATABASE_REDIS_URI: Joi.string()
-        .default('localhost')
+        .default('redis://localhost:6379/0')
         .optional()
         .empty(),
       DATABASE_REDIS_TTL: Joi.number()
