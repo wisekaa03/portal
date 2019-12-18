@@ -13,6 +13,8 @@ import { LoggerModule, LogService } from '@app/logger';
 import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
 import { UserModule } from '../../portal/src/user/user.module';
 import { SynchService } from './app.service';
+import { ProfileModule } from '../../portal/src/profile/profile.module';
+import { GroupModule } from '../../portal/src/group/group.module';
 // #endregion
 
 @Entity()
@@ -92,6 +94,8 @@ describe('Synch service', () => {
         /* eslint-enable prettier/prettier */
         // #endregion
 
+        GroupModule,
+        ProfileModule,
         UserModule,
       ],
       providers: [SynchService],
