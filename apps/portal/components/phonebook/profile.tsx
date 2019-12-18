@@ -307,13 +307,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.manager`)} />
                       <ListItemText
-                        className={clsx(
-                          profile &&
-                            profile.manager &&
-                            !profile.manager.disabled &&
-                            !profile.manager.notShowing &&
-                            classes.pointer,
-                        )}
+                        className={classes.pointer}
                         onClick={handleProfile(profile && profile.manager)}
                         primary={
                           profile ? (

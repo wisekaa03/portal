@@ -77,6 +77,15 @@ export class ProfileService {
     this.profileRepository.findOne(id, { relations: ['manager'], cache: true });
 
   /**
+   * Profile by Identificator
+   *
+   * @param loginIdentificator string
+   * @return Profile
+   */
+  profileByIdentificator = async (loginIdentificator: string): Promise<ProfileEntity | undefined> =>
+    this.profileRepository.findOne({ where: { loginIdentificator }, cache: true });
+
+  /**
    * searchSuggestions
    *
    * @param search string
@@ -231,23 +240,56 @@ export class ProfileService {
       }
     }
 
-    let profileEnt;
+    return this.save(this.create(profile));
+  }
+
+  /**
+   * Create
+   *
+   * @param {Profile} The profile
+   * @returns {ProfileEntity} The profile
+   */
+  create = (profile: Profile): ProfileEntity => {
     try {
-      profileEnt = this.profileRepository.create(profile);
+      return this.profileRepository.create(profile);
     } catch (error) {
       this.logService.error('Unable to create data in `profile`', error, 'ProfileService');
 
       throw error;
     }
+  };
 
+  /**
+   * Bulk Save
+   *
+   * @param {ProfileEntity[]} The profiles
+   * @returns {ProfileEntity[] | undefined} The profiles
+   */
+  bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[] | undefined> => {
     try {
-      return this.profileRepository.save(profileEnt);
+      return this.profileRepository.save(profile);
     } catch (error) {
-      this.logService.error('Unable to save data in `profile`', error, 'ProfileService');
+      this.logService.error('Unable to save data in `profile`', error.toString(), 'ProfileService');
 
       throw error;
     }
-  }
+  };
+
+  /**
+   * Save
+   *
+   * @param {ProfileEntity} The profile
+   * @returns {ProfileEntity | undefined} The profile
+   */
+  save = async (profile: ProfileEntity): Promise<ProfileEntity | undefined> => {
+    try {
+      return this.profileRepository.save(profile);
+    } catch (error) {
+      this.logService.error('Unable to save data in `profile`', error.toString(), 'ProfileService');
+
+      throw error;
+    }
+  };
 
   /**
    * changeProfile

@@ -26,7 +26,7 @@ export class GroupService {
 
     if (ldap.groups) {
       const promises = (ldap.groups as LdapResonseGroup[]).map(async (ldapGroup: LdapResonseGroup) => {
-        const updateAt = await this.groupRepository.findOne({ loginIdentificator: ldapGroup.objectGUID });
+        const updateAt = await this.groupByIdentificator(ldapGroup.objectGUID);
 
         const group: Group = {
           ...updateAt,
@@ -36,27 +36,54 @@ export class GroupService {
           loginService: LoginService.LDAP,
         };
 
-        let update: GroupEntity;
-        try {
-          update = this.groupRepository.create(group);
-        } catch (error) {
-          this.logService.error('Group create error:', error, 'GroupService');
-
-          throw error;
-        }
-
-        try {
-          return this.groupRepository.save(update);
-        } catch (error) {
-          this.logService.error('Unable to save data in `group`', error, 'GroupService');
-
-          throw error;
-        }
+        return this.create(group);
       });
 
       groups = await Promise.all(promises);
+      await this.save(groups);
     }
 
     return groups;
   }
+
+  /**
+   * Group by Identificator
+   *
+   * @param loginIdentificator string
+   * @return Group
+   */
+  groupByIdentificator = async (loginIdentificator: string): Promise<GroupEntity | undefined> =>
+    this.groupRepository.findOne({ where: { loginIdentificator }, cache: true });
+
+  /**
+   * Create
+   *
+   * @param {Group} The group
+   * @returns {GroupEntity} The group entity
+   */
+  create = (group: Group): GroupEntity => {
+    try {
+      return this.groupRepository.create(group);
+    } catch (error) {
+      this.logService.error('Unable to create data in `group`', error, 'GroupService');
+
+      throw error;
+    }
+  };
+
+  /**
+   * Save
+   *
+   * @param {GroupEntity[]} The groups
+   * @returns {GroupEntity[] | undefined} The groups
+   */
+  save = async (group: GroupEntity[]): Promise<GroupEntity[] | undefined> => {
+    try {
+      return this.groupRepository.save(group);
+    } catch (error) {
+      this.logService.error('Unable to save data in `group`', error.toString(), 'GroupService');
+
+      throw error;
+    }
+  };
 }

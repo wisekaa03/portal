@@ -51,7 +51,9 @@ export interface Profile {
 
   title: string;
 
-  manager?: Profile;
+  managerId?: string;
+
+  manager?: Profile | undefined;
 
   telephone: string;
 

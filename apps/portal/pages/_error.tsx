@@ -79,7 +79,7 @@ const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
 
             <Typography component="p">
               <Trans i18nKey="error:explanation">
-                <a href="mailto:webmaster@kngk-group.ru">email</a>
+                <a href="mailto:webmaster@i-npz.ru">email</a>
               </Trans>
             </Typography>
           </Paper>

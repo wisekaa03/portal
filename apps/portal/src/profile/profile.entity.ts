@@ -11,6 +11,7 @@ import {
   BeforeUpdate,
   ManyToOne,
   JoinTable,
+  RelationId,
 } from 'typeorm';
 // #endregion
 // #region Imports Local
@@ -152,6 +153,9 @@ export class ProfileEntity {
     nullable: true,
   })
   title: string;
+
+  @RelationId((profile: ProfileEntity) => profile.manager)
+  managerId?: string;
 
   @ManyToOne((type: any) => ProfileEntity)
   @JoinTable()
