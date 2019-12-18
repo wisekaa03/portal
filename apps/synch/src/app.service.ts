@@ -56,12 +56,14 @@ export class SynchService {
       const updatedProfiles: ProfileEntity[] = [];
       const updatedGroups: GroupEntity[] = [];
 
-      users.forEach(async (ldapUser) => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const ldapUser of users) {
         if (!updatedUsers.find((u) => u.username === ldapUser.sAMAccountName)) {
           let groups: GroupEntity[] = [];
           let profile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID.toString());
 
           if (!profile) {
+            // eslint-disable-next-line no-await-in-loop
             profile = await this.createProfile(ldapUser);
             updatedProfiles.push(profile);
           }
@@ -78,14 +80,16 @@ export class SynchService {
               return createdGroup;
             });
 
+            // eslint-disable-next-line no-await-in-loop
             groups = await Promise.all(groupsPromises);
           }
 
+          // eslint-disable-next-line no-await-in-loop
           updatedUsers.push(await this.createUser(ldapUser, profile, groups));
         }
-      });
+      }
 
-      debugger;
+      console.log(updatedUsers);
 
       return true;
     }

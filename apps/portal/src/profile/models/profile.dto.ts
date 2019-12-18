@@ -77,9 +77,9 @@ export interface Profile {
 
   notShowing: boolean;
 
-  thumbnailPhoto?: string;
+  thumbnailPhoto?: string | Promise<string | undefined>;
 
-  thumbnailPhoto40?: string;
+  thumbnailPhoto40?: string | Promise<string | undefined>;
 
   createdAt?: Date;
 

@@ -159,7 +159,7 @@ export class ProfileEntity {
 
   @ManyToOne((_type: any) => ProfileEntity)
   @JoinTable()
-  manager?: ProfileEntity | Promise<ProfileEntity | undefined>;
+  manager?: ProfileEntity | undefined;
 
   @Column({
     type: 'varchar',
@@ -258,12 +258,12 @@ export class ProfileEntity {
       this.thumbnailPhoto40 = this.thumbnailPhoto ? await this.thumbnailPhoto40 : undefined;
     }
 
-    if (
-      typeof this.manager === 'object' &&
-      typeof ((this.manager as unknown) as Record<string, any>).then === 'function'
-    ) {
-      ((this.manager as unknown) as ProfileEntity | undefined) = await this.manager;
-    }
+    // if (
+    //   typeof this.manager === 'object' &&
+    //   typeof ((this.manager as unknown) as Record<string, any>).then === 'function'
+    // ) {
+    //   ((this.manager as unknown) as ProfileEntity | undefined) = await this.manager;
+    // }
   }
 
   toResponseObject = (): ProfileEntity => ({ ...this });
