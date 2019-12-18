@@ -154,6 +154,10 @@ ENV MEETING_URL ${MEETING_URL}
 #  nano \
 #  && rm -rf /var/lib/apt/lists/*
 
+RUN set -ex; \
+  apt-get update \
+  && apt-get install -y libpq-dev
+
 # COPY
 COPY . ./
 
