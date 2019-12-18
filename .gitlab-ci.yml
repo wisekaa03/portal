@@ -23,7 +23,9 @@ test_build:
       - node_modules/
       - apps/portal/.next/cache/
   script:
-    - env && echo -n "node version " && node -v && yarn install --production=false
+    - env && echo -n "node version " && node -v
+    - apt-get upgrade && apt-get install -y libpq-dev
+    - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u
     - time yarn build
@@ -43,7 +45,9 @@ prepare:
     paths:
       - node_modules/
   script:
-    - env && echo -n "node version " && node -v && yarn install --production=true
+    - env && echo -n "node version " && node -v
+    - apt-get upgrade && apt-get install -y libpq-dev
+    - yarn install --production=true
 
 production:
   image: docker:latest
