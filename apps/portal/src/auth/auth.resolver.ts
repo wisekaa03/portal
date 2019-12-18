@@ -39,13 +39,13 @@ export class AuthResolver {
   @Mutation()
   async login(
   /* eslint-disable prettier/prettier */
-    @Args('username') username: string,
+    @Args('username') Username: string,
       @Args('password') password: string,
       @Context('req') req: Request,
       @Context('res') res: Response,
   /* eslint-enable prettier/prettier */
   ): Promise<UserResponse | null> {
-    const user = await this.authService.login({ username, password }, req);
+    const user = await this.authService.login({ username: Username.toLowerCase(), password }, req);
 
     if (user) {
       req.logIn(user as User, (err: any) => {
