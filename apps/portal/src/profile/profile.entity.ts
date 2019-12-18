@@ -157,7 +157,7 @@ export class ProfileEntity {
   @RelationId((profile: ProfileEntity) => profile.manager)
   managerId?: string;
 
-  @ManyToOne((type: any) => ProfileEntity)
+  @ManyToOne((_type: any) => ProfileEntity)
   @JoinTable()
   manager?: ProfileEntity | Promise<ProfileEntity | undefined>;
 

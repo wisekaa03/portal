@@ -168,7 +168,7 @@ export class SynchService {
       ...profile,
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
-      loginIdentificator: ldapUser.objectGUID.toString(),
+      loginIdentificator: ldapUser.objectGUID,
       username: ldapUser.sAMAccountName,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
