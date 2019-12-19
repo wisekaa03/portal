@@ -15,7 +15,7 @@ import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import stateResolvers from './state-link';
-import { FIRST_PAGE, NO_REDIRECT_PAGES } from './constants';
+import getRedirect from './get-redirect';
 // #endregion
 
 let apollo: ApolloClient<NormalizedCacheObject>;
@@ -38,11 +38,9 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.map(({ message, locations, path }): any => {
         if (!__SERVER__) {
-          const redirect = NO_REDIRECT_PAGES.includes(window.location.pathname) ? FIRST_PAGE : window.location.pathname;
-
           switch ((message as any).statusCode) {
             case 403:
-              Router.push({ pathname: '/auth/login', query: { redirect } });
+              Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
               break;
             default:
               break;

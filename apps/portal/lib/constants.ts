@@ -10,7 +10,18 @@ import { UserContext } from '../src/user/models/user.dto';
 export const FIRST_PAGE = '/';
 export const SESSION = 'session';
 export const ADMIN_PAGES = ['/admin'];
-export const NO_REDIRECT_PAGES = ['/_error'];
+export const ALLOW_REDIRECT_PAGES = [
+  '/mail',
+  '/phonebook',
+  '/profile',
+  '/services',
+  '/calendar',
+  '/faq',
+  '/meetings',
+  '/news',
+  '/settings',
+  '/admin',
+];
 export const LARGE_RESOLUTION = 1440;
 export const AUTO_COLLAPSE_ROUTES = ['/mail'];
 
