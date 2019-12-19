@@ -20,8 +20,8 @@ export default (configService: ConfigService, logService: LogService): Session.S
 
     logService.debug(
       'redis: ' +
-        `url="${configService.get<string>('SESSION_REDIS_URI')}" ` +
-        `cookie ttl="${configService.get<number>('SESSION_COOKIE_TTL')}" ` +
+        `url="${configService.get<string>('SESSION_REDIS_URI')}", ` +
+        `cookie ttl=${configService.get<number>('SESSION_COOKIE_TTL')}ms, ` +
         `secret="${configService.get<string>('SESSION_SECRET') ? '{MASKED}' : ''}" `,
       'Session',
     );

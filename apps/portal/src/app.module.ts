@@ -56,9 +56,9 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
       useFactory: async (configService: ConfigService, logService: LogService) => {
         logService.debug(
           `install cache: ` +
-            `url="${configService.get('HTTP_REDIS_URI')}" ` +
-            `ttl="${configService.get('HTTP_REDIS_TTL')}" ` +
-            `max objects="${configService.get('HTTP_REDIS_MAX_OBJECTS')}" `,
+            `url="${configService.get('HTTP_REDIS_URI')}", ` +
+            `ttl=${configService.get('HTTP_REDIS_TTL')}s, ` +
+            `max objects=${configService.get('HTTP_REDIS_MAX_OBJECTS')} `,
           'Cache',
         );
 

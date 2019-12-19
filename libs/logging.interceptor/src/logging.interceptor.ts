@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-// import { Socket, AddressInfo } from 'net';
+import { IncomingMessage } from 'http';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Type } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
@@ -47,17 +47,17 @@ export class LoggingInterceptor implements NestInterceptor {
 
       case 'http':
       default: {
-        const req = context.switchToHttp().getRequest();
+        const req = context.switchToHttp().getRequest<IncomingMessage>();
 
         if (req) {
-          const { method, url, client } = req;
+          const { method, url, socket } = req;
 
           return next
             .handle()
             .pipe(
               tap(() =>
                 this.logService.log(
-                  `${method} ${url} - ${client.remoteAddress} - ${Date.now() - now}ms`,
+                  `${method} ${url} - ${req.method} - ${socket.remoteAddress} - ${Date.now() - now}ms`,
                   context.getClass().name,
                 ),
               ),
