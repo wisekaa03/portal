@@ -154,7 +154,7 @@
   resolved "https://registry.yarnpkg.com/@apollographql/graphql-playground-html/-/graphql-playground-html-1.6.24.tgz#3ce939cb127fb8aaa3ffc1e90dff9b8af9f2e3dc"
   integrity sha512-8GqG48m1XqyXh4mIZrtB5xOhUwSsh1WsrrsaZQOEYYql3YN9DEu9OOSg0ILzXHZo/h2Q74777YE4YzlArQzQEQ==
 
-"@babel/cli@^7.7.5":
+"@babel/cli@^7.7.7":
   version "7.7.7"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.7.7.tgz#56849acbf81d1a970dd3d1b3097c8ebf5da3f534"
   integrity sha512-XQw5KyCZyu/M8/0rYiZyuwbgIQNzOrJzs9dDLX+MieSgBwTLvTj4QVbLmxJACAIvQIDT7PtyHN2sC48EOWTgaA==
@@ -217,7 +217,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@>=7.2.2", "@babel/core@^7.0.0", "@babel/core@^7.1.0", "@babel/core@^7.4.5", "@babel/core@^7.7.5":
+"@babel/core@>=7.2.2", "@babel/core@^7.0.0", "@babel/core@^7.1.0", "@babel/core@^7.4.5", "@babel/core@^7.7.7":
   version "7.7.7"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.7.7.tgz#ee155d2e12300bcc0cff6a8ad46f2af5063803e9"
   integrity sha512-jlSjuj/7z138NLZALxVgrx13AOtqip42ATZP7+kYl53GvDV6+4dCek1mVUo8z8c8Xnw/mx2q3d9HWh3griuesQ==
@@ -2302,7 +2302,7 @@
     webpack "4.41.2"
     webpack-node-externals "1.7.2"
 
-"@nestjs/common@^6.0", "@nestjs/common@^6.10.11":
+"@nestjs/common@^6.0", "@nestjs/common@^6.10.12":
   version "6.10.12"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-6.10.12.tgz#3ac48b5ec305243802320c5c53480fab3a5c1820"
   integrity sha512-UWQ3HqMDVAf85HNZAgahT0Ig7/4WGI1jE+UvZlNMIrLcI8y98LHwbS8fwHUxdRYW9L7NEDTYn8oBL6lS+z4OWA==
@@ -2311,7 +2311,7 @@
     cli-color "2.0.0"
     uuid "3.3.3"
 
-"@nestjs/core@^6.0", "@nestjs/core@^6.10.11":
+"@nestjs/core@^6.0", "@nestjs/core@^6.10.12":
   version "6.10.12"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-6.10.12.tgz#546363837e3cf9a4467e24c4cd8902e9a492668b"
   integrity sha512-pZ+KK7BQ9OH6ZSQoakbodFTuoUqa14WDJ/d1GQZbDpkGGOv26rmitjHmuBRMkttkHHsSvLtU1Y2e4vtMFevDcA==
@@ -2347,7 +2347,7 @@
     iterare "1.2.0"
     json-socket "0.3.0"
 
-"@nestjs/microservices@^6.10.11":
+"@nestjs/microservices@^6.10.12":
   version "6.10.12"
   resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-6.10.12.tgz#88cefaa363e4b20919a3391087e982da52ad02bf"
   integrity sha512-I7eYZpeVNCt2LM6PmlVWWVRvoOeJz00jABcLo+KKBnlo2pIWCH7W84wZslSWSJPi2q11j6tWvfAtUdR29pX53Q==
@@ -2375,7 +2375,7 @@
     express "4.17.1"
     multer "1.4.2"
 
-"@nestjs/platform-express@^6.10.11":
+"@nestjs/platform-express@^6.10.12":
   version "6.10.12"
   resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-6.10.12.tgz#e8c3189a5b3761c05ec0bbc40db0573b5070e9cc"
   integrity sha512-XNW2tBIF229OQtZ+rcBLGcqh7QM2C3et7zry/af+nWNecKCiORyDNAQBAi8r6n6BtQJUv4Po7Wts5CGJz0Nldw==
@@ -2438,7 +2438,7 @@
     redis "2.8.0"
     typeorm "0.2.21"
 
-"@nestjs/testing@^6.10.11":
+"@nestjs/testing@^6.10.12":
   version "6.10.12"
   resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-6.10.12.tgz#146c90bf0c8b2575e5eaa11ec86007147a063cf9"
   integrity sha512-dHCv7FFnZingfUeuQKO3ybbC/kWyrP2W/i7SSn04+ntvKDzd9cysNgEH1YCdUjH2HeADy21H0CK2Q8OqY8ROTA==
@@ -2452,7 +2452,7 @@
   dependencies:
     uuid "3.3.3"
 
-"@nestjs/websockets@^6.10.11":
+"@nestjs/websockets@^6.10.12":
   version "6.10.12"
   resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-6.10.12.tgz#18b2171d193f522cb3457a52d8f26ec1adf084c0"
   integrity sha512-E9CmcuEB/3xZym9uXAINHUdCwGkpJEXPwWVxWJ9kxKxlDPU+mM25ox1HL+hnAjX70GjIe6PLjf/8V8SXCCiPdg==
@@ -15522,7 +15522,7 @@ pg-types@^2.1.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^7.15.0:
+pg@^7.15.1:
   version "7.15.1"
   resolved "https://registry.yarnpkg.com/pg/-/pg-7.15.1.tgz#a0bac84ebaeb809f3a369fb695ae89b314b08b22"
   integrity sha512-o293Pxx5bNRpTv3Dh4+IIhPbTw19Bo4zvppLgR+MAV2I7AF3sMr9gPB4JPvBffWb24pDfC+7Ghe6xh2VxVMBpQ==
