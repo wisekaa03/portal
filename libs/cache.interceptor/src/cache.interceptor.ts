@@ -3,11 +3,11 @@
 // #region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ExecutionContext, Injectable, CacheInterceptor } from '@nestjs/common';
+import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger/logger.service';
-import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
 // #endregion
 
 @Injectable()
