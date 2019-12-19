@@ -145,26 +145,11 @@ spec:
                   name: portal-configmap
                   key: HTTP_REDIS_PREFIX
             # Session
-            - name: SESSION_REDIS_HOST
+            - name: SESSION_REDIS_URI
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: SESSION_REDIS_HOST
-            - name: SESSION_REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_PORT
-            - name: SESSION_REDIS_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_DB
-            - name: SESSION_REDIS_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SESSION_REDIS_PASSWORD
+                  key: SESSION_REDIS_URI
             - name: SESSION_COOKIE_TTL
               valueFrom:
                 configMapKeyRef:

@@ -41,10 +41,7 @@ HTTP_REDIS_MAX_OBJECTS: 10000
 HTTP_REDIS_PREFIX: ""
 
 # Session Redis
-SESSION_REDIS_HOST: "redis.default.svc.cluster.local"
-SESSION_REDIS_PORT: 6379
-SESSION_REDIS_DB: 2
-SESSION_REDIS_PASSWORD: ""
+SESSION_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 SESSION_COOKIE_TTL: 300
 SESSION_SECRET: "supersecret"
 
