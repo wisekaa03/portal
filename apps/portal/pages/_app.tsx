@@ -24,8 +24,9 @@ import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { Loading } from '../components/loading';
 import { User } from '../src/user/models/user.dto';
-import { FIRST_PAGE, ADMIN_PAGES, NO_REDIRECT_PAGES } from '../lib/constants';
+import { FIRST_PAGE, ADMIN_PAGES } from '../lib/constants';
 import getCookie from '../lib/get-cookie';
+import getRedirect from '../lib/get-redirect';
 // #endregion
 
 // const LoginPage = dynamic(() => import('./auth/login'));
@@ -66,7 +67,7 @@ const CurrentLogin: React.FC<{
   router: NextRouter;
 }> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
   const pathname = (ctx && ctx.asPath) || (router && router.asPath);
-  const redirect = NO_REDIRECT_PAGES.includes(pathname) ? FIRST_PAGE : pathname;
+  const redirect = getRedirect(pathname);
 
   if (__SERVER__) {
     // SERVER
