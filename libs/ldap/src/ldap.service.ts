@@ -500,7 +500,7 @@ export class LdapService extends EventEmitter {
 
           this.logger.debug(`To cache: ${user.sAMAccountName}`, 'LDAP');
           this.userCache.set<LDAPCache>(
-            user.sAMAccountName,
+            user.sAMAccountName.toLowerCase(),
             {
               user,
             },
@@ -664,7 +664,7 @@ export class LdapService extends EventEmitter {
               this.logger.debug(`To cache: ${userWithGroups.sAMAccountName}`, 'LDAP');
 
               this.userCache.set<LDAPCache>(
-                userWithGroups.sAMAccountName,
+                userWithGroups.sAMAccountName.toLowerCase(),
                 {
                   user: userWithGroups as LdapResponseUser,
                 },

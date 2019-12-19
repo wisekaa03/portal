@@ -143,7 +143,7 @@ export class UserService {
       id: user && user.id,
       createdAt: user && user.createdAt,
       updatedAt: user && user.updatedAt,
-      username: ldapUser.sAMAccountName,
+      username: ldapUser.sAMAccountName.toLowerCase(),
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),

@@ -42,7 +42,7 @@ export class SynchService {
       const updatedGroups: GroupEntity[] = [];
 
       for (const ldapUser of users) {
-        if (!updatedUsers.find((u) => u.username === ldapUser.sAMAccountName)) {
+        if (!updatedUsers.find((u) => u.username === ldapUser.sAMAccountName.toLowerCase())) {
           const currentGroups: GroupEntity[] = [];
           let currentProfile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID);
 
@@ -92,12 +92,12 @@ export class SynchService {
       lng: 'ru',
     };
 
-    const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false, false);
+    const user = await this.userService.readByUsername(ldapUser.sAMAccountName.toLowerCase(), false, false);
 
     const userEntity: User = {
       settings: defaultSettings,
       ...user,
-      username: ldapUser.sAMAccountName,
+      username: ldapUser.sAMAccountName.toLowerCase(),
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
@@ -159,7 +159,7 @@ export class SynchService {
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID,
-      username: ldapUser.sAMAccountName,
+      username: ldapUser.sAMAccountName.toLowerCase(),
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName: ldapUser.middleName,
@@ -202,7 +202,7 @@ export class SynchService {
     const groupEntity: Group = {
       ...group,
       loginIdentificator: ldapGroup.objectGUID,
-      name: ldapGroup.sAMAccountName as string,
+      name: ldapGroup.sAMAccountName.toLowerCase(),
       dn: ldapGroup.dn,
       loginService: LoginService.LDAP,
     };
