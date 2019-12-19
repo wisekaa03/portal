@@ -28,14 +28,11 @@ export class HttpCacheInterceptor extends CacheInterceptor {
       }
 
       const req = context.switchToHttp().getRequest<Request>();
-
       if (req && req.method === 'GET') {
         // TODO: доделать все-таки кэш, не получается из-за связки nest с next, разобраться
         this.logService.log(`Cache: "${req.url}". Session: "${req.session && req.session.id}"`, 'CacheInterceptor');
         // const url = httpAdapter.getRequestUrl(req);
-        // const { cookie } = req.headers;
-
-        // return `${url}$${cookie}`;
+        // return `${url}$${req.headers.cookie}`;
       }
     }
 
