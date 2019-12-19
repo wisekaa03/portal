@@ -4,7 +4,7 @@
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
-module.exports = function(original) {
+module.exports = (original) => {
   return {
     watch: true,
     target: 'node',
@@ -24,11 +24,11 @@ module.exports = function(original) {
          */
         checkResource(resource) {
           const lazyImports = [
-            '@nestjs/microservices',
-            '@nestjs/platform-express',
-            'class-validator',
-            'class-transformer',
-            'google-libphonenumber',
+            // '@nestjs/microservices',
+            // '@nestjs/platform-express',
+            // 'class-validator',
+            // 'class-transformer',
+            // 'google-libphonenumber',
             // '@nestjs/graphql',
             // 'cache-manager',
             // 'typeorm',

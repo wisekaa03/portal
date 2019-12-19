@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 // const nodeExternals = require('webpack-node-externals');
 
-module.exports = function(original) {
+module.exports = (original) => {
   const config = {
     // entry: [path.resolve(__dirname, 'apps/portal/src/main.ts')],
     watch: false,
@@ -119,11 +119,11 @@ module.exports = function(original) {
          */
         checkResource(resource) {
           const lazyImports = [
-            '@nestjs/microservices',
-            '@nestjs/platform-express',
-            'class-validator',
-            'class-transformer',
-            'google-libphonenumber',
+            // '@nestjs/microservices',
+            // '@nestjs/platform-express',
+            // 'class-validator',
+            // 'class-transformer',
+            // 'google-libphonenumber',
             // '@nestjs/graphql',
             // 'next',
             // 'cache-manager',
