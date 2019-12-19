@@ -7,6 +7,7 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger/logger.service';
+import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
 // #endregion
 
 @Injectable()
@@ -18,19 +19,21 @@ export class HttpCacheInterceptor extends CacheInterceptor {
   trackBy(context: ExecutionContext): string | undefined {
     const type = context.getType();
 
-    switch (type) {
-      case 'http':
-        {
-          const req = context.switchToHttp().getRequest<Request>();
+    if (type === 'http') {
+      const { httpAdapter } = this.httpAdapterHost;
+      const isHttpApp = httpAdapter && !!httpAdapter.getRequestMethod;
+      const cacheMetadata = this.reflector.get(CACHE_KEY_METADATA, context.getHandler());
+      if (!isHttpApp || cacheMetadata) {
+        return cacheMetadata;
+      }
 
-          if (req && req.method === 'GET') {
-            this.logService.log(`Cache: "${req.url}". Session: "${req.session && req.session.id}"`, 'CacheInterceptor');
-            return `${req.url}#${req.session && req.session.id}`;
-          }
-        }
-        break;
+      const req = context.switchToHttp().getRequest<Request>();
 
-      default:
+      if (req && req.method === 'GET') {
+        this.logService.log(`Cache: "${req.url}". Session: "${req.session && req.session.id}"`, 'CacheInterceptor');
+
+        return httpAdapter.getRequestUrl(req);
+      }
     }
 
     return undefined;
