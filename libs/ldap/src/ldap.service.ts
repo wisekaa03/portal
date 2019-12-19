@@ -62,11 +62,8 @@ export class LdapService extends EventEmitter {
         // A string used to prefix all used keys (e.g. namespace:test).
         // Please be aware that the keys command will not be prefixed.
         prefix: 'LDAP',
-        host: configService.get<string>('LDAP_REDIS_HOST'), // IP address of the Redis server
-        port: configService.get<number>('LDAP_REDIS_PORT'), // Port of the Redis server
-        db: configService.get<number>('LDAP_REDIS_DB'), // If set, client will run Redis select command on connect.
+        url: configService.get<string>('LDAP_REDIS_URI'), // IP address of the Redis server
         // If set, client will run Redis auth command on connect.
-        password: configService.get<string>('LDAP_REDIS_PASSWORD') || undefined,
         // path - The UNIX socket string of the Redis server
         // url - The URL of the Redis server.
         // string_numbers
@@ -96,12 +93,9 @@ export class LdapService extends EventEmitter {
 
       this.logger.debug(
         `install cache: ` +
-          `host="${configService.get('LDAP_REDIS_HOST')}" ` +
-          `port="${configService.get('LDAP_REDIS_PORT')}" ` +
-          `db="${configService.get('LDAP_REDIS_DB')}" ` +
+          `url="${configService.get('LDAP_REDIS_URI')}" ` +
           // `max="${configService.get('LDAP_REDIS_MAX')}" ` +
-          `ttl="${this.ttl}" ` +
-          `password="${configService.get('LDAP_REDIS_PASSWORD') ? '{MASKED}' : ''}"`,
+          `ttl="${this.ttl}" `,
         'LDAP',
       );
     }

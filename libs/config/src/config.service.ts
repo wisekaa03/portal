@@ -55,11 +55,11 @@ export class ConfigService {
         .optional()
         .empty(),
       DATABASE_URI: Joi.string()
-        .default('localhost')
+        .default('postgres://postgres:1234567890@localhost:5432/postgres')
         .optional()
         .empty(),
       DATABASE_URI_RD: Joi.string()
-        .default('localhost')
+        .default('postgres://postgres:1234567890@localhost:5432/postgres')
         .optional()
         .empty(),
       DATABASE_SCHEMA: Joi.string()
@@ -91,12 +91,8 @@ export class ConfigService {
         .optional()
         .empty(),
 
-      HTTP_REDIS_HOST: Joi.string()
-        .default('localhost')
-        .optional()
-        .empty(),
-      HTTP_REDIS_PORT: Joi.number()
-        .default(6379)
+      HTTP_REDIS_URI: Joi.string()
+        .default('redis://localhost:6379/1')
         .optional()
         .empty(),
       HTTP_REDIS_TTL: Joi.number()
@@ -105,18 +101,6 @@ export class ConfigService {
         .empty(),
       HTTP_REDIS_MAX_OBJECTS: Joi.number()
         .default(10000)
-        .optional()
-        .empty(),
-      HTTP_REDIS_DB: Joi.number()
-        .default(1)
-        .optional()
-        .empty(),
-      HTTP_REDIS_PASSWORD: Joi.string()
-        .allow('')
-        .optional()
-        .empty(),
-      HTTP_REDIS_PREFIX: Joi.string()
-        .allow('')
         .optional()
         .empty(),
 
@@ -133,24 +117,12 @@ export class ConfigService {
         .optional()
         .empty(),
 
-      LDAP_REDIS_HOST: Joi.string()
-        .default('localhost')
-        .optional()
-        .empty(),
-      LDAP_REDIS_PORT: Joi.number()
-        .default(6379)
+      LDAP_REDIS_URI: Joi.string()
+        .default('redis://localhost:6379/3')
         .optional()
         .empty(),
       LDAP_REDIS_TTL: Joi.number()
         .default(300)
-        .optional()
-        .empty(),
-      LDAP_REDIS_DB: Joi.number()
-        .default(3)
-        .optional()
-        .empty(),
-      LDAP_REDIS_PASSWORD: Joi.string()
-        .allow('')
         .optional()
         .empty(),
 

@@ -109,26 +109,11 @@ spec:
                   name: portal-configmap
                   key: DATABASE_REDIS_TTL
             # HTTP
-            - name: HTTP_REDIS_HOST
+            - name: HTTP_REDIS_URI
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: HTTP_REDIS_HOST
-            - name: HTTP_REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: HTTP_REDIS_PORT
-            - name: HTTP_REDIS_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: HTTP_REDIS_DB
-            - name: HTTP_REDIS_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: HTTP_REDIS_PASSWORD
+                  key: HTTP_REDIS_URI
             - name: HTTP_REDIS_TTL
               valueFrom:
                 configMapKeyRef:
@@ -139,11 +124,6 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: HTTP_REDIS_MAX_OBJECTS
-            - name: HTTP_REDIS_PREFIX
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: HTTP_REDIS_PREFIX
             # Session
             - name: SESSION_REDIS_URI
               valueFrom:
@@ -202,26 +182,11 @@ spec:
                   name: portal-configmap
                   key: LDAP_SEARCH_FILTER_ALL_USERS
             # LDAP Redis
-            - name: LDAP_REDIS_HOST
+            - name: LDAP_REDIS_URI
               valueFrom:
                 configMapKeyRef:
                   name: portal-configmap
-                  key: LDAP_REDIS_HOST
-            - name: LDAP_REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: LDAP_REDIS_PORT
-            - name: LDAP_REDIS_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: LDAP_REDIS_DB
-            - name: LDAP_REDIS_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: LDAP_REDIS_PASSWORD
+                  key: LDAP_REDIS_URI
             - name: LDAP_REDIS_TTL
               valueFrom:
                 configMapKeyRef:
