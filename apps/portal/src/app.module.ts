@@ -58,8 +58,8 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           `install cache: ` +
             `url="${configService.get('HTTP_REDIS_URI')}" ` +
             `ttl="${configService.get('HTTP_REDIS_TTL')}" ` +
-            `max objects="${configService.get('HTTP_REDIS_MAX_OBJECTS')}" ` +
-            'Cache',
+            `max objects="${configService.get('HTTP_REDIS_MAX_OBJECTS')}" `,
+          'Cache',
         );
 
         return {
