@@ -42,7 +42,10 @@ export class SynchService {
       const updatedGroups: GroupEntity[] = [];
 
       for (const ldapUser of users) {
-        if (!updatedUsers.find((u) => u.username === ldapUser.sAMAccountName.toLowerCase())) {
+        if (
+          !ldapUser.sAMAccountName ||
+          !updatedUsers.find((u) => u.username === ldapUser.sAMAccountName.toLowerCase())
+        ) {
           const currentGroups: GroupEntity[] = [];
           let currentProfile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID);
 
@@ -159,7 +162,7 @@ export class SynchService {
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID,
-      username: ldapUser.sAMAccountName.toLowerCase(),
+      username: ldapUser.sAMAccountName ? ldapUser.sAMAccountName.toLowerCase() : '',
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName: ldapUser.middleName,
@@ -202,7 +205,7 @@ export class SynchService {
     const groupEntity: Group = {
       ...group,
       loginIdentificator: ldapGroup.objectGUID,
-      name: ldapGroup.sAMAccountName.toLowerCase(),
+      name: ldapGroup.sAMAccountName,
       dn: ldapGroup.dn,
       loginService: LoginService.LDAP,
     };

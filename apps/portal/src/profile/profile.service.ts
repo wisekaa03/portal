@@ -190,7 +190,7 @@ export class ProfileService {
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID,
-      username: ldapUser.sAMAccountName.toLowerCase(),
+      username: ldapUser.sAMAccountName ? ldapUser.sAMAccountName.toLowerCase() : '',
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName: ldapUser.middleName,
