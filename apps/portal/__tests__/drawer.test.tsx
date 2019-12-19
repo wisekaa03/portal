@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
-import { ShallowWrapper } from 'enzyme';
+import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 // #endregion
 // #region Imports Local
@@ -23,7 +23,7 @@ jest.mock('next/router', () => ({
 }));
 
 describe('Drawer component', () => {
-  let component: ShallowWrapper;
+  let shallow: typeof Shallow;
   const props = {
     open: false,
     isMobile: false,
@@ -35,19 +35,22 @@ describe('Drawer component', () => {
 
   describe('Without context', () => {
     beforeAll(() => {
-      component = createShallow({ dive: true })(<Drawer {...props} />);
+      shallow = createShallow({ dive: true });
     });
 
     it('match snapshot', () => {
-      expect(component).toMatchSnapshot();
+      const wrapper = shallow(<Drawer {...props} />);
+      expect(wrapper).toMatchSnapshot();
     });
 
     it('open correctly', () => {
-      expect(component.find('WithStyles(ForwardRef(Drawer))').props().open).toEqual(props.open);
+      const wrapper = shallow(<Drawer {...props} />);
+      expect(wrapper.find('WithStyles(ForwardRef(Drawer))').props().open).toEqual(props.open);
     });
 
     it('count links correctly', () => {
-      expect(component.find('li')).toHaveLength(linkCount);
+      const wrapper = shallow(<Drawer {...props} />);
+      expect(wrapper.find('li')).toHaveLength(linkCount);
     });
   });
 

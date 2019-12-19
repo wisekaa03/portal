@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
-import { ShallowWrapper } from 'enzyme';
+import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import { Toolbar, Popover, IconButton } from '@material-ui/core';
 // #endregion
@@ -15,7 +15,7 @@ import { LOGOUT, SYNC } from '../lib/queries';
 describe('AppBar component', () => {
   const mockOpen = jest.fn();
   const props = { handleDrawerOpen: mockOpen };
-  let component: ShallowWrapper;
+  let shallow: typeof Shallow;
 
   const mocks = [
     {
@@ -34,32 +34,39 @@ describe('AppBar component', () => {
     },
   ];
 
+  const Component = (
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <AppBar {...props} />
+    </MockedProvider>
+  );
+
   beforeAll(() => {
-    component = createShallow()(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AppBar {...props} />
-      </MockedProvider>,
-    );
+    shallow = createShallow();
   });
 
   it('match snapshot', () => {
-    expect(component).toMatchSnapshot();
+    const wrapper = shallow(Component);
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('render component', () => {
-    expect(component.find(AppBar)).toBeDefined();
+    const wrapper = shallow(Component);
+    expect(wrapper.find(AppBar)).toBeDefined();
   });
 
   it('find drawer icon', () => {
-    expect(component.find(IconButton)).toBeDefined();
+    const wrapper = shallow(Component);
+    expect(wrapper.find(IconButton)).toBeDefined();
   });
 
   it('find Toolbar', () => {
-    expect(component.find(Toolbar)).toBeDefined();
+    const wrapper = shallow(Component);
+    expect(wrapper.find(Toolbar)).toBeDefined();
   });
 
   it('find popover', () => {
-    expect(component.find(Popover)).toBeDefined();
+    const wrapper = shallow(Component);
+    expect(wrapper.find(Popover)).toBeDefined();
   });
 
   // it('simulate open', () => {

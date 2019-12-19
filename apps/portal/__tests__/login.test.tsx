@@ -1,7 +1,7 @@
 /** @format */
 // #region Imports NPM
 import React from 'react';
-import { ShallowWrapper } from 'enzyme';
+import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import { TextField, Button } from '@material-ui/core';
 import { MutationFunction } from 'react-apollo';
@@ -11,7 +11,7 @@ import LoginComponent from '../components/login';
 // #endregion
 
 describe('Login page', () => {
-  let component: ShallowWrapper;
+  let shallow: typeof Shallow;
   const props = {
     loading: false,
     login: ((): void => {}) as MutationFunction,
@@ -19,19 +19,22 @@ describe('Login page', () => {
   };
 
   beforeAll(() => {
-    component = createShallow()(<LoginComponent {...props} />);
+    shallow = createShallow();
   });
 
   it('match snapshot', () => {
-    expect(component).toMatchSnapshot();
+    const wrapper = shallow(<LoginComponent {...props} />);
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('have login button', () => {
-    expect(component.find(Button)).toBeDefined();
+    const wrapper = shallow(<LoginComponent {...props} />);
+    expect(wrapper.find(Button)).toBeDefined();
   });
 
   it('have textField', () => {
-    expect(component.find(TextField)).toBeDefined();
+    const wrapper = shallow(<LoginComponent {...props} />);
+    expect(wrapper.find(TextField)).toBeDefined();
   });
 
   // TODO: чота непонятное тута, разобраться

@@ -1,6 +1,6 @@
 /** @format */
 
-import { ShallowWrapper } from 'enzyme';
+import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
 
@@ -9,24 +9,27 @@ import IsAdminComponent from '../components/isAdmin';
 import { MOCK_PROFILE } from '../lib/constants';
 
 describe('IsAdmin Component', () => {
-  let component: ShallowWrapper;
+  let shallow: typeof Shallow;
   const props = {};
+  const child = <p>test</p>;
+
+  const Component = (
+    <ProfileContext.Provider value={MOCK_PROFILE}>
+      <IsAdminComponent {...props}>{child}</IsAdminComponent>
+    </ProfileContext.Provider>
+  );
 
   beforeAll(() => {
-    const child = <p>test</p>;
-
-    component = createShallow()(
-      <ProfileContext.Provider value={MOCK_PROFILE}>
-        <IsAdminComponent {...props}>{child}</IsAdminComponent>
-      </ProfileContext.Provider>,
-    );
+    shallow = createShallow();
   });
 
   it('render correctly', () => {
-    expect(component).toMatchSnapshot();
+    const wrapper = shallow(Component);
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('context correctly', () => {
-    expect(component.find('p')).toHaveLength(1);
+    const wrapper = shallow(Component);
+    expect(wrapper.find('p')).toHaveLength(1);
   });
 });

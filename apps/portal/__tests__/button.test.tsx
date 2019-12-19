@@ -1,28 +1,32 @@
 /** @format */
 
-import { ShallowWrapper } from 'enzyme';
+import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
 
 import ButtonComponent, { ButtonBaseProps } from '../components/button';
 
 describe('Button Component', () => {
-  let component: ShallowWrapper;
+  let shallow: typeof Shallow;
   const props: ButtonBaseProps = {
     actionType: 'accept',
   };
 
   const text = 'test button';
 
+  const Component = <ButtonComponent {...props}>{text}</ButtonComponent>;
+
   beforeAll(() => {
-    component = createShallow({ dive: true })(<ButtonComponent {...props}>{text}</ButtonComponent>);
+    shallow = createShallow({ dive: true });
   });
 
   it('render correctly', () => {
-    expect(component).toMatchSnapshot();
+    const wrapper = shallow(Component);
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('children correctly', () => {
-    expect(component.children().text()).toEqual(text);
+    const wrapper = shallow(Component);
+    expect(wrapper.children().text()).toEqual(text);
   });
 });
