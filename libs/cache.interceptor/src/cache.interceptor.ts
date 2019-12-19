@@ -19,26 +19,13 @@ export class CacheInterceptor extends MainCacheInterceptor {
           const req = context.switchToHttp().getRequest<Request>();
 
           if (req && req.method === 'GET') {
-            const { httpAdapter } = this.httpAdapterHost;
-            const httpServer = httpAdapter.getHttpServer();
-
-            return httpServer.getRequestUrl(req);
+            return `${req.url}#${req.headers.cookie}`;
           }
         }
         break;
 
       default:
     }
-
-    // const { httpAdapter } = this.httpAdapterHost;
-    // const httpServer = httpAdapter.getHttpServer();
-
-    // const isGetRequest = httpServer.getRequestMethod(request) === 'GET';
-    // const excludePaths = ['/graphql'];
-    // if (!isGetRequest || (isGetRequest && excludePaths.includes(httpServer.getRequestUrl))) {
-    //   return undefined;
-    // }
-    // return httpServer.getRequestUrl(request);
 
     return undefined;
   }
