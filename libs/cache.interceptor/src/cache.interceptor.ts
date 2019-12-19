@@ -3,6 +3,7 @@
 // #region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ExecutionContext, Injectable, CacheInterceptor as MainCacheInterceptor } from '@nestjs/common';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
 // #endregion
@@ -10,7 +11,25 @@ import { ExecutionContext, Injectable, CacheInterceptor as MainCacheInterceptor 
 @Injectable()
 export class CacheInterceptor extends MainCacheInterceptor {
   trackBy(context: ExecutionContext): string | undefined {
-    // const request = context.switchToHttp().getRequest();
+    const type = context.getType();
+
+    switch (type) {
+      case 'http':
+        {
+          const req = context.switchToHttp().getRequest<Request>();
+
+          if (req && req.method === 'GET') {
+            const { httpAdapter } = this.httpAdapterHost;
+            const httpServer = httpAdapter.getHttpServer();
+
+            return httpServer.getRequestUrl(req);
+          }
+        }
+        break;
+
+      default:
+    }
+
     // const { httpAdapter } = this.httpAdapterHost;
     // const httpServer = httpAdapter.getHttpServer();
 
