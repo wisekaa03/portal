@@ -2,7 +2,7 @@
 
 [Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport JWT](https://github.com/mikenicholson/passport-jwt), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
-[![pipeline status](https://git.kngk.org/Project/portal/badges/master/pipeline.svg)](https://git.kngk.org/Project/portal/commits/master)
+[![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.kngk.org/Project/portal/commits/master)
 
 ## Features
 
@@ -141,24 +141,16 @@ PORT=4000
 PORT_DEBUGGER=9229
 
 # DB
-DATABASE_CONNECTION="postgres"
-DATABASE_HOST="localhost"
-DATABASE_PORT="5432"
-DATABASE_USERNAME="portal"
-DATABASE_PASSWORD="portalpwd"
-DATABASE_DATABASE="portaldb"
+DATABASE_URI="postgres://postgres:1234567890@postgresql.database:5432/postgres"
+DATABASE_URI_RD="postgres://postgres:1234567890@postgresql-read.database:5432/postgres"
 DATABASE_SCHEMA="public"
 DATABASE_SYNCHRONIZE="false"
 DATABASE_DROP_SCHEMA="false"
 DATABASE_MIGRATIONS_RUN="true"
 DATABASE_LOGGING=["error"]
-DATABASE_CACHE="true"
-DATABASE_REDIS_HOST="redis-master.production.svc.cluster.local"
-DATABASE_REDIS_PORT="6379"
-DATABASE_REDIS_PASSWORD=""
+DATABASE_REDIS_URI="redis://redis-master.production.svc.cluster.local:6379/0"
 # time in milliseconds, 3000 ms = 3 seconds
 DATABASE_REDIS_TTL="3000"
-DATABASE_REDIS_DB="0"
 
 # HTTP Redis
 HTTP_REDIS_HOST="localhost"
@@ -171,10 +163,7 @@ HTTP_REDIS_TTL="300"
 HTTP_REDIS_MAX_OBJECTS="10000"
 
 # Session Redis
-SESSION_REDIS_HOST="localhost"
-SESSION_REDIS_PORT="6379"
-SESSION_REDIS_DB="2"
-SESSION_REDIS_PASSWORD=""
+SESSION_REDIS_URI="redis://redis-master.production.svc.cluster.local:6379/2"
 # time in milliseconds, 1200000 ms = 1000 * 60 * 20 minutes
 SESSION_COOKIE_TTL="1200000"
 SESSION_SECRET="supersecret"
@@ -185,8 +174,10 @@ LDAP_BIND_DN="CN=Administrator,DC=example,DC=local"
 LDAP_BIND_PW="PaSsWoRd123"
 LDAP_SEARCH_BASE="DC=example,DC=local"
 LDAP_SEARCH_FILTER="(sAMAccountName={{username}})"
+LDAP_SEARCH_GROUP="(&(objectClass=group)(member={{dn}}))"
 LDAP_SEARCH_BASE_ALL_USERS="DC=example,DC=local"
 LDAP_SEARCH_FILTER_ALL_USERS="(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
+
 # LDAP Redis
 LDAP_REDIS_HOST="localhost"
 LDAP_REDIS_PORT="6379"
@@ -206,14 +197,15 @@ SOAP_USER="admin"
 SOAP_PASS="supersecret"
 
 # NEWS
-NEWS_URL="https://news"
-NEWS_API_URL="https://news/api"
+NEWS_URL="https://news/wp/wp-json/wp/v2/posts"
+NEWS_API_URL="https://news/wp/wp-content/"
 
-#MAIL
-MAIL_LOGIN_URL="https://roundcube.production/login/index.php"
+# MAIL
+MAIL_URL="https://portal/roundcube"
+MAIL_LOGIN_URL="/roundcube/login/index.php"
 
 # MEETING
-MEETING_URL="https://meeting"
+MEETING_URL="https://meeting/"
 ```
 
 ## Production Deployment
