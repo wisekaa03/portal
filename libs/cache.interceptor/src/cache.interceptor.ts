@@ -19,7 +19,7 @@ export class CacheInterceptor extends MainCacheInterceptor {
           const req = context.switchToHttp().getRequest<Request>();
 
           if (req && req.method === 'GET') {
-            return `${req.url}#${req.headers.cookie}`;
+            return `${req.url}#${req.session && req.session.id}`;
           }
         }
         break;
