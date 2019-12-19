@@ -173,16 +173,16 @@ const Dropzone: I18nPage<DropzoneProps> = ({
       accept={acceptedFiles.join(',')}
       {...rest}
     >
-      {(state: DropzoneState) => (
+      {({ getRootProps, getInputProps }: DropzoneState) => (
         <section className={classes.container}>
           <div
-            {...state.getRootProps({
+            {...getRootProps({
               className: clsx(classes.dropzone, {
                 [classes.marginBottom]: files.length > 0,
               }),
             })}
           >
-            <input {...state.getInputProps()} />
+            <input {...getInputProps()} />
             <p>{t('dropzone:attach')}</p>
           </div>
           <aside className={classes.thumbsContainer}>
@@ -199,6 +199,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
                 <>
                   <div className={classes.thumb}>
                     <div className={classes.thumbInner}>
+                      // TODO: отработать стиль отображения документов
                       {file.preview === NO_PREVIEW ? (
                         <Typography className={classes.nopreview} variant="h6">
                           {t('dropzone:nopreview')}
@@ -220,8 +221,8 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 };
 
 Dropzone.defaultProps = {
-  // не только картинки, но еще и документы...
-  acceptedFiles: ['*'],
+  // необходимо перечислить все типы файлов, просто звездочка не катит...
+  acceptedFiles: ['image/*', '.doc'],
   filesLimit: 5,
   maxFileSize: 3000000,
 };
