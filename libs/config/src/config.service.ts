@@ -124,20 +124,8 @@ export class ConfigService {
         .default('portal')
         .optional()
         .empty(),
-      SESSION_REDIS_HOST: Joi.string()
-        .default('localhost')
-        .optional()
-        .empty(),
-      SESSION_REDIS_PORT: Joi.number()
-        .default(6379)
-        .optional()
-        .empty(),
-      SESSION_REDIS_DB: Joi.number()
-        .default(2)
-        .optional()
-        .empty(),
-      SESSION_REDIS_PASSWORD: Joi.string()
-        .allow('')
+      SESSION_REDIS_URI: Joi.string()
+        .default('redis://localhost:6379/2')
         .optional()
         .empty(),
       SESSION_COOKIE_TTL: Joi.number()

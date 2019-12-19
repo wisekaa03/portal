@@ -25,10 +25,7 @@ data:
   HTTP_REDIS_PREFIX: {{ .Values.REDIS_PREFIX | default "" | quote }}
 
   # Session Redis
-  SESSION_REDIS_HOST: {{ .Values.SESSION_REDIS_HOST | default "localhost" | quote }}
-  SESSION_REDIS_PORT: {{ .Values.SESSION_REDIS_PORT | default "6379" | quote }}
-  SESSION_REDIS_DB: {{ .Values.SESSION_REDIS_DB | default "2" | quote }}
-  SESSION_REDIS_PASSWORD: {{ .Values.SESSION_REDIS_PASSWORD | default "" | quote }}
+  SESSION_REDIS_URI: {{ .Values.SESSION_REDIS_URI | default "redis://localhost:6379/2" | quote }}
   SESSION_COOKIE_TTL: {{ .Values.SESSION_COOKIE_TTL | default "300" | quote }}
   SESSION_SECRET: {{ .Values.SESSION_SECRET | default "supersecret" | quote }}
 
