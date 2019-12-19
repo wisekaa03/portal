@@ -89,6 +89,7 @@ export class AuthService {
     let sessionStoreReset = false;
     let databaseStoreReset = false;
     let ldapCacheReset = false;
+    let httpStoreReset = false;
 
     if (this.configService.get<string>('DATABASE_REDIS_URI')) {
       const redisDatabase = Redis.createClient({
@@ -126,6 +127,24 @@ export class AuthService {
       redisLdap.quit();
     }
 
+    if (this.configService.get<string>('HTTP_REDIS_URI')) {
+      const redisHttp = Redis.createClient({
+        url: this.configService.get<string>('HTTP_REDIS_URI'),
+      });
+
+      try {
+        redisHttp.flushdb();
+
+        this.logService.log('Reset HTTP cache.', 'AuthService');
+
+        httpStoreReset = true;
+      } catch (error) {
+        this.logService.error('Unable to reset LDAP cache:', error, 'AuthService');
+      }
+
+      redisHttp.quit();
+    }
+
     try {
       const redisSession = Redis.createClient({
         url: this.configService.get<string>('SESSION_REDIS_URI'),
@@ -146,7 +165,7 @@ export class AuthService {
       this.logService.error('Error in cache reset, session store', error, 'AuthService');
     }
 
-    if (databaseStoreReset && sessionStoreReset && ldapCacheReset) {
+    if (databaseStoreReset && sessionStoreReset && ldapCacheReset && httpStoreReset) {
       return true;
     }
 
