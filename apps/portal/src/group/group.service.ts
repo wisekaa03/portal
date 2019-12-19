@@ -33,7 +33,7 @@ export class GroupService {
         const group: Group = {
           ...updateAt,
           loginIdentificator: ldapGroup.objectGUID,
-          name: ldapGroup.sAMAccountName.toLowerase(),
+          name: ldapGroup.sAMAccountName.toLowerCase(),
           dn: ldapGroup.dn,
           loginService: LoginService.LDAP,
         };
