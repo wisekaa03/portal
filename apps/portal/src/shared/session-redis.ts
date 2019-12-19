@@ -15,7 +15,6 @@ export default (configService: ConfigService, logService: LogService): Session.S
     const sess = new (RedisSessionStore(Session))({
       client: Redis.createClient({
         url: configService.get<string>('SESSION_REDIS_URI'),
-        prefix: configService.get<string>('SESSION_REDIS_PREFIX') || 'SESSION',
       }),
     });
 
@@ -24,8 +23,7 @@ export default (configService: ConfigService, logService: LogService): Session.S
         `url="${configService.get<string>('SESSION_REDIS_URI')}" ` +
         `cookie ttl="${configService.get<number>('SESSION_COOKIE_TTL')}" ` +
         `secret="${configService.get<string>('SESSION_SECRET') ? '{MASKED}' : ''}" ` +
-        `prefix="${configService.get<string>('SESSION_REDIS_PREFIX') || 'SESSION'}"`,
-      'Session',
+        'Session',
     );
 
     return sess;

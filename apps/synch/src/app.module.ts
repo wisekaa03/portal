@@ -94,7 +94,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
             type: 'redis',
             options: {
               url: configService.get<string>('DATABASE_REDIS_URI'),
-              prefix: configService.get<string>('DATABASE_REDIS_PREFIX') || 'DB',
             },
             duration: configService.get<number>('DATABASE_REDIS_TTL'),
           },

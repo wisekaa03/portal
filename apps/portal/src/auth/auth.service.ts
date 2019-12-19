@@ -90,13 +90,9 @@ export class AuthService {
     let databaseStoreReset = false;
     let ldapCacheReset = false;
 
-    if (this.configService.get<string>('DATABASE_REDIS_HOST')) {
+    if (this.configService.get<string>('DATABASE_REDIS_URI')) {
       const redisDatabase = Redis.createClient({
-        host: this.configService.get<string>('DATABASE_REDIS_HOST'),
-        port: this.configService.get<number>('DATABASE_REDIS_PORT'),
-        password: this.configService.get<string>('DATABASE_REDIS_PASSWORD') || undefined,
-        db: this.configService.get<number>('DATABASE_REDIS_DB'),
-        prefix: this.configService.get<string>('DATABASE_REDIS_PREFIX'),
+        url: this.configService.get<string>('DATABASE_REDIS_URI'),
       });
 
       try {
@@ -112,12 +108,9 @@ export class AuthService {
       redisDatabase.quit();
     }
 
-    if (this.configService.get<string>('LDAP_REDIS_HOST')) {
+    if (this.configService.get<string>('LDAP_REDIS_URI')) {
       const redisLdap = Redis.createClient({
-        host: this.configService.get<string>('LDAP_REDIS_HOST'),
-        port: this.configService.get<number>('LDAP_REDIS_PORT'),
-        password: this.configService.get<string>('LDAP_REDIS_PASSWORD') || undefined,
-        db: this.configService.get<number>('LDAP_REDIS_DB'),
+        url: this.configService.get<string>('LDAP_REDIS_URI'),
       });
 
       try {
@@ -135,11 +128,7 @@ export class AuthService {
 
     try {
       const redisSession = Redis.createClient({
-        host: this.configService.get<string>('SESSION_REDIS_HOST'),
-        port: this.configService.get<number>('SESSION_REDIS_PORT'),
-        password: this.configService.get<string>('SESSION_REDIS_PASSWORD') || undefined,
-        db: this.configService.get<number>('SESSION_REDIS_DB'),
-        prefix: this.configService.get<string>('SESSION_REDIS_PREFIX') || 'SESSION',
+        url: this.configService.get<string>('SESSION_REDIS_URI'),
       });
 
       try {

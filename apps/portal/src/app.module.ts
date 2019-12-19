@@ -56,25 +56,17 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
       useFactory: async (configService: ConfigService, logService: LogService) => {
         logService.debug(
           `install cache: ` +
-            `host="${configService.get('HTTP_REDIS_HOST')}" ` +
-            `port="${configService.get('HTTP_REDIS_PORT')}" ` +
-            `db="${configService.get('HTTP_REDIS_DB')}" ` +
+            `url="${configService.get('HTTP_REDIS_URI')}" ` +
             `ttl="${configService.get('HTTP_REDIS_TTL')}" ` +
             `max objects="${configService.get('HTTP_REDIS_MAX_OBJECTS')}" ` +
-            `prefix="${configService.get('HTTP_REDIS_PREFIX') || 'HTTP'}" ` +
-            `password="${configService.get('HTTP_REDIS_PASSWORD') ? '{MASKED}' : ''}" `,
-          'Cache',
+            'Cache',
         );
 
         return {
           store: redisCacheStore,
           ttl: configService.get<number>('HTTP_REDIS_TTL'), // seconds
           max: configService.get<number>('HTTP_REDIS_MAX_OBJECTS'), // maximum number of items in cache
-          host: configService.get<string>('HTTP_REDIS_HOST'),
-          port: configService.get<number>('HTTP_REDIS_PORT'),
-          db: configService.get<number>('HTTP_REDIS_DB'),
-          password: configService.get<string>('HTTP_REDIS_PASSWORD') || undefined,
-          keyPrefix: configService.get<string>('HTTP_REDIS_PREFIX') || 'HTTP',
+          url: configService.get<string>('HTTP_REDIS_URI'),
           // retry_strategy: (options) => {}
         };
       },
@@ -141,7 +133,6 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           type: 'redis',
           options: {
             url: configService.get<string>('DATABASE_REDIS_URI'),
-            prefix: configService.get<string>('DATABASE_REDIS_PREFIX') || 'DB',
           },
           duration: configService.get<number>('DATABASE_REDIS_TTL'),
         },

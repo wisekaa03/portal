@@ -1,6 +1,6 @@
 /** @format */
 
-import { ALLOW_REDIRECT_PAGES, FIRST_PAGE } from './constants';
+import { FIRST_PAGE, ALLOW_REDIRECT_PAGES } from './constants';
 
 const redirect = (pathname: any): string => {
   if (pathname && typeof pathname === 'string' && ALLOW_REDIRECT_PAGES.some((p) => pathname.startsWith(p))) {
