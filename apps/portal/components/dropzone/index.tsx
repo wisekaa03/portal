@@ -199,7 +199,6 @@ const Dropzone: I18nPage<DropzoneProps> = ({
                 <>
                   <div className={classes.thumb}>
                     <div className={classes.thumbInner}>
-                      // TODO: отработать стиль отображения документов
                       {file.preview === NO_PREVIEW ? (
                         <Typography className={classes.nopreview} variant="h6">
                           {t('dropzone:nopreview')}
