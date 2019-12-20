@@ -326,9 +326,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 <Button actionType="cancel" onClick={handleClose}>
                   {t('common:cancel')}
                 </Button>
-                <Button actionType="accept" onClick={handleAccept}>
-                  {t('profile:tickets.comment.submit')}
-                </Button>
+                <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
               </FormControl>
             </Box>
           </Box>

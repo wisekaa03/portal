@@ -7,7 +7,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 
 export interface ButtonBaseProps extends ButtonProps {
-  actionType: 'accept' | 'cancel';
+  actionType?: 'accept' | 'cancel';
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const BaseButton = ({ actionType, children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
+const BaseButton = ({ actionType = 'accept', children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
   const classes = useStyles({});
   const Icon = actionType === 'accept' ? <CheckCircleIcon /> : <HighlightOffIcon />;
 

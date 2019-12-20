@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Badge, Typography, Fab } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';

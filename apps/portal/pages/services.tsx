@@ -404,9 +404,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 <Button actionType="cancel" onClick={handleClose}>
                   {t('common:cancel')}
                 </Button>
-                <Button actionType="accept" onClick={handleAccept}>
-                  {t('common:accept')}
-                </Button>
+                <Button onClick={handleAccept}>{t('common:accept')}</Button>
               </FormControl>
             </div>
           </SwipeableViews>

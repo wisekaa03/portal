@@ -295,9 +295,7 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
         <Button actionType="cancel" onClick={handleClose}>
           {t('common:cancel')}
         </Button>
-        <Button actionType="accept" onClick={handleAccept}>
-          {t('common:accept')}
-        </Button>
+        <Button onClick={handleAccept}>{t('common:accept')}</Button>
       </CardActions>
     </Card>
   );
