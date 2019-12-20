@@ -13,6 +13,8 @@ imagePullSecrets: []
 nameOverride: "portal-synch"
 fullnameOverride: "portal-synch"
 
+signatureShedule: "*/10 * * * *"
+
 # App
 HOST: 0.0.0.0
 PORT: 4222

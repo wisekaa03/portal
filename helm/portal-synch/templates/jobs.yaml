@@ -1,7 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "roundcube.fullname" . }}-signature
+  name: {{ include "portal.fullname" . }}-job
+  labels:
+{{ include "portal.labels" . | indent 4 }}
 spec:
   schedule: {{ .Values.signatureShedule | quote }}
   concurrencyPolicy: Forbid
