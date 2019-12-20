@@ -43,8 +43,8 @@ export class SynchService {
 
       for (const ldapUser of users) {
         if (
-          !ldapUser.sAMAccountName ||
-          !updatedUsers.find((u) => u.username === ldapUser.sAMAccountName.toLowerCase())
+          !ldapUser.hasOwnProperty('sAMAccountName') ||
+          !updatedUsers.find((u) => u.username === ldapUser.sAMAccountName)
         ) {
           const currentGroups: GroupEntity[] = [];
           let currentProfile = updatedProfiles.find((p) => p.loginIdentificator === ldapUser.objectGUID);
@@ -95,12 +95,12 @@ export class SynchService {
       lng: 'ru',
     };
 
-    const user = await this.userService.readByUsername(ldapUser.sAMAccountName.toLowerCase(), false, false);
+    const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false, false);
 
     const userEntity: User = {
       settings: defaultSettings,
       ...user,
-      username: ldapUser.sAMAccountName.toLowerCase(),
+      username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
@@ -162,7 +162,7 @@ export class SynchService {
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID,
-      username: ldapUser.sAMAccountName ? ldapUser.sAMAccountName.toLowerCase() : '',
+      username: ldapUser.sAMAccountName,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName: ldapUser.middleName,

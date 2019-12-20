@@ -294,6 +294,12 @@ export class LdapService extends EventEmitter {
                 if (object.hasOwnProperty('objectGUID')) {
                   object.objectGUID = this.GUIDtoString(object.objectGUID as string);
                 }
+                if (object.hasOwnProperty('dn')) {
+                  object.dn = object.dn.toLowerCase();
+                }
+                if (object.hasOwnProperty('sAMAccountName')) {
+                  object.sAMAccountName = (object.sAMAccountName as string).toLowerCase();
+                }
                 items.push(object);
                 if (this.opts.includeRaw === true) {
                   items[items.length - 1].raw = (entry.raw as unknown) as string;
@@ -495,7 +501,7 @@ export class LdapService extends EventEmitter {
 
           this.logger.debug(`To cache: ${user.sAMAccountName}`, 'LDAP');
           this.userCache.set<LDAPCache>(
-            user.sAMAccountName.toLowerCase(),
+            user.sAMAccountName,
             {
               user,
             },
@@ -659,7 +665,7 @@ export class LdapService extends EventEmitter {
               this.logger.debug(`To cache: ${userWithGroups.sAMAccountName}`, 'LDAP');
 
               this.userCache.set<LDAPCache>(
-                userWithGroups.sAMAccountName.toLowerCase(),
+                userWithGroups.sAMAccountName,
                 {
                   user: userWithGroups as LdapResponseUser,
                 },

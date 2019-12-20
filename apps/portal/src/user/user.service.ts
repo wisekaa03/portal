@@ -120,6 +120,11 @@ export class UserService {
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
 
+    // Для контактов
+    if (!ldapUser.sAMAccountName) {
+      return undefined;
+    }
+
     try {
       groups = await this.groupService.createFromUser(ldapUser);
     } catch (error) {
@@ -134,16 +139,11 @@ export class UserService {
       throw new Error('Unable to save data in `group`. Unknown error.');
     }
 
-    // Для контактов
-    if (!ldapUser.sAMAccountName) {
-      return undefined;
-    }
-
     const data: User = {
       id: user && user.id,
       createdAt: user && user.createdAt,
       updatedAt: user && user.updatedAt,
-      username: ldapUser.sAMAccountName.toLowerCase(),
+      username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
