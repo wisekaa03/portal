@@ -29,6 +29,15 @@
         "tsConfigPath": "apps/synch/tsconfig.app.json"
       }
     },
+    "job-synch": {
+      "type": "application",
+      "root": "apps/job-synch",
+      "entryFile": "main",
+      "sourceRoot": "apps/job-synch/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/job-synch/tsconfig.app.json"
+      }
+    },
     "soap1c": {
       "type": "application",
       "root": "apps/soap1c",
@@ -99,15 +108,6 @@
       "sourceRoot": "libs/cache.interceptor/src",
       "compilerOptions": {
         "tsConfigPath": "libs/cache.interceptor/tsconfig.lib.json"
-      }
-    },
-    "job-synch": {
-      "type": "application",
-      "root": "apps/job-synch",
-      "entryFile": "main",
-      "sourceRoot": "apps/job-synch/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/job-synch/tsconfig.app.json"
       }
     }
   }
