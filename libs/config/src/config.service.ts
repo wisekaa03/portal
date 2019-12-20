@@ -37,174 +37,134 @@ export class ConfigService {
   private validateInput(envConfig: EnvConfig<any>): EnvConfig<any> {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any()
-        .default('development')
         .optional()
         .empty(),
       PORT: Joi.number()
         .integer()
-        .default(4000)
         .optional()
         .empty(),
       PORT_DEBUGGER: Joi.number()
         .integer()
-        .default(9229)
         .optional()
         .empty(),
       HOST: Joi.string()
-        .default('0.0.0.0')
         .optional()
         .empty(),
       DATABASE_URI: Joi.string()
-        .default('postgres://postgres:1234567890@localhost:5432/postgres')
         .optional()
         .empty(),
       DATABASE_URI_RD: Joi.string()
-        .default('postgres://postgres:1234567890@localhost:5432/postgres')
         .optional()
         .empty(),
       DATABASE_SCHEMA: Joi.string()
-        .default('public')
         .optional()
         .empty(),
       DATABASE_SYNCHRONIZE: Joi.boolean()
-        .default(true)
         .optional()
         .empty(),
       DATABASE_DROP_SCHEMA: Joi.boolean()
-        .default(true)
         .optional()
         .empty(),
       DATABASE_LOGGING: Joi.string()
-        .default(true)
         .optional()
         .empty(),
       DATABASE_MIGRATIONS_RUN: Joi.boolean()
-        .default(false)
         .optional()
         .empty(),
       DATABASE_REDIS_URI: Joi.string()
-        .default('redis://localhost:6379/0')
         .optional()
         .empty(),
       DATABASE_REDIS_TTL: Joi.number()
-        .default(300)
         .optional()
         .empty(),
 
       HTTP_REDIS_URI: Joi.string()
-        .default('redis://localhost:6379/1')
         .optional()
         .empty(),
       HTTP_REDIS_TTL: Joi.number()
-        .default(300)
         .optional()
         .empty(),
       HTTP_REDIS_MAX_OBJECTS: Joi.number()
-        .default(10000)
         .optional()
         .empty(),
 
       SESSION_SECRET: Joi.string()
-        .default('portal')
         .optional()
         .empty(),
       SESSION_REDIS_URI: Joi.string()
-        .default('redis://localhost:6379/2')
         .optional()
         .empty(),
       SESSION_COOKIE_TTL: Joi.number()
-        .default(24)
         .optional()
         .empty(),
 
       LDAP_REDIS_URI: Joi.string()
-        .default('redis://localhost:6379/3')
         .optional()
         .empty(),
       LDAP_REDIS_TTL: Joi.number()
-        .default(300)
         .optional()
         .empty(),
 
       LDAP_URL: Joi.string()
-        .default('ldap://activedirectory:389')
         .optional()
         .empty(),
       LDAP_BIND_DN: Joi.string()
-        .default('CN=Administrator,DC=example,DC=local')
         .optional()
         .empty(),
       LDAP_BIND_PW: Joi.string()
-        .default('PaSsWoRd123')
         .optional()
         .empty(),
       LDAP_SEARCH_BASE: Joi.string()
-        .default('DC=example,DC=local')
         .optional()
         .empty(),
       LDAP_SEARCH_FILTER: Joi.string()
-        .default('(sAMAccountName={{username}})')
         .optional()
         .empty(),
       LDAP_SEARCH_GROUP: Joi.string()
-        .default('(&(objectClass=group)(member={{dn}}))')
         .optional()
         .empty(),
       LDAP_SEARCH_BASE_ALL_USERS: Joi.string()
-        .default('DC=example,DC=local')
         .optional()
         .empty(),
       LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
-        .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
         .optional()
         .empty(),
 
       MICROSERVICE_URL: Joi.string()
-        .default('nats://nats-cluster.production:4222')
         .optional()
         .empty(),
       MICROSERVICE_USER: Joi.string()
-        .default('admin')
         .optional()
         .empty(),
       MICROSERVICE_PASS: Joi.string()
-        .default('supersecret')
         .optional()
         .empty(),
 
       SOAP_URL: Joi.string()
-        .default('https://server1c')
         .optional()
         .empty(),
       SOAP_USER: Joi.string()
-        .default('admin')
         .optional()
         .empty(),
       SOAP_PASS: Joi.string()
-        .default('supersecret')
         .optional()
         .empty(),
 
       NEWS_URL: Joi.string()
-        .default('https://news')
         .optional()
         .empty(),
       NEWS_API_URL: Joi.string()
-        .default('https://news/api')
         .optional()
         .empty(),
 
       MAIL_URL: Joi.string()
-        .default('https://portal')
         .optional()
         .empty(),
       MAIL_LOGIN_URL: Joi.string()
-        .default('https://roundcube.production/login/index.php')
         .optional()
         .empty(),
 
       MEETING_URL: Joi.string()
-        .default('https://meeting')
         .optional()
         .empty(),
     });
