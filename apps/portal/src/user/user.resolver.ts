@@ -41,6 +41,7 @@ export class UserResolver {
 
   /**
    * GraphQL query: settingsDrawer
+   * TODO: вставить сюда synchronizationRunning, или куда-нибудь, чтобы показывать что идет синхронизация
    *
    * @param req
    * @param value
