@@ -100,6 +100,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/cache.interceptor/tsconfig.lib.json"
       }
+    },
+    "job-synch": {
+      "type": "application",
+      "root": "apps/job-synch",
+      "entryFile": "main",
+      "sourceRoot": "apps/job-synch/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/job-synch/tsconfig.app.json"
+      }
     }
   }
 }

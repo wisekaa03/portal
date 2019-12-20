@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "experimentalDecorators": true,
+    "outDir": "../../dist/apps/job-synch"
+  },
+  "include": ["src/**/*", "../../typings/global.d.ts"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}
