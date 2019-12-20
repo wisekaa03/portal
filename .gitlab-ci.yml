@@ -30,7 +30,8 @@ test_build:
     - ./entrypoint.sh test -u
     - time yarn build
     - time yarn build:synch
-    - time yarn build:soap1c
+    - time yarn build:jobSynch
+    # - time yarn build:soap1c
   artifacts:
     paths:
       - .next/
@@ -134,12 +135,12 @@ deploy:
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
     # Portal-soap1c
-    - |
-      helm upgrade ${RELEASE_NAME_SOAP1C} helm/portal-soap1c \
-        --install --namespace=${PRODUCTION_NAMESPACE} \
-        --debug --values helm/portal-soap1c/values.yaml \
-        --set HOST="${HOST}" \
-        --set PORT="${PORT_MICROSERVICE}" \
-        --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
-        --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
-        --set image.tag="${CI_BUILD_REF}"
+    # - |
+    #   helm upgrade ${RELEASE_NAME_SOAP1C} helm/portal-soap1c \
+    #     --install --namespace=${PRODUCTION_NAMESPACE} \
+    #     --debug --values helm/portal-soap1c/values.yaml \
+    #     --set HOST="${HOST}" \
+    #     --set PORT="${PORT_MICROSERVICE}" \
+    #     --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
+    #     --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
+    #     --set image.tag="${CI_BUILD_REF}"
