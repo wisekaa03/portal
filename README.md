@@ -152,11 +152,7 @@ DATABASE_REDIS_URI="redis://redis-master.production.svc.cluster.local:6379/0"
 DATABASE_REDIS_TTL="3000"
 
 # HTTP Redis
-HTTP_REDIS_HOST="localhost"
-HTTP_REDIS_PORT="6379"
-HTTP_REDIS_DB="0"
-HTTP_REDIS_PASSWORD=""
-# HTTP_REDIS_PREFIX=""
+HTTP_REDIS_URI="redis://localhost:6379/1"
 # time in milliseconds, 600000 ms = 1000 * 60 * 10 minutes
 HTTP_REDIS_TTL="300"
 HTTP_REDIS_MAX_OBJECTS="10000"
@@ -178,10 +174,7 @@ LDAP_SEARCH_BASE_ALL_USERS="DC=example,DC=local"
 LDAP_SEARCH_FILTER_ALL_USERS="(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
 
 # LDAP Redis
-LDAP_REDIS_HOST="localhost"
-LDAP_REDIS_PORT="6379"
-LDAP_REDIS_DB="1"
-LDAP_REDIS_PASSWORD=""
+LDAP_REDIS_URI="redis://localhost:6379/3"
 # time in milliseconds, 600000 ms = 1000 * 60 * 10 minutes
 LDAP_REDIS_TTL="300"
 
