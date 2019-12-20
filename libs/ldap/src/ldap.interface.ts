@@ -405,4 +405,6 @@ export const ldapADattributes = [
   'title',
   'wWWHomePage',
   'userAccountControl',
+  'whenChanged',
+  'whenCreated',
 ];

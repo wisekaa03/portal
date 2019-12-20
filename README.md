@@ -2,7 +2,7 @@
 
 [Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport JWT](https://github.com/mikenicholson/passport-jwt), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
-[![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.kngk.org/Project/portal/commits/master)
+[![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.i-npz.ru/Project/portal/commits/master)
 
 ## Features
 
@@ -22,7 +22,6 @@
 ## Technologies
 
 - Hot reloading for the developer experience
-  - [nodemon](https://nodemon.io) - Monitor for any changes in your node.js application and automatically restart the server
   - [Next.js](https://nextjs.org) - The React Framework
 - Lang
   - [TypeScript](https://www.typescriptlang.org) - Javascript that scales
@@ -153,11 +152,7 @@ DATABASE_REDIS_URI="redis://redis-master.production.svc.cluster.local:6379/0"
 DATABASE_REDIS_TTL="3000"
 
 # HTTP Redis
-HTTP_REDIS_HOST="localhost"
-HTTP_REDIS_PORT="6379"
-HTTP_REDIS_DB="0"
-HTTP_REDIS_PASSWORD=""
-# HTTP_REDIS_PREFIX=""
+HTTP_REDIS_URI="redis://localhost:6379/1"
 # time in milliseconds, 600000 ms = 1000 * 60 * 10 minutes
 HTTP_REDIS_TTL="300"
 HTTP_REDIS_MAX_OBJECTS="10000"
@@ -179,10 +174,7 @@ LDAP_SEARCH_BASE_ALL_USERS="DC=example,DC=local"
 LDAP_SEARCH_FILTER_ALL_USERS="(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
 
 # LDAP Redis
-LDAP_REDIS_HOST="localhost"
-LDAP_REDIS_PORT="6379"
-LDAP_REDIS_DB="1"
-LDAP_REDIS_PASSWORD=""
+LDAP_REDIS_URI="redis://localhost:6379/3"
 # time in milliseconds, 600000 ms = 1000 * 60 * 10 minutes
 LDAP_REDIS_TTL="300"
 
@@ -210,35 +202,7 @@ MEETING_URL="https://meeting/"
 
 ## Production Deployment
 
-With production usages, please use [pm2](https://github.com/Unitech/pm2) for Node.js process managements.
-
-```bash
-# install pm2
-$ npm install --global pm2
-
-# run the app "Portal" with the config `ecosystem.config.js`
-$ pm2 start
-```
-
-The example `ecosystem.config.js`:
-
-```js
-module.exports = {
-  apps: [
-    {
-      name: 'Portal',
-      script: '.next/server/main.js',
-      instances: 1,
-      autorestart: true,
-      watch: false,
-      max_memory_restart: '1G',
-      env: {
-        NODE_ENV: 'production',
-      },
-    },
-  ],
-};
-```
+We use Kubernetes/Docker production.
 
 ## Roadmaps
 
