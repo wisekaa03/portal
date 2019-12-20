@@ -157,6 +157,9 @@ export class SynchService {
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
 
+    const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
+    const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
+
     const profileEntity: Profile = {
       ...profile,
       dn: ldapUser.dn,
@@ -165,7 +168,7 @@ export class SynchService {
       username: ldapUser.sAMAccountName,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
-      middleName: ldapUser.middleName,
+      middleName,
       birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,

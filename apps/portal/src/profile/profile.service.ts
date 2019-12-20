@@ -186,6 +186,9 @@ export class ProfileService {
 
     const [department, otdel] = ldapUser.department ? ldapUser.department.split(/\s*,\s*/, 2) : [undefined, undefined];
 
+    const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
+    const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
+
     const profile: Profile = {
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
@@ -193,7 +196,7 @@ export class ProfileService {
       username: ldapUser.sAMAccountName,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
-      middleName: ldapUser.middleName,
+      middleName,
       birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,

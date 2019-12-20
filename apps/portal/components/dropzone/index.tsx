@@ -186,7 +186,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
             <p>{t('dropzone:attach')}</p>
           </div>
           <aside className={classes.thumbsContainer}>
-            {files.map((file, index) => (
+            {files.map((file) => (
               <Badge
                 key={file.id}
                 className={classes.badge}
