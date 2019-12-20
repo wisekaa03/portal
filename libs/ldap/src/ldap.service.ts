@@ -271,10 +271,12 @@ export class LdapService extends EventEmitter {
             options,
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
               if (searchErr) {
+                this.logger.error('LDAP Error:', searchErr.toString(), 'LDAP');
                 reject(searchErr);
                 return undefined;
               }
-              if (!searchResult) {
+              if (typeof searchResult !== 'object') {
+                this.logger.error('The search result returns null parameters', searchResult, 'LDAP');
                 reject(
                   new Error(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`),
                 );
