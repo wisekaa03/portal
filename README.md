@@ -2,7 +2,7 @@
 
 [Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport JWT](https://github.com/mikenicholson/passport-jwt), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
-[![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.kngk.org/Project/portal/commits/master)
+[![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.i-npz.ru/Project/portal/commits/master)
 
 ## Features
 
