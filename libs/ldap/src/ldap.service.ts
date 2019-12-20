@@ -99,13 +99,13 @@ export class LdapService extends EventEmitter {
       tlsOptions: opts.tlsOptions,
       socketPath: opts.socketPath,
       log: opts.logger,
-      timeout: opts.timeout || 60,
-      connectTimeout: opts.connectTimeout || 90,
-      idleTimeout: opts.idleTimeout || 60,
+      timeout: opts.timeout || 5000,
+      connectTimeout: opts.connectTimeout || 5000,
+      idleTimeout: opts.idleTimeout || 5000,
       reconnect: opts.reconnect || true,
       strictDN: opts.strictDN,
       queueSize: opts.queueSize || 200,
-      queueTimeout: opts.queueTimeout || 90,
+      queueTimeout: opts.queueTimeout || 5000,
       queueDisable: opts.queueDisable || false,
     };
 
@@ -272,15 +272,13 @@ export class LdapService extends EventEmitter {
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
               if (searchErr) {
                 this.logger.error('LDAP Error:', searchErr.toString(), 'LDAP');
-                reject(searchErr);
-                return undefined;
+                return reject(searchErr);
               }
               if (typeof searchResult !== 'object') {
-                this.logger.error('The search result returns null parameters', searchResult, 'LDAP');
-                reject(
+                this.logger.error('The search returns null results:', searchResult, 'LDAP');
+                return reject(
                   new Error(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`),
                 );
-                return undefined;
               }
 
               const items: Ldap.SearchEntryObject[] = [];
