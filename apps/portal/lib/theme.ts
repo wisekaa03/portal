@@ -73,7 +73,7 @@ theme.overrides = {
   },
   MuiCheckbox: {
     root: {
-      color: theme.palette.primary.main,
+      color: 'inherit',
     },
   },
   MuiFormLabel: {

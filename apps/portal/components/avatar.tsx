@@ -21,9 +21,18 @@ export const Avatar = (props: AvatarProps): React.ReactElement => {
   const { profile, fullSize = false, ...rest } = props;
   const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
 
-  const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
+  const photo = (fullSize ? thumbnailPhoto : thumbnailPhoto40) as string;
 
-  const src = photo ? `data:image/png;base64,${photo}` : gender === 1 ? Man : gender === 2 ? Woman : Alien;
+  const base64Prefix = 'data:image/png;base64,';
+  /* eslint-disable prettier/prettier */
+  const src = photo
+    ? `${photo.startsWith('data:image/') ? '' : base64Prefix}${photo}`
+    : gender === 1
+      ? Man
+      : gender === 2
+        ? Woman
+        : Alien;
+  /* eslint-enable prettier/prettier */
 
   return <AvatarMui src={src} {...rest} />;
 };

@@ -1,25 +1,29 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, Typography, TextField, IconButton, InputAdornment, Divider } from '@material-ui/core';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { Box, TextField, IconButton, InputAdornment, Divider, FormControlLabel, Checkbox } from '@material-ui/core';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
+import { useDropzone } from 'react-dropzone';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
-import uuidv4 from 'uuid/v4';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 // #endregion
 // #region Imports Local
+import IsAdmin from '../../components/isAdmin';
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
 import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { ProfileContext } from '../../lib/context';
-import { PROFILE } from '../../lib/queries';
+import { PROFILE, USER_SETTINGS } from '../../lib/queries';
+import { toBase64 } from '../../components/utils';
+import Button from '../../components/button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,8 +48,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     avatar: {
-      height: 150,
-      width: 150,
+      height: 200,
+      width: 200,
       borderRadius: theme.spacing() / 2,
     },
     nameBlock: {
@@ -56,41 +60,36 @@ const useStyles = makeStyles((theme: Theme) =>
       'padding': theme.spacing(),
       'backgroundColor': fade(theme.palette.secondary.main, 0.05),
       'color': theme.palette.secondary.main,
-      '& > h6': {
-        fontSize: '1.4rem',
+      '& > div:not(:last-child)': {
+        marginBottom: theme.spacing(),
+      },
+      '& > label': {
+        margin: 0,
       },
     },
     hr: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
     },
+    pickPhoto: {
+      'position': 'absolute',
+      'zIndex': 100,
+      'width': '100%',
+      'height': '100%',
+      'borderRadius': 0,
+      'color': '#fff',
+      'opacity': 0,
+      'transition': theme.transitions.create('opacity', {
+        easing: theme.transitions.easing.easeInOut,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      '&:hover': {
+        background: '#000',
+        opacity: 0.4,
+      },
+    },
   }),
 );
-
-const firstBlock: Array<keyof Profile> = [
-  'company',
-  'companyEng',
-  'department',
-  'departmentEng',
-  'otdel',
-  'otdelEng',
-  'title',
-  'positionEng',
-];
-
-const lastBlock: Array<keyof Profile> = [
-  'manager',
-  'birthday',
-  'email',
-  'telephone',
-  'mobile',
-  'workPhone',
-  'country',
-  'region',
-  'town',
-  'street',
-  'postalCode',
-];
 
 const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
@@ -99,6 +98,20 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
   const isAdmin = profile && profile.user && profile.user.isAdmin;
   const router = useRouter();
+
+  const [changeProfile] = useMutation(USER_SETTINGS);
+
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      if (acceptedFiles.length) {
+        const thumbnailPhoto = (await toBase64(acceptedFiles[0])) as string;
+        setCurrent({ ...current, thumbnailPhoto });
+      }
+    },
+    [current],
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   // TODO: пока так, потом переделать с выводом ошибок
   useEffect(() => {
@@ -121,17 +134,32 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   }, [loading, data, isAdmin, error, profile.user.profile]);
 
-  // console.log(current);
-  const InputProps = {
-    readOnly: true,
-    ...(isAdmin && {
-      endAdornment: (
-        <InputAdornment position="end">
-          <EditIcon color="secondary" />
-        </InputAdornment>
-      ),
-    }),
+  const handleChange = (name: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const el: EventTarget & HTMLInputElement = e.target;
+    const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
+
+    if (isAdmin) {
+      setCurrent({ ...current, [name]: value });
+    }
   };
+
+  const handleSave = (): void => {
+    changeProfile({
+      variables: current,
+    });
+  };
+
+  const endAdornment = (
+    <InputAdornment position="end">
+      <EditIcon color="secondary" />
+    </InputAdornment>
+  );
+
+  const InputProps = isAdmin ? { endAdornment } : { readOnly: true };
+
+  const getManager = (m: Profile | undefined): string =>
+    // eslint-disable-next-line prettier/prettier
+    (m ? `${m.lastName || ''} ${m.firstName || ''} ${m.middleName || ''}` : '');
 
   return (
     <>
@@ -142,72 +170,311 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <Box display="flex" flexDirection="column">
           {!current && <Loading noMargin type="linear" variant="indeterminate" />}
           <Box display="flex" flexDirection="column" p={2} overflow="auto">
-            <Box display="flex">
+            <Box display="flex" mb={1}>
               <Link href={{ pathname: '/profile' }} passHref>
                 <IconButton>
                   <ArrowBackIcon />
                 </IconButton>
               </Link>
+              <IsAdmin>
+                <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
+                  <Button>{t('common:accept')}</Button>
+                </Box>
+              </IsAdmin>
             </Box>
             <Box display="flex" flexDirection="column">
               {current && (
                 <>
                   <div className={classes.firstBlock}>
                     <Box display="flex">
-                      <Box mr={1}>
-                        <Avatar fullSize className={classes.avatar} profile={current} />
+                      <Box mr={1} position="relative">
+                        <div
+                          {...getRootProps({
+                            onClick: (event) => console.log(event),
+                          })}
+                        >
+                          <input {...getInputProps()} />
+                          <IconButton className={classes.pickPhoto}>
+                            <PhotoCameraIcon />
+                          </IconButton>
+                          <Avatar fullSize className={classes.avatar} profile={current} />
+                        </div>
                       </Box>
                       <div className={classes.nameBlock}>
-                        {current.lastName && <Typography variant="subtitle2">{current.lastName}</Typography>}
-                        {current.firstName && <Typography variant="subtitle2">{current.firstName}</Typography>}
-                        {current.middleName && <Typography variant="subtitle2">{current.middleName}</Typography>}
-                      </div>
-                    </Box>
-                    <div className={classes.nameBlock}>
-                      {current.lastName && <Typography variant="subtitle2">{current.lastName}</Typography>}
-                      {current.firstName && <Typography variant="subtitle2">{current.firstName}</Typography>}
-                      {current.middleName && <Typography variant="subtitle2">{current.middleName}</Typography>}
-                    </div>
-                    {firstBlock.map((item) => (
-                      <div key={uuidv4()}>
                         <TextField
                           fullWidth
+                          onChange={handleChange('lastName')}
                           color="secondary"
-                          value={current[item] || ''}
-                          label={t(`phonebook:fields.${item}`)}
+                          value={current.lastName || ''}
+                          label={t('phonebook:fields.lastName')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('firstName')}
+                          color="secondary"
+                          value={current.firstName || ''}
+                          label={t('phonebook:fields.firstName')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('middleName')}
+                          color="secondary"
+                          value={current.middleName || ''}
+                          label={t('phonebook:fields.middleName')}
                           variant="outlined"
                           InputProps={InputProps}
                         />
                       </div>
-                    ))}
+                    </Box>
+                    <div className={classes.nameBlock}>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('nameEng')}
+                        color="secondary"
+                        value={current.nameEng || ''}
+                        label={t('phonebook:fields.nameEng')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={current.disabled}
+                            onChange={handleChange('disabled')}
+                            color="secondary"
+                            value="disabled"
+                          />
+                        }
+                        label={t('phonebook:fields.disabled')}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={current.notShowing}
+                            onChange={handleChange('notShowing')}
+                            color="secondary"
+                            value="notShowing"
+                          />
+                        }
+                        label={t('phonebook:fields.notShowing')}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('company')}
+                        color="secondary"
+                        value={current.company || ''}
+                        label={t('phonebook:fields.company')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('companyEng')}
+                        color="secondary"
+                        value={current.companyEng || ''}
+                        label={t('phonebook:fields.companyEng')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('department')}
+                        color="secondary"
+                        value={current.department || ''}
+                        label={t('phonebook:fields.department')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('departmentEng')}
+                        color="secondary"
+                        value={current.departmentEng || ''}
+                        label={t('phonebook:fields.departmentEng')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('otdel')}
+                        color="secondary"
+                        value={current.otdel || ''}
+                        label={t('phonebook:fields.otdel')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('otdelEng')}
+                        color="secondary"
+                        value={current.otdelEng || ''}
+                        label={t('phonebook:fields.otdelEng')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('title')}
+                        color="secondary"
+                        value={current.title || ''}
+                        label={t('phonebook:fields.title')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('positionEng')}
+                        color="secondary"
+                        value={current.positionEng || ''}
+                        label={t('phonebook:fields.positionEng')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
                   </div>
                   <Divider className={classes.hr} />
                   <div className={classes.secondBlock}>
-                    {lastBlock.reduce((result: JSX.Element[], item: keyof Profile) => {
-                      let value = current[item];
-
-                      if (item === 'manager') {
-                        const { manager } = current;
-
-                        value = manager
-                          ? `${manager.lastName || ''} ${manager.firstName || ''} ${manager.middleName || ''}`
-                          : '';
-                      }
-
-                      return [
-                        ...result,
-                        <div key={uuidv4()}>
-                          <TextField
-                            fullWidth
-                            color="secondary"
-                            value={value || ''}
-                            label={t(`phonebook:fields.${item}`)}
-                            variant="outlined"
-                            InputProps={InputProps}
-                          />
-                        </div>,
-                      ];
-                    }, [])}
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('manager')}
+                        color="secondary"
+                        value={getManager(current.manager)}
+                        label={t('phonebook:fields.manager')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('birthday')}
+                        color="secondary"
+                        value={current.birthday || ''}
+                        label={t('phonebook:fields.birthday')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('email')}
+                        color="secondary"
+                        value={current.email || ''}
+                        label={t('phonebook:fields.email')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('telephone')}
+                        color="secondary"
+                        value={current.telephone || ''}
+                        label={t('phonebook:fields.telephone')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('mobile')}
+                        color="secondary"
+                        value={current.mobile || ''}
+                        label={t('phonebook:fields.mobile')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('workPhone')}
+                        color="secondary"
+                        value={current.workPhone || ''}
+                        label={t('phonebook:fields.workPhone')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('country')}
+                        color="secondary"
+                        value={current.country || ''}
+                        label={t('phonebook:fields.country')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('region')}
+                        color="secondary"
+                        value={current.region || ''}
+                        label={t('phonebook:fields.region')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('town')}
+                        color="secondary"
+                        value={current.town || ''}
+                        label={t('phonebook:fields.town')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('street')}
+                        color="secondary"
+                        value={current.street || ''}
+                        label={t('phonebook:fields.street')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        onChange={handleChange('postalCode')}
+                        color="secondary"
+                        value={current.postalCode || ''}
+                        label={t('phonebook:fields.postalCode')}
+                        variant="outlined"
+                        InputProps={InputProps}
+                      />
+                    </div>
                   </div>
                 </>
               )}

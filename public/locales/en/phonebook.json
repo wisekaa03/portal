@@ -5,7 +5,9 @@
     "header": "Address book - settings"
   },
   "fields": {
-    "lastName": "Name",
+    "lastName": "Surname",
+    "firstName": "Name",
+    "middleName": "Middle name",
     "nameEng": "Name (on english)",
     "username": "Username",
     "birthday": "Birthday",
