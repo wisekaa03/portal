@@ -6,7 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 // #region Imports Local
 // #endregion
 
-@Entity('ticketDepartment')
+@Entity('ticket_department')
 export class TicketDepartmentEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

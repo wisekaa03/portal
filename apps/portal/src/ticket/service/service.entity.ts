@@ -15,7 +15,7 @@ import {
 import { TicketDepartmentEntity } from '../department/department.entity';
 // #endregion
 
-@Entity('ticketService')
+@Entity('ticket_service')
 export class TicketServiceEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -33,7 +33,7 @@ export class TicketServiceEntity {
   name: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => TicketDepartmentEntity)
+  @OneToOne((type: any) => TicketDepartmentEntity, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn()
   department: TicketDepartmentEntity;
 
