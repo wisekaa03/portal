@@ -13,6 +13,7 @@ import {
 // #endregion
 // #region Imports Local
 import { TicketDepartmentEntity } from '../department/department.entity';
+import { UserEntity } from '../../user/user.entity';
 // #endregion
 
 @Entity('ticket_service')
@@ -33,7 +34,12 @@ export class TicketServiceEntity {
   name: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => TicketDepartmentEntity, { cascade: true, onDelete: 'CASCADE' })
+  @OneToOne((type: any) => UserEntity, { onDelete: 'CASCADE', nullable: false })
+  @JoinColumn()
+  user: UserEntity;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  @OneToOne((type: any) => TicketDepartmentEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   department: TicketDepartmentEntity;
 

@@ -1,7 +1,16 @@
 /** @format */
 
 // #region Imports NPM
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
+import { UserEntity } from '../../user/user.entity';
 // #endregion
 // #region Imports Local
 // #endregion
@@ -16,6 +25,11 @@ export class TicketDepartmentEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  @OneToOne((type: any) => UserEntity, { onDelete: 'CASCADE', nullable: false })
+  @JoinColumn()
+  user: UserEntity;
 
   @Column({
     type: 'varchar',

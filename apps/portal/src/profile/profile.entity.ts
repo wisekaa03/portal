@@ -157,7 +157,7 @@ export class ProfileEntity {
   @RelationId((profile: ProfileEntity) => profile.manager)
   managerId?: string;
 
-  @ManyToOne((_type: any) => ProfileEntity)
+  @ManyToOne((_type: any) => ProfileEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinTable()
   manager?: ProfileEntity | undefined;
 
