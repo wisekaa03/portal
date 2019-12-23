@@ -35,7 +35,7 @@ export class TicketServiceEntity {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @OneToOne((type: any) => TicketDepartmentEntity)
   @JoinColumn()
-  departmentId: TicketDepartmentEntity;
+  department: TicketDepartmentEntity;
 
   toResponseObject = (): TicketServiceEntity => ({ ...this });
 }
