@@ -45,7 +45,7 @@ export class UserEntity {
   password: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToMany((type) => GroupEntity, { eager: true, cascade: ['update'], nullable: true })
+  @ManyToMany((type) => GroupEntity, { eager: true, cascade: ['update'], onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
@@ -78,7 +78,7 @@ export class UserEntity {
   profileId: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => ProfileEntity)
+  @OneToOne((type: any) => ProfileEntity, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn()
   profile: ProfileEntity;
 
