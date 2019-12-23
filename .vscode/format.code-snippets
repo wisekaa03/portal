@@ -9,6 +9,7 @@
 	"Format code snippet": {
 		"prefix": "format",
 		"body": [
+			"",
 			"// #region Imports NPM",
 			"// #endregion",
 			"// #region Imports Local",
