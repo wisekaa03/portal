@@ -29,6 +29,8 @@ import { ProfileEntity } from './profile/profile.entity';
 import { UserEntity } from './user/user.entity';
 import { GroupModule } from './group/group.module';
 import { GroupEntity } from './group/group.entity';
+import { TicketDepartmentModule } from './ticket/department/department.module';
+import { TicketServiceModule } from './ticket/service/service.module';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -163,6 +165,11 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
 
     // #region Home page
     HomeModule,
+    // #endregion
+
+    // #region Ticket
+    TicketDepartmentModule,
+    TicketServiceModule,
     // #endregion
   ],
 
