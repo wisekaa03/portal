@@ -10,14 +10,14 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
+import { UserEntity } from '../../user/user.entity';
+import { TicketDepartmentEntity } from '../department/department.entity';
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../../user/user.entity';
-import { TicketGroupServiceEntity } from '../group-service/group-service.entity';
 // #endregion
 
-@Entity('ticket_service')
-export class TicketServiceEntity {
+@Entity('ticket_group_service')
+export class TicketGroupServiceEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -39,9 +39,9 @@ export class TicketServiceEntity {
   user: UserEntity;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => TicketGroupServiceEntity, { onDelete: 'CASCADE' })
+  @OneToOne((type: any) => TicketDepartmentEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
-  groupService: TicketGroupServiceEntity;
+  department: TicketDepartmentEntity;
 
-  toResponseObject = (): TicketServiceEntity => ({ ...this });
+  toResponseObject = (): TicketGroupServiceEntity => ({ ...this });
 }

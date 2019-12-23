@@ -31,6 +31,10 @@ import { GroupModule } from './group/group.module';
 import { GroupEntity } from './group/group.entity';
 import { TicketDepartmentModule } from './ticket/department/department.module';
 import { TicketServiceModule } from './ticket/service/service.module';
+import { TicketGroupServiceModule } from './ticket/group-service/group-service.module';
+import { TicketsModule } from './ticket/tickets/tickets.module';
+import { TicketAttachmentsModule } from './ticket/attachments/attachments.module';
+import { TicketCommentsModule } from './ticket/comments/comments.module';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -170,6 +174,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #region Ticket
     TicketDepartmentModule,
     TicketServiceModule,
+    TicketGroupServiceModule,
+    TicketsModule,
+    TicketAttachmentsModule,
+    TicketCommentsModule,
     // #endregion
   ],
 

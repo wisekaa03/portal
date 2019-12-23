@@ -13,11 +13,11 @@ import {
 // #endregion
 // #region Imports Local
 import { UserEntity } from '../../user/user.entity';
-import { TicketGroupServiceEntity } from '../group-service/group-service.entity';
+import { TicketServiceEntity } from '../service/service.entity';
 // #endregion
 
-@Entity('ticket_service')
-export class TicketServiceEntity {
+@Entity('tickets')
+export class TicketsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -31,7 +31,13 @@ export class TicketServiceEntity {
     type: 'varchar',
     nullable: true,
   })
-  name: string;
+  title: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  body: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @OneToOne((type: any) => UserEntity, { onDelete: 'CASCADE', nullable: false })
@@ -39,9 +45,9 @@ export class TicketServiceEntity {
   user: UserEntity;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => TicketGroupServiceEntity, { onDelete: 'CASCADE' })
+  @OneToOne((type: any) => TicketServiceEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
-  groupService: TicketGroupServiceEntity;
+  service: TicketServiceEntity;
 
-  toResponseObject = (): TicketServiceEntity => ({ ...this });
+  toResponseObject = (): TicketsEntity => ({ ...this });
 }
