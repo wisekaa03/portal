@@ -516,6 +516,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
                 value={_search}
                 onChange={handleSearch}
                 fullWidth
+                autoFocus
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
