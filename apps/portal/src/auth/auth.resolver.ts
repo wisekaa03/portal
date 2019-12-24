@@ -48,18 +48,24 @@ export class AuthResolver {
     const user = await this.authService.login({ username: username.toLowerCase(), password }, req);
 
     if (user) {
+      let email: any;
+
+      try {
+        if (user.profile && user.profile.email) {
+          email = this.authService.loginEmail(user.profile.email, password, res);
+        }
+      } catch (error) {
+        this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
+      }
+
       req.logIn(user as User, (err: any) => {
         if (err) {
           this.logService.error('Error when logging in:', err);
         }
       });
 
-      try {
-        if (user.profile && user.profile.email) {
-          await this.authService.loginEmail(user.profile.email, password, res);
-        }
-      } catch (error) {
-        this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
+      if (email) {
+        await email;
       }
 
       return user;
