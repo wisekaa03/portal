@@ -307,7 +307,7 @@ export class ProfileService {
     const created = await this.profileRepository.findOne(updated.id);
     const ldapUser = await this.ldapService.searchByDN(created.dn);
 
-    let comment;
+    let comment = {};
     try {
       comment = JSON.parse(ldapUser.comment);
     } catch (error) {
