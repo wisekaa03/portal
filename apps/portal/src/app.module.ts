@@ -119,7 +119,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
             `master url="${configService.get<string>('DATABASE_URI')}, ` +
             `slaves url="${configService.get<string>('DATABASE_URI_RD')}. ` +
           `Cache url="${configService.get<string>('DATABASE_REDIS_URI')}", ` +
-            `ttl=${configService.get<number>('DATABASE_REDIS_TTL')}s.`,
+            `ttl=${configService.get<number>('DATABASE_REDIS_TTL')}ms.`,
           'Database',
         );
 
