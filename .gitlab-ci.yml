@@ -27,6 +27,7 @@ test_build:
     # - apt-get upgrade && apt-get install -y openssl libpq-dev
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
+    - ./entrypoint.sh
     # - ./entrypoint.sh test -u
     - time yarn build
     - time yarn build:synch
