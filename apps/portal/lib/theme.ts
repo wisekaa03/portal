@@ -76,6 +76,11 @@ theme.overrides = {
       color: 'inherit',
     },
   },
+  MuiRadio: {
+    root: {
+      color: 'inherit',
+    },
+  },
   MuiFormLabel: {
     root: {
       'color:not($disabled)': theme.palette.primary.main,

@@ -15,5 +15,10 @@
   "meeting": "Meeting rooms",
   "news": "Timeline",
   "services": "Сreate a request",
-  "adminPanel": "Admin panel"
+  "adminPanel": "Admin panel",
+  "gender": {
+    "MAN": "Man",
+    "WOMAN": "Woman",
+    "UNKNOWN": "Unknown"
+  }
 }

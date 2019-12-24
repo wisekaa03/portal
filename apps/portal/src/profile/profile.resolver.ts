@@ -1,15 +1,17 @@
 /** @format */
 
 // #region Imports NPM
-import { Query, Mutation, Resolver, Args } from '@nestjs/graphql';
+import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { IsAdminGuard } from '../guards/admin.guard';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
+import { Profile } from './models/profile.dto';
 // #endregion
 
 @Resolver('Profile')
@@ -76,14 +78,24 @@ export class ProfileResolver {
   /**
    * GraphQL mutation: changeProfile
    *
-   * @param id
-   * @param value
+   * @param req
+   * @param profile
    * @returns {Boolean}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
-  async changeProfile(@Args('id') id: string, @Args('value') value: any): Promise<boolean | null> {
-    return this.profileService.changeProfile(id, value) || null;
+  async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<boolean | null> {
+    if (
+      req &&
+      req.session &&
+      req.session.passport &&
+      req.session.passport.user.profile &&
+      req.session.passport.user.profile.id
+    ) {
+      return this.profileService.changeProfile(req.session.passport.user.profile.id, profile) || null;
+    }
+
+    return null;
   }
 }

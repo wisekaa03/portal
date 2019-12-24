@@ -4,6 +4,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
+import Ldap from 'ldapjs';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -296,11 +297,120 @@ export class ProfileService {
 
   /**
    * changeProfile
-   * @param id string
-   * @param value any
+   * @param id Profile ID
+   * @param profile Profile
    * @returns boolean | null
    */
-  async changeProfile(id: string, value: any): Promise<boolean | null> {
-    return null;
+  async changeProfile(id: string, profile: Profile): Promise<boolean | null> {
+    const updated = { id, ...profile };
+
+    const created = await this.profileRepository.findOne(updated.id);
+    const ldapUser = await this.ldapService.searchByDN(created.dn);
+
+    let comment;
+    try {
+      comment = JSON.parse(ldapUser.comment);
+    } catch (error) {
+      comment = {};
+    }
+
+    const modification: any = {};
+
+    const clean = (value: any): string | number | boolean => {
+      return typeof value === 'string' ? value.trim() : value;
+    };
+
+    Object.keys(profile).forEach((key) => {
+      const value = clean(profile[key]);
+
+      switch (key) {
+        case 'firstName':
+          modification.givenName = value;
+          break;
+        case 'lastName':
+          modification.sn = value;
+          break;
+        case 'middleName':
+          modification.middleName = value;
+          modification.displayName = [created.lastName, created.firstName, value].join(' ');
+          break;
+        case 'birthday':
+          // TODO: пока непонятно в каком формате хранить в ldap
+          break;
+        case 'gender':
+          if ([Gender.MAN, Gender.WOMAN].includes(value as number)) {
+            modification.comment = { ...comment, gender: value === Gender.MAN ? 'M' : 'W' };
+          }
+          break;
+        case 'companyEng':
+        case 'nameEng':
+        case 'departmentEng':
+        case 'otdelEng':
+        case 'positionEng':
+          modification.comment = { ...comment, [key]: value };
+          break;
+        case 'country':
+          modification.co = value;
+          break;
+        case 'town':
+          modification.l = value;
+          break;
+        case 'region':
+          modification.st = value;
+          break;
+        case 'street':
+          modification.streetAddress = value;
+          break;
+        case 'email':
+          modification.mail = value;
+          break;
+        case 'telephone':
+          modification.telephoneNumber = value;
+          break;
+        case 'workPhone':
+          modification.otherTelephone = value;
+          break;
+        case 'fax':
+          modification.facsimileTelephoneNumber = value;
+          break;
+        case 'room':
+          modification.physicalDeliveryOfficeName = value;
+          break;
+        case 'notShowing':
+          // TODO: тоже доделать
+          // modification.flags;
+          break;
+        case 'thumbnailPhoto':
+          // TODO: преобразовать из буфера
+          break;
+        case 'department':
+        case 'otdel':
+          // TODO: посмотреть как хранится
+          // modification.department =
+          break;
+        // имена ключей совпадают
+        case 'postalCode':
+        case 'company':
+        case 'title':
+        case 'mobile':
+          modification[key] = value;
+          break;
+        default:
+          break;
+      }
+    });
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    // TODO: отладить и только после сохранять
+    // const ldapUpdated = new Ldap.Change({
+    //   operation: 'replace',
+    //   modification,
+    // });
+    // if (await this.ldapService.modify(created.dn, ldapUpdated, created.username)) {
+    //   await this.save({ ...created, ...profile });
+    // }
+
+    return true;
   }
 }

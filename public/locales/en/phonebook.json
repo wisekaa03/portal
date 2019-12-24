@@ -34,7 +34,8 @@
     "street": "Street",
     "postalCode": "Postal code",
     "disabled": "Dismissed",
-    "notShowing": "Hidden"
+    "notShowing": "Hidden",
+    "gender": "Gender"
   },
   "profile": {
     "hide": "Hide profile",
