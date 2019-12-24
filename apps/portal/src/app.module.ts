@@ -113,36 +113,51 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, LoggerModule],
       inject: [ConfigService, LogService],
-      useFactory: async (configService: ConfigService, logger: LogService) => ({
-        name: 'default',
-        keepConnectionAlive: true,
-        type: 'postgres',
-        replication: {
-          master: { url: configService.get<string>('DATABASE_URI') },
-          slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
-        },
-        schema: configService.get<string>('DATABASE_SCHEMA'),
-        uuidExtension: 'pgcrypto',
-        logger,
-        synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
-        dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-        logging: dev
-          ? true
-          : configService.get('DATABASE_LOGGING') === 'false'
-            ? false
-            : configService.get('DATABASE_LOGGING') === 'true'
-              ? true
-              : JSON.parse(configService.get('DATABASE_LOGGING')),
-        entities: [ProfileEntity, GroupEntity, UserEntity],
-        migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-        cache: {
-          type: 'redis',
-          options: {
-            url: configService.get<string>('DATABASE_REDIS_URI'),
+      useFactory: async (configService: ConfigService, logger: LogService) => {
+        logger.debug(
+          `Replication: ` +
+            `master url="${configService.get<string>('DATABASE_URI')}, ` +
+            `slaves url="${configService.get<string>('DATABASE_URI_RD')}. ` +
+          `Cache url="${configService.get<string>('DATABASE_REDIS_URI')}", ` +
+            `ttl=${configService.get<number>('DATABASE_REDIS_TTL')}s.`,
+          'Database',
+        );
+
+        return {
+          name: 'default',
+          keepConnectionAlive: true,
+          type: 'postgres',
+          replication: {
+            master: { url: configService.get<string>('DATABASE_URI') },
+            slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
           },
-          duration: configService.get<number>('DATABASE_REDIS_TTL'),
-        },
-      } as TypeOrmModuleOptions),
+          schema: configService.get<string>('DATABASE_SCHEMA'),
+          uuidExtension: 'pgcrypto',
+          logger,
+          synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+          dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
+          logging: dev
+            ? true
+            : configService.get('DATABASE_LOGGING') === 'false'
+              ? false
+              : configService.get('DATABASE_LOGGING') === 'true'
+                ? true
+                : JSON.parse(configService.get('DATABASE_LOGGING')),
+          entities: [
+            ProfileEntity, GroupEntity, UserEntity,
+            TicketDepartmentModule, TicketGroupServiceModule, TicketServiceModule,
+            TicketsModule, TicketAttachmentsModule, TicketCommentsModule
+          ],
+          migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
+          cache: {
+            type: 'redis',
+            options: {
+              url: configService.get<string>('DATABASE_REDIS_URI'),
+            },
+            duration: configService.get<number>('DATABASE_REDIS_TTL'),
+          },
+        } as TypeOrmModuleOptions;
+      },
     }),
     /* eslint-enable prettier/prettier */
     // #endregion
