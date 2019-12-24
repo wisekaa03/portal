@@ -305,7 +305,16 @@ export class ProfileService {
     const updated = { id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
+
+    if (!created) {
+      return false;
+    }
+
     const ldapUser = await this.ldapService.searchByDN(created.dn);
+
+    if (!ldapUser) {
+      return false;
+    }
 
     let comment = {};
     try {
@@ -321,7 +330,7 @@ export class ProfileService {
     };
 
     Object.keys(profile).forEach((key) => {
-      const value = clean(profile[key]);
+      const value = clean((profile as any)[key]);
 
       switch (key) {
         case 'firstName':
