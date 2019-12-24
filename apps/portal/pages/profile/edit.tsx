@@ -4,7 +4,17 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, TextField, IconButton, InputAdornment, Divider, FormControlLabel, Checkbox } from '@material-ui/core';
+import {
+  Box,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Divider,
+  FormControlLabel,
+  Checkbox,
+  Radio,
+  RadioGroup,
+} from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { useDropzone } from 'react-dropzone';
@@ -21,9 +31,10 @@ import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { ProfileContext } from '../../lib/context';
-import { PROFILE, USER_SETTINGS } from '../../lib/queries';
+import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import { toBase64 } from '../../components/utils';
 import Button from '../../components/button';
+import { Gender } from '../../src/shared/interfaces';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,6 +78,12 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: 0,
       },
     },
+    genderBlock: {
+      'flexDirection': 'row',
+      '& > label': {
+        margin: 0,
+      },
+    },
     hr: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
@@ -76,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'zIndex': 100,
       'width': '100%',
       'height': '100%',
-      'borderRadius': 0,
+      'borderRadius': theme.spacing() / 2,
       'color': '#fff',
       'opacity': 0,
       'transition': theme.transitions.create('opacity', {
@@ -95,20 +112,22 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
   const [current, setCurrent] = useState<Profile | undefined>();
+  const [updated, setUpdated] = useState<Profile | undefined>();
   const profile = useContext(ProfileContext);
   const isAdmin = profile && profile.user && profile.user.isAdmin;
   const router = useRouter();
 
-  const [changeProfile] = useMutation(USER_SETTINGS);
+  const [changeProfile] = useMutation(CHANGE_PROFILE);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
       if (acceptedFiles.length) {
         const thumbnailPhoto = (await toBase64(acceptedFiles[0])) as string;
         setCurrent({ ...current, thumbnailPhoto });
+        setUpdated({ ...updated, thumbnailPhoto });
       }
     },
-    [current],
+    [current, updated],
   );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
@@ -116,9 +135,11 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // TODO: пока так, потом переделать с выводом ошибок
   useEffect(() => {
     if (isAdmin && router && router.query && router.query.id) {
+      const id = router.query.id as string;
       getProfile({
-        variables: { id: router.query.id },
+        variables: { id },
       });
+      setUpdated({ id } as any);
     } else {
       setCurrent(profile.user.profile);
     }
@@ -139,13 +160,18 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
     const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
 
     if (isAdmin) {
-      setCurrent({ ...current, [name]: value });
+      const result = name === 'gender' ? +value : value;
+
+      setCurrent({ ...current, [name]: result });
+      setUpdated({ ...updated, [name]: result });
     }
   };
 
   const handleSave = (): void => {
     changeProfile({
-      variables: current,
+      variables: {
+        profile: updated,
+      },
     });
   };
 
@@ -178,7 +204,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               </Link>
               <IsAdmin>
                 <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-                  <Button>{t('common:accept')}</Button>
+                  <Button onClick={handleSave}>{t('common:accept')}</Button>
                 </Box>
               </IsAdmin>
             </Box>
@@ -188,11 +214,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   <div className={classes.firstBlock}>
                     <Box display="flex">
                       <Box mr={1} position="relative">
-                        <div
-                          {...getRootProps({
-                            onClick: (event) => console.log(event),
-                          })}
-                        >
+                        <div {...getRootProps()}>
                           <input {...getInputProps()} />
                           <IconButton className={classes.pickPhoto}>
                             <PhotoCameraIcon />
@@ -243,17 +265,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={current.disabled}
-                            onChange={handleChange('disabled')}
-                            color="secondary"
-                            value="disabled"
-                          />
-                        }
-                        label={t('phonebook:fields.disabled')}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
                             checked={current.notShowing}
                             onChange={handleChange('notShowing')}
                             color="secondary"
@@ -262,6 +273,35 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         }
                         label={t('phonebook:fields.notShowing')}
                       />
+                      <RadioGroup
+                        className={classes.genderBlock}
+                        onChange={handleChange('gender')}
+                        aria-label="gender"
+                        name="gender"
+                        value={current.gender}
+                      >
+                        <FormControlLabel
+                          value={Gender.MAN}
+                          control={<Radio color="secondary" />}
+                          label={t('common:gender.MAN')}
+                          name="gender"
+                          labelPlacement="end"
+                        />
+                        <FormControlLabel
+                          value={Gender.WOMAN}
+                          control={<Radio color="secondary" />}
+                          label={t('common:gender.WOMAN')}
+                          name="gender"
+                          labelPlacement="end"
+                        />
+                        <FormControlLabel
+                          value={Gender.UNKNOWN}
+                          control={<Radio color="secondary" />}
+                          label={t('common:gender.UNKNOWN')}
+                          name="gender"
+                          labelPlacement="end"
+                        />
+                      </RadioGroup>
                     </div>
                     <div>
                       <TextField
@@ -362,7 +402,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         value={getManager(current.manager)}
                         label={t('phonebook:fields.manager')}
                         variant="outlined"
-                        InputProps={InputProps}
+                        InputProps={{ readOnly: true }}
                       />
                     </div>
                     <div>

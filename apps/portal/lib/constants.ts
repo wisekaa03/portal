@@ -25,7 +25,7 @@ export const ALLOW_REDIRECT_PAGES = [
 export const LARGE_RESOLUTION = 1440;
 export const AUTO_COLLAPSE_ROUTES = ['/mail'];
 
-export const ADMIN_GROUP = 'Web Master';
+export const ADMIN_GROUP = 'web master';
 
 // TEST
 export const MOCK_PROFILE: UserContext = {

@@ -99,7 +99,41 @@ type ProfileConnection {
 }
 
 input ProfileSettingsInput {
-  flags: Boolean
+  id: ID
+
+  firstName: String
+  lastName: String
+  middleName: String
+  birthday: String
+  gender: Int
+
+  company: String
+  title: String
+  department: String
+  otdel: String
+
+  telephone: String
+  workPhone: String
+  fax: String
+  mobile: String
+  email: String
+
+  companyEng: String
+  nameEng: String
+  departmentEng: String
+  otdelEng: String
+  positionEng: String
+
+  country: String
+  postalCode: String
+  region: String
+  town: String
+  street: String
+  room: String
+
+  notShowing: Boolean
+
+  thumbnailPhoto: String
 }
 
 type Query {
@@ -113,5 +147,5 @@ type Query {
 }
 
 type Mutation {
-  changeProfile(id: ID, value: ProfileSettingsInput): Boolean
+  changeProfile(profile: ProfileSettingsInput): Boolean
 }
