@@ -50,19 +50,24 @@ export class AuthResolver {
       @Context('res') res: Response,
   /* eslint-enable prettier/prettier */
   ): Promise<UserResponse | null> {
+    let emailSession = new Promise(() => true);
+
     const user = await this.authService.login({ username: username.toLowerCase(), password }, req).catch((error) => {
       throw new UnauthorizedException(undefined, JSON.stringify(error));
     });
 
     if (user.profile && user.profile.email) {
-      await this.authService
+      emailSession = this.authService
         .loginEmail(user.profile.email, password)
         .then((response) => {
           // eslint-disable-next-line no-debugger
           debugger;
 
           if (response.data && response.data.sessid && response.data.sessauth) {
-            const options = { maxAge: this.configService.get<number>('SESSION_COOKIE_TTL') };
+            const options = {
+              domain: '.portal.i-npz.ru',
+              maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
+            };
 
             res.cookie('roundcube_sessid', response.data.sessid, options);
             res.cookie('roundcube_sessauth', response.data.sessauth, options);
@@ -83,7 +88,7 @@ export class AuthResolver {
       }
     });
 
-    return user;
+    return (await emailSession) && user;
   }
 
   /**
