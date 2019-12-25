@@ -79,6 +79,8 @@ export class AuthResolver {
         })
         .catch((error) => {
           this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
+
+          return true;
         });
     }
 
