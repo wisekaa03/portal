@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { User } from '../user/models/user.dto';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
@@ -15,7 +16,11 @@ import { UserResponse } from '../user/user.entity';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService, private readonly logService: LogService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+    private readonly logService: LogService,
+  ) {}
 
   /**
    * GraphQL query: me
@@ -45,33 +50,40 @@ export class AuthResolver {
       @Context('res') res: Response,
   /* eslint-enable prettier/prettier */
   ): Promise<UserResponse | null> {
-    const user = await this.authService.login({ username: username.toLowerCase(), password }, req);
+    const user = await this.authService.login({ username: username.toLowerCase(), password }, req).catch((error) => {
+      throw new UnauthorizedException(undefined, JSON.stringify(error));
+    });
 
-    if (user) {
-      let email: any;
+    if (user.profile && user.profile.email) {
+      await this.authService
+        .loginEmail(user.profile.email, password)
+        .then((response) => {
+          // eslint-disable-next-line no-debugger
+          debugger;
 
-      try {
-        if (user.profile && user.profile.email) {
-          email = this.authService.loginEmail(user.profile.email, password, res);
-        }
-      } catch (error) {
-        this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
-      }
+          if (response.data && response.data.sessid && response.data.sessauth) {
+            const options = { maxAge: this.configService.get<number>('SESSION_COOKIE_TTL') };
 
-      req.logIn(user as User, (err: any) => {
-        if (err) {
-          this.logService.error('Error when logging in:', err);
-        }
-      });
+            res.cookie('roundcube_sessid', response.data.sessid, options);
+            res.cookie('roundcube_sessauth', response.data.sessauth, options);
+          } else {
+            throw new Error('MailSession error.');
+          }
 
-      if (email) {
-        await email;
-      }
-
-      return user;
+          return true;
+        })
+        .catch((error) => {
+          this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
+        });
     }
 
-    throw new UnauthorizedException();
+    req.logIn(user as User, (err: any) => {
+      if (err) {
+        this.logService.error('Error when logging in:', err);
+      }
+    });
+
+    return user;
   }
 
   /**

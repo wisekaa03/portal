@@ -51,7 +51,7 @@ export class AuthService {
    * @param {UserLogin} data User login data transfer object
    * @returns {UserResponse} User response
    */
-  async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse | null> {
+  async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
     try {
@@ -212,27 +212,11 @@ export class AuthService {
     }
   }
 
-  loginEmail = async (email: string, password: string, res: Response): Promise<void> => {
-    const mailSession = (
-      await this.httpService
-        .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
-          email,
-          password,
-        })
-        .toPromise()
-    ).data;
-
-    if (mailSession.sessid && mailSession.sessauth) {
-      // TODO: важно! точка вначале обязательна
-      const domain = '.portal.i-npz.ru';
-      const maxAge = parseInt(this.configService.get<string>('SESSION_COOKIE_TTL'), 10);
-      const options = { httpOnly: true, path: '/', domain, maxAge };
-
-      // res.clearCookie('roundcube_sessauth', options).status(200);
-      // res.clearCookie('roundcube_sessid', options).status(200);
-
-      res.cookie('roundcube_sessid', mailSession.sessid, options);
-      res.cookie('roundcube_sessauth', mailSession.sessauth, options);
-    }
-  };
+  loginEmail = async (email: string, password: string): Promise<any> =>
+    this.httpService
+      .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+        email,
+        password,
+      })
+      .toPromise();
 }
