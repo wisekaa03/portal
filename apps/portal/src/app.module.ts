@@ -9,7 +9,7 @@ import { Module, CacheModule } from '@nestjs/common';
 import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { RenderModule } from 'nest-next';
+import { RenderModule } from 'nest-next-2';
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local

@@ -205,7 +205,7 @@ const plugins = [
   [withCustomWebpack],
 ];
 
-const config = {
+const nextConfig = {
   devIndicators: {
     autoPrerender: false,
   },
@@ -215,7 +215,7 @@ const config = {
   dist: '../../dist/apps/portal',
   compress: false,
   // crossOrigin: 'anonymous',
-  poweredByHeader: false,
+  // poweredByHeader: false,
 };
 
-module.exports = withPlugins(plugins, config);
+module.exports = withPlugins(plugins, nextConfig);

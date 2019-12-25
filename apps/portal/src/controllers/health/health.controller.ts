@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Controller, Get } from '@nestjs/common';
-// import { RenderableResponse } from 'nest-next';
+// import { RenderableResponse } from 'nest-next-2';
 // #endregion
 // #region Imports Local
 // #endregion

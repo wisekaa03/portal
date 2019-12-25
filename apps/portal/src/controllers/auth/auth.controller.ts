@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Controller, Get, Res, UseGuards } from '@nestjs/common';
-import { RenderableResponse } from 'nest-next';
+import { RenderableResponse } from 'nest-next-2';
 import { SessionGuard } from '../../guards/session.guard';
 // #endregion
 // #region Imports Local

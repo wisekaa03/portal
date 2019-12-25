@@ -15,7 +15,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 // import { getConnection } from 'typeorm';
-import { RenderModule } from 'nest-next';
+import { RenderModule } from 'nest-next-2';
 import Next from 'next';
 import 'reflect-metadata';
 // #endregion
@@ -137,8 +137,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
       },
     }),
   );
-
-  server.use(helmet.hidePoweredBy());
   // #endregion
 
   // #region Improve performance - this is done by Nginx reverse-proxy, do not need
@@ -172,9 +170,10 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Next.JS locals
   server.use('*', (_req: Request, res: Response, next: Function) => {
-    // res.set('X-Server-ID', );
     res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     next();
+    // res.set('X-Server-ID', res);
+    res.removeHeader('X-Powered-By');
   });
   // #endregion
 
