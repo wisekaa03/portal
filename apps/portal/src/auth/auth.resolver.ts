@@ -66,11 +66,11 @@ export class AuthResolver {
 
             res.cookie('roundcube_sessid', response.data.sessid, options);
             res.cookie('roundcube_sessauth', response.data.sessauth, options);
-          } else {
-            throw new Error('MailSession error.');
+
+            return true;
           }
 
-          return true;
+          throw new Error('Undefined mailSession error.');
         })
         .catch((error) => {
           this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
