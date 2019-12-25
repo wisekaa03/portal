@@ -32,18 +32,24 @@ export class AuthService {
    * @param {username} Username
    * @returns {UserRespone | null}
    */
-  public validate = async (username: string, password: string, req?: Express.Request): Promise<UserResponse | null> => {
-    // TODO: сделать что-нибудь... постоянно опрашивается и база и ldap, согласно политики redis-а
-    // TODO: опрашивается redis, но у него есть время на удаление всех записей, настраивается через
-    // TODO: у базы - DATABASE_REDIS_TTL, у ldap - LDAP_REDIS_TTL
-    const user = await this.userService.comparePassword(username, password);
+  public validate = async (
+    username: string,
+    password: string,
+    request: Express.Request,
+  ): Promise<UserResponse | null> =>
+    request && request.session && request.session.passport && request.session.passport.user;
 
-    if (user) {
-      return user.toResponseObject((req && req.sessionID) || '');
-    }
+  // // TODO: сделать что-нибудь... постоянно опрашивается и база и ldap, согласно политики redis-а
+  // // TODO: опрашивается redis, но у него есть время на удаление всех записей, настраивается через
+  // // TODO: у базы - DATABASE_REDIS_TTL, у ldap - LDAP_REDIS_TTL
+  // const user = await this.userService.comparePassword(username, password);
 
-    throw new UnauthorizedException();
-  };
+  // if (user) {
+  //   return user.toResponseObject((req && req.sessionID) || '');
+  // }
+
+  // throw new UnauthorizedException();
+  // };
 
   /**
    * Login a user
@@ -54,31 +60,17 @@ export class AuthService {
   async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
-    try {
-      const user = await this.userLdapLogin({
-        username,
-        password,
-        user: await this.userService.readByUsername(username),
+    return this.userLdapLogin({
+      username,
+      password,
+      user: await this.userService.readByUsername(username, true, true),
+    })
+      .then((user) => user && user.toResponseObject((req && req.sessionID) || ''))
+      .catch((error) => {
+        this.logService.error('Error: not found user', JSON.stringify(error), 'AuthService');
+
+        throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
       });
-      if (user) {
-        try {
-          // TODO:
-          return user.toResponseObject((req && req.sessionID) || '');
-        } catch (error) {
-          this.logService.error('Error:', error.toString(), 'AuthService');
-
-          throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
-        }
-      }
-
-      this.logService.error('Error: not found user', undefined, 'AuthService');
-
-      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
-    } catch (error) {
-      this.logService.error('Error:', error.toString(), 'AuthService');
-
-      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
-    }
   }
 
   /**
@@ -186,30 +178,20 @@ export class AuthService {
     username: string;
     password: string;
     user?: UserEntity;
-  }): Promise<UserEntity | undefined> {
-    try {
-      // #region to LDAP database
-      const ldapUser = await this.ldapService.authenticate(username, password);
-      // #endregion
+  }): Promise<UserEntity> {
+    const ldapUser = await this.ldapService.authenticate(username, password);
 
-      if (!ldapUser) {
-        this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
+    if (!ldapUser) {
+      this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
 
-        return undefined;
-      }
-
-      try {
-        return this.userService.createFromLdap(ldapUser, user);
-      } catch (error) {
-        this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
-
-        throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), 500);
-      }
-    } catch (error) {
-      this.logService.error('Unable to login in ldap', JSON.stringify(error), 'AuthService');
-
-      throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
+      throw new Error('Unable to find user in ldap');
     }
+
+    return this.userService.createFromLdap(ldapUser, user).catch((error) => {
+      this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
+
+      throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), 500);
+    });
   }
 
   loginEmail = async (email: string, password: string): Promise<any> =>
