@@ -269,7 +269,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.company`)} />
                       <ListItemText
-                        className={profile && profile.company && classes.pointer}
+                        className={(profile && profile.company && classes.pointer) || ''}
                         onClick={handleSearchClose(profile && profile.company)}
                         primary={profile ? profile.company : <Skeleton variant="rect" width={250} height={25} />}
                       />
@@ -279,7 +279,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.department`)} />
                       <ListItemText
-                        className={profile && profile.department && classes.pointer}
+                        className={(profile && profile.department && classes.pointer) || ''}
                         onClick={handleSearchClose(profile && profile.department)}
                         primary={profile ? profile.department : <Skeleton variant="rect" width={250} height={25} />}
                       />
@@ -289,7 +289,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                     <div className={classes.listItem}>
                       <ListItemText primary={t(`phonebook:fields.title`)} />
                       <ListItemText
-                        className={profile && profile.title && classes.pointer}
+                        className={(profile && profile.title && classes.pointer) || ''}
                         onClick={handleSearchClose(profile && profile.title)}
                         primary={profile ? profile.title : <Skeleton variant="rect" width={250} height={25} />}
                       />
