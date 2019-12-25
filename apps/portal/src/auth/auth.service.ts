@@ -30,14 +30,16 @@ export class AuthService {
    * Validate a user
    *
    * @param {username} Username
-   * @returns {UserRespone | null}
+   * @returns {UserRespone}
+   * @throws {UnauthorizedException}
    */
-  public validate = async (
-    username: string,
-    password: string,
-    request: Express.Request,
-  ): Promise<UserResponse | null> =>
-    request && request.session && request.session.passport && request.session.passport.user;
+  public validate = async (request: Express.Request): Promise<UserResponse> => {
+    if (request && request.session && request.session.passport && request.session.passport.user) {
+      return request.session.passport.user;
+    }
+
+    throw new UnauthorizedException();
+  };
 
   // // TODO: сделать что-нибудь... постоянно опрашивается и база и ldap, согласно политики redis-а
   // // TODO: опрашивается redis, но у него есть время на удаление всех записей, настраивается через
