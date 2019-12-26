@@ -380,7 +380,7 @@ export class ProfileService {
           modification.physicalDeliveryOfficeName = value;
           break;
         case 'notShowing':
-          modification.flags = value ? '1' : '';
+          modification.flags = value ? '1' : '0';
           break;
         case 'thumbnailPhoto':
           // eslint-disable-next-line no-case-declarations
