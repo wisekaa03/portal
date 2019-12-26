@@ -161,11 +161,11 @@ export class ProfileService {
       comment = {};
     }
     const {
-      companyEng = undefined,
-      nameEng = undefined,
-      departmentEng = undefined,
-      otdelEng = undefined,
-      positionEng = undefined,
+      companyeng = undefined,
+      nameeng = undefined,
+      departmenteng = undefined,
+      otdeleng = undefined,
+      positioneng = undefined,
       gender = undefined,
     } = comment;
 
@@ -216,11 +216,11 @@ export class ProfileService {
       mobile: ldapUser.mobile,
       fax: ldapUser.facsimileTelephoneNumber,
       room: ldapUser.physicalDeliveryOfficeName,
-      companyEng,
-      nameEng,
-      departmentEng,
-      otdelEng,
-      positionEng,
+      companyeng,
+      nameeng,
+      departmenteng,
+      otdeleng,
+      positioneng,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       notShowing: !!(parseInt(ldapUser.flags, 10) === 1),
@@ -345,11 +345,11 @@ export class ProfileService {
           }
           break;
         case 'birthday':
-        case 'companyEng':
-        case 'nameEng':
-        case 'departmentEng':
-        case 'otdelEng':
-        case 'positionEng':
+        case 'companyeng':
+        case 'nameeng':
+        case 'departmenteng':
+        case 'otdeleng':
+        case 'positioneng':
           modification.comment = { ...modification.comment, [key]: value };
           break;
         case 'country':

@@ -259,10 +259,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <div className={classes.nameBlock}>
                       <TextField
                         fullWidth
-                        onChange={handleChange('nameEng')}
+                        onChange={handleChange('nameeng')}
                         color="secondary"
-                        value={current.nameEng || ''}
-                        label={t('phonebook:fields.nameEng')}
+                        value={current.nameeng || ''}
+                        label={t('phonebook:fields.nameeng')}
                         variant="outlined"
                         InputProps={InputProps}
                       />
@@ -321,10 +321,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <div>
                       <TextField
                         fullWidth
-                        onChange={handleChange('companyEng')}
+                        onChange={handleChange('companyeng')}
                         color="secondary"
-                        value={current.companyEng || ''}
-                        label={t('phonebook:fields.companyEng')}
+                        value={current.companyeng || ''}
+                        label={t('phonebook:fields.companyeng')}
                         variant="outlined"
                         InputProps={InputProps}
                       />
@@ -343,10 +343,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <div>
                       <TextField
                         fullWidth
-                        onChange={handleChange('departmentEng')}
+                        onChange={handleChange('departmenteng')}
                         color="secondary"
-                        value={current.departmentEng || ''}
-                        label={t('phonebook:fields.departmentEng')}
+                        value={current.departmenteng || ''}
+                        label={t('phonebook:fields.departmenteng')}
                         variant="outlined"
                         InputProps={InputProps}
                       />
@@ -365,10 +365,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <div>
                       <TextField
                         fullWidth
-                        onChange={handleChange('otdelEng')}
+                        onChange={handleChange('otdeleng')}
                         color="secondary"
-                        value={current.otdelEng || ''}
-                        label={t('phonebook:fields.otdelEng')}
+                        value={current.otdeleng || ''}
+                        label={t('phonebook:fields.otdeleng')}
                         variant="outlined"
                         InputProps={InputProps}
                       />
@@ -387,10 +387,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <div>
                       <TextField
                         fullWidth
-                        onChange={handleChange('positionEng')}
+                        onChange={handleChange('positioneng')}
                         color="secondary"
-                        value={current.positionEng || ''}
-                        label={t('phonebook:fields.positionEng')}
+                        value={current.positioneng || ''}
+                        label={t('phonebook:fields.positioneng')}
                         variant="outlined"
                         InputProps={InputProps}
                       />

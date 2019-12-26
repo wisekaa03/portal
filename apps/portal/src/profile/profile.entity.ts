@@ -189,31 +189,31 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
-  companyEng: string;
+  companyeng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  nameEng: string;
+  nameeng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  departmentEng: string;
+  departmenteng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  otdelEng: string;
+  otdeleng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  positionEng: string;
+  positioneng: string;
 
   @Column({
     type: 'boolean',

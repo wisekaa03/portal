@@ -104,7 +104,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 200, maxWidth: 200 },
   },
   {
-    name: 'nameEng',
+    name: 'nameeng',
     admin: false,
     defaultStyle: { minWidth: 160, maxWidth: 160 },
     largeStyle: { minWidth: 200, maxWidth: 200 },
@@ -122,7 +122,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 350, maxWidth: 350 },
   },
   {
-    name: 'companyEng',
+    name: 'companyeng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 350, maxWidth: 350 },
@@ -134,7 +134,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 350, maxWidth: 350 },
   },
   {
-    name: 'departmentEng',
+    name: 'departmenteng',
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 350, maxWidth: 350 },
@@ -146,7 +146,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 300, maxWidth: 300 },
   },
   {
-    name: 'otdelEng',
+    name: 'otdeleng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 300, maxWidth: 300 },
@@ -158,7 +158,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 280, maxWidth: 280 },
   },
   {
-    name: 'positionEng',
+    name: 'positioneng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 250, maxWidth: 250 },

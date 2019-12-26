@@ -236,9 +236,9 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                 <span>{t(`phonebook:fields.notShowing`)}</span>
               </div>
             )}
-            {profile && profile.nameEng && (
+            {profile && profile.nameeng && (
               <div className={classes.center}>
-                <span>{profile && profile.nameEng}</span>
+                <span>{profile && profile.nameeng}</span>
               </div>
             )}
             {profile && profile.mobile && (

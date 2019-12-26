@@ -63,15 +63,15 @@ export interface Profile {
 
   fax: string;
 
-  companyEng: string;
+  companyeng: string;
 
-  nameEng: string;
+  nameeng: string;
 
-  departmentEng: string;
+  departmenteng: string;
 
-  otdelEng: string;
+  otdeleng: string;
 
-  positionEng: string;
+  positioneng: string;
 
   disabled: boolean;
 

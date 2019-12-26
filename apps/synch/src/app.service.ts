@@ -133,11 +133,11 @@ export class SynchService {
       comment = {};
     }
     const {
-      companyEng = undefined,
-      nameEng = undefined,
-      departmentEng = undefined,
-      otdelEng = undefined,
-      positionEng = undefined,
+      companyeng = undefined,
+      nameeng = undefined,
+      departmenteng = undefined,
+      otdeleng = undefined,
+      positioneng = undefined,
       gender = undefined,
     } = comment;
 
@@ -189,11 +189,11 @@ export class SynchService {
       mobile: ldapUser.mobile,
       fax: ldapUser.facsimileTelephoneNumber,
       room: ldapUser.physicalDeliveryOfficeName,
-      companyEng,
-      nameEng,
-      departmentEng,
-      otdelEng,
-      positionEng,
+      companyeng,
+      nameeng,
+      departmenteng,
+      otdeleng,
+      positioneng,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       notShowing: !!(parseInt(ldapUser.flags, 10) === 1),

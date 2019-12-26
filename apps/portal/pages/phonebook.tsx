@@ -271,16 +271,16 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
             break;
           }
 
-          case 'nameEng':
+          case 'nameeng':
           case 'username':
           case 'company':
-          case 'companyEng':
+          case 'companyeng':
           case 'department':
-          case 'departmentEng':
+          case 'departmenteng':
           case 'otdel':
-          case 'otdelEng':
+          case 'otdeleng':
           case 'title':
-          case 'positionEng':
+          case 'positioneng':
           case 'room':
           case 'telephone':
           case 'fax':

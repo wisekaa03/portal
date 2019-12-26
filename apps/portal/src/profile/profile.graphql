@@ -26,11 +26,11 @@ type Profile {
   mobile: String
   email: String
 
-  companyEng: String
-  nameEng: String
-  departmentEng: String
-  otdelEng: String
-  positionEng: String
+  companyeng: String
+  nameeng: String
+  departmenteng: String
+  otdeleng: String
+  positioneng: String
 
   country: String
   postalCode: String
@@ -53,15 +53,15 @@ enum ProfileOrderField {
   firstName
   lastName
   middleName
-  nameEng
+  nameeng
   company
-  companyEng
+  companyeng
   department
-  departmentEng
+  departmenteng
   otdel
-  otdelEng
+  otdeleng
   title
-  positionEng
+  positioneng
   telephone
   mobile
   workPhone
@@ -118,11 +118,11 @@ input ProfileSettingsInput {
   mobile: String
   email: String
 
-  companyEng: String
-  nameEng: String
-  departmentEng: String
-  otdelEng: String
-  positionEng: String
+  companyeng: String
+  nameeng: String
+  departmenteng: String
+  otdeleng: String
+  positioneng: String
 
   country: String
   postalCode: String

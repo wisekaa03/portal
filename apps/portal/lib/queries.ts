@@ -11,16 +11,16 @@ const PROFILE_FRAGMENT = gql`
     firstName
     lastName
     middleName
-    nameEng
+    nameeng
     birthday
     gender
     company
-    companyEng
+    companyeng
     department
     otdel
-    departmentEng
-    otdelEng
-    positionEng
+    departmenteng
+    otdeleng
+    positioneng
     title
     telephone
     workPhone
