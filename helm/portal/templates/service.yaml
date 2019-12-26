@@ -14,10 +14,10 @@ spec:
       {{- end }}
       protocol: TCP
       name: http
-    - port: {{ .Values.PORT_DEBUGGER | default 9229 }}
-      targetPort: {{ .Values.PORT_DEBUGGER | default 9229 }}
-      {{- if .Values.service.nodePort_debugger }}
-      nodePort: {{ .Values.service.nodePort_debugger }}
+    - port: {{ .Values.PORT_DEBUG | default 9229 }}
+      targetPort: {{ .Values.PORT_DEBUG | default 9229 }}
+      {{- if .Values.service.nodePort_debug }}
+      nodePort: {{ .Values.service.nodePort_debug }}
       {{- end }}
       protocol: TCP
       name: http-debugger

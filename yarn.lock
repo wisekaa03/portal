@@ -13397,7 +13397,7 @@ native-url@0.2.3:
   dependencies:
     querystring "^0.2.0"
 
-nats@1.3.2, nats@^1.3.2:
+nats@1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/nats/-/nats-1.3.2.tgz#e80c8fbb31f9e664c6293a7f444d846b9e7659ef"
   integrity sha512-4BVDo3aT+x+ac/RgW1GXBLkjS7iXYrmQymFgQ33/bYn8VuU65M8gd7yxra+7Dr5J3RRN6+Bt0KhoG9ugzmL0rQ==

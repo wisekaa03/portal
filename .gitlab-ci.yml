@@ -84,9 +84,8 @@ deploy:
       helm upgrade ${RELEASE_NAME} helm/portal \
         --install --namespace=${PRODUCTION_NAMESPACE} \
         --debug --values helm/portal/values.yaml \
-        --set HOST="${HOST}" \
         --set PORT="${PORT}" \
-        --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
+        --set PORT_DEBUG="${PORT_DEBUG}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
@@ -128,9 +127,8 @@ deploy:
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-synch \
         --install --namespace=${PRODUCTION_NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
-        --set HOST="${HOST}" \
         --set PORT="${PORT_MICROSERVICE}" \
-        --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
+        --set PORT_DEBUG="${PORT_DEBUG}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
     # Portal-soap1c
@@ -138,8 +136,7 @@ deploy:
     #   helm upgrade ${RELEASE_NAME_SOAP1C} helm/portal-soap1c \
     #     --install --namespace=${PRODUCTION_NAMESPACE} \
     #     --debug --values helm/portal-soap1c/values.yaml \
-    #     --set HOST="${HOST}" \
     #     --set PORT="${PORT_MICROSERVICE}" \
-    #     --set PORT_DEBUGGER="${PORT_DEBUGGER}" \
+    #     --set PORT_DEBUG="${PORT_DEBUG}" \
     #     --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
     #     --set image.tag="${CI_BUILD_REF}"

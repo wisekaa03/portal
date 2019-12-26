@@ -39,8 +39,6 @@ data:
   LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
 
   MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "redis://localhost:6379" | quote }}
-  MICROSERVICE_USER: {{ .Values.MICROSERVICE_USER | default "admin" | quote }}
-  MICROSERVICE_PASS: {{ .Values.MICROSERVICE_PASS | default "supersecret" | quote }}
 
   SOAP_URL: {{ .Values.SOAP_URL | default "https://soap1c" | quote }}
   SOAP_USER: {{ .Values.SOAP_USER | default "admin" | quote }}

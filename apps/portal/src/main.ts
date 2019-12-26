@@ -56,12 +56,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   server.useLogger(logger);
   // #endregion
 
-  // #region Create Microservices
-  // const microservice = server.connectMicroservice({
-  //   transport: Transport,
-  // });
-  // #endregion
-
   // #region Next Render
   const renderer = server.get(RenderModule);
   renderer.register(server, app, { dev, viewsDir: '' });
@@ -178,8 +172,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Start server
-  await server.listen(configService.get('PORT'), configService.get('HOST'));
-  logger.log(`Server running on ${configService.get('HOST')}:${configService.get('PORT')}`, 'Bootstrap');
+  await server.listen(configService.get('PORT'));
+  logger.log(`Server running on port ${configService.get('PORT')}`, 'Bootstrap');
   // #endregion
 
   // #region Webpack-HMR

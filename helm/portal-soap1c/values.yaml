@@ -14,15 +14,14 @@ nameOverride: "portal-soap1c"
 fullnameOverride: "portal-soap1c"
 
 # App
-HOST: 0.0.0.0
 PORT: 4222
-PORT_DEBUGGER: 9229
+PORT_DEBUG: 9229
 
 service:
   type: LoadBalancer
 
   # nodePort: 30300
-  # nodePort_debugger: 30301
+  # nodePort_debug: 30301
 
 tls:
   enabled: false

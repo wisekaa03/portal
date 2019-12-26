@@ -14,9 +14,8 @@ nameOverride: "portal"
 fullnameOverride: "portal"
 
 # App
-HOST: 0.0.0.0
 PORT: 4000
-PORT_DEBUGGER: 9229
+PORT_DEBUG: 9229
 
 # DB
 DATABASE_URI: "postgres://postgres:1234567890@postgresql.default.svc.cluster.local:5432/portaldb"
@@ -55,8 +54,6 @@ LDAP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 LDAP_REDIS_TTL: 300
 
 MICROSERVICE_URL: "redis://redis.default.svc.cluster.local:6379"
-MICROSERVICE_USER: "admin"
-MICROSERVICE_PASS: "supersecret"
 
 SOAP_URL: "https://soap1c"
 SOAP_USER: "admin"
@@ -74,7 +71,7 @@ service:
   type: LoadBalancer
 
   nodePort: 30300
-  nodePort_debugger: 30301
+  nodePort_debug: 30301
 
   externalIPs:
     - 10.10.5.70

@@ -57,12 +57,10 @@ spec:
           #   successThreshold: {{ .Values.readinessProbe.successThreshold }}
           #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
-            - name: HOST
-              value: {{ .Values.HOST | default "0.0.0.0" | quote }}
             - name: PORT
               value: {{ .Values.PORT | default "4222" | quote }}
-            - name: PORT_DEBUGGER
-              value: {{ .Values.PORT_DEBUGGER | default "9229" | quote }}
+            - name: PORT_DEBUG
+              value: {{ .Values.PORT_DEBUG | default "9229" | quote }}
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:
@@ -197,16 +195,6 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: MICROSERVICE_URL
-            - name: MICROSERVICE_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: MICROSERVICE_USER
-            - name: MICROSERVICE_PASS
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: MICROSERVICE_PASS
             - name: SOAP_URL
               valueFrom:
                 configMapKeyRef:

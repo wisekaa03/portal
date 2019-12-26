@@ -43,11 +43,8 @@ export class ConfigService {
         .integer()
         .optional()
         .empty(),
-      PORT_DEBUGGER: Joi.number()
+      PORT_DEBUG: Joi.number()
         .integer()
-        .optional()
-        .empty(),
-      HOST: Joi.string()
         .optional()
         .empty(),
       DATABASE_URI: Joi.string()
@@ -131,12 +128,6 @@ export class ConfigService {
         .empty(),
 
       MICROSERVICE_URL: Joi.string()
-        .optional()
-        .empty(),
-      MICROSERVICE_USER: Joi.string()
-        .optional()
-        .empty(),
-      MICROSERVICE_PASS: Joi.string()
         .optional()
         .empty(),
 

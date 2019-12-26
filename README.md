@@ -135,9 +135,8 @@ The `.env` file is like this:
 
 ```bash
 # App
-HOST=0.0.0.0
 PORT=4000
-PORT_DEBUGGER=9229
+PORT_DEBUG=9229
 
 # DB
 DATABASE_URI="postgres://postgres:1234567890@postgresql.database:5432/postgres"
@@ -180,8 +179,6 @@ LDAP_REDIS_TTL="300"
 
 # MICROSERVICE
 MICROSERVICE_URL="redis://localhost:6379"
-# MICROSERVICE_USER="admin"
-# MICROSERVICE_PASS="QweAsdZxc321"
 
 # SOAP
 SOAP_URL="https://server1c"
