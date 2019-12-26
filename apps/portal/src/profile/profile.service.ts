@@ -316,16 +316,16 @@ export class ProfileService {
       return false;
     }
 
-    let comment = {};
-    try {
-      comment = JSON.parse(ldapUser.comment);
-    } catch (error) {
-      comment = {};
-    }
-
     const modification: any = {};
 
+    try {
+      modification.comment = JSON.parse(ldapUser.comment);
+    } catch (_) {
+      modification.comment = {};
+    }
+
     const clean = (value: any): string | number | boolean => {
+      // TODO: продумать варианты отчистки и безопасности
       return typeof value === 'string' ? value.trim() : value;
     };
 
@@ -340,23 +340,21 @@ export class ProfileService {
           modification.sn = value;
           break;
         case 'middleName':
-          modification.middleName = value;
+          modification[key] = value;
           modification.displayName = [created.lastName, created.firstName, value].join(' ');
-          break;
-        case 'birthday':
-          // TODO: пока непонятно в каком формате хранить в ldap
           break;
         case 'gender':
           if ([Gender.MAN, Gender.WOMAN].includes(value as number)) {
-            modification.comment = { ...comment, gender: value === Gender.MAN ? 'M' : 'W' };
+            modification.comment = { ...modification.comment, [key]: value === Gender.MAN ? 'M' : 'W' };
           }
           break;
+        case 'birthday':
         case 'companyEng':
         case 'nameEng':
         case 'departmentEng':
         case 'otdelEng':
         case 'positionEng':
-          modification.comment = { ...comment, [key]: value };
+          modification.comment = { ...modification.comment, [key]: value };
           break;
         case 'country':
           modification.co = value;
@@ -386,16 +384,31 @@ export class ProfileService {
           modification.physicalDeliveryOfficeName = value;
           break;
         case 'notShowing':
-          // TODO: тоже доделать
-          // modification.flags;
+          modification.flags = value ? '1' : '';
           break;
         case 'thumbnailPhoto':
-          // TODO: преобразовать из буфера
+          // eslint-disable-next-line no-case-declarations
+          const thumbnailPhotoBuffer = Buffer.from(value as string, 'base64');
+
+          /* eslint-disable prettier/prettier */
+          created.thumbnailPhoto = thumbnailPhotoBuffer
+            ? this.imageService
+              .imageResize(thumbnailPhotoBuffer, 250, 250)
+              .then((img) => (img ? img.toString('base64') : undefined))
+            : undefined;
+          created.thumbnailPhoto40 = thumbnailPhotoBuffer
+            ? this.imageService
+              .imageResize(thumbnailPhotoBuffer)
+              .then((img) => (img ? img.toString('base64') : undefined))
+            : undefined;
+          /* eslint-enable prettier/prettier */
+
+          modification[key] = value as string;
           break;
         case 'department':
         case 'otdel':
-          // TODO: посмотреть как хранится
-          // modification.department =
+          created[key] = value as string;
+          modification.department = [created.department, created.otdel].join(', ');
           break;
         // имена ключей совпадают
         case 'postalCode':
@@ -409,16 +422,23 @@ export class ProfileService {
       }
     });
 
+    modification.comment = JSON.stringify(modification.comment);
+
+    const ldapUpdated = Object.keys(modification).map(
+      (key) =>
+        new Ldap.Change({
+          operation: 'replace',
+          modification: { [key]: modification[key] },
+        }),
+    );
+
     // eslint-disable-next-line no-debugger
     debugger;
-    // TODO: отладить и только после сохранять
-    // const ldapUpdated = new Ldap.Change({
-    //   operation: 'replace',
-    //   modification,
-    // });
-    // if (await this.ldapService.modify(created.dn, ldapUpdated, created.username)) {
-    //   await this.save({ ...created, ...profile });
-    // }
+
+    if (await this.ldapService.modify(created.dn, ldapUpdated, created.username)) {
+      const result = this.profileRepository.merge(created, profile);
+      await this.save(result);
+    }
 
     return true;
   }
