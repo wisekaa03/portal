@@ -28,7 +28,10 @@ export const GQLError = (props: ErrorProps): React.ReactElement => {
 
   return (
     <Typography className={classes.errors} variant="h6">
-      {props.error.graphQLErrors.map((value: GraphQLError) => `Ошибка: ${value.message}`)}
+      {props.error.graphQLErrors.map(
+        (value: GraphQLError) =>
+          `Ошибка: ${typeof value.message === 'object' ? (value.message as any).message : value.message}`,
+      )}
     </Typography>
   );
 };

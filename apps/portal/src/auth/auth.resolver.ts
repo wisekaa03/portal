@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 // #endregion
 // #region Imports Local
@@ -40,6 +40,7 @@ export class AuthResolver {
    * @param username - username
    * @param password - password
    * @returns {UserResponseDTO}
+   * @throws {UnauthorizedException}
    */
   @Mutation()
   async login(
@@ -52,16 +53,18 @@ export class AuthResolver {
   ): Promise<UserResponse | null> {
     let emailSession = new Promise(() => true);
 
-    const user = await this.authService.login({ username: username.toLowerCase(), password }, req).catch((error) => {
-      throw new UnauthorizedException(undefined, JSON.stringify(error));
-    });
+    const user = await this.authService
+      .login({ username: username.toLowerCase(), password }, req)
+      .catch((error: HttpException) => {
+        throw new UnauthorizedException(error.message);
+      });
 
     if (user.profile && user.profile.email) {
       emailSession = this.authService
         .loginEmail(user.profile.email, password)
         .then((response) => {
           // eslint-disable-next-line no-debugger
-          debugger;
+          // debugger;
 
           if (response.data && response.data.sessid && response.data.sessauth) {
             const options = {

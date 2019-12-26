@@ -41,23 +41,12 @@ export class AuthService {
     throw new UnauthorizedException();
   };
 
-  // // TODO: сделать что-нибудь... постоянно опрашивается и база и ldap, согласно политики redis-а
-  // // TODO: опрашивается redis, но у него есть время на удаление всех записей, настраивается через
-  // // TODO: у базы - DATABASE_REDIS_TTL, у ldap - LDAP_REDIS_TTL
-  // const user = await this.userService.comparePassword(username, password);
-
-  // if (user) {
-  //   return user.toResponseObject((req && req.sessionID) || '');
-  // }
-
-  // throw new UnauthorizedException();
-  // };
-
   /**
    * Login a user
    *
    * @param {UserLogin} data User login data transfer object
    * @returns {UserResponse} User response
+   * @throws {HttpException} Http Exception
    */
   async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
@@ -68,7 +57,7 @@ export class AuthService {
       user: await this.userService.readByUsername(username, true, true),
     })
       .then((user) => user && user.toResponseObject((req && req.sessionID) || ''))
-      .catch((error) => {
+      .catch((error: HttpException) => {
         this.logService.error('Error: not found user', JSON.stringify(error), 'AuthService');
 
         throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
@@ -171,6 +160,7 @@ export class AuthService {
    *
    * @param {string, string, UserEntity} - User register data transfer object
    * @returns {UserEntity} User response DTO
+   * @throws {HttpException}
    */
   async userLdapLogin({
     username,
@@ -186,7 +176,7 @@ export class AuthService {
     if (!ldapUser) {
       this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
 
-      throw new Error('Unable to find user in ldap');
+      throw new HttpException('Unable to find user in ldap', 401);
     }
 
     return this.userService.createFromLdap(ldapUser, user).catch((error) => {
@@ -196,6 +186,12 @@ export class AuthService {
     });
   }
 
+  /**
+   * User Email login
+   *
+   * @param {email, password} - User Email, password
+   * @returns {response} - User response
+   */
   loginEmail = async (email: string, password: string): Promise<any> =>
     this.httpService
       .post(this.configService.get<string>('MAIL_LOGIN_URL'), {

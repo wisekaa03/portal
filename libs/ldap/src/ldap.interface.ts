@@ -12,8 +12,8 @@ export const LDAP_OPTIONS = 'LDAP_OPTIONS';
 export type Scope = 'base' | 'one' | 'sub';
 
 export interface LDAPCache {
-  user?: LdapResponseUser;
-  synch?: SearchEntryObject[];
+  user: LdapResponseUser;
+  password: string;
 }
 
 export interface LdapResonseGroup extends SearchEntryObject {
