@@ -22,6 +22,8 @@ import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 // #endregion
 // #region Imports Local
 import IsAdmin from '../../components/isAdmin';
@@ -32,9 +34,10 @@ import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { ProfileContext } from '../../lib/context';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
-import { toBase64 } from '../../components/utils';
+import { resizeImage } from '../../components/utils';
 import Button from '../../components/button';
 import { Gender } from '../../src/shared/interfaces';
+import dayjs from '../../lib/dayjs';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -122,7 +125,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const onDrop = useCallback(
     async (acceptedFiles) => {
       if (acceptedFiles.length) {
-        const thumbnailPhoto = (await toBase64(acceptedFiles[0])) as string;
+        const thumbnailPhoto = (await resizeImage(acceptedFiles[0])) as string;
         setCurrent({ ...current, thumbnailPhoto });
         setUpdated({ ...updated, thumbnailPhoto });
       }
@@ -146,18 +149,14 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   }, [isAdmin, getProfile, router, profile.user]);
 
   useEffect(() => {
-    if (isAdmin && !loading) {
-      if (!error && data && data.profile) {
-        setCurrent(data.profile);
-      } else {
-        setCurrent(profile.user.profile);
-      }
+    if (isAdmin && !loading && !error && data && data.profile) {
+      setCurrent(data.profile);
     }
   }, [loading, data, isAdmin, error, profile.user.profile]);
 
   const handleChange = (name: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const el: EventTarget & HTMLInputElement = e.target;
-    const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
+    const value: string | boolean | number = el.type === 'checkbox' ? el.checked : el.value;
 
     if (isAdmin) {
       const result = name === 'gender' ? +value : value;
@@ -165,6 +164,11 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
       setCurrent({ ...current, [name]: result });
       setUpdated({ ...updated, [name]: result });
     }
+  };
+
+  const handleBirthday = (value: Date | null): void => {
+    setCurrent({ ...current, birthday: new Date(value) });
+    setUpdated({ ...updated, birthday: dayjs(value).format('YYYY-MM-DD') as any });
   };
 
   const handleSave = (): void => {
@@ -406,15 +410,20 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       />
                     </div>
                     <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('birthday')}
-                        color="secondary"
-                        value={current.birthday || ''}
-                        label={t('phonebook:fields.birthday')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          fullWidth
+                          inputVariant="outlined"
+                          color="secondary"
+                          format="yyyy-MM-dd"
+                          label={t('phonebook:fields.birthday')}
+                          value={current.birthday}
+                          onChange={handleBirthday}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change birthday',
+                          }}
+                        />
+                      </MuiPickersUtilsProvider>
                     </div>
                     <div>
                       <TextField
