@@ -77,7 +77,7 @@ describe('UserService', () => {
         ClientsModule.register([
           {
             name: SYNCHRONIZATION_SERVICE,
-            transport: Transport.NATS,
+            transport: Transport.REDIS,
           },
         ]),
 

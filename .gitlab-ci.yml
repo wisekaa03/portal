@@ -113,8 +113,6 @@ deploy:
         --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
         --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
-        --set MICROSERVICE_USER="${MICROSERVICE_USER}" \
-        --set MICROSERVICE_PASS="${MICROSERVICE_PASS}" \
         --set SOAP_URL="${SOAP_URL}" \
         --set SOAP_USER="${SOAP_USER}" \
         --set SOAP_PASS="${SOAP_PASS}" \

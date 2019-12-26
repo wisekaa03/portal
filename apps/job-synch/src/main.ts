@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { resolve } from 'path';
-import { ClientNats } from '@nestjs/microservices';
+import { ClientRedis } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
@@ -15,10 +15,8 @@ const dev = process.env.NODE_ENV !== 'production';
 const logger = new LogService();
 
 async function bootstrap(configService: ConfigService): Promise<void> {
-  const client = new ClientNats({
+  const client = new ClientRedis({
     url: configService.get<string>('MICROSERVICE_URL'),
-    user: configService.get<string>('MICROSERVICE_USER'),
-    pass: configService.get<string>('MICROSERVICE_PASS'),
   });
 
   await client.connect();

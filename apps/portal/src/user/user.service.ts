@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClientProxy, Transport, ClientNats } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 // #endregion

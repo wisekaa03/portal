@@ -35,10 +35,10 @@ data:
   LDAP_SEARCH_BASE_ALL_USERS: {{ .Values.LDAP_SEARCH_BASE_ALL_USERS | default "DC=example,DC=local" | quote }}
   LDAP_SEARCH_FILTER_ALL_USERS: {{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | default "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))" | quote }}
   # LDAP Redis
-  LDAP_REDIS_URI: {{ .Values.LDAP_REDIS_URI | default "localhost" | quote }}
+  LDAP_REDIS_URI: {{ .Values.LDAP_REDIS_URI | default "redis://localhost:6379/3" | quote }}
   LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
 
-  MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "nats://nats-cluster.production:4222" | quote }}
+  MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "redis://localhost:6379" | quote }}
   MICROSERVICE_USER: {{ .Values.MICROSERVICE_USER | default "admin" | quote }}
   MICROSERVICE_PASS: {{ .Values.MICROSERVICE_PASS | default "supersecret" | quote }}
 

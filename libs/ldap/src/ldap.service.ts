@@ -6,6 +6,7 @@ import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
 import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
+import bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
@@ -40,6 +41,8 @@ export class LdapService extends EventEmitter {
 
   private userCache: cacheManager.Cache;
 
+  private salt: string;
+
   private ttl: number;
 
   /**
@@ -57,6 +60,7 @@ export class LdapService extends EventEmitter {
 
     if (opts.cache) {
       this.ttl = configService.get<number>('LDAP_REDIS_TTL');
+      this.salt = bcrypt.genSaltSync(10);
 
       this.userCacheStore = redisStore.create({
         // A string used to prefix all used keys (e.g. namespace:test).
@@ -491,22 +495,10 @@ export class LdapService extends EventEmitter {
       .then((user) => {
         if (user && this.userCache) {
           this.logger.debug(`To cache: ${userByDN}`, 'LDAP');
-          this.userCache.set<LDAPCache>(
-            userByDN,
-            {
-              user,
-            },
-            this.ttl,
-          );
+          this.userCache.set<LDAPCache>(userByDN, { user, password: '' }, this.ttl);
 
           this.logger.debug(`To cache: ${user.sAMAccountName}`, 'LDAP');
-          this.userCache.set<LDAPCache>(
-            user.sAMAccountName,
-            {
-              user,
-            },
-            this.ttl,
-          );
+          this.userCache.set<LDAPCache>(user.sAMAccountName, { user, password: '' }, this.ttl);
         }
 
         return user;
@@ -615,9 +607,10 @@ export class LdapService extends EventEmitter {
    *
    * @param {string} username - The username to authenticate
    * @param {string} password - The password to verify
-   * @returns {undefined | LdapResponseUser} - User in LDAP
+   * @returns {LdapResponseUser} - User in LDAP
+   * @throws {Ldap.Error}
    */
-  public async authenticate(username: string, password: string): Promise<undefined | LdapResponseUser> {
+  public async authenticate(username: string, password: string): Promise<LdapResponseUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
       this.logger.error('No password given', undefined, 'LDAP');
       throw new Error('No password given');
@@ -626,7 +619,13 @@ export class LdapService extends EventEmitter {
     if (this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(username);
-      if (cached && cached.user && cached.user.sAMAccountName) {
+      if (
+        cached &&
+        cached.user &&
+        cached.user.sAMAccountName &&
+        cached.password &&
+        bcrypt.compareSync(password, cached.password)
+      ) {
         this.logger.debug(`From cache: ${cached.user.sAMAccountName}`, 'LDAP');
 
         return cached.user as LdapResponseUser;
@@ -642,11 +641,11 @@ export class LdapService extends EventEmitter {
     if (!foundUser) {
       this.logger.error(`Not found user: "${username}"`, undefined, 'LDAP');
 
-      return undefined;
+      throw new Error(`Not found user: "${username}"`);
     }
 
     // 2. Attempt to bind as that user to check password.
-    return new Promise<undefined | LdapResponseUser>((resolve, reject) => {
+    return new Promise<LdapResponseUser>((resolve, reject) => {
       this.userClient.bind(
         foundUser[this.opts.bindProperty || 'dn'],
         password,
@@ -667,7 +666,8 @@ export class LdapService extends EventEmitter {
               this.userCache.set<LDAPCache>(
                 userWithGroups.sAMAccountName,
                 {
-                  user: userWithGroups as LdapResponseUser,
+                  user: userWithGroups,
+                  password: bcrypt.hashSync(password, this.salt),
                 },
                 this.ttl,
               );
@@ -677,14 +677,10 @@ export class LdapService extends EventEmitter {
           } catch (error) {
             this.logger.error('Authenticate:', error.toString(), 'LDAP');
 
-            return reject(Error(`Authenticate: ${error.toString()}`));
+            return reject(new Error(`Authenticate: ${error.toString()}`));
           }
         },
       );
-    }).catch((error) => {
-      this.logger.error('Authenticate:', error.toString(), 'LDAP');
-
-      return undefined;
     });
   }
 
