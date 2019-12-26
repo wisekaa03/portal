@@ -331,9 +331,11 @@ export class ProfileService {
       switch (key) {
         case 'firstName':
           modification.givenName = value;
+          modification.displayName = [created.lastName, value, created.middleName].join(' ');
           break;
         case 'lastName':
           modification.sn = value;
+          modification.displayName = [value, created.firstName, created.middleName].join(' ');
           break;
         case 'middleName':
           modification[key] = value;
@@ -421,12 +423,15 @@ export class ProfileService {
     if (Object.keys(modification.comment).length === 0) {
       delete modification.comment;
     } else {
+      // TODO: если сломался синтаксис, в адешке все перепишется
+      let oldComment = {};
+
       try {
-        const oldComment = JSON.parse(ldapUser.comment);
-        modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
-      } catch (_) {
-        delete modification.comment;
-      }
+        oldComment = JSON.parse(ldapUser.comment);
+        // eslint-disable-next-line no-empty
+      } catch (_) {}
+
+      modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
     }
 
     const ldapUpdated = Object.keys(modification).map(
