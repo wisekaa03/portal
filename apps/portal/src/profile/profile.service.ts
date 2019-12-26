@@ -316,13 +316,9 @@ export class ProfileService {
       return false;
     }
 
-    const modification: any = {};
-
-    try {
-      modification.comment = JSON.parse(ldapUser.comment);
-    } catch (_) {
-      modification.comment = {};
-    }
+    const modification: any = {
+      comment: {},
+    };
 
     const clean = (value: any): string | number | boolean => {
       // TODO: продумать варианты отчистки и безопасности
@@ -422,7 +418,16 @@ export class ProfileService {
       }
     });
 
-    modification.comment = JSON.stringify(modification.comment);
+    if (Object.keys(modification.comment).length === 0) {
+      delete modification.comment;
+    } else {
+      try {
+        const oldComment = JSON.parse(ldapUser.comment);
+        modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
+      } catch (_) {
+        delete modification.comment;
+      }
+    }
 
     const ldapUpdated = Object.keys(modification).map(
       (key) =>
