@@ -179,9 +179,9 @@ LDAP_REDIS_URI="redis://localhost:6379/3"
 LDAP_REDIS_TTL="300"
 
 # MICROSERVICE
-MICROSERVICE_URL="nats://nats-cluster.production:4222"
-MICROSERVICE_USER="admin"
-MICROSERVICE_PASS="QweAsdZxc321"
+MICROSERVICE_URL="redis://localhost:6379"
+# MICROSERVICE_USER="admin"
+# MICROSERVICE_PASS="QweAsdZxc321"
 
 # SOAP
 SOAP_URL="https://server1c"

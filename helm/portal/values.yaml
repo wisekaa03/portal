@@ -54,7 +54,7 @@ LDAP_SEARCH_FILTER_ALL_USERS: "(&(&(|(&(objectClass=user)(objectCategory=person)
 LDAP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 LDAP_REDIS_TTL: 300
 
-MICROSERVICE_URL: "nats://nats-cluster.nats-io:4222"
+MICROSERVICE_URL: "redis://redis.default.svc.cluster.local:6379"
 MICROSERVICE_USER: "admin"
 MICROSERVICE_PASS: "supersecret"
 

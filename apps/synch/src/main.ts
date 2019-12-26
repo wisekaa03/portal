@@ -17,11 +17,9 @@ const logger = new LogService();
 async function bootstrap(configService: ConfigService): Promise<void> {
   const server = await NestFactory.createMicroservice(AppModule, {
     logger,
-    transport: Transport.NATS,
+    transport: Transport.REDIS,
     options: {
       url: configService.get<string>('MICROSERVICE_URL'),
-      user: configService.get<string>('MICROSERVICE_USER'),
-      pass: configService.get<string>('MICROSERVICE_PASS'),
     },
   });
   server.useLogger(logger);

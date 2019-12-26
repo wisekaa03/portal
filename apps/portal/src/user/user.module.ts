@@ -40,11 +40,9 @@ import { GroupEntity } from '../group/group.entity';
       provide: SYNCHRONIZATION_SERVICE,
       useFactory: (configService: ConfigService) => {
         return ClientProxyFactory.create({
-          transport: Transport.NATS,
+          transport: Transport.REDIS,
           options: {
             url: configService.get<string>('MICROSERVICE_URL'),
-            user: configService.get<string>('MICROSERVICE_USER'),
-            pass: configService.get<string>('MICROSERVICE_PASS'),
           },
         });
       },
