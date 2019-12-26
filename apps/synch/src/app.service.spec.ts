@@ -56,7 +56,7 @@ jest.mock('@app/logger/logger.service', () => ({
     debug: jest.fn(),
   })),
 }));
-// jest.mock('@app/config/config.service');
+jest.mock('@app/config/config.service');
 
 describe('Synch service', () => {
   let libs: SynchService;
