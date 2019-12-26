@@ -133,10 +133,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   );
   // #endregion
 
-  // #region Improve performance - this is done by Nginx reverse-proxy, do not need
-  // server.use(compression());
-  // #endregion
-
   // #region Enable json response
   server.use(bodyParser.urlencoded({ extended: true }));
   server.use(bodyParser.json());
