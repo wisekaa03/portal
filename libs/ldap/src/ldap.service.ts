@@ -568,10 +568,22 @@ export class LdapService extends EventEmitter {
 
             this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
 
-            if (username && this.userCache) {
+            if (this.userCache) {
               this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
 
-              await this.userCache.del(username);
+              await this.userCache.del(dn, (error) => {
+                if (error) {
+                  this.logger.error(`Cache delete error "${dn}": ${error}`, undefined, 'LDAP');
+                }
+              });
+
+              if (username) {
+                await this.userCache.del(username, (error) => {
+                  if (error) {
+                    this.logger.error(`Cache delete error "${username}": ${error}`, undefined, 'LDAP');
+                  }
+                });
+              }
             }
 
             return resolve(true);
