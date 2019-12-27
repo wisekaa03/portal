@@ -40,7 +40,7 @@
     "storybook": "start-storybook",
     "cli:login": "curl -X POST -H 'content-type: application/json' -d '{\"query\":\"mutation{login(username:\\\"'${LOGIN}'\\\",password:\\\"'${PASSWORD}'\\\"){token}}\"}' ${HTTP:-http}://${HOST:-localhost}:${PORT:-4000}/graphql",
     "cli:synch": "curl -X POST -H 'content-type: application/json' -H 'Authorization: bearer '${TOKEN} -d '{\"query\":\"mutation { synchronization }\"}' ${HTTP:-http}://${HOST:-localhost}:${PORT:-4000}/graphql",
-    "test": "jest --maxWorkers=80%",
+    "test": "jest --maxWorkers=10%",
     "test:next": "jest --watch __tests__",
     "coverage": "yarn test -u --coverage",
     "preversion": "yarn test -u",
