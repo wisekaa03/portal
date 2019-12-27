@@ -86,16 +86,6 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<boolean | null> {
-    if (
-      req &&
-      req.session &&
-      req.session.passport &&
-      req.session.passport.user.profile &&
-      req.session.passport.user.profile.id
-    ) {
-      return this.profileService.changeProfile(req.session.passport.user.profile.id, profile) || null;
-    }
-
-    return null;
+    return this.profileService.changeProfile(req, profile) || null;
   }
 }

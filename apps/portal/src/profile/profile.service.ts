@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import Ldap from 'ldapjs';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -297,12 +298,17 @@ export class ProfileService {
 
   /**
    * changeProfile
-   * @param id Profile ID
-   * @param profile Profile
-   * @returns boolean | null
+   * @param {req} Request
+   * @param {profile} Profile
+   * @returns {boolean | null}
    */
-  async changeProfile(id: string, profile: Profile): Promise<boolean | null> {
-    const updated = { id, ...profile };
+  async changeProfile(req: Request, profile: Profile): Promise<boolean | null> {
+    // В резолвере проверка на юзера уже есть
+    if (!req.session!.passport.user.profile || !req.session!.passport.user.profile.id) {
+      return false;
+    }
+
+    const updated = { id: req.session!.passport.user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
 
@@ -447,6 +453,11 @@ export class ProfileService {
 
     if (await this.ldapService.modify(created.dn, ldapUpdated, created.username)) {
       const result = this.profileRepository.merge(created, profile);
+
+      if (req.session!.passport.user.profile.id === result.id) {
+        req.session!.passport.user.profile = result;
+      }
+
       await this.save(result);
     }
 

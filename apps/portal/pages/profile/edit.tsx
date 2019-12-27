@@ -298,13 +298,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           name="gender"
                           labelPlacement="end"
                         />
-                        <FormControlLabel
-                          value={Gender.UNKNOWN}
-                          control={<Radio color="secondary" />}
-                          label={t('common:gender.UNKNOWN')}
-                          name="gender"
-                          labelPlacement="end"
-                        />
                       </RadioGroup>
                     </div>
                     <div>
