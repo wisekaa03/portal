@@ -3,7 +3,6 @@
 // #region Imports NPM
 import { Injectable, HttpService } from '@nestjs/common';
 // import { Observable } from 'rxjs';
-import { AxiosResponse } from 'axios';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -25,10 +24,13 @@ export class NewsService {
    *
    * @return News
    */
-  news = async (): Promise<AxiosResponse<any>> =>
-    this.httpService
+  news = async (): Promise<any> => {
+    const response = await this.httpService
       .get(this.configService.get<string>('NEWS_URL'), {
         params: { per_page: 20 },
       })
       .toPromise();
+
+    return response && (response as any).data;
+  };
 }

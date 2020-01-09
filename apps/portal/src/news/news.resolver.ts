@@ -22,8 +22,8 @@ export class NewsResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async news(): Promise<News[]> {
-    return this.newsService.news().then((entries) => {
-      return entries.data;
-    });
+    const result = await this.newsService.news();
+
+    return result;
   }
 }
