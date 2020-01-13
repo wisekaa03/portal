@@ -697,7 +697,7 @@ export class LdapService extends EventEmitter {
   public async close(): Promise<boolean> {
     // It seems to be OK just to call unbind regardless of if the
     // client has been bound (e.g. how ldapjs pool destroy does)
-    return new Promise((resolve) => {
+    return new Promise<boolean>((resolve) => {
       this.adminClient.unbind(() => {
         this.logger.log('adminClient: close', 'LDAP');
 
