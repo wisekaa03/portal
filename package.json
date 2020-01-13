@@ -191,7 +191,7 @@
     "@types/ldapjs": "^0.0.3",
     "@types/lodash": "^4.14.149",
     "@types/morgan": "^1.7.37",
-    "@types/node": "12.12.24",
+    "@types/node": "^13.1.6",
     "@types/object-assign": "^4.0.30",
     "@types/passport": "^1.0.2",
     "@types/passport-local": "^1.0.33",
