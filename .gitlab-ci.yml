@@ -12,7 +12,6 @@ variables:
   RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
   RELEASE_NAME_SOAP1C: ${PREFIX}${CI_PROJECT_NAME}-soap1c
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
-  CONTAINER_IMAGE_LATEST: ${PREFIX}${CI_PROJECT_NAME}:latest
 
 test_build:
   image: node:13
@@ -65,9 +64,7 @@ production:
     # TODO: авторизация по логину, пока нету, так что у нас в открытом доступе по docker-registry.kngk.org лежит куча portal-ов
     # - docker login
     - docker build --tag ${CONTAINER_IMAGE} .
-    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
-    - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE_LATEST}
     - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
 
 deploy:
