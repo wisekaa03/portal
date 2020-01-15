@@ -97,7 +97,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
 
     // TODO: лучшенный контроль за кешем (продумать)
     cache = new InStorageCache({
-      storage: window.localStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
+      storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
       shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
         // debugger;
         return true;
