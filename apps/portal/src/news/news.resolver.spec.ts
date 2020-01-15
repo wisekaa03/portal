@@ -7,10 +7,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
 import { ImageModule } from '@app/image';
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigModule } from '@app/config';
 import { NewsResolver } from './news.resolver';
 import { NewsService } from './news.service';
-import { NewsModule } from './news.module';
+// import { NewsModule } from './news.module';
 // import { NewsEntity } from './news.entity';
 // #endregion
 

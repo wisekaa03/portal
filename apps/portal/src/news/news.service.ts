@@ -7,6 +7,7 @@ import { Injectable, HttpService } from '@nestjs/common';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { News } from './models/news.dto';
 // #endregion
 
 @Injectable()
@@ -20,7 +21,7 @@ export class NewsService {
   ) {}
 
   /**
-   * News
+   * Fetch news
    *
    * @return News
    */
@@ -33,4 +34,20 @@ export class NewsService {
 
     return response && (response as any).data;
   };
+
+  /**
+   * Edit news
+   *
+   * @return id
+   */
+  editNews = async ({ title, excerpt, content, updatedAt, id }: News): Promise<string> => {
+    return '';
+  };
+
+  /**
+   * Delete news
+   *
+   * @return void
+   */
+  deleteNews = async ({ id }: { id: string }): Promise<void> => {};
 }

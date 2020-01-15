@@ -35,6 +35,7 @@ import { TicketGroupServiceModule } from './ticket/group-service/group-service.m
 import { TicketsModule } from './ticket/tickets/tickets.module';
 import { TicketAttachmentsModule } from './ticket/attachments/attachments.module';
 import { TicketCommentsModule } from './ticket/comments/comments.module';
+import { NewsEntity } from './news/news.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -145,6 +146,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities: [
             ProfileEntity, GroupEntity, UserEntity,
+            NewsEntity,
             TicketDepartmentModule, TicketGroupServiceModule, TicketServiceModule,
             TicketsModule, TicketAttachmentsModule, TicketCommentsModule
           ],
