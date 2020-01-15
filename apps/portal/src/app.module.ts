@@ -149,14 +149,13 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
             TicketsModule, TicketAttachmentsModule, TicketCommentsModule
           ],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-          cache: false,
-          // {
-          //   type: 'redis',
-          //   options: {
-          //     url: configService.get<string>('DATABASE_REDIS_URI'),
-          //   },
-          //   duration: configService.get<number>('DATABASE_REDIS_TTL'),
-          // },
+          cache: {
+            type: 'redis',
+            options: {
+              url: configService.get<string>('DATABASE_REDIS_URI'),
+            },
+            duration: configService.get<number>('DATABASE_REDIS_TTL'),
+          },
         } as TypeOrmModuleOptions;
       },
     }),
