@@ -23,15 +23,13 @@ export class NewsResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async news(): Promise<News[]> {
-    const result = await this.newsService.news();
-
-    return result;
+    return this.newsService.news();
   }
 
   /**
    * GraphQL mutation: editNews
    *
-   * @returns {any}
+   * @returns {string}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -53,7 +51,7 @@ export class NewsResolver {
    *
    * @returns {any}
    */
-  @Query()
+  @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async deleteNews(@Args('id') id: string): Promise<boolean> {
