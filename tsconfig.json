@@ -13,6 +13,7 @@
     "allowJs": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "stripInternal": true,
     "strict": true,
