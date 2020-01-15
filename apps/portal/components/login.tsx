@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface State {
   save: boolean;
-  name: string;
+  user: string;
   pass: string;
 }
 
@@ -118,7 +118,7 @@ const LoginComponent: I18nPage<{
 
   const [values, setValues] = useState<State>({
     save: false,
-    name: '',
+    user: '',
     pass: '',
   });
 
@@ -127,23 +127,28 @@ const LoginComponent: I18nPage<{
     const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
 
     setValues({ ...values, [name]: value });
-    /* name !== 'pass' &&  */ setStorage(`user.${name}`, value.toString());
+    if (name !== 'pass') {
+      setStorage(name, value.toString());
+    }
   };
 
   useEffect(() => {
-    const save: string = getStorage('user.save');
+    const save = getStorage('save');
 
     if (save === 'true') {
       setValues({
-        save: !!save,
-        name: getStorage('user.name'),
-        // TODO: секурити риск ! :)
-        pass: '' || getStorage('user.pass'),
+        save: true,
+        user: getStorage('user'),
+        // секурити риск ! :)
+        pass: '' /* || getStorage('pass'), */,
       });
     }
   }, []);
 
-  called = error ? false : called;
+  if (error) {
+    // eslint-disable-next-line no-param-reassign
+    called = false;
+  }
 
   return (
     <>
@@ -162,7 +167,7 @@ const LoginComponent: I18nPage<{
 
               login({
                 variables: {
-                  username: values.name,
+                  username: values.user,
                   password: values.pass,
                 },
               });
@@ -180,8 +185,8 @@ const LoginComponent: I18nPage<{
                   <TextField
                     data-field-name="username"
                     type="username"
-                    value={values.name}
-                    onChange={handleChange('name')}
+                    value={values.user}
+                    onChange={handleChange('user')}
                     disabled={called || loading}
                     label={t('login:username')}
                     variant="outlined"
