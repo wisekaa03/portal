@@ -150,10 +150,17 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           ],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {
-            type: 'redis',
+            type: 'redis', // "ioredis/cluster"
             options: {
               url: configService.get<string>('DATABASE_REDIS_URI'),
+              scaleReads: 'slave',
             },
+            alwaysEnabled: true,
+            /**
+            * Time in milliseconds in which cache will expire.
+            * This can be setup per-query.
+            * Default value is 1000 which is equivalent to 1 second.
+            */
             duration: configService.get<number>('DATABASE_REDIS_TTL'),
           },
         } as TypeOrmModuleOptions;
