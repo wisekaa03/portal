@@ -1,9 +1,18 @@
 /** @format */
 
 // #region Imports NPM
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 // #endregion
 // #region Imports Local
+import { UserEntity } from '../user/user.entity';
 // #endregion
 
 @Entity('news')
@@ -34,4 +43,9 @@ export class NewsEntity {
     nullable: true,
   })
   content: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  @OneToOne((type: any) => UserEntity, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  user: UserEntity;
 }

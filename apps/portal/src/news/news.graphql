@@ -16,6 +16,9 @@ type Query {
 }
 
 type Mutation {
+
   editNews(title: String!, excerpt: String, content: String, date: String, id: ID): ID
-  deleteNews(id: ID)
+
+  deleteNews(id: ID): Boolean
+
 }
