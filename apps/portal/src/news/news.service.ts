@@ -54,7 +54,7 @@ export class NewsService {
    *
    * @return void
    */
-  deleteNews = async ({ id }: { id: string }): Promise<boolean> => {
+  deleteNews = async (id: string): Promise<boolean> => {
     return true;
   };
 }

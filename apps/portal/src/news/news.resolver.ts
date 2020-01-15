@@ -55,6 +55,6 @@ export class NewsResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async deleteNews(@Args('id') id: string): Promise<boolean> {
-    return this.newsService.deleteNews({ id });
+    return this.newsService.deleteNews(id);
   }
 }
