@@ -119,6 +119,9 @@ ENV MEETING_URL ${MEETING_URL}
 #   apt-get update \
 #   && apt-get install -y openssl libpq-dev
 
+# FIX: failed to export image: failed to set parent sha256:..: unknown parent image ID
+RUN true
+
 # COPY
 COPY . ./
 
