@@ -29,7 +29,7 @@ test_build:
     - ./entrypoint.sh test -u || true
     - time yarn build
     - time yarn build:synch
-    - time yarn build:jobSynch
+    - time yarn build:synchJob
     # - time yarn build:soap1c
   artifacts:
     paths:

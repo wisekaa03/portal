@@ -29,13 +29,13 @@
         "tsConfigPath": "apps/synch/tsconfig.app.json"
       }
     },
-    "job-synch": {
+    "synch-job": {
       "type": "application",
-      "root": "apps/job-synch",
+      "root": "apps/synch-job",
       "entryFile": "main",
-      "sourceRoot": "apps/job-synch/src",
+      "sourceRoot": "apps/synch-job/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/job-synch/tsconfig.app.json"
+        "tsConfigPath": "apps/synch-job/tsconfig.app.json"
       }
     },
     "soap1c": {

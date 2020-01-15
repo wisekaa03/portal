@@ -87,10 +87,10 @@ elif [ -n "$*" -a "$1" = "start:synch" ]; then
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch/main.js
 
-elif [ -n "$*" -a "$1" = "start:jobSynch" ]; then
+elif [ -n "$*" -a "$1" = "start:synchJob" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
   export NODE_ENV=${NODE_ENV:=production}
-  $NODE dist/apps/job-synch/main.js
+  $NODE dist/apps/synch-job/main.js
 
 elif [ -n "$*" -a "$1" = "start:soap1c" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
