@@ -90,19 +90,6 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
         <div className={classes.root}>
           <Card className={classes.card}>
             <CardActions disableSpacing>
-              <Button fullWidth disabled={soap1cLoading} color="secondary" onClick={handleSoap1c}>
-                {!soap1cLoading ? t('admin:news:edit') : t('admin:news:wait')}
-              </Button>
-              {errorsSoap1c && <GQLError error={errorsSoap1c} />}
-            </CardActions>
-            <CardContent>
-              <Typography color="textSecondary" component="p">
-                {t('admin:news:description')}
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card className={classes.card}>
-            <CardActions disableSpacing>
               <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleSync}>
                 {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
               </Button>

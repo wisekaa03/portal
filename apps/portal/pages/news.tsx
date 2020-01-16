@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
 import {
@@ -12,9 +12,13 @@ import {
   Typography,
   CardContent,
   CardActions,
-  Button,
+  Fab,
   IconButton,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import MoreIcon from '@material-ui/icons/MoreHoriz';
 import Head from 'next/head';
 import clsx from 'clsx';
 import CloseIcon from '@material-ui/icons/Close';
@@ -26,6 +30,7 @@ import { NEWS } from '../lib/queries';
 import { Loading } from '../components/loading';
 import dayjs from '../lib/dayjs';
 import { LARGE_RESOLUTION } from '../lib/constants';
+import { ProfileContext } from '../lib/context';
 // #endregion
 
 const DATE_FORMAT = 'MMMM DD, YYYY';
@@ -98,6 +103,14 @@ const useStyles = makeStyles((theme: Theme) =>
         height: 'auto',
       },
     },
+    icons: {
+      marginLeft: 'auto !important',
+    },
+    add: {
+      position: 'absolute',
+      bottom: theme.spacing(2),
+      right: 18 + theme.spacing(2),
+    },
   }),
 );
 
@@ -119,10 +132,14 @@ const News: I18nPage = (props): React.ReactElement => {
   const classes = useStyles({});
   const { loading, data, error } = useQuery(NEWS);
   const [current, setCurrent] = useState(null);
+  const profile = useContext(ProfileContext);
 
   const handleCurrent = (news: NewsProps) => (): void => {
     setCurrent(news);
   };
+
+  const handleEdit = (news: NewsProps) => (): void => {};
+  const handleDelete = (news: NewsProps) => (): void => {};
 
   const handleCloseCurrent = (): void => {
     setCurrent(null);
@@ -184,13 +201,34 @@ const News: I18nPage = (props): React.ReactElement => {
                       <Typography variant="body2" color="textSecondary" component="p">
                         {dayjs(news.date).format(DATE_FORMAT)}
                       </Typography>
-                      <Button size="small" color="secondary" onClick={handleCurrent(news)}>
-                        {t('news:more')}
-                      </Button>
+                      {profile.user && profile.user.isAdmin && (
+                        <>
+                          <IconButton
+                            className={classes.icons}
+                            size="small"
+                            color="secondary"
+                            onClick={handleDelete(news)}
+                            aria-label="delete"
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton size="small" color="secondary" onClick={handleEdit(news)} aria-label="edit">
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </>
+                      )}
+                      <IconButton size="small" color="secondary" onClick={handleCurrent(news)} aria-label="more">
+                        <MoreIcon fontSize="small" />
+                      </IconButton>
                     </CardActions>
                   </Card>
                 );
               })}
+              {profile.user && profile.user.isAdmin && (
+                <Fab color="primary" className={classes.add} aria-label="add">
+                  <AddIcon />
+                </Fab>
+              )}
             </div>
           </div>
         </div>
