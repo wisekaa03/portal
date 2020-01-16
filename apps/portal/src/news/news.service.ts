@@ -11,6 +11,7 @@ import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { News } from './models/news.dto';
 import { NewsEntity } from './news.entity';
+import { UserService } from '../user/user.service';
 // #endregion
 
 @Injectable()
@@ -21,6 +22,7 @@ export class NewsService {
     private readonly httpService: HttpService,
     private readonly logService: LogService,
     private readonly configService: ConfigService,
+    private readonly userService: UserService,
     @InjectRepository(NewsEntity)
     private readonly newsRepository: Repository<NewsEntity>,
   ) {}
@@ -30,14 +32,8 @@ export class NewsService {
    *
    * @return News
    */
-  news = async (): Promise<any> => {
-    const response = await this.httpService
-      .get(this.configService.get<string>('NEWS_URL'), {
-        params: { per_page: 20 },
-      })
-      .toPromise();
-
-    return response && (response as any).data;
+  news = async (): Promise<NewsEntity[]> => {
+    return this.newsRepository.find();
   };
 
   /**
@@ -45,8 +41,18 @@ export class NewsService {
    *
    * @return id
    */
-  editNews = async ({ title, excerpt, content, updatedAt, id }: News): Promise<string> => {
-    return '';
+  editNews = async ({ title, excerpt, content, user, id }: News): Promise<NewsEntity> => {
+    const data = {
+      title,
+      excerpt,
+      content,
+      user,
+      id,
+    };
+
+    return this.newsRepository.save(this.newsRepository.create(data)).catch((error) => {
+      throw error;
+    });
   };
 
   /**
@@ -55,6 +61,8 @@ export class NewsService {
    * @return void
    */
   deleteNews = async (id: string): Promise<boolean> => {
-    return true;
+    const deleteResult = await this.newsRepository.delete({ id });
+
+    return !!(deleteResult.affected && deleteResult.affected > 0);
   };
 }

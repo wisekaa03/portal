@@ -45,7 +45,7 @@ export class NewsEntity {
   content: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => UserEntity, { onDelete: 'CASCADE' })
+  @OneToOne((type: any) => UserEntity)
   @JoinColumn()
   user: UserEntity;
 }

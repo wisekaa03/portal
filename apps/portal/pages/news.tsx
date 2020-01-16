@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React, { useState, useContext } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import {
   Card,
   CardActionArea,
@@ -26,7 +26,7 @@ import CloseIcon from '@material-ui/icons/Close';
 // #region Imports Local
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { NEWS } from '../lib/queries';
+import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../lib/queries';
 import { Loading } from '../components/loading';
 import dayjs from '../lib/dayjs';
 import { LARGE_RESOLUTION } from '../lib/constants';
@@ -114,17 +114,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface Rendered {
-  rendered: string;
-  protected: boolean;
-}
-
 interface NewsProps {
   id: string;
-  date: string;
-  title: Rendered;
-  content: Rendered;
-  excerpt: Rendered;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  content: string;
+  excerpt: string;
 }
 
 const News: I18nPage = (props): React.ReactElement => {
@@ -138,8 +134,17 @@ const News: I18nPage = (props): React.ReactElement => {
     setCurrent(news);
   };
 
-  const handleEdit = (news: NewsProps) => (): void => {};
-  const handleDelete = (news: NewsProps) => (): void => {};
+  const [editNews] = useMutation(NEWS_EDIT);
+
+  const [deleteNews] = useMutation(NEWS_DELETE);
+
+  const handleEdit = (news?: NewsProps) => (): void => {};
+
+  const handleDelete = (news: NewsProps) => (): void => {
+    if (news && news.id) {
+      deleteNews({ variables: { id: news.id } });
+    }
+  };
 
   const handleCloseCurrent = (): void => {
     setCurrent(null);
@@ -184,7 +189,7 @@ const News: I18nPage = (props): React.ReactElement => {
             <div>
               {data.news.map((news: NewsProps) => {
                 // TODO: regexp может быть улучшен
-                const images = news.content.rendered.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
+                const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
                 const anchor = `news-${news.id}`;
 
                 return (
@@ -193,13 +198,13 @@ const News: I18nPage = (props): React.ReactElement => {
                       <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
                       <CardContent>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          {news.title.rendered}
+                          {news.title}
                         </Typography>
                       </CardContent>
                     </CardActionArea>
                     <CardActions className={classes.action}>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        {dayjs(news.date).format(DATE_FORMAT)}
+                        {dayjs(news.updatedAt).format(DATE_FORMAT)}
                       </Typography>
                       {profile.user && profile.user.isAdmin && (
                         <>
@@ -225,7 +230,7 @@ const News: I18nPage = (props): React.ReactElement => {
                 );
               })}
               {profile.user && profile.user.isAdmin && (
-                <Fab color="primary" className={classes.add} aria-label="add">
+                <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
                   <AddIcon />
                 </Fab>
               )}

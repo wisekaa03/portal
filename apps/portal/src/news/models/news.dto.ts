@@ -10,7 +10,7 @@ import { UserEntity } from '../../user/user.entity';
 export interface News {
   id?: string;
 
-  updatedAt: Date;
+  updatedAt?: Date;
 
   title: string;
 

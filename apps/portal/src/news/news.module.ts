@@ -10,6 +10,7 @@ import { ConfigModule } from '@app/config';
 import { NewsService } from './news.service';
 import { NewsResolver } from './news.resolver';
 import { NewsEntity } from './news.entity';
+import { UserModule } from '../user/user.module';
 // #endregion
 
 @Module({
@@ -19,6 +20,8 @@ import { NewsEntity } from './news.entity';
     ConfigModule,
     LoggerModule,
     // #endregion
+
+    UserModule,
 
     // #region TypeORM
     TypeOrmModule.forFeature([NewsEntity]),

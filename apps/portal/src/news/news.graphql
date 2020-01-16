@@ -1,14 +1,11 @@
-type Rendered {
-  rendered: String
-  protected: Boolean
-}
-
 type News {
   id: ID
-  date: String
-  title: Rendered
-  content: Rendered
-  excerpt: Rendered
+  createdAt: Date
+  updatedAt: Date
+  title: String
+  excerpt: String
+  content: String
+  user: User
 }
 
 type Query {
@@ -17,7 +14,7 @@ type Query {
 
 type Mutation {
 
-  editNews(title: String!, excerpt: String, content: String, date: String, id: ID): ID
+  editNews(title: String!, excerpt: String, content: String, date: String, id: ID): News
 
   deleteNews(id: ID): Boolean
 

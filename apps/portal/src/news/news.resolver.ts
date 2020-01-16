@@ -1,19 +1,23 @@
 /** @format */
 
 // #region Imports NPM
-import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { IsAdminGuard } from '../guards/admin.guard';
 import { NewsService } from './news.service';
-import { News } from './news.interface';
+import { UserResponse } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { NewsEntity } from './news.entity';
+import { News } from './models/news.dto';
 // #endregion
 
 @Resolver('News')
 export class NewsResolver {
-  constructor(private readonly newsService: NewsService) {}
+  constructor(private readonly newsService: NewsService, private readonly userService: UserService) {}
 
   /**
    * GraphQL query: news
@@ -23,33 +27,41 @@ export class NewsResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async news(): Promise<News[]> {
-    return this.newsService.news();
+    return this.newsService.news().then((news: NewsEntity[]) => news as News[]);
   }
 
   /**
    * GraphQL mutation: editNews
    *
-   * @returns {string}
+   * @returns {string} - id of news
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async editNews(
-  /* eslint-disable prettier/prettier */
-    @Args('title') title: string,
+    @Context('req') req: Request,
+    /* eslint-disable prettier/prettier */
+      @Args('title') title: string,
       @Args('excerpt') excerpt: string,
       @Args('content') content: string,
-      @Args('date') date: string,
       @Args('id') id: string,
-  /* eslint-enable prettier/prettier */
-  ): Promise<string> {
-    return this.newsService.editNews({ title, excerpt, content, updatedAt: new Date(date), id });
+      /* eslint-enable prettier/prettier */
+  ): Promise<NewsEntity> {
+    const userId = req.user as UserResponse;
+    if (userId) {
+      const user = await this.userService.readById(userId.id, false);
+      if (user) {
+        return this.newsService.editNews({ title, excerpt, content, user, id });
+      }
+    }
+
+    throw new UnauthorizedException();
   }
 
   /**
    * GraphQL mutation: deleteNews
    *
-   * @returns {boolean}
+   * @returns {boolean} - true/false of delete news
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
