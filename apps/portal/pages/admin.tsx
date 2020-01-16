@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Card, CardContent, Button } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
 // #endregion
@@ -16,12 +16,15 @@ import { GQLError } from '../components/gql-error';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(2),
-      display: 'grid',
-      gridTemplateColumns: '500px',
-      height: 'fit-content',
-      gridGap: theme.spacing(),
+    // root: {
+    //   padding: theme.spacing(2),
+    //   display: 'grid',
+    //   gridTemplateColumns: '500px',
+    //   height: 'fit-content',
+    //   gridGap: theme.spacing(),
+    // },
+    card: {
+      maxWidth: 345,
     },
     buttonSync: {
       // backgroundColor: green[300],
@@ -81,38 +84,48 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
         <title>{t('admin:title')}</title>
       </Head>
       <Page {...props}>
-        <div className={classes.root}>
-          <Button
-            disabled={syncLoading}
-            variant="contained"
-            color="secondary"
-            className={classes.buttonSync}
-            onClick={handleSync}
-          >
-            {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
-          </Button>
-          {errorsSynch && <GQLError error={errorsSynch} />}
-          <Button
-            disabled={cacheLoading}
-            variant="contained"
-            color="secondary"
-            className={classes.buttonCache}
-            onClick={handleCache}
-          >
-            {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
-          </Button>
-          {errorsCache && <GQLError error={errorsCache} />}
-          <Button
-            disabled={soap1cLoading}
-            variant="contained"
-            color="secondary"
-            className={classes.buttonSoap}
-            onClick={handleSoap1c}
-          >
-            {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
-          </Button>
-          {errorsSoap1c && <GQLError error={errorsSoap1c} />}
-        </div>
+        <Card className={classes.card}>
+          <CardContent>
+            <Button
+              disabled={syncLoading}
+              variant="contained"
+              color="secondary"
+              className={classes.buttonSync}
+              onClick={handleSync}
+            >
+              {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
+            </Button>
+            {errorsSynch && <GQLError error={errorsSynch} />}
+          </CardContent>
+        </Card>
+        <Card className={classes.card}>
+          <CardContent>
+            <Button
+              disabled={cacheLoading}
+              variant="contained"
+              color="secondary"
+              className={classes.buttonCache}
+              onClick={handleCache}
+            >
+              {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
+            </Button>
+            {errorsCache && <GQLError error={errorsCache} />}
+          </CardContent>
+        </Card>
+        <Card className={classes.card}>
+          <CardContent>
+            <Button
+              disabled={soap1cLoading}
+              variant="contained"
+              color="secondary"
+              className={classes.buttonSoap}
+              onClick={handleSoap1c}
+            >
+              {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
+            </Button>
+            {errorsSoap1c && <GQLError error={errorsSoap1c} />}
+          </CardContent>
+        </Card>
       </Page>
     </>
   );

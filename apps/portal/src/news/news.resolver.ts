@@ -18,7 +18,7 @@ export class NewsResolver {
   /**
    * GraphQL query: news
    *
-   * @returns {any}
+   * @returns {News[]}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -49,7 +49,7 @@ export class NewsResolver {
   /**
    * GraphQL mutation: deleteNews
    *
-   * @returns {any}
+   * @returns {boolean}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
