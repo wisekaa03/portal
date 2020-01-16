@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Card, CardContent, Button } from '@material-ui/core';
+import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
 // #endregion
@@ -16,13 +16,16 @@ import { GQLError } from '../components/gql-error';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    // root: {
-    //   padding: theme.spacing(2),
-    //   display: 'grid',
-    //   gridTemplateColumns: '500px',
-    //   height: 'fit-content',
-    //   gridGap: theme.spacing(),
-    // },
+    root: {
+      padding: theme.spacing(2),
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 310px)',
+      gridTemplateRows: 'repeat(1, 150px)',
+      // justifyContent: 'center',
+      // alignContent: 'center',
+      height: '100%',
+      gridGap: theme.spacing(),
+    },
     card: {
       maxWidth: 345,
     },
@@ -84,48 +87,60 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
         <title>{t('admin:title')}</title>
       </Head>
       <Page {...props}>
-        <Card className={classes.card}>
-          <CardContent>
-            <Button
-              disabled={syncLoading}
-              variant="contained"
-              color="secondary"
-              className={classes.buttonSync}
-              onClick={handleSync}
-            >
-              {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
-            </Button>
-            {errorsSynch && <GQLError error={errorsSynch} />}
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent>
-            <Button
-              disabled={cacheLoading}
-              variant="contained"
-              color="secondary"
-              className={classes.buttonCache}
-              onClick={handleCache}
-            >
-              {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
-            </Button>
-            {errorsCache && <GQLError error={errorsCache} />}
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent>
-            <Button
-              disabled={soap1cLoading}
-              variant="contained"
-              color="secondary"
-              className={classes.buttonSoap}
-              onClick={handleSoap1c}
-            >
-              {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
-            </Button>
-            {errorsSoap1c && <GQLError error={errorsSoap1c} />}
-          </CardContent>
-        </Card>
+        <div className={classes.root}>
+          <Card className={classes.card}>
+            <CardActions disableSpacing>
+              <Button fullWidth disabled={soap1cLoading} color="secondary" onClick={handleSoap1c}>
+                {!soap1cLoading ? t('admin:news:edit') : t('admin:news:wait')}
+              </Button>
+              {errorsSoap1c && <GQLError error={errorsSoap1c} />}
+            </CardActions>
+            <CardContent>
+              <Typography color="textSecondary" component="p">
+                {t('admin:news:description')}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card className={classes.card}>
+            <CardActions disableSpacing>
+              <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleSync}>
+                {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
+              </Button>
+              {errorsSynch && <GQLError error={errorsSynch} />}
+            </CardActions>
+            <CardContent>
+              <Typography color="textSecondary" component="p">
+                {t('admin:synch:description')}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card className={classes.card}>
+            <CardActions disableSpacing>
+              <Button fullWidth disabled={cacheLoading} color="secondary" onClick={handleCache}>
+                {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
+              </Button>
+              {errorsCache && <GQLError error={errorsCache} />}
+            </CardActions>
+            <CardContent>
+              <Typography color="textSecondary" component="p">
+                {t('admin:cache:description')}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card className={classes.card}>
+            <CardActions disableSpacing>
+              <Button fullWidth disabled={soap1cLoading} color="secondary" onClick={handleSoap1c}>
+                {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
+              </Button>
+              {errorsSoap1c && <GQLError error={errorsSoap1c} />}
+            </CardActions>
+            <CardContent>
+              <Typography color="textSecondary" component="p">
+                {t('admin:soap1c:description')}
+              </Typography>
+            </CardContent>
+          </Card>
+        </div>
       </Page>
     </>
   );

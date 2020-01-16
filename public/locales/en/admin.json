@@ -1,15 +1,23 @@
 {
   "title": "Portal: administration panel",
   "soap1c": {
-    "synch": "Synchroniziting SOAP",
+    "synch": "Synchroniziting",
+    "description": "Synchronization SOAP to 1С",
     "wait": "... Synching ..."
   },
   "synch": {
     "synch": "Synchronization",
+    "description": "Synchronization with Active Directory",
     "wait": "... Synching ..."
   },
   "cache": {
     "cache": "Erase cache",
+    "description": "Erase Redis Cache",
     "wait": "... Erase cache ..."
+  },
+  "news": {
+    "edit": "News",
+    "description": "Add, delete or edit news",
+    "wait": "... News ..."
   }
 }
