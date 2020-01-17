@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Module, HttpModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
@@ -16,7 +16,6 @@ import { UserModule } from '../user/user.module';
 @Module({
   imports: [
     // #region Config module
-    HttpModule,
     ConfigModule,
     LoggerModule,
     // #endregion

@@ -1,22 +1,61 @@
 /** @format */
+/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
 
 // #region Imports NPM
 import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-// import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
+import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { ImageModule } from '@app/image';
 import { ConfigModule } from '@app/config';
 import { NewsResolver } from './news.resolver';
 import { NewsService } from './news.service';
-// import { NewsModule } from './news.module';
-// import { NewsEntity } from './news.entity';
+import { UserModule } from '../user/user.module';
 // #endregion
 
-jest.mock('@nestjs/typeorm/dist/typeorm.module');
+@Entity()
+class UserEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
+
+@Entity()
+class GroupEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
+@Entity()
+class ProfileEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
+@Entity()
+class NewsEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
 jest.mock('../guards/gqlauth.guard');
 jest.mock('./news.service');
+jest.mock('../user/user.service');
+jest.mock('../profile/profile.service');
 
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV === 'test';
@@ -30,19 +69,25 @@ describe('NewsResolver', () => {
       imports: [
         ConfigModule.register(env),
         ImageModule,
-        // TypeOrmModule.forRoot({}),
-        // TypeOrmModule.forFeature([NewsEntity]),
+        UserModule,
+        TypeOrmModule.forRootAsync({
+          useFactory: async () =>
+            ({
+              type: 'sqlite',
+              database: ':memory:',
+              dropSchema: true,
+              entities: [UserEntity, GroupEntity, ProfileEntity, NewsEntity],
+              synchronize: true,
+              logging: false,
+            } as TypeOrmModuleOptions),
+        }),
+        TypeOrmModule.forFeature([NewsEntity]),
       ],
       providers: [
         NewsService,
         NewsResolver,
-        // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        // { provide: getRepositoryToken(NewsEntity), useValue: mockRepository },
       ],
-    })
-      // .overrideGuard(GqlAuthGuard)
-      // .useValue(GqlAuthGuardMock)
-      .compile();
+    }).compile();
 
     resolver = module.get<NewsResolver>(NewsResolver);
   });

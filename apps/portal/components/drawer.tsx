@@ -8,6 +8,8 @@ import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } fro
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { WithTranslation } from 'next-i18next';
+import MediaIcon from '@material-ui/icons/PermMedia';
+import MediaIconSelected from '@material-ui/icons/PermMediaOutlined';
 // #endregion
 // #region Imports Local
 import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
@@ -99,6 +101,7 @@ interface UrlProps {
   text: any;
   link: string;
   admin: boolean;
+  material?: boolean;
 }
 
 const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
@@ -130,6 +133,14 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
     { icon: FaqIcon, selected: FaqIconSelected, text: t('common:faq'), link: '/faq', admin: false },
     { icon: MeetingIcon, selected: MeetingIconSelected, text: t('common:meeting'), link: '/meetings', admin: false },
     { icon: NewsIcon, selected: NewsIconSelected, text: t('common:news'), link: '/news', admin: false },
+    {
+      icon: MediaIcon,
+      selected: MediaIconSelected,
+      text: t('common:media'),
+      link: '/media',
+      admin: false,
+      material: true,
+    },
     { icon: SettingsIcon, selected: SettingsIconSelected, text: t('common:settings'), link: '/settings', admin: false },
     { icon: AdminIcon, selected: AdminIconSelected, text: t('common:adminPanel'), link: '/admin', admin: true },
   ];
@@ -177,7 +188,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
                   title={url.text}
                 >
                   <ListItemIcon>
-                    <Icon src={selected ? url.selected : url.icon} />
+                    <Icon src={selected ? url.selected : url.icon} material={url.material} />
                   </ListItemIcon>
                   <ListItemText primary={url.text} />
                 </ListItem>

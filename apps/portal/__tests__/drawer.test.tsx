@@ -30,8 +30,8 @@ describe('Drawer component', () => {
     handleOpen: (): void => {},
     namespacesRequired: [],
   };
-  const linkCount = 9;
-  const linkAdminCount = 10;
+  const linkCount = 10;
+  const linkAdminCount = 11;
 
   describe('Without context', () => {
     beforeAll(() => {

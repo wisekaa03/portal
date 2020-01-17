@@ -24,13 +24,13 @@ import clsx from 'clsx';
 import CloseIcon from '@material-ui/icons/Close';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../lib/queries';
-import { Loading } from '../components/loading';
-import dayjs from '../lib/dayjs';
-import { LARGE_RESOLUTION } from '../lib/constants';
-import { ProfileContext } from '../lib/context';
+import Page from '../../layouts/main';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
+import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
+import { Loading } from '../../components/loading';
+import dayjs from '../../lib/dayjs';
+import { LARGE_RESOLUTION } from '../../lib/constants';
+import { ProfileContext } from '../../lib/context';
 // #endregion
 
 const DATE_FORMAT = 'MMMM DD, YYYY';
@@ -140,6 +140,7 @@ const News: I18nPage = (props): React.ReactElement => {
         query: NEWS,
       },
     ],
+    awaitRefetchQueries: true,
   });
 
   const [deleteNews] = useMutation(NEWS_DELETE, {
@@ -148,6 +149,7 @@ const News: I18nPage = (props): React.ReactElement => {
         query: NEWS,
       },
     ],
+    awaitRefetchQueries: true,
   });
 
   const handleEdit = (news?: NewsProps) => (): void => {};

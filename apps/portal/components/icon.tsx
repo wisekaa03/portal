@@ -6,8 +6,9 @@ import Icon from '@material-ui/core/Icon';
 const iconWidth = 24;
 
 interface IconProps {
-  src?: string;
+  src?: any;
   size?: number;
+  material?: boolean;
 }
 
 const useStyles = makeStyles<Theme | undefined, IconProps>(() =>
@@ -21,6 +22,11 @@ const useStyles = makeStyles<Theme | undefined, IconProps>(() =>
 
 const BaseIcon = ({ size, ...props }: IconProps): React.ReactElement => {
   const classes = useStyles({ size });
+
+  if (props.material) {
+    const TheIcon = props.src;
+    return <TheIcon />;
+  }
 
   return (
     <Icon>

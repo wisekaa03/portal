@@ -227,8 +227,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
 
     // #region GraphQL interceptor
     // {
-    // TODO: сделать чтобы IntrospectionQuery блокировался до тех пор
-    // TODO: пока кто-либо не воспользуется login
+    // TODO: сделать чтобы IntrospectionQuery блокировался до тех пор пока кто-либо не воспользуется login
     //   provide: APP_INTERCEPTOR,
     //   useClass: GraphQLInterceptor,
     // },

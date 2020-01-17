@@ -3,18 +3,37 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpModule } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
-import { LoggerModule, LogService } from '@app/logger';
+import { ConfigModule } from '@app/config';
+import { LoggerModule } from '@app/logger';
 import { NewsService } from './news.service';
+import { UserModule } from '../user/user.module';
 // #endregion
 
 @Entity()
 class UserEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
+
+@Entity()
+class GroupEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
+@Entity()
+class ProfileEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -31,7 +50,8 @@ class NewsEntity {
   name?: string;
 }
 
-// jest.mock('@nestjs/typeorm/dist/typeorm.module');
+jest.mock('../user/user.service');
+jest.mock('../profile/profile.service');
 jest.mock('@app/ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
 jest.mock('@app/config/config.service');
@@ -44,14 +64,14 @@ describe('NewsService', () => {
       imports: [
         LoggerModule,
         ConfigModule.register('.env'),
-        HttpModule,
+        UserModule,
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [UserEntity, NewsEntity],
+              entities: [UserEntity, GroupEntity, ProfileEntity, NewsEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),

@@ -2,27 +2,24 @@
 
 // #region Imports NPM
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, HttpService } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 // import { Observable } from 'rxjs';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
-import { ConfigService } from '@app/config';
+// import { LogService } from '@app/logger';
+// import { ConfigService } from '@app/config';
+// import { UserService } from '../user/user.service';
 import { News } from './models/news.dto';
 import { NewsEntity } from './news.entity';
-import { UserService } from '../user/user.service';
 // #endregion
 
 @Injectable()
 export class NewsService {
   constructor(
-    // @InjectRepository(NewsEntity)
-    // private readonly newsRepository: Repository<NewsEntity>,
-    private readonly httpService: HttpService,
-    private readonly logService: LogService,
-    private readonly configService: ConfigService,
-    private readonly userService: UserService,
+    // private readonly logService: LogService,
+    // private readonly configService: ConfigService,
+    // private readonly userService: UserService,
     @InjectRepository(NewsEntity)
     private readonly newsRepository: Repository<NewsEntity>,
   ) {}
@@ -34,7 +31,7 @@ export class NewsService {
    */
   news = async (): Promise<NewsEntity[]> => {
     // TODO: сделать чтобы выводилось постранично
-    return this.newsRepository.find({ cache: false });
+    return this.newsRepository.find();
   };
 
   /**

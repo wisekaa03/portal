@@ -12,7 +12,6 @@ import { NewsService } from './news.service';
 import { UserResponse } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { NewsEntity } from './news.entity';
-import { News } from './models/news.dto';
 // #endregion
 
 @Resolver('News')
