@@ -32,6 +32,13 @@ export class MediaEntity {
   })
   title: string;
 
+  // TODO: это ссылка на файл, который будет лежать где-то... продумать.
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  file: string;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @OneToOne((type: any) => UserEntity)
   @JoinColumn()
