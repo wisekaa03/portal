@@ -223,3 +223,42 @@ export const NEWS_DELETE = gql`
     deleteNews(id: $id)
   }
 `;
+
+/**
+ * MEDIA
+ */
+export const MEDIA = gql`
+  query Media {
+    media {
+      id
+      updatedAt
+      createdAt
+      file
+      title
+      content
+    }
+  }
+`;
+
+export const MEDIA_EDIT = gql`
+  mutation editMedia($title: String, $content: String, $id: ID) {
+    editMedia(title: $title, content: $content, id: $id) {
+      id
+      updatedAt
+      createdAt
+      file
+      title
+      content
+      user {
+        id
+        username
+      }
+    }
+  }
+`;
+
+export const MEDIA_DELETE = gql`
+  mutation deleteMedia($id: ID) {
+    deleteMedia(id: $id)
+  }
+`;

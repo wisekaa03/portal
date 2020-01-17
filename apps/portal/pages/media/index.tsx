@@ -27,7 +27,7 @@ import CloseIcon from '@material-ui/icons/Close';
 // #region Imports Local
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
+import { MEDIA, MEDIA_EDIT, MEDIA_DELETE } from '../../lib/queries';
 import { Loading } from '../../components/loading';
 import dayjs from '../../lib/dayjs';
 import { LARGE_RESOLUTION } from '../../lib/constants';
@@ -115,51 +115,51 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface NewsProps {
+interface MediaProps {
   id: string;
   createdAt: string;
   updatedAt: string;
   title: string;
-  content: string;
-  excerpt: string;
+  file: string;
+  content: Buffer;
 }
 
-const News: I18nPage = (props): React.ReactElement => {
+const Media: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
-  const { loading, data, error } = useQuery(NEWS);
-  const [current, setCurrent] = useState<NewsProps>(null);
+  const { loading, data, error } = useQuery(MEDIA);
+  const [current, setCurrent] = useState<MediaProps>(null);
   const profile = useContext(ProfileContext);
   const router = useRouter();
-  const newsId = router && router.query && router.query.id;
+  const mediaId = router && router.query && router.query.id;
 
-  const handleCurrent = (news: NewsProps) => (): void => {
-    setCurrent(news);
+  const handleCurrent = (media: MediaProps) => (): void => {
+    setCurrent(media);
   };
 
-  const [editNews] = useMutation(NEWS_EDIT, {
+  const [editMedia] = useMutation(MEDIA_EDIT, {
     refetchQueries: [
       {
-        query: NEWS,
+        query: MEDIA,
       },
     ],
     awaitRefetchQueries: true,
   });
 
-  const [deleteNews] = useMutation(NEWS_DELETE, {
+  const [deleteMedia] = useMutation(MEDIA_DELETE, {
     refetchQueries: [
       {
-        query: NEWS,
+        query: MEDIA,
       },
     ],
     awaitRefetchQueries: true,
   });
 
-  const handleEdit = (news?: NewsProps) => (): void => {};
+  const handleEdit = (media?: MediaProps) => (): void => {};
 
-  const handleDelete = (news: NewsProps) => (): void => {
-    if (news && news.id) {
-      deleteNews({ variables: { id: news.id } });
+  const handleDelete = (media: MediaProps) => (): void => {
+    if (media && media.id) {
+      deleteMedia({ variables: { id: media.id } });
     }
   };
 
@@ -170,7 +170,7 @@ const News: I18nPage = (props): React.ReactElement => {
   return (
     <Page {...props}>
       <Head>
-        <title>{t('news:title')}</title>
+        <title>{t('media:title')}</title>
       </Head>
       {loading || !data || !data.news ? (
         <Loading noMargin type="linear" variant="indeterminate" />
@@ -196,7 +196,7 @@ const News: I18nPage = (props): React.ReactElement => {
                   <div
                     className={classes.content}
                     // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: current.content }}
+                    dangerouslySetInnerHTML={{ __html: current.file }}
                   />
                 </CardContent>
               </Card>
@@ -204,24 +204,27 @@ const News: I18nPage = (props): React.ReactElement => {
           )}
           <div className={classes.container}>
             <div>
-              {data.news.map((news: NewsProps) => {
+              {data.media.map((media: MediaProps) => {
                 // TODO: regexp может быть улучшен
-                const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
-                const anchor = `news-${news.id}`;
+                const anchor = `media-${media.id}`;
 
                 return (
-                  <Card id={anchor} key={news.id} className={classes.card}>
-                    <CardActionArea onClick={handleCurrent(news)}>
-                      <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
+                  <Card id={anchor} key={media.id} className={classes.card}>
+                    <CardActionArea onClick={handleCurrent(media)}>
+                      <CardMedia
+                        component="img"
+                        height={current ? 150 : 200}
+                        // image={media.content ? media.content : null}
+                      />
                       <CardContent>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          {news.title}
+                          {media.title}
                         </Typography>
                       </CardContent>
                     </CardActionArea>
                     <CardActions className={classes.action}>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        {dayjs(news.updatedAt).format(DATE_FORMAT)}
+                        {dayjs(media.updatedAt).format(DATE_FORMAT)}
                       </Typography>
                       {profile.user && profile.user.isAdmin && (
                         <>
@@ -229,28 +232,26 @@ const News: I18nPage = (props): React.ReactElement => {
                             className={classes.icons}
                             size="small"
                             color="secondary"
-                            onClick={handleDelete(news)}
+                            onClick={handleDelete(media)}
                             aria-label="delete"
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
-                          <IconButton size="small" color="secondary" onClick={handleEdit(news)} aria-label="edit">
+                          <IconButton size="small" color="secondary" onClick={handleEdit(media)} aria-label="edit">
                             <EditIcon fontSize="small" />
                           </IconButton>
                         </>
                       )}
-                      <IconButton size="small" color="secondary" onClick={handleCurrent(news)} aria-label="more">
+                      <IconButton size="small" color="secondary" onClick={handleCurrent(media)} aria-label="more">
                         <MoreIcon fontSize="small" />
                       </IconButton>
                     </CardActions>
                   </Card>
                 );
               })}
-              {profile.user && profile.user.isAdmin && (
-                <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
-                  <AddIcon />
-                </Fab>
-              )}
+              <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
+                <AddIcon />
+              </Fab>
             </div>
           </div>
         </div>
@@ -259,8 +260,8 @@ const News: I18nPage = (props): React.ReactElement => {
   );
 };
 
-News.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['news']),
+Media.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['media']),
 });
 
-export default nextI18next.withTranslation('news')(News);
+export default nextI18next.withTranslation('news')(Media);

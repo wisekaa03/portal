@@ -9,7 +9,7 @@ type Media {
 }
 
 type Query {
-  mediaGet: [Media!]!
+  media: [Media!]!
 }
 
 type Mutation {

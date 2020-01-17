@@ -25,7 +25,7 @@ export class MediaService {
    *
    * @return News
    */
-  mediaGet = async (): Promise<MediaEntity[]> => {
+  media = async (): Promise<MediaEntity[]> => {
     // TODO: сделать чтобы выводилось постранично
     return this.mediaRepository.find();
   };

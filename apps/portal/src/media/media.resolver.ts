@@ -26,8 +26,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async mediaGet(): Promise<MediaEntity[]> {
-    return this.mediaService.mediaGet();
+  async media(): Promise<MediaEntity[]> {
+    return this.mediaService.media();
   }
 
   /**
