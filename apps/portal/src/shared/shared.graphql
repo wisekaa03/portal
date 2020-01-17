@@ -1,2 +1,3 @@
 scalar Date
 scalar ByteArray
+scalar Upload

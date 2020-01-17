@@ -1,20 +1,20 @@
 type Media {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-  title: String
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  title: String!
   file: String
-  content: String
+  content: Upload
   user: User
 }
 
 type Query {
-  mediaGet: [Media]
+  mediaGet: [Media!]!
 }
 
 type Mutation {
 
-  editMedia(title: String!, content: String, id: ID): Media
+  editMedia(title: String!, content: Upload, id: ID): Media
 
   deleteMedia(id: ID): Boolean
 

@@ -7,8 +7,8 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 // #endregion
 // #region Imports Local
@@ -45,7 +45,7 @@ export class NewsEntity {
   content: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => UserEntity)
+  @ManyToOne((type: any) => UserEntity)
   @JoinColumn()
   user: UserEntity;
 }

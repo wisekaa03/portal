@@ -7,7 +7,7 @@ import { UserEntity } from '../../user/user.entity';
 // #endregion
 
 // #region Profile
-export interface News {
+export interface Media {
   id?: string;
 
   createdAt?: Date;
@@ -16,9 +16,9 @@ export interface News {
 
   title: string;
 
-  excerpt: string;
+  file?: string;
 
-  content: string;
+  content?: Buffer;
 
   user?: UserEntity;
 }

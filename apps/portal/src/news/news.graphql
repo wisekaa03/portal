@@ -1,15 +1,15 @@
 type News {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-  title: String
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  title: String!
   excerpt: String
   content: String
-  user: User
+  user: User!
 }
 
 type Query {
-  news: [News]
+  news: [News!]!
 }
 
 type Mutation {

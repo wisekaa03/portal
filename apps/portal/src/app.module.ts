@@ -38,6 +38,7 @@ import { TicketCommentsModule } from './ticket/comments/comments.module';
 import { NewsEntity } from './news/news.entity';
 import { MediaModule } from './media/media.module';
 import { MediaEntity } from './media/media.entity';
+import { Upload } from './shared/upload.scalar';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -96,6 +97,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #endregion
 
     // #region GraphQL
+    Upload,
     /* eslint-disable prettier/prettier */
     GraphQLModule.forRoot({
       debug: dev,
@@ -108,6 +110,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
         }
         : false,
       typePaths: ['./**/*.graphql'],
+      uploads: {
+        maxFileSize: 10000000, // 10MB
+        maxFiles: 5,
+      },
       context: ({ req, res }) => ({ req, res }),
     }),
     // #endregion
