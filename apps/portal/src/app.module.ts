@@ -36,6 +36,7 @@ import { TicketsModule } from './ticket/tickets/tickets.module';
 import { TicketAttachmentsModule } from './ticket/attachments/attachments.module';
 import { TicketCommentsModule } from './ticket/comments/comments.module';
 import { NewsEntity } from './news/news.entity';
+import { MediaModule } from './media/media.module';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -202,6 +203,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     TicketsModule,
     TicketAttachmentsModule,
     TicketCommentsModule,
+    MediaModule,
     // #endregion
   ],
 
