@@ -169,6 +169,9 @@ export const USER_SETTINGS = gql`
   }
 `;
 
+/**
+ * ADDRESSBOOK
+ */
 export const SEARCH_SUGGESTIONS = gql`
   query SearchSuggestions($search: String) {
     searchSuggestions(search: $search) {
@@ -182,24 +185,9 @@ export const SEARCH_SUGGESTIONS = gql`
   }
 `;
 
-// export const NEWS = gql`
-//   query News {
-//     news {
-//       id
-//       date
-//       title {
-//         rendered
-//       }
-//       content {
-//         rendered
-//       }
-//       excerpt {
-//         rendered
-//       }
-//     }
-//   }
-// `;
-
+/**
+ * NEWS
+ */
 export const NEWS = gql`
   query News {
     news {

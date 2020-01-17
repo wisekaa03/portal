@@ -33,7 +33,8 @@ export class NewsService {
    * @return News
    */
   news = async (): Promise<NewsEntity[]> => {
-    return this.newsRepository.find();
+    // TODO: сделать чтобы выводилось постранично
+    return this.newsRepository.find({ cache: false });
   };
 
   /**

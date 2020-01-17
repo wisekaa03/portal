@@ -26,8 +26,8 @@ export class NewsResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async news(): Promise<News[]> {
-    return this.newsService.news().then((news: NewsEntity[]) => news as News[]);
+  async news(): Promise<NewsEntity[]> {
+    return this.newsService.news();
   }
 
   /**

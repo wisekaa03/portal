@@ -127,16 +127,28 @@ const News: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
   const { loading, data, error } = useQuery(NEWS);
-  const [current, setCurrent] = useState(null);
+  const [current, setCurrent] = useState<NewsProps>(null);
   const profile = useContext(ProfileContext);
 
   const handleCurrent = (news: NewsProps) => (): void => {
     setCurrent(news);
   };
 
-  const [editNews] = useMutation(NEWS_EDIT);
+  const [editNews] = useMutation(NEWS_EDIT, {
+    refetchQueries: [
+      {
+        query: NEWS,
+      },
+    ],
+  });
 
-  const [deleteNews] = useMutation(NEWS_DELETE);
+  const [deleteNews] = useMutation(NEWS_DELETE, {
+    refetchQueries: [
+      {
+        query: NEWS,
+      },
+    ],
+  });
 
   const handleEdit = (news?: NewsProps) => (): void => {};
 
@@ -172,14 +184,14 @@ const News: I18nPage = (props): React.ReactElement => {
                       <CloseIcon />
                     </IconButton>
                   }
-                  title={current.title.rendered}
-                  subheader={dayjs(current.date).format(DATE_FORMAT)}
+                  title={current.title}
+                  subheader={dayjs(current.updatedAt).format(DATE_FORMAT)}
                 />
                 <CardContent>
                   <div
                     className={classes.content}
                     // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: current.content.rendered }}
+                    dangerouslySetInnerHTML={{ __html: current.content }}
                   />
                 </CardContent>
               </Card>
