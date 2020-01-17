@@ -167,12 +167,15 @@ const Media: I18nPage = (props): React.ReactElement => {
     setCurrent(null);
   };
 
+  // eslint-disable-next-line no-debugger
+  debugger;
+
   return (
     <Page {...props}>
       <Head>
         <title>{t('media:title')}</title>
       </Head>
-      {loading || !data || !data.news ? (
+      {loading || !data || !data.media ? (
         <Loading noMargin type="linear" variant="indeterminate" />
       ) : (
         <div

@@ -1,6 +1,8 @@
 {
   "title": "Portal: News",
-  "add": "Add",
+  "add": {
+    "title": "Add"
+  },
   "delete": "Delete",
   "edit": "Edit",
   "more": "Learn more"

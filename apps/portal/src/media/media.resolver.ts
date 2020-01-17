@@ -41,7 +41,7 @@ export class MediaResolver {
     @Context('req') req: Request,
     /* eslint-disable prettier/prettier */
       @Args('title') title: string,
-      @Args('content') content: Buffer,
+      @Args('content') content: any,
       @Args('id') id: string,
       /* eslint-enable prettier/prettier */
   ): Promise<MediaEntity> {
@@ -49,8 +49,9 @@ export class MediaResolver {
     if (userId) {
       const user = await this.userService.readById(userId.id);
       if (user) {
-        const file = '';
+        console.log('File', content);
 
+        const file = '';
         return this.mediaService.editMedia({ title, file, user, id });
       }
     }

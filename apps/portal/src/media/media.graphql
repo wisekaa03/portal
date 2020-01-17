@@ -5,7 +5,7 @@ type Media {
   title: String!
   file: String
   content: Upload
-  user: User
+  user: User!
 }
 
 type Query {
