@@ -158,7 +158,7 @@ const Media: I18nPage = (props): React.ReactElement => {
   };
 
   // eslint-disable-next-line no-debugger
-  debugger;
+  // debugger;
 
   return (
     <Page {...props}>
