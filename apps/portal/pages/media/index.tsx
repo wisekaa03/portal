@@ -4,6 +4,7 @@
 import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -137,15 +138,6 @@ const Media: I18nPage = (props): React.ReactElement => {
     setCurrent(media);
   };
 
-  const [editMedia] = useMutation(MEDIA_EDIT, {
-    refetchQueries: [
-      {
-        query: MEDIA,
-      },
-    ],
-    awaitRefetchQueries: true,
-  });
-
   const [deleteMedia] = useMutation(MEDIA_DELETE, {
     refetchQueries: [
       {
@@ -154,8 +146,6 @@ const Media: I18nPage = (props): React.ReactElement => {
     ],
     awaitRefetchQueries: true,
   });
-
-  const handleEdit = (media?: MediaProps) => (): void => {};
 
   const handleDelete = (media: MediaProps) => (): void => {
     if (media && media.id) {
@@ -240,9 +230,11 @@ const Media: I18nPage = (props): React.ReactElement => {
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
-                          <IconButton size="small" color="secondary" onClick={handleEdit(media)} aria-label="edit">
-                            <EditIcon fontSize="small" />
-                          </IconButton>
+                          <Link href={{ pathname: '/media/edit', query: { id: media && media.id } }} passHref>
+                            <IconButton size="small" color="secondary" aria-label="edit">
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
                         </>
                       )}
                       <IconButton size="small" color="secondary" onClick={handleCurrent(media)} aria-label="more">
@@ -252,9 +244,11 @@ const Media: I18nPage = (props): React.ReactElement => {
                   </Card>
                 );
               })}
-              <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
-                <AddIcon />
-              </Fab>
+              <Link href={{ pathname: '/media/edit' }} passHref>
+                <Fab color="primary" className={classes.add} aria-label="add">
+                  <AddIcon />
+                </Fab>
+              </Link>
             </div>
           </div>
         </div>

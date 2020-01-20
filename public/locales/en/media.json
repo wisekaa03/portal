@@ -4,6 +4,8 @@
     "title": "Add"
   },
   "delete": "Delete",
-  "edit": "Edit",
+  "edit": {
+    "title": "Edit"
+  },
   "more": "Learn more"
 }
