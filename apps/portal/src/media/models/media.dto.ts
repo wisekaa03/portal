@@ -9,17 +9,17 @@ import { UserEntity } from '../../user/user.entity';
 // #region Profile
 export interface Media {
   id?: string;
+  user?: UserEntity;
 
   createdAt?: Date;
-
   updatedAt?: Date;
 
   title: string;
 
-  file?: string;
+  directory?: string;
+  filename?: string;
+  mimetype?: string;
 
   content?: Buffer;
-
-  user?: UserEntity;
 }
 // #endregion

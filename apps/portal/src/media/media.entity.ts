@@ -32,12 +32,24 @@ export class MediaEntity {
   })
   title: string;
 
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  directory: string;
+
   // TODO: это ссылка на файл, который будет лежать где-то... продумать.
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  file: string;
+  filename: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  mimetype: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @ManyToOne((type: any) => UserEntity)

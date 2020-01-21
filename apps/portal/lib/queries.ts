@@ -241,8 +241,8 @@ export const MEDIA = gql`
 `;
 
 export const MEDIA_EDIT = gql`
-  mutation editMedia($content: Upload!, $id: ID) {
-    editMedia(content: $content, id: $id) {
+  mutation editMedia($file: Upload!, $id: ID) {
+    editMedia(file: $file, id: $id) {
       id
       updatedAt
       createdAt

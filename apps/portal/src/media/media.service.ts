@@ -35,10 +35,12 @@ export class MediaService {
    *
    * @return id
    */
-  editMedia = async ({ title, file, user, id }: Media): Promise<MediaEntity> => {
+  editMedia = async ({ title, directory, filename, mimetype, user, id }: Media): Promise<MediaEntity> => {
     const data = {
       title,
-      file,
+      directory,
+      filename,
+      mimetype,
       user,
       id,
     };

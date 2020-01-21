@@ -39,7 +39,8 @@ export class MediaResolver {
   async editMedia(
     @Context('req') req: Request,
     /* eslint-disable prettier/prettier */
-      @Args('content') content: FileUpload,
+      @Args('file') file: FileUpload,
+      @Args('directory') directory: string,
       @Args('id') id: string,
       /* eslint-enable prettier/prettier */
   ): Promise<MediaEntity> {
@@ -47,12 +48,18 @@ export class MediaResolver {
     if (userId) {
       const user = await this.userService.readById(userId.id);
       if (user) {
-        console.log('File', content);
+        console.log('File', file);
+        const { filename, mimetype, createReadStream } = await file;
+        const stream = createReadStream();
 
-        if (content.createReadStream) {
-          const file = '';
-          return this.mediaService.editMedia({ title: content.filename, file, user, id });
-        }
+        return this.mediaService.editMedia({
+          title: filename,
+          directory,
+          filename,
+          mimetype,
+          user,
+          id,
+        });
       }
     }
 
