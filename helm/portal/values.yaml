@@ -67,6 +67,13 @@ MAIL_LOGIN_URL: "https://roundcube.production/login/index.php"
 
 MEETING_URL: "https://meeting"
 
+persistence:
+  enabled: true
+  # existingClaim:
+  storageClassName: nfs-storage
+  accessMode: ReadWriteOnce
+  size: 100Gi
+
 service:
   type: LoadBalancer
 

@@ -29,6 +29,9 @@ spec:
             - name: http
               containerPort: {{ .Values.PORT | default 4000 }}
               protocol: TCP
+          volumeMounts:
+            - name: {{ include "portal.name" . }}-media
+              mountPath: /media
           livenessProbe:
             httpGet:
               path: /health
@@ -239,6 +242,14 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
+      volumes:
+        - name: {{ include "portal.name" . }}-media
+        {{- if .Values.persistence.enabled }}
+          persistenceVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
