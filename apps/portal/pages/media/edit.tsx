@@ -40,18 +40,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // eslint-disable-next-line no-debugger
-  debugger;
+  // debugger;
 
   const classes = useStyles({});
   const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA);
   const [mediaEdit] = useMutation(MEDIA_EDIT);
   const router = useRouter();
-  const title = router.query.id ? 'media:edit:title' : 'media:add:title';
 
   const [current, setCurrent] = useState<Media | undefined>();
   const [updated, setUpdated] = useState<Media | undefined>();
 
   const [files, setFiles] = useState<DropzoneFile[]>([]);
+
+  const title = current ? 'media:edit:title' : 'media:add:title';
 
   useEffect(() => {
     if (router && router.query && router.query.id) {
