@@ -3,7 +3,7 @@ type Media {
   createdAt: Date!
   updatedAt: Date!
   title: String!
-  file: String
+  file: String!
   content: Upload
   user: User!
 }
@@ -14,8 +14,8 @@ type Query {
 
 type Mutation {
 
-  editMedia(title: String!, content: Upload, id: ID): Media
+  editMedia(content: Upload!, id: ID): Media
 
-  deleteMedia(id: ID): Boolean
+  deleteMedia(id: ID!): Boolean
 
 }

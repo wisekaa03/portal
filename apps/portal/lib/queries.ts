@@ -241,13 +241,13 @@ export const MEDIA = gql`
 `;
 
 export const MEDIA_EDIT = gql`
-  mutation editMedia($title: String, $content: String, $id: ID) {
-    editMedia(title: $title, content: $content, id: $id) {
+  mutation editMedia($content: Upload!, $id: ID) {
+    editMedia(content: $content, id: $id) {
       id
       updatedAt
       createdAt
-      file
       title
+      file
       content
       user {
         id

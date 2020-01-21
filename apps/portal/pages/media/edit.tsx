@@ -21,7 +21,22 @@ import Dropzone from '../../components/dropzone';
 import { DropzoneFile } from '../../components/dropzone/types';
 // #endregion
 
-const useStyles = makeStyles((theme: Theme) => createStyles({}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    dropBox: {
+      padding: '0 20px 0 20px',
+    },
+
+    firstBlock: {
+      display: 'grid',
+      gridGap: theme.spacing(2),
+      width: '100%',
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '1fr 1fr',
+      },
+    },
+  }),
+);
 
 const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // eslint-disable-next-line no-debugger
@@ -57,12 +72,13 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   }, [loading, data, error]);
 
   const handleSave = (): void => {
-    mediaEdit({
-      variables: {
-        title: 'First',
-        content: files,
-        ...updated,
-      },
+    files.forEach((file) => {
+      mediaEdit({
+        variables: {
+          ...updated,
+          content: file,
+        },
+      });
     });
   };
 
@@ -89,10 +105,8 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     </Box>
                   </Box>
                 </Box>
-                <Box>
-                  <Box display="flex" flexDirection="column">
-                    <Dropzone setFiles={setFiles} files={files} {...rest} />
-                  </Box>
+                <Box display="flex" className={classes.dropBox} flexDirection="column">
+                  <Dropzone setFiles={setFiles} files={files} {...rest} />
                 </Box>
               </>
             )}

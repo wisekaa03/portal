@@ -4,13 +4,12 @@
 import { Resolver, Query, Mutation, Context, Args } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
+import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
-import { concat } from 'apollo-link';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { MediaEntity } from './media.entity';
 import { MediaService } from './media.service';
-import { IsAdminGuard } from '../guards/admin.guard';
 import { UserResponse } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 // #endregion
@@ -40,8 +39,7 @@ export class MediaResolver {
   async editMedia(
     @Context('req') req: Request,
     /* eslint-disable prettier/prettier */
-      @Args('title') title: string,
-      @Args('content') content: any,
+      @Args('content') content: FileUpload,
       @Args('id') id: string,
       /* eslint-enable prettier/prettier */
   ): Promise<MediaEntity> {
@@ -51,8 +49,10 @@ export class MediaResolver {
       if (user) {
         console.log('File', content);
 
-        const file = '';
-        return this.mediaService.editMedia({ title, file, user, id });
+        if (content.createReadStream) {
+          const file = '';
+          return this.mediaService.editMedia({ title: content.filename, file, user, id });
+        }
       }
     }
 
