@@ -231,10 +231,16 @@ export const MEDIA = gql`
   query Media {
     media {
       id
+      user {
+        id
+        username
+      }
       updatedAt
       createdAt
-      file
+      directory
       title
+      filename
+      mimetype
       content
     }
   }
@@ -247,7 +253,9 @@ export const MEDIA_EDIT = gql`
       updatedAt
       createdAt
       title
-      file
+      directory
+      filename
+      mimetype
       content
       user {
         id
