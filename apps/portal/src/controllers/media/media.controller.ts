@@ -2,7 +2,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get, Res, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { RenderableResponse } from 'nest-next-2';
 // #endregion
 // #region Imports Local
@@ -19,7 +19,7 @@ export class MediaController {
 
   @Get('edit')
   @UseGuards(SessionGuard)
-  public async edit(@Res() res: RenderableResponse, @Query('id') id: string): Promise<void> {
-    return res.render(`media/edit`, { id });
+  public async edit(@Res() res: RenderableResponse): Promise<void> {
+    return res.render('media/edit');
   }
 }
