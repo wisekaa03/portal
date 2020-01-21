@@ -49,7 +49,7 @@ export class MediaResolver {
       if (user) {
         console.log('File', content);
 
-        if (content.createReadStream) {
+        if (content.createReadStream()) {
           const file = '';
           return this.mediaService.editMedia({ title: content.filename, file, user, id });
         }
