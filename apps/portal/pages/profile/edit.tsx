@@ -223,7 +223,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           <IconButton className={classes.pickPhoto}>
                             <PhotoCameraIcon />
                           </IconButton>
-                          <Avatar fullSize className={classes.avatar} profile={current} />
+                          <Avatar fullSize className={classes.avatar} profile={current} alt="photo" />
                         </div>
                       </Box>
                       <div className={classes.nameBlock}>

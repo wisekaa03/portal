@@ -170,7 +170,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
           <Box display="flex" flexDirection="column" p={1}>
             <Box display="flex" flexWrap="wrap">
               <Box mr={1} mb={1}>
-                <Avatar fullSize className={classes.avatar} profile={profile.user.profile} />
+                <Avatar fullSize className={classes.avatar} profile={profile.user.profile} alt="photo" />
               </Box>
               <div className={classes.personal}>
                 <Box display="flex" flexDirection="column" mb={1}>

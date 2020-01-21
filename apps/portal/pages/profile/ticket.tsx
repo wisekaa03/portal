@@ -147,7 +147,7 @@ const InfoCard = ({ classes, header, profile, t }: InfoCardProps): React.ReactEl
     <CardContent className={classes.cardContent}>
       <Box display="flex">
         <Box mr={2}>
-          <Avatar fullSize className={classes.avatar} profile={profile.user.profile} />
+          <Avatar fullSize className={classes.avatar} profile={profile.user.profile} alt="photo" />
         </Box>
         <Box flex={1}>
           <Paper>

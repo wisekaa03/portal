@@ -216,7 +216,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             </div>
             <div className={classes.center}>
               {profile ? (
-                <Avatar fullSize className={classes.avatar} profile={profile} />
+                <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
               ) : (
                 <Skeleton className={classes.avatar} variant="circle" />
               )}

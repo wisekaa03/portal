@@ -148,7 +148,11 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
               </div>
               <Box id="profile-avatar" className={classes.avatarWrap} onClick={context.user && handlePopoverOpen}>
                 {context.user ? (
-                  <Avatar className={clsx(classes.avatar, classes.pointer)} profile={context.user.profile} />
+                  <Avatar
+                    className={clsx(classes.avatar, classes.pointer)}
+                    profile={context.user.profile}
+                    alt="photo"
+                  />
                 ) : (
                   <Skeleton className={classes.avatar} variant="circle" />
                 )}
@@ -175,7 +179,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                   <Typography className={classes.profileName}>
                     {context.user.profile.lastName} {context.user.profile.firstName} {context.user.profile.middleName}
                   </Typography>
-                  <Avatar className={classes.avatar} profile={context.user.profile} />
+                  <Avatar className={classes.avatar} profile={context.user.profile} alt="photo" />
                   <Box className={classes.commonBlock}>
                     <Box className={classes.phoneBlock}>
                       {context.user.profile.telephone && (
