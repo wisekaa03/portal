@@ -35,6 +35,7 @@ export class MediaEntity {
   @Column({
     type: 'varchar',
     nullable: false,
+    default: '',
   })
   directory: string;
 
@@ -42,12 +43,14 @@ export class MediaEntity {
   @Column({
     type: 'varchar',
     nullable: false,
+    default: '',
   })
   filename: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
+    default: '',
   })
   mimetype: string;
 
