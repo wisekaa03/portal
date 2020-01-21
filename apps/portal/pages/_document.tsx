@@ -44,6 +44,8 @@ class MainDocument extends Document<MainDocumentInitialProps> {
         <Head nonce={nonce}>
           <meta charSet="utf-8" />
           <meta name="Description" content="Портал" />
+          // TODO: временно запрещаем индексацию
+          <meta name="robots" content="noindex" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           {/* <meta property="csp-nonce" content={this.props.nonce} /> */}
           <meta name="theme-color" content={theme.palette.primary.main} />
