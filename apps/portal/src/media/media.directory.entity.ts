@@ -13,11 +13,10 @@ import {
 // #endregion
 // #region Imports Local
 import { UserEntity } from '../user/user.entity';
-import { MediaDirectoryEntity } from './media.directory.entity';
 // #endregion
 
-@Entity('media')
-export class MediaEntity {
+@Entity('media.directory')
+export class MediaDirectoryEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -31,27 +30,7 @@ export class MediaEntity {
     type: 'varchar',
     nullable: false,
   })
-  title: string;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => MediaDirectoryEntity)
-  @JoinColumn()
-  directory: MediaDirectoryEntity;
-
-  // TODO: это ссылка на файл, который будет лежать где-то... продумать.
-  @Column({
-    type: 'varchar',
-    nullable: false,
-    default: '',
-  })
-  filename: string;
-
-  @Column({
-    type: 'varchar',
-    nullable: false,
-    default: '',
-  })
-  mimetype: string;
+  pathname: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @ManyToOne((type: any) => UserEntity)

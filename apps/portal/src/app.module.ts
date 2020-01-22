@@ -37,6 +37,7 @@ import { TicketAttachmentsModule } from './ticket/attachments/attachments.module
 import { TicketCommentsModule } from './ticket/comments/comments.module';
 import { NewsEntity } from './news/news.entity';
 import { MediaModule } from './media/media.module';
+import { MediaDirectoryEntity } from './media/media.directory.entity';
 import { MediaEntity } from './media/media.entity';
 import { Upload } from './shared/upload.scalar';
 // #endregion
@@ -154,7 +155,8 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
                 : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities: [
             ProfileEntity, GroupEntity, UserEntity,
-            NewsEntity, MediaEntity,
+            NewsEntity,
+            MediaDirectoryEntity, MediaEntity,
             TicketDepartmentModule, TicketGroupServiceModule, TicketServiceModule,
             TicketsModule, TicketAttachmentsModule, TicketCommentsModule
           ],

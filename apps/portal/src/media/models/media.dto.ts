@@ -4,6 +4,7 @@
 // #endregion
 // #region Imports Local
 import { UserEntity } from '../../user/user.entity';
+import { MediaDirectoryEntity } from '../media.directory.entity';
 // #endregion
 
 // #region Profile
@@ -16,7 +17,7 @@ export interface Media {
 
   title: string;
 
-  directory?: string;
+  directory?: MediaDirectoryEntity | string;
   filename?: string;
   mimetype?: string;
 

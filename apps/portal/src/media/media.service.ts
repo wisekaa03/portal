@@ -6,18 +6,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { MediaEntity } from './media.entity';
 import { Media } from './models/media.dto';
+import { MediaDirectoryEntity } from './media.directory.entity';
 // #endregion
 
 @Injectable()
 export class MediaService {
   constructor(
-    // private readonly logService: LogService,
+    private readonly logService: LogService,
     // private readonly configService: ConfigService,
     // private readonly userService: UserService,
     @InjectRepository(MediaEntity)
     private readonly mediaRepository: Repository<MediaEntity>,
+    @InjectRepository(MediaDirectoryEntity)
+    private readonly mediaDirectoryRepository: Repository<MediaDirectoryEntity>,
   ) {}
 
   /**
@@ -26,6 +30,8 @@ export class MediaService {
    * @return News
    */
   media = async (): Promise<MediaEntity[]> => {
+    this.logService.log('Media entity', 'Media');
+
     // TODO: сделать чтобы выводилось постранично
     return this.mediaRepository.find();
   };
@@ -36,9 +42,13 @@ export class MediaService {
    * @return id
    */
   editMedia = async ({ title, directory, filename, mimetype, user, id }: Media): Promise<MediaEntity> => {
+    this.logService.log(`Edit: ${JSON.stringify({ title, directory, filename, mimetype, user, id })}`, 'Media');
+
+    const directoryEntity = await this.mediaDirectoryRepository.findOne(directory as string);
+
     const data = {
       title,
-      directory,
+      directory: directoryEntity,
       filename,
       mimetype,
       user,
@@ -56,6 +66,8 @@ export class MediaService {
    * @return void
    */
   deleteMedia = async (id: string): Promise<boolean> => {
+    this.logService.log(`Edit: ${JSON.stringify({ id })}`, 'Media');
+
     const deleteResult = await this.mediaRepository.delete({ id });
 
     return !!(deleteResult.affected && deleteResult.affected > 0);
