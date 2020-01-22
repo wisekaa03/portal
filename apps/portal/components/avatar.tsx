@@ -13,6 +13,7 @@ import Woman from '../../../public/images/svg/photo/woman-blue.svg';
 
 interface AvatarProps {
   profile: Profile;
+  alt: string;
   fullSize?: boolean;
   className?: string;
 }

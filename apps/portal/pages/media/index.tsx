@@ -132,7 +132,7 @@ const Media: I18nPage = (props): React.ReactElement => {
   const [current, setCurrent] = useState<MediaProps>(null);
   const profile = useContext(ProfileContext);
   const router = useRouter();
-  const mediaId = router && router.query && router.query.id;
+  // const mediaId = router && router.query && router.query.id;
 
   const handleCurrent = (media: MediaProps) => (): void => {
     setCurrent(media);

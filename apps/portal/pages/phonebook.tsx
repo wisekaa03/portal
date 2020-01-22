@@ -251,7 +251,7 @@ const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ..
 
         switch (name) {
           case 'thumbnailPhoto40': {
-            cellData = <Avatar profile={item} />;
+            cellData = <Avatar profile={item} alt="photo" />;
             break;
           }
 
