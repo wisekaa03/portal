@@ -46,8 +46,8 @@ export class MediaResolver {
   ): Promise<MediaEntity> {
     const userId = req.user as UserResponse;
     if (userId) {
-      const user = await this.userService.readById(userId.id);
-      if (user) {
+      const updatedUser = await this.userService.readById(userId.id);
+      if (updatedUser) {
         console.log('File', file);
         const { filename, mimetype, createReadStream } = await file;
         const readableStream = createReadStream();
@@ -59,7 +59,7 @@ export class MediaResolver {
           directory,
           filename,
           mimetype,
-          user,
+          updatedUser,
           id,
         });
       }

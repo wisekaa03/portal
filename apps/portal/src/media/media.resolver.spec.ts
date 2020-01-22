@@ -50,6 +50,15 @@ class MediaEntity {
   name?: string;
 }
 
+@Entity()
+class MediaDirectoryEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column()
+  name?: string;
+}
+
 jest.mock('./media.service');
 jest.mock('../user/user.service');
 jest.mock('../profile/profile.service');
@@ -63,18 +72,19 @@ describe('MediaResolver', () => {
         LoggerModule,
         ConfigModule.register('.env'),
         UserModule,
+
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [UserEntity, GroupEntity, ProfileEntity, MediaEntity],
+              entities: [UserEntity, GroupEntity, ProfileEntity, MediaDirectoryEntity, MediaEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([MediaEntity]),
+        TypeOrmModule.forFeature([UserEntity, MediaDirectoryEntity, MediaEntity]),
       ],
       providers: [
         MediaService,

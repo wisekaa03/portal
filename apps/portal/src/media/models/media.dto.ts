@@ -10,7 +10,8 @@ import { MediaDirectoryEntity } from '../media.directory.entity';
 // #region Profile
 export interface Media {
   id?: string;
-  user?: UserEntity;
+  createdUser?: UserEntity;
+  updatedUser?: UserEntity;
 
   createdAt?: Date;
   updatedAt?: Date;

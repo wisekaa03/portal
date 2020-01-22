@@ -15,7 +15,7 @@ import {
 import { UserEntity } from '../user/user.entity';
 // #endregion
 
-@Entity('media.directory')
+@Entity('media_directory')
 export class MediaDirectoryEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
