@@ -111,7 +111,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
         : false,
       typePaths: ['./**/*.graphql'],
       uploads: {
-        maxFileSize: 10000000, // 10MB
+        maxFileSize: 100000000, // 100MB
         maxFiles: 5,
       },
       context: ({ req, res }) => ({ req, res }),

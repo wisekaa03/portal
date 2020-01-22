@@ -50,7 +50,9 @@ export class MediaResolver {
       if (user) {
         console.log('File', file);
         const { filename, mimetype, createReadStream } = await file;
-        const stream = createReadStream();
+        const readableStream = createReadStream();
+        // const writableStream = new WritableStream<Buffer>();
+        // readableStream.pipe(writableStream);
 
         return this.mediaService.editMedia({
           title: filename,
