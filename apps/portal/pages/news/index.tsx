@@ -34,6 +34,13 @@ import { LARGE_RESOLUTION } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';
 // #endregion
 
+// TODO: Import jodit-react:
+// import dynamic from 'next/dynamic';
+// const importJodit = () => import('jodit-react');
+// const JoditEditor = dynamic(importJodit, {
+//     ssr: false,
+// });
+
 const DATE_FORMAT = 'MMMM DD, YYYY';
 
 const useStyles = makeStyles((theme: Theme) =>
