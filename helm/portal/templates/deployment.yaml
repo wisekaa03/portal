@@ -241,15 +241,15 @@ spec:
                   key: MEETING_URL
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
       volumes:
         - name: {{ include "portal.name" . }}-media
         {{- if .Values.persistence.enabled }}
-          persistenceVolumeClaim:
+          persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
         {{- else }}
           emptyDir: {}
         {{- end }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
