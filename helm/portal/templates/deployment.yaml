@@ -30,7 +30,7 @@ spec:
               containerPort: {{ .Values.PORT | default 4000 }}
               protocol: TCP
           volumeMounts:
-            - name: {{ include "portal.name" . }}-media
+            - name: portal-media
               mountPath: /media
           livenessProbe:
             httpGet:
@@ -242,7 +242,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: {{ include "portal.name" . }}-media
+        - name: portal-media
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
