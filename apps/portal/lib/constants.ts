@@ -7,7 +7,7 @@ import { LoginService, Gender } from '../src/shared/interfaces';
 import { UserContext } from '../src/user/models/user.dto';
 // #endregion
 
-export const FIRST_PAGE = '/';
+export const FIRST_PAGE = '/mail';
 export const SESSION = 'session';
 export const ADMIN_PAGES = ['/admin'];
 export const ALLOW_REDIRECT_PAGES = [
@@ -23,7 +23,9 @@ export const ALLOW_REDIRECT_PAGES = [
   '/admin',
 ];
 export const LARGE_RESOLUTION = 1440;
-export const AUTO_COLLAPSE_ROUTES = ['/mail'];
+export const AUTO_COLLAPSE_ROUTES = [
+  /* '/mail' */
+];
 
 export const ADMIN_GROUP = 'web master';
 
