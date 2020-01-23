@@ -8,8 +8,6 @@ import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } fro
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { WithTranslation } from 'next-i18next';
-import MediaIcon from '@material-ui/icons/PermMedia';
-import MediaIconSelected from '@material-ui/icons/PermMediaOutlined';
 // #endregion
 // #region Imports Local
 import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
@@ -25,6 +23,8 @@ import ProfileIcon from '../../../public/images/svg/icons/profile.svg';
 import ProfileIconSelected from '../../../public/images/svg/icons/profile_select.svg';
 import MailIcon from '../../../public/images/svg/icons/mail.svg';
 import MailIconSelected from '../../../public/images/svg/icons/mail_select.svg';
+import MediaIcon from '../../../public/images/svg/icons/media.svg';
+import MediaIconSelected from '../../../public/images/svg/icons/media_select.svg';
 import MeetingIcon from '../../../public/images/svg/icons/meeting.svg';
 import MeetingIconSelected from '../../../public/images/svg/icons/meeting_select.svg';
 import NewsIcon from '../../../public/images/svg/icons/news.svg';
@@ -139,7 +139,6 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
       text: t('common:media'),
       link: '/media',
       admin: false,
-      material: true,
     },
     { icon: SettingsIcon, selected: SettingsIconSelected, text: t('common:settings'), link: '/settings', admin: false },
     { icon: AdminIcon, selected: AdminIconSelected, text: t('common:adminPanel'), link: '/admin', admin: true },
