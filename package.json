@@ -70,6 +70,8 @@
     ]
   },
   "resolutions": {
+    "**/**/react-swipeable-views-core": "0.13.1",
+    "**/**/react-swipeable-views-utils": "0.13.4",
     "**/**/fs-capacitor": "^5.0.0",
     "**/graphql-upload": "^9.0.0"
   },
@@ -153,7 +155,7 @@
     "react-i18next": "^11.3.1",
     "react-swipeable-views": "0.13.3",
     "react-swipeable-views-core": "0.13.1",
-    "react-swipeable-views-utils": "0.13.3",
+    "react-swipeable-views-utils": "0.13.4",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
     "react-window-infinite-loader": "^1.0.5",
