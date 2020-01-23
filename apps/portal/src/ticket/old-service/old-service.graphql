@@ -1,0 +1,24 @@
+type Service {
+  code: String
+  name: String
+  description: String
+  caterogyType: String
+  avatar: String
+}
+
+type Route {
+  code: String
+  name: String
+  group: String
+  description: String
+  avatar: String
+  services: [Service!]!
+}
+
+type Query {
+  GetRoutes: [Route!]!
+}
+
+# type Mutation {
+
+# }

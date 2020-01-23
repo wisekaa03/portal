@@ -35,6 +35,7 @@ import { TicketGroupServiceModule } from './ticket/group-service/group-service.m
 import { TicketsModule } from './ticket/tickets/tickets.module';
 import { TicketAttachmentsModule } from './ticket/attachments/attachments.module';
 import { TicketCommentsModule } from './ticket/comments/comments.module';
+import { TicketOldServiceModule } from './ticket/old-service/old-service.module';
 import { NewsEntity } from './news/news.entity';
 import { MediaModule } from './media/media.module';
 import { MediaDirectoryEntity } from './media/media.directory.entity';
@@ -212,6 +213,10 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     TicketsModule,
     TicketAttachmentsModule,
     TicketCommentsModule,
+    TicketOldServiceModule,
+    // #endregion
+
+    // #region Media
     MediaModule,
     // #endregion
   ],

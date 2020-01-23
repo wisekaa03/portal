@@ -1,0 +1,3 @@
+/** @format */
+
+export interface Route {}
