@@ -41,8 +41,8 @@ export class MediaService {
    *
    * @return id
    */
-  editMedia = async ({ title, directory, filename, mimetype, user, id }: Media): Promise<MediaEntity> => {
-    this.logService.log(`Edit: ${JSON.stringify({ title, directory, filename, mimetype, user, id })}`, 'Media');
+  editMedia = async ({ title, directory, filename, mimetype, updatedUser, id }: Media): Promise<MediaEntity> => {
+    this.logService.log(`Edit: ${JSON.stringify({ title, directory, filename, mimetype, updatedUser, id })}`, 'Media');
 
     const directoryEntity = await this.mediaDirectoryRepository.findOne(directory as string);
 
@@ -51,7 +51,7 @@ export class MediaService {
       directory: directoryEntity,
       filename,
       mimetype,
-      user,
+      updatedUser,
       id,
     };
 
