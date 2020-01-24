@@ -27,7 +27,7 @@ export class TicketOldServiceResolver {
     const user = req.user as User;
 
     if (user) {
-      return this.ticketOldService.GetRoutes(user.username, user.passwordFrontend as string).catch((error: Error) => {
+      return this.ticketOldService.GetService(user.username, user.passwordFrontend as string).catch((error: Error) => {
         throw new UnauthorizedException(error.message);
       });
     }

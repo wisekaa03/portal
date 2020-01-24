@@ -21,7 +21,7 @@ export class TicketOldService {
    *
    * @returns {Routes[]} Services and Categories
    */
-  GetRoutes = async (username: string, password: string): Promise<Route[]> => {
+  GetService = async (username: string, password: string): Promise<Route[]> => {
     if (!this.client) {
       this.client = await this.soapService.connect(username, password).catch((error) => {
         throw error;
