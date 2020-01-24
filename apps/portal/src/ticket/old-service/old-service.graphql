@@ -1,24 +1,44 @@
-type Category {
-  code: String
-  name: String
-  description: String
-  caterogyType: String
-  avatar: String
+type OldCategory {
+  code: String!
+  name: String!
+  description: String!
+  caterogyType: String!
+  avatar: String!
 }
 
-type Service {
-  code: String
-  name: String
-  group: String
-  description: String
-  avatar: String
-  category: [Category!]!
+type OldService {
+  code: String!
+  name: String!
+  group: String!
+  description: String!
+  avatar: String!
+  category: [OldCategory!]!
+}
+
+type OldTicketNew {
+  code: String!
+  name: String!
+  requisiteSource: String!
+  category: String!
+  organization: String!
+  status: String!
+  createdDate: Date!
 }
 
 type Query {
-  GetService: [Service!]!
+  OldTicketService: [OldService!]!
 }
 
-# type Mutation {
+input OldTicketNewInput {
+  title: String!
+  body: String!
+  serviceId: String!
+  categoryId: String!
+  caterogyType: String!
+  executorUser: String!
+  attachments: [Upload]
+}
 
-# }
+type Mutation {
+  OldTicketNew(ticket: OldTicketNewInput!): OldTicketNew!
+}

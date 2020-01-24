@@ -16,3 +16,7 @@ export interface OldService {
   avatar: string;
   category: OldCategory[];
 }
+
+export interface OldTicketNewInput {}
+
+export interface OldTicketNew {}

@@ -22,7 +22,7 @@ export class TicketOldService {
    *
    * @returns {Routes[]} Services and Categories
    */
-  GetService = async (
+  OldTicketService = async (
     username: string,
     password: string,
     domain?: string,
