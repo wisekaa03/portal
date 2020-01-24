@@ -216,7 +216,7 @@ module.exports = {
     '@typescript-eslint/no-parameter-properties': [
       'error',
       {
-        allows: ['private readonly'],
+        allows: ['private readonly', 'public readonly'],
       },
     ],
     'jsx-a11y/anchor-is-valid': [

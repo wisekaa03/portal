@@ -10,12 +10,10 @@ import { ConfigService } from '@app/config';
 import { SoapOptions, SOAP_OPTIONS } from './soap.interface';
 // #endregion
 
+export type SOAPClient = Client;
+
 @Injectable()
 export class SoapService {
-  private client: Client;
-
-  private security: NTLMSecurity;
-
   /**
    * Create an LDAP class.
    *
@@ -23,12 +21,12 @@ export class SoapService {
    * @constructor
    */
   constructor(
-    @Inject(SOAP_OPTIONS) private readonly opts: SoapOptions,
+    @Inject(SOAP_OPTIONS) public readonly opts: SoapOptions,
     private readonly logger: LogService,
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(username?: string, password?: string): Promise<Client> {
+  async connect(username?: string, password?: string, domain?: string, workstation?: string): Promise<SOAPClient> {
     if (username && password) {
       this.opts.options = {
         ...this.opts.options,
@@ -40,18 +38,23 @@ export class SoapService {
           ntlm: true,
           username,
           password,
+          domain,
+          workstation,
         },
       };
     }
 
-    this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint).catch(
-      (error: Error) => {
+    return createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint)
+      .then((client: Client) => {
+        if (this.opts.options && this.opts.options.wsdl_options && this.opts.options.wsdl_options.ntlm) {
+          client.setSecurity(new NTLMSecurity(this.opts.options.wsdl_options));
+        }
+        return client as SOAPClient;
+      })
+      .catch((error: Error) => {
         this.logger.error('SOAP connect error: ', JSON.stringify(error), 'SOAP Service');
 
         throw error;
-      },
-    );
-
-    return this.client;
+      });
   }
 }

@@ -32,6 +32,7 @@ import { TicketOldService } from './old-service.service';
               ntlm: true,
               username: configService.get<string>('SOAP_USER'),
               password: configService.get<string>('SOAP_PASS'),
+              domain: configService.get<string>('SOAP_DOMAIN'),
             },
           },
         };

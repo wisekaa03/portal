@@ -2,17 +2,18 @@
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
-import { Client } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { SoapService } from '@app/soap';
-import { Route } from './models/old-service.interface';
+import { SoapService, SOAPClient } from '@app/soap';
+import { OldService } from './models/old-service.interface';
 // #endregion
 
 @Injectable()
 export class TicketOldService {
-  private client: Client;
+  private client: SOAPClient;
+
+  private service: OldService[];
 
   constructor(private readonly logService: LogService, private readonly soapService: SoapService) {}
 
@@ -21,17 +22,46 @@ export class TicketOldService {
    *
    * @returns {Routes[]} Services and Categories
    */
-  GetService = async (username: string, password: string): Promise<Route[]> => {
+  GetService = async (
+    username: string,
+    password: string,
+    domain?: string,
+    workstation?: string,
+  ): Promise<OldService[]> => {
     if (!this.client) {
-      this.client = await this.soapService.connect(username, password).catch((error) => {
+      this.client = await this.soapService.connect(username, password, domain, workstation).catch((error) => {
         throw error;
       });
     }
 
     if (this.client) {
-      return this.client.kngk_GetRoutesAsync({ log: username });
+      this.service = await this.client
+        .kngk_GetRoutesAsync({ log: username })
+        .then((result: any) => {
+          if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
+            return result[0]['return']['Услуга'].map((service: any) => ({
+              code: service['Код'],
+              name: service['Наименование'],
+              description: service['ОписаниеФД'],
+              group: service['Группа'],
+              avatar: service['Аватар'],
+              category: service['СоставУслуги']['ЭлементСоставаУслуги'].map((category: any) => ({
+                code: category['Код'],
+                name: category['Наименование'],
+                description: category['ОписаниеФД'],
+                avatar: category['Аватар'],
+                categoryType: category['ТипЗначенияКатегории'],
+              })),
+            }));
+          }
+
+          return [];
+        })
+        .catch((error: Error) => {
+          throw error;
+        });
     }
 
-    throw new Error('Unexpected SOAP error.');
+    return this.service;
   };
 }
