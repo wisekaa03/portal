@@ -18,7 +18,7 @@ export class TicketOldServiceResolver {
   constructor(private readonly configService: ConfigService, private readonly ticketOldService: TicketOldService) {}
 
   /**
-   * GraphQL query: GetRoutes
+   * GraphQL query: GetService
    *
    * @returns {OldService[]}
    */

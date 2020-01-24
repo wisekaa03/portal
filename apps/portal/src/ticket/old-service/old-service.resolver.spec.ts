@@ -1,6 +1,7 @@
 /** @format */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@app/config';
 import { TicketOldServiceResolver } from './old-service.resolver';
 import { TicketOldService } from './old-service.service';
 
@@ -11,6 +12,7 @@ describe('TicketOldServiceResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.register('.env')],
       providers: [TicketOldService, TicketOldServiceResolver],
     }).compile();
 
