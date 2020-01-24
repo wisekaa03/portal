@@ -48,6 +48,7 @@ import AppIcon17 from '../../../public/images/svg/itapps/app_17.svg';
 // import AppIcon19 from '../../../public/images/svg/itapps/app_19.svg';
 import AppIcon20 from '../../../public/images/svg/itapps/app_20.svg';
 import AppIcon21 from '../../../public/images/svg/itapps/app_21.svg';
+import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     header: {
       '& button': {
-        padding: `${theme.spacing(2)}px ${theme.spacing(8)}px`,
+        padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
       },
     },
     contentWrap: {
@@ -88,6 +89,11 @@ const useStyles = makeStyles((theme: Theme) =>
       '& > div': {
         marginBottom: theme.spacing(3),
       },
+    },
+    serviceBox: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 2fr',
+      gap: theme.spacing(4),
     },
     service: {
       'padding': theme.spacing(),
@@ -462,9 +468,18 @@ const services: ServicesProps[] = [
 //   },
 // ];
 
+const departments = [
+  {
+    id: 0,
+    icon: ServicesIcon,
+    title: 'Департамент ИТ',
+  },
+];
+
 const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
+  const [departmentIndex, setDepartmentIndex] = useState<number>(-1);
   const [serviceIndex, setServiceIndex] = useState<number>(-1);
   const [category, setCategory] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
@@ -479,9 +494,14 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrentTab(index);
   };
 
+  const handleCurrentDepartment = (index: number) => (): void => {
+    setDepartmentIndex(index);
+    setCurrentTab(1);
+  };
+
   const handleCurrentService = (index: number) => (): void => {
     setServiceIndex(index);
-    setCurrentTab(1);
+    setCurrentTab(2);
   };
 
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -499,6 +519,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleAccept = (): void => {};
 
   const handleClose = (): void => {
+    setDepartmentIndex(-1);
     setServiceIndex(-1);
     setCurrentTab(0);
     setTitle('');
@@ -510,6 +531,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const inputLabel = useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
+  const currentDepartment = departmentIndex >= 0 ? departments[departmentIndex] : false;
   const currentService = serviceIndex >= 0 ? services[serviceIndex] : false;
 
   useEffect(() => {
@@ -540,46 +562,76 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
           <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />
-              <Tab disabled={!currentService} label={t('services:tabs.tab2')} />
+              <Tab disabled={!currentDepartment} label={t('services:tabs.tab2')} />
+              <Tab disabled={!currentService} label={t('services:tabs.tab3')} />
             </Tabs>
           </Paper>
           <SwipeableViews
             ref={swipeableViews}
             animateHeight
-            disabled={!currentService}
+            disabled={!currentDepartment || !currentService}
             index={currentTab}
             className={classes.contentWrap}
             containerStyle={{ flexGrow: 1 }}
             onChangeIndex={handleChangeTabIndex}
           >
-            <div style={{ minHeight: containerHeight }} className={classes.container1}>
-              {services.map((service) => (
+            <div className={classes.container1}>
+              {departments.map((department) => (
                 <Box
-                  key={service.id}
-                  onClick={handleCurrentService(service.id)}
+                  key={department.id}
+                  onClick={handleCurrentDepartment(department.id)}
                   className={clsx(classes.service, {
-                    [classes.serviceIndex]: serviceIndex === service.id,
+                    [classes.serviceIndex]: departmentIndex === department.id,
                   })}
                 >
                   <div>
-                    <BaseIcon src={service.icon} size={48} />
+                    <BaseIcon src={department.icon} size={48} />
                   </div>
                   <div>
-                    <Typography variant="subtitle1">{service.title}</Typography>
+                    <Typography variant="subtitle1">{department.title}</Typography>
                   </div>
                 </Box>
               ))}
             </div>
+            <div style={{ minHeight: containerHeight }} className={classes.container1}>
+              {currentDepartment &&
+                services.map((service) => (
+                  <Box
+                    key={service.id}
+                    onClick={handleCurrentService(service.id)}
+                    className={clsx(classes.service, {
+                      [classes.serviceIndex]: serviceIndex === service.id,
+                    })}
+                  >
+                    <div>
+                      <BaseIcon src={service.icon} size={48} />
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1">{service.title}</Typography>
+                    </div>
+                  </Box>
+                ))}
+            </div>
             <div style={{ minHeight: containerHeight }} className={classes.container2}>
-              {currentService && (
-                <Box className={clsx(classes.service, classes.formControl)}>
-                  <div>
-                    <BaseIcon src={currentService.icon} size={48} />
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1">{currentService.title}</Typography>
-                  </div>
-                </Box>
+              {currentDepartment && currentService && (
+                <div className={clsx(classes.serviceBox, classes.formControl)}>
+                  <Box className={classes.service}>
+                    <div>
+                      <BaseIcon src={currentDepartment.icon} size={48} />
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1">{currentDepartment.title}</Typography>
+                    </div>
+                  </Box>
+                  <Box className={classes.service}>
+                    <div>
+                      <BaseIcon src={currentService.icon} size={48} />
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1">{currentService.title}</Typography>
+                    </div>
+                  </Box>
+                </div>
               )}
               {currentService && (
                 <FormControl className={classes.formControl} variant="outlined">
