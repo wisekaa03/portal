@@ -140,6 +140,9 @@ export class ConfigService {
       SOAP_PASS: Joi.string()
         .optional()
         .empty(),
+      SOAP_DOMAIN: Joi.string()
+        .optional()
+        .empty(),
 
       NEWS_URL: Joi.string()
         .optional()

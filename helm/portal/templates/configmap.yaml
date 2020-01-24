@@ -43,6 +43,7 @@ data:
   SOAP_URL: {{ .Values.SOAP_URL | default "https://soap1c" | quote }}
   SOAP_USER: {{ .Values.SOAP_USER | default "admin" | quote }}
   SOAP_PASS: {{ .Values.SOAP_PASS | default "supersecret" | quote }}
+  SOAP_DOMAIN: {{ .Values.SOAP_DOMAIN | default "EXAMPLE" | quote }}
 
   NEWS_URL: {{ .Values.NEWS_URL | default "https://news" | quote }}
   NEWS_API_URL: {{ .Values.NEWS_API_URL | default "https://news/api" | quote }}

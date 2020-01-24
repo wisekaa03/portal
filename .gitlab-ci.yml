@@ -111,6 +111,7 @@ deploy:
         --set SOAP_URL="${SOAP_URL}" \
         --set SOAP_USER="${SOAP_USER}" \
         --set SOAP_PASS="${SOAP_PASS}" \
+        --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \
