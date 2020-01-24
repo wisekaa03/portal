@@ -17,6 +17,7 @@ import {
   InputLabel,
 } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
+import { useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
@@ -24,30 +25,10 @@ import Dropzone from '../components/dropzone';
 import { DropzoneFile } from '../components/dropzone/types';
 import { appBarHeight } from '../components/app-bar';
 import Page from '../layouts/main';
+import { SERVICES } from '../lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import BaseIcon from '../components/icon';
 import Button from '../components/button';
-import AppIcon1 from '../../../public/images/svg/itapps/app_1.svg';
-import AppIcon2 from '../../../public/images/svg/itapps/app_2.svg';
-import AppIcon3 from '../../../public/images/svg/itapps/app_3.svg';
-import AppIcon4 from '../../../public/images/svg/itapps/app_4.svg';
-import AppIcon5 from '../../../public/images/svg/itapps/app_5.svg';
-import AppIcon6 from '../../../public/images/svg/itapps/app_6.svg';
-import AppIcon7 from '../../../public/images/svg/itapps/app_7.svg';
-// import AppIcon8 from '../../../public/images/svg/itapps/app_8.svg';
-import AppIcon9 from '../../../public/images/svg/itapps/app_9.svg';
-import AppIcon10 from '../../../public/images/svg/itapps/app_10.svg';
-// import AppIcon11 from '../../../public/images/svg/itapps/app_11.svg';
-// import AppIcon12 from '../../../public/images/svg/itapps/app_12.svg';
-import AppIcon13 from '../../../public/images/svg/itapps/app_13.svg';
-import AppIcon14 from '../../../public/images/svg/itapps/app_14.svg';
-// import AppIcon15 from '../../../public/images/svg/itapps/app_15.svg';
-import AppIcon16 from '../../../public/images/svg/itapps/app_16.svg';
-import AppIcon17 from '../../../public/images/svg/itapps/app_17.svg';
-// import AppIcon18 from '../../../public/images/svg/itapps/app_18.svg';
-// import AppIcon19 from '../../../public/images/svg/itapps/app_19.svg';
-import AppIcon20 from '../../../public/images/svg/itapps/app_20.svg';
-import AppIcon21 from '../../../public/images/svg/itapps/app_21.svg';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 // #endregion
 
@@ -109,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) =>
         cursor: 'pointer',
       },
       'color': '#484848',
-      '&:hover:not($serviceIndex):not($formControl) h6': {
+      '&:hover:not($serviceIndex):not($serviceBox) h6': {
         color: '#000',
       },
     },
@@ -138,338 +119,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ServicesProps {
-  id: number;
-  icon: any;
-  title: string;
-  subtitle?: string;
-  categories: string[];
-}
-
-const services: ServicesProps[] = [
-  {
-    id: 0,
-    icon: AppIcon1,
-    title: '1C Бухгалтерия',
-    categories: [
-      'Не работает',
-      'Доступ в базу',
-      'НДС/УСН/Налог на прибыль/Налоги',
-      'Неправильно формируются проводки',
-      'Не запускается/Выдаёт ошибку',
-      'Печатная форма',
-      'Закрытие отчетного периода',
-      'Новый отчёт, внешняя обработка',
-      'Как это сделать в 1С',
-      'Изменение даты запрета редактирование',
-      'Закрытие 1С с ошибкой',
-      'Не могу выполнить задачу',
-      'Прочее 1с',
-      'Некорректно отрабатывает обработка',
-      'Неправильно заполняется документ/справочник',
-      'Настройка программы',
-    ],
-  },
-  {
-    id: 1,
-    icon: AppIcon10,
-    title: '1С Зарплата и управление персоналом',
-    categories: [
-      'Ошибка начисления ЗП',
-      'Ошибка начисления Налогов и Взносов',
-      'Не запускается/Выдаёт ошибку',
-      'Доступ в базу',
-      'Новый отчёт, внешняя обработка',
-      'Печатная форма',
-      'Прочее 1C',
-      'Не работает',
-    ],
-  },
-  {
-    id: 2,
-    icon: AppIcon9,
-    title: '1С Документооборот',
-    categories: [
-      'Не запускается/Выдаёт ошибку',
-      'Доступ в базу',
-      'Доступ к внутренним документам',
-      'Доступ к исходящим документам',
-      'Доступ к входящим документам',
-      'Изменение контактной информации',
-      'Настройка шаблонов документов',
-      'Настройка шаблонов процессов',
-      'Не открывается файл',
-      'Отсутствует документ',
-      'Не работает',
-      'Прочее 1C',
-    ],
-  },
-  {
-    id: 3,
-    icon: AppIcon20,
-    title: '1С Консолидация',
-    categories: [
-      'Доступ в базу',
-      'Новый отчёт, внешняя обработка',
-      'Не работает',
-      'Печатная форма',
-      'Закрытие 1C с ошибкой',
-      'Прочее 1C',
-    ],
-  },
-  {
-    id: 4,
-    icon: AppIcon3,
-    title: 'Печать и сканирование',
-    categories: [
-      'Замена картриджа',
-      'Настройка сканирования',
-      'Подключить принтер (МФУ)',
-      'Обновление прошивки',
-      'Замяло бумагу',
-      'Не печатает',
-      'Прочее',
-    ],
-  },
-  {
-    id: 5,
-    icon: AppIcon7,
-    title: 'Справочные системы',
-    categories: [
-      'Гарант',
-      'Консультант +',
-      'Контурн-Экстерн',
-      'Нормакс',
-      'Отчеты минэнерго',
-      'Росстат',
-      'Прочее',
-      'СБИС',
-      'СМС ФАБЕР',
-      'Архивариус',
-      'Прочее',
-    ],
-  },
-  {
-    id: 6,
-    icon: AppIcon4,
-    title: 'Телефония',
-    categories: [
-      'Журнал вызовов',
-      'Замена телефона',
-      'Запись разговоров',
-      'Переадресация',
-      'Подключение телефона',
-      'Проведение конференций',
-      'Короткие гудки',
-      'Нет гудков',
-      'Прочее',
-    ],
-  },
-  {
-    id: 7,
-    icon: AppIcon6,
-    title: 'Электронная почта',
-    categories: [
-      'Не отправляется письмо',
-      'Создать ящик',
-      'Не могу напечатать',
-      'Не могу скачать вложение',
-      'Не открывается вложение',
-      'Ошибка сервера',
-    ],
-  },
-  {
-    id: 8,
-    icon: AppIcon2,
-    title: 'Рабочее место',
-    categories: [
-      'Новое рабочее место',
-      'Офисные приложения',
-      'Создание учётной записи в AD',
-      'Генерация отп пароля',
-      'Обмен данными',
-      'Завис компьютер',
-      'Закрытие ПО с ошибкой',
-      'Не загружается ПК',
-      'Не работает клавиатура (мышь)',
-      'Источник бесперебойного питания',
-      'Ошибка запуска в CITRIX',
-      'Прочее',
-    ],
-  },
-  {
-    id: 9,
-    icon: AppIcon7,
-    title: 'Банк-Клиенты',
-    categories: ['Закончился сертификат', 'Настройка ключей доступа', 'Прочее', 'Не работает'],
-  },
-  {
-    id: 10,
-    icon: AppIcon5,
-    title: 'Расходные материалы',
-    categories: ['DVD-Диски', 'CD-Диски', 'Салфетки', 'Флешки'],
-  },
-  {
-    id: 11,
-    icon: AppIcon17,
-    title: '1C Управление автотранспортом',
-    categories: [
-      'Ошибка в рассчете или остатках ГСМ',
-      'Добавить/Изменить тариф',
-      'Не работает',
-      'Изменить нормы ГСМ',
-      'Некорректно заполняется табель и/или рассчитывается выработка водителей',
-      'Некорректно заполняются и/или рассчитываются остатки и/или расход ГСМ',
-      'Некорректно заполняются показания счетчиков',
-      'Некорректно рассчитывается стоимость транспортных услуг',
-      'Новый отчёт, внешняя обработка',
-      'Печатная форма',
-      'Доступ в базу',
-      'Прочее 1C',
-    ],
-  },
-  {
-    id: 12,
-    icon: AppIcon14,
-    title: 'Веб-сайты',
-    categories: ['Изменение сайта', 'Размещение информации', 'Удаление информации'],
-  },
-
-  {
-    id: 13,
-    icon: AppIcon21,
-    title: 'Заказать услугу',
-    categories: ['1C Бухгалтерия', '1C Документооборот', 'Видеонаблюдение', 'Печать и сканирование', 'Прочее'],
-  },
-  {
-    id: 14,
-    icon: AppIcon13,
-    title: '1C КСУП',
-    categories: [
-      'Не работает',
-      'Доступ в базу',
-      'Доработка программы',
-      'Изменить (доработать) внешнюю обработку, отчёт',
-      'Как это сделать в 1C',
-      'Прочее 1C',
-    ],
-  },
-  {
-    id: 15,
-    icon: AppIcon16,
-    title: 'Дизайн и полиграфия',
-    categories: ['Создание макета', 'Брендирование', 'Полиграфия', 'Верстка', 'Печать на фотобумаге'],
-  },
-];
-
-// const services: ServicesProps[] = [
-//   {
-//     id: 0,
-//     icon: AppIcon1,
-//     title: '1C:Бухгалтерия',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-// { id: 1, icon: AppIcon2, title: 'Рабочее место', subtitle: 'текст', cegories: ['Категория услуги (по умолчанию)'] },
-//   {
-//     id: 2,
-//     icon: AppIcon3,
-//     title: 'Печать и сканирование',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   { id: 3, icon: AppIcon4, title: 'Телефония', subtitle: 'текст', categories: ['Категория услуги (по умолчанию)'] },
-//   {
-//     id: 4,
-//     icon: AppIcon5,
-//     title: 'Расходные материалы',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 5,
-//     icon: AppIcon6,
-//     title: 'Электронная почта',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 6,
-//     icon: AppIcon7,
-//     title: 'Справочные системы',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-// { id: 7, icon: AppIcon8, title: 'Банк-Клиенты', subtitle: 'текст', categries: ['Категория услуги (по умолчанию)'] },
-//   {
-//     id: 8,
-//     icon: AppIcon9,
-//     title: '1C:Документооборот',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-// { id: 9, icon: AppIcon10, title: '1C:Зарплата', subtitle: 'текст', categories: ['Категория услуги (по умолчанию)'] },
-//   {
-//     id: 10,
-//     icon: AppIcon11,
-//     title: 'Доступ к информационным ресурсам',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 11,
-//     icon: AppIcon12,
-//     title: 'Новое рабочее место',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   { id: 12, icon: AppIcon13, title: '1C:КСУП', subtitle: 'текст', categories: ['Категория услуги (по умолчанию)'] },
-// { id: 13, icon: AppIcon14, title: 'Веб-сайты', subtitle: 'текст', categories: ['Категория услуги (по умолчанию)'] },
-// { id: 14, icon: AppIcon15, title: 'Фотография', subtitle: 'текст', categories: ['Категория услуги (по умолчанию)'] },
-//   {
-//     id: 15,
-//     icon: AppIcon16,
-//     title: 'Дизайн и полиграфия',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 16,
-//     icon: AppIcon17,
-//     title: '1C:Автотранспорт',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 17,
-//     icon: AppIcon18,
-//     title: 'Брендирование',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 18,
-//     icon: AppIcon19,
-//     title: 'Создание макета',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 19,
-//     icon: AppIcon20,
-//     title: '1C:Консолидация',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-//   {
-//     id: 20,
-//     icon: AppIcon21,
-//     title: 'Заказать услугу',
-//     subtitle: 'текст',
-//     categories: ['Категория услуги (по умолчанию)'],
-//   },
-// ];
-
 const departments = [
   {
     id: 0,
@@ -482,11 +131,13 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState(0);
   const [departmentIndex, setDepartmentIndex] = useState<number>(-1);
-  const [serviceIndex, setServiceIndex] = useState<number>(-1);
-  const [category, setCategory] = useState<number>(0);
+  const [serviceIndex, setServiceIndex] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
+
+  const { loading, data, error } = useQuery(SERVICES);
 
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
@@ -501,7 +152,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrentTab(1);
   };
 
-  const handleCurrentService = (index: number) => (): void => {
+  const handleCurrentService = (index: string) => (): void => {
     setServiceIndex(index);
     setCurrentTab(2);
   };
@@ -515,26 +166,27 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleCategory = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setCategory(+event.target.value);
+    setCategory(event.target.value);
   };
 
   const handleAccept = (): void => {};
 
   const handleClose = (): void => {
     setDepartmentIndex(-1);
-    setServiceIndex(-1);
+    setServiceIndex('');
     setCurrentTab(0);
     setTitle('');
     setText('');
     setFiles([]);
-    setCategory(0);
+    setCategory('');
   };
 
   const inputLabel = useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
   const currentDepartment = departmentIndex >= 0 ? departments[departmentIndex] : false;
-  const currentService = serviceIndex >= 0 ? services[serviceIndex] : false;
+  const currentService =
+    data && data.OldTicketService ? data.OldTicketService.find((service) => service.code === serviceIndex) : false;
 
   useEffect(() => {
     if (inputLabel.current) {
@@ -571,7 +223,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
           <SwipeableViews
             ref={swipeableViews}
             animateHeight
-            disabled={!currentDepartment || !currentService}
+            disabled={!currentDepartment}
             index={currentTab}
             className={classes.contentWrap}
             containerStyle={{ flexGrow: 1 }}
@@ -597,19 +249,21 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             </div>
             <div style={{ minHeight: containerHeight }} className={classes.container1}>
               {currentDepartment &&
-                services.map((service) => (
+                data &&
+                data.OldTicketService &&
+                data.OldTicketService.map((service) => (
                   <Box
-                    key={service.id}
-                    onClick={handleCurrentService(service.id)}
+                    key={service.code}
+                    onClick={handleCurrentService(service.code)}
                     className={clsx(classes.service, {
-                      [classes.serviceIndex]: serviceIndex === service.id,
+                      [classes.serviceIndex]: serviceIndex === service.code,
                     })}
                   >
                     <div>
-                      <BaseIcon src={service.icon} size={48} />
+                      <BaseIcon base64={service.avatar} size={48} />
                     </div>
                     <div>
-                      <Typography variant="subtitle1">{service.title}</Typography>
+                      <Typography variant="subtitle1">{service.name}</Typography>
                     </div>
                   </Box>
                 ))}
@@ -627,10 +281,10 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </Box>
                   <Box className={classes.service}>
                     <div>
-                      <BaseIcon src={currentService.icon} size={48} />
+                      <BaseIcon base64={currentService.avatar} size={48} />
                     </div>
                     <div>
-                      <Typography variant="subtitle1">{currentService.title}</Typography>
+                      <Typography variant="subtitle1">{currentService.name}</Typography>
                     </div>
                   </Box>
                 </div>
@@ -639,9 +293,9 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 <FormControl className={classes.formControl} variant="outlined">
                   <InputLabel ref={inputLabel}>{t('services:form.category')}</InputLabel>
                   <Select value={category} onChange={handleCategory} labelWidth={labelWidth}>
-                    {currentService.categories.map((cur, index) => (
-                      <MenuItem key={cur} value={index}>
-                        {cur}
+                    {currentService.category.map((cur) => (
+                      <MenuItem key={cur.code} value={cur.code}>
+                        {cur.name}
                       </MenuItem>
                     ))}
                   </Select>
