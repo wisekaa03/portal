@@ -29,7 +29,7 @@ export class TicketOldService {
     }
 
     if (this.client) {
-      return [{}];
+      return this.client.kngk_GetRoutesAsync({ log: username });
     }
 
     throw new Error('Unexpected SOAP error.');

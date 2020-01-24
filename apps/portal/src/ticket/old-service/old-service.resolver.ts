@@ -23,7 +23,7 @@ export class TicketOldServiceResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async GetRoutes(@Context('req') req: Request): Promise<Route[]> {
+  async GetService(@Context('req') req: Request): Promise<Route[]> {
     const user = req.user as User;
 
     if (user) {
