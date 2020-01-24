@@ -63,9 +63,6 @@ export class AuthResolver {
       emailSession = this.authService
         .loginEmail(user.profile.email, password)
         .then((response) => {
-          // eslint-disable-next-line no-debugger
-          // debugger;
-
           if (response.data && response.data.sessid && response.data.sessauth) {
             const options = {
               domain: '.portal.i-npz.ru',
@@ -92,6 +89,9 @@ export class AuthResolver {
         this.logService.error('Error when logging in:', err);
       }
     });
+
+    // Чтобы в дальнейшем был пароль
+    (user as User).passwordFrontend = password;
 
     return (await emailSession) && user;
   }
