@@ -270,3 +270,22 @@ export const MEDIA_DELETE = gql`
     deleteMedia(id: $id)
   }
 `;
+
+export const SERVICES = gql`
+  query {
+    OldTicketService {
+      code
+      name
+      group
+      description
+      avatar
+      category {
+        code
+        name
+        description
+        categoryType
+        avatar
+      }
+    }
+  }
+`;

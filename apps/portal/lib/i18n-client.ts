@@ -25,8 +25,8 @@ export const nextI18next = new NextI18Next({
         ? 'public/locales'
         : 'public/locales'
       : process.env.NODE_ENV !== 'production'
-      ? 'locales'
-      : 'locales',
+        ? 'locales'
+        : 'locales',
   otherLanguages: ['en'],
 });
 /* eslint-enable prettier/prettier */
