@@ -92,8 +92,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     serviceBox: {
       display: 'grid',
-      gridTemplateColumns: '1fr 2fr',
-      gap: theme.spacing(4),
+      gap: `0 ${theme.spacing(4)}px`,
+      [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: '1fr 2fr',
+      },
     },
     service: {
       'padding': theme.spacing(),
@@ -117,12 +119,12 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     formControl: {
-      minWidth: '90%',
+      width: '90%',
       [theme.breakpoints.up('md')]: {
-        minWidth: '80%',
+        width: '80%',
       },
       [theme.breakpoints.up('lg')]: {
-        minWidth: '60%',
+        width: '60%',
       },
     },
     formAction: {
