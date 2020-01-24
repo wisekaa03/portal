@@ -10,6 +10,13 @@ import { IOptions } from 'soap';
 
 export const SOAP_OPTIONS = 'SOAP_OPTIONS';
 
+export interface SoapAuthentication {
+  username: string;
+  password: string;
+  domain?: string;
+  workstation?: string;
+}
+
 export interface SoapOptions {
   url: string;
   options?: IOptions;

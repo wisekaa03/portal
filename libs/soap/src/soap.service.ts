@@ -7,7 +7,7 @@ import { createClientAsync, Client, NTLMSecurity } from 'soap';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
-import { SoapOptions, SOAP_OPTIONS } from './soap.interface';
+import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
 // #endregion
 
 export type SOAPClient = Client;
@@ -26,8 +26,8 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(username?: string, password?: string, domain?: string, workstation?: string): Promise<SOAPClient> {
-    if (username && password) {
+  async connect(authentication: SoapAuthentication): Promise<SOAPClient> {
+    if (authentication.username && authentication.password) {
       this.opts.options = {
         ...this.opts.options,
 
@@ -36,10 +36,7 @@ export class SoapService {
         },
         wsdl_options: {
           ntlm: true,
-          username,
-          password,
-          domain,
-          workstation,
+          ...authentication,
         },
       };
     }
