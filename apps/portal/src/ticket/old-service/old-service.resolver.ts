@@ -23,11 +23,11 @@ export class TicketOldServiceResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async GetRoutes(@Context('req') req: Request): Promise<Route[]> {
+  async GetService(@Context('req') req: Request): Promise<Route[]> {
     const user = req.user as User;
 
     if (user) {
-      return this.ticketOldService.GetRoutes(user.username, user.passwordFrontend as string).catch((error: Error) => {
+      return this.ticketOldService.GetService(user.username, user.passwordFrontend as string).catch((error: Error) => {
         throw new UnauthorizedException(error.message);
       });
     }

@@ -1,4 +1,4 @@
-type Service {
+type Category {
   code: String
   name: String
   description: String
@@ -6,17 +6,17 @@ type Service {
   avatar: String
 }
 
-type Route {
+type Service {
   code: String
   name: String
   group: String
   description: String
   avatar: String
-  services: [Service!]!
+  category: [Category!]!
 }
 
 type Query {
-  GetRoutes: [Route!]!
+  GetService: [Service!]!
 }
 
 # type Mutation {

@@ -44,13 +44,13 @@ export class SoapService {
       };
     }
 
-    try {
-      this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
-    } catch (error) {
-      this.logger.error('SOAP connect error: ', error, 'SOAP Service');
+    this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint).catch(
+      (error: Error) => {
+        this.logger.error('SOAP connect error: ', JSON.stringify(error), 'SOAP Service');
 
-      throw error;
-    }
+        throw error;
+      },
+    );
 
     return this.client;
   }
