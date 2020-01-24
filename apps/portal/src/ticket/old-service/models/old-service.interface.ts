@@ -4,7 +4,7 @@ export interface OldCategory {
   code: string;
   name: string;
   description: string;
-  caterogyType: string;
+  categoryType: string;
   avatar: string;
 }
 
@@ -16,3 +16,7 @@ export interface OldService {
   avatar: string;
   category: OldCategory[];
 }
+
+export interface OldTicketNewInput {}
+
+export interface OldTicketNew {}

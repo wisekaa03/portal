@@ -1,6 +1,6 @@
 # Portal
 
-[Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport JWT](https://github.com/mikenicholson/passport-jwt), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
+[Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport](http://www.passportjs.org/), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
 [![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.i-npz.ru/Project/portal/commits/master)
 
@@ -184,6 +184,7 @@ MICROSERVICE_URL="redis://localhost:6379"
 SOAP_URL="https://server1c"
 SOAP_USER="admin"
 SOAP_PASS="supersecret"
+SOAP_DOMAIN="EXAMPLE"
 
 # NEWS
 NEWS_URL="https://news/wp/wp-json/wp/v2/posts"
@@ -211,7 +212,7 @@ We use Kubernetes/Docker production.
 - [x] Server: integration between [Nest](https://nestjs.com) and [Next.js](https://nextjs.org)
 - [x] UI: integration between [Next.js](https://nextjs.org) and [Material UI](https://material-ui.com)
 - [x] Authentication with LDAP
-- [-] Test: unit tests
+- [x] Test: unit tests
 - [-] Test: e2e tests
 - [ ] [Nest.JS WebSockets](https://github.com/nestjs/nest/tree/master/packages/platform-ws)
 - [ ] [Apollo Link WebSockets](https://www.apollographql.com/docs/link/links/ws/)

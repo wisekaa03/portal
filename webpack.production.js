@@ -128,6 +128,8 @@ module.exports = (original) => {
             // 'next',
             // 'cache-manager',
             // 'graphql',
+            // 'jodit',
+            // 'jodit-react',
           ];
           if (!lazyImports.includes(resource)) {
             return false;

@@ -12,7 +12,7 @@ describe('TicketOldServiceResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.register('.env')],
+      imports: [ConfigModule.register('.env.example')],
       providers: [TicketOldService, TicketOldServiceResolver],
     }).compile();
 

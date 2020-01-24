@@ -33,6 +33,8 @@ module.exports = (original) => {
             // 'cache-manager',
             // 'typeorm',
             // 'graphql',
+            // 'jodit',
+            // 'jodit-react',
           ];
           if (!lazyImports.includes(resource)) {
             return false;
