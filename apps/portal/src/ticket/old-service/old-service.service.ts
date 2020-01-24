@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { SoapService, SOAPClient } from '@app/soap';
-import { OldService } from './models/old-service.interface';
+import { OldService, OldCategory } from './models/old-service.interface';
 // #endregion
 
 @Injectable()
@@ -39,20 +39,26 @@ export class TicketOldService {
         .kngk_GetRoutesAsync({ log: username })
         .then((result: any) => {
           if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
-            return result[0]['return']['Услуга'].map((service: any) => ({
-              code: service['Код'],
-              name: service['Наименование'],
-              description: service['ОписаниеФД'],
-              group: service['Группа'],
-              avatar: service['Аватар'],
-              category: service['СоставУслуги']['ЭлементСоставаУслуги'].map((category: any) => ({
-                code: category['Код'],
-                name: category['Наименование'],
-                description: category['ОписаниеФД'],
-                avatar: category['Аватар'],
-                categoryType: category['ТипЗначенияКатегории'],
-              })),
-            }));
+            return result[0]['return']['Услуга'].map(
+              (service: any) =>
+                ({
+                  code: service['Код'],
+                  name: service['Наименование'],
+                  description: service['ОписаниеФД'],
+                  group: service['Группа'],
+                  avatar: service['Аватар'],
+                  category: service['СоставУслуги']['ЭлементСоставаУслуги'].map(
+                    (category: any) =>
+                      ({
+                        code: category['Код'],
+                        name: category['Наименование'],
+                        description: category['ОписаниеФД'],
+                        avatar: category['Аватар'],
+                        categoryType: category['ТипЗначенияКатегории'],
+                      } as OldCategory),
+                  ),
+                } as OldService),
+            );
           }
 
           return [];

@@ -2,7 +2,7 @@ type OldCategory {
   code: String!
   name: String!
   description: String!
-  caterogyType: String!
+  categoryType: String!
   avatar: String!
 }
 
@@ -34,7 +34,7 @@ input OldTicketNewInput {
   body: String!
   serviceId: String!
   categoryId: String!
-  caterogyType: String!
+  categoryType: String!
   executorUser: String!
   attachments: [Upload]
 }

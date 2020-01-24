@@ -4,7 +4,7 @@ export interface OldCategory {
   code: string;
   name: string;
   description: string;
-  caterogyType: string;
+  categoryType: string;
   avatar: string;
 }
 
