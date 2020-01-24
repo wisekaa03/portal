@@ -28,7 +28,7 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(username?: string, password?: string): Promise<Client | Error> {
+  async connect(username?: string, password?: string): Promise<Client> {
     if (username && password) {
       this.opts.options = {
         ...this.opts.options,

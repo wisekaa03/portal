@@ -90,7 +90,7 @@ export class AuthResolver {
       }
     });
 
-    // Чтобы в дальнейшем был пароль
+    // Чтобы в дальнейшем был пароль, в частности, в SOAP
     (user as User).passwordFrontend = password;
 
     return (await emailSession) && user;

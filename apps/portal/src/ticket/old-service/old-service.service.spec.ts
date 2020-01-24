@@ -3,10 +3,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule } from '@app/logger';
-import { SoapModule } from '@app/soap';
+import { SoapModule, SoapOptions } from '@app/soap';
 import { TicketOldService } from './old-service.service';
 
-jest.mock('@app/config/config.service');
 jest.mock('@app/soap/soap.service');
 
 describe('OldServiceService', () => {
@@ -21,23 +20,7 @@ describe('OldServiceService', () => {
         // #endregion
 
         SoapModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => {
-            return {
-              url: configService.get<string>('SOAP_URL'),
-              options: {
-                wsdl_headers: {
-                  connection: 'keep-alive',
-                },
-                wsdl_options: {
-                  ntlm: true,
-                  username: configService.get<string>('SOAP_USER'),
-                  password: configService.get<string>('SOAP_PASS'),
-                },
-              },
-            };
-          },
+          useFactory: () => ({} as SoapOptions),
         }),
       ],
       providers: [TicketOldService],

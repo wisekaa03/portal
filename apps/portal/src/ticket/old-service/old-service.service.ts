@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
+import { Client } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -11,6 +12,8 @@ import { Route } from './models/old-service.interface';
 
 @Injectable()
 export class TicketOldService {
+  private client: Client;
+
   constructor(private readonly logService: LogService, private readonly soapService: SoapService) {}
 
   /**
@@ -19,6 +22,16 @@ export class TicketOldService {
    * @returns {Routes[]} Services and Categories
    */
   GetRoutes = async (username: string, password: string): Promise<Route[]> => {
-    return (this.soapService.connect(username, password) as unknown) as Route[];
+    if (!this.client) {
+      this.client = await this.soapService.connect(username, password).catch((error) => {
+        throw error;
+      });
+    }
+
+    if (this.client) {
+      return [{}];
+    }
+
+    throw new Error('Unexpected SOAP error.');
   };
 }
