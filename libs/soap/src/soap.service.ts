@@ -28,7 +28,22 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(): Promise<Client | Error> {
+  async connect(username?: string, password?: string): Promise<Client | Error> {
+    if (username && password) {
+      this.opts.options = {
+        ...this.opts.options,
+
+        wsdl_headers: {
+          connection: 'keep-alive',
+        },
+        wsdl_options: {
+          ntlm: true,
+          username,
+          password,
+        },
+      };
+    }
+
     try {
       this.client = await createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint);
     } catch (error) {

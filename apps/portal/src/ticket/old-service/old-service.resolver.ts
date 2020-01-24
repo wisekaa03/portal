@@ -1,16 +1,21 @@
 /** @format */
 
 // #region Imports NPM
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Request } from 'express';
 // #endregion
 // #region Imports Local
+import { User } from '../../user/models/user.dto';
 import { GqlAuthGuard } from '../../guards/gqlauth.guard';
 import { Route } from './models/old-service.interface';
+import { TicketOldService } from './old-service.service';
 // #endregion
 
-@Resolver('TicketOldService')
+@Resolver('TicketOldServiceResolver')
 export class TicketOldServiceResolver {
+  constructor(private readonly ticketOldService: TicketOldService) {}
+
   /**
    * GraphQL query: GetRoutes
    *
@@ -18,9 +23,13 @@ export class TicketOldServiceResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async GetRoutes(): Promise<Route[]> {
-    const routes = [{} as Route];
+  async GetRoutes(@Context('req') req: Request): Promise<Route[]> {
+    const user = req.user as User;
 
-    return routes;
+    if (user) {
+      return this.ticketOldService.GetRoutes(user.username, user.passwordFrontend as string);
+    }
+
+    throw new UnauthorizedException();
   }
 }
