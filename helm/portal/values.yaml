@@ -125,9 +125,11 @@ resources:
   limits:
     cpu: 650m
     memory: 1Gi
+    ephemeral-storage: 500Mi
   requests:
     cpu: 650m
     memory: 1Gi
+    ephemeral-storage: 500Mi
 
 nodeSelector: {}
 
