@@ -35,7 +35,7 @@ input OldTicketNewInput {
   serviceId: String!
   categoryId: String!
   categoryType: String!
-  executorUser: String!
+  executorUser: String
   attachments: [Upload]
 }
 

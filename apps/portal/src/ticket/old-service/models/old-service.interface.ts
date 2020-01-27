@@ -1,4 +1,5 @@
 /** @format */
+import { FileUpload } from 'graphql-upload';
 
 export interface OldCategory {
   code: string;
@@ -17,6 +18,22 @@ export interface OldService {
   category: OldCategory[];
 }
 
-export interface OldTicketNewInput {}
+export interface OldTicketNewInput {
+  title: string;
+  body: string;
+  serviceId: string;
+  categoryId: string;
+  categoryType: string;
+  executorUser?: string;
+  attachments?: FileUpload;
+}
 
-export interface OldTicketNew {}
+export interface OldTicketNew {
+  code: string;
+  name: string;
+  requisiteSource: string;
+  category: string;
+  organization: string;
+  status: string;
+  createdDate: Date;
+}
