@@ -26,8 +26,8 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(authentication: SoapAuthentication): Promise<SOAPClient> {
-    if (authentication.username && authentication.password) {
+  async connect(authentication?: SoapAuthentication): Promise<SOAPClient> {
+    if (authentication && authentication.username && authentication.password) {
       this.opts.options = {
         ...this.opts.options,
 
