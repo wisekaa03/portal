@@ -29,6 +29,7 @@ import Page from '../layouts/main';
 import { SERVICES } from '../lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import BaseIcon from '../components/icon';
+import { Loading } from '../components/loading';
 import Button from '../components/button';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 // #endregion
@@ -247,6 +248,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
+          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
           <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />
@@ -265,32 +267,33 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             onChangeIndex={handleChangeTabIndex}
           >
             <div className={classes.container1}>
-              {departments.map((department) => (
-                <Box
-                  key={department.id}
-                  onClick={() =>
-                    handleTicket(
-                      'department',
-                      {
-                        id: department.id,
-                        name: department.title,
-                        icon: department.icon,
-                      },
-                      1,
-                    )
-                  }
-                  className={clsx(classes.service, {
-                    [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
-                  })}
-                >
-                  <div>
-                    <BaseIcon src={department.icon} size={48} />
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1">{department.title}</Typography>
-                  </div>
-                </Box>
-              ))}
+              {!loading &&
+                departments.map((department) => (
+                  <Box
+                    key={department.id}
+                    onClick={() =>
+                      handleTicket(
+                        'department',
+                        {
+                          id: department.id,
+                          name: department.title,
+                          icon: department.icon,
+                        },
+                        1,
+                      )
+                    }
+                    className={clsx(classes.service, {
+                      [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
+                    })}
+                  >
+                    <div>
+                      <BaseIcon src={department.icon} size={48} />
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1">{department.title}</Typography>
+                    </div>
+                  </Box>
+                ))}
             </div>
             <div style={{ minHeight: containerHeight }} className={classes.container1}>
               {services &&
