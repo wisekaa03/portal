@@ -1,30 +1,45 @@
 /** @format */
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
+import { withStyles } from '@material-ui/core/styles';
 
-const Jodit = dynamic(() => import('jodit-react'), { ssr: false });
+const JoditReact = dynamic(() => import('jodit-react'), { ssr: false });
 
-const JoditEditor = ({}): React.ReactElement => {
-  const editor = useRef(null);
-  const [content, setContent] = useState('');
+const styles = {
+  '@global': {
+    // Fix jodit_tooltip style
+    '.jodit_tooltip': {
+      position: 'fixed !important',
+    },
+    '.jodit_container': {
+      'border': '2px solid #929fb7',
+      'borderRadius': '4px',
+      '&:hover': {
+        borderColor: '#5e7196',
+      },
+    },
+  },
+};
 
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/doc/
-  };
+// Должен быть снаружи компонента
+// all options from https://xdsoft.net/jodit/doc/
+const config = {
+  beautifyHTML: false,
+  useAceEditor: false,
+  sourceEditor: 'area',
+  placeholder: 'Подробное описание',
+};
 
-  // if (__SERVER__) return null;
-
+const JoditEditor = ({ value, onChange }): React.ReactElement => {
   return (
-    <Jodit
-      ref={editor}
-      value={content}
+    <JoditReact
+      value={value}
       config={config}
-      // preferred to use only this option
-      // to update the content for performance reasons
-      onBlur={(newContent) => setContent(newContent)}
+      // preferred to use only this option to update the content for performance reasons
+      onBlur={onChange}
       onChange={() => {}}
     />
   );
 };
 
-export default JoditEditor;
+export default withStyles(styles)(JoditEditor);

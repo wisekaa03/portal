@@ -4,18 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Paper,
-  Tabs,
-  Tab,
-  Box,
-  FormControl,
-  TextField,
-  Typography,
-  Select,
-  MenuItem,
-  InputLabel,
-} from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import { useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
@@ -141,7 +130,6 @@ interface TicketProps {
   service: false | CurrentProps;
   category: false | CurrentProps;
   title: string;
-  text: string;
 }
 
 const defaultTicketState: TicketProps = {
@@ -149,7 +137,6 @@ const defaultTicketState: TicketProps = {
   service: false,
   category: false,
   title: '',
-  text: '',
 };
 
 const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
@@ -157,6 +144,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
   const [ticket, setTicket] = useState<TicketProps>(defaultTicketState);
+  const [text, setText] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading, data, error } = useQuery(SERVICES);
@@ -169,7 +157,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
+  const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
   };
 
@@ -179,6 +167,8 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleClearTicket = (): void => {
     setTicket(defaultTicketState);
+    setText('');
+    setFiles([]);
     setCurrentTab(0);
   };
 
@@ -187,48 +177,6 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   useEffect(() => {
     setServices(!loading && !error && data && data.OldTicketService);
   }, [loading, data, error]);
-
-  // const [departmentIndex, setDepartmentIndex] = useState<number>(-1);
-  // const [serviceIndex, setServiceIndex] = useState<string>('');
-  // const [category, setCategory] = useState<string>('');
-  // const [title, setTitle] = useState<string>('');
-  // const [text, setText] = useState<string>('');
-  // const [files, setFiles] = useState<DropzoneFile[]>([]);
-
-  // const handleCurrentDepartment = (index: number) => (): void => {
-  //   setDepartmentIndex(index);
-  //   setCurrentTab(1);
-  // };
-
-  // const handleCurrentService = (index: string) => (): void => {
-  //   setServiceIndex(index);
-  //   setCurrentTab(2);
-  // };
-
-  // const handleTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   setTitle(event.target.value);
-  // };
-
-  // const handleText = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   setText(event.target.value);
-  // };
-
-  // const handleCategory = (event: ReahangeEvent<HTMLInputElement>): void => {
-  //   setCategory(event.target.value);
-  // };
-
-  // const inputLabel = useRef<HTMLLabelElement>(null);
-  // const [labelWidth, setLabelWidth] = useState(0);
-
-  // const currentDepartment = departmentIndex >= 0 ? departments[departmentIndex] : false;
-  // const currentService =
-  //   data && data.OldTicketService ? data.OldTicketService.find((service) => service.code === serviceIndex) : false;
-
-  // useEffect(() => {
-  //   if (inputLabel.current) {
-  //     setLabelWidth(inputLabel.current!.offsetWidth);
-  //   }
-  // }, [inputLabel, currentService]);
 
   const swipeableViews = useRef(null);
 
@@ -386,18 +334,6 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </Box>
                 </div>
               )}
-              {/* currentService && (
-                <FormControl className={classes.formControl} variant="outlined">
-                  <InputLabel ref={inputLabel}>{t('services:form.category')}</InputLabel>
-                  <Select value={category} onChange={handleCategory} labelWidth={labelWidth}>
-                    {currentService.category.map((cur) => (
-                      <MenuItem key={cur.code} value={cur.code}>
-                        {cur.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                    ) */}
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
                   value={ticket.title}
@@ -408,16 +344,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
-                {/* <TextField
-                  value={ticket.text}
-                  onChange={(e) => handleTicket('text', e.target.value)}
-                  multiline
-                  rows={10}
-                  type="text"
-                  label={t('services:form.text')}
-                  variant="outlined"
-                /> */}
-                {currentTab > 2 && <JoditEditor />}
+                <JoditEditor value={text} onChange={setText} />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
                 <Dropzone setFiles={setFiles} files={files} {...rest} />
