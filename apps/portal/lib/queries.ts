@@ -285,7 +285,7 @@ export const OLD_TICKET_SERVICE = gql`
 `;
 
 export const OLD_TICKET_NEW = gql`
-  mutation OldTicketNew($ticket: OldTicketNew) {
+  mutation OldTicketNew($ticket: OldTicketNewInput!) {
     OldTicketNew(ticket: $ticket) {
       code
       name
