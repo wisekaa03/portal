@@ -32,6 +32,7 @@ import BaseIcon from '../components/icon';
 import { Loading } from '../components/loading';
 import Button from '../components/button';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
+import JoditEditor from '../components/jodit';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -407,7 +408,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
-                <TextField
+                {/* <TextField
                   value={ticket.text}
                   onChange={(e) => handleTicket('text', e.target.value)}
                   multiline
@@ -415,7 +416,8 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   type="text"
                   label={t('services:form.text')}
                   variant="outlined"
-                />
+                /> */}
+                {currentTab > 2 && <JoditEditor />}
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
                 <Dropzone setFiles={setFiles} files={files} {...rest} />
