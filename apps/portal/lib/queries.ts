@@ -265,7 +265,7 @@ export const MEDIA_DELETE = gql`
   }
 `;
 
-export const SERVICES = gql`
+export const OLD_TICKET_SERVICE = gql`
   query {
     OldTicketService {
       code
@@ -280,6 +280,20 @@ export const SERVICES = gql`
         categoryType
         avatar
       }
+    }
+  }
+`;
+
+export const OLD_TICKET_NEW = gql`
+  mutation OldTicketNew($ticket: OldTicketNew) {
+    OldTicketNew(ticket: $ticket) {
+      code
+      name
+      requisiteSource
+      category
+      organization
+      status
+      createdDate
     }
   }
 `;
