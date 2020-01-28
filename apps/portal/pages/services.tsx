@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
@@ -15,7 +15,7 @@ import Dropzone from '../components/dropzone';
 import { DropzoneFile } from '../components/dropzone/types';
 import { appBarHeight } from '../components/app-bar';
 import Page from '../layouts/main';
-import { SERVICES } from '../lib/queries';
+import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import BaseIcon from '../components/icon';
 import { Loading } from '../components/loading';
@@ -147,7 +147,8 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [text, setText] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading, data, error } = useQuery(SERVICES);
+  const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE);
+  const [oldTicketNew, { loading: loadingNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
     setTicket({ ...ticket, [key]: value });
@@ -172,11 +173,31 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrentTab(0);
   };
 
-  const handleAccept = (): void => {};
+  const handleAccept = (): void => {
+    const title = 'test';
+    const body = 'test';
+    const serviceId = '000000116';
+    const categoryId = '000000119';
+    const categoryType = 'itilprofКаталогУслуг';
+    const executorUser = 'stas';
+
+    oldTicketNew({
+      variables: {
+        ticket: {
+          title,
+          body,
+          serviceId,
+          categoryId,
+          categoryType,
+          executorUser,
+        },
+      },
+    });
+  };
 
   useEffect(() => {
-    setServices(!loading && !error && data && data.OldTicketService);
-  }, [loading, data, error]);
+    setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
+  }, [dataService, errorService, loadingService]);
 
   const swipeableViews = useRef(null);
 
@@ -197,7 +218,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
-          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+          {loadingService && <Loading noMargin type="linear" variant="indeterminate" />}
           <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />
@@ -216,7 +237,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             onChangeIndex={handleChangeTabIndex}
           >
             <div className={classes.container1}>
-              {!loading &&
+              {!loadingService &&
                 departments.map((department) => (
                   <Box
                     key={department.id}

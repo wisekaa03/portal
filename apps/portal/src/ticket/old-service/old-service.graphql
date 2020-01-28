@@ -15,6 +15,10 @@ type OldService {
   category: [OldCategory!]!
 }
 
+type Query {
+  OldTicketService: [OldService!]!
+}
+
 type OldTicketNew {
   code: String!
   name: String!
@@ -23,10 +27,6 @@ type OldTicketNew {
   organization: String!
   status: String!
   createdDate: Date!
-}
-
-type Query {
-  OldTicketService: [OldService!]!
 }
 
 input OldTicketNewInput {
