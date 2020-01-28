@@ -28,18 +28,6 @@ export class UserResolver {
   }
 
   /**
-   * GraphQL query: soap 1c synchronization
-   *
-   * @param req
-   * @returns {Boolean}
-   */
-  @Mutation()
-  @UseGuards(GqlAuthGuard)
-  async soap1csynch(@Context('req') req: Request): Promise<boolean | null> {
-    return this.userService.soap1csynch(req) || null;
-  }
-
-  /**
    * GraphQL query: settingsDrawer
    * TODO: вставить сюда synchronizationRunning, или куда-нибудь, чтобы показывать что идет синхронизация
    *

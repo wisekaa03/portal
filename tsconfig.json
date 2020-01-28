@@ -40,12 +40,6 @@
       "@app/synch/*": [
         "apps/synch/src/*"
       ],
-      "@app/soap1c": [
-        "apps/soap1c/src"
-      ],
-      "@app/soap1c/*": [
-        "apps/soap1c/src/*"
-      ],
       "@app/soap": [
         "libs/soap/src"
       ],

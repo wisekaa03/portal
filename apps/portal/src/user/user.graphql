@@ -29,11 +29,6 @@ input UserSettingsInput {
 }
 
 type Mutation {
-
   synchronization: Boolean
-
   userSettings(value: UserSettingsInput): User
-
-  soap1csynch: Boolean
-
 }

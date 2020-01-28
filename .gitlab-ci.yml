@@ -10,7 +10,6 @@ variables:
   PREFIX: ""
   RELEASE_NAME: ${PREFIX}${CI_PROJECT_NAME}
   RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
-  RELEASE_NAME_SOAP1C: ${PREFIX}${CI_PROJECT_NAME}-soap1c
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
 
 test_build:
@@ -30,7 +29,6 @@ test_build:
     - time yarn build
     - time yarn build:synch
     - time yarn build:synchJob
-    # - time yarn build:soap1c
   artifacts:
     paths:
       - .next/
@@ -128,12 +126,3 @@ deploy:
         --set PORT_DEBUG="${PORT_DEBUG}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
-    # Portal-soap1c
-    # - |
-    #   helm upgrade ${RELEASE_NAME_SOAP1C} helm/portal-soap1c \
-    #     --install --namespace=${PRODUCTION_NAMESPACE} \
-    #     --debug --values helm/portal-soap1c/values.yaml \
-    #     --set PORT="${PORT_MICROSERVICE}" \
-    #     --set PORT_DEBUG="${PORT_DEBUG}" \
-    #     --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
-    #     --set image.tag="${CI_BUILD_REF}"

@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.server.json",
-  "compilerOptions": {
-    "declaration": false,
-    "outDir": "../../dist/apps/soap1c"
-  },
-  "include": ["src/**/*", "../../typings/global.d.ts"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
-}

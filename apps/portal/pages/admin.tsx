@@ -10,7 +10,7 @@ import Head from 'next/head';
 // #region Imports Local
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { SYNC, CACHE, SOAP1CSYNCH } from '../lib/queries';
+import { SYNC, CACHE } from '../lib/queries';
 import { GQLError } from '../components/gql-error';
 // #endregion
 
@@ -45,18 +45,11 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
   // const [syncLoading, setSyncLoading] = useState<boolean>(false);
-  // const [soap1cLoading, setSoap1cLoading] = useState<boolean>(false);
   // const [cacheLoading, setCacheLoading] = useState<boolean>(false);
 
   const [sync, { loading: syncLoading, error: errorsSynch }] = useMutation(SYNC, {
     // onCompleted() {
     //   setSyncLoading(false);
-    // },
-  });
-
-  const [soap1c, { loading: soap1cLoading, error: errorsSoap1c }] = useMutation(SOAP1CSYNCH, {
-    // onCompleted() {
-    //   setSoap1cLoading(false);
     // },
   });
 
@@ -74,11 +67,6 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
   const handleCache = (): void => {
     // setCacheLoading(true);
     cache();
-  };
-
-  const handleSoap1c = (): void => {
-    // setSoap1cLoading(true);
-    soap1c();
   };
 
   return (
@@ -111,19 +99,6 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
             <CardContent>
               <Typography color="textSecondary" component="p">
                 {t('admin:cache:description')}
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card className={classes.card}>
-            <CardActions disableSpacing>
-              <Button fullWidth disabled={soap1cLoading} color="secondary" onClick={handleSoap1c}>
-                {!soap1cLoading ? t('admin:soap1c:synch') : t('admin:soap1c:wait')}
-              </Button>
-              {errorsSoap1c && <GQLError error={errorsSoap1c} />}
-            </CardActions>
-            <CardContent>
-              <Typography color="textSecondary" component="p">
-                {t('admin:soap1c:description')}
               </Typography>
             </CardContent>
           </Card>

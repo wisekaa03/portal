@@ -38,15 +38,6 @@
         "tsConfigPath": "apps/synch-job/tsconfig.app.json"
       }
     },
-    "soap1c": {
-      "type": "application",
-      "root": "apps/soap1c",
-      "entryFile": "main",
-      "sourceRoot": "apps/soap1c/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/soap1c/tsconfig.app.json"
-      }
-    },
     "soap": {
       "type": "library",
       "root": "libs/soap",

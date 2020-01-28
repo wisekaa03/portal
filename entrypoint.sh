@@ -93,12 +93,6 @@ elif [ -n "$*" -a "$1" = "start:synchJob" ]; then
   export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch-job/main.js
 
-elif [ -n "$*" -a "$1" = "start:soap1c" ]; then
-  $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_OPTIONS=--max_old_space_size=4096
-  export NODE_ENV=${NODE_ENV:=production}
-  $NODE dist/apps/soap1c/main.js
-
 elif [ -n "$*" ]; then
   yarn dev
 
