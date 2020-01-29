@@ -4,6 +4,7 @@
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { Request } from 'express';
+import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
@@ -50,7 +51,13 @@ export class TicketOldServiceResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async OldTicketNew(@Context('req') req: Request, @Args('ticket') ticket: OldTicketNewInput): Promise<OldTicketNew> {
+  async OldTicketNew(
+  /* eslint-disable prettier/prettier */
+    @Context('req') req: Request,
+      @Args('ticket') ticket: OldTicketNewInput,
+      @Args('attachments') attachments: Promise<FileUpload>,
+  /* eslint-enable prettier/prettier */
+  ): Promise<OldTicketNew> {
     const user = req.user as User;
 
     if (user) {
@@ -60,7 +67,7 @@ export class TicketOldServiceResolver {
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
-      return this.ticketOldService.OldTicketNew(authentication, ticket).catch((error: Error) => {
+      return this.ticketOldService.OldTicketNew(authentication, ticket, attachments).catch((error: Error) => {
         throw new UnauthorizedException(error.message);
       });
     }
