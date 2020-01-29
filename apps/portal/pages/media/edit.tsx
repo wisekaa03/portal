@@ -73,11 +73,11 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   }, [loading, data, error]);
 
   const handleSave = (): void => {
-    files.forEach((file) => {
+    files.forEach((file: DropzoneFile) => {
       mediaEdit({
         variables: {
           ...updated,
-          content: file,
+          file: file.file,
         },
       });
     });
