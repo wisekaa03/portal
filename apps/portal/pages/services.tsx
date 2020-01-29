@@ -177,9 +177,6 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleAccept = (): void => {
     const { /* department, */ service, category, title } = ticket;
 
-    // const attachments = files.slice((file: DropzoneFile) => file.file);
-    const attachments = files.pop().file;
-
     const variables = {
       ticket: {
         title,
@@ -188,7 +185,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
         categoryId: category ? category.id : null,
         categoryType: category ? category.categoryType : null,
       },
-      attachments,
+      attachments: files.map((file: DropzoneFile) => file.file),
     };
 
     oldTicketNew({
