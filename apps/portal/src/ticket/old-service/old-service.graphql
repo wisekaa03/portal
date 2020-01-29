@@ -1,22 +1,58 @@
 type OldCategory {
   code: String!
   name: String!
-  description: String!
-  categoryType: String!
+  description: String
+  categoryType: String
   avatar: String
 }
 
 type OldService {
   code: String!
   name: String!
-  group: String!
-  description: String!
+  group: String
+  description: String
   avatar: String
-  category: [OldCategory!]!
+  category: [OldCategory!]
+}
+
+type OldUser {
+  name: String!
+  avatar: String!
+  email: String!
+  telephone: String!
+  company: String!
+  department: String!
+  otdel: String!
+  position: String!
+}
+
+type OldFile {
+  code: String
+  name: String
+  ext: String
+}
+
+type OldTicket {
+  code: String!
+  name: String!
+  description: String!
+  descriptionFull: String
+  status: String!
+  createdDate: String!
+  avatar: String
+  endDate: String
+  timeout: String
+  executorUser: OldUser
+  initiatorUser: OldUser
+  service: OldService
+  serviceCategory: OldService
+  files: OldFile
 }
 
 type Query {
   OldTicketService: [OldService!]!
+  OldTickets(status: String): [OldTicket!]!
+  OldTicketDescription(code: String): OldTicket!
 }
 
 type OldTicketNew {
