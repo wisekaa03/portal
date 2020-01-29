@@ -175,22 +175,21 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleAccept = (): void => {
-    const { department, service, category, title } = ticket;
-    if (typeof files === 'object' && files.length > 0) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-    }
+    const { /* department, */ service, category, title } = ticket;
+
+    const attachments = files.map((file: DropzoneFile) => file.file);
+
+    const variables = {
+      title,
+      body,
+      serviceId: service ? service.id : null,
+      categoryId: category ? category.id : null,
+      categoryType: category ? category.categoryType : null,
+      attachments,
+    };
 
     oldTicketNew({
-      variables: {
-        ticket: {
-          title,
-          body,
-          serviceId: service ? service.id : null,
-          categoryId: category ? category.id : null,
-          categoryType: category ? category.categoryType : null,
-        },
-      },
+      variables,
     });
   };
 

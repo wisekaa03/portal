@@ -121,7 +121,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 
   const updateError = (value?: string): void => setError(value ? [...error, value] : []);
 
-  const onDrop = (newFiles: DropzoneFile[]): void => {
+  const onDrop = (newFiles: File[]): void => {
     if (newFiles.length > filesLimit) {
       updateError(t('dropzone:filesLimit'));
 
@@ -132,8 +132,8 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 
     setFiles((state) => [
       ...state,
-      ...newFiles.map((file) => ({
-        ...file,
+      ...newFiles.map((file: File) => ({
+        file,
         id: uuidv4(),
         preview: file.type.includes('image') ? URL.createObjectURL(file) : NO_PREVIEW,
       })),
@@ -142,10 +142,10 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 
   const handleDelete = (index: string) => (): void => {
     updateError();
-    setFiles(files.filter((file) => file.id !== index));
+    setFiles(files.filter((file: DropzoneFile) => file.id !== index));
   };
 
-  const handleDropRejected = (rejectedFiles: DropzoneFile[]): void => {
+  const handleDropRejected = (rejectedFiles: File[]): void => {
     updateError();
 
     rejectedFiles.forEach((rejectedFile) => {
@@ -178,7 +178,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
           <div
             {...getRootProps({
               className: clsx(classes.dropzone, {
-                [classes.marginBottom]: files.length > 0,
+                [classes.marginBottom]: files?.length > 0,
               }),
             })}
           >
@@ -186,7 +186,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
             <p>{t('dropzone:attach')}</p>
           </div>
           <aside className={classes.thumbsContainer}>
-            {files.map((file) => (
+            {files.map((file: DropzoneFile) => (
               <Badge
                 key={file.id}
                 className={classes.badge}
@@ -208,7 +208,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
                       )}
                     </div>
                   </div>
-                  <span>{file.name}</span>
+                  <span>{file.file.name}</span>
                 </>
               </Badge>
             ))}
