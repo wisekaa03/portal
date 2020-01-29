@@ -74,4 +74,60 @@ export class TicketOldServiceResolver {
 
     throw new UnauthorizedException();
   }
+
+  /**
+   * GraphQL query: GetTickets
+   *
+   * @returns {OldTicket[]}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async OldTickets(@Context('req') req: Request, @Args('status') status: string): Promise<OldService[]> {
+    const user = req.user as User;
+
+    if (user) {
+      const authentication = {
+        username: user.username,
+        password: user.passwordFrontend as string,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      } as SoapAuthentication;
+
+      return this.ticketOldService.OldTickets(authentication, status).catch((error: Error) => {
+        throw new UnauthorizedException(error.message);
+      });
+    }
+
+    throw new UnauthorizedException();
+  }
+
+  /**
+   * GraphQL query: GetTicketDescription
+   *
+   * @returns {OldTicket}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  /* eslint-disable @typescript-eslint/indent */
+  async OldTicketDescription(
+    @Context('req') req: Request,
+    @Args('code') code: string,
+    @Args('type') type: string,
+  ): Promise<OldService> {
+    /* eslint-enable @typescript-eslint/indent */
+    const user = req.user as User;
+
+    if (user) {
+      const authentication = {
+        username: user.username,
+        password: user.passwordFrontend as string,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      } as SoapAuthentication;
+
+      return this.ticketOldService.OldTicketDescription(authentication, code, type).catch((error: Error) => {
+        throw new UnauthorizedException(error.message);
+      });
+    }
+
+    throw new UnauthorizedException();
+  }
 }

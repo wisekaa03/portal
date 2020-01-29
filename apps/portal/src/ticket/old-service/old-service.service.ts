@@ -7,7 +7,14 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { SoapService, SoapError, SoapAuthentication } from '@app/soap';
-import { OldService, OldCategory, OldTicketNewInput, OldTicketNew } from './models/old-service.interface';
+import {
+  OldService,
+  OldCategory,
+  OldTicketNewInput,
+  OldTicketNew,
+  OldTicket,
+  OldUser,
+} from './models/old-service.interface';
 // #endregion
 
 @Injectable()
@@ -113,11 +120,132 @@ export class TicketOldService {
           } as OldTicketNew;
         }
 
-        return [];
+        return {};
       })
       .catch((error: SoapError) => {
         this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketNew');
 
+        throw error;
+      });
+  };
+
+  /**
+   * Ticket get all
+   *
+   * @returns {OldTicket[]}
+   */
+  OldTickets = async (authentication: SoapAuthentication, status: string): Promise<OldService[]> => {
+    const client = await this.soapService.connect(authentication).catch((error) => {
+      throw error;
+    });
+
+    this.service = await client
+      .kngk_GetTaskAsync({
+        log: authentication.username,
+        Dept: '',
+        Status: status,
+        Executor: false,
+        Alltask: false,
+      })
+      .then((result: any) => {
+        if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Задача'] === 'object') {
+          return result[0]['return']['Задача'].map(
+            (ticket: any) =>
+              ({
+                code: ticket['Код'],
+                type: ticket['ТипОбращения'],
+                name: ticket['Наименование'],
+                description: ticket['Описание'],
+                status: ticket['Статус'],
+                createdDate: ticket['Дата'],
+                avatar: ticket['Услуга']['Аватар'],
+              } as OldTicket),
+          );
+        }
+
+        return [];
+      })
+      .catch((error: SoapError) => {
+        throw error;
+      });
+
+    return this.service;
+  };
+
+  /**
+   * Ticket get one
+   *
+   * @returns {OldTicket}
+   */
+  OldTicketDescription = async (
+    authentication: SoapAuthentication,
+    status: string,
+    type: string,
+  ): Promise<OldService> => {
+    const client = await this.soapService.connect(authentication).catch((error) => {
+      throw error;
+    });
+
+    return client
+      .kngk_GetTaskDescriptionAsync({
+        log: status,
+        Type: type,
+      })
+      .then((result: any) => {
+        if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
+          const createUser = (user: any): OldUser | null => {
+            if (user) {
+              return {
+                name: user['ФИО'],
+                avatar: user['Аватар'],
+                email: user['ОсновнойEmail'],
+                telephone: user['ОсновнойТелефон'],
+                company: user['Организация'],
+                department: user['Подразделение'].split(', ')[0],
+                otdel: user['Подразделение'].split(', ')[1],
+                position: user['Должность'],
+              };
+            }
+
+            return null;
+          };
+
+          const ticket = result[0]['return'];
+
+          return {
+            code: ticket['Код'],
+            name: ticket['Наименование'],
+            description: ticket['Описание'],
+            descriptionFull: ticket['ОписаниеФД'],
+            status: ticket['Статус'],
+            createdDate: ticket['Дата'],
+            timeout: ticket['СрокИсполнения'],
+            endDate: ticket['ДатаЗавершения'],
+            executorUser: createUser(ticket['ТекущийИсполнитель']),
+            initiatorUser: createUser(ticket['Инициатор']),
+            service: {
+              code: ticket['Услуга']['Код'],
+              name: ticket['Услуга']['Наименование'],
+              avatar: ticket['Услуга']['Аватар'],
+            },
+            serviceCategory: {
+              code: ticket['КатегорияУслуги']['Код'],
+              name: ticket['КатегорияУслуги']['Наименование'],
+              avatar: ticket['КатегорияУслуги']['Аватар'],
+            },
+            files: [
+              {
+                code: ticket['СписокФайлов']['Файл']['Код'],
+                name: ticket['СписокФайлов']['Файл']['Наименование'],
+                ext: ticket['СписокФайлов']['Файл']['РасширениеФайла'],
+              },
+            ],
+          } as OldTicket;
+        }
+
+        return {};
+      })
+      .catch((error: SoapError) => {
         throw error;
       });
   };

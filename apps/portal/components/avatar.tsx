@@ -12,19 +12,25 @@ import Woman from '../../../public/images/svg/photo/woman-blue.svg';
 // #endregion
 
 interface AvatarProps {
-  profile: Profile;
+  profile?: Profile;
   alt: string;
+  base64?: string;
   fullSize?: boolean;
   className?: string;
 }
 
 export const Avatar = (props: AvatarProps): React.ReactElement => {
-  const { profile, fullSize = false, ...rest } = props;
-  const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
+  const { profile, fullSize = false, base64, ...rest } = props;
+  let src = 'data:image/png;base64,';
 
+  if (base64) {
+    return <AvatarMui src={src + base64} {...rest} />;
+  }
+
+  const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
   const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
 
-  const src = photo ? `data:image/png;base64,${photo}` : gender === 1 ? Man : gender === 2 ? Woman : Alien;
+  src = photo ? src + photo : gender === 1 ? Man : gender === 2 ? Woman : Alien;
 
   return <AvatarMui src={src} {...rest} />;
 };

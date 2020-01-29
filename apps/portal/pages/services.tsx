@@ -219,7 +219,6 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
-          {!__SERVER__ && (loadingService || loadingNew) && <Loading noMargin type="linear" variant="indeterminate" />}
           <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />

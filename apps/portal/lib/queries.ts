@@ -296,6 +296,70 @@ export const OLD_TICKET_SERVICE = gql`
   }
 `;
 
+export const OLD_TICKETS = gql`
+  query OldTickets($status: String) {
+    OldTickets(status: $status) {
+      code
+      type
+      name
+      description
+      status
+      createdDate
+      avatar
+    }
+  }
+`;
+
+export const OLD_TICKET_DESCRIPTION = gql`
+  query OldTicketDescription($code: String, $type: String) {
+    OldTicketDescription(code: $code, type: $type) {
+      code
+      name
+      description
+      descriptionFull
+      status
+      createdDate
+      endDate
+      timeout
+      executorUser {
+        name
+        avatar
+        email
+        telephone
+        company
+        department
+        otdel
+        position
+      }
+      initiatorUser {
+        name
+        avatar
+        email
+        telephone
+        company
+        department
+        otdel
+        position
+      }
+      service {
+        code
+        name
+        avatar
+      }
+      serviceCategory {
+        code
+        name
+        avatar
+      }
+      files {
+        code
+        name
+        ext
+      }
+    }
+  }
+`;
+
 export const OLD_TICKET_NEW = gql`
   mutation OldTicketNew($ticket: OldTicketNewInput!, $attachments: Upload) {
     OldTicketNew(ticket: $ticket, attachments: $attachments) {

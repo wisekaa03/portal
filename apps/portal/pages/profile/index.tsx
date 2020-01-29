@@ -8,7 +8,6 @@ import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles'
 import {
   Box,
   Button,
-  Container,
   InputBase,
   IconButton,
   Card,
@@ -20,9 +19,12 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import { useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
+import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
+import { OLD_TICKETS } from '../../lib/queries';
 import BaseIcon from '../../components/icon';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
@@ -30,11 +32,10 @@ import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
 import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
-import AppIcon1 from '../../../../public/images/svg/itapps/app_1.svg';
+import { Loading } from '../../components/loading';
 // #endregion
 
 const avatarHeight = 180;
-const cardWidth = 300;
 const DATE_FORMAT = 'DD.MM.YYYY г.';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -147,6 +148,9 @@ const useStyles = makeStyles((theme: Theme) =>
     ticketRegistered: {
       color: '#b99d15',
     },
+    ticketWorked: {
+      color: '#3aad0b',
+    },
   }),
 );
 
@@ -155,6 +159,8 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
   const [_search, setSearch] = useState<string>('');
   const search = useDebounce(_search, 300);
+
+  const { loading, data, error } = useQuery(OLD_TICKETS, { variables: { status: 'В работе' } });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.target.value);
@@ -222,44 +228,55 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </Box>
               </Box>
               <Box display="flex" flexGrow={1} flexWrap="wrap">
-                <Card className={classes.ticket}>
-                  <CardActionArea>
-                    <Link href={{ pathname: '/profile/ticket', query: { id: '12345' } }}>
-                      <CardContent className={classes.ticketContent}>
-                        <div className={classes.ticketLabel}>
-                          <div>
-                            <BaseIcon src={AppIcon1} size={36} />
-                          </div>
-                          <div>
-                            <Typography variant="subtitle2" noWrap>
-                              Печать и сканирование
-                            </Typography>
-                          </div>
-                          <div>
-                            <Typography variant="body1">Заменить картридж в принтере на 7 этаже</Typography>
-                          </div>
-                        </div>
-                        <Divider />
-                        <div className={classes.ticketInformation}>
-                          <span>
-                            {t('profile:tickets.status')}:{' '}
-                            <span
-                              className={clsx({
-                                [classes.ticketRegistered]: true,
-                              })}
-                            >
-                              Зарегистрирована
-                            </span>
-                          </span>
-                          <span>
-                            {t('profile:tickets.date')}: {dayjs(new Date()).format(DATE_FORMAT)}
-                          </span>
-                          <span>{t('profile:tickets.id')}: 14234234</span>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </CardActionArea>
-                </Card>
+                {data &&
+                  data.OldTickets &&
+                  data.OldTickets.map((ticket: OldTicket) => (
+                    <Card className={classes.ticket} key={ticket.code}>
+                      <CardActionArea>
+                        <Link href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}>
+                          <CardContent className={classes.ticketContent}>
+                            <div className={classes.ticketLabel}>
+                              <div>
+                                <BaseIcon base64 src={ticket.avatar} size={36} />
+                              </div>
+                              <div>
+                                <Typography variant="subtitle2" noWrap>
+                                  {ticket.name}
+                                </Typography>
+                              </div>
+                              <div>
+                                <Typography
+                                  variant="body1"
+                                  // eslint-disable-next-line react/no-danger
+                                  dangerouslySetInnerHTML={{ __html: ticket.description }}
+                                />
+                              </div>
+                            </div>
+                            <Divider />
+                            <div className={classes.ticketInformation}>
+                              <span>
+                                {t('profile:tickets.status')}:{' '}
+                                <span
+                                  className={clsx({
+                                    [classes.ticketRegistered]: ticket.status !== 'В работе',
+                                    [classes.ticketWorked]: ticket.status === 'В работе',
+                                  })}
+                                >
+                                  {ticket.status}
+                                </span>
+                              </span>
+                              <span>
+                                {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT)}
+                              </span>
+                              <span>
+                                {t('profile:tickets.id')}: {ticket.code}
+                              </span>
+                            </div>
+                          </CardContent>
+                        </Link>
+                      </CardActionArea>
+                    </Card>
+                  ))}
               </Box>
             </Box>
           </Box>
