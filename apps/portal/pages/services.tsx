@@ -145,7 +145,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
   const [ticket, setTicket] = useState<TicketProps>(defaultTicketState);
-  const [text, setText] = useState<string>('');
+  const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE);
@@ -169,7 +169,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleClearTicket = (): void => {
     setTicket(defaultTicketState);
-    setText('');
+    setBody('');
     setFiles([]);
     setCurrentTab(0);
   };
@@ -185,7 +185,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       variables: {
         ticket: {
           title,
-          body: text,
+          body,
           serviceId: service ? service.id : null,
           categoryId: category ? category.id : null,
           categoryType: category ? category.categoryType : null,
@@ -366,7 +366,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
-                <JoditEditor value={text} onChange={setText} />
+                <JoditEditor value={body} onChange={setBody} />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
                 <Dropzone setFiles={setFiles} files={files} {...rest} />
