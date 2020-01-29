@@ -25,7 +25,7 @@ export interface OldTicketNewInput {
   categoryId: string;
   categoryType: string;
   executorUser?: string;
-  attachments?: FileUpload[];
+  attachments?: Promise<FileUpload>[];
 }
 
 export interface OldTicketNew {

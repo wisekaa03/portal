@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
-import { createClientAsync, Client, NTLMSecurity } from 'soap';
+import { createClientAsync, Client, NTLMSecurity, ISoapFaultError } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -10,7 +10,8 @@ import { ConfigService } from '@app/config';
 import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
 // #endregion
 
-export type SOAPClient = Client;
+export type SoapClient = Client;
+export type SoapError = ISoapFaultError;
 
 @Injectable()
 export class SoapService {
@@ -26,7 +27,7 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
-  async connect(authentication?: SoapAuthentication): Promise<SOAPClient> {
+  async connect(authentication?: SoapAuthentication): Promise<SoapClient> {
     if (authentication && authentication.username && authentication.password) {
       this.opts.options = {
         ...this.opts.options,
@@ -46,9 +47,9 @@ export class SoapService {
         if (this.opts.options && this.opts.options.wsdl_options && this.opts.options.wsdl_options.ntlm) {
           client.setSecurity(new NTLMSecurity(this.opts.options.wsdl_options));
         }
-        return client as SOAPClient;
+        return client as SoapClient;
       })
-      .catch((error: Error) => {
+      .catch((error: SoapError) => {
         this.logger.error('SOAP connect error: ', JSON.stringify(error), 'SOAP Service');
 
         throw error;
