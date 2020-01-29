@@ -145,7 +145,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
   const [ticket, setTicket] = useState<TicketProps>(defaultTicketState);
-  const [text, setText] = useState<string>('');
+  const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE);
@@ -169,7 +169,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleClearTicket = (): void => {
     setTicket(defaultTicketState);
-    setText('');
+    setBody('');
     setFiles([]);
     setCurrentTab(0);
   };
@@ -185,7 +185,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       variables: {
         ticket: {
           title,
-          body: text,
+          body,
           serviceId: service ? service.id : null,
           categoryId: category ? category.id : null,
           categoryType: category ? category.categoryType : null,
@@ -217,13 +217,14 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
-          {loadingService && <Loading noMargin type="linear" variant="indeterminate" />}
+          {!__SERVER__ && (loadingService || loadingNew) && <Loading noMargin type="linear" variant="indeterminate" />}
           <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />
               <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
               <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
               <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
+              <Tab disabled label={t('services:tabs.tab5')} />
             </Tabs>
           </Paper>
           <SwipeableViews
@@ -365,7 +366,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
-                <JoditEditor value={text} onChange={setText} />
+                <JoditEditor value={body} onChange={setBody} />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
                 <Dropzone setFiles={setFiles} files={files} {...rest} />
@@ -376,6 +377,9 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </Button>
                 <Button onClick={handleAccept}>{t('common:accept')}</Button>
               </FormControl>
+            </div>
+            <div style={{ minHeight: containerHeight }} className={classes.container2}>
+              Ответ
             </div>
           </SwipeableViews>
         </div>
