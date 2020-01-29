@@ -91,10 +91,10 @@ export class TicketOldService {
         route: ticket.categoryId,
         category: ticket.serviceId,
         TypeOfCategory: ticket.categoryType,
-        Executor: ticket.executorUser,
-        NFile: null,
-        DFile: null,
-        Attaches: null,
+        Executor: ticket.executorUser ? ticket.executorUser : '',
+        NFile: '',
+        DFile: '',
+        Attaches: '',
       })
       .then((result: any) => {
         if (result && result[0] && result[0]['return']) {

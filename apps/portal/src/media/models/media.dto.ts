@@ -3,6 +3,7 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
+import { FileUpload } from 'graphql-upload';
 import { UserEntity } from '../../user/user.entity';
 import { MediaDirectoryEntity } from '../media.directory.entity';
 // #endregion
@@ -22,6 +23,6 @@ export interface Media {
   filename?: string;
   mimetype?: string;
 
-  content?: Buffer;
+  content?: Promise<FileUpload>;
 }
 // #endregion

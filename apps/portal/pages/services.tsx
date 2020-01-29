@@ -176,7 +176,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleAccept = (): void => {
     const { department, service, category, title } = ticket;
-    if (files) {
+    if (typeof files === 'object' && files.length > 0) {
       // eslint-disable-next-line no-debugger
       debugger;
     }

@@ -39,7 +39,7 @@ export class MediaResolver {
   async editMedia(
     @Context('req') req: Request,
     /* eslint-disable prettier/prettier */
-      @Args('file') file: FileUpload,
+      @Args('file') file: Promise<FileUpload>,
       @Args('directory') directory: string,
       @Args('id') id: string,
       /* eslint-enable prettier/prettier */
