@@ -34,6 +34,7 @@ type OldFile {
 
 type OldTicket {
   code: String!
+  type: String
   name: String!
   description: String!
   descriptionFull: String
@@ -52,7 +53,7 @@ type OldTicket {
 type Query {
   OldTicketService: [OldService!]!
   OldTickets(status: String): [OldTicket!]!
-  OldTicketDescription(code: String): OldTicket!
+  OldTicketDescription(code: String, type: String): OldTicket
 }
 
 type OldTicketNew {

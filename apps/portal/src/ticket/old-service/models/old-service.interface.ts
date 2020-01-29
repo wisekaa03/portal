@@ -27,6 +27,7 @@ export interface OldFile {
 export interface OldTicket {
   code: string;
   name: string;
+  type?: string;
   description: string;
   descriptionFull?: string;
   status: string;

@@ -100,7 +100,13 @@ export class TicketOldServiceResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async OldTicketDescription(@Context('req') req: Request, @Args('code') code: string): Promise<OldService> {
+  /* eslint-disable @typescript-eslint/indent */
+  async OldTicketDescription(
+    @Context('req') req: Request,
+    @Args('code') code: string,
+    @Args('type') type: string,
+  ): Promise<OldService> {
+    /* eslint-enable @typescript-eslint/indent */
     const user = req.user as User;
 
     if (user) {
@@ -110,7 +116,7 @@ export class TicketOldServiceResolver {
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
-      return this.ticketOldService.OldTicketDescription(authentication, code).catch((error: Error) => {
+      return this.ticketOldService.OldTicketDescription(authentication, code, type).catch((error: Error) => {
         throw new UnauthorizedException(error.message);
       });
     }

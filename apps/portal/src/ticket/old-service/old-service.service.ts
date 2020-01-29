@@ -149,6 +149,7 @@ export class TicketOldService {
             (ticket: any) =>
               ({
                 code: ticket['Код'],
+                type: ticket['ТипОбращения'],
                 name: ticket['Наименование'],
                 description: ticket['Описание'],
                 status: ticket['Статус'],
@@ -172,7 +173,11 @@ export class TicketOldService {
    *
    * @returns {OldTicket}
    */
-  OldTicketDescription = async (authentication: SoapAuthentication, status: string): Promise<OldService> => {
+  OldTicketDescription = async (
+    authentication: SoapAuthentication,
+    status: string,
+    type: string,
+  ): Promise<OldService> => {
     const client = await this.soapService.connect(authentication).catch((error) => {
       throw error;
     });
@@ -180,7 +185,7 @@ export class TicketOldService {
     return client
       .kngk_GetTaskDescriptionAsync({
         log: status,
-        Type: 'itilprofЗапросы',
+        Type: type,
       })
       .then((result: any) => {
         if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
