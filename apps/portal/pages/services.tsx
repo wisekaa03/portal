@@ -123,6 +123,7 @@ interface CurrentProps {
   id: number | string;
   name: string;
   icon: any;
+  categoryType?: string;
 }
 
 interface TicketProps {
@@ -174,22 +175,20 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleAccept = (): void => {
-    const title = 'test';
-    const body = 'test';
-    const serviceId = '000000116';
-    const categoryId = '000000119';
-    const categoryType = 'itilprofКаталогУслуг';
-    const executorUser = 'stas';
+    const { department, service, category, title } = ticket;
+    if (files) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+    }
 
     oldTicketNew({
       variables: {
         ticket: {
           title,
-          body,
-          serviceId,
-          categoryId,
-          categoryType,
-          executorUser,
+          body: text,
+          serviceId: service ? service.id : null,
+          categoryId: category ? category.id : null,
+          categoryType: category ? category.categoryType : null,
         },
       },
     });
@@ -309,6 +308,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                             id: category.code,
                             name: category.name,
                             icon: category.avatar,
+                            categoryType: category.categoryType,
                           },
                           3,
                         )

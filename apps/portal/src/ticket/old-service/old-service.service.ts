@@ -6,7 +6,7 @@ import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { SoapService, SOAPClient, SoapAuthentication } from '@app/soap';
+import { SoapService, SoapError, SoapAuthentication } from '@app/soap';
 import { OldService, OldCategory, OldTicketNewInput, OldTicketNew } from './models/old-service.interface';
 // #endregion
 
@@ -54,7 +54,7 @@ export class TicketOldService {
 
         return [];
       })
-      .catch((error: Error) => {
+      .catch((error: SoapError) => {
         throw error;
       });
 
@@ -75,8 +75,8 @@ export class TicketOldService {
       // eslint-disable-next-line no-debugger
       debugger;
 
-      ticket.attachments.forEach(async (attach: FileUpload) => {
-        const { filename, mimetype, createReadStream } = await attach;
+      ticket.attachments.forEach(async (value: Promise<FileUpload>) => {
+        const { filename, mimetype, createReadStream } = await value;
 
         // eslint-disable-next-line no-debugger
         debugger;
@@ -87,11 +87,14 @@ export class TicketOldService {
       .kngk_NewTaskAsync({
         log: authentication.username,
         Title: ticket.title,
-        descr: ticket.body,
+        deskr: ticket.body,
         route: ticket.categoryId,
         category: ticket.serviceId,
         TypeOfCategory: ticket.categoryType,
         Executor: ticket.executorUser,
+        NFile: null,
+        DFile: null,
+        Attaches: null,
       })
       .then((result: any) => {
         if (result && result[0] && result[0]['return']) {
@@ -108,7 +111,9 @@ export class TicketOldService {
 
         return [];
       })
-      .catch((error: Error) => {
+      .catch((error: SoapError) => {
+        this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketNew');
+
         throw error;
       });
   };
