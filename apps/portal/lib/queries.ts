@@ -297,26 +297,8 @@ export const OLD_TICKET_SERVICE = gql`
 `;
 
 export const OLD_TICKET_NEW = gql`
-  mutation OldTicketNew(
-    $title: String!
-    $body: String!
-    $serviceId: String!
-    $categoryId: String!
-    $categoryType: String!
-    $executorUser: String
-    $attachments: [Upload]
-  ) {
-    OldTicketNew(
-      ticket: {
-        title: $title
-        body: $body
-        serviceId: $serviceId
-        categoryId: $categoryId
-        categoryType: $categoryType
-        executorUser: $executorUser
-        attachments: $attachments
-      }
-    ) {
+  mutation OldTicketNew($ticket: OldTicketNewInput!, $attachments: Upload) {
+    OldTicketNew(ticket: $ticket, attachments: $attachments) {
       code
       name
       requisiteSource

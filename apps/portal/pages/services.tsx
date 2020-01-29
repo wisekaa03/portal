@@ -177,14 +177,17 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleAccept = (): void => {
     const { /* department, */ service, category, title } = ticket;
 
-    const attachments = files.map((file: DropzoneFile) => file.file);
+    // const attachments = files.slice((file: DropzoneFile) => file.file);
+    const attachments = files.pop().file;
 
     const variables = {
-      title,
-      body,
-      serviceId: service ? service.id : null,
-      categoryId: category ? category.id : null,
-      categoryType: category ? category.categoryType : null,
+      ticket: {
+        title,
+        body,
+        serviceId: service ? service.id : null,
+        categoryId: category ? category.id : null,
+        categoryType: category ? category.categoryType : null,
+      },
       attachments,
     };
 

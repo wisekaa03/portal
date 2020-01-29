@@ -66,21 +66,25 @@ export class TicketOldService {
    *
    * @returns {OldTicketNew} - new ticket creation
    */
-  OldTicketNew = async (authentication: SoapAuthentication, ticket: OldTicketNewInput): Promise<OldTicketNew> => {
+  OldTicketNew = async (
+    authentication: SoapAuthentication,
+    ticket: OldTicketNewInput,
+    attachments?: Promise<FileUpload>,
+  ): Promise<OldTicketNew> => {
     const client = await this.soapService.connect(authentication).catch((error) => {
       throw error;
     });
 
-    if (ticket.attachments) {
+    if (attachments) {
       // eslint-disable-next-line no-debugger
       debugger;
 
-      ticket.attachments.forEach(async (value: Promise<FileUpload>) => {
-        const { filename, mimetype, createReadStream } = await value;
+      // attachments.forEach(async (value: Promise<FileUpload>) => {
+      const { filename, mimetype, createReadStream } = await attachments;
 
-        // eslint-disable-next-line no-debugger
-        debugger;
-      });
+      // eslint-disable-next-line no-debugger
+      debugger;
+      // });
     }
 
     return client

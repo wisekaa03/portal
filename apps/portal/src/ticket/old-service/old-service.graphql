@@ -36,9 +36,8 @@ input OldTicketNewInput {
   categoryId: String!
   categoryType: String!
   executorUser: String
-  attachments: [Upload]
 }
 
 type Mutation {
-  OldTicketNew(ticket: OldTicketNewInput!): OldTicketNew!
+  OldTicketNew(ticket: OldTicketNewInput!, attachments: Upload): OldTicketNew!
 }
