@@ -218,13 +218,14 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
-          {loadingService && <Loading noMargin type="linear" variant="indeterminate" />}
+          {!__SERVER__ && (loadingService || loadingNew) && <Loading noMargin type="linear" variant="indeterminate" />}
           <Paper ref={tabHeader} square className={classes.header}>
             <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
               <Tab label={t('services:tabs.tab1')} />
               <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
               <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
               <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
+              <Tab disabled label={t('services:tabs.tab5')} />
             </Tabs>
           </Paper>
           <SwipeableViews
@@ -376,6 +377,9 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </Button>
                 <Button onClick={handleAccept}>{t('common:accept')}</Button>
               </FormControl>
+            </div>
+            <div style={{ minHeight: containerHeight }} className={classes.container2}>
+              Ответ
             </div>
           </SwipeableViews>
         </div>
