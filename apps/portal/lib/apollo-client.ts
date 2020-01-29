@@ -10,6 +10,7 @@ import { concat, ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client';
 import Router from 'next/router';
 // import { WebSocketLink } from 'apollo-link-ws';
 // #endregion
@@ -56,7 +57,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
   });
 
   let clientParams = {};
-  let cache;
+  let cache: InMemoryCache;
 
   if (__SERVER__) {
     global.fetch = fetch;
@@ -87,7 +88,11 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     //   },
     // });
 
-    httpLink = createHttpLink({
+    // httpLink = createHttpLink({
+    //   uri: `/graphql`,
+    // });
+
+    httpLink = createUploadLink({
       uri: `/graphql`,
     });
 
@@ -111,7 +116,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
           return value;
         }
       },
-    }).restore(initialState);
+    }).restore(initialState) as InMemoryCache;
   }
 
   return new ApolloClient({

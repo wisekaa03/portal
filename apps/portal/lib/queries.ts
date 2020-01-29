@@ -225,7 +225,11 @@ export const MEDIA = gql`
   query Media {
     media {
       id
-      user {
+      createdUser {
+        id
+        username
+      }
+      updatedUser {
         id
         username
       }
@@ -251,7 +255,11 @@ export const MEDIA_EDIT = gql`
       filename
       mimetype
       content
-      user {
+      createdUser {
+        id
+        username
+      }
+      updatedUser {
         id
         username
       }
@@ -264,6 +272,10 @@ export const MEDIA_DELETE = gql`
     deleteMedia(id: $id)
   }
 `;
+
+/**
+ * Ticket
+ */
 
 export const OLD_TICKET_SERVICE = gql`
   query {
@@ -285,8 +297,26 @@ export const OLD_TICKET_SERVICE = gql`
 `;
 
 export const OLD_TICKET_NEW = gql`
-  mutation OldTicketNew($ticket: OldTicketNewInput!) {
-    OldTicketNew(ticket: $ticket) {
+  mutation OldTicketNew(
+    $title: String!
+    $body: String!
+    $serviceId: String!
+    $categoryId: String!
+    $categoryType: String!
+    $executorUser: String
+    $attachments: [Upload]
+  ) {
+    OldTicketNew(
+      ticket: {
+        title: $title
+        body: $body
+        serviceId: $serviceId
+        categoryId: $categoryId
+        categoryType: $categoryType
+        executorUser: $executorUser
+        attachments: $attachments
+      }
+    ) {
       code
       name
       requisiteSource

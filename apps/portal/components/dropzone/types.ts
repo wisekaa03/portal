@@ -1,8 +1,9 @@
 /** @format */
 
-export interface DropzoneFile extends File {
-  id?: string;
-  preview?: string;
+export interface DropzoneFile {
+  file: File;
+  id: string;
+  preview: string;
 }
 
 export interface DropzoneProps {
