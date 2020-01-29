@@ -88,13 +88,13 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     //   },
     // });
 
-    httpLink = createHttpLink({
-      uri: `/graphql`,
-    });
-
-    // httpLink = createUploadLink({
+    // httpLink = createHttpLink({
     //   uri: `/graphql`,
     // });
+
+    httpLink = createUploadLink({
+      uri: `/graphql`,
+    });
 
     clientParams = {
       resolvers: stateResolvers,

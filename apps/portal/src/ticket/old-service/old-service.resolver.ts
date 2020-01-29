@@ -55,7 +55,7 @@ export class TicketOldServiceResolver {
   /* eslint-disable prettier/prettier */
     @Context('req') req: Request,
       @Args('ticket') ticket: OldTicketNewInput,
-      @Args('attachments') attachments: Promise<FileUpload>,
+      @Args('attachments') attachments: Promise<FileUpload>[],
   /* eslint-enable prettier/prettier */
   ): Promise<OldTicketNew> {
     const user = req.user as User;

@@ -9463,15 +9463,10 @@ from2@^2.1.0, from2@^2.1.1:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
-fs-capacitor@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/fs-capacitor/-/fs-capacitor-2.0.4.tgz#5a22e72d40ae5078b4fe64fe4d08c0d3fc88ad3c"
-  integrity sha512-8S4f4WsCryNw2mJJchi46YgB6CR5Ze+4L1h8ewl9tEpL4SJ3ZO+c/bS4BWhB8bK+O3TMqhuZarTitd0S0eh2pA==
-
-fs-capacitor@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/fs-capacitor/-/fs-capacitor-6.1.0.tgz#457f5868a743fe662caa9bd825be966c3d4641a4"
-  integrity sha512-YsKGCLAB40P3OKeciIa7cKzt7WkY8QT9ETa2wVIG3fQDHW2h3xtRo0770lUIbPrjCr5Sa+zFhixNJ+2xNxaraQ==
+fs-capacitor@5.0.0, fs-capacitor@^2.0.4, fs-capacitor@^4.0.1:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/fs-capacitor/-/fs-capacitor-5.0.0.tgz#0d98d1278d5dd3247411f51ccd2a0bdcfe72320a"
+  integrity sha512-M1CNCxyeL81Tyr6qpxBgRJ3GEHKrzFdpen7ttoDd9KtRbf74myW7Kb39QHbNzo9rf/2CNJlEUbAKnfi7N40Pdg==
 
 fs-constants@^1.0.0:
   version "1.0.0"
@@ -10134,17 +10129,6 @@ graphql-tools@^4.0.0, graphql-tools@^4.0.6:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql-upload@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-upload/-/graphql-upload-10.0.0.tgz#1020c8ac6208c8cdf9de1f6ad9000eab7467e00f"
-  integrity sha512-8n11qujsqHWT48visvQbqLqAj8o6NCLJ35tGkI/RynhDs7E07TxlswVe4vPZaLiXJeemZA7xrxkMohwP//DOqA==
-  dependencies:
-    busboy "^0.3.1"
-    fs-capacitor "^6.1.0"
-    http-errors "^1.7.3"
-    isobject "^4.0.0"
-    object-path "^0.11.4"
-
 graphql-upload@^8.0.2:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/graphql-upload/-/graphql-upload-8.1.0.tgz#6d0ab662db5677a68bfb1f2c870ab2544c14939a"
@@ -10152,6 +10136,16 @@ graphql-upload@^8.0.2:
   dependencies:
     busboy "^0.3.1"
     fs-capacitor "^2.0.4"
+    http-errors "^1.7.3"
+    object-path "^0.11.4"
+
+graphql-upload@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-upload/-/graphql-upload-9.0.0.tgz#14c5250895f5d04ea83dcfcb3a16bd0e1c4cee95"
+  integrity sha512-YR2o9GoDa5On3q3lYLkLo3gHfa8crCHvMY1QbT7Zqja6BUqiihqaGjbWbvSPko/gbDSmZE+zLcX46Ef+/SmRyA==
+  dependencies:
+    busboy "^0.3.1"
+    fs-capacitor "^4.0.1"
     http-errors "^1.7.3"
     object-path "^0.11.4"
 
@@ -14155,6 +14149,22 @@ node-notifier@^6.0.0:
     shellwords "^0.1.1"
     which "^1.3.1"
 
+node-pre-gyp@*, node-pre-gyp@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
+  integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4.4.2"
+
 node-pre-gyp@0.13.0:
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.13.0.tgz#df9ab7b68dd6498137717838e4f92a33fc9daa42"
@@ -14186,22 +14196,6 @@ node-pre-gyp@^0.11.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
-
-node-pre-gyp@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
-  integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4.4.2"
 
 node-releases@^1.1.29, node-releases@^1.1.44, node-releases@^1.1.46:
   version "1.1.47"
@@ -14885,9 +14879,9 @@ packet-reader@1.0.0:
   integrity sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==
 
 pako@^1.0.5, pako@~1.0.5:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
-  integrity sha512-0DTvPVU3ed8+HNXOu5Bs+o//Mbdj9VNQMUOe9oKCwh8l0GNwpTDMKCWbRjgtD291AWnkAgkqA/LOnQS8AmS1tw==
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
+  integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
 parallel-transform@^1.1.0:
   version "1.2.0"
@@ -18070,9 +18064,9 @@ set-blocking@^2.0.0, set-blocking@~2.0.0:
   integrity sha1-BF+XgtARrppoA93TgrJDkrPYkPc=
 
 set-cookie-parser@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.4.1.tgz#b77d0020241628b8ce12b16ec8af492e773af31a"
-  integrity sha512-bUcyZhIOLvjvdO7UT5MyNd6AAci4ssZy/8Da1etJVI/2n3vgpxfJ/ntYA0bN+8qg9HZB7xR9/g+fcDbGkk/gQg==
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.4.2.tgz#7bfc4e774808d084afe899b7fea36f2598683cf7"
+  integrity sha512-gd7o93Fp6gBtlBm4aMJDx//+BjvOfoXu34BxiKjU1EyBxPQtHIjv4Fc7C5fkp1JNre3e5jd+BUVAnbnduhZDOg==
 
 set-value@^2.0.0, set-value@^2.0.1:
   version "2.0.1"

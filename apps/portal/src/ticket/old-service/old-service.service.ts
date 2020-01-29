@@ -17,6 +17,15 @@ import {
 } from './models/old-service.interface';
 // #endregion
 
+export interface Attaches1CFile {
+  NFile: string;
+  DFile: string;
+}
+
+export interface Attaches1C {
+  Вложение: Attaches1CFile[];
+}
+
 @Injectable()
 export class TicketOldService {
   private service: OldService[];
@@ -76,22 +85,30 @@ export class TicketOldService {
   OldTicketNew = async (
     authentication: SoapAuthentication,
     ticket: OldTicketNewInput,
-    attachments?: Promise<FileUpload>,
+    attachments?: Promise<FileUpload>[],
   ): Promise<OldTicketNew> => {
     const client = await this.soapService.connect(authentication).catch((error) => {
       throw error;
     });
 
+    let Attaches: Attaches1C | string = '';
+
     if (attachments) {
-      // eslint-disable-next-line no-debugger
-      debugger;
+      await attachments.forEach(async (value: Promise<FileUpload>) => {
+        const { filename, mimetype, createReadStream } = await value;
 
-      // attachments.forEach(async (value: Promise<FileUpload>) => {
-      const { filename, mimetype, createReadStream } = await attachments;
+        Attaches = {
+          Вложение: [
+            {
+              NFile: filename,
+              DFile: Buffer.from(filename).toString('base64'),
+            },
+          ],
+        };
 
-      // eslint-disable-next-line no-debugger
-      debugger;
-      // });
+        // eslint-disable-next-line no-debugger
+        debugger;
+      });
     }
 
     return client
@@ -105,9 +122,11 @@ export class TicketOldService {
         Executor: ticket.executorUser ? ticket.executorUser : '',
         NFile: '',
         DFile: '',
-        Attaches: '',
+        Attaches,
       })
       .then((result: any) => {
+        this.logService.log(client.lastRequest, 'OldTicketNew');
+
         if (result && result[0] && result[0]['return']) {
           return {
             code: result[0]['return']['Код'],
