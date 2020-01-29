@@ -137,7 +137,7 @@ export class TicketOldService {
 
     this.service = await client
       .kngk_GetTaskAsync({
-        log: 'stas', // authentication.username,
+        log: authentication.username,
         Dept: '',
         Status: status,
         Executor: false,
