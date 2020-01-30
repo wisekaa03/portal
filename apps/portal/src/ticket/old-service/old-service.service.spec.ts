@@ -4,12 +4,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule } from '@app/logger';
 import { SoapModule, SoapOptions } from '@app/soap';
-import { TicketOldService } from './old-service.service';
+import { OldTicketService } from './old-service.service';
 
 jest.mock('@app/soap/soap.service');
 
 describe('OldServiceService', () => {
-  let service: TicketOldService;
+  let service: OldTicketService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,10 +23,10 @@ describe('OldServiceService', () => {
           useFactory: () => ({} as SoapOptions),
         }),
       ],
-      providers: [TicketOldService],
+      providers: [OldTicketService],
     }).compile();
 
-    service = module.get<TicketOldService>(TicketOldService);
+    service = module.get<OldTicketService>(OldTicketService);
   });
 
   it('should be defined', () => {

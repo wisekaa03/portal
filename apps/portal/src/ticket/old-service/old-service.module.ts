@@ -7,8 +7,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule } from '@app/logger';
 import { SoapModule } from '@app/soap';
-import { TicketOldServiceResolver } from './old-service.resolver';
-import { TicketOldService } from './old-service.service';
+import { OldTicketResolver } from './old-service.resolver';
+import { OldTicketService } from './old-service.service';
 // #endregion
 
 @Module({
@@ -40,6 +40,6 @@ import { TicketOldService } from './old-service.service';
     }),
   ],
 
-  providers: [TicketOldServiceResolver, TicketOldService],
+  providers: [OldTicketResolver, OldTicketService],
 })
 export class TicketOldServiceModule {}

@@ -12,12 +12,12 @@ import { SoapAuthentication } from '@app/soap';
 import { User } from '../../user/models/user.dto';
 import { GqlAuthGuard } from '../../guards/gqlauth.guard';
 import { OldService, OldTicketNewInput, OldTicketNew } from './models/old-service.interface';
-import { TicketOldService } from './old-service.service';
+import { OldTicketService } from './old-service.service';
 // #endregion
 
-@Resolver('TicketOldServiceResolver')
-export class TicketOldServiceResolver {
-  constructor(private readonly configService: ConfigService, private readonly ticketOldService: TicketOldService) {}
+@Resolver('OldTicketResolver')
+export class OldTicketResolver {
+  constructor(private readonly configService: ConfigService, private readonly ticketOldService: OldTicketService) {}
 
   /**
    * GraphQL query: GetService

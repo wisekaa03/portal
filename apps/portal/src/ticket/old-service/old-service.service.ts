@@ -29,7 +29,7 @@ export interface Attaches1C {
 }
 
 @Injectable()
-export class TicketOldService {
+export class OldTicketService {
   private service: OldService[];
 
   constructor(private readonly logService: LogService, private readonly soapService: SoapService) {}
@@ -124,8 +124,8 @@ export class TicketOldService {
         Attaches,
       })
       .then((result: any) => {
-        this.logService.log(client.lastRequest, 'OldTicketService');
-        this.logService.log(client.lastResponse, 'OldTicketService');
+        this.logService.debug(client.lastRequest, 'OldTicketService');
+        this.logService.debug(client.lastResponse, 'OldTicketService');
 
         if (result && result[0] && result[0]['return']) {
           return {
