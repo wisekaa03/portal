@@ -341,27 +341,31 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   />
                   <CardContent>КОММЕНТАРИИ</CardContent>
                 </Card>
-                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                  <TextField
-                    value={comment}
-                    onChange={handleComment}
-                    multiline
-                    rows={5}
-                    type="text"
-                    color="secondary"
-                    label={t('profile:tickets.comment.add')}
-                    variant="outlined"
-                  />
-                </FormControl>
-                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                  <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
-                </FormControl>
-                <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
-                  <Button actionType="cancel" onClick={handleClose}>
-                    {t('common:cancel')}
-                  </Button>
-                  <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
-                </FormControl>
+                {ticket.status !== 'Завершен' && (
+                  <>
+                    <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                      <TextField
+                        value={comment}
+                        onChange={handleComment}
+                        multiline
+                        rows={5}
+                        type="text"
+                        color="secondary"
+                        label={t('profile:tickets.comment.add')}
+                        variant="outlined"
+                      />
+                    </FormControl>
+                    <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                      <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
+                    </FormControl>
+                    <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
+                      <Button actionType="cancel" onClick={handleClose}>
+                        {t('common:cancel')}
+                      </Button>
+                      <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
+                    </FormControl>
+                  </>
+                )}
               </Box>
             )}
           </Box>
