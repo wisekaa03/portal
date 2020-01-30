@@ -26,7 +26,7 @@ import clsx from 'clsx';
 import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
-import { OldUser, OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
+import { OldUser, OldTicket, OldFile } from '@app/portal/ticket/old-service/models/old-service.interface';
 import Page from '../../layouts/main';
 import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
@@ -318,18 +318,28 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   />
                   <CardContent dangerouslySetInnerHTML={{ __html: ticket.description }} />
                 </Card>
-                <Card className={classes.fullRow}>
-                  <CardHeader
-                    disableTypography
-                    className={clsx(classes.cardHeader, classes.background)}
-                    title={
-                      <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {t('profile:tickets.headers.files')}
-                      </Typography>
-                    }
-                  />
-                  <CardContent>ФАЙЛЫ</CardContent>
-                </Card>
+                {ticket.files && (
+                  <Card className={classes.fullRow}>
+                    <CardHeader
+                      disableTypography
+                      className={clsx(classes.cardHeader, classes.background)}
+                      title={
+                        <Typography className={classes.cardHeaderTitle} variant="h6">
+                          {t('profile:tickets.headers.files')}
+                        </Typography>
+                      }
+                    />
+                    <CardContent>
+                      <Box display="flex" flexDirection="column">
+                        {ticket.files.map((file: OldFile) => (
+                          <Typography variant="subtitle1" key={file.code}>
+                            {`${file.name}.${file.ext}`}
+                          </Typography>
+                        ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+                )}
                 <Card className={classes.fullRow}>
                   <CardHeader
                     disableTypography

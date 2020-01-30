@@ -14,6 +14,7 @@ import {
   OldTicketNew,
   OldTicket,
   OldUser,
+  OldFile,
 } from './models/old-service.interface';
 // #endregion
 
@@ -188,7 +189,13 @@ export class TicketOldService {
       })
       .then((result: any) => {
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Задача'] === 'object') {
-          return result[0]['return']['Задача'].map(
+          let response = result[0]['return']['Задача'];
+
+          if (!Array.isArray(response)) {
+            response = [response];
+          }
+
+          return response.map(
             (ticket: any) =>
               ({
                 code: ticket['Код'],
@@ -249,6 +256,20 @@ export class TicketOldService {
             return null;
           };
 
+          const createFiles = (files: any): OldFile[] | [] => {
+            if (files) {
+              const newFiles = Array.isArray(files) ? files : [files];
+
+              return newFiles.map((file) => ({
+                code: file['Код'],
+                name: file['Наименование'],
+                ext: file['РасширениеФайла'],
+              }));
+            }
+
+            return [];
+          };
+
           const ticket = result[0]['return'];
 
           return {
@@ -272,13 +293,7 @@ export class TicketOldService {
               name: ticket['КатегорияУслуги']['Наименование'],
               avatar: ticket['КатегорияУслуги']['Аватар'],
             },
-            files: [
-              {
-                code: ticket['СписокФайлов']['Файл']['Код'],
-                name: ticket['СписокФайлов']['Файл']['Наименование'],
-                ext: ticket['СписокФайлов']['Файл']['РасширениеФайла'],
-              },
-            ],
+            files: createFiles(ticket['СписокФайлов']['Файл']),
           } as OldTicket;
         }
 

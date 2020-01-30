@@ -47,7 +47,7 @@ type OldTicket {
   initiatorUser: OldUser
   service: OldService
   serviceCategory: OldService
-  files: OldFile
+  files: [OldFile]
 }
 
 type Query {
