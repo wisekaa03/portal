@@ -22,6 +22,7 @@ import { Loading } from '../components/loading';
 import Button from '../components/button';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 import JoditEditor from '../components/jodit';
+import { VerticalCenter } from '../components/verticalcenter';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -107,6 +108,10 @@ const useStyles = makeStyles((theme: Theme) =>
       '& button:not(:last-child)': {
         marginRight: theme.spacing(),
       },
+    },
+    loading: {
+      textAlign: 'center',
+      color: '#000',
     },
   }),
 );
@@ -235,33 +240,42 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             onChangeIndex={handleChangeTabIndex}
           >
             <div className={classes.container1}>
-              {!loadingService &&
-                departments.map((department) => (
-                  <Box
-                    key={department.id}
-                    onClick={() =>
-                      handleTicket(
-                        'department',
-                        {
-                          id: department.id,
-                          name: department.title,
-                          icon: department.icon,
-                        },
-                        1,
-                      )
-                    }
-                    className={clsx(classes.service, {
-                      [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
-                    })}
-                  >
-                    <div>
-                      <BaseIcon src={department.icon} size={48} />
+              <>
+                {!loadingService &&
+                  departments.map((department) => (
+                    <Box
+                      key={department.id}
+                      onClick={() =>
+                        handleTicket(
+                          'department',
+                          {
+                            id: department.id,
+                            name: department.title,
+                            icon: department.icon,
+                          },
+                          1,
+                        )
+                      }
+                      className={clsx(classes.service, {
+                        [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
+                      })}
+                    >
+                      <div>
+                        <BaseIcon src={department.icon} size={48} />
+                      </div>
+                      <div>
+                        <Typography variant="subtitle1">{department.title}</Typography>
+                      </div>
+                    </Box>
+                  ))}
+                {loadingService && (
+                  <VerticalCenter>
+                    <div className={classes.loading}>
+                      <Loading type="circular" color="inherit" disableShrink size={74} />
                     </div>
-                    <div>
-                      <Typography variant="subtitle1">{department.title}</Typography>
-                    </div>
-                  </Box>
-                ))}
+                  </VerticalCenter>
+                )}
+              </>
             </div>
             <div style={{ minHeight: containerHeight }} className={classes.container1}>
               {services &&
