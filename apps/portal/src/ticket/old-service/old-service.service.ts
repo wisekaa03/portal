@@ -117,6 +117,7 @@ export class TicketOldService {
 
     if (attachments) {
       await this.uploadAsync(attachments, (filename, mimetype, file) => {
+        // eslint-disable-next-line no-debugger
         debugger;
 
         Attaches = {
