@@ -7,6 +7,7 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { SoapService, SoapError, SoapAuthentication } from '@app/soap';
+import { constructUploads } from '../../shared/upload';
 import {
   OldService,
   OldCategory,
@@ -32,28 +33,6 @@ export class TicketOldService {
   private service: OldService[];
 
   constructor(private readonly logService: LogService, private readonly soapService: SoapService) {}
-
-  /**
-   * upload async
-   *
-   * @param {Promise<FileUpload>[]}
-   * @param {(filename, file) => void}
-   * @returns {void}
-   */
-  private uploadAsync = async (
-    attachments: Promise<FileUpload>[],
-    callback: (filename: string, mimetype: string, file: any) => void,
-  ): Promise<void> => {
-    attachments.forEach(async (value: Promise<FileUpload>) => {
-      const { filename, mimetype, createReadStream } = await value;
-      const file = await createReadStream().read();
-
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      callback(filename, mimetype, file);
-    });
-  };
 
   /**
    * Ticket get service and categories
@@ -114,21 +93,20 @@ export class TicketOldService {
       throw error;
     });
 
-    let Attaches: Attaches1C | string = '';
+    const Attaches: Attaches1C = { Вложение: [] };
 
     if (attachments) {
-      await this.uploadAsync(attachments, (filename, mimetype, file) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
+      await Promise.all(
+        await constructUploads(attachments, ({ filename, file }) => {
+          Attaches['Вложение'].push({
+            DFile: file.toString('base64'),
+            NFile: filename,
+          });
+        }),
+      ).catch((error) => {
+        this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
 
-        Attaches = {
-          Вложение: [
-            {
-              DFile: Buffer.from(file).toString('base64'),
-              NFile: filename,
-            },
-          ],
-        };
+        throw error;
       });
     }
 
@@ -146,7 +124,8 @@ export class TicketOldService {
         Attaches,
       })
       .then((result: any) => {
-        this.logService.log(client.lastRequest, 'OldTicketNew');
+        this.logService.log(client.lastRequest, 'OldTicketService');
+        this.logService.log(client.lastResponse, 'OldTicketService');
 
         if (result && result[0] && result[0]['return']) {
           return {
@@ -163,7 +142,7 @@ export class TicketOldService {
         return {};
       })
       .catch((error: SoapError) => {
-        this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketNew');
+        this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketService');
 
         throw error;
       });
