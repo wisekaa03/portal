@@ -126,6 +126,16 @@ interface CurrentProps {
   categoryType?: string;
 }
 
+interface CurrentResponse {
+  code?: string;
+  name?: string;
+  requisiteSource?: string;
+  category?: string;
+  organization?: string;
+  status?: string;
+  createdDate?: Date;
+}
+
 interface TicketProps {
   department: false | CurrentProps;
   service: false | CurrentProps;
@@ -145,13 +155,14 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
   const [ticket, setTicket] = useState<TicketProps>(defaultTicketState);
+  const [ticketNew, setNew] = useState<CurrentResponse>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
   });
-  const [oldTicketNew, { loading: loadingNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
+  const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
     setTicket({ ...ticket, [key]: value });
@@ -193,11 +204,18 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     oldTicketNew({
       variables,
     });
+
+    setNew({});
+    setCurrentTab(4);
   };
 
   useEffect(() => {
     setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
   }, [dataService, errorService, loadingService]);
+
+  useEffect(() => {
+    setNew(!loadingNew && !errorNew && dataNew && dataNew.OldTicketNew);
+  }, [dataNew, errorNew, loadingNew]);
 
   const swipeableViews = useRef(null);
 
@@ -224,7 +242,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
               <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
               <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
-              <Tab disabled label={t('services:tabs.tab5')} />
+              <Tab disabled={!ticketNew} label={t('services:tabs.tab5')} />
             </Tabs>
           </Paper>
           <SwipeableViews
@@ -382,7 +400,33 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
               </FormControl>
             </div>
             <div style={{ minHeight: containerHeight }} className={classes.container2}>
-              Ответ
+              {!loadingNew && ticketNew ? (
+                <>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Код: {ticketNew.code}</Typography>
+                  </Box>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Имя заявки: {ticketNew.name}</Typography>
+                  </Box>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Организация: {ticketNew.organization}</Typography>
+                  </Box>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Категория: {ticketNew.category}</Typography>
+                  </Box>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Реквизит источника: {ticketNew.requisiteSource}</Typography>
+                  </Box>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
+                  </Box>
+                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Дата: {ticketNew.createdDate}</Typography>
+                  </Box>
+                </>
+              ) : (
+                <Loading full type="circular" color="secondary" disableShrink size={48} />
+              )}
             </div>
           </SwipeableViews>
         </div>
