@@ -27,6 +27,10 @@ export const Avatar = (props: AvatarProps): React.ReactElement => {
     return <AvatarMui src={src + base64} {...rest} />;
   }
 
+  if (!profile) {
+    return <AvatarMui src={Alien} {...rest} />;
+  }
+
   const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
   const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
 
