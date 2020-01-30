@@ -185,6 +185,7 @@ const LoginComponent: I18nPage<{
                   <TextField
                     data-field-name="username"
                     type="username"
+                    autoFocus
                     value={values.user}
                     onChange={handleChange('user')}
                     disabled={called || loading}
@@ -241,10 +242,8 @@ const LoginComponent: I18nPage<{
   );
 };
 
-LoginComponent.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['login']),
-  };
-};
+LoginComponent.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['login']),
+});
 
 export default nextI18next.withTranslation('login')(LoginComponent);

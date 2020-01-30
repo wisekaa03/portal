@@ -227,7 +227,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </IconButton>
                 </Box>
               </Box>
-              <Box display="flex" flexGrow={1} flexWrap="wrap">
+              <Box display="flex" flexGrow={1} flexWrap="wrap" my={2} justifyContent="center">
                 {data &&
                   data.OldTickets &&
                   data.OldTickets.map((ticket: OldTicket) => (

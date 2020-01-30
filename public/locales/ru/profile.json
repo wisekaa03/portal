@@ -3,6 +3,7 @@
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
+  "notFound": "Заявка не найдена",
   "tickets": {
     "title": "Мои заявки",
     "status": "Статус",
