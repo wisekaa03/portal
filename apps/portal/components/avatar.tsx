@@ -23,7 +23,7 @@ export const Avatar = (props: AvatarProps): React.ReactElement => {
   const { profile, fullSize = false, base64, ...rest } = props;
   let src = 'data:image/png;base64,';
 
-  if (!profile && base64) {
+  if (base64) {
     return <AvatarMui src={src + base64} {...rest} />;
   }
 
