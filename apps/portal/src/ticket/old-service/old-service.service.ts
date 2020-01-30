@@ -33,6 +33,28 @@ export class TicketOldService {
   constructor(private readonly logService: LogService, private readonly soapService: SoapService) {}
 
   /**
+   * upload async
+   *
+   * @param {Promise<FileUpload>[]}
+   * @param {(filename, file) => void}
+   * @returns {void}
+   */
+  private uploadAsync = async (
+    attachments: Promise<FileUpload>[],
+    callback: (filename: string, mimetype: string, file: any) => void,
+  ): Promise<void> => {
+    attachments.forEach(async (value: Promise<FileUpload>) => {
+      const { filename, mimetype, createReadStream } = await value;
+      const file = await createReadStream().read();
+
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      callback(filename, mimetype, file);
+    });
+  };
+
+  /**
    * Ticket get service and categories
    *
    * @returns {OldService[]} - Services and Categories
@@ -94,20 +116,17 @@ export class TicketOldService {
     let Attaches: Attaches1C | string = '';
 
     if (attachments) {
-      await attachments.forEach(async (value: Promise<FileUpload>) => {
-        const { filename, mimetype, createReadStream } = await value;
+      await this.uploadAsync(attachments, (filename, mimetype, file) => {
+        debugger;
 
         Attaches = {
           Вложение: [
             {
+              DFile: Buffer.from(file).toString('base64'),
               NFile: filename,
-              DFile: Buffer.from(filename).toString('base64'),
             },
           ],
         };
-
-        // eslint-disable-next-line no-debugger
-        debugger;
       });
     }
 

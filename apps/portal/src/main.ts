@@ -10,11 +10,10 @@ import { Request, Response } from 'express';
 import uuidv4 from 'uuid/v4';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
-// import responseTime from 'response-time';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-// import { getConnection } from 'typeorm';
+// import { graphqlUploadExpress } from 'graphql-upload';
 import { RenderModule } from 'nest-next-2';
 import Next from 'next';
 import 'reflect-metadata';
@@ -148,6 +147,10 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   server.use(passport.initialize());
   server.use(passport.session());
+  // #endregion
+
+  // #region Graphql Upload
+  // server.use('/graphql', graphqlUploadExpress({ maxFileSize: 10000000 }));
   // #endregion
 
   // #region Static files
