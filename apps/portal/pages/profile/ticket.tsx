@@ -236,9 +236,11 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
             </Box>
             <Box className={classes.content}>
               {!ticket ? (
-                <Typography className={clsx(classes.fullRow, classes.cardHeaderTitle, classes.notFound)} variant="h4">
-                  {t('profile:tickets.notFound')}
-                </Typography>
+                !loading && (
+                  <Typography className={clsx(classes.fullRow, classes.cardHeaderTitle, classes.notFound)} variant="h4">
+                    {t('profile:tickets.notFound')}
+                  </Typography>
+                )
               ) : (
                 <>
                   <Card className={classes.fullRow}>
