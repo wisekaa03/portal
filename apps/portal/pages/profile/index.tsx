@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useContext, useState } from 'react';
+import React, { useRef, useContext, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -9,16 +9,16 @@ import {
   Box,
   Button,
   InputBase,
-  IconButton,
   Card,
   CardActionArea,
   CardContent,
   Typography,
   Divider,
+  Checkbox,
+  FormControlLabel,
+  BoxProps,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
 // #endregion
@@ -34,6 +34,8 @@ import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 // #endregion
+
+const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
 
 const avatarHeight = 180;
 const DATE_FORMAT = 'DD.MM.YYYY г.';
@@ -63,12 +65,6 @@ const useStyles = makeStyles((theme: Theme) =>
         lineHeight: '1.2em',
         textAlign: 'center',
       },
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
     },
     search: {
       'position': 'relative',
@@ -158,13 +154,20 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
   const [_search, setSearch] = useState<string>('');
+  const [status, setStatus] = useState<boolean>(true);
   const search = useDebounce(_search, 300);
 
-  const { loading, data, error } = useQuery(OLD_TICKETS, { variables: { status: 'В работе' } });
+  const { loading, data, error } = useQuery(OLD_TICKETS, { variables: { status: status ? 'В работе' : '' } });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.target.value);
   };
+
+  const handleToggleStatus = (): void => {
+    setStatus(!status);
+  };
+
+  const ticketBox = useRef(null);
 
   return (
     <>
@@ -198,7 +201,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </div>
               </div>
             </Box>
-            <Box className={classes.container}>
+            <Box display="slex" flexGrow={1} px={2}>
               <Box display="flex" mb={1}>
                 <div className={classes.search}>
                   <div className={classes.searchIcon}>
@@ -219,15 +222,27 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </Typography>
                 </Box>
                 <Box display="flex" className={classes.headerButtons} justifyContent="flex-end">
-                  <IconButton className={classes.iconButton}>
-                    <FilterListIcon />
-                  </IconButton>
-                  <IconButton className={classes.iconButton}>
-                    <HelpOutlineIcon />
-                  </IconButton>
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={status} onChange={handleToggleStatus} value="status" color="secondary" />
+                    }
+                    color="red"
+                    label={t('profile:tickets.inWork')}
+                  />
                 </Box>
               </Box>
-              <Box display="flex" flexGrow={1} flexWrap="wrap" my={2} justifyContent="center">
+              <BoxWithRef
+                ref={ticketBox}
+                overflow="auto"
+                style={{
+                  maxHeight: ticketBox && ticketBox.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%',
+                }}
+                display="flex"
+                flexGrow={1}
+                flexWrap="wrap"
+                my={2}
+                justifyContent="center"
+              >
                 {data &&
                   data.OldTickets &&
                   data.OldTickets.map((ticket: OldTicket) => (
@@ -245,11 +260,11 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                                 </Typography>
                               </div>
                               <div>
-                                <Typography
+                                {/* <Typography
                                   variant="body1"
                                   // eslint-disable-next-line react/no-danger
                                   dangerouslySetInnerHTML={{ __html: ticket.description }}
-                                />
+                                /> */}
                               </div>
                             </div>
                             <Divider />
@@ -277,7 +292,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       </CardActionArea>
                     </Card>
                   ))}
-              </Box>
+              </BoxWithRef>
             </Box>
           </Box>
         )}
