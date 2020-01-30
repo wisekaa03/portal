@@ -199,6 +199,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const query = { id: null, type: null, ...(router && router.query) };
 
   const { loading, data, error } = useQuery(OLD_TICKET_DESCRIPTION, {
+    ssr: false,
     variables: {
       code: query.id,
       type: query.type,

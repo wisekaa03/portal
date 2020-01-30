@@ -157,7 +157,10 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [status, setStatus] = useState<boolean>(true);
   const search = useDebounce(_search, 300);
 
-  const { loading, data, error } = useQuery(OLD_TICKETS, { variables: { status: status ? 'В работе' : '' } });
+  const { loading, data, error } = useQuery(OLD_TICKETS, {
+    ssr: false,
+    variables: { status: status ? 'В работе' : '' },
+  });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.target.value);

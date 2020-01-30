@@ -39,6 +39,8 @@ export const Loading: React.FC<{
 }> = ({ variant, disableShrink, size, thickness, color, type, noMargin, full }) => {
   const classes = useStyles({});
 
+  if (__SERVER__) return null;
+
   if (type === 'linear') {
     const className = clsx(classes.loading, {
       [classes.margin]: !noMargin,

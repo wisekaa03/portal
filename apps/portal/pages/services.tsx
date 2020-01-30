@@ -148,7 +148,9 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE);
+  const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE, {
+    ssr: false,
+  });
   const [oldTicketNew, { loading: loadingNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
