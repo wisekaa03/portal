@@ -225,8 +225,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <Box display="flex" flexDirection="column">
-          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
-          <Box display="flex" flexDirection="column" px={4} py={2} overflow="auto">
+          <Box display="flex" flexGrow={1} flexDirection="column" px={4} py={2} overflow="auto">
             <Box display="flex">
               <Link href={{ pathname: '/profile' }} passHref>
                 <IconButton>
@@ -234,137 +233,137 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </IconButton>
               </Link>
             </Box>
-            <Box className={classes.content}>
-              {!ticket ? (
-                !loading && (
-                  <Typography className={clsx(classes.fullRow, classes.cardHeaderTitle, classes.notFound)} variant="h4">
-                    {t('profile:tickets.notFound')}
-                  </Typography>
-                )
+            {!ticket ? (
+              loading ? (
+                <Loading full type="circular" color="secondary" disableShrink size={48} />
               ) : (
-                <>
-                  <Card className={classes.fullRow}>
-                    <CardHeader
-                      disableTypography
-                      className={clsx(classes.cardHeader, classes.background)}
-                      title={
-                        <Typography className={classes.cardHeaderTitle} variant="h6">
-                          {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(ticket.createdDate).format(DATE_FORMAT)}`}
-                        </Typography>
-                      }
-                    />
-                    <CardContent>{ticket.name}</CardContent>
-                  </Card>
-                  <InfoCard
-                    classes={classes}
-                    header={t('profile:tickets.headers.author')}
-                    profile={ticket.initiatorUser}
-                    t={t}
+                <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
+                  {t('profile:notFound')}
+                </Typography>
+              )
+            ) : (
+              <Box className={classes.content}>
+                <Card className={classes.fullRow}>
+                  <CardHeader
+                    disableTypography
+                    className={clsx(classes.cardHeader, classes.background)}
+                    title={
+                      <Typography className={classes.cardHeaderTitle} variant="h6">
+                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(ticket.createdDate).format(DATE_FORMAT)}`}
+                      </Typography>
+                    }
                   />
-                  <InfoCard
-                    classes={classes}
-                    header={t('profile:tickets.headers.executor')}
-                    profile={ticket.executorUser}
-                    t={t}
+                  <CardContent>{ticket.name}</CardContent>
+                </Card>
+                <InfoCard
+                  classes={classes}
+                  header={t('profile:tickets.headers.author')}
+                  profile={ticket.initiatorUser}
+                  t={t}
+                />
+                <InfoCard
+                  classes={classes}
+                  header={t('profile:tickets.headers.executor')}
+                  profile={ticket.executorUser}
+                  t={t}
+                />
+                <Card className={clsx(classes.fullRow, classes.rounded, classes.background)}>
+                  <CardContent className={classes.cardContent}>
+                    <Box className={classes.statusBox}>
+                      <Card>
+                        <CardHeader
+                          className={classes.lightHeader}
+                          disableTypography
+                          title={
+                            <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                              {t('profile:tickets.headers.service')}
+                            </Typography>
+                          }
+                        />
+                        <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                          <Box textAlign="center">
+                            <BaseIcon base64 src={ticket.service && ticket.service.avatar} size={48} />
+                          </Box>
+                          <span>{ticket.service && ticket.service.name}</span>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader
+                          className={classes.lightHeader}
+                          disableTypography
+                          title={
+                            <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                              {t('profile:tickets.headers.status')}
+                            </Typography>
+                          }
+                        />
+                        <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                          <Box textAlign="center">{/* <BaseIcon src={} size={48} /> */}</Box>
+                          <span>{ticket.status}</span>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  </CardContent>
+                </Card>
+                <Card className={classes.fullRow}>
+                  <CardHeader
+                    disableTypography
+                    className={clsx(classes.cardHeader, classes.background)}
+                    title={
+                      <Typography className={classes.cardHeaderTitle} variant="h6">
+                        {t('profile:tickets.headers.description')}
+                      </Typography>
+                    }
                   />
-                  <Card className={clsx(classes.fullRow, classes.rounded, classes.background)}>
-                    <CardContent className={classes.cardContent}>
-                      <Box className={classes.statusBox}>
-                        <Card>
-                          <CardHeader
-                            className={classes.lightHeader}
-                            disableTypography
-                            title={
-                              <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                                {t('profile:tickets.headers.service')}
-                              </Typography>
-                            }
-                          />
-                          <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                            <Box textAlign="center">
-                              <BaseIcon base64 src={ticket.service && ticket.service.avatar} size={48} />
-                            </Box>
-                            <span>{ticket.service && ticket.service.name}</span>
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardHeader
-                            className={classes.lightHeader}
-                            disableTypography
-                            title={
-                              <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                                {t('profile:tickets.headers.status')}
-                              </Typography>
-                            }
-                          />
-                          <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                            <Box textAlign="center">{/* <BaseIcon src={} size={48} /> */}</Box>
-                            <span>{ticket.status}</span>
-                          </CardContent>
-                        </Card>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                  <Card className={classes.fullRow}>
-                    <CardHeader
-                      disableTypography
-                      className={clsx(classes.cardHeader, classes.background)}
-                      title={
-                        <Typography className={classes.cardHeaderTitle} variant="h6">
-                          {t('profile:tickets.headers.description')}
-                        </Typography>
-                      }
-                    />
-                    <CardContent dangerouslySetInnerHTML={{ __html: ticket.description }} />
-                  </Card>
-                  <Card className={classes.fullRow}>
-                    <CardHeader
-                      disableTypography
-                      className={clsx(classes.cardHeader, classes.background)}
-                      title={
-                        <Typography className={classes.cardHeaderTitle} variant="h6">
-                          {t('profile:tickets.headers.files')}
-                        </Typography>
-                      }
-                    />
-                    <CardContent>ФАЙЛЫ</CardContent>
-                  </Card>
-                  <Card className={classes.fullRow}>
-                    <CardHeader
-                      disableTypography
-                      className={clsx(classes.cardHeader, classes.background)}
-                      title={
-                        <Typography className={classes.cardHeaderTitle} variant="h6">
-                          {t('profile:tickets.headers.comments')}
-                        </Typography>
-                      }
-                    />
-                    <CardContent>КОММЕНТАРИИ</CardContent>
-                  </Card>
-                  <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                    <TextField
-                      value={comment}
-                      onChange={handleComment}
-                      multiline
-                      rows={5}
-                      type="text"
-                      color="secondary"
-                      label={t('profile:tickets.comment.add')}
-                      variant="outlined"
-                    />
-                  </FormControl>
-                  <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                    <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
-                  </FormControl>
-                  <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
-                    <Button actionType="cancel" onClick={handleClose}>
-                      {t('common:cancel')}
-                    </Button>
-                    <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
-                  </FormControl>
-                </>
-              )}
-            </Box>
+                  <CardContent dangerouslySetInnerHTML={{ __html: ticket.description }} />
+                </Card>
+                <Card className={classes.fullRow}>
+                  <CardHeader
+                    disableTypography
+                    className={clsx(classes.cardHeader, classes.background)}
+                    title={
+                      <Typography className={classes.cardHeaderTitle} variant="h6">
+                        {t('profile:tickets.headers.files')}
+                      </Typography>
+                    }
+                  />
+                  <CardContent>ФАЙЛЫ</CardContent>
+                </Card>
+                <Card className={classes.fullRow}>
+                  <CardHeader
+                    disableTypography
+                    className={clsx(classes.cardHeader, classes.background)}
+                    title={
+                      <Typography className={classes.cardHeaderTitle} variant="h6">
+                        {t('profile:tickets.headers.comments')}
+                      </Typography>
+                    }
+                  />
+                  <CardContent>КОММЕНТАРИИ</CardContent>
+                </Card>
+                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                  <TextField
+                    value={comment}
+                    onChange={handleComment}
+                    multiline
+                    rows={5}
+                    type="text"
+                    color="secondary"
+                    label={t('profile:tickets.comment.add')}
+                    variant="outlined"
+                  />
+                </FormControl>
+                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                  <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
+                </FormControl>
+                <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
+                  <Button actionType="cancel" onClick={handleClose}>
+                    {t('common:cancel')}
+                  </Button>
+                  <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
+                </FormControl>
+              </Box>
+            )}
           </Box>
         </Box>
       </Page>
