@@ -47,7 +47,6 @@
 - User authentication
   - [LDAP] - Custom NestJS LDAPService, internally using [ldapjs](http://ldapjs.org/)
   - [Passport](http://www.passportjs.org) - Simple, unobtrusive authentication for Node.js
-  - [Passport JWT](https://github.com/mikenicholson/passport-jwt) - Passport authentication using JSON Web Tokens
 - UI framework
   - [Next.js](https://nextjs.org) - The React Framework
   - [React](https://reactjs.org) - A JavaScript library for building user interfaces
