@@ -183,7 +183,7 @@ const Media: I18nPage = (props): React.ReactElement => {
                     </IconButton>
                   }
                   title={current.title}
-                  subheader={dayjs(current.updatedAt).format(DATE_FORMAT)}
+                  subheader={dayjs(+current.updatedAt).format(DATE_FORMAT)}
                 />
                 <CardContent>
                   <div
@@ -217,7 +217,7 @@ const Media: I18nPage = (props): React.ReactElement => {
                     </CardActionArea>
                     <CardActions className={classes.action}>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        {dayjs(media.updatedAt).format(DATE_FORMAT)}
+                        {dayjs(+media.updatedAt).format(DATE_FORMAT)}
                       </Typography>
                       {profile.user && profile.user.isAdmin && (
                         <>

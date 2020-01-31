@@ -45,7 +45,7 @@ import TicketIconWorked from '../../public/images/svg/ticket/ticket_worked.svg';
 import TicketIconComplete from '../../public/images/svg/ticket/ticket_complete.svg';
 // #endregion
 
-const DATE_FORMAT = 'DD.MM.YYYY г.';
+const DATE_FORMAT = 'DD.MM.YYYY г. HH:mm';
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
@@ -301,7 +301,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     className={clsx(classes.cardHeader, classes.background)}
                     title={
                       <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(ticket.createdDate).format(DATE_FORMAT)}`}
+                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(+ticket.createdDate).format(DATE_FORMAT)}`}
                       </Typography>
                     }
                   />
