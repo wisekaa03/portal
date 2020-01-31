@@ -75,6 +75,13 @@ input OldTicketNewInput {
   executorUser: String
 }
 
+input OldTicketEditInput {
+  code: String!
+  type: String!
+  comment: String!
+}
+
 type Mutation {
   OldTicketNew(ticket: OldTicketNewInput!, attachments: [Upload]): OldTicketNew!
+  OldTicketEdit(ticket: OldTicketEditInput!, attachments: [Upload]): OldTicket!
 }

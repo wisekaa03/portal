@@ -16,6 +16,7 @@ import {
   OldTicket,
   OldUser,
   OldFile,
+  OldTicketEditInput,
 } from './models/old-service.interface';
 // #endregion
 
@@ -27,6 +28,61 @@ export interface Attaches1CFile {
 export interface Attaches1C {
   Вложение: Attaches1CFile[];
 }
+
+const createUser = (user: any): OldUser | null => {
+  if (user) {
+    return {
+      name: user['ФИО'],
+      avatar: user['Аватар'],
+      email: user['ОсновнойEmail'],
+      telephone: user['ОсновнойТелефон'],
+      company: user['Организация'],
+      department: user['Подразделение'].split(', ')[0],
+      otdel: user['Подразделение'].split(', ')[1],
+      position: user['Должность'],
+    };
+  }
+
+  return null;
+};
+
+const createFiles = (files: any): OldFile[] | [] => {
+  if (files) {
+    const newFiles = Array.isArray(files) ? files : [files];
+
+    return newFiles.map((file) => ({
+      code: file['Код'],
+      name: file['Наименование'],
+      ext: file['РасширениеФайла'],
+    }));
+  }
+
+  return [];
+};
+
+const createTicket = (ticket: any): OldTicket => ({
+  code: ticket['Код'],
+  name: ticket['Наименование'],
+  description: ticket['Описание'],
+  descriptionFull: ticket['ОписаниеФД'],
+  status: ticket['Статус'],
+  createdDate: ticket['Дата'],
+  timeout: ticket['СрокИсполнения'],
+  endDate: ticket['ДатаЗавершения'],
+  executorUser: createUser(ticket['ТекущийИсполнитель']),
+  initiatorUser: createUser(ticket['Инициатор']),
+  service: {
+    code: ticket['Услуга']['Код'],
+    name: ticket['Услуга']['Наименование'],
+    avatar: ticket['Услуга']['Аватар'],
+  },
+  serviceCategory: {
+    code: ticket['КатегорияУслуги']['Код'],
+    name: ticket['КатегорияУслуги']['Наименование'],
+    avatar: ticket['КатегорияУслуги']['Аватар'],
+  },
+  files: createFiles(ticket['СписокФайлов']['Файл']),
+});
 
 @Injectable()
 export class OldTicketService {
@@ -149,6 +205,65 @@ export class OldTicketService {
   };
 
   /**
+   * Edit ticket
+   *
+   * @returns {OldTicket} - new ticket creation
+   */
+  OldTicketEdit = async (
+    authentication: SoapAuthentication,
+    ticket: OldTicketEditInput,
+    attachments?: Promise<FileUpload>[],
+  ): Promise<OldTicket> => {
+    const client = await this.soapService.connect(authentication).catch((error) => {
+      throw error;
+    });
+
+    const Attaches: Attaches1C = { Вложение: [] };
+
+    if (attachments) {
+      await Promise.all(
+        await constructUploads(attachments, ({ filename, file }) => {
+          Attaches['Вложение'].push({
+            DFile: file.toString('base64'),
+            NFile: filename,
+          });
+        }),
+      ).catch((error) => {
+        this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
+
+        throw error;
+      });
+    }
+
+    return client
+      .kngk_EditTaskAsync({
+        log: ticket.code,
+        Type: ticket.type,
+        NewComment: ticket.comment,
+        Executor: '',
+        NFile: '',
+        DFile: '',
+        Attaches,
+        AuthorComment: authentication.username,
+      })
+      .then((result: any) => {
+        this.logService.debug(client.lastRequest, 'OldTicketService');
+        this.logService.debug(client.lastResponse, 'OldTicketService');
+
+        if (result && result[0] && result[0]['return']) {
+          return createTicket(result[0]['return']);
+        }
+
+        return {};
+      })
+      .catch((error: SoapError) => {
+        this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketService');
+
+        throw error;
+      });
+  };
+
+  /**
    * Ticket get all
    *
    * @returns {OldTicket[]}
@@ -218,62 +333,7 @@ export class OldTicketService {
       })
       .then((result: any) => {
         if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
-          const createUser = (user: any): OldUser | null => {
-            if (user) {
-              return {
-                name: user['ФИО'],
-                avatar: user['Аватар'],
-                email: user['ОсновнойEmail'],
-                telephone: user['ОсновнойТелефон'],
-                company: user['Организация'],
-                department: user['Подразделение'].split(', ')[0],
-                otdel: user['Подразделение'].split(', ')[1],
-                position: user['Должность'],
-              };
-            }
-
-            return null;
-          };
-
-          const createFiles = (files: any): OldFile[] | [] => {
-            if (files) {
-              const newFiles = Array.isArray(files) ? files : [files];
-
-              return newFiles.map((file) => ({
-                code: file['Код'],
-                name: file['Наименование'],
-                ext: file['РасширениеФайла'],
-              }));
-            }
-
-            return [];
-          };
-
-          const ticket = result[0]['return'];
-
-          return {
-            code: ticket['Код'],
-            name: ticket['Наименование'],
-            description: ticket['Описание'],
-            descriptionFull: ticket['ОписаниеФД'],
-            status: ticket['Статус'],
-            createdDate: ticket['Дата'],
-            timeout: ticket['СрокИсполнения'],
-            endDate: ticket['ДатаЗавершения'],
-            executorUser: createUser(ticket['ТекущийИсполнитель']),
-            initiatorUser: createUser(ticket['Инициатор']),
-            service: {
-              code: ticket['Услуга']['Код'],
-              name: ticket['Услуга']['Наименование'],
-              avatar: ticket['Услуга']['Аватар'],
-            },
-            serviceCategory: {
-              code: ticket['КатегорияУслуги']['Код'],
-              name: ticket['КатегорияУслуги']['Наименование'],
-              avatar: ticket['КатегорияУслуги']['Аватар'],
-            },
-            files: createFiles(ticket['СписокФайлов']['Файл']),
-          } as OldTicket;
+          return createTicket(result[0]['return']);
         }
 
         return {};

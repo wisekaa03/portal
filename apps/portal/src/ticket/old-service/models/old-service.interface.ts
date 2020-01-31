@@ -63,6 +63,13 @@ export interface OldTicketNewInput {
   attachments?: Promise<FileUpload>[];
 }
 
+export interface OldTicketEditInput {
+  code: string;
+  type: string;
+  comment: string;
+  attachments?: Promise<FileUpload>[];
+}
+
 export interface OldTicketNew {
   code: string;
   name: string;

@@ -11,7 +11,13 @@ import { ConfigService } from '@app/config';
 import { SoapAuthentication } from '@app/soap';
 import { User } from '../../user/models/user.dto';
 import { GqlAuthGuard } from '../../guards/gqlauth.guard';
-import { OldService, OldTicketNewInput, OldTicketNew } from './models/old-service.interface';
+import {
+  OldService,
+  OldTicket,
+  OldTicketNewInput,
+  OldTicketNew,
+  OldTicketEditInput,
+} from './models/old-service.interface';
 import { OldTicketService } from './old-service.service';
 // #endregion
 
@@ -47,12 +53,12 @@ export class OldTicketResolver {
   /**
    * GraphQL mutation: TicketNew
    *
-   * @returns {OldService[]}
+   * @returns {OldTicketNew}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketNew(
-  /* eslint-disable prettier/prettier */
+    /* eslint-disable prettier/prettier */
     @Context('req') req: Request,
       @Args('ticket') ticket: OldTicketNewInput,
       @Args('attachments') attachments: Promise<FileUpload>[],
@@ -68,6 +74,37 @@ export class OldTicketResolver {
       } as SoapAuthentication;
 
       return this.ticketOldService.OldTicketNew(authentication, ticket, attachments).catch((error: Error) => {
+        throw new UnauthorizedException(error.message);
+      });
+    }
+
+    throw new UnauthorizedException();
+  }
+
+  /**
+   * GraphQL mutation: TicketEdit
+   *
+   * @returns {OldTicket}
+   */
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async OldTicketEdit(
+  /* eslint-disable prettier/prettier */
+    @Context('req') req: Request,
+      @Args('ticket') ticket: OldTicketEditInput,
+      @Args('attachments') attachments: Promise<FileUpload>[],
+  /* eslint-enable prettier/prettier */
+  ): Promise<OldTicket> {
+    const user = req.user as User;
+
+    if (user) {
+      const authentication = {
+        username: user.username,
+        password: user.passwordFrontend as string,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      } as SoapAuthentication;
+
+      return this.ticketOldService.OldTicketEdit(authentication, ticket, attachments).catch((error: Error) => {
         throw new UnauthorizedException(error.message);
       });
     }
