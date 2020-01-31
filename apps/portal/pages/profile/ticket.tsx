@@ -392,7 +392,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     }
                   />
                   <CardContent>
-                    <Iframe srcdoc={ticket.descriptionFull} />
+                    <Iframe srcDoc={ticket.descriptionFull} />
                   </CardContent>
                 </Card>
                 {ticket.status !== 'Завершен' &&

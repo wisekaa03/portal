@@ -37,11 +37,11 @@ const Iframe: ComponentType<IframeInterface> = ({
   referrerpolicy,
   allowpaymentrequest,
   src,
-  srcdoc,
+  srcDoc,
 }: IframeInterface) => {
   const defaultProps = objectAssign({
     'src': src || url,
-    'srcdoc': srcdoc || null,
+    'srcDoc': srcDoc || null,
     'target': target || null,
     'style': {
       position: position || null,
