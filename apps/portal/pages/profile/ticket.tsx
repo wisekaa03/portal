@@ -39,9 +39,29 @@ import Dropzone from '../../components/dropzone';
 import Button from '../../components/button';
 import { DropzoneFile } from '../../components/dropzone/types';
 import Iframe from '../../components/iframe';
+import TicketIconNew from '../../public/images/svg/ticket/ticket_new.svg';
+import TicketIconPause from '../../public/images/svg/ticket/ticket_pause.svg';
+import TicketIconWorked from '../../public/images/svg/ticket/ticket_worked.svg';
+import TicketIconComplete from '../../public/images/svg/ticket/ticket_complete.svg';
 // #endregion
 
 const DATE_FORMAT = 'DD.MM.YYYY г.';
+
+const getTicketStatusIcon = (status: string): any => {
+  switch (status) {
+    case 'Черновик':
+    case 'Эскалация':
+      return TicketIconPause;
+    case 'Зарегистрирован':
+      return TicketIconNew;
+    case 'Принят к выполнению':
+      return TicketIconWorked;
+    case 'Завершен':
+      return TicketIconComplete;
+    default:
+      return TicketIconPause;
+  }
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -318,7 +338,9 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           }
                         />
                         <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                          <Box textAlign="center">{/* <BaseIcon src={} size={48} /> */}</Box>
+                          <Box textAlign="center">
+                            <BaseIcon src={getTicketStatusIcon(ticket.status)} size={48} />
+                          </Box>
                           <span>{ticket.status}</span>
                         </CardContent>
                       </Card>
