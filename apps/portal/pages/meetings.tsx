@@ -13,18 +13,12 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-cli
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      display: 'block',
-      border: 'none',
-      height: '100%',
-      width: '100%',
-    },
+    root: {},
   }),
 );
 
 const Meetings: I18nPage = (props): React.ReactElement => {
   const { t } = props;
-  const classes = useStyles({});
   const url = 'https://ww.kngk-group.ru/site3/';
 
   return (
@@ -33,7 +27,7 @@ const Meetings: I18nPage = (props): React.ReactElement => {
         <title>{t('meeting:title')}</title>
       </Head>
       <Page {...props}>
-        <Iframe className={classes.root} url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+        <Iframe url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
       </Page>
     </>
   );

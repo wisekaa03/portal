@@ -14,18 +14,12 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-cli
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      display: 'block',
-      border: 'none',
-      height: '100%',
-      width: '100%',
-    },
+    root: {},
   }),
 );
 
 const Mail: I18nPage = (props): React.ReactElement => {
   const { t } = props;
-  const classes = useStyles({});
   const { to } = __SERVER__ ? { to: false } : queryString.parse(window.location.search);
   const url = `${process.env.MAIL_URL}${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 
@@ -36,7 +30,6 @@ const Mail: I18nPage = (props): React.ReactElement => {
       </Head>
       <Page {...props}>
         <Iframe
-          className={classes.root}
           url={url}
           // eslint-disable-next-line max-len
           sandbox="allow-scripts allow-same-origin allow-top-navigation allow-forms allow-popups allow-pointer-lock allow-popups-to-escape-sandbox"

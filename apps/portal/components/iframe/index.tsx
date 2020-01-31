@@ -37,14 +37,17 @@ const Iframe: ComponentType<IframeInterface> = ({
   referrerpolicy,
   allowpaymentrequest,
   src,
+  srcdoc,
 }: IframeInterface) => {
   const defaultProps = objectAssign({
     'src': src || url,
+    'srcdoc': srcdoc || null,
     'target': target || null,
     'style': {
       position: position || null,
       display: display || 'block',
       overflow: overflow || null,
+      border: 'none',
     },
     'scrolling': scrolling || null,
     'allowpaymentrequest': allowpaymentrequest || null,
@@ -61,8 +64,8 @@ const Iframe: ComponentType<IframeInterface> = ({
     'aria-labelledby': ariaLabelledby || null,
     'aria-hidden': ariaHidden || null,
     'aria-label': ariaLabel || null,
-    'width': width || null,
-    'height': height || null,
+    'width': width || '100%',
+    'height': height || '100%',
     'onLoad': onLoad || null,
     'onMouseOver': onMouseOver || null,
     'onMouseOut': onMouseOut || null,
@@ -94,9 +97,7 @@ const Iframe: ComponentType<IframeInterface> = ({
   }
 
   if (frameBorder && frameBorder >= 0) {
-    if (!props.style.hasOwnProperty('border')) {
-      props.style.border = frameBorder;
-    }
+    props.style.border = !props.style.hasOwnProperty('border') ? frameBorder : 'none';
   }
 
   return <iframe title="IFrame" {...props} />;
