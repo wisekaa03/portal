@@ -31,11 +31,9 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 import { MEDIA, MEDIA_EDIT, MEDIA_DELETE } from '../../lib/queries';
 import { Loading } from '../../components/loading';
 import dayjs from '../../lib/dayjs';
-import { LARGE_RESOLUTION } from '../../lib/constants';
+import { LARGE_RESOLUTION, DATE_FORMAT } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';
 // #endregion
-
-const DATE_FORMAT = 'MMMM DD, YYYY';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

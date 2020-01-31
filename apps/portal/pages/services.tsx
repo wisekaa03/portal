@@ -22,6 +22,8 @@ import { Loading } from '../components/loading';
 import Button from '../components/button';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 import JoditEditor from '../components/jodit';
+import { DATE_FORMAT } from '../lib/constants';
+import dayjs from '../lib/dayjs';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -425,7 +427,9 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <Typography variant="subtitle1">Услуга: {ticketNew.category}</Typography>
                     <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
                     <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
-                    <Typography variant="subtitle1">Дата: {ticketNew.createdDate}</Typography>
+                    <Typography variant="subtitle1">
+                      {`Дата: ${dayjs(+ticketNew.createdDate).format(DATE_FORMAT)}`}
+                    </Typography>
                   </CardContent>
                 </Card>
               ) : (
