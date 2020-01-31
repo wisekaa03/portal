@@ -38,6 +38,7 @@ import BaseIcon from '../../components/icon';
 import Dropzone from '../../components/dropzone';
 import Button from '../../components/button';
 import { DropzoneFile } from '../../components/dropzone/types';
+import Iframe from '../../components/iframe';
 // #endregion
 
 const DATE_FORMAT = 'DD.MM.YYYY г.';
@@ -350,7 +351,9 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       </Typography>
                     }
                   />
-                  <CardContent>КОММЕНТАРИИ</CardContent>
+                  <CardContent>
+                    <Iframe srcdoc={ticket.descriptionFull} />
+                  </CardContent>
                 </Card>
                 {ticket.status !== 'Завершен' && (
                   <>
