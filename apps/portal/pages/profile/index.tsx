@@ -159,6 +159,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const { loading, data, error } = useQuery(OLD_TICKETS, {
     ssr: false,
+    pollInterval: 120000,
     variables: { status: status ? 'В работе' : '' },
   });
 
