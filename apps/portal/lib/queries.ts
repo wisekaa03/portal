@@ -361,9 +361,10 @@ export const OLD_TICKETS = gql`
 export const OLD_TICKET_DESCRIPTION = gql`
   query OldTicketDescription($code: String, $type: String) {
     OldTicketDescription(code: $code, type: $type) {
-      ...
+      ...TicketProps
     }
   }
+  ${TICKET_FRAGMENT}
 `;
 
 export const OLD_TICKET_NEW = gql`
