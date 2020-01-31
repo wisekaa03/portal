@@ -244,7 +244,7 @@ export class OldTicketService {
         NFile: '',
         DFile: '',
         Attaches,
-        AuthorComment: authentication.username,
+        AutorComment: authentication.username,
       })
       .then((result: any) => {
         this.logService.debug(client.lastRequest, 'OldTicketService');
