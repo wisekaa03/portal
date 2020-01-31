@@ -221,7 +221,7 @@ const Dropzone: I18nPage<DropzoneProps> = ({
 
 Dropzone.defaultProps = {
   // необходимо перечислить все типы файлов, просто звездочка не катит...
-  acceptedFiles: ['image/*', '.doc'],
+  acceptedFiles: ['image/*', '*/*', '.doc'],
   filesLimit: 5,
   maxFileSize: 3000000,
 };
