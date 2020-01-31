@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
@@ -29,6 +29,13 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
       flexDirection: 'column',
+    },
+    card: {
+      padding: theme.spacing(2),
+      width: '600px',
+    },
+    cardContent: {
+      padding: 0,
     },
     header: {
       '& button': {
@@ -401,29 +408,17 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             </div>
             <div style={{ minHeight: containerHeight }} className={classes.container2}>
               {!loadingNew && ticketNew ? (
-                <>
-                  <Box className={classes.service}>
+                <Card className={classes.card}>
+                  <CardContent className={classes.cardContent}>
                     <Typography variant="subtitle1">Код: {ticketNew.code}</Typography>
-                  </Box>
-                  <Box className={classes.service}>
                     <Typography variant="subtitle1">Имя заявки: {ticketNew.name}</Typography>
-                  </Box>
-                  <Box className={classes.service}>
                     <Typography variant="subtitle1">Организация: {ticketNew.organization}</Typography>
-                  </Box>
-                  <Box className={classes.service}>
-                    <Typography variant="subtitle1">Категория: {ticketNew.category}</Typography>
-                  </Box>
-                  <Box className={classes.service}>
-                    <Typography variant="subtitle1">Реквизит источника: {ticketNew.requisiteSource}</Typography>
-                  </Box>
-                  <Box className={classes.service}>
+                    <Typography variant="subtitle1">Услуга: {ticketNew.category}</Typography>
+                    <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
                     <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
-                  </Box>
-                  <Box className={classes.service}>
                     <Typography variant="subtitle1">Дата: {ticketNew.createdDate}</Typography>
-                  </Box>
-                </>
+                  </CardContent>
+                </Card>
               ) : (
                 <Loading full type="circular" color="secondary" disableShrink size={48} />
               )}
