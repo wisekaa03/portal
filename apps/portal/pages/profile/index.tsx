@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useRef, useContext, useState } from 'react';
+import React, { useRef, useContext, useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -17,6 +17,10 @@ import {
   Checkbox,
   FormControlLabel,
   BoxProps,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useQuery } from '@apollo/react-hooks';
@@ -33,6 +37,7 @@ import { ProfileContext } from '../../lib/context';
 import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
+import { TICKET_STATUSES } from '../../lib/constants';
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
@@ -88,6 +93,9 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       color: theme.palette.secondary.main,
+    },
+    inputRoot: {
+      height: '100%',
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
@@ -154,23 +162,32 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
   const [_search, setSearch] = useState<string>('');
-  const [status, setStatus] = useState<boolean>(true);
+  const [status, setStatus] = useState<string>(TICKET_STATUSES[0]);
   const search = useDebounce(_search, 300);
 
   const { loading, data, error } = useQuery(OLD_TICKETS, {
     ssr: false,
-    variables: { status: status ? 'В работе' : '' },
+    variables: { status },
+    fetchPolicy: 'network-only',
   });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.target.value);
   };
 
-  const handleToggleStatus = (): void => {
-    setStatus(!status);
+  const handleToggleStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setStatus(event.target.value);
   };
 
   const ticketBox = useRef(null);
+  const inputLabel = useRef<HTMLLabelElement>(null);
+  const [labelWidth, setLabelWidth] = useState(0);
+
+  useEffect(() => {
+    if (inputLabel.current) {
+      setLabelWidth(inputLabel.current!.offsetWidth);
+    }
+  }, [inputLabel]);
 
   return (
     <>
@@ -191,12 +208,12 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   {profile.user.profile.middleName && <span>{profile.user.profile.middleName}</span>}
                 </Box>
                 <div className={classes.links}>
-                  <Link href={{ pathname: '/profile/edit' }} passHref>
+                  <Link href={{ pathname: '/profile/edit' }} as="/profile/edit" passHref>
                     <Button color="secondary" component="a" variant="contained">
                       {t('profile:btnEdit')}
                     </Button>
                   </Link>
-                  <Link href={{ pathname: '/profile/equipment' }} passHref>
+                  <Link href={{ pathname: '/profile/equipment' }} as="/profile/equipment" passHref>
                     <Button color="secondary" component="a" variant="contained">
                       {t('profile:btnEquipment')}
                     </Button>
@@ -215,6 +232,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     placeholder={t('profile:searchPlaceholder')}
                     classes={{
                       input: classes.inputInput,
+                      root: classes.inputRoot,
                     }}
                     inputProps={{ 'aria-label': 'search' }}
                   />
@@ -225,13 +243,16 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </Typography>
                 </Box>
                 <Box display="flex" className={classes.headerButtons} justifyContent="flex-end">
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={status} onChange={handleToggleStatus} value="status" color="secondary" />
-                    }
-                    color="red"
-                    label={t('profile:tickets.inWork')}
-                  />
+                  <FormControl variant="outlined">
+                    <InputLabel ref={inputLabel}>{t('profile:tickets.status')}</InputLabel>
+                    <Select color="secondary" value={status} onChange={handleToggleStatus} labelWidth={labelWidth}>
+                      {TICKET_STATUSES.map((cur) => (
+                        <MenuItem key={cur} value={cur}>
+                          {cur}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Box>
               </Box>
               <BoxWithRef
@@ -254,7 +275,10 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   data.OldTickets.map((ticket: OldTicket) => (
                     <Card className={classes.ticket} key={ticket.code}>
                       <CardActionArea>
-                        <Link href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}>
+                        <Link
+                          href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}
+                          as={`/profile/ticket?id=${ticket.code}&type=${ticket.type}`}
+                        >
                           <CardContent className={classes.ticketContent}>
                             <div className={classes.ticketLabel}>
                               <div>

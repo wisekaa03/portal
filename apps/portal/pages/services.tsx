@@ -168,6 +168,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const { loading: loadingService, data: dataService, error: errorService } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
+    fetchPolicy: 'network-only',
   });
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 

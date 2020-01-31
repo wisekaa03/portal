@@ -33,7 +33,7 @@ import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '../../lib/queries';
-import { LARGE_RESOLUTION } from '../../lib/constants';
+import { LARGE_RESOLUTION, TICKET_STATUSES } from '../../lib/constants';
 import BaseIcon from '../../components/icon';
 import Dropzone from '../../components/dropzone';
 import Button from '../../components/button';
@@ -49,14 +49,14 @@ const DATE_FORMAT = 'DD.MM.YYYY г.';
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
-    case 'Черновик':
-    case 'Эскалация':
+    case TICKET_STATUSES[1]:
+    case TICKET_STATUSES[2]:
       return TicketIconPause;
-    case 'Зарегистрирован':
+    case TICKET_STATUSES[3]:
       return TicketIconNew;
-    case 'Принят к выполнению':
+    case TICKET_STATUSES[0]:
       return TicketIconWorked;
-    case 'Завершен':
+    case TICKET_STATUSES[4]:
       return TicketIconComplete;
     default:
       return TicketIconPause;
@@ -225,6 +225,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
       code: query.id,
       type: query.type,
     },
+    fetchPolicy: 'network-only',
   });
 
   const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT, {
@@ -278,7 +279,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <Box display="flex" flexDirection="column">
           <Box display="flex" flexGrow={1} flexDirection="column" px={4} py={2} overflow="auto">
             <Box display="flex">
-              <Link href={{ pathname: '/profile' }} passHref>
+              <Link href={{ pathname: '/profile' }} as="/profile" passHref>
                 <IconButton>
                   <ArrowBackIcon />
                 </IconButton>
