@@ -230,7 +230,11 @@ const Media: I18nPage = (props): React.ReactElement => {
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
-                          <Link href={{ pathname: '/media/edit', query: { id: media && media.id } }} passHref>
+                          <Link
+                            href={{ pathname: '/media/edit', query: { id: media && media.id } }}
+                            as={`/media/edit?id=${media && media.id}`}
+                            passHref
+                          >
                             <IconButton size="small" color="secondary" aria-label="edit">
                               <EditIcon fontSize="small" />
                             </IconButton>
@@ -244,7 +248,7 @@ const Media: I18nPage = (props): React.ReactElement => {
                   </Card>
                 );
               })}
-              <Link href={{ pathname: '/media/edit' }} passHref>
+              <Link href={{ pathname: '/media/edit' }} as="/media/edit" passHref>
                 <Fab color="primary" className={classes.add} aria-label="add">
                   <AddIcon />
                 </Fab>

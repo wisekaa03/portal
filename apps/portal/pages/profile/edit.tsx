@@ -201,7 +201,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
           {!current && <Loading noMargin type="linear" variant="indeterminate" />}
           <Box display="flex" flexDirection="column" p={2} overflow="auto">
             <Box display="flex" mb={1}>
-              <Link href={{ pathname: '/profile' }} passHref>
+              <Link href={{ pathname: '/profile' }} as="/profile" passHref>
                 <IconButton>
                   <ArrowBackIcon />
                 </IconButton>

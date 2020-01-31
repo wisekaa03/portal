@@ -96,7 +96,7 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <>
                 <Box display="flex" flexDirection="column" p={2} overflow="auto">
                   <Box display="flex" mb={1}>
-                    <Link href={{ pathname: '/media' }} passHref>
+                    <Link href={{ pathname: '/media' }} as="/media" passHref>
                       <IconButton>
                         <ArrowBackIcon />
                       </IconButton>

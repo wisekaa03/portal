@@ -64,7 +64,7 @@ const ProfileEquipment: I18nPage = ({ t, ...rest }): React.ReactElement => {
           {!(profile && profile.user) && <Loading noMargin type="linear" variant="indeterminate" />}
           <Box display="flex" flexDirection="column" p={2}>
             <Box display="flex">
-              <Link href={{ pathname: '/profile' }} passHref>
+              <Link href={{ pathname: '/profile' }} as="/profile" passHref>
                 <IconButton>
                   <ArrowBackIcon />
                 </IconButton>

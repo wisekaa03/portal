@@ -204,7 +204,11 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                           <MenuItem onClick={handleChangeProfile(profile && profile.id)}>
                             {t('phonebook:profile.hide')}
                           </MenuItem>
-                          <Link href={{ pathname: '/profile/edit', query: { id: profile && profile.id } }} passHref>
+                          <Link
+                            href={{ pathname: '/profile/edit', query: { id: profile && profile.id } }}
+                            as={`/profile/edit?id=${profile && profile.id}`}
+                            passHref
+                          >
                             <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
                           </Link>
                         </MenuList>
@@ -255,7 +259,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             )}
             {profile && profile.email && (
               <div className={classes.center}>
-                <Link href={{ pathname: '/mail', query: { to: profile.email } }}>
+                <Link href={{ pathname: '/mail', query: { to: profile.email } }} as={`/mail?to=${profile.email}`}>
                   <a>{profile.email}</a>
                 </Link>
               </div>
