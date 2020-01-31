@@ -30,7 +30,7 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
 import { Loading } from '../../components/loading';
 import dayjs from '../../lib/dayjs';
-import { LARGE_RESOLUTION } from '../../lib/constants';
+import { LARGE_RESOLUTION, DATE_FORMAT } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';
 // #endregion
 
@@ -40,8 +40,6 @@ import { ProfileContext } from '../../lib/context';
 // const JoditEditor = dynamic(importJodit, {
 //     ssr: false,
 // });
-
-const DATE_FORMAT = 'MMMM DD, YYYY';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -197,7 +195,7 @@ const News: I18nPage = (props): React.ReactElement => {
                     </IconButton>
                   }
                   title={current.title}
-                  subheader={dayjs(current.updatedAt).format(DATE_FORMAT)}
+                  subheader={dayjs(+current.updatedAt).format(DATE_FORMAT)}
                 />
                 <CardContent>
                   <div
@@ -228,7 +226,7 @@ const News: I18nPage = (props): React.ReactElement => {
                     </CardActionArea>
                     <CardActions className={classes.action}>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        {dayjs(news.updatedAt).format(DATE_FORMAT)}
+                        {dayjs(+news.updatedAt).format(DATE_FORMAT)}
                       </Typography>
                       {profile.user && profile.user.isAdmin && (
                         <>

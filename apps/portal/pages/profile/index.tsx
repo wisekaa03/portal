@@ -37,13 +37,12 @@ import { ProfileContext } from '../../lib/context';
 import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
-import { TICKET_STATUSES } from '../../lib/constants';
+import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
 
 const avatarHeight = 180;
-const DATE_FORMAT = 'DD.MM.YYYY г.';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -312,7 +311,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                                 </span>
                               </span>
                               <span>
-                                {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT)}
+                                {t('profile:tickets.date')}: {dayjs(+ticket.createdDate).format(DATE_FORMAT)}
                               </span>
                               <span>
                                 {t('profile:tickets.id')}: {ticket.code}

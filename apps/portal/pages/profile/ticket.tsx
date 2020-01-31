@@ -33,7 +33,7 @@ import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '../../lib/queries';
-import { LARGE_RESOLUTION, TICKET_STATUSES } from '../../lib/constants';
+import { LARGE_RESOLUTION, TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import BaseIcon from '../../components/icon';
 import Dropzone from '../../components/dropzone';
 import Button from '../../components/button';
@@ -44,8 +44,6 @@ import TicketIconPause from '../../public/images/svg/ticket/ticket_pause.svg';
 import TicketIconWorked from '../../public/images/svg/ticket/ticket_worked.svg';
 import TicketIconComplete from '../../public/images/svg/ticket/ticket_complete.svg';
 // #endregion
-
-const DATE_FORMAT = 'DD.MM.YYYY г.';
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
@@ -301,7 +299,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     className={clsx(classes.cardHeader, classes.background)}
                     title={
                       <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(ticket.createdDate).format(DATE_FORMAT)}`}
+                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(+ticket.createdDate).format(DATE_FORMAT)}`}
                       </Typography>
                     }
                   />

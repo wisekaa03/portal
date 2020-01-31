@@ -30,6 +30,7 @@ export const AUTO_COLLAPSE_ROUTES = [
 export const TICKET_STATUSES = ['Принят к выполнению', 'Эскалация', 'Черновик', 'Зарегистрирован', 'Завершен'];
 
 export const ADMIN_GROUP = 'web master';
+export const DATE_FORMAT = 'DD.MM.YYYY г. HH:mm';
 
 // TEST
 export const MOCK_PROFILE: UserContext = {

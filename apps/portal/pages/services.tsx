@@ -22,6 +22,8 @@ import { Loading } from '../components/loading';
 import Button from '../components/button';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 import JoditEditor from '../components/jodit';
+import { DATE_FORMAT } from '../lib/constants';
+import dayjs from '../lib/dayjs';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -263,67 +265,67 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             containerStyle={{ flexGrow: 1 }}
             onChangeIndex={handleChangeTabIndex}
           >
-            {!loadingService ? (
-              <div className={classes.container1}>
-                {departments.map((department) => (
-                  <Box
-                    key={department.id}
-                    onClick={() =>
-                      handleTicket(
-                        'department',
-                        {
-                          id: department.id,
-                          name: department.title,
-                          icon: department.icon,
-                        },
-                        1,
-                      )
-                    }
-                    className={clsx(classes.service, {
-                      [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
-                    })}
-                  >
-                    <div>
-                      <BaseIcon src={department.icon} size={48} />
-                    </div>
-                    <div>
-                      <Typography variant="subtitle1">{department.title}</Typography>
-                    </div>
-                  </Box>
-                ))}
-              </div>
-            ) : (
-              <Loading full type="circular" color="secondary" disableShrink size={48} />
-            )}
-            <div style={{ minHeight: containerHeight }} className={classes.container1}>
-              {services &&
-                services.map((service) => (
-                  <Box
-                    key={service.code}
-                    onClick={() =>
-                      handleTicket(
-                        'service',
-                        {
-                          id: service.code,
-                          name: service.name,
-                          icon: service.avatar,
-                        },
-                        2,
-                      )
-                    }
-                    className={clsx(classes.service, {
-                      [classes.serviceIndex]: ticket.service && ticket.service.id === service.code,
-                    })}
-                  >
-                    <div>
-                      <BaseIcon base64 src={service.avatar} size={48} />
-                    </div>
-                    <div>
-                      <Typography variant="subtitle1">{service.name}</Typography>
-                    </div>
-                  </Box>
-                ))}
+            <div className={classes.container1}>
+              {departments.map((department) => (
+                <Box
+                  key={department.id}
+                  onClick={() =>
+                    handleTicket(
+                      'department',
+                      {
+                        id: department.id,
+                        name: department.title,
+                        icon: department.icon,
+                      },
+                      1,
+                    )
+                  }
+                  className={clsx(classes.service, {
+                    [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
+                  })}
+                >
+                  <div>
+                    <BaseIcon src={department.icon} size={48} />
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1">{department.title}</Typography>
+                  </div>
+                </Box>
+              ))}
             </div>
+            {loadingService ? (
+              <Loading full type="circular" color="secondary" disableShrink size={48} />
+            ) : (
+              <div style={{ minHeight: containerHeight }} className={classes.container1}>
+                {services &&
+                  services.map((service) => (
+                    <Box
+                      key={service.code}
+                      onClick={() =>
+                        handleTicket(
+                          'service',
+                          {
+                            id: service.code,
+                            name: service.name,
+                            icon: service.avatar,
+                          },
+                          2,
+                        )
+                      }
+                      className={clsx(classes.service, {
+                        [classes.serviceIndex]: ticket.service && ticket.service.id === service.code,
+                      })}
+                    >
+                      <div>
+                        <BaseIcon base64 src={service.avatar} size={48} />
+                      </div>
+                      <div>
+                        <Typography variant="subtitle1">{service.name}</Typography>
+                      </div>
+                    </Box>
+                  ))}
+              </div>
+            )}
             <div style={{ minHeight: containerHeight }} className={classes.container1}>
               {services &&
                 ticket.service &&
@@ -418,7 +420,9 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <Typography variant="subtitle1">Услуга: {ticketNew.category}</Typography>
                     <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
                     <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
-                    <Typography variant="subtitle1">Дата: {ticketNew.createdDate}</Typography>
+                    <Typography variant="subtitle1">
+                      {`Дата: ${dayjs(+ticketNew.createdDate).format(DATE_FORMAT)}`}
+                    </Typography>
                   </CardContent>
                 </Card>
               ) : (
