@@ -169,6 +169,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
     ssr: false,
     variables: { status },
     fetchPolicy: 'network-only',
+    pollInterval: 120000,
   });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
