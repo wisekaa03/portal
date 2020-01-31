@@ -11,7 +11,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
-import { blue } from '@material-ui/core/colors';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import Link from 'next/link';
 import { WithTranslation } from 'next-i18next';

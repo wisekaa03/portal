@@ -4,10 +4,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography, Card, CardContent } from '@material-ui/core';
+import {
+  Paper,
+  Tabs,
+  Tab,
+  Box,
+  FormControl,
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+  IconButton,
+} from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
+import SyncIcon from '@material-ui/icons/Sync';
 // #endregion
 // #region Imports Local
 import { OldService } from '@app/portal/ticket/old-service/models/old-service.interface';
@@ -31,6 +43,11 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
       flexDirection: 'column',
+    },
+    refresh: {
+      flex: 'auto',
+      flexBasis: '100%',
+      justifyContent: 'flex-end',
     },
     card: {
       padding: theme.spacing(2),
@@ -254,48 +271,57 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
               <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
               <Tab disabled={!ticketNew} label={t('services:tabs.tab5')} />
+              <IconButton
+                className={classes.refresh}
+                edge="end"
+                onClick={() => refetch()}
+                color="inherit"
+                aria-label="refresh"
+              >
+                <SyncIcon />
+              </IconButton>
             </Tabs>
           </Paper>
-          <SwipeableViews
-            ref={swipeableViews}
-            animateHeight
-            disabled={!ticket.department}
-            index={currentTab}
-            className={classes.contentWrap}
-            containerStyle={{ flexGrow: 1 }}
-            onChangeIndex={handleChangeTabIndex}
-          >
-            <div className={classes.container1}>
-              {departments.map((department) => (
-                <Box
-                  key={department.id}
-                  onClick={() =>
-                    handleTicket(
-                      'department',
-                      {
-                        id: department.id,
-                        name: department.title,
-                        icon: department.icon,
-                      },
-                      1,
-                    )
-                  }
-                  className={clsx(classes.service, {
-                    [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
-                  })}
-                >
-                  <div>
-                    <BaseIcon src={department.icon} size={48} />
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1">{department.title}</Typography>
-                  </div>
-                </Box>
-              ))}
-            </div>
-            {loadingService ? (
-              <Loading full type="circular" color="secondary" disableShrink size={48} />
-            ) : (
+          {loadingService ? (
+            <Loading full type="circular" color="secondary" disableShrink size={48} />
+          ) : (
+            <SwipeableViews
+              ref={swipeableViews}
+              animateHeight
+              disabled={!ticket.department}
+              index={currentTab}
+              className={classes.contentWrap}
+              containerStyle={{ flexGrow: 1 }}
+              onChangeIndex={handleChangeTabIndex}
+            >
+              <div className={classes.container1}>
+                {departments.map((department) => (
+                  <Box
+                    key={department.id}
+                    onClick={() =>
+                      handleTicket(
+                        'department',
+                        {
+                          id: department.id,
+                          name: department.title,
+                          icon: department.icon,
+                        },
+                        1,
+                      )
+                    }
+                    className={clsx(classes.service, {
+                      [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
+                    })}
+                  >
+                    <div>
+                      <BaseIcon src={department.icon} size={48} />
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1">{department.title}</Typography>
+                    </div>
+                  </Box>
+                ))}
+              </div>
               <div style={{ minHeight: containerHeight }} className={classes.container1}>
                 {services &&
                   services.map((service) => (
@@ -325,111 +351,111 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     </Box>
                   ))}
               </div>
-            )}
-            <div style={{ minHeight: containerHeight }} className={classes.container1}>
-              {services &&
-                ticket.service &&
-                services
-                  .find((service) => ticket.service && service.code === ticket.service.id)
-                  .category.map((category) => (
-                    <Box
-                      key={category.code}
-                      onClick={() =>
-                        handleTicket(
-                          'category',
-                          {
-                            id: category.code,
-                            name: category.name,
-                            icon: category.avatar,
-                            categoryType: category.categoryType,
-                          },
-                          3,
-                        )
-                      }
-                      className={clsx(classes.service, {
-                        [classes.serviceIndex]: ticket.category && ticket.category.id === category.code,
-                      })}
-                    >
+              <div style={{ minHeight: containerHeight }} className={classes.container1}>
+                {services &&
+                  ticket.service &&
+                  services
+                    .find((service) => ticket.service && service.code === ticket.service.id)
+                    .category.map((category) => (
+                      <Box
+                        key={category.code}
+                        onClick={() =>
+                          handleTicket(
+                            'category',
+                            {
+                              id: category.code,
+                              name: category.name,
+                              icon: category.avatar,
+                              categoryType: category.categoryType,
+                            },
+                            3,
+                          )
+                        }
+                        className={clsx(classes.service, {
+                          [classes.serviceIndex]: ticket.category && ticket.category.id === category.code,
+                        })}
+                      >
+                        <div>
+                          <BaseIcon base64 src={category.avatar} size={48} />
+                        </div>
+                        <div>
+                          <Typography variant="subtitle1">{category.name}</Typography>
+                        </div>
+                      </Box>
+                    ))}
+              </div>
+              <div style={{ minHeight: containerHeight }} className={classes.container2}>
+                {ticket.department && ticket.service && ticket.category && (
+                  <div className={clsx(classes.serviceBox, classes.formControl)}>
+                    <Box className={classes.service}>
                       <div>
-                        <BaseIcon base64 src={category.avatar} size={48} />
+                        <BaseIcon src={ticket.department.icon} size={48} />
                       </div>
                       <div>
-                        <Typography variant="subtitle1">{category.name}</Typography>
+                        <Typography variant="subtitle1">{ticket.department.name}</Typography>
                       </div>
                     </Box>
-                  ))}
-            </div>
-            <div style={{ minHeight: containerHeight }} className={classes.container2}>
-              {ticket.department && ticket.service && ticket.category && (
-                <div className={clsx(classes.serviceBox, classes.formControl)}>
-                  <Box className={classes.service}>
-                    <div>
-                      <BaseIcon src={ticket.department.icon} size={48} />
-                    </div>
-                    <div>
-                      <Typography variant="subtitle1">{ticket.department.name}</Typography>
-                    </div>
-                  </Box>
-                  <Box className={classes.service}>
-                    <div>
-                      <BaseIcon base64 src={ticket.service.icon} size={48} />
-                    </div>
-                    <div>
-                      <Typography variant="subtitle1">{ticket.service.name}</Typography>
-                    </div>
-                  </Box>
-                  <Box className={classes.service}>
-                    <div>
-                      <BaseIcon base64 src={ticket.category.icon} size={48} />
-                    </div>
-                    <div>
-                      <Typography variant="subtitle1">{ticket.category.name}</Typography>
-                    </div>
-                  </Box>
-                </div>
-              )}
-              <FormControl className={classes.formControl} variant="outlined">
-                <TextField
-                  value={ticket.title}
-                  onChange={(e) => handleTicket('title', e.target.value)}
-                  type="text"
-                  label={t('services:form.title')}
-                  variant="outlined"
-                />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <JoditEditor value={body} onChange={setBody} />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <Dropzone setFiles={setFiles} files={files} {...rest} />
-              </FormControl>
-              <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                <Button actionType="cancel" onClick={handleClearTicket}>
-                  {t('common:cancel')}
-                </Button>
-                <Button onClick={handleAccept}>{t('common:accept')}</Button>
-              </FormControl>
-            </div>
-            <div style={{ minHeight: containerHeight }} className={classes.container2}>
-              {!loadingNew && ticketNew ? (
-                <Card className={classes.card}>
-                  <CardContent className={classes.cardContent}>
-                    <Typography variant="subtitle1">Код: {ticketNew.code}</Typography>
-                    <Typography variant="subtitle1">Имя заявки: {ticketNew.name}</Typography>
-                    <Typography variant="subtitle1">Организация: {ticketNew.organization}</Typography>
-                    <Typography variant="subtitle1">Услуга: {ticketNew.category}</Typography>
-                    <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
-                    <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
-                    <Typography variant="subtitle1">
-                      {`Дата: ${dayjs(+ticketNew.createdDate).format(DATE_FORMAT)}`}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Loading full type="circular" color="secondary" disableShrink size={48} />
-              )}
-            </div>
-          </SwipeableViews>
+                    <Box className={classes.service}>
+                      <div>
+                        <BaseIcon base64 src={ticket.service.icon} size={48} />
+                      </div>
+                      <div>
+                        <Typography variant="subtitle1">{ticket.service.name}</Typography>
+                      </div>
+                    </Box>
+                    <Box className={classes.service}>
+                      <div>
+                        <BaseIcon base64 src={ticket.category.icon} size={48} />
+                      </div>
+                      <div>
+                        <Typography variant="subtitle1">{ticket.category.name}</Typography>
+                      </div>
+                    </Box>
+                  </div>
+                )}
+                <FormControl className={classes.formControl} variant="outlined">
+                  <TextField
+                    value={ticket.title}
+                    onChange={(e) => handleTicket('title', e.target.value)}
+                    type="text"
+                    label={t('services:form.title')}
+                    variant="outlined"
+                  />
+                </FormControl>
+                <FormControl className={classes.formControl} variant="outlined">
+                  <JoditEditor value={body} onChange={setBody} />
+                </FormControl>
+                <FormControl className={classes.formControl} variant="outlined">
+                  <Dropzone setFiles={setFiles} files={files} {...rest} />
+                </FormControl>
+                <FormControl className={clsx(classes.formControl, classes.formAction)}>
+                  <Button actionType="cancel" onClick={handleClearTicket}>
+                    {t('common:cancel')}
+                  </Button>
+                  <Button onClick={handleAccept}>{t('common:accept')}</Button>
+                </FormControl>
+              </div>
+              <div style={{ minHeight: containerHeight }} className={classes.container2}>
+                {!loadingNew && ticketNew ? (
+                  <Card className={classes.card}>
+                    <CardContent className={classes.cardContent}>
+                      <Typography variant="subtitle1">Код: {ticketNew.code}</Typography>
+                      <Typography variant="subtitle1">Имя заявки: {ticketNew.name}</Typography>
+                      <Typography variant="subtitle1">Организация: {ticketNew.organization}</Typography>
+                      <Typography variant="subtitle1">Услуга: {ticketNew.category}</Typography>
+                      <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
+                      <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
+                      <Typography variant="subtitle1">
+                        {`Дата: ${dayjs(+ticketNew.createdDate).format(DATE_FORMAT)}`}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Loading full type="circular" color="secondary" disableShrink size={48} />
+                )}
+              </div>
+            </SwipeableViews>
+          )}
         </div>
       </Page>
     </>
