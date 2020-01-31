@@ -234,73 +234,72 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   />
                 </Box>
               </Box>
-              {loading ? (
-                <Loading full type="circular" color="secondary" disableShrink size={48} />
-              ) : (
-                <BoxWithRef
-                  ref={ticketBox}
-                  overflow="auto"
-                  style={{
-                    maxHeight:
-                      ticketBox && ticketBox.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%',
-                  }}
-                  display="flex"
-                  flexGrow={1}
-                  flexWrap="wrap"
-                  my={2}
-                  justifyContent="center"
-                >
-                  {data &&
-                    data.OldTickets &&
-                    data.OldTickets.map((ticket: OldTicket) => (
-                      <Card className={classes.ticket} key={ticket.code}>
-                        <CardActionArea>
-                          <Link href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}>
-                            <CardContent className={classes.ticketContent}>
-                              <div className={classes.ticketLabel}>
-                                <div>
-                                  <BaseIcon base64 src={ticket.avatar} size={36} />
-                                </div>
-                                <div>
-                                  <Typography variant="subtitle2" noWrap>
-                                    {ticket.name}
-                                  </Typography>
-                                </div>
-                                <div>
-                                  {/* <Typography
-                                    variant="body1"
-                                    // eslint-disable-next-line react/no-danger
-                                    dangerouslySetInnerHTML={{ __html: ticket.description }}
-                                  /> */}
-                                </div>
+              <BoxWithRef
+                ref={ticketBox}
+                overflow="auto"
+                style={{
+                  maxHeight: ticketBox && ticketBox.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%',
+                }}
+                display="flex"
+                flexGrow={1}
+                flexWrap="wrap"
+                my={2}
+                justifyContent="center"
+              >
+                {loading ? (
+                  <Loading full type="circular" color="secondary" disableShrink size={48} />
+                ) : (
+                  data &&
+                  data.OldTickets &&
+                  data.OldTickets.map((ticket: OldTicket) => (
+                    <Card className={classes.ticket} key={ticket.code}>
+                      <CardActionArea>
+                        <Link href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}>
+                          <CardContent className={classes.ticketContent}>
+                            <div className={classes.ticketLabel}>
+                              <div>
+                                <BaseIcon base64 src={ticket.avatar} size={36} />
                               </div>
-                              <Divider />
-                              <div className={classes.ticketInformation}>
-                                <span>
-                                  {t('profile:tickets.status')}:{' '}
-                                  <span
-                                    className={clsx({
-                                      [classes.ticketRegistered]: ticket.status !== 'В работе',
-                                      [classes.ticketWorked]: ticket.status === 'В работе',
-                                    })}
-                                  >
-                                    {ticket.status}
-                                  </span>
-                                </span>
-                                <span>
-                                  {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT)}
-                                </span>
-                                <span>
-                                  {t('profile:tickets.id')}: {ticket.code}
-                                </span>
+                              <div>
+                                <Typography variant="subtitle2" noWrap>
+                                  {ticket.name}
+                                </Typography>
                               </div>
-                            </CardContent>
-                          </Link>
-                        </CardActionArea>
-                      </Card>
-                    ))}
-                </BoxWithRef>
-              )}
+                              <div>
+                                {/* <Typography
+                                  variant="body1"
+                                  // eslint-disable-next-line react/no-danger
+                                  dangerouslySetInnerHTML={{ __html: ticket.description }}
+                                /> */}
+                              </div>
+                            </div>
+                            <Divider />
+                            <div className={classes.ticketInformation}>
+                              <span>
+                                {t('profile:tickets.status')}:{' '}
+                                <span
+                                  className={clsx({
+                                    [classes.ticketRegistered]: ticket.status !== 'В работе',
+                                    [classes.ticketWorked]: ticket.status === 'В работе',
+                                  })}
+                                >
+                                  {ticket.status}
+                                </span>
+                              </span>
+                              <span>
+                                {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT)}
+                              </span>
+                              <span>
+                                {t('profile:tickets.id')}: {ticket.code}
+                              </span>
+                            </div>
+                          </CardContent>
+                        </Link>
+                      </CardActionArea>
+                    </Card>
+                  ))
+                )}
+              </BoxWithRef>
             </Box>
           </Box>
         )}
