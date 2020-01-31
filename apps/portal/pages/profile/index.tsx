@@ -168,7 +168,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { loading, data, error } = useQuery(OLD_TICKETS, {
     ssr: false,
     variables: { status },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     pollInterval: 120000,
   });
 

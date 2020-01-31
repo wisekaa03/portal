@@ -168,15 +168,8 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
-    fetchPolicy: 'network-only',
-    pollInterval: 120000,
-    skip: !ticket.department,
+    fetchPolicy: 'cache-and-network',
   });
-  // TODO: просто сделал чтобы проверялся ticket.department
-  // TODO: нужно сделать чтобы из параметров бралось Ref
-  if (!ticket.department) {
-    refetch();
-  }
 
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 

@@ -129,7 +129,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
 
   const [settingsEl, setSettingsEl] = useState<HTMLElement | null>(null);
 
-  const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE, { pollInterval: 120000 });
+  const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
   const [changeProfile] = useMutation(CHANGE_PROFILE);
 
   useEffect(() => {

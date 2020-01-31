@@ -225,7 +225,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
       code: query.id,
       type: query.type,
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
 
   const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT, {
