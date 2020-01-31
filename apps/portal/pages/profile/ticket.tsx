@@ -21,7 +21,7 @@ import {
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
 import { TFunction } from 'i18next';
 // #endregion
@@ -32,7 +32,7 @@ import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { OLD_TICKET_DESCRIPTION } from '../../lib/queries';
+import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '../../lib/queries';
 import { LARGE_RESOLUTION } from '../../lib/constants';
 import BaseIcon from '../../components/icon';
 import Dropzone from '../../components/dropzone';
@@ -207,18 +207,36 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
     },
   });
 
+  const [oldTicketEdit, { loading: loadingEdit, data: dataEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT);
+
   const handleComment = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setComment(event.target.value);
   };
 
-  const handleAccept = (): void => {};
+  const handleAccept = (): void => {
+    const variables = {
+      ticket: {
+        code: query.id,
+        type: query.type,
+        comment,
+      },
+      attachments: files.map((file: DropzoneFile) => file.file),
+    };
+
+    oldTicketEdit({
+      variables,
+    });
+
+    setFiles([]);
+    setComment('');
+  };
 
   const handleClose = (): void => {
     setComment('');
     setFiles([]);
   };
 
-  const ticket: OldTicket | undefined = data && data.OldTicketDescription;
+  const ticket: OldTicket | undefined = (dataEdit && dataEdit.OldTicketEdit) || (data && data.OldTicketDescription);
 
   return (
     <>
@@ -355,31 +373,34 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     <Iframe srcdoc={ticket.descriptionFull} />
                   </CardContent>
                 </Card>
-                {ticket.status !== 'Завершен' && (
-                  <>
-                    <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                      <TextField
-                        value={comment}
-                        onChange={handleComment}
-                        multiline
-                        rows={5}
-                        type="text"
-                        color="secondary"
-                        label={t('profile:tickets.comment.add')}
-                        variant="outlined"
-                      />
-                    </FormControl>
-                    <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                      <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
-                    </FormControl>
-                    <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
-                      <Button actionType="cancel" onClick={handleClose}>
-                        {t('common:cancel')}
-                      </Button>
-                      <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
-                    </FormControl>
-                  </>
-                )}
+                {ticket.status !== 'Завершен' &&
+                  (loadingEdit ? (
+                    <Loading full type="circular" color="secondary" disableShrink size={48} />
+                  ) : (
+                    <>
+                      <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                        <TextField
+                          value={comment}
+                          onChange={handleComment}
+                          multiline
+                          rows={5}
+                          type="text"
+                          color="secondary"
+                          label={t('profile:tickets.comment.add')}
+                          variant="outlined"
+                        />
+                      </FormControl>
+                      <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                        <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
+                      </FormControl>
+                      <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
+                        <Button actionType="cancel" onClick={handleClose}>
+                          {t('common:cancel')}
+                        </Button>
+                        <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
+                      </FormControl>
+                    </>
+                  ))}
               </Box>
             )}
           </Box>

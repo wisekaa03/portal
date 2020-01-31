@@ -46,6 +46,54 @@ const PROFILE_FRAGMENT = gql`
   }
 `;
 
+const TICKET_FRAGMENT = gql`
+  fragment TicketProps on OldTicket {
+    code
+    name
+    description
+    descriptionFull
+    status
+    createdDate
+    endDate
+    timeout
+    executorUser {
+      name
+      avatar
+      email
+      telephone
+      company
+      department
+      otdel
+      position
+    }
+    initiatorUser {
+      name
+      avatar
+      email
+      telephone
+      company
+      department
+      otdel
+      position
+    }
+    service {
+      code
+      name
+      avatar
+    }
+    serviceCategory {
+      code
+      name
+      avatar
+    }
+    files {
+      code
+      name
+      ext
+    }
+  }
+`;
+
 export const CURRENT_USER = gql`
   query Me {
     me {
@@ -313,49 +361,7 @@ export const OLD_TICKETS = gql`
 export const OLD_TICKET_DESCRIPTION = gql`
   query OldTicketDescription($code: String, $type: String) {
     OldTicketDescription(code: $code, type: $type) {
-      code
-      name
-      description
-      descriptionFull
-      status
-      createdDate
-      endDate
-      timeout
-      executorUser {
-        name
-        avatar
-        email
-        telephone
-        company
-        department
-        otdel
-        position
-      }
-      initiatorUser {
-        name
-        avatar
-        email
-        telephone
-        company
-        department
-        otdel
-        position
-      }
-      service {
-        code
-        name
-        avatar
-      }
-      serviceCategory {
-        code
-        name
-        avatar
-      }
-      files {
-        code
-        name
-        ext
-      }
+      ...
     }
   }
 `;
@@ -372,4 +378,13 @@ export const OLD_TICKET_NEW = gql`
       createdDate
     }
   }
+`;
+
+export const OLD_TICKET_EDIT = gql`
+  mutation OldTicketEdit($ticket: OldTicketEditInput!, $attachments: [Upload]) {
+    OldTicketEdit(ticket: $ticket, attachments: $attachments) {
+      ...TicketProps
+    }
+  }
+  ${TICKET_FRAGMENT}
 `;
