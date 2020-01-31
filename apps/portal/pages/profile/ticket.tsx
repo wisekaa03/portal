@@ -227,7 +227,18 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
     },
   });
 
-  const [oldTicketEdit, { loading: loadingEdit, data: dataEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT);
+  const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT, {
+    update(cache, { data: { OldTicketEdit } }) {
+      cache.writeQuery({
+        query: OLD_TICKET_DESCRIPTION,
+        variables: {
+          code: query.id,
+          type: query.type,
+        },
+        data: { OldTicketDescription: OldTicketEdit },
+      });
+    },
+  });
 
   const handleComment = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setComment(event.target.value);
@@ -256,7 +267,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setFiles([]);
   };
 
-  const ticket: OldTicket | undefined = (dataEdit && dataEdit.OldTicketEdit) || (data && data.OldTicketDescription);
+  const ticket: OldTicket | undefined = data && data.OldTicketDescription;
 
   return (
     <>
@@ -397,7 +408,9 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 </Card>
                 {ticket.status !== 'Завершен' &&
                   (loadingEdit ? (
-                    <Loading full type="circular" color="secondary" disableShrink size={48} />
+                    <Box className={classes.fullRow}>
+                      <Loading full type="circular" color="secondary" disableShrink size={48} />
+                    </Box>
                   ) : (
                     <>
                       <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
