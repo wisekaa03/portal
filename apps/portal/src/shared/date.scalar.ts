@@ -3,9 +3,9 @@
 // #region Imports NPM
 import { Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
+import dayjs from 'dayjs';
 // #endregion
 
-// TODO: внести в env формат даты
 @Scalar('Date')
 export class DateScalar {
   description = 'Date scalar type';
@@ -18,7 +18,7 @@ export class DateScalar {
     if (typeof value === 'string') {
       return new Date(value);
     }
-    return value.toLocaleString();
+    return dayjs(value).format('YYYY-MM-DD HH:mm:ss');
   }
 
   parseLiteral(ast: any): any {
