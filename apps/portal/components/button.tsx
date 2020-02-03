@@ -5,17 +5,22 @@ import Button, { ButtonProps } from '@material-ui/core/Button';
 import clsx from 'clsx';
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
+import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
+import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
 
 export interface ButtonBaseProps extends ButtonProps {
-  actionType?: 'accept' | 'cancel';
+  actionType?: 'accept' | 'cancel' | 'save' | 'print';
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      borderRadius: theme.spacing(3),
+    },
     accept: {
       'color': theme.palette.getContrastText('#DEECEC'),
       'backgroundColor': '#DEECEC',
-      'borderRadius': theme.spacing(3),
+
       '&:hover': {
         backgroundColor: '#BECDCD',
       },
@@ -23,9 +28,25 @@ const useStyles = makeStyles((theme: Theme) =>
     cancel: {
       'color': theme.palette.getContrastText('#ECDEDE'),
       'backgroundColor': '#ECDEDE',
-      'borderRadius': theme.spacing(3),
+
       '&:hover': {
         backgroundColor: '#D9C0C0',
+      },
+    },
+    save: {
+      'color': theme.palette.getContrastText('#dee4ec'),
+      'backgroundColor': '#dee4ec',
+
+      '&:hover': {
+        backgroundColor: '#a9b6c7',
+      },
+    },
+    print: {
+      'color': theme.palette.getContrastText('#e2e2cd'),
+      'backgroundColor': '#e2e2cd',
+
+      '&:hover': {
+        backgroundColor: '#c7c7a8',
       },
     },
   }),
@@ -33,10 +54,29 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const BaseButton = ({ actionType = 'accept', children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
   const classes = useStyles({});
-  const Icon = actionType === 'accept' ? <CheckCircleIcon /> : <HighlightOffIcon />;
+  let icon;
+
+  switch (actionType) {
+    case 'cancel':
+      icon = <HighlightOffIcon />;
+      break;
+    case 'save':
+      icon = <SaveOutlinedIcon />;
+      break;
+    case 'print':
+      icon = <PrintOutlinedIcon />;
+      break;
+    default:
+      icon = <CheckCircleIcon />;
+  }
 
   return (
-    <Button {...rest} variant="contained" startIcon={Icon} className={clsx(classes[actionType], className)}>
+    <Button
+      {...rest}
+      variant="contained"
+      startIcon={icon}
+      className={clsx(classes.root, classes[actionType], className)}
+    >
       {children}
     </Button>
   );

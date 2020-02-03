@@ -148,6 +148,8 @@
     "react-swipeable-views": "0.13.7",
     "react-swipeable-views-core": "0.13.7",
     "react-swipeable-views-utils": "0.13.7",
+    "react-to-pdf": "^0.0.8",
+    "react-to-print": "^2.5.1",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
     "react-window-infinite-loader": "^1.0.5",

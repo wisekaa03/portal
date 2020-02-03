@@ -4,10 +4,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography, Card, CardContent } from '@material-ui/core';
+import {
+  Paper,
+  Tabs,
+  Tab,
+  Box,
+  FormControl,
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+} from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
+import dynamic from 'next/dynamic';
+import ReactToPrint from 'react-to-print';
 // #endregion
 // #region Imports Local
 import { OldService } from '@app/portal/ticket/old-service/models/old-service.interface';
@@ -27,6 +40,8 @@ import dayjs from '../lib/dayjs';
 import RefreshButton from '../components/refreshButton';
 // #endregion
 
+const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -35,11 +50,18 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
     },
     card: {
-      padding: theme.spacing(2),
-      width: '600px',
+      width: '90vw',
+      maxWidth: '600px',
     },
     cardContent: {
-      padding: 0,
+      'padding': theme.spacing(2),
+      'width': '100%',
+      '& h5': {
+        marginBottom: theme.spacing(),
+      },
+      '& h5, & h6': {
+        textAlign: 'center',
+      },
     },
     header: {
       '& button': {
@@ -161,7 +183,7 @@ const defaultTicketState: TicketProps = {
   title: '',
 };
 
-const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
@@ -242,6 +264,8 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const containerHeight =
     tabHeader && tabHeader.current ? `calc(100vh - ${appBarHeight}px - ${tabHeader.current.clientHeight}px)` : '100%';
 
+  const newTicketRef = useRef(null);
+
   return (
     <>
       <Head>
@@ -262,7 +286,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             <Loading full type="circular" color="secondary" disableShrink size={48} />
           ) : (
             <>
-              <RefreshButton onClick={() => refetch()} />
+              {currentTab < 4 && <RefreshButton onClick={() => refetch()} />}
               <SwipeableViews
                 ref={swipeableViews}
                 animateHeight
@@ -416,7 +440,8 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                 <div style={{ minHeight: containerHeight }} className={classes.container2}>
                   {!loadingNew && ticketNew ? (
                     <Card className={classes.card}>
-                      <CardContent className={classes.cardContent}>
+                      <CardContent ref={newTicketRef} className={classes.cardContent}>
+                        <Typography variant="h5">{t('services:success')}</Typography>
                         <Typography variant="subtitle1">Код: {ticketNew.code}</Typography>
                         <Typography variant="subtitle1">Имя заявки: {ticketNew.name}</Typography>
                         <Typography variant="subtitle1">Организация: {ticketNew.organization}</Typography>
@@ -424,9 +449,25 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
                         <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
                         <Typography variant="subtitle1">
-                          {`Дата: ${dayjs(ticketNew.createdDate).format(DATE_FORMAT)}`}
+                          {`Дата: ${dayjs(ticketNew.createdDate).format(DATE_FORMAT(i18n))}`}
                         </Typography>
                       </CardContent>
+                      <CardActions>
+                        <Box display="flex" flexGrow={1} justifyContent="space-around" p={2}>
+                          <ReactToPdf targetRef={newTicketRef} filename="ticketNew.code.pdf">
+                            {({ toPdf }) => (
+                              <Button onClick={toPdf} actionType="save">
+                                {t('common:save')}
+                              </Button>
+                            )}
+                          </ReactToPdf>
+                          <ReactToPrint
+                            trigger={() => <Button actionType="print">{t('common:print')}</Button>}
+                            content={() => newTicketRef.current}
+                            copyStyles
+                          />
+                        </Box>
+                      </CardActions>
                     </Card>
                   ) : (
                     <Loading full type="circular" color="secondary" disableShrink size={48} />

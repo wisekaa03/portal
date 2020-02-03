@@ -1,5 +1,6 @@
 {
   "title": "Portal: IT application",
+  "success": "Заявка успешно создана.",
   "tabs": {
     "tab1": "Выбор департамента",
     "tab2": "Выбор услуги",

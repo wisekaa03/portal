@@ -3,6 +3,8 @@
   "title": "Portal: Home",
   "accept": "Accept",
   "cancel": "Cancel",
+  "save": "Save",
+  "print": "Print",
   "authorization": "Authorization",
   "wait": "Wait...",
   "signOut": "Sign out",
