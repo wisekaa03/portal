@@ -37,7 +37,10 @@ const InnerLogin: React.FC<{
   isMobile: boolean;
   language: string;
 }> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
-  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, { fetchPolicy: 'cache-and-network' });
+  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+    fetchPolicy: 'cache-and-network',
+    pollInterval: 600000,
+  });
   const user = data ? data.me : undefined;
 
   return loading ? (
