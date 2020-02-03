@@ -30,8 +30,8 @@ const config = {
   placeholder: 'Подробное описание',
   // TODO: ,image,file
   buttons:
-    'eraser,|,|,ul,ol,|,outdent,indent,|,font,fontsize,brush,paragraph,|,table,link,|,' +
-    'align,undo,redo,selectall,cut,copy,|,hr,symbol,print,source',
+    'eraser,|,align,outdent,indent,|,ul,ol,|,font,fontsize,brush,paragraph,|,table,link,|,' +
+    'undo,redo,cut,copy,|,hr,symbol,print,source',
 };
 
 const JoditEditor = ({ value, onChange }): React.ReactElement => {
