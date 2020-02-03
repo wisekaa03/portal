@@ -30,7 +30,7 @@ import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/icon';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import useDebounce from '../../lib/debounce';
+// import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
 import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
@@ -172,18 +172,18 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     }
   }, [ticketStatus]);
 
+  // TODO: выводить ошибки
   const { loading, data, error, refetch } = useQuery(OLD_TICKETS, {
     ssr: false,
     variables: { status: status === TICKET_STATUSES[0] ? '' : status },
     fetchPolicy: 'cache-and-network',
-    // pollInterval: 120000,
   });
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     setSearch(event.target.value);
   };
 
-  const handleToggleStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleToggleStatus = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     userSettings({
       variables: {
         value: { ticketStatus: event.target.value },
