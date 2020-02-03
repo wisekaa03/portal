@@ -6,7 +6,7 @@ import { NextComponentType, NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
-import { UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 // import dynamic from 'next/dynamic';
 import { ApolloProvider, QueryResult } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';

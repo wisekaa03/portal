@@ -21,12 +21,12 @@ import {
   Select,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
-import { OLD_TICKETS } from '../../lib/queries';
+import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/icon';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
@@ -159,9 +159,18 @@ const useStyles = makeStyles((theme: Theme) =>
 const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
-  const [_search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>('');
   const [status, setStatus] = useState<string>(TICKET_STATUSES[0]);
-  const search = useDebounce(_search, 300);
+  // const search = useDebounce(_search, 300);
+
+  const ticketStatus = (profile.user && profile.user.settings && profile.user.settings.ticketStatus) as string | null;
+  const [userSettings] = useMutation(USER_SETTINGS);
+
+  useEffect(() => {
+    if (ticketStatus) {
+      setStatus(ticketStatus);
+    }
+  }, [ticketStatus]);
 
   const { loading, data, error, refetch } = useQuery(OLD_TICKETS, {
     ssr: false,
@@ -175,7 +184,11 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   };
 
   const handleToggleStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setStatus(event.target.value);
+    userSettings({
+      variables: {
+        value: { ticketStatus: event.target.value },
+      },
+    });
   };
 
   const ticketBox = useRef(null);
@@ -187,6 +200,11 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       setLabelWidth(inputLabel.current!.offsetWidth);
     }
   }, [inputLabel]);
+
+  const tickets: OldTicket[] | undefined =
+    data &&
+    data.OldTickets &&
+    data.OldTickets.filter((ticket) => ticket.code.includes(search) || ticket.name.includes(search));
 
   return (
     <>
@@ -272,9 +290,8 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 {loading ? (
                   <Loading full type="circular" color="secondary" disableShrink size={48} />
                 ) : (
-                  data &&
-                  data.OldTickets &&
-                  data.OldTickets.map((ticket: OldTicket) => (
+                  tickets &&
+                  tickets.map((ticket: OldTicket) => (
                     <Card className={classes.ticket} key={ticket.code}>
                       <CardActionArea>
                         <Link
