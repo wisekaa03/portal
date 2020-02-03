@@ -17,7 +17,7 @@ export class DateScalar {
     if (typeof value === 'string') {
       return new Date(value);
     }
-    return value.toISOString();
+    return value.toLocaleString();
   }
 
   parseLiteral(ast: any): any {

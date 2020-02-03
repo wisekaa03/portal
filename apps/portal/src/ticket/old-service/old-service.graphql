@@ -39,7 +39,7 @@ type OldTicket {
   description: String!
   descriptionFull: String
   status: String!
-  createdDate: String!
+  createdDate: Date!
   avatar: String
   endDate: String
   timeout: String
