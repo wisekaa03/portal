@@ -40,6 +40,7 @@ import { Loading } from '../components/loading';
 import { Avatar } from '../components/avatar';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
+import RefreshButton from '../components/refreshButton';
 // #endregion
 
 const panelHeight = 48;
@@ -354,7 +355,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
     SEARCH_SUGGESTIONS,
   );
 
-  const { loading, data, fetchMore } = useQuery(PROFILES(getGraphQLColumns(columns)), {
+  const { loading, data, fetchMore, refetch } = useQuery(PROFILES(getGraphQLColumns(columns)), {
     variables: {
       orderBy,
       first: 50,
@@ -365,8 +366,6 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       notShowing: isAdmin && columns.includes('notShowing'),
     },
     fetchPolicy: 'cache-and-network',
-    partialRefetch: true,
-    pollInterval: 120000,
   });
 
   useEffect(() => {
@@ -548,6 +547,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
                 </Paper>
               </Popper>
             </div>
+            <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
             <IconButton onClick={handleSettingsOpen}>
               <SettingsIcon />
             </IconButton>

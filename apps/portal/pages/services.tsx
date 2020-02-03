@@ -4,22 +4,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Paper,
-  Tabs,
-  Tab,
-  Box,
-  FormControl,
-  TextField,
-  Typography,
-  Card,
-  CardContent,
-  IconButton,
-} from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
-import SyncIcon from '@material-ui/icons/Sync';
 // #endregion
 // #region Imports Local
 import { OldService } from '@app/portal/ticket/old-service/models/old-service.interface';
@@ -36,6 +24,7 @@ import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 import JoditEditor from '../components/jodit';
 import { DATE_FORMAT } from '../lib/constants';
 import dayjs from '../lib/dayjs';
+import RefreshButton from '../components/refreshButton';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,20 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
-    },
-    refresh: {
-      'position': 'absolute',
-      'top': '60px',
-      'right': '15px',
-      'zIndex': 100,
-      'opacity': 0.6,
-      'color': theme.palette.secondary.main,
-
-      '&:hover': {
-        color: '#fff',
-        backgroundColor: theme.palette.secondary.main,
-        opacity: 1,
-      },
     },
     card: {
       padding: theme.spacing(2),
@@ -287,15 +262,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
             <Loading full type="circular" color="secondary" disableShrink size={48} />
           ) : (
             <>
-              <IconButton
-                className={classes.refresh}
-                edge="end"
-                disableRipple={false}
-                onClick={() => refetch()}
-                aria-label="refresh"
-              >
-                <SyncIcon />
-              </IconButton>
+              <RefreshButton onClick={() => refetch()} />
               <SwipeableViews
                 ref={swipeableViews}
                 animateHeight
