@@ -67,6 +67,7 @@ export interface UserRegister {
 export interface UserSettings {
   lng?: 'ru' | 'en' | null;
   drawer?: boolean | null;
+  ticketStatus?: string | null;
 }
 // #endregion
 

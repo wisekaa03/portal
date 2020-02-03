@@ -21,11 +21,13 @@ type MailSession {
 type UserSettings {
   lng: String
   drawer: Boolean
+  ticketStatus: String
 }
 
 input UserSettingsInput {
   lng: String
   drawer: Boolean
+  ticketStatus: String
 }
 
 type Mutation {
