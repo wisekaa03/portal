@@ -50,11 +50,13 @@ const createFiles = (files: any): OldFile[] | [] => {
   if (files) {
     const newFiles = Array.isArray(files) ? files : [files];
 
-    return newFiles.map((file) => ({
-      code: file['Код'],
-      name: file['Наименование'],
-      ext: file['РасширениеФайла'],
-    }));
+    return newFiles
+      .filter((file) => file['Код'])
+      .map((file) => ({
+        code: file['Код'],
+        name: file['Наименование'],
+        ext: file['РасширениеФайла'],
+      }));
   }
 
   return [];

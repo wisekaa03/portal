@@ -454,7 +454,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                       </CardContent>
                       <CardActions>
                         <Box display="flex" flexGrow={1} justifyContent="space-around" p={2}>
-                          <ReactToPdf targetRef={newTicketRef} filename="ticketNew.code.pdf">
+                          <ReactToPdf targetRef={newTicketRef} filename={`ticket_${ticketNew.code}.pdf`}>
                             {({ toPdf }) => (
                               <Button onClick={toPdf} actionType="save">
                                 {t('common:save')}
