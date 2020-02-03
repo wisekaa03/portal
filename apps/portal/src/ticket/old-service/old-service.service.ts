@@ -171,8 +171,8 @@ export class OldTicketService {
         log: authentication.username,
         Title: ticket.title,
         deskr: ticket.body,
-        route: ticket.categoryId,
-        category: ticket.serviceId,
+        route: ticket.serviceId,
+        category: ticket.categoryId,
         TypeOfCategory: ticket.categoryType,
         Executor: ticket.executorUser ? ticket.executorUser : '',
         NFile: '',
@@ -180,8 +180,8 @@ export class OldTicketService {
         Attaches,
       })
       .then((result: any) => {
-        this.logService.debug(client.lastRequest, 'OldTicketService');
-        this.logService.debug(client.lastResponse, 'OldTicketService');
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         if (result && result[0] && result[0]['return']) {
           return {

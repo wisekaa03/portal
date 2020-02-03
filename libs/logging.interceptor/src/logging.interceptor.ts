@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { IncomingMessage } from 'http';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Type } from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -13,9 +13,7 @@ import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config/config.service';
 // #endregion
 
-export interface AppGraphQLExecutionContext extends GraphQLExecutionContext {
-  constructorRef?: Type<any>;
-}
+export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -65,7 +63,7 @@ export class LoggingInterceptor implements NestInterceptor {
         }
 
         const ctx: AppGraphQLExecutionContext = GqlExecutionContext.create(context);
-        const resolverName = ctx.constructorRef && ctx.constructorRef.name;
+        const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
         const address = gqlCtx.req && gqlCtx.req.client && gqlCtx.req.client.remoteAddress;
