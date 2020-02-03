@@ -65,8 +65,6 @@
     ]
   },
   "resolutions": {
-    "**/**/react-swipeable-views-core": "0.13.1",
-    "**/**/react-swipeable-views-utils": "0.13.4",
     "**/**/fs-capacitor": "5.0.0"
   },
   "dependencies": {
