@@ -209,7 +209,7 @@ const InfoCard = ({ classes, header, profile, t }: InfoCardProps): React.ReactEl
   </Card>
 );
 
-const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
@@ -299,7 +299,10 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     className={clsx(classes.cardHeader, classes.background)}
                     title={
                       <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(+ticket.createdDate).format(DATE_FORMAT)}`}
+                        {t('profile:ticket:header', {
+                          ticket: ticket.code,
+                          date: dayjs(ticket.createdDate).format(DATE_FORMAT(i18n)),
+                        })}
                       </Typography>
                     }
                   />
@@ -431,7 +434,7 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <Button actionType="cancel" onClick={handleClose}>
                           {t('common:cancel')}
                         </Button>
-                        <Button onClick={handleAccept}>{t('profile:tickets.comment.submit')}</Button>
+                        <Button onClick={handleAccept}>{t('common:send')}</Button>
                       </FormControl>
                     </>
                   ))}
