@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
   const [_search, setSearch] = useState<string>('');
@@ -313,7 +313,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                                 </span>
                               </span>
                               <span>
-                                {t('profile:tickets.date')}: {dayjs(+ticket.createdDate).format(DATE_FORMAT)}
+                                {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT(i18n))}
                               </span>
                               <span>
                                 {t('profile:tickets.id')}: {ticket.code}

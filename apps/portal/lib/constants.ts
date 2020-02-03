@@ -1,6 +1,7 @@
 /** @format */
 
 // #region Imports NPM
+import { I18n } from 'next-i18next';
 // #endregion
 // #region Imports Local
 import { LoginService, Gender } from '../src/shared/interfaces';
@@ -37,7 +38,7 @@ export const TICKET_STATUSES = [
 ];
 
 export const ADMIN_GROUP = 'web master';
-export const DATE_FORMAT = 'DD.MM.YYYY г. HH:mm';
+export const DATE_FORMAT = (i: I18n): string => (i.language !== 'ru' ? 'YYYY-MM-DD HH:mm' : 'DD.MM.YYYY г. HH:mm');
 
 // TEST
 export const MOCK_PROFILE: UserContext = {

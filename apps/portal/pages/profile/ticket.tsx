@@ -209,7 +209,7 @@ const InfoCard = ({ classes, header, profile, t }: InfoCardProps): React.ReactEl
   </Card>
 );
 
-const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
@@ -299,9 +299,9 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     className={clsx(classes.cardHeader, classes.background)}
                     title={
                       <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {t('profile:ticket.header', {
+                        {t('profile:ticket:header', {
                           ticket: ticket.code,
-                          date: dayjs(ticket.createdDate).format(DATE_FORMAT),
+                          date: dayjs(ticket.createdDate).format(DATE_FORMAT(i18n)),
                         })}
                       </Typography>
                     }
