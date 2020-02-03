@@ -2,29 +2,28 @@
   "title": "Portal: Profile",
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
-  "searchPlaceholder": "Найти заявку...",
-  "notFound": "Заявка не найдена",
+  "searchPlaceholder": "Ticket search...",
+  "notFound": "Ticket not found",
   "ticket": {
     "header": "Ticket № {{ticket}} at {{date}}"
   },
   "tickets": {
     "title": "Мои заявки",
-    "status": "Статус",
+    "status": "Status",
     "inWork": "В работе",
     "date": "Дата регистрации",
     "id": "id",
     "comment": {
-      "add": "Оставить комментарий",
-      "submit": "Отправить"
+      "add": "Оставить комментарий"
     },
     "headers": {
-      "author": "Автор",
-      "executor": "Исполнитель",
-      "service": "Услуга",
+      "author": "Author",
+      "executor": "Executor",
+      "service": "Service",
       "status": "Статус выполнения",
-      "description": "Подробное описание",
-      "files": "Файлы",
-      "comments": "Комментарии"
+      "description": "Description",
+      "files": "Files",
+      "comments": "Comments"
     }
   },
   "equipment": {
