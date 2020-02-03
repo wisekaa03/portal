@@ -28,6 +28,10 @@ const config = {
   useAceEditor: false,
   sourceEditor: 'area',
   placeholder: 'Подробное описание',
+  // TODO: ,image,file
+  buttons:
+    'eraser,|,|,ul,ol,|,outdent,indent,|,font,fontsize,brush,paragraph,|,table,link,|,' +
+    'align,undo,redo,selectall,cut,copy,|,hr,symbol,print,source',
 };
 
 const JoditEditor = ({ value, onChange }): React.ReactElement => {
