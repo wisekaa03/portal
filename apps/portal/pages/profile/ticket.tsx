@@ -299,7 +299,10 @@ const ProfileTicket: I18nPage = ({ t, ...rest }): React.ReactElement => {
                     className={clsx(classes.cardHeader, classes.background)}
                     title={
                       <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {`ЗАЯВКА № ${ticket.code} ОТ ${dayjs(+ticket.createdDate).format(DATE_FORMAT)}`}
+                        {t('profile:ticket.header', {
+                          ticket: ticket.code,
+                          date: dayjs(ticket.createdDate).format(DATE_FORMAT),
+                        })}
                       </Typography>
                     }
                   />

@@ -4,6 +4,7 @@
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
   "notFound": "Заявка не найдена",
+  "ticket.header": "Заявка №{{ticket}} от {{date}}",
   "tickets": {
     "title": "Мои заявки",
     "status": "Статус",

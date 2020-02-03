@@ -167,7 +167,7 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
     ssr: false,
     variables: { status: status === TICKET_STATUSES[0] ? '' : status },
     fetchPolicy: 'cache-and-network',
-    pollInterval: 120000,
+    // pollInterval: 120000,
   });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
