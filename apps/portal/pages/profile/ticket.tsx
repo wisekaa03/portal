@@ -47,14 +47,14 @@ import TicketIconComplete from '../../public/images/svg/ticket/ticket_complete.s
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
-    case TICKET_STATUSES[1]:
     case TICKET_STATUSES[2]:
-      return TicketIconPause;
     case TICKET_STATUSES[3]:
-      return TicketIconNew;
-    case TICKET_STATUSES[0]:
-      return TicketIconWorked;
+      return TicketIconPause;
     case TICKET_STATUSES[4]:
+      return TicketIconNew;
+    case TICKET_STATUSES[1]:
+      return TicketIconWorked;
+    case TICKET_STATUSES[5]:
       return TicketIconComplete;
     default:
       return TicketIconPause;

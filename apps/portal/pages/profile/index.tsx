@@ -14,8 +14,6 @@ import {
   CardContent,
   Typography,
   Divider,
-  Checkbox,
-  FormControlLabel,
   BoxProps,
   FormControl,
   InputLabel,
@@ -38,6 +36,7 @@ import dayjs from '../../lib/dayjs';
 import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
+import RefreshButton from '../../components/refreshButton';
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
@@ -110,7 +109,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.secondary.main,
     },
     headerButtons: {
-      minWidth: 260,
+      // minWidth: 260,
     },
     ticket: {
       display: 'flex',
@@ -164,9 +163,9 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [status, setStatus] = useState<string>(TICKET_STATUSES[0]);
   const search = useDebounce(_search, 300);
 
-  const { loading, data, error } = useQuery(OLD_TICKETS, {
+  const { loading, data, error, refetch } = useQuery(OLD_TICKETS, {
     ssr: false,
-    variables: { status },
+    variables: { status: status === TICKET_STATUSES[0] ? '' : status },
     fetchPolicy: 'cache-and-network',
     pollInterval: 120000,
   });
@@ -241,6 +240,9 @@ const MyProfile: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   <Typography color="secondary" variant="h4">
                     {t('profile:tickets.title')}
                   </Typography>
+                </Box>
+                <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
+                  <RefreshButton noAbsolute onClick={() => refetch()} />
                 </Box>
                 <Box display="flex" className={classes.headerButtons} justifyContent="flex-end">
                   <FormControl variant="outlined">
