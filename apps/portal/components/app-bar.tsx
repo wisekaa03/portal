@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React, { useState } from 'react';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
@@ -26,6 +26,7 @@ import { LOGOUT } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import { Avatar } from './avatar';
 import { SESSION } from '../lib/constants';
+
 // #endregion
 
 const avatarHeight = 48;
@@ -103,13 +104,15 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   const { handleDrawerOpen, t } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const client = useApolloClient();
+  const router = useRouter();
+  const pathname = router && router.pathname;
 
   const [logout] = useMutation(LOGOUT, {
     onCompleted() {
       removeStorage(SESSION);
       client.resetStore();
 
-      Router.push({ pathname: '/auth/login' });
+      router.push({ pathname: '/auth/login', query: { redirect: pathname } });
     },
   });
 

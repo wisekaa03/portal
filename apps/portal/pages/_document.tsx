@@ -41,7 +41,8 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
     return (
       <Html lang={currentLanguage} dir="ltr">
-        <Head nonce={nonce}>
+        {/* nonce={nonce} */}
+        <Head>
           <meta charSet="utf-8" />
           <meta name="Description" content="Портал" />
           {/* TODO: временно запрещаем индексацию */}
@@ -52,7 +53,8 @@ class MainDocument extends Document<MainDocumentInitialProps> {
         </Head>
         <body>
           <Main />
-          <NextScript nonce={nonce} />
+          {/* nonce={nonce} */}
+          <NextScript />
         </body>
       </Html>
     );

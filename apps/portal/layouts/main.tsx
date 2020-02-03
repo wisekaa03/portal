@@ -2,12 +2,12 @@
 
 // #region Imports NPM
 import React, { useState, ReactNode, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/react-hooks';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
-import { useRouter } from 'next/router';
 import { I18nPage, nextI18next } from '../lib/i18n-client';
 import AppBar, { appBarHeight } from '../components/app-bar';
 import Drawer from '../components/drawer';
