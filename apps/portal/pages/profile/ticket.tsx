@@ -372,7 +372,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   />
                   <CardContent dangerouslySetInnerHTML={{ __html: ticket.description }} />
                 </Card>
-                {ticket.files && (
+                {ticket.files.length > 0 && (
                   <Card className={classes.fullRow}>
                     <CardHeader
                       disableTypography
