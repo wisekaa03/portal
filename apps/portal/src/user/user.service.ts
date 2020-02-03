@@ -210,8 +210,10 @@ export class UserService {
 
       if (user) {
         user.settings = { ...user.settings, ...value };
-        req.session.passport.user = user;
         this.save(user);
+
+        (user as User).passwordFrontend = req.session.passport.user.passwordFrontend;
+        req.session.passport.user = user;
 
         return user as User;
       }

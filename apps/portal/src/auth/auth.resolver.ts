@@ -84,14 +84,14 @@ export class AuthResolver {
         });
     }
 
+    // Чтобы в дальнейшем был пароль, в частности, в SOAP
+    (user as User).passwordFrontend = password;
+
     req.logIn(user as User, (err: any) => {
       if (err) {
         this.logService.error('Error when logging in:', err);
       }
     });
-
-    // Чтобы в дальнейшем был пароль, в частности, в SOAP
-    (user as User).passwordFrontend = password;
 
     return (await emailSession) && user;
   }
