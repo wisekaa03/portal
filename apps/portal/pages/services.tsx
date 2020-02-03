@@ -457,7 +457,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
                         <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
                         <Typography variant="subtitle1">
-                          {`Дата: ${dayjs(+ticketNew.createdDate).format(DATE_FORMAT)}`}
+                          {`Дата: ${dayjs(ticketNew.createdDate).format(DATE_FORMAT)}`}
                         </Typography>
                       </CardContent>
                     </Card>

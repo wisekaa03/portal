@@ -5,6 +5,7 @@ import { Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
 // #endregion
 
+// TODO: внести в env формат даты
 @Scalar('Date')
 export class DateScalar {
   description = 'Date scalar type';
