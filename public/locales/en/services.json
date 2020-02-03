@@ -2,15 +2,15 @@
   "title": "Portal: IT application",
   "success": "Заявка успешно создана.",
   "tabs": {
-    "tab1": "Выбор департамента",
-    "tab2": "Выбор услуги",
-    "tab3": "Выбор категории",
-    "tab4": "Отправка заявки",
-    "tab5": "Подтверждение"
+    "tab1": "Department",
+    "tab2": "Service",
+    "tab3": "Category",
+    "tab4": "Ticket",
+    "tab5": "Acknowledgment"
   },
   "form": {
-    "title": "Наименование заявки",
-    "text": "Подробное описание",
+    "title": "Title",
+    "text": "Description",
     "category": "Категория услуги"
   }
 }
