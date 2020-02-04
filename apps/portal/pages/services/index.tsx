@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -41,6 +41,7 @@ import { DATE_FORMAT } from '../../lib/constants';
 import dayjs from '../../lib/dayjs';
 import RefreshButton from '../../components/refreshButton';
 import { ComposeButton } from '../../components/compose-link';
+import { OldCategory } from '../../src/ticket/old-service/models/old-service.interface';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -149,10 +150,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const departments = [
   {
-    id: 0,
-    name: 'IT',
+    id: 'IT',
+    name: 'Департамент ИТ',
     icon: ServicesIcon,
-    title: 'Департамент ИТ',
   },
 ];
 
@@ -188,6 +188,7 @@ const defaultTicketState: TicketProps = {
 };
 
 const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+  const router = useRouter();
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
@@ -195,8 +196,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [ticketNew, setNew] = useState<CurrentResponse>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
-  const router = useRouter();
-  const queryParams = { ...(router && router.query) };
+  const [query] = useState(router && router.query);
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -205,21 +205,39 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
+  const handleRouting = useCallback((newValue: number): void => {
+    let departmentId = '';
+    let serviceId = '';
+    let categoryId = '';
+    if (newValue >= 1) {
+      departmentId = ticket.department && `/${ticket.department.id}`;
+    }
+    if (newValue >= 2) {
+      serviceId = ticket.service && `/${ticket.service.id}`;
+    }
+    if (newValue >= 3) {
+      categoryId = ticket.category && `/${ticket.category.id}`;
+    }
+    router.replace(router.pathname, `/services${departmentId}${serviceId}${categoryId}`);
+  });
+
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
-    router.pathname = '/services/IT';
     setTicket({ ...ticket, [key]: value });
 
     if (tabIndex) {
       setCurrentTab(tabIndex);
+      handleRouting(tabIndex);
     }
   };
 
   const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
+    handleRouting(newValue);
   };
 
   const handleChangeTabIndex = (index: number): void => {
     setCurrentTab(index);
+    handleRouting(index);
   };
 
   const handleClearTicket = (): void => {
@@ -227,10 +245,11 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     setBody('');
     setFiles([]);
     setCurrentTab(0);
+    handleRouting(0);
   };
 
   const handleAccept = (): void => {
-    const { /* department, */ service, category, title } = ticket;
+    const { service, category, title } = ticket;
 
     const variables = {
       ticket: {
@@ -251,14 +270,58 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     setCurrentTab(4);
   };
 
-  if (queryParams.department) {
-    // eslint-disable-next-line no-debugger
-    debugger;
-  }
-
   useEffect(() => {
     setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
   }, [dataService, errorService, loadingService]);
+
+  useEffect(() => {
+    const { department: departmentId, service: serviceId, category: categoryId } = query;
+    if (departmentId) {
+      const [department] = departmentId && departments.filter((dep) => dep.id === departmentId);
+      if (serviceId && typeof services === 'object') {
+        const [service] = services.filter((s) => s.code === serviceId);
+        if (categoryId && typeof service.category === 'object') {
+          const [category] = service.category.filter((c) => c.code === categoryId);
+
+          if (category) {
+            setTicket({
+              department,
+              service: {
+                id: service.code,
+                name: service.name,
+                icon: service.avatar,
+              },
+              category: {
+                id: category.code,
+                name: category.name,
+                icon: category.avatar,
+              },
+              title: '',
+            });
+            setCurrentTab(3);
+            handleRouting(3);
+          }
+        } else if (service) {
+          setTicket({
+            department,
+            service: {
+              id: service.code,
+              name: service.name,
+              icon: service.avatar,
+            },
+            category: false,
+            title: '',
+          });
+          setCurrentTab(2);
+          handleRouting(2);
+        }
+      } else if (department) {
+        setTicket({ department, service: false, category: false, title: '' });
+        setCurrentTab(1);
+        handleRouting(1);
+      }
+    }
+  }, [handleRouting, query, services]);
 
   useEffect(() => {
     setNew(!loadingNew && !errorNew && dataNew && dataNew.OldTicketNew);
@@ -331,7 +394,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                         <BaseIcon src={department.icon} size={48} />
                       </div>
                       <div>
-                        <Typography variant="subtitle1">{department.title}</Typography>
+                        <Typography variant="subtitle1">{department.name}</Typography>
                       </div>
                     </Box>
                   ))}

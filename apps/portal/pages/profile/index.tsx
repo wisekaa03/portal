@@ -208,7 +208,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const tickets: OldTicket[] | undefined =
     dataTickets &&
     dataTickets.OldTickets &&
-    dataTickets.OldTickets.filter((ticket) => ticket.code.includes(search) || ticket.name.includes(search));
+    dataTickets.OldTickets.filter((ticket: OldTicket) => ticket.code.includes(search) || ticket.name.includes(search));
 
   return (
     <>

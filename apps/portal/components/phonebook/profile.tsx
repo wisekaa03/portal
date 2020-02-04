@@ -179,6 +179,8 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   const openSettings = Boolean(settingsEl);
   const profile = !loading && data && data.profile;
 
+  // TODO: вставить сюда обработку ошибок
+
   return (
     <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
@@ -206,8 +208,8 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                             {t('phonebook:profile.hide')}
                           </MenuItem>
                           <Link
-                            href={{ pathname: '/profile/edit', query: { id: profile && profile.id } }}
-                            as={`/profile/edit?id=${profile && profile.id}`}
+                            href={{ pathname: `/profile/edit`, query: { id: profile && profile.id } }}
+                            as={`/profile/edit/${profile && profile.id}`}
                             passHref
                           >
                             <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
