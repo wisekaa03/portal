@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get, Res, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards, Param } from '@nestjs/common';
 import { RenderableResponse } from 'nest-next-2';
 // #endregion
 // #region Imports Local
@@ -18,14 +18,24 @@ export class ProfileController {
 
   @Get('edit')
   @UseGuards(SessionGuard)
-  public async edit(@Res() res: RenderableResponse, @Query('id') id: string): Promise<void> {
-    return res.render(`profile/edit`, { id });
+  public async editMe(@Res() res: RenderableResponse): Promise<void> {
+    return res.render('profile/edit');
   }
 
-  @Get('ticket')
+  @Get('edit/:id')
   @UseGuards(SessionGuard)
-  public async ticket(@Res() res: RenderableResponse, @Query('id') id: string): Promise<void> {
-    return res.render(`profile/ticket`, { id });
+  public async editProfile(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
+    return res.render('profile/edit', { id });
+  }
+
+  @Get('ticket/:id/:type')
+  @UseGuards(SessionGuard)
+  public async ticket(
+    @Res() res: RenderableResponse,
+    @Param('id') id: string,
+    @Param('type') type: string,
+  ): Promise<void> {
+    return res.render('profile/ticket', { id, type });
   }
 
   @Get('equipment')
