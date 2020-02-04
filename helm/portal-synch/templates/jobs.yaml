@@ -199,6 +199,6 @@ spec:
                   configMapKeyRef:
                     name: portal-configmap
                     key: MEETING_URL
+            resources:
+              {{- toYaml .Values.resources | nindent 14 }}
           restartPolicy: Never
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
