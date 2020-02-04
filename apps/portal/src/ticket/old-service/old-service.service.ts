@@ -105,6 +105,9 @@ export class OldTicketService {
     this.service = await client
       .kngk_GetRoutesAsync({ log: authentication.username })
       .then((result: any) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        // this.logService.debug(client.lastResponse, 'OldTicketService');
+
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
           return result[0]['return']['Услуга'].map(
             (service: any) =>
@@ -131,6 +134,11 @@ export class OldTicketService {
         return [];
       })
       .catch((error: SoapError) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
+
+        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+
         throw error;
       });
 
@@ -161,7 +169,7 @@ export class OldTicketService {
             NFile: filename,
           });
         }),
-      ).catch((error) => {
+      ).catch((error: Error) => {
         this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
 
         throw error;
@@ -183,7 +191,7 @@ export class OldTicketService {
       })
       .then((result: any) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
-        this.logService.verbose(client.lastResponse, 'OldTicketService');
+        // this.logService.debug(client.lastResponse, 'OldTicketService');
 
         if (result && result[0] && result[0]['return']) {
           return {
@@ -200,7 +208,10 @@ export class OldTicketService {
         return {};
       })
       .catch((error: SoapError) => {
-        this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketService');
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
+
+        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
         throw error;
       });
@@ -230,8 +241,11 @@ export class OldTicketService {
             NFile: filename,
           });
         }),
-      ).catch((error) => {
-        this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
+      ).catch((error: SoapError) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
+
+        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
         throw error;
       });
@@ -249,8 +263,8 @@ export class OldTicketService {
         AutorComment: authentication.username,
       })
       .then((result: any) => {
-        this.logService.debug(client.lastRequest, 'OldTicketService');
-        this.logService.debug(client.lastResponse, 'OldTicketService');
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        // this.logService.debug(client.lastResponse, 'OldTicketService');
 
         if (result && result[0] && result[0]['return']) {
           return createTicket(result[0]['return']);
@@ -259,7 +273,10 @@ export class OldTicketService {
         return {};
       })
       .catch((error: SoapError) => {
-        this.logService.error(client.lastRequest, JSON.stringify(error), 'OldTicketService');
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
+
+        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
         throw error;
       });
@@ -284,6 +301,9 @@ export class OldTicketService {
         Alltask: false,
       })
       .then((result: any) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        // this.logService.debug(client.lastResponse, 'OldTicketService');
+
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Задача'] === 'object') {
           let response = result[0]['return']['Задача'];
 
@@ -308,6 +328,11 @@ export class OldTicketService {
         return [];
       })
       .catch((error: SoapError) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
+
+        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+
         throw error;
       });
 
@@ -334,6 +359,9 @@ export class OldTicketService {
         Type: type,
       })
       .then((result: any) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        // this.logService.debug(client.lastResponse, 'OldTicketService');
+
         if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
           return createTicket(result[0]['return']);
         }
@@ -341,6 +369,11 @@ export class OldTicketService {
         return {};
       })
       .catch((error: SoapError) => {
+        this.logService.verbose(client.lastRequest, 'OldTicketService');
+        this.logService.verbose(client.lastResponse, 'OldTicketService');
+
+        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+
         throw error;
       });
   };
