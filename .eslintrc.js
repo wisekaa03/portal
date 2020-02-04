@@ -106,8 +106,9 @@ module.exports = {
         allowForLoopAfterthoughts: true,
       },
     ],
+    // https://github.com/typescript-eslint/typescript-eslint/issues/1232
     '@typescript-eslint/indent': [
-      'error',
+      'off',
       2,
       {
         flatTernaryExpressions: false,
