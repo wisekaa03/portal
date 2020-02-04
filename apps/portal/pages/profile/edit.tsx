@@ -168,7 +168,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleBirthday = (value: Date | null): void => {
     setCurrent({ ...current, birthday: new Date(value) });
-    setUpdated({ ...updated, birthday: dayjs(value).format('YYYY-MM-DD') as any });
+    setUpdated({ ...updated, birthday: new Date(dayjs(value).format('YYYY-MM-DD')) });
   };
 
   const handleSave = (): void => {
@@ -213,312 +213,316 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               </IsAdmin>
             </Box>
             <Box display="flex" flexDirection="column">
-              {current && (
-                <>
-                  <div className={classes.firstBlock}>
-                    <Box display="flex">
-                      <Box mr={1} position="relative">
-                        <div {...getRootProps()}>
-                          <input {...getInputProps()} />
-                          <IconButton className={classes.pickPhoto}>
-                            <PhotoCameraIcon />
-                          </IconButton>
-                          <Avatar fullSize className={classes.avatar} profile={current} alt="photo" />
+              {loading ? (
+                <Loading noMargin type="linear" variant="indeterminate" />
+              ) : (
+                current && (
+                  <>
+                    <div className={classes.firstBlock}>
+                      <Box display="flex">
+                        <Box mr={1} position="relative">
+                          <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <IconButton className={classes.pickPhoto}>
+                              <PhotoCameraIcon />
+                            </IconButton>
+                            <Avatar fullSize className={classes.avatar} profile={current} alt="photo" />
+                          </div>
+                        </Box>
+                        <div className={classes.nameBlock}>
+                          <TextField
+                            fullWidth
+                            onChange={handleChange('lastName')}
+                            color="secondary"
+                            value={current.lastName || ''}
+                            label={t('phonebook:fields.lastName')}
+                            variant="outlined"
+                            InputProps={InputProps}
+                          />
+                          <TextField
+                            fullWidth
+                            onChange={handleChange('firstName')}
+                            color="secondary"
+                            value={current.firstName || ''}
+                            label={t('phonebook:fields.firstName')}
+                            variant="outlined"
+                            InputProps={InputProps}
+                          />
+                          <TextField
+                            fullWidth
+                            onChange={handleChange('middleName')}
+                            color="secondary"
+                            value={current.middleName || ''}
+                            label={t('phonebook:fields.middleName')}
+                            variant="outlined"
+                            InputProps={InputProps}
+                          />
                         </div>
                       </Box>
                       <div className={classes.nameBlock}>
                         <TextField
                           fullWidth
-                          onChange={handleChange('lastName')}
+                          onChange={handleChange('nameeng')}
                           color="secondary"
-                          value={current.lastName || ''}
-                          label={t('phonebook:fields.lastName')}
+                          value={current.nameeng || ''}
+                          label={t('phonebook:fields.nameeng')}
                           variant="outlined"
                           InputProps={InputProps}
                         />
-                        <TextField
-                          fullWidth
-                          onChange={handleChange('firstName')}
-                          color="secondary"
-                          value={current.firstName || ''}
-                          label={t('phonebook:fields.firstName')}
-                          variant="outlined"
-                          InputProps={InputProps}
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={current.notShowing}
+                              onChange={handleChange('notShowing')}
+                              color="secondary"
+                              value="notShowing"
+                            />
+                          }
+                          label={t('phonebook:fields.notShowing')}
                         />
+                        <RadioGroup
+                          className={classes.genderBlock}
+                          onChange={handleChange('gender')}
+                          aria-label="gender"
+                          name="gender"
+                          value={current.gender}
+                        >
+                          <FormControlLabel
+                            value={Gender.MAN}
+                            control={<Radio color="secondary" />}
+                            label={t('common:gender.MAN')}
+                            name="gender"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value={Gender.WOMAN}
+                            control={<Radio color="secondary" />}
+                            label={t('common:gender.WOMAN')}
+                            name="gender"
+                            labelPlacement="end"
+                          />
+                        </RadioGroup>
+                      </div>
+                      <div>
                         <TextField
                           fullWidth
-                          onChange={handleChange('middleName')}
+                          onChange={handleChange('company')}
                           color="secondary"
-                          value={current.middleName || ''}
-                          label={t('phonebook:fields.middleName')}
+                          value={current.company || ''}
+                          label={t('phonebook:fields.company')}
                           variant="outlined"
                           InputProps={InputProps}
                         />
                       </div>
-                    </Box>
-                    <div className={classes.nameBlock}>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('nameeng')}
-                        color="secondary"
-                        value={current.nameeng || ''}
-                        label={t('phonebook:fields.nameeng')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={current.notShowing}
-                            onChange={handleChange('notShowing')}
-                            color="secondary"
-                            value="notShowing"
-                          />
-                        }
-                        label={t('phonebook:fields.notShowing')}
-                      />
-                      <RadioGroup
-                        className={classes.genderBlock}
-                        onChange={handleChange('gender')}
-                        aria-label="gender"
-                        name="gender"
-                        value={current.gender}
-                      >
-                        <FormControlLabel
-                          value={Gender.MAN}
-                          control={<Radio color="secondary" />}
-                          label={t('common:gender.MAN')}
-                          name="gender"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value={Gender.WOMAN}
-                          control={<Radio color="secondary" />}
-                          label={t('common:gender.WOMAN')}
-                          name="gender"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('company')}
-                        color="secondary"
-                        value={current.company || ''}
-                        label={t('phonebook:fields.company')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('companyeng')}
-                        color="secondary"
-                        value={current.companyeng || ''}
-                        label={t('phonebook:fields.companyeng')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('department')}
-                        color="secondary"
-                        value={current.department || ''}
-                        label={t('phonebook:fields.department')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('departmenteng')}
-                        color="secondary"
-                        value={current.departmenteng || ''}
-                        label={t('phonebook:fields.departmenteng')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('otdel')}
-                        color="secondary"
-                        value={current.otdel || ''}
-                        label={t('phonebook:fields.otdel')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('otdeleng')}
-                        color="secondary"
-                        value={current.otdeleng || ''}
-                        label={t('phonebook:fields.otdeleng')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('title')}
-                        color="secondary"
-                        value={current.title || ''}
-                        label={t('phonebook:fields.title')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('positioneng')}
-                        color="secondary"
-                        value={current.positioneng || ''}
-                        label={t('phonebook:fields.positioneng')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                  </div>
-                  <Divider className={classes.hr} />
-                  <div className={classes.secondBlock}>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('manager')}
-                        color="secondary"
-                        value={getManager(current.manager)}
-                        label={t('phonebook:fields.manager')}
-                        variant="outlined"
-                        InputProps={{ readOnly: true }}
-                      />
-                    </div>
-                    <div>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
+                      <div>
+                        <TextField
                           fullWidth
-                          inputVariant="outlined"
+                          onChange={handleChange('companyeng')}
                           color="secondary"
-                          format="yyyy-MM-dd"
-                          label={t('phonebook:fields.birthday')}
-                          value={current.birthday}
-                          onChange={handleBirthday}
-                          KeyboardButtonProps={{
-                            'aria-label': 'change birthday',
-                          }}
+                          value={current.companyeng || ''}
+                          label={t('phonebook:fields.companyeng')}
+                          variant="outlined"
+                          InputProps={InputProps}
                         />
-                      </MuiPickersUtilsProvider>
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('department')}
+                          color="secondary"
+                          value={current.department || ''}
+                          label={t('phonebook:fields.department')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('departmenteng')}
+                          color="secondary"
+                          value={current.departmenteng || ''}
+                          label={t('phonebook:fields.departmenteng')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('otdel')}
+                          color="secondary"
+                          value={current.otdel || ''}
+                          label={t('phonebook:fields.otdel')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('otdeleng')}
+                          color="secondary"
+                          value={current.otdeleng || ''}
+                          label={t('phonebook:fields.otdeleng')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('title')}
+                          color="secondary"
+                          value={current.title || ''}
+                          label={t('phonebook:fields.title')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('positioneng')}
+                          color="secondary"
+                          value={current.positioneng || ''}
+                          label={t('phonebook:fields.positioneng')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('email')}
-                        color="secondary"
-                        value={current.email || ''}
-                        label={t('phonebook:fields.email')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
+                    <Divider className={classes.hr} />
+                    <div className={classes.secondBlock}>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('manager')}
+                          color="secondary"
+                          value={getManager(current.manager)}
+                          label={t('phonebook:fields.manager')}
+                          variant="outlined"
+                          InputProps={{ readOnly: true }}
+                        />
+                      </div>
+                      <div>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardDatePicker
+                            fullWidth
+                            inputVariant="outlined"
+                            color="secondary"
+                            format="yyyy-MM-dd"
+                            label={t('phonebook:fields.birthday')}
+                            value={current.birthday}
+                            onChange={handleBirthday}
+                            KeyboardButtonProps={{
+                              'aria-label': 'change birthday',
+                            }}
+                          />
+                        </MuiPickersUtilsProvider>
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('email')}
+                          color="secondary"
+                          value={current.email || ''}
+                          label={t('phonebook:fields.email')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('telephone')}
+                          color="secondary"
+                          value={current.telephone || ''}
+                          label={t('phonebook:fields.telephone')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('mobile')}
+                          color="secondary"
+                          value={current.mobile || ''}
+                          label={t('phonebook:fields.mobile')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('workPhone')}
+                          color="secondary"
+                          value={current.workPhone || ''}
+                          label={t('phonebook:fields.workPhone')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('country')}
+                          color="secondary"
+                          value={current.country || ''}
+                          label={t('phonebook:fields.country')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('region')}
+                          color="secondary"
+                          value={current.region || ''}
+                          label={t('phonebook:fields.region')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('town')}
+                          color="secondary"
+                          value={current.town || ''}
+                          label={t('phonebook:fields.town')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('street')}
+                          color="secondary"
+                          value={current.street || ''}
+                          label={t('phonebook:fields.street')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          onChange={handleChange('postalCode')}
+                          color="secondary"
+                          value={current.postalCode || ''}
+                          label={t('phonebook:fields.postalCode')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('telephone')}
-                        color="secondary"
-                        value={current.telephone || ''}
-                        label={t('phonebook:fields.telephone')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('mobile')}
-                        color="secondary"
-                        value={current.mobile || ''}
-                        label={t('phonebook:fields.mobile')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('workPhone')}
-                        color="secondary"
-                        value={current.workPhone || ''}
-                        label={t('phonebook:fields.workPhone')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('country')}
-                        color="secondary"
-                        value={current.country || ''}
-                        label={t('phonebook:fields.country')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('region')}
-                        color="secondary"
-                        value={current.region || ''}
-                        label={t('phonebook:fields.region')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('town')}
-                        color="secondary"
-                        value={current.town || ''}
-                        label={t('phonebook:fields.town')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('street')}
-                        color="secondary"
-                        value={current.street || ''}
-                        label={t('phonebook:fields.street')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        onChange={handleChange('postalCode')}
-                        color="secondary"
-                        value={current.postalCode || ''}
-                        label={t('phonebook:fields.postalCode')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                    </div>
-                  </div>
-                </>
+                  </>
+                )
               )}
             </Box>
           </Box>

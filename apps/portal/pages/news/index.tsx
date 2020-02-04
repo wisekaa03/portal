@@ -195,7 +195,7 @@ const News: I18nPage = (props): React.ReactElement => {
                     </IconButton>
                   }
                   title={current.title}
-                  subheader={dayjs(+current.updatedAt).format(DATE_FORMAT(i18n))}
+                  subheader={dayjs(current.updatedAt).format(DATE_FORMAT(i18n))}
                 />
                 <CardContent>
                   <div
