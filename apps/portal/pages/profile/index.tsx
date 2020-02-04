@@ -174,11 +174,14 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   }, [ticketStatus]);
 
   // TODO: выводить ошибки
-  const { loading, data, error, refetch } = useQuery(OLD_TICKETS, {
-    ssr: false,
-    variables: { status: status === TICKET_STATUSES[0] ? '' : status },
-    fetchPolicy: 'cache-and-network',
-  });
+  const { loading: loadingTickets, data: dataTickets, error: errorTickets, refetch: refetchTickets } = useQuery(
+    OLD_TICKETS,
+    {
+      ssr: false,
+      variables: { status: status === TICKET_STATUSES[0] ? '' : status },
+      fetchPolicy: 'cache-and-network',
+    },
+  );
 
   const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     setSearch(event.target.value);
@@ -203,9 +206,9 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   }, [inputLabel]);
 
   const tickets: OldTicket[] | undefined =
-    data &&
-    data.OldTickets &&
-    data.OldTickets.filter((ticket) => ticket.code.includes(search) || ticket.name.includes(search));
+    dataTickets &&
+    dataTickets.OldTickets &&
+    dataTickets.OldTickets.filter((ticket) => ticket.code.includes(search) || ticket.name.includes(search));
 
   return (
     <>
@@ -261,7 +264,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   </Typography>
                 </Box>
                 <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
-                  <RefreshButton noAbsolute onClick={() => refetch()} />
+                  <RefreshButton noAbsolute onClick={() => refetchTickets()} />
                 </Box>
                 <Box display="flex" className={classes.headerButtons} justifyContent="flex-end">
                   <FormControl variant="outlined">
@@ -288,9 +291,9 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 my={2}
                 justifyContent="center"
               >
-                {error ? (
-                  <GQLError error={error} />
-                ) : loading ? (
+                {errorTickets ? (
+                  <GQLError error={errorTickets} />
+                ) : loadingTickets ? (
                   <Loading full type="circular" color="secondary" disableShrink size={48} />
                 ) : (
                   tickets &&
