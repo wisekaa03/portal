@@ -205,21 +205,24 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
-  const handleRouting = useCallback((newValue: number): void => {
-    let departmentId = '';
-    let serviceId = '';
-    let categoryId = '';
-    if (newValue >= 1) {
-      departmentId = ticket.department && `/${ticket.department.id}`;
-    }
-    if (newValue >= 2) {
-      serviceId = ticket.service && `/${ticket.service.id}`;
-    }
-    if (newValue >= 3) {
-      categoryId = ticket.category && `/${ticket.category.id}`;
-    }
-    router.replace(router.pathname, `/services${departmentId}${serviceId}${categoryId}`);
-  });
+  const handleRouting = useCallback(
+    (newValue: number): void => {
+      let departmentId = '';
+      let serviceId = '';
+      let categoryId = '';
+      if (newValue >= 1) {
+        departmentId = ticket.department && `/${ticket.department.id}`;
+      }
+      if (newValue >= 2) {
+        serviceId = ticket.service && `/${ticket.service.id}`;
+      }
+      if (newValue >= 3) {
+        categoryId = ticket.category && `/${ticket.category.id}`;
+      }
+      router.replace(router.pathname, `/services${departmentId}${serviceId}${categoryId}`);
+    },
+    [router, ticket],
+  );
 
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
     setTicket({ ...ticket, [key]: value });
