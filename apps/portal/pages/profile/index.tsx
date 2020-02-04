@@ -161,10 +161,10 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
   const [search, setSearch] = useState<string>('');
-  const [status, setStatus] = useState<string>(TICKET_STATUSES[0]);
   // const search = useDebounce(_search, 300);
 
   const ticketStatus = (profile.user && profile.user.settings && profile.user.settings.ticketStatus) as string | null;
+  const [status, setStatus] = useState<string>(ticketStatus || TICKET_STATUSES[0]);
   const [userSettings] = useMutation(USER_SETTINGS);
 
   useEffect(() => {

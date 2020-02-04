@@ -17,6 +17,7 @@ import {
   CardContent,
   CardActions,
 } from '@material-ui/core';
+import SendIcon from '@material-ui/icons/SendOutlined';
 import SwipeableViews from 'react-swipeable-views';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
@@ -39,6 +40,7 @@ import JoditEditor from '../../components/jodit';
 import { DATE_FORMAT } from '../../lib/constants';
 import dayjs from '../../lib/dayjs';
 import RefreshButton from '../../components/refreshButton';
+import { ComposeButton } from '../components/compose-link';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -464,6 +466,14 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                       </CardContent>
                       <CardActions>
                         <Box display="flex" flexGrow={1} justifyContent="space-around" p={2}>
+                          <ComposeButton
+                            variant="contained"
+                            startIcon={<SendIcon />}
+                            rounded
+                            body={`<p>Код заявки: ${ticketNew.code}</p>`}
+                          >
+                            {t('common:send')}
+                          </ComposeButton>
                           <ReactToPdf targetRef={newTicketRef} filename={`ticket_${ticketNew.code}.pdf`}>
                             {({ toPdf }) => (
                               <Button onClick={toPdf} actionType="save">

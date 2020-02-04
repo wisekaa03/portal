@@ -39,6 +39,7 @@ import Dropzone from '../../components/dropzone';
 import Button from '../../components/button';
 import { DropzoneFile } from '../../components/dropzone/types';
 import Iframe from '../../components/iframe';
+import { ComposeLink } from '../../components/compose-link';
 import TicketIconNew from '../../public/images/svg/ticket/ticket_new.svg';
 import TicketIconPause from '../../public/images/svg/ticket/ticket_pause.svg';
 import TicketIconWorked from '../../public/images/svg/ticket/ticket_worked.svg';
@@ -198,7 +199,7 @@ const InfoCard = ({ classes, header, profile, t }: InfoCardProps): React.ReactEl
                 </ListItem>
                 <ListItem>
                   <ListItemText primary={t('phonebook:fields.email')} />
-                  <ListItemText primary={profile.email} />
+                  <ListItemText primary={<ComposeLink to={profile.email}>{profile.email}</ComposeLink>} />
                 </ListItem>
               </List>
             </Paper>
