@@ -40,7 +40,7 @@ import JoditEditor from '../../components/jodit';
 import { DATE_FORMAT } from '../../lib/constants';
 import dayjs from '../../lib/dayjs';
 import RefreshButton from '../../components/refreshButton';
-import { ComposeButton } from '../components/compose-link';
+import { ComposeButton } from '../../components/compose-link';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
