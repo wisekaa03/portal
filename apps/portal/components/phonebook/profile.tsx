@@ -30,6 +30,7 @@ import { ProfileProps } from './types';
 import { Avatar } from '../avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import IsAdmin from '../isAdmin';
+import { ComposeLink } from '../compose-link';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -259,9 +260,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
             )}
             {profile && profile.email && (
               <div className={classes.center}>
-                <Link href={{ pathname: '/mail', query: { to: profile.email } }} as={`/mail?to=${profile.email}`}>
-                  <a>{profile.email}</a>
-                </Link>
+                <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
               </div>
             )}
           </div>
