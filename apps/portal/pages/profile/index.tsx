@@ -37,6 +37,7 @@ import { Avatar } from '../../components/avatar';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/refreshButton';
+import { GQLError } from '../../components/gql-error';
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
@@ -287,7 +288,9 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 my={2}
                 justifyContent="center"
               >
-                {loading ? (
+                {error ? (
+                  <GQLError error={error} />
+                ) : loading ? (
                   <Loading full type="circular" color="secondary" disableShrink size={48} />
                 ) : (
                   tickets &&

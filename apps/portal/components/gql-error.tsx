@@ -23,6 +23,7 @@ interface ErrorProps {
   error: ApolloError;
 }
 
+// TODO: сделать что-нибудь с отображением ошибок
 export const GQLError = (props: ErrorProps): React.ReactElement => {
   const classes = useStyles({});
 
