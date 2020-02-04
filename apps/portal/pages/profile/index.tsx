@@ -302,7 +302,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                       <CardActionArea>
                         <Link
                           href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}
-                          as={`/profile/ticket?id=${ticket.code}&type=${ticket.type}`}
+                          as={`/profile/ticket/${ticket.code}/${ticket.type}`}
                         >
                           <CardContent className={classes.ticketContent}>
                             <div className={classes.ticketLabel}>

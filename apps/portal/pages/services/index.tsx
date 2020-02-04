@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -24,20 +25,20 @@ import ReactToPrint from 'react-to-print';
 // #endregion
 // #region Imports Local
 import { OldService } from '@app/portal/ticket/old-service/models/old-service.interface';
-import Dropzone from '../components/dropzone';
-import { DropzoneFile } from '../components/dropzone/types';
-import { appBarHeight } from '../components/app-bar';
-import Page from '../layouts/main';
-import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../lib/queries';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import BaseIcon from '../components/icon';
-import { Loading } from '../components/loading';
-import Button from '../components/button';
-import ServicesIcon from '../../../public/images/svg/icons/services.svg';
-import JoditEditor from '../components/jodit';
-import { DATE_FORMAT } from '../lib/constants';
-import dayjs from '../lib/dayjs';
-import RefreshButton from '../components/refreshButton';
+import Dropzone from '../../components/dropzone';
+import { DropzoneFile } from '../../components/dropzone/types';
+import { appBarHeight } from '../../components/app-bar';
+import Page from '../../layouts/main';
+import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../../lib/queries';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
+import BaseIcon from '../../components/icon';
+import { Loading } from '../../components/loading';
+import Button from '../../components/button';
+import ServicesIcon from '../../public/images/svg/icons/services.svg';
+import JoditEditor from '../../components/jodit';
+import { DATE_FORMAT } from '../../lib/constants';
+import dayjs from '../../lib/dayjs';
+import RefreshButton from '../../components/refreshButton';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -147,6 +148,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const departments = [
   {
     id: 0,
+    name: 'IT',
     icon: ServicesIcon,
     title: 'Департамент ИТ',
   },
@@ -191,6 +193,8 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [ticketNew, setNew] = useState<CurrentResponse>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
+  const router = useRouter();
+  const queryParams = { ...(router && router.query) };
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -200,6 +204,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
+    router.pathname = '/services/IT';
     setTicket({ ...ticket, [key]: value });
 
     if (tabIndex) {
@@ -243,6 +248,11 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     setNew({});
     setCurrentTab(4);
   };
+
+  if (queryParams.department) {
+    // eslint-disable-next-line no-debugger
+    debugger;
+  }
 
   useEffect(() => {
     setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
@@ -305,7 +315,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                           'department',
                           {
                             id: department.id,
-                            name: department.title,
+                            name: department.name,
                             icon: department.icon,
                           },
                           1,
