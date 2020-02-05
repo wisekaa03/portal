@@ -1,10 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import { IncomingMessage } from 'http';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
 // #endregion
 // #region Imports Local
 // #endregion

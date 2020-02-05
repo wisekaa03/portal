@@ -272,7 +272,13 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   return (
     <>
       <Head>
-        <title>{t('profile:title')}</title>
+        <title>
+          {t('profile:title')} :{' '}
+          {t('profile:ticket:header', {
+            ticket: ticket.code,
+            date: dayjs(ticket.createdDate).format(DATE_FORMAT(i18n)),
+          })}
+        </title>
       </Head>
       <Page {...rest}>
         <Box display="flex" flexDirection="column">

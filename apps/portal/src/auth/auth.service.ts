@@ -46,7 +46,7 @@ export class AuthService {
    *
    * @param {UserLogin} data User login data transfer object
    * @returns {UserResponse} User response
-   * @throws {HttpException} Http Exception
+   * @throws {UnauthorizedException} Http Exception
    */
   async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
@@ -57,10 +57,10 @@ export class AuthService {
       user: await this.userService.readByUsername(username, true, 'profile'),
     })
       .then((user) => user && user.toResponseObject((req && req.sessionID) || ''))
-      .catch((error: HttpException) => {
+      .catch((error: UnauthorizedException) => {
         this.logService.error('Error: not found user', JSON.stringify(error), 'AuthService');
 
-        throw new HttpException(this.i18n.translate('auth.LOGIN.INCORRECT'), 401);
+        throw error;
       });
   }
 
@@ -160,7 +160,7 @@ export class AuthService {
    *
    * @param {string, string, UserEntity} - User register data transfer object
    * @returns {UserEntity} User response DTO
-   * @throws {HttpException}
+   * @throws {UnauthorizedException}
    */
   async userLdapLogin({
     username,
@@ -176,13 +176,13 @@ export class AuthService {
     if (!ldapUser) {
       this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
 
-      throw new HttpException('Unable to find user in ldap', 401);
+      throw new UnauthorizedException(401, 'Unable to find user in ldap');
     }
 
     return this.userService.createFromLdap(ldapUser, user).catch((error) => {
       this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
 
-      throw new HttpException(this.i18n.translate('auth.LOGIN.SERVER_ERROR'), 500);
+      throw new UnauthorizedException(500, this.i18n.translate('auth.LOGIN.SERVER_ERROR'));
     });
   }
 

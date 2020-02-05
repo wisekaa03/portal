@@ -17,6 +17,7 @@ import Router from 'next/router';
 // #region Imports Local
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
+import { GqlErrorMessage } from './types';
 // #endregion
 
 let apollo: ApolloClient<NormalizedCacheObject>;
@@ -34,21 +35,25 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     };
   });
 
-  const errorLink = onError(({ graphQLErrors, networkError }): any => {
+  const errorLink = onError(({ graphQLErrors, networkError /* response, operation */ }): any => {
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
-      graphQLErrors.map(({ message, locations, path }): any => {
+      graphQLErrors.some(({ message, locations, path, extensions }): boolean => {
         if (!__SERVER__) {
-          switch ((message as any).statusCode) {
-            case 403:
+          switch (extensions.code) {
+            case 'UNAUTHENTICATED':
+            case 'INTERNAL_SERVER_ERROR':
               Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
-              break;
+              return false;
+
             default:
               break;
           }
         }
 
-        return console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
+        console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
+
+        return true;
       });
     }
     if (networkError) {

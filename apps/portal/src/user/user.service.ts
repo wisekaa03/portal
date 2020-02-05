@@ -219,7 +219,7 @@ export class UserService {
    */
   async settings(req: Request, value: any): Promise<UserResponse | boolean> {
     if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
-      const user: UserEntity | undefined = await this.readById(req.session.passport.user.id, false, false);
+      const user: UserEntity | undefined = await this.readById(req.session.passport.user.id, false, 'profile');
 
       if (user) {
         user.settings = { ...user.settings, ...value };
