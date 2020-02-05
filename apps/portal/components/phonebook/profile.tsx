@@ -31,6 +31,7 @@ import { Avatar } from '../avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import IsAdmin from '../isAdmin';
 import { ComposeLink } from '../compose-link';
+import { GQLError } from '../gql-error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,6 +44,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     noPadding: {
       padding: 0,
+    },
+    fullRow: {
+      gridColumnStart: 1,
+      gridColumnEnd: 3,
     },
     wrap: {
       '&:last-child': {
@@ -177,7 +182,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   };
 
   const openSettings = Boolean(settingsEl);
-  const profile = !loading && data && data.profile;
+  const profile = !loading && !error && data && data.profile;
 
   // TODO: вставить сюда обработку ошибок
 
@@ -185,199 +190,215 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
     <Card ref={ref} className={classes.root}>
       <CardContent className={clsx(classes.wrap, classes.noPadding)}>
         <div className={clsx(classes.grid, classes.main)}>
-          <div className={clsx(classes.grid, classes.column)}>
+          <div
+            className={clsx(classes.grid, classes.column, {
+              [classes.fullRow]: error,
+            })}
+          >
             <div className={classes.topIcons}>
               <IconButton className={classes.noPadding} onClick={handleClose}>
                 <ArrowBackRounded />
               </IconButton>
-              <IsAdmin>
-                <IconButton className={classes.noPadding} onClick={handleSettings}>
-                  <MoreVertRounded />
-                  <Popper
-                    id="profile-setting"
-                    placement="bottom-end"
-                    className={classes.settingsPopper}
-                    open={openSettings}
-                    anchorEl={settingsEl}
-                    transition
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={handleCloseSettings}>
-                        <MenuList>
-                          <MenuItem onClick={handleChangeProfile(profile && profile.id)}>
+              {profile && (
+                <IsAdmin>
+                  <IconButton className={classes.noPadding} onClick={handleSettings}>
+                    <MoreVertRounded />
+                    <Popper
+                      id="profile-setting"
+                      placement="bottom-end"
+                      className={classes.settingsPopper}
+                      open={openSettings}
+                      anchorEl={settingsEl}
+                      transition
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleCloseSettings}>
+                          <MenuList>
+                            {/* <MenuItem onClick={handleChangeProfile(profile && profile.id)}>
                             {t('phonebook:profile.hide')}
-                          </MenuItem>
-                          <Link
-                            href={{ pathname: `/profile/edit`, query: { id: profile && profile.id } }}
-                            as={`/profile/edit/${profile && profile.id}`}
-                            passHref
-                          >
-                            <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
-                          </Link>
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Popper>
-                </IconButton>
-              </IsAdmin>
-            </div>
-            <div className={classes.center}>
-              {profile ? (
-                <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
-              ) : (
-                <Skeleton className={classes.avatar} variant="circle" />
+                          </MenuItem> */}
+                            <Link
+                              href={{ pathname: `/profile/edit`, query: { id: profile && profile.id } }}
+                              as={`/profile/edit/${profile && profile.id}`}
+                              passHref
+                            >
+                              <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
+                            </Link>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Popper>
+                  </IconButton>
+                </IsAdmin>
               )}
             </div>
-            <div className={classes.firstName}>
-              <h2>{profile ? profile.lastName : <Skeleton variant="rect" width={120} />}</h2>
-              <h2>{profile ? profile.firstName : <Skeleton variant="rect" width={150} />}</h2>
-              <h2>{profile ? profile.middleName : <Skeleton variant="rect" width={120} />}</h2>
-            </div>
-            {profile && profile.disabled && (
-              <div className={clsx(classes.center, classes.disabled)}>
-                <span>{t(`phonebook:fields.disabled`)}</span>
-              </div>
-            )}
-            {profile && profile.notShowing && (
-              <div className={clsx(classes.center, classes.notShowing)}>
-                <span>{t(`phonebook:fields.notShowing`)}</span>
-              </div>
-            )}
-            {profile && profile.nameeng && (
+            {error ? (
               <div className={classes.center}>
-                <span>{profile && profile.nameeng}</span>
+                <GQLError error={error} />
               </div>
-            )}
-            {profile && profile.mobile && (
-              <div className={classes.center}>
-                <PhoneAndroidRounded />
-                <span>{profile.mobile}</span>
-              </div>
-            )}
-            {profile && profile.workPhone && (
-              <div className={classes.center}>
-                <PhoneRounded />
-                <span>{profile.workPhone}</span>
-              </div>
-            )}
-            {profile && profile.email && (
-              <div className={classes.center}>
-                <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
-              </div>
+            ) : (
+              <>
+                <div className={classes.center}>
+                  {profile ? (
+                    <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
+                  ) : (
+                    <Skeleton className={classes.avatar} variant="circle" />
+                  )}
+                </div>
+                <div className={classes.firstName}>
+                  <h2>{profile ? profile.lastName : <Skeleton variant="rect" width={120} />}</h2>
+                  <h2>{profile ? profile.firstName : <Skeleton variant="rect" width={150} />}</h2>
+                  <h2>{profile ? profile.middleName : <Skeleton variant="rect" width={120} />}</h2>
+                </div>
+                {profile && profile.disabled && (
+                  <div className={clsx(classes.center, classes.disabled)}>
+                    <span>{t(`phonebook:fields.disabled`)}</span>
+                  </div>
+                )}
+                {profile && profile.notShowing && (
+                  <div className={clsx(classes.center, classes.notShowing)}>
+                    <span>{t(`phonebook:fields.notShowing`)}</span>
+                  </div>
+                )}
+                {profile && profile.nameeng && (
+                  <div className={classes.center}>
+                    <span>{profile && profile.nameeng}</span>
+                  </div>
+                )}
+                {profile && profile.mobile && (
+                  <div className={classes.center}>
+                    <PhoneAndroidRounded />
+                    <span>{profile.mobile}</span>
+                  </div>
+                )}
+                {profile && profile.workPhone && (
+                  <div className={classes.center}>
+                    <PhoneRounded />
+                    <span>{profile.workPhone}</span>
+                  </div>
+                )}
+                {profile && profile.email && (
+                  <div className={classes.center}>
+                    <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
+                  </div>
+                )}
+              </>
             )}
           </div>
-          <div className={clsx(classes.grid, classes.column)}>
-            <div>
-              <Paper>
-                <List className={classes.list}>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.company`)} />
-                      <ListItemText
-                        className={(profile && profile.company && classes.pointer) || ''}
-                        onClick={handleSearchClose(profile && profile.company)}
-                        primary={profile ? profile.company : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.department`)} />
-                      <ListItemText
-                        className={(profile && profile.department && classes.pointer) || ''}
-                        onClick={handleSearchClose(profile && profile.department)}
-                        primary={profile ? profile.department : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.title`)} />
-                      <ListItemText
-                        className={(profile && profile.title && classes.pointer) || ''}
-                        onClick={handleSearchClose(profile && profile.title)}
-                        primary={profile ? profile.title : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.otdel`)} />
-                      <ListItemText
-                        primary={profile ? profile.otdel : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.manager`)} />
-                      <ListItemText
-                        className={classes.pointer}
-                        onClick={handleProfile(profile && profile.manager)}
-                        primary={
-                          profile ? (
-                            profile.manager ? (
-                              `${profile.manager.lastName} ${profile.manager.firstName} ${profile.manager.middleName}`
+          {!error && (
+            <div className={clsx(classes.grid, classes.column)}>
+              <div>
+                <Paper>
+                  <List className={classes.list}>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.company`)} />
+                        <ListItemText
+                          className={(profile && profile.company && classes.pointer) || ''}
+                          onClick={handleSearchClose(profile && profile.company)}
+                          primary={profile ? profile.company : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.department`)} />
+                        <ListItemText
+                          className={(profile && profile.department && classes.pointer) || ''}
+                          onClick={handleSearchClose(profile && profile.department)}
+                          primary={profile ? profile.department : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.title`)} />
+                        <ListItemText
+                          className={(profile && profile.title && classes.pointer) || ''}
+                          onClick={handleSearchClose(profile && profile.title)}
+                          primary={profile ? profile.title : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.otdel`)} />
+                        <ListItemText
+                          primary={profile ? profile.otdel : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.manager`)} />
+                        <ListItemText
+                          className={classes.pointer}
+                          onClick={handleProfile(profile && profile.manager)}
+                          primary={
+                            profile ? (
+                              profile.manager ? (
+                                `${profile.manager.lastName} ${profile.manager.firstName} ${profile.manager.middleName}`
+                              ) : (
+                                ''
+                              )
                             ) : (
-                              ''
+                              <Skeleton variant="rect" width={250} height={25} />
                             )
-                          ) : (
-                            <Skeleton variant="rect" width={250} height={25} />
-                          )
-                        }
-                      />
-                    </div>
-                  </ListItem>
-                </List>
-              </Paper>
+                          }
+                        />
+                      </div>
+                    </ListItem>
+                  </List>
+                </Paper>
+              </div>
+              <div>
+                <Paper>
+                  <List className={classes.list}>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.country`)} />
+                        <ListItemText
+                          primary={profile ? profile.country : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.region`)} />
+                        <ListItemText
+                          primary={profile ? profile.region : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.town`)} />
+                        <ListItemText
+                          primary={profile ? profile.town : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem divider>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.street`)} />
+                        <ListItemText
+                          primary={profile ? profile.street : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                    <ListItem>
+                      <div className={classes.listItem}>
+                        <ListItemText primary={t(`phonebook:fields.postalCode`)} />
+                        <ListItemText
+                          primary={profile ? profile.postalCode : <Skeleton variant="rect" width={250} height={25} />}
+                        />
+                      </div>
+                    </ListItem>
+                  </List>
+                </Paper>
+              </div>
             </div>
-            <div>
-              <Paper>
-                <List className={classes.list}>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.country`)} />
-                      <ListItemText
-                        primary={profile ? profile.country : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.region`)} />
-                      <ListItemText
-                        primary={profile ? profile.region : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.town`)} />
-                      <ListItemText
-                        primary={profile ? profile.town : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem divider>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.street`)} />
-                      <ListItemText
-                        primary={profile ? profile.street : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                  <ListItem>
-                    <div className={classes.listItem}>
-                      <ListItemText primary={t(`phonebook:fields.postalCode`)} />
-                      <ListItemText
-                        primary={profile ? profile.postalCode : <Skeleton variant="rect" width={250} height={25} />}
-                      />
-                    </div>
-                  </ListItem>
-                </List>
-              </Paper>
-            </div>
-          </div>
+          )}
         </div>
       </CardContent>
     </Card>
