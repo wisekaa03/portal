@@ -169,17 +169,17 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
     setSettingsEl(null);
   };
 
-  const handleChangeProfile = (id: string | undefined) => (): void => {
-    if (id) {
-      changeProfile({
-        variables: {
-          id,
-          value: { flags: true },
-        },
-      });
-    }
-    handleClose();
-  };
+  // const handleChangeProfile = (id: string | undefined) => (): void => {
+  //   if (id) {
+  //     changeProfile({
+  //       variables: {
+  //         id,
+  //         value: { flags: true },
+  //       },
+  //     });
+  //   }
+  //   handleClose();
+  // };
 
   const openSettings = Boolean(settingsEl);
   const profile = !loading && !error && data && data.profile;
