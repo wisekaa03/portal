@@ -210,16 +210,16 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       let departmentId = '';
       let serviceId = '';
       let categoryId = '';
-      if (newValue >= 1) {
+      if (newValue >= 1 && ticket.department) {
         departmentId = ticket.department && `/${ticket.department.id}`;
       }
-      if (newValue >= 2) {
+      if (newValue >= 2 && ticket.service) {
         serviceId = ticket.service && `/${ticket.service.id}`;
       }
-      if (newValue >= 3) {
+      if (newValue >= 3 && ticket.category) {
         categoryId = ticket.category && `/${ticket.category.id}`;
       }
-      router.replace(router.pathname, `/services${departmentId}${serviceId}${categoryId}`);
+      router.push(router.pathname, `/services${departmentId}${serviceId}${categoryId}`);
     },
     [router, ticket],
   );
