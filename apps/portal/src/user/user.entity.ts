@@ -96,8 +96,9 @@ export class UserEntity {
 }
 
 // #region User response
-export interface UserResponse extends UserEntity {
-  session: string;
+export interface UserResponse extends Omit<UserEntity, 'comparePassword, toResponseObject'>, Express.User {
+  session?: string;
   mailSession?: MailSessionProps;
+  passwordFrontend?: string;
 }
 // #endregion

@@ -54,7 +54,7 @@ export class AuthService {
     return this.userLdapLogin({
       username,
       password,
-      user: await this.userService.readByUsername(username, true, true),
+      user: await this.userService.readByUsername(username, true, 'profile'),
     })
       .then((user) => user && user.toResponseObject((req && req.sessionID) || ''))
       .catch((error: HttpException) => {

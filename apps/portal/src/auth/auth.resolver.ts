@@ -83,9 +83,9 @@ export class AuthResolver {
     }
 
     // Чтобы в дальнейшем был пароль, в частности, в SOAP
-    (user as User).passwordFrontend = password;
+    user.passwordFrontend = password;
 
-    req.logIn(user as User, (err: any) => {
+    req.logIn(user, (err: any) => {
       if (err) {
         this.logService.error('Error when logging in:', err);
       }
@@ -102,7 +102,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') req: Request): Promise<boolean | null> {
-    this.logService.debug(`User logout`, 'AuthResolver');
+    this.logService.debug('User logout', 'AuthResolver');
 
     if (req.session) {
       req.logOut();
@@ -119,7 +119,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async cacheReset(): Promise<boolean> {
-    this.logService.debug(`Cache reset`, 'AuthResolver');
+    this.logService.debug('Cache reset', 'AuthResolver');
 
     return this.authService.cacheReset();
   }

@@ -9,7 +9,6 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { SoapAuthentication } from '@app/soap';
-import { User } from '../../user/models/user.dto';
 import { GqlAuthGuard } from '../../guards/gqlauth.guard';
 import {
   OldService,
@@ -19,6 +18,7 @@ import {
   OldTicketEditInput,
 } from './models/old-service.interface';
 import { OldTicketService } from './old-service.service';
+import { UserResponse } from '../../user/user.entity';
 // #endregion
 
 @Resolver('OldTicketResolver')
@@ -33,7 +33,7 @@ export class OldTicketResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async OldTicketService(@Context('req') req: Request): Promise<OldService[]> {
-    const user = req.user as User;
+    const user = req.user as UserResponse;
 
     if (user) {
       const authentication = {
@@ -62,7 +62,7 @@ export class OldTicketResolver {
     @Args('ticket') ticket: OldTicketNewInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
   ): Promise<OldTicketNew> {
-    const user = req.user as User;
+    const user = req.user as UserResponse;
 
     if (user) {
       const authentication = {
@@ -91,7 +91,7 @@ export class OldTicketResolver {
     @Args('ticket') ticket: OldTicketEditInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
   ): Promise<OldTicket> {
-    const user = req.user as User;
+    const user = req.user as UserResponse;
 
     if (user) {
       const authentication = {
@@ -116,7 +116,7 @@ export class OldTicketResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async OldTickets(@Context('req') req: Request, @Args('status') status: string): Promise<OldService[]> {
-    const user = req.user as User;
+    const user = req.user as UserResponse;
 
     if (user) {
       const authentication = {
@@ -145,7 +145,7 @@ export class OldTicketResolver {
     @Args('code') code: string,
     @Args('type') type: string,
   ): Promise<OldService> {
-    const user = req.user as User;
+    const user = req.user as UserResponse;
 
     if (user) {
       const authentication = {
