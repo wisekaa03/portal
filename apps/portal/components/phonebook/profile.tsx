@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useLazyQuery /* , useMutation */ } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {
@@ -136,7 +136,7 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   const [settingsEl, setSettingsEl] = useState<HTMLElement | null>(null);
 
   const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
-  const [changeProfile] = useMutation(CHANGE_PROFILE);
+  // const [changeProfile] = useMutation(CHANGE_PROFILE);
 
   useEffect(() => {
     getProfile({
