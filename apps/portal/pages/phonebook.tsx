@@ -367,7 +367,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       // TODO: для админов
       notShowing: isAdmin && columns.includes('notShowing'),
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   useEffect(() => {

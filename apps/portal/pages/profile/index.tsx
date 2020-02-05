@@ -179,7 +179,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     {
       ssr: false,
       variables: { status: status === TICKET_STATUSES[0] ? '' : status },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'cache-first',
     },
   );
 

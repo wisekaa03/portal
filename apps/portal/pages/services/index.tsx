@@ -200,7 +200,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
