@@ -114,7 +114,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
       uploads: {
         maxFileSize: 100000000, // 100MB
       },
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
     }),
     // #endregion
 

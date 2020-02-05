@@ -46,18 +46,26 @@ export class AuthResolver {
     @Args('username') username: string,
     @Args('password') password: string,
     @Context('req') req: Request,
+    // FIX: в GraphQLModule.forRoot({ context: ({ req, res }) => ({ req, res }) })
     @Context('res') res: Response,
   ): Promise<UserResponse | null> {
-    let emailSession = new Promise(() => true);
-
     const user = await this.authService
       .login({ username: username.toLowerCase(), password }, req)
       .catch((error: HttpException) => {
         throw new UnauthorizedException(error.message);
       });
 
+    // Чтобы в дальнейшем был пароль, в частности, в SOAP
+    user.passwordFrontend = password;
+
+    req.logIn(user, (err: any) => {
+      if (err) {
+        this.logService.error('Error when logging in:', err);
+      }
+    });
+
     if (user.profile && user.profile.email) {
-      emailSession = this.authService
+      await this.authService
         .loginEmail(user.profile.email, password)
         .then((response) => {
           if (response.data && response.data.sessid && response.data.sessauth) {
@@ -69,28 +77,22 @@ export class AuthResolver {
             res.cookie('roundcube_sessid', response.data.sessid, options);
             res.cookie('roundcube_sessauth', response.data.sessauth, options);
 
+            user.mailSession = {
+              sessid: response.data.sessid,
+              sessauth: response.data.sessauth,
+            };
+
             return true;
           }
 
           throw new Error('Undefined mailSession error.');
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
-
-          return true;
         });
     }
 
-    // Чтобы в дальнейшем был пароль, в частности, в SOAP
-    user.passwordFrontend = password;
-
-    req.logIn(user, (err: any) => {
-      if (err) {
-        this.logService.error('Error when logging in:', err);
-      }
-    });
-
-    return (await emailSession) && user;
+    return user;
   }
 
   /**
