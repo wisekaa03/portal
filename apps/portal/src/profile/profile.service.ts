@@ -155,7 +155,7 @@ export class ProfileService {
         ? await this.createLdapDN(ldapUser.manager, count)
         : undefined;
 
-    let comment;
+    let comment: any;
     try {
       comment = JSON.parse(ldapUser.comment);
     } catch (error) {
@@ -229,17 +229,20 @@ export class ProfileService {
 
     if (user && user.profile) {
       profile.id = user.profile.id;
-      profile.createdAt = user.profile.createdAt;
-      profile.updatedAt = user.profile.updatedAt;
+      // profile.createdAt = user.profile.createdAt;
+      // profile.updatedAt = user.profile.updatedAt;
     } else {
       const profileSave = await this.profileRepository.findOne({
         where: { loginIdentificator: ldapUser.objectGUID },
       });
 
+      profile.createdAt = new Date(ldapUser.whenCreated);
+      profile.updatedAt = new Date(ldapUser.whenChanged);
+
       if (profileSave) {
         profile.id = profileSave.id;
-        profile.createdAt = profileSave.createdAt;
-        profile.updatedAt = profileSave.updatedAt;
+        // profile.createdAt = profileSave.createdAt;
+        // profile.updatedAt = profileSave.updatedAt;
       }
     }
 

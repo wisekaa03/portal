@@ -8,7 +8,6 @@ import { Request, Response } from 'express';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
-import { User } from '../user/models/user.dto';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { UserResponse } from '../user/user.entity';

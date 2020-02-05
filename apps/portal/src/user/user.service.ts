@@ -144,8 +144,10 @@ export class UserService {
 
     const data: User = {
       id: user && user.id,
-      createdAt: user && user.createdAt,
-      updatedAt: user && user.updatedAt,
+      // createdAt: user && user.createdAt,
+      // updatedAt: user && user.updatedAt,
+      createdAt: new Date(ldapUser.whenCreated),
+      updatedAt: new Date(ldapUser.whenChanged),
       username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
