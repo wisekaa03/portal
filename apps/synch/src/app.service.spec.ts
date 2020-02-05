@@ -80,18 +80,17 @@ describe('Synch service', () => {
         }),
 
         // #region TypeORM
-        /* eslint-disable prettier/prettier */
         TypeOrmModule.forRootAsync({
-          useFactory: () => ({
-            type: 'sqlite',
-            database: ':memory:',
-            dropSchema: true,
-            entities: [ProfileEntity, GroupEntity, UserEntity],
-            synchronize: true,
-            logging: false
-          } as TypeOrmModuleOptions),
+          useFactory: () =>
+            ({
+              type: 'sqlite',
+              database: ':memory:',
+              dropSchema: true,
+              entities: [ProfileEntity, GroupEntity, UserEntity],
+              synchronize: true,
+              logging: false,
+            } as TypeOrmModuleOptions),
         }),
-        /* eslint-enable prettier/prettier */
         // #endregion
 
         GroupModule,

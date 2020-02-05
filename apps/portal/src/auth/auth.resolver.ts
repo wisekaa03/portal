@@ -44,12 +44,10 @@ export class AuthResolver {
    */
   @Mutation()
   async login(
-  /* eslint-disable prettier/prettier */
     @Args('username') username: string,
-      @Args('password') password: string,
-      @Context('req') req: Request,
-      @Context('res') res: Response,
-  /* eslint-enable prettier/prettier */
+    @Args('password') password: string,
+    @Context('req') req: Request,
+    @Context('res') res: Response,
   ): Promise<UserResponse | null> {
     let emailSession = new Promise(() => true);
 

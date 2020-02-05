@@ -58,11 +58,9 @@ export class OldTicketResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketNew(
-    /* eslint-disable prettier/prettier */
     @Context('req') req: Request,
-      @Args('ticket') ticket: OldTicketNewInput,
-      @Args('attachments') attachments: Promise<FileUpload>[],
-  /* eslint-enable prettier/prettier */
+    @Args('ticket') ticket: OldTicketNewInput,
+    @Args('attachments') attachments: Promise<FileUpload>[],
   ): Promise<OldTicketNew> {
     const user = req.user as User;
 
@@ -89,11 +87,9 @@ export class OldTicketResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketEdit(
-  /* eslint-disable prettier/prettier */
     @Context('req') req: Request,
-      @Args('ticket') ticket: OldTicketEditInput,
-      @Args('attachments') attachments: Promise<FileUpload>[],
-  /* eslint-enable prettier/prettier */
+    @Args('ticket') ticket: OldTicketEditInput,
+    @Args('attachments') attachments: Promise<FileUpload>[],
   ): Promise<OldTicket> {
     const user = req.user as User;
 
@@ -144,13 +140,11 @@ export class OldTicketResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  /* eslint-disable @typescript-eslint/indent */
   async OldTicketDescription(
     @Context('req') req: Request,
     @Args('code') code: string,
     @Args('type') type: string,
   ): Promise<OldService> {
-    /* eslint-enable @typescript-eslint/indent */
     const user = req.user as User;
 
     if (user) {

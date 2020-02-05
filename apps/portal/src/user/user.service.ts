@@ -57,14 +57,18 @@ export class UserService {
    * @param {string} username User ID
    * @returns {UserEntity | undefined} The user
    */
-  readByUsername = async (username: string, isDisabled = true, isRelations = true): Promise<UserEntity | undefined> => {
+  readByUsername = async (
+    username: string,
+    isDisabled = true,
+    isRelations: boolean | 'profile' | 'groups' = true,
+  ): Promise<UserEntity | undefined> => {
     const where: Record<any, any> = { username };
 
     if (isDisabled) {
       where.disabled = false;
     }
 
-    const relations = isRelations ? ['profile', 'groups'] : [];
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
 
     return this.userRepository.findOne({
       where,

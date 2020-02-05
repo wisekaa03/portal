@@ -175,13 +175,11 @@ export class ProfileService {
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
-    /* eslint-disable prettier/prettier */
     const thumbnailPhoto = thumbnailPhotoBuffer
       ? this.imageService
-        .imageResize(thumbnailPhotoBuffer, 250, 250)
-        .then((img) => (img ? img.toString('base64') : undefined))
+          .imageResize(thumbnailPhotoBuffer, 250, 250)
+          .then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
-    /* eslint-enable prettier/prettier */
     const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
@@ -394,18 +392,16 @@ export class ProfileService {
           // eslint-disable-next-line no-case-declarations
           const thumbnailPhotoBuffer = Buffer.from(value as string, 'base64');
 
-          /* eslint-disable prettier/prettier */
           created.thumbnailPhoto = thumbnailPhotoBuffer
             ? this.imageService
-              .imageResize(thumbnailPhotoBuffer, 250, 250)
-              .then((img) => (img ? img.toString('base64') : undefined))
+                .imageResize(thumbnailPhotoBuffer, 250, 250)
+                .then((img) => (img ? img.toString('base64') : undefined))
             : undefined;
           created.thumbnailPhoto40 = thumbnailPhotoBuffer
             ? this.imageService
-              .imageResize(thumbnailPhotoBuffer)
-              .then((img) => (img ? img.toString('base64') : undefined))
+                .imageResize(thumbnailPhotoBuffer)
+                .then((img) => (img ? img.toString('base64') : undefined))
             : undefined;
-          /* eslint-enable prettier/prettier */
 
           modification[key] = value as string;
           break;

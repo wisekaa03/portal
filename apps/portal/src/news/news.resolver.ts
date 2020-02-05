@@ -39,12 +39,10 @@ export class NewsResolver {
   @UseGuards(IsAdminGuard)
   async editNews(
     @Context('req') req: Request,
-    /* eslint-disable prettier/prettier */
-      @Args('title') title: string,
-      @Args('excerpt') excerpt: string,
-      @Args('content') content: string,
-      @Args('id') id: string,
-      /* eslint-enable prettier/prettier */
+    @Args('title') title: string,
+    @Args('excerpt') excerpt: string,
+    @Args('content') content: string,
+    @Args('id') id: string,
   ): Promise<NewsEntity> {
     const userId = req.user as UserResponse;
     if (userId) {
