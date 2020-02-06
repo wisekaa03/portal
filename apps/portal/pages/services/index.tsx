@@ -213,8 +213,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleTabChange = (_: React.ChangeEvent<{}>, index: number): void => {
-    // eslint-disable-next-line default-case
+  const handleRouting = (index: number): void => {
     switch (index) {
       case 2:
         setTicket({ ...ticket, category: false });
@@ -223,26 +222,20 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
         setTicket({ ...ticket, category: false, service: false });
         break;
       case 0:
+      default:
         setTicket({ ...ticket, category: false, service: false, department: false });
         break;
     }
+  };
+
+  const handleTabChange = (_: React.ChangeEvent<{}>, index: number): void => {
+    handleRouting(index);
     setCurrentTab(index);
     setInit(false);
   };
 
   const handleChangeTabIndex = (index: number): void => {
-    // eslint-disable-next-line default-case
-    switch (index) {
-      case 2:
-        setTicket({ ...ticket, category: false });
-        break;
-      case 1:
-        setTicket({ ...ticket, category: false, service: false });
-        break;
-      case 0:
-        setTicket({ ...ticket, category: false, service: false, department: false });
-        break;
-    }
+    handleRouting(index);
     setCurrentTab(index);
     setInit(false);
   };
