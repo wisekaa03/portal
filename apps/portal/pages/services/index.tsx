@@ -196,6 +196,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [init, setInit] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -358,11 +359,19 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
               <Tab disabled={!ticketNew} label={t('services:tabs.tab5')} />
             </Tabs>
           </Paper>
-          {!__SERVER__ && loadingService ? (
+          {!__SERVER__ && (loadingService || loading) ? (
             <Loading full type="circular" color="secondary" disableShrink size={48} />
           ) : (
             <>
-              {currentTab < 4 && <RefreshButton onClick={() => refetch()} />}
+              {currentTab < 4 && (
+                <RefreshButton
+                  onClick={async () => {
+                    setLoading(true);
+                    await refetch();
+                    setLoading(false);
+                  }}
+                />
+              )}
               <SwipeableViews
                 ref={swipeableViews}
                 animateHeight
