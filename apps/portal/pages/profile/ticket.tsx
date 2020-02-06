@@ -273,11 +273,14 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     <>
       <Head>
         <title>
-          {t('profile:title')} :{' '}
-          {t('profile:ticket:header', {
-            ticket: ticket.code,
-            date: dayjs(ticket.createdDate).format(DATE_FORMAT(i18n)),
-          })}
+          {`${t('profile:title')}: ${
+            ticket
+              ? t('profile:ticket.header', {
+                  ticket: ticket.code,
+                  date: dayjs(ticket.createdDate).format(DATE_FORMAT(i18n)),
+                })
+              : ''
+          }`}
         </title>
       </Head>
       <Page {...rest}>
@@ -291,7 +294,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
               </Link>
             </Box>
             {!ticket ? (
-              loading ? (
+              !__SERVER__ && loading ? (
                 <Loading full type="circular" color="secondary" disableShrink size={48} />
               ) : (
                 <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
@@ -306,7 +309,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                     className={clsx(classes.cardHeader, classes.background)}
                     title={
                       <Typography className={classes.cardHeaderTitle} variant="h6">
-                        {t('profile:ticket:header', {
+                        {t('profile:ticket.header', {
                           ticket: ticket.code,
                           date: dayjs(ticket.createdDate).format(DATE_FORMAT(i18n)),
                         })}

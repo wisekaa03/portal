@@ -508,7 +508,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       </Head>
       <Page {...props}>
         <div className={classes.root}>
-          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+          {!__SERVER__ && loading && <Loading noMargin type="linear" variant="indeterminate" />}
           <div className={classes.panel}>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
