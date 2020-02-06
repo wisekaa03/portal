@@ -91,8 +91,9 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Page {...rest}>
         <Box display="flex" flexDirection="column">
           <>
-            {!current && <Loading noMargin type="linear" variant="indeterminate" />}
-            {current && (
+            {!current ? (
+              <Loading noMargin type="linear" variant="indeterminate" />
+            ) : (
               <>
                 <Box display="flex" flexDirection="column" p={2} overflow="auto">
                   <Box display="flex" mb={1}>
