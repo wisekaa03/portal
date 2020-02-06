@@ -155,7 +155,7 @@ export class ProfileService {
         ? await this.createLdapDN(ldapUser.manager, count)
         : undefined;
 
-    let comment;
+    let comment: any;
     try {
       comment = JSON.parse(ldapUser.comment);
     } catch (error) {
@@ -175,13 +175,11 @@ export class ProfileService {
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
-    /* eslint-disable prettier/prettier */
     const thumbnailPhoto = thumbnailPhotoBuffer
       ? this.imageService
-        .imageResize(thumbnailPhotoBuffer, 250, 250)
-        .then((img) => (img ? img.toString('base64') : undefined))
+          .imageResize(thumbnailPhotoBuffer, 250, 250)
+          .then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
-    /* eslint-enable prettier/prettier */
     const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
@@ -231,17 +229,20 @@ export class ProfileService {
 
     if (user && user.profile) {
       profile.id = user.profile.id;
-      profile.createdAt = user.profile.createdAt;
-      profile.updatedAt = user.profile.updatedAt;
+      // profile.createdAt = user.profile.createdAt;
+      // profile.updatedAt = user.profile.updatedAt;
     } else {
       const profileSave = await this.profileRepository.findOne({
         where: { loginIdentificator: ldapUser.objectGUID },
       });
 
+      profile.createdAt = new Date(ldapUser.whenCreated);
+      profile.updatedAt = new Date(ldapUser.whenChanged);
+
       if (profileSave) {
         profile.id = profileSave.id;
-        profile.createdAt = profileSave.createdAt;
-        profile.updatedAt = profileSave.updatedAt;
+        // profile.createdAt = profileSave.createdAt;
+        // profile.updatedAt = profileSave.updatedAt;
       }
     }
 
@@ -394,18 +395,16 @@ export class ProfileService {
           // eslint-disable-next-line no-case-declarations
           const thumbnailPhotoBuffer = Buffer.from(value as string, 'base64');
 
-          /* eslint-disable prettier/prettier */
           created.thumbnailPhoto = thumbnailPhotoBuffer
             ? this.imageService
-              .imageResize(thumbnailPhotoBuffer, 250, 250)
-              .then((img) => (img ? img.toString('base64') : undefined))
+                .imageResize(thumbnailPhotoBuffer, 250, 250)
+                .then((img) => (img ? img.toString('base64') : undefined))
             : undefined;
           created.thumbnailPhoto40 = thumbnailPhotoBuffer
             ? this.imageService
-              .imageResize(thumbnailPhotoBuffer)
-              .then((img) => (img ? img.toString('base64') : undefined))
+                .imageResize(thumbnailPhotoBuffer)
+                .then((img) => (img ? img.toString('base64') : undefined))
             : undefined;
-          /* eslint-enable prettier/prettier */
 
           modification[key] = value as string;
           break;

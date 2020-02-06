@@ -8,7 +8,7 @@ import { Request } from 'express';
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { UserService } from './user.service';
-import { User } from './models/user.dto';
+import { UserResponse } from './user.entity';
 // #endregion
 
 @Resolver()
@@ -37,7 +37,7 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async userSettings(@Context('req') req: Request, @Args('value') value: any): Promise<User | boolean> {
+  async userSettings(@Context('req') req: Request, @Args('value') value: any): Promise<UserResponse | boolean> {
     return this.userService.settings(req, value) || null;
   }
 }

@@ -147,7 +147,8 @@ module.exports = {
     'no-debugger': 1,
     'new-cap': 'off',
     'no-extra-boolean-cast': 0,
-    'indent': ['error'],
+    // 'indent': ['error'],
+    'indent': 'off',
     'react/jsx-one-expression-per-line': 'off',
     'quotes': ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
     'import/no-extraneous-dependencies': [

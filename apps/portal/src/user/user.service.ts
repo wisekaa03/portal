@@ -11,7 +11,7 @@ import { Request } from 'express';
 import { LogService } from '@app/logger';
 import { LdapService, LdapResponseUser } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
-import { UserEntity } from './user.entity';
+import { UserEntity, UserResponse } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../profile/models/profile.dto';
@@ -57,14 +57,18 @@ export class UserService {
    * @param {string} username User ID
    * @returns {UserEntity | undefined} The user
    */
-  readByUsername = async (username: string, isDisabled = true, isRelations = true): Promise<UserEntity | undefined> => {
+  readByUsername = async (
+    username: string,
+    isDisabled = true,
+    isRelations: boolean | 'profile' | 'groups' = true,
+  ): Promise<UserEntity | undefined> => {
     const where: Record<any, any> = { username };
 
     if (isDisabled) {
       where.disabled = false;
     }
 
-    const relations = isRelations ? ['profile', 'groups'] : [];
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
 
     return this.userRepository.findOne({
       where,
@@ -79,15 +83,22 @@ export class UserService {
    * @param {string} id User ID
    * @returns {UserEntity | undefined} The user
    */
-  readById = async (id: string, isDisabled = true): Promise<UserEntity | undefined> => {
+  readById = async (
+    id: string,
+    isDisabled = true,
+    isRelations: boolean | 'profile' | 'groups' = true,
+  ): Promise<UserEntity | undefined> => {
     const where: Record<any, any> = { id };
+
     if (isDisabled) {
       where.disabled = false;
     }
 
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
+
     return this.userRepository.findOne({
       where,
-      relations: ['profile', 'groups'],
+      relations,
       cache: true,
     });
   };
@@ -133,8 +144,10 @@ export class UserService {
 
     const data: User = {
       id: user && user.id,
-      createdAt: user && user.createdAt,
-      updatedAt: user && user.updatedAt,
+      // createdAt: user && user.createdAt,
+      // updatedAt: user && user.updatedAt,
+      createdAt: new Date(ldapUser.whenCreated),
+      updatedAt: new Date(ldapUser.whenChanged),
       username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
@@ -204,18 +217,18 @@ export class UserService {
    * @param {string} value settings object
    * @returns {boolean}
    */
-  async settings(req: Request, value: any): Promise<User | boolean> {
+  async settings(req: Request, value: any): Promise<UserResponse | boolean> {
     if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
-      const user: UserEntity | undefined = await this.readById(req.session.passport.user.id);
+      const user: UserEntity | undefined = await this.readById(req.session.passport.user.id, false, 'profile');
 
       if (user) {
         user.settings = { ...user.settings, ...value };
         this.save(user);
 
-        (user as User).passwordFrontend = req.session.passport.user.passwordFrontend;
+        (user as UserResponse).passwordFrontend = req.session.passport.user.passwordFrontend;
         req.session.passport.user = user;
 
-        return user as User;
+        return user as UserResponse;
       }
     }
 

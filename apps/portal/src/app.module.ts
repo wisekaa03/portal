@@ -100,22 +100,21 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
 
     // #region GraphQL
     Upload,
-    /* eslint-disable prettier/prettier */
     GraphQLModule.forRoot({
       debug: dev,
       playground: dev
         ? {
-          settings: {
-            // Когда в playground режиме, нажмите settings и добавте строку:
-            'request.credentials': 'same-origin',
-          },
-        }
+            settings: {
+              // Когда в playground режиме, нажмите settings и добавте строку:
+              'request.credentials': 'same-origin',
+            },
+          }
         : false,
       typePaths: ['./**/*.graphql'],
       uploads: {
         maxFileSize: 100000000, // 100MB
       },
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
     }),
     // #endregion
 
@@ -128,7 +127,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           `Replication: ` +
             `master url="${configService.get<string>('DATABASE_URI')}, ` +
             `slave url="${configService.get<string>('DATABASE_URI_RD')}. ` +
-          `Cache url="${configService.get<string>('DATABASE_REDIS_URI')}", ` +
+            `Cache url="${configService.get<string>('DATABASE_REDIS_URI')}", ` +
             `ttl=${configService.get<number>('DATABASE_REDIS_TTL')}ms.`,
           'Database',
         );
@@ -149,16 +148,23 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           logging: dev
             ? true
             : configService.get('DATABASE_LOGGING') === 'false'
-              ? false
-              : configService.get('DATABASE_LOGGING') === 'true'
-                ? true
-                : JSON.parse(configService.get('DATABASE_LOGGING')),
+            ? false
+            : configService.get('DATABASE_LOGGING') === 'true'
+            ? true
+            : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities: [
-            ProfileEntity, GroupEntity, UserEntity,
+            ProfileEntity,
+            GroupEntity,
+            UserEntity,
             NewsEntity,
-            MediaDirectoryEntity, MediaEntity,
-            TicketDepartmentModule, TicketGroupServiceModule, TicketServiceModule,
-            TicketsModule, TicketAttachmentsModule, TicketCommentsModule
+            MediaDirectoryEntity,
+            MediaEntity,
+            TicketDepartmentModule,
+            TicketGroupServiceModule,
+            TicketServiceModule,
+            TicketsModule,
+            TicketAttachmentsModule,
+            TicketCommentsModule,
           ],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {
@@ -169,16 +175,15 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
             },
             alwaysEnabled: true,
             /**
-            * Time in milliseconds in which cache will expire.
-            * This can be setup per-query.
-            * Default value is 1000 which is equivalent to 1 second.
-            */
+             * Time in milliseconds in which cache will expire.
+             * This can be setup per-query.
+             * Default value is 1000 which is equivalent to 1 second.
+             */
             duration: configService.get<number>('DATABASE_REDIS_TTL'),
           },
         } as TypeOrmModuleOptions;
       },
     }),
-    /* eslint-enable prettier/prettier */
     // #endregion
 
     // #region Profile

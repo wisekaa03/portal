@@ -148,13 +148,11 @@ export class SynchService {
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
-    /* eslint-disable prettier/prettier */
     const thumbnailPhoto = thumbnailPhotoBuffer
       ? this.imageService
-        .imageResize(thumbnailPhotoBuffer, 250, 250)
-        .then((img) => (img ? img.toString('base64') : undefined))
+          .imageResize(thumbnailPhotoBuffer, 250, 250)
+          .then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
-    /* eslint-enable prettier/prettier */
     const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;

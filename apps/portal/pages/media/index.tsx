@@ -126,7 +126,9 @@ interface MediaProps {
 const Media: I18nPage = (props): React.ReactElement => {
   const { t, i18n } = props;
   const classes = useStyles({});
-  const { loading, data, error } = useQuery(MEDIA);
+  const { loading, data, error } = useQuery(MEDIA, {
+    fetchPolicy: 'cache-first',
+  });
   const [current, setCurrent] = useState<MediaProps>(null);
   const profile = useContext(ProfileContext);
   const router = useRouter();

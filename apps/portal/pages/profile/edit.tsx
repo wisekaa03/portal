@@ -194,7 +194,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   return (
     <>
       <Head>
-        <title>{t('profile:title')}</title>
+        <title>{t('profile:edit.title', { current })}</title>
       </Head>
       <Page {...rest}>
         <Box display="flex" flexDirection="column">

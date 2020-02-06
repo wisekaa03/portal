@@ -10,7 +10,6 @@ import { NextComponentType, NextPageContext } from 'next';
 
 const detectionOrder: string[] = [];
 
-/* eslint-disable prettier/prettier */
 export const nextI18next = new NextI18Next({
   browserLanguageDetection: true, // Set-Cookie: next-i18next
   serverLanguageDetection: true,
@@ -25,22 +24,19 @@ export const nextI18next = new NextI18Next({
         ? 'public/locales'
         : 'public/locales'
       : process.env.NODE_ENV !== 'production'
-        ? 'locales'
-        : 'locales',
+      ? 'locales'
+      : 'locales',
   otherLanguages: ['en'],
 });
-/* eslint-enable prettier/prettier */
 
 export const { appWithTranslation, Trans } = nextI18next;
 export const useTranslation = originalUseTranslation;
 export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common'].concat(namespaces);
 
-/* eslint-disable @typescript-eslint/indent */
 export type I18nPage<P = {}> = NextComponentType<
   NextPageContext,
   { namespacesRequired: string[] },
   WithTranslation & P & { namespacesRequired: string[] }
 >;
-/* eslint-enable @typescript-eslint/indent */
 
 export default nextI18next;

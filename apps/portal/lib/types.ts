@@ -10,6 +10,12 @@ import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
 // #region Imports Local
 // #endregion
 
+export interface GqlErrorMessage {
+  statusCode: number;
+  error: string;
+  message: string;
+}
+
 export interface NodeIdGetterObj extends IdGetterObj {
   nodeId?: string;
 }

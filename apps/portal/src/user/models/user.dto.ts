@@ -15,7 +15,6 @@ export interface BaseUser {
   username: string;
 
   password?: string;
-  passwordFrontend?: string;
 
   disabled: boolean;
 
