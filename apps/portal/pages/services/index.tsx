@@ -213,33 +213,35 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
+  const handleTabChange = (_: React.ChangeEvent<{}>, index: number): void => {
     // eslint-disable-next-line default-case
-    switch (newValue) {
-      case 3:
-        ticket.category = false;
-      // eslint-disable-next-line no-fallthrough
+    switch (index) {
       case 2:
-        ticket.service = false;
-      // eslint-disable-next-line no-fallthrough
+        setTicket({ ...ticket, category: false });
+        break;
       case 1:
-        ticket.department = false;
+        setTicket({ ...ticket, category: false, service: false });
+        break;
+      case 0:
+        setTicket({ ...ticket, category: false, service: false, department: false });
+        break;
     }
-    setCurrentTab(newValue);
+    setCurrentTab(index);
     setInit(false);
   };
 
   const handleChangeTabIndex = (index: number): void => {
     // eslint-disable-next-line default-case
     switch (index) {
-      case 3:
-        ticket.category = false;
-      // eslint-disable-next-line no-fallthrough
       case 2:
-        ticket.service = false;
-      // eslint-disable-next-line no-fallthrough
+        setTicket({ ...ticket, category: false });
+        break;
       case 1:
-        ticket.department = false;
+        setTicket({ ...ticket, category: false, service: false });
+        break;
+      case 0:
+        setTicket({ ...ticket, category: false, service: false, department: false });
+        break;
     }
     setCurrentTab(index);
     setInit(false);
