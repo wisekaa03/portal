@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -41,7 +41,6 @@ import { DATE_FORMAT } from '../../lib/constants';
 import dayjs from '../../lib/dayjs';
 import RefreshButton from '../../components/refreshButton';
 import { ComposeButton } from '../../components/compose-link';
-import { OldCategory } from '../../src/ticket/old-service/models/old-service.interface';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -196,7 +195,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [ticketNew, setNew] = useState<CurrentResponse>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
-  const [query] = useState(router && router.query);
+  const [init, setInit] = useState<boolean>(false);
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -205,42 +204,20 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
-  const handleRouting = useCallback(
-    (newValue: number): void => {
-      let departmentId = '';
-      let serviceId = '';
-      let categoryId = '';
-      if (newValue >= 1 && ticket.department) {
-        departmentId = ticket.department && `/${ticket.department.id}`;
-      }
-      if (newValue >= 2 && ticket.service) {
-        serviceId = ticket.service && `/${ticket.service.id}`;
-      }
-      if (newValue >= 3 && ticket.category) {
-        categoryId = ticket.category && `/${ticket.category.id}`;
-      }
-      router.push(router.pathname, `/services${departmentId}${serviceId}${categoryId}`);
-    },
-    [router, ticket],
-  );
-
   const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
     setTicket({ ...ticket, [key]: value });
 
     if (tabIndex) {
       setCurrentTab(tabIndex);
-      handleRouting(tabIndex);
     }
   };
 
   const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
     setCurrentTab(newValue);
-    handleRouting(newValue);
   };
 
   const handleChangeTabIndex = (index: number): void => {
     setCurrentTab(index);
-    handleRouting(index);
   };
 
   const handleClearTicket = (): void => {
@@ -248,7 +225,6 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     setBody('');
     setFiles([]);
     setCurrentTab(0);
-    handleRouting(0);
   };
 
   const handleAccept = (): void => {
@@ -274,57 +250,79 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   };
 
   useEffect(() => {
-    setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
-  }, [dataService, errorService, loadingService]);
+    if (!__SERVER__ && services && !init) {
+      const { department, service, category } = router.query;
+      const initialState = { ...defaultTicketState };
+      let tab = 0;
+
+      if (department) {
+        initialState.department = departments.find((dep) => dep.id === department);
+
+        if (initialState.department) {
+          tab += 1;
+
+          if (service) {
+            const currentService = services.find((ser) => ser.code === service);
+
+            if (currentService) {
+              tab += 1;
+              initialState.service = {
+                id: currentService.code,
+                name: currentService.name,
+                icon: currentService.avatar,
+              };
+
+              if (category) {
+                const currentCategory = currentService.category.find((cat) => cat.code === category);
+
+                if (currentCategory) {
+                  tab += 1;
+                  initialState.category = {
+                    id: currentCategory.code,
+                    name: currentCategory.name,
+                    icon: currentCategory.avatar,
+                  };
+                }
+              }
+            }
+          }
+
+          setCurrentTab(tab);
+          setTicket(initialState);
+        }
+      }
+
+      setInit(true);
+    }
+  }, [router, init, services, setTicket, setCurrentTab]);
 
   useEffect(() => {
-    const { department: departmentId, service: serviceId, category: categoryId } = query;
-    if (departmentId) {
-      const [department] = departmentId && departments.filter((dep) => dep.id === departmentId);
-      if (serviceId && typeof services === 'object') {
-        const [service] = services.filter((s) => s.code === serviceId);
-        if (categoryId && typeof service.category === 'object') {
-          const [category] = service.category.filter((c) => c.code === categoryId);
+    if (!init) {
+      return;
+    }
 
-          if (category) {
-            setTicket({
-              department,
-              service: {
-                id: service.code,
-                name: service.name,
-                icon: service.avatar,
-              },
-              category: {
-                id: category.code,
-                name: category.name,
-                icon: category.avatar,
-              },
-              title: '',
-            });
-            setCurrentTab(3);
-            handleRouting(3);
-          }
-        } else if (service) {
-          setTicket({
-            department,
-            service: {
-              id: service.code,
-              name: service.name,
-              icon: service.avatar,
-            },
-            category: false,
-            title: '',
-          });
-          setCurrentTab(2);
-          handleRouting(2);
+    let pathname = '/services';
+
+    if (ticket.department) {
+      pathname += `/${ticket.department.id}`;
+
+      if (ticket.service) {
+        pathname += `/${ticket.service.id}`;
+
+        if (ticket.category) {
+          pathname += `/${ticket.category.id}`;
         }
-      } else if (department) {
-        setTicket({ department, service: false, category: false, title: '' });
-        setCurrentTab(1);
-        handleRouting(1);
       }
     }
-  }, [handleRouting, query, services]);
+
+    if (router.asPath !== pathname) {
+      router.replace(router.pathname, pathname);
+    }
+  }, [router, init, ticket.department, ticket.service, ticket.category]);
+
+  useEffect(() => {
+    setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
+  }, [dataService, errorService, loadingService]);
 
   useEffect(() => {
     setNew(!loadingNew && !errorNew && dataNew && dataNew.OldTicketNew);
@@ -360,7 +358,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
               <Tab disabled={!ticketNew} label={t('services:tabs.tab5')} />
             </Tabs>
           </Paper>
-          {loadingService ? (
+          {!__SERVER__ && loadingService ? (
             <Loading full type="circular" color="secondary" disableShrink size={48} />
           ) : (
             <>
