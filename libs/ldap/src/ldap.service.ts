@@ -11,6 +11,7 @@ import bcrypt from 'bcrypt';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
+import dayjs from 'dayjs';
 import {
   LDAP_OPTIONS,
   LdapModuleOptions,
@@ -303,6 +304,16 @@ export class LdapService extends EventEmitter {
                 }
                 if (object.hasOwnProperty('sAMAccountName')) {
                   object.sAMAccountName = (object.sAMAccountName as string).toLowerCase();
+                }
+                if (object.hasOwnProperty('whenCreated')) {
+                  object.whenCreated = dayjs((object.whenCreated as string).replace(/\.0Z/, ''), {
+                    format: 'YYYYMMDDHHmmssSSSS',
+                  }).format('YYYY-MM-DD HH:mm:ss');
+                }
+                if (object.hasOwnProperty('whenChanged')) {
+                  object.whenChanged = dayjs((object.whenChanged as string).replace(/\.0Z/, ''), {
+                    format: 'YYYYMMDDHHmmssSSSS',
+                  }).format('YYYY-MM-DD HH:mm:ss');
                 }
                 items.push(object);
                 if (this.opts.includeRaw === true) {
