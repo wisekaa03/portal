@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -25,7 +26,7 @@ import dynamic from 'next/dynamic';
 import ReactToPrint from 'react-to-print';
 // #endregion
 // #region Imports Local
-import { OldService } from '@app/portal/ticket/old-service/models/old-service.interface';
+import { OldService, OldCategory } from '@app/portal/ticket/old-service/models/old-service.interface';
 import Dropzone from '../../components/dropzone';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { appBarHeight } from '../../components/app-bar';
@@ -191,11 +192,11 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<false | OldService[]>(false);
+  const [categories, setCategories] = useState<false | OldCategory[]>(false);
   const [ticket, setTicket] = useState<TicketProps>(defaultTicketState);
   const [ticketNew, setNew] = useState<CurrentResponse>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
-  const [init, setInit] = useState<boolean>(false);
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -205,51 +206,16 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
 
-  const handleTicket = (key: keyof TicketProps, value: any, tabIndex?: number): void => {
-    setTicket({ ...ticket, [key]: value });
-
-    if (tabIndex) {
-      setCurrentTab(tabIndex);
-    }
-  };
-
-  const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
-    // eslint-disable-next-line default-case
-    switch (newValue) {
-      case 3:
-        ticket.category = false;
-      // eslint-disable-next-line no-fallthrough
-      case 2:
-        ticket.service = false;
-      // eslint-disable-next-line no-fallthrough
-      case 1:
-        ticket.department = false;
-    }
-    setCurrentTab(newValue);
-    setInit(false);
-  };
-
   const handleChangeTabIndex = (index: number): void => {
-    // eslint-disable-next-line default-case
-    switch (index) {
-      case 3:
-        ticket.category = false;
-      // eslint-disable-next-line no-fallthrough
-      case 2:
-        ticket.service = false;
-      // eslint-disable-next-line no-fallthrough
-      case 1:
-        ticket.department = false;
-    }
     setCurrentTab(index);
-    setInit(false);
   };
 
   const handleClearTicket = (): void => {
     setTicket(defaultTicketState);
+    setCategories(false);
     setBody('');
     setFiles([]);
-    setCurrentTab(0);
+    router.push(router.pathname, router.pathname);
   };
 
   const handleAccept = (): void => {
@@ -275,7 +241,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   };
 
   useEffect(() => {
-    if (!__SERVER__ && services && !init) {
+    if (!__SERVER__ && services) {
       const { department, service, category } = router.query;
       const initialState = { ...defaultTicketState };
       let tab = 0;
@@ -297,6 +263,8 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 icon: currentService.avatar,
               };
 
+              setCategories(currentService.category);
+
               if (category) {
                 const currentCategory = currentService.category.find((cat) => cat.code === category);
 
@@ -306,44 +274,19 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                     id: currentCategory.code,
                     name: currentCategory.name,
                     icon: currentCategory.avatar,
+                    categoryType: currentCategory.categoryType,
                   };
                 }
               }
             }
           }
-
-          setCurrentTab(tab);
-          setTicket(initialState);
         }
       }
 
-      setInit(true);
+      setCurrentTab(tab);
+      setTicket(initialState);
     }
-  }, [router, init, services, setTicket, setCurrentTab]);
-
-  useEffect(() => {
-    if (!init) {
-      return;
-    }
-
-    let pathname = '/services';
-
-    if (ticket.department) {
-      pathname += `/${ticket.department.id}`;
-
-      if (ticket.service) {
-        pathname += `/${ticket.service.id}`;
-
-        if (ticket.category) {
-          pathname += `/${ticket.category.id}`;
-        }
-      }
-    }
-
-    if (router.asPath !== pathname) {
-      router.push(router.pathname, pathname);
-    }
-  }, [router, init, ticket.department, ticket.service, ticket.category]);
+  }, [services, setTicket, setCurrentTab, router]);
 
   useEffect(() => {
     setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
@@ -375,16 +318,16 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
             ? t('services:title.category', {
                 department: ticket.department && ticket.department.name,
                 service: ticket.service && ticket.service.name,
-                category: ticket.category && ticket.category.name,
+                category: ticket.category.name,
               })
             : ticket.service
             ? t('services:title.service', {
                 department: ticket.department && ticket.department.name,
-                service: ticket.service && ticket.service.name,
+                service: ticket.service.name,
               })
             : ticket.department
             ? t('services:title.department', {
-                department: ticket.department && ticket.department.name,
+                department: ticket.department.name,
               })
             : t('services:title.title')}
         </title>
@@ -392,7 +335,12 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       <Page {...rest}>
         <div className={classes.root}>
           <Paper ref={tabHeader} square className={classes.header}>
-            <Tabs value={currentTab} indicatorColor="primary" textColor="primary" onChange={handleTabChange}>
+            <Tabs
+              value={currentTab}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={(_: any, tab: number): void => handleChangeTabIndex(tab)}
+            >
               <Tab label={t('services:tabs.tab1')} />
               <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
               <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
@@ -416,81 +364,72 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
               >
                 <div className={classes.container1}>
                   {departments.map((department) => (
-                    <Box
+                    <Link
                       key={department.id}
-                      onClick={() =>
-                        handleTicket(
-                          'department',
-                          {
-                            id: department.id,
-                            name: department.name,
-                            icon: department.icon,
-                          },
-                          1,
-                        )
-                      }
-                      className={clsx(classes.service, {
-                        [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
-                      })}
+                      href={{ pathname: '/services', query: { department: department.id } }}
+                      as={`/services/${department.id}`}
                     >
-                      <div>
-                        <BaseIcon src={department.icon} size={48} />
-                      </div>
-                      <div>
-                        <Typography variant="subtitle1">{department.name}</Typography>
-                      </div>
-                    </Box>
+                      <Box
+                        className={clsx(classes.service, {
+                          [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
+                        })}
+                      >
+                        <div>
+                          <BaseIcon src={department.icon} size={48} />
+                        </div>
+                        <div>
+                          <Typography variant="subtitle1">{department.name}</Typography>
+                        </div>
+                      </Box>
+                    </Link>
                   ))}
                 </div>
                 <div style={{ minHeight: containerHeight }} className={classes.container1}>
                   {services &&
                     services.map((service) => (
-                      <Box
+                      <Link
                         key={service.code}
-                        onClick={() =>
-                          handleTicket(
-                            'service',
-                            {
-                              id: service.code,
-                              name: service.name,
-                              icon: service.avatar,
-                            },
-                            2,
-                          )
-                        }
-                        className={clsx(classes.service, {
-                          [classes.serviceIndex]: ticket.service && ticket.service.id === service.code,
-                        })}
+                        href={{
+                          pathname: '/services',
+                          query: {
+                            department: ticket.department && ticket.department.id,
+                            service: service.code,
+                          },
+                        }}
+                        as={`/services/${ticket.department && ticket.department.id}/${service.code}`}
                       >
-                        <div>
-                          <BaseIcon base64 src={service.avatar} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{service.name}</Typography>
-                        </div>
-                      </Box>
+                        <Box
+                          className={clsx(classes.service, {
+                            [classes.serviceIndex]: ticket.service && ticket.service.id === service.code,
+                          })}
+                        >
+                          <div>
+                            <BaseIcon base64 src={service.avatar} size={48} />
+                          </div>
+                          <div>
+                            <Typography variant="subtitle1">{service.name}</Typography>
+                          </div>
+                        </Box>
+                      </Link>
                     ))}
                 </div>
                 <div style={{ minHeight: containerHeight }} className={classes.container1}>
-                  {services &&
-                    ticket.service &&
-                    services
-                      .find((service) => ticket.service && service.code === ticket.service.id)
-                      .category.map((category) => (
+                  {categories &&
+                    categories.map((category) => (
+                      <Link
+                        key={category.code}
+                        href={{
+                          pathname: '/services',
+                          query: {
+                            department: ticket.department && ticket.department.id,
+                            service: ticket.service && ticket.service.id,
+                            category: category.code,
+                          },
+                        }}
+                        as={`/services/${ticket.department && ticket.department.id}/${ticket.service &&
+                          ticket.service.id}/${category.code}`}
+                      >
                         <Box
-                          key={category.code}
-                          onClick={() =>
-                            handleTicket(
-                              'category',
-                              {
-                                id: category.code,
-                                name: category.name,
-                                icon: category.avatar,
-                                categoryType: category.categoryType,
-                              },
-                              3,
-                            )
-                          }
                           className={clsx(classes.service, {
                             [classes.serviceIndex]: ticket.category && ticket.category.id === category.code,
                           })}
@@ -502,7 +441,8 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                             <Typography variant="subtitle1">{category.name}</Typography>
                           </div>
                         </Box>
-                      ))}
+                      </Link>
+                    ))}
                 </div>
                 <div style={{ minHeight: containerHeight }} className={classes.container2}>
                   {ticket.department && ticket.service && ticket.category && (
@@ -536,7 +476,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   <FormControl className={classes.formControl} variant="outlined">
                     <TextField
                       value={ticket.title}
-                      onChange={(e) => handleTicket('title', e.target.value)}
+                      onChange={(e) => setTicket({ ...ticket, title: e.target.value })}
                       type="text"
                       label={t('services:form.title')}
                       variant="outlined"
