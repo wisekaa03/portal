@@ -25,7 +25,7 @@ export class AuthResolver {
    * GraphQL query: me
    *
    * @param req - request.User
-   * @returns {UserResponseDTO}
+   * @returns {UserResponse}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
