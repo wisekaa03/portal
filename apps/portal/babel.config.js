@@ -9,7 +9,8 @@
 module.exports = function(api) {
   api.cache(true);
 
-  const devProd = {
+  /*
+  const oldProd = {
     presets: ['next/babel', ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }]],
     plugins: [
       '@babel/proposal-class-properties',
@@ -59,6 +60,92 @@ module.exports = function(api) {
       ],
     ],
   };
+  */
+
+  const devProd = {
+    plugins: [
+      // "babel-plugin-styled-components",
+      'babel-plugin-react-require',
+      '@babel/plugin-syntax-dynamic-import',
+      // './node_modules/next/dist/build/babel/plugins/react-loadable-plugin',
+      '@babel/plugin-proposal-class-properties',
+      [
+        '@babel/plugin-proposal-object-rest-spread',
+        {
+          useBuiltIns: true,
+        },
+      ],
+    ],
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          debug: true,
+          modules: false,
+          exclude: ['transform-typeof-symbol'],
+          useBuiltIns: 'usage',
+          corejs: '3.1',
+        },
+      ],
+      [
+        '@babel/preset-react',
+        {
+          development: true,
+        },
+      ],
+      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+    ],
+  };
+
+  const prodProd = {
+    plugins: [
+      // "babel-plugin-styled-components",
+      'babel-plugin-react-require',
+      '@babel/plugin-syntax-dynamic-import',
+      // './node_modules/next/dist/build/babel/plugins/react-loadable-plugin',
+      '@babel/plugin-proposal-class-properties',
+      [
+        '@babel/plugin-proposal-object-rest-spread',
+        {
+          useBuiltIns: true,
+        },
+      ],
+    ],
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          modules: false,
+          exclude: ['transform-typeof-symbol'],
+          useBuiltIns: 'usage',
+          corejs: '3.1',
+        },
+      ],
+      '@babel/preset-react',
+      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+    ],
+  };
+
+  const testProd = {
+    plugins: ['babel-plugin-styled-components', '@babel/plugin-proposal-class-properties'],
+    presets: [
+      [
+        '@babel/preset-react',
+        {
+          development: true,
+        },
+      ],
+      [
+        '@babel/preset-env',
+        {
+          targets: 'node 10.16',
+          useBuiltIns: false,
+          ignoreBrowserslistConfig: true,
+        },
+      ],
+      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+    ],
+  };
 
   const config = {
     env: {
@@ -67,12 +154,17 @@ module.exports = function(api) {
       },
 
       production: {
-        ...devProd,
+        ...prodProd,
       },
 
       test: {
-        ...devProd,
-        presets: [['next/babel', { 'preset-env': { modules: 'commonjs' } }], '@zeit/next-typescript/babel'],
+        ...testProd,
+        // presets: [
+        //   [
+        //     'next/babel', { 'preset-env': { modules: 'commonjs' } }
+        //   ],
+        //   '@zeit/next-typescript/babel'
+        // ],
       },
     },
   };
@@ -125,7 +217,7 @@ module.exports = function(api) {
     // TODO: разобраться почему navbar не работает при включенном
     // config.plugins.push('minify-simplify');
     // TODO: разобраться почему babel-plugin-minify-flip-comparisons не работает
-    config.plugins.push('minify-flip-comparisons');
+    // config.plugins.push('minify-flip-comparisons');
   }
 
   return config;
