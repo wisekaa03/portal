@@ -154,6 +154,9 @@ const useStyles = makeStyles((theme: Theme) =>
     ticketWorked: {
       color: '#3aad0b',
     },
+    notFounds: {
+      color: '#949494',
+    },
   }),
 );
 
@@ -180,6 +183,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       ssr: false,
       variables: { status: status === TICKET_STATUSES[0] ? '' : status },
       fetchPolicy: 'cache-first',
+      notifyOnNetworkStatusChange: true,
     },
   );
 
@@ -295,8 +299,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   <GQLError error={errorTickets} />
                 ) : loadingTickets ? (
                   <Loading full type="circular" color="secondary" disableShrink size={48} />
-                ) : (
-                  tickets &&
+                ) : tickets && tickets.length > 0 ? (
                   tickets.map((ticket: OldTicket) => (
                     <Card className={classes.ticket} key={ticket.code}>
                       <CardActionArea>
@@ -316,10 +319,10 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                               </div>
                               <div>
                                 {/* <Typography
-                                  variant="body1"
-                                  // eslint-disable-next-line react/no-danger
-                                  dangerouslySetInnerHTML={{ __html: ticket.description }}
-                                /> */}
+                                    variant="body1"
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{ __html: ticket.description }}
+                                  /> */}
                               </div>
                             </div>
                             <Divider />
@@ -347,6 +350,10 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                       </CardActionArea>
                     </Card>
                   ))
+                ) : (
+                  <Typography className={classes.notFounds} variant="h4">
+                    {t('profile:notFounds')}
+                  </Typography>
                 )}
               </BoxWithRef>
             </Box>
