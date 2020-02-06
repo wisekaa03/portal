@@ -68,6 +68,7 @@ module.exports = function(api) {
       'babel-plugin-react-require',
       '@babel/plugin-syntax-dynamic-import',
       // './node_modules/next/dist/build/babel/plugins/react-loadable-plugin',
+      '@babel/plugin-proposal-optional-chaining',
       '@babel/plugin-proposal-class-properties',
       [
         '@babel/plugin-proposal-object-rest-spread',
@@ -112,6 +113,7 @@ module.exports = function(api) {
       '@babel/plugin-syntax-dynamic-import',
       // './node_modules/next/dist/build/babel/plugins/react-loadable-plugin',
       '@babel/plugin-proposal-class-properties',
+      '@babel/plugin-proposal-optional-chaining',
       [
         '@babel/plugin-proposal-object-rest-spread',
         {
@@ -145,6 +147,7 @@ module.exports = function(api) {
   const testProd = {
     plugins: [
       // 'babel-plugin-styled-components',
+      '@babel/plugin-proposal-optional-chaining',
       '@babel/plugin-proposal-class-properties',
     ],
     presets: [
@@ -200,19 +203,18 @@ module.exports = function(api) {
 
   // TODO: why this is not working ?
   if (0 && process.env.NODE_ENV === 'production') {
-    config.plugins.push('transform-inline-consecutive-adds');
-    config.plugins.push('transform-inline-environment-variables');
-    config.plugins.push('transform-member-expression-literals');
-    config.plugins.push('transform-merge-sibling-variables');
-    config.plugins.push('transform-minify-booleans');
-    config.plugins.push('minify-builtins');
-    config.plugins.push('minify-constant-folding');
+    config.env.production.plugins.push('transform-inline-consecutive-adds');
+    config.env.production.plugins.push('transform-member-expression-literals');
+    config.env.production.plugins.push('transform-merge-sibling-variables');
+    config.env.production.plugins.push('transform-minify-booleans');
+    config.env.production.plugins.push('minify-builtins');
+    config.env.production.plugins.push('minify-constant-folding');
 
-    config.plugins.push([
+    config.env.production.plugins.push([
       'minify-dead-code-elimination',
       { keepFnName: true, keepFnArgs: false, keepClassName: false },
     ]);
-    config.plugins.push([
+    config.env.production.plugins.push([
       'minify-replace',
       {
         // TODO: придумать чтобы мои серверные отличались от клиентских
@@ -228,23 +230,22 @@ module.exports = function(api) {
       },
     ]);
 
-    config.plugins.push('minify-guarded-expressions');
-    config.plugins.push('minify-infinity');
-    config.plugins.push(['minify-mangle-names', { exclude: { foo: true, bar: true } }]);
-    config.plugins.push('minify-numeric-literals');
-    config.plugins.push('minify-type-constructors');
-    config.plugins.push('transform-node-env-inline');
-    config.plugins.push('transform-property-literals');
-    config.plugins.push('transform-regexp-constructors');
-    config.plugins.push(['transform-remove-console', { exclude: ['error'] }]);
-    config.plugins.push('transform-remove-debugger');
-    config.plugins.push('transform-remove-undefined');
-    config.plugins.push('transform-simplify-comparison-operators');
-    config.plugins.push('transform-undefined-to-void');
+    config.env.production.plugins.push('minify-guarded-expressions');
+    config.env.production.plugins.push('minify-infinity');
+    config.env.production.plugins.push(['minify-mangle-names', { exclude: { foo: true, bar: true } }]);
+    config.env.production.plugins.push('minify-numeric-literals');
+    config.env.production.plugins.push('minify-type-constructors');
+    config.env.production.plugins.push('transform-property-literals');
+    config.env.production.plugins.push('transform-regexp-constructors');
+    config.env.production.plugins.push(['transform-remove-console', { exclude: ['error'] }]);
+    config.env.production.plugins.push('transform-remove-debugger');
+    config.env.production.plugins.push('transform-remove-undefined');
+    config.env.production.plugins.push('transform-simplify-comparison-operators');
+    config.env.production.plugins.push('transform-undefined-to-void');
     // TODO: разобраться почему navbar не работает при включенном
-    // config.plugins.push('minify-simplify');
+    // config.env.production.plugins.push('minify-simplify');
     // TODO: разобраться почему babel-plugin-minify-flip-comparisons не работает
-    // config.plugins.push('minify-flip-comparisons');
+    // config.env.production.plugins.push('minify-flip-comparisons');
   }
 
   return config;

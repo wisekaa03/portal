@@ -44,11 +44,11 @@
     "typeorm:sync": "yarn typeorm schema:sync"
   },
   "browserslist": [
-    "last 3 version",
+    "last 2 version",
     "> 2%",
     "maintained node versions",
     "not dead",
-    "not ie < 10",
+    "not ie <= 11",
     "not op_mini all"
   ],
   "postcss": {
@@ -132,7 +132,7 @@
     "jodit-react": "^1.0.39",
     "ldapjs": "^1.0.2",
     "libpq": "^1.8.9",
-    "nest-next-2": "^9.1.2",
+    "nest-next-2": "^9.1.3",
     "nestjs-i18n": "^5.0.1",
     "next": "^9.2.1",
     "next-fonts": "^1.0.3",
