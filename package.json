@@ -44,11 +44,11 @@
     "typeorm:sync": "yarn typeorm schema:sync"
   },
   "browserslist": [
-    "last 2 version",
+    "last 3 version",
     "> 2%",
     "maintained node versions",
     "not dead",
-    "not ie <= 11",
+    "not ie < 10",
     "not op_mini all"
   ],
   "postcss": {
@@ -101,8 +101,8 @@
     "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.16",
     "apollo-link-ws": "^1.0.19",
-    "apollo-server-core": "^2.9.16",
-    "apollo-server-express": "^2.9.16",
+    "apollo-server-core": "^2.10.0",
+    "apollo-server-express": "^2.10.0",
     "apollo-upload-client": "^12.1.0",
     "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",

@@ -78,6 +78,14 @@ module.exports = function(api) {
     ],
     presets: [
       [
+        'next/babel',
+        {
+          'transform-runtime': {
+            corejs: '3',
+          },
+        },
+      ],
+      [
         '@babel/preset-env',
         {
           debug: true,
@@ -113,6 +121,14 @@ module.exports = function(api) {
     ],
     presets: [
       [
+        'next/babel',
+        {
+          'transform-runtime': {
+            corejs: '3',
+          },
+        },
+      ],
+      [
         '@babel/preset-env',
         {
           modules: false,
@@ -127,8 +143,19 @@ module.exports = function(api) {
   };
 
   const testProd = {
-    plugins: ['babel-plugin-styled-components', '@babel/plugin-proposal-class-properties'],
+    plugins: [
+      // 'babel-plugin-styled-components',
+      '@babel/plugin-proposal-class-properties',
+    ],
     presets: [
+      [
+        'next/babel',
+        {
+          'transform-runtime': {
+            corejs: '3',
+          },
+        },
+      ],
       [
         '@babel/preset-react',
         {
