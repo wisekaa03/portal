@@ -218,8 +218,6 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     router.push(router.pathname, router.pathname);
   };
 
-  console.log(categories);
-
   const handleAccept = (): void => {
     const { service, category, title } = ticket;
 
