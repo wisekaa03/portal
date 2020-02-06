@@ -1,6 +1,11 @@
 {
-  "title": "Portal: IT application",
-  "success": "Заявка успешно создана.",
+  "title": {
+    "title": "Portal: Ticket",
+    "department": "Portal: Ticket, Department \"{{department}}\"",
+    "service": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\"",
+    "category": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\", Category \"{{category}}\""
+  },
+  "success": "Ticket was successfully created.",
   "tabs": {
     "tab1": "Department",
     "tab2": "Service",
@@ -11,6 +16,6 @@
   "form": {
     "title": "Title",
     "text": "Description",
-    "category": "Категория услуги"
+    "category": "Category"
   }
 }

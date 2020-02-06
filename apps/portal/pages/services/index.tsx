@@ -317,7 +317,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     }
 
     if (router.asPath !== pathname) {
-      router.replace(router.pathname, pathname);
+      router.push(router.pathname, pathname);
     }
   }, [router, init, ticket.department, ticket.service, ticket.category]);
 
@@ -346,7 +346,24 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   return (
     <>
       <Head>
-        <title>{t('services:title')}</title>
+        <title>
+          {ticket.category
+            ? t('services:title.category', {
+                department: ticket.department && ticket.department.name,
+                service: ticket.service && ticket.service.name,
+                category: ticket.category && ticket.category.name,
+              })
+            : ticket.service
+            ? t('services:title.service', {
+                department: ticket.department && ticket.department.name,
+                service: ticket.service && ticket.service.name,
+              })
+            : ticket.department
+            ? t('services:title.department', {
+                department: ticket.department && ticket.department.name,
+              })
+            : t('services:title.title')}
+        </title>
       </Head>
       <Page {...rest}>
         <div className={classes.root}>
