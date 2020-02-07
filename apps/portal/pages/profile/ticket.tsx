@@ -420,7 +420,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   </CardContent>
                 </Card>
                 {ticket.status !== 'Завершен' &&
-                  (loadingEdit ? (
+                  (!__SERVER__ && loadingEdit ? (
                     <Box className={classes.fullRow}>
                       <Loading full type="circular" color="secondary" disableShrink size={48} />
                     </Box>

@@ -316,7 +316,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
         <title>
           {ticket.category
             ? t('services:title.category', {
-                department: ticket.department?.name,
+                department: ticket.department && ticket.department.name,
                 service: ticket.service && ticket.service.name,
                 category: ticket.category.name,
               })
