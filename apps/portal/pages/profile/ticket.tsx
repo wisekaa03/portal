@@ -30,14 +30,14 @@ import { OldUser, OldTicket, OldFile } from '@app/portal/ticket/old-service/mode
 import Page from '../../layouts/main';
 import dayjs from '../../lib/dayjs';
 import clearHtml from '../../lib/clear-html';
-import { Avatar } from '../../components/avatar';
+import { Avatar } from '../../components/common/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '../../lib/queries';
 import { LARGE_RESOLUTION, TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
-import BaseIcon from '../../components/icon';
+import BaseIcon from '../../components/common/icon';
 import Dropzone from '../../components/dropzone';
-import Button from '../../components/button';
+import Button from '../../components/common/button';
 import { DropzoneFile } from '../../components/dropzone/types';
 import Iframe from '../../components/iframe';
 import { ComposeLink } from '../../components/compose-link';

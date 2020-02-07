@@ -37,10 +37,10 @@ import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import useDebounce from '../lib/debounce';
 import { Loading } from '../components/loading';
-import { Avatar } from '../components/avatar';
+import { Avatar } from '../components/common/avatar';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
-import RefreshButton from '../components/refreshButton';
+import RefreshButton from '../components/common/refreshButton';
 // #endregion
 
 const panelHeight = 48;

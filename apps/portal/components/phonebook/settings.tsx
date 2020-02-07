@@ -18,7 +18,7 @@ import {
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
 import { Column, ColumnNames, SettingsProps } from './types';
-import Button from '../button';
+import Button from '../common/button';
 import HeaderBg from '../../../../public/images/jpeg/header_bg.jpg';
 import { ProfileContext } from '../../lib/context';
 // #endregion

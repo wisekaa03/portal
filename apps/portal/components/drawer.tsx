@@ -12,7 +12,7 @@ import { WithTranslation } from 'next-i18next';
 // #region Imports Local
 import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
 import DrawerBg from '../../../public/images/jpeg/drawer_bg.jpg';
-import Icon from './icon';
+import Icon from './common/icon';
 import CalendarIcon from '../../../public/images/svg/icons/calendar.svg';
 import CalendarIconSelected from '../../../public/images/svg/icons/calendar_select.svg';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';

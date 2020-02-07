@@ -5,7 +5,7 @@ import React from 'react';
 import AvatarMui from '@material-ui/core/Avatar';
 // #endregion
 // #region Imports Local
-import { Profile } from '../src/profile/models/profile.dto';
+import { Profile } from '../../src/profile/models/profile.dto';
 import Alien from '../../../public/images/svg/photo/alien-blue.svg';
 import Man from '../../../public/images/svg/photo/man-blue.svg';
 import Woman from '../../../public/images/svg/photo/woman-blue.svg';

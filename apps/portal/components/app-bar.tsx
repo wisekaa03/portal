@@ -24,7 +24,7 @@ import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
 import { LOGOUT } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
-import { Avatar } from './avatar';
+import { Avatar } from './common/avatar';
 import { SESSION, FIRST_PAGE } from '../lib/constants';
 
 // #endregion
