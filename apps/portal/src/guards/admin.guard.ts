@@ -14,13 +14,7 @@ export class IsAdminGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = this.getRequest(context);
 
-    if (
-      request &&
-      request.session &&
-      request.session.passport &&
-      request.session.passport.user &&
-      request.session.passport.user.isAdmin
-    ) {
+    if (request?.session?.passport?.user?.isAdmin) {
       return true;
     }
 
