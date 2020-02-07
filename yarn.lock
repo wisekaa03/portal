@@ -2889,9 +2889,9 @@
   integrity sha512-PGAK759pxyfXE78NbKxyfRcWYA/KwW17X290cNev/qAsn9eQIxkH4shoNBafH37wewhDG/0p1cHPbK6+SzZjWQ==
 
 "@types/ioredis@*":
-  version "4.14.6"
-  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.14.6.tgz#446403ab0360bf12d010ba8bbd0670b292f12143"
-  integrity sha512-VUbEZaeCfdiqfd3UDtmPpwewCBdbnjpMZtarKuZV7XwkhqgBZN208WQpsD3hT0BJqEx3GPApFnIVnIOq/eBpbA==
+  version "4.14.7"
+  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.14.7.tgz#a11d1b2102042efd61fb4e96e04299d2c29d0334"
+  integrity sha512-PC0myxSTUm4m97YfD3Cn2s+7gajoUdM3Xh8JuULK7kftJOx7s3LfWWDPPVYAI96ADt+epQuu/qMa9yecIOL94A==
   dependencies:
     "@types/node" "*"
 
@@ -2925,10 +2925,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^25.1.1":
-  version "25.1.1"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-25.1.1.tgz#dcf65a8ee315b91ad39c0d358ae0ddc5602ab0e9"
-  integrity sha512-bKSZJYZJLzwaoVYNN4W3A0RvKNYsrLm5tsuXaMlfYDxKf4gY2sFrMYneCugNQWGg1gjPW+FHBwNrwPzEi4sIsw==
+"@types/jest@^25.1.2":
+  version "25.1.2"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-25.1.2.tgz#1c4c8770c27906c7d8def5d2033df9dbd39f60da"
+  integrity sha512-EsPIgEsonlXmYV7GzUqcvORsSS9Gqxw/OvkGwHfAdpjduNRxMlhsav0O5Kb0zijc/eXSO/uW6SJt9nwull8AUQ==
   dependencies:
     jest-diff "^25.1.0"
     pretty-format "^25.1.0"
@@ -3251,9 +3251,9 @@
     "@types/react" "*"
 
 "@types/superagent@*":
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/@types/superagent/-/superagent-4.1.5.tgz#dc46a8ad2f4d96f8e7a777c4ea6a5847184af877"
-  integrity sha512-9loAjd4tUO+I8zsTMRzFMWV0PZYy4ffJ+OnMBBdDI/Pe/Df4IIxSzwsLRc6WF7dMAIfBm1ucYqVZPwwu8pnruA==
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@types/superagent/-/superagent-4.1.6.tgz#16344063e09240316c303a4fbc26de8f9b938463"
+  integrity sha512-/T1RB7/2HaAu62fhda87PRVRPakpZpXXLdsbRmAWqZ7mxMqSDXklN2P1RKVyafJTwJm199+gVvjqhpz4f7mT1A==
   dependencies:
     "@types/cookiejar" "*"
     "@types/node" "*"
@@ -4577,7 +4577,7 @@ async@1.5.2:
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
   integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
 
-async@^2.1.4, async@^2.1.5:
+async@^2.1.5:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
   integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
@@ -11283,11 +11283,9 @@ is-extglob@^2.1.0, is-extglob@^2.1.1:
   integrity sha1-qIwCU1eR8C7TfHahueqXc8gz+MI=
 
 is-finite@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/is-finite/-/is-finite-1.0.2.tgz#cc6677695602be550ef11e8b4aa6305342b6d0aa"
-  integrity sha1-zGZ3aVYCvlUO8R6LSqYwU0K20Ko=
-  dependencies:
-    number-is-nan "^1.0.0"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/is-finite/-/is-finite-1.1.0.tgz#904135c77fb42c0641d6aa1bcdbc4daa8da082f3"
+  integrity sha512-cdyMtqX/BOqqNBBiKlIVkytNHm49MtMlYyn1zxzvJKWmFMlGzm+ry5BBfYyeY9YmNKbRSo/o7OX9w9ale0wg3w==
 
 is-fullwidth-code-point@^1.0.0:
   version "1.0.0"
@@ -16790,16 +16788,16 @@ react-dev-utils@^9.0.0:
     text-table "0.2.0"
 
 react-docgen@^5.0.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/react-docgen/-/react-docgen-5.1.0.tgz#8e69f1d2e9153c535c20162ea1b85878b059b474"
-  integrity sha512-buAVMVqDEtvC7+VRDRlA9udS9cO9jFfb7yxRvKNYR9MXS0MJwaIe7OjSEydNzH9oH7LND3whDE+koFDUBtF3zA==
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-docgen/-/react-docgen-5.2.0.tgz#ec6f6a46cb9c66a32c703321946d3ba796689b34"
+  integrity sha512-QzloLDy4JftSRoP0EPtTceYHEzKjDk+88bc2tvjTrIjmxznd5SS9V+vs8tUnfukPymmD8+a/aBZPfi+y+1a+Bg==
   dependencies:
     "@babel/core" "^7.7.5"
     "@babel/runtime" "^7.7.6"
     ast-types "^0.13.2"
-    async "^2.1.4"
     commander "^2.19.0"
     doctrine "^3.0.0"
+    neo-async "^2.6.1"
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
@@ -19156,9 +19154,9 @@ supports-color@^7.0.0, supports-color@^7.1.0:
     has-flag "^4.0.0"
 
 supports-hyperlinks@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/supports-hyperlinks/-/supports-hyperlinks-2.0.0.tgz#b1b94a159e9df00b0a554b2d5f0e0a89690334b0"
-  integrity sha512-bFhn0MQ8qefLyJ3K7PpHiPUTuTVPWw6RXfaMeV6xgJLXtBbszyboz1bvGTVv4R0YpQm2DqlXXn0fFHhxUHVE5w==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/supports-hyperlinks/-/supports-hyperlinks-2.1.0.tgz#f663df252af5f37c5d49bbd7eeefa9e0b9e59e47"
+  integrity sha512-zoE5/e+dnEijk6ASB6/qrK+oYdm2do1hjoLWrqUC/8WEIW1gbxFcKuBof7sW8ArN6e+AYvsE8HBGiVRWL/F5CA==
   dependencies:
     has-flag "^4.0.0"
     supports-color "^7.0.0"

@@ -22,5 +22,16 @@ module.exports = (options) => {
   // console.log('Options:', options);
   // console.log('Config:', c);
 
+  // Babel
+  c.module.rules.unshift({
+    test: /.tsx?$/,
+    use: [{ loader: 'babel-loader' }],
+  });
+
+  // console.log('Config.module.rules:', c.module.rules);
+  // c.module.rules.forEach((rule) => {
+  //   console.log(`Config.module.rules.use "${rule.test}":`, rule.use);
+  // });
+
   return c;
 };

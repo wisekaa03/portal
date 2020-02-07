@@ -195,7 +195,7 @@
     "@types/hapi__joi": "^16.0.9",
     "@types/helmet": "^0.0.45",
     "@types/isomorphic-fetch": "^0.0.35",
-    "@types/jest": "^25.1.1",
+    "@types/jest": "^25.1.2",
     "@types/joi": "^14.3.4",
     "@types/js-base64": "^2.3.1",
     "@types/js-cookie": "^2.2.4",

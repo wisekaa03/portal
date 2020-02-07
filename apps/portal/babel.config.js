@@ -1,5 +1,6 @@
 /** @format */
-/* eslint func-names:0, @typescript-eslint/no-var-requires:0 */
+/* eslint func-names:0 */
+
 // #region Imports NPM
 // const path = require('path');
 // #endregion
@@ -9,83 +10,79 @@
 module.exports = function(api) {
   api.cache(true);
 
-  /*
-  const oldProd = {
-    presets: ['next/babel', ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }]],
-    plugins: [
-      '@babel/proposal-class-properties',
-      '@babel/proposal-object-rest-spread',
-      [
-        'module-resolver',
-        {
-          extensions: ['.ts', '.tsx', '.js', '.jsx'],
-          root: [__dirname],
-          alias: {},
+  // #region Constants
+  const constantsPresets = [
+    [
+      'next/babel',
+      {
+        'transform-runtime': {
+          corejs: '3',
         },
-      ],
-      [
-        'babel-plugin-transform-imports',
-        {
-          '@material-ui/core': {
-            // eslint-disable-next-line no-template-curly-in-string
-            transform: '@material-ui/core/${member}',
-            preventFullImport: true,
-          },
-          '@material-ui/icons': {
-            // eslint-disable-next-line no-template-curly-in-string
-            transform: '@material-ui/icons/${member}',
-            preventFullImport: true,
-          },
-        },
-      ],
-      [
-        'babel-plugin-import',
-        {
-          libraryName: '@material-ui/core',
-          // Use "'libraryDirectory': ''," if your bundler does not support ES modules
-          libraryDirectory: 'esm',
-          camel2DashComponentName: false,
-        },
-        'core',
-      ],
-      [
-        'babel-plugin-import',
-        {
-          libraryName: '@material-ui/icons',
-          // Use "'libraryDirectory': ''," if your bundler does not support ES modules
-          libraryDirectory: 'esm',
-          camel2DashComponentName: false,
-        },
-        'icons',
-      ],
+      },
     ],
-  };
-  */
+    ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+  ];
 
-  const devProd = {
-    plugins: [
-      // "babel-plugin-styled-components",
-      'babel-plugin-react-require',
-      '@babel/plugin-syntax-dynamic-import',
-      // './node_modules/next/dist/build/babel/plugins/react-loadable-plugin',
-      '@babel/plugin-proposal-optional-chaining',
-      '@babel/plugin-proposal-class-properties',
-      [
-        '@babel/plugin-proposal-object-rest-spread',
-        {
-          useBuiltIns: true,
-        },
-      ],
+  const constantsPlugins = [
+    'babel-plugin-react-require',
+    ['@babel/plugin-proposal-optional-chaining', { loose: false }],
+    '@babel/proposal-class-properties',
+    '@babel/plugin-syntax-dynamic-import',
+    [
+      '@babel/plugin-proposal-object-rest-spread',
+      {
+        useBuiltIns: true,
+      },
     ],
-    presets: [
-      [
-        'next/babel',
-        {
-          'transform-runtime': {
-            corejs: '3',
-          },
+    [
+      'module-resolver',
+      {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        root: [__dirname],
+        alias: {},
+      },
+    ],
+    [
+      'babel-plugin-transform-imports',
+      {
+        '@material-ui/core': {
+          // eslint-disable-next-line no-template-curly-in-string
+          transform: '@material-ui/core/${member}',
+          preventFullImport: true,
         },
-      ],
+        '@material-ui/icons': {
+          // eslint-disable-next-line no-template-curly-in-string
+          transform: '@material-ui/icons/${member}',
+          preventFullImport: true,
+        },
+      },
+    ],
+    [
+      'babel-plugin-import',
+      {
+        libraryName: '@material-ui/core',
+        // Use "'libraryDirectory': ''," if your bundler does not support ES modules
+        libraryDirectory: 'esm',
+        camel2DashComponentName: false,
+      },
+      'core',
+    ],
+    [
+      'babel-plugin-import',
+      {
+        libraryName: '@material-ui/icons',
+        // Use "'libraryDirectory': ''," if your bundler does not support ES modules
+        libraryDirectory: 'esm',
+        camel2DashComponentName: false,
+      },
+      'icons',
+    ],
+  ];
+  // #endregion
+
+  // #region Development
+  const devProd = {
+    presets: [
       [
         '@babel/preset-env',
         {
@@ -93,7 +90,7 @@ module.exports = function(api) {
           modules: false,
           exclude: ['transform-typeof-symbol'],
           useBuiltIns: 'usage',
-          corejs: '3.1',
+          corejs: '3.8',
         },
       ],
       [
@@ -102,61 +99,40 @@ module.exports = function(api) {
           development: true,
         },
       ],
-      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+      ...constantsPresets,
     ],
+    plugins: [...constantsPlugins],
   };
+  // #endregion
 
+  // #region Production
   const prodProd = {
-    plugins: [
-      // "babel-plugin-styled-components",
-      'babel-plugin-react-require',
-      '@babel/plugin-syntax-dynamic-import',
-      // './node_modules/next/dist/build/babel/plugins/react-loadable-plugin',
-      '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-proposal-optional-chaining',
-      [
-        '@babel/plugin-proposal-object-rest-spread',
-        {
-          useBuiltIns: true,
-        },
-      ],
-    ],
     presets: [
-      [
-        'next/babel',
-        {
-          'transform-runtime': {
-            corejs: '3',
-          },
-        },
-      ],
       [
         '@babel/preset-env',
         {
           modules: false,
           exclude: ['transform-typeof-symbol'],
           useBuiltIns: 'usage',
-          corejs: '3.1',
+          corejs: '3.8',
         },
       ],
       '@babel/preset-react',
-      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+      ...constantsPresets,
     ],
+    plugins: [...constantsPlugins],
   };
+  // #endregion
 
+  // #region Test
   const testProd = {
-    plugins: [
-      // 'babel-plugin-styled-components',
-      '@babel/plugin-proposal-optional-chaining',
-      '@babel/plugin-proposal-class-properties',
-    ],
     presets: [
       [
-        'next/babel',
+        '@babel/preset-env',
         {
-          'transform-runtime': {
-            corejs: '3',
-          },
+          targets: 'node 13',
+          useBuiltIns: false,
+          ignoreBrowserslistConfig: true,
         },
       ],
       [
@@ -165,18 +141,13 @@ module.exports = function(api) {
           development: true,
         },
       ],
-      [
-        '@babel/preset-env',
-        {
-          targets: 'node 10.16',
-          useBuiltIns: false,
-          ignoreBrowserslistConfig: true,
-        },
-      ],
-      ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
+      ...constantsPresets,
     ],
+    plugins: [...constantsPlugins],
   };
+  // #endregion
 
+  // #region Config
   const config = {
     env: {
       development: {
@@ -189,64 +160,142 @@ module.exports = function(api) {
 
       test: {
         ...testProd,
-        // presets: [
-        //   [
-        //     'next/babel', { 'preset-env': { modules: 'commonjs' } }
-        //   ],
-        //   '@zeit/next-typescript/babel'
-        // ],
       },
     },
   };
+  // #endregion
 
-  // console.warn('process.env:', process.env);
-
-  // TODO: why this is not working ?
-  if (0 && process.env.NODE_ENV === 'production') {
+  // #region Production Plugins
+  if (process.env.NODE_ENV === 'production') {
+    // For variable assignments, this removes rvals that evaluate to undefined (vars in functions only).
+    // For functions, this removes return arguments that evaluate to undefined.
+    config.env.production.plugins.push('transform-remove-undefined');
+    // This plugin inlines consecutive property assignments, array pushes, etc.
     config.env.production.plugins.push('transform-inline-consecutive-adds');
+    // Ensure that reserved words are quoted in property accesses
     config.env.production.plugins.push('transform-member-expression-literals');
-    config.env.production.plugins.push('transform-merge-sibling-variables');
+    // This plugin allows Babel to transform boolean literals into !0 for true and !1 for false.
     config.env.production.plugins.push('transform-minify-booleans');
-    config.env.production.plugins.push('minify-builtins');
-    config.env.production.plugins.push('minify-constant-folding');
-
+    // Inlines bindings when possible. Tries to evaluate expressions and prunes unreachable as a result.
     config.env.production.plugins.push([
       'minify-dead-code-elimination',
       { keepFnName: true, keepFnArgs: false, keepClassName: false },
     ]);
+    // Configurable "search and replace" plugin. Replaces matching nodes in the tree with
+    // a given replacement node. For example you can replace process.NODE_ENV with "production"
     config.env.production.plugins.push([
       'minify-replace',
       {
-        // TODO: придумать чтобы мои серверные отличались от клиентских
         replacements: [
           {
             identifierName: '__DEV__',
             replacement: {
-              type: 'booleanLiteral',
-              value: true,
+              type: 'numericLiteral',
+              value: 0,
+            },
+          },
+          {
+            identifierName: 'process.env.NODE_ENV',
+            replacement: {
+              type: 'stringLiteral',
+              value: 'production',
             },
           },
         ],
       },
     ]);
-
-    config.env.production.plugins.push('minify-guarded-expressions');
+    // In: Infinity; Out: 1/0;
     config.env.production.plugins.push('minify-infinity');
-    config.env.production.plugins.push(['minify-mangle-names', { exclude: { foo: true, bar: true } }]);
+    // In: [1000, -2000]; Out: [1e3, -2e4]
     config.env.production.plugins.push('minify-numeric-literals');
+    // In: Boolean(x); Out: !!x;
     config.env.production.plugins.push('minify-type-constructors');
+    // Ensure that reserved words are quoted in object property keys
     config.env.production.plugins.push('transform-property-literals');
-    config.env.production.plugins.push('transform-regexp-constructors');
+    // This plugin removes all console.* calls.
     config.env.production.plugins.push(['transform-remove-console', { exclude: ['error'] }]);
+    // This plugin removes all debugger; statements.
     config.env.production.plugins.push('transform-remove-debugger');
-    config.env.production.plugins.push('transform-remove-undefined');
+    // // In: typeof foo === 'object'; Out: typeof foo == 'object';
     config.env.production.plugins.push('transform-simplify-comparison-operators');
+    // // This plugin transforms undefined into void 0 which returns undefined regardless of if it's been reassigned.
     config.env.production.plugins.push('transform-undefined-to-void');
+
+    // In: if (bar !== null); Out: if (null !== bar);
+    config.env.production.plugins.push('minify-flip-comparisons');
+
+    // config.env.production.plugins.push(['minify-mangle-names', { exclude: { foo: true, bar: true } }]);
+
+    // Merge sibling variables into one. - Warnings
+    // config.env.production.plugins.push('transform-merge-sibling-variables');
+    // Tries to evaluate expressions and inline the result. - Error in page
+    // config.env.production.plugins.push('minify-constant-folding');
+    // In: !x && foo(); alert(0 && new Foo()); Out: x || foo(); alert(0); - Error
+    // config.env.production.plugins.push('minify-guarded-expressions');
+    // Minify Standard built-in Objects - Error
+    // config.env.production.plugins.push('minify-builtins');
     // TODO: разобраться почему navbar не работает при включенном
     // config.env.production.plugins.push('minify-simplify');
-    // TODO: разобраться почему babel-plugin-minify-flip-comparisons не работает
-    // config.env.production.plugins.push('minify-flip-comparisons');
+  } else if (process.env.NODE_ENV === 'development') {
+    // For variable assignments, this removes rvals that evaluate to undefined (vars in functions only).
+    // For functions, this removes return arguments that evaluate to undefined.
+    config.env.development.plugins.push('transform-remove-undefined');
+    // This plugin inlines consecutive property assignments, array pushes, etc.
+    config.env.development.plugins.push('transform-inline-consecutive-adds');
+    // Ensure that reserved words are quoted in property accesses
+    config.env.development.plugins.push('transform-member-expression-literals');
+    // This plugin allows Babel to transform boolean literals into !0 for true and !1 for false.
+    config.env.development.plugins.push('transform-minify-booleans');
+    // Inlines bindings when possible. Tries to evaluate expressions and prunes unreachable as a result.
+    config.env.development.plugins.push([
+      'minify-dead-code-elimination',
+      { keepFnName: true, keepFnArgs: false, keepClassName: false },
+    ]);
+    // Configurable "search and replace" plugin. Replaces matching nodes in the tree with
+    // a given replacement node. For example you can replace process.NODE_ENV with "production"
+    config.env.development.plugins.push([
+      'minify-replace',
+      {
+        replacements: [
+          {
+            identifierName: '__DEV__',
+            replacement: {
+              type: 'numericLiteral',
+              value: 0,
+            },
+          },
+          {
+            identifierName: 'process.env.NODE_ENV',
+            replacement: {
+              type: 'stringLiteral',
+              value: 'production',
+            },
+          },
+        ],
+      },
+    ]);
+    // In: Infinity; Out: 1/0;
+    config.env.development.plugins.push('minify-infinity');
+    // In: [1000, -2000]; Out: [1e3, -2e4]
+    config.env.development.plugins.push('minify-numeric-literals');
+    // In: Boolean(x); Out: !!x;
+    config.env.development.plugins.push('minify-type-constructors');
+    // Ensure that reserved words are quoted in object property keys
+    config.env.development.plugins.push('transform-property-literals');
+    // // In: typeof foo === 'object'; Out: typeof foo == 'object';
+    config.env.development.plugins.push('transform-simplify-comparison-operators');
+    // // This plugin transforms undefined into void 0 which returns undefined regardless of if it's been reassigned.
+    config.env.development.plugins.push('transform-undefined-to-void');
+
+    // In: if (bar !== null); Out: if (null !== bar);
+    config.env.development.plugins.push('minify-flip-comparisons');
   }
+  // #endregion
+
+  // console.warn('process.env:', process.env);
+  // console.warn('config:', config);
+  // console.warn('config.env.production.presets:', config.env.production.presets);
+  // console.warn('config.env.production.plugins:', config.env.production.plugins);
 
   return config;
 };
