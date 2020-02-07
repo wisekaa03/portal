@@ -18,6 +18,7 @@ import {
   OldFile,
   OldTicketEditInput,
 } from './models/old-service.interface';
+import clearHtml from '../../../lib/clear-html';
 // #endregion
 
 export interface Attaches1CFile {
@@ -65,7 +66,7 @@ const createFiles = (files: any): OldFile[] | [] => {
 const createTicket = (ticket: any): OldTicket => ({
   code: ticket['Код'],
   name: ticket['Наименование'],
-  description: ticket['Описание'],
+  description: clearHtml(ticket['Описание']),
   descriptionFull: ticket['ОписаниеФД'],
   status: ticket['Статус'],
   createdDate: ticket['Дата'],
@@ -317,7 +318,7 @@ export class OldTicketService {
                 code: ticket['Код'],
                 type: ticket['ТипОбращения'],
                 name: ticket['Наименование'],
-                description: ticket['Описание'],
+                description: clearHtml(ticket['Описание']),
                 status: ticket['Статус'],
                 createdDate: ticket['Дата'],
                 avatar: ticket['Услуга']['Аватар'],

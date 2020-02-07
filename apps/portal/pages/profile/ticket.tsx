@@ -29,7 +29,6 @@ import { TFunction } from 'i18next';
 import { OldUser, OldTicket, OldFile } from '@app/portal/ticket/old-service/models/old-service.interface';
 import Page from '../../layouts/main';
 import dayjs from '../../lib/dayjs';
-import clearHtml from '../../lib/clear-html';
 import Avatar from '../../components/common/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
@@ -380,7 +379,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                       </Typography>
                     }
                   />
-                  <CardContent dangerouslySetInnerHTML={{ __html: clearHtml(ticket.description) }} />
+                  <CardContent dangerouslySetInnerHTML={{ __html: ticket.description }} />
                 </Card>
                 {ticket.files.length > 0 && (
                   <Card className={classes.fullRow}>
