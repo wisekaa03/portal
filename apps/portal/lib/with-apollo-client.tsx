@@ -4,7 +4,8 @@
 // #region Imports NPM
 import React from 'react';
 import { getDataFromTree } from 'react-apollo';
-
+import { getMarkupFromTree } from 'react-apollo-hooks';
+import { renderToString } from 'react-dom/server';
 import Head from 'next/head';
 // eslint-disable-next-line import/no-named-default
 import { AppContext, default as NextApp } from 'next/app';
@@ -58,6 +59,22 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
               isMobile={isMobile}
             />,
           );
+
+          await getMarkupFromTree({
+            renderFunction: renderToString,
+            tree: (
+              <MainApp
+                {...appProps}
+                {...appCtx}
+                Component={Component}
+                router={router}
+                apolloState={apolloState}
+                apolloClient={apollo}
+                currentLanguage={currentLanguage}
+                isMobile={isMobile}
+              />
+            ),
+          });
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:

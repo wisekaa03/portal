@@ -8,8 +8,9 @@ import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { UnauthorizedException } from '@nestjs/common';
 // import dynamic from 'next/dynamic';
-import { ApolloProvider, QueryResult } from 'react-apollo';
-import { useQuery } from '@apollo/react-hooks';
+import { QueryResult } from 'react-apollo';
+import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider as ApolloHooksProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -159,32 +160,34 @@ class MainApp extends App<ApolloAppProps> {
 
     return (
       <ApolloProvider client={apolloClient}>
-        <Head>
-          <title>Portal</title>
-        </Head>
-        {/* MuiThemeProvider makes the theme available down the React
-              tree thanks to React context. */}
-        <CssBaseline />
-        <ThemeProvider
-          theme={{
-            ...theme,
-            props: {
-              ...theme.props,
-              MuiUseMediaQuery: {
-                ssrMatchMedia,
+        <ApolloHooksProvider client={apolloClient}>
+          <Head>
+            <title>Portal</title>
+          </Head>
+          {/* MuiThemeProvider makes the theme available down the React
+                tree thanks to React context. */}
+          <CssBaseline />
+          <ThemeProvider
+            theme={{
+              ...theme,
+              props: {
+                ...theme.props,
+                MuiUseMediaQuery: {
+                  ssrMatchMedia,
+                },
               },
-            },
-          }}
-        >
-          <CurrentLogin
-            pageProps={pageProps}
-            isMobile={!!isMobile}
-            language={currentLanguage || ''}
-            Component={Component}
-            router={router}
-            ctx={ctx}
-          />
-        </ThemeProvider>
+            }}
+          >
+            <CurrentLogin
+              pageProps={pageProps}
+              isMobile={!!isMobile}
+              language={currentLanguage || ''}
+              Component={Component}
+              router={router}
+              ctx={ctx}
+            />
+          </ThemeProvider>
+        </ApolloHooksProvider>
       </ApolloProvider>
     );
   }
