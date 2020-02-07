@@ -3,7 +3,7 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 
-import NoImage from '../../../public/images/svg/noimage.svg';
+import NoImage from '../../../../public/images/svg/noimage.svg';
 
 const iconWidth = 24;
 

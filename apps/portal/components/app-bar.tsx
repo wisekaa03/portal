@@ -19,7 +19,6 @@ import { WithTranslation } from 'next-i18next';
 import HeaderBg from '../../../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../../../public/images/png/profile_popover_bg.png';
 import LogoMin from '../../../public/images/png/logo_min.png';
-
 import { nextI18next } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
 import { LOGOUT } from '../lib/queries';
