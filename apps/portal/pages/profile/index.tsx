@@ -15,10 +15,6 @@ import {
   Typography,
   Divider,
   BoxProps,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -33,11 +29,13 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
 import dayjs from '../../lib/dayjs';
-import { Avatar } from '../../components/common/avatar';
+import Avatar from '../../components/common/avatar';
+import Select from '../../components/common/select';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/common/refreshButton';
 import { GQLError } from '../../components/gql-error';
+
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
@@ -199,14 +197,6 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   };
 
   const ticketBox = useRef(null);
-  const inputLabel = useRef<HTMLLabelElement>(null);
-  const [labelWidth, setLabelWidth] = useState(0);
-
-  useEffect(() => {
-    if (inputLabel.current) {
-      setLabelWidth(inputLabel.current.offsetWidth);
-    }
-  }, [inputLabel]);
 
   const tickets: OldTicket[] | undefined =
     dataTickets &&
@@ -270,16 +260,12 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   <RefreshButton noAbsolute onClick={() => refetchTickets()} />
                 </Box>
                 <Box display="flex" className={classes.headerButtons} justifyContent="flex-end">
-                  <FormControl variant="outlined">
-                    <InputLabel ref={inputLabel}>{t('profile:tickets.status')}</InputLabel>
-                    <Select color="secondary" value={status} onChange={handleToggleStatus} labelWidth={labelWidth}>
-                      {TICKET_STATUSES.map((cur) => (
-                        <MenuItem key={cur} value={cur}>
-                          {cur}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <Select
+                    label={t('profile:tickets.status')}
+                    items={TICKET_STATUSES}
+                    value={status}
+                    onChange={handleToggleStatus}
+                  />
                 </Box>
               </Box>
               <BoxWithRef
