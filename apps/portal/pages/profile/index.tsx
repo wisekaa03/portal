@@ -35,7 +35,6 @@ import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/common/refreshButton';
 import { GQLError } from '../../components/gql-error';
-
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
@@ -107,22 +106,24 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing() / 2,
       color: theme.palette.secondary.main,
     },
-    headerButtons: {
-      // minWidth: 260,
-    },
     ticket: {
-      display: 'flex',
-      flex: 1,
-      height: 200,
-      minWidth: 300,
-      maxWidth: 300,
-      borderRadius: theme.spacing() / 2,
-      background: fade(theme.palette.secondary.main, 0.15),
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
+      'display': 'flex',
+      'flex': 1,
+      'minWidth': 300,
+      'maxWidth': 300,
+      'borderRadius': theme.spacing() / 2,
+      'background': fade(theme.palette.secondary.main, 0.15),
+      'marginRight': theme.spacing(2),
+      'marginBottom': theme.spacing(2),
+      '& > button': {
+        height: '100%',
+      },
     },
     ticketContent: {
+      'height': '100%',
       'padding': theme.spacing(2),
+      'display': 'grid',
+      'gridTemplateRows': '1fr min-content min-content',
       '& > hr': {
         marginTop: theme.spacing(),
         marginBottom: theme.spacing(),
@@ -131,7 +132,7 @@ const useStyles = makeStyles((theme: Theme) =>
     ticketLabel: {
       'display': 'grid',
       'gridTemplateColumns': '1fr 4fr',
-      'gridTemplateRows': '40px 60px',
+      'gridTemplateRows': '40px 1fr',
       'gridGap': theme.spacing(),
       '& h6': {
         maxWidth: 220,
@@ -259,7 +260,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
                   <RefreshButton noAbsolute onClick={() => refetchTickets()} />
                 </Box>
-                <Box display="flex" className={classes.headerButtons} justifyContent="flex-end">
+                <Box display="flex" justifyContent="flex-end">
                   <Select
                     label={t('profile:tickets.status')}
                     items={TICKET_STATUSES}
@@ -303,11 +304,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                                 </Typography>
                               </div>
                               <div>
-                                {/* <Typography
-                                    variant="body1"
-                                    // eslint-disable-next-line react/no-danger
-                                    dangerouslySetInnerHTML={{ __html: ticket.description }}
-                                  /> */}
+                                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: ticket.description }} />
                               </div>
                             </div>
                             <Divider />
