@@ -19,7 +19,7 @@ interface AvatarProps {
   className?: string;
 }
 
-export const Avatar = (props: AvatarProps): React.ReactElement => {
+const Avatar = (props: AvatarProps): React.ReactElement => {
   const { profile, fullSize = false, base64, ...rest } = props;
   let src = 'data:image/png;base64,';
 
@@ -38,3 +38,5 @@ export const Avatar = (props: AvatarProps): React.ReactElement => {
 
   return <AvatarMui src={src} {...rest} />;
 };
+
+export default Avatar;

@@ -30,7 +30,7 @@ import { OldUser, OldTicket, OldFile } from '@app/portal/ticket/old-service/mode
 import Page from '../../layouts/main';
 import dayjs from '../../lib/dayjs';
 import clearHtml from '../../lib/clear-html';
-import { Avatar } from '../../components/common/avatar';
+import Avatar from '../../components/common/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '../../lib/queries';
