@@ -220,7 +220,6 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const query = { id: null, type: null, ...(router && router.query) };
 
   const { loading, data, error } = useQuery(OLD_TICKET_DESCRIPTION, {
-    ssr: false,
     variables: {
       code: query.id,
       type: query.type,
@@ -295,7 +294,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
               </Link>
             </Box>
             {!ticket ? (
-              !__SERVER__ && loading ? (
+              loading ? (
                 <Loading full type="circular" color="secondary" disableShrink size={48} />
               ) : (
                 <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
@@ -420,7 +419,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                   </CardContent>
                 </Card>
                 {ticket.status !== 'Завершен' &&
-                  (!__SERVER__ && loadingEdit ? (
+                  (loadingEdit ? (
                     <Box className={classes.fullRow}>
                       <Loading full type="circular" color="secondary" disableShrink size={48} />
                     </Box>
