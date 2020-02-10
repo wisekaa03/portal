@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
 
+    sharedOrUser: {
+      flexDirection: 'row',
+    },
+
     treeView: {
       textAlign: 'left',
     },
@@ -155,7 +159,7 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
 
-  const title = current ? 'media:edit:title' : 'media:add:title';
+  const title = current ? 'media:edit.title' : 'media:add.title';
 
   useEffect(() => {
     if (router && router.query && router.query.id) {
@@ -206,19 +210,28 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       </IconButton>
                     </Link>
                     <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-                      <Button onClick={handleUpload}>{t('common:accept')}</Button>
+                      <Button onClick={handleUpload}>{t(title)}</Button>
                     </Box>
                   </Box>
                 </Box>
-                <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <RadioGroup defaultValue="0" aria-label={t('media:control.sharedOrUser')} name="sharedOrUser">
+                <Box display="flex" className={classes.dropBox} flexDirection="row">
+                  <RadioGroup
+                    defaultValue="0"
+                    className={classes.sharedOrUser}
+                    aria-label={t('media:control.sharedOrUser')}
+                    name="sharedOrUser"
+                  >
                     <FormControlLabel value="0" control={<Radio />} label={t('media:control.shared')} />
                     <FormControlLabel value="1" control={<Radio />} label={t('media:control.user')} />
                   </RadioGroup>
+                </Box>
+                <Box display="flex" className={classes.dropBox} flexDirection="column">
                   <TreeView className={classes.treeView}>
                     <StyledTreeItem nodeId="1" labelText="Directory" labelIcon={DirectoryIcon} />
-                    <StyledTreeItem nodeId="2" labelText="File" labelIcon={FileIcon} />
+                    <StyledTreeItem nodeId="2" labelText="Directory" labelIcon={DirectoryIcon} />
                   </TreeView>
+                </Box>
+                <Box display="flex" className={classes.dropBox} flexDirection="column">
                   <Dropzone setFiles={setAttachments} files={attachments} {...rest} />
                 </Box>
               </>
