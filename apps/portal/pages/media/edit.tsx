@@ -7,7 +7,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, IconButton, RadioGroup, FormControlLabel, Radio, Typography } from '@material-ui/core';
+import { Box, IconButton, Typography } from '@material-ui/core';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
@@ -172,7 +172,7 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
       setCurrent(undefined);
       setTitle('media:add.title');
     }
-  }, [title, getMedia, router]);
+  }, [getMedia, router]);
 
   useEffect(() => {
     if (!loading && !error && data && data.media) {
@@ -214,17 +214,6 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <Button onClick={handleUpload}>{t(title)}</Button>
                     </Box>
                   </Box>
-                </Box>
-                <Box display="flex" className={classes.dropBox} flexDirection="row">
-                  <RadioGroup
-                    defaultValue="0"
-                    className={classes.sharedOrUser}
-                    aria-label={t('media:control.sharedOrUser')}
-                    name="sharedOrUser"
-                  >
-                    <FormControlLabel value="0" control={<Radio />} label={t('media:control.shared')} />
-                    <FormControlLabel value="1" control={<Radio />} label={t('media:control.user')} />
-                  </RadioGroup>
                 </Box>
                 <Box display="flex" className={classes.dropBox} flexDirection="column">
                   <TreeView className={classes.treeView}>
