@@ -289,7 +289,6 @@ export const MEDIA = gql`
       title
       filename
       mimetype
-      content
     }
   }
 `;

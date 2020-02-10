@@ -7,5 +7,10 @@
   "edit": {
     "title": "Edit"
   },
-  "more": "Learn more"
+  "more": "Learn more",
+  "control": {
+    "sharedOrUser": "Directory",
+    "shared": "Shared",
+    "user": "User"
+  }
 }

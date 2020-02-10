@@ -34,7 +34,7 @@ export class MediaEntity {
   title: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => MediaDirectoryEntity)
+  @ManyToOne((type: any) => MediaDirectoryEntity, { nullable: false })
   @JoinColumn()
   directory: MediaDirectoryEntity;
 
@@ -54,12 +54,12 @@ export class MediaEntity {
   mimetype: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity)
+  @ManyToOne((type: any) => UserEntity, { nullable: false })
   @JoinColumn()
   createdUser: UserEntity;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity)
+  @ManyToOne((type: any) => UserEntity, { nullable: false })
   @JoinColumn()
   updatedUser: UserEntity;
 }

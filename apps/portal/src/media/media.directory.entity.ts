@@ -26,6 +26,11 @@ export class MediaDirectoryEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  @ManyToOne((type: any) => UserEntity, { nullable: true })
+  @JoinColumn()
+  user: UserEntity;
+
   @Column({
     type: 'varchar',
     nullable: false,
@@ -33,12 +38,12 @@ export class MediaDirectoryEntity {
   pathname: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity)
+  @ManyToOne((type: any) => UserEntity, { nullable: false })
   @JoinColumn()
   createdUser: UserEntity;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity)
+  @ManyToOne((type: any) => UserEntity, { nullable: false })
   @JoinColumn()
   updatedUser: UserEntity;
 }
