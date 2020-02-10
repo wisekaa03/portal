@@ -48,6 +48,7 @@ module.exports = {
     'plugin:jsx-a11y/recommended'
   ],
   parserOptions: {
+    project: './tsconfig.json',
     sourceType: 'module',
     jsx: true,
     useJSXTextNode: true,
