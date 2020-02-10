@@ -9,6 +9,7 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { MediaDirectoryEntity } from './media.directory.entity';
 import { MediaEntity } from './media.entity';
 import { MediaService } from './media.service';
 import { UserResponse } from '../user/user.entity';
@@ -30,8 +31,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async media(): Promise<MediaEntity[]> {
-    return this.mediaService.media();
+  async media(@Args('id') id: string): Promise<MediaEntity[]> {
+    return this.mediaService.media(id);
   }
 
   /**
@@ -69,5 +70,17 @@ export class MediaResolver {
   @UseGuards(GqlAuthGuard)
   async deleteMedia(@Args('id') id: string): Promise<boolean> {
     return this.mediaService.deleteMedia(id);
+  }
+
+  /**
+   * GraphQL query: directory
+   *
+   * @param {id}
+   * @returns {boolean} - true/false of delete media
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async directory(@Args('id') id: string): Promise<MediaDirectoryEntity[]> {
+    return this.mediaService.directory(id);
   }
 }

@@ -1,0 +1,13 @@
+type Directory {
+  id: ID!
+  createdUser: User!
+  updatedUser: User!
+  createdAt: Date!
+  updatedAt: Date!
+  user: User!
+  pathname: String!
+}
+
+type Query {
+  directory(id: ID): [Directory!]!
+}

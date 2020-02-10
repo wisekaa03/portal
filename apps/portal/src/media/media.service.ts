@@ -29,11 +29,11 @@ export class MediaService {
    *
    * @return News
    */
-  media = async (): Promise<MediaEntity[]> => {
-    this.logService.log('Media entity', 'Media');
+  media = async (id: string): Promise<MediaEntity[]> => {
+    this.logService.log(`Media entity: ${id}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
-    return this.mediaRepository.find();
+    return this.mediaRepository.find({ id });
   };
 
   /**
@@ -42,7 +42,10 @@ export class MediaService {
    * @return id
    */
   editMedia = async ({ title, directory, filename, mimetype, updatedUser, id }: Media): Promise<MediaEntity> => {
-    this.logService.log(`Edit: ${JSON.stringify({ title, directory, filename, mimetype, updatedUser, id })}`, 'Media');
+    this.logService.log(
+      `Edit: ${JSON.stringify({ title, directory, filename, mimetype, updatedUser, id })}`,
+      'MediaService',
+    );
 
     const directoryEntity = await this.mediaDirectoryRepository.findOne(directory as string);
 
@@ -66,10 +69,22 @@ export class MediaService {
    * @return void
    */
   deleteMedia = async (id: string): Promise<boolean> => {
-    this.logService.log(`Edit: ${JSON.stringify({ id })}`, 'Media');
+    this.logService.log(`Edit: ${JSON.stringify({ id })}`, 'MediaService');
 
     const deleteResult = await this.mediaRepository.delete({ id });
 
     return !!(deleteResult.affected && deleteResult.affected > 0);
+  };
+
+  /**
+   * Directory
+   *
+   * @return MediaDirectoryEntity
+   */
+  directory = async (id: string): Promise<MediaDirectoryEntity[]> => {
+    this.logService.log(`Directory: ${id}`, 'MediaService');
+
+    // TODO: сделать чтобы выводилось постранично
+    return this.mediaDirectoryRepository.find({ id });
   };
 }
