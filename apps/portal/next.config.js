@@ -5,7 +5,7 @@
 const { resolve } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withBundleAnalyzer = require('@next/bundle-analyzer');
 
 // const withImages = require('next-images');
 const optimizedImages = require('next-optimized-images');
@@ -198,8 +198,7 @@ const plugins = [
   [
     withBundleAnalyzer,
     {
-      analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-      analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
+      enabled: process.env.ANALYZE === 'true',
     },
   ],
   [withCustomWebpack],
