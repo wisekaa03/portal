@@ -5,10 +5,9 @@ type Media {
   createdAt: Date!
   updatedAt: Date!
   title: String!
-  directory: String
-  filename: String
+  directory: String!
+  filename: String!
   mimetype: String
-  content: Upload
 }
 
 type Query {
@@ -17,7 +16,7 @@ type Query {
 
 type Mutation {
 
-  editMedia(file: Upload!, directory: String, id: ID): Media
+  editMedia(attachment: Upload!, directory: String!, id: ID): Media
 
   deleteMedia(id: ID!): Boolean
 

@@ -7,6 +7,7 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { MediaEntity } from './media.entity';
 import { MediaService } from './media.service';
@@ -16,7 +17,11 @@ import { UserService } from '../user/user.service';
 
 @Resolver('Media')
 export class MediaResolver {
-  constructor(private readonly mediaService: MediaService, private readonly userService: UserService) {}
+  constructor(
+    private readonly logService: LogService,
+    private readonly mediaService: MediaService,
+    private readonly userService: UserService,
+  ) {}
 
   /**
    * GraphQL query: media get
@@ -38,28 +43,17 @@ export class MediaResolver {
   @UseGuards(GqlAuthGuard)
   async editMedia(
     @Context('req') req: Request,
-    @Args('file') file: Promise<FileUpload>,
+    @Args('attachment') attachment: Promise<FileUpload>,
     @Args('directory') directory: string,
     @Args('id') id: string,
   ): Promise<MediaEntity> {
-    const userId = req.user as UserResponse;
-    if (userId) {
-      const updatedUser = await this.userService.readById(userId.id);
-      if (updatedUser) {
-        console.log('File', file);
-        const { filename, mimetype, createReadStream } = await file;
-        const readableStream = createReadStream();
-        // const writableStream = new WritableStream<Buffer>();
-        // readableStream.pipe(writableStream);
+    const user = req.user as UserResponse;
 
-        return this.mediaService.editMedia({
-          title: filename,
-          directory,
-          filename,
-          mimetype,
-          updatedUser,
-          id,
-        });
+    if (user) {
+      const updatedUser = await this.userService.readById(user.id);
+      if (updatedUser) {
+        // if (attachment) {
+        // }
       }
     }
 
