@@ -1,8 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
-import { createClientAsync, Client, NTLMSecurity, ISoapFaultError } from 'soap';
+import { Injectable, Inject, HttpException } from '@nestjs/common';
+import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -11,7 +11,17 @@ import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface'
 // #endregion
 
 export type SoapClient = Client;
-export type SoapError = ISoapFaultError;
+export type SoapFault = ISoapFaultError;
+
+export const SoapError = (error: SoapFault): HttpException => {
+  if (error.Fault) {
+    if ((error.Fault as ISoapFault11).faultstring) {
+      return new HttpException((error.Fault as ISoapFault11).faultstring, error.Fault.statusCode || 500);
+    }
+  }
+
+  return new HttpException((error.Fault as ISoapFault12).Reason.Text, error.Fault.statusCode || 500);
+};
 
 @Injectable()
 export class SoapService {
@@ -49,10 +59,10 @@ export class SoapService {
         }
         return client as SoapClient;
       })
-      .catch((error: SoapError) => {
+      .catch((error: SoapFault) => {
         this.logger.error('SOAP connect error: ', JSON.stringify(error), 'SOAP Service');
 
-        throw error;
+        throw SoapError(error);
       });
   }
 }

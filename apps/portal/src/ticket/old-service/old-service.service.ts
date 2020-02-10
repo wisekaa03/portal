@@ -6,7 +6,7 @@ import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { SoapService, SoapError, SoapAuthentication } from '@app/soap';
+import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '../../shared/upload';
 import {
   OldService,
@@ -134,13 +134,13 @@ export class OldTicketService {
 
         return [];
       })
-      .catch((error: SoapError) => {
+      .catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
-        throw error;
+        throw SoapError(error);
       });
 
     return this.service;
@@ -208,13 +208,13 @@ export class OldTicketService {
 
         return {};
       })
-      .catch((error: SoapError) => {
+      .catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
-        throw error;
+        throw SoapError(error);
       });
   };
 
@@ -242,13 +242,13 @@ export class OldTicketService {
             NFile: filename,
           });
         }),
-      ).catch((error: SoapError) => {
+      ).catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
-        throw error;
+        throw SoapError(error);
       });
     }
 
@@ -273,13 +273,13 @@ export class OldTicketService {
 
         return {};
       })
-      .catch((error: SoapError) => {
+      .catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
-        throw error;
+        throw SoapError(error);
       });
   };
 
@@ -328,13 +328,13 @@ export class OldTicketService {
 
         return [];
       })
-      .catch((error: SoapError) => {
+      .catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
-        throw error;
+        throw SoapError(error);
       });
 
     return this.service;
@@ -369,13 +369,13 @@ export class OldTicketService {
 
         return {};
       })
-      .catch((error: SoapError) => {
+      .catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
         this.logService.error(error, JSON.stringify(error), 'OldTicketService');
 
-        throw error;
+        throw SoapError(error);
       });
   };
 }
