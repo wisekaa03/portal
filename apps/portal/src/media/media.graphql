@@ -11,7 +11,7 @@ type Media {
 }
 
 type Query {
-  media: [Media!]!
+  media(id: ID): [Media!]!
 }
 
 type Mutation {

@@ -1,11 +1,11 @@
 {
-  "title": "Portal: Upload file",
+  "title": "Portal: Upload files",
   "add": {
-    "title": "Add"
+    "title": "Portal: Add files"
   },
   "delete": "Delete",
   "edit": {
-    "title": "Edit"
+    "title": "Portal: Edit files"
   },
   "more": "Learn more",
   "control": {

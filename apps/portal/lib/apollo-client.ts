@@ -57,7 +57,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
         return true;
       });
       if (error) {
-        response.errors = undefined;
+        response.errors = null;
       }
 
       // eslint-disable-next-line no-debugger

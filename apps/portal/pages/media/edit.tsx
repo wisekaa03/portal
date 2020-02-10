@@ -154,12 +154,11 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [mediaEdit] = useMutation(MEDIA_EDIT);
   const router = useRouter();
 
+  const [title, setTitle] = useState<string | undefined>();
   const [current, setCurrent] = useState<Media | undefined>();
   const [updated, setUpdated] = useState<Media | undefined>();
 
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
-
-  const title = current ? 'media:edit.title' : 'media:add.title';
 
   useEffect(() => {
     if (router && router.query && router.query.id) {
@@ -168,10 +167,12 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
         variables: { id },
       });
       setUpdated({ id } as any);
+      setTitle('media:edit.title');
     } else {
-      setCurrent({} as any);
+      setCurrent(undefined);
+      setTitle('media:add.title');
     }
-  }, [getMedia, router]);
+  }, [title, getMedia, router]);
 
   useEffect(() => {
     if (!loading && !error && data && data.media) {

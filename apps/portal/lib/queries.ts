@@ -213,9 +213,10 @@ export const USER_SETTINGS = gql`
   }
 `;
 
-/**
+/**---------------------------------------------------------------------------------------------------------------------------------------
  * ADDRESSBOOK
  */
+
 export const SEARCH_SUGGESTIONS = gql`
   query SearchSuggestions($search: String) {
     searchSuggestions(search: $search) {
@@ -229,9 +230,10 @@ export const SEARCH_SUGGESTIONS = gql`
   }
 `;
 
-/**
+/**---------------------------------------------------------------------------------------------------------------------------------------
  * NEWS
  */
+
 export const NEWS = gql`
   query News {
     news {
@@ -268,12 +270,13 @@ export const NEWS_DELETE = gql`
   }
 `;
 
-/**
+/**---------------------------------------------------------------------------------------------------------------------------------------
  * MEDIA
  */
+
 export const MEDIA = gql`
-  query Media {
-    media {
+  query Media($id: ID) {
+    media(id: $id) {
       id
       createdUser {
         id
@@ -322,7 +325,7 @@ export const MEDIA_DELETE = gql`
   }
 `;
 
-/**
+/**---------------------------------------------------------------------------------------------------------------------------------------
  * Ticket
  */
 
