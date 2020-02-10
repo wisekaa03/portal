@@ -84,7 +84,7 @@ module.exports = {
     ],
     // TODO: what ?!
     'react/jsx-props-no-spreading': 0,
-    '@typescript-eslint/no-implied-eval': 0,
+    '@typescript-eslint/no-implied-eval': 1,
     '@typescript-eslint/no-throw-literal': 1,
     'no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true }],
     'no-confusing-arrow': ['error', { allowParens: true }],
