@@ -248,7 +248,7 @@ export class ProfileService {
       }
     }
 
-    return this.save(this.create(profile));
+    return this.save(this.profileRepository.create(profile));
   }
 
   /**
@@ -257,47 +257,34 @@ export class ProfileService {
    * @param {Profile} - The profile
    * @returns {ProfileEntity} - The profile
    */
-  create = (profile: Profile): ProfileEntity => {
-    try {
-      return this.profileRepository.create(profile);
-    } catch (error) {
-      this.logService.error('Unable to create data in `profile`', error, 'ProfileService');
-
-      throw error;
-    }
-  };
+  create = (profile: Profile): ProfileEntity => this.profileRepository.create(profile);
 
   /**
    * Bulk Save
    *
    * @param {ProfileEntity[]} The profiles
-   * @returns {ProfileEntity[] | undefined} The profiles
+   * @returns {ProfileEntity[]} The profiles
    */
-  bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[] | undefined> => {
-    try {
-      return this.profileRepository.save(profile);
-    } catch (error) {
-      this.logService.error('Unable to save data in `profile`', error.toString(), 'ProfileService');
+  bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[]> =>
+    this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
+      this.logService.error('Unable to save data in `profile`[]', JSON.stringify(error), 'ProfileService');
 
       throw error;
-    }
-  };
+    });
 
   /**
    * Save
    *
    * @param {ProfileEntity} - The profile
-   * @returns {ProfileEntity | undefined} - The profile
+   * @returns {ProfileEntity} - The profile
+   * @throws {Error} - error
    */
-  save = async (profile: ProfileEntity): Promise<ProfileEntity | undefined> => {
-    try {
-      return this.profileRepository.save(profile);
-    } catch (error) {
-      this.logService.error('Unable to save data in `profile`', error.toString(), 'ProfileService');
+  save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
+    this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
+      this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'ProfileService');
 
       throw error;
-    }
-  };
+    });
 
   /**
    * changeProfile
@@ -308,7 +295,7 @@ export class ProfileService {
    */
   async changeProfile(req: Request, profile: Profile): Promise<boolean> {
     // В резолвере проверка на юзера уже есть
-    if (!req.session!.passport.user.profile || !req.session!.passport.user.profile.id) {
+    if (!req.session!.passport!.user!.profile!.id) {
       throw new UnauthorizedException();
     }
 
