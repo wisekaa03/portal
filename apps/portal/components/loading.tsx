@@ -24,6 +24,13 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'fixed',
       width: '100%',
     },
+    absolute: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
   }),
 );
 
@@ -36,7 +43,8 @@ export const Loading: React.FC<{
   type?: 'linear' | 'circular';
   full?: boolean;
   noMargin?: boolean;
-}> = ({ variant, disableShrink, size, thickness, color, type, noMargin, full }) => {
+  absolute?: boolean;
+}> = ({ variant, disableShrink, size, thickness, color, type, noMargin, full, absolute }) => {
   const classes = useStyles({});
 
   if (type === 'linear') {
@@ -68,7 +76,14 @@ export const Loading: React.FC<{
 
   if (full) {
     circular = (
-      <Box display="flex" height="100%" width="100%" justifyContent="center" alignItems="center">
+      <Box
+        className={clsx({ [classes.absolute]: absolute })}
+        display="flex"
+        height="100%"
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+      >
         {circular}
       </Box>
     );

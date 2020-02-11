@@ -85,7 +85,7 @@ export class ProfileResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
-  async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<boolean | null> {
-    return this.profileService.changeProfile(req, profile) || null;
+  async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<boolean> {
+    return this.profileService.changeProfile(req, profile);
   }
 }

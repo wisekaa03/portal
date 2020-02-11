@@ -564,33 +564,37 @@ export class LdapService extends EventEmitter {
    * @private
    * @param {string} dn - LDAP Distiguished Name
    * @param {Object | Object[]} data - LDAP modify data
-   * @returns {undefined | boolean}
+   * @returns {boolean}
    */
-  public async modify(dn: string, data: Ldap.Change | Ldap.Change[], username?: string): Promise<undefined | boolean> {
+  public async modify(dn: string, data: Ldap.Change | Ldap.Change[], username?: string): Promise<boolean> {
     return this.adminBind().then(
       () =>
-        new Promise<undefined | boolean>((resolve, reject) =>
-          this.adminClient.modify(dn, data, async (searchErr: Ldap.Error | null) => {
-            if (searchErr) {
-              this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
+        new Promise<boolean>((resolve, reject) =>
+          this.adminClient.modify(
+            dn,
+            data,
+            async (searchErr: Ldap.Error | null): Promise<void> => {
+              if (searchErr) {
+                this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
 
-              return reject(searchErr);
-            }
-
-            this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
-
-            if (this.userCache) {
-              await this.userCache.del(dn);
-              this.logger.debug(`Modify: cache reset: ${dn}`, 'LDAP');
-
-              if (username) {
-                await this.userCache.del(username);
-                this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
+                reject(searchErr);
               }
-            }
 
-            return resolve(true);
-          }),
+              this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
+
+              if (this.userCache) {
+                await this.userCache.del(dn);
+                this.logger.debug(`Modify: cache reset: ${dn}`, 'LDAP');
+
+                if (username) {
+                  await this.userCache.del(username);
+                  this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
+                }
+              }
+
+              resolve(true);
+            },
+          ),
         ),
     );
   }

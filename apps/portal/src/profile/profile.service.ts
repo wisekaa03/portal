@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import Ldap from 'ldapjs';
@@ -125,8 +125,10 @@ export class ProfileService {
 
   /**
    * Create or update by user DN
-   * @param userByDN string
-   * @returns string
+   *
+   * @param {string} - User by DN
+   * @param {number} - Count
+   * @returns {ProfileEntity}
    */
   async createLdapDN(userByDN: string, count: number): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
@@ -145,9 +147,9 @@ export class ProfileService {
   /**
    * Create or Update user profiles
    *
-   * @param ldapUser LdapResponseUser
-   * @param user UserEntity
-   * @returns ProfileEntity
+   * @param {LdapResponseUser} - The LDAP user
+   * @param {UserEntity} - User from Database
+   * @returns {ProfileEntity}
    */
   async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, count = 1): Promise<ProfileEntity | undefined> {
     const manager =
@@ -252,8 +254,8 @@ export class ProfileService {
   /**
    * Create
    *
-   * @param {Profile} The profile
-   * @returns {ProfileEntity} The profile
+   * @param {Profile} - The profile
+   * @returns {ProfileEntity} - The profile
    */
   create = (profile: Profile): ProfileEntity => {
     try {
@@ -284,8 +286,8 @@ export class ProfileService {
   /**
    * Save
    *
-   * @param {ProfileEntity} The profile
-   * @returns {ProfileEntity | undefined} The profile
+   * @param {ProfileEntity} - The profile
+   * @returns {ProfileEntity | undefined} - The profile
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity | undefined> => {
     try {
@@ -299,28 +301,27 @@ export class ProfileService {
 
   /**
    * changeProfile
-   * @param {req} Request
-   * @param {profile} Profile
-   * @returns {boolean | null}
+   * @param {Request} - Express Request
+   * @param {Profile} - Profile params
+   * @returns {boolean}
+   * @throws {UnauthorizedException | HttpException}
    */
-  async changeProfile(req: Request, profile: Profile): Promise<boolean | null> {
+  async changeProfile(req: Request, profile: Profile): Promise<boolean> {
     // В резолвере проверка на юзера уже есть
     if (!req.session!.passport.user.profile || !req.session!.passport.user.profile.id) {
-      return false;
+      throw new UnauthorizedException();
     }
 
     const updated = { id: req.session!.passport.user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
-
     if (!created) {
-      return false;
+      throw new HttpException('Profile repository: "created" is null', 500);
     }
 
     const ldapUser = await this.ldapService.searchByDN(created.dn);
-
     if (!ldapUser) {
-      return false;
+      throw new HttpException('Ldap is not connected.', 500);
     }
 
     const modification: any = {

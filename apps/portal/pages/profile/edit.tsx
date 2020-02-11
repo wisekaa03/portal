@@ -38,6 +38,7 @@ import { resizeImage } from '../../components/utils';
 import Button from '../../components/common/button';
 import { Gender } from '../../src/shared/interfaces';
 import dayjs from '../../lib/dayjs';
+import { GQLError } from '../../components/gql-error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -117,10 +118,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
   const profile = useContext(ProfileContext);
-  const isAdmin = profile && profile.user && profile.user.isAdmin;
+  const { isAdmin } = profile!.user;
   const router = useRouter();
 
-  const [changeProfile] = useMutation(CHANGE_PROFILE);
+  const [changeProfile, { loading: loadingProfile, error: errorProfile }] = useMutation(CHANGE_PROFILE);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -218,6 +219,8 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               ) : (
                 current && (
                   <>
+                    {errorProfile && <GQLError error={errorProfile} />}
+                    {loadingProfile && <Loading full absolute color="secondary" size={48} type="circular" />}
                     <div className={classes.firstBlock}>
                       <Box display="flex">
                         <Box mr={1} position="relative">
@@ -232,6 +235,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <div className={classes.nameBlock}>
                           <TextField
                             fullWidth
+                            disabled={loadingProfile}
                             onChange={handleChange('lastName')}
                             color="secondary"
                             value={current.lastName || ''}
@@ -241,6 +245,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           />
                           <TextField
                             fullWidth
+                            disabled={loadingProfile}
                             onChange={handleChange('firstName')}
                             color="secondary"
                             value={current.firstName || ''}
@@ -250,6 +255,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           />
                           <TextField
                             fullWidth
+                            disabled={loadingProfile}
                             onChange={handleChange('middleName')}
                             color="secondary"
                             value={current.middleName || ''}
@@ -262,6 +268,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div className={classes.nameBlock}>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('nameeng')}
                           color="secondary"
                           value={current.nameeng || ''}
@@ -272,6 +279,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <FormControlLabel
                           control={
                             <Checkbox
+                              disabled={loadingProfile}
                               checked={current.notShowing}
                               onChange={handleChange('notShowing')}
                               color="secondary"
@@ -288,6 +296,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           value={current.gender}
                         >
                           <FormControlLabel
+                            disabled={loadingProfile}
                             value={Gender.MAN}
                             control={<Radio color="secondary" />}
                             label={t('common:gender.MAN')}
@@ -295,6 +304,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                             labelPlacement="end"
                           />
                           <FormControlLabel
+                            disabled={loadingProfile}
                             value={Gender.WOMAN}
                             control={<Radio color="secondary" />}
                             label={t('common:gender.WOMAN')}
@@ -306,6 +316,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('company')}
                           color="secondary"
                           value={current.company || ''}
@@ -317,6 +328,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('companyeng')}
                           color="secondary"
                           value={current.companyeng || ''}
@@ -328,6 +340,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('department')}
                           color="secondary"
                           value={current.department || ''}
@@ -339,6 +352,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('departmenteng')}
                           color="secondary"
                           value={current.departmenteng || ''}
@@ -350,6 +364,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('otdel')}
                           color="secondary"
                           value={current.otdel || ''}
@@ -361,6 +376,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('otdeleng')}
                           color="secondary"
                           value={current.otdeleng || ''}
@@ -372,6 +388,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('title')}
                           color="secondary"
                           value={current.title || ''}
@@ -383,6 +400,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('positioneng')}
                           color="secondary"
                           value={current.positioneng || ''}
@@ -397,6 +415,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('manager')}
                           color="secondary"
                           value={getManager(current.manager)}
@@ -409,6 +428,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardDatePicker
                             fullWidth
+                            disabled={loadingProfile}
                             inputVariant="outlined"
                             color="secondary"
                             format="yyyy-MM-dd"
@@ -424,6 +444,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('email')}
                           color="secondary"
                           value={current.email || ''}
@@ -435,6 +456,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('telephone')}
                           color="secondary"
                           value={current.telephone || ''}
@@ -446,6 +468,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('mobile')}
                           color="secondary"
                           value={current.mobile || ''}
@@ -457,6 +480,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('workPhone')}
                           color="secondary"
                           value={current.workPhone || ''}
@@ -468,6 +492,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('country')}
                           color="secondary"
                           value={current.country || ''}
@@ -479,6 +504,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('region')}
                           color="secondary"
                           value={current.region || ''}
@@ -490,6 +516,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('town')}
                           color="secondary"
                           value={current.town || ''}
@@ -501,6 +528,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('street')}
                           color="secondary"
                           value={current.street || ''}
@@ -512,6 +540,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       <div>
                         <TextField
                           fullWidth
+                          disabled={loadingProfile}
                           onChange={handleChange('postalCode')}
                           color="secondary"
                           value={current.postalCode || ''}
