@@ -102,11 +102,12 @@ export class MediaService {
   editFolder = async ({ id, user, pathname, updatedUser }: MediaDirectory): Promise<MediaDirectoryEntity> => {
     this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'MediaService');
 
+    // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
+    // const folderPathname = await this.mediaDirectoryRepository.findOne({ pathname });
+
     let data = id
       ? await this.mediaDirectoryRepository.findOne({ id })
       : ({ createdUser: updatedUser } as MediaDirectory);
-
-    // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
 
     data = {
       ...data,
