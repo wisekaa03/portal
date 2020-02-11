@@ -102,9 +102,12 @@ export class MediaService {
   editDirectory = async ({ id, user, pathname, updatedUser }: MediaDirectory): Promise<MediaDirectoryEntity> => {
     this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'MediaService');
 
-    let data = id ? await this.mediaDirectoryRepository.findOne({ id }) : {};
+    let data = id
+      ? await this.mediaDirectoryRepository.findOne({ id })
+      : ({ createdUser: updatedUser } as MediaDirectory);
 
     data = {
+      ...data,
       pathname,
       user,
       updatedUser,

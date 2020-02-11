@@ -143,7 +143,7 @@ export class UserService {
     }
 
     const data: User = {
-      id: user && user.id,
+      id: user?.id,
       createdAt: new Date(ldapUser.whenCreated),
       updatedAt: new Date(ldapUser.whenChanged),
       username: ldapUser.sAMAccountName,
@@ -152,7 +152,7 @@ export class UserService {
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       groups,
       isAdmin: Boolean(groups.find((group) => group.name === ADMIN_GROUP)),
-      settings: user && user.settings ? user.settings : defaultSettings,
+      settings: user?.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
 

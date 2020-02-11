@@ -12,11 +12,7 @@ export class GqlAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = this.getRequest(context);
 
-    if (request && request.session && request.session.passport && request.session.passport.user) {
-      return true;
-    }
-
-    return false;
+    return !!request?.session?.passport?.user;
   }
 
   getResponse = (): any => undefined;

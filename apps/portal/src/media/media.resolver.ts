@@ -53,7 +53,7 @@ export class MediaResolver {
     @Args('directory') directory: string,
     @Args('id') id: string,
   ): Promise<MediaEntity> {
-    const updatedUser = await this.userService.readById((req.user as UserResponse).id);
+    const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
 
     if (updatedUser) {
       // eslint-disable-next-line no-debugger
@@ -104,10 +104,10 @@ export class MediaResolver {
     @Args('userId') userId?: string,
     @Args('id') id?: string,
   ): Promise<MediaDirectoryEntity> {
-    const updatedUser = await this.userService.readById((req.user as UserResponse).id);
+    const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
 
     if (updatedUser) {
-      const user = userId ? await this.userService.readById(userId) : undefined;
+      const user = userId ? await this.userService.readById(userId, true, false) : undefined;
 
       return this.mediaService.editDirectory({ pathname, user, id, updatedUser });
     }
