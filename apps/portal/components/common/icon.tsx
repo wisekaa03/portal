@@ -12,25 +12,37 @@ interface IconProps {
   base64?: boolean;
   size?: number;
   material?: boolean;
+  mask?: string;
+  color?: string;
 }
 
-const useStyles = makeStyles<Theme | undefined, IconProps>(() =>
+const useStyles = makeStyles<Theme | undefined, IconProps>((theme) =>
   createStyles({
-    root: (props) => ({
-      width: props.size ? props.size : iconWidth,
-      height: props.size ? props.size : iconWidth,
+    root: ({ size }) => ({
+      width: size || iconWidth,
+      height: size || iconWidth,
+    }),
+    mask: ({ mask, color }) => ({
+      '-webkit-mask-size': 'cover',
+      '-webkit-mask': `url(${mask})`,
+      'mask': `url(${mask})`,
+      'background': color in theme.palette ? theme.palette[color].main : color,
     }),
   }),
 );
 
-const BaseIcon = ({ size, ...props }: IconProps): React.ReactElement => {
-  const classes = useStyles({ size });
+const BaseIcon = ({ size, mask, color, ...props }: IconProps): React.ReactElement => {
+  const classes = useStyles({ size, mask, color });
 
   const otherProps: IconProps = {};
 
   if (props.material) {
     const TheIcon = props.src;
     return <TheIcon />;
+  }
+
+  if (mask) {
+    return <Icon className={classes.mask} />;
   }
 
   if (props.src) {

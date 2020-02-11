@@ -14,27 +14,16 @@ import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-cli
 import DrawerBg from '../../../public/images/jpeg/drawer_bg.jpg';
 import Icon from './common/icon';
 import CalendarIcon from '../../../public/images/svg/icons/calendar.svg';
-import CalendarIconSelected from '../../../public/images/svg/icons/calendar_select.svg';
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
-import ServicesIconSelected from '../../../public/images/svg/icons/services_select.svg';
 import FaqIcon from '../../../public/images/svg/icons/faq.svg';
-import FaqIconSelected from '../../../public/images/svg/icons/faq_select.svg';
 import ProfileIcon from '../../../public/images/svg/icons/profile.svg';
-import ProfileIconSelected from '../../../public/images/svg/icons/profile_select.svg';
 import MailIcon from '../../../public/images/svg/icons/mail.svg';
-import MailIconSelected from '../../../public/images/svg/icons/mail_select.svg';
 import MediaIcon from '../../../public/images/svg/icons/media.svg';
-import MediaIconSelected from '../../../public/images/svg/icons/media_select.svg';
 import MeetingIcon from '../../../public/images/svg/icons/meeting.svg';
-import MeetingIconSelected from '../../../public/images/svg/icons/meeting_select.svg';
 import NewsIcon from '../../../public/images/svg/icons/news.svg';
-import NewsIconSelected from '../../../public/images/svg/icons/news_select.svg';
 import PhonebookIcon from '../../../public/images/svg/icons/phonebook.svg';
-import PhonebookIconSelected from '../../../public/images/svg/icons/phonebook_select.svg';
 import SettingsIcon from '../../../public/images/svg/icons/settings.svg';
-import SettingsIconSelected from '../../../public/images/svg/icons/settings_select.svg';
 import AdminIcon from '../../../public/images/svg/icons/admin.svg';
-import AdminIconSelected from '../../../public/images/svg/icons/admin_select.svg';
 import { ProfileContext } from '../lib/context';
 import { ADMIN_PAGES } from '../lib/constants';
 // #endregion
@@ -76,7 +65,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     item: {
       '&$itemSelected, &:hover': {
-        color: '#fff',
+        'color': '#fff',
+        '& .MuiIcon-root': {
+          background: '#fff',
+        },
       },
       '&$itemSelected, &:hover$itemSelected': {
         backgroundColor: theme.palette.secondary.main,
@@ -97,11 +89,9 @@ interface DrawerProps extends WithTranslation {
 
 interface UrlProps {
   icon: any;
-  selected: any;
   text: any;
   link: string;
   admin: boolean;
-  material?: boolean;
 }
 
 const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
@@ -113,35 +103,32 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const { open, isMobile, handleOpen, t } = props;
 
   const urls: UrlProps[] = [
-    { icon: MailIcon, selected: MailIconSelected, text: t('common:mail'), link: '/mail', admin: false },
+    { icon: MailIcon, text: t('common:mail'), link: '/mail', admin: false },
     {
       icon: PhonebookIcon,
-      selected: PhonebookIconSelected,
       text: t('common:phonebook'),
       link: '/phonebook',
       admin: false,
     },
-    { icon: ProfileIcon, selected: ProfileIconSelected, text: t('common:profile'), link: '/profile', admin: false },
+    { icon: ProfileIcon, text: t('common:profile'), link: '/profile', admin: false },
     {
       icon: ServicesIcon,
-      selected: ServicesIconSelected,
       text: t('common:services'),
       link: '/services',
       admin: false,
     },
-    { icon: CalendarIcon, selected: CalendarIconSelected, text: t('common:calendar'), link: '/calendar', admin: false },
-    { icon: FaqIcon, selected: FaqIconSelected, text: t('common:faq'), link: '/faq', admin: false },
-    { icon: MeetingIcon, selected: MeetingIconSelected, text: t('common:meeting'), link: '/meetings', admin: false },
-    { icon: NewsIcon, selected: NewsIconSelected, text: t('common:news'), link: '/news', admin: false },
+    { icon: CalendarIcon, text: t('common:calendar'), link: '/calendar', admin: false },
+    { icon: FaqIcon, text: t('common:faq'), link: '/faq', admin: false },
+    { icon: MeetingIcon, text: t('common:meeting'), link: '/meetings', admin: false },
+    { icon: NewsIcon, text: t('common:news'), link: '/news', admin: false },
     {
       icon: MediaIcon,
-      selected: MediaIconSelected,
       text: t('common:media'),
       link: '/media',
       admin: false,
     },
-    { icon: SettingsIcon, selected: SettingsIconSelected, text: t('common:settings'), link: '/settings', admin: false },
-    { icon: AdminIcon, selected: AdminIconSelected, text: t('common:adminPanel'), link: '/admin', admin: true },
+    { icon: SettingsIcon, text: t('common:settings'), link: '/settings', admin: false },
+    { icon: AdminIcon, text: t('common:adminPanel'), link: '/admin', admin: true },
   ];
 
   const pathname = router ? router.pathname : '';
@@ -149,36 +136,14 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const drawer = (
     <div className={classes.toolbar}>
       <List>
-        {urls.reduce((result: JSX.Element[], url: UrlProps) => {
-          if (ADMIN_PAGES.includes(url.link) && (!profile.user || (profile.user && !profile.user.isAdmin))) {
-            return result;
-          }
-
-          const selected = pathname.startsWith(url.link);
-
-          const handleEnter = (e: any): void => {
-            if (selected) return;
-
-            e.currentTarget.firstElementChild.firstElementChild.firstElementChild.src = url.selected;
-          };
-
-          const handleLeave = (e: any): void => {
-            if (selected) return;
-
-            e.currentTarget.firstElementChild.firstElementChild.firstElementChild.src = url.icon;
-          };
-
-          return [
-            ...result,
+        {urls
+          .filter((url) => !ADMIN_PAGES.includes(url.link) || profile.user?.isAdmin)
+          .map((url) => (
             <li key={url.text}>
               <Link href={url.link} passHref>
                 <ListItem
                   button
-                  onMouseOver={handleEnter}
-                  onMouseOut={handleLeave}
-                  onFocus={handleEnter}
-                  onBlur={handleLeave}
-                  selected={selected}
+                  selected={pathname.startsWith(url.link)}
                   classes={{
                     root: classes.item,
                     selected: classes.itemSelected,
@@ -187,14 +152,13 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
                   title={url.text}
                 >
                   <ListItemIcon>
-                    <Icon src={selected ? url.selected : url.icon} material={url.material} />
+                    <Icon mask={url.icon} color="secondary" />
                   </ListItemIcon>
                   <ListItemText primary={url.text} />
                 </ListItem>
               </Link>
-            </li>,
-          ];
-        }, [])}
+            </li>
+          ))}
       </List>
     </div>
   );
@@ -207,11 +171,11 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}
           open={open}
           onClose={handleOpen}
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
           classes={{
+            root: clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
             paper: clsx(classes.paper, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
@@ -225,11 +189,11 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
         <Drawer
           variant="permanent"
           open={open}
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
           classes={{
+            root: clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
             paper: clsx(classes.paper, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
