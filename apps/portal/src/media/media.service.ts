@@ -10,6 +10,7 @@ import { LogService } from '@app/logger';
 import { MediaEntity } from './media.entity';
 import { Media } from './models/media.dto';
 import { MediaDirectoryEntity } from './media.directory.entity';
+import { MediaDirectory } from './models/media.directory.dto';
 // #endregion
 
 @Injectable()
@@ -90,6 +91,29 @@ export class MediaService {
 
     // TODO: сделать чтобы выводилось постранично
     return this.mediaDirectoryRepository.find({ id });
+  };
+
+  /**
+   * Edit directory
+   *
+   * @param {Directory}
+   * @return {MediaDirectoryEntity}
+   */
+  editDirectory = async ({ id, user, pathname, updatedUser }: MediaDirectory): Promise<MediaDirectoryEntity> => {
+    this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'MediaService');
+
+    let data = id ? await this.mediaDirectoryRepository.findOne({ id }) : {};
+
+    data = {
+      pathname,
+      user,
+      updatedUser,
+      id,
+    };
+
+    return this.mediaDirectoryRepository.save(this.mediaDirectoryRepository.create(data)).catch((error: Error) => {
+      throw error;
+    });
   };
 
   /**

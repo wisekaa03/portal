@@ -112,8 +112,9 @@ export class MediaResolver {
     if (user) {
       const updatedUser = await this.userService.readById(user.id);
       if (updatedUser) {
-        // if (attachment) {
-        // }
+        const userEntity = userId ? await this.userService.readById(userId) : undefined;
+
+        return this.mediaService.editDirectory({ pathname, user: userEntity, id, updatedUser });
       }
     }
 
