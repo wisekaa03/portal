@@ -123,9 +123,8 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 700m
-    memory: 1Gi
-    ephemeral-storage: 1Gi
+    cpu: 1000m
+    memory: 2Gi
   requests:
     cpu: 700m
     memory: 1Gi
