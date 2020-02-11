@@ -83,8 +83,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async directory(@Args('id') id: string): Promise<MediaDirectoryEntity[]> {
-    return this.mediaService.directory(id);
+  async folders(@Args('id') id: string): Promise<MediaDirectoryEntity[]> {
+    return this.mediaService.folders(id);
   }
 
   /**
@@ -98,7 +98,7 @@ export class MediaResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async editDirectory(
+  async editFolder(
     @Context('req') req: Request,
     @Args('pathname') pathname: string,
     @Args('userId') userId?: string,
@@ -109,7 +109,7 @@ export class MediaResolver {
     if (updatedUser) {
       const user = userId ? await this.userService.readById(userId, true, false) : undefined;
 
-      return this.mediaService.editDirectory({ pathname, user, id, updatedUser });
+      return this.mediaService.editFolder({ pathname, user, id, updatedUser });
     }
 
     throw new UnauthorizedException();
@@ -123,7 +123,7 @@ export class MediaResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async deleteDirectory(@Args('id') id: string): Promise<boolean> {
-    return this.mediaService.deleteDirectory(id);
+  async deleteFolder(@Args('id') id: string): Promise<boolean> {
+    return this.mediaService.deleteFolder(id);
   }
 }

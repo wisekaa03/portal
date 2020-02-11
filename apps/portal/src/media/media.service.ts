@@ -86,7 +86,7 @@ export class MediaService {
    * @param {string} - id of directory, optional
    * @return {MediaDirectoryEntity[]}
    */
-  directory = async (id: string): Promise<MediaDirectoryEntity[]> => {
+  folders = async (id: string): Promise<MediaDirectoryEntity[]> => {
     this.logService.log(`Directory: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
@@ -99,12 +99,14 @@ export class MediaService {
    * @param {Directory}
    * @return {MediaDirectoryEntity}
    */
-  editDirectory = async ({ id, user, pathname, updatedUser }: MediaDirectory): Promise<MediaDirectoryEntity> => {
+  editFolder = async ({ id, user, pathname, updatedUser }: MediaDirectory): Promise<MediaDirectoryEntity> => {
     this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'MediaService');
 
     let data = id
       ? await this.mediaDirectoryRepository.findOne({ id })
       : ({ createdUser: updatedUser } as MediaDirectory);
+
+    // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
 
     data = {
       ...data,
@@ -125,7 +127,7 @@ export class MediaService {
    * @param {string} - id of directory
    * @return {boolean} - true/false of delete directory
    */
-  deleteDirectory = async (id: string): Promise<boolean> => {
+  deleteFolder = async (id: string): Promise<boolean> => {
     this.logService.log(`Edit directory: id={${id}}`, 'MediaService');
 
     const deleteResult = await this.mediaDirectoryRepository.delete({ id });
