@@ -83,4 +83,41 @@ export class MediaResolver {
   async directory(@Args('id') id: string): Promise<MediaDirectoryEntity[]> {
     return this.mediaService.directory(id);
   }
+
+  /**
+   * GraphQL mutation: editDirectory
+   *
+   * @returns {string} - id of directory
+   */
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async editDirectory(
+    @Context('req') req: Request,
+    @Args('pathname') pathname: string,
+    @Args('userId') userId: string,
+    @Args('id') id: string,
+  ): Promise<MediaDirectoryEntity> {
+    const user = req.user as UserResponse;
+
+    if (user) {
+      const updatedUser = await this.userService.readById(user.id);
+      if (updatedUser) {
+        // if (attachment) {
+        // }
+      }
+    }
+
+    throw new UnauthorizedException();
+  }
+
+  /**
+   * GraphQL mutation: deleteDirectory
+   *
+   * @returns {boolean} - true/false of delete directory
+   */
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async deleteDirectory(@Args('id') id: string): Promise<boolean> {
+    return this.mediaService.deleteDirectory(id);
+  }
 }

@@ -87,4 +87,17 @@ export class MediaService {
     // TODO: сделать чтобы выводилось постранично
     return this.mediaDirectoryRepository.find({ id });
   };
+
+  /**
+   * Delete news
+   *
+   * @return void
+   */
+  deleteDirectory = async (id: string): Promise<boolean> => {
+    this.logService.log(`Edit directory: id={${id}}`, 'MediaService');
+
+    const deleteResult = await this.mediaDirectoryRepository.delete({ id });
+
+    return !!(deleteResult.affected && deleteResult.affected > 0);
+  };
 }
