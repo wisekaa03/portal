@@ -39,20 +39,21 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.forEach(({ message, locations, path, extensions }): void => {
-        if (!__SERVER__) {
-          switch (extensions.code) {
-            case 'UNAUTHENTICATED':
-              Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
-              return;
-
-            case 'INTERNAL_SERVER_ERROR':
-            default:
-            // if (process.env.NODE_ENV === 'production') {
-            //   Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
-            // }
-          }
-        }
         console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
+
+        if (!__SERVER__) {
+          if (extensions.code === 'UNAUTHENTICATED' || (message as any).statusCode === 403) {
+            Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
+          }
+
+          // switch (extensions.code) {
+          //   case 'INTERNAL_SERVER_ERROR':
+          //   default:
+          // if (process.env.NODE_ENV === 'production') {
+          //   Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
+          // }
+          // }
+        }
       });
     }
     if (networkError) {
