@@ -25,9 +25,10 @@ export class MediaService {
   ) {}
 
   /**
-   * Fetch news
+   * Get media
    *
-   * @return News
+   * @param {string} - id of media, optional
+   * @return {MediaEntity[]}
    */
   media = async (id: string): Promise<MediaEntity[]> => {
     this.logService.log(`Media entity: id={${id}}`, 'MediaService');
@@ -39,7 +40,8 @@ export class MediaService {
   /**
    * Edit media
    *
-   * @return id
+   * @param {Media}
+   * @return {MediaEntity}
    */
   editMedia = async ({ title, directory, filename, mimetype, updatedUser, id }: Media): Promise<MediaEntity> => {
     this.logService.log(
@@ -64,9 +66,10 @@ export class MediaService {
   };
 
   /**
-   * Delete news
+   * Delete media
    *
-   * @return void
+   * @param {string} - id of media
+   * @return {boolean} - true/false of delete media
    */
   deleteMedia = async (id: string): Promise<boolean> => {
     this.logService.log(`Edit: id={${id}}`, 'MediaService');
@@ -77,9 +80,10 @@ export class MediaService {
   };
 
   /**
-   * Directory
+   * Get directory
    *
-   * @return MediaDirectoryEntity
+   * @param {string} - id of directory, optional
+   * @return {MediaDirectoryEntity[]}
    */
   directory = async (id: string): Promise<MediaDirectoryEntity[]> => {
     this.logService.log(`Directory: id={${id}}`, 'MediaService');
@@ -89,9 +93,10 @@ export class MediaService {
   };
 
   /**
-   * Delete news
+   * Delete directory
    *
-   * @return void
+   * @param {string} - id of directory
+   * @return {boolean} - true/false of delete directory
    */
   deleteDirectory = async (id: string): Promise<boolean> => {
     this.logService.log(`Edit directory: id={${id}}`, 'MediaService');

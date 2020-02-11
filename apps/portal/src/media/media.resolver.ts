@@ -27,6 +27,7 @@ export class MediaResolver {
   /**
    * GraphQL query: media get
    *
+   * @param {string} - id of media, optional
    * @returns {MediaEntity[]}
    */
   @Query()
@@ -38,7 +39,11 @@ export class MediaResolver {
   /**
    * GraphQL mutation: editMedia
    *
-   * @returns {string} - id of media
+   * @param {Request} - Express request
+   * @param {Promise<FileUpload>} - Attachment
+   * @param {string} - id of directory
+   * @param {string} - id of media, optional
+   * @returns {MediaEntity} - media entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -64,6 +69,7 @@ export class MediaResolver {
   /**
    * GraphQL mutation: deleteMedia
    *
+   * @param {string} - id of media
    * @returns {boolean} - true/false of delete media
    */
   @Mutation()
@@ -75,8 +81,8 @@ export class MediaResolver {
   /**
    * GraphQL query: directory
    *
-   * @param {id}
-   * @returns {boolean} - true/false of delete media
+   * @param {string} - id of directory, optional
+   * @returns {MediaDirectoryEntity[]} - Directory entity
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -87,15 +93,19 @@ export class MediaResolver {
   /**
    * GraphQL mutation: editDirectory
    *
-   * @returns {string} - id of directory
+   * @param {Request} - Express request
+   * @param {string} - Pathname (without /)
+   * @param {string} - "shared" or "user ID"
+   * @param {string} - ID of directory
+   * @returns {MediaDirectoryEntity} - Media directory entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async editDirectory(
     @Context('req') req: Request,
     @Args('pathname') pathname: string,
-    @Args('userId') userId: string,
-    @Args('id') id: string,
+    @Args('userId') userId?: string,
+    @Args('id') id?: string,
   ): Promise<MediaDirectoryEntity> {
     const user = req.user as UserResponse;
 
@@ -113,6 +123,7 @@ export class MediaResolver {
   /**
    * GraphQL mutation: deleteDirectory
    *
+   * @param {string} - id of directory
    * @returns {boolean} - true/false of delete directory
    */
   @Mutation()
