@@ -13,6 +13,8 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DirectoryIcon from '@material-ui/icons/Folder';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import DirectorySharedIcon from '@material-ui/icons/FolderShared';
 import FileIcon from '@material-ui/icons/Note';
 // #endregion
@@ -45,12 +47,12 @@ type StyledTreeItemProps = TreeItemProps & {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dropBox: {
-      padding: '0 20px 0 20px',
+      padding: theme.spacing(1, 2),
     },
 
     firstBlock: {
       display: 'grid',
-      gridGap: theme.spacing(2),
+      gap: `${theme.spacing(2)}px`,
       width: '100%',
       [theme.breakpoints.up('lg')]: {
         gridTemplateColumns: '1fr 1fr',
@@ -80,7 +82,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
       'color': theme.palette.text.secondary,
       'borderTopRightRadius': theme.spacing(2),
       'borderBottomRightRadius': theme.spacing(2),
-      'paddingRight': theme.spacing(1),
+      'paddingRight': theme.spacing(),
       'fontWeight': theme.typography.fontWeightMedium,
       '$expanded > &': {
         fontWeight: theme.typography.fontWeightRegular,
@@ -103,7 +105,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(0.5, 0),
     },
     labelIcon: {
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(),
     },
     labelText: {
       fontWeight: 'inherit',
@@ -199,7 +201,7 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Page {...rest}>
         <Box display="flex" flexDirection="column">
           <>
-            {!current ? (
+            {loading ? (
               <Loading noMargin type="linear" variant="indeterminate" />
             ) : (
               <>
@@ -216,7 +218,12 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </Box>
                 </Box>
                 <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <TreeView className={classes.treeView}>
+                  <TreeView
+                    className={classes.treeView}
+                    defaultCollapseIcon={<ArrowDropDownIcon />}
+                    defaultExpandIcon={<ArrowRightIcon />}
+                    defaultEndIcon={<div style={{ width: 24 }} />}
+                  >
                     <StyledTreeItem nodeId="1" labelText="Directory" labelIcon={DirectoryIcon} />
                     <StyledTreeItem nodeId="2" labelText="Directory" labelIcon={DirectoryIcon} />
                   </TreeView>

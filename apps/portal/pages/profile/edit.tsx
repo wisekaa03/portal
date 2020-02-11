@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     firstBlock: {
       display: 'grid',
-      gridGap: theme.spacing(2),
+      gap: `${theme.spacing(2)}px`,
       width: '100%',
       [theme.breakpoints.up('lg')]: {
         gridTemplateColumns: '1fr 1fr',
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     secondBlock: {
       display: 'grid',
-      gridGap: theme.spacing(2),
+      gap: `${theme.spacing(2)}px`,
       width: '100%',
       [theme.breakpoints.up('md')]: {
         gridTemplateColumns: '1fr 1fr',
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       height: 200,
       width: 200,
-      borderRadius: theme.spacing() / 2,
+      borderRadius: theme.spacing(0.5),
     },
     nameBlock: {
       'display': 'flex',
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'zIndex': 100,
       'width': '100%',
       'height': '100%',
-      'borderRadius': theme.spacing() / 2,
+      'borderRadius': theme.spacing(0.5),
       'color': '#fff',
       'opacity': 0,
       'transition': theme.transitions.create('opacity', {

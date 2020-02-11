@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundSize: 'cover',
     },
     toolbar: {
-      padding: `0 ${theme.spacing(2)}px`,
+      padding: theme.spacing(0, 2),
     },
     menuButton: {
       color: 'rgba(0, 0, 0, 0.54)',
@@ -58,19 +58,19 @@ const useStyles = makeStyles((theme: Theme) =>
       width: avatarHeight,
     },
     profile: {
-      padding: theme.spacing() / 2,
+      padding: theme.spacing(0.5),
       background: `url(${PopoverBg})`,
       minWidth: '200px',
       minHeight: '150px',
       display: 'grid',
       gridTemplateColumns: `200px ${avatarHeight}px`,
-      borderRadius: theme.spacing() / 2,
+      borderRadius: theme.spacing(0.5),
     },
     pointer: {
       cursor: 'pointer',
     },
     avatarWrap: {
-      padding: theme.spacing() / 2,
+      padding: theme.spacing(0.5),
     },
     profileName: {
       margin: theme.spacing(),
@@ -79,13 +79,13 @@ const useStyles = makeStyles((theme: Theme) =>
     commonBlock: {
       display: 'grid',
       gridColumn: '1 / 3',
-      gridGap: theme.spacing(),
+      gap: `${theme.spacing()}px`,
       padding: theme.spacing(),
     },
     phoneBlock: {
       display: 'grid',
       gridTemplateColumns: '1fr 6fr',
-      gridGap: `${theme.spacing()}px 0`,
+      gap: `${theme.spacing()}px 0`,
       alignItems: 'center',
     },
     buttonLogout: {

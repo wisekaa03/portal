@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'grid',
         gridTemplateColumns: '1fr',
         padding: theme.spacing(6),
-        gridGap: theme.spacing(4),
+        gap: `${theme.spacing(4)}px`,
         gridAutoRows: 'max-content',
         overflowX: 'hidden',
         overflowY: 'auto',
@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'justifyContent': 'space-between',
       'alignItems': 'flex-end',
       '& p': {
-        padding: theme.spacing() / 2,
+        padding: theme.spacing(0.5),
       },
     },
     content: {

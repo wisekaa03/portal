@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridTemplateColumns: '200px',
       height: 'fit-content',
-      gridGap: theme.spacing(),
+      gap: `${theme.spacing()}px`,
     },
   }),
 );

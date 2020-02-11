@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     rounded: {
-      borderRadius: theme.spacing() / 2,
+      borderRadius: theme.spacing(0.5),
     },
     cardHeader: {
       boxShadow: theme.shadows[3],
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(),
     },
     cardContent: {
-      'padding': `0 ${theme.spacing(2)}px`,
+      'padding': theme.spacing(0, 2),
       '&:first-child': {
         paddingTop: theme.spacing(2),
       },

@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
     typoAuthorization: {
       color: '#2c4373',
       textAlign: 'left',
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(),
     },
     labelForFormControl: {
       borderColor: 'rgba(44, 67, 115, 0.4)',
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     formControl: {
-      margin: `${theme.spacing(1)}px 0`,
+      margin: theme.spacing(1, 0),
 
       [theme.breakpoints.up('sm')]: {
         minWidth: 320,
@@ -87,12 +87,12 @@ const useStyles = makeStyles((theme: Theme) =>
     submitButton: {
       'borderRadius': 24,
       'width': 'fit-content',
-      'marginTop': `${theme.spacing(1)}px`,
+      'marginTop': theme.spacing(),
 
       '&:disabled': {
         color: '#2c4373',
         borderRadius: 24,
-        marginTop: `${theme.spacing(1)}px`,
+        marginTop: theme.spacing(),
       },
 
       '&:hover': {

@@ -46,7 +46,7 @@ theme.overrides = {
   },
   MuiOutlinedInput: {
     root: {
-      'borderRadius': theme.spacing() / 2,
+      'borderRadius': theme.spacing(0.5),
       '&:hover:not($focused):not($disabled) $notchedOutline': {
         borderColor: fade(theme.palette.primary.main, 0.75),
       },

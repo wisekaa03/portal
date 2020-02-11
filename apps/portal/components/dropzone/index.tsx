@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'marginRight': theme.spacing(),
       'width': thumbHeight,
       'height': thumbHeight,
-      'padding': theme.spacing() / 2,
+      'padding': theme.spacing(0.5),
       'boxSizing': 'border-box',
       'transition': `border 200ms ${theme.transitions.easing.easeOut} 0ms`,
       '&:hover': {

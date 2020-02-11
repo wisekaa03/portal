@@ -46,23 +46,23 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: avatarHeight,
       height: avatarHeight,
-      borderRadius: theme.spacing() / 2,
+      borderRadius: theme.spacing(0.5),
     },
     personal: {
       flex: 1,
       background: fade(theme.palette.secondary.main, 0.15),
       padding: theme.spacing(),
       color: theme.palette.secondary.main,
-      borderRadius: theme.spacing() / 2,
+      borderRadius: theme.spacing(0.5),
       marginBottom: theme.spacing(),
     },
     links: {
       'display': 'grid',
-      'gridGap': theme.spacing(),
+      'gap': `${theme.spacing()}px`,
       'gridAutoColumns': 180,
       'gridAutoRows': '1fr',
       '& > a': {
-        borderRadius: theme.spacing() / 2,
+        borderRadius: theme.spacing(0.5),
         lineHeight: '1.2em',
         textAlign: 'center',
       },
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'position': 'relative',
       'backgroundColor': fade(theme.palette.common.white, 0.15),
       'width': '100%',
-      'borderRadius': theme.spacing() / 2,
+      'borderRadius': theme.spacing(0.5),
       'border': `1px solid ${theme.palette.secondary.main}`,
       '&:hover': {
         backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     iconButton: {
-      padding: theme.spacing() / 2,
+      padding: theme.spacing(0.5),
       color: theme.palette.secondary.main,
     },
     ticket: {
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'flex': 1,
       'minWidth': 300,
       'maxWidth': 300,
-      'borderRadius': theme.spacing() / 2,
+      'borderRadius': theme.spacing(0.5),
       'background': fade(theme.palette.secondary.main, 0.15),
       'marginRight': theme.spacing(2),
       'marginBottom': theme.spacing(2),
@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'display': 'grid',
       'gridTemplateColumns': '1fr 4fr',
       'gridTemplateRows': '40px 1fr',
-      'gridGap': theme.spacing(),
+      'gap': `${theme.spacing()}px`,
       '& h6': {
         maxWidth: 220,
       },

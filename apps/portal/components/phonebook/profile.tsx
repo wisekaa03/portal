@@ -58,8 +58,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     grid: {
       display: 'grid',
-      gridGap: theme.spacing(2),
-      padding: theme.spacing() / 2,
+      gap: `${theme.spacing(2)}px`,
+      padding: theme.spacing(0.5),
     },
     main: {
       [theme.breakpoints.up('sm')]: {
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     listItem: {
       'display': 'grid',
-      'gridGap': theme.spacing(),
+      'gap': `${theme.spacing()}px`,
       'gridTemplateColumns': '120px auto',
 
       '& > .MuiListItemText-root': {
@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
       'alignItems': 'center',
       '& > h2': {
-        margin: theme.spacing() / 2,
+        margin: theme.spacing(0.5),
         fontWeight: 500,
       },
     },

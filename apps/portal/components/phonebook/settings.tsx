@@ -37,26 +37,26 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundSize: 'cover',
     },
     wrapContent: {
-      padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
+      padding: theme.spacing(1, 2),
 
       [theme.breakpoints.up('sm')]: {
-        padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+        padding: theme.spacing(2, 4),
       },
     },
     content: {
-      padding: theme.spacing() / 2,
+      padding: theme.spacing(0.5),
       display: 'grid',
 
       [theme.breakpoints.down('md')]: {
         maxHeight: '50vh',
         overflowX: 'hidden',
         overflowY: 'auto',
-        gridGap: theme.spacing(),
+        gap: `${theme.spacing()}px`,
       },
 
       [theme.breakpoints.up('sm')]: {
         gridTemplateColumns: '1fr 1fr',
-        gridGap: `0 ${theme.spacing(4)}px`,
+        gap: `${theme.spacing(0)}px ${theme.spacing(4)}px`,
       },
 
       [theme.breakpoints.up('lg')]: {
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     group: {
       boxShadow: '0px 0px 2px rgba(0, 0, 0, 0.2)',
-      padding: `${theme.spacing()}px 0`,
+      padding: theme.spacing(1, 0),
     },
     item: {
       margin: 0,
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '56px',
     },
     actions: {
-      'padding': `0 ${theme.spacing(4)}px ${theme.spacing(2)}px ${theme.spacing(4)}px`,
+      'padding': theme.spacing(0, 4, 2, 4),
       'display': 'flex',
       'justifyContent': 'flex-end',
       '& button:not(:last-child)': {

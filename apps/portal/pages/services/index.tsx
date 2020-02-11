@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     header: {
       '& button': {
-        padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+        padding: theme.spacing(2, 4),
       },
     },
     contentWrap: {
@@ -79,11 +79,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container1: {
       display: 'grid',
-      gridGap: `${theme.spacing()}px ${theme.spacing(4)}px`,
-      padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+      gap: `${theme.spacing()}px ${theme.spacing(4)}px`,
+      padding: theme.spacing(2, 4),
 
       [theme.breakpoints.up('sm')]: {
-        padding: `${theme.spacing(4)}px ${theme.spacing(8)}px`,
+        padding: theme.spacing(4, 8),
         gridTemplateColumns: '1fr 1fr',
       },
 
@@ -109,10 +109,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     service: {
       'padding': theme.spacing(),
-      'borderRadius': theme.spacing() / 2,
+      'borderRadius': theme.spacing(0.5),
       'display': 'grid',
       'gridTemplateColumns': '60px 1fr',
-      'gridGap': theme.spacing(),
+      'gap': `${theme.spacing()}px`,
       'justifyItems': 'flex-start',
       'alignItems': 'center',
       '&:not($formControl)': {

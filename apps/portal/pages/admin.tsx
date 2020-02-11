@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       // justifyContent: 'center',
       // alignContent: 'center',
       height: '100%',
-      gridGap: theme.spacing(),
+      gap: `${theme.spacing()}px`,
     },
     card: {
       maxWidth: 345,
