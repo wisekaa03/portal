@@ -7,16 +7,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, IconButton, Typography } from '@material-ui/core';
-import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import TreeView from '@material-ui/lab/TreeView';
-import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
+import { Box, IconButton } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import DirectoryIcon from '@material-ui/icons/Folder';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import DirectorySharedIcon from '@material-ui/icons/FolderShared';
-import FileIcon from '@material-ui/icons/Note';
 // #endregion
 // #region Imports Local
 import Button from '../../components/common/button';
@@ -27,29 +19,14 @@ import { Loading } from '../../components/loading';
 import { Media } from '../../src/media/models/media.dto';
 import Dropzone from '../../components/dropzone';
 import { DropzoneFile } from '../../components/dropzone/types';
+import { TreeView, TreeItem } from '../../components/tree-view';
 // #endregion
-
-declare module 'csstype' {
-  interface Properties {
-    '--tree-view-color'?: string;
-    '--tree-view-bg-color'?: string;
-  }
-}
-
-type StyledTreeItemProps = TreeItemProps & {
-  bgColor?: string;
-  color?: string;
-  labelIcon: React.ElementType<SvgIconProps>;
-  labelInfo?: string;
-  labelText: string;
-};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dropBox: {
       padding: theme.spacing(1, 2),
     },
-
     firstBlock: {
       display: 'grid',
       gap: `${theme.spacing(2)}px`,
@@ -58,99 +35,16 @@ const useStyles = makeStyles((theme: Theme) =>
         gridTemplateColumns: '1fr 1fr',
       },
     },
-
     sharedOrUser: {
       flexDirection: 'row',
     },
-
     treeView: {
       textAlign: 'left',
     },
   }),
 );
 
-const useTreeItemStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      'color': theme.palette.text.secondary,
-      '&:focus > $content': {
-        backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
-        color: 'var(--tree-view-color)',
-      },
-    },
-    content: {
-      'color': theme.palette.text.secondary,
-      'borderTopRightRadius': theme.spacing(2),
-      'borderBottomRightRadius': theme.spacing(2),
-      'paddingRight': theme.spacing(),
-      'fontWeight': theme.typography.fontWeightMedium,
-      '$expanded > &': {
-        fontWeight: theme.typography.fontWeightRegular,
-      },
-    },
-    group: {
-      'marginLeft': 0,
-      '& $content': {
-        paddingLeft: theme.spacing(2),
-      },
-    },
-    expanded: {},
-    label: {
-      fontWeight: 'inherit',
-      color: 'inherit',
-    },
-    labelRoot: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(0.5, 0),
-    },
-    labelIcon: {
-      marginRight: theme.spacing(),
-    },
-    labelText: {
-      fontWeight: 'inherit',
-      flexGrow: 1,
-    },
-  }),
-);
-
-const StyledTreeItem = (props: StyledTreeItemProps) => {
-  const classes = useTreeItemStyles();
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other } = props;
-
-  return (
-    <TreeItem
-      label={
-        <div className={classes.labelRoot}>
-          <LabelIcon color="inherit" className={classes.labelIcon} />
-          <Typography variant="body2" className={classes.labelText}>
-            {labelText}
-          </Typography>
-          <Typography variant="caption" color="inherit">
-            {labelInfo}
-          </Typography>
-        </div>
-      }
-      style={{
-        '--tree-view-color': color,
-        '--tree-view-bg-color': bgColor,
-      }}
-      classes={{
-        root: classes.root,
-        content: classes.content,
-        expanded: classes.expanded,
-        group: classes.group,
-        label: classes.label,
-      }}
-      {...other}
-    />
-  );
-};
-
 const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  // eslint-disable-next-line no-debugger
-  // debugger;
-
   const classes = useStyles({});
   const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA);
   const [mediaEdit] = useMutation(MEDIA_EDIT);
@@ -205,7 +99,7 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               <Loading noMargin type="linear" variant="indeterminate" />
             ) : (
               <>
-                <Box display="flex" flexDirection="column" p={2} overflow="auto">
+                <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
                   <Box display="flex" mb={1}>
                     <Link href={{ pathname: '/media' }} as="/media" passHref>
                       <IconButton>
@@ -218,18 +112,13 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </Box>
                 </Box>
                 <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <TreeView
-                    className={classes.treeView}
-                    defaultCollapseIcon={<ArrowDropDownIcon />}
-                    defaultExpandIcon={<ArrowRightIcon />}
-                    defaultEndIcon={<div style={{ width: 24 }} />}
-                  >
-                    <StyledTreeItem nodeId="1" labelText="Directory" labelIcon={DirectoryIcon} />
-                    <StyledTreeItem nodeId="2" labelText="Directory" labelIcon={DirectoryIcon} />
+                  <TreeView>
+                    <TreeItem nodeId="1" labelText="Directory" />
+                    <TreeItem nodeId="2" labelText="Directory" />
                   </TreeView>
                 </Box>
                 <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <Dropzone setFiles={setAttachments} files={attachments} {...rest} />
+                  <Dropzone color="secondary" setFiles={setAttachments} files={attachments} {...rest} />
                 </Box>
               </>
             )}
