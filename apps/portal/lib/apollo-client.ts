@@ -38,12 +38,12 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
   const errorLink = onError(({ graphQLErrors, networkError, response, operation }): any => {
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
-      const error = graphQLErrors.every(({ message, locations, path, extensions }): boolean => {
+      graphQLErrors.forEach(({ message, locations, path, extensions }): void => {
         if (!__SERVER__) {
           switch (extensions.code) {
             case 'UNAUTHENTICATED':
               Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
-              return false;
+              return;
 
             case 'INTERNAL_SERVER_ERROR':
             default:
@@ -53,15 +53,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
           }
         }
         console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
-
-        return true;
       });
-      if (error) {
-        response.errors = null;
-      }
-
-      // eslint-disable-next-line no-debugger
-      debugger;
     }
     if (networkError) {
       console.error('[Network error]:', networkError);
