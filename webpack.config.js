@@ -28,6 +28,8 @@ module.exports = (options) => {
     use: [{ loader: 'babel-loader' }],
   });
 
+  // c.output.ecmaVersion = 2020;
+
   // console.log('Config.module.rules:', c.module.rules);
   // c.module.rules.forEach((rule) => {
   //   console.log(`Config.module.rules.use "${rule.test}":`, rule.use);

@@ -43,11 +43,11 @@ function withCustomWebpack(conf = {}) {
       new Webpack.IgnorePlugin({
         checkResource(resource) {
           const lazyImports = [
-            '@nestjs/microservices',
-            '@nestjs/platform-express',
-            'class-validator',
-            'class-transformer',
-            'google-libphonenumber',
+            // '@nestjs/microservices',
+            // '@nestjs/platform-express',
+            // 'class-validator',
+            // 'class-transformer',
+            // 'google-libphonenumber',
             // 'cache-manager',
           ];
           if (!lazyImports.includes(resource)) {
