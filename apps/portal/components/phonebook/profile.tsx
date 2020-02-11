@@ -127,6 +127,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const Wire = ({ children, ...props }) => children(props);
+
 export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>((props, ref) => {
   const classes = useStyles({});
   const { t, profileId, handleClose, handleSearch } = props;
@@ -217,13 +219,17 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                             {/* <MenuItem onClick={handleChangeProfile(profile && profile.id)}>
                             {t('phonebook:profile.hide')}
                           </MenuItem> */}
-                            <Link
-                              href={{ pathname: `/profile/edit`, query: { id: profile && profile.id } }}
-                              as={`/profile/edit/${profile && profile.id}`}
-                              passHref
-                            >
-                              <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
-                            </Link>
+                            <Wire>
+                              {() => (
+                                <Link
+                                  href={{ pathname: `/profile/edit`, query: { id: profile && profile.id } }}
+                                  as={`/profile/edit/${profile && profile.id}`}
+                                  passHref
+                                >
+                                  <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
+                                </Link>
+                              )}
+                            </Wire>
                           </MenuList>
                         </ClickAwayListener>
                       </Paper>
