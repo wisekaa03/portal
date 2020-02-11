@@ -53,14 +53,11 @@ export class MediaResolver {
     @Args('directory') directory: string,
     @Args('id') id: string,
   ): Promise<MediaEntity> {
-    const user = req.user as UserResponse;
+    const updatedUser = await this.userService.readById((req.user as UserResponse).id);
 
-    if (user) {
-      const updatedUser = await this.userService.readById(user.id);
-      if (updatedUser) {
-        // if (attachment) {
-        // }
-      }
+    if (updatedUser) {
+      // eslint-disable-next-line no-debugger
+      debugger;
     }
 
     throw new UnauthorizedException();
@@ -107,15 +104,12 @@ export class MediaResolver {
     @Args('userId') userId?: string,
     @Args('id') id?: string,
   ): Promise<MediaDirectoryEntity> {
-    const user = req.user as UserResponse;
+    const updatedUser = await this.userService.readById((req.user as UserResponse).id);
 
-    if (user) {
-      const updatedUser = await this.userService.readById(user.id);
-      if (updatedUser) {
-        const userEntity = userId ? await this.userService.readById(userId) : undefined;
+    if (updatedUser) {
+      const user = userId ? await this.userService.readById(userId) : undefined;
 
-        return this.mediaService.editDirectory({ pathname, user: userEntity, id, updatedUser });
-      }
+      return this.mediaService.editDirectory({ pathname, user, id, updatedUser });
     }
 
     throw new UnauthorizedException();
