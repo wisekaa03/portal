@@ -35,7 +35,7 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
     };
   });
 
-  const errorLink = onError(({ graphQLErrors, networkError, response, operation }): any => {
+  const errorLink = onError(({ graphQLErrors, networkError /* , response, operation */ }): any => {
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.forEach(({ message, locations, path, extensions }): void => {
