@@ -30,7 +30,7 @@ export class MediaService {
    * @return News
    */
   media = async (id: string): Promise<MediaEntity[]> => {
-    this.logService.log(`Media entity: ${id}`, 'MediaService');
+    this.logService.log(`Media entity: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
     return this.mediaRepository.find({ id });
@@ -69,7 +69,7 @@ export class MediaService {
    * @return void
    */
   deleteMedia = async (id: string): Promise<boolean> => {
-    this.logService.log(`Edit: ${JSON.stringify({ id })}`, 'MediaService');
+    this.logService.log(`Edit: id={${id}}`, 'MediaService');
 
     const deleteResult = await this.mediaRepository.delete({ id });
 
@@ -82,7 +82,7 @@ export class MediaService {
    * @return MediaDirectoryEntity
    */
   directory = async (id: string): Promise<MediaDirectoryEntity[]> => {
-    this.logService.log(`Directory: ${id}`, 'MediaService');
+    this.logService.log(`Directory: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
     return this.mediaDirectoryRepository.find({ id });

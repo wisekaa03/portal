@@ -47,9 +47,9 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
 
             case 'INTERNAL_SERVER_ERROR':
             default:
-              if (process.env.NODE_ENV === 'production') {
-                Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
-              }
+            // if (process.env.NODE_ENV === 'production') {
+            //   Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
+            // }
           }
         }
         console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
