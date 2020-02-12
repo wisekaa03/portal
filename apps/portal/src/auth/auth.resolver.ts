@@ -49,16 +49,18 @@ export class AuthResolver {
     // FIX: в GraphQLModule.forRoot({ context: ({ req, res }) => ({ req, res }) })
     @Context('res') res: Response,
   ): Promise<UserResponse | null> {
-    const user = await this.authService.login({ username: username.toLowerCase(), password }, req);
+    const user = await this.authService.login({ username: username.toLowerCase(), password }, req).catch((error) => {
+      throw new UnauthorizedException(error, error.message);
+    });
 
     // Чтобы в дальнейшем был пароль, в частности, в SOAP
     user.passwordFrontend = password;
 
-    req.logIn(user, (err: Error) => {
-      if (err) {
-        this.logService.error('Error when logging in:', JSON.stringify(err), 'AuthResolver');
+    req.logIn(user, (error: Error) => {
+      if (error) {
+        this.logService.error('Error when logging in:', JSON.stringify(error), 'AuthResolver');
 
-        throw new UnauthorizedException(err, err.message);
+        throw new UnauthorizedException(error, error.message);
       }
     });
 

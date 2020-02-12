@@ -219,7 +219,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               ) : (
                 current && (
                   <>
-                    {errorProfile && <GQLError error={errorProfile} />}
+                    {errorProfile && <GQLError error={errorProfile} {...rest} />}
                     {loadingProfile && <Loading full absolute color="secondary" size={48} type="circular" />}
                     <div className={classes.firstBlock}>
                       <Box display="flex">

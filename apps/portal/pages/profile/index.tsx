@@ -22,6 +22,7 @@ import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
+import GQLError from '../../components/gql-error';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';
@@ -34,7 +35,6 @@ import Select from '../../components/ui/select';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/ui/refreshButton';
-import { GQLError } from '../../components/gql-error';
 // #endregion
 
 const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
@@ -282,7 +282,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 justifyContent="center"
               >
                 {errorTickets ? (
-                  <GQLError error={errorTickets} />
+                  <GQLError error={errorTickets} {...rest} />
                 ) : loadingTickets ? (
                   <Loading full type="circular" color="secondary" disableShrink size={48} />
                 ) : tickets && tickets.length > 0 ? (

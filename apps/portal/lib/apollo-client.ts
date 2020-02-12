@@ -42,7 +42,11 @@ const create = (initialState = {}, cookie?: string): ApolloClient<NormalizedCach
         console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
 
         if (!__SERVER__) {
-          if (extensions.code === 'UNAUTHENTICATED' || extensions.exception!.status === 403) {
+          if (
+            extensions.code === 'UNAUTHENTICATED' ||
+            extensions.exception!.status === 403 ||
+            extensions.exception!.status === 401
+          ) {
             Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
           }
 
