@@ -72,10 +72,10 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
 
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
-    if (errorSynch) {
+    if (errorsSynch) {
       GQLError({ enqueueSnackbar, errors: errorsSynch, t });
     }
-    if (errorCache) {
+    if (errorsCache) {
       GQLError({ enqueueSnackbar, errors: errorsCache, t });
     }
   }, [enqueueSnackbar, errorsCache, errorsSynch, t]);
