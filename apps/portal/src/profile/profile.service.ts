@@ -252,6 +252,14 @@ export class ProfileService {
   }
 
   /**
+   * Create profile
+   *
+   * @param {Profile} - Profile
+   * @returns {ProfileEntity} - Profile entity
+   */
+  create = async (profile: Profile): Promise<ProfileEntity> => this.profileRepository.create(profile);
+
+  /**
    * Bulk Save
    *
    * @param {ProfileEntity[]} - The profiles
