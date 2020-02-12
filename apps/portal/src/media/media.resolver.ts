@@ -32,7 +32,7 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async media(@Args('id') id: string): Promise<MediaEntity[]> {
+  async media(@Args('id') id?: string): Promise<MediaEntity[]> {
     return this.mediaService.media(id);
   }
 
@@ -51,7 +51,7 @@ export class MediaResolver {
     @Context('req') req: Request,
     @Args('attachment') attachment: Promise<FileUpload>,
     @Args('directory') directory: string,
-    @Args('id') id: string,
+    @Args('id') id?: string,
   ): Promise<MediaEntity> {
     const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
 
@@ -83,7 +83,7 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async folders(@Args('id') id: string): Promise<MediaDirectoryEntity[]> {
+  async folders(@Args('id') id?: string): Promise<MediaDirectoryEntity[]> {
     return this.mediaService.folders(id);
   }
 

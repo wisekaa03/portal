@@ -31,11 +31,11 @@ export class MediaService {
    * @param {string} - id of media, optional
    * @return {MediaEntity[]}
    */
-  media = async (id: string): Promise<MediaEntity[]> => {
+  media = async (id?: string): Promise<MediaEntity[]> => {
     this.logService.log(`Media entity: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
-    return this.mediaRepository.find({ id });
+    return this.mediaRepository.find(id ? { id } : undefined);
   };
 
   /**
@@ -90,7 +90,7 @@ export class MediaService {
     this.logService.log(`Directory: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
-    return this.mediaDirectoryRepository.find(id ? { id } : {});
+    return this.mediaDirectoryRepository.find(id ? { id } : undefined);
   };
 
   /**
