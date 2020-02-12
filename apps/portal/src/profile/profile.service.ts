@@ -262,8 +262,8 @@ export class ProfileService {
   /**
    * Bulk Save
    *
-   * @param {ProfileEntity[]} The profiles
-   * @returns {ProfileEntity[]} The profiles
+   * @param {ProfileEntity[]} - The profiles
+   * @returns {ProfileEntity[]} - The profiles
    */
   bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
@@ -290,7 +290,7 @@ export class ProfileService {
    * changeProfile
    * @param {Request} - Express Request
    * @param {Profile} - Profile params
-   * @returns {boolean}
+   * @returns {boolean} - True/false of change profile
    * @throws {UnauthorizedException | HttpException}
    */
   async changeProfile(req: Request, profile: Profile): Promise<boolean> {
@@ -445,7 +445,7 @@ export class ProfileService {
         req.session!.passport.user.profile = result;
       }
 
-      await this.save(result);
+      await this.profileRepository.save<ProfileEntity>(result);
     }
 
     return true;

@@ -244,26 +244,13 @@ export class ProfileEntity {
   @BeforeUpdate()
   @BeforeInsert()
   async resizeImage(): Promise<void> {
-    if (
-      typeof this.thumbnailPhoto === 'object' &&
-      typeof ((this.thumbnailPhoto as unknown) as Record<string, any>).then === 'function'
-    ) {
-      this.thumbnailPhoto = this.thumbnailPhoto ? await this.thumbnailPhoto : undefined;
+    if (this.thumbnailPhoto instanceof Promise) {
+      this.thumbnailPhoto = await this.thumbnailPhoto;
     }
 
-    if (
-      typeof this.thumbnailPhoto40 === 'object' &&
-      typeof ((this.thumbnailPhoto40 as unknown) as Record<string, any>).then === 'function'
-    ) {
-      this.thumbnailPhoto40 = this.thumbnailPhoto ? await this.thumbnailPhoto40 : undefined;
+    if (this.thumbnailPhoto40 instanceof Promise) {
+      this.thumbnailPhoto40 = await this.thumbnailPhoto40;
     }
-
-    // if (
-    //   typeof this.manager === 'object' &&
-    //   typeof ((this.manager as unknown) as Record<string, any>).then === 'function'
-    // ) {
-    //   ((this.manager as unknown) as ProfileEntity | undefined) = await this.manager;
-    // }
   }
 
   toResponseObject = (): ProfileEntity => ({ ...this });
