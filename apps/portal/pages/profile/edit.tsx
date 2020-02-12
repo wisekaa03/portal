@@ -24,9 +24,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import GQLError from '../../components/gql-error';
+import { GQLError } from '../../components/gqlerror';
 import IsAdmin from '../../components/isAdmin';
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
@@ -192,6 +193,16 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
     // eslint-disable-next-line prettier/prettier
     (m ? `${m.lastName || ''} ${m.firstName || ''} ${m.middleName || ''}` : '');
 
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    if (error) {
+      GQLError({ enqueueSnackbar, errors: error, t });
+    }
+    if (errorProfile) {
+      GQLError({ enqueueSnackbar, errors: errorProfile, t });
+    }
+  }, [enqueueSnackbar, error, errorProfile, t]);
+
   return (
     <>
       <Head>
@@ -219,7 +230,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               ) : (
                 current && (
                   <>
-                    {errorProfile && <GQLError error={errorProfile} {...rest} />}
                     {loadingProfile && <Loading full absolute color="secondary" size={48} type="circular" />}
                     <div className={classes.firstBlock}>
                       <Box display="flex">

@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -9,9 +9,11 @@ import { Typography, Button, Card, CardContent, FormControl } from '@material-ui
 
 import { MutationFunction } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
+
+import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import { GQLError } from './gql-error';
+import { GQLError } from './gqlerror';
 import { Loading } from './loading';
 import Background2 from '../../../public/images/svg/background2.svg';
 import Logo from '../../../public/images/svg/logo.svg';
@@ -108,6 +110,13 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
   const { error, loading, logout, t } = props;
   const classes: any = useStyles({});
 
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    if (error) {
+      GQLError({ enqueueSnackbar, errors: error, t });
+    }
+  }, [enqueueSnackbar, error, t]);
+
   return (
     <>
       <Head>
@@ -133,7 +142,6 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
                   {t('logout:authorization')}
                 </Typography>
                 {loading && <Loading />}
-                {error && <GQLError error={error} />}
                 <FormControl className={classes.submitButtonContainer}>
                   <Button
                     className={classes.submitButton}

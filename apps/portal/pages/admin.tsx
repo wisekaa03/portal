@@ -1,14 +1,15 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
+import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import GQLError from '../components/gql-error';
+import { GQLError } from '../components/gqlerror';
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import { SYNC, CACHE } from '../lib/queries';
@@ -69,6 +70,16 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
     cache();
   };
 
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    if (errorSynch) {
+      GQLError({ enqueueSnackbar, errors: errorSynch, t });
+    }
+    if (errorCache) {
+      GQLError({ enqueueSnackbar, errors: errorCache, t });
+    }
+  }, [enqueueSnackbar, t]);
+
   return (
     <>
       <Head>
@@ -81,7 +92,6 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
               <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleSync}>
                 {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
               </Button>
-              {errorsSynch && <GQLError error={errorsSynch} {...props} />}
             </CardActions>
             <CardContent>
               <Typography color="textSecondary" component="p">
@@ -94,7 +104,6 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
               <Button fullWidth disabled={cacheLoading} color="secondary" onClick={handleCache}>
                 {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
               </Button>
-              {errorsCache && <GQLError error={errorsCache} {...props} />}
             </CardActions>
             <CardContent>
               <Typography color="textSecondary" component="p">

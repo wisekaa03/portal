@@ -22,6 +22,7 @@ import {
 } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
+import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
 import { Profile } from '@app/portal/profile/models/profile.dto';
@@ -31,7 +32,7 @@ import Avatar from '../ui/avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import IsAdmin from '../isAdmin';
 import { ComposeLink } from '../compose-link';
-import GQLError from '../gql-error';
+import { GQLError } from '../gqlerror';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -130,7 +131,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Wire = ({ children, ...props }): any => children(props);
 
 export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>(
-  ({ t, profileId, handleClose, handleSearch, ...rest }, ref) => {
+  ({ t, profileId, handleClose, handleSearch }, ref) => {
     const classes = useStyles({});
 
     if (!profileId) return null;
@@ -186,7 +187,12 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
     const openSettings = Boolean(settingsEl);
     const profile = !loading && !error && data && data.profile;
 
-    // TODO: вставить сюда обработку ошибок
+    const { enqueueSnackbar } = useSnackbar();
+    useEffect(() => {
+      if (error) {
+        GQLError({ enqueueSnackbar, errors: error, t });
+      }
+    }, [enqueueSnackbar, error, t]);
 
     return (
       <Card ref={ref} className={classes.root}>
@@ -238,56 +244,52 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
                   </IsAdmin>
                 )}
               </div>
-              {error ? (
-                <GQLError error={error} {...rest} />
-              ) : (
-                <>
+              <>
+                <div className={classes.center}>
+                  {profile ? (
+                    <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
+                  ) : (
+                    <Skeleton className={classes.avatar} variant="circle" />
+                  )}
+                </div>
+                <div className={classes.firstName}>
+                  <h2>{profile ? profile.lastName : <Skeleton variant="rect" width={120} />}</h2>
+                  <h2>{profile ? profile.firstName : <Skeleton variant="rect" width={150} />}</h2>
+                  <h2>{profile ? profile.middleName : <Skeleton variant="rect" width={120} />}</h2>
+                </div>
+                {profile && profile.disabled && (
+                  <div className={clsx(classes.center, classes.disabled)}>
+                    <span>{t(`phonebook:fields.disabled`)}</span>
+                  </div>
+                )}
+                {profile && profile.notShowing && (
+                  <div className={clsx(classes.center, classes.notShowing)}>
+                    <span>{t(`phonebook:fields.notShowing`)}</span>
+                  </div>
+                )}
+                {profile && profile.nameeng && (
                   <div className={classes.center}>
-                    {profile ? (
-                      <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
-                    ) : (
-                      <Skeleton className={classes.avatar} variant="circle" />
-                    )}
+                    <span>{profile && profile.nameeng}</span>
                   </div>
-                  <div className={classes.firstName}>
-                    <h2>{profile ? profile.lastName : <Skeleton variant="rect" width={120} />}</h2>
-                    <h2>{profile ? profile.firstName : <Skeleton variant="rect" width={150} />}</h2>
-                    <h2>{profile ? profile.middleName : <Skeleton variant="rect" width={120} />}</h2>
+                )}
+                {profile && profile.mobile && (
+                  <div className={classes.center}>
+                    <PhoneAndroidRounded />
+                    <span>{profile.mobile}</span>
                   </div>
-                  {profile && profile.disabled && (
-                    <div className={clsx(classes.center, classes.disabled)}>
-                      <span>{t(`phonebook:fields.disabled`)}</span>
-                    </div>
-                  )}
-                  {profile && profile.notShowing && (
-                    <div className={clsx(classes.center, classes.notShowing)}>
-                      <span>{t(`phonebook:fields.notShowing`)}</span>
-                    </div>
-                  )}
-                  {profile && profile.nameeng && (
-                    <div className={classes.center}>
-                      <span>{profile && profile.nameeng}</span>
-                    </div>
-                  )}
-                  {profile && profile.mobile && (
-                    <div className={classes.center}>
-                      <PhoneAndroidRounded />
-                      <span>{profile.mobile}</span>
-                    </div>
-                  )}
-                  {profile && profile.workPhone && (
-                    <div className={classes.center}>
-                      <PhoneRounded />
-                      <span>{profile.workPhone}</span>
-                    </div>
-                  )}
-                  {profile && profile.email && (
-                    <div className={classes.center}>
-                      <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
-                    </div>
-                  )}
-                </>
-              )}
+                )}
+                {profile && profile.workPhone && (
+                  <div className={classes.center}>
+                    <PhoneRounded />
+                    <span>{profile.workPhone}</span>
+                  </div>
+                )}
+                {profile && profile.email && (
+                  <div className={classes.center}>
+                    <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
+                  </div>
+                )}
+              </>
             </div>
             {!error && (
               <div className={clsx(classes.grid, classes.column)}>

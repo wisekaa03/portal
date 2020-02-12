@@ -19,10 +19,11 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
+import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
-import GQLError from '../../components/gql-error';
+import { GQLError } from '../../components/gqlerror';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';
@@ -167,7 +168,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const ticketStatus = (profile.user && profile.user.settings && profile.user.settings.ticketStatus) as string | null;
   const [status, setStatus] = useState<string>(ticketStatus || TICKET_STATUSES[0]);
-  const [userSettings] = useMutation(USER_SETTINGS);
+  const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
 
   useEffect(() => {
     if (ticketStatus) {
@@ -203,6 +204,16 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     dataTickets &&
     dataTickets.OldTickets &&
     dataTickets.OldTickets.filter((ticket: OldTicket) => ticket.code.includes(search) || ticket.name.includes(search));
+
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    if (errorTickets) {
+      GQLError({ enqueueSnackbar, errors: errorTickets, t });
+    }
+    if (errorSettings) {
+      GQLError({ enqueueSnackbar, errors: errorSettings, t });
+    }
+  }, [enqueueSnackbar, errorTickets, errorSettings, t]);
 
   return (
     <>
@@ -281,9 +292,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 my={2}
                 justifyContent="center"
               >
-                {errorTickets ? (
-                  <GQLError error={errorTickets} {...rest} />
-                ) : loadingTickets ? (
+                {loadingTickets ? (
                   <Loading full type="circular" color="secondary" disableShrink size={48} />
                 ) : tickets && tickets.length > 0 ? (
                   tickets.map((ticket: OldTicket) => (

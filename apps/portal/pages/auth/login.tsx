@@ -22,7 +22,7 @@ import Router from 'next/router';
 import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import GQLError from '../../components/gql-error';
+import { GQLError } from '../../components/gqlerror';
 import { Loading } from '../../components/loading';
 import { LOGIN } from '../../lib/queries';
 import { Data } from '../../lib/types';
@@ -111,7 +111,7 @@ interface LoginState {
   pass: string;
 }
 
-const Login: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const Login: I18nPage = ({ t }): React.ReactElement => {
   const classes: any = useStyles({});
   const client = useApolloClient();
   const [values, setValues] = useState<LoginState>({
@@ -157,9 +157,9 @@ const Login: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     if (error) {
-      enqueueSnackbar('Ошибка входа', { variant: 'error' });
+      GQLError({ enqueueSnackbar, errors: error, t });
     }
-  }, [enqueueSnackbar, error]);
+  }, [enqueueSnackbar, error, t]);
 
   useEffect(() => {
     const save = getStorage('save');
