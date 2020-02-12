@@ -211,4 +211,4 @@ BaseDrawer.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['common']),
 });
 
-export default nextI18next.withTranslation('common')(BaseDrawer);
+export default React.memo(nextI18next.withTranslation('common')(BaseDrawer));

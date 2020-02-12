@@ -19,6 +19,7 @@ import {
 
 import queryString from 'query-string';
 import Router from 'next/router';
+import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
 import GQLError from '../../components/gql-error';
@@ -54,12 +55,9 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       textAlign: 'center',
     },
-    container: {
+    card: {
       width: 600,
       maxWidth: '95vw',
-      margin: `${theme.spacing(2)}px auto`,
-    },
-    card: {
       padding: theme.spacing(4),
       backgroundColor: 'rgba(255,255,255,0.5)',
       color: '#2c4373',
@@ -122,6 +120,8 @@ const Login: I18nPage = ({ t, ...rest }): React.ReactElement => {
     pass: '',
   });
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const [login, { loading, error }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
       if (data && data.login) {
@@ -146,6 +146,21 @@ const Login: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   };
 
+  const handleSubmit = (): void => {
+    login({
+      variables: {
+        username: values.user,
+        password: values.pass,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar('Ошибка входа', { variant: 'error' });
+    }
+  }, [enqueueSnackbar, error]);
+
   useEffect(() => {
     const save = getStorage('save');
 
@@ -164,86 +179,70 @@ const Login: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('login:title')}</title>
       </Head>
-      <div className={classes.root} {...rest}>
+      <div className={classes.root}>
         <div>
           <img src={Logo} alt="Logo" className={classes.logo} />
         </div>
         <div className={classes.loginContainer}>
-          <form
-            onSubmit={async (e: any): Promise<void> => {
-              e.preventDefault();
-
-              login({
-                variables: {
-                  username: values.user,
-                  password: values.pass,
-                },
-              });
-            }}
-            className={classes.container}
-            autoComplete="off"
-            noValidate
-          >
-            <Card className={classes.card}>
-              <CardContent>
-                <Typography className={classes.typoAuthorization} variant="h4">
-                  {t('common:authorization')}
-                </Typography>
-                <FormControl className={classes.formControl} fullWidth variant="outlined">
-                  <TextField
-                    data-field-name="username"
-                    type="username"
-                    autoFocus
-                    value={values.user}
-                    onChange={handleChange('user')}
-                    disabled={loading}
-                    label={t('login:username')}
-                    variant="outlined"
-                    className={classes.labelForFormControl}
-                  />
-                </FormControl>
-                <FormControl className={classes.formControl} fullWidth variant="outlined">
-                  <TextField
-                    data-field-name="password"
-                    type="password"
-                    value={values.pass}
-                    onChange={handleChange('pass')}
-                    disabled={loading}
-                    label={t('login:password')}
-                    variant="outlined"
-                    className={classes.labelForFormControl}
-                  />
-                </FormControl>
-                <FormControlLabel
-                  className={classes.labelForCheckbox}
-                  control={
-                    <Checkbox
-                      checked={values.save}
-                      onChange={handleChange('save')}
-                      value="save"
-                      color="primary"
-                      disabled={loading}
-                    />
-                  }
-                  label={t('remember')}
+          <Card className={classes.card}>
+            <CardContent>
+              <Typography className={classes.typoAuthorization} variant="h4">
+                {t('common:authorization')}
+              </Typography>
+              <FormControl className={classes.formControl} fullWidth variant="outlined">
+                <TextField
+                  data-field-name="username"
+                  type="username"
+                  autoFocus
+                  value={values.user}
+                  onChange={handleChange('user')}
+                  disabled={loading}
+                  label={t('login:username')}
+                  variant="outlined"
+                  className={classes.labelForFormControl}
                 />
-                {loading && <Loading />}
-                {error && <GQLError error={error} {...rest} />}
-                <FormControl className={classes.submitButtonContainer}>
-                  <Button
-                    className={classes.submitButton}
-                    type="submit"
-                    variant="outlined"
+              </FormControl>
+              <FormControl className={classes.formControl} fullWidth variant="outlined">
+                <TextField
+                  data-field-name="password"
+                  type="password"
+                  value={values.pass}
+                  onChange={handleChange('pass')}
+                  disabled={loading}
+                  label={t('login:password')}
+                  variant="outlined"
+                  className={classes.labelForFormControl}
+                />
+              </FormControl>
+              <FormControlLabel
+                className={classes.labelForCheckbox}
+                control={
+                  <Checkbox
+                    checked={values.save}
+                    onChange={handleChange('save')}
+                    value="save"
                     color="primary"
-                    size="large"
                     disabled={loading}
-                  >
-                    {t('signIn')}
-                  </Button>
-                </FormControl>
-              </CardContent>
-            </Card>
-          </form>
+                  />
+                }
+                label={t('remember')}
+              />
+              {loading && <Loading />}
+              <FormControl className={classes.submitButtonContainer}>
+                <Button
+                  className={classes.submitButton}
+                  type="submit"
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  disabled={loading}
+                  onClick={handleSubmit}
+                >
+                  {t('signIn')}
+                </Button>
+              </FormControl>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </>
