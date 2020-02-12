@@ -11,7 +11,7 @@ import { Box, IconButton } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // #endregion
 // #region Imports Local
-import Button from '../../components/common/button';
+import Button from '../../components/ui/button';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { MEDIA_EDIT, MEDIA } from '../../lib/queries';
