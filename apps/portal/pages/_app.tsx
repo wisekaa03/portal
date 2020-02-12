@@ -15,6 +15,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
+import { SnackbarProvider } from 'notistack';
 // #endregion
 // #region Imports Local
 import theme from '../lib/theme';
@@ -29,8 +30,6 @@ import { FIRST_PAGE, ADMIN_PAGES } from '../lib/constants';
 import getCookie from '../lib/get-cookie';
 import getRedirect from '../lib/get-redirect';
 // #endregion
-
-// const LoginPage = dynamic(() => import('./auth/login'));
 
 const InnerLogin: React.FC<{
   Component: NextComponentType<NextPageContext, any, {}>;
@@ -178,14 +177,23 @@ class MainApp extends App<ApolloAppProps> {
               },
             }}
           >
-            <CurrentLogin
-              pageProps={pageProps}
-              isMobile={!!isMobile}
-              language={currentLanguage || ''}
-              Component={Component}
-              router={router}
-              ctx={ctx}
-            />
+            <SnackbarProvider
+              maxSnack={3}
+              dense={isMobile}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              <CurrentLogin
+                pageProps={pageProps}
+                isMobile={!!isMobile}
+                language={currentLanguage || ''}
+                Component={Component}
+                router={router}
+                ctx={ctx}
+              />
+            </SnackbarProvider>
           </ThemeProvider>
         </ApolloHooksProvider>
       </ApolloProvider>

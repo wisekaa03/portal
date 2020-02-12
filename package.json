@@ -138,6 +138,7 @@
     "next": "^9.2.1",
     "next-fonts": "^1.0.3",
     "next-i18next": "^4.2.0",
+    "notistack": "^0.9.7",
     "object-assign": "^4.1.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
