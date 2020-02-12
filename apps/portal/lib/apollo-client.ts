@@ -17,7 +17,6 @@ import Router from 'next/router';
 // #region Imports Local
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
-import { GqlErrorMessage } from './types';
 // #endregion
 
 let apollo: ApolloClient<NormalizedCacheObject>;

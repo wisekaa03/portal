@@ -233,7 +233,7 @@ export class LdapService extends EventEmitter {
           this.logger.error('bind error:', error.toString(), 'LDAP');
           this.adminBound = false;
 
-          return reject(error.message);
+          return reject(new Error(error.message));
         }
 
         this.logger.log('bind ok', 'LDAP');
@@ -277,11 +277,13 @@ export class LdapService extends EventEmitter {
             options,
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
               if (searchErr) {
-                this.logger.error('LDAP Error:', searchErr.toString(), 'LDAP');
-                return reject(searchErr.message);
+                this.logger.error('LDAP Error:', JSON.stringify(searchErr), 'LDAP');
+
+                return reject(new Error(searchErr.message));
               }
               if (typeof searchResult !== 'object') {
-                this.logger.error('The search returns null results:', searchResult, 'LDAP');
+                this.logger.error('The search returns null results:', JSON.stringify(searchResult), 'LDAP');
+
                 return reject(
                   new Error(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`),
                 );
@@ -322,7 +324,7 @@ export class LdapService extends EventEmitter {
                 }
               });
 
-              searchResult.on('error', (error: Ldap.Error) => reject(error.message));
+              searchResult.on('error', (error: Ldap.Error) => reject(new Error(error.message)));
 
               searchResult.on('end', (result: Ldap.LDAPResult) => {
                 if (result.status !== 0) {
@@ -581,7 +583,7 @@ export class LdapService extends EventEmitter {
               if (searchErr) {
                 this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
 
-                reject(searchErr.message);
+                reject(new Error(searchErr.message));
               }
 
               this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
@@ -601,28 +603,6 @@ export class LdapService extends EventEmitter {
           ),
         ),
     );
-  }
-
-  /**
-   * Resets LDAP cache
-   *
-   * @returns {Promise<boolean>} - User in LDAP
-   */
-  public async cacheReset(): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      if (this.userCacheStore.reset) {
-        this.userCacheStore.reset((error: any) => {
-          if (error) {
-            this.logger.error('LDAP cache error', error, 'LDAP');
-            reject(error);
-          } else {
-            resolve(true);
-          }
-        });
-      } else {
-        reject(new Error('LDAP not initialized with cache.'));
-      }
-    });
   }
 
   /**
@@ -676,7 +656,7 @@ export class LdapService extends EventEmitter {
           if (bindErr) {
             this.logger.error('bind error:', JSON.stringify(bindErr), 'LDAP');
 
-            return reject(bindErr.message);
+            return reject(new Error(bindErr.message));
           }
 
           // 3. If requested, fetch user groups

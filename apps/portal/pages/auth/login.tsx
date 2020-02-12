@@ -125,7 +125,7 @@ const Login: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [login, { loading, error }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
       if (data && data.login) {
-        setStorage(SESSION, data.login.session);
+        setStorage(SESSION, data.login.session || '');
         client.resetStore();
 
         const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);

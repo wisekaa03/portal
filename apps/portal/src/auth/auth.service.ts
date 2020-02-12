@@ -41,20 +41,20 @@ export class AuthService {
   /**
    * Login a user
    *
-   * @param {UserLogin} data User login data transfer object
-   * @returns {UserResponse} User response
-   * @throws {UnauthorizedException} Http Exception
+   * @param {UserLogin} - User login data transfer object
+   * @returns {UserResponse} - User response
+   * @throws {Error} - Exception
    */
   async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
-    return this.userLdapLogin({
-      username,
-      password,
-      user: await this.userService.readByUsername(username, true, 'profile'),
-    })
+    return this.userService
+      .createFromLdap(
+        await this.ldapService.authenticate(username, password),
+        await this.userService.readByUsername(username, true, 'profile'),
+      )
       .then((user) => user && user.toResponseObject((req && req.sessionID) || ''))
-      .catch((error: UnauthorizedException) => {
+      .catch((error: Error) => {
         this.logService.error('Error: not found user', JSON.stringify(error), 'AuthService');
 
         throw error;
@@ -151,24 +151,6 @@ export class AuthService {
 
     return false;
   };
-
-  /**
-   * User LDAP login
-   *
-   * @param {string, string, UserEntity} - User register data transfer object
-   * @returns {UserEntity} User response DTO
-   * @throws {UnauthorizedException}
-   */
-  userLdapLogin = async ({
-    username,
-    password,
-    user,
-  }: {
-    username: string;
-    password: string;
-    user?: UserEntity;
-  }): Promise<UserEntity> =>
-    this.userService.createFromLdap(await this.ldapService.authenticate(username, password), user);
 
   /**
    * User Email login

@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
@@ -12,6 +12,7 @@ import { ConfigService } from '@app/config';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { UserResponse } from '../user/user.entity';
+import { GQLError } from '../shared/gqlerror';
 // #endregion
 
 @Resolver()
@@ -41,7 +42,7 @@ export class AuthResolver {
    * @param username - username
    * @param password - password
    * @returns {UserResponse}
-   * @throws {UnauthorizedException}
+   * @throws {GraphQLError}
    */
   @Mutation()
   async login(
@@ -51,9 +52,11 @@ export class AuthResolver {
     // FIX: в GraphQLModule.forRoot({ context: ({ req, res }) => ({ req, res }) })
     @Context('res') res: Response,
   ): Promise<UserResponse> {
-    const user = await this.authService.login({ username: username.toLowerCase(), password }, req).catch((error) => {
-      throw new UnauthorizedException(error, this.i18n.translate('auth.LOGIN.INCORRECT'));
-    });
+    const user = await this.authService
+      .login({ username: username.toLowerCase(), password }, req)
+      .catch((error: Error) => {
+        throw GQLError({ error, i18n: this.i18n });
+      });
 
     // Чтобы в дальнейшем был пароль, в частности, в SOAP
     user.passwordFrontend = password;
@@ -62,7 +65,7 @@ export class AuthResolver {
       if (error) {
         this.logService.error('Error when logging in:', JSON.stringify(error), 'AuthResolver');
 
-        throw new UnauthorizedException(error, error.message);
+        throw GQLError({ error, i18n: this.i18n });
       }
     });
 

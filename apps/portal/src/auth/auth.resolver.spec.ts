@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { I18nModule, I18nOptions } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { LoggerModule } from '@app/logger';
@@ -25,7 +26,13 @@ describe('AuthResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule, ConfigModule],
+      imports: [
+        LoggerModule,
+        ConfigModule,
+        I18nModule.forRootAsync({
+          useFactory: async () => ({} as I18nOptions),
+        }),
+      ],
       providers: [AuthResolver, AuthService, ConfigService],
     }).compile();
 

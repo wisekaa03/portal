@@ -1,9 +1,14 @@
 /** @format */
+
+// #region Imports NPM
 import React from 'react';
+import { Palette } from '@material-ui/core/styles/createPalette';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
-
+// #endregion
+// #region Imports Local
 import NoImage from '../../../../public/images/svg/noimage.svg';
+// #endregion
 
 const iconWidth = 24;
 
@@ -16,7 +21,7 @@ interface IconProps {
   color?: string;
 }
 
-const useStyles = makeStyles<Theme, IconProps>((theme: Theme) =>
+const useStyles = makeStyles<Theme, IconProps, string>((theme: Theme) =>
   createStyles({
     root: ({ size }) => ({
       width: size || iconWidth,
@@ -26,7 +31,7 @@ const useStyles = makeStyles<Theme, IconProps>((theme: Theme) =>
       '-webkit-mask-size': 'cover',
       '-webkit-mask': `url(${mask})`,
       'mask': `url(${mask})`,
-      'background': color in theme.palette ? (theme.palette[color as string] as any).main : color,
+      'background': color && color in theme.palette ? (theme.palette as any)[color].main : color,
     }),
   }),
 );

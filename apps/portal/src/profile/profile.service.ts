@@ -267,7 +267,7 @@ export class ProfileService {
    */
   bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`[]', JSON.stringify(error), 'ProfileService');
+      this.logService.error('Unable to save data(s) in `profile`', JSON.stringify(error), 'ProfileService');
 
       throw error;
     });
