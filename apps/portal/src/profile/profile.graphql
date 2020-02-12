@@ -147,5 +147,5 @@ type Query {
 }
 
 type Mutation {
-  changeProfile(profile: ProfileSettingsInput): Boolean
+  changeProfile(profile: ProfileSettingsInput): Profile
 }

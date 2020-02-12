@@ -252,14 +252,6 @@ export class ProfileService {
   }
 
   /**
-   * Create
-   *
-   * @param {Profile} - The profile
-   * @returns {ProfileEntity} - The profile
-   */
-  create = (profile: Profile): ProfileEntity => this.profileRepository.create(profile);
-
-  /**
    * Bulk Save
    *
    * @param {ProfileEntity[]} - The profiles
@@ -290,10 +282,10 @@ export class ProfileService {
    * changeProfile
    * @param {Request} - Express Request
    * @param {Profile} - Profile params
-   * @returns {boolean} - True/false of change profile
+   * @returns {ProfileEntity} - The corrected ProfileEntity
    * @throws {UnauthorizedException | HttpException}
    */
-  async changeProfile(req: Request, profile: Profile): Promise<boolean> {
+  async changeProfile(req: Request, profile: Profile): Promise<ProfileEntity> {
     // В резолвере проверка на юзера уже есть
     if (!req.session!.passport!.user!.profile!.id) {
       throw new UnauthorizedException();
@@ -427,6 +419,10 @@ export class ProfileService {
       modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
     }
 
+    if (!Object.keys(modification).length) {
+      throw new HttpException('No fields are filled in profile', 200);
+    }
+
     const ldapUpdated = Object.keys(modification).map(
       (key) =>
         new Ldap.Change({
@@ -438,16 +434,18 @@ export class ProfileService {
     // eslint-disable-next-line no-debugger
     debugger;
 
-    if (await this.ldapService.modify(created.dn, ldapUpdated, created.username)) {
-      const result = this.profileRepository.merge(created, profile);
+    await this.ldapService.modify(created.dn, ldapUpdated, created.username).catch((error) => {
+      throw error;
+    });
 
-      if (req.session!.passport.user.profile.id === result.id) {
-        req.session!.passport.user.profile = result;
-      }
+    const result = this.profileRepository.merge(created, profile);
 
-      await this.profileRepository.save<ProfileEntity>(result);
+    if (req.session!.passport.user.profile.id === result.id) {
+      req.session!.passport.user.profile = result;
     }
 
-    return true;
+    return this.save(result).catch((error) => {
+      throw error;
+    });
   }
 }

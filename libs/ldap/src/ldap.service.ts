@@ -565,6 +565,7 @@ export class LdapService extends EventEmitter {
    * @param {string} dn - LDAP Distiguished Name
    * @param {Object | Object[]} data - LDAP modify data
    * @returns {boolean}
+   * @throws {Ldap.Error}
    */
   public async modify(dn: string, data: Ldap.Change | Ldap.Change[], username?: string): Promise<boolean> {
     return this.adminBind().then(
