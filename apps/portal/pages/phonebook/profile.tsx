@@ -27,11 +27,11 @@ import { red } from '@material-ui/core/colors';
 import { Profile } from '@app/portal/profile/models/profile.dto';
 import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
-import Avatar from '../common/avatar';
+import Avatar from '../../components/common/avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
-import IsAdmin from '../isAdmin';
-import { ComposeLink } from '../compose-link';
-import { GQLError } from '../gql-error';
+import IsAdmin from '../../components/isAdmin';
+import { ComposeLink } from '../../components/compose-link';
+import { GQLError } from '../../components/gql-error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Wire = ({ children, ...props }) => children(props);
+const Wire = ({ children, ...props }): any => children(props);
 
 export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>((props, ref) => {
   const classes = useStyles({});
