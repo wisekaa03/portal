@@ -1,10 +1,8 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, HttpException, UnauthorizedException, HttpService } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
+import { Injectable, UnauthorizedException, HttpService } from '@nestjs/common';
 import Redis from 'redis';
-import { Response } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -23,7 +21,6 @@ export class AuthService {
     private readonly logService: LogService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -162,7 +159,7 @@ export class AuthService {
    * @returns {UserEntity} User response DTO
    * @throws {UnauthorizedException}
    */
-  async userLdapLogin({
+  userLdapLogin = async ({
     username,
     password,
     user,
@@ -170,21 +167,8 @@ export class AuthService {
     username: string;
     password: string;
     user?: UserEntity;
-  }): Promise<UserEntity> {
-    const ldapUser = await this.ldapService.authenticate(username, password);
-
-    if (!ldapUser) {
-      this.logService.error('Unable to find user in ldap', undefined, 'AuthService');
-
-      throw new UnauthorizedException(401, 'Unable to find user in ldap');
-    }
-
-    return this.userService.createFromLdap(ldapUser, user).catch((error) => {
-      this.logService.error('Unable to save user', JSON.stringify(error), 'AuthService');
-
-      throw new UnauthorizedException(500, this.i18n.translate('auth.LOGIN.SERVER_ERROR'));
-    });
-  }
+  }): Promise<UserEntity> =>
+    this.userService.createFromLdap(await this.ldapService.authenticate(username, password), user);
 
   /**
    * User Email login

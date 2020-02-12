@@ -4,6 +4,7 @@
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -19,6 +20,7 @@ export class AuthResolver {
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
     private readonly logService: LogService,
+    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -38,8 +40,8 @@ export class AuthResolver {
    *
    * @param username - username
    * @param password - password
-   * @returns {UserResponseDTO}
-   * @throws {UnauthorizedException}
+   * @returns {UserResponse}
+   * @throws {UnauthorizedException | Ldap.Error}
    */
   @Mutation()
   async login(
@@ -48,9 +50,9 @@ export class AuthResolver {
     @Context('req') req: Request,
     // FIX: в GraphQLModule.forRoot({ context: ({ req, res }) => ({ req, res }) })
     @Context('res') res: Response,
-  ): Promise<UserResponse | null> {
+  ): Promise<UserResponse> {
     const user = await this.authService.login({ username: username.toLowerCase(), password }, req).catch((error) => {
-      throw new UnauthorizedException(error, error.message);
+      throw new UnauthorizedException(error, this.i18n.translate('auth.LOGIN.INCORRECT'));
     });
 
     // Чтобы в дальнейшем был пароль, в частности, в SOAP
