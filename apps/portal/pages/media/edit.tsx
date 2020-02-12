@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React, { useEffect, useState } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery, useQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,10 +11,10 @@ import { Box, IconButton } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // #endregion
 // #region Imports Local
-import Button from '../../components/common/button';
+import Button from '../../components/ui/button';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { MEDIA_EDIT, MEDIA } from '../../lib/queries';
+import { MEDIA_EDIT, MEDIA, FOLDERS } from '../../lib/queries';
 import { Loading } from '../../components/loading';
 import { Media } from '../../src/media/models/media.dto';
 import Dropzone from '../../components/dropzone';
@@ -46,15 +46,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
-  const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA);
-  const [mediaEdit] = useMutation(MEDIA_EDIT);
-  const router = useRouter();
-
   const [title, setTitle] = useState<string | undefined>();
   const [current, setCurrent] = useState<Media | undefined>();
   const [updated, setUpdated] = useState<Media | undefined>();
-
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
+  const router = useRouter();
+
+  const { data: foldersData, loading: foldersLoading, error: foldersError } = useQuery(FOLDERS);
+  const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA);
+  const [mediaEdit] = useMutation(MEDIA_EDIT);
+
+  console.log(foldersData);
 
   useEffect(() => {
     if (router && router.query && router.query.id) {
