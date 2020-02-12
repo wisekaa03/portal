@@ -26,7 +26,7 @@ const useStyles = makeStyles<Theme, IconProps>((theme: Theme) =>
       '-webkit-mask-size': 'cover',
       '-webkit-mask': `url(${mask})`,
       'mask': `url(${mask})`,
-      'background': 'color' in theme.palette ? (theme.palette[color] as any).main : color,
+      'background': color in theme.palette ? (theme.palette[color] as any).main : color,
     }),
   }),
 );
