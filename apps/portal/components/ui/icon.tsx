@@ -16,7 +16,7 @@ interface IconProps {
   color?: string;
 }
 
-const useStyles = makeStyles<Theme | undefined, IconProps>((theme) =>
+const useStyles = makeStyles<Theme, IconProps>((theme: Theme) =>
   createStyles({
     root: ({ size }) => ({
       width: size || iconWidth,
@@ -26,7 +26,7 @@ const useStyles = makeStyles<Theme | undefined, IconProps>((theme) =>
       '-webkit-mask-size': 'cover',
       '-webkit-mask': `url(${mask})`,
       'mask': `url(${mask})`,
-      'background': color in theme.palette ? theme.palette[color].main : color,
+      'background': 'color' in theme.palette ? (theme.palette[color] as any).main : color,
     }),
   }),
 );
