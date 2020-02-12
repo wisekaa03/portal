@@ -30,17 +30,17 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
-import { Column, ColumnNames, HeaderProps } from '../components/phonebook/types';
-import { ProfileComponent } from '../components/phonebook/profile';
-import { SettingsComponent, allColumns } from '../components/phonebook/settings';
-import useDebounce from '../lib/debounce';
-import { Loading } from '../components/loading';
-import Avatar from '../components/common/avatar';
-import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
-import { ProfileContext } from '../lib/context';
-import RefreshButton from '../components/common/refreshButton';
+import Page from '../../layouts/main';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '../../lib/i18n-client';
+import { Column, ColumnNames, HeaderProps } from './types';
+import { ProfileComponent } from './profile';
+import { SettingsComponent, allColumns } from './settings';
+import useDebounce from '../../lib/debounce';
+import { Loading } from '../../components/loading';
+import Avatar from '../../components/common/avatar';
+import { PROFILES, SEARCH_SUGGESTIONS } from '../../lib/queries';
+import { ProfileContext } from '../../lib/context';
+import RefreshButton from '../../components/common/refreshButton';
 // #endregion
 
 const panelHeight = 48;
@@ -360,14 +360,14 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
   const { loading, data, fetchMore, refetch } = useQuery(PROFILES(getGraphQLColumns(columns)), {
     variables: {
       orderBy,
-      first: 50,
+      first: 100,
       after: '',
       search: search.length > 3 ? search : '',
       disabled: columns.includes('disabled'),
       // TODO: для админов
       notShowing: isAdmin && columns.includes('notShowing'),
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
@@ -418,7 +418,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       variables: {
         orderBy,
         after: data.profiles.pageInfo.endCursor,
-        first: 50,
+        first: 100,
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
         notShowing: isAdmin && columns.includes('notShowing'),
@@ -443,7 +443,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       },
     });
 
-  const loadMoreItems = (_: number, __: number): any => !loading && fetchFunction();
+  const loadMoreItems = (_: number, __: number): Promise<any> | null => !loading && fetchFunction();
 
   const handleRequestSort = (column: ColumnNames) => (): void => {
     const isAsc = orderBy.field === column && orderBy.direction === OrderDirection.ASC;
@@ -560,7 +560,12 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
               <TableBody component="div" className={classes.tbody}>
                 <AutoSizer disableWidth>
                   {({ height }) => (
-                    <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
+                    <InfiniteLoader
+                      isItemLoaded={isItemLoaded}
+                      itemCount={itemCount}
+                      loadMoreItems={loadMoreItems}
+                      threshold={50}
+                    >
                       {({ onItemsRendered, ref }) => (
                         <HeaderContext.Provider value={{ columns, orderBy, handleRequestSort, t, classes, largeWidth }}>
                           <List

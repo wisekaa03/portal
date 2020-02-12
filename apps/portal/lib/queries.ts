@@ -162,6 +162,7 @@ export const PROFILES = (_columns: string): any => gql`
           id
           disabled
           notShowing
+          gender
           ${_columns}
         }
         cursor
@@ -325,6 +326,28 @@ export const MEDIA_DELETE = gql`
   }
 `;
 
+export const FOLDERS = gql`
+  query Folders($id: ID) {
+    folders(id: $id) {
+      id
+      createdUser {
+        id
+        username
+      }
+      updatedUser {
+        id
+        username
+      }
+      updatedAt
+      createdAt
+      pathname
+      user {
+        id
+        username
+      }
+    }
+  }
+`;
 /**---------------------------------------------------------------------------------------------------------------------------------------
  * Ticket
  */
