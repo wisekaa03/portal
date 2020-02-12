@@ -18,9 +18,8 @@ import {
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
 import { Column, ColumnNames, SettingsProps } from './types';
-import Button from '../../components/ui/button';
+import Button from '../ui/button';
 import HeaderBg from '../../../../public/images/jpeg/header_bg.jpg';
-import { ProfileContext } from '../../lib/context';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -259,7 +258,8 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
     handleClose();
   };
 
-  const blocks = Math.ceil(allColumns.length / countInBlocks);
+  const renderColumns = allColumns.filter(({ admin }) => isAdmin || !admin);
+  const blocks = Math.ceil(renderColumns.length / countInBlocks);
 
   return (
     <Card ref={ref} className={classes.root}>
@@ -269,23 +269,16 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
           {[...Array(blocks).keys()].map((i) => (
             <FormControl key={i} className={classes.group}>
               <FormGroup>
-                {allColumns
-                  .slice(i * countInBlocks, i * countInBlocks + countInBlocks)
-                  .reduce((result: JSX.Element[], { admin, name }: Column) => {
-                    if (!isAdmin && admin) return result;
-
-                    return [
-                      ...result,
-                      <FormControlLabel
-                        key={name}
-                        className={classes.item}
-                        label={t(`phonebook:fields.${name}`)}
-                        control={
-                          <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
-                        }
-                      />,
-                    ];
-                  }, [])}
+                {renderColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }: Column) => (
+                  <FormControlLabel
+                    key={name}
+                    className={classes.item}
+                    label={t(`phonebook:fields.${name}`)}
+                    control={
+                      <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
+                    }
+                  />
+                ))}
               </FormGroup>
             </FormControl>
           ))}

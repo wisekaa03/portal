@@ -27,11 +27,11 @@ import { red } from '@material-ui/core/colors';
 import { Profile } from '@app/portal/profile/models/profile.dto';
 import { nextI18next } from '../../lib/i18n-client';
 import { ProfileProps } from './types';
-import Avatar from '../../components/ui/avatar';
+import Avatar from '../ui/avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
-import IsAdmin from '../../components/isAdmin';
-import { ComposeLink } from '../../components/compose-link';
-import { GQLError } from '../../components/gql-error';
+import IsAdmin from '../isAdmin';
+import { ComposeLink } from '../compose-link';
+import { GQLError } from '../gql-error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

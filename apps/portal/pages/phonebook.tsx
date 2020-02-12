@@ -30,17 +30,17 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import Page from '../../layouts/main';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../../lib/i18n-client';
-import { Column, ColumnNames, HeaderProps } from './types';
-import { ProfileComponent } from './profile';
-import { SettingsComponent, allColumns } from './settings';
-import useDebounce from '../../lib/debounce';
-import { Loading } from '../../components/loading';
-import Avatar from '../../components/ui/avatar';
-import { PROFILES, SEARCH_SUGGESTIONS } from '../../lib/queries';
-import { ProfileContext } from '../../lib/context';
-import RefreshButton from '../../components/ui/refreshButton';
+import Page from '../layouts/main';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+import { Column, ColumnNames, HeaderProps } from '../components/phonebook/types';
+import { ProfileComponent } from '../components/phonebook/profile';
+import { SettingsComponent, allColumns } from '../components/phonebook/settings';
+import useDebounce from '../lib/debounce';
+import { Loading } from '../components/loading';
+import Avatar from '../components/ui/avatar';
+import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
+import { ProfileContext } from '../lib/context';
+import RefreshButton from '../components/ui/refreshButton';
 // #endregion
 
 const panelHeight = 48;
