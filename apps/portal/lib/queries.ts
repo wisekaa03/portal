@@ -197,7 +197,9 @@ export const PROFILE = gql`
 
 export const CHANGE_PROFILE = gql`
   mutation ChangeProfile($profile: ProfileSettingsInput) {
-    changeProfile(profile: $profile)
+    changeProfile(profile: $profile) {
+      id
+    }
   }
 `;
 
