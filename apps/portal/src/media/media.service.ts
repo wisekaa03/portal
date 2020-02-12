@@ -86,11 +86,11 @@ export class MediaService {
    * @param {string} - id of directory, optional
    * @return {MediaDirectoryEntity[]}
    */
-  folders = async (id: string): Promise<MediaDirectoryEntity[]> => {
+  folders = async (id?: string): Promise<MediaDirectoryEntity[]> => {
     this.logService.log(`Directory: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
-    return this.mediaDirectoryRepository.find({ id });
+    return this.mediaDirectoryRepository.find(id ? { id } : {});
   };
 
   /**
