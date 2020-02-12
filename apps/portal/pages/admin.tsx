@@ -8,10 +8,10 @@ import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
 // #endregion
 // #region Imports Local
+import GQLError from '../components/gql-error';
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import { SYNC, CACHE } from '../lib/queries';
-import { GQLError } from '../components/gql-error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -81,7 +81,7 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
               <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleSync}>
                 {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
               </Button>
-              {errorsSynch && <GQLError error={errorsSynch} />}
+              {errorsSynch && <GQLError error={errorsSynch} {...props} />}
             </CardActions>
             <CardContent>
               <Typography color="textSecondary" component="p">
@@ -94,7 +94,7 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
               <Button fullWidth disabled={cacheLoading} color="secondary" onClick={handleCache}>
                 {!cacheLoading ? t('admin:cache:cache') : t('admin:cache:wait')}
               </Button>
-              {errorsCache && <GQLError error={errorsCache} />}
+              {errorsCache && <GQLError error={errorsCache} {...props} />}
             </CardActions>
             <CardContent>
               <Typography color="textSecondary" component="p">
