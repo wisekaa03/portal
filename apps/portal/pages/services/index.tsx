@@ -33,14 +33,14 @@ import { appBarHeight } from '../../components/app-bar';
 import Page from '../../layouts/main';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../../lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import BaseIcon from '../../components/common/icon';
+import BaseIcon from '../../components/ui/icon';
 import { Loading } from '../../components/loading';
-import Button from '../../components/common/button';
+import Button from '../../components/ui/button';
 import ServicesIcon from '../../public/images/svg/icons/services.svg';
 import JoditEditor from '../../components/jodit';
 import { DATE_FORMAT } from '../../lib/constants';
 import dayjs from '../../lib/dayjs';
-import RefreshButton from '../../components/common/refreshButton';
+import RefreshButton from '../../components/ui/refreshButton';
 import { ComposeButton } from '../../components/compose-link';
 // #endregion
 

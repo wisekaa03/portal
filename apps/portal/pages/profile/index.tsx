@@ -23,17 +23,17 @@ import clsx from 'clsx';
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
-import BaseIcon from '../../components/common/icon';
+import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
 import dayjs from '../../lib/dayjs';
-import Avatar from '../../components/common/avatar';
-import Select from '../../components/common/select';
+import Avatar from '../../components/ui/avatar';
+import Select from '../../components/ui/select';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
-import RefreshButton from '../../components/common/refreshButton';
+import RefreshButton from '../../components/ui/refreshButton';
 import { GQLError } from '../../components/gql-error';
 // #endregion
 

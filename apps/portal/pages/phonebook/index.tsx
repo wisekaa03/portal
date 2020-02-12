@@ -37,10 +37,10 @@ import { ProfileComponent } from './profile';
 import { SettingsComponent, allColumns } from './settings';
 import useDebounce from '../../lib/debounce';
 import { Loading } from '../../components/loading';
-import Avatar from '../../components/common/avatar';
+import Avatar from '../../components/ui/avatar';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../../lib/queries';
 import { ProfileContext } from '../../lib/context';
-import RefreshButton from '../../components/common/refreshButton';
+import RefreshButton from '../../components/ui/refreshButton';
 // #endregion
 
 const panelHeight = 48;
