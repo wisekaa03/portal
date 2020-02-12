@@ -20,7 +20,7 @@ import { MutationFunction } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
 // #endregion
 // #region Imports Local
-import { GQLError } from './gql-error';
+import GQLError from './gql-error';
 import { Loading } from './loading';
 import { getStorage, setStorage } from '../lib/session-storage';
 import Background2 from '../../../public/images/svg/background2.svg';

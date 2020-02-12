@@ -26,6 +26,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 // #endregion
 // #region Imports Local
+import GQLError from '../../components/gql-error';
 import IsAdmin from '../../components/isAdmin';
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
@@ -38,7 +39,6 @@ import { resizeImage } from '../../components/utils';
 import Button from '../../components/ui/button';
 import { Gender } from '../../src/shared/interfaces';
 import dayjs from '../../lib/dayjs';
-import { GQLError } from '../../components/gql-error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
