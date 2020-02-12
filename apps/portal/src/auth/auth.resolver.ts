@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
@@ -41,7 +41,7 @@ export class AuthResolver {
    * @param username - username
    * @param password - password
    * @returns {UserResponse}
-   * @throws {UnauthorizedException | Ldap.Error}
+   * @throws {UnauthorizedException}
    */
   @Mutation()
   async login(

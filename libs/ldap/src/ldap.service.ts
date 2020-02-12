@@ -176,12 +176,12 @@ export class LdapService extends EventEmitter {
    * Mark admin client unbound so reconnect works as expected and re-emit the error
    *
    * @private
-   * @param {Error} err - The error to be logged and emitted
+   * @param {Ldap.Error} error - The error to be logged and emitted
    * @returns {void}
    */
-  private handleErrorAdmin(err: Ldap.Error): void {
-    if (`${err.code}` !== 'ECONNRESET') {
-      this.logger.error(`admin emitted error: [${err.code}]`, err.toString(), 'LDAP');
+  private handleErrorAdmin(error: Ldap.Error): void {
+    if (`${error.code}` !== 'ECONNRESET') {
+      this.logger.error(`admin emitted error: [${error.code}]`, JSON.stringify(error), 'LDAP');
     }
     this.adminBound = false;
   }
@@ -190,12 +190,12 @@ export class LdapService extends EventEmitter {
    * Mark user client unbound so reconnect works as expected and re-emit the error
    *
    * @private
-   * @param {Error} err - The error to be logged and emitted
+   * @param {Ldap.Error} - The error to be logged and emitted
    * @returns {void}
    */
-  private handleErrorUser(err: Ldap.Error): void {
-    if (`${err.code}` !== 'ECONNRESET') {
-      this.logger.error(`user emitted error: [${err.code}]`, err.toString(), 'LDAP');
+  private handleErrorUser(error: Ldap.Error): void {
+    if (`${error.code}` !== 'ECONNRESET') {
+      this.logger.error(`user emitted error: [${error.code}]`, JSON.stringify(error), 'LDAP');
     }
     // this.adminBound = false;
   }
@@ -204,11 +204,11 @@ export class LdapService extends EventEmitter {
    * Connect error handler
    *
    * @private
-   * @param {Error} err - The error to be logged and emitted
+   * @param {Ldap.Error} - The error to be logged and emitted
    * @returns {void}
    */
-  private handleConnectError(err: Ldap.Error): void {
-    this.logger.error(`emitted error: [${err.code}]`, err.toString(), 'LDAP');
+  private handleConnectError(error: Ldap.Error): void {
+    this.logger.error(`emitted error: [${error.code}]`, JSON.stringify(error), 'LDAP');
   }
 
   /**
@@ -233,7 +233,7 @@ export class LdapService extends EventEmitter {
           this.logger.error('bind error:', error.toString(), 'LDAP');
           this.adminBound = false;
 
-          return reject(error);
+          return reject(error.message);
         }
 
         this.logger.log('bind ok', 'LDAP');
@@ -266,6 +266,7 @@ export class LdapService extends EventEmitter {
    * @param {string} options.scope - LDAP search scope
    * @param {(string[]|undefined)} options.attributes - Attributes to fetch
    * @returns {undefined | Ldap.SearchEntryObject[]}
+   * @throws {Error}
    */
   private async search(searchBase: string, options: Ldap.SearchOptions): Promise<undefined | Ldap.SearchEntryObject[]> {
     return this.adminBind().then(
@@ -277,7 +278,7 @@ export class LdapService extends EventEmitter {
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
               if (searchErr) {
                 this.logger.error('LDAP Error:', searchErr.toString(), 'LDAP');
-                return reject(searchErr);
+                return reject(searchErr.message);
               }
               if (typeof searchResult !== 'object') {
                 this.logger.error('The search returns null results:', searchResult, 'LDAP');
@@ -321,7 +322,7 @@ export class LdapService extends EventEmitter {
                 }
               });
 
-              searchResult.on('error', (error: Ldap.Error) => reject(error));
+              searchResult.on('error', (error: Ldap.Error) => reject(error.message));
 
               searchResult.on('end', (result: Ldap.LDAPResult) => {
                 if (result.status !== 0) {
@@ -363,6 +364,7 @@ export class LdapService extends EventEmitter {
    * @private
    * @param {string} username - Username to search for
    * @returns {undefined} - If user is not found but no error happened, result is undefined.
+   * @throws {Error}
    */
   private async findUser(username: string): Promise<undefined | Ldap.SearchEntryObject> {
     if (!username) {
@@ -409,8 +411,8 @@ export class LdapService extends EventEmitter {
             }
           }),
       )
-      .catch((error: Ldap.Error) => {
-        this.logger.error(`user search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
+      .catch((error: Error) => {
+        this.logger.error(`user search error: ${error.name}`, JSON.stringify(error), 'LDAP');
 
         throw error;
       });
@@ -452,8 +454,8 @@ export class LdapService extends EventEmitter {
             return resolve(user);
           }),
       )
-      .catch((error: Ldap.Error) => {
-        this.logger.error(`group search error: [${error.code}] ${error.name}`, error.toString(), 'LDAP');
+      .catch((error: Error) => {
+        this.logger.error(`group search error: ${error.name}`, JSON.stringify(error), 'LDAP');
 
         throw error;
       });
@@ -514,8 +516,8 @@ export class LdapService extends EventEmitter {
 
         return user;
       })
-      .catch((error: Ldap.Error) => {
-        this.logger.error('Search by DN error:', error.toString(), 'LDAP');
+      .catch((error: Error) => {
+        this.logger.error('Search by DN error:', JSON.stringify(error), 'LDAP');
 
         return undefined;
       });
@@ -525,6 +527,7 @@ export class LdapService extends EventEmitter {
    * Synchronize users
    *
    * @returns {undefined | LdapResponseUser[]} - User in LDAP
+   * @throws {Error}
    */
   public async synchronization(): Promise<undefined | LdapResponseUser[]> {
     const opts = {
@@ -551,8 +554,8 @@ export class LdapService extends EventEmitter {
 
         return undefined;
       })
-      .catch((error: Ldap.Error) => {
-        this.logger.error('Synchronize error:', error.toString(), 'LDAP');
+      .catch((error: Error) => {
+        this.logger.error('Synchronize error:', JSON.stringify(error), 'LDAP');
 
         return undefined;
       });
@@ -565,7 +568,7 @@ export class LdapService extends EventEmitter {
    * @param {string} dn - LDAP Distiguished Name
    * @param {Object | Object[]} data - LDAP modify data
    * @returns {boolean}
-   * @throws {Ldap.Error}
+   * @throws {Error}
    */
   public async modify(dn: string, data: Ldap.Change | Ldap.Change[], username?: string): Promise<boolean> {
     return this.adminBind().then(
@@ -578,7 +581,7 @@ export class LdapService extends EventEmitter {
               if (searchErr) {
                 this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
 
-                reject(searchErr);
+                reject(searchErr.message);
               }
 
               this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
@@ -628,7 +631,7 @@ export class LdapService extends EventEmitter {
    * @param {string} username - The username to authenticate
    * @param {string} password - The password to verify
    * @returns {LdapResponseUser} - User in LDAP
-   * @throws {Ldap.Error}
+   * @throws {Error}
    */
   public async authenticate(username: string, password: string): Promise<LdapResponseUser> {
     if (typeof password === 'undefined' || password === null || password === '') {
@@ -653,8 +656,8 @@ export class LdapService extends EventEmitter {
     }
 
     // 1. Find the user DN in question.
-    const foundUser = await this.findUser(username).catch((error: Ldap.Error) => {
-      this.logger.error(`Not found user: "${username}"`, error.toString(), 'LDAP');
+    const foundUser = await this.findUser(username).catch((error: Error) => {
+      this.logger.error(`Not found user: "${username}"`, JSON.stringify(error), 'LDAP');
 
       throw error;
     });
@@ -671,9 +674,9 @@ export class LdapService extends EventEmitter {
         password,
         async (bindErr?: Ldap.Error): Promise<unknown | LdapResponseUser> => {
           if (bindErr) {
-            this.logger.error('bind error:', bindErr.toString(), 'LDAP');
+            this.logger.error('bind error:', JSON.stringify(bindErr), 'LDAP');
 
-            return reject(bindErr);
+            return reject(bindErr.message);
           }
 
           // 3. If requested, fetch user groups
@@ -695,9 +698,9 @@ export class LdapService extends EventEmitter {
 
             return resolve(userWithGroups as LdapResponseUser);
           } catch (error) {
-            this.logger.error('Authenticate:', error.toString(), 'LDAP');
+            this.logger.error('Authenticate:', JSON.stringify(error), 'LDAP');
 
-            return reject(new Error(`Authenticate: ${error.toString()}`));
+            return reject(new Error(`Authenticate: ${JSON.stringify(error)}`));
           }
         },
       );
