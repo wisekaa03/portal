@@ -7,7 +7,7 @@ import { TextField, Button } from '@material-ui/core';
 import { MutationFunction } from 'react-apollo';
 // #endregion
 // #region Imports Local
-import LoginComponent from '../components/login';
+import Login from '../pages/auth/login';
 // #endregion
 
 describe('Login page', () => {
@@ -23,17 +23,17 @@ describe('Login page', () => {
   });
 
   it('match snapshot', () => {
-    const wrapper = shallow(<LoginComponent {...props} />);
+    const wrapper = shallow(<Login {...props} />);
     expect(wrapper).toMatchSnapshot();
   });
 
   it('have login button', () => {
-    const wrapper = shallow(<LoginComponent {...props} />);
+    const wrapper = shallow(<Login {...props} />);
     expect(wrapper.find(Button)).toBeDefined();
   });
 
   it('have textField', () => {
-    const wrapper = shallow(<LoginComponent {...props} />);
+    const wrapper = shallow(<Login {...props} />);
     expect(wrapper.find(TextField)).toBeDefined();
   });
 

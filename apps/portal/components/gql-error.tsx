@@ -63,8 +63,4 @@ const BaseGQLError: I18nPage<GQLErrorProps> = ({ error, t, ...rest }): React.Rea
   );
 };
 
-BaseGQLError.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['error']),
-});
-
 export default nextI18next.withTranslation('error')(BaseGQLError);
