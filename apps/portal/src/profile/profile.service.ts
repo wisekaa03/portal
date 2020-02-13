@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, UnauthorizedException, HttpException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import Ldap from 'ldapjs';
@@ -15,6 +15,7 @@ import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
 import { UserEntity } from '../user/user.entity';
 import { LoginService, Gender } from '../shared/interfaces';
+import { GQLErrorCode } from '../shared/gqlerror';
 // #endregion
 
 @Injectable()
@@ -449,7 +450,9 @@ export class ProfileService {
         }),
     );
 
-    await this.ldapService.modify(created.dn, ldapUpdated, created.username);
+    await this.ldapService.modify(created.dn, ldapUpdated, created.username).catch((/* error: Error */) => {
+      throw new Error(GQLErrorCode.INSUFF_RIGHTS);
+    });
 
     const result = this.profileRepository.merge(created, profile);
 

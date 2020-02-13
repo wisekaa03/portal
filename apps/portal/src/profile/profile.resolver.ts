@@ -23,14 +23,13 @@ export class ProfileResolver {
   /**
    * GraphQL query: profiles
    *
-   * @param first
-   * @param after
-   * @param orderBy
-   * @param search
-   * @param disabled
-   * @returns {Profiles[]}
+   * @param {number} first
+   * @param {string} after
+   * @param {Order<string>} orderBy
+   * @param {string} search
+   * @param {boolean} disabled
+   * @returns {Promise<Connection<ProfilesEntity>>}
    */
-  /* eslint @typescript-eslint/indent:0 */
   @Query()
   @UseGuards(GqlAuthGuard)
   async profiles(
@@ -56,8 +55,8 @@ export class ProfileResolver {
   /**
    * GraphQL query: searchSuggestions
    *
-   * @param search
-   * @returns {string[]}
+   * @param {string} search - The search suggestions string
+   * @returns {Promise<ProfileEntity[]>}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -68,8 +67,8 @@ export class ProfileResolver {
   /**
    * GraphQL query: profile
    *
-   * @param id
-   * @returns {Profiles[]}
+   * @param {string} id - optional id of param
+   * @returns {ProfilesEntity | undefined}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -80,15 +79,19 @@ export class ProfileResolver {
   /**
    * GraphQL mutation: changeProfile
    *
-   * @param req
-   * @param profile
-   * @returns {Boolean}
+   * @param {Request} req - The request from which I try to compose user
+   * @param {Profile} profile - The profile
+   * @returns {Promise<ProfileEntity>}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<ProfileEntity> {
     return this.profileService.changeProfile(req, profile).catch((error: Error) => {
+      if (error.message === GQLErrorCode.INSUFF_RIGHTS) {
+        throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.INSUFF_RIGHTS });
+      }
+
       throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.SERVER_PARAMS });
     });
   }
