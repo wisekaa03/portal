@@ -177,6 +177,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
     changeProfile({
       variables: {
         profile: updated,
+        thumbnailPhoto: updated.thumbnailPhoto,
       },
     });
   };
