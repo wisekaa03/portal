@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
+/* eslint spaced-comment:0, max-classes-per-file:0 */
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
@@ -11,7 +11,11 @@ import { ConfigModule } from '@app/config';
 import { LoggerModule } from '@app/logger';
 import { NewsService } from './news.service';
 import { UserModule } from '../user/user.module';
+import { ProfileService } from '../profile/profile.service';
+import { UserService } from '../user/user.service';
 // #endregion
+
+const ServiceMock = jest.fn(() => ({}));
 
 @Entity()
 class UserEntity {
@@ -21,7 +25,6 @@ class UserEntity {
   @Column()
   name?: string;
 }
-
 
 @Entity()
 class GroupEntity {
@@ -50,11 +53,15 @@ class NewsEntity {
   name?: string;
 }
 
-jest.mock('../user/user.service');
-jest.mock('../profile/profile.service');
 jest.mock('@app/ldap/ldap.service');
-jest.mock('../guards/gqlauth.guard');
 jest.mock('@app/config/config.service');
+jest.mock('../guards/gqlauth.guard');
+jest.mock('../user/user.module');
+jest.mock('../user/user.resolver');
+jest.mock('../user/user.service');
+jest.mock('../profile/profile.module');
+jest.mock('../profile/profile.resolver');
+jest.mock('../profile/profile.service');
 
 describe('NewsService', () => {
   let service: NewsService;
@@ -64,6 +71,7 @@ describe('NewsService', () => {
       imports: [
         LoggerModule,
         ConfigModule.register('.env'),
+
         UserModule,
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
@@ -78,7 +86,11 @@ describe('NewsService', () => {
         }),
         TypeOrmModule.forFeature([NewsEntity]),
       ],
-      providers: [NewsService],
+      providers: [
+        NewsService,
+        { provide: UserService, useValue: ServiceMock },
+        { provide: ProfileService, useValue: ServiceMock },
+      ],
     }).compile();
 
     service = module.get<NewsService>(NewsService);

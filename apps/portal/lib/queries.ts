@@ -196,8 +196,8 @@ export const PROFILE = gql`
 `;
 
 export const CHANGE_PROFILE = gql`
-  mutation ChangeProfile($profile: ProfileSettingsInput) {
-    changeProfile(profile: $profile) {
+  mutation ChangeProfile($profile: ProfileSettingsInput, $thumbnailPhoto: Upload) {
+    changeProfile(profile: $profile, thumbnailPhoto: $thumbnailPhoto) {
       id
     }
   }

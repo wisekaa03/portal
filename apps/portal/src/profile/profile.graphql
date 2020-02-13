@@ -132,8 +132,6 @@ input ProfileSettingsInput {
   room: String
 
   notShowing: Boolean
-
-  thumbnailPhoto: String
 }
 
 type Query {
@@ -147,5 +145,5 @@ type Query {
 }
 
 type Mutation {
-  changeProfile(profile: ProfileSettingsInput): Profile
+  changeProfile(profile: ProfileSettingsInput, thumbnailPhoto: Upload): Profile
 }

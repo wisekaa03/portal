@@ -12,7 +12,11 @@ import { ConfigModule } from '@app/config';
 import { MediaResolver } from './media.resolver';
 import { UserModule } from '../user/user.module';
 import { MediaService } from './media.service';
+import { UserService } from '../user/user.service';
+import { ProfileService } from '../profile/profile.service';
 // #endregion
+
+const ServiceMock = jest.fn(() => ({}));
 
 @Entity()
 class UserEntity {
@@ -60,7 +64,11 @@ class MediaDirectoryEntity {
 }
 
 jest.mock('./media.service');
+jest.mock('../user/user.module');
+jest.mock('../user/user.resolver');
 jest.mock('../user/user.service');
+jest.mock('../profile/profile.module');
+jest.mock('../profile/profile.resolver');
 jest.mock('../profile/profile.service');
 
 describe('MediaResolver', () => {
@@ -88,7 +96,10 @@ describe('MediaResolver', () => {
       ],
       providers: [
         MediaService,
-        MediaResolver],
+        MediaResolver,
+        { provide: UserService, useValue: ServiceMock },
+        { provide: ProfileService, useValue: ServiceMock },
+      ],
     }).compile();
 
     resolver = module.get<MediaResolver>(MediaResolver);

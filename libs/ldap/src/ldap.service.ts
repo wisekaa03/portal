@@ -568,40 +568,88 @@ export class LdapService extends EventEmitter {
    *
    * @private
    * @param {string} dn - LDAP Distiguished Name
-   * @param {Object | Object[]} data - LDAP modify data
-   * @returns {boolean}
+   * @param {Ldap.Change | Ldap.Change[]} data - LDAP modify data
+   * @param {string} username - The optional parameter
+   * @param {string} password - The optional parameter
+   * @returns {boolean} - The result
    * @throws {Error}
    */
-  public async modify(dn: string, data: Ldap.Change | Ldap.Change[], username?: string): Promise<boolean> {
+  public async modify(
+    dn: string,
+    data: Ldap.Change | Ldap.Change[],
+    username?: string,
+    password?: string,
+  ): Promise<boolean> {
     return this.adminBind().then(
       () =>
-        new Promise<boolean>((resolve, reject) =>
-          this.adminClient.modify(
-            dn,
-            data,
-            async (searchErr: Ldap.Error | null): Promise<void> => {
-              if (searchErr) {
-                this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
+        new Promise<boolean>((resolve, reject) => {
+          if (password) {
+            // If a password, then we try to connect with user's login and password, and try to modify
+            this.userClient.bind(dn, password, (bindErr?: Ldap.Error): any => {
+              if (bindErr) {
+                this.logger.error('bind error:', JSON.stringify(bindErr), 'LDAP');
 
-                reject(new Error(searchErr.message));
+                return reject(new Error(bindErr.message));
               }
 
-              this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
+              return this.userClient.modify(
+                dn,
+                data,
+                async (searchErr: Ldap.Error | null): Promise<void> => {
+                  if (searchErr) {
+                    this.logger.error(
+                      `Modify error "${dn}": ${JSON.stringify(data)}`,
+                      JSON.stringify(searchErr),
+                      'LDAP',
+                    );
 
-              if (this.userCache) {
-                await this.userCache.del(dn);
-                this.logger.debug(`Modify: cache reset: ${dn}`, 'LDAP');
+                    reject(new Error(searchErr.message));
+                  }
 
-                if (username) {
-                  await this.userCache.del(username);
-                  this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
+                  this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
+
+                  if (this.userCache) {
+                    await this.userCache.del(dn);
+                    this.logger.debug(`Modify: cache reset: ${dn}`, 'LDAP');
+
+                    if (username) {
+                      await this.userCache.del(username);
+                      this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
+                    }
+                  }
+
+                  resolve(true);
+                },
+              );
+            });
+          } else {
+            this.adminClient.modify(
+              dn,
+              data,
+              async (searchErr: Ldap.Error | null): Promise<void> => {
+                if (searchErr) {
+                  this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
+
+                  reject(new Error(searchErr.message));
                 }
-              }
 
-              resolve(true);
-            },
-          ),
-        ),
+                this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
+
+                if (this.userCache) {
+                  await this.userCache.del(dn);
+                  this.logger.debug(`Modify: cache reset: ${dn}`, 'LDAP');
+
+                  if (username) {
+                    await this.userCache.del(username);
+                    this.logger.debug(`Modify: cache reset: ${username}`, 'LDAP');
+                  }
+                }
+
+                resolve(true);
+              },
+            );
+          }
+        }),
     );
   }
 

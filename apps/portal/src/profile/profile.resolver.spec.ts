@@ -2,11 +2,12 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 // import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
 import { ImageModule } from '@app/image';
-import { ConfigModule } from '@app/config';
+import { ConfigModule, ConfigService } from '@app/config';
 import { ProfileResolver } from './profile.resolver';
 import { ProfileService } from './profile.service';
 // import { ProfileEntity } from './profile.entity';
@@ -25,6 +26,18 @@ describe('ProfileResolver', () => {
       imports: [
         ConfigModule.register('.env'),
         ImageModule,
+
+        I18nModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            path: configService.i18nPath,
+            filePattern: configService.i18nFilePattern,
+            fallbackLanguage: configService.fallbackLanguage,
+            resolvers: [new QueryResolver(['lang', 'locale', 'l']), new HeaderResolver()],
+          }),
+        }),
+
         // TypeOrmModule.forRoot({}),
         // TypeOrmModule.forFeature([ProfileEntity]),
       ],

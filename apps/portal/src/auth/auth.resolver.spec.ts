@@ -1,8 +1,9 @@
 /** @format */
 
 // #region Imports NPM
+import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nModule, I18nOptions } from 'nestjs-i18n';
+import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { LoggerModule } from '@app/logger';
@@ -11,7 +12,8 @@ import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 // #endregion
 
-jest.mock('./auth.service');
+const AuthServiceMock = jest.fn(() => ({}));
+
 jest.mock('../guards/gqlauth.guard');
 jest.mock('@app/logger/logger.service', () => ({
   LogService: jest.fn().mockImplementation(() => ({
@@ -19,7 +21,10 @@ jest.mock('@app/logger/logger.service', () => ({
     debug: jest.fn(),
   })),
 }));
-jest.mock('@app/config/config.service');
+
+const dev = process.env.NODE_ENV !== 'production';
+const test = process.env.NODE_ENV === 'test';
+const env = resolve(__dirname, dev ? (test ? '../../../..' : '../../..') : '../../..', '.env');
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;
@@ -28,12 +33,20 @@ describe('AuthResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         LoggerModule,
-        ConfigModule,
+        ConfigModule.register(env),
+
         I18nModule.forRootAsync({
-          useFactory: async () => ({} as I18nOptions),
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            path: configService.i18nPath,
+            filePattern: configService.i18nFilePattern,
+            fallbackLanguage: configService.fallbackLanguage,
+            resolvers: [new QueryResolver(['lang', 'locale', 'l']), new HeaderResolver()],
+          }),
         }),
       ],
-      providers: [AuthResolver, AuthService, ConfigService],
+      providers: [AuthResolver, { provide: AuthService, useValue: AuthServiceMock }],
     }).compile();
 
     resolver = module.get<AuthResolver>(AuthResolver);

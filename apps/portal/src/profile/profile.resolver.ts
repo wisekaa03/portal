@@ -5,6 +5,8 @@ import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { Request } from 'express';
+import { I18nService } from 'nestjs-i18n';
+import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
@@ -12,23 +14,23 @@ import { IsAdminGuard } from '../guards/admin.guard';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
+import { GQLError, GQLErrorCode } from '../shared/gqlerror';
 // #endregion
 
 @Resolver('Profile')
 export class ProfileResolver {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService, private readonly i18n: I18nService) {}
 
   /**
    * GraphQL query: profiles
    *
-   * @param first
-   * @param after
-   * @param orderBy
-   * @param search
-   * @param disabled
-   * @returns {Profiles[]}
+   * @param {number} first
+   * @param {string} after
+   * @param {Order<string>} orderBy
+   * @param {string} search
+   * @param {boolean} disabled
+   * @returns {Promise<Connection<ProfilesEntity>>}
    */
-  /* eslint @typescript-eslint/indent:0 */
   @Query()
   @UseGuards(GqlAuthGuard)
   async profiles(
@@ -54,8 +56,8 @@ export class ProfileResolver {
   /**
    * GraphQL query: searchSuggestions
    *
-   * @param search
-   * @returns {string[]}
+   * @param {string} search - The search suggestions string
+   * @returns {Promise<ProfileEntity[]>}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -66,8 +68,8 @@ export class ProfileResolver {
   /**
    * GraphQL query: profile
    *
-   * @param id
-   * @returns {Profiles[]}
+   * @param {string} id - optional id of param
+   * @returns {ProfilesEntity | undefined}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -78,14 +80,25 @@ export class ProfileResolver {
   /**
    * GraphQL mutation: changeProfile
    *
-   * @param req
-   * @param profile
-   * @returns {Boolean}
+   * @param {Request} req - The request from which I try to compose user
+   * @param {Profile} profile - The profile
+   * @param {Promise<FileUpload>} thumbnailPhoto - Avatar
+   * @returns {Promise<ProfileEntity>}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
-  async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<ProfileEntity> {
-    return this.profileService.changeProfile(req, profile);
+  async changeProfile(
+    @Context('req') req: Request,
+    @Args('profile') profile: Profile,
+    @Args('thumbnailPhoto') thumbnailPhoto: Promise<FileUpload>,
+  ): Promise<ProfileEntity> {
+    return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch((error: Error) => {
+      if (error.message === GQLErrorCode.INSUFF_RIGHTS) {
+        throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.INSUFF_RIGHTS });
+      }
+
+      throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.SERVER_PARAMS });
+    });
   }
 }
