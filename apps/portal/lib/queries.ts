@@ -115,7 +115,6 @@ export const CURRENT_USER = gql`
       groups {
         id
         name
-        dn
       }
     }
   }
