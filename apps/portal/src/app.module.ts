@@ -111,6 +111,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           }
         : false,
       typePaths: ['./**/*.graphql'],
+      installSubscriptionHandlers: true,
       uploads: {
         maxFileSize: 100000000, // 100MB
       },
