@@ -16,8 +16,8 @@ import { createHttpLink } from 'apollo-link-http';
 import { createUploadLink } from 'apollo-upload-client';
 import fetch from 'isomorphic-fetch';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-// import { InStorageCache } from 'apollo-cache-instorage';
-// import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
+import { InStorageCache } from 'apollo-cache-instorage';
+import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 // #endregion
@@ -69,6 +69,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
   let clientParams = {};
   let httpLink: ApolloLink;
+  let cache: InMemoryCache;
 
   if (__SERVER__) {
     global.fetch = fetch;
@@ -76,6 +77,8 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     httpLink = createHttpLink({
       uri: `http://localhost:${process.env.PORT}/graphql`,
     });
+
+    cache = new InMemoryCache().restore(initialState);
   } else {
     httpLink = createUploadLink({
       uri: `/graphql`,
@@ -87,29 +90,29 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
     // TODO: лучшенный контроль за кешем (продумать)
     // TODO: Протестить без него
-    // cache = new InStorageCache({
-    //   storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
-    //   shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
-    //     // debugger;
-    //     return true;
-    //   },
-    //   denormalize: (value: any): any => {
-    //     // debugger;
+    cache = new InStorageCache({
+      storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
+      shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
+        // debugger;
+        return true;
+      },
+      denormalize: (value: any): any => {
+        // debugger;
 
-    //     try {
-    //       return JSON.parse(value);
-    //     } catch {
-    //       return value;
-    //     }
-    //   },
-    // }).restore(initialState) as InMemoryCache;
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      },
+    }).restore(initialState) as InMemoryCache;
   }
 
   return new ApolloClient({
     connectToDevTools: !__SERVER__,
     ssrMode: __SERVER__,
     link: concat(authLink.concat(errorLink), httpLink),
-    cache: new InMemoryCache().restore(initialState),
+    cache,
     ...clientParams,
   });
 };
@@ -135,8 +138,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
     public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
       const { AppTree, Component, router, ctx } = appCtx;
-      const apolloState: WithApolloState = {};
-      let apolloClient: ApolloClient<NormalizedCacheObject>;
+      // const apolloState: WithApolloState = {};
+      const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
       const currentLanguage = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language;
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
@@ -144,8 +147,6 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       if (__SERVER__) {
-        apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
-
         try {
           await getDataFromTree(
             <AppTree
@@ -153,7 +154,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
               {...appCtx}
               Component={Component}
               router={router}
-              apolloState={apolloState}
+              // apolloState={apolloState}
               apolloClient={apolloClient}
               currentLanguage={currentLanguage}
               isMobile={isMobile}
@@ -168,7 +169,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
                 {...appCtx}
                 Component={Component}
                 router={router}
-                apolloState={apolloState}
+                // apolloState={apolloState}
                 apolloClient={apolloClient}
                 currentLanguage={currentLanguage}
                 isMobile={isMobile}
@@ -187,12 +188,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
-      } else {
-        apolloClient = initApollo({});
       }
 
       // Extract query data from the Apollo store
-      apolloState.data = apolloClient.cache.extract();
+      const apolloState = apolloClient.cache.extract();
 
       // Extract query data from the Apollo store
       // On the client side, initApollo() below will return the SAME Apollo
@@ -207,10 +206,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
     public constructor(props: any) {
       super(props);
-      this.apolloClient = props.apolloClient || initApollo({ initialState: props.apolloState.data });
+      this.apolloClient = initApollo({ initialState: props.apolloState });
     }
 
     public render(): React.ReactElement {
-      return <MainApp {...this.props} apolloClient={this.apolloClient} />;
+      return <MainApp apolloClient={this.apolloClient} {...this.props} />;
     }
   };

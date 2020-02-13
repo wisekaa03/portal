@@ -6,7 +6,7 @@ import { ProfileContext } from '../lib/context';
 const IsAdmin = ({ children }: any): React.ReactElement => {
   const profile = useContext(ProfileContext);
 
-  return <>{profile && profile.user && profile.user.isAdmin && children}</>;
+  return profile?.user?.isAdmin && React.Children.only(children);
 };
 
 IsAdmin.displayName = 'IsAdmin';
