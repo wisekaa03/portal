@@ -140,7 +140,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       if (__SERVER__) {
         apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
-
+        console.log('11');
         try {
           await getDataFromTree(
             <AppTree
