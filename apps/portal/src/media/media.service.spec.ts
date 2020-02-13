@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
+/* eslint spaced-comment:0, max-classes-per-file:0 */
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
@@ -11,7 +11,11 @@ import { LoggerModule } from '@app/logger';
 import { ConfigModule } from '@app/config';
 import { MediaService } from './media.service';
 import { UserModule } from '../user/user.module';
+import { UserService } from '../user/user.service';
+import { ProfileService } from '../profile/profile.service';
 // #endregion
+
+const ServiceMock = jest.fn(() => ({}));
 
 @Entity()
 class UserEntity {
@@ -58,7 +62,11 @@ class MediaEntity {
   name?: string;
 }
 
+jest.mock('../user/user.module');
+jest.mock('../user/user.resolver');
 jest.mock('../user/user.service');
+jest.mock('../profile/profile.module');
+jest.mock('../profile/profile.resolver');
 jest.mock('../profile/profile.service');
 
 describe('MediaService', () => {
@@ -69,7 +77,9 @@ describe('MediaService', () => {
       imports: [
         LoggerModule,
         ConfigModule.register('.env'),
+
         UserModule,
+
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
@@ -83,7 +93,11 @@ describe('MediaService', () => {
         }),
         TypeOrmModule.forFeature([MediaDirectoryEntity, MediaEntity]),
       ],
-      providers: [MediaService],
+      providers: [
+        MediaService,
+        { provide: UserService, useValue: ServiceMock },
+        { provide: ProfileService, useValue: ServiceMock },
+      ],
     }).compile();
 
     service = module.get<MediaService>(MediaService);

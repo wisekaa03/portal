@@ -56,6 +56,7 @@ jest.mock('../guards/gqlauth.guard');
 jest.mock('./news.service');
 jest.mock('../user/user.service');
 jest.mock('../profile/profile.service');
+jest.mock('../profile/profile.resolver');
 
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV === 'test';
@@ -70,6 +71,7 @@ describe('NewsResolver', () => {
         ConfigModule.register(env),
         ImageModule,
         UserModule,
+
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({

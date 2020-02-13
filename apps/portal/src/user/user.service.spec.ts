@@ -2,7 +2,7 @@
 /* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
 
 // #region Imports NPM
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 // import { I18nModule } from 'nestjs-i18n';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -15,7 +15,10 @@ import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
 import { UserService } from './user.service';
 import { ProfileModule } from '../profile/profile.module';
 import { GroupModule } from '../group/group.module';
+import { ProfileService } from '../profile/profile.service';
 // #endregion
+
+const ProfileServiceMock = jest.fn(() => ({}));
 
 @Entity()
 class UserEntity {
@@ -46,7 +49,9 @@ class GroupEntity {
 
 jest.mock('@app/ldap/ldap.service');
 jest.mock('../guards/gqlauth.guard');
-// jest.mock('@app/config/config.service');
+jest.mock('../profile/profile.module');
+jest.mock('../profile/profile.resolver');
+jest.mock('../profile/profile.service');
 
 describe('UserService', () => {
   let service: UserService;
@@ -87,6 +92,7 @@ describe('UserService', () => {
       providers: [
         UserService,
         LdapService,
+        { provide: ProfileService, useValue: ProfileServiceMock },
         // { provide: ClientProxy, useValue: ClientProxy },
         // { provide: getRepositoryToken(UserEntity), useValue: mockRepository },
         // { provide: getRepositoryToken(ProfileEntity), useValue: mockRepository },
