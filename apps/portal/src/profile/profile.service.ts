@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import Ldap from 'ldapjs';
 import { Request } from 'express';
+import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -299,12 +300,13 @@ export class ProfileService {
 
   /**
    * changeProfile
-   * @param {Request} - Express Request
-   * @param {Profile} - Profile params
+   * @param {Request} req - Express Request
+   * @param {Profile} profile - Profile params
+   * @param {Promise<FileUpload>} thumbnailPhoto - Avatar
    * @returns {ProfileEntity} - The corrected ProfileEntity
    * @throws {Error} - Exception
    */
-  async changeProfile(req: Request, profile: Profile): Promise<ProfileEntity> {
+  async changeProfile(req: Request, profile: Profile, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
     // В резолвере проверка на юзера уже есть
     if (!req.session!.passport!.user!.profile!.id) {
       throw new Error('Not authorized');
@@ -438,6 +440,11 @@ export class ProfileService {
       modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
     }
 
+    if (thumbnailPhoto) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+    }
+
     if (!Object.keys(modification).length) {
       throw new Error('No fields are filled in profile');
     }
@@ -455,7 +462,8 @@ export class ProfileService {
         created.dn,
         ldapUpdated,
         created.username,
-        (req.session!.passport!.user as UserResponse)!.passwordFrontend,
+        // TODO: .modify with password parameter
+        // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
       )
       .catch((/* error: Error */) => {
         throw new Error(GQLErrorCode.INSUFF_RIGHTS);

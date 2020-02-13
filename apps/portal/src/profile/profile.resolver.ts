@@ -6,6 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { Request } from 'express';
 import { I18nService } from 'nestjs-i18n';
+import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
@@ -81,13 +82,18 @@ export class ProfileResolver {
    *
    * @param {Request} req - The request from which I try to compose user
    * @param {Profile} profile - The profile
+   * @param {Promise<FileUpload>} thumbnailPhoto - Avatar
    * @returns {Promise<ProfileEntity>}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
-  async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<ProfileEntity> {
-    return this.profileService.changeProfile(req, profile).catch((error: Error) => {
+  async changeProfile(
+    @Context('req') req: Request,
+    @Args('profile') profile: Profile,
+    @Args('thumbnailPhoto') thumbnailPhoto: Promise<FileUpload>,
+  ): Promise<ProfileEntity> {
+    return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch((error: Error) => {
       if (error.message === GQLErrorCode.INSUFF_RIGHTS) {
         throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.INSUFF_RIGHTS });
       }
