@@ -13,7 +13,7 @@ import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser } from '@app/ldap';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity, UserResponse } from '../user/user.entity';
 import { LoginService, Gender } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
 // #endregion
@@ -450,9 +450,16 @@ export class ProfileService {
         }),
     );
 
-    await this.ldapService.modify(created.dn, ldapUpdated, created.username).catch((/* error: Error */) => {
-      throw new Error(GQLErrorCode.INSUFF_RIGHTS);
-    });
+    await this.ldapService
+      .modify(
+        created.dn,
+        ldapUpdated,
+        created.username,
+        (req.session!.passport!.user as UserResponse)!.passwordFrontend,
+      )
+      .catch((/* error: Error */) => {
+        throw new Error(GQLErrorCode.INSUFF_RIGHTS);
+      });
 
     const result = this.profileRepository.merge(created, profile);
 
