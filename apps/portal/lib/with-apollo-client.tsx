@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React from 'react';
-import { getDataFromTree } from 'react-apollo';
+import { getDataFromTree } from '@apollo/react-ssr';
 import { getMarkupFromTree } from 'react-apollo-hooks';
 import { renderToString } from 'react-dom/server';
 import Head from 'next/head';
@@ -28,9 +28,14 @@ import getRedirect from './get-redirect';
 import { ApolloAppProps, WithApolloState, ApolloInitialProps } from './types';
 // #endregion
 
+interface CreateClientProps {
+  initialState?: any;
+  cookie?: string;
+}
+
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
-const createClient = ({ initialState, cookie }): ApolloClient<NormalizedCacheObject> => {
+const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
   const authLink = setContext((_, { headers }) => {
     return {
       headers: {
@@ -109,7 +114,7 @@ const createClient = ({ initialState, cookie }): ApolloClient<NormalizedCacheObj
   });
 };
 
-const initApollo = (options): ApolloClient<NormalizedCacheObject> => {
+const initApollo = (options: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
   if (__SERVER__) {
     return createClient(options);
   }
