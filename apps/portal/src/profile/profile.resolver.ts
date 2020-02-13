@@ -5,6 +5,7 @@ import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { Request } from 'express';
+import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
@@ -12,11 +13,12 @@ import { IsAdminGuard } from '../guards/admin.guard';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
+import { GQLError, GQLErrorCode } from '../shared/gqlerror';
 // #endregion
 
 @Resolver('Profile')
 export class ProfileResolver {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService, private readonly i18n: I18nService) {}
 
   /**
    * GraphQL query: profiles
@@ -86,6 +88,8 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async changeProfile(@Context('req') req: Request, @Args('profile') profile: Profile): Promise<ProfileEntity> {
-    return this.profileService.changeProfile(req, profile);
+    return this.profileService.changeProfile(req, profile).catch((error: Error) => {
+      throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.SERVER_PARAMS });
+    });
   }
 }

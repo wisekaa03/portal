@@ -39,6 +39,14 @@ export class ProfileService {
     private readonly ldapService: LdapService,
   ) {}
 
+  /**
+   * Get profiles
+   *
+   * @param {string} string - The search string
+   * @param {boolean} disabled - The disabled
+   * @param {boolean} notShowing - The not showing
+   * @return {SelectQueryBuilder<ProfileEntity>}
+   */
   getProfiles = (search: string, disabled: boolean, notShowing: boolean): SelectQueryBuilder<ProfileEntity> => {
     const query = this.profileRepository.createQueryBuilder('profile').leftJoinAndSelect('profile.manager', 'manager');
 
@@ -90,7 +98,8 @@ export class ProfileService {
   /**
    * searchSuggestions
    *
-   * @param search string
+   * @param {string} - Search string
+   * @throws {Error} - Exception
    */
   searchSuggestions = async (search: string): Promise<ProfileEntity[]> => {
     // TODO: сейчас уникализация на клиенте, продумать или оставить так
@@ -149,7 +158,8 @@ export class ProfileService {
    *
    * @param {LdapResponseUser} - The LDAP user
    * @param {UserEntity} - User from Database
-   * @returns {ProfileEntity}
+   * @returns {ProfileEntity} - The profile entity
+   * @throws {Error} - Exception
    */
   async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, count = 1): Promise<ProfileEntity | undefined> {
     const manager =
@@ -277,7 +287,7 @@ export class ProfileService {
    *
    * @param {ProfileEntity} - The profile
    * @returns {ProfileEntity} - The profile
-   * @throws {Error} - error
+   * @throws {Error} - Exception
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
@@ -291,24 +301,24 @@ export class ProfileService {
    * @param {Request} - Express Request
    * @param {Profile} - Profile params
    * @returns {ProfileEntity} - The corrected ProfileEntity
-   * @throws {UnauthorizedException | HttpException}
+   * @throws {Error} - Exception
    */
   async changeProfile(req: Request, profile: Profile): Promise<ProfileEntity> {
     // В резолвере проверка на юзера уже есть
     if (!req.session!.passport!.user!.profile!.id) {
-      throw new UnauthorizedException();
+      throw new Error('Not authorized');
     }
 
     const updated = { id: req.session!.passport.user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
     if (!created) {
-      throw new HttpException('Profile repository: "created" is null', 500);
+      throw new Error('Profile repository: "created" is null');
     }
 
     const ldapUser = await this.ldapService.searchByDN(created.dn);
     if (!ldapUser) {
-      throw new HttpException('Ldap is not connected.', 500);
+      throw new Error('Ldap is not connected.');
     }
 
     const modification: any = {
@@ -416,7 +426,7 @@ export class ProfileService {
     if (Object.keys(modification.comment).length === 0) {
       delete modification.comment;
     } else {
-      // TODO: если сломался синтаксис, в адешке все перепишется
+      // если сломался синтаксис, в адешке все перепишется
       let oldComment = {};
 
       try {
@@ -428,7 +438,7 @@ export class ProfileService {
     }
 
     if (!Object.keys(modification).length) {
-      throw new HttpException('No fields are filled in profile', 200);
+      throw new Error('No fields are filled in profile');
     }
 
     const ldapUpdated = Object.keys(modification).map(
@@ -439,12 +449,7 @@ export class ProfileService {
         }),
     );
 
-    // eslint-disable-next-line no-debugger
-    debugger;
-
-    await this.ldapService.modify(created.dn, ldapUpdated, created.username).catch((error) => {
-      throw error;
-    });
+    await this.ldapService.modify(created.dn, ldapUpdated, created.username);
 
     const result = this.profileRepository.merge(created, profile);
 
@@ -452,8 +457,6 @@ export class ProfileService {
       req.session!.passport.user.profile = result;
     }
 
-    return this.save(result).catch((error) => {
-      throw error;
-    });
+    return this.save(result);
   }
 }

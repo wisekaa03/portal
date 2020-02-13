@@ -3,6 +3,7 @@
 // #region Imports NPM
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { I18nModule } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { ConfigModule } from '@app/config';
