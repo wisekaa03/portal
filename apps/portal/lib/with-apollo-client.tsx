@@ -25,7 +25,7 @@ import { isMobile as checkMobile } from 'is-mobile';
 import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
-import { ApolloAppProps, ApolloInitialProps } from './types';
+import { ApolloAppProps, WithApolloState, ApolloInitialProps } from './types';
 // #endregion
 
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
@@ -129,26 +129,26 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
     static displayName = 'withApolloClient(MainApp)';
 
     public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
-      const { Component, router, ctx } = appCtx;
-      // const apolloState: WithApolloState = {};
-      const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
+      const { AppTree, Component, router, ctx } = appCtx;
+      const apolloState: WithApolloState = {};
+      let apolloClient: ApolloClient<NormalizedCacheObject>;
 
       const currentLanguage = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language;
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
 
-      // ctx.apolloClient = apolloClient;
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       if (__SERVER__) {
+        apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
+
         try {
           await getDataFromTree(
-            <MainApp
+            <AppTree
               {...appProps}
               {...appCtx}
               Component={Component}
               router={router}
-              // TODO: насколько я понимаю это лишнее поле
-              // apolloState={apolloState}
+              apolloState={apolloState}
               apolloClient={apolloClient}
               currentLanguage={currentLanguage}
               isMobile={isMobile}
@@ -158,12 +158,12 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
           await getMarkupFromTree({
             renderFunction: renderToString,
             tree: (
-              <MainApp
+              <AppTree
                 {...appProps}
                 {...appCtx}
                 Component={Component}
                 router={router}
-                // apolloState={apolloState}
+                apolloState={apolloState}
                 apolloClient={apolloClient}
                 currentLanguage={currentLanguage}
                 isMobile={isMobile}
@@ -182,10 +182,12 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
+      } else {
+        apolloClient = initApollo({});
       }
 
       // Extract query data from the Apollo store
-      const apolloState = apolloClient.cache.extract();
+      apolloState.data = apolloClient.cache.extract();
 
       // Extract query data from the Apollo store
       // On the client side, initApollo() below will return the SAME Apollo
@@ -200,10 +202,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
     public constructor(props: any) {
       super(props);
-      this.apolloClient = initApollo({ initialState: props.apolloState });
+      this.apolloClient = props.apolloClient || initApollo({ initialState: props.apolloState.data });
     }
 
     public render(): React.ReactElement {
-      return <MainApp apolloClient={this.apolloClient} {...this.props} />;
+      return <MainApp {...this.props} apolloClient={this.apolloClient} />;
     }
   };
