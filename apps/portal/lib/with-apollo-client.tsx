@@ -1,5 +1,4 @@
 /** @format */
-/* eslint @typescript-eslint/indent:0 */
 
 // #region Imports NPM
 import React from 'react';
@@ -7,45 +6,140 @@ import { getDataFromTree } from 'react-apollo';
 import { getMarkupFromTree } from 'react-apollo-hooks';
 import { renderToString } from 'react-dom/server';
 import Head from 'next/head';
-// eslint-disable-next-line import/no-named-default
-import { AppContext, default as NextApp } from 'next/app';
-
+import { AppContext } from 'next/app';
+import Router from 'next/router';
 import { ApolloClient } from 'apollo-client';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { concat, ApolloLink } from 'apollo-link';
+import { onError } from 'apollo-link-error';
+import { setContext } from 'apollo-link-context';
+import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client';
+import fetch from 'isomorphic-fetch';
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+// import { InStorageCache } from 'apollo-cache-instorage';
+// import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 // #endregion
 // #region Imports Local
 import { nextI18next } from './i18n-client';
-import { apolloClient } from './apollo-client';
-import { ApolloAppProps, WithApolloState, ApolloInitialProps } from './types';
+import stateResolvers from './state-link';
+import getRedirect from './get-redirect';
+import { ApolloAppProps, ApolloInitialProps } from './types';
 // #endregion
 
-export const withApolloClient = (MainApp: any /* typeof NextApp */): Function => {
-  return class ApolloClass extends React.Component<ApolloAppProps> {
+let browserApolloClient: ApolloClient<NormalizedCacheObject>;
+
+const createClient = ({ initialState, cookie }): ApolloClient<NormalizedCacheObject> => {
+  const authLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        Cookie: cookie,
+      },
+    };
+  });
+
+  const errorLink = onError(({ graphQLErrors, networkError /* , response, operation */ }): any => {
+    if (graphQLErrors) {
+      // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
+      graphQLErrors.forEach(({ message, locations, path, extensions }): void => {
+        console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
+
+        if (!__SERVER__) {
+          if (
+            extensions.code === 'UNAUTHENTICATED' ||
+            extensions.exception!.status === 403 ||
+            extensions.exception!.status === 401
+          ) {
+            Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
+          }
+        }
+      });
+    }
+    if (networkError) {
+      console.error('[Network error]:', networkError);
+    }
+  });
+
+  let clientParams = {};
+  let httpLink: ApolloLink;
+
+  if (__SERVER__) {
+    global.fetch = fetch;
+
+    httpLink = createHttpLink({
+      uri: `http://localhost:${process.env.PORT}/graphql`,
+    });
+  } else {
+    httpLink = createUploadLink({
+      uri: `/graphql`,
+    });
+
+    clientParams = {
+      resolvers: stateResolvers,
+    };
+
+    // TODO: лучшенный контроль за кешем (продумать)
+    // TODO: Протестить без него
+    // cache = new InStorageCache({
+    //   storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
+    //   shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
+    //     // debugger;
+    //     return true;
+    //   },
+    //   denormalize: (value: any): any => {
+    //     // debugger;
+
+    //     try {
+    //       return JSON.parse(value);
+    //     } catch {
+    //       return value;
+    //     }
+    //   },
+    // }).restore(initialState) as InMemoryCache;
+  }
+
+  return new ApolloClient({
+    connectToDevTools: !__SERVER__,
+    ssrMode: __SERVER__,
+    link: concat(authLink.concat(errorLink), httpLink),
+    cache: new InMemoryCache().restore(initialState),
+    ...clientParams,
+  });
+};
+
+const initApollo = (options): ApolloClient<NormalizedCacheObject> => {
+  if (__SERVER__) {
+    return createClient(options);
+  }
+
+  if (!browserApolloClient) {
+    browserApolloClient = createClient(options);
+  }
+
+  return browserApolloClient;
+};
+
+export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
+  class Apollo extends React.Component<ApolloAppProps> {
     private apolloClient: ApolloClient<NormalizedCacheObject>;
 
     // eslint-disable-next-line react/static-property-placement
-    public static displayName = 'withApolloClient(MainApp)';
+    static displayName = 'withApolloClient(MainApp)';
 
     public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
       const { Component, router, ctx } = appCtx;
-      const apolloState: WithApolloState = {};
-      let apollo: ApolloClient<NormalizedCacheObject>;
+      // const apolloState: WithApolloState = {};
+      const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
       const currentLanguage = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language;
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
 
-      // eslint-disable-next-line no-debugger
-      // debugger;
-
-      // Run all GraphQL queries in the component tree
-      // and extract the resulting data
+      // ctx.apolloClient = apolloClient;
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       if (__SERVER__) {
-        apollo = apolloClient(apolloState, ctx.req && ctx.req.headers && ctx.req.headers.cookie);
-
         try {
           await getDataFromTree(
             <MainApp
@@ -53,8 +147,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
               {...appCtx}
               Component={Component}
               router={router}
-              apolloState={apolloState}
-              apolloClient={apollo}
+              // TODO: насколько я понимаю это лишнее поле
+              // apolloState={apolloState}
+              apolloClient={apolloClient}
               currentLanguage={currentLanguage}
               isMobile={isMobile}
             />,
@@ -68,8 +163,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
                 {...appCtx}
                 Component={Component}
                 router={router}
-                apolloState={apolloState}
-                apolloClient={apollo}
+                // apolloState={apolloState}
+                apolloClient={apolloClient}
                 currentLanguage={currentLanguage}
                 isMobile={isMobile}
               />
@@ -87,12 +182,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
-      } else {
-        apollo = apolloClient();
       }
 
       // Extract query data from the Apollo store
-      apolloState.data = apollo.cache.extract();
+      const apolloState = apolloClient.cache.extract();
 
       // Extract query data from the Apollo store
       // On the client side, initApollo() below will return the SAME Apollo
@@ -107,14 +200,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
     public constructor(props: any) {
       super(props);
-
-      // `getDataFromTree` renders the component first, the client is passed off as a property.
-      // After that rendering is done using Next's normal rendering pipeline
-      this.apolloClient = props.apolloClient || apolloClient(props.apolloState.data);
+      this.apolloClient = initApollo({ initialState: props.apolloState });
     }
 
     public render(): React.ReactElement {
-      return <MainApp {...this.props} apolloClient={this.apolloClient} />;
+      return <MainApp apolloClient={this.apolloClient} {...this.props} />;
     }
   };
-};
