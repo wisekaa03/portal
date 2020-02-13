@@ -6,6 +6,7 @@
 import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { I18nModule } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -31,6 +32,19 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     // #region Config & Log module
     ConfigModule.register(env),
     LoggerModule,
+    // #endregion
+
+    // #region Locale I18n
+    I18nModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        path: configService.i18nPath,
+        filePattern: configService.i18nFilePattern,
+        fallbackLanguage: configService.fallbackLanguage,
+        resolvers: [],
+      }),
+    }),
     // #endregion
 
     // #region LDAP Module

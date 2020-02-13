@@ -45,18 +45,6 @@ class GroupEntity {
 }
 
 jest.mock('@app/ldap/ldap.service');
-jest.mock('@app/image/image.service');
-jest.mock('../../portal/src/user/user.service');
-jest.mock('../../portal/src/profile/profile.service');
-jest.mock('../../portal/src/group/group.service');
-
-jest.mock('@app/logger/logger.service', () => ({
-  LogService: jest.fn().mockImplementation(() => ({
-    error: jest.fn(),
-    debug: jest.fn(),
-  })),
-}));
-jest.mock('@app/config/config.service');
 
 describe('Synch service', () => {
   let libs: SynchService;
