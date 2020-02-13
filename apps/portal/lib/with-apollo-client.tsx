@@ -3,8 +3,6 @@
 // #region Imports NPM
 import React from 'react';
 import { getDataFromTree } from '@apollo/react-ssr';
-import { getMarkupFromTree } from 'react-apollo-hooks';
-import { renderToString } from 'react-dom/server';
 import Head from 'next/head';
 import { AppContext } from 'next/app';
 import Router from 'next/router';
