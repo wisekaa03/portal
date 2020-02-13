@@ -25,7 +25,7 @@ import { isMobile as checkMobile } from 'is-mobile';
 import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
-import { ApolloAppProps, WithApolloState, ApolloInitialProps } from './types';
+import { ApolloAppProps, ApolloInitialProps } from './types';
 // #endregion
 
 interface CreateClientProps {
@@ -92,19 +92,19 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     // TODO: Протестить без него
     cache = new InStorageCache({
       storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
-      shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
-        // debugger;
-        return true;
-      },
-      denormalize: (value: any): any => {
-        // debugger;
+      // shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
+      //   // debugger;
+      //   return true;
+      // },
+      // denormalize: (value: any): any => {
+      //   // debugger;
 
-        try {
-          return JSON.parse(value);
-        } catch {
-          return value;
-        }
-      },
+      //   try {
+      //     return JSON.parse(value);
+      //   } catch {
+      //     return value;
+      //   }
+      // },
     }).restore(initialState) as InMemoryCache;
   }
 
@@ -151,7 +151,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
           await getDataFromTree(
             <AppTree
               {...appProps}
-              {...appCtx}
+              // {...appCtx}
               Component={Component}
               router={router}
               // apolloState={apolloState}
@@ -166,7 +166,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
             tree: (
               <AppTree
                 {...appProps}
-                {...appCtx}
+                // {...appCtx}
                 Component={Component}
                 router={router}
                 // apolloState={apolloState}
