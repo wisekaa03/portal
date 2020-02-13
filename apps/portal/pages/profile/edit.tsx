@@ -36,7 +36,7 @@ import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { ProfileContext } from '../../lib/context';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
-import { resizeImage } from '../../components/utils';
+import { resizeImage } from '../../lib/utils';
 import Button from '../../components/ui/button';
 import { Gender } from '../../src/shared/interfaces';
 import dayjs from '../../lib/dayjs';

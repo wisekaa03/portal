@@ -39,7 +39,7 @@ const InnerLogin: React.FC<{
 }> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
   const { loading, data }: QueryResult<Data<'me', User>> = useQuery(
     CURRENT_USER,
-    __SERVER__ ? {} : { fetchPolicy: 'cache-and-network', pollingInterval: 300000 },
+    __SERVER__ ? {} : { fetchPolicy: 'cache-and-network', pollInterval: 300000 },
   );
   const user = data ? data.me : undefined;
 
