@@ -128,7 +128,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Wire = ({ children, ...props }): any => children(props);
+const Wire = ({ children, ...props }): any => React.Children.only(children(props));
 
 export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
