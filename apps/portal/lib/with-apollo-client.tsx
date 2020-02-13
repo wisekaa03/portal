@@ -147,8 +147,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
               {...appCtx}
               Component={Component}
               router={router}
-              // TODO: насколько я понимаю это лишнее поле
-              // apolloState={apolloState}
+              // BUG: Кэш хранится и передается с сервака на клиент.
+              // BUG: Иначе будет постоянно опрашивать graphql по два раза
+              // BUG: apolloState={apolloState}
               apolloClient={apolloClient}
               currentLanguage={currentLanguage}
               isMobile={isMobile}
