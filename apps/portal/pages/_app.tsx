@@ -9,8 +9,7 @@ import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { UnauthorizedException } from '@nestjs/common';
 // import dynamic from 'next/dynamic';
 import { QueryResult } from 'react-apollo';
-import { ApolloProvider } from 'react-apollo-hooks';
-import { ApolloProvider as ApolloHooksProvider, useQuery } from '@apollo/react-hooks';
+import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -159,43 +158,41 @@ class MainApp extends App<ApolloAppProps> {
 
     return (
       <ApolloProvider client={apolloClient}>
-        <ApolloHooksProvider client={apolloClient}>
-          <Head>
-            <title>Portal</title>
-          </Head>
-          {/* MuiThemeProvider makes the theme available down the React
+        <Head>
+          <title>Portal</title>
+        </Head>
+        {/* MuiThemeProvider makes the theme available down the React
                 tree thanks to React context. */}
-          <CssBaseline />
-          <ThemeProvider
-            theme={{
-              ...theme,
-              props: {
-                ...theme.props,
-                MuiUseMediaQuery: {
-                  ssrMatchMedia,
-                },
+        <CssBaseline />
+        <ThemeProvider
+          theme={{
+            ...theme,
+            props: {
+              ...theme.props,
+              MuiUseMediaQuery: {
+                ssrMatchMedia,
               },
+            },
+          }}
+        >
+          <SnackbarProvider
+            maxSnack={3}
+            dense={isMobile}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
             }}
           >
-            <SnackbarProvider
-              maxSnack={3}
-              dense={isMobile}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-            >
-              <CurrentLogin
-                pageProps={pageProps}
-                isMobile={!!isMobile}
-                language={currentLanguage || ''}
-                Component={Component}
-                router={router}
-                ctx={ctx}
-              />
-            </SnackbarProvider>
-          </ThemeProvider>
-        </ApolloHooksProvider>
+            <CurrentLogin
+              pageProps={pageProps}
+              isMobile={!!isMobile}
+              language={currentLanguage || ''}
+              Component={Component}
+              router={router}
+              ctx={ctx}
+            />
+          </SnackbarProvider>
+        </ThemeProvider>
       </ApolloProvider>
     );
   }

@@ -18,13 +18,35 @@ import theme from '../lib/theme';
 import { nextI18next } from '../lib/i18n-client';
 // #endregion
 
+// Resolution order
+//
+// On the server:
+// 1. app.getInitialProps
+// 2. page.getInitialProps
+// 3. document.getInitialProps
+// 4. app.render
+// 5. page.render
+// 6. document.render
+//
+// On the server with error:
+// 1. document.getInitialProps
+// 2. app.render
+// 3. page.render
+// 4. document.render
+//
+// On the client
+// 1. app.getInitialProps
+// 2. page.getInitialProps
+// 3. app.render
+// 4. page.render
+
 // const minifier = postcss([/* autoprefixer,  */ cssnano]);
 // const postCssOptions = { from: undefined };
 
 interface MainDocumentInitialProps extends DocumentInitialProps {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   currentLanguage: string | undefined;
-  nonce: string;
+  nonce?: string;
   req?: IncomingMessage;
 }
 
@@ -37,7 +59,7 @@ interface MainDocumentInitialProps extends DocumentInitialProps {
 
 class MainDocument extends Document<MainDocumentInitialProps> {
   render(): React.ReactElement {
-    const { nonce, currentLanguage } = this.props;
+    const { /* nonce, */ currentLanguage } = this.props;
 
     return (
       <Html lang={currentLanguage} dir="ltr">
@@ -73,7 +95,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
     // Run the parent `getInitialProps` using `ctx` that now includes our custom `renderPage`
     const initialProps = await Document.getInitialProps(ctx);
-    const nonce = res && (res as any).locals && (res as any).locals.nonce;
+    // const nonce = res && (res as any).locals && (res as any).locals.nonce;
 
     // let minifiedStyles;
     // if (process.env.NODE_ENV === 'production') {
@@ -89,7 +111,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
       apolloClient,
       ...initialProps,
       currentLanguage,
-      nonce,
+      // nonce,
       // Styles fragment is rendered after the app and page rendering finish.
       styles: [
         <React.Fragment key="styles">
@@ -97,7 +119,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
           <style
             id="jss"
             key="jss"
-            nonce={nonce}
+            // nonce={nonce}
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: minifiedStyles }}
           />

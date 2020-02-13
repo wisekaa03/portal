@@ -161,21 +161,22 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
             />,
           );
 
-          await getMarkupFromTree({
-            renderFunction: renderToString,
-            tree: (
-              <AppTree
-                {...appProps}
-                // {...appCtx}
-                Component={Component}
-                router={router}
-                // apolloState={apolloState}
-                apolloClient={apolloClient}
-                currentLanguage={currentLanguage}
-                isMobile={isMobile}
-              />
-            ),
-          });
+          // TODO: что это такое ?
+          // await getMarkupFromTree({
+          //   renderFunction: renderToString,
+          //   tree: (
+          //     <AppTree
+          //       {...appProps}
+          //       // {...appCtx}
+          //       Component={Component}
+          //       router={router}
+          //       // apolloState={apolloState}
+          //       apolloClient={apolloClient}
+          //       currentLanguage={currentLanguage}
+          //       isMobile={isMobile}
+          //     />
+          //   ),
+          // });
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
