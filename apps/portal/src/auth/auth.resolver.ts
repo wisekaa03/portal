@@ -12,7 +12,7 @@ import { ConfigService } from '@app/config';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
 import { UserResponse } from '../user/user.entity';
-import { GQLError } from '../shared/gqlerror';
+import { GQLError, GQLErrorCode } from '../shared/gqlerror';
 // #endregion
 
 @Resolver()
@@ -55,7 +55,7 @@ export class AuthResolver {
     const user = await this.authService
       .login({ username: username.toLowerCase(), password }, req)
       .catch((error: Error) => {
-        throw GQLError({ error, i18n: this.i18n });
+        throw GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       });
 
     // Чтобы в дальнейшем был пароль, в частности, в SOAP
@@ -65,7 +65,7 @@ export class AuthResolver {
       if (error) {
         this.logService.error('Error when logging in:', JSON.stringify(error), 'AuthResolver');
 
-        throw GQLError({ error, i18n: this.i18n });
+        throw GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
     });
 

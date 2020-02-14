@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 // #endregion
@@ -11,9 +11,11 @@ export class SessionGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context.switchToHttp().getRequest<Express.Request>();
 
-    if (request && request.session && request.session.passport && request.session.passport.user) {
+    if (!!request?.session?.passport?.user) {
       return true;
     }
+
+    // throw new UnauthorizedException();
 
     const response = context.switchToHttp();
     response.getResponse().status(403);
