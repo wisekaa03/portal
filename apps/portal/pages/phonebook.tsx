@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, forwardRef, createContext, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
@@ -9,7 +9,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableSortLabel,
+  // TableSortLabel,
   TableRow,
   InputBase,
   IconButton,
@@ -30,16 +30,17 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
+import PhonebookHeader from '../components/phonebook/header';
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
-import { Column, ColumnNames, HeaderProps } from '../components/phonebook/types';
+import { Column, ColumnNames } from '../components/phonebook/types';
 import { ProfileComponent } from '../components/phonebook/profile';
 import { SettingsComponent, allColumns } from '../components/phonebook/settings';
 import useDebounce from '../lib/debounce';
 import { Loading } from '../components/loading';
 import Avatar from '../components/ui/avatar';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
-import { ProfileContext } from '../lib/context';
+import { ProfileContext, PhonebookHeaderContext } from '../lib/context';
 import RefreshButton from '../components/ui/refreshButton';
 // #endregion
 
@@ -70,30 +71,30 @@ const useStyles = makeStyles((theme: Theme) =>
     tbody: {
       flex: 1,
     },
-    header: {
-      position: 'sticky',
-      top: 0,
-      background: '#fff',
-      zIndex: 2,
-      boxShadow: theme.shadows[3],
-    },
-    row: {
-      width: 'auto',
-      minWidth: '100%',
-      boxSizing: 'border-box',
-      display: 'flex',
-      justifyItems: 'stretch',
-      alignContent: 'stretch',
-      justifyContent: 'space-between',
-      flexWrap: 'nowrap',
-      borderBottom: '1px solid rgba(224, 224, 224, 1)',
-    },
-    cell: {
-      flex: '1',
-      display: 'flex',
-      alignItems: 'center',
-      border: 'none',
-    },
+    // header: {
+    //   position: 'sticky',
+    //   top: 0,
+    //   background: '#fff',
+    //   zIndex: 2,
+    //   boxShadow: theme.shadows[3],
+    // },
+    // row: {
+    //   width: 'auto',
+    //   minWidth: '100%',
+    //   boxSizing: 'border-box',
+    //   display: 'flex',
+    //   justifyItems: 'stretch',
+    //   alignContent: 'stretch',
+    //   justifyContent: 'space-between',
+    //   flexWrap: 'nowrap',
+    //   borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    // },
+    // cell: {
+    //   flex: '1',
+    //   display: 'flex',
+    //   alignItems: 'center',
+    //   border: 'none',
+    // },
     disabled: {
       color: red[600],
     },
@@ -172,62 +173,62 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
   return result;
 };
 
-const HeaderContext = createContext<HeaderProps | undefined>(undefined);
-HeaderContext.displayName = 'HeaderContext';
+// const HeaderContext = createContext<HeaderProps | undefined>(undefined);
+// HeaderContext.displayName = 'HeaderContext';
 
-const InnerElementList = forwardRef<React.Component, any>(({ children, style, ...rest }, ref) => (
-  <HeaderContext.Consumer>
-    {(context) => (
-      <div ref={ref} {...rest} style={{ height: style.height, flex: 1 }}>
-        <>
-          {context && (
-            <TableRow component="div" className={clsx(context.classes.row, context.classes.header)}>
-              {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
-                const { name, defaultStyle, largeStyle } = column;
-                const cellStyle = { height: rowHeight, ...(context.largeWidth ? largeStyle : defaultStyle) };
+// const InnerElementList = forwardRef<React.Component, any>(({ children, style, ...rest }, ref) => (
+//   <HeaderContext.Consumer>
+//     {(context) => (
+//       <div ref={ref} {...rest} style={{ height: style.height, flex: 1 }}>
+//         <>
+//           {context && (
+//             <TableRow component="div" className={clsx(context.classes.row, context.classes.header)}>
+//               {allColumns.reduce((result: JSX.Element[], column: Column): JSX.Element[] => {
+//                 const { name, defaultStyle, largeStyle } = column;
+//                 const cellStyle = { height: rowHeight, ...(context.largeWidth ? largeStyle : defaultStyle) };
 
-                if (!context.columns.includes(name) || name === 'disabled' || name === 'notShowing') return result;
+//                 if (!context.columns.includes(name) || name === 'disabled' || name === 'notShowing') return result;
 
-                if (name === 'thumbnailPhoto40') {
-                  return [
-                    ...result,
-                    <TableCell key={name} className={context.classes.cell} component="div" style={cellStyle} />,
-                  ];
-                }
+//                 if (name === 'thumbnailPhoto40') {
+//                   return [
+//                     ...result,
+//                     <TableCell key={name} className={context.classes.cell} component="div" style={cellStyle} />,
+//                   ];
+//                 }
 
-                return [
-                  ...result,
-                  <TableCell
-                    key={name}
-                    className={context.classes.cell}
-                    component="div"
-                    scope="col"
-                    style={cellStyle}
-                    sortDirection={
-                      context.orderBy.field === name
-                        ? (context.orderBy.direction.toLowerCase() as 'desc' | 'asc')
-                        : false
-                    }
-                  >
-                    <TableSortLabel
-                      active={context.orderBy.field === name}
-                      direction={context.orderBy.direction.toLowerCase() as 'desc' | 'asc'}
-                      onClick={context.handleRequestSort(name)}
-                    >
-                      {context.t(`phonebook:fields.${name}`)}
-                    </TableSortLabel>
-                  </TableCell>,
-                ];
-              }, [])}
-            </TableRow>
-          )}
-          {children}
-        </>
-      </div>
-    )}
-  </HeaderContext.Consumer>
-));
-InnerElementList.displayName = 'InnerElementList';
+//                 return [
+//                   ...result,
+//                   <TableCell
+//                     key={name}
+//                     className={context.classes.cell}
+//                     component="div"
+//                     scope="col"
+//                     style={cellStyle}
+//                     sortDirection={
+//                       context.orderBy.field === name
+//                         ? (context.orderBy.direction.toLowerCase() as 'desc' | 'asc')
+//                         : false
+//                     }
+//                   >
+//                     <TableSortLabel
+//                       active={context.orderBy.field === name}
+//                       direction={context.orderBy.direction.toLowerCase() as 'desc' | 'asc'}
+//                       onClick={context.handleRequestSort(name)}
+//                     >
+//                       {context.t(`phonebook:fields.${name}`)}
+//                     </TableSortLabel>
+//                   </TableCell>,
+//                 ];
+//               }, [])}
+//             </TableRow>
+//           )}
+//           {children}
+//         </>
+//       </div>
+//     )}
+//   </HeaderContext.Consumer>
+// ));
+// InnerElementList.displayName = 'InnerElementList';
 
 const Row: React.FC<ListChildComponentProps> = ({ index, style: { width, top, ...rest }, data }) => {
   const item = data.items[index].node;
@@ -567,7 +568,9 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
                       threshold={50}
                     >
                       {({ onItemsRendered, ref }) => (
-                        <HeaderContext.Provider value={{ columns, orderBy, handleRequestSort, t, classes, largeWidth }}>
+                        <PhonebookHeaderContext.Provider
+                          value={{ columns, orderBy, handleRequestSort, largeWidth, height: rowHeight }}
+                        >
                           <List
                             style={{ display: 'flex' }}
                             ref={ref}
@@ -577,7 +580,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
                             itemCount={data ? data.profiles.edges.length : 0}
                             itemSize={rowHeight}
                             itemKey={itemKey}
-                            innerElementType={InnerElementList}
+                            innerElementType={PhonebookHeader}
                             itemData={{
                               classes,
                               items: data ? data.profiles.edges : [],
@@ -588,7 +591,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
                           >
                             {Row}
                           </List>
-                        </HeaderContext.Provider>
+                        </PhonebookHeaderContext.Provider>
                       )}
                     </InfiniteLoader>
                   )}

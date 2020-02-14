@@ -65,7 +65,6 @@ export interface HeaderProps {
   columns: ColumnNames[];
   orderBy: Order<ColumnNames>;
   handleRequestSort: (column: ColumnNames) => () => void;
-  classes: any;
-  t: TFunction;
+  height: number;
   largeWidth: boolean;
 }
