@@ -94,6 +94,35 @@ interface UrlProps {
   admin: boolean;
 }
 
+const urls: UrlProps[] = [
+  { icon: MailIcon, text: 'common:mail', link: '/mail', admin: false },
+  {
+    icon: PhonebookIcon,
+    text: 'common:phonebook',
+    link: '/phonebook',
+    admin: false,
+  },
+  { icon: ProfileIcon, text: 'common:profile', link: '/profile', admin: false },
+  {
+    icon: ServicesIcon,
+    text: 'common:services',
+    link: '/services',
+    admin: false,
+  },
+  { icon: CalendarIcon, text: 'common:calendar', link: '/calendar', admin: false },
+  { icon: FaqIcon, text: 'common:faq', link: '/faq', admin: false },
+  { icon: MeetingIcon, text: 'common:meeting', link: '/meetings', admin: false },
+  { icon: NewsIcon, text: 'common:news', link: '/news', admin: false },
+  {
+    icon: MediaIcon,
+    text: 'common:media',
+    link: '/media',
+    admin: false,
+  },
+  { icon: SettingsIcon, text: 'common:settings', link: '/settings', admin: false },
+  { icon: AdminIcon, text: 'common:adminPanel', link: '/admin', admin: true },
+];
+
 const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const classes = useStyles({});
   const theme = useTheme();
@@ -101,35 +130,6 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const profile = useContext(ProfileContext);
   const { open, isMobile, handleOpen, t } = props;
-
-  const urls: UrlProps[] = [
-    { icon: MailIcon, text: t('common:mail'), link: '/mail', admin: false },
-    {
-      icon: PhonebookIcon,
-      text: t('common:phonebook'),
-      link: '/phonebook',
-      admin: false,
-    },
-    { icon: ProfileIcon, text: t('common:profile'), link: '/profile', admin: false },
-    {
-      icon: ServicesIcon,
-      text: t('common:services'),
-      link: '/services',
-      admin: false,
-    },
-    { icon: CalendarIcon, text: t('common:calendar'), link: '/calendar', admin: false },
-    { icon: FaqIcon, text: t('common:faq'), link: '/faq', admin: false },
-    { icon: MeetingIcon, text: t('common:meeting'), link: '/meetings', admin: false },
-    { icon: NewsIcon, text: t('common:news'), link: '/news', admin: false },
-    {
-      icon: MediaIcon,
-      text: t('common:media'),
-      link: '/media',
-      admin: false,
-    },
-    { icon: SettingsIcon, text: t('common:settings'), link: '/settings', admin: false },
-    { icon: AdminIcon, text: t('common:adminPanel'), link: '/admin', admin: true },
-  ];
 
   const pathname = router ? router.pathname : '';
 
@@ -139,7 +139,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
         {urls
           .filter((url) => !ADMIN_PAGES.includes(url.link) || profile.user?.isAdmin)
           .map((url) => (
-            <li key={url.text}>
+            <li key={url.link}>
               <Link href={url.link} passHref>
                 <ListItem
                   button
@@ -149,12 +149,12 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
                     selected: classes.itemSelected,
                   }}
                   component="a"
-                  title={url.text}
+                  title={t(url.text)}
                 >
                   <ListItemIcon>
                     <Icon mask={url.icon} color="secondary" />
                   </ListItemIcon>
-                  <ListItemText primary={url.text} />
+                  <ListItemText primary={t(url.text)} />
                 </ListItem>
               </Link>
             </li>
@@ -207,8 +207,8 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   );
 };
 
-BaseDrawer.getInitialProps = () => ({
+BaseDrawer.getInitialProps = (ctx) => ({
   namespacesRequired: includeDefaultNamespaces(['common']),
 });
 
-export default React.memo(nextI18next.withTranslation('common')(BaseDrawer));
+export default nextI18next.withTranslation('common')(BaseDrawer);
