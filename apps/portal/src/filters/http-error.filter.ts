@@ -1,7 +1,9 @@
 /** @format */
 
+// TODO: DEPRECATED: Next.JS is forwarding through RenderService -> setErrorHandler
+
 // #region Imports NPM
-import { ExceptionFilter, Catch, HttpException, HttpStatus, ExecutionContext } from '@nestjs/common';
+import { ExceptionFilter, Catch, HttpException, HttpStatus, ArgumentsHost, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 // #endregion
@@ -14,7 +16,7 @@ import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 export class HttpErrorFilter implements ExceptionFilter {
   constructor(private readonly logService: LogService) {}
 
-  catch(exception: Error | HttpException, host: ExecutionContext): void {
+  catch(exception: Error | HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -58,7 +60,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       // #endregion
     } else {
       // #region GraphQL query
-      const context: AppGraphQLExecutionContext = GqlExecutionContext.create(host);
+      const context: AppGraphQLExecutionContext = GqlExecutionContext.create(host as ExecutionContext);
       const info = context.getInfo();
 
       this.logService.error(`${info.parentType.name} "${info.fieldName}": ${message}`, undefined, 'ExceptionFilter');

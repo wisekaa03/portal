@@ -47,7 +47,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     if (graphQLErrors) {
       // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
       graphQLErrors.forEach(({ message, locations, path, extensions }): void => {
-        console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
+        console.error('[GraphQL error]: Message:', message, 'Location:', locations, 'Path:', path);
 
         if (!__SERVER__) {
           if (extensions.code === GQLErrorCode.UNAUTHENTICATED) {
@@ -177,9 +177,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
           // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          let c = true;
+          let message = true;
           if (error instanceof ApolloError) {
-            c = error.graphQLErrors.some(
+            message = error.graphQLErrors.some(
               ({ extensions }): boolean =>
                 !!!(
                   extensions.code === GQLErrorCode.UNAUTHENTICATED ||
@@ -188,9 +188,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
                 ),
             );
           } else if (!(error && error.status === 401)) {
-            c = true;
+            message = true;
           }
-          if (c) {
+          if (message) {
             console.error('withApolloClient getDataFromTree:', error);
           }
         }

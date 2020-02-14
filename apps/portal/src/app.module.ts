@@ -233,13 +233,14 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #endregion
 
     // #region Errors
-    {
-      provide: APP_FILTER,
-      inject: [LogService],
-      useFactory: (logService: LogService) => {
-        return new HttpErrorFilter(logService);
-      },
-    },
+    // TODO: Next.JS is forwarding through RenderService -> setErrorHandler
+    // {
+    //   provide: APP_FILTER,
+    //   inject: [LogService],
+    //   useFactory: (logService: LogService) => {
+    //     return new HttpErrorFilter(logService);
+    //   },
+    // },
     // #endregion
 
     LoggingInterceptorProvider,
