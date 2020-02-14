@@ -61,6 +61,10 @@ export interface SettingsProps extends WithTranslation {
   isAdmin: boolean;
 }
 
+export interface HeaderPropsRef {
+  style: any;
+}
+
 export interface HeaderProps {
   columns: ColumnNames[];
   orderBy: Order<ColumnNames>;

@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { Component, forwardRef } from 'react';
+import React, { Component, forwardRef, RefForwardingComponent } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { TableRow, TableCell, TableSortLabel } from '@material-ui/core';
 // #endregion
@@ -10,6 +10,8 @@ import Box from '../../lib/box-ref';
 import { PhonebookHeaderContext } from '../../lib/context';
 import { allColumns } from './settings';
 import { useTranslation } from '../../lib/i18n-client';
+import { HeaderPropsRef } from './types';
+
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,14 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const hiddenColumns = ['disabled', 'notShowing'];
 
-export default forwardRef<Component, any>(function PhonebookHeader({ children, style, ...rest }, ref) {
+const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ children, style }, ref) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
   return (
     <PhonebookHeaderContext.Consumer>
       {(context) => (
-        <Box ref={ref} flexGrow={1} style={{ height: style.height }} {...rest}>
+        <Box ref={ref} flexGrow={1} style={{ height: style.height }}>
           <>
             {context && (
               <TableRow component="div" className={classes.row}>
@@ -93,4 +95,6 @@ export default forwardRef<Component, any>(function PhonebookHeader({ children, s
       )}
     </PhonebookHeaderContext.Consumer>
   );
-});
+};
+
+export default forwardRef(PhonebookHeader);
