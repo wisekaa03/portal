@@ -6,7 +6,7 @@ import { getDataFromTree } from '@apollo/react-ssr';
 import Head from 'next/head';
 import { AppContext } from 'next/app';
 import Router from 'next/router';
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient, ApolloError } from 'apollo-client';
 import { concat, ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
@@ -24,6 +24,7 @@ import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
+import { GQLErrorCode } from '../src/shared/gqlerror';
 // #endregion
 
 interface CreateClientProps {
@@ -50,11 +51,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         console.error('[GraphQL error]: Path:', path, 'Message:', message, 'Location:', locations);
 
         if (!__SERVER__) {
-          if (
-            extensions.code === 'UNAUTHENTICATED' ||
-            extensions.exception!.status === 403 ||
-            extensions.exception!.status === 401
-          ) {
+          if (extensions.code === GQLErrorCode.UNAUTHENTICATED) {
             Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
           }
         }
@@ -179,7 +176,20 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
           // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          if (!(error && error.status === 401)) {
+          let c = true;
+          if (error instanceof ApolloError) {
+            c = error.graphQLErrors.some(
+              ({ extensions }): boolean =>
+                !!!(
+                  extensions.code === GQLErrorCode.UNAUTHENTICATED ||
+                  extensions.code === GQLErrorCode.UNAUTHENTICATED_LOGIN ||
+                  extensions.code === GQLErrorCode.UNAUTHORIZED
+                ),
+            );
+          } else if (!(error && error.status === 401)) {
+            c = true;
+          }
+          if (c) {
             console.error('withApolloClient getDataFromTree:', error);
           }
         }

@@ -7,7 +7,7 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { IsAdminGuard } from '../guards/admin.guard';
+import { IsAdminGuard } from '../guards/gqlauth-admin.guard';
 import { NewsService } from './news.service';
 import { UserResponse } from '../user/user.entity';
 import { UserService } from '../user/user.service';

@@ -10,7 +10,7 @@ import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { IsAdminGuard } from '../guards/admin.guard';
+import { IsAdminGuard } from '../guards/gqlauth-admin.guard';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
@@ -94,8 +94,8 @@ export class ProfileResolver {
     @Args('thumbnailPhoto') thumbnailPhoto: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
     return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch((error: Error) => {
-      if (error.message === GQLErrorCode.INSUFF_RIGHTS) {
-        throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.INSUFF_RIGHTS });
+      if (error.message === GQLErrorCode.INSUFF_RIGHTS_AD) {
+        throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.INSUFF_RIGHTS_AD });
       }
 
       throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.SERVER_PARAMS });

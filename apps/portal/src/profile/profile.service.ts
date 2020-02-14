@@ -466,7 +466,7 @@ export class ProfileService {
         // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
       )
       .catch((/* error: Error */) => {
-        throw new Error(GQLErrorCode.INSUFF_RIGHTS);
+        throw new Error(GQLErrorCode.INSUFF_RIGHTS_AD);
       });
 
     const result = this.profileRepository.merge(created, profile);

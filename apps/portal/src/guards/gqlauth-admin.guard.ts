@@ -1,12 +1,11 @@
 /** @format */
 
 // #region Imports NPM
-import { IncomingMessage } from 'http';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
 // #endregion
 // #region Imports Local
+import { GQLError, GQLErrorCode } from '../shared/gqlerror';
 // #endregion
 
 @Injectable()
@@ -14,14 +13,19 @@ export class IsAdminGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = this.getRequest(context);
 
-    if (request?.session?.passport?.user?.isAdmin) {
+    if (!!request?.session?.passport?.user?.isAdmin) {
       return true;
     }
 
-    return false;
+    throw GQLError({ code: GQLErrorCode.UNAUTHORIZED });
   }
 
-  getResponse = (): any => undefined;
+  getResponse = (context: ExecutionContext): Express.Session => {
+    const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
+    const gqlCtx = gqlContext.getContext();
+
+    return gqlCtx.res;
+  };
 
   getRequest(context: ExecutionContext): Express.Session {
     const gqlContext: GraphQLExecutionContext = GqlExecutionContext.create(context);
