@@ -5,6 +5,7 @@ import React from 'react';
 // #endregion
 // #region Imports Local
 import { UserContext } from '../src/user/models/user.dto';
+import { HeaderProps } from '../components/phonebook/types';
 // #endregion
 
 /**
@@ -14,3 +15,6 @@ import { UserContext } from '../src/user/models/user.dto';
  * the top, then put the user object in React Context for ease of access.
  */
 export const ProfileContext = React.createContext<UserContext>({ user: undefined });
+
+export const PhonebookHeaderContext = React.createContext<HeaderProps | undefined>(undefined);
+// HeaderContext.displayName = 'HeaderContext';
