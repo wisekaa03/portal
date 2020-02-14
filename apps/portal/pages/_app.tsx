@@ -40,7 +40,7 @@ const InnerLogin: React.FC<{
     CURRENT_USER,
     __SERVER__
       ? {}
-      : { fetchPolicy: 'cache-and-network', pollInterval: parseInt(process.env.SESSION_COOKIE_TTL, 10) - 100 },
+      : { fetchPolicy: 'cache-and-network', pollInterval: parseInt(process.env.SESSION_COOKIE_TTL, 10) - 10000 },
   );
   const user = data ? data.me : undefined;
 
