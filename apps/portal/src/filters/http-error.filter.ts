@@ -1,8 +1,9 @@
 /** @format */
 
+// TODO: DEPRECATED: Next.JS is forwarding through RenderService -> setErrorHandler
+
 // #region Imports NPM
 import { ExceptionFilter, Catch, HttpException, HttpStatus, ArgumentsHost, ExecutionContext } from '@nestjs/common';
-import { BaseExceptionFilter } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 // #endregion
@@ -12,13 +13,8 @@ import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 // #endregion
 
 @Catch()
-export class HttpErrorFilter extends BaseExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logService: LogService) {
-    super();
-
-    // eslint-disable-next-line no-debugger
-    debugger;
-  }
+export class HttpErrorFilter implements ExceptionFilter {
+  constructor(private readonly logService: LogService) {}
 
   catch(exception: Error | HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();

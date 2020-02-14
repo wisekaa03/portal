@@ -15,11 +15,6 @@ export class SessionGuard implements CanActivate {
       return true;
     }
 
-    // throw new UnauthorizedException();
-
-    const response = context.switchToHttp();
-    response.getResponse().status(403);
-
-    return false;
+    throw new UnauthorizedException('Session guard');
   }
 }

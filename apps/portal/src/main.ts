@@ -13,8 +13,8 @@ import passport from 'passport';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-// import { graphqlUploadExpress } from 'graphql-upload';
-import { RenderModule } from 'nest-next-2';
+import { HttpException } from '@nestjs/common';
+import { RenderModule, RenderService } from 'nest-next-2';
 import Next from 'next';
 import 'reflect-metadata';
 // #endregion
@@ -58,6 +58,14 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Next Render
   const renderer = server.get(RenderModule);
   renderer.register(server, app, { dev, viewsDir: '' });
+  const service = server.get(RenderService);
+  service.setErrorHandler(async (err: HttpException, req: Request, res: Response) => {
+    const status = err.getStatus();
+    if (status === 403 || status === 401) {
+      res.status(302);
+      res.location(`/auth/login?redirect=${encodeURI(req.url)}`);
+    }
+  });
   // #endregion
 
   // #region X-Response-Time
@@ -147,10 +155,6 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   server.use(passport.initialize());
   server.use(passport.session());
-  // #endregion
-
-  // #region Graphql Upload
-  // server.use('/graphql', graphqlUploadExpress({ maxFileSize: 10000000 }));
   // #endregion
 
   // #region Static files
