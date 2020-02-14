@@ -17,4 +17,3 @@ import { HeaderProps } from '../components/phonebook/types';
 export const ProfileContext = React.createContext<UserContext>({ user: undefined });
 
 export const PhonebookHeaderContext = React.createContext<HeaderProps | undefined>(undefined);
-// HeaderContext.displayName = 'HeaderContext';
