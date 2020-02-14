@@ -2,7 +2,6 @@
 
 // #region Imports NPM
 import React from 'react';
-import { getDataFromTree } from '@apollo/react-ssr';
 import Head from 'next/head';
 import { AppContext } from 'next/app';
 import Router from 'next/router';
@@ -143,6 +142,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       if (__SERVER__) {
         try {
+          const { getDataFromTree } = await import('@apollo/react-ssr');
+
           await getDataFromTree(
             <AppTree
               {...appProps}
