@@ -30,6 +30,7 @@ import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
+import BoxWithRef from '../../lib/box-ref';
 import dayjs from '../../lib/dayjs';
 import Avatar from '../../components/ui/avatar';
 import Select from '../../components/ui/select';
@@ -37,8 +38,6 @@ import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/ui/refreshButton';
 // #endregion
-
-const BoxWithRef = Box as React.ComponentType<{ ref: React.Ref<any> } & BoxProps>;
 
 const avatarHeight = 180;
 

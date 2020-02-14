@@ -80,3 +80,9 @@ export const MOCK_PROFILE: UserContext = {
     },
   },
 };
+
+// ////////// PHONEBOOK ///////////
+export const PHONEBOOK_HIDDEN_COLS = ['disabled', 'notShowing'];
+export const PHONEBOOK_ROW_HEIGHT = 72;
+
+// ////////////////////////////////
