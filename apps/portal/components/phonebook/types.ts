@@ -3,7 +3,6 @@
 // #region Imports NPM
 import { WithTranslation } from 'next-i18next';
 import { Order } from 'typeorm-graphql-pagination';
-import { TFunction } from 'i18next';
 // #endregion
 // #region Imports Local
 // #endregion
@@ -68,7 +67,31 @@ export interface HeaderPropsRef {
 export interface HeaderProps {
   columns: ColumnNames[];
   orderBy: Order<ColumnNames>;
-  handleRequestSort: (column: ColumnNames) => () => void;
-  height: number;
+  handleSort: (column: ColumnNames) => () => void;
   largeWidth: boolean;
+}
+
+export interface PhonebookControlProps {
+  searchRef: React.MutableRefObject<HTMLInputElement>;
+  search: string;
+  suggestions: string[];
+  // TODO: вписать нормальный тип
+  refetch: any;
+  handleSearch: React.ChangeEventHandler<HTMLInputElement>;
+  handleSugClose: (_: React.MouseEvent<EventTarget>) => void;
+  handleSugKeyDown: (_: React.KeyboardEvent) => void;
+  handleSugClick: (_: string) => () => void;
+  handleSettingsOpen: () => void;
+}
+
+export interface TableProps {
+  hasLoadMore: boolean;
+  loadMoreItems: () => any;
+  columns: ColumnNames[];
+  orderBy: Order<ColumnNames>;
+  handleSort: (_: ColumnNames) => () => void;
+  largeWidth: boolean;
+  // TODO: вписать нормальный тип
+  data: any;
+  handleProfileId: (_: string | undefined) => () => void;
 }

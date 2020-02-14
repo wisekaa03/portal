@@ -8,10 +8,10 @@ import { TableRow, TableCell, TableSortLabel } from '@material-ui/core';
 // #region Imports Local
 import Box from '../../lib/box-ref';
 import { PhonebookHeaderContext } from '../../lib/context';
-import { allColumns } from './settings';
+import { PHONEBOOK_HIDDEN_COLS, PHONEBOOK_ROW_HEIGHT } from '../../lib/constants';
 import { useTranslation } from '../../lib/i18n-client';
+import { allColumns } from './settings';
 import { HeaderPropsRef } from './types';
-
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,8 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const hiddenColumns = ['disabled', 'notShowing'];
-
 const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ children, style }, ref) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -55,12 +53,15 @@ const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ ch
             {context && (
               <TableRow component="div" className={classes.row}>
                 {allColumns
-                  .filter(({ name }) => context.columns.includes(name) && !hiddenColumns.includes(name))
+                  .filter(({ name }) => context.columns.includes(name) && !PHONEBOOK_HIDDEN_COLS.includes(name))
                   .map((col) => {
                     const { name, defaultStyle, largeStyle } = col;
-                    const { largeWidth, handleRequestSort, orderBy, height } = context;
+                    const { largeWidth, handleSort, orderBy } = context;
 
-                    const cellStyle = { height, ...(largeWidth ? largeStyle : defaultStyle) };
+                    const cellStyle = {
+                      height: PHONEBOOK_ROW_HEIGHT,
+                      ...(largeWidth ? largeStyle : defaultStyle),
+                    };
 
                     if (name === 'thumbnailPhoto40') {
                       return <TableCell key={name} component="div" className={classes.cell} style={cellStyle} />;
@@ -80,7 +81,7 @@ const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ ch
                         <TableSortLabel
                           active={orderBy.field === name}
                           direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
-                          onClick={handleRequestSort(name)}
+                          onClick={handleSort(name)}
                         >
                           {t(`phonebook:fields.${name}`)}
                         </TableSortLabel>

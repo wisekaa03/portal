@@ -207,7 +207,7 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   );
 };
 
-BaseDrawer.getInitialProps = (ctx) => ({
+BaseDrawer.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['common']),
 });
 
