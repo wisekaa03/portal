@@ -43,7 +43,8 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { /* width, */ top, ...rest }, data }) => {
+// eslint-disable-next-line no-unused-vars
+const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top, ...rest }, data }) => {
   const classes = useStyles({});
   const { columns, handleProfileId, largeWidth } = data;
   const cell = data.items[index].node;
