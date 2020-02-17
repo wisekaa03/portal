@@ -19,11 +19,9 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
-import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
-import { GQLError } from '../../components/gqlerror';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';
@@ -37,6 +35,7 @@ import Select from '../../components/ui/select';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/ui/refreshButton';
+import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
 const avatarHeight = 180;
@@ -204,15 +203,14 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     dataTickets.OldTickets &&
     dataTickets.OldTickets.filter((ticket: OldTicket) => ticket.code.includes(search) || ticket.name.includes(search));
 
-  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (errorTickets) {
-      GQLError({ enqueueSnackbar, errors: errorTickets });
+      snackbarUtils.show(errorTickets);
     }
     if (errorSettings) {
-      GQLError({ enqueueSnackbar, errors: errorSettings });
+      snackbarUtils.show(errorSettings);
     }
-  }, [enqueueSnackbar, errorTickets, errorSettings]);
+  }, [errorTickets, errorSettings]);
 
   return (
     <>

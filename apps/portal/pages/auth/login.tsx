@@ -19,10 +19,9 @@ import {
 
 import queryString from 'query-string';
 import Router from 'next/router';
-import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import { GQLError } from '../../components/gqlerror';
+import snackbarUtils from '../../lib/snackbar-utils';
 import { Loading } from '../../components/loading';
 import { LOGIN } from '../../lib/queries';
 import { Data } from '../../lib/types';
@@ -120,8 +119,6 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
     pass: '',
   });
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const [login, { loading, error }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
       if (data && data.login) {
@@ -157,9 +154,9 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
 
   useEffect(() => {
     if (error) {
-      GQLError({ enqueueSnackbar, errors: error });
+      snackbarUtils.show(error);
     }
-  }, [enqueueSnackbar, error]);
+  }, [error]);
 
   useEffect(() => {
     const save = getStorage('save');

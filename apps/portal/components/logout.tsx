@@ -3,21 +3,17 @@
 // #region Imports NPM
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Button, Card, CardContent, FormControl } from '@material-ui/core';
-
 import { MutationFunction } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
-
-import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import { GQLError } from './gqlerror';
 import { Loading } from './loading';
 import Background2 from '../../../public/images/svg/background2.svg';
 import Logo from '../../../public/images/svg/logo.svg';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -110,12 +106,11 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
   const { error, loading, logout, t } = props;
   const classes: any = useStyles({});
 
-  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (error) {
-      GQLError({ enqueueSnackbar, errors: error });
+      snackbarUtils.show(error);
     }
-  }, [enqueueSnackbar, error]);
+  }, [error]);
 
   return (
     <>

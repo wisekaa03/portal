@@ -22,7 +22,6 @@ import {
 } from '@material-ui/core';
 import { ArrowBackRounded, MoreVertRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
-import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
 import { Profile } from '@app/portal/profile/models/profile.dto';
@@ -32,7 +31,7 @@ import Avatar from '../ui/avatar';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import IsAdmin from '../isAdmin';
 import { ComposeLink } from '../compose-link';
-import { GQLError } from '../gqlerror';
+import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -187,12 +186,11 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
     const openSettings = Boolean(settingsEl);
     const profile = !loading && !error && data && data.profile;
 
-    const { enqueueSnackbar } = useSnackbar();
     useEffect(() => {
       if (error) {
-        GQLError({ enqueueSnackbar, errors: error });
+        snackbarUtils.show(error);
       }
-    }, [enqueueSnackbar, error]);
+    }, [error]);
 
     return (
       <Card ref={ref} className={classes.root}>

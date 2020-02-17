@@ -6,13 +6,12 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
-import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import { GQLError } from '../components/gqlerror';
 import Page from '../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import { SYNC, CACHE } from '../lib/queries';
+import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -70,15 +69,15 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
     cache();
   };
 
-  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
-    if (errorsSynch) {
-      GQLError({ enqueueSnackbar, errors: errorsSynch });
-    }
     if (errorsCache) {
-      GQLError({ enqueueSnackbar, errors: errorsCache });
+      snackbarUtils.show(errorsCache);
     }
-  }, [enqueueSnackbar, errorsCache, errorsSynch]);
+
+    if (errorsSynch) {
+      snackbarUtils.show(errorsSynch);
+    }
+  }, [errorsCache, errorsSynch]);
 
   return (
     <>

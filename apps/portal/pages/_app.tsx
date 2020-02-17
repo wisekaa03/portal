@@ -28,6 +28,7 @@ import { User } from '../src/user/models/user.dto';
 import { FIRST_PAGE, ADMIN_PAGES } from '../lib/constants';
 import getCookie from '../lib/get-cookie';
 import getRedirect from '../lib/get-redirect';
+import { SnackbarUtilsConfigurator } from '../lib/snackbar-utils';
 // #endregion
 
 const InnerLogin: React.FC<{
@@ -185,14 +186,17 @@ class MainApp extends App<ApolloAppProps> {
               horizontal: 'center',
             }}
           >
-            <CurrentLogin
-              pageProps={pageProps}
-              isMobile={!!isMobile}
-              language={currentLanguage || ''}
-              Component={Component}
-              router={router}
-              ctx={ctx}
-            />
+            <>
+              <SnackbarUtilsConfigurator />
+              <CurrentLogin
+                pageProps={pageProps}
+                isMobile={!!isMobile}
+                language={currentLanguage || ''}
+                Component={Component}
+                router={router}
+                ctx={ctx}
+              />
+            </>
           </SnackbarProvider>
         </ThemeProvider>
       </ApolloProvider>

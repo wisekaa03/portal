@@ -24,10 +24,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import { useSnackbar } from 'notistack';
 // #endregion
 // #region Imports Local
-import { GQLError } from '../../components/gqlerror';
 import IsAdmin from '../../components/isAdmin';
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
@@ -40,6 +38,7 @@ import { resizeImage } from '../../lib/utils';
 import Button from '../../components/ui/button';
 import { Gender } from '../../src/shared/interfaces';
 import dayjs from '../../lib/dayjs';
+import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -194,15 +193,14 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
     // eslint-disable-next-line prettier/prettier
     (m ? `${m.lastName || ''} ${m.firstName || ''} ${m.middleName || ''}` : '');
 
-  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (error) {
-      GQLError({ enqueueSnackbar, errors: error });
+      snackbarUtils.show(error);
     }
     if (errorProfile) {
-      GQLError({ enqueueSnackbar, errors: errorProfile });
+      snackbarUtils.show(errorProfile);
     }
-  }, [enqueueSnackbar, error, errorProfile]);
+  }, [error, errorProfile]);
 
   return (
     <>
