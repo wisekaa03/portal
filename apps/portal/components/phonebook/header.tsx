@@ -83,7 +83,7 @@ const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ ch
                           direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
                           onClick={handleSort(name)}
                         >
-                          {t(`phonebook:fields.${name}`)}
+                          {t(`phonebook:fields.${name === 'lastName' ? 'fullName' : name}`)}
                         </TableSortLabel>
                       </TableCell>
                     );

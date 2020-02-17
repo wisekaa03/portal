@@ -75,19 +75,16 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
               break;
             }
 
-            case 'lastName': {
-              const { firstName, lastName, middleName } = cell;
-              cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
+            case 'lastName':
+              cellData = cell.fullName;
               break;
-            }
 
             case 'manager': {
               if (!cell.manager) {
                 break;
               }
 
-              const { firstName, lastName, middleName } = cell.manager;
-              cellData = `${lastName || ''} ${firstName || ''} ${middleName || ''}`;
+              cellData = cell.manager.fullName;
               break;
             }
 

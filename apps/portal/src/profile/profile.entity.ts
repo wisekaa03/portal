@@ -12,6 +12,7 @@ import {
   ManyToOne,
   JoinTable,
   RelationId,
+  AfterLoad,
 } from 'typeorm';
 // #endregion
 // #region Imports Local
@@ -74,6 +75,13 @@ export class ProfileEntity {
     nullable: true,
   })
   middleName: string;
+
+  fullName: string;
+
+  @AfterLoad()
+  setComputed(): void {
+    this.fullName = `${this.lastName} ${this.firstName} ${this.middleName}`;
+  }
 
   @Column({
     type: 'varchar',
