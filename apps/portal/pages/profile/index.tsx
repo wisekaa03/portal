@@ -205,10 +205,10 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     if (errorTickets) {
-      snackbarUtils.show(errorTickets);
+      snackbarUtils.error(errorTickets);
     }
     if (errorSettings) {
-      snackbarUtils.show(errorSettings);
+      snackbarUtils.error(errorSettings);
     }
   }, [errorTickets, errorSettings]);
 

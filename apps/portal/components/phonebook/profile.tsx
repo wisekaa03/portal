@@ -188,7 +188,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
 
     useEffect(() => {
       if (error) {
-        snackbarUtils.show(error);
+        snackbarUtils.error(error);
       }
     }, [error]);
 

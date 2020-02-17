@@ -108,7 +108,7 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
 
   useEffect(() => {
     if (error) {
-      snackbarUtils.show(error);
+      snackbarUtils.error(error);
     }
   }, [error]);
 

@@ -195,10 +195,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     if (error) {
-      snackbarUtils.show(error);
+      snackbarUtils.error(error);
     }
     if (errorProfile) {
-      snackbarUtils.show(errorProfile);
+      snackbarUtils.error(errorProfile);
     }
   }, [error, errorProfile]);
 

@@ -71,11 +71,11 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
 
   useEffect(() => {
     if (errorsCache) {
-      snackbarUtils.show(errorsCache);
+      snackbarUtils.error(errorsCache);
     }
 
     if (errorsSynch) {
-      snackbarUtils.show(errorsSynch);
+      snackbarUtils.error(errorsSynch);
     }
   }, [errorsCache, errorsSynch]);
 
