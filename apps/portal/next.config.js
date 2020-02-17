@@ -84,7 +84,6 @@ function withCustomWebpack(conf = {}) {
           swURLRoot: '/_next/static',
           // optional, you can use workbox-build options.
           // except swDest because of output location is fixed in 'static/workbox',
-          importScripts: 'local',
           // ...WorkboxBuildOptions,
         }),
       );
