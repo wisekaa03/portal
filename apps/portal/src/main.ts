@@ -111,6 +111,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     frameSrc.push(meetingUrl);
   }
 
+  scriptSrc.push('https://storage.googleapis.com');
+
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");

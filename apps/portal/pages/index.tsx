@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 import Head from 'next/head';
@@ -23,6 +23,21 @@ const useStyles = makeStyles((theme: Theme) =>
 const HomePage: I18nPage = (props): React.ReactElement => {
   const { t } = props;
   const classes = useStyles({});
+  if (!__SERVER__) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/_next/static/sw.js')
+          .then((/* registration */) => {
+            return console.log('service worker registration successful');
+          })
+          .catch((err) => {
+            console.warn('service worker registration failed', err.message);
+          });
+      }
+    }, []);
+  }
 
   return (
     <>
