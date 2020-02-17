@@ -11,14 +11,14 @@ import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 // #region Imports Local
 import PhonebookControl from '../components/phonebook/control';
 import PhonebookTable from '../components/phonebook/table';
+import PhonebookProfile from '../components/phonebook/profile';
+import PhonebookSettings from '../components/phonebook/settings';
+import { ColumnNames } from '../components/phonebook/types';
 import Modal from '../components/ui/modal';
+import { Loading } from '../components/loading';
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
-import { ColumnNames } from '../components/phonebook/types';
-import { ProfileComponent } from '../components/phonebook/profile';
-import { SettingsComponent } from '../components/phonebook/settings';
 import useDebounce from '../lib/debounce';
-import { Loading } from '../components/loading';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
 // #endregion
@@ -229,7 +229,6 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       </Head>
       <Page {...props}>
         <Box display="flex" flexDirection="column">
-          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
           <PhonebookControl
             searchRef={searchRef}
             search={_search}
@@ -251,13 +250,14 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
             data={data && data.profiles}
             handleProfileId={handleProfileId}
           />
+          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
         </Box>
       </Page>
       <Modal open={Boolean(profileId)} onClose={handleProfileClose}>
-        <ProfileComponent profileId={profileId} handleClose={handleProfileClose} handleSearch={setSearch} />
+        <PhonebookProfile profileId={profileId} handleClose={handleProfileClose} handleSearch={setSearch} />
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose}>
-        <SettingsComponent
+        <PhonebookSettings
           columns={columns}
           changeColumn={setColumns}
           handleClose={handleSettingsClose}

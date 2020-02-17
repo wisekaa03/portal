@@ -244,7 +244,7 @@ export const allColumns: Column[] = [
 
 const countInBlocks = 4;
 
-export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
+const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
   const { t, columns, changeColumn, handleClose, isAdmin } = props;
   const [current, setCurrent] = useState<ColumnNames[]>(columns);
@@ -294,4 +294,4 @@ export const BaseSettingsComponent = React.forwardRef((props: SettingsProps, ref
   );
 });
 
-export const SettingsComponent = React.memo(nextI18next.withTranslation('phonebook')(BaseSettingsComponent));
+export default nextI18next.withTranslation('phonebook')(SettingsComponent);

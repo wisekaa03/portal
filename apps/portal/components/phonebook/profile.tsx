@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Wire = ({ children, ...props }): any => React.Children.only(children(props));
 
-export const BaseProfileComponent = React.forwardRef<React.Component, ProfileProps>(
+const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
     const classes = useStyles({});
 
@@ -414,4 +414,4 @@ export const BaseProfileComponent = React.forwardRef<React.Component, ProfilePro
   },
 );
 
-export const ProfileComponent = React.memo(nextI18next.withTranslation('phonebook')(BaseProfileComponent));
+export default nextI18next.withTranslation('phonebook')(ProfileComponent);
