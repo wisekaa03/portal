@@ -5,6 +5,7 @@ import { WithTranslation } from 'next-i18next';
 import { Order } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
+import { Profile } from '@app/portal/profile/models/profile.dto';
 // #endregion
 
 export type ColumnNames =
@@ -94,4 +95,37 @@ export interface TableProps {
   // TODO: вписать нормальный тип
   data: any;
   handleProfileId: (_: string | undefined) => () => void;
+}
+
+export interface PhonebookProfileControlProps {
+  controlEl: HTMLElement | null;
+  profileId: string;
+  handleControl: (event: React.MouseEvent<HTMLElement>) => void;
+  handleCloseControl: () => void;
+}
+
+export interface PhonebookProfileModule<T extends string | number | symbol> {
+  profile: Profile;
+  classes: Record<T, string>;
+}
+
+export interface PhonebookProfileNameProps extends PhonebookProfileModule<'root'> {
+  type: 'firstName' | 'lastName' | 'middleName';
+}
+
+export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root' | 'pointer'> {
+  last?: boolean;
+  onClick?: (_: Profile | string | undefined) => () => void;
+  title: string;
+  field:
+    | 'department'
+    | 'company'
+    | 'title'
+    | 'otdel'
+    | 'manager'
+    | 'country'
+    | 'region'
+    | 'town'
+    | 'street'
+    | 'postalCode';
 }
