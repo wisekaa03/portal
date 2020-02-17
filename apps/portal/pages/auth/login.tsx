@@ -152,6 +152,12 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
     });
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   useEffect(() => {
     if (error) {
       snackbarUtils.show(error);
@@ -182,7 +188,7 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
         </div>
         <div className={classes.loginContainer}>
           <Card className={classes.card}>
-            <CardContent>
+            <CardContent onKeyDown={handleKeyDown}>
               <Typography className={classes.typoAuthorization} variant="h4">
                 {t('common:authorization')}
               </Typography>
