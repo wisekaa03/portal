@@ -115,6 +115,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   if (process.env.NODE_ENV !== 'production') {
     scriptSrc.push("'unsafe-eval'");
     scriptSrc.push('https://cdn.jsdelivr.net');
+    scriptSrc.push('https://storage.googleapis.com');
     styleSrc.push('https://fonts.googleapis.com');
     styleSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('https://cdn.jsdelivr.net');
