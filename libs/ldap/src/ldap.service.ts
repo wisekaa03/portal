@@ -435,15 +435,16 @@ export class LdapService extends EventEmitter {
     const searchFilter =
       typeof this.opts.groupSearchFilter === 'function' ? this.opts.groupSearchFilter(user) : undefined;
 
-    const opts = {
+    const opts: Ldap.SearchOptions = {
       filter: searchFilter,
       scope: this.opts.groupSearchScope,
-      attributes: ldapADattributes,
       timeLimit: this.opts.timeLimit,
       sizeLimit: this.opts.sizeLimit,
     };
     if (this.opts.groupSearchAttributes) {
       opts.attributes = this.opts.groupSearchAttributes;
+    } else {
+      opts.attributes = ldapADattributes;
     }
 
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
