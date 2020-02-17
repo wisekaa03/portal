@@ -19,6 +19,8 @@ export interface Profile {
 
   dn: string;
 
+  fullName?: string;
+
   firstName: string;
 
   lastName: string;

@@ -9,6 +9,6 @@ const IsAdmin = ({ children }: any): React.ReactElement => {
   return profile?.user?.isAdmin && React.Children.only(children);
 };
 
-IsAdmin.displayName = 'IsAdmin';
+// IsAdmin.displayName = 'IsAdmin';
 
 export default IsAdmin;

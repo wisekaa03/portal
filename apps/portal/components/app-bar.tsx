@@ -175,9 +175,7 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                   transitionDuration={0}
                   disableRestoreFocus
                 >
-                  <Typography className={classes.profileName}>
-                    {context.user.profile.lastName} {context.user.profile.firstName} {context.user.profile.middleName}
-                  </Typography>
+                  <Typography className={classes.profileName}>{context.user.profile.fullName}</Typography>
                   <Avatar className={classes.avatar} profile={context.user.profile} alt="photo" />
                   <Box className={classes.commonBlock}>
                     <Box className={classes.phoneBlock}>

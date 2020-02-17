@@ -189,10 +189,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const InputProps = isAdmin ? { endAdornment } : { readOnly: true };
 
-  const getManager = (m: Profile | undefined): string =>
-    // eslint-disable-next-line prettier/prettier
-    (m ? `${m.lastName || ''} ${m.firstName || ''} ${m.middleName || ''}` : '');
-
   useEffect(() => {
     if (error) {
       snackbarUtils.error(error);
@@ -427,7 +423,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           disabled={loadingProfile}
                           onChange={handleChange('manager')}
                           color="secondary"
-                          value={getManager(current.manager)}
+                          value={current.fullName}
                           label={t('phonebook:fields.manager')}
                           variant="outlined"
                           InputProps={{ readOnly: true }}

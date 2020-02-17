@@ -5,6 +5,7 @@
     "header": "Адресная книга - настройки отображения"
   },
   "fields": {
+    "fullName": "Ф.И.О.",
     "lastName": "Фамилия",
     "firstName": "Имя",
     "middleName": "Отчество",

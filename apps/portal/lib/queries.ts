@@ -11,6 +11,7 @@ const PROFILE_FRAGMENT = gql`
     firstName
     lastName
     middleName
+    fullName
     nameeng
     birthday
     gender
@@ -31,6 +32,7 @@ const PROFILE_FRAGMENT = gql`
       firstName
       lastName
       middleName
+      fullName
       disabled
       notShowing
     }
@@ -222,9 +224,7 @@ export const USER_SETTINGS = gql`
 export const SEARCH_SUGGESTIONS = gql`
   query SearchSuggestions($search: String) {
     searchSuggestions(search: $search) {
-      firstName
-      lastName
-      middleName
+      fullName
       department
       company
       title

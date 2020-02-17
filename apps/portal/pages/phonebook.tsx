@@ -40,11 +40,11 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
   let result = columns.filter((col) => col !== 'disabled' && col !== 'notShowing').join(' ');
 
   if (columns.includes('lastName')) {
-    result += ' firstName middleName';
+    result = result.replace('lastName', 'fullName');
   }
 
   if (columns.includes('manager')) {
-    result = result.replace('manager', 'manager { id firstName lastName middleName }');
+    result = result.replace('manager', 'manager { id fullName }');
   }
 
   return result;
@@ -110,10 +110,8 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
           const lower = _search.toLowerCase().trim();
           let showing = '';
 
-          const fullName = `${cur.lastName || ''} ${cur.firstName || ''} ${cur.middleName || ''}`;
-
-          if (fullName.toLowerCase().includes(lower)) {
-            showing = fullName;
+          if (cur.fullName.toLowerCase().includes(lower)) {
+            showing = cur.fullName;
           } else if (cur.department && cur.department.toLowerCase().includes(lower)) {
             showing = cur.department;
           } else if (cur.company && cur.company.toLowerCase().includes(lower)) {
