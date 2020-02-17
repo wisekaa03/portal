@@ -157,9 +157,9 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
 
   useEffect(() => {
     if (error) {
-      GQLError({ enqueueSnackbar, errors: error, t });
+      GQLError({ enqueueSnackbar, errors: error });
     }
-  }, [enqueueSnackbar, error, t]);
+  }, [enqueueSnackbar, error]);
 
   useEffect(() => {
     const save = getStorage('save');

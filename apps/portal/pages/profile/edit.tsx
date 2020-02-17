@@ -197,12 +197,12 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (error) {
-      GQLError({ enqueueSnackbar, errors: error, t });
+      GQLError({ enqueueSnackbar, errors: error });
     }
     if (errorProfile) {
-      GQLError({ enqueueSnackbar, errors: errorProfile, t });
+      GQLError({ enqueueSnackbar, errors: errorProfile });
     }
-  }, [enqueueSnackbar, error, errorProfile, t]);
+  }, [enqueueSnackbar, error, errorProfile]);
 
   return (
     <>

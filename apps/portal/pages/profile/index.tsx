@@ -207,12 +207,12 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (errorTickets) {
-      GQLError({ enqueueSnackbar, errors: errorTickets, t });
+      GQLError({ enqueueSnackbar, errors: errorTickets });
     }
     if (errorSettings) {
-      GQLError({ enqueueSnackbar, errors: errorSettings, t });
+      GQLError({ enqueueSnackbar, errors: errorSettings });
     }
-  }, [enqueueSnackbar, errorTickets, errorSettings, t]);
+  }, [enqueueSnackbar, errorTickets, errorSettings]);
 
   return (
     <>

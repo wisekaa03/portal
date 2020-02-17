@@ -190,9 +190,9 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
     const { enqueueSnackbar } = useSnackbar();
     useEffect(() => {
       if (error) {
-        GQLError({ enqueueSnackbar, errors: error, t });
+        GQLError({ enqueueSnackbar, errors: error });
       }
-    }, [enqueueSnackbar, error, t]);
+    }, [enqueueSnackbar, error]);
 
     return (
       <Card ref={ref} className={classes.root}>

@@ -113,9 +113,9 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (error) {
-      GQLError({ enqueueSnackbar, errors: error, t });
+      GQLError({ enqueueSnackbar, errors: error });
     }
-  }, [enqueueSnackbar, error, t]);
+  }, [enqueueSnackbar, error]);
 
   return (
     <>
