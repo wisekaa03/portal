@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { FetchResult } from 'apollo-link';
@@ -113,6 +113,10 @@ interface LoginState {
 const Login: I18nPage = ({ t }): React.ReactElement => {
   const classes: any = useStyles({});
   const client = useApolloClient();
+
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
   const [values, setValues] = useState<LoginState>({
     save: false,
     user: '',
@@ -144,12 +148,18 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
   };
 
   const handleSubmit = (): void => {
-    login({
-      variables: {
-        username: values.user,
-        password: values.pass,
-      },
-    });
+    if (values.user.trim() === '') {
+      usernameRef.current.focus();
+    } else if (values.pass.trim() === '') {
+      passwordRef.current.focus();
+    } else {
+      login({
+        variables: {
+          username: values.user,
+          password: values.pass,
+        },
+      });
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
@@ -160,7 +170,7 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
 
   useEffect(() => {
     if (error) {
-      snackbarUtils.show(error);
+      snackbarUtils.error(error);
     }
   }, [error]);
 
@@ -194,6 +204,7 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
               </Typography>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
+                  inputRef={usernameRef}
                   data-field-name="username"
                   type="username"
                   autoFocus
@@ -207,6 +218,7 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
               </FormControl>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
+                  inputRef={passwordRef}
                   data-field-name="password"
                   type="password"
                   value={values.pass}
