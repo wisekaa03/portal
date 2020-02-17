@@ -1,9 +1,9 @@
 /** @format */
 
-const path = require('path');
-const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
+const { resolve } = require('path');
+// const webpack = require('webpack');
 // const nodeExternals = require('webpack-node-externals');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (original) => {
   const config = {
@@ -110,44 +110,44 @@ module.exports = (original) => {
     },
     plugins: [
       ...(original.plugins || []),
-      new webpack.IgnorePlugin({
-        /**
-         * There is a small problem with Nest's idea of lazy require() calls,
-         * Webpack tries to load these lazy imports that you may not be using,
-         * so we must explicitly handle the issue.
-         * Refer to: https://github.com/nestjs/nest/issues/1706
-         */
-        checkResource(resource) {
-          const lazyImports = [
-            // '@nestjs/microservices',
-            // '@nestjs/platform-express',
-            // 'class-validator',
-            // 'class-transformer',
-            // 'google-libphonenumber',
-            // '@nestjs/graphql',
-            // 'next',
-            // 'cache-manager',
-            // 'graphql',
-            // 'jodit',
-            // 'jodit-react',
-          ];
-          if (!lazyImports.includes(resource)) {
-            return false;
-          }
-          try {
-            require.resolve(resource);
-          } catch (err) {
-            return true;
-          }
-          return false;
-        },
-      }),
+      // new webpack.IgnorePlugin({
+      //   /**
+      //    * There is a small problem with Nest's idea of lazy require() calls,
+      //    * Webpack tries to load these lazy imports that you may not be using,
+      //    * so we must explicitly handle the issue.
+      //    * Refer to: https://github.com/nestjs/nest/issues/1706
+      //    */
+      //   checkResource(resource) {
+      //     const lazyImports = [
+      //       // '@nestjs/microservices',
+      //       // '@nestjs/platform-express',
+      //       // 'class-validator',
+      //       // 'class-transformer',
+      //       // 'google-libphonenumber',
+      //       // '@nestjs/graphql',
+      //       // 'next',
+      //       // 'cache-manager',
+      //       // 'graphql',
+      //       // 'jodit',
+      //       // 'jodit-react',
+      //     ];
+      //     if (!lazyImports.includes(resource)) {
+      //       return false;
+      //     }
+      //     try {
+      //       require.resolve(resource);
+      //     } catch (err) {
+      //       return true;
+      //     }
+      //     return false;
+      //   },
+      // }),
     ],
   };
 
   if (original.output.filename.includes('/portal/')) {
     config.output = {
-      path: path.resolve(__dirname, '.next/nest'),
+      path: resolve(__dirname, '.next/nest'),
       filename: 'main.js',
     };
   }
