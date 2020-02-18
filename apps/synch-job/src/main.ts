@@ -14,16 +14,19 @@ const dev = process.env.NODE_ENV !== 'production';
 
 const logger = new LogService();
 
-async function bootstrap(configService: ConfigService): Promise<void> {
+async function bootstrap(configService: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
     url: configService.get<string>('MICROSERVICE_URL'),
   });
 
   await client.connect();
 
-  const result = await client.send<boolean>(SYNCHRONIZATION, []).toPromise();
-  logger.log(`Result: ${result}`, 'Synch job');
+  return client.send<boolean>(SYNCHRONIZATION, []).toPromise();
 }
 
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
-bootstrap(configService);
+bootstrap(configService)
+  .then((result) => logger.log(`Result: ${result}`, 'Synch job'))
+  .catch((error) => {
+    logger.error(`Result: ${JSON.stringify(error)}`, 'Synch job');
+  });
