@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
       gap: `${theme.spacing(2)}px`,
       padding: theme.spacing(0.5),
     },
+    gridFull: {
+      gridTemplateRows: 'max-content',
+    },
     main: {
       [theme.breakpoints.up('sm')]: {
         gridTemplateColumns: 'auto minmax(auto, 420px)',
@@ -188,8 +191,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
         <CardContent className={clsx(classes.wrap, classes.noPadding)}>
           <Box className={clsx(classes.grid, classes.main)}>
             <Box
-              gridTemplateRows="max-content"
-              className={clsx(classes.grid, {
+              className={clsx(classes.grid, classes.gridFull, {
                 [classes.fullRow]: error,
               })}
             >
@@ -248,7 +250,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
               </>
             </Box>
             {!error && (
-              <Box gridTemplateRows="max-content" className={classes.grid}>
+              <Box className={clsx(classes.grid, classes.gridFull)}>
                 <Paper>
                   <List className={classes.list}>
                     <ProfileField

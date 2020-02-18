@@ -20,7 +20,7 @@ type TreeItemProps = MuiTreeItemProps & {
   labelText: string;
 };
 
-const useTreeItemStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       'color': theme.palette.secondary.main,
@@ -69,7 +69,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
 );
 
 export const TreeItem = (props: TreeItemProps): React.ReactElement => {
-  const classes = useTreeItemStyles();
+  const classes = useStyles({});
   const { labelText, labelInfo, ...rest } = props;
 
   return (
