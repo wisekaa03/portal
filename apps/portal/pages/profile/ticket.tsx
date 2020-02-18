@@ -437,7 +437,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                         />
                       </FormControl>
                       <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                        <Dropzone color="secondary" setFiles={setFiles} files={files} {...rest} />
+                        <Dropzone files={files} setFiles={setFiles} color="secondary" />
                       </FormControl>
                       <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
                         <Button actionType="cancel" onClick={handleClose}>

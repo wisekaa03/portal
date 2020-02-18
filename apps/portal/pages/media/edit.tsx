@@ -120,7 +120,7 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                   </TreeView>
                 </Box>
                 <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <Dropzone color="secondary" setFiles={setAttachments} files={attachments} {...rest} />
+                  <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
                 </Box>
               </>
             )}

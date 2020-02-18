@@ -12,7 +12,7 @@ import uuidv4 from 'uuid/v4';
 // #endregion
 // #region Imports Local
 import { DropzoneFile, DropzoneProps } from './types';
-import { nextI18next, I18nPage, includeDefaultNamespaces } from '../../lib/i18n-client';
+import { nextI18next, useTranslation } from '../../lib/i18n-client';
 // #endregion
 
 const thumbHeight = 100;
@@ -106,17 +106,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NO_PREVIEW = 'no_preview';
 
-const Dropzone: I18nPage<DropzoneProps> = ({
-  t,
+const Dropzone = ({
   files,
   setFiles,
-  filesLimit,
-  acceptedFiles,
-  maxFileSize,
+  filesLimit = 5,
+  acceptedFiles = ['image/*', '*/*', '.doc'],
+  maxFileSize = 3000000,
   color = 'primary',
-  ...rest
-}): React.ReactElement => {
+}: DropzoneProps): React.ReactElement => {
   const classes = useStyles({ color });
+  const { t } = useTranslation();
   const [error, setError] = useState<string[]>([]);
 
   const updateError = (value?: string): void => setError(value ? [...error, value] : []);
@@ -171,7 +170,6 @@ const Dropzone: I18nPage<DropzoneProps> = ({
       onDropRejected={handleDropRejected}
       maxSize={maxFileSize}
       accept={acceptedFiles.join(',')}
-      {...rest}
     >
       {({ getRootProps, getInputProps }: DropzoneState) => (
         <section className={classes.container}>
@@ -218,16 +216,5 @@ const Dropzone: I18nPage<DropzoneProps> = ({
     </BaseDropzone>
   );
 };
-
-Dropzone.defaultProps = {
-  // необходимо перечислить все типы файлов, просто звездочка не катит...
-  acceptedFiles: ['image/*', '*/*', '.doc'],
-  filesLimit: 5,
-  maxFileSize: 3000000,
-};
-
-Dropzone.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['dropzone']),
-});
 
 export default nextI18next.withTranslation('dropzone')(Dropzone);
