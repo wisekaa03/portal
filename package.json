@@ -11,8 +11,8 @@
     "clean:build": "yarn clean:all && yarn && yarn build && yarn test -u && yarn clean:node && yarn install --production=true && ./entrypoint.sh start",
     "secrets": "cat /dev/urandom | head -c 512 | openssl sha256 | cut -d ' ' -f 2",
     "dev": "nest start -d",
-    "dev:synch": "NODE_OPTIONS=--max_old_space_size=4096 nest start synch -d",
-    "dev:synchJob": "NODE_OPTIONS=--max_old_space_size=4096 nest start synch-job -d",
+    "dev:synch": "NODE_OPTIONS=--max_old_space_size=4096 nest start synch -d :9230",
+    "dev:synchJob": "NODE_OPTIONS=--max_old_space_size=4096 nest start synch-job -d :9231",
     "build": "yarn clean && yarn next:build && yarn copy && yarn nest:build && yarn nest:ormconfig",
     "build:synch": "yarn nest:build synch",
     "build:synchJob": "yarn nest:build synch-job",
@@ -74,8 +74,8 @@
   },
   "private": true,
   "engines": {
-    "node": ">= 13",
-    "yarn": ">= 1.18"
+    "node": ">= 13.8.0",
+    "yarn": ">= 1.22.0"
   },
   "os": ["!win32"],
   "dependencies": {

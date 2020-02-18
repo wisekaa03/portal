@@ -188,6 +188,7 @@ export class SynchService {
       workPhone: ldapUser.otherTelephone,
       mobile: ldapUser.mobile,
       fax: ldapUser.facsimileTelephoneNumber,
+      employeeID: ldapUser.employeeID,
       room: ldapUser.physicalDeliveryOfficeName,
       companyeng,
       nameeng,
