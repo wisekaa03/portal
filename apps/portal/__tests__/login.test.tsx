@@ -8,14 +8,16 @@ import { MutationFunction } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import Login from '../pages/auth/login';
+import { LoginPageProps } from '../components/login/types';
 // #endregion
 
 describe('Login page', () => {
   let shallow: typeof Shallow;
-  const props = {
+  const props: LoginPageProps = {
     loading: false,
     login: ((): void => {}) as MutationFunction,
     namespacesRequired: [],
+    initUsername: '',
   };
 
   beforeAll(() => {

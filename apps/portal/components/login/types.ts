@@ -1,7 +1,12 @@
 /** @format */
 
+import { MutationFunction } from 'react-apollo';
+
 export interface LoginPageProps {
   initUsername: string;
+  loading?: boolean;
+  login?: MutationFunction;
+  namespacesRequired: string[];
 }
 
 export interface LoginComponentProps {

@@ -83,14 +83,14 @@ const Login: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElemen
 
   useEffect(() => {
     if (usernameRef?.current && initUsername) {
-      passwordRef.current.focus();
+      passwordRef!.current.focus();
     }
   }, [usernameRef, passwordRef, initUsername]);
 
   useEffect(() => {
     if (error) {
       snackbarUtils.error(error);
-      passwordRef.current.focus();
+      passwordRef!.current.focus();
     }
   }, [passwordRef, error]);
 
