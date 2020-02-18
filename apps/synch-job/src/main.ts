@@ -22,7 +22,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   await client.connect();
 
   const result = await client.send<boolean>(SYNCHRONIZATION, []).toPromise();
-  logger.log(`Result: ${result}`);
+  logger.log(`Result: ${result}`, 'Synch job');
 }
 
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));

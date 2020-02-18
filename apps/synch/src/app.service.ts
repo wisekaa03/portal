@@ -32,8 +32,6 @@ export class SynchService {
   ) {}
 
   synchronization = async (): Promise<boolean> => {
-    // TODO: куда-то вставить в базе данных - updatedAt и в LDAP AD - whenChanged
-
     const users = await this.ldapService.synchronization();
 
     if (users) {
@@ -82,8 +80,12 @@ export class SynchService {
 
       await this.userService.bulkSave(updatedUsers);
 
+      this.logService.log('--- End of synchronization: true ---', 'Synch');
+
       return true;
     }
+
+    this.logService.log('--- End of synchronization: false ---', 'Synch');
 
     return false;
   };
