@@ -17,5 +17,14 @@
     "title": "Наименование заявки",
     "text": "Подробное описание",
     "category": "Категория услуги"
+  },
+  "complete": {
+    "code": "Код: {{value}}",
+    "name": "Имя заявки: {{value}}",
+    "company": "Организация: {{value}}",
+    "service": "Услуга: {{value}}",
+    "category": "Категория: {{value}}",
+    "status": "Статус: {{value}}",
+    "date": "Дата: {{value}}"
   }
 }

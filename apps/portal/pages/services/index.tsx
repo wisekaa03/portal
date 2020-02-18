@@ -4,238 +4,88 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Paper,
-  Tabs,
-  Tab,
-  Box,
-  FormControl,
-  TextField,
-  Typography,
-  Card,
-  CardContent,
-  CardActions,
-} from '@material-ui/core';
-import SendIcon from '@material-ui/icons/SendOutlined';
-import SwipeableViews from 'react-swipeable-views';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import clsx from 'clsx';
-import dynamic from 'next/dynamic';
-import ReactToPrint from 'react-to-print';
 // #endregion
 // #region Imports Local
 import { OldService, OldCategory } from '@app/portal/ticket/old-service/models/old-service.interface';
-import Dropzone from '../../components/dropzone';
+import ServicesComponent from '../../components/services';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { appBarHeight } from '../../components/app-bar';
+import { ServicesTicketProps, ServicesCreatedProps } from '../../components/services/types';
 import Page from '../../layouts/main';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../../lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import BaseIcon from '../../components/ui/icon';
-import { Loading } from '../../components/loading';
-import Button from '../../components/ui/button';
 import ServicesIcon from '../../public/images/svg/icons/services.svg';
-import JoditEditor from '../../components/jodit';
-import { DATE_FORMAT } from '../../lib/constants';
-import dayjs from '../../lib/dayjs';
-import RefreshButton from '../../components/ui/refreshButton';
-import { ComposeButton } from '../../components/compose-link';
 // #endregion
-
-const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative',
-    },
-    card: {
-      width: '90vw',
-      maxWidth: '600px',
-    },
-    cardContent: {
-      'padding': theme.spacing(2),
-      'width': '100%',
-      '& h5': {
-        marginBottom: theme.spacing(),
-      },
-      '& h5, & h6': {
-        textAlign: 'center',
-      },
-    },
-    header: {
-      '& button': {
-        padding: theme.spacing(2, 4),
-      },
-    },
-    contentWrap: {
-      display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
-    },
-    container1: {
-      display: 'grid',
-      gap: `${theme.spacing()}px ${theme.spacing(4)}px`,
-      padding: theme.spacing(2, 4),
-
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(4, 8),
-        gridTemplateColumns: '1fr 1fr',
-      },
-
-      [theme.breakpoints.up('md')]: {
-        gridTemplateColumns: '1fr 1fr 1fr',
-      },
-    },
-    container2: {
-      'display': 'flex',
-      'flexDirection': 'column',
-      'justifyContent': 'center',
-      'alignItems': 'center',
-      '& > div': {
-        marginBottom: theme.spacing(3),
-      },
-    },
-    serviceBox: {
-      display: 'grid',
-      // gap: `0 ${theme.spacing(4)}px`,
-      // [theme.breakpoints.up('md')]: {
-      //   gridTemplateColumns: '1fr 2fr',
-      // },
-    },
-    service: {
-      'padding': theme.spacing(),
-      'borderRadius': theme.spacing(0.5),
-      'display': 'grid',
-      'gridTemplateColumns': '60px 1fr',
-      'gap': `${theme.spacing()}px`,
-      'justifyItems': 'flex-start',
-      'alignItems': 'center',
-      '&:not($formControl)': {
-        cursor: 'pointer',
-      },
-      'color': '#484848',
-      '&:hover:not($serviceIndex):not($serviceBox) h6': {
-        color: '#000',
-      },
-    },
-    serviceIndex: {
-      '& h6': {
-        color: '#000',
-      },
-    },
-    formControl: {
-      width: '90%',
-      [theme.breakpoints.up('md')]: {
-        width: '80%',
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: '60%',
-      },
-    },
-    formAction: {
-      'display': 'flex',
-      'flexDirection': 'row',
-      'justifyContent': 'flex-end',
-      '& button:not(:last-child)': {
-        marginRight: theme.spacing(),
-      },
-    },
-  }),
-);
 
 const departments = [
   {
-    id: 'IT',
+    code: 'IT',
     name: 'Департамент ИТ',
-    icon: ServicesIcon,
+    avatar: ServicesIcon,
   },
 ];
 
-interface CurrentProps {
-  id: number | string;
-  name: string;
-  icon: any;
-  categoryType?: string;
-}
+const defaultTicketState: ServicesTicketProps = { title: '' };
 
-interface CurrentResponse {
-  code?: string;
-  name?: string;
-  requisiteSource?: string;
-  category?: string;
-  organization?: string;
-  status?: string;
-  createdDate?: Date;
-}
-
-interface TicketProps {
-  department: false | CurrentProps;
-  service: false | CurrentProps;
-  category: false | CurrentProps;
-  title: string;
-}
-
-const defaultTicketState: TicketProps = {
-  department: false,
-  service: false,
-  category: false,
-  title: '',
-};
-
-const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const router = useRouter();
-  const classes = useStyles({});
+
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const [services, setServices] = useState<false | OldService[]>(false);
-  const [categories, setCategories] = useState<false | OldCategory[]>(false);
-  const [ticket, setTicket] = useState<TicketProps>(defaultTicketState);
-  const [ticketNew, setNew] = useState<CurrentResponse>({});
+  const [services, setServices] = useState<OldService[]>([]);
+  const [categories, setCategories] = useState<OldCategory[]>([]);
+  const [ticket, setTicket] = useState<ServicesTicketProps>(defaultTicketState);
+  const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
-    fetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
-  });
+  const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery(
+    OLD_TICKET_SERVICE,
+    {
+      fetchPolicy: 'cache-first',
+      notifyOnNetworkStatusChange: true,
+    },
+  );
 
-  const [oldTicketNew, { loading: loadingNew, data: dataNew, error: errorNew }] = useMutation(OLD_TICKET_NEW);
+  const [createTicket, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
+    OLD_TICKET_NEW,
+  );
 
-  const handleChangeTabIndex = (index: number): void => {
+  const handleCurrentTab = (index: number): void => {
     setCurrentTab(index);
   };
 
-  const handleClearTicket = (): void => {
+  const handleTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setTicket({ ...ticket, title: event.target.value });
+  };
+
+  const handleResetTicket = (): void => {
     setTicket(defaultTicketState);
-    setCategories(false);
+    setCategories([]);
     setBody('');
     setFiles([]);
     router.push(router.pathname, router.pathname);
   };
 
-  const handleAccept = (): void => {
+  const handleSubmit = (): void => {
     const { service, category, title } = ticket;
 
     const variables = {
       ticket: {
         title,
         body,
-        serviceId: service ? service.id : null,
-        categoryId: category ? category.id : null,
+        serviceId: service ? service.code : null,
+        categoryId: category ? category.code : null,
         categoryType: category ? category.categoryType : null,
       },
       attachments: files.map((file: DropzoneFile) => file.file),
     };
 
-    oldTicketNew({
+    createTicket({
       variables,
     });
 
-    setNew({});
+    setCreated({});
     setCurrentTab(4);
   };
 
@@ -246,7 +96,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       let tab = 0;
 
       if (department) {
-        initialState.department = departments.find((dep) => dep.id === department);
+        initialState.department = departments.find((dep) => dep.code === department);
 
         if (initialState.department) {
           tab += 1;
@@ -256,11 +106,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
             if (currentService) {
               tab += 1;
-              initialState.service = {
-                id: currentService.code,
-                name: currentService.name,
-                icon: currentService.avatar,
-              };
+              initialState.service = currentService;
 
               setCategories(currentService.category);
 
@@ -269,12 +115,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
                 if (currentCategory) {
                   tab += 1;
-                  initialState.category = {
-                    id: currentCategory.code,
-                    name: currentCategory.name,
-                    icon: currentCategory.avatar,
-                    categoryType: currentCategory.categoryType,
-                  };
+                  initialState.category = currentCategory;
                 }
               }
             }
@@ -288,26 +129,27 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   }, [services, setTicket, setCurrentTab, router]);
 
   useEffect(() => {
-    setServices(!loadingService && !errorService && dataService && dataService.OldTicketService);
-  }, [dataService, errorService, loadingService]);
+    setServices((!loadingServices && !errorServices && dataServices?.OldTicketService) || []);
+  }, [dataServices, errorServices, loadingServices]);
 
   useEffect(() => {
-    setNew(!loadingNew && !errorNew && dataNew && dataNew.OldTicketNew);
-  }, [dataNew, errorNew, loadingNew]);
+    setCreated(!loadingCreated && !errorCreated && dataCreated?.OldTicketNew);
+  }, [dataCreated, errorCreated, loadingCreated]);
 
-  const swipeableViews = useRef(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
-    if (swipeableViews && swipeableViews.current) {
-      swipeableViews.current.updateHeight();
+    if (contentRef?.current) {
+      contentRef.current.updateHeight();
     }
-  }, [swipeableViews, files]);
+  }, [contentRef, files]);
 
-  const tabHeader = useRef(null);
-  const containerHeight =
-    tabHeader && tabHeader.current ? `calc(100vh - ${appBarHeight}px - ${tabHeader.current.clientHeight}px)` : '100%';
+  const headerRef = useRef(null);
+  const contentHeight = headerRef?.current
+    ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
+    : '100%';
 
-  const newTicketRef = useRef(null);
+  const createdRef = useRef(null);
 
   return (
     <>
@@ -315,13 +157,13 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
         <title>
           {ticket.category
             ? t('services:title.category', {
-                department: ticket.department && ticket.department.name,
-                service: ticket.service && ticket.service.name,
+                department: ticket.department?.name,
+                service: ticket.service?.name,
                 category: ticket.category.name,
               })
             : ticket.service
             ? t('services:title.service', {
-                department: ticket.department && ticket.department.name,
+                department: ticket.department?.name,
                 service: ticket.service.name,
               })
             : ticket.department
@@ -332,216 +174,29 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
         </title>
       </Head>
       <Page {...rest}>
-        <div className={classes.root}>
-          <Paper ref={tabHeader} square className={classes.header}>
-            <Tabs
-              value={currentTab}
-              indicatorColor="primary"
-              textColor="primary"
-              onChange={(_: any, tab: number): void => handleChangeTabIndex(tab)}
-            >
-              <Tab label={t('services:tabs.tab1')} />
-              <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
-              <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
-              <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
-              <Tab disabled={!ticketNew} label={t('services:tabs.tab5')} />
-            </Tabs>
-          </Paper>
-          {loadingService ? (
-            <Loading full type="circular" color="secondary" disableShrink size={48} />
-          ) : (
-            <>
-              {currentTab < 4 && <RefreshButton onClick={() => refetch()} />}
-              <SwipeableViews
-                ref={swipeableViews}
-                animateHeight
-                disabled={!ticket.department}
-                index={currentTab}
-                className={classes.contentWrap}
-                containerStyle={{ flexGrow: 1 }}
-                onChangeIndex={handleChangeTabIndex}
-              >
-                <div className={classes.container1}>
-                  {departments.map((department) => (
-                    <Link
-                      key={department.id}
-                      href={{ pathname: '/services', query: { department: department.id } }}
-                      as={`/services/${department.id}`}
-                    >
-                      <Box
-                        className={clsx(classes.service, {
-                          [classes.serviceIndex]: ticket.department && ticket.department.id === department.id,
-                        })}
-                      >
-                        <div>
-                          <BaseIcon src={department.icon} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{department.name}</Typography>
-                        </div>
-                      </Box>
-                    </Link>
-                  ))}
-                </div>
-                <div style={{ minHeight: containerHeight }} className={classes.container1}>
-                  {services &&
-                    services.map((service) => (
-                      <Link
-                        key={service.code}
-                        href={{
-                          pathname: '/services',
-                          query: {
-                            department: ticket.department && ticket.department.id,
-                            service: service.code,
-                          },
-                        }}
-                        as={`/services/${ticket.department && ticket.department.id}/${service.code}`}
-                      >
-                        <Box
-                          className={clsx(classes.service, {
-                            [classes.serviceIndex]: ticket.service && ticket.service.id === service.code,
-                          })}
-                        >
-                          <div>
-                            <BaseIcon base64 src={service.avatar} size={48} />
-                          </div>
-                          <div>
-                            <Typography variant="subtitle1">{service.name}</Typography>
-                          </div>
-                        </Box>
-                      </Link>
-                    ))}
-                </div>
-                <div style={{ minHeight: containerHeight }} className={classes.container1}>
-                  {categories &&
-                    categories.map((category) => (
-                      <Link
-                        key={category.code}
-                        href={{
-                          pathname: '/services',
-                          query: {
-                            department: ticket.department && ticket.department.id,
-                            service: ticket.service && ticket.service.id,
-                            category: category.code,
-                          },
-                        }}
-                        as={`/services/${ticket.department && ticket.department.id}/${ticket.service &&
-                          ticket.service.id}/${category.code}`}
-                      >
-                        <Box
-                          className={clsx(classes.service, {
-                            [classes.serviceIndex]: ticket.category && ticket.category.id === category.code,
-                          })}
-                        >
-                          <div>
-                            <BaseIcon base64 src={category.avatar} size={48} />
-                          </div>
-                          <div>
-                            <Typography variant="subtitle1">{category.name}</Typography>
-                          </div>
-                        </Box>
-                      </Link>
-                    ))}
-                </div>
-                <div style={{ minHeight: containerHeight }} className={classes.container2}>
-                  {ticket.department && ticket.service && ticket.category && (
-                    <div className={clsx(classes.serviceBox, classes.formControl)}>
-                      <Box className={classes.service}>
-                        <div>
-                          <BaseIcon src={ticket.department.icon} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{ticket.department.name}</Typography>
-                        </div>
-                      </Box>
-                      <Box className={classes.service}>
-                        <div>
-                          <BaseIcon base64 src={ticket.service.icon} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{ticket.service.name}</Typography>
-                        </div>
-                      </Box>
-                      <Box className={classes.service}>
-                        <div>
-                          <BaseIcon base64 src={ticket.category.icon} size={48} />
-                        </div>
-                        <div>
-                          <Typography variant="subtitle1">{ticket.category.name}</Typography>
-                        </div>
-                      </Box>
-                    </div>
-                  )}
-                  <FormControl className={classes.formControl} variant="outlined">
-                    <TextField
-                      value={ticket.title}
-                      onChange={(e) => setTicket({ ...ticket, title: e.target.value })}
-                      type="text"
-                      label={t('services:form.title')}
-                      variant="outlined"
-                    />
-                  </FormControl>
-                  <FormControl className={classes.formControl} variant="outlined">
-                    <JoditEditor value={body} onChange={setBody} />
-                  </FormControl>
-                  <FormControl className={classes.formControl} variant="outlined">
-                    <Dropzone setFiles={setFiles} files={files} {...rest} />
-                  </FormControl>
-                  <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                    <Button actionType="cancel" onClick={handleClearTicket}>
-                      {t('common:cancel')}
-                    </Button>
-                    <Button onClick={handleAccept}>{t('common:accept')}</Button>
-                  </FormControl>
-                </div>
-                <div style={{ minHeight: containerHeight }} className={classes.container2}>
-                  {!loadingNew && ticketNew ? (
-                    <Card className={classes.card}>
-                      <CardContent ref={newTicketRef} className={classes.cardContent}>
-                        <Typography variant="h5">{t('services:success')}</Typography>
-                        <Typography variant="subtitle1">Код: {ticketNew.code}</Typography>
-                        <Typography variant="subtitle1">Имя заявки: {ticketNew.name}</Typography>
-                        <Typography variant="subtitle1">Организация: {ticketNew.organization}</Typography>
-                        <Typography variant="subtitle1">Услуга: {ticketNew.category}</Typography>
-                        <Typography variant="subtitle1">Категория: {ticketNew.requisiteSource}</Typography>
-                        <Typography variant="subtitle1">Статус: {ticketNew.status}</Typography>
-                        <Typography variant="subtitle1">
-                          {`Дата: ${dayjs(ticketNew.createdDate).format(DATE_FORMAT(i18n))}`}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Box display="flex" flexGrow={1} justifyContent="space-around" p={2}>
-                          <ComposeButton
-                            variant="contained"
-                            startIcon={<SendIcon />}
-                            rounded
-                            body={`<p>Код заявки: ${ticketNew.code}</p>`}
-                          >
-                            {t('common:send')}
-                          </ComposeButton>
-                          <ReactToPdf targetRef={newTicketRef} filename={`ticket_${ticketNew.code}.pdf`}>
-                            {({ toPdf }) => (
-                              <Button onClick={toPdf} actionType="save">
-                                {t('common:save')}
-                              </Button>
-                            )}
-                          </ReactToPdf>
-                          <ReactToPrint
-                            trigger={() => <Button actionType="print">{t('common:print')}</Button>}
-                            content={() => newTicketRef.current}
-                            copyStyles
-                          />
-                        </Box>
-                      </CardActions>
-                    </Card>
-                  ) : (
-                    <Loading full type="circular" color="secondary" disableShrink size={48} />
-                  )}
-                </div>
-              </SwipeableViews>
-            </>
-          )}
-        </div>
+        <ServicesComponent
+          headerRef={headerRef}
+          contentRef={contentRef}
+          createdRef={createdRef}
+          contentHeight={contentHeight}
+          currentTab={currentTab}
+          ticket={ticket}
+          created={created}
+          departments={departments}
+          services={services}
+          categories={categories}
+          body={body}
+          setBody={setBody}
+          files={files}
+          setFiles={setFiles}
+          loadingServices={loadingServices}
+          loadingCreated={loadingCreated}
+          refetchServices={refetchServices}
+          handleCurrentTab={handleCurrentTab}
+          handleTitle={handleTitle}
+          handleSubmit={handleSubmit}
+          handleResetTicket={handleResetTicket}
+        />
       </Page>
     </>
   );
