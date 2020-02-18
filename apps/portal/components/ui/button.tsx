@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const BaseButton = ({ actionType = 'accept', children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
   const classes = useStyles({});
-  let icon;
+  let icon: JSX.Element;
 
   switch (actionType) {
     case 'cancel':

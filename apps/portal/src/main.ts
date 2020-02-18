@@ -129,7 +129,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc,
-        baseUri: ["'none'"],
+        // TODO: production != development, will consider this
+        // baseUri: ["'none'"],
         objectSrc: ["'none'"],
         imgSrc,
         fontSrc,

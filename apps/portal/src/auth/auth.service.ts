@@ -53,7 +53,7 @@ export class AuthService {
         await this.ldapService.authenticate(username, password),
         await this.userService.readByUsername(username, true, 'profile'),
       )
-      .then((user) => user && user.toResponseObject((req && req.sessionID) || ''))
+      .then((user) => user?.toResponseObject(req?.sessionID || ''))
       .catch((error: Error) => {
         this.logService.error('Error: not found user', JSON.stringify(error), 'AuthService');
 

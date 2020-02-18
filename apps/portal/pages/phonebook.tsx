@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
+import { QueryResult } from 'react-apollo';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
 import { Box, useMediaQuery } from '@material-ui/core';
@@ -21,6 +22,7 @@ import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-cli
 import useDebounce from '../lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
+import { Data, ProfileProps } from '../lib/types';
 // #endregion
 
 const defaultColumnsLG: ColumnNames[] = [
@@ -77,25 +79,30 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
 
   const isAdmin = Boolean(profile?.user?.isAdmin);
 
-  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData }] = useLazyQuery(
-    SEARCH_SUGGESTIONS,
-  );
+  const [
+    getSearchSuggestions,
+    { loading: suggestionsLoading, data: suggestionsData },
+  ] = useLazyQuery(SEARCH_SUGGESTIONS, { ssr: false });
 
   // TODO: вставить сюда роутинг по id конкретного юзера
 
-  const { loading, data, fetchMore, refetch } = useQuery(PROFILES(getGraphQLColumns(columns)), {
-    variables: {
-      orderBy,
-      first: 100,
-      after: '',
-      search: search.length > 3 ? search : '',
-      disabled: columns.includes('disabled'),
-      // TODO: для админов
-      notShowing: isAdmin && columns.includes('notShowing'),
+  const { loading, data, fetchMore, refetch }: QueryResult<Data<'profiles', ProfileProps>> = useQuery(
+    PROFILES(getGraphQLColumns(columns)),
+    {
+      ssr: false,
+      variables: {
+        orderBy,
+        first: 100,
+        after: '',
+        search: search.length > 3 ? search : '',
+        disabled: columns.includes('disabled'),
+        // TODO: для админов
+        notShowing: isAdmin && columns.includes('notShowing'),
+      },
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
     },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-  });
+  );
 
   useEffect(() => {
     setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);

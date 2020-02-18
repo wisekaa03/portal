@@ -22,6 +22,7 @@ import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
+import { QueryResult } from 'react-apollo';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';
@@ -36,6 +37,7 @@ import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
 import RefreshButton from '../../components/ui/refresh-button';
 import snackbarUtils from '../../lib/snackbar-utils';
+import { Data } from '../../lib/types';
 // #endregion
 
 const avatarHeight = 180;
@@ -175,14 +177,17 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   }, [ticketStatus]);
 
   // TODO: выводить ошибки
-  const { loading: loadingTickets, data: dataTickets, error: errorTickets, refetch: refetchTickets } = useQuery(
-    OLD_TICKETS,
-    {
-      variables: { status: status === TICKET_STATUSES[0] ? '' : status },
-      fetchPolicy: 'cache-first',
-      notifyOnNetworkStatusChange: true,
-    },
-  );
+  const {
+    loading: loadingTickets,
+    data: dataTickets,
+    error: errorTickets,
+    refetch: refetchTickets,
+  }: QueryResult<Data<'OldTickets', OldTicket[]>> = useQuery(OLD_TICKETS, {
+    ssr: false,
+    variables: { status: status === TICKET_STATUSES[0] ? '' : status },
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  });
 
   const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     setSearch(event.target.value);

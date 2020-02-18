@@ -149,9 +149,9 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
 
   const handleSubmit = (): void => {
     if (values.user.trim() === '') {
-      usernameRef.current.focus();
+      usernameRef!.current!.focus();
     } else if (values.pass.trim() === '') {
-      passwordRef.current.focus();
+      passwordRef!.current!.focus();
     } else {
       login({
         variables: {

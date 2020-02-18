@@ -8,6 +8,7 @@ import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
 // #endregion
 // #region Imports Local
+import { Profile } from '../src/profile/models/profile.dto';
 // #endregion
 
 export interface GqlErrorMessage {
@@ -51,4 +52,10 @@ export interface Address {
 
 export interface Data<K, T> {
   [K: string]: T;
+}
+
+export interface ProfileProps extends Profile {
+  pageInfo: any;
+  edges: any;
+  totalCount: any;
 }

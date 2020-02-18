@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import { OldService, OldCategory } from '@app/portal/ticket/old-service/models/old-service.interface';
@@ -14,6 +15,7 @@ import { appBarHeight } from '../../components/app-bar';
 import { ServicesTicketProps, ServicesCreatedProps } from '../../components/services/types';
 import Page from '../../layouts/main';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../../lib/queries';
+import { Data } from '../../lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import ServicesIcon from '../../public/images/svg/icons/services.svg';
 // #endregion
@@ -39,13 +41,16 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery(
-    OLD_TICKET_SERVICE,
-    {
-      fetchPolicy: 'cache-first',
-      notifyOnNetworkStatusChange: true,
-    },
-  );
+  const {
+    loading: loadingServices,
+    data: dataServices,
+    error: errorServices,
+    refetch: refetchServices,
+  }: QueryResult<Data<'OldTicketService', OldService[]>> = useQuery(OLD_TICKET_SERVICE, {
+    ssr: false,
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  });
 
   const [createTicket, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
     OLD_TICKET_NEW,

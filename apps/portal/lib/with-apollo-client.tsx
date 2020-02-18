@@ -140,6 +140,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
+      // TODO: trying without getDataFromTree
       if (__SERVER__) {
         try {
           const { getDataFromTree } = await import('@apollo/react-ssr');
@@ -197,7 +198,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
-        Head.rewind();
+        // Head.rewind();
       }
 
       // Extract query data from the Apollo store

@@ -92,7 +92,12 @@ export class UserEntity {
   comparePassword = async (attempt: string | undefined): Promise<boolean> =>
     bcrypt.compare(attempt || '', this.password);
 
-  toResponseObject = (session: string): UserResponse => ({ session, ...this });
+  toResponseObject = (session: string): UserResponse => {
+    if (this.profile) {
+      this.profile.fullName = `${this.profile.lastName} ${this.profile.firstName} ${this.profile.middleName}`;
+    }
+    return { session, ...this };
+  };
 }
 
 // #region User response

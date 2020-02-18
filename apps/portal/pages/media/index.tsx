@@ -7,6 +7,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import {
   Card,
@@ -33,6 +34,7 @@ import { Loading } from '../../components/loading';
 import dayjs from '../../lib/dayjs';
 import { LARGE_RESOLUTION, DATE_FORMAT } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';
+import { Data } from '../../lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -126,7 +128,8 @@ interface MediaProps {
 const Media: I18nPage = (props): React.ReactElement => {
   const { t, i18n } = props;
   const classes = useStyles({});
-  const { loading, data, error } = useQuery(MEDIA, {
+  const { loading, data, error }: QueryResult<Data<'media', MediaProps[]>> = useQuery(MEDIA, {
+    ssr: false,
     fetchPolicy: 'cache-first',
   });
   const [current, setCurrent] = useState<MediaProps>(null);
