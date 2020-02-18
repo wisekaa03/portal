@@ -8,7 +8,7 @@ import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/ico
 // #endregion
 // #region Imports Local
 import { PhonebookControlProps } from './types';
-import RefreshButton from '../ui/refreshButton';
+import RefreshButton from '../ui/refresh-button';
 import { useTranslation } from '../../lib/i18n-client';
 
 // #endregion

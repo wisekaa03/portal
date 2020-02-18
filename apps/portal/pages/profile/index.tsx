@@ -34,7 +34,7 @@ import Avatar from '../../components/ui/avatar';
 import Select from '../../components/ui/select';
 import { Loading } from '../../components/loading';
 import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
-import RefreshButton from '../../components/ui/refreshButton';
+import RefreshButton from '../../components/ui/refresh-button';
 import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
