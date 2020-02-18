@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/SendOutlined';
 import SwipeableViews from 'react-swipeable-views';
+import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
@@ -42,6 +43,7 @@ import { DATE_FORMAT } from '../../lib/constants';
 import dayjs from '../../lib/dayjs';
 import RefreshButton from '../../components/ui/refreshButton';
 import { ComposeButton } from '../../components/compose-link';
+import { Data } from '../../lib/types';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -198,7 +200,12 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
+  const {
+    loading: loadingService,
+    data: dataService,
+    error: errorService,
+    refetch,
+  }: QueryResult<Data<'OldTicketService', OldService[]>> = useQuery(OLD_TICKET_SERVICE, {
     ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import {
   Card,
@@ -32,6 +33,7 @@ import { Loading } from '../../components/loading';
 import dayjs from '../../lib/dayjs';
 import { LARGE_RESOLUTION, DATE_FORMAT } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';
+import { Data } from '../../lib/types';
 // #endregion
 
 // TODO: Import jodit-react:
@@ -132,7 +134,7 @@ interface NewsProps {
 const News: I18nPage = (props): React.ReactElement => {
   const { t, i18n } = props;
   const classes = useStyles({});
-  const { loading, data, error } = useQuery(NEWS, { ssr: false });
+  const { loading, data, error }: QueryResult<Data<'news', NewsProps[]>> = useQuery(NEWS, { ssr: false });
   const [current, setCurrent] = useState<NewsProps>(null);
   const profile = useContext(ProfileContext);
   const router = useRouter();

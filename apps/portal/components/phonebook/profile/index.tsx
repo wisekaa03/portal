@@ -142,7 +142,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
 
     const [controlEl, setControlEl] = useState<HTMLElement | null>(null);
 
-    const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
+    const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE, { ssr: false });
 
     useEffect(() => {
       getProfile({

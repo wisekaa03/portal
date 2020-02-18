@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import React, { useEffect, useState } from 'react';
+import { QueryResult } from 'react-apollo';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -20,6 +21,7 @@ import { Media } from '../../src/media/models/media.dto';
 import Dropzone from '../../components/dropzone';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { TreeView, TreeItem } from '../../components/tree-view';
+import { Data } from '../../lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,8 +54,12 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
   const router = useRouter();
 
-  const { data: foldersData, loading: foldersLoading, error: foldersError } = useQuery(FOLDERS);
-  const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA);
+  const {
+    data: foldersData,
+    loading: foldersLoading,
+    error: foldersError,
+  }: QueryResult<Data<'Folders', any>> = useQuery(FOLDERS, { ssr: false });
+  const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA, { ssr: false });
   const [mediaEdit] = useMutation(MEDIA_EDIT);
 
   console.log(foldersData);

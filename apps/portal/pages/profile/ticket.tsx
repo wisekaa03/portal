@@ -21,6 +21,7 @@ import {
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
 import { TFunction } from 'i18next';
@@ -44,6 +45,7 @@ import TicketIconNew from '../../public/images/svg/ticket/ticket_new.svg';
 import TicketIconPause from '../../public/images/svg/ticket/ticket_pause.svg';
 import TicketIconWorked from '../../public/images/svg/ticket/ticket_worked.svg';
 import TicketIconComplete from '../../public/images/svg/ticket/ticket_complete.svg';
+import { Data } from '../../lib/types';
 // #endregion
 
 const getTicketStatusIcon = (status: string): any => {
@@ -218,13 +220,17 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
 
   const query = { id: null, type: null, ...(router && router.query) };
 
-  const { loading, data, error } = useQuery(OLD_TICKET_DESCRIPTION, {
-    variables: {
-      code: query.id,
-      type: query.type,
+  const { loading, data, error }: QueryResult<Data<'OldTicketDescription', OldTicket>> = useQuery(
+    OLD_TICKET_DESCRIPTION,
+    {
+      ssr: false,
+      variables: {
+        code: query.id,
+        type: query.type,
+      },
+      fetchPolicy: 'cache-and-network',
     },
-    fetchPolicy: 'cache-and-network',
-  });
+  );
 
   const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT, {
     update(cache, { data: { OldTicketEdit } }) {
@@ -266,7 +272,7 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     setFiles([]);
   };
 
-  const ticket: OldTicket | undefined = data && data.OldTicketDescription;
+  const ticket = data?.OldTicketDescription;
 
   return (
     <>
