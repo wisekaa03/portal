@@ -20,7 +20,7 @@
   },
   "complete": {
     "code": "Code: {{value}}",
-    "name": "Name: {{value}}",
+    "name": "Theme appeal: {{value}}",
     "company": "Company: {{value}}",
     "service": "Service: {{value}}",
     "category": "Category: {{value}}",

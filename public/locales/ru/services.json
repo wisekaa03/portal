@@ -20,7 +20,7 @@
   },
   "complete": {
     "code": "Код: {{value}}",
-    "name": "Имя заявки: {{value}}",
+    "name": "Тема обращения: {{value}}",
     "company": "Организация: {{value}}",
     "service": "Услуга: {{value}}",
     "category": "Категория: {{value}}",
