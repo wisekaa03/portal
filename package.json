@@ -1,7 +1,6 @@
 {
-  "private": true,
   "name": "portal",
-  "version": "4.4.4",
+  "version": "4.5.0",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -46,9 +45,11 @@
   "browserslist": [
     "last 2 version",
     "> 2%",
-    "maintained node versions",
     "not dead",
-    "not ie <= 11",
+    "node >= 13",
+    "edge > 14",
+    "not ie 11",
+    "not ie_mob 11",
     "not op_mini all"
   ],
   "postcss": {
@@ -71,6 +72,12 @@
     "**/**/graphql-upload": "^10.0.0",
     "**/**/webpack": "^4.41.6"
   },
+  "private": true,
+  "engines": {
+    "node": ">= 13",
+    "yarn": ">= 1.18"
+  },
+  "os": ["!win32"],
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@apollo/react-ssr": "^3.1.3",
@@ -128,7 +135,7 @@
     "i18next-browser-languagedetector": "^4.0.1",
     "is-mobile": "^2.2.1",
     "isomorphic-fetch": "^2.2.1",
-    "jodit": "^3.3.23",
+    "jodit": "^3.3.24",
     "jodit-react": "^1.0.42",
     "ldapjs": "^1.0.2",
     "libpq": "^1.8.9",
@@ -150,7 +157,7 @@
     "react-apollo": "^3.1.3",
     "react-dom": "^16.12.0",
     "react-dropzone": "^10.2.1",
-    "react-i18next": "^11.3.2",
+    "react-i18next": "^11.3.3",
     "react-swipeable-views": "0.13.9",
     "react-swipeable-views-core": "0.13.7",
     "react-swipeable-views-utils": "0.13.9",
