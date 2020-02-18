@@ -199,6 +199,7 @@ const Services: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingService, data: dataService, error: errorService, refetch } = useQuery(OLD_TICKET_SERVICE, {
+    ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });

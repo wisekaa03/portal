@@ -132,7 +132,7 @@ interface NewsProps {
 const News: I18nPage = (props): React.ReactElement => {
   const { t, i18n } = props;
   const classes = useStyles({});
-  const { loading, data, error } = useQuery(NEWS);
+  const { loading, data, error } = useQuery(NEWS, { ssr: false });
   const [current, setCurrent] = useState<NewsProps>(null);
   const profile = useContext(ProfileContext);
   const router = useRouter();

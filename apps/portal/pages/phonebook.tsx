@@ -84,6 +84,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
   // TODO: вставить сюда роутинг по id конкретного юзера
 
   const { loading, data, fetchMore, refetch } = useQuery(PROFILES(getGraphQLColumns(columns)), {
+    ssr: false,
     variables: {
       orderBy,
       first: 100,

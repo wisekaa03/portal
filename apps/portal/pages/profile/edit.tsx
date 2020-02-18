@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
-  const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE);
+  const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE, { ssr: false });
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
   const profile = useContext(ProfileContext);
