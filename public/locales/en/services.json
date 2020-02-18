@@ -5,7 +5,7 @@
     "service": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\"",
     "category": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\", Category \"{{category}}\""
   },
-  "success": "Ticket was successfully created.",
+  "success": "User appeal registered.",
   "tabs": {
     "tab1": "Department",
     "tab2": "Service",
