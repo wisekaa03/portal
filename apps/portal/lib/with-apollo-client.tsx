@@ -140,65 +140,66 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
-      if (__SERVER__) {
-        try {
-          const { getDataFromTree } = await import('@apollo/react-ssr');
+      // TODO: trying without getDataFromTree
+      // if (__SERVER__) {
+      //   try {
+      //     const { getDataFromTree } = await import('@apollo/react-ssr');
 
-          await getDataFromTree(
-            <AppTree
-              {...appProps}
-              // {...appCtx}
-              Component={Component}
-              router={router}
-              // apolloState={apolloState}
-              apolloClient={apolloClient}
-              currentLanguage={currentLanguage}
-              isMobile={isMobile}
-            />,
-          );
+      //     await getDataFromTree(
+      //       <AppTree
+      //         {...appProps}
+      //         // {...appCtx}
+      //         Component={Component}
+      //         router={router}
+      //         // apolloState={apolloState}
+      //         apolloClient={apolloClient}
+      //         currentLanguage={currentLanguage}
+      //         isMobile={isMobile}
+      //       />,
+      //     );
 
-          // TODO: что это такое ?
-          // await getMarkupFromTree({
-          //   renderFunction: renderToString,
-          //   tree: (
-          //     <AppTree
-          //       {...appProps}
-          //       // {...appCtx}
-          //       Component={Component}
-          //       router={router}
-          //       // apolloState={apolloState}
-          //       apolloClient={apolloClient}
-          //       currentLanguage={currentLanguage}
-          //       isMobile={isMobile}
-          //     />
-          //   ),
-          // });
-        } catch (error) {
-          // Prevent Apollo Client GraphQL errors from crashing SSR.
-          // Handle them in components via the data.error prop:
-          // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          let message = true;
-          if (error instanceof ApolloError) {
-            message = error.graphQLErrors.some(
-              ({ extensions }): boolean =>
-                !!!(
-                  extensions.code === GQLErrorCode.UNAUTHENTICATED ||
-                  extensions.code === GQLErrorCode.UNAUTHENTICATED_LOGIN ||
-                  extensions.code === GQLErrorCode.UNAUTHORIZED
-                ),
-            );
-          } else if (!(error && error.status === 401)) {
-            message = true;
-          }
-          if (message) {
-            console.error('withApolloClient getDataFromTree:', error);
-          }
-        }
+      //     // TODO: что это такое ?
+      //     // await getMarkupFromTree({
+      //     //   renderFunction: renderToString,
+      //     //   tree: (
+      //     //     <AppTree
+      //     //       {...appProps}
+      //     //       // {...appCtx}
+      //     //       Component={Component}
+      //     //       router={router}
+      //     //       // apolloState={apolloState}
+      //     //       apolloClient={apolloClient}
+      //     //       currentLanguage={currentLanguage}
+      //     //       isMobile={isMobile}
+      //     //     />
+      //     //   ),
+      //     // });
+      //   } catch (error) {
+      //     // Prevent Apollo Client GraphQL errors from crashing SSR.
+      //     // Handle them in components via the data.error prop:
+      //     // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
+      //     let message = true;
+      //     if (error instanceof ApolloError) {
+      //       message = error.graphQLErrors.some(
+      //         ({ extensions }): boolean =>
+      //           !!!(
+      //             extensions.code === GQLErrorCode.UNAUTHENTICATED ||
+      //             extensions.code === GQLErrorCode.UNAUTHENTICATED_LOGIN ||
+      //             extensions.code === GQLErrorCode.UNAUTHORIZED
+      //           ),
+      //       );
+      //     } else if (!(error && error.status === 401)) {
+      //       message = true;
+      //     }
+      //     if (message) {
+      //       console.error('withApolloClient getDataFromTree:', error);
+      //     }
+      //   }
 
-        // getDataFromTree does not call componentWillUnmount
-        // head side effect therefore need to be cleared manually
-        Head.rewind();
-      }
+      //   // getDataFromTree does not call componentWillUnmount
+      //   // head side effect therefore need to be cleared manually
+      //   Head.rewind();
+      // }
 
       // Extract query data from the Apollo store
       const apolloState = apolloClient.cache.extract();
