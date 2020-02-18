@@ -23,6 +23,7 @@ const PROFILE_FRAGMENT = gql`
     otdeleng
     positioneng
     title
+    employeeID
     telephone
     workPhone
     email

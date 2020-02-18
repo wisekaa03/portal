@@ -554,6 +554,18 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           InputProps={InputProps}
                         />
                       </div>
+                      <div>
+                        <TextField
+                          fullWidth
+                          disabled={loadingProfile}
+                          onChange={handleChange('employeeID')}
+                          color="secondary"
+                          value={current.employeeID || ''}
+                          label={t('phonebook:fields.employeeID')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                      </div>
                     </div>
                   </>
                 )

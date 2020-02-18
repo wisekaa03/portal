@@ -142,6 +142,12 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
+  employeeID: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   company: string;
 
   @Column({

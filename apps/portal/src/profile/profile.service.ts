@@ -229,6 +229,7 @@ export class ProfileService {
       mobile: ldapUser.mobile,
       fax: ldapUser.facsimileTelephoneNumber,
       room: ldapUser.physicalDeliveryOfficeName,
+      employeeID: ldapUser.employeeID,
       companyeng,
       nameeng,
       departmenteng,
@@ -388,6 +389,9 @@ export class ProfileService {
           break;
         case 'room':
           modification.physicalDeliveryOfficeName = value;
+          break;
+        case 'employeeID':
+          modification.employeeID = value;
           break;
         case 'notShowing':
           modification.flags = value ? '1' : '0';

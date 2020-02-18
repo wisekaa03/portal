@@ -45,6 +45,8 @@ export interface Profile {
 
   room: string;
 
+  employeeID?: string;
+
   company: string;
 
   department?: string;

@@ -5,24 +5,14 @@ import React, { useRef, useContext, useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Box,
-  Button,
-  InputBase,
-  Card,
-  CardActionArea,
-  CardContent,
-  Typography,
-  Divider,
-  BoxProps,
-} from '@material-ui/core';
+import { Box, Button, InputBase, Card, CardActionArea, CardContent, Typography, Divider } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
-import { QueryResult } from 'react-apollo';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
 import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';

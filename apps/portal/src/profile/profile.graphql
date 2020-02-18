@@ -28,6 +28,9 @@ type Profile {
   mobile: String
   email: String
 
+  # ИНН
+  employeeID: String
+
   companyeng: String
   nameeng: String
   departmenteng: String
