@@ -7,108 +7,32 @@ import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { FetchResult } from 'apollo-link';
 import queryString from 'query-string';
 import Router from 'next/router';
+
 // #endregion
 // #region Imports Local
 import LoginComponent from '../../components/login';
-import { LoginValuesProps } from '../../components/login/types';
+import { LoginValuesProps, LoginPageProps } from '../../components/login/types';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { LOGIN } from '../../lib/queries';
 import { Data } from '../../lib/types';
 import { FIRST_PAGE, SESSION } from '../../lib/constants';
 import { UserResponse } from '../../src/user/user.entity';
-import { getStorage, setStorage, removeStorage } from '../../lib/session-storage';
+import { setStorage, removeStorage } from '../../lib/session-storage';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../../lib/i18n-client';
+import Cookie from '../../lib/cookie';
 // #endregion
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     root: {
-//       backgroundSize: 'cover',
-//       backgroundImage: `url(${Background2})`,
-//       backgroundRepeat: 'no-repeat',
-//       backgroundPosition: 'bottom center',
-//       height: '100vh',
-//     },
-//     logo: {
-//       height: '11vh',
-//       margin: '10px auto',
-//       width: '100%',
-//     },
-//     loginContainer: {
-//       height: '70vh',
-//       display: 'flex',
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       textAlign: 'center',
-//     },
-//     card: {
-//       width: 600,
-//       maxWidth: '95vw',
-//       padding: theme.spacing(4),
-//       backgroundColor: 'rgba(255,255,255,0.5)',
-//       color: '#2c4373',
-//       border: 'solid 3px #2c4373',
-//       borderRadius: 16,
-//       paddingLeft: 24,
-//     },
-//     typoAuthorization: {
-//       color: '#2c4373',
-//       textAlign: 'left',
-//       marginBottom: theme.spacing(),
-//     },
-//     labelForFormControl: {
-//       borderColor: 'rgba(44, 67, 115, 0.4)',
-//     },
-//     labelForCheckbox: {
-//       borderColor: 'rgba(44, 67, 115, 0.4)',
-//       width: '100%',
-//     },
-//     formControl: {
-//       margin: theme.spacing(1, 0),
-
-//       [theme.breakpoints.up('sm')]: {
-//         minWidth: 320,
-//       },
-//     },
-//     submitButtonContainer: {
-//       width: '100%',
-//     },
-//     submitButton: {
-//       'borderRadius': 24,
-//       'width': 'fit-content',
-//       'marginTop': theme.spacing(),
-
-//       '&:disabled': {
-//         color: '#2c4373',
-//         borderRadius: 24,
-//         marginTop: theme.spacing(),
-//       },
-
-//       '&:hover': {
-//         color: '#2c4373',
-//       },
-//     },
-//   }),
-// );
-
-const Login: I18nPage = ({ t }): React.ReactElement => {
+const Login: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
   const client = useApolloClient();
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const getInitialValues = (): LoginValuesProps => {
-    // TODO: localStorage бесполезен при ssr надо продумать, либо отказаться от этого функционала
-    const save = false; // = getStorage('save') === 'true';
-
-    return {
-      save,
-      username: save ? getStorage('user') : '',
-      password: '',
-    };
-  };
-
-  const [values, setValues] = useState<LoginValuesProps>(getInitialValues);
+  const [values, setValues] = useState<LoginValuesProps>({
+    save: !!initUsername,
+    username: initUsername,
+    password: '',
+  });
 
   const [login, { loading, error }] = useMutation(LOGIN, {
     update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
@@ -129,9 +53,6 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
     const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
 
     setValues({ ...values, [name]: value });
-    if (name !== 'password') {
-      setStorage(name, value.toString());
-    }
   };
 
   const handleSubmit = (): void => {
@@ -153,10 +74,25 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
   };
 
   useEffect(() => {
+    if (values.save) {
+      Cookie.set('username', values.username);
+    } else {
+      Cookie.remove('username');
+    }
+  }, [values.save, values.username]);
+
+  useEffect(() => {
+    if (usernameRef?.current && initUsername) {
+      passwordRef.current.focus();
+    }
+  }, [usernameRef, passwordRef, initUsername]);
+
+  useEffect(() => {
     if (error) {
       snackbarUtils.error(error);
+      passwordRef.current.focus();
     }
-  }, [error]);
+  }, [passwordRef, error]);
 
   return (
     <>
@@ -176,8 +112,13 @@ const Login: I18nPage = ({ t }): React.ReactElement => {
   );
 };
 
-Login.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['login']),
-});
+Login.getInitialProps = (ctx) => {
+  const { username } = Cookie.get(ctx);
+
+  return {
+    initUsername: username || '',
+    namespacesRequired: includeDefaultNamespaces(['login']),
+  };
+};
 
 export default nextI18next.withTranslation('login')(Login);

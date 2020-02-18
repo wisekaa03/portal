@@ -1,5 +1,9 @@
 /** @format */
 
+export interface LoginPageProps {
+  initUsername: string;
+}
+
 export interface LoginComponentProps {
   usernameRef: React.Ref<HTMLInputElement>;
   passwordRef: React.Ref<HTMLInputElement>;
