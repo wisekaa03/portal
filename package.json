@@ -75,7 +75,7 @@
   "private": true,
   "engines": {
     "node": ">= 13.8.0",
-    "yarn": ">= 1.22.0"
+    "yarn": ">= 1.21.1"
   },
   "os": ["!win32"],
   "dependencies": {
