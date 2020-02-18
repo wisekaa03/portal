@@ -10,6 +10,7 @@ import clsx from 'clsx';
 // #region Imports Local
 import { ServicesElementProps, ServicesElementLinkQueryProps, ServicesElementType } from './types';
 import BaseIcon from '../ui/icon';
+import ConditionalWrapper from '../../lib/conditional-wrapper';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,41 +49,40 @@ const getElement = (query: ServicesElementLinkQueryProps): ServicesElementType =
 const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, linkQuery, withLink }) => {
   const classes = useStyles({});
 
-  const Component = (
-    <Box
-      className={clsx(classes.root, {
-        [classes.active]: active === element.code,
-      })}
-    >
-      <div>
-        <BaseIcon base64={base64} src={element.avatar} size={48} />
-      </div>
-      <div>
-        <Typography variant="subtitle1">{element.name}</Typography>
-      </div>
-    </Box>
-  );
-
-  if (!withLink) {
-    return <>{Component}</>;
-  }
-
   let linkAs = pathname;
 
-  if (linkQuery) {
+  if (withLink && linkQuery) {
     linkAs += `/${Object.values(linkQuery).join('/')}`;
   }
 
   return (
-    <Link
-      href={{
-        pathname,
-        query: { ...linkQuery, [getElement(linkQuery)]: element.code },
-      }}
-      as={`${linkAs}/${element.code}`}
+    <ConditionalWrapper
+      condition={withLink}
+      wrapper={(children) => (
+        <Link
+          href={{
+            pathname,
+            query: { ...linkQuery, [getElement(linkQuery)]: element.code },
+          }}
+          as={`${linkAs}/${element.code}`}
+        >
+          {children}
+        </Link>
+      )}
     >
-      {Component}
-    </Link>
+      <Box
+        className={clsx(classes.root, {
+          [classes.active]: active === element.code,
+        })}
+      >
+        <div>
+          <BaseIcon base64={base64} src={element.avatar} size={48} />
+        </div>
+        <div>
+          <Typography variant="subtitle1">{element.name}</Typography>
+        </div>
+      </Box>
+    </ConditionalWrapper>
   );
 };
 

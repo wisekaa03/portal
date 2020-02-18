@@ -7,8 +7,8 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { LinearProgress, CircularProgress, Box } from '@material-ui/core';
 import clsx from 'clsx';
 // #endregion
-
 // #region Imports Local
+import ConditionalWrapper from '../lib/conditional-wrapper';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,33 +61,32 @@ export const Loading: React.FC<{
     );
   }
 
-  let circular = (
-    <CircularProgress
-      color={color || 'primary'}
-      variant={(variant as 'determinate' | 'indeterminate' | 'static') || 'indeterminate'}
-      disableShrink={disableShrink || false}
-      size={size || 24}
-      thickness={thickness || 4}
-      className={clsx({
-        [classes.margin]: !noMargin,
-      })}
-    />
+  return (
+    <ConditionalWrapper
+      condition={full}
+      wrapper={(children) => (
+        <Box
+          className={clsx({ [classes.absolute]: absolute })}
+          display="flex"
+          height="100%"
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {children}
+        </Box>
+      )}
+    >
+      <CircularProgress
+        color={color || 'primary'}
+        variant={(variant as 'determinate' | 'indeterminate' | 'static') || 'indeterminate'}
+        disableShrink={disableShrink || false}
+        size={size || 24}
+        thickness={thickness || 4}
+        className={clsx({
+          [classes.margin]: !noMargin,
+        })}
+      />
+    </ConditionalWrapper>
   );
-
-  if (full) {
-    circular = (
-      <Box
-        className={clsx({ [classes.absolute]: absolute })}
-        display="flex"
-        height="100%"
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-      >
-        {circular}
-      </Box>
-    );
-  }
-
-  return circular;
 };
