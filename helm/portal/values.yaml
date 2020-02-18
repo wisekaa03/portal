@@ -126,7 +126,7 @@ resources:
     cpu: 1000m
     memory: 2Gi
   requests:
-    cpu: 700m
+    cpu: 400m
     memory: 1Gi
     ephemeral-storage: 1Gi
 
