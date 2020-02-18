@@ -108,6 +108,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.secondary.main,
     },
     ticket: {
+      'height': 'fit-content',
       'display': 'flex',
       'flex': 1,
       'minWidth': 300,
