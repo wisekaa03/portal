@@ -56,7 +56,7 @@ export const Loading: React.FC<{
   color,
   type,
   noMargin,
-  full,
+  full = false,
   wrapperClasses,
   absolute,
   children,
