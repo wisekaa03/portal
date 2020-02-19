@@ -1,12 +1,8 @@
 {
   "title": "Portal: Upload files",
-  "add": {
-    "title": "Portal: Add files"
-  },
-  "delete": "Delete",
-  "edit": {
-    "title": "Portal: Edit files"
-  },
+  "add": "Create file",
+  "edit": "Edit file",
+  "delete": "Delete file",
   "more": "Learn more",
   "control": {
     "sharedOrUser": "Directory",
