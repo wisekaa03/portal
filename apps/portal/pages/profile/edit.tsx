@@ -17,7 +17,6 @@ import {
 } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-import { useDropzone } from 'react-dropzone';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
@@ -38,6 +37,7 @@ import Button from '../../components/ui/button';
 import { Gender } from '../../src/shared/interfaces';
 import dayjs from '../../lib/dayjs';
 import snackbarUtils from '../../lib/snackbar-utils';
+import { DropzoneWrapper } from '../../components/dropzone';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -113,8 +113,8 @@ const useStyles = makeStyles((theme: Theme) =>
     pickPhoto: {
       'position': 'absolute',
       'zIndex': 100,
-      'width': '100%',
-      'height': '100%',
+      'width': 200,
+      'height': 200,
       'borderRadius': theme.spacing(0.5),
       'color': '#fff',
       'opacity': 0,
@@ -154,8 +154,6 @@ const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }):
     },
     [current, updated],
   );
-
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   // TODO: пока так, потом переделать с выводом ошибок
   useEffect(() => {
@@ -248,13 +246,12 @@ const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }):
                     <div className={classes.firstBlock}>
                       <Box display="flex">
                         <Box mr={1} position="relative">
-                          <div {...getRootProps()}>
-                            <input {...getInputProps()} />
+                          <DropzoneWrapper onDrop={onDrop}>
                             <IconButton className={classes.pickPhoto}>
                               <PhotoCameraIcon />
                             </IconButton>
                             <Avatar fullSize className={classes.avatar} profile={current} alt="photo" />
-                          </div>
+                          </DropzoneWrapper>
                         </Box>
                         <div className={classes.nameBlock}>
                           <TextField

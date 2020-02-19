@@ -1,11 +1,11 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Badge, Typography, Fab } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BaseDropzone, { DropzoneState } from 'react-dropzone';
+import BaseDropzone, { DropzoneState, useDropzone } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
 import clsx from 'clsx';
 import uuidv4 from 'uuid/v4';
@@ -103,6 +103,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
+
+export const DropzoneWrapper: FC<{ onDrop: (acceptedFiles: any) => Promise<void> }> = ({ onDrop, children }) => {
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  return (
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      {children}
+    </div>
+  );
+};
 
 const NO_PREVIEW = 'no_preview';
 
