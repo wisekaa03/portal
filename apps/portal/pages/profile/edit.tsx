@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
@@ -32,7 +32,6 @@ import Page from '../../layouts/main';
 import Avatar from '../../components/ui/avatar';
 import { Loading } from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { ProfileContext } from '../../lib/context';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import { resizeImage } from '../../lib/utils';
 import Button from '../../components/ui/button';
@@ -131,13 +130,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
+interface ProfileEditProps {
+  user?: any;
+  isAdmin: boolean;
+}
+
+const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE, { ssr: false });
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
-  const profile = useContext(ProfileContext);
-  const { isAdmin } = profile!.user;
   const router = useRouter();
 
   const [changeProfile, { loading: loadingProfile, error: errorProfile }] = useMutation(CHANGE_PROFILE);
@@ -157,22 +159,22 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   // TODO: пока так, потом переделать с выводом ошибок
   useEffect(() => {
-    if (isAdmin && router && router.query && router.query.id) {
+    if (isAdmin && router?.query?.id) {
       const id = router.query.id as string;
       getProfile({
         variables: { id },
       });
       setUpdated({ id } as any);
     } else {
-      setCurrent(profile.user.profile);
+      setCurrent(user.profile);
     }
-  }, [isAdmin, getProfile, router, profile.user]);
+  }, [getProfile, isAdmin, router, user.profile]);
 
   useEffect(() => {
-    if (isAdmin && !loading && !error && data && data.profile) {
+    if (isAdmin && !loading && !error && data?.profile) {
       setCurrent(data.profile);
     }
-  }, [loading, data, isAdmin, error, profile.user.profile]);
+  }, [loading, data, error, isAdmin]);
 
   const handleChange = (name: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const el: EventTarget & HTMLInputElement = e.target;
@@ -436,7 +438,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           disabled={loadingProfile}
                           onChange={handleChange('manager')}
                           color="secondary"
-                          value={current.fullName}
+                          value={current.manager?.fullName}
                           label={t('phonebook:fields.manager')}
                           variant="outlined"
                           InputProps={{ readOnly: true }}
@@ -591,8 +593,15 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-ProfileEdit.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
-});
+ProfileEdit.getInitialProps = ({ req }) => {
+  const { user } = ((req as unknown) as Express.Request)?.session?.passport;
+  const { isAdmin = false } = user;
+
+  return {
+    user,
+    isAdmin,
+    namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
+  };
+};
 
 export default nextI18next.withTranslation('profile')(ProfileEdit);
