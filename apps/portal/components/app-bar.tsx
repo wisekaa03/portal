@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import Router from 'next/router';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -12,14 +12,12 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import Skeleton from '@material-ui/lab/Skeleton';
-// import Link from 'next/link';
-import { WithTranslation } from 'next-i18next';
 // #endregion
 // #region Imports Local
 import HeaderBg from '../../../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../../../public/images/png/profile_popover_bg.png';
 import LogoMin from '../../../public/images/png/logo_min.png';
-import { nextI18next } from '../lib/i18n-client';
+import { nextI18next, useTranslation } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
 import { LOGOUT } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
@@ -94,15 +92,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface AppBarProps extends WithTranslation {
+interface AppBarComponentProps {
   handleDrawerOpen(): void;
 }
 
-const BaseAppBar = (props: AppBarProps): React.ReactElement => {
+const AppBarComponent: FC<AppBarComponentProps> = ({ handleDrawerOpen }) => {
   const classes = useStyles({});
-  const { handleDrawerOpen, t } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const client = useApolloClient();
+  const { t } = useTranslation();
 
   const [logout] = useMutation(LOGOUT, {
     onCompleted() {
@@ -131,11 +129,11 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
     <AppBar id="header" position="sticky" className={classes.root}>
       <Toolbar className={classes.toolbar}>
         <ProfileContext.Consumer>
-          {(context) => (
+          {({ user }) => (
             <>
               <IconButton
                 edge="start"
-                onClick={context.user && handleDrawerOpen}
+                onClick={user && handleDrawerOpen}
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
@@ -145,18 +143,14 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
               <div className={classes.logo}>
                 <img src={LogoMin} alt="logo" />
               </div>
-              <Box id="profile-avatar" className={classes.avatarWrap} onClick={context.user && handlePopoverOpen}>
-                {context.user ? (
-                  <Avatar
-                    className={clsx(classes.avatar, classes.pointer)}
-                    profile={context.user.profile}
-                    alt="photo"
-                  />
+              <Box id="profile-avatar" className={classes.avatarWrap} onClick={user && handlePopoverOpen}>
+                {user ? (
+                  <Avatar className={clsx(classes.avatar, classes.pointer)} profile={user.profile} alt="photo" />
                 ) : (
                   <Skeleton className={classes.avatar} variant="circle" />
                 )}
               </Box>
-              {context.user && (
+              {user && (
                 <Popover
                   id="profile-popover"
                   open={open}
@@ -175,26 +169,26 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
                   transitionDuration={0}
                   disableRestoreFocus
                 >
-                  <Typography className={classes.profileName}>{context.user.profile.fullName}</Typography>
-                  <Avatar className={classes.avatar} profile={context.user.profile} alt="photo" />
+                  <Typography className={classes.profileName}>{user.profile.fullName}</Typography>
+                  <Avatar className={classes.avatar} profile={user.profile} alt="photo" />
                   <Box className={classes.commonBlock}>
                     <Box className={classes.phoneBlock}>
-                      {context.user.profile.telephone && (
+                      {user.profile.telephone && (
                         <>
                           <PhoneIcon />
-                          <Typography>{context.user.profile.telephone}</Typography>
+                          <Typography>{user.profile.telephone}</Typography>
                         </>
                       )}
-                      {context.user.profile.mobile && (
+                      {user.profile.mobile && (
                         <>
                           <PhoneIphoneIcon />
-                          <Typography>{context.user.profile.mobile}</Typography>
+                          <Typography>{user.profile.mobile}</Typography>
                         </>
                       )}
-                      {context.user.profile.workPhone && (
+                      {user.profile.workPhone && (
                         <>
                           <PhoneInTalkIcon />
-                          <Typography>{context.user.profile.workPhone}</Typography>
+                          <Typography>{user.profile.workPhone}</Typography>
                         </>
                       )}
                     </Box>
@@ -217,4 +211,4 @@ const BaseAppBar = (props: AppBarProps): React.ReactElement => {
   );
 };
 
-export default nextI18next.withTranslation('common')(BaseAppBar);
+export default AppBarComponent;
