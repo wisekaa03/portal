@@ -3,7 +3,6 @@
 // #region Imports NPM
 import Head from 'next/head';
 import React from 'react';
-import { TFunction } from 'i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Grid } from '@material-ui/core';
 // #endregion
@@ -36,25 +35,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const title = (t: TFunction, statusCode?: number): string => {
+const title = (statusCode?: number): string => {
   switch (statusCode) {
     case 500:
-      return t('error:title:server');
+      return 'error:title:server';
     case 403:
-      return t('error:title:notauthorized');
+      return 'error:title:notauthorized';
     default:
-      return t('error:title:notfound');
+      return 'error:title:notfound';
   }
 };
 
-const description = (t: TFunction, statusCode?: number): string => {
+const description = (statusCode?: number): string => {
   switch (statusCode) {
     case 500:
-      return t('error:description:server');
+      return 'error:description:server';
     case 403:
-      return t('error:description:notauthorized');
+      return 'error:description:notauthorized';
     default:
-      return t('error:description:notfound');
+      return 'error:description:notfound';
   }
 };
 
@@ -64,13 +63,13 @@ const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
   return (
     <div className={classes.root}>
       <Head>
-        <title>{title(t, statusCode)}</title>
+        <title>{t(title(statusCode))}</title>
       </Head>
       <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
         <Grid item>
           <Paper className={classes.paper}>
             <Typography variant="h3" component="h3">
-              {description(t, statusCode)}
+              {t(description(statusCode))}
             </Typography>
 
             <Typography variant="h1" component="h1" className={classes.statusCode}>
