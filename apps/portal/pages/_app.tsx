@@ -36,18 +36,19 @@ const InnerLogin: React.FC<{
   pageProps: any;
   isMobile: boolean;
   language: string;
-}> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
+  user: User;
+}> = ({ Component, pageProps, isMobile, language, user }): React.ReactElement | null => {
   const { loading, data }: QueryResult<Data<'me', User>> = useQuery(
     CURRENT_USER,
     __SERVER__ ? { ssr: true } : { ssr: true, fetchPolicy: 'cache-first' },
   );
-  const user = data ? data.me : undefined;
+  // const user = data ? data.me : undefined;
 
   return (
     <Loading activate={loading} noMargin type="linear" variant="indeterminate">
       <ProfileContext.Provider
         value={{
-          user,
+          user: user || data?.me,
           language,
           isMobile,
         }}
@@ -71,12 +72,13 @@ const CurrentLogin: React.FC<{
 }> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
   const pathname = (ctx && ctx.asPath) || (router && router.asPath);
   const redirect = getRedirect(pathname);
+  let user;
 
   if (__SERVER__) {
     // SERVER
     const req = ctx && ((ctx.req as unknown) as Express.Request);
     const res = ctx && (ctx.res as any);
-    const user = req && req.session && req.session.passport && req.session.passport.user;
+    user = req && req.session && req.session.passport && req.session.passport.user;
 
     if (!user) {
       if (pathname.startsWith('/auth/login')) {
@@ -117,7 +119,9 @@ const CurrentLogin: React.FC<{
   }
 
   if (!pathname.startsWith('/auth/login')) {
-    return <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} />;
+    return (
+      <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} user={user} />
+    );
   }
 
   return (
