@@ -84,7 +84,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
   static async getInitialProps(ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> {
     const sheets = new ServerStyleSheets();
-    const { apolloClient, renderPage: originalRenderPage, res, req } = ctx;
+    const { apolloClient, renderPage: originalRenderPage, req } = ctx;
 
     const lng = req && lngFromReq(req);
 

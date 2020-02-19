@@ -7,7 +7,7 @@ import App from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { UnauthorizedException } from '@nestjs/common';
-// import dynamic from 'next/dynamic';
+import { Response, Request } from 'express';
 import { QueryResult } from 'react-apollo';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider } from '@material-ui/styles';
@@ -36,11 +36,28 @@ const InnerLogin: React.FC<{
   pageProps: any;
   isMobile: boolean;
   language: string;
-}> = ({ Component, pageProps, isMobile, language }): React.ReactElement | null => {
-  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(
-    CURRENT_USER,
-    __SERVER__ ? { ssr: true } : { ssr: true, fetchPolicy: 'cache-first' },
-  );
+  user: User;
+}> = ({ Component, pageProps, isMobile, language, user: userServer }): React.ReactElement | null => {
+  if (__SERVER__) {
+    return (
+      <ProfileContext.Provider
+        value={{
+          user: userServer,
+          language,
+          isMobile,
+        }}
+      >
+        <Component {...pageProps} />
+      </ProfileContext.Provider>
+    );
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+    ssr: false,
+    fetchPolicy: 'cache-first',
+  });
+
   const user = data ? data.me : undefined;
 
   return (
@@ -69,15 +86,13 @@ const CurrentLogin: React.FC<{
   ctx: NextPageContext;
   router: NextRouter;
 }> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
-  const pathname = (ctx && ctx.asPath) || (router && router.asPath);
+  const pathname = ctx?.asPath || router?.asPath;
   const redirect = getRedirect(pathname);
 
-  if (__SERVER__) {
-    // SERVER
-    const req = ctx && ((ctx.req as unknown) as Express.Request);
-    const res = ctx && (ctx.res as any);
-    const user = req && req.session && req.session.passport && req.session.passport.user;
+  const { req, res }: { req?: any; res?: any } = ctx || {};
+  const user: User = req?.session?.passport?.user;
 
+  if (__SERVER__) {
     if (!user) {
       if (pathname.startsWith('/auth/login')) {
         return (
@@ -117,7 +132,9 @@ const CurrentLogin: React.FC<{
   }
 
   if (!pathname.startsWith('/auth/login')) {
-    return <InnerLogin Component={Component} pageProps={pageProps} isMobile={isMobile} language={language} />;
+    return (
+      <InnerLogin Component={Component} user={user} pageProps={pageProps} isMobile={isMobile} language={language} />
+    );
   }
 
   return (
