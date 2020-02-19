@@ -131,8 +131,7 @@ interface NewsProps {
   excerpt: string;
 }
 
-const News: I18nPage = (props): React.ReactElement => {
-  const { t, i18n } = props;
+const NewsPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const { loading, data, error }: QueryResult<Data<'news', NewsProps[]>> = useQuery(NEWS, { ssr: false });
   const [current, setCurrent] = useState<NewsProps>(null);
@@ -175,97 +174,99 @@ const News: I18nPage = (props): React.ReactElement => {
   };
 
   return (
-    <Page {...props}>
+    <>
       <Head>
         <title>{t('news:title')}</title>
       </Head>
-      <Loading activate={loading || !data || !data.news} noMargin type="linear" variant="indeterminate">
-        <div
-          className={clsx(classes.root, {
-            [classes.rootSelected]: current,
-          })}
-        >
-          {current && (
-            <div className={classes.containerCurrent}>
-              <Card className={classes.cardCurrent}>
-                <CardHeader
-                  action={
-                    <IconButton aria-label="close" onClick={handleCloseCurrent}>
-                      <CloseIcon />
-                    </IconButton>
-                  }
-                  title={current.title}
-                  subheader={format(current.updatedAt, i18n)}
-                />
-                <CardContent>
-                  <div
-                    className={classes.content}
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: current.content }}
-                  />
-                </CardContent>
-              </Card>
-            </div>
-          )}
-          <div className={classes.container}>
-            <div>
-              {data.news.map((news: NewsProps) => {
-                // TODO: regexp может быть улучшен
-                const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
-                const anchor = `news-${news.id}`;
-
-                return (
-                  <Card id={anchor} key={news.id} className={classes.card}>
-                    <CardActionArea onClick={handleCurrent(news)}>
-                      <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
-                      <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          {news.title}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions className={classes.action}>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        {format(news.updatedAt, i18n)}
-                      </Typography>
-                      {profile.user && profile.user.isAdmin && (
-                        <>
-                          <IconButton
-                            className={classes.icons}
-                            size="small"
-                            color="secondary"
-                            onClick={handleDelete(news)}
-                            aria-label="delete"
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                          <IconButton size="small" color="secondary" onClick={handleEdit(news)} aria-label="edit">
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </>
-                      )}
-                      <IconButton size="small" color="secondary" onClick={handleCurrent(news)} aria-label="more">
-                        <MoreIcon fontSize="small" />
+      <Page {...rest}>
+        <Loading activate={loading || !data || !data.news} noMargin type="linear" variant="indeterminate">
+          <div
+            className={clsx(classes.root, {
+              [classes.rootSelected]: current,
+            })}
+          >
+            {current && (
+              <div className={classes.containerCurrent}>
+                <Card className={classes.cardCurrent}>
+                  <CardHeader
+                    action={
+                      <IconButton aria-label="close" onClick={handleCloseCurrent}>
+                        <CloseIcon />
                       </IconButton>
-                    </CardActions>
-                  </Card>
-                );
-              })}
-              {profile.user && profile.user.isAdmin && (
-                <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
-                  <AddIcon />
-                </Fab>
-              )}
+                    }
+                    title={current.title}
+                    subheader={format(current.updatedAt, i18n)}
+                  />
+                  <CardContent>
+                    <div
+                      className={classes.content}
+                      // eslint-disable-next-line react/no-danger
+                      dangerouslySetInnerHTML={{ __html: current.content }}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+            <div className={classes.container}>
+              <div>
+                {data.news.map((news: NewsProps) => {
+                  // TODO: regexp может быть улучшен
+                  const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
+                  const anchor = `news-${news.id}`;
+
+                  return (
+                    <Card id={anchor} key={news.id} className={classes.card}>
+                      <CardActionArea onClick={handleCurrent(news)}>
+                        <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
+                        <CardContent>
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            {news.title}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                      <CardActions className={classes.action}>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {format(news.updatedAt, i18n)}
+                        </Typography>
+                        {profile.user && profile.user.isAdmin && (
+                          <>
+                            <IconButton
+                              className={classes.icons}
+                              size="small"
+                              color="secondary"
+                              onClick={handleDelete(news)}
+                              aria-label="delete"
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton size="small" color="secondary" onClick={handleEdit(news)} aria-label="edit">
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        )}
+                        <IconButton size="small" color="secondary" onClick={handleCurrent(news)} aria-label="more">
+                          <MoreIcon fontSize="small" />
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  );
+                })}
+                {profile.user && profile.user.isAdmin && (
+                  <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
+                    <AddIcon />
+                  </Fab>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </Loading>
-    </Page>
+        </Loading>
+      </Page>
+    </>
   );
 };
 
-News.getInitialProps = () => ({
+NewsPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['news']),
 });
 
-export default nextI18next.withTranslation('news')(News);
+export default nextI18next.withTranslation('news')(NewsPage);

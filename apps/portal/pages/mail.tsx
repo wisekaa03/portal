@@ -18,8 +18,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Mail: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const MailPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { to } = __SERVER__ ? { to: false } : queryString.parse(window.location.search);
   const url = `${process.env.MAIL_URL}${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 
@@ -28,7 +27,7 @@ const Mail: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('mail:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <Iframe
           url={url}
           // eslint-disable-next-line max-len
@@ -39,8 +38,8 @@ const Mail: I18nPage = (props): React.ReactElement => {
   );
 };
 
-Mail.getInitialProps = () => ({
+MailPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['mail']),
 });
 
-export default nextI18next.withTranslation('mail')(Mail);
+export default nextI18next.withTranslation('mail')(MailPage);

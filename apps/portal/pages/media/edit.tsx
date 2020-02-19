@@ -18,7 +18,7 @@ import snackbarUtils from '../../lib/snackbar-utils';
 import MediaEditComponent from '../../components/media/edit';
 // #endregion
 
-const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const MediaEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Media | undefined>();
   const [updated, setUpdated] = useState<Media | undefined>();
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
@@ -91,8 +91,8 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-MediaEdit.getInitialProps = () => ({
+MediaEditPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['media']),
 });
 
-export default nextI18next.withTranslation('media')(MediaEdit);
+export default nextI18next.withTranslation('media')(MediaEditPage);

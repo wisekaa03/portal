@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const FAQ: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const FAQPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
 
   return (
@@ -29,7 +28,7 @@ const FAQ: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('faq:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <VerticalCenter horizontal>
           <Paper className={classes.root}>
             <Typography>Извините, база знаний пока не готова.</Typography>
@@ -40,10 +39,8 @@ const FAQ: I18nPage = (props): React.ReactElement => {
   );
 };
 
-FAQ.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['faq']),
-  };
-};
+FAQPage.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['faq']),
+});
 
-export default nextI18next.withTranslation('faq')(FAQ);
+export default nextI18next.withTranslation('faq')(FAQPage);

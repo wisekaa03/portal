@@ -52,9 +52,7 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
   return result;
 };
 
-const PhoneBook: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
-
+const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
@@ -232,7 +230,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('phonebook:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <Box display="flex" flexDirection="column">
           <PhonebookControl
             searchRef={searchRef}
@@ -273,8 +271,8 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
   );
 };
 
-PhoneBook.getInitialProps = () => ({
+PhonebookPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['phonebook']),
 });
 
-export default nextI18next.withTranslation('phonebook')(PhoneBook);
+export default nextI18next.withTranslation('phonebook')(PhonebookPage);

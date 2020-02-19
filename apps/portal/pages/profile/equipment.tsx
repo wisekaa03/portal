@@ -50,7 +50,7 @@ const rows = [
   createData('0024003440043', 'Монитор Samsung UE40', 1),
 ];
 
-const ProfileEquipment: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ProfileEquipmentPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
 
@@ -108,8 +108,8 @@ const ProfileEquipment: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-ProfileEquipment.getInitialProps = () => ({
+ProfileEquipmentPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['profile']),
 });
 
-export default nextI18next.withTranslation('profile')(ProfileEquipment);
+export default nextI18next.withTranslation('profile')(ProfileEquipmentPage);

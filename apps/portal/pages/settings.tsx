@@ -26,8 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Settings: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
 
   const [userSettings] = useMutation(USER_SETTINGS);
@@ -49,7 +48,7 @@ const Settings: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('setting:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <div className={classes.root}>
           <ProfileContext.Consumer>
             {(context) => (
@@ -74,8 +73,8 @@ const Settings: I18nPage = (props): React.ReactElement => {
   );
 };
 
-Settings.getInitialProps = () => ({
+SettingsPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['setting']),
 });
 
-export default nextI18next.withTranslation('setting')(Settings);
+export default nextI18next.withTranslation('setting')(SettingsPage);
