@@ -38,7 +38,7 @@ const InnerLogin: React.FC<{
   language: string;
   user: User;
 }> = ({ Component, pageProps, isMobile, language, user: userServer }): React.ReactElement | null => {
-  if (__SERVER__) {
+  if (__SERVER__ && userServer) {
     return (
       <ProfileContext.Provider
         value={{
@@ -54,7 +54,6 @@ const InnerLogin: React.FC<{
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
-    ssr: false,
     fetchPolicy: 'cache-first',
   });
 
@@ -64,7 +63,7 @@ const InnerLogin: React.FC<{
     <Loading activate={loading} noMargin type="linear" variant="indeterminate">
       <ProfileContext.Provider
         value={{
-          user: user || data?.me,
+          user,
           language,
           isMobile,
         }}
@@ -201,17 +200,15 @@ class MainApp extends App<ApolloAppProps> {
               horizontal: 'center',
             }}
           >
-            <>
-              <SnackbarUtilsConfigurator />
-              <CurrentLogin
-                pageProps={pageProps}
-                isMobile={!!isMobile}
-                language={currentLanguage || ''}
-                Component={Component}
-                router={router}
-                ctx={ctx}
-              />
-            </>
+            <SnackbarUtilsConfigurator />
+            <CurrentLogin
+              pageProps={pageProps}
+              isMobile={!!isMobile}
+              language={currentLanguage || ''}
+              Component={Component}
+              router={router}
+              ctx={ctx}
+            />
           </SnackbarProvider>
         </ThemeProvider>
       </ApolloProvider>
