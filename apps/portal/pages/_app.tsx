@@ -64,7 +64,7 @@ const InnerLogin: React.FC<{
     <Loading activate={loading} noMargin type="linear" variant="indeterminate">
       <ProfileContext.Provider
         value={{
-          user,
+          user: user || data?.me,
           language,
           isMobile,
         }}
