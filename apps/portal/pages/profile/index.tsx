@@ -126,6 +126,8 @@ const useStyles = makeStyles((theme: Theme) =>
       'gridTemplateColumns': '1fr 4fr',
       'gridTemplateRows': '40px 1fr',
       'gap': `${theme.spacing()}px`,
+      'maxHeight': '180px',
+      'minHeight': '180px',
       '& h6': {
         maxWidth: 220,
       },
