@@ -2,7 +2,6 @@
 
 // #region Imports NPM
 import React from 'react';
-import Head from 'next/head';
 import { AppContext } from 'next/app';
 import Router from 'next/router';
 import { ApolloClient, ApolloError } from 'apollo-client';
@@ -148,7 +147,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
           await getDataFromTree(
             <AppTree
               {...appProps}
-              // {...appCtx}
+              ctx={ctx}
               Component={Component}
               router={router}
               // apolloState={apolloState}
@@ -157,23 +156,6 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
               isMobile={isMobile}
             />,
           );
-
-          // TODO: что это такое ?
-          // await getMarkupFromTree({
-          //   renderFunction: renderToString,
-          //   tree: (
-          //     <AppTree
-          //       {...appProps}
-          //       // {...appCtx}
-          //       Component={Component}
-          //       router={router}
-          //       // apolloState={apolloState}
-          //       apolloClient={apolloClient}
-          //       currentLanguage={currentLanguage}
-          //       isMobile={isMobile}
-          //     />
-          //   ),
-          // });
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
