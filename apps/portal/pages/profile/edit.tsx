@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
+import { Request } from 'express';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -38,6 +39,7 @@ import { Gender } from '../../src/shared/interfaces';
 import { format } from '../../lib/dayjs';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { DropzoneWrapper } from '../../components/dropzone';
+import { User } from '../../src/user/models/user.dto';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -131,7 +133,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ProfileEditProps {
-  user?: any;
+  user?: User;
   isAdmin: boolean;
 }
 
@@ -591,12 +593,11 @@ const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }):
 };
 
 ProfileEdit.getInitialProps = ({ req }) => {
-  const { user } = ((req as unknown) as Express.Request)?.session?.passport;
-  const { isAdmin = false } = user;
+  const { user }: { user?: User } = ((req as unknown) as Request)?.session?.passport.user;
 
   return {
     user,
-    isAdmin,
+    isAdmin: user?.isAdmin || false,
     namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
   };
 };
