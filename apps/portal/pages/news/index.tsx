@@ -30,8 +30,8 @@ import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
 import { Loading } from '../../components/loading';
-import dayjs from '../../lib/dayjs';
-import { LARGE_RESOLUTION, DATE_FORMAT } from '../../lib/constants';
+import { format } from '../../lib/dayjs';
+import { LARGE_RESOLUTION } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';
 import { Data } from '../../lib/types';
 // #endregion
@@ -195,7 +195,7 @@ const News: I18nPage = (props): React.ReactElement => {
                     </IconButton>
                   }
                   title={current.title}
-                  subheader={dayjs(current.updatedAt).format(DATE_FORMAT(i18n))}
+                  subheader={format(current.updatedAt, i18n)}
                 />
                 <CardContent>
                   <div
@@ -226,7 +226,7 @@ const News: I18nPage = (props): React.ReactElement => {
                     </CardActionArea>
                     <CardActions className={classes.action}>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        {dayjs(news.updatedAt).format(DATE_FORMAT(i18n))}
+                        {format(news.updatedAt, i18n)}
                       </Typography>
                       {profile.user && profile.user.isAdmin && (
                         <>

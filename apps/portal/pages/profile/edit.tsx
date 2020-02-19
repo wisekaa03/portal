@@ -35,7 +35,7 @@ import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import { resizeImage } from '../../lib/utils';
 import Button from '../../components/ui/button';
 import { Gender } from '../../src/shared/interfaces';
-import dayjs from '../../lib/dayjs';
+import { format } from '../../lib/dayjs';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { DropzoneWrapper } from '../../components/dropzone';
 // #endregion
@@ -188,7 +188,7 @@ const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }):
 
   const handleBirthday = (value: Date | null): void => {
     setCurrent({ ...current, birthday: new Date(value) });
-    setUpdated({ ...updated, birthday: new Date(dayjs(value).format('YYYY-MM-DD')) });
+    setUpdated({ ...updated, birthday: new Date(format(value, 'YYYY-MM-DD')) });
   };
 
   const handleSave = (): void => {

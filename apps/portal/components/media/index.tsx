@@ -28,8 +28,8 @@ import { MediaComponentProps } from './types';
 import IsAdmin from '../isAdmin';
 import { useTranslation } from '../../lib/i18n-client';
 import { Loading } from '../loading';
-import dayjs from '../../lib/dayjs';
-import { LARGE_RESOLUTION, DATE_FORMAT } from '../../lib/constants';
+import { format } from '../../lib/dayjs';
+import { LARGE_RESOLUTION } from '../../lib/constants';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -130,7 +130,7 @@ const MediaComponent: FC<MediaComponentProps> = ({
                   </IconButton>
                 }
                 title={current.title}
-                subheader={dayjs(current.updatedAt).format(DATE_FORMAT(i18n))}
+                subheader={format(current.updatedAt, i18n)}
               />
               <CardContent>
                 <div
@@ -165,7 +165,7 @@ const MediaComponent: FC<MediaComponentProps> = ({
                     </CardActionArea>
                     <CardActions className={classes.action}>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        {dayjs(media.updatedAt).format(DATE_FORMAT(i18n))}
+                        {format(media.updatedAt, i18n)}
                       </Typography>
                       <IsAdmin>
                         <IconButton

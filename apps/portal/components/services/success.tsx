@@ -13,8 +13,7 @@ import { ServicesSuccessProps, ServicesSuccessCardProps } from './types';
 import { ComposeButton } from '../compose-link';
 import Button from '../ui/button';
 import { useTranslation } from '../../lib/i18n-client';
-import dayjs from '../../lib/dayjs';
-import { DATE_FORMAT } from '../../lib/constants';
+import { format } from '../../lib/dayjs';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -43,9 +42,7 @@ const ServicesSuccessCard = withStyles((theme) => ({
       <Typography variant="subtitle1">{t('services:complete.service', { value: category })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.category', { value: requisiteSource })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
-      <Typography variant="subtitle1">
-        {t('services:complete.date', { value: dayjs(createdDate).format(DATE_FORMAT(i18n)) })}
-      </Typography>
+      <Typography variant="subtitle1">{t('services:complete.date', { value: format(createdDate, i18n) })}</Typography>
     </CardContent>
   );
 });
