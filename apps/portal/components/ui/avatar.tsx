@@ -19,8 +19,7 @@ interface AvatarProps {
   className?: string;
 }
 
-const Avatar = (props: AvatarProps): React.ReactElement => {
-  const { profile, fullSize = false, base64, ...rest } = props;
+const Avatar = ({ profile, fullSize = false, base64, ...rest }: AvatarProps): React.ReactElement => {
   let src = 'data:image/png;base64,';
 
   if (base64) {

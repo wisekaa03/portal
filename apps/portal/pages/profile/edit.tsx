@@ -62,6 +62,25 @@ const useStyles = makeStyles((theme: Theme) =>
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
       },
     },
+    thirdBlock: {
+      display: 'grid',
+      width: '100%',
+    },
+    nameEngBlock: {
+      'display': 'flex',
+      'flex': 1,
+      'justifyContent': 'flex-end',
+      'flexDirection': 'column',
+      'padding': theme.spacing(),
+      'backgroundColor': fade(theme.palette.secondary.main, 0.05),
+      'color': theme.palette.secondary.main,
+      '& > div:not(:last-child)': {
+        marginBottom: theme.spacing(),
+      },
+      '& > label': {
+        margin: 0,
+      },
+    },
     avatar: {
       height: 200,
       width: 200,
@@ -76,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'backgroundColor': fade(theme.palette.secondary.main, 0.05),
       'color': theme.palette.secondary.main,
       '& > div:not(:last-child)': {
-        marginBottom: theme.spacing(),
+        marginBottom: theme.spacing(2),
       },
       '& > label': {
         margin: 0,
@@ -270,55 +289,63 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           />
                         </div>
                       </Box>
-                      <div className={classes.nameBlock}>
-                        <TextField
-                          fullWidth
-                          disabled={loadingProfile}
-                          onChange={handleChange('nameeng')}
-                          color="secondary"
-                          value={current.nameeng || ''}
-                          label={t('phonebook:fields.nameeng')}
-                          variant="outlined"
-                          InputProps={InputProps}
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              disabled={loadingProfile}
-                              checked={current.notShowing}
-                              onChange={handleChange('notShowing')}
-                              color="secondary"
-                              value="notShowing"
+                      <div className={classes.thirdBlock}>
+                        <div className={classes.nameBlock}>
+                          <div className={classes.genderBlock}>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  disabled={loadingProfile}
+                                  checked={current.notShowing}
+                                  onChange={handleChange('notShowing')}
+                                  color="secondary"
+                                  value="notShowing"
+                                />
+                              }
+                              label={t('phonebook:fields.notShowing')}
                             />
-                          }
-                          label={t('phonebook:fields.notShowing')}
-                        />
-                        <RadioGroup
-                          className={classes.genderBlock}
-                          onChange={handleChange('gender')}
-                          aria-label="gender"
-                          name="gender"
-                          value={current.gender}
-                        >
-                          <FormControlLabel
+                          </div>
+                          <div className={classes.genderBlock}>
+                            <RadioGroup
+                              className={classes.genderBlock}
+                              onChange={handleChange('gender')}
+                              aria-label="gender"
+                              name="gender"
+                              value={current.gender}
+                            >
+                              <FormControlLabel
+                                disabled={loadingProfile}
+                                value={Gender.MAN}
+                                control={<Radio color="secondary" />}
+                                label={t('common:gender.MAN')}
+                                name="gender"
+                                labelPlacement="end"
+                              />
+                              <FormControlLabel
+                                disabled={loadingProfile}
+                                value={Gender.WOMAN}
+                                control={<Radio color="secondary" />}
+                                label={t('common:gender.WOMAN')}
+                                name="gender"
+                                labelPlacement="end"
+                              />
+                            </RadioGroup>
+                          </div>
+                        </div>
+                        <div className={classes.nameEngBlock}>
+                          <TextField
+                            fullWidth
                             disabled={loadingProfile}
-                            value={Gender.MAN}
-                            control={<Radio color="secondary" />}
-                            label={t('common:gender.MAN')}
-                            name="gender"
-                            labelPlacement="end"
+                            onChange={handleChange('nameeng')}
+                            color="secondary"
+                            value={current.nameeng || ''}
+                            label={t('phonebook:fields.nameeng')}
+                            variant="outlined"
+                            InputProps={InputProps}
                           />
-                          <FormControlLabel
-                            disabled={loadingProfile}
-                            value={Gender.WOMAN}
-                            control={<Radio color="secondary" />}
-                            label={t('common:gender.WOMAN')}
-                            name="gender"
-                            labelPlacement="end"
-                          />
-                        </RadioGroup>
+                        </div>
                       </div>
-                      <div>
+                      <div className={classes.nameBlock}>
                         <TextField
                           fullWidth
                           disabled={loadingProfile}
@@ -329,20 +356,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           variant="outlined"
                           InputProps={InputProps}
                         />
-                      </div>
-                      <div>
-                        <TextField
-                          fullWidth
-                          disabled={loadingProfile}
-                          onChange={handleChange('companyeng')}
-                          color="secondary"
-                          value={current.companyeng || ''}
-                          label={t('phonebook:fields.companyeng')}
-                          variant="outlined"
-                          InputProps={InputProps}
-                        />
-                      </div>
-                      <div>
                         <TextField
                           fullWidth
                           disabled={loadingProfile}
@@ -353,20 +366,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           variant="outlined"
                           InputProps={InputProps}
                         />
-                      </div>
-                      <div>
-                        <TextField
-                          fullWidth
-                          disabled={loadingProfile}
-                          onChange={handleChange('departmenteng')}
-                          color="secondary"
-                          value={current.departmenteng || ''}
-                          label={t('phonebook:fields.departmenteng')}
-                          variant="outlined"
-                          InputProps={InputProps}
-                        />
-                      </div>
-                      <div>
                         <TextField
                           fullWidth
                           disabled={loadingProfile}
@@ -377,20 +376,6 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           variant="outlined"
                           InputProps={InputProps}
                         />
-                      </div>
-                      <div>
-                        <TextField
-                          fullWidth
-                          disabled={loadingProfile}
-                          onChange={handleChange('otdeleng')}
-                          color="secondary"
-                          value={current.otdeleng || ''}
-                          label={t('phonebook:fields.otdeleng')}
-                          variant="outlined"
-                          InputProps={InputProps}
-                        />
-                      </div>
-                      <div>
                         <TextField
                           fullWidth
                           disabled={loadingProfile}
@@ -402,7 +387,37 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                           InputProps={InputProps}
                         />
                       </div>
-                      <div>
+                      <div className={classes.nameBlock}>
+                        <TextField
+                          fullWidth
+                          disabled={loadingProfile}
+                          onChange={handleChange('companyeng')}
+                          color="secondary"
+                          value={current.companyeng || ''}
+                          label={t('phonebook:fields.companyeng')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                        <TextField
+                          fullWidth
+                          disabled={loadingProfile}
+                          onChange={handleChange('departmenteng')}
+                          color="secondary"
+                          value={current.departmenteng || ''}
+                          label={t('phonebook:fields.departmenteng')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
+                        <TextField
+                          fullWidth
+                          disabled={loadingProfile}
+                          onChange={handleChange('otdeleng')}
+                          color="secondary"
+                          value={current.otdeleng || ''}
+                          label={t('phonebook:fields.otdeleng')}
+                          variant="outlined"
+                          InputProps={InputProps}
+                        />
                         <TextField
                           fullWidth
                           disabled={loadingProfile}
