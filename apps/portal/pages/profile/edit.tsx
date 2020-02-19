@@ -593,7 +593,7 @@ const ProfileEditPage: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest
 };
 
 ProfileEditPage.getInitialProps = ({ req }) => {
-  const { user }: { user?: User } = ((req as unknown) as Request)?.session?.passport.user;
+  const { user }: { user?: User } = ((req as unknown) as Request)?.session?.passport || {};
 
   return {
     user,

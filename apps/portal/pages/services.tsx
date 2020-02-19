@@ -9,6 +9,7 @@ import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import { OldService, OldCategory } from '@app/portal/ticket/old-service/models/old-service.interface';
+import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 import ServicesComponent from '../components/services';
 import { DropzoneFile } from '../components/dropzone/types';
 import { appBarHeight } from '../components/app-bar';
@@ -17,7 +18,6 @@ import Page from '../layouts/main';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../lib/queries';
 import { Data } from '../lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import ServicesIcon from '../../public/images/svg/icons/services.svg';
 // #endregion
 
 const departments = [

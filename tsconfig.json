@@ -28,6 +28,12 @@
     "experimentalDecorators": true,
     "baseUrl": "./",
     "paths": {
+      "@app/images": [
+        "public/images"
+      ],
+      "@app/images/*": [
+        "public/images/*"
+      ],
       "@app/portal": [
         "apps/portal/src"
       ],
