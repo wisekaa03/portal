@@ -20,11 +20,11 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
 import BoxWithRef from '../../lib/box-ref';
-import dayjs from '../../lib/dayjs';
+import { format } from '../../lib/dayjs';
 import Avatar from '../../components/ui/avatar';
 import Select from '../../components/ui/select';
 import { Loading } from '../../components/loading';
-import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
+import { TICKET_STATUSES } from '../../lib/constants';
 import RefreshButton from '../../components/ui/refresh-button';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { Data } from '../../lib/types';
@@ -327,7 +327,7 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                                   </span>
                                 </span>
                                 <span>
-                                  {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT(i18n))}
+                                  {t('profile:tickets.date')}: {format(ticket.createdDate, i18n)}
                                 </span>
                                 <span>
                                   {t('profile:tickets.id')}: {ticket.code}
