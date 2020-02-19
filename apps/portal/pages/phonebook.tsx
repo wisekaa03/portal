@@ -207,7 +207,7 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleSugClose = (event: React.MouseEvent<EventTarget>): void => {
-    if (searchRef.current && searchRef.current.contains(event.target as HTMLElement)) {
+    if (searchRef?.current.contains(event.target as HTMLElement)) {
       return;
     }
 

@@ -73,7 +73,7 @@ const ServicesSuccess = withStyles({
           </ReactToPdf>
           <ReactToPrint
             trigger={() => <Button actionType="print">{t('common:print')}</Button>}
-            content={() => (cardRef as any).current}
+            content={() => cardRef.current}
             copyStyles
           />
         </Box>

@@ -171,7 +171,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
   const { t } = useTranslation();
   const ticketBox = useRef(null);
 
-  const maxHeight = ticketBox?.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%';
+  const maxHeight = ticketBox ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%';
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={1} px={2}>

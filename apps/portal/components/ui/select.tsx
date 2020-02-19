@@ -19,7 +19,7 @@ const Select = ({ label, items, value, onChange, color }: SelectProps): React.Re
   const [labelWidth, setLabelWidth] = useState(0);
 
   useEffect(() => {
-    if (inputLabel.current) {
+    if (inputLabel) {
       setLabelWidth(inputLabel.current.offsetWidth);
     }
   }, [inputLabel]);

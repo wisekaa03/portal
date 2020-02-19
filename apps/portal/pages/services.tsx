@@ -143,7 +143,7 @@ const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const contentRef = useRef(null);
 
   useEffect(() => {
-    if (contentRef?.current) {
+    if (contentRef) {
       contentRef.current.updateHeight();
     }
   }, [contentRef, files]);

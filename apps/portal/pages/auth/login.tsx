@@ -82,7 +82,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
   }, [values.save, values.username]);
 
   useEffect(() => {
-    if (usernameRef?.current && initUsername) {
+    if (usernameRef && initUsername) {
       passwordRef.current!.focus();
     }
   }, [usernameRef, passwordRef, initUsername]);

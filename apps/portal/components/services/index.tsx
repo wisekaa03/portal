@@ -92,9 +92,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const { t } = useTranslation();
   const headerRef = useRef(null);
 
-  const contentHeight = headerRef?.current
-    ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
-    : '100%';
+  const contentHeight = headerRef ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)` : '100%';
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
