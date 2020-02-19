@@ -137,7 +137,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
   const profile = useContext(ProfileContext);
-  const { isAdmin } = profile!.user;
+  const { isAdmin } = profile?.user || {};
   const router = useRouter();
 
   const [changeProfile, { loading: loadingProfile, error: errorProfile }] = useMutation(CHANGE_PROFILE);
