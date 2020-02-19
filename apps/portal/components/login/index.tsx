@@ -146,20 +146,21 @@ const LoginComponent: FC<LoginComponentProps> = ({
               }
               label={t('login:remember')}
             />
-            {loading && <Loading />}
-            <FormControl style={{ width: '100%' }}>
-              <Button
-                className={classes.submit}
-                type="submit"
-                variant="outlined"
-                color="primary"
-                size="large"
-                disabled={loading}
-                onClick={handleSubmit}
-              >
-                {t('login:signIn')}
-              </Button>
-            </FormControl>
+            <Loading activate={loading}>
+              <FormControl style={{ width: '100%' }}>
+                <Button
+                  className={classes.submit}
+                  type="submit"
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  disabled={loading}
+                  onClick={handleSubmit}
+                >
+                  {t('login:signIn')}
+                </Button>
+              </FormControl>
+            </Loading>
           </CardContent>
         </Card>
       </Box>

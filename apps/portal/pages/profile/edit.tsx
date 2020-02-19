@@ -205,7 +205,7 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <Box display="flex" flexDirection="column">
-          {!current && <Loading noMargin type="linear" variant="indeterminate" />}
+          <Loading activate={!current} noMargin type="linear" variant="indeterminate" />
           <Box display="flex" flexDirection="column" p={2} overflow="auto">
             <Box display="flex" mb={1}>
               <Link href={{ pathname: '/profile' }} as="/profile" passHref>
@@ -220,12 +220,10 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
               </IsAdmin>
             </Box>
             <Box display="flex" flexDirection="column">
-              {loading ? (
-                <Loading noMargin type="linear" variant="indeterminate" />
-              ) : (
-                current && (
+              <Loading activate={loading} noMargin type="linear" variant="indeterminate">
+                {current && (
                   <>
-                    {loadingProfile && <Loading full absolute color="secondary" size={48} type="circular" />}
+                    <Loading activate={loadingProfile} full absolute color="secondary" size={48} type="circular" />
                     <div className={classes.firstBlock}>
                       <Box display="flex">
                         <Box mr={1} position="relative">
@@ -568,8 +566,8 @@ const ProfileEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
                       </div>
                     </div>
                   </>
-                )
-              )}
+                )}
+              </Loading>
             </Box>
           </Box>
         </Box>

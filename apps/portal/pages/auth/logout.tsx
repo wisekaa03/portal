@@ -25,11 +25,11 @@ const Logout: I18nPage = (props): React.ReactElement => {
     },
   });
 
-  if (loading) {
-    return <Loading type="linear" variant="indeterminate" />;
-  }
-
-  return <LogoutComponent error={error} loading={loading} logout={logout} {...props} />;
+  return (
+    <Loading activate={loading} type="linear" variant="indeterminate">
+      <LogoutComponent error={error} loading={loading} logout={logout} {...props} />
+    </Loading>
+  );
 };
 
 Logout.getInitialProps = () => {

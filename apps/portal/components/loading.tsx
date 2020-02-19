@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Loading: React.FC<{
+  activate?: boolean;
   variant?: 'determinate' | 'indeterminate' | 'static' | 'buffer' | 'query';
   disableShrink?: boolean;
   size?: number;
@@ -42,10 +43,29 @@ export const Loading: React.FC<{
   color?: 'primary' | 'secondary' | 'inherit';
   type?: 'linear' | 'circular';
   full?: boolean;
+  wrapperClasses?: string;
   noMargin?: boolean;
   absolute?: boolean;
-}> = ({ variant, disableShrink, size, thickness, color, type, noMargin, full, absolute }) => {
+  children?: any;
+}> = ({
+  activate = true,
+  variant,
+  disableShrink,
+  size,
+  thickness,
+  color,
+  type,
+  noMargin,
+  full,
+  wrapperClasses,
+  absolute,
+  children,
+}) => {
   const classes = useStyles({});
+
+  if (__SERVER__ || !activate) {
+    return children ? React.Children.map(children, (child) => <>{child}</>) : <></>;
+  }
 
   if (type === 'linear') {
     const className = clsx(classes.loading, {
@@ -64,16 +84,16 @@ export const Loading: React.FC<{
   return (
     <ConditionalWrapper
       condition={full}
-      wrapper={(children) => (
+      wrapper={(child) => (
         <Box
-          className={clsx({ [classes.absolute]: absolute })}
+          className={clsx(wrapperClasses, { [classes.absolute]: absolute })}
           display="flex"
           height="100%"
           width="100%"
           justifyContent="center"
           alignItems="center"
         >
-          {children}
+          {child}
         </Box>
       )}
     >

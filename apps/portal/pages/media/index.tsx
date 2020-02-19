@@ -168,9 +168,7 @@ const Media: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('media:title')}</title>
       </Head>
-      {loading || !data || !data.media ? (
-        <Loading noMargin type="linear" variant="indeterminate" />
-      ) : (
+      <Loading activate={loading || !data || !data.media} noMargin type="linear" variant="indeterminate">
         <div
           className={clsx(classes.root, {
             [classes.rootSelected]: current,
@@ -200,7 +198,7 @@ const Media: I18nPage = (props): React.ReactElement => {
           )}
           <div className={classes.container}>
             <div>
-              {data.media.map((media: MediaProps) => {
+              {data?.media.map((media: MediaProps) => {
                 // TODO: regexp может быть улучшен
                 const anchor = `media-${media.id}`;
 
@@ -259,7 +257,7 @@ const Media: I18nPage = (props): React.ReactElement => {
             </div>
           </div>
         </div>
-      )}
+      </Loading>
     </Page>
   );
 };

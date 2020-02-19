@@ -136,19 +136,20 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
                 <Typography className={classes.typoAuthorization} variant="h4">
                   {t('logout:authorization')}
                 </Typography>
-                {loading && <Loading />}
-                <FormControl className={classes.submitButtonContainer}>
-                  <Button
-                    className={classes.submitButton}
-                    type="submit"
-                    variant="outlined"
-                    color="primary"
-                    size="large"
-                    disabled={loading}
-                  >
-                    {t('logout:signOut')}
-                  </Button>
-                </FormControl>
+                <Loading activate={loading}>
+                  <FormControl className={classes.submitButtonContainer}>
+                    <Button
+                      className={classes.submitButton}
+                      type="submit"
+                      variant="outlined"
+                      color="primary"
+                      size="large"
+                      disabled={loading}
+                    >
+                      {t('logout:signOut')}
+                    </Button>
+                  </FormControl>
+                </Loading>
               </CardContent>
             </Card>
           </form>

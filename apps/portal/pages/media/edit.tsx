@@ -102,35 +102,31 @@ const MediaEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <Box display="flex" flexDirection="column">
-          <>
-            {loading ? (
-              <Loading noMargin type="linear" variant="indeterminate" />
-            ) : (
-              <>
-                <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
-                  <Box display="flex" mb={1}>
-                    <Link href={{ pathname: '/media' }} as="/media" passHref>
-                      <IconButton>
-                        <ArrowBackIcon />
-                      </IconButton>
-                    </Link>
-                    <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-                      <Button onClick={handleUpload}>{t(title)}</Button>
-                    </Box>
+          <Loading activate={loading} noMargin type="linear" variant="indeterminate">
+            <>
+              <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
+                <Box display="flex" mb={1}>
+                  <Link href={{ pathname: '/media' }} as="/media" passHref>
+                    <IconButton>
+                      <ArrowBackIcon />
+                    </IconButton>
+                  </Link>
+                  <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
+                    <Button onClick={handleUpload}>{t(title)}</Button>
                   </Box>
                 </Box>
-                <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <TreeView>
-                    <TreeItem nodeId="1" labelText="Directory" />
-                    <TreeItem nodeId="2" labelText="Directory" />
-                  </TreeView>
-                </Box>
-                <Box display="flex" className={classes.dropBox} flexDirection="column">
-                  <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
-                </Box>
-              </>
-            )}
-          </>
+              </Box>
+              <Box display="flex" className={classes.dropBox} flexDirection="column">
+                <TreeView>
+                  <TreeItem nodeId="1" labelText="Directory" />
+                  <TreeItem nodeId="2" labelText="Directory" />
+                </TreeView>
+              </Box>
+              <Box display="flex" className={classes.dropBox} flexDirection="column">
+                <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
+              </Box>
+            </>
+          </Loading>
         </Box>
       </Page>
     </>

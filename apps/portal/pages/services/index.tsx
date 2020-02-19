@@ -47,7 +47,7 @@ const Services: I18nPage = ({ t, ...rest }): React.ReactElement => {
     error: errorServices,
     refetch: refetchServices,
   }: QueryResult<Data<'OldTicketService', OldService[]>> = useQuery(OLD_TICKET_SERVICE, {
-    // ssr: false,
+    ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
