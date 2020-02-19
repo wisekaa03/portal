@@ -299,13 +299,11 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
               </Link>
             </Box>
             {!ticket ? (
-              loading ? (
-                <Loading full type="circular" color="secondary" disableShrink size={48} />
-              ) : (
+              <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
                 <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
                   {t('profile:notFound')}
                 </Typography>
-              )
+              </Loading>
             ) : (
               <Box className={classes.content}>
                 <Card className={classes.fullRow}>
@@ -423,12 +421,16 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                     <Iframe srcDoc={ticket.descriptionFull} />
                   </CardContent>
                 </Card>
-                {ticket.status !== 'Завершен' &&
-                  (loadingEdit ? (
-                    <Box className={classes.fullRow}>
-                      <Loading full type="circular" color="secondary" disableShrink size={48} />
-                    </Box>
-                  ) : (
+                {ticket.status !== 'Завершен' && (
+                  <Loading
+                    activate={loadingEdit}
+                    full
+                    wrapperClasses={classes.fullRow}
+                    type="circular"
+                    color="secondary"
+                    disableShrink
+                    size={48}
+                  >
                     <>
                       <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
                         <TextField
@@ -452,7 +454,8 @@ const ProfileTicket: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                         <Button onClick={handleAccept}>{t('common:send')}</Button>
                       </FormControl>
                     </>
-                  ))}
+                  </Loading>
+                )}
               </Box>
             )}
           </Box>

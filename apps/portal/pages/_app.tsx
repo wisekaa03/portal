@@ -43,18 +43,18 @@ const InnerLogin: React.FC<{
   );
   const user = data ? data.me : undefined;
 
-  return loading ? (
-    <Loading noMargin type="linear" variant="indeterminate" />
-  ) : (
-    <ProfileContext.Provider
-      value={{
-        user,
-        language,
-        isMobile,
-      }}
-    >
-      <Component {...pageProps} />
-    </ProfileContext.Provider>
+  return (
+    <Loading activate={loading} noMargin type="linear" variant="indeterminate">
+      <ProfileContext.Provider
+        value={{
+          user,
+          language,
+          isMobile,
+        }}
+      >
+        <Component {...pageProps} />
+      </ProfileContext.Provider>
+    </Loading>
   );
 };
 

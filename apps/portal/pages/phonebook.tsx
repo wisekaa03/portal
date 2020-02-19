@@ -255,7 +255,7 @@ const PhoneBook: I18nPage = (props): React.ReactElement => {
             data={data && data.profiles}
             handleProfileId={handleProfileId}
           />
-          {loading && <Loading noMargin type="linear" variant="indeterminate" />}
+          <Loading activate={loading} noMargin type="linear" variant="indeterminate" />
         </Box>
       </Page>
       <Modal open={Boolean(profileId)} onClose={handleProfileClose}>

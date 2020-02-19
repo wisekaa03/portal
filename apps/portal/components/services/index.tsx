@@ -109,9 +109,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           <Tab disabled={!created} label={t('services:tabs.tab5')} />
         </Tabs>
       </Paper>
-      {loadingServices ? (
-        <Loading full type="circular" color="secondary" disableShrink size={48} />
-      ) : (
+      <Loading activate={loadingServices} full type="circular" color="secondary" disableShrink size={48}>
         <>
           {currentTab < 4 && <RefreshButton onClick={() => refetchServices()} />}
           <SwipeableViews
@@ -198,15 +196,20 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               alignItems="center"
               justifyContent="center"
             >
-              {!loadingCreated && created ? (
+              <Loading
+                activate={loadingCreated || !created}
+                full
+                type="circular"
+                color="secondary"
+                disableShrink
+                size={48}
+              >
                 <ServicesSuccess cardRef={createdRef} data={created} />
-              ) : (
-                <Loading full type="circular" color="secondary" disableShrink size={48} />
-              )}
+              </Loading>
             </Box>
           </SwipeableViews>
         </>
-      )}
+      </Loading>
     </Box>
   );
 };

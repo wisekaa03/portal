@@ -285,60 +285,63 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
                 my={2}
                 justifyContent="center"
               >
-                {loadingTickets ? (
-                  <Loading full type="circular" color="secondary" disableShrink size={48} />
-                ) : tickets && tickets.length > 0 ? (
-                  tickets.map((ticket: OldTicket) => (
-                    <Card className={classes.ticket} key={ticket.code}>
-                      <CardActionArea>
-                        <Link
-                          href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}
-                          as={`/profile/ticket/${ticket.code}/${ticket.type}`}
-                        >
-                          <CardContent className={classes.ticketContent}>
-                            <div className={classes.ticketLabel}>
-                              <div>
-                                <BaseIcon base64 src={ticket.avatar} size={36} />
+                <Loading activate={loadingTickets} full type="circular" color="secondary" disableShrink size={48}>
+                  {tickets && tickets.length > 0 ? (
+                    tickets.map((ticket: OldTicket) => (
+                      <Card className={classes.ticket} key={ticket.code}>
+                        <CardActionArea>
+                          <Link
+                            href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}
+                            as={`/profile/ticket/${ticket.code}/${ticket.type}`}
+                          >
+                            <CardContent className={classes.ticketContent}>
+                              <div className={classes.ticketLabel}>
+                                <div>
+                                  <BaseIcon base64 src={ticket.avatar} size={36} />
+                                </div>
+                                <div>
+                                  <Typography variant="subtitle2" noWrap>
+                                    {ticket.name}
+                                  </Typography>
+                                </div>
+                                <div>
+                                  <Typography
+                                    variant="body1"
+                                    dangerouslySetInnerHTML={{ __html: ticket.description }}
+                                  />
+                                </div>
                               </div>
-                              <div>
-                                <Typography variant="subtitle2" noWrap>
-                                  {ticket.name}
-                                </Typography>
-                              </div>
-                              <div>
-                                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: ticket.description }} />
-                              </div>
-                            </div>
-                            <Divider />
-                            <div className={classes.ticketInformation}>
-                              <span>
-                                {t('profile:tickets.status')}:{' '}
-                                <span
-                                  className={clsx({
-                                    [classes.ticketRegistered]: ticket.status !== 'В работе',
-                                    [classes.ticketWorked]: ticket.status === 'В работе',
-                                  })}
-                                >
-                                  {ticket.status}
+                              <Divider />
+                              <div className={classes.ticketInformation}>
+                                <span>
+                                  {t('profile:tickets.status')}:{' '}
+                                  <span
+                                    className={clsx({
+                                      [classes.ticketRegistered]: ticket.status !== 'В работе',
+                                      [classes.ticketWorked]: ticket.status === 'В работе',
+                                    })}
+                                  >
+                                    {ticket.status}
+                                  </span>
                                 </span>
-                              </span>
-                              <span>
-                                {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT(i18n))}
-                              </span>
-                              <span>
-                                {t('profile:tickets.id')}: {ticket.code}
-                              </span>
-                            </div>
-                          </CardContent>
-                        </Link>
-                      </CardActionArea>
-                    </Card>
-                  ))
-                ) : (
-                  <Typography className={classes.notFounds} variant="h4">
-                    {t('profile:notFounds')}
-                  </Typography>
-                )}
+                                <span>
+                                  {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT(i18n))}
+                                </span>
+                                <span>
+                                  {t('profile:tickets.id')}: {ticket.code}
+                                </span>
+                              </div>
+                            </CardContent>
+                          </Link>
+                        </CardActionArea>
+                      </Card>
+                    ))
+                  ) : (
+                    <Typography className={classes.notFounds} variant="h4">
+                      {t('profile:notFounds')}
+                    </Typography>
+                  )}
+                </Loading>
               </BoxWithRef>
             </Box>
           </Box>

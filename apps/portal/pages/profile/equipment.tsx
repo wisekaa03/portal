@@ -61,7 +61,7 @@ const ProfileEquipment: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <Box display="flex" flexDirection="column">
-          {!(profile && profile.user) && <Loading noMargin type="linear" variant="indeterminate" />}
+          <Loading activate={!profile?.user} noMargin type="linear" variant="indeterminate" />
           <Box display="flex" flexDirection="column" p={2}>
             <Box display="flex">
               <Link href={{ pathname: '/profile' }} as="/profile" passHref>

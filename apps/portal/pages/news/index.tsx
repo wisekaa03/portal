@@ -179,9 +179,7 @@ const News: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('news:title')}</title>
       </Head>
-      {loading || !data || !data.news ? (
-        <Loading noMargin type="linear" variant="indeterminate" />
-      ) : (
+      <Loading activate={loading || !data || !data.news} noMargin type="linear" variant="indeterminate">
         <div
           className={clsx(classes.root, {
             [classes.rootSelected]: current,
@@ -261,7 +259,7 @@ const News: I18nPage = (props): React.ReactElement => {
             </div>
           </div>
         </div>
-      )}
+      </Loading>
     </Page>
   );
 };
