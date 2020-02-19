@@ -1,175 +1,36 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useRef, useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
-import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, Button, InputBase, Card, CardActionArea, CardContent, Typography, Divider } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import clsx from 'clsx';
+import Box from '@material-ui/core/Box';
 // #endregion
 // #region Imports Local
 import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
 import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
-import BaseIcon from '../../components/ui/icon';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '../../lib/context';
-import BoxWithRef from '../../lib/box-ref';
-import dayjs from '../../lib/dayjs';
-import Avatar from '../../components/ui/avatar';
-import Select from '../../components/ui/select';
-import { Loading } from '../../components/loading';
-import { TICKET_STATUSES, DATE_FORMAT } from '../../lib/constants';
-import RefreshButton from '../../components/ui/refresh-button';
+import { TICKET_STATUSES } from '../../lib/constants';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { Data } from '../../lib/types';
+import ProfileInfoComponent from '../../components/profile/info';
+import ProfileTicketsComponent from '../../components/profile/tickets';
 // #endregion
 
-const avatarHeight = 180;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    avatar: {
-      width: avatarHeight,
-      height: avatarHeight,
-      borderRadius: theme.spacing(0.5),
-    },
-    personal: {
-      flex: 1,
-      background: fade(theme.palette.secondary.main, 0.15),
-      padding: theme.spacing(),
-      color: theme.palette.secondary.main,
-      borderRadius: theme.spacing(0.5),
-      marginBottom: theme.spacing(),
-    },
-    links: {
-      'display': 'grid',
-      'gap': `${theme.spacing()}px`,
-      'gridAutoColumns': 180,
-      'gridAutoRows': '1fr',
-      '& > a': {
-        borderRadius: theme.spacing(0.5),
-        lineHeight: '1.2em',
-        textAlign: 'center',
-      },
-    },
-    search: {
-      'position': 'relative',
-      'backgroundColor': fade(theme.palette.common.white, 0.15),
-      'width': '100%',
-      'borderRadius': theme.spacing(0.5),
-      'border': `1px solid ${theme.palette.secondary.main}`,
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      [theme.breakpoints.up('sm')]: {
-        width: 'auto',
-      },
-    },
-    searchIcon: {
-      width: theme.spacing(7),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: theme.palette.secondary.main,
-    },
-    inputRoot: {
-      height: '100%',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 7),
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      color: theme.palette.secondary.main,
-      [theme.breakpoints.up('sm')]: {
-        width: 200,
-      },
-    },
-    iconButton: {
-      padding: theme.spacing(0.5),
-      color: theme.palette.secondary.main,
-    },
-    ticket: {
-      'height': 'fit-content',
-      'display': 'flex',
-      'flex': 1,
-      'minWidth': 300,
-      'maxWidth': 300,
-      'borderRadius': theme.spacing(0.5),
-      'background': fade(theme.palette.secondary.main, 0.15),
-      'marginRight': theme.spacing(2),
-      'marginBottom': theme.spacing(2),
-      '& > button': {
-        height: '100%',
-      },
-    },
-    ticketContent: {
-      'height': '100%',
-      'padding': theme.spacing(2),
-      'display': 'grid',
-      'gridTemplateRows': '1fr min-content min-content',
-      '& > hr': {
-        marginTop: theme.spacing(),
-        marginBottom: theme.spacing(),
-      },
-    },
-    ticketLabel: {
-      'display': 'grid',
-      'gridTemplateColumns': '1fr 4fr',
-      'gridTemplateRows': '40px 1fr',
-      'gap': `${theme.spacing()}px`,
-      'maxHeight': '180px',
-      'minHeight': '180px',
-      '& h6': {
-        maxWidth: 220,
-      },
-      '& > div:last-child': {
-        gridColumnStart: 1,
-        gridColumnEnd: 3,
-      },
-    },
-    ticketInformation: {
-      display: 'flex',
-      flexDirection: 'column',
-      color: 'gray',
-    },
-    ticketRegistered: {
-      color: '#b99d15',
-    },
-    ticketWorked: {
-      color: '#3aad0b',
-    },
-    notFounds: {
-      color: '#949494',
-    },
-  }),
-);
-
-const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
-  const classes = useStyles({});
+const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
-  const [search, setSearch] = useState<string>('');
   // const search = useDebounce(_search, 300);
 
-  const ticketStatus = (profile.user && profile.user.settings && profile.user.settings.ticketStatus) as string | null;
+  const ticketStatus = profile?.user?.settings?.ticketStatus as string | null;
   const [status, setStatus] = useState<string>(ticketStatus || TICKET_STATUSES[0]);
+  const [search, setSearch] = useState<string>('');
+
   const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
 
-  useEffect(() => {
-    if (ticketStatus) {
-      setStatus(ticketStatus);
-    }
-  }, [ticketStatus]);
-
-  // TODO: выводить ошибки
   const {
     loading: loadingTickets,
     data: dataTickets,
@@ -182,11 +43,11 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     notifyOnNetworkStatusChange: true,
   });
 
-  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.target.value);
   };
 
-  const handleToggleStatus = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const handleStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
     userSettings({
       variables: {
         value: { ticketStatus: event.target.value },
@@ -194,12 +55,16 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     });
   };
 
-  const ticketBox = useRef(null);
+  const tickets: OldTicket[] =
+    dataTickets?.OldTickets.filter(
+      (ticket: OldTicket) => ticket.code.includes(search) || ticket.name.includes(search),
+    ) || [];
 
-  const tickets: OldTicket[] | undefined =
-    dataTickets &&
-    dataTickets.OldTickets &&
-    dataTickets.OldTickets.filter((ticket: OldTicket) => ticket.code.includes(search) || ticket.name.includes(search));
+  useEffect(() => {
+    if (ticketStatus) {
+      setStatus(ticketStatus);
+    }
+  }, [ticketStatus]);
 
   useEffect(() => {
     if (errorTickets) {
@@ -216,145 +81,25 @@ const MyProfile: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
         <title>{t('profile:title')}</title>
       </Head>
       <Page {...rest}>
-        {profile && profile.user && (
-          <Box display="flex" flexDirection="column" p={1}>
-            <Box display="flex" flexWrap="wrap">
-              <Box mr={1} mb={1}>
-                <Avatar fullSize className={classes.avatar} profile={profile.user.profile} alt="photo" />
-              </Box>
-              <div className={classes.personal}>
-                <Box display="flex" flexDirection="column" mb={1}>
-                  {profile.user.profile.lastName && <span>{profile.user.profile.lastName}</span>}
-                  {profile.user.profile.firstName && <span>{profile.user.profile.firstName}</span>}
-                  {profile.user.profile.middleName && <span>{profile.user.profile.middleName}</span>}
-                </Box>
-                <div className={classes.links}>
-                  <Link href={{ pathname: '/profile/edit' }} as="/profile/edit" passHref>
-                    <Button color="secondary" component="a" variant="contained">
-                      {t('profile:btnEdit')}
-                    </Button>
-                  </Link>
-                  <Link href={{ pathname: '/profile/equipment' }} as="/profile/equipment" passHref>
-                    <Button color="secondary" component="a" variant="contained">
-                      {t('profile:btnEquipment')}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </Box>
-            <Box display="flex" flexDirection="column" flexGrow={1} px={2}>
-              <Box display="flex" mb={1}>
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
-                  </div>
-                  <InputBase
-                    onChange={handleSearch}
-                    placeholder={t('profile:searchPlaceholder')}
-                    classes={{
-                      input: classes.inputInput,
-                      root: classes.inputRoot,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                  />
-                </div>
-                <Box display="flex" justifyContent="center" alignItems="center" flexGrow={1} px={1}>
-                  <Typography color="secondary" variant="h4">
-                    {t('profile:tickets.title')}
-                  </Typography>
-                </Box>
-                <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
-                  <RefreshButton noAbsolute onClick={() => refetchTickets()} />
-                </Box>
-                <Box display="flex" justifyContent="flex-end">
-                  <Select
-                    label={t('profile:tickets.status')}
-                    items={TICKET_STATUSES}
-                    value={status}
-                    onChange={handleToggleStatus}
-                  />
-                </Box>
-              </Box>
-              <BoxWithRef
-                ref={ticketBox}
-                overflow="auto"
-                style={{
-                  maxHeight: ticketBox && ticketBox.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%',
-                }}
-                display="flex"
-                flexGrow={1}
-                flexWrap="wrap"
-                my={2}
-                justifyContent="center"
-              >
-                <Loading activate={loadingTickets} full type="circular" color="secondary" disableShrink size={48}>
-                  {tickets && tickets.length > 0 ? (
-                    tickets.map((ticket: OldTicket) => (
-                      <Card className={classes.ticket} key={ticket.code}>
-                        <CardActionArea>
-                          <Link
-                            href={{ pathname: '/profile/ticket', query: { id: ticket.code, type: ticket.type } }}
-                            as={`/profile/ticket/${ticket.code}/${ticket.type}`}
-                          >
-                            <CardContent className={classes.ticketContent}>
-                              <div className={classes.ticketLabel}>
-                                <div>
-                                  <BaseIcon base64 src={ticket.avatar} size={36} />
-                                </div>
-                                <div>
-                                  <Typography variant="subtitle2" noWrap>
-                                    {ticket.name}
-                                  </Typography>
-                                </div>
-                                <div>
-                                  <Typography
-                                    variant="body1"
-                                    dangerouslySetInnerHTML={{ __html: ticket.description }}
-                                  />
-                                </div>
-                              </div>
-                              <Divider />
-                              <div className={classes.ticketInformation}>
-                                <span>
-                                  {t('profile:tickets.status')}:{' '}
-                                  <span
-                                    className={clsx({
-                                      [classes.ticketRegistered]: ticket.status !== 'В работе',
-                                      [classes.ticketWorked]: ticket.status === 'В работе',
-                                    })}
-                                  >
-                                    {ticket.status}
-                                  </span>
-                                </span>
-                                <span>
-                                  {t('profile:tickets.date')}: {dayjs(ticket.createdDate).format(DATE_FORMAT(i18n))}
-                                </span>
-                                <span>
-                                  {t('profile:tickets.id')}: {ticket.code}
-                                </span>
-                              </div>
-                            </CardContent>
-                          </Link>
-                        </CardActionArea>
-                      </Card>
-                    ))
-                  ) : (
-                    <Typography className={classes.notFounds} variant="h4">
-                      {t('profile:notFounds')}
-                    </Typography>
-                  )}
-                </Loading>
-              </BoxWithRef>
-            </Box>
-          </Box>
-        )}
+        <Box display="flex" flexDirection="column" p={1}>
+          <ProfileInfoComponent />
+          <ProfileTicketsComponent
+            loading={loadingTickets}
+            tickets={tickets}
+            status={status}
+            search={search}
+            refetchTickets={refetchTickets}
+            handleSearch={handleSearch}
+            handleStatus={handleStatus}
+          />
+        </Box>
       </Page>
     </>
   );
 };
 
-MyProfile.getInitialProps = () => ({
+ProfilePage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['profile']),
 });
 
-export default nextI18next.withTranslation('profile')(MyProfile);
+export default nextI18next.withTranslation('profile')(ProfilePage);
