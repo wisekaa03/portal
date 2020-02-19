@@ -17,8 +17,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Meetings: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const MeetingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const url = 'https://ww.kngk-group.ru/site3/';
 
   return (
@@ -26,15 +25,15 @@ const Meetings: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('meeting:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <Iframe url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
       </Page>
     </>
   );
 };
 
-Meetings.getInitialProps = () => ({
+MeetingsPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['meeting']),
 });
 
-export default nextI18next.withTranslation('meeting')(Meetings);
+export default nextI18next.withTranslation('meeting')(MeetingsPage);

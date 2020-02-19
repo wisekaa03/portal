@@ -41,8 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const AdminPanel: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   // const [syncLoading, setSyncLoading] = useState<boolean>(false);
   // const [cacheLoading, setCacheLoading] = useState<boolean>(false);
@@ -84,7 +83,7 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('admin:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <div className={classes.root}>
           <Card className={classes.card}>
             <CardActions disableSpacing>
@@ -116,8 +115,8 @@ const AdminPanel: I18nPage = (props): React.ReactElement => {
   );
 };
 
-AdminPanel.getInitialProps = () => ({
+AdminPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['admin']),
 });
 
-export default nextI18next.withTranslation('admin')(AdminPanel);
+export default nextI18next.withTranslation('admin')(AdminPage);

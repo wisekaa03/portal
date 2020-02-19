@@ -18,8 +18,7 @@ import MediaComponent from '../../components/media';
 import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
-const Media: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const { loading, data, error }: QueryResult<Data<'media', MediaQueryProps[]>> = useQuery(MEDIA, {
     ssr: false,
     fetchPolicy: 'cache-first',
@@ -63,7 +62,7 @@ const Media: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('media:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <MediaComponent
           loading={loading}
           current={current}
@@ -77,8 +76,8 @@ const Media: I18nPage = (props): React.ReactElement => {
   );
 };
 
-Media.getInitialProps = () => ({
+MediaPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['media']),
 });
 
-export default nextI18next.withTranslation('news')(Media);
+export default nextI18next.withTranslation('news')(MediaPage);

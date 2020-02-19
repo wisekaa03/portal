@@ -137,7 +137,7 @@ interface ProfileEditProps {
   isAdmin: boolean;
 }
 
-const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE, { ssr: false });
   const [current, setCurrent] = useState<Profile | undefined>();
@@ -592,7 +592,7 @@ const ProfileEdit: I18nPage<ProfileEditProps> = ({ t, user, isAdmin, ...rest }):
   );
 };
 
-ProfileEdit.getInitialProps = ({ req }) => {
+ProfileEditPage.getInitialProps = ({ req }) => {
   const { user }: { user?: User } = ((req as unknown) as Request)?.session?.passport.user;
 
   return {
@@ -602,4 +602,4 @@ ProfileEdit.getInitialProps = ({ req }) => {
   };
 };
 
-export default nextI18next.withTranslation('profile')(ProfileEdit);
+export default nextI18next.withTranslation('profile')(ProfileEditPage);

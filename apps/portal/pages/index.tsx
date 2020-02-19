@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const HomePage: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const HomePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   if (!__SERVER__) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -44,7 +43,7 @@ const HomePage: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('common:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <VerticalCenter horizontal>
           <Paper className={classes.root}>
             <Typography>Извините, данный модуль пока не готов.</Typography>
@@ -55,10 +54,8 @@ const HomePage: I18nPage = (props): React.ReactElement => {
   );
 };
 
-HomePage.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces([]),
-  };
-};
+HomePage.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces([]),
+});
 
 export default nextI18next.withTranslation()(HomePage);

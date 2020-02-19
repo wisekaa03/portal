@@ -12,7 +12,7 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 
 const useStyles = makeStyles((theme: Theme) => createStyles({}));
 
-const NewsEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const NewsEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   return (
     <Page {...rest}>
       <Head>
@@ -22,8 +22,8 @@ const NewsEdit: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-NewsEdit.getInitialProps = () => ({
+NewsEditPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['news']),
 });
 
-export default nextI18next.withTranslation('news')(NewsEdit);
+export default nextI18next.withTranslation('news')(NewsEditPage);

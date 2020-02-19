@@ -22,7 +22,7 @@ import { I18nPage, includeDefaultNamespaces, nextI18next } from '../../lib/i18n-
 import Cookie from '../../lib/cookie';
 // #endregion
 
-const Login: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
+const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
   const client = useApolloClient();
 
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -112,7 +112,7 @@ const Login: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElemen
   );
 };
 
-Login.getInitialProps = (ctx) => {
+AuthLoginPage.getInitialProps = (ctx) => {
   const { username } = Cookie.get(ctx);
 
   return {
@@ -121,4 +121,4 @@ Login.getInitialProps = (ctx) => {
   };
 };
 
-export default nextI18next.withTranslation('login')(Login);
+export default nextI18next.withTranslation('login')(AuthLoginPage);

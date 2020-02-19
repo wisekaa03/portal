@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Calendar: I18nPage = (props): React.ReactElement => {
-  const { t } = props;
+const CalendarPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
 
   return (
@@ -29,7 +28,7 @@ const Calendar: I18nPage = (props): React.ReactElement => {
       <Head>
         <title>{t('calendar:title')}</title>
       </Head>
-      <Page {...props}>
+      <Page {...rest}>
         <VerticalCenter horizontal>
           <Paper className={classes.root}>
             <Typography>Извините, календарь компании пока не готов.</Typography>
@@ -40,10 +39,8 @@ const Calendar: I18nPage = (props): React.ReactElement => {
   );
 };
 
-Calendar.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['calendar']),
-  };
-};
+CalendarPage.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['calendar']),
+});
 
-export default nextI18next.withTranslation('calendar')(Calendar);
+export default nextI18next.withTranslation('calendar')(CalendarPage);
