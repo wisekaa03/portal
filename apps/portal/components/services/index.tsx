@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Tabs, Tab, Box, FormControl, TextField } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
@@ -11,6 +11,7 @@ import clsx from 'clsx';
 import { ServicesWrapperProps } from './types';
 // import ServicesTab from './tab';
 import ServicesSuccess from './success';
+import { appBarHeight } from '../app-bar';
 import ServicesElement from './element';
 import { useTranslation } from '../../lib/i18n-client';
 import { Loading } from '../loading';
@@ -68,10 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ServicesComponent: FC<ServicesWrapperProps> = ({
-  headerRef,
   contentRef,
-  createdRef,
-  contentHeight,
   currentTab,
   ticket,
   created,
@@ -92,6 +90,11 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+  const headerRef = useRef(null);
+
+  const contentHeight = headerRef?.current
+    ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
+    : '100%';
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -204,7 +207,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 disableShrink
                 size={48}
               >
-                <ServicesSuccess cardRef={createdRef} data={created} />
+                <ServicesSuccess data={created} />
               </Loading>
             </Box>
           </SwipeableViews>

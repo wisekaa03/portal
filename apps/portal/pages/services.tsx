@@ -12,7 +12,6 @@ import { OldService, OldCategory } from '@app/portal/ticket/old-service/models/o
 import ServicesIcon from '../../../public/images/svg/icons/services.svg';
 import ServicesComponent from '../components/services';
 import { DropzoneFile } from '../components/dropzone/types';
-import { appBarHeight } from '../components/app-bar';
 import { ServicesTicketProps, ServicesCreatedProps } from '../components/services/types';
 import Page from '../layouts/main';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../lib/queries';
@@ -149,13 +148,6 @@ const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   }, [contentRef, files]);
 
-  const headerRef = useRef(null);
-  const contentHeight = headerRef?.current
-    ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
-    : '100%';
-
-  const createdRef = useRef(null);
-
   return (
     <>
       <Head>
@@ -180,10 +172,7 @@ const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <Page {...rest}>
         <ServicesComponent
-          headerRef={headerRef}
           contentRef={contentRef}
-          createdRef={createdRef}
-          contentHeight={contentHeight}
           currentTab={currentTab}
           ticket={ticket}
           created={created}

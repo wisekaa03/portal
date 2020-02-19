@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
 import { Box, Typography, Card, CardContent, CardActions } from '@material-ui/core';
@@ -52,8 +52,9 @@ const ServicesSuccess = withStyles({
     width: '90vw',
     maxWidth: '600px',
   },
-})(({ cardRef, classes, data }: ServicesSuccessProps) => {
+})(({ classes, data }: ServicesSuccessProps) => {
   const { t } = useTranslation();
+  const cardRef = useRef(null);
 
   return (
     <Card className={classes.root}>

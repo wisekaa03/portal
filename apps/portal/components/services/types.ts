@@ -12,10 +12,7 @@ export interface ServicesDepartmentsProps {
 }
 
 export interface ServicesWrapperProps {
-  headerRef: React.Ref<any>;
   contentRef: React.Ref<any>;
-  createdRef: React.Ref<any>;
-  contentHeight: string;
   currentTab: number;
   ticket: ServicesTicketProps;
   created: ServicesCreatedProps;
@@ -50,7 +47,6 @@ export interface ServicesElementProps {
 }
 
 export interface ServicesSuccessProps {
-  cardRef: React.Ref<any>;
   classes: Record<'root', string>;
   data: ServicesCreatedProps;
 }
