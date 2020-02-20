@@ -1,11 +1,12 @@
 {
   "name": "portal",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
     "v:minor": "yarn version --minor",
     "preversion": "yarn test -u",
+    "postversion": "git push --tags",
     "clean": "rimraf dist .next apps/portal/.next/nest",
     "clean:node": "rimraf node_modules",
     "clean:all": "rimraf dist .next apps/portal/.next node_modules yarn.lock package.lock ~/.npm ~/.node-gyp ~/.cache/node-gyp ~/.cache/yarn ~/.config/yarn ~/.yarn",
