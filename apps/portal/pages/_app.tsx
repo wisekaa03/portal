@@ -81,7 +81,7 @@ const CurrentComponent: React.FC<{
 class MainApp extends App<ApolloAppProps> {
   componentDidMount(): void {
     // Remove the server-sie injectsed CSS
-    const jssStyles = document.querySelector('#jss-server-style');
+    const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
       jssStyles.parentNode!.removeChild(jssStyles);
     }
