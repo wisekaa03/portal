@@ -44,6 +44,7 @@ export interface ProfileEditComponentProps {
   isAdmin: boolean;
   loadingProfile: boolean;
   loadingChanged: boolean;
+  hasUpdate: boolean;
   profile?: Profile;
   onDrop: (_: any) => Promise<void>;
   handleChange: (_: keyof Profile) => (__: React.ChangeEvent<HTMLInputElement>) => void;

@@ -96,6 +96,7 @@ const ProfileEditPage: I18nPage<ProfileEditPageProps> = ({ t, id, ...rest }): Re
           loadingProfile={loadingProfile}
           loadingChanged={loadingChanged}
           profile={current}
+          hasUpdate={!!updated}
           onDrop={onDrop}
           handleChange={handleChange}
           handleBirthday={handleBirthday}

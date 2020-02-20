@@ -125,6 +125,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       color: '#949494',
     },
+    loadingBackground: {
+      transition: theme.transitions.create('background', {
+        easing: theme.transitions.easing.easeInOut,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      background: '#0000001a',
+      zIndex: 1,
+    },
   }),
 );
 
@@ -138,6 +146,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
   loadingProfile,
   loadingChanged,
+  hasUpdate,
   profile,
   onDrop,
   handleChange,
@@ -161,7 +170,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           </Link>
           <IsAdmin>
             <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-              <Button disabled={loadingChanged} onClick={handleSave}>
+              <Button disabled={!hasUpdate || loadingChanged} onClick={handleSave}>
                 {t('common:accept')}
               </Button>
             </Box>
@@ -171,7 +180,15 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           <Loading activate={loadingProfile} noMargin type="linear" variant="indeterminate">
             {profile ? (
               <>
-                <Loading activate={loadingChanged} full absolute color="secondary" size={48} type="circular" />
+                <Loading
+                  activate={loadingChanged}
+                  full
+                  wrapperClasses={classes.loadingBackground}
+                  absolute
+                  color="secondary"
+                  size={48}
+                  type="circular"
+                />
                 <div className={classes.firstBlock}>
                   <Box display="flex">
                     <Box mr={1} position="relative">
