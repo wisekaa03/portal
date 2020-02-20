@@ -10,8 +10,8 @@ import Router from 'next/router';
 
 // #endregion
 // #region Imports Local
-import LoginComponent from '../../components/login';
-import { LoginValuesProps, LoginPageProps } from '../../components/login/types';
+import LoginComponent from '../../components/auth/login';
+import { LoginValuesProps, LoginPageProps } from '../../components/auth/types';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { LOGIN } from '../../lib/queries';
 import { Data } from '../../lib/types';

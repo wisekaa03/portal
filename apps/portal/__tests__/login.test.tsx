@@ -8,7 +8,7 @@ import { MutationFunction } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import Login from '../pages/auth/login';
-import { LoginPageProps } from '../components/login/types';
+import { LoginPageProps } from '../components/auth/types';
 // #endregion
 
 describe('Login page', () => {
