@@ -18,6 +18,7 @@ import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 // #endregion
 // #region Imports Local
+import { UserContext } from '@app/portal/user/models/user.dto';
 import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
@@ -134,8 +135,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       // const apolloState: WithApolloState = {};
       const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
-      const currentLanguage = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language;
+      const language = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language || '';
       const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
+
+      const context: UserContext = { isMobile, language };
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
@@ -152,8 +155,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
               router={router}
               // apolloState={apolloState}
               apolloClient={apolloClient}
-              currentLanguage={currentLanguage}
-              isMobile={isMobile}
+              context={context}
             />,
           );
         } catch (error) {
@@ -191,8 +193,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       // Client object over repeated calls, to preserve state.
       return {
         ...appProps,
-        currentLanguage,
-        isMobile,
+        context,
         apolloState,
       };
     }

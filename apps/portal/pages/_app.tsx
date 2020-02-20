@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React, { useEffect, useState } from 'react';
-import { NextComponentType, NextPageContext } from 'next';
+import { NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
@@ -15,6 +15,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
 import { SnackbarProvider } from 'notistack';
+import url from 'url';
 // #endregion
 // #region Imports Local
 import theme from '../lib/theme';
@@ -23,44 +24,43 @@ import { ProfileContext } from '../lib/context';
 import { ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
-import { User } from '../src/user/models/user.dto';
+import { User, UserContext } from '../src/user/models/user.dto';
 import getCookie from '../lib/get-cookie';
 import getRedirect from '../lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '../lib/snackbar-utils';
+import { AUTH_PAGE } from '../lib/constants';
 // #endregion
 
 /**
  * Current login: ME
  */
-const CurrentLogin: React.FC<{
-  Component: NextComponentType<NextPageContext, any, {}>;
-  pageProps: any;
-  isMobile: boolean;
-  language: string;
+const CurrentComponent: React.FC<{
+  context: UserContext;
   ctx: NextPageContext;
   router: NextRouter;
-}> = ({ Component, pageProps, isMobile, language, ctx, router }): React.ReactElement | null => {
-  const pathname = ctx?.asPath || router?.asPath;
-  const redirect = getRedirect(pathname);
+  children: React.ReactNode;
+}> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const [user, setUser] = useState<User>(undefined);
+
+  const pathname = ctx?.asPath || router?.asPath;
+  const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
 
   if (__SERVER__) {
     const { req, res }: { req?: any; res?: any } = ctx || {};
 
-    if (res && !pathname.startsWith('/auth/login') && !(req?.session?.passport?.user as User)) {
+    if (res && !pathname.startsWith(AUTH_PAGE) && !(req?.session?.passport?.user as User)) {
       res.status(401);
-      res.redirect(`/auth/login?redirect=${redirect}`);
+      res.redirect(url.format(redirectUrl));
 
       throw new UnauthorizedException();
     }
-  } else if (!getCookie() && !pathname.startsWith('/auth/login')) {
-    router.push({ pathname: '/auth/login', query: { redirect } });
+  } else if (!getCookie() && !pathname.startsWith(AUTH_PAGE)) {
+    router.push(redirectUrl);
 
     throw new UnauthorizedException();
   }
 
-  const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
-    ssr: true,
+  const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
 
@@ -70,17 +70,7 @@ const CurrentLogin: React.FC<{
     }
   }, [data]);
 
-  return (
-    <ProfileContext.Provider
-      value={{
-        user,
-        language,
-        isMobile,
-      }}
-    >
-      <Component {...pageProps} />
-    </ProfileContext.Provider>
-  );
+  return <ProfileContext.Provider value={{ ...context, user }}>{children}</ProfileContext.Provider>;
 };
 
 /**
@@ -96,20 +86,11 @@ class MainApp extends App<ApolloAppProps> {
   }
 
   render(): React.ReactElement {
-    const {
-      disableGeneration = false,
-      Component,
-      apolloClient,
-      pageProps,
-      currentLanguage,
-      isMobile,
-      router,
-      ctx,
-    } = this.props;
+    const { disableGeneration = false, Component, apolloClient, pageProps, context, router, ctx } = this.props;
 
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
-        width: !!isMobile ? 0 : 1280,
+        width: !!context.isMobile ? 0 : 1280,
       }),
     });
 
@@ -133,21 +114,16 @@ class MainApp extends App<ApolloAppProps> {
             <CssBaseline />
             <SnackbarProvider
               maxSnack={3}
-              dense={isMobile}
+              dense={context.isMobile}
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'center',
               }}
             >
               <SnackbarUtilsConfigurator />
-              <CurrentLogin
-                pageProps={pageProps}
-                isMobile={!!isMobile}
-                language={currentLanguage || ''}
-                Component={Component}
-                router={router}
-                ctx={ctx}
-              />
+              <CurrentComponent context={context} router={router} ctx={ctx}>
+                <Component {...pageProps} />
+              </CurrentComponent>
             </SnackbarProvider>
           </StylesProvider>
         </ThemeProvider>

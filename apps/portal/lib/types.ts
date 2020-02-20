@@ -9,6 +9,7 @@ import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory
 // #endregion
 // #region Imports Local
 import { Profile } from '../src/profile/models/profile.dto';
+import { UserContext } from '../src/user/models/user.dto';
 // #endregion
 
 // export interface GqlErrorMessage {
@@ -34,8 +35,7 @@ export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppConte
   apolloClient: ApolloClient<NormalizedCacheObject>;
   apolloState: WithApolloState<TCache>;
   disableGeneration?: boolean;
-  currentLanguage?: string;
-  isMobile?: boolean;
+  context: UserContext;
 }
 
 export interface ApolloDocumentProps extends DocumentContext {
