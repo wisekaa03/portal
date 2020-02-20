@@ -1,25 +1,25 @@
 /** @format */
 
 // #region Import NPM
-import React from 'react';
+// import React from 'react';
 import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext } from 'next/document';
 import { ApolloClient } from 'apollo-client';
-import { NormalizedCacheObject, IdGetterObj } from 'apollo-cache-inmemory';
+import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
 // #endregion
 // #region Imports Local
 import { Profile } from '../src/profile/models/profile.dto';
 // #endregion
 
-export interface GqlErrorMessage {
-  statusCode: number;
-  error: string;
-  message: string;
-}
+// export interface GqlErrorMessage {
+//   statusCode: number;
+//   error: string;
+//   message: string;
+// }
 
-export interface NodeIdGetterObj extends IdGetterObj {
-  nodeId?: string;
-}
+// export interface NodeIdGetterObj extends IdGetterObj {
+//   nodeId?: string;
+// }
 
 export interface WithApolloState<TCache = NormalizedCacheObject> {
   data?: TCache;
@@ -42,13 +42,13 @@ export interface ApolloDocumentProps extends DocumentContext {
   currentLanguage?: string;
 }
 
-export interface Address {
-  country: string;
-  postalCode: string;
-  town: string;
-  region: string;
-  street: string;
-}
+// export interface Address {
+//   country: string;
+//   postalCode: string;
+//   town: string;
+//   region: string;
+//   street: string;
+// }
 
 export interface Data<K, T> {
   [K: string]: T;
