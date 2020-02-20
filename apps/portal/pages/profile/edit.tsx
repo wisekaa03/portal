@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import Head from 'next/head';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
 import { Profile } from '../../src/profile/models/profile.dto';
@@ -24,7 +24,7 @@ const ProfileEditPage: I18nPage<ProfileEditPageProps> = ({ t, id, ...rest }): Re
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
 
-  const [getProfile, { loading: loadingProfile, error: errorProfile, data: dataProfile }] = useLazyQuery(PROFILE);
+  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery(PROFILE, { variables: { id } });
 
   const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(CHANGE_PROFILE);
 
@@ -67,20 +67,14 @@ const ProfileEditPage: I18nPage<ProfileEditPageProps> = ({ t, id, ...rest }): Re
 
   useEffect(() => {
     if (isAdmin && id) {
-      getProfile({
-        variables: { id },
-      });
-      setUpdated({ id } as any);
-    } else {
-      setCurrent(user?.profile);
+      if (dataProfile) {
+        setCurrent(dataProfile.profile);
+        setUpdated({ id } as any);
+      }
+    } else if (user) {
+      setCurrent(user.profile);
     }
-  }, [getProfile, isAdmin, id, user]);
-
-  useEffect(() => {
-    if (isAdmin && !loadingProfile && !errorProfile && dataProfile?.profile) {
-      setCurrent(dataProfile.profile);
-    }
-  }, [loadingProfile, dataProfile, errorProfile, isAdmin]);
+  }, [dataProfile, isAdmin, id, user]);
 
   useEffect(() => {
     if (errorProfile) {
