@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Button } from '@material-ui/core';
@@ -46,34 +46,42 @@ const useStyles = makeStyles((theme: Theme) =>
 const ProfileInfoComponent: FC = () => {
   const classes = useStyles({});
   const { t } = useTranslation();
-  const profileContext = useContext(ProfileContext);
-  const profile = profileContext?.user?.profile;
+  // const profileContext = useContext(ProfileContext);
+  // const profile = profileContext?.user?.profile;
 
   return (
-    <Box display="flex" flexWrap="wrap">
-      <Box mr={1} mb={1}>
-        <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
-      </Box>
-      <div className={classes.personal}>
-        <Box display="flex" flexDirection="column" mb={1}>
-          {profile.lastName && <span>{profile.lastName}</span>}
-          {profile.firstName && <span>{profile.firstName}</span>}
-          {profile.middleName && <span>{profile.middleName}</span>}
+    <ProfileContext.Consumer>
+      {({ user }) => (
+        <Box display="flex" flexWrap="wrap">
+          {user && (
+            <>
+              <Box mr={1} mb={1}>
+                <Avatar fullSize className={classes.avatar} profile={user.profile} alt="photo" />
+              </Box>
+              <div className={classes.personal}>
+                <Box display="flex" flexDirection="column" mb={1}>
+                  {user.profile.lastName && <span>{user.profile.lastName}</span>}
+                  {user.profile.firstName && <span>{user.profile.firstName}</span>}
+                  {user.profile.middleName && <span>{user.profile.middleName}</span>}
+                </Box>
+                <div className={classes.links}>
+                  <Link href={{ pathname: '/profile/edit' }} as="/profile/edit" passHref>
+                    <Button color="secondary" component="a" variant="contained">
+                      {t('profile:btnEdit')}
+                    </Button>
+                  </Link>
+                  <Link href={{ pathname: '/profile/equipment' }} as="/profile/equipment" passHref>
+                    <Button color="secondary" component="a" variant="contained">
+                      {t('profile:btnEquipment')}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </>
+          )}
         </Box>
-        <div className={classes.links}>
-          <Link href={{ pathname: '/profile/edit' }} as="/profile/edit" passHref>
-            <Button color="secondary" component="a" variant="contained">
-              {t('profile:btnEdit')}
-            </Button>
-          </Link>
-          <Link href={{ pathname: '/profile/equipment' }} as="/profile/equipment" passHref>
-            <Button color="secondary" component="a" variant="contained">
-              {t('profile:btnEquipment')}
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </Box>
+      )}
+    </ProfileContext.Consumer>
   );
 };
 
