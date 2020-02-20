@@ -244,7 +244,7 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
         {!ticket ? (
           <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
             <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-              {t('profile:notFound')}
+              {t('profile:ticket.notFound')}
             </Typography>
           </Loading>
         ) : (

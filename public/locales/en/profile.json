@@ -6,10 +6,11 @@
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Ticket search...",
-  "notFound": "Ticket not found",
-  "notFounds": "Tickets not found",
+  "notFound": "Profile not found",
   "ticket": {
-    "header": "Ticket № {{ticket}} at {{date}}"
+    "header": "Ticket № {{ticket}} at {{date}}",
+    "notFound": "Ticket not found",
+    "notFounds": "Tickets not found",
   },
   "tickets": {
     "title": "Мои заявки",

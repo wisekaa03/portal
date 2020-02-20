@@ -6,10 +6,11 @@
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
-  "notFound": "Заявка не найдена",
-  "notFounds": "Заявки не найдены",
+  "notFound": "Профиль не найден",
   "ticket": {
-    "header": "Заявка № {{ticket}} от {{date}}"
+    "header": "Ticket № {{ticket}} at {{date}}",
+    "notFound": "Обращение не найдено",
+    "notFounds": "Обращения не найдены"
   },
   "tickets": {
     "title": "Мои заявки",

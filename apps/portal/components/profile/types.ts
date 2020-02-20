@@ -39,3 +39,18 @@ export interface ProfileTicketInfoCardProps {
   header: string;
   profile: OldUser;
 }
+
+export interface ProfileEditComponentProps {
+  isAdmin: boolean;
+  loadingProfile: boolean;
+  loadingChanged: boolean;
+  profile?: Profile;
+  onDrop: (_: any) => Promise<void>;
+  handleChange: (_: keyof Profile) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBirthday: (_: Date | null) => void;
+  handleSave: () => void;
+}
+
+export interface ProfileEditPageProps {
+  id: string | undefined;
+}

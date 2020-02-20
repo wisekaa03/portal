@@ -218,7 +218,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
             tickets.map((ticket) => <ProfileTicketsCard key={ticket.code} ticket={ticket} />)
           ) : (
             <Typography className={classes.notFounds} variant="h4">
-              {t('profile:notFounds')}
+              {t('profile:ticket.notFounds')}
             </Typography>
           )}
         </Loading>
