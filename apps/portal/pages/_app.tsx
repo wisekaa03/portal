@@ -46,9 +46,8 @@ const CurrentLogin: React.FC<{
 
   if (__SERVER__) {
     const { req, res }: { req?: any; res?: any } = ctx || {};
-    // const user: User = req?.session?.passport?.user;
 
-    if (res && !user && !pathname.startsWith('/auth/login')) {
+    if (res && !pathname.startsWith('/auth/login') && !(req?.session?.passport?.user as User)) {
       res.status(401);
       res.redirect(`/auth/login?redirect=${redirect}`);
 
