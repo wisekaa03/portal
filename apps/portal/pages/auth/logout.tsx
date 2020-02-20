@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 // #region Imports Local
 import { nextI18next, includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { LOGOUT } from '../../lib/queries';
-import LogoutComponent from '../../components/logout';
+import LogoutComponent from '../../components/auth/logout';
 import Cookies from '../../lib/cookie';
 import { removeStorage } from '../../lib/session-storage';
 import { SESSION, AUTH_PAGE } from '../../lib/constants';
