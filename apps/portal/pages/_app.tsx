@@ -54,11 +54,10 @@ const CurrentLogin: React.FC<{
 
       throw new UnauthorizedException();
     }
-  } else {
-    // eslint-disable-next-line no-lonely-if
-    if (!getCookie() && !pathname.startsWith('/auth/login')) {
-      router.push({ pathname: '/auth/login', query: { redirect } });
-    }
+  } else if (!getCookie() && !pathname.startsWith('/auth/login')) {
+    router.push({ pathname: '/auth/login', query: { redirect } });
+
+    throw new UnauthorizedException();
   }
 
   const { loading, data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
@@ -67,7 +66,7 @@ const CurrentLogin: React.FC<{
   });
 
   useEffect(() => {
-    if (data.me) {
+    if (data?.me) {
       setUser(data.me);
     }
   }, [data]);
