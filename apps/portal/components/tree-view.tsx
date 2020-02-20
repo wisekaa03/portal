@@ -68,9 +68,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const TreeItem = (props: TreeItemProps): React.ReactElement => {
+export const TreeItem = ({ labelText, labelInfo, ...rest }: TreeItemProps): React.ReactElement => {
   const classes = useStyles({});
-  const { labelText, labelInfo, ...rest } = props;
 
   return (
     <MuiTreeItem

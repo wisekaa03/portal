@@ -1,7 +1,6 @@
 /** @format */
 
 // #region Imports NPM
-import { I18n } from 'next-i18next';
 // #endregion
 // #region Imports Local
 import { LoginService, Gender } from '../src/shared/interfaces';

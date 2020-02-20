@@ -36,13 +36,11 @@ const useStyles = makeStyles<Theme, IconProps, string>((theme: Theme) =>
   }),
 );
 
-const BaseIcon = ({ size, mask, color, ...props }: IconProps): React.ReactElement => {
+const BaseIcon = ({ size, mask, color, material, src, base64 }: IconProps): React.ReactElement => {
   const classes = useStyles({ size, mask, color });
 
-  const otherProps: IconProps = {};
-
-  if (props.material) {
-    const TheIcon = props.src;
+  if (material) {
+    const TheIcon = src;
     return <TheIcon />;
   }
 
@@ -50,15 +48,11 @@ const BaseIcon = ({ size, mask, color, ...props }: IconProps): React.ReactElemen
     return <Icon className={classes.mask} />;
   }
 
-  if (props.src) {
-    otherProps.src = props.base64 ? `data:image/png;base64,${props.src}` : props.src;
-  } else {
-    otherProps.src = NoImage;
-  }
+  const baseType = `data:image/png;base64,`;
 
   return (
     <Icon>
-      <img className={classes.root} alt="icon" {...otherProps} />
+      <img className={classes.root} alt="icon" src={src ? `${base64 ? baseType : ''}${src}` : NoImage} />
     </Icon>
   );
 };
