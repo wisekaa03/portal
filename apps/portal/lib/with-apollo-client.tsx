@@ -139,13 +139,13 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
-      // TODO: trying without getDataFromTree
       if (__SERVER__) {
         try {
           const { getDataFromTree } = await import('@apollo/react-ssr');
 
           await getDataFromTree(
             <AppTree
+              disableGeneration
               {...appProps}
               ctx={ctx}
               Component={Component}
@@ -170,8 +170,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
                   extensions.code === GQLErrorCode.UNAUTHORIZED
                 ),
             );
-          } else if (!(error && error.status === 401)) {
-            message = true;
+          } else if (error?.status === 401) {
+            message = false;
           }
           if (message) {
             console.error('withApolloClient getDataFromTree:', error);
