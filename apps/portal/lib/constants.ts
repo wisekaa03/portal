@@ -9,7 +9,7 @@ import { UserContext } from '../src/user/models/user.dto';
 // #endregion
 
 export const AUTH_PAGE = '/auth/login';
-export const FIRST_PAGE = '/mail';
+export const FIRST_PAGE = '/phonebook';
 export const SESSION = 'session';
 export const ADMIN_PAGES = ['/admin'];
 export const ALLOW_REDIRECT_PAGES = [

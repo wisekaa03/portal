@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NextPageContext } from 'next';
 import App from 'next/app';
 import Head from 'next/head';
@@ -28,7 +28,7 @@ import { User, UserContext } from '../src/user/models/user.dto';
 import getCookie from '../lib/get-cookie';
 import getRedirect from '../lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '../lib/snackbar-utils';
-import { AUTH_PAGE } from '../lib/constants';
+import { FIRST_PAGE, AUTH_PAGE } from '../lib/constants';
 // #endregion
 
 /**
@@ -40,19 +40,27 @@ const CurrentComponent: React.FC<{
   router: NextRouter;
   children: React.ReactNode;
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
-  const [user, setUser] = useState<User>(undefined);
+  // const [user, setUser] = useState<User>(undefined);
 
   const pathname = ctx?.asPath || router?.asPath;
   const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
 
   if (__SERVER__) {
     const { req, res }: { req?: any; res?: any } = ctx || {};
+    const isAuthPage = pathname.startsWith(AUTH_PAGE);
+    const user = req?.session?.passport?.user as User;
 
-    if (res && !pathname.startsWith(AUTH_PAGE) && !(req?.session?.passport?.user as User)) {
-      res.status(401);
-      res.redirect(url.format(redirectUrl));
+    if (res) {
+      // Редирект с страницы авторизации если уже вошел
+      if (isAuthPage && user) {
+        res.status(401);
+        res.redirect(FIRST_PAGE);
+      } else if (!isAuthPage && !user) {
+        res.status(401);
+        res.redirect(url.format(redirectUrl));
 
-      throw new UnauthorizedException();
+        throw new UnauthorizedException();
+      }
     }
   } else if (!getCookie() && !pathname.startsWith(AUTH_PAGE)) {
     router.push(redirectUrl);
@@ -64,13 +72,14 @@ const CurrentComponent: React.FC<{
     fetchPolicy: 'cache-first',
   });
 
-  useEffect(() => {
-    if (data?.me) {
-      setUser(data.me);
-    }
-  }, [data]);
+  // TODO: useEffect использовать ради 1 вызова избыточно
+  // useEffect(() => {
+  //   if (data?.me) {
+  //     setUser(data.me);
+  //   }
+  // }, [data]);
 
-  return <ProfileContext.Provider value={{ ...context, user }}>{children}</ProfileContext.Provider>;
+  return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
 };
 
 /**
