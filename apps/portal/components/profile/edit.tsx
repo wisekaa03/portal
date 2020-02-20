@@ -161,13 +161,15 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           </Link>
           <IsAdmin>
             <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-              <Button onClick={handleSave}>{t('common:accept')}</Button>
+              <Button disabled={loadingChanged} onClick={handleSave}>
+                {t('common:accept')}
+              </Button>
             </Box>
           </IsAdmin>
         </Box>
-        <Box display="flex" flexDirection="column">
+        <Box display="flex" position="relative" flexDirection="column">
           <Loading activate={loadingProfile} noMargin type="linear" variant="indeterminate">
-            {!loadingProfile && profile ? (
+            {profile ? (
               <>
                 <Loading activate={loadingChanged} full absolute color="secondary" size={48} type="circular" />
                 <div className={classes.firstBlock}>
