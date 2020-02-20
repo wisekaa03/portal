@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { QueryResult } from 'react-apollo';
 import { useMutation, useLazyQuery, useQuery } from '@apollo/react-hooks';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 // #endregion
 // #region Imports Local
 import Page from '../../layouts/main';
@@ -18,11 +17,10 @@ import snackbarUtils from '../../lib/snackbar-utils';
 import MediaEditComponent from '../../components/media/edit';
 // #endregion
 
-const MediaEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Media | undefined>();
   const [updated, setUpdated] = useState<Media | undefined>();
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
-  const router = useRouter();
 
   const {
     data: foldersData,
@@ -46,8 +44,9 @@ const MediaEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   useEffect(() => {
-    if (router && router.query && router.query.id) {
-      const id = router.query.id as string;
+    if (query.id) {
+      const { id } = query;
+
       getMedia({
         variables: { id },
       });
@@ -55,7 +54,7 @@ const MediaEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     } else {
       setCurrent(undefined);
     }
-  }, [getMedia, router]);
+  }, [getMedia, query]);
 
   useEffect(() => {
     if (!loading && !error && data?.media) {
@@ -91,7 +90,8 @@ const MediaEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-MediaEditPage.getInitialProps = () => ({
+MediaEditPage.getInitialProps = ({ query }) => ({
+  query,
   namespacesRequired: includeDefaultNamespaces(['media']),
 });
 

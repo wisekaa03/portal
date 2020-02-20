@@ -14,9 +14,9 @@ import { LoginPageProps } from '../components/login/types';
 describe('Login page', () => {
   let shallow: typeof Shallow;
   const props: LoginPageProps = {
-    loading: false,
-    login: ((): void => {}) as MutationFunction,
-    namespacesRequired: [],
+    // loading: false,
+    // login: ((): void => {}) as MutationFunction,
+    // namespacesRequired: [],
     initUsername: '',
   };
 

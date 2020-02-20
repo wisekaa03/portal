@@ -3,7 +3,6 @@
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
@@ -19,12 +18,9 @@ import ProfileTicketComponent from '../../components/profile/ticket';
 import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
-const ProfileTicketPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
-  const router = useRouter();
-
-  const query = { id: null, type: null, ...(router && router.query) };
 
   const { loading, data, error }: QueryResult<Data<'OldTicketDescription', OldTicket>> = useQuery(
     OLD_TICKET_DESCRIPTION,
@@ -120,8 +116,13 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement =
   );
 };
 
-ProfileTicketPage.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
-});
+ProfileTicketPage.getInitialProps = ({ query }) => {
+  const { id, type } = query;
+
+  return {
+    query: { id, type },
+    namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
+  };
+};
 
 export default nextI18next.withTranslation('profile')(ProfileTicketPage);
