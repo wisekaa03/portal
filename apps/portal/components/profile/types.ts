@@ -55,3 +55,11 @@ export interface ProfileEditComponentProps {
 export interface ProfileEditPageProps {
   id: string | undefined;
 }
+
+export interface TextFieldComponentProps {
+  disabled: boolean;
+  handleChange: (_: keyof Profile) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  field: keyof Profile;
+  value?: any;
+  InputProps: any;
+}

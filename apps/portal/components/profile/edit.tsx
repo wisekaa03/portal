@@ -23,6 +23,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 // #endregion
 // #region Imports Local
+import { Profile } from '@app/portal/profile/models/profile.dto';
 import IsAdmin from '../isAdmin';
 import Avatar from '../ui/avatar';
 import Loading from '../loading';
@@ -30,7 +31,7 @@ import { useTranslation } from '../../lib/i18n-client';
 import Button from '../ui/button';
 import { Gender } from '../../src/shared/interfaces';
 import { DropzoneWrapper } from '../dropzone';
-import { ProfileEditComponentProps } from './types';
+import { ProfileEditComponentProps, TextFieldComponentProps } from './types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -142,6 +143,23 @@ const endAdornment = (
   </InputAdornment>
 );
 
+const TextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, handleChange, field, value, InputProps }) => {
+  const { t } = useTranslation();
+
+  return (
+    <TextField
+      fullWidth
+      disabled={disabled}
+      onChange={handleChange(field)}
+      color="secondary"
+      value={value || ''}
+      label={t(`phonebook:fields.${field}`)}
+      variant="outlined"
+      InputProps={InputProps}
+    />
+  );
+};
+
 const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
   loadingProfile,
@@ -158,6 +176,22 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
 
   const InputProps = isAdmin ? { endAdornment } : { readOnly: true };
 
+  const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
+  const companyes: (keyof Profile)[] = ['company', 'department', 'otdel', 'title'];
+  const langs: (keyof Profile)[] = ['companyeng', 'departmenteng', 'otdeleng', 'positioneng'];
+  const others: (keyof Profile)[] = [
+    'email',
+    'telephone',
+    'mobile',
+    'workPhone',
+    'country',
+    'region',
+    'town',
+    'street',
+    'postalCode',
+    'employeeID',
+  ];
+
   return (
     <Box display="flex" flexDirection="column">
       <Loading activate={!profile} noMargin type="linear" variant="indeterminate" />
@@ -170,7 +204,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           </Link>
           <IsAdmin>
             <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-              <Button disabled={!hasUpdate || loadingChanged} onClick={handleSave}>
+              <Button disabled={!hasUpdate} onClick={handleSave}>
                 {t('common:accept')}
               </Button>
             </Box>
@@ -200,36 +234,16 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       </DropzoneWrapper>
                     </Box>
                     <div className={classes.nameBlock}>
-                      <TextField
-                        fullWidth
-                        disabled={loadingChanged}
-                        onChange={handleChange('lastName')}
-                        color="secondary"
-                        value={profile.lastName || ''}
-                        label={t('phonebook:fields.lastName')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                      <TextField
-                        fullWidth
-                        disabled={loadingChanged}
-                        onChange={handleChange('firstName')}
-                        color="secondary"
-                        value={profile.firstName || ''}
-                        label={t('phonebook:fields.firstName')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
-                      <TextField
-                        fullWidth
-                        disabled={loadingChanged}
-                        onChange={handleChange('middleName')}
-                        color="secondary"
-                        value={profile.middleName || ''}
-                        label={t('phonebook:fields.middleName')}
-                        variant="outlined"
-                        InputProps={InputProps}
-                      />
+                      {names.map((field) => (
+                        <TextFieldComponent
+                          key={field}
+                          disabled={loadingChanged}
+                          handleChange={handleChange}
+                          field={field}
+                          value={profile[field]}
+                          InputProps={InputProps}
+                        />
+                      ))}
                     </div>
                   </Box>
                   <div className={classes.thirdBlock}>
@@ -276,114 +290,48 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       </div>
                     </div>
                     <div className={classes.nameEngBlock}>
-                      <TextField
-                        fullWidth
+                      <TextFieldComponent
                         disabled={loadingChanged}
-                        onChange={handleChange('nameeng')}
-                        color="secondary"
-                        value={profile.nameeng || ''}
-                        label={t('phonebook:fields.nameeng')}
-                        variant="outlined"
+                        handleChange={handleChange}
+                        field="nameeng"
+                        value={profile.nameeng}
                         InputProps={InputProps}
                       />
                     </div>
                   </div>
                   <div className={classes.nameBlock}>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('company')}
-                      color="secondary"
-                      value={profile.company || ''}
-                      label={t('phonebook:fields.company')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('department')}
-                      color="secondary"
-                      value={profile.department || ''}
-                      label={t('phonebook:fields.department')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('otdel')}
-                      color="secondary"
-                      value={profile.otdel || ''}
-                      label={t('phonebook:fields.otdel')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('title')}
-                      color="secondary"
-                      value={profile.title || ''}
-                      label={t('phonebook:fields.title')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
+                    {companyes.map((field) => (
+                      <TextFieldComponent
+                        key={field}
+                        disabled={loadingChanged}
+                        handleChange={handleChange}
+                        field={field}
+                        value={profile[field]}
+                        InputProps={InputProps}
+                      />
+                    ))}
                   </div>
                   <div className={classes.nameBlock}>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('companyeng')}
-                      color="secondary"
-                      value={profile.companyeng || ''}
-                      label={t('phonebook:fields.companyeng')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('departmenteng')}
-                      color="secondary"
-                      value={profile.departmenteng || ''}
-                      label={t('phonebook:fields.departmenteng')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('otdeleng')}
-                      color="secondary"
-                      value={profile.otdeleng || ''}
-                      label={t('phonebook:fields.otdeleng')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('positioneng')}
-                      color="secondary"
-                      value={profile.positioneng || ''}
-                      label={t('phonebook:fields.positioneng')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
+                    {langs.map((field) => (
+                      <TextFieldComponent
+                        key={field}
+                        disabled={loadingChanged}
+                        handleChange={handleChange}
+                        field={field}
+                        value={profile[field]}
+                        InputProps={InputProps}
+                      />
+                    ))}
                   </div>
                 </div>
                 <Divider className={classes.hr} />
                 <div className={classes.secondBlock}>
                   <div>
-                    <TextField
-                      fullWidth
+                    <TextFieldComponent
                       disabled={loadingChanged}
-                      onChange={handleChange('manager')}
-                      color="secondary"
-                      value={profile.manager?.fullName || ''}
-                      label={t('phonebook:fields.manager')}
-                      variant="outlined"
+                      handleChange={handleChange}
+                      field="manager"
+                      value={profile.manager?.fullName}
                       InputProps={{ readOnly: true }}
                     />
                   </div>
@@ -404,126 +352,17 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       />
                     </MuiPickersUtilsProvider>
                   </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('email')}
-                      color="secondary"
-                      value={profile.email || ''}
-                      label={t('phonebook:fields.email')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('telephone')}
-                      color="secondary"
-                      value={profile.telephone || ''}
-                      label={t('phonebook:fields.telephone')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('mobile')}
-                      color="secondary"
-                      value={profile.mobile || ''}
-                      label={t('phonebook:fields.mobile')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('workPhone')}
-                      color="secondary"
-                      value={profile.workPhone || ''}
-                      label={t('phonebook:fields.workPhone')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('country')}
-                      color="secondary"
-                      value={profile.country || ''}
-                      label={t('phonebook:fields.country')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('region')}
-                      color="secondary"
-                      value={profile.region || ''}
-                      label={t('phonebook:fields.region')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('town')}
-                      color="secondary"
-                      value={profile.town || ''}
-                      label={t('phonebook:fields.town')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('street')}
-                      color="secondary"
-                      value={profile.street || ''}
-                      label={t('phonebook:fields.street')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('postalCode')}
-                      color="secondary"
-                      value={profile.postalCode || ''}
-                      label={t('phonebook:fields.postalCode')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      fullWidth
-                      disabled={loadingChanged}
-                      onChange={handleChange('employeeID')}
-                      color="secondary"
-                      value={profile.employeeID || ''}
-                      label={t('phonebook:fields.employeeID')}
-                      variant="outlined"
-                      InputProps={InputProps}
-                    />
-                  </div>
+                  {others.map((field) => (
+                    <div key={field}>
+                      <TextFieldComponent
+                        disabled={loadingChanged}
+                        handleChange={handleChange}
+                        field={field}
+                        value={profile[field]}
+                        InputProps={InputProps}
+                      />
+                    </div>
+                  ))}
                 </div>
               </>
             ) : (
