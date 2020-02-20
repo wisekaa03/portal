@@ -1,5 +1,5 @@
 /** @format */
-import React from 'react';
+import React, { forwardRef, Component, RefForwardingComponent } from 'react';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -34,16 +34,24 @@ const config = {
     'undo,redo,cut,copy,|,hr,symbol,print,source',
 };
 
-const JoditEditor = ({ value, onChange }): React.ReactElement => {
-  return (
-    <JoditReact
-      value={value}
-      config={config}
-      // preferred to use only this option to update the content for performance reasons
-      onBlur={onChange}
-      onChange={() => {}}
-    />
-  );
-};
+interface JoditEditorComponentProps {
+  value: string;
+  onChange: any;
+}
 
-export default withStyles(styles)(JoditEditor);
+const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorComponentProps> = (
+  { value, onChange },
+  ref,
+) => (
+  // TODO: не поддерживает ref WTF???
+  <JoditReact
+    // ref={ref}
+    value={value}
+    config={config}
+    // preferred to use only this option to update the content for performance reasons
+    onBlur={onChange}
+    onChange={() => {}}
+  />
+);
+
+export default withStyles(styles)(forwardRef(JoditEditorComponent));

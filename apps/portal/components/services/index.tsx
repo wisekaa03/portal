@@ -70,6 +70,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,
+  titleRef,
+  bodyRef,
   currentTab,
   ticket,
   created,
@@ -95,6 +97,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const contentHeight = headerRef.current
     ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
     : '100%';
+
+  const invalidTitle = ticket.title.length < 10 && body.length > 0;
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -122,7 +126,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
             index={currentTab}
             className={classes.body}
             containerStyle={{ flexGrow: 1 }}
-            onChangeIndex={handleCurrentTab}
+            onSwitching={handleCurrentTab}
           >
             <Box className={classes.container}>
               {departments.map((current) => (
@@ -172,6 +176,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               )}
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
+                  inputRef={titleRef}
+                  error={invalidTitle}
                   value={ticket.title}
                   onChange={handleTitle}
                   type="text"
@@ -180,7 +186,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
-                <JoditEditor value={body} onChange={setBody} />
+                <JoditEditor ref={bodyRef} value={body} onChange={setBody} />
               </FormControl>
               <FormControl className={classes.formControl} variant="outlined">
                 <Dropzone files={files} setFiles={setFiles} />

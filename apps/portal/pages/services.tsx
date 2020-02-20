@@ -17,6 +17,7 @@ import Page from '../layouts/main';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../lib/queries';
 import { Data } from '../lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
+import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
 const departments = [
@@ -55,6 +56,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     OLD_TICKET_NEW,
   );
 
+  const contentRef = useRef(null);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef(null);
+
   const handleCurrentTab = (index: number): void => {
     setCurrentTab(index);
   };
@@ -72,12 +77,29 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   };
 
   const handleSubmit = (): void => {
-    const { service, category, title } = ticket;
+    const { service, category } = ticket;
+
+    const cleanedTitle = ticket.title.trim();
+    const cleanedBody = body.trim();
+
+    // TODO: продумать
+    if (cleanedTitle.length < 10) {
+      snackbarUtils.show(t('services:errors.smallTitle'));
+      titleRef.current.focus();
+
+      return;
+    }
+    if (cleanedBody.length < 10) {
+      snackbarUtils.show(t('services:errors.smallBody'));
+      // bodyRef.current.focus();
+
+      return;
+    }
 
     const variables = {
       ticket: {
-        title,
-        body,
+        title: cleanedTitle,
+        body: cleanedBody,
         serviceId: service ? service.code : null,
         categoryId: category ? category.code : null,
         categoryType: category ? category.categoryType : null,
@@ -130,7 +152,13 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
       setCurrentTab(tab);
       setTicket(initialState);
     }
-  }, [services, setTicket, setCurrentTab, router]);
+  }, [services, setTicket, setCurrentTab, query]);
+
+  useEffect(() => {
+    if (currentTab === 3 && ticket.title.trim().length === 0 && titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [currentTab, titleRef, ticket.title]);
 
   useEffect(() => {
     setServices((!loadingServices && !errorServices && dataServices?.OldTicketService) || []);
@@ -140,13 +168,20 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     setCreated(!loadingCreated && !errorCreated && dataCreated?.OldTicketNew);
   }, [dataCreated, errorCreated, loadingCreated]);
 
-  const contentRef = useRef(null);
-
   useEffect(() => {
     if (contentRef.current) {
       contentRef.current.updateHeight();
     }
   }, [contentRef, files]);
+
+  useEffect(() => {
+    if (errorCreated) {
+      snackbarUtils.error(errorCreated);
+    }
+    if (errorServices) {
+      snackbarUtils.error(errorServices);
+    }
+  }, [errorCreated, errorServices]);
 
   return (
     <>
@@ -173,6 +208,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
       <Page {...rest}>
         <ServicesComponent
           contentRef={contentRef}
+          titleRef={titleRef}
+          bodyRef={bodyRef}
           currentTab={currentTab}
           ticket={ticket}
           created={created}
