@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useEffect } from 'react';
+import React, { useEffect, FC } from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Button, Card, CardContent, FormControl } from '@material-ui/core';
@@ -12,7 +12,7 @@ import { ApolloError } from 'apollo-client';
 import Loading from './loading';
 import Background2 from '../../../public/images/svg/background2.svg';
 import Logo from '../../../public/images/svg/logo.svg';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+import { useTranslation } from '../lib/i18n-client';
 import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
@@ -102,9 +102,10 @@ interface State {
   pass: string;
 }
 
-const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
-  const { error, loading, logout, t } = props;
-  const classes: any = useStyles({});
+const LogoutComponent: FC<LogoutProps> = (props): React.ReactElement => {
+  const { error, loading, logout } = props;
+  const classes = useStyles({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (error) {
@@ -115,7 +116,7 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
   return (
     <>
       <Head>
-        <title>{t('logout:title')}</title>
+        <title>{t('login:titleLogout')}</title>
       </Head>
       <div className={classes.root}>
         <div>
@@ -134,7 +135,7 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
             <Card className={classes.card}>
               <CardContent>
                 <Typography className={classes.typoAuthorization} variant="h4">
-                  {t('logout:authorization')}
+                  {t('login:authorization')}
                 </Typography>
                 <Loading activate={loading}>
                   <FormControl className={classes.submitButtonContainer}>
@@ -146,7 +147,7 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
                       size="large"
                       disabled={loading}
                     >
-                      {t('logout:signOut')}
+                      {t('login:signOut')}
                     </Button>
                   </FormControl>
                 </Loading>
@@ -159,10 +160,4 @@ const LogoutComponent: I18nPage<LogoutProps> = (props): React.ReactElement => {
   );
 };
 
-LogoutComponent.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces(['logout']),
-  };
-};
-
-export default nextI18next.withTranslation('logout')(LogoutComponent);
+export default LogoutComponent;

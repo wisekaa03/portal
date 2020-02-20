@@ -17,13 +17,12 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import HeaderBg from '../../../public/images/jpeg/header_bg.jpg';
 import PopoverBg from '../../../public/images/png/profile_popover_bg.png';
 import LogoMin from '../../../public/images/png/logo_min.png';
-import { nextI18next, useTranslation } from '../lib/i18n-client';
+import { useTranslation } from '../lib/i18n-client';
 import { ProfileContext } from '../lib/context';
 import { LOGOUT } from '../lib/queries';
-import { removeStorage } from '../lib/session-storage';
 import Avatar from './ui/avatar';
-import { SESSION, FIRST_PAGE } from '../lib/constants';
-
+import { FIRST_PAGE, SESSION } from '../lib/constants';
+import { removeStorage } from '../lib/session-storage';
 // #endregion
 
 const avatarHeight = 48;
@@ -103,7 +102,7 @@ const AppBarComponent: FC<AppBarComponentProps> = ({ handleDrawerOpen }) => {
   const { t } = useTranslation();
 
   const [logout] = useMutation(LOGOUT, {
-    onCompleted() {
+    onCompleted: () => {
       removeStorage(SESSION);
       client.resetStore();
 

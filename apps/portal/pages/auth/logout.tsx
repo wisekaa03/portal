@@ -4,21 +4,22 @@
 import React from 'react';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import Router from 'next/router';
+import Head from 'next/head';
 // #endregion
 // #region Imports Local
+import { nextI18next, includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { LOGOUT } from '../../lib/queries';
 import LogoutComponent from '../../components/logout';
-import { includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { removeStorage } from '../../lib/session-storage';
-import Loading from '../../components/loading';
+import { SESSION } from '../../lib/constants';
 // #endregion
 
-const Logout: I18nPage = (props): React.ReactElement => {
+const Logout: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const client = useApolloClient();
 
   const [logout, { loading, error }] = useMutation(LOGOUT, {
-    onCompleted() {
-      removeStorage('session');
+    onCompleted: () => {
+      removeStorage(SESSION);
       client.resetStore();
 
       Router.push({ pathname: '/auth/login' });
@@ -26,16 +27,19 @@ const Logout: I18nPage = (props): React.ReactElement => {
   });
 
   return (
-    <Loading activate={loading} type="linear" variant="indeterminate">
-      <LogoutComponent error={error} loading={loading} logout={logout} {...props} />
-    </Loading>
+    <>
+      <Head>
+        <title>{t('login:title')}</title>
+      </Head>
+      <LogoutComponent error={error} loading={loading} logout={logout} {...rest} />
+    </>
   );
 };
 
 Logout.getInitialProps = () => {
   return {
-    namespacesRequired: includeDefaultNamespaces(['logout']),
+    namespacesRequired: includeDefaultNamespaces(['login']),
   };
 };
 
-export default Logout;
+export default nextI18next.withTranslation('login')(Logout);

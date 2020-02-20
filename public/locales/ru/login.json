@@ -1,7 +1,10 @@
 {
   "title": "Портал: Вход",
+  "titleLogout": "Портал: Выход",
+  "authorization": "Авторизация",
   "username": "Пользователь",
   "password": "Пароль",
   "remember": "Запомнить меня на этом компьютере",
-  "signIn": "Вход"
+  "signIn": "Вход",
+  "signOut": "Выход"
 }
