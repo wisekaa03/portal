@@ -1,16 +1,16 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, ReactNode, useEffect, useContext } from 'react';
+import React, { FC, useState, ReactNode, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/react-hooks';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
-import { I18nPage, nextI18next } from '../lib/i18n-client';
-import AppBar, { appBarHeight } from '../components/app-bar';
-import Drawer from '../components/drawer';
+import { nextI18next } from '../lib/i18n-client';
+import AppBarComponent, { appBarHeight } from '../components/app-bar';
+import DrawerComponent from '../components/drawer';
 import { ProfileContext } from '../lib/context';
 import { USER_SETTINGS } from '../lib/queries';
 import { AUTO_COLLAPSE_ROUTES } from '../lib/constants';
@@ -36,41 +36,42 @@ const useStyles = makeStyles((/* theme: Theme */) =>
     },
   }));
 
-interface Main {
+interface MainLayoutProps {
   children: ReactNode;
 }
 
-const MainTemplate: I18nPage<Main> = ({ children, ...rest }): React.ReactElement => {
+const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   const classes = useStyles({});
   const theme = useTheme();
   const profile = useContext(ProfileContext);
 
   const router = useRouter();
-  const isCollapse = router && router.pathname && AUTO_COLLAPSE_ROUTES.some((r) => router.pathname.startsWith(r));
+  const isCollapse = router?.pathname && AUTO_COLLAPSE_ROUTES.some((r) => router.pathname.startsWith(r));
 
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const ifModal = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const drawer = (profile.user && profile.user.settings && profile.user.settings.drawer) as boolean | null;
-  const defaultDrawer = !profile.isMobile && !ifModal && !isCollapse && (drawer !== null ? drawer : lgUp);
+  const drawer = profile?.user?.settings.drawer as boolean | null;
+  const { isMobile } = profile;
+  const defaultDrawer = !isMobile && !ifModal && !isCollapse && (drawer !== null ? drawer : lgUp);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(defaultDrawer);
 
   const [userSettings] = useMutation(USER_SETTINGS);
 
   useEffect(() => {
-    if (profile.isMobile || ifModal) {
+    if (isMobile || ifModal) {
       setDrawerOpen(false);
     }
-  }, [profile.isMobile, ifModal]);
+  }, [isMobile, ifModal]);
 
   useEffect(() => {
-    if (!profile.isMobile && !ifModal && !isCollapse) {
+    if (!isMobile && !ifModal && !isCollapse) {
       setDrawerOpen(drawer === null ? lgUp : drawer);
     }
-  }, [lgUp, drawer, profile.isMobile, ifModal, isCollapse]);
+  }, [lgUp, drawer, isMobile, ifModal, isCollapse]);
 
   const handleDrawerOpen = (): void => {
-    if (!profile.isMobile && !ifModal) {
+    if (!isMobile && !ifModal) {
       userSettings({
         variables: {
           value: { drawer: !drawerOpen },
@@ -82,9 +83,9 @@ const MainTemplate: I18nPage<Main> = ({ children, ...rest }): React.ReactElement
 
   return (
     <div className={classes.root}>
-      <AppBar handleDrawerOpen={handleDrawerOpen} />
+      <AppBarComponent handleDrawerOpen={handleDrawerOpen} />
       <Box display="flex" flexGrow={1}>
-        <Drawer open={drawerOpen} isMobile={profile.isMobile} handleOpen={handleDrawerOpen} {...rest} />
+        <DrawerComponent open={drawerOpen} isMobile={isMobile} handleOpen={handleDrawerOpen} />
         <div id="content" className={classes.content}>
           {children}
         </div>
@@ -93,4 +94,4 @@ const MainTemplate: I18nPage<Main> = ({ children, ...rest }): React.ReactElement
   );
 };
 
-export default nextI18next.withTranslation('common')(MainTemplate);
+export default MainLayout;
