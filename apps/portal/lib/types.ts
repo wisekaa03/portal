@@ -33,6 +33,7 @@ export interface ApolloInitialProps<TCache = NormalizedCacheObject> extends AppI
 export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppContext {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   apolloState: WithApolloState<TCache>;
+  disableGeneration?: boolean;
   currentLanguage?: string;
   isMobile?: boolean;
 }

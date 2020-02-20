@@ -250,7 +250,7 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             orderBy={orderBy}
             handleSort={handleSort}
             largeWidth={largeWidth}
-            data={data && data.profiles}
+            data={data?.profiles}
             handleProfileId={handleProfileId}
           />
           <Loading activate={loading} noMargin type="linear" variant="indeterminate" />
