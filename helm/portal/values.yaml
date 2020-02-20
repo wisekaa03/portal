@@ -36,6 +36,7 @@ HTTP_REDIS_TTL: 300
 HTTP_REDIS_MAX_OBJECTS: 10000
 
 # Session Redis
+SESSION_NAME: portal
 SESSION_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 SESSION_COOKIE_TTL: 300
 SESSION_SECRET: "supersecret"

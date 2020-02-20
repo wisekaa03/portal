@@ -21,6 +21,7 @@ data:
   HTTP_REDIS_MAX_OBJECTS: {{ .Values.HTTP_REDIS_MAX_OBJECTS | default "10000" | quote }}
 
   # Session Redis
+  SESSION_NAME: {{ .Values.SESSION_NAME | default "portal" | quote }}
   SESSION_REDIS_URI: {{ .Values.SESSION_REDIS_URI | default "redis://localhost:6379/2" | quote }}
   SESSION_COOKIE_TTL: {{ .Values.SESSION_COOKIE_TTL | default "300" | quote }}
   SESSION_SECRET: {{ .Values.SESSION_SECRET | default "supersecret" | quote }}

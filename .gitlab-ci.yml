@@ -92,6 +92,7 @@ deploy:
         --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
         --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
         --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
+        --set SESSION_NAME="${SESSION_NAME}" \
         --set SESSION_REDIS_URI="${SESSION_REDIS_URI}" \
         --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
         --set SESSION_SECRET="${SESSION_SECRET}" \

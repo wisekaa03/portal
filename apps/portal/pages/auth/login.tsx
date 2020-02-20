@@ -35,7 +35,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
   });
 
   const [login, { loading, error }] = useMutation(LOGIN, {
-    update(_cache, { data }: FetchResult<Data<'data', UserResponse>>) {
+    update: (_cache, { data }: FetchResult<Data<'data', UserResponse>>) => {
       if (data && data.login) {
         setStorage(SESSION, data.login.session || '');
         client.resetStore();

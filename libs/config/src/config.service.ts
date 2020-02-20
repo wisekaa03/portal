@@ -37,130 +37,95 @@ export class ConfigService {
   private validateInput(envConfig: EnvConfig<any>): EnvConfig<any> {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       PORT: Joi.number()
         .integer()
-        .optional()
-        .empty(),
+        .required(),
       PORT_DEBUG: Joi.number()
+        .empty('')
         .integer()
-        .optional()
-        .empty(),
-      DATABASE_URI: Joi.string()
-        .optional()
-        .empty(),
-      DATABASE_URI_RD: Joi.string()
-        .optional()
-        .empty(),
-      DATABASE_SCHEMA: Joi.string()
-        .optional()
-        .empty(),
-      DATABASE_SYNCHRONIZE: Joi.boolean()
-        .optional()
-        .empty(),
-      DATABASE_DROP_SCHEMA: Joi.boolean()
-        .optional()
-        .empty(),
+        .optional(),
+      DATABASE_URI: Joi.string().required(),
+      DATABASE_URI_RD: Joi.string().required(),
+      DATABASE_SCHEMA: Joi.string().required(),
+      DATABASE_SYNCHRONIZE: Joi.boolean().required(),
+      DATABASE_DROP_SCHEMA: Joi.boolean().required(),
       DATABASE_LOGGING: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       DATABASE_MIGRATIONS_RUN: Joi.boolean()
-        .optional()
-        .empty(),
-      DATABASE_REDIS_URI: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
+      DATABASE_REDIS_URI: Joi.string().required(),
       DATABASE_REDIS_TTL: Joi.number()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
 
       HTTP_REDIS_URI: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       HTTP_REDIS_TTL: Joi.number()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       HTTP_REDIS_MAX_OBJECTS: Joi.number()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
 
+      SESSION_NAME: Joi.string()
+        .empty('')
+        .default('portal')
+        .optional(),
       SESSION_SECRET: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       SESSION_REDIS_URI: Joi.string()
-        .optional()
-        .empty(),
-      SESSION_COOKIE_TTL: Joi.number()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
+      SESSION_COOKIE_TTL: Joi.number().required(),
 
-      LDAP_REDIS_URI: Joi.string()
-        .optional()
-        .empty(),
+      LDAP_REDIS_URI: Joi.string().required(),
       LDAP_REDIS_TTL: Joi.number()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
 
-      LDAP_URL: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_BIND_DN: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_BIND_PW: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_SEARCH_BASE: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_SEARCH_FILTER: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_SEARCH_GROUP: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_SEARCH_BASE_ALL_USERS: Joi.string()
-        .optional()
-        .empty(),
-      LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
-        .optional()
-        .empty(),
+      LDAP_URL: Joi.string().required(),
+      LDAP_BIND_DN: Joi.string().required(),
+      LDAP_BIND_PW: Joi.string().required(),
+      LDAP_SEARCH_BASE: Joi.string().required(),
+      LDAP_SEARCH_FILTER: Joi.string().required(),
+      LDAP_SEARCH_GROUP: Joi.string().required(),
+      LDAP_SEARCH_BASE_ALL_USERS: Joi.string().required(),
+      LDAP_SEARCH_FILTER_ALL_USERS: Joi.string().required(),
 
-      MICROSERVICE_URL: Joi.string()
-        .optional()
-        .empty(),
+      MICROSERVICE_URL: Joi.string().required(),
 
-      SOAP_URL: Joi.string()
-        .optional()
-        .empty(),
+      SOAP_URL: Joi.string().required(),
       SOAP_USER: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       SOAP_PASS: Joi.string()
-        .optional()
-        .empty(),
-      SOAP_DOMAIN: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
+      SOAP_DOMAIN: Joi.string().optional(),
 
       NEWS_URL: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       NEWS_API_URL: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
 
       MAIL_URL: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
       MAIL_LOGIN_URL: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
 
       MEETING_URL: Joi.string()
-        .optional()
-        .empty(),
+        .empty('')
+        .optional(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);

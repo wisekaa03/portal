@@ -142,6 +142,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: SESSION_SECRET
+            - name: SESSION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: SESSION_NAME
             # LDAP
             - name: LDAP_URL
               valueFrom:

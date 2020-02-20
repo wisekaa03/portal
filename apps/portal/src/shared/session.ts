@@ -24,7 +24,7 @@ export default (configService: ConfigService, logService: LogService, store: Ses
       rolling: true,
       // Don't create a session for anonymous users
       saveUninitialized: false,
-      name: 'portal',
+      name: configService.get<string>('SESSION_NAME'),
       // genid: () => genuuid(),
       cookie: {
         path: '/',
@@ -37,11 +37,16 @@ export default (configService: ConfigService, logService: LogService, store: Ses
       },
     });
 
-    logService.debug('ok', 'Session');
+    logService.debug(
+      `OK: name=${configService.get<string>('SESSION_NAME')}, ` +
+        `cookie ttl=${configService.get<number>('SESSION_COOKIE_TTL')}ms, ` +
+        `secret="${configService.get<string>('SESSION_SECRET') ? '{MASKED}' : ''}" `,
+      'Session',
+    );
 
     return sess;
   } catch (error) {
-    logService.error('cannot install', error.toString(), 'Session');
+    logService.error('cannot install', JSON.stringify(error), 'Session');
 
     throw error;
   }

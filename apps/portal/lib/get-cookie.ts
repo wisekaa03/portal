@@ -1,6 +1,6 @@
 /** @format */
 
-const defaultCookie = 'portal';
+const defaultCookie = process.env.SESSION_NAME;
 
 const getCookie = (name = defaultCookie): string | undefined => {
   const matches = document.cookie.match(
