@@ -71,6 +71,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, li
       )}
     >
       <Box
+        boxShadow={active === element.code ? 3 : 0}
         className={clsx(classes.root, {
           [classes.active]: active === element.code,
         })}

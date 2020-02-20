@@ -13,6 +13,8 @@ export interface ServicesDepartmentsProps {
 
 export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
+  titleRef: React.Ref<HTMLInputElement>;
+  bodyRef: React.Ref<any>;
   currentTab: number;
   ticket: ServicesTicketProps;
   created: ServicesCreatedProps;

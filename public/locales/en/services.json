@@ -26,5 +26,9 @@
     "category": "Category: {{value}}",
     "status": "Status: {{value}}",
     "date": "Date: {{value}}"
+  },
+  "errors": {
+    "smallTitle": "Слишком короткий заголовок обращения",
+    "smallBody": "Необходимо подробнее описать проблему"
   }
 }
