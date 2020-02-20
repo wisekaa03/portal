@@ -10,6 +10,7 @@ import { Response, Request } from 'express';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
+import { AUTH_PAGE } from '../../lib/constants';
 // #endregion
 
 @Catch()
@@ -46,7 +47,7 @@ export class HttpErrorFilter implements ExceptionFilter {
 
       if (status === 403) {
         response.status(302);
-        response.redirect('/auth/login');
+        response.redirect(AUTH_PAGE);
         return;
       }
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {

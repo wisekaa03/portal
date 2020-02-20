@@ -24,6 +24,7 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
 import { GQLErrorCode } from '../src/shared/gqlerror';
+import { AUTH_PAGE } from './constants';
 // #endregion
 
 interface CreateClientProps {
@@ -51,7 +52,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
         if (!__SERVER__) {
           if (extensions.code === GQLErrorCode.UNAUTHENTICATED) {
-            Router.push({ pathname: '/auth/login', query: { redirect: getRedirect(window.location.pathname) } });
+            Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
           }
         }
       });
