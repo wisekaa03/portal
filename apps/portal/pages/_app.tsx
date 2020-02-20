@@ -25,7 +25,7 @@ import { ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
 import { User, UserContext } from '../src/user/models/user.dto';
-import getCookie from '../lib/get-cookie';
+import Cookie from '../lib/cookie';
 import getRedirect from '../lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '../lib/snackbar-utils';
 import { FIRST_PAGE, AUTH_PAGE } from '../lib/constants';
@@ -62,7 +62,7 @@ const CurrentComponent: React.FC<{
         throw new UnauthorizedException();
       }
     }
-  } else if (!getCookie() && !pathname.startsWith(AUTH_PAGE)) {
+  } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME] && !pathname.startsWith(AUTH_PAGE)) {
     router.push(redirectUrl);
 
     throw new UnauthorizedException();
@@ -71,13 +71,6 @@ const CurrentComponent: React.FC<{
   const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
-
-  // TODO: useEffect использовать ради 1 вызова избыточно
-  // useEffect(() => {
-  //   if (data?.me) {
-  //     setUser(data.me);
-  //   }
-  // }, [data]);
 
   return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
 };
