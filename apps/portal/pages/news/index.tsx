@@ -29,7 +29,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
-import { Loading } from '../../components/loading';
+import Loading from '../../components/loading';
 import { format } from '../../lib/dayjs';
 import { LARGE_RESOLUTION } from '../../lib/constants';
 import { ProfileContext } from '../../lib/context';

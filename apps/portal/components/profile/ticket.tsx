@@ -24,7 +24,7 @@ import clsx from 'clsx';
 // #region Imports Local
 import { format } from '../../lib/dayjs';
 import Avatar from '../ui/avatar';
-import { Loading } from '../loading';
+import Loading from '../loading';
 import { useTranslation } from '../../lib/i18n-client';
 import { LARGE_RESOLUTION, TICKET_STATUSES } from '../../lib/constants';
 import BaseIcon from '../ui/icon';

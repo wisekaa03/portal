@@ -14,7 +14,7 @@ import { useTranslation } from '../../lib/i18n-client';
 import BoxWithRef from '../../lib/box-ref';
 import { format } from '../../lib/dayjs';
 import Select from '../ui/select';
-import { Loading } from '../loading';
+import Loading from '../loading';
 import { TICKET_STATUSES } from '../../lib/constants';
 import RefreshButton from '../ui/refresh-button';
 import { ProfileTicketsComponentProps, ProfileTicketsCardProps } from './types';
@@ -171,7 +171,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
   const { t } = useTranslation();
   const ticketBox = useRef(null);
 
-  const maxHeight = ticketBox ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%';
+  const maxHeight = ticketBox.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%';
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={1} px={2}>

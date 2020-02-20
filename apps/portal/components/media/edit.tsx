@@ -10,7 +10,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // #region Imports Local
 import Button from '../ui/button';
 import { useTranslation } from '../../lib/i18n-client';
-import { Loading } from '../loading';
+import Loading from '../loading';
 import Dropzone from '../dropzone';
 import { TreeView, TreeItem } from '../tree-view';
 import { MediaEditComponentProps } from './types';

@@ -17,7 +17,7 @@ import {
 // #endregion
 // #region Imports Local
 import { LoginComponentProps } from './types';
-import { Loading } from '../loading';
+import Loading from '../loading';
 import Background2 from '../../public/images/svg/background2.svg';
 import Logo from '../../public/images/svg/logo.svg';
 import { useTranslation } from '../../lib/i18n-client';

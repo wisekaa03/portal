@@ -16,7 +16,7 @@ import PhonebookProfile from '../components/phonebook/profile';
 import PhonebookSettings from '../components/phonebook/settings';
 import { ColumnNames } from '../components/phonebook/types';
 import Modal from '../components/ui/modal';
-import { Loading } from '../components/loading';
+import Loading from '../components/loading';
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 import useDebounce from '../lib/debounce';
@@ -207,7 +207,7 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const handleSugClose = (event: React.MouseEvent<EventTarget>): void => {
-    if (searchRef?.current.contains(event.target as HTMLElement)) {
+    if (searchRef.current && searchRef.current.contains(event.target as HTMLElement)) {
       return;
     }
 

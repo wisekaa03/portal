@@ -14,7 +14,7 @@ import ServicesSuccess from './success';
 import { appBarHeight } from '../app-bar';
 import ServicesElement from './element';
 import { useTranslation } from '../../lib/i18n-client';
-import { Loading } from '../loading';
+import Loading from '../loading';
 import JoditEditor from '../jodit';
 import Dropzone from '../dropzone';
 import Button from '../ui/button';
@@ -92,7 +92,9 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const { t } = useTranslation();
   const headerRef = useRef(null);
 
-  const contentHeight = headerRef ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)` : '100%';
+  const contentHeight = headerRef.current
+    ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
+    : '100%';
 
   return (
     <Box display="flex" flexDirection="column" position="relative">

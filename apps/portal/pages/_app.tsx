@@ -23,7 +23,7 @@ import { ProfileContext } from '../lib/context';
 import { ApolloAppProps, Data } from '../lib/types';
 import { withApolloClient } from '../lib/with-apollo-client';
 import { appWithTranslation } from '../lib/i18n-client';
-import { Loading } from '../components/loading';
+import Loading from '../components/loading';
 import { User } from '../src/user/models/user.dto';
 import { FIRST_PAGE, ADMIN_PAGES } from '../lib/constants';
 import getCookie from '../lib/get-cookie';

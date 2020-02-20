@@ -27,7 +27,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { MediaComponentProps } from './types';
 import IsAdmin from '../isAdmin';
 import { useTranslation } from '../../lib/i18n-client';
-import { Loading } from '../loading';
+import Loading from '../loading';
 import { format } from '../../lib/dayjs';
 import { LARGE_RESOLUTION } from '../../lib/constants';
 // #endregion

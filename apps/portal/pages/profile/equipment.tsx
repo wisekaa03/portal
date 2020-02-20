@@ -21,7 +21,7 @@ import uuidv4 from 'uuid/v4';
 // #endregion
 // #region Imports Local
 import Page from '../../layouts/main';
-import { Loading } from '../../components/loading';
+import Loading from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { ProfileContext } from '../../lib/context';
 // #endregion

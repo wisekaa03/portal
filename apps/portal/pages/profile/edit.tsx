@@ -30,7 +30,7 @@ import IsAdmin from '../../components/isAdmin';
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
 import Avatar from '../../components/ui/avatar';
-import { Loading } from '../../components/loading';
+import Loading from '../../components/loading';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
 import { resizeImage } from '../../lib/utils';

@@ -9,7 +9,7 @@ import { MutationFunction } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
 // #endregion
 // #region Imports Local
-import { Loading } from './loading';
+import Loading from './loading';
 import Background2 from '../../../public/images/svg/background2.svg';
 import Logo from '../../../public/images/svg/logo.svg';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';

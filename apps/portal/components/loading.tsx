@@ -1,8 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
-
+import React, { FC } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { LinearProgress, CircularProgress, Box } from '@material-ui/core';
 import clsx from 'clsx';
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const Loading: React.FC<{
+interface LoadingComponentProps {
   activate?: boolean;
   variant?: 'determinate' | 'indeterminate' | 'static' | 'buffer' | 'query';
   disableShrink?: boolean;
@@ -47,7 +46,9 @@ export const Loading: React.FC<{
   noMargin?: boolean;
   absolute?: boolean;
   children?: any;
-}> = ({
+}
+
+const LoadingComponent: FC<LoadingComponentProps> = ({
   activate = true,
   variant,
   disableShrink,
@@ -110,3 +111,5 @@ export const Loading: React.FC<{
     </ConditionalWrapper>
   );
 };
+
+export default LoadingComponent;
