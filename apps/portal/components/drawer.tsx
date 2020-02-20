@@ -1,16 +1,15 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { fade, Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { WithTranslation } from 'next-i18next';
 // #endregion
 // #region Imports Local
-import { I18nPage, nextI18next, includeDefaultNamespaces } from '../lib/i18n-client';
+import { useTranslation } from '../lib/i18n-client';
 import DrawerBg from '../../../public/images/jpeg/drawer_bg.jpg';
 import Icon from './ui/icon';
 import CalendarIcon from '../../../public/images/svg/icons/calendar.svg';
@@ -81,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface DrawerProps extends WithTranslation {
+interface DrawerProps {
   open: boolean;
   isMobile?: boolean;
   handleOpen(): void;
@@ -123,15 +122,16 @@ const urls: UrlProps[] = [
   { icon: AdminIcon, text: 'common:adminPanel', link: '/admin', admin: true },
 ];
 
-const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
+const DrawerComponent: FC<DrawerProps> = ({ open, isMobile, handleOpen }) => {
   const classes = useStyles({});
-  const theme = useTheme();
-  const router = useRouter();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const profile = useContext(ProfileContext);
-  const { open, isMobile, handleOpen, t } = props;
+  const { t } = useTranslation();
 
-  const pathname = router ? router.pathname : '';
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { pathname } = useRouter();
+  // const pathname = router ? router.pathname : '';
 
   const drawer = (
     <div className={classes.toolbar}>
@@ -207,8 +207,4 @@ const BaseDrawer: I18nPage<DrawerProps> = (props): React.ReactElement => {
   );
 };
 
-BaseDrawer.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['common']),
-});
-
-export default nextI18next.withTranslation('common')(BaseDrawer);
+export default DrawerComponent;
