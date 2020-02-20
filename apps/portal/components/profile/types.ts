@@ -52,10 +52,6 @@ export interface ProfileEditComponentProps {
   handleSave: () => void;
 }
 
-export interface ProfileEditPageProps {
-  id: string | undefined;
-}
-
 export interface TextFieldComponentProps {
   disabled: boolean;
   handleChange: (_: keyof Profile) => (__: React.ChangeEvent<HTMLInputElement>) => void;

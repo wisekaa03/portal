@@ -33,10 +33,15 @@ export const { appWithTranslation, Trans } = nextI18next;
 export const useTranslation = originalUseTranslation;
 export const includeDefaultNamespaces = (namespaces: string[]): string[] => ['common'].concat(namespaces);
 
+type WithRouter = {
+  pathname?: string;
+  query?: { [key: string]: string };
+};
+
 export type I18nPage<P = {}> = NextComponentType<
   NextPageContext,
   { namespacesRequired: string[] },
-  WithTranslation & P & { namespacesRequired: string[] }
+  WithTranslation & P & { namespacesRequired: string[] } & WithRouter
 >;
 
 export default nextI18next;

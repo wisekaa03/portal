@@ -15,16 +15,19 @@ import { ProfileContext } from '../../lib/context';
 import { format } from '../../lib/dayjs';
 import snackbarUtils from '../../lib/snackbar-utils';
 import ProfileEditComponent from '../../components/profile/edit';
-import { ProfileEditPageProps } from '../../components/profile/types';
 // #endregion
 
-const ProfileEditPage: I18nPage<ProfileEditPageProps> = ({ t, id, ...rest }): React.ReactElement => {
-  const { user } = useContext(ProfileContext);
-  const { isAdmin } = user || { isAdmin: false };
+const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
 
-  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery(PROFILE, { variables: { id } });
+  const { user } = useContext(ProfileContext);
+  const { id } = query;
+  const { isAdmin } = user || { isAdmin: false };
+
+  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery(PROFILE, {
+    variables: { id },
+  });
 
   const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(CHANGE_PROFILE);
 
@@ -108,7 +111,7 @@ const ProfileEditPage: I18nPage<ProfileEditPageProps> = ({ t, id, ...rest }): Re
 };
 
 ProfileEditPage.getInitialProps = ({ query }) => ({
-  id: query.id,
+  query,
   namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
 });
 

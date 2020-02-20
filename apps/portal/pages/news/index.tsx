@@ -2,7 +2,6 @@
 
 // #region Imports NPM
 import React, { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -131,13 +130,13 @@ interface NewsProps {
   excerpt: string;
 }
 
-const NewsPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const { loading, data, error }: QueryResult<Data<'news', NewsProps[]>> = useQuery(NEWS, { ssr: false });
   const [current, setCurrent] = useState<NewsProps>(null);
   const profile = useContext(ProfileContext);
-  const router = useRouter();
-  const newsId = router && router.query && router.query.id;
+
+  const newsId = query?.id;
 
   const handleCurrent = (news: NewsProps) => (): void => {
     setCurrent(news);
@@ -265,7 +264,8 @@ const NewsPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   );
 };
 
-NewsPage.getInitialProps = () => ({
+NewsPage.getInitialProps = ({ query }) => ({
+  query,
   namespacesRequired: includeDefaultNamespaces(['news']),
 });
 

@@ -29,7 +29,7 @@ const departments = [
 
 const defaultTicketState: ServicesTicketProps = { title: '' };
 
-const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
   const router = useRouter();
 
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -68,7 +68,7 @@ const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCategories([]);
     setBody('');
     setFiles([]);
-    router.push(router.pathname, router.pathname);
+    router.push(pathname, pathname);
   };
 
   const handleSubmit = (): void => {
@@ -95,7 +95,7 @@ const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     if (!__SERVER__ && services) {
-      const { department, service, category } = router.query;
+      const { department, service, category } = query;
       const initialState = { ...defaultTicketState };
       let tab = 0;
 
@@ -196,7 +196,9 @@ const ServicesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-ServicesPage.getInitialProps = () => ({
+ServicesPage.getInitialProps = ({ pathname, query }) => ({
+  pathname,
+  query,
   namespacesRequired: includeDefaultNamespaces(['services']),
 });
 
