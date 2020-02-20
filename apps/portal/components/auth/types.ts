@@ -6,6 +6,11 @@ export interface LoginPageProps {
   initUsername: string;
 }
 
+export interface LogoutPageProps {
+  loading: boolean;
+  logout: MutationFunction;
+}
+
 export interface LoginComponentProps {
   usernameRef: React.Ref<HTMLInputElement>;
   passwordRef: React.Ref<HTMLInputElement>;
