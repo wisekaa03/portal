@@ -10,7 +10,7 @@
   "ticket": {
     "header": "Ticket № {{ticket}} at {{date}}",
     "notFound": "Ticket not found",
-    "notFounds": "Tickets not found",
+    "notFounds": "Tickets not found"
   },
   "tickets": {
     "title": "Мои заявки",

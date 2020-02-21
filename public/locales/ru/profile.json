@@ -6,7 +6,7 @@
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
-  "notFound": "Профиль не найден",
+  "notFound": "Карточка сотрудника не найдена",
   "ticket": {
     "header": "Ticket № {{ticket}} at {{date}}",
     "notFound": "Обращение не найдено",
