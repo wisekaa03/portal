@@ -20,6 +20,7 @@ import ProfileEditComponent from '../../components/profile/edit';
 const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
+  const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
   const { user } = useContext(ProfileContext);
   const { id } = query;
@@ -32,14 +33,13 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(CHANGE_PROFILE);
 
   const onDrop = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles: File[]) => {
       if (acceptedFiles.length) {
-        const thumbnailPhoto = (await resizeImage(acceptedFiles[0])) as string;
-        setCurrent({ ...current, thumbnailPhoto });
-        setUpdated({ ...updated, thumbnailPhoto });
+        setThumbnail(acceptedFiles[0]);
+        setCurrent({ ...current, thumbnailPhoto: (await resizeImage(acceptedFiles[0])) as string });
       }
     },
-    [current, updated],
+    [current],
   );
 
   const handleChange = (name: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +63,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     changeProfile({
       variables: {
         profile: updated,
-        thumbnailPhoto: updated.thumbnailPhoto,
+        thumbnailPhoto,
       },
     });
   };
@@ -99,7 +99,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
           loadingProfile={loadingProfile}
           loadingChanged={loadingChanged}
           profile={current}
-          hasUpdate={!!updated && !loadingChanged}
+          hasUpdate={(!!updated || !!thumbnailPhoto) && !loadingChanged}
           onDrop={onDrop}
           handleChange={handleChange}
           handleBirthday={handleBirthday}
