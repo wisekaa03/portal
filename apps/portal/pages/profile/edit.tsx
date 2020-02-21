@@ -111,7 +111,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   return (
     <>
       <Head>
-        <title>{t('profile:edit.title', { current: current.username })}</title>
+        <title>{t('profile:edit.title', { current: current?.fullName })}</title>
       </Head>
       <Page {...rest}>
         <ProfileEditComponent
