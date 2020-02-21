@@ -16,6 +16,7 @@ export enum GQLErrorCode {
   SERVER_PARAMS = 'SERVER_PARAMS',
   INSUFF_RIGHTS_AD = 'INSUFF_RIGHTS_AD',
   NO_FIELDS_ARE_FILLED_WITH_PROFILE = 'NO_FIELDS_ARE_FILLED_WITH_PROFILE',
+  CONSTRAINT_VIOLATION_ERROR = 'CONSTRAINT_VIOLATION_ERROR',
 }
 
 interface GQLErrorParams {
@@ -42,6 +43,9 @@ export const GQLError = ({ error, i18n, code = GQLErrorCode.UNAUTHENTICATED }: G
       break;
     case GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE:
       message = i18n ? i18n.translate('auth.NO_FIELDS_ARE_FILLED_WITH_PROFILE') : 'No fields are filled with profile';
+      break;
+    case GQLErrorCode.CONSTRAINT_VIOLATION_ERROR:
+      message = i18n ? i18n.translate('auth.CONSTRAINT_VIOLATION_ERROR') : 'Constraint violation error';
       break;
     default:
       message = i18n ? i18n.translate('auth.SERVER_ERROR') : 'Server error';

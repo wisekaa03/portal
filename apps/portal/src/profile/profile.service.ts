@@ -17,6 +17,7 @@ import { Profile } from './models/profile.dto';
 import { UserEntity } from '../user/user.entity';
 import { LoginService, Gender } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
+import { constructUploads } from '../shared/upload';
 // #endregion
 
 @Injectable()
@@ -335,8 +336,16 @@ export class ProfileService {
     };
 
     if (thumbnailPhoto) {
-      // eslint-disable-next-line no-debugger
-      debugger;
+      await Promise.all(
+        await constructUploads([thumbnailPhoto], ({ filename, file }) => {
+          // TODO: сохранить в профиле пользователя картинку
+          modification.thumbnailPhoto = file.toString('utf8');
+        }),
+      ).catch((error: Error) => {
+        this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
+
+        throw error;
+      });
     }
 
     if (profile) {
@@ -402,8 +411,6 @@ export class ProfileService {
           case 'notShowing':
             modification.flags = value ? '1' : '0';
             break;
-          case 'thumbnailPhoto':
-            break;
           case 'department':
           case 'otdel':
             created[key] = value as string;
@@ -456,8 +463,13 @@ export class ProfileService {
         // TODO: .modify with password parameter
         // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
       )
-      .catch((/* error: Error */) => {
-        throw new Error(GQLErrorCode.INSUFF_RIGHTS_AD);
+      .catch((error: Ldap.Error) => {
+        if (error.name === 'InsufficientAccessRightsError') {
+          throw new Error(GQLErrorCode.INSUFF_RIGHTS_AD);
+        } else if (error.name === 'ConstraintViolationError') {
+          throw new Error(GQLErrorCode.CONSTRAINT_VIOLATION_ERROR);
+        }
+        throw new Error(GQLErrorCode.SERVER_PARAMS);
       });
 
     const result = this.profileRepository.merge(created, profile);
