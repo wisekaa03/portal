@@ -109,8 +109,8 @@ const LoginComponent: FC<LoginComponentProps> = ({
             <FormControl className={classes.formControl} fullWidth variant="outlined">
               <TextField
                 inputRef={usernameRef}
-                data-field-name="username"
-                type="username"
+                name="username"
+                type="text"
                 autoFocus
                 value={values.username}
                 onChange={handleValues('username')}
@@ -123,7 +123,7 @@ const LoginComponent: FC<LoginComponentProps> = ({
             <FormControl className={classes.formControl} fullWidth variant="outlined">
               <TextField
                 inputRef={passwordRef}
-                data-field-name="password"
+                name="password"
                 type="password"
                 value={values.password}
                 onChange={handleValues('password')}
