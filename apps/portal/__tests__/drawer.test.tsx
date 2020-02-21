@@ -27,7 +27,7 @@ describe('Drawer component', () => {
   const props = {
     open: false,
     isMobile: false,
-    handleOpen: (): void => {},
+    handleOpen: jest.fn(),
     namespacesRequired: [],
   };
   const linkCount = 10;

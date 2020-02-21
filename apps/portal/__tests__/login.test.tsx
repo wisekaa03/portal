@@ -4,7 +4,6 @@ import React from 'react';
 import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import { TextField, Button } from '@material-ui/core';
-import { MutationFunction } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import Login from '../pages/auth/login';
@@ -16,7 +15,7 @@ describe('Login page', () => {
   const props: LoginPageProps = {
     // loading: false,
     // login: ((): void => {}) as MutationFunction,
-    // namespacesRequired: [],
+    namespacesRequired: [],
     initUsername: '',
   };
 

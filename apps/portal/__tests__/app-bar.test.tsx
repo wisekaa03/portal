@@ -14,7 +14,14 @@ import { LOGOUT, SYNC } from '../lib/queries';
 
 describe('AppBar component', () => {
   const mockOpen = jest.fn();
-  const props = { handleDrawerOpen: mockOpen };
+  const props = {
+    open: true,
+    anchorEl: null,
+    handleDrawerOpen: mockOpen,
+    handlePopoverOpen: mockOpen,
+    handlePopoverClose: mockOpen,
+    handleLogout: mockOpen,
+  };
   let shallow: typeof Shallow;
 
   const mocks = [

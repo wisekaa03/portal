@@ -4,6 +4,7 @@ import { MutationFunction } from 'react-apollo';
 
 export interface LoginPageProps {
   initUsername: string;
+  namespacesRequired: string[];
 }
 
 export interface LogoutPageProps {
