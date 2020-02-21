@@ -46,8 +46,9 @@ const MainLayout: FC = ({ children }) => {
   const router = useRouter();
   const isCollapse = router.pathname && AUTO_COLLAPSE_ROUTES.some((r) => router.pathname.startsWith(r));
 
-  const defaultDrawer = !isMobile && !ifModal && !isCollapse && (drawer !== undefined ? drawer : lgUp);
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(defaultDrawer);
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(
+    !isMobile && !ifModal && !isCollapse && (drawer === undefined || drawer === null ? lgUp : drawer),
+  );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [userSettings] = useMutation(USER_SETTINGS);
@@ -93,7 +94,7 @@ const MainLayout: FC = ({ children }) => {
 
   useEffect(() => {
     if (!isMobile && !ifModal && !isCollapse) {
-      setDrawerOpen(drawer !== undefined ? drawer : lgUp);
+      setDrawerOpen(drawer === undefined || drawer === null ? lgUp : drawer);
     }
   }, [lgUp, drawer, isMobile, ifModal, isCollapse]);
 
