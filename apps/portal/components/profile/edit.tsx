@@ -75,8 +75,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     avatar: {
-      height: 200,
-      width: 200,
+      height: 220,
+      width: 220,
+      objectFit: 'contain',
       borderRadius: theme.spacing(0.5),
     },
     nameBlock: {
@@ -107,8 +108,8 @@ const useStyles = makeStyles((theme: Theme) =>
     pickPhoto: {
       'position': 'absolute',
       'zIndex': 100,
-      'width': 200,
-      'height': 200,
+      'width': 220,
+      'height': 220,
       'borderRadius': theme.spacing(0.5),
       'color': '#fff',
       'opacity': 0,
