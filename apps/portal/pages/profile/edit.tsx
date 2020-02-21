@@ -30,13 +30,27 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     variables: { id },
   });
 
-  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(CHANGE_PROFILE, {
-    refetchQueries: [
-      {
-        query: CURRENT_USER,
-      },
-    ],
-  });
+  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(
+    CHANGE_PROFILE,
+    id
+      ? {
+          refetchQueries: [
+            {
+              query: PROFILE,
+            },
+          ],
+        }
+      : {
+          refetchQueries: [
+            {
+              query: PROFILE,
+            },
+            {
+              query: CURRENT_USER,
+            },
+          ],
+        },
+  );
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
