@@ -1,4 +1,4 @@
-type Media {
+type File {
   id: ID!
   createdUser: User!
   updatedUser: User!
@@ -11,13 +11,10 @@ type Media {
 }
 
 type Query {
-  media(id: ID): [Media!]!
+  file(id: ID): [File!]!
 }
 
 type Mutation {
-
-  editMedia(attachment: Upload!, directory: String!, id: ID): Media
-
-  deleteMedia(id: ID!): Boolean
-
+  editFile(attachment: Upload!, directory: String!, id: ID): File
+  deleteFile(id: ID!): Boolean
 }

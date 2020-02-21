@@ -9,7 +9,7 @@ type Directory {
 }
 
 type Query {
-  folders(id: ID): [Directory!]!
+  folder(id: ID): [Directory!]!
 }
 
 type Mutation {

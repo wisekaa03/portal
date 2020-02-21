@@ -32,8 +32,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async media(@Args('id') id?: string): Promise<MediaEntity[]> {
-    return this.mediaService.media(id);
+  async file(@Args('id') id?: string): Promise<MediaEntity[]> {
+    return this.mediaService.file(id);
   }
 
   /**
@@ -47,7 +47,7 @@ export class MediaResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async editMedia(
+  async editFile(
     @Context('req') req: Request,
     @Args('attachment') attachment: Promise<FileUpload>,
     @Args('directory') directory: string,
@@ -71,8 +71,8 @@ export class MediaResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async deleteMedia(@Args('id') id: string): Promise<boolean> {
-    return this.mediaService.deleteMedia(id);
+  async deleteFile(@Args('id') id: string): Promise<boolean> {
+    return !!id && this.mediaService.deleteFile(id);
   }
 
   /**
@@ -83,8 +83,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async folders(@Args('id') id?: string): Promise<MediaDirectoryEntity[]> {
-    return this.mediaService.folders(id);
+  async folder(@Args('id') id?: string): Promise<MediaDirectoryEntity[]> {
+    return this.mediaService.folder(id);
   }
 
   /**
@@ -124,6 +124,6 @@ export class MediaResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async deleteFolder(@Args('id') id: string): Promise<boolean> {
-    return this.mediaService.deleteFolder(id);
+    return !!id && this.mediaService.deleteFolder(id);
   }
 }

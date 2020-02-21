@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
+/* eslint spaced-comment:0, max-classes-per-file:0 */
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
