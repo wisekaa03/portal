@@ -9,7 +9,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { PROFILE, CHANGE_PROFILE } from '../../lib/queries';
+import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '../../lib/queries';
 import { resizeImage } from '../../lib/utils';
 import { ProfileContext } from '../../lib/context';
 import { format } from '../../lib/dayjs';
@@ -30,7 +30,13 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     variables: { id },
   });
 
-  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(CHANGE_PROFILE);
+  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(CHANGE_PROFILE, {
+    refetchQueries: [
+      {
+        query: CURRENT_USER,
+      },
+    ],
+  });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
