@@ -573,7 +573,7 @@ export class LdapService extends EventEmitter {
    * @param {string} username - The optional parameter
    * @param {string} password - The optional parameter
    * @returns {boolean} - The result
-   * @throws {Error}
+   * @throws {Ldap.Error}
    */
   public async modify(
     dn: string,
@@ -590,7 +590,7 @@ export class LdapService extends EventEmitter {
               if (bindErr) {
                 this.logger.error('bind error:', JSON.stringify(bindErr), 'LDAP');
 
-                return reject(new Error(bindErr.message));
+                return reject(bindErr);
               }
 
               return this.userClient.modify(
@@ -604,7 +604,7 @@ export class LdapService extends EventEmitter {
                       'LDAP',
                     );
 
-                    reject(new Error(searchErr.message));
+                    reject(searchErr);
                   }
 
                   this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
@@ -631,7 +631,7 @@ export class LdapService extends EventEmitter {
                 if (searchErr) {
                   this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
 
-                  reject(new Error(searchErr.message));
+                  reject(searchErr);
                 }
 
                 this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
