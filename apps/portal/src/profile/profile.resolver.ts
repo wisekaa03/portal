@@ -94,11 +94,7 @@ export class ProfileResolver {
     @Args('thumbnailPhoto') thumbnailPhoto: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
     return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch((error: Error) => {
-      if (error.message === GQLErrorCode.INSUFF_RIGHTS_AD) {
-        throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.INSUFF_RIGHTS_AD });
-      }
-
-      throw GQLError({ error, i18n: this.i18n, code: GQLErrorCode.SERVER_PARAMS });
+      throw GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
     });
   }
 }

@@ -14,7 +14,7 @@ import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser } from '@app/ldap';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
-import { UserEntity, UserResponse } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { LoginService, Gender } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
 // #endregion
@@ -334,101 +334,93 @@ export class ProfileService {
       return typeof value === 'string' ? value.trim() : value;
     };
 
-    Object.keys(profile).forEach((key) => {
-      const value = clean((profile as any)[key]);
+    if (thumbnailPhoto) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+    }
 
-      switch (key) {
-        case 'firstName':
-          modification.givenName = value;
-          modification.displayName = [created.lastName, value, created.middleName].join(' ');
-          break;
-        case 'lastName':
-          modification.sn = value;
-          modification.displayName = [value, created.firstName, created.middleName].join(' ');
-          break;
-        case 'middleName':
-          modification[key] = value;
-          modification.displayName = [created.lastName, created.firstName, value].join(' ');
-          break;
-        case 'gender':
-          if ([Gender.MAN, Gender.WOMAN].includes(value as number)) {
-            modification.comment = { ...modification.comment, [key]: value === Gender.MAN ? 'M' : 'W' };
-          }
-          break;
-        case 'birthday':
-        case 'companyeng':
-        case 'nameeng':
-        case 'departmenteng':
-        case 'otdeleng':
-        case 'positioneng':
-          modification.comment = { ...modification.comment, [key]: value };
-          break;
-        case 'country':
-          modification.co = value;
-          break;
-        case 'town':
-          modification.l = value;
-          break;
-        case 'region':
-          modification.st = value;
-          break;
-        case 'street':
-          modification.streetAddress = value;
-          break;
-        case 'email':
-          modification.mail = value;
-          break;
-        case 'telephone':
-          modification.telephoneNumber = value;
-          break;
-        case 'workPhone':
-          modification.otherTelephone = value;
-          break;
-        case 'fax':
-          modification.facsimileTelephoneNumber = value;
-          break;
-        case 'room':
-          modification.physicalDeliveryOfficeName = value;
-          break;
-        case 'employeeID':
-          modification.employeeID = value;
-          break;
-        case 'notShowing':
-          modification.flags = value ? '1' : '0';
-          break;
-        case 'thumbnailPhoto':
-          // eslint-disable-next-line no-case-declarations
-          const thumbnailPhotoBuffer = Buffer.from(value as string, 'base64');
+    if (profile) {
+      Object.keys(profile).forEach((key) => {
+        const value = clean((profile as any)[key]);
 
-          created.thumbnailPhoto = thumbnailPhotoBuffer
-            ? this.imageService
-                .imageResize(thumbnailPhotoBuffer, 250, 250)
-                .then((img) => (img ? img.toString('base64') : undefined))
-            : undefined;
-          created.thumbnailPhoto40 = thumbnailPhotoBuffer
-            ? this.imageService
-                .imageResize(thumbnailPhotoBuffer)
-                .then((img) => (img ? img.toString('base64') : undefined))
-            : undefined;
-
-          modification[key] = value as string;
-          break;
-        case 'department':
-        case 'otdel':
-          created[key] = value as string;
-          modification.department = [created.department, created.otdel].join(', ');
-          break;
-        // имена ключей совпадают
-        case 'postalCode':
-        case 'company':
-        case 'title':
-        case 'mobile':
-          modification[key] = value;
-          break;
-        default:
-          break;
-      }
-    });
+        switch (key) {
+          case 'firstName':
+            modification.givenName = value;
+            modification.displayName = [created.lastName, value, created.middleName].join(' ');
+            break;
+          case 'lastName':
+            modification.sn = value;
+            modification.displayName = [value, created.firstName, created.middleName].join(' ');
+            break;
+          case 'middleName':
+            modification[key] = value;
+            modification.displayName = [created.lastName, created.firstName, value].join(' ');
+            break;
+          case 'gender':
+            if ([Gender.MAN, Gender.WOMAN].includes(value as number)) {
+              modification.comment = { ...modification.comment, [key]: value === Gender.MAN ? 'M' : 'W' };
+            }
+            break;
+          case 'birthday':
+          case 'companyeng':
+          case 'nameeng':
+          case 'departmenteng':
+          case 'otdeleng':
+          case 'positioneng':
+            modification.comment = { ...modification.comment, [key]: value };
+            break;
+          case 'country':
+            modification.co = value;
+            break;
+          case 'town':
+            modification.l = value;
+            break;
+          case 'region':
+            modification.st = value;
+            break;
+          case 'street':
+            modification.streetAddress = value;
+            break;
+          case 'email':
+            modification.mail = value;
+            break;
+          case 'telephone':
+            modification.telephoneNumber = value;
+            break;
+          case 'workPhone':
+            modification.otherTelephone = value;
+            break;
+          case 'fax':
+            modification.facsimileTelephoneNumber = value;
+            break;
+          case 'room':
+            modification.physicalDeliveryOfficeName = value;
+            break;
+          case 'employeeID':
+            modification.employeeID = value;
+            break;
+          case 'notShowing':
+            modification.flags = value ? '1' : '0';
+            break;
+          case 'thumbnailPhoto':
+            break;
+          case 'department':
+          case 'otdel':
+            created[key] = value as string;
+            modification.department = [created.department, created.otdel].join(', ');
+            break;
+          // имена ключей совпадают
+          case 'postalCode':
+          case 'company':
+          case 'title':
+          case 'mobile':
+            modification[key] = value;
+            break;
+          default:
+            break;
+        }
+      });
+    }
 
     if (Object.keys(modification.comment).length === 0) {
       delete modification.comment;
@@ -444,13 +436,8 @@ export class ProfileService {
       modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
     }
 
-    if (thumbnailPhoto) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-    }
-
     if (!Object.keys(modification).length) {
-      throw new Error('No fields are filled in profile');
+      throw new Error(GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE);
     }
 
     const ldapUpdated = Object.keys(modification).map(

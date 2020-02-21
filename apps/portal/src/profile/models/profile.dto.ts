@@ -81,9 +81,9 @@ export interface Profile {
 
   notShowing: boolean;
 
-  thumbnailPhoto?: string | Promise<string | undefined> | File;
+  thumbnailPhoto?: string | Promise<string | undefined> | any;
 
-  thumbnailPhoto40?: string | Promise<string | undefined> | File;
+  thumbnailPhoto40?: string | Promise<string | undefined> | any;
 
   createdAt?: Date;
 
