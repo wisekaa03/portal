@@ -35,7 +35,7 @@ describe('Drawer component', () => {
 
   describe('Without context', () => {
     beforeAll(() => {
-      shallow = createShallow({ dive: true });
+      shallow = createShallow({ dive: false });
     });
 
     it('match snapshot', () => {

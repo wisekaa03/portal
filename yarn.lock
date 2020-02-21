@@ -1936,21 +1936,22 @@
     tslib "1.10.0"
     uuid "3.4.0"
 
-"@nestjs/graphql@^6.5.4":
-  version "6.5.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-6.5.4.tgz#4dc691ffc94d4ff86e10c9039cd303510e0afb7e"
-  integrity sha512-t+l8+2SgY7u3yUDyzuffMD5728hdK9E8wX/AjCbm5PKDEMdDgNuA9pAj/UoRZNaeXYVcFazQZztMRMzHnMjHQg==
+"@nestjs/graphql@^6.5.5":
+  version "6.5.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-6.5.5.tgz#eecd3f33b7797ad13b97bcbafe42c9adf96d7bbe"
+  integrity sha512-0Y2LkXPS6l0WJlhfq0Bqayu1X7O0ProJHsu5QE20GeBASYZc3yrwu6C959DIds4zQN2LChijykz6SMHelAZd1Q==
   dependencies:
     "@types/graphql" "14.2.3"
     chokidar "3.3.1"
-    fast-glob "3.1.1"
-    graphql-tools "4.0.6"
+    fast-glob "3.2.1"
+    graphql-tools "4.0.7"
     iterall "1.2.2"
     lodash "4.17.15"
     merge-graphql-schemas "1.7.6"
     normalize-path "3.0.0"
+    rimraf "3.0.2"
     ts-morph "5.0.0"
-    uuid "3.3.3"
+    uuid "3.4.0"
   optionalDependencies:
     type-graphql "^0.17.3"
 
@@ -1977,10 +1978,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mongoose/-/mongoose-6.3.1.tgz#542b73a8a9b2b8d42c52c9738eb3e7450018bb93"
   integrity sha512-yILdv4ZNXUTNNvLC2qB6F30xsapv4U4xEttoP9S4p6xkK5bh9gbtAXOdnV/U7VH8oLKP29Rr6VRSRd3098+h5w==
 
-"@nestjs/passport@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.1.1.tgz#991b8736c0ebffabb85a6455f0288055e5b52755"
-  integrity sha512-wMhvi3Ru965nftCLUhFUqWNwyzSxVDmGgTEYVyWbOOmHFjNg5US47jzV2NresuUP2vjgg8J8S6DviKTVuLfkRw==
+"@nestjs/passport@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.2.0.tgz#de5bf9b20912d26e15a99c7478b2760e7c3ebc79"
+  integrity sha512-Wy8FeSCNxbfTKRe/mJk0w5hSLsqoNMehg6DUQOoDug+6Uaq+QLEy6wvGPUJbVqGKpJwFHGgUoWp2ag05zh4zpA==
 
 "@nestjs/platform-express@6.11.6":
   version "6.11.6"
@@ -5243,12 +5244,12 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bcrypt@^3.0.8:
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/bcrypt/-/bcrypt-3.0.8.tgz#fe437b7569faffc1105c3c3f6e7d2913e3d3bea5"
-  integrity sha512-jKV6RvLhI36TQnPDvUFqBEnGX9c8dRRygKxCZu7E+MgLfKZbmmXL8a7/SFFOyHoPNX9nV81cKRC5tbQfvEQtpw==
+bcrypt@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/bcrypt/-/bcrypt-4.0.0.tgz#c973832823c45d6d5cbcd943f5f07dde546df252"
+  integrity sha512-UroxVJgmpeek3uxjY0IgtVtegM8EQqSLXnc5HE59m388MGZr0wPpRBqKJTaTraY3YEJOo1XIczExiEY9eeOCmg==
   dependencies:
-    nan "2.14.0"
+    node-addon-api "^2.0.0"
     node-pre-gyp "0.14.0"
 
 bfj@^6.1.1:
@@ -9296,16 +9297,17 @@ fast-diff@^1.1.2:
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
   integrity sha512-xJuoT5+L99XlZ8twedaRf6Ax2TgQVxvgZOYoPKqZufmJib0tL2tegPBOZb1pVNgIhlqDlA0eO0c3wBvQcmzx4w==
 
-fast-glob@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.1.1.tgz#87ee30e9e9f3eb40d6f254a7997655da753d7c82"
-  integrity sha512-nTCREpBY8w8r+boyFYAx21iL6faSsQynliPHM4Uf56SbkyohCNxpVPEH9xrF5TXKy+IsjkPUHDKiUkzBVRXn9g==
+fast-glob@3.2.1, fast-glob@^3.0.3, fast-glob@^3.1.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.1.tgz#c5aaea632f92543b744bdcb19f11efd49e56c7b3"
+  integrity sha512-XObtOQLTl4EptWcBbO9O6wd17VlVf9YXYY/zuzuu7nZfTsv4BL3KupMAMUVzH88CUwWkI3uNHBfxtfU8PveVTQ==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
     "@nodelib/fs.walk" "^1.2.3"
     glob-parent "^5.1.0"
     merge2 "^1.3.0"
     micromatch "^4.0.2"
+    picomatch "^2.2.1"
 
 fast-glob@^2.0.2:
   version "2.2.7"
@@ -9318,18 +9320,6 @@ fast-glob@^2.0.2:
     is-glob "^4.0.0"
     merge2 "^1.2.3"
     micromatch "^3.1.10"
-
-fast-glob@^3.0.3, fast-glob@^3.1.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.1.tgz#c5aaea632f92543b744bdcb19f11efd49e56c7b3"
-  integrity sha512-XObtOQLTl4EptWcBbO9O6wd17VlVf9YXYY/zuzuu7nZfTsv4BL3KupMAMUVzH88CUwWkI3uNHBfxtfU8PveVTQ==
-  dependencies:
-    "@nodelib/fs.stat" "^2.0.2"
-    "@nodelib/fs.walk" "^1.2.3"
-    glob-parent "^5.1.0"
-    merge2 "^1.3.0"
-    micromatch "^4.0.2"
-    picomatch "^2.2.1"
 
 fast-json-stable-stringify@2.0.0:
   version "2.0.0"
@@ -10637,18 +10627,7 @@ graphql-tag@^2.10.3, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
 
-graphql-tools@4.0.6:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.6.tgz#0e729e73db05ade3df10a2f92511be544972a844"
-  integrity sha512-jHLQw8x3xmSNRBCsaZqelXXsFfUSUSktSCUP8KYHiX1Z9qEuwcMpAf+FkdBzk8aTAFqOlPdNZ3OI4DKKqGKUqg==
-  dependencies:
-    apollo-link "^1.2.3"
-    apollo-utilities "^1.0.1"
-    deprecated-decorator "^0.1.6"
-    iterall "^1.1.3"
-    uuid "^3.1.0"
-
-graphql-tools@^4.0.0, graphql-tools@^4.0.7:
+graphql-tools@4.0.7, graphql-tools@^4.0.0, graphql-tools@^4.0.7:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.7.tgz#743309b96cb657ff45b607ee0a07193cd987e43c"
   integrity sha512-rApl8sT8t/W1uQRcwzxMYyUBiCl/XicluApiDkNze5TX/GR0BSTQMjM2UcRGdTmkbsb1Eqq6afkyyeG/zMxZYQ==
@@ -11194,10 +11173,10 @@ hyphenate-style-name@^1.0.3:
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.3.tgz#097bb7fa0b8f1a9cf0bd5c734cf95899981a9b48"
   integrity sha512-EcuixamT82oplpoJ2XU4pDtKGWQ7b00CD9f1ug9IaQ3p1bkHMiKCZ9ut9QDI6qsa6cpUuB+A/I+zLtdNK4n2DQ==
 
-i18next-browser-languagedetector@^4.0.0, i18next-browser-languagedetector@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-4.0.1.tgz#6a0b44a93835146287130da36ce3d04a1836879f"
-  integrity sha512-RxSoX6mB8cab0CTIQ+klCS764vYRj+Jk621cnFVsINvcdlb/cdi3vQFyrPwmnowB7ReUadjHovgZX+RPIzHVQQ==
+i18next-browser-languagedetector@^4.0.0, i18next-browser-languagedetector@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-4.0.2.tgz#eb02535cc5e57dd534fc60abeede05a3823a8551"
+  integrity sha512-AK4IZ3XST4HIKShgpB2gOFeDPrMOnZx56GLA6dGo/8rvkiczIlq05lV8w77c3ShEZxtTZeUVRI4Q/cBFFVXS/w==
   dependencies:
     "@babel/runtime" "^7.5.5"
 
@@ -12903,10 +12882,10 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-jsonc-parser@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-2.2.0.tgz#f206f87f9d49d644b7502052c04e82dd6392e9ef"
-  integrity sha512-4fLQxW1j/5fWj6p78vAlAafoCKtuBm6ghv+Ij5W2DrDx0qE+ZdEl2c6Ko1mgJNF5ftX1iEWQQ4Ap7+3GlhjkOA==
+jsonc-parser@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-2.2.1.tgz#db73cd59d78cce28723199466b2a03d1be1df2bc"
+  integrity sha512-o6/yDBYccGvTz1+QFevz6l6OBZ2+fMVu2JZ9CIhzsYRX4mjaK5IyX9eldUdCmga16zlgQxyrj5pt9kzuj2C02w==
 
 jsonfile@^2.1.0:
   version "2.4.0"
@@ -14563,7 +14542,7 @@ mz@^2.4.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nan@2.14.0, nan@^2.12.1, nan@^2.13.2, nan@^2.14.0:
+nan@^2.12.1, nan@^2.13.2, nan@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
@@ -14851,6 +14830,11 @@ node-abi@^2.7.0:
   integrity sha512-FeLpTS0F39U7hHZU1srAK4Vx+5AHNVOTP+hxBNQknR/54laTHSFIJkDWDqiquY1LeLUgTfPN7sLPhMubx0PLAg==
   dependencies:
     semver "^5.4.1"
+
+node-addon-api@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.0.tgz#f9afb8d777a91525244b01775ea0ddbe1125483b"
+  integrity sha512-ASCL5U13as7HhOExbT6OlWJJUV/lLzL2voOSP1UVehpRD8FbSrSDjfScK/KwAvVTI5AS6r4VwbOMlIqtvRidnA==
 
 node-dir@^0.1.10:
   version "0.1.17"
@@ -18651,7 +18635,7 @@ rimraf@3.0.1:
   dependencies:
     glob "^7.1.3"
 
-rimraf@^3.0.0, rimraf@^3.0.2:
+rimraf@3.0.2, rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
   integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
@@ -21440,22 +21424,22 @@ void-elements@^2.0.1:
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
 vscode-json-languageservice@^3.4.12:
-  version "3.4.12"
-  resolved "https://registry.yarnpkg.com/vscode-json-languageservice/-/vscode-json-languageservice-3.4.12.tgz#e7c96a1824896a624cc7bb14f46fbf9cb7e6c5a3"
-  integrity sha512-+tA0KPVM1pDfORZqsQen7bY5buBpQGDTVYEobm5MoGtXNeZY2Kn0iy5wIQqXveb28LRv/I5xKE87dmNJTEaijQ==
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/vscode-json-languageservice/-/vscode-json-languageservice-3.5.1.tgz#75779d466107cbc8c4cc9828df100df71c1870f8"
+  integrity sha512-F8jPqcAC1mbQOMKvGYS4dGEw9JCZxVEi7tc5ASZLfcfwKq2URZKB4fOtdy1GEsTLsrW11tVrBjEPntpXzqp/NA==
   dependencies:
-    jsonc-parser "^2.2.0"
-    vscode-languageserver-textdocument "^1.0.1-next.1"
-    vscode-languageserver-types "^3.15.0"
+    jsonc-parser "^2.2.1"
+    vscode-languageserver-textdocument "^1.0.1"
+    vscode-languageserver-types "^3.15.1"
     vscode-nls "^4.1.1"
     vscode-uri "^2.1.1"
 
-vscode-languageserver-textdocument@^1.0.1-next.1:
-  version "1.0.1-next.1"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.1-next.1.tgz#c8f2f792c7c88d33ea8441ca04bfb8376896b671"
-  integrity sha512-Cmt0KsNxouns+d7/Kw/jWtWU9Z3h56z1qAA8utjDOEqrDcrTs2rDXv3EJRa99nuKM3wVf6DbWym1VqL9q71XPA==
+vscode-languageserver-textdocument@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.1.tgz#178168e87efad6171b372add1dea34f53e5d330f"
+  integrity sha512-UIcJDjX7IFkck7cSkNNyzIz5FyvpQfY7sdzVy+wkKN/BLaD4DQ0ppXQrKePomCxTS7RrolK1I0pey0bG9eh8dA==
 
-vscode-languageserver-types@^3.15.0:
+vscode-languageserver-types@^3.15.1:
   version "3.15.1"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
   integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
