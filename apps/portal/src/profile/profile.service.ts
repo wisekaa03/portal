@@ -337,9 +337,9 @@ export class ProfileService {
 
     if (thumbnailPhoto) {
       await Promise.all(
-        await constructUploads([thumbnailPhoto], ({ filename, file }) => {
+        await constructUploads([thumbnailPhoto], ({ /* filename, */ file }) => {
           // TODO: сохранить в профиле пользователя картинку
-          modification.thumbnailPhoto = file.toString('utf8');
+          modification.thumbnailPhoto = file;
         }),
       ).catch((error: Error) => {
         this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
@@ -472,7 +472,15 @@ export class ProfileService {
         throw new Error(GQLErrorCode.SERVER_PARAMS);
       });
 
-    const result = this.profileRepository.merge(created, profile);
+    const thumbnail = modification.thumbnailPhoto
+      ? {
+          thumbnailPhoto: modification.thumbnailPhoto.toString('base64'),
+          thumbnailPhoto40: await this.imageService
+            .imageResize(modification.thumbnailPhoto)
+            .then((value: Buffer | undefined) => value?.toString('base64')),
+        }
+      : {};
+    const result = this.profileRepository.merge(created, profile, thumbnail as ProfileEntity);
 
     if (req.session!.passport.user.profile.id === result.id) {
       req.session!.passport.user.profile = result;
