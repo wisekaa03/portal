@@ -42,11 +42,7 @@ export class UserService {
   comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
     const user = await this.readByUsername(username);
 
-    if (user && user.comparePassword(password)) {
-      return user;
-    }
-
-    return undefined;
+    return user?.comparePassword(password) ? user : undefined;
   };
 
   /**
