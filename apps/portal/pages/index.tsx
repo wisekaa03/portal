@@ -22,21 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const HomePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
-  if (!__SERVER__) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .register('/_next/static/sw.js')
-          .then((/* registration */) => {
-            return console.log('service worker registration successful');
-          })
-          .catch((err) => {
-            console.warn('service worker registration failed', err.message);
-          });
-      }
-    }, []);
-  }
 
   return (
     <>

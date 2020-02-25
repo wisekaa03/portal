@@ -86,6 +86,18 @@ class MainApp extends App<ApolloAppProps> {
     if (jssStyles) {
       jssStyles.parentNode!.removeChild(jssStyles);
     }
+
+    // Service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/_next/static/sw.js')
+        .then((/* registration */) => {
+          return console.log('service worker registration successful');
+        })
+        .catch((err) => {
+          console.warn('service worker registration failed', err.message);
+        });
+    }
   }
 
   render(): React.ReactElement {
