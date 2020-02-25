@@ -3,6 +3,7 @@
 // #region Imports NPM
 import { IncomingMessage } from 'http';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { Request } from 'express';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
@@ -11,6 +12,7 @@ import { tap } from 'rxjs/operators';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config/config.service';
+import { UserResponse } from '../../../apps/portal/src/user/user.entity';
 // #endregion
 
 export type AppGraphQLExecutionContext = GraphQLExecutionContext;
@@ -45,8 +47,10 @@ export class LoggingInterceptor implements NestInterceptor {
 
       case 'http':
       default: {
-        const req = context.switchToHttp().getRequest<IncomingMessage>();
+        const req = context.switchToHttp().getRequest<Request>();
+        let username = (req?.session?.passport?.user as UserResponse)?.username;
 
+        // HTTP requests
         if (req) {
           const { method, url, socket } = req;
 
@@ -55,18 +59,20 @@ export class LoggingInterceptor implements NestInterceptor {
             .pipe(
               tap(() =>
                 this.logService.log(
-                  `${method} ${url} - ${req.method} - ${socket.remoteAddress} - ${Date.now() - now}ms`,
+                  `"${username}" - ${method} ${url} - ${req.method} - ${socket.remoteAddress} - ${Date.now() - now}ms`,
                   context.getClass().name,
                 ),
               ),
             );
         }
 
+        // GraphQL requests
         const ctx: AppGraphQLExecutionContext = GqlExecutionContext.create(context);
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        const address = gqlCtx.req && gqlCtx.req.client && gqlCtx.req.client.remoteAddress;
+        const address = gqlCtx?.req?.client?.remoteAddress;
+        username = (gqlCtx?.req?.session?.passport?.user as UserResponse)?.username;
 
         const values = info.variableValues;
         if (values['password']) {
@@ -78,8 +84,9 @@ export class LoggingInterceptor implements NestInterceptor {
           .pipe(
             tap(() =>
               this.logService.log(
-                `${info.parentType.name} "${info.fieldName}": ${JSON.stringify(values)} - ${address} - ${Date.now() -
-                  now}ms`,
+                `"${username}"` +
+                  ` - ${info.parentType.name} "${info.fieldName}"` +
+                  ` - ${JSON.stringify(values)} - ${address} - ${Date.now() - now}ms`,
                 resolverName,
               ),
             ),
