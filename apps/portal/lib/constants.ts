@@ -11,6 +11,7 @@ export const AUTH_PAGE = '/auth/login';
 export const FIRST_PAGE = '/phonebook';
 export const SESSION = 'session';
 export const ADMIN_PAGES = ['/calendar', '/faq', '/meetings', '/news', '/media', '/settings', '/admin'];
+export const HIDDEN_PAGES = ['/calendar', '/faq', '/meetings', '/news', '/media', '/settings', '/admin'];
 // export const ADMIN_PAGES = ['/admin'];
 
 export const ALLOW_REDIRECT_PAGES = [

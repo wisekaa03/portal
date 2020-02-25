@@ -28,7 +28,7 @@ import { User, UserContext } from '../src/user/models/user.dto';
 import Cookie from '../lib/cookie';
 import getRedirect from '../lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '../lib/snackbar-utils';
-import { FIRST_PAGE, AUTH_PAGE } from '../lib/constants';
+import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '../lib/constants';
 // #endregion
 
 /**
@@ -60,6 +60,9 @@ const CurrentComponent: React.FC<{
         res.redirect(url.format(redirectUrl));
 
         throw new UnauthorizedException();
+      } else if (!user.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page))) {
+        res.status(401);
+        res.redirect(FIRST_PAGE);
       }
     }
   } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME] && !pathname.startsWith(AUTH_PAGE)) {
