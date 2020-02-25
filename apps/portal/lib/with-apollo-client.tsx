@@ -14,7 +14,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import fetch from 'isomorphic-fetch';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { InStorageCache } from 'apollo-cache-instorage';
-import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
+// import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 // #endregion
@@ -84,24 +84,25 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       resolvers: stateResolvers,
     };
 
-    // TODO: лучшенный контроль за кешем (продумать)
-    // TODO: Протестить без него
-    cache = new InStorageCache({
-      storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
-      // shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
-      //   // debugger;
-      //   return true;
-      // },
-      // denormalize: (value: any): any => {
-      //   // debugger;
+    // TODO: Протестить без него, так как он дает ошибку
+    cache = new InMemoryCache().restore(initialState);
+    // TODO: улучшенный контроль за кешем (продумать)
+    // cache = new InStorageCache({
+    // storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
+    // shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
+    //   // debugger;
+    //   return true;
+    // },
+    // denormalize: (value: any): any => {
+    //   // debugger;
 
-      //   try {
-      //     return JSON.parse(value);
-      //   } catch {
-      //     return value;
-      //   }
-      // },
-    }).restore(initialState) as InMemoryCache;
+    //   try {
+    //     return JSON.parse(value);
+    //   } catch {
+    //     return value;
+    //   }
+    // },
+    // }).restore(initialState) as InMemoryCache;
   }
 
   return new ApolloClient({
