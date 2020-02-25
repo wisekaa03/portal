@@ -6,6 +6,7 @@ import { useTheme } from '@material-ui/core/styles';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
 // #endregion
@@ -45,13 +46,14 @@ const getGraphQLColumns = (columns: ColumnNames[]): string => {
   return result;
 };
 
-const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
   const largeWidth = useMediaQuery('(min-width:1600px)');
 
+  const router = useRouter();
   const profile = useContext(ProfileContext);
 
   const defaultColumns = profile?.user?.settings?.phonebook?.columns as ColumnNames[] | null;
@@ -59,7 +61,6 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [columns, setColumns] = useState<ColumnNames[]>(
     defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
   );
-  const [profileId, setProfileId] = useState<string | false>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<string[]>([]);
   const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
@@ -212,12 +213,8 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleProfileId = (id: string | undefined) => (): void => {
-    setProfileId(id || false);
-  };
-
   const handleProfileClose = (): void => {
-    setProfileId(false);
+    router.push({ pathname: '/phonebook' });
   };
 
   const handleSettingsOpen = (): void => {
@@ -283,13 +280,12 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             handleSort={handleSort}
             largeWidth={largeWidth}
             data={data?.profiles}
-            handleProfileId={handleProfileId}
           />
           <Loading activate={loading} noMargin type="linear" variant="indeterminate" />
         </Box>
       </Page>
-      <Modal open={Boolean(profileId)} onClose={handleProfileClose}>
-        <PhonebookProfile profileId={profileId} handleClose={handleProfileClose} handleSearch={setSearch} />
+      <Modal open={Boolean(query.id)} onClose={handleProfileClose}>
+        <PhonebookProfile profileId={query.id} handleClose={handleProfileClose} handleSearch={setSearch} />
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose}>
         <PhonebookSettings
@@ -304,7 +300,8 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-PhonebookPage.getInitialProps = () => ({
+PhonebookPage.getInitialProps = ({ query }) => ({
+  query,
   namespacesRequired: includeDefaultNamespaces(['phonebook']),
 });
 

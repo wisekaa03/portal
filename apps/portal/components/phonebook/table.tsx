@@ -41,7 +41,6 @@ const PhonebookTable: FC<TableProps> = ({
   handleSort,
   largeWidth,
   data,
-  handleProfileId,
 }) => {
   const classes = useStyles({});
 
@@ -76,7 +75,6 @@ const PhonebookTable: FC<TableProps> = ({
                       itemData={{
                         items: data ? data.edges : [],
                         columns,
-                        handleProfileId,
                         largeWidth,
                       }}
                     >

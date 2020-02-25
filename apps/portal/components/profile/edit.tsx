@@ -15,7 +15,7 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
@@ -161,6 +161,22 @@ const TextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, handleChang
   );
 };
 
+const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
+const companyes: (keyof Profile)[] = ['company', 'department', 'otdel', 'title'];
+const langs: (keyof Profile)[] = ['companyeng', 'departmenteng', 'otdeleng', 'positioneng'];
+const others: (keyof Profile)[] = [
+  'email',
+  'telephone',
+  'mobile',
+  'workPhone',
+  'country',
+  'region',
+  'town',
+  'street',
+  'postalCode',
+  'employeeID',
+];
+
 const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
   loadingProfile,
@@ -174,35 +190,18 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+  const router = useRouter();
 
   const InputProps = isAdmin ? { endAdornment } : { readOnly: true };
-
-  const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
-  const companyes: (keyof Profile)[] = ['company', 'department', 'otdel', 'title'];
-  const langs: (keyof Profile)[] = ['companyeng', 'departmenteng', 'otdeleng', 'positioneng'];
-  const others: (keyof Profile)[] = [
-    'email',
-    'telephone',
-    'mobile',
-    'workPhone',
-    'country',
-    'region',
-    'town',
-    'street',
-    'postalCode',
-    'employeeID',
-  ];
 
   return (
     <Box display="flex" flexDirection="column">
       <Loading activate={!profile} noMargin type="linear" variant="indeterminate" />
       <Box display="flex" flexDirection="column" p={2} overflow="auto">
         <Box display="flex" mb={1}>
-          <Link href={{ pathname: '/profile' }} as="/profile" passHref>
-            <IconButton>
-              <ArrowBackIcon />
-            </IconButton>
-          </Link>
+          <IconButton onClick={() => router.back()}>
+            <ArrowBackIcon />
+          </IconButton>
           <IsAdmin>
             <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
               <Button disabled={!hasUpdate} onClick={handleSave}>
