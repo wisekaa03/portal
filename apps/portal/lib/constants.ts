@@ -12,26 +12,26 @@ export const FIRST_PAGE = '/phonebook';
 export const SESSION = 'session';
 export const ADMIN_PAGES = [
   '/mail',
-  '/profile',
-  '/services',
+  // '/profile',
+  // '/services',
   '/calendar',
   '/faq',
   '/meetings',
   '/news',
   '/media',
-  '/settings',
+  // '/settings',
   '/admin',
 ];
 export const HIDDEN_PAGES = [
   '/mail',
-  '/profile',
-  '/services',
+  // '/profile',
+  // '/services',
   '/calendar',
   '/faq',
   '/meetings',
   '/news',
   '/media',
-  '/settings',
+  // '/settings',
   '/admin',
 ];
 // export const ADMIN_PAGES = ['/admin'];
