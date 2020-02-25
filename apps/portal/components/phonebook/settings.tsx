@@ -201,8 +201,8 @@ export const allColumns: Column[] = [
   {
     name: 'email',
     admin: false,
-    defaultStyle: { minWidth: 150, maxWidth: 150 },
-    largeStyle: { minWidth: 180, maxWidth: 180 },
+    defaultStyle: { minWidth: 210, maxWidth: 210 },
+    largeStyle: { minWidth: 230, maxWidth: 230 },
   },
   {
     name: 'country',
