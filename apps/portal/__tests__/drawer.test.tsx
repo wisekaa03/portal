@@ -30,7 +30,7 @@ describe('Drawer component', () => {
     handleOpen: jest.fn(),
     namespacesRequired: [],
   };
-  const linkCount = 10;
+  const linkCount = 4;
   const linkAdminCount = 11;
 
   describe('Without context', () => {
