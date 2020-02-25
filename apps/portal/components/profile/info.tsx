@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'display': 'grid',
       'gap': `${theme.spacing()}px`,
       'gridAutoColumns': 180,
-      'gridAutoRows': '1fr',
+      'gridAutoRows': 'minmax(45px, 1fr)',
       '& > a': {
         borderRadius: theme.spacing(0.5),
         lineHeight: '1.2em',
@@ -70,11 +70,11 @@ const ProfileInfoComponent: FC = () => {
                       {t('profile:btnEdit')}
                     </Button>
                   </Link>
-                  <Link href={{ pathname: '/profile/equipment' }} as="/profile/equipment" passHref>
+                  {/* <Link href={{ pathname: '/profile/equipment' }} as="/profile/equipment" passHref>
                     <Button color="secondary" component="a" variant="contained">
                       {t('profile:btnEquipment')}
                     </Button>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </>
