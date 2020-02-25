@@ -215,9 +215,12 @@ export class UserService {
 
         (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
           if (typeof value[key] === 'object') {
-            newSettings = { ...newSettings, [key]: { ...(newSettings[key] as object), ...(value[key] as object) } };
+            newSettings = {
+              ...newSettings,
+              [key]: { ...((newSettings[key] as unknown) as object), ...((value[key] as unknown) as object) },
+            };
           } else {
-            newSettings = { ...newSettings, ...(value[key] as object) };
+            newSettings = { ...newSettings, ...((value[key] as unknown) as object) };
           }
         });
 

@@ -11,6 +11,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next-2';
 import redisCacheStore from 'cache-manager-redis-store';
+import { TerminusModule, TypeOrmHealthIndicator, TerminusModuleOptions } from '@nestjs/terminus';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -46,6 +47,20 @@ import { Upload } from './shared/upload.scalar';
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV !== 'test';
 const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../..', '.env');
+
+const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions => ({
+  endpoints: [
+    {
+      // The health check will be available with /health
+      url: '/health',
+      // All the indicator which will be checked when requesting /health
+      healthIndicators: [
+        // Set the timeout for a response to 300ms
+        async () => db.pingCheck('database', { timeout: 300 }),
+      ],
+    },
+  ],
+});
 
 @Module({
   imports: [
@@ -223,6 +238,13 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
 
     // #region Media
     MediaModule,
+    // #endregion
+
+    // #region Health
+    TerminusModule.forRootAsync({
+      inject: [TypeOrmHealthIndicator],
+      useFactory: (db) => getTerminusOptions(db),
+    }),
     // #endregion
   ],
 

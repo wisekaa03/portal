@@ -17,7 +17,6 @@ import { PhonebookController } from './phonebook/phonebook.controller';
 import { ProfileController } from './profile/profile.controller';
 import { MediaController } from './media/media.controller';
 import { SettingsController } from './settings/settings.controller';
-import { HealthController } from './health/health.controller';
 // #endregion
 
 @Module({
@@ -36,7 +35,6 @@ import { HealthController } from './health/health.controller';
     ProfileController,
     MediaController,
     SettingsController,
-    HealthController,
   ],
 })
 export class HomeModule {}
