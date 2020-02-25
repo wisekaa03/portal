@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React from 'react';
 import { AppContext } from 'next/app';
+import Head from 'next/head';
 import Router from 'next/router';
 import { ApolloClient, ApolloError } from 'apollo-client';
 import { concat, ApolloLink } from 'apollo-link';
@@ -183,7 +184,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
-        // Head.rewind();
+        Head.rewind();
       }
 
       // Extract query data from the Apollo store

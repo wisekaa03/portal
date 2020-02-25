@@ -34,7 +34,7 @@ const createUser = (user: any): OldUser | null => {
   if (user) {
     return {
       name: user['ФИО'],
-      avatar: user['Аватар'],
+      avatar: user['Аватар'] || '',
       email: user['ОсновнойEmail'],
       telephone: user['ОсновнойТелефон'],
       company: user['Организация'],
@@ -75,16 +75,16 @@ const createTicket = (ticket: any): OldTicket => ({
   executorUser: createUser(ticket['ТекущийИсполнитель']),
   initiatorUser: createUser(ticket['Инициатор']),
   service: {
-    code: ticket['Услуга']['Код'],
-    name: ticket['Услуга']['Наименование'],
-    avatar: ticket['Услуга']['Аватар'],
+    code: ticket['Услуга']?.['Код'] || '',
+    name: ticket['Услуга']?.['Наименование'] || '',
+    avatar: ticket['Услуга']?.['Аватар'] || '',
   },
   serviceCategory: {
-    code: ticket['КатегорияУслуги']['Код'],
-    name: ticket['КатегорияУслуги']['Наименование'],
-    avatar: ticket['КатегорияУслуги']['Аватар'],
+    code: ticket['КатегорияУслуги']?.['Код'] || '',
+    name: ticket['КатегорияУслуги']?.['Наименование'] || '',
+    avatar: ticket['КатегорияУслуги']?.['Аватар'] || '',
   },
-  files: createFiles(ticket['СписокФайлов']['Файл']),
+  files: createFiles(ticket['СписокФайлов']?.['Файл'] || undefined),
 });
 
 @Injectable()
@@ -124,7 +124,7 @@ export class OldTicketService {
                       code: category['Код'],
                       name: category['Наименование'],
                       description: category['ОписаниеФД'],
-                      avatar: category['Аватар'],
+                      avatar: category['Аватар'] || '',
                       categoryType: category['ТипЗначенияКатегории'],
                     } as OldCategory),
                 ),
@@ -321,7 +321,7 @@ export class OldTicketService {
                 description: clearHtml(ticket['Описание']),
                 status: ticket['Статус'],
                 createdDate: ticket['Дата'],
-                avatar: ticket['Услуга']['Аватар'],
+                avatar: ticket['Услуга']?.['Аватар'] || '',
               } as OldTicket),
           );
         }
