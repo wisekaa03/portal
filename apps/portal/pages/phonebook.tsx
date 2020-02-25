@@ -113,9 +113,11 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   }, [error, suggestionsError, errorSettings]);
 
-  useEffect(() => {
-    setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
-  }, [lgUp, mdUp, smUp]);
+  // TODO: тут 2 варианта: либо под каждую диагональ свои дефолтные колонки,
+  // TODO: либо нет подстановки дефольных колонок, если есть в settings
+  // useEffect(() => {
+  //   setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
+  // }, [lgUp, mdUp, smUp]);
 
   useEffect(() => {
     if (!suggestionsLoading) {
@@ -226,6 +228,16 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setSettingsOpen(false);
   };
 
+  const handleSettingsReset = (): void => {
+    userSettings({
+      variables: {
+        value: { phonebook: { columns: null } },
+      },
+    });
+    setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
+    setSettingsOpen(false);
+  };
+
   const handleSugClose = (event: React.MouseEvent<EventTarget>): void => {
     if (searchRef.current && searchRef.current.contains(event.target as HTMLElement)) {
       return;
@@ -284,6 +296,7 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           columns={columns}
           changeColumn={handleColumns}
           handleClose={handleSettingsClose}
+          handleReset={handleSettingsReset}
           isAdmin={isAdmin}
         />
       </Modal>

@@ -206,18 +206,18 @@ export class UserService {
    * @param {string} value settings object
    * @returns {boolean}
    */
-  async settings(req: Request, value: any): Promise<UserResponse | boolean> {
+  async settings(req: Request, value: UserSettings): Promise<UserResponse | boolean> {
     if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
       const user: UserEntity | undefined = await this.readById(req.session.passport.user.id, false, 'profile');
 
       if (user) {
         let newSettings = { ...user.settings };
 
-        Object.keys(value).forEach((key) => {
+        (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
           if (typeof value[key] === 'object') {
-            newSettings = { ...newSettings, [key]: { ...newSettings[key], ...value[key] } };
+            newSettings = { ...newSettings, [key]: { ...(newSettings[key] as object), ...(value[key] as object) } };
           } else {
-            newSettings = { ...newSettings, ...value[key] };
+            newSettings = { ...newSettings, ...(value[key] as object) };
           }
         });
 

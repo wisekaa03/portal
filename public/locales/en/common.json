@@ -5,6 +5,7 @@
   "error": "Error: {{message}}",
   "send": "Send",
   "cancel": "Cancel",
+  "reset": "Reset",
   "save": "Save",
   "print": "Print",
   "authorization": "Authorization",

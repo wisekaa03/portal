@@ -8,9 +8,10 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
+import RestoreOutlinedIcon from '@material-ui/icons/RestoreOutlined';
 
 export interface ButtonBaseProps extends ButtonProps {
-  actionType?: 'accept' | 'cancel' | 'save' | 'print';
+  actionType?: 'accept' | 'cancel' | 'save' | 'print' | 'reset';
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,6 +51,14 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#c7c7a8',
       },
     },
+    reset: {
+      'color': theme.palette.getContrastText('#e6ccd9'),
+      'backgroundColor': '#e6ccd9',
+
+      '&:hover': {
+        backgroundColor: '#d2adbf',
+      },
+    },
   }),
 );
 
@@ -66,6 +75,9 @@ const BaseButton = ({ actionType = 'accept', children, className, ...rest }: But
       break;
     case 'print':
       icon = <PrintOutlinedIcon />;
+      break;
+    case 'reset':
+      icon = <RestoreOutlinedIcon />;
       break;
     default:
       icon = <CheckCircleIcon />;
