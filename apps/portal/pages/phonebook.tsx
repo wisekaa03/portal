@@ -23,6 +23,7 @@ import useDebounce from '../lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
 import { Data, ProfileProps } from '../lib/types';
+import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
 const defaultColumnsLG: ColumnNames[] = [
@@ -79,12 +80,12 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [
     getSearchSuggestions,
-    { loading: suggestionsLoading, data: suggestionsData },
+    { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError },
   ] = useLazyQuery(SEARCH_SUGGESTIONS, { ssr: false });
 
   // TODO: вставить сюда роутинг по id конкретного юзера
 
-  const { loading, data, fetchMore, refetch }: QueryResult<Data<'profiles', ProfileProps>> = useQuery(
+  const { loading, data, error, fetchMore, refetch }: QueryResult<Data<'profiles', ProfileProps>> = useQuery(
     PROFILES(getGraphQLColumns(columns)),
     {
       ssr: false,
@@ -101,6 +102,15 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       notifyOnNetworkStatusChange: true,
     },
   );
+
+  useEffect(() => {
+    if (error) {
+      snackbarUtils.error(error);
+    }
+    if (suggestionsError) {
+      snackbarUtils.error(suggestionsError);
+    }
+  }, [error, suggestionsError]);
 
   useEffect(() => {
     setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);
@@ -167,7 +177,7 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           },
         };
       },
-    });
+    }).catch((err) => snackbarUtils.error(err));
 
   const handleSort = (column: ColumnNames) => (): void => {
     const isAsc = orderBy.field === column && orderBy.direction === OrderDirection.ASC;
