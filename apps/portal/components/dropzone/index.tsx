@@ -140,7 +140,7 @@ const Dropzone = ({
 
     updateError();
 
-    setFiles((state) => [
+    setFiles((state: any) => [
       ...state,
       ...newFiles.map((file: File) => ({
         file,

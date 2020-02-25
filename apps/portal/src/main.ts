@@ -170,7 +170,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Next.JS locals
   server.use('*', (_req: Request, res: Response, next: Function) => {
-    res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
+    // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     next();
     // res.set('X-Server-ID', res);
     res.removeHeader('X-Powered-By');
