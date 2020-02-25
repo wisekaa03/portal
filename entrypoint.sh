@@ -66,35 +66,32 @@ EOF
 export NODE=`which node`
 export NODE_OPTIONS=--max_old_space_size=4096
 export NODE_PG_FORCE_NATIVE=true
+export NODE_ENV=${NODE_ENV:=production}
 
 # TODO: https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 # "Typically it is unsafe to use synchronize: true for schema synchronization on production
 # once you get data in your database. Here is where migrations come to help."
 
 if [ -n "$*" -a "$1" = "test" ]; then
+  NODE_ENV=test
   yarn nest:ormconfig
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_ENV=${NODE_ENV:=test}
   node_modules/.bin/jest $2 $3 $4 $5
 
 elif [ -n "$*" -a "$1" = "start" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_OPTIONS=--max_old_space_size=4096
-  export NODE_ENV=${NODE_ENV:=production}
   $NODE .next/nest/main.js
 
 elif [ -n "$*" -a "$1" = "start:synch" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_OPTIONS=--max_old_space_size=4096
-  export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch/main.js
 
 elif [ -n "$*" -a "$1" = "start:synchJob" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  export NODE_ENV=${NODE_ENV:=production}
   $NODE dist/apps/synch-job/main.js
 
 elif [ -n "$*" ]; then
+  NODE_ENV=development
   yarn dev
 
 fi
