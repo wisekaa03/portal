@@ -6,8 +6,8 @@
     "wait": "... Подождите ..."
   },
   "cache": {
-    "cache": "Обновить",
-    "description": "Обновить Redis Cache",
-    "wait": "... Обновляю ..."
+    "cache": "Очистить",
+    "description": "Очистить Redis Cache",
+    "wait": "... Очищаю ..."
   }
 }
