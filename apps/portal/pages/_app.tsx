@@ -51,16 +51,14 @@ const CurrentComponent: React.FC<{
     const user = req?.session?.passport?.user as User;
 
     if (res) {
-      // Редирект с страницы авторизации если уже вошел
-      if (isAuthPage && user) {
-        res.status(401);
-        res.redirect(FIRST_PAGE);
-      } else if (!isAuthPage && !user) {
-        res.status(401);
-        res.redirect(url.format(redirectUrl));
+      if (!user) {
+        if (!isAuthPage) {
+          res.status(401);
+          res.redirect(url.format(redirectUrl));
 
-        throw new UnauthorizedException();
-      } else if (!user.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page))) {
+          throw new UnauthorizedException();
+        }
+      } else if (isAuthPage || (!user.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page)))) {
         res.status(401);
         res.redirect(FIRST_PAGE);
       }
