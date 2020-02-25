@@ -99,6 +99,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
     'gap': `${theme.spacing()}px`,
     'maxHeight': '180px',
     'minHeight': '180px',
+    'overflow': 'hidden',
     '& h6': {
       maxWidth: 220,
     },
