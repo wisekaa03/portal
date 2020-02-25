@@ -125,10 +125,10 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 1000m
-    memory: 3Gi
+    memory: 4Gi
   requests:
     cpu: 400m
-    memory: 2Gi
+    memory: 3Gi
     ephemeral-storage: 1Gi
 
 nodeSelector: {}
