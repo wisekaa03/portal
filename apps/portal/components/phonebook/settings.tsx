@@ -76,8 +76,18 @@ const useStyles = makeStyles((theme: Theme) =>
       'padding': theme.spacing(0, 4, 2, 4),
       'display': 'flex',
       'justifyContent': 'flex-end',
+      'alignItems': 'flex-end',
+      'flexDirection': 'column',
       '& button:not(:last-child)': {
-        marginRight: theme.spacing(),
+        marginBottom: theme.spacing(),
+      },
+      [theme.breakpoints.up('sm')]: {
+        'flexDirection': 'row',
+
+        '& button:not(:last-child)': {
+          marginBottom: 0,
+          marginRight: theme.spacing(),
+        },
       },
     },
     buttonAccept: {
