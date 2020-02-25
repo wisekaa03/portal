@@ -211,7 +211,17 @@ export class UserService {
       const user: UserEntity | undefined = await this.readById(req.session.passport.user.id, false, 'profile');
 
       if (user) {
-        user.settings = { ...user.settings, ...value };
+        let newSettings = { ...user.settings };
+
+        Object.keys(value).forEach((key) => {
+          if (typeof value[key] === 'object') {
+            newSettings = { ...newSettings, [key]: { ...newSettings[key], ...value[key] } };
+          } else {
+            newSettings = { ...newSettings, ...value[key] };
+          }
+        });
+
+        user.settings = newSettings;
         this.save(user);
 
         (user as UserResponse).passwordFrontend = req.session.passport.user.passwordFrontend;

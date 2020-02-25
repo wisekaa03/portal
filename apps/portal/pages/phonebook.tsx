@@ -4,7 +4,7 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { QueryResult } from 'react-apollo';
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { Order, OrderDirection } from 'typeorm-graphql-pagination';
@@ -20,24 +20,16 @@ import Loading from '../components/loading';
 import Page from '../layouts/main';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
 import useDebounce from '../lib/debounce';
-import { PROFILES, SEARCH_SUGGESTIONS } from '../lib/queries';
+import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
 import { Data, ProfileProps } from '../lib/types';
 import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
-const defaultColumnsLG: ColumnNames[] = [
-  'thumbnailPhoto40',
-  'lastName',
-  'company',
-  'department',
-  'title',
-  'mobile',
-  'workPhone',
-];
-const defaultColumnsMD: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'company', 'department', 'title', 'workPhone'];
-const defaultColumnsSM: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'title', 'workPhone'];
-const defaultColumnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
+const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
+const columnsSM: ColumnNames[] = [...columnsXS, 'title', 'workPhone'];
+const columnsMD: ColumnNames[] = [...columnsSM, 'company', 'department'];
+const columnsLG: ColumnNames[] = [...columnsMD, 'mobile', 'email'];
 
 const getGraphQLColumns = (columns: ColumnNames[]): string => {
   let result = columns.filter((col) => col !== 'disabled' && col !== 'notShowing').join(' ');
@@ -62,10 +54,14 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const profile = useContext(ProfileContext);
 
+  const defaultColumns = profile?.user?.settings?.phonebook?.columns as ColumnNames[] | null;
+
+  const [columns, setColumns] = useState<ColumnNames[]>(
+    defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
+  );
   const [profileId, setProfileId] = useState<string | false>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<string[]>([]);
-  const [columns, setColumns] = useState<ColumnNames[]>(defaultColumnsLG);
   const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
     direction: OrderDirection.ASC,
     field: 'lastName',
@@ -77,6 +73,8 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const searchRef = useRef<HTMLInputElement>(null);
 
   const isAdmin = Boolean(profile?.user?.isAdmin);
+
+  const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
 
   const [
     getSearchSuggestions,
@@ -110,10 +108,13 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     if (suggestionsError) {
       snackbarUtils.error(suggestionsError);
     }
-  }, [error, suggestionsError]);
+    if (errorSettings) {
+      snackbarUtils.error(errorSettings);
+    }
+  }, [error, suggestionsError, errorSettings]);
 
   useEffect(() => {
-    setColumns(lgUp ? defaultColumnsLG : mdUp ? defaultColumnsMD : smUp ? defaultColumnsSM : defaultColumnsXS);
+    setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
   }, [lgUp, mdUp, smUp]);
 
   useEffect(() => {
@@ -178,6 +179,15 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         };
       },
     }).catch((err) => snackbarUtils.error(err));
+
+  const handleColumns = (values: ColumnNames[]): void => {
+    userSettings({
+      variables: {
+        value: { phonebook: { columns: values } },
+      },
+    });
+    setColumns(values);
+  };
 
   const handleSort = (column: ColumnNames) => (): void => {
     const isAsc = orderBy.field === column && orderBy.direction === OrderDirection.ASC;
@@ -272,7 +282,7 @@ const PhonebookPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Modal open={settingsOpen} onClose={handleSettingsClose}>
         <PhonebookSettings
           columns={columns}
-          changeColumn={setColumns}
+          changeColumn={handleColumns}
           handleClose={handleSettingsClose}
           isAdmin={isAdmin}
         />

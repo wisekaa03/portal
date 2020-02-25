@@ -25,7 +25,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
   // const search = useDebounce(_search, 300);
 
-  const ticketStatus = profile?.user?.settings?.ticketStatus as string | null;
+  const ticketStatus = profile?.user?.settings?.ticket?.status as string | null;
   const [status, setStatus] = useState<string>(ticketStatus || TICKET_STATUSES[0]);
   const [search, setSearch] = useState<string>('');
 
@@ -50,7 +50,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
     userSettings({
       variables: {
-        value: { ticketStatus: event.target.value },
+        value: { ticket: { status: event.target.value } },
       },
     });
   };

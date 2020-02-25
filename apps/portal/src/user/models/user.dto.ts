@@ -7,6 +7,7 @@
 // #region Imports Local
 import { Profile } from '../../profile/models/profile.dto';
 import { Group } from '../../group/models/group.dto';
+import { ColumnNames } from '../../../components/phonebook/types';
 // #endregion
 
 export interface BaseUser {
@@ -63,10 +64,19 @@ export interface UserRegister {
 // #endregion
 
 // #region User settings
+interface UserSettingsTicket {
+  status?: string | null;
+}
+
+interface UserSettingsPhonebook {
+  columns?: ColumnNames[] | null;
+}
+
 export interface UserSettings {
   lng?: 'ru' | 'en' | null;
   drawer?: boolean | null;
-  ticketStatus?: string | null;
+  ticket?: UserSettingsTicket | null;
+  phonebook?: UserSettingsPhonebook | null;
 }
 // #endregion
 
