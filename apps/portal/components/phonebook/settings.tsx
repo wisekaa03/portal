@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { nextI18next } from '../../lib/i18n-client';
+import { nextI18next, useTranslation } from '../../lib/i18n-client';
 import { Column, ColumnNames, SettingsProps } from './types';
 import Button from '../ui/button';
 import HeaderBg from '../../../../public/images/jpeg/header_bg.jpg';
@@ -244,54 +244,59 @@ export const allColumns: Column[] = [
 
 const countInBlocks = 4;
 
-const SettingsComponent = React.forwardRef((props: SettingsProps, ref?: React.Ref<React.Component>) => {
-  const classes = useStyles({});
-  const { t, columns, changeColumn, handleClose, isAdmin } = props;
-  const [current, setCurrent] = useState<ColumnNames[]>(columns);
+const SettingsComponent = React.forwardRef(
+  ({ columns, changeColumn, handleClose, handleReset, isAdmin }: SettingsProps, ref?: React.Ref<React.Component>) => {
+    const classes = useStyles({});
+    const { t } = useTranslation();
+    const [current, setCurrent] = useState<ColumnNames[]>(columns);
 
-  const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setCurrent(e.target.checked ? [name, ...current] : current.filter((el) => el !== name));
-  };
+    const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
+      setCurrent(e.target.checked ? [name, ...current] : current.filter((el) => el !== name));
+    };
 
-  const handleAccept = (): void => {
-    changeColumn(current);
-    handleClose();
-  };
+    const handleAccept = (): void => {
+      changeColumn(current);
+      handleClose();
+    };
 
-  const renderColumns = allColumns.filter(({ admin }) => isAdmin || !admin);
-  const blocks = Math.ceil(renderColumns.length / countInBlocks);
+    const renderColumns = allColumns.filter(({ admin }) => isAdmin || !admin);
+    const blocks = Math.ceil(renderColumns.length / countInBlocks);
 
-  return (
-    <Card ref={ref} className={classes.root}>
-      <CardHeader className={classes.head} title={t('phonebook:settings.header')} />
-      <CardContent className={classes.wrapContent}>
-        <div className={classes.content}>
-          {[...Array(blocks).keys()].map((i) => (
-            <FormControl key={i} className={classes.group}>
-              <FormGroup>
-                {renderColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }: Column) => (
-                  <FormControlLabel
-                    key={name}
-                    className={classes.item}
-                    label={t(`phonebook:fields.${name}`)}
-                    control={
-                      <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
-                    }
-                  />
-                ))}
-              </FormGroup>
-            </FormControl>
-          ))}
-        </div>
-      </CardContent>
-      <CardActions className={classes.actions} disableSpacing>
-        <Button actionType="cancel" onClick={handleClose}>
-          {t('common:cancel')}
-        </Button>
-        <Button onClick={handleAccept}>{t('common:accept')}</Button>
-      </CardActions>
-    </Card>
-  );
-});
+    return (
+      <Card ref={ref} className={classes.root}>
+        <CardHeader className={classes.head} title={t('phonebook:settings.header')} />
+        <CardContent className={classes.wrapContent}>
+          <div className={classes.content}>
+            {[...Array(blocks).keys()].map((i) => (
+              <FormControl key={i} className={classes.group}>
+                <FormGroup>
+                  {renderColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }: Column) => (
+                    <FormControlLabel
+                      key={name}
+                      className={classes.item}
+                      label={t(`phonebook:fields.${name}`)}
+                      control={
+                        <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
+                      }
+                    />
+                  ))}
+                </FormGroup>
+              </FormControl>
+            ))}
+          </div>
+        </CardContent>
+        <CardActions className={classes.actions} disableSpacing>
+          <Button actionType="cancel" onClick={handleClose}>
+            {t('common:cancel')}
+          </Button>
+          <Button actionType="reset" onClick={handleReset}>
+            {t('common:reset')}
+          </Button>
+          <Button onClick={handleAccept}>{t('common:accept')}</Button>
+        </CardActions>
+      </Card>
+    );
+  },
+);
 
 export default nextI18next.withTranslation('phonebook')(SettingsComponent);

@@ -56,7 +56,8 @@ export interface ProfileProps extends WithTranslation {
 
 export interface SettingsProps extends WithTranslation {
   columns: ColumnNames[];
-  handleClose(): void;
+  handleClose: () => void;
+  handleReset: () => void;
   changeColumn(columns: ColumnNames[]): void;
   isAdmin: boolean;
 }

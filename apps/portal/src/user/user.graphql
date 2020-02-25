@@ -18,16 +18,35 @@ type MailSession {
   sessauth: String
 }
 
+type UserSettingsTicket {
+  status: String
+}
+
+input UserSettingsTicketInput {
+  status: String
+}
+
+type UserSettingsPhonebook {
+  columns: [String]
+}
+
+input UserSettingsPhonebookInput {
+  columns: [String]
+}
+
+
 type UserSettings {
   lng: String
   drawer: Boolean
-  ticketStatus: String
+  ticket: UserSettingsTicket
+  phonebook: UserSettingsPhonebook
 }
 
 input UserSettingsInput {
   lng: String
   drawer: Boolean
-  ticketStatus: String
+  ticket: UserSettingsTicketInput
+  phonebook: UserSettingsPhonebookInput
 }
 
 type Mutation {

@@ -108,7 +108,12 @@ export const CURRENT_USER = gql`
       settings {
         lng
         drawer
-        ticketStatus
+        ticket {
+          status
+        }
+        phonebook {
+          columns
+        }
       }
       profile {
         ...ProfileProps
@@ -212,7 +217,12 @@ export const USER_SETTINGS = gql`
       settings {
         lng
         drawer
-        ticketStatus
+        ticket {
+          status
+        }
+        phonebook {
+          columns
+        }
       }
     }
   }
