@@ -72,8 +72,8 @@ const ProfileTicketsCard = withStyles((theme) => ({
     'height': 'fit-content',
     'display': 'flex',
     'flex': 1,
-    'minWidth': 300,
-    'maxWidth': 300,
+    'minWidth': 344,
+    'maxWidth': 344,
     'borderRadius': theme.spacing(0.5),
     'background': fade(theme.palette.secondary.main, 0.15),
     'marginRight': theme.spacing(2),
@@ -101,7 +101,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
     'minHeight': '180px',
     'overflow': 'hidden',
     '& h6': {
-      maxWidth: 220,
+      maxWidth: 254,
     },
     '& > div:last-child': {
       gridColumnStart: 1,
@@ -128,9 +128,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
                 <BaseIcon base64 src={avatar} size={36} />
               </div>
               <div>
-                <Typography variant="subtitle2" noWrap>
-                  {name}
-                </Typography>
+                <Typography variant="subtitle2">{name}</Typography>
               </div>
               <div>
                 <Typography variant="body1" dangerouslySetInnerHTML={{ __html: description }} />
