@@ -95,7 +95,6 @@ export interface TableProps {
   largeWidth: boolean;
   // TODO: вписать нормальный тип
   data: any;
-  handleProfileId: (_: string | undefined) => () => void;
 }
 
 export interface PhonebookProfileControlProps {

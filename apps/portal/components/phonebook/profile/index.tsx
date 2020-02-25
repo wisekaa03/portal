@@ -3,6 +3,7 @@
 // #region Imports NPM
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import Link from 'next/link';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -196,9 +197,11 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
               })}
             >
               <Box justifyContent="space-between" display="flex">
-                <IconButton className={classes.noPadding} onClick={handleClose}>
-                  <ArrowBackRounded />
-                </IconButton>
+                <Link href={{ pathname: '/phonebook' }} as="/phonebook">
+                  <IconButton className={classes.noPadding}>
+                    <ArrowBackRounded />
+                  </IconButton>
+                </Link>
                 <IsAdmin>
                   <PhonebookProfileControl
                     controlEl={controlEl}
