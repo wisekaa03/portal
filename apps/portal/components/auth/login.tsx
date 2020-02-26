@@ -13,6 +13,7 @@ import {
   FormControl,
   FormControlLabel,
   TextField,
+  Tooltip,
 } from '@material-ui/core';
 // #endregion
 // #region Imports Local
@@ -106,20 +107,36 @@ const LoginComponent: FC<LoginComponentProps> = ({
             <Typography className={classes.title} variant="h4">
               {t('common:authorization')}
             </Typography>
-            <FormControl className={classes.formControl} fullWidth variant="outlined">
-              <TextField
-                inputRef={usernameRef}
-                name="username"
-                type="text"
-                autoFocus
-                value={values.username}
-                onChange={handleValues('username')}
-                disabled={loading}
-                label={t('login:username')}
-                variant="outlined"
-                className={classes.textField}
-              />
-            </FormControl>
+            <Tooltip
+              title={
+                <span>
+                  Для входа используйте логин пароль как при входе в систему.
+                  <br />
+                  Пример:
+                  <br />
+                  i.ivanov
+                  <br />
+                  Qwerty123
+                </span>
+              }
+              placement="top"
+              leaveDelay={3000}
+            >
+              <FormControl className={classes.formControl} fullWidth variant="outlined">
+                <TextField
+                  inputRef={usernameRef}
+                  name="username"
+                  type="text"
+                  autoFocus
+                  value={values.username}
+                  onChange={handleValues('username')}
+                  disabled={loading}
+                  label={t('login:username')}
+                  variant="outlined"
+                  className={classes.textField}
+                />
+              </FormControl>
+            </Tooltip>
             <FormControl className={classes.formControl} fullWidth variant="outlined">
               <TextField
                 inputRef={passwordRef}
