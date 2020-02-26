@@ -7,5 +7,5 @@
   "remember": "Remember me on this computer",
   "signIn": "Sign in",
   "signOut": "Sign out",
-  "tooltip": "Для входа используйте логин пароль как при входе в систему.\\nExample:\\nUsername: \"example\"\\nPassword: \"SuPeRsEcReT123\""
+  "tooltip": "Для входа используйте логин пароль как при входе в систему. Пример: Пользователь: \"i.ivanov\", пароль: \"SuPeRsEcReT123\""
 }
