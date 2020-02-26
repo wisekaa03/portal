@@ -81,6 +81,8 @@ stage:
         --set replicaCount="1" \
         --set nameOverride="portal-stage" \
         --set fullnameOverride="portal-stage" \
+        --set service.nodePort="30400" \
+        --set service.nodePort_debug="30401" \
         --set PORT="${PORT_STAGE}" \
         --set PORT_DEBUG="${PORT_DEBUG}" \
         --set DATABASE_URI="${DATABASE_URI}" \
