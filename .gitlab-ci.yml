@@ -5,9 +5,7 @@ stages:
   - deploy
 
 variables:
-  PRODUCTION_NAMESPACE: default
   DOCKER_DRIVER: overlay2
-  PRODUCTION_NAMESPACE: production
   PREFIX: ""
   RELEASE_NAME: ${PREFIX}${CI_PROJECT_NAME}
   RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
@@ -76,7 +74,7 @@ stage:
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
-        --install --namespace=${PRODUCTION_NAMESPACE} \
+        --install --namespace=${DEVELOPMENT_NAMESPACE} \
         --debug --values helm/portal/values.yaml \
         --set replicaCount="1" \
         --set nameOverride="portal-stage" \
