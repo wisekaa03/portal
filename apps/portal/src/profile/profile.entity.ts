@@ -80,7 +80,7 @@ export class ProfileEntity {
 
   @AfterLoad()
   setComputed(): void {
-    this.fullName = `${this.lastName} ${this.firstName} ${this.middleName}`;
+    this.fullName = `${this.lastName || ''} ${this.firstName || ''} ${this.middleName || ''}`;
   }
 
   @Column({
