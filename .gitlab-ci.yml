@@ -124,7 +124,7 @@ stage:
     # Portal-synch
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-synch \
-        --install --namespace=${PRODUCTION_NAMESPACE} \
+        --install --namespace=${DEVELOPMENT_NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
         --set replicaCount="1" \
         --set nameOverride="portal-synch-stage" \
