@@ -3,7 +3,17 @@
 // #region Imports NPM
 import React, { FC } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, InputBase, IconButton, Popper, ClickAwayListener, MenuList, MenuItem, Paper } from '@material-ui/core';
+import {
+  Box,
+  InputBase,
+  IconButton,
+  Popper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+  Paper,
+  Tooltip,
+} from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
@@ -74,19 +84,21 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
         >
           <SearchIcon />
         </Box>
-        <InputBase
-          ref={searchRef}
-          placeholder={t('phonebook:search')}
-          value={search}
-          onChange={handleSearch}
-          fullWidth
-          autoFocus
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ 'aria-label': 'search' }}
-        />
+        <Tooltip title={t('phonebook:searchHelp')} placement="top-start">
+          <InputBase
+            ref={searchRef}
+            placeholder={t('phonebook:search')}
+            value={search}
+            onChange={handleSearch}
+            fullWidth
+            autoFocus
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ 'aria-label': 'search' }}
+          />
+        </Tooltip>
         <Popper
           id="search-suggestions"
           placement="bottom-start"
