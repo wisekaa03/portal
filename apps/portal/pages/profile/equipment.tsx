@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 // #endregion
 // #region Imports Local
 import Page from '../../layouts/main';

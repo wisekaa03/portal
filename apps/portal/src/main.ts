@@ -7,7 +7,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
 import { Request, Response } from 'express';
-import uuidv4 from 'uuid/v4';
+// import { v4 as uuidv4 } from 'uuid';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';

@@ -8,7 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import BaseDropzone, { DropzoneState, useDropzone } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
 import clsx from 'clsx';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 // #endregion
 // #region Imports Local
 import { DropzoneFile, DropzoneProps } from './types';
