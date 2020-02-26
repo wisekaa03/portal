@@ -126,19 +126,21 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
         const filtered = suggestionsData.searchSuggestions.reduce((result: string[], cur: any) => {
           if (result.length > 4) return result;
 
-          const lower = _search.toLowerCase().trim();
+          const lower = _search
+            .toLowerCase()
+            .split('+')
+            .map((l) => l.trim());
           let showing = '';
 
-          if (cur.fullName.toLowerCase().includes(lower)) {
+          if (lower.some((l) => cur.fullName.toLowerCase().includes(l))) {
             showing = cur.fullName;
-          } else if (cur.department && cur.department.toLowerCase().includes(lower)) {
+          } else if (lower.some((l) => cur.department && cur.department.toLowerCase().includes(l))) {
             showing = cur.department;
-          } else if (cur.company && cur.company.toLowerCase().includes(lower)) {
+          } else if (lower.some((l) => cur.company && cur.company.toLowerCase().includes(l))) {
             showing = cur.company;
-          } else if (cur.title && cur.title.toLowerCase().includes(lower)) {
+          } else if (lower.some((l) => cur.title && cur.title.toLowerCase().includes(l))) {
             showing = cur.title;
           }
-          showing = showing.trim();
 
           if (result.includes(showing) || showing === '') return result;
 

@@ -53,7 +53,7 @@ export class ProfileService {
   getProfiles = (search: string, disabled: boolean, notShowing: boolean): SelectQueryBuilder<ProfileEntity> => {
     const query = this.profileRepository.createQueryBuilder('profile').leftJoinAndSelect('profile.manager', 'manager');
 
-    const parameters = { search: `%${search}%`, notShowing, disabled };
+    const parameters = { notShowing, disabled };
 
     if (!disabled) {
       query.andWhere('profile.disabled = :disabled');
@@ -63,19 +63,23 @@ export class ProfileService {
       query.andWhere('profile.notShowing = :notShowing');
     }
 
-    if (search !== '') {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.where("profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike :search")
-            .orWhere('profile.department iLike :search')
-            .orWhere('profile.company iLike :search')
-            .orWhere('profile.title iLike :search')
-            .orWhere('profile.telephone iLike :search')
-            .orWhere('profile.workPhone iLike :search')
-            .orWhere('profile.mobile iLike :search');
-        }),
-      );
-    }
+    search.split('+').forEach((value) => {
+      const cleared = value.trim() !== '' ? `'%${value.trim()}%'` : '';
+
+      if (cleared) {
+        query.andWhere(
+          new Brackets((qb) => {
+            qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
+              .orWhere(`profile.department iLike ${cleared}`)
+              .orWhere(`profile.company iLike ${cleared}`)
+              .orWhere(`profile.title iLike ${cleared}`)
+              .orWhere(`profile.telephone iLike ${cleared}`)
+              .orWhere(`profile.workPhone iLike ${cleared}`)
+              .orWhere(`profile.mobile iLike ${cleared}`);
+          }),
+        );
+      }
+    });
 
     return query.setParameters(parameters).cache(true);
   };
@@ -106,26 +110,38 @@ export class ProfileService {
    */
   searchSuggestions = async (search: string): Promise<ProfileEntity[]> => {
     // TODO: сейчас уникализация на клиенте, продумать или оставить так
-    return (
-      this.profileRepository
-        .createQueryBuilder('profile')
-        // .select(
-        // eslint-disable-next-line max-len
-        //   'DISTINCT profile.firstName, profile.lastName, profile.middleName, profile.department, profile.company, profile.title',
-        // )
-        .where('profile.notShowing = :notShowing')
-        .andWhere('profile.disabled = :disabled')
-        .andWhere(
+
+    const result = this.profileRepository
+      .createQueryBuilder('profile')
+      // .select(
+      // eslint-disable-next-line max-len
+      //   'DISTINCT profile.firstName, profile.lastName, profile.middleName, profile.department, profile.company, profile.title',
+      // )
+      .where('profile.notShowing = :notShowing')
+      .andWhere('profile.disabled = :disabled');
+
+    search.split('+').forEach((value) => {
+      const cleared = value.trim() !== '' ? `'%${value.trim()}%'` : '';
+
+      if (cleared) {
+        result.andWhere(
           new Brackets((qb) => {
-            qb.where("profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike :search")
-              .orWhere('profile.department iLike :search')
-              .orWhere('profile.company iLike :search')
-              .orWhere('profile.title iLike :search');
+            qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
+              .orWhere(`profile.department iLike ${cleared}`)
+              .orWhere(`profile.company iLike ${cleared}`)
+              .orWhere(`profile.title iLike ${cleared}`)
+              .orWhere(`profile.telephone iLike ${cleared}`)
+              .orWhere(`profile.workPhone iLike ${cleared}`)
+              .orWhere(`profile.mobile iLike ${cleared}`);
           }),
-        )
+        );
+      }
+    });
+
+    return (
+      result
         .orderBy('profile.lastName', 'ASC')
         .setParameters({
-          search: `%${search}%`,
           notShowing: false,
           disabled: false,
         })
