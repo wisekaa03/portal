@@ -220,7 +220,7 @@ export class UserService {
               [key]: { ...((newSettings[key] as unknown) as object), ...((value[key] as unknown) as object) },
             };
           } else {
-            newSettings = { ...newSettings, ...((value[key] as unknown) as object) };
+            newSettings = { ...newSettings, [key]: value[key] };
           }
         });
 
