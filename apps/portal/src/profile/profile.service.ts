@@ -70,6 +70,7 @@ export class ProfileService {
         query.andWhere(
           new Brackets((qb) => {
             qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
+              .orWhere(`profile.username iLike ${cleared}`)
               .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
@@ -127,6 +128,7 @@ export class ProfileService {
         result.andWhere(
           new Brackets((qb) => {
             qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
+              .orWhere(`profile.username iLike ${cleared}`)
               .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
