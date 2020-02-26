@@ -37,6 +37,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
           refetchQueries: [
             {
               query: PROFILE,
+              variables: { id },
             },
           ],
         }
@@ -44,6 +45,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
           refetchQueries: [
             {
               query: PROFILE,
+              variables: { id },
             },
             {
               query: CURRENT_USER,
