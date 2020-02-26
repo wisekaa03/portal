@@ -107,21 +107,7 @@ const LoginComponent: FC<LoginComponentProps> = ({
             <Typography className={classes.title} variant="h4">
               {t('common:authorization')}
             </Typography>
-            <Tooltip
-              title={
-                <span>
-                  Для входа используйте логин пароль как при входе в систему.
-                  <br />
-                  Пример:
-                  <br />
-                  i.ivanov
-                  <br />
-                  Qwerty123
-                </span>
-              }
-              placement="top"
-              leaveDelay={3000}
-            >
+            <Tooltip title={t('login:tooltip')} placement="top" leaveDelay={3000}>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
                   inputRef={usernameRef}

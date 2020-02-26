@@ -6,5 +6,6 @@
   "password": "Password",
   "remember": "Remember me on this computer",
   "signIn": "Sign in",
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+  "tooltip": "<span>Для входа используйте логин пароль как при входе в систему.<br />Example:<br />Username: \"example\"<br />Password: \"SuPeRsEcReT123\"</span>"
 }
