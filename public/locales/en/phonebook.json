@@ -1,6 +1,7 @@
 {
   "title": "Portal: Phonebook",
   "search": "Search",
+  "searchHelp": "Используйте комбинированные запросы через знак плюса. Например запрос \"Нефте + бухг\" покажет всех бухгалтеров ООО \"Нефтебитум\"",
   "settings": {
     "header": "Address book - settings"
   },
