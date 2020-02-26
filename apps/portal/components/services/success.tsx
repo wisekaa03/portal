@@ -61,9 +61,10 @@ const ServicesSuccess = withStyles({
       <ServicesSuccessCard cardRef={cardRef} data={data} />
       <CardActions>
         <Box display="flex" flexGrow={1} justifyContent="space-around" p={2}>
+          {/*
           <ComposeButton variant="contained" startIcon={<SendIcon />} rounded body={`<p>Код заявки: ${data.code}</p>`}>
             {t('common:send')}
-          </ComposeButton>
+          </ComposeButton> */}
           <ReactToPdf targetRef={cardRef} filename={`ticket_${data.code}.pdf`}>
             {({ toPdf }) => (
               <Button onClick={toPdf} actionType="save">
