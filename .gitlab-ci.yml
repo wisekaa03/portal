@@ -1,8 +1,8 @@
 stages:
   - test_build
+  - build
+  - development
   - production
-  - stage
-  - deploy
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -11,7 +11,7 @@ variables:
   RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
 
-test_build:
+build:
   image: node:13
   stage: test_build
   cache:
@@ -21,7 +21,6 @@ test_build:
       - apps/portal/.next/cache/
   script:
     - env && echo -n "node version " && node -v
-    # - apt-get upgrade && apt-get install -y openssl libpq-dev
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u || true
@@ -46,9 +45,9 @@ prepare:
     # - apt-get upgrade && apt-get install -y openssl libpq-dev
     - yarn install --production=true
 
-production:
+docker_build:
   image: docker:latest
-  stage: production
+  stage: build
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
@@ -64,9 +63,9 @@ production:
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
     - docker push ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
 
-stage:
+helm_development:
   image: dtzar/helm-kubectl:latest
-  stage: stage
+  stage: development
   dependencies: []
   allow_failure: false
   script:
@@ -81,7 +80,7 @@ stage:
         --set fullnameOverride="portal-stage" \
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
-        --set PORT="${PORT_STAGE}" \
+        --set PORT="${PORT}" \
         --set PORT_DEBUG="${PORT_DEBUG}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
@@ -134,9 +133,9 @@ stage:
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
 
-deploy:
+helm_production:
   image: dtzar/helm-kubectl:latest
-  stage: deploy
+  stage: production
   dependencies: []
   when: manual
   allow_failure: false
@@ -147,6 +146,8 @@ deploy:
       helm upgrade ${RELEASE_NAME} helm/portal \
         --install --namespace=${PRODUCTION_NAMESPACE} \
         --debug --values helm/portal/values.yaml \
+        --set service.nodePort="30300" \
+        --set service.nodePort_debug="30301" \
         --set PORT="${PORT}" \
         --set PORT_DEBUG="${PORT_DEBUG}" \
         --set DATABASE_URI="${DATABASE_URI}" \

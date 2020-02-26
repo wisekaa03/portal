@@ -239,7 +239,7 @@ const nextConfig = {
   dist: '../../dist/apps/portal',
   compress: false,
   // crossOrigin: 'anonymous',
-  // poweredByHeader: false,
+  poweredByHeader: false,
 };
 
 module.exports = withPlugins(plugins, nextConfig);

@@ -122,7 +122,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push('http://localhost:4000');
+    frameSrc.push(`http://localhost:${configService.get<number>('PORT')}`);
   }
 
   server.use(
@@ -178,7 +178,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Start server
-  await server.listen(configService.get('PORT'));
+  await server.listen(configService.get<number>('PORT'));
   logger.log(`Server running on port ${configService.get('PORT')}`, 'Bootstrap');
   // #endregion
 
