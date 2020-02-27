@@ -18,6 +18,7 @@ import { Profile } from '../profile/models/profile.dto';
 import { GroupService } from '../group/group.service';
 import { LoginService } from '../shared/interfaces';
 import { ADMIN_GROUP } from '../../lib/constants';
+import { Group } from '../group/models/group.dto';
 // #endregion
 
 @Injectable()
@@ -128,7 +129,7 @@ export class UserService {
     const groups = await this.groupService.createFromUser(ldapUser).catch((error) => {
       this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'UserService');
 
-      throw error;
+      // throw error;
     });
 
     // TODO: fck
@@ -146,8 +147,8 @@ export class UserService {
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
-      groups,
-      isAdmin: Boolean(groups.find((group) => group.name === ADMIN_GROUP)),
+      groups: groups as Group[],
+      isAdmin: groups ? Boolean(groups.find((group) => group.name === ADMIN_GROUP)) : false,
       settings: user?.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
