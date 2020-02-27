@@ -10,7 +10,7 @@ import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
 import { UserLogin } from '../user/models/user.dto';
 import { UserService } from '../user/user.service';
-import { UserEntity, UserResponse } from '../user/user.entity';
+import { UserResponse } from '../user/user.entity';
 // #endregion
 
 @Injectable()

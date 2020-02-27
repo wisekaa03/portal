@@ -103,18 +103,20 @@ export class AuthResolver {
   /**
    * GraphQL mutation: logout
    *
-   * @returns {boolean}
+   * @param {Request} req - the Request (app.module.ts GraphQL: "context: ({ req, res }) => ({ req, res })")
+   * @returns {boolean} - the true/false of logout
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async logout(@Context('req') req: Request): Promise<boolean | null> {
+  async logout(@Context('req') req: Request): Promise<boolean> {
     this.logService.debug('User logout', 'AuthResolver');
 
     if (req.session) {
       req.logOut();
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   /**

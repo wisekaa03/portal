@@ -72,12 +72,14 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
     httpLink = createHttpLink({
       uri: `http://localhost:${process.env.PORT}/graphql`,
+      credentials: 'same-origin',
     });
 
     cache = new InMemoryCache().restore(initialState);
   } else {
     httpLink = createUploadLink({
       uri: `/graphql`,
+      credentials: 'same-origin',
     });
 
     clientParams = {
