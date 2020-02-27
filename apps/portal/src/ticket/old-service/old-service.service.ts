@@ -96,6 +96,7 @@ export class OldTicketService {
   /**
    * Ticket get service and categories
    *
+   * @param {SoapAuthentication} authentication - Soap authentication
    * @returns {OldService[]} - Services and Categories
    */
   OldTicketService = async (authentication: SoapAuthentication): Promise<OldService[]> => {
@@ -286,9 +287,11 @@ export class OldTicketService {
   /**
    * Ticket get all
    *
-   * @returns {OldTicket[]}
+   * @param {SoapAuthentication} authentication - Soap authentication
+   * @param {string} Status
+   * @returns {OldService[]}
    */
-  OldTickets = async (authentication: SoapAuthentication, status: string): Promise<OldService[]> => {
+  OldTickets = async (authentication: SoapAuthentication, Status: string): Promise<OldService[]> => {
     const client = await this.soapService.connect(authentication).catch((error) => {
       throw error;
     });
@@ -297,7 +300,7 @@ export class OldTicketService {
       .kngk_GetTaskAsync({
         log: authentication.username,
         Dept: '',
-        Status: status,
+        Status,
         Executor: false,
         Alltask: false,
       })
