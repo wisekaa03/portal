@@ -76,8 +76,10 @@ export class UserService {
   /**
    * Reads by ID
    *
-   * @param {string} id User ID
-   * @returns {UserEntity | undefined} The user
+   * @param {string} id - User ID
+   * @param {boolean} isDisabled - Is this user disabled
+   * @param {boolean} isRelation - boolean | 'profile' | 'groups' = true
+   * @returns {UserEntity | undefined} - The user
    */
   readById = async (
     id: string,
@@ -102,7 +104,8 @@ export class UserService {
   /**
    * Create a User with Ldap params
    *
-   * @param {string} id - User ID
+   * @param {LdapResponseUser} ldapUser - Ldap user
+   * @param {UserEntity} user - User
    * @throws {Error}
    */
   async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity): Promise<UserEntity> {
@@ -152,17 +155,17 @@ export class UserService {
   /**
    * Synchronization
    *
-   * @param {req} Request
-   * @returns {boolean}
+   * @param {Request} - why it is here?
+   * @returns {boolean} - The result of synchronization
    */
-  synchronization = async (_req: Request): Promise<boolean | null> =>
+  synchronization = async (_req?: Request): Promise<boolean | null> =>
     this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
 
   /**
    * Create
    *
-   * @param {User} The user
-   * @returns {UserEntity} The user entity
+   * @param {User} user - The user
+   * @returns {UserEntity} - The user entity
    */
   create = (user: User): UserEntity => this.userRepository.create(user);
 
