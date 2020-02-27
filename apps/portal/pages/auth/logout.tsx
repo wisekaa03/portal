@@ -10,31 +10,39 @@ import { useRouter } from 'next/router';
 import { nextI18next, includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { LOGOUT } from '../../lib/queries';
 import LogoutComponent from '../../components/auth/logout';
-import Cookies from '../../lib/cookie';
 import { removeStorage } from '../../lib/session-storage';
-import { SESSION, AUTH_PAGE } from '../../lib/constants';
+import { SESSION, AUTH_PAGE, FIRST_PAGE } from '../../lib/constants';
 import snackbarUtils from '../../lib/snackbar-utils';
+import Cookie from '../../lib/cookie';
 // #endregion
 
 const Logout: I18nPage = ({ t }): React.ReactElement => {
   const client = useApolloClient();
   const router = useRouter();
 
-  const [logout, { loading, error }] = useMutation(LOGOUT, {
+  const [logout, { loading, error: errorLogout }] = useMutation(LOGOUT, {
     onCompleted: () => {
       removeStorage(SESSION);
-      Cookies.remove(process.env.SESSION_NAME);
-      client.resetStore();
+      Cookie.remove(process.env.SESSION_NAME);
 
-      router.push({ pathname: AUTH_PAGE });
+      client
+        .clearStore()
+        .then(() => {
+          client.resetStore();
+          const { pathname = FIRST_PAGE } = router;
+          return router.push({ pathname: AUTH_PAGE, query: { redirect: pathname } });
+        })
+        .catch((error) => {
+          throw error;
+        });
     },
   });
 
   useEffect(() => {
-    if (error) {
-      snackbarUtils.error(error);
+    if (errorLogout) {
+      snackbarUtils.error(errorLogout);
     }
-  }, [error]);
+  }, [errorLogout]);
 
   return (
     <>

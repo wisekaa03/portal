@@ -14,6 +14,7 @@ import { ProfileContext } from '../lib/context';
 import { LOGOUT, USER_SETTINGS } from '../lib/queries';
 import { removeStorage } from '../lib/session-storage';
 import { SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '../lib/constants';
+import Cookie from '../lib/cookie';
 // #endregion
 
 const useStyles = makeStyles((/* theme: Theme */) =>
@@ -54,12 +55,20 @@ const MainLayout: FC = ({ children }) => {
   const [userSettings] = useMutation(USER_SETTINGS);
 
   const [logout] = useMutation(LOGOUT, {
-    onCompleted() {
+    onCompleted: () => {
       removeStorage(SESSION);
-      client.resetStore();
+      Cookie.remove(process.env.SESSION_NAME);
 
-      const { pathname = FIRST_PAGE } = router;
-      router.push({ pathname: AUTH_PAGE, query: { redirect: pathname } });
+      client
+        .clearStore()
+        .then(() => {
+          client.resetStore();
+          const { pathname = FIRST_PAGE } = router;
+          return router.push({ pathname: AUTH_PAGE, query: { redirect: pathname } });
+        })
+        .catch((error) => {
+          throw error;
+        });
     },
   });
 
