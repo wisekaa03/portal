@@ -45,7 +45,7 @@ export class UserEntity {
   password: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToMany((type) => GroupEntity, { eager: true, onDelete: 'CASCADE', nullable: true })
+  @ManyToMany((type) => GroupEntity, { onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
