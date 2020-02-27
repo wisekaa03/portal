@@ -57,7 +57,7 @@ const MainLayout: FC = ({ children }) => {
   const [logout] = useMutation(LOGOUT, {
     onCompleted: () => {
       removeStorage(SESSION);
-      Cookie.remove(process.env.SESSION_NAME);
+      Cookie.remove(process.env.SESSION_NAME || 'portal');
 
       client
         .clearStore()

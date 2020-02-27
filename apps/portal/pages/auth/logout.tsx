@@ -23,7 +23,7 @@ const Logout: I18nPage = ({ t }): React.ReactElement => {
   const [logout, { loading, error: errorLogout }] = useMutation(LOGOUT, {
     onCompleted: () => {
       removeStorage(SESSION);
-      Cookie.remove(process.env.SESSION_NAME);
+      Cookie.remove(process.env.SESSION_NAME || 'portal');
 
       client
         .clearStore()
