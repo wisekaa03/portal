@@ -131,11 +131,12 @@ export class UserService {
       throw error;
     });
 
-    if (!groups) {
-      this.logService.error('Unable to save data in `group`. Unknown error.', undefined, 'UserService');
+    // TODO: fck
+    // if (!groups) {
+    //   this.logService.error('Unable to save data in `group`. Unknown error.', undefined, 'UserService');
 
-      throw new Error('Unable to save data in `group`. Unknown error.');
-    }
+    //   throw new Error('Unable to save data in `group`. Unknown error.');
+    // }
 
     const data: User = {
       id: user?.id,
