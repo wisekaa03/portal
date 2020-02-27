@@ -6,6 +6,7 @@ metadata:
 {{ include "portal.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  # https://blog.sebastian-daschner.com/entries/zero-downtime-updates-kubernetes
   strategy:
     type: RollingUpdate
     rollingUpdate:
