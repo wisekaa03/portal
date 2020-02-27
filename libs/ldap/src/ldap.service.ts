@@ -598,16 +598,12 @@ export class LdapService extends EventEmitter {
                 data,
                 async (searchErr: Ldap.Error | null): Promise<void> => {
                   if (searchErr) {
-                    this.logger.error(
-                      `Modify error "${dn}": ${JSON.stringify(data)}`,
-                      JSON.stringify(searchErr),
-                      'LDAP',
-                    );
+                    this.logger.error(`Modify error "${dn}"`, JSON.stringify(searchErr), 'LDAP');
 
                     reject(searchErr);
                   }
 
-                  this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
+                  this.logger.log(`Modify success "${dn}"`, 'LDAP');
 
                   if (this.userCache) {
                     await this.userCache.del(dn);
