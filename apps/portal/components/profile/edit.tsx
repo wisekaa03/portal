@@ -59,6 +59,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       width: '100%',
     },
+    fullNameBlock: {
+      [theme.breakpoints.down('xs')]: {
+        'flexDirection': 'column',
+        'alignItems': 'center',
+        '& > div:first-child': {
+          marginBottom: theme.spacing(),
+        },
+      },
+    },
     nameEngBlock: {
       'display': 'flex',
       'flex': 1,
@@ -81,6 +90,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.spacing(0.5),
     },
     nameBlock: {
+      'width': '100%',
       'display': 'flex',
       'flex': 1,
       'justifyContent': 'center',
@@ -224,7 +234,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   type="circular"
                 />
                 <div className={classes.firstBlock}>
-                  <Box display="flex">
+                  <Box display="flex" className={classes.fullNameBlock}>
                     <Box mr={1} position="relative">
                       <DropzoneWrapper onDrop={onDrop}>
                         <IconButton className={classes.pickPhoto}>
