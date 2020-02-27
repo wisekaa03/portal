@@ -28,7 +28,7 @@ export class GroupService {
       /* eslint-disable no-restricted-syntax */
       /* eslint-disable no-await-in-loop */
       for (const ldapGroup of ldap.groups as LdapResonseGroup[]) {
-        const updateAt = await this.groupByIdentificator(ldapGroup.objectGUID);
+        const updateAt = await this.groupByIdentificator(ldapGroup.objectGUID, false);
 
         const group: Group = {
           ...updateAt,
@@ -55,8 +55,8 @@ export class GroupService {
    * @param {string} - group object GUID
    * @return {GroupEntity | undefined} - Group
    */
-  groupByIdentificator = async (loginIdentificator: string): Promise<GroupEntity | undefined> =>
-    this.groupRepository.findOne({ where: { loginIdentificator }, cache: true });
+  groupByIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
+    this.groupRepository.findOne({ where: { loginIdentificator }, cache });
 
   /**
    * Create
