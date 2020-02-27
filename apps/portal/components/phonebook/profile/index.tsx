@@ -8,7 +8,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton } from '@material-ui/core';
-import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded } from '@material-ui/icons';
+import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     grid: {
       display: 'grid',
-      gap: `${theme.spacing(2)}px`,
+      gap: `${theme.spacing()}px`,
       padding: theme.spacing(0.5),
     },
     gridFull: {
@@ -243,6 +243,12 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
                   <Box display="flex" alignItems="center" justifyContent="center">
                     <PhoneRounded />
                     <span>{profile.workPhone}</span>
+                  </Box>
+                )}
+                {profile?.username && (
+                  <Box display="flex" alignItems="center" justifyContent="center">
+                    <PersonRounded />
+                    <span>{profile.username}</span>
                   </Box>
                 )}
                 {profile?.email && (
