@@ -69,7 +69,7 @@ export class LogService extends Logger implements TypeOrmLogger {
   /**
    * From app.use(morgan('dev', { stream: logger })) - the request/response logging
    *
-   * @param message Message string
+   * @param {string} message Message string
    */
   write(message: string): void {
     this.verbose(message.replace(/\n/, ''), 'Request');

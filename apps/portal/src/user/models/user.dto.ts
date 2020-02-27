@@ -8,6 +8,7 @@
 import { Profile } from '../../profile/models/profile.dto';
 import { Group } from '../../group/models/group.dto';
 import { ColumnNames } from '../../../components/phonebook/types';
+import { GroupEntity } from '../../group/group.entity';
 // #endregion
 
 export interface BaseUser {
@@ -19,7 +20,7 @@ export interface BaseUser {
 
   disabled: boolean;
 
-  groups?: Group[];
+  groups?: Group[] | GroupEntity[];
 
   groupIds?: string[];
 

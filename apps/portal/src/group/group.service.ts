@@ -38,7 +38,7 @@ export class GroupService {
           loginService: LoginService.LDAP,
         };
 
-        groups.push(this.create(group));
+        groups.push(this.groupRepository.create(group));
       }
 
       await this.bulkSave(groups);
@@ -52,8 +52,8 @@ export class GroupService {
   /**
    * Group by Identificator
    *
-   * @param loginIdentificator string
-   * @return Group
+   * @param {string} - group object GUID
+   * @return {GroupEntity | undefined} - Group
    */
   groupByIdentificator = async (loginIdentificator: string): Promise<GroupEntity | undefined> =>
     this.groupRepository.findOne({ where: { loginIdentificator }, cache: true });
@@ -61,48 +61,34 @@ export class GroupService {
   /**
    * Create
    *
-   * @param {Group} The group
-   * @returns {GroupEntity} The group entity
+   * @param {Group} - The group
+   * @returns {GroupEntity} - The group entity
    */
-  create = (group: Group): GroupEntity => {
-    try {
-      return this.groupRepository.create(group);
-    } catch (error) {
-      this.logService.error('Unable to create data in `group`', error, 'GroupService');
-
-      throw error;
-    }
-  };
+  create = (group: Group): GroupEntity => this.groupRepository.create(group);
 
   /**
    * Bulk Save
    *
-   * @param {GroupEntity[]} The groups
-   * @returns {GroupEntity[] | undefined} The groups
+   * @param {GroupEntity[]} - The groups
+   * @returns {GroupEntity[]} - The groups
    */
-  bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[] | undefined> => {
-    try {
-      return this.groupRepository.save(group);
-    } catch (error) {
-      this.logService.error('Unable to save data in `group`', error.toString(), 'GroupService');
+  bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[]> =>
+    this.groupRepository.save(group).catch((error) => {
+      this.logService.error('Unable to save data in `groups`', JSON.stringify(error), 'GroupService');
 
       throw error;
-    }
-  };
+    });
 
   /**
    * Save
    *
-   * @param {GroupEntity} The group
-   * @returns {GroupEntity | undefined} The group
+   * @param {GroupEntity} - The group
+   * @returns {GroupEntity} - The group
    */
-  save = async (group: GroupEntity): Promise<GroupEntity | undefined> => {
-    try {
-      return this.groupRepository.save(group);
-    } catch (error) {
-      this.logService.error('Unable to save data in `group`', error.toString(), 'GroupService');
+  save = async (group: GroupEntity): Promise<GroupEntity> =>
+    this.groupRepository.save(group).catch((error) => {
+      this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'GroupService');
 
       throw error;
-    }
-  };
+    });
 }

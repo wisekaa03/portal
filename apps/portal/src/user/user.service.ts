@@ -19,6 +19,7 @@ import { GroupService } from '../group/group.service';
 import { LoginService } from '../shared/interfaces';
 import { ADMIN_GROUP } from '../../lib/constants';
 import { Group } from '../group/models/group.dto';
+import { GroupEntity } from '../group/group.entity';
 // #endregion
 
 @Injectable()
@@ -114,30 +115,22 @@ export class UserService {
 
       throw error;
     });
-
     if (!profile) {
       this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
 
-    // Для контактов
+    // Contact
     if (!ldapUser.sAMAccountName) {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups = await this.groupService.createFromUser(ldapUser).catch((error) => {
+    const groups: GroupEntity[] | undefined = await this.groupService.createFromUser(ldapUser).catch((error) => {
       this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'UserService');
 
-      // throw error;
+      return undefined;
     });
-
-    // TODO: fck
-    // if (!groups) {
-    //   this.logService.error('Unable to save data in `group`. Unknown error.', undefined, 'UserService');
-
-    //   throw new Error('Unable to save data in `group`. Unknown error.');
-    // }
 
     const data: User = {
       id: user?.id,
@@ -147,8 +140,8 @@ export class UserService {
       password: `$${LoginService.LDAP}`,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
-      groups: groups as Group[],
-      isAdmin: groups ? Boolean(groups.find((group) => group.name === ADMIN_GROUP)) : false,
+      groups,
+      isAdmin: groups ? Boolean(groups.find((group) => group.name.toLowerCase() === ADMIN_GROUP)) : false,
       settings: user?.settings ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
