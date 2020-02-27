@@ -27,8 +27,8 @@ import { Data, ProfileProps } from '../lib/types';
 import snackbarUtils from '../lib/snackbar-utils';
 // #endregion
 
-const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName'];
-const columnsSM: ColumnNames[] = [...columnsXS, 'title', 'workPhone'];
+const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
+const columnsSM: ColumnNames[] = [...columnsXS, 'title'];
 const columnsMD: ColumnNames[] = [...columnsSM, 'company', 'department'];
 const columnsLG: ColumnNames[] = [...columnsMD, 'mobile', 'email'];
 
