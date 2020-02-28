@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -78,6 +78,19 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+  const [openTooltip, setOpenTooltip] = useState<boolean>(false);
+
+  const handleCloseTooltip = (): void => {
+    setOpenTooltip(false);
+  };
+
+  const handleOpenTooltip = (): void => {
+    setOpenTooltip(true);
+  };
+
+  useEffect(() => {
+    setOpenTooltip(!!!search);
+  }, [search]);
 
   const showedSuggestions = suggestions.length > 0;
 
@@ -93,7 +106,14 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
         >
           <SearchIcon />
         </Box>
-        <Tooltip title={t('phonebook:help.search')} placement="top-start">
+        <Tooltip
+          open={openTooltip}
+          onOpen={handleOpenTooltip}
+          onClose={handleCloseTooltip}
+          title={t('phonebook:help.search')}
+          interactive
+          placement="top-start"
+        >
           <InputBase
             ref={searchRef}
             placeholder={t('phonebook:search')}
@@ -121,7 +141,7 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
               <ClickAwayListener onClickAway={handleSugClose}>
                 <MenuList onKeyDown={handleSugKeyDown}>
                   {suggestions.map((item) => (
-                    <MenuItem key={item} onClick={handleSugClick(item)}>
+                    <MenuItem key={item} onClick={handleSugClick}>
                       {item}
                     </MenuItem>
                   ))}

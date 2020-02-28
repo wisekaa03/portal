@@ -82,7 +82,7 @@ export interface PhonebookControlProps {
   handleSearch: React.ChangeEventHandler<HTMLInputElement>;
   handleSugClose: (_: React.MouseEvent<EventTarget>) => void;
   handleSugKeyDown: (_: React.KeyboardEvent) => void;
-  handleSugClick: (_: string) => () => void;
+  handleSugClick: (_: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   handleHelpOpen: () => void;
   handleSettingsOpen: () => void;
 }
