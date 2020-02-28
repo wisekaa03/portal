@@ -402,6 +402,7 @@ export const ldapADattributes = [
   'sn',
   'st',
   'streetAddress',
+  'telephoneNumber',
   'title',
   'wWWHomePage',
   'userAccountControl',
