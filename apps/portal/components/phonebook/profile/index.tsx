@@ -8,7 +8,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
-import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded } from '@material-ui/icons';
+import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded, CallEndRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
@@ -243,6 +243,12 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
                   <Box display="flex" alignItems="center" justifyContent="center">
                     <PhoneAndroidRounded />
                     <span>{profile.mobile}</span>
+                  </Box>
+                )}
+                {profile?.telephone && (
+                  <Box display="flex" alignItems="center" justifyContent="center">
+                    <CallEndRounded />
+                    <span>{profile.telephone}</span>
                   </Box>
                 )}
                 {profile?.workPhone && (
