@@ -83,6 +83,7 @@ export interface PhonebookControlProps {
   handleSugClose: (_: React.MouseEvent<EventTarget>) => void;
   handleSugKeyDown: (_: React.KeyboardEvent) => void;
   handleSugClick: (_: string) => () => void;
+  handleHelpOpen: () => void;
   handleSettingsOpen: () => void;
 }
 
@@ -128,4 +129,10 @@ export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root
     | 'town'
     | 'street'
     | 'postalCode';
+}
+
+export interface HelpDataProps {
+  id: number;
+  image: any;
+  text: React.ReactNode;
 }

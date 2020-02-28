@@ -254,7 +254,7 @@ export const allColumns: Column[] = [
 
 const countInBlocks = 4;
 
-const SettingsComponent = React.forwardRef(
+const PhonebookSettings = React.forwardRef(
   ({ columns, changeColumn, handleClose, handleReset, isAdmin }: SettingsProps, ref?: React.Ref<React.Component>) => {
     const classes = useStyles({});
     const { t } = useTranslation();
@@ -309,4 +309,4 @@ const SettingsComponent = React.forwardRef(
   },
 );
 
-export default nextI18next.withTranslation('phonebook')(SettingsComponent);
+export default nextI18next.withTranslation('phonebook')(PhonebookSettings);

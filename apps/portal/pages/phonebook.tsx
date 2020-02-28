@@ -15,6 +15,7 @@ import PhonebookControl from '../components/phonebook/control';
 import PhonebookTable from '../components/phonebook/table';
 import PhonebookProfile from '../components/phonebook/profile';
 import PhonebookSettings from '../components/phonebook/settings';
+import PhonebookHelp from '../components/phonebook/help';
 import { ColumnNames } from '../components/phonebook/types';
 import Modal from '../components/ui/modal';
 import Loading from '../components/loading';
@@ -61,6 +62,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [columns, setColumns] = useState<ColumnNames[]>(
     defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
   );
+  const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<string[]>([]);
   const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
@@ -219,6 +221,14 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     router.push({ pathname: '/phonebook' });
   };
 
+  const handleHelpOpen = (): void => {
+    setHelpOpen(true);
+  };
+
+  const handleHelpClose = (): void => {
+    setHelpOpen(false);
+  };
+
   const handleSettingsOpen = (): void => {
     setSettingsOpen(true);
   };
@@ -272,6 +282,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
             handleSugClose={handleSugClose}
             handleSugKeyDown={handleSugKeyDown}
             handleSugClick={handleSugClick}
+            handleHelpOpen={handleHelpOpen}
             handleSettingsOpen={handleSettingsOpen}
           />
           <PhonebookTable
@@ -288,6 +299,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       </Page>
       <Modal open={Boolean(query.id)} onClose={handleProfileClose}>
         <PhonebookProfile profileId={query.id} handleClose={handleProfileClose} handleSearch={setSearch} />
+      </Modal>
+      <Modal open={helpOpen} onClose={handleHelpClose}>
+        <PhonebookHelp />
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose}>
         <PhonebookSettings

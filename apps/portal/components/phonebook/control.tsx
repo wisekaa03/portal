@@ -14,7 +14,7 @@ import {
   Paper,
   Tooltip,
 } from '@material-ui/core';
-import { Search as SearchIcon, Settings as SettingsIcon } from '@material-ui/icons';
+import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
 import { PhonebookControlProps } from './types';
@@ -53,6 +53,14 @@ const useStyles = makeStyles((theme: Theme) =>
       zIndex: theme.zIndex.appBar,
       marginLeft: theme.spacing(7),
     },
+    icon: {
+      'opacity': 0.6,
+      'transition': `all 200ms ${theme.transitions.easing.easeOut} 0ms`,
+
+      '&:hover': {
+        opacity: 1,
+      },
+    },
   }),
 );
 
@@ -65,6 +73,7 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
   handleSugClose,
   handleSugKeyDown,
   handleSugClick,
+  handleHelpOpen,
   handleSettingsOpen,
 }) => {
   const classes = useStyles({});
@@ -84,7 +93,7 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
         >
           <SearchIcon />
         </Box>
-        <Tooltip title={t('phonebook:searchHelp')} placement="top-start">
+        <Tooltip title={t('phonebook:help.search')} placement="top-start">
           <InputBase
             ref={searchRef}
             placeholder={t('phonebook:search')}
@@ -122,8 +131,11 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
           </Paper>
         </Popper>
       </Box>
+      <IconButton className={classes.icon} onClick={handleHelpOpen}>
+        <HelpIcon />
+      </IconButton>
       <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
-      <IconButton onClick={handleSettingsOpen}>
+      <IconButton className={classes.icon} onClick={handleSettingsOpen}>
         <SettingsIcon />
       </IconButton>
     </Box>
