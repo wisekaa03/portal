@@ -124,32 +124,8 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     if (!suggestionsLoading) {
-      if (suggestionsData && suggestionsData.searchSuggestions.length && _search.length >= 3) {
-        const filtered = suggestionsData.searchSuggestions.reduce((result: string[], cur: any) => {
-          if (result.length > 4) return result;
-
-          const lower = _search
-            .toLowerCase()
-            .split('+')
-            .map((l) => l.trim());
-          let showing = '';
-
-          if (lower.some((l) => cur.fullName.toLowerCase().includes(l))) {
-            showing = cur.fullName;
-          } else if (lower.some((l) => cur.department && cur.department.toLowerCase().includes(l))) {
-            showing = cur.department;
-          } else if (lower.some((l) => cur.company && cur.company.toLowerCase().includes(l))) {
-            showing = cur.company;
-          } else if (lower.some((l) => cur.title && cur.title.toLowerCase().includes(l))) {
-            showing = cur.title;
-          }
-
-          if (result.includes(showing) || showing === '') return result;
-
-          return [...result, showing];
-        }, []);
-
-        setSuggestionsFiltered(filtered.length === 1 && filtered[0] === _search ? [] : filtered);
+      if (suggestionsData?.searchSuggestions.length && _search.length >= 3) {
+        setSuggestionsFiltered(suggestionsData.searchSuggestions);
       } else {
         setSuggestionsFiltered([]);
       }

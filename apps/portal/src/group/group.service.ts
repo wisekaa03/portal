@@ -52,7 +52,8 @@ export class GroupService {
   /**
    * Group by Identificator
    *
-   * @param {string} - group object GUID
+   * @param {string} loginIdentificator - group object GUID
+   * @param {boolean} cache - cache true/false
    * @return {GroupEntity | undefined} - Group
    */
   groupByIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>

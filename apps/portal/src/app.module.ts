@@ -55,8 +55,8 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
       url: '/health',
       // All the indicator which will be checked when requesting /health
       healthIndicators: [
-        // Set the timeout for a response to 300ms
-        async () => db.pingCheck('database', { timeout: 300 }),
+        // Set the timeout for a response to 400ms
+        async () => db.pingCheck('database', { timeout: 400 }),
       ],
     },
   ],

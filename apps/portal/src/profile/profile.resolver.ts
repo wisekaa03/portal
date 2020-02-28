@@ -57,11 +57,11 @@ export class ProfileResolver {
    * GraphQL query: searchSuggestions
    *
    * @param {string} search - The search suggestions string
-   * @returns {Promise<ProfileEntity[]>}
+   * @returns {Promise<string[]>} - The search suggestions
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async searchSuggestions(@Args('search') search: string): Promise<ProfileEntity[]> {
+  async searchSuggestions(@Args('search') search: string): Promise<string[]> {
     return this.profileService.searchSuggestions(search);
   }
 
