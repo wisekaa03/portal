@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton } from '@material-ui/core';
+import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
 import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 // #endregion
@@ -21,6 +21,7 @@ import { PROFILE } from '../../../lib/queries';
 import IsAdmin from '../../isAdmin';
 import { ComposeLink } from '../../compose-link';
 import snackbarUtils from '../../../lib/snackbar-utils';
+import CopyButton from '../../ui/copy-button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
       '& > li': {
         minHeight: '48px',
-        padding: '4px 16px',
+        padding: theme.spacing(0.5, 0.5, 0.5, 2),
       },
     },
     disabled: {
@@ -104,7 +105,8 @@ const ProfileField = withStyles((theme) => ({
   root: {
     'display': 'grid',
     'gap': `${theme.spacing()}px`,
-    'gridTemplateColumns': '120px auto',
+    'gridTemplateColumns': '120px 1fr 30px',
+    'width': '100%',
 
     '& > .MuiListItemText-root': {
       margin: 0,
@@ -115,30 +117,34 @@ const ProfileField = withStyles((theme) => ({
   pointer: {
     cursor: 'pointer',
   },
-}))(({ classes, profile, last, onClick, title, field }: PhonebookProfileFieldProps) => (
-  <ListItem divider={!last}>
-    <div className={classes.root}>
-      <ListItemText primary={title} />
-      <ListItemText
-        className={(onClick && profile?.[field] && classes.pointer) || ''}
-        onClick={onClick && onClick(profile?.[field])}
-        primary={
-          profile ? (
-            field !== 'manager' ? (
-              profile[field]
-            ) : profile.manager ? (
-              profile.manager.fullName
+}))(({ classes, profile, last, onClick, title, field }: PhonebookProfileFieldProps) => {
+  let text = '';
+
+  if (profile) {
+    text = field !== 'manager' ? profile[field] : profile.manager?.fullName || '';
+  }
+
+  return (
+    <ListItem divider={!last}>
+      <div className={classes.root}>
+        <ListItemText primary={title} />
+        <ListItemText
+          className={clsx({
+            [classes.pointer]: onClick && profile?.[field],
+          })}
+          primary={
+            profile ? (
+              <Typography onClick={onClick && onClick(profile?.[field])}>{text}</Typography>
             ) : (
-              ''
+              <Skeleton variant="rect" width={250} height={25} />
             )
-          ) : (
-            <Skeleton variant="rect" width={250} height={25} />
-          )
-        }
-      />
-    </div>
-  </ListItem>
-));
+          }
+        />
+        {profile && text && <CopyButton text={text} />}
+      </div>
+    </ListItem>
+  );
+});
 
 const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
