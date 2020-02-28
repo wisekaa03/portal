@@ -5,26 +5,31 @@
 import React, { useState } from 'react';
 // import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { MobileStepper, Card, Paper, Typography, Button, Box } from '@material-ui/core';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
+import { MobileStepper, Card, Paper, Typography, Button, Box, IconButton } from '@material-ui/core';
+import { ArrowBackRounded, KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import SwipeableViews from 'react-swipeable-views';
-import { WithTranslation } from 'next-i18next';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
-import { HelpDataProps } from './types';
-import Img1 from '../../public/images/jpeg/help/phonebook/img1.jpg';
-import Img2 from '../../public/images/jpeg/help/phonebook/img2.jpg';
-import Img3 from '../../public/images/jpeg/help/phonebook/img3.jpg';
-import Img4 from '../../public/images/jpeg/help/phonebook/img4.jpg';
-import Img5 from '../../public/images/jpeg/help/phonebook/img5.jpg';
+import { HelpDataProps, PhonebookHelpProps } from './types';
+import Img1 from '../../public/images/jpeg/help/phonebook/img1.png';
+import Img2 from '../../public/images/jpeg/help/phonebook/img2.png';
+import Img3 from '../../public/images/jpeg/help/phonebook/img3.png';
+import Img4 from '../../public/images/jpeg/help/phonebook/img4.png';
+import Img5 from '../../public/images/jpeg/help/phonebook/img5.png';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      position: 'relative',
       maxWidth: '80vw',
       flexGrow: 1,
+    },
+    backButton: {
+      position: 'absolute',
+      top: theme.spacing(1.5),
+      left: theme.spacing(2),
     },
     header: {
       display: 'flex',
@@ -70,6 +75,7 @@ const helpData: HelpDataProps[] = [
           <li>Логин</li>
           <li>Компания</li>
           <li>Департамент</li>
+          <li>Отдел</li>
           <li>Должность</li>
           <li>Телефон</li>
           <li>Мобильный</li>
@@ -88,7 +94,10 @@ const helpData: HelpDataProps[] = [
     text: (
       <Typography variant="body1">
         При нажатии на строку адресной книги в появившемся всплывающем окне отобразится подробная информация о
-        сотруднике.
+        сотруднике. Здесь активными являются строки «Компания», «Департамент», «Должность», «Отдел», «Руководитель».
+        Например при нажатии на «Департамент» отобразятся все сотрудники данного департамента. При нажатии на строку
+        «Руководитель» откроется карточка руководителя сотрудника. Для копирования информации в буфер обмена нажмите
+        кнопку справа от строки.
       </Typography>
     ),
   },
@@ -138,7 +147,7 @@ const helpData: HelpDataProps[] = [
   },
 ];
 
-const PhonebookHelp = React.forwardRef(({ t }: WithTranslation, ref?: React.Ref<React.Component>) => {
+const PhonebookHelp = React.forwardRef(({ onClose, t }: PhonebookHelpProps, ref?: React.Ref<React.Component>) => {
   const classes = useStyles({});
 
   const [step, setStep] = useState<number>(0);
@@ -158,6 +167,9 @@ const PhonebookHelp = React.forwardRef(({ t }: WithTranslation, ref?: React.Ref<
 
   return (
     <Card ref={ref} className={classes.root}>
+      <IconButton size="small" className={classes.backButton} onClick={onClose}>
+        <ArrowBackRounded />
+      </IconButton>
       <Paper square elevation={0} className={classes.header}>
         <Typography variant="h6">{t('phonebook:help.title')}</Typography>
       </Paper>
@@ -178,7 +190,7 @@ const PhonebookHelp = React.forwardRef(({ t }: WithTranslation, ref?: React.Ref<
       <MobileStepper
         steps={maxSteps}
         position="static"
-        variant="text"
+        variant="dots"
         activeStep={step}
         nextButton={
           <Button size="small" onClick={handleNext} disabled={step === maxSteps - 1}>

@@ -277,7 +277,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
         <PhonebookProfile profileId={query.id} handleClose={handleProfileClose} handleSearch={setSearch} />
       </Modal>
       <Modal open={helpOpen} onClose={handleHelpClose}>
-        <PhonebookHelp />
+        <PhonebookHelp onClose={handleHelpClose} />
       </Modal>
       <Modal open={settingsOpen} onClose={handleSettingsClose}>
         <PhonebookSettings

@@ -62,6 +62,10 @@ export interface SettingsProps extends WithTranslation {
   isAdmin: boolean;
 }
 
+export interface PhonebookHelpProps extends WithTranslation {
+  onClose: () => void;
+}
+
 export interface HeaderPropsRef {
   style: any;
 }
