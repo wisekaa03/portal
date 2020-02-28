@@ -109,8 +109,8 @@ export class ProfileService {
    * @param {string} - Search string
    * @throws {Error} - Exception
    */
-  searchSuggestions = async (search: string): Promise<ProfileEntity[]> => {
-    const result = this.profileRepository
+  searchSuggestions = async (search: string): Promise<string[]> => {
+    const query = this.profileRepository
       .createQueryBuilder('profile')
       .where('profile.notShowing = :notShowing')
       .andWhere('profile.disabled = :disabled');
@@ -119,7 +119,7 @@ export class ProfileService {
       const cleared = value.trim() !== '' ? `'%${value.trim()}%'` : '';
 
       if (cleared) {
-        result.andWhere(
+        query.andWhere(
           new Brackets((qb) => {
             qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
               .orWhere(`profile.username iLike ${cleared}`)
@@ -134,16 +134,50 @@ export class ProfileService {
       }
     });
 
-    return result
+    const result = await query
       .orderBy('profile.lastName', 'ASC')
-      .distinct(true)
+      .distinctOn([
+        'profile.lastName',
+        'profile.firstName',
+        'profile.middleName',
+        'profile.username',
+        'profile.department',
+        'profile.title',
+        'profile.company',
+        'profile.telephone',
+        'profile.workPhone',
+        'profile.mobile',
+      ])
       .setParameters({
         notShowing: false,
         disabled: false,
       })
-      .limit(5)
       .cache(true)
       .getMany();
+
+    return result.reduce((accumulator: string[], cur: any) => {
+      if (accumulator.length >= 7) return accumulator;
+
+      const lower = search
+        .toLowerCase()
+        .split('+')
+        .map((l) => l.trim());
+      let showing = '';
+
+      if (lower.some((l) => cur.fullName.toLowerCase().includes(l))) {
+        showing = cur.fullName;
+      } else if (lower.some((l) => cur.department && cur.department.toLowerCase().includes(l))) {
+        showing = cur.department;
+      } else if (lower.some((l) => cur.company && cur.company.toLowerCase().includes(l))) {
+        showing = cur.company;
+      } else if (lower.some((l) => cur.title && cur.title.toLowerCase().includes(l))) {
+        showing = cur.title;
+      }
+
+      if (accumulator.includes(showing) || showing === '') return accumulator;
+
+      return [...accumulator, showing];
+    }, []);
   };
 
   /**

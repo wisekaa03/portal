@@ -234,12 +234,7 @@ export const USER_SETTINGS = gql`
 
 export const SEARCH_SUGGESTIONS = gql`
   query SearchSuggestions($search: String) {
-    searchSuggestions(search: $search) {
-      fullName
-      department
-      company
-      title
-    }
+    searchSuggestions(search: $search)
   }
 `;
 

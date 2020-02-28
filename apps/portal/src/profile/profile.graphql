@@ -146,7 +146,7 @@ type Query {
 
   profile(id: ID): Profile
 
-  searchSuggestions(search: String): [Profile]
+  searchSuggestions(search: String): [String]
 
 }
 
