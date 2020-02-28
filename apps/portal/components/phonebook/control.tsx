@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -88,9 +88,10 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
     setOpenTooltip(true);
   };
 
-  useEffect(() => {
-    setOpenTooltip(!!!search);
-  }, [search]);
+  const handleCurrentSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setOpenTooltip(!!!event.target.value);
+    handleSearch(event);
+  };
 
   const showedSuggestions = suggestions.length > 0;
 
@@ -118,9 +119,8 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
             ref={searchRef}
             placeholder={t('phonebook:search')}
             value={search}
-            onChange={handleSearch}
+            onChange={handleCurrentSearch}
             fullWidth
-            autoFocus
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,

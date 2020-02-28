@@ -1,5 +1,4 @@
 /** @format */
-/** @format */
 
 // #region Imports NPM
 import React, { useState, useEffect } from 'react';
@@ -8,17 +7,15 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import CopyToClipboard from 'react-copy-to-clipboard';
-// import clsx from 'clsx';
 import { ClickAwayListener } from '@material-ui/core';
-import { useTranslation } from '../../lib/i18n-client';
 // #endregion
 // #region Imports Local
+import { useTranslation } from '../../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      // 'opacity': 0.6,
       'transition': `all 200ms ${theme.transitions.easing.easeOut} 0ms`,
       '&:hover': {
         color: theme.palette.secondary.main,
