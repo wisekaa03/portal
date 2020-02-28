@@ -84,8 +84,6 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError },
   ] = useLazyQuery(SEARCH_SUGGESTIONS, { ssr: false });
 
-  // TODO: вставить сюда роутинг по id конкретного юзера
-
   const { loading, data, error, fetchMore, refetch }: QueryResult<Data<'profiles', ProfileProps>> = useQuery(
     PROFILES(getGraphQLColumns(columns)),
     {
@@ -124,8 +122,10 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     if (!suggestionsLoading) {
-      if (suggestionsData?.searchSuggestions.length && _search.length >= 3) {
-        setSuggestionsFiltered(suggestionsData.searchSuggestions);
+      const result = suggestionsData?.searchSuggestions;
+
+      if (result?.length && _search.length >= 3) {
+        setSuggestionsFiltered(result.length === 1 && result[0] === _search ? [] : result);
       } else {
         setSuggestionsFiltered([]);
       }
@@ -180,8 +180,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     });
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const { value } = event.target;
+  const actionSearch = (value: string): void => {
     setSearch(value);
 
     if (value.length >= 3) {
@@ -192,6 +191,11 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       });
     }
   };
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => actionSearch(event.target.value);
+
+  const handleSugClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void =>
+    actionSearch(event.currentTarget.innerText);
 
   const handleProfileClose = (): void => {
     router.push({ pathname: '/phonebook' });
@@ -236,10 +240,6 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       event.preventDefault();
       setSuggestionsFiltered([]);
     }
-  };
-
-  const handleSugClick = (value: string) => (): void => {
-    setSearch(value);
   };
 
   return (
