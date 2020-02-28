@@ -204,7 +204,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
             >
               <Box justifyContent="space-between" display="flex">
                 <Link href={{ pathname: '/phonebook' }} as="/phonebook">
-                  <IconButton className={classes.noPadding}>
+                  <IconButton size="small">
                     <ArrowBackRounded />
                   </IconButton>
                 </Link>

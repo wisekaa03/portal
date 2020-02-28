@@ -73,6 +73,7 @@ export class ProfileService {
               .orWhere(`profile.username iLike ${cleared}`)
               .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
+              .orWhere(`profile.otdel iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
               .orWhere(`profile.telephone iLike ${cleared}`)
               .orWhere(`profile.workPhone iLike ${cleared}`)
@@ -125,6 +126,7 @@ export class ProfileService {
               .orWhere(`profile.username iLike ${cleared}`)
               .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
+              .orWhere(`profile.otdel iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
               .orWhere(`profile.telephone iLike ${cleared}`)
               .orWhere(`profile.workPhone iLike ${cleared}`)
@@ -144,6 +146,7 @@ export class ProfileService {
         'profile.department',
         'profile.title',
         'profile.company',
+        'profile.otdel',
         'profile.telephone',
         'profile.workPhone',
         'profile.mobile',
