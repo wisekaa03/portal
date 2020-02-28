@@ -142,7 +142,7 @@ export class ProfileService {
         disabled: false,
       })
       .limit(5)
-      .cache(false)
+      .cache(true)
       .getMany();
   };
 
