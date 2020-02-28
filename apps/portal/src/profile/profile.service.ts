@@ -110,14 +110,8 @@ export class ProfileService {
    * @throws {Error} - Exception
    */
   searchSuggestions = async (search: string): Promise<ProfileEntity[]> => {
-    // TODO: сейчас уникализация на клиенте, продумать или оставить так
-
     const result = this.profileRepository
       .createQueryBuilder('profile')
-      // .select(
-      // eslint-disable-next-line max-len
-      //   'DISTINCT profile.firstName, profile.lastName, profile.middleName, profile.department, profile.company, profile.title',
-      // )
       .where('profile.notShowing = :notShowing')
       .andWhere('profile.disabled = :disabled');
 
@@ -140,17 +134,16 @@ export class ProfileService {
       }
     });
 
-    return (
-      result
-        .orderBy('profile.lastName', 'ASC')
-        .setParameters({
-          notShowing: false,
-          disabled: false,
-        })
-        // .limit(5)
-        .cache(true)
-        .getMany()
-    );
+    return result
+      .orderBy('profile.lastName', 'ASC')
+      .distinct(true)
+      .setParameters({
+        notShowing: false,
+        disabled: false,
+      })
+      .limit(5)
+      .cache(false)
+      .getMany();
   };
 
   /**
