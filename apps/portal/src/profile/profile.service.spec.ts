@@ -7,28 +7,20 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
-import { ImageModule } from '@app/image';
-import { ConfigModule, ConfigService } from '@app/config';
-import { LoggerModule, LogService } from '@app/logger';
+import { LdapService } from '@app/ldap';
+import { ImageService } from '@app/image';
+import { LogService } from '@app/logger';
 import { ProfileService } from './profile.service';
+import { GroupService } from '../group/group.service';
 // #endregion
 
-const mockRepository = jest.fn(() => ({
+const serviceMock = jest.fn(() => ({}));
+const repositoryMock = jest.fn(() => ({
   metadata: {
     columns: [],
     relations: [],
   },
 }));
-
-@Entity()
-class UserEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
 
 @Entity()
 class ProfileEntity {
@@ -39,22 +31,7 @@ class ProfileEntity {
   name?: string;
 }
 
-@Entity()
-class GroupEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-const LdapServiceMock = jest.fn(() => ({}));
-
-// jest.mock('@nestjs/typeorm/dist/typeorm.module');
-jest.mock('@app/ldap/ldap.service');
-jest.mock('../guards/gqlauth.guard');
-jest.mock('@app/config/config.service');
-jest.mock('@app/logger/logger.service');
+// jest.mock('../guards/gqlauth.guard');
 
 describe('ProfileService', () => {
   let service: ProfileService;
@@ -62,33 +39,28 @@ describe('ProfileService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule,
-        ConfigModule.register('.env'),
-
-        ImageModule,
-
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [ProfileEntity, GroupEntity, UserEntity],
+              entities: [ProfileEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
         TypeOrmModule.forFeature([ProfileEntity]),
-
-        LdapModule.registerAsync({
-          useFactory: () => ({} as LdapModuleOptions),
-        }),
       ],
       providers: [
         ProfileService,
-        { provide: LdapService, useValue: LdapServiceMock },
-        // { provide: getRepositoryToken(UserEntity), useValue: MockRepository },
-        // { provide: getRepositoryToken(ProfileEntity), useValue: mockRepository },
+        { provide: LogService, useValue: serviceMock },
+        { provide: LdapService, useValue: serviceMock },
+        { provide: GroupService, useValue: serviceMock },
+        { provide: ImageService, useValue: serviceMock },
+        // { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
+        // { provide: getRepositoryToken(UserEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
       ],
     }).compile();
 

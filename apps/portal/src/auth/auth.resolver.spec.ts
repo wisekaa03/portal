@@ -1,52 +1,39 @@
 /** @format */
 
 // #region Imports NPM
-import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { LoggerModule } from '@app/logger';
-import { ConfigModule, ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 // #endregion
 
-const AuthServiceMock = jest.fn(() => ({}));
+const serviceMock = jest.fn(() => ({}));
+// const repositoryMock = jest.fn(() => ({
+//   metadata: {
+//     columns: [],
+//     relations: [],
+//   },
+// }));
 
-jest.mock('../guards/gqlauth.guard');
-jest.mock('@app/logger/logger.service', () => ({
-  LogService: jest.fn().mockImplementation(() => ({
-    error: jest.fn(),
-    debug: jest.fn(),
-  })),
-}));
-
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV === 'test';
-const env = resolve(__dirname, dev ? (test ? '../../../..' : '../../..') : '../../..', '.env');
+// jest.mock('../guards/gqlauth.guard');
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        LoggerModule,
-        ConfigModule.register(env),
-
-        I18nModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            path: configService.i18nPath,
-            filePattern: configService.i18nFilePattern,
-            fallbackLanguage: configService.fallbackLanguage,
-            resolvers: [new QueryResolver(['lang', 'locale', 'l']), new HeaderResolver()],
-          }),
-        }),
+      imports: [],
+      providers: [
+        AuthResolver,
+        { provide: ConfigService, useValue: serviceMock },
+        { provide: LogService, useValue: serviceMock },
+        { provide: AuthService, useValue: serviceMock },
+        { provide: I18nService, useValue: serviceMock },
       ],
-      providers: [AuthResolver, { provide: AuthService, useValue: AuthServiceMock }],
     }).compile();
 
     resolver = module.get<AuthResolver>(AuthResolver);

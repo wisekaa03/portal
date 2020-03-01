@@ -1,24 +1,30 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
+/* eslint spaced-comment:0, max-classes-per-file:0 */
 
 // #region Imports NPM
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-// import { I18nModule } from 'nestjs-i18n';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { LoggerModule } from '@app/logger';
-import { LdapModule, LdapService, LdapModuleOptions } from '@app/ldap';
+import { LogService } from '@app/logger';
+import { LdapService } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
 import { UserService } from './user.service';
-import { ProfileModule } from '../profile/profile.module';
-import { GroupModule } from '../group/group.module';
+// import { ProfileModule } from '../profile/profile.module';
+// import { GroupModule } from '../group/group.module';
 import { ProfileService } from '../profile/profile.service';
+import { GroupService } from '../group/group.service';
 // #endregion
 
-const ProfileServiceMock = jest.fn(() => ({}));
+const serviceMock = jest.fn(() => ({}));
+const repositoryMock = jest.fn(() => ({
+  metadata: {
+    columns: [],
+    relations: [],
+  },
+}));
 
 @Entity()
 class UserEntity {
@@ -29,29 +35,7 @@ class UserEntity {
   name?: string;
 }
 
-@Entity()
-class ProfileEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-@Entity()
-class GroupEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-jest.mock('@app/ldap/ldap.service');
-jest.mock('../guards/gqlauth.guard');
-jest.mock('../profile/profile.module');
-jest.mock('../profile/profile.resolver');
-jest.mock('../profile/profile.service');
+// jest.mock('../guards/gqlauth.guard');
 
 describe('UserService', () => {
   let service: UserService;
@@ -59,43 +43,30 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule,
-        // ConfigModule.register('.env'),
-
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [ProfileEntity, GroupEntity, UserEntity],
+              entities: [UserEntity],
               synchronize: true,
-              logging: false
+              logging: false,
             } as TypeOrmModuleOptions),
         }),
         TypeOrmModule.forFeature([UserEntity]),
-
-        LdapModule.registerAsync({
-          useFactory: () => ({} as LdapModuleOptions),
-        }),
-
-        ClientsModule.register([
-          {
-            name: SYNCHRONIZATION_SERVICE,
-            transport: Transport.REDIS,
-          },
-        ]),
-
-        GroupModule,
-        ProfileModule,
       ],
       providers: [
         UserService,
-        LdapService,
-        { provide: ProfileService, useValue: ProfileServiceMock },
-        // { provide: ClientProxy, useValue: ClientProxy },
-        // { provide: getRepositoryToken(UserEntity), useValue: mockRepository },
-        // { provide: getRepositoryToken(ProfileEntity), useValue: mockRepository },
+        { provide: LogService, useValue: serviceMock },
+        { provide: SYNCHRONIZATION_SERVICE, useValue: serviceMock },
+        { provide: ClientProxy, useValue: serviceMock },
+        { provide: LdapService, useValue: serviceMock },
+        { provide: ProfileService, useValue: serviceMock },
+        { provide: GroupService, useValue: serviceMock },
+        { provide: getRepositoryToken(UserEntity), useValue: repositoryMock },
+        // { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
+        // { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
       ],
     }).compile();
 

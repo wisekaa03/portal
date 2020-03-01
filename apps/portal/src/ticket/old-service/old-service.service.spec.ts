@@ -1,29 +1,31 @@
 /** @format */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@app/config';
-import { LoggerModule } from '@app/logger';
-import { SoapModule, SoapOptions } from '@app/soap';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
+import { SoapService } from '@app/soap';
 import { OldTicketService } from './old-service.service';
 
-jest.mock('@app/soap/soap.service');
+const serviceMock = jest.fn(() => ({}));
+// const repositoryMock = jest.fn(() => ({
+//   metadata: {
+//     columns: [],
+//     relations: [],
+//   },
+// }));
 
 describe('OldServiceService', () => {
   let service: OldTicketService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        // #region Config & Log module
-        ConfigModule,
-        LoggerModule,
-        // #endregion
-
-        SoapModule.registerAsync({
-          useFactory: () => ({} as SoapOptions),
-        }),
+      imports: [],
+      providers: [
+        OldTicketService,
+        { provide: LogService, useValue: serviceMock },
+        { provide: ConfigService, useValue: serviceMock },
+        { provide: SoapService, useValue: serviceMock },
       ],
-      providers: [OldTicketService],
     }).compile();
 
     service = module.get<OldTicketService>(OldTicketService);

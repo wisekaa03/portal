@@ -1,47 +1,19 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
+/* eslint spaced-comment:0, max-classes-per-file:0 */
 
 // #region Imports NPM
-import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { ImageModule } from '@app/image';
-import { ConfigModule } from '@app/config';
+import { ImageService } from '@app/image';
 import { NewsResolver } from './news.resolver';
 import { NewsService } from './news.service';
-import { UserModule } from '../user/user.module';
+import { UserService } from '../user/user.service';
 // #endregion
 
-@Entity()
-class UserEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-
-@Entity()
-class GroupEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-@Entity()
-class ProfileEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
+const serviceMock = jest.fn(() => ({}));
 
 @Entity()
 class NewsEntity {
@@ -52,15 +24,7 @@ class NewsEntity {
   name?: string;
 }
 
-jest.mock('../guards/gqlauth.guard');
-jest.mock('./news.service');
-jest.mock('../user/user.service');
-jest.mock('../profile/profile.service');
-jest.mock('../profile/profile.resolver');
-
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV === 'test';
-const env = resolve(__dirname, dev ? (test ? '../../../..' : '../../..') : '../../..', '.env');
+// jest.mock('../guards/gqlauth.guard');
 
 describe('NewsResolver', () => {
   let resolver: NewsResolver;
@@ -68,17 +32,13 @@ describe('NewsResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.register(env),
-        ImageModule,
-        UserModule,
-
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [UserEntity, GroupEntity, ProfileEntity, NewsEntity],
+              entities: [NewsEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
@@ -86,8 +46,10 @@ describe('NewsResolver', () => {
         TypeOrmModule.forFeature([NewsEntity]),
       ],
       providers: [
-        NewsService,
         NewsResolver,
+        { provide: NewsService, useValue: serviceMock },
+        { provide: ImageService, useValue: serviceMock },
+        { provide: UserService, useValue: serviceMock },
       ],
     }).compile();
 

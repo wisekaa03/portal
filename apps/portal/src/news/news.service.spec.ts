@@ -3,46 +3,23 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { ConfigModule } from '@app/config';
-import { LoggerModule } from '@app/logger';
+import { LogService } from '@app/logger';
 import { NewsService } from './news.service';
-import { UserModule } from '../user/user.module';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user/user.service';
 // #endregion
 
-const ServiceMock = jest.fn(() => ({}));
-
-@Entity()
-class UserEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-@Entity()
-class GroupEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-@Entity()
-class ProfileEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
+const serviceMock = jest.fn(() => ({}));
+const repositoryMock = jest.fn(() => ({
+  metadata: {
+    columns: [],
+    relations: [],
+  },
+}));
 
 @Entity()
 class NewsEntity {
@@ -53,15 +30,7 @@ class NewsEntity {
   name?: string;
 }
 
-jest.mock('@app/ldap/ldap.service');
-jest.mock('@app/config/config.service');
-jest.mock('../guards/gqlauth.guard');
-jest.mock('../user/user.module');
-jest.mock('../user/user.resolver');
-jest.mock('../user/user.service');
-jest.mock('../profile/profile.module');
-jest.mock('../profile/profile.resolver');
-jest.mock('../profile/profile.service');
+// jest.mock('../guards/gqlauth.guard');
 
 describe('NewsService', () => {
   let service: NewsService;
@@ -69,17 +38,13 @@ describe('NewsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule,
-        ConfigModule.register('.env'),
-
-        UserModule,
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [UserEntity, GroupEntity, ProfileEntity, NewsEntity],
+              entities: [NewsEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
@@ -88,8 +53,10 @@ describe('NewsService', () => {
       ],
       providers: [
         NewsService,
-        { provide: UserService, useValue: ServiceMock },
-        { provide: ProfileService, useValue: ServiceMock },
+        { provide: LogService, useValue: serviceMock },
+        { provide: UserService, useValue: serviceMock },
+        { provide: ProfileService, useValue: serviceMock },
+        { provide: getRepositoryToken(NewsEntity), useValue: repositoryMock },
       ],
     }).compile();
 
