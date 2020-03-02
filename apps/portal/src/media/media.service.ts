@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 import { LogService } from '@app/logger';
 import { MediaEntity } from './media.entity';
 import { Media } from './models/media.dto';
-import { MediaDirectoryEntity } from './media.directory.entity';
-import { MediaDirectory } from './models/media.directory.dto';
+import { MediaFolderEntity } from './media.folder.entity';
+import { MediaFolder } from './models/media.folder.dto';
 // #endregion
 
 @Injectable()
@@ -21,8 +21,8 @@ export class MediaService {
     // private readonly userService: UserService,
     @InjectRepository(MediaEntity)
     private readonly mediaRepository: Repository<MediaEntity>,
-    @InjectRepository(MediaDirectoryEntity)
-    private readonly mediaDirectoryRepository: Repository<MediaDirectoryEntity>,
+    @InjectRepository(MediaFolderEntity)
+    private readonly mediaFolderRepository: Repository<MediaFolderEntity>,
   ) {}
 
   /**
@@ -44,17 +44,17 @@ export class MediaService {
    * @param {Media}
    * @return {MediaEntity}
    */
-  editFile = async ({ title, directory, filename, mimetype, updatedUser, id }: Media): Promise<MediaEntity> => {
+  editFile = async ({ title, folder, filename, mimetype, updatedUser, id }: Media): Promise<MediaEntity> => {
     this.logService.log(
-      `Edit: ${JSON.stringify({ title, directory, filename, mimetype, updatedUser, id })}`,
+      `Edit: ${JSON.stringify({ title, folder, filename, mimetype, updatedUser, id })}`,
       'MediaService',
     );
 
-    const directoryEntity = await this.mediaDirectoryRepository.findOne(directory as string);
+    const folderEntity = await this.mediaFolderRepository.findOne(folder as string);
 
     const data = {
       title,
-      directory: directoryEntity,
+      folder: folderEntity,
       filename,
       mimetype,
       updatedUser,
@@ -81,33 +81,31 @@ export class MediaService {
   };
 
   /**
-   * Get directory
+   * Get folder
    *
-   * @param {string} - id of directory, optional
-   * @return {MediaDirectoryEntity[]}
+   * @param {string} - id of folder, optional
+   * @return {MediaFolderEntity[]}
    */
-  folder = async (id?: string): Promise<MediaDirectoryEntity[]> => {
-    this.logService.log(`Directory: id={${id}}`, 'MediaService');
+  folder = async (id?: string): Promise<MediaFolderEntity[]> => {
+    this.logService.log(`Folder: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
-    return this.mediaDirectoryRepository.find(id ? { id } : undefined);
+    return this.mediaFolderRepository.find(id ? { id } : undefined);
   };
 
   /**
-   * Edit directory
+   * Edit folder
    *
-   * @param {Directory}
-   * @return {MediaDirectoryEntity}
+   * @param {Folder}
+   * @return {MediaFolderEntity}
    */
-  editFolder = async ({ id, user, pathname, updatedUser }: MediaDirectory): Promise<MediaDirectoryEntity> => {
+  editFolder = async ({ id, user, pathname, updatedUser }: MediaFolder): Promise<MediaFolderEntity> => {
     this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'MediaService');
 
     // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
-    // const folderPathname = await this.mediaDirectoryRepository.findOne({ pathname });
+    // const folderPathname = await this.mediaFolderRepository.findOne({ pathname });
 
-    let data = id
-      ? await this.mediaDirectoryRepository.findOne({ id })
-      : ({ createdUser: updatedUser } as MediaDirectory);
+    let data = id ? await this.mediaFolderRepository.findOne({ id }) : ({ createdUser: updatedUser } as MediaFolder);
 
     data = {
       ...data,
@@ -117,21 +115,21 @@ export class MediaService {
       id,
     };
 
-    return this.mediaDirectoryRepository.save(this.mediaDirectoryRepository.create(data)).catch((error: Error) => {
+    return this.mediaFolderRepository.save(this.mediaFolderRepository.create(data)).catch((error: Error) => {
       throw error;
     });
   };
 
   /**
-   * Delete directory
+   * Delete folder
    *
-   * @param {string} - id of directory
-   * @return {boolean} - true/false of delete directory
+   * @param {string} - id of folder
+   * @return {boolean} - true/false of delete folder
    */
   deleteFolder = async (id: string): Promise<boolean> => {
-    this.logService.log(`Edit directory: id={${id}}`, 'MediaService');
+    this.logService.log(`Edit folder: id={${id}}`, 'MediaService');
 
-    const deleteResult = await this.mediaDirectoryRepository.delete({ id });
+    const deleteResult = await this.mediaFolderRepository.delete({ id });
 
     return !!(deleteResult.affected && deleteResult.affected > 0);
   };

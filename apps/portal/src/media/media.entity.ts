@@ -13,7 +13,7 @@ import {
 // #endregion
 // #region Imports Local
 import { UserEntity } from '../user/user.entity';
-import { MediaDirectoryEntity } from './media.directory.entity';
+import { MediaFolderEntity } from './media.folder.entity';
 // #endregion
 
 @Entity('media')
@@ -34,9 +34,9 @@ export class MediaEntity {
   title: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => MediaDirectoryEntity, { nullable: false })
+  @ManyToOne((type: any) => MediaFolderEntity, { nullable: false })
   @JoinColumn()
-  directory: MediaDirectoryEntity;
+  folder: MediaFolderEntity;
 
   // TODO: это ссылка на файл, который будет лежать где-то... продумать.
   @Column({

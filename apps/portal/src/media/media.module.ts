@@ -11,7 +11,7 @@ import { MediaService } from './media.service';
 import { MediaResolver } from './media.resolver';
 import { UserModule } from '../user/user.module';
 import { MediaEntity } from './media.entity';
-import { MediaDirectoryEntity } from './media.directory.entity';
+import { MediaFolderEntity } from './media.folder.entity';
 // #endregion
 
 @Module({
@@ -24,7 +24,7 @@ import { MediaDirectoryEntity } from './media.directory.entity';
     UserModule,
 
     // #region TypeORM
-    TypeOrmModule.forFeature([MediaDirectoryEntity, MediaEntity]),
+    TypeOrmModule.forFeature([MediaFolderEntity, MediaEntity]),
     // #endregion
   ],
   providers: [MediaService, MediaResolver],

@@ -10,7 +10,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #region Imports Local
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { MEDIA, MEDIA_EDIT, MEDIA_DELETE } from '../../lib/queries';
+import { FILE, EDIT_FILE, DELETE_FILE } from '../../lib/queries';
 import { ProfileContext } from '../../lib/context';
 import { Data } from '../../lib/types';
 import { MediaQueryProps } from '../../components/media/types';
@@ -19,8 +19,8 @@ import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
 const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  const { loading, data, error }: QueryResult<Data<'media', MediaQueryProps[]>> = useQuery(MEDIA, {
-    ssr: false,
+  const { loading, data, error }: QueryResult<Data<'media', MediaQueryProps[]>> = useQuery(FILE, {
+    // ssr: false,
     fetchPolicy: 'cache-first',
   });
   const [current, setCurrent] = useState<MediaQueryProps | undefined>();
@@ -32,10 +32,10 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setCurrent(media);
   };
 
-  const [deleteMedia] = useMutation(MEDIA_DELETE, {
+  const [deleteMedia] = useMutation(DELETE_FILE, {
     refetchQueries: [
       {
-        query: MEDIA,
+        query: FILE,
       },
     ],
     awaitRefetchQueries: true,

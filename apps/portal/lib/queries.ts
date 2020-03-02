@@ -282,9 +282,9 @@ export const NEWS_DELETE = gql`
  * MEDIA
  */
 
-export const MEDIA = gql`
-  query Media($id: ID) {
-    media(id: $id) {
+export const FILE = gql`
+  query File($id: ID) {
+    file(id: $id) {
       id
       createdUser {
         id
@@ -296,7 +296,7 @@ export const MEDIA = gql`
       }
       updatedAt
       createdAt
-      directory
+      folder
       title
       filename
       mimetype
@@ -304,14 +304,14 @@ export const MEDIA = gql`
   }
 `;
 
-export const MEDIA_EDIT = gql`
-  mutation editMedia($attachment: Upload!, $directory: String!, $id: ID) {
-    editMedia(attachment: $attachment, directory: $directory, id: $id) {
+export const EDIT_FILE = gql`
+  mutation EditFile($attachment: Upload!, $folder: String!, $id: ID) {
+    editFile(attachment: $attachment, folder: $folder, id: $id) {
       id
       updatedAt
       createdAt
       title
-      directory
+      folder
       filename
       mimetype
       content
@@ -327,15 +327,15 @@ export const MEDIA_EDIT = gql`
   }
 `;
 
-export const MEDIA_DELETE = gql`
-  mutation deleteMedia($id: ID) {
-    deleteMedia(id: $id)
+export const DELETE_FILE = gql`
+  mutation DeleteFile($id: ID) {
+    deleteFile(id: $id)
   }
 `;
 
-export const FOLDERS = gql`
-  query Folders($id: ID) {
-    folders(id: $id) {
+export const FOLDER = gql`
+  query Folder($id: ID) {
+    folder(id: $id) {
       id
       createdUser {
         id
@@ -353,6 +353,35 @@ export const FOLDERS = gql`
         username
       }
     }
+  }
+`;
+
+export const EDIT_FOLDER = gql`
+  query EditFolder($id: ID) {
+    editfolder(id: $id) {
+      id
+      createdUser {
+        id
+        username
+      }
+      updatedUser {
+        id
+        username
+      }
+      updatedAt
+      createdAt
+      pathname
+      user {
+        id
+        username
+      }
+    }
+  }
+`;
+
+export const DELETE_FOLDER = gql`
+  mutation DeleteFolder($id: ID) {
+    deleteFolder(id: $id)
   }
 `;
 /**---------------------------------------------------------------------------------------------------------------------------------------

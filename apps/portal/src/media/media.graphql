@@ -5,7 +5,7 @@ type File {
   createdAt: Date!
   updatedAt: Date!
   title: String!
-  directory: String!
+  folder: String!
   filename: String!
   mimetype: String!
 }
@@ -15,6 +15,6 @@ type Query {
 }
 
 type Mutation {
-  editFile(attachment: Upload!, directory: String!, id: ID): File
+  editFile(attachment: Upload!, folder: String!, id: ID): File
   deleteFile(id: ID!): Boolean
 }

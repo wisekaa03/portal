@@ -32,7 +32,7 @@ class MediaEntity {
 }
 
 @Entity()
-class MediaDirectoryEntity {
+class MediaFolderEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -52,12 +52,12 @@ describe('MediaService', () => {
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [MediaEntity, MediaDirectoryEntity],
+              entities: [MediaEntity, MediaFolderEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([MediaEntity, MediaDirectoryEntity]),
+        TypeOrmModule.forFeature([MediaEntity, MediaFolderEntity]),
       ],
       providers: [
         MediaService,
@@ -65,7 +65,7 @@ describe('MediaService', () => {
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
         { provide: getRepositoryToken(MediaEntity), useValue: repositoryMock },
-        { provide: getRepositoryToken(MediaDirectoryEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(MediaFolderEntity), useValue: repositoryMock },
       ],
     }).compile();
 

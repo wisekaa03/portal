@@ -112,6 +112,7 @@ const MediaComponent: FC<MediaComponentProps> = ({
 }) => {
   const classes = useStyles({});
   const { i18n } = useTranslation();
+
   return (
     <Loading activate={loading || !data} noMargin type="linear" variant="indeterminate">
       <Box
@@ -146,7 +147,6 @@ const MediaComponent: FC<MediaComponentProps> = ({
           <div>
             {data &&
               data.map((media) => {
-                // TODO: regexp может быть улучшен
                 const anchor = `media-${media.id}`;
 
                 return (
@@ -178,8 +178,8 @@ const MediaComponent: FC<MediaComponentProps> = ({
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                         <Link
-                          href={{ pathname: '/media/edit', query: { id: media?.id } }}
-                          as={`/media/edit?id=${media?.id}`}
+                          href={{ pathname: '/media/edit', query: { id: media.id } }}
+                          as={`/media/edit?id=${media.id}`}
                           passHref
                         >
                           <IconButton size="small" color="secondary" aria-label="edit">
@@ -194,11 +194,13 @@ const MediaComponent: FC<MediaComponentProps> = ({
                   </Card>
                 );
               })}
-            <Link href={{ pathname: '/media/edit' }} as="/media/edit" passHref>
-              <Fab color="primary" className={classes.fab} aria-label="add">
-                <AddIcon />
-              </Fab>
-            </Link>
+            <IsAdmin>
+              <Link href={{ pathname: '/media/edit' }} as="/media/edit" passHref>
+                <Fab color="primary" className={classes.fab} aria-label="add">
+                  <AddIcon />
+                </Fab>
+              </Link>
+            </IsAdmin>
           </div>
         </div>
       </Box>

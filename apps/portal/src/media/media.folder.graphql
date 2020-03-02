@@ -1,4 +1,4 @@
-type Directory {
+type Folder {
   id: ID!
   createdUser: User!
   updatedUser: User!
@@ -9,10 +9,10 @@ type Directory {
 }
 
 type Query {
-  folder(id: ID): [Directory!]!
+  folder(id: ID): [Folder!]!
 }
 
 type Mutation {
-  editFolder(pathname: String!, userId: ID, id: ID): Directory
+  editFolder(pathname: String!, userId: ID, id: ID): Folder
   deleteFolder(id: ID!): Boolean
 }

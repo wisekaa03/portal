@@ -9,7 +9,7 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { MediaDirectoryEntity } from './media.directory.entity';
+import { MediaFolderEntity } from './media.folder.entity';
 import { MediaEntity } from './media.entity';
 import { MediaService } from './media.service';
 import { UserResponse } from '../user/user.entity';
@@ -41,7 +41,7 @@ export class MediaResolver {
    *
    * @param {Request} - Express request
    * @param {Promise<FileUpload>} - Attachment
-   * @param {string} - id of directory
+   * @param {string} - id of folder
    * @param {string} - id of media, optional
    * @returns {MediaEntity} - media entity
    */
@@ -50,7 +50,7 @@ export class MediaResolver {
   async editFile(
     @Context('req') req: Request,
     @Args('attachment') attachment: Promise<FileUpload>,
-    @Args('directory') directory: string,
+    @Args('folder') folder: string,
     @Args('id') id?: string,
   ): Promise<MediaEntity> {
     const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
@@ -76,25 +76,25 @@ export class MediaResolver {
   }
 
   /**
-   * GraphQL query: directory
+   * GraphQL query: folder
    *
-   * @param {string} - id of directory, optional
-   * @returns {MediaDirectoryEntity[]} - Directory entity
+   * @param {string} - id of folder, optional
+   * @returns {MediaFolderEntity[]} - Folder entity
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async folder(@Args('id') id?: string): Promise<MediaDirectoryEntity[]> {
+  async folder(@Args('id') id?: string): Promise<MediaFolderEntity[]> {
     return this.mediaService.folder(id);
   }
 
   /**
-   * GraphQL mutation: editDirectory
+   * GraphQL mutation: editFolder
    *
    * @param {Request} - Express request
    * @param {string} - Pathname (without /)
    * @param {string} - "shared" or "user ID"
-   * @param {string} - ID of directory
-   * @returns {MediaDirectoryEntity} - Media directory entity
+   * @param {string} - ID of folder
+   * @returns {MediaFolderEntity} - Media folder entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -103,7 +103,7 @@ export class MediaResolver {
     @Args('pathname') pathname: string,
     @Args('userId') userId?: string,
     @Args('id') id?: string,
-  ): Promise<MediaDirectoryEntity> {
+  ): Promise<MediaFolderEntity> {
     const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
 
     if (updatedUser) {
@@ -116,10 +116,10 @@ export class MediaResolver {
   }
 
   /**
-   * GraphQL mutation: deleteDirectory
+   * GraphQL mutation: deleteFolder
    *
-   * @param {string} - id of directory
-   * @returns {boolean} - true/false of delete directory
+   * @param {string} - id of folder
+   * @returns {boolean} - true/false of delete folder
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
