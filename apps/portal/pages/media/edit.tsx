@@ -20,7 +20,7 @@ import { MediaFolder } from '../../src/media/models/media.folder.dto';
 
 const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Media | undefined>();
-  const [folders, setFolders] = useState<MediaFolder[]>([]);
+  const [newFolder, setNewFolder] = useState<string>('');
   // const [updated, setUpdated] = useState<Media | undefined>();
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
 
@@ -79,6 +79,8 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           loading={loading}
           foldersLoading={folderLoading}
           folderData={folderData?.folder}
+          newFolder={newFolder}
+          setNewFolder={setNewFolder}
           current={current}
           attachments={attachments}
           setAttachments={setAttachments}

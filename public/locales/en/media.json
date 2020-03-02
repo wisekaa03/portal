@@ -4,6 +4,7 @@
   "edit": "Edit file",
   "delete": "Delete file",
   "more": "Learn more",
+  "addFolder": "Create Folder",
   "control": {
     "sharedOrUser": "Directory",
     "shared": "Shared",

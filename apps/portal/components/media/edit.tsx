@@ -39,19 +39,29 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const commonFolder = <TreeItem nodeId="/" labelText="Общая" />;
-
 const MediaEditComponent: FC<MediaEditComponentProps> = ({
   loading,
   foldersLoading,
   folderData,
   current,
+  newFolder,
+  setNewFolder,
   attachments,
   setAttachments,
   handleUpload,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+
+  const CreateFolderItem = ({ nodeId, folder, handleFolder }): React.ReactElement => (
+    <TreeItem nodeId={nodeId} labelText={t('media:addFolder')} createItem={folder} handleCreateItem={handleFolder} />
+  );
+
+  const commonFolderItem = (
+    <TreeItem key="/" nodeId="/" labelText={t('media:control.shared')}>
+      <CreateFolderItem nodeId="new /" folder={newFolder} handleFolder={setNewFolder} />
+    </TreeItem>
+  );
 
   const folders = folderData
     ? folderData
@@ -103,7 +113,7 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
 
             return [...acc, recursive(cur)];
           },
-          [commonFolder],
+          [commonFolderItem],
         )
     : [];
 
