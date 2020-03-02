@@ -308,13 +308,6 @@ export const EDIT_FILE = gql`
   mutation EditFile($attachment: Upload!, $folder: String!, $id: ID) {
     editFile(attachment: $attachment, folder: $folder, id: $id) {
       id
-      updatedAt
-      createdAt
-      title
-      folder
-      filename
-      mimetype
-      content
       createdUser {
         id
         username
@@ -323,6 +316,12 @@ export const EDIT_FILE = gql`
         id
         username
       }
+      updatedAt
+      createdAt
+      folder
+      title
+      filename
+      mimetype
     }
   }
 `;

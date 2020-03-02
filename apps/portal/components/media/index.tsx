@@ -114,7 +114,7 @@ const MediaComponent: FC<MediaComponentProps> = ({
   const { i18n } = useTranslation();
 
   return (
-    <Loading activate={loading || !data} noMargin type="linear" variant="indeterminate">
+    <Loading activate={loading} noMargin type="linear" variant="indeterminate">
       <Box
         display="grid"
         className={clsx({

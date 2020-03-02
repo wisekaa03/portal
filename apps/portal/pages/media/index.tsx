@@ -19,7 +19,7 @@ import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
 const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  const { loading, data, error }: QueryResult<Data<'media', MediaQueryProps[]>> = useQuery(FILE, {
+  const { loading, data, error }: QueryResult<Data<'Media', MediaQueryProps[]>> = useQuery(FILE, {
     // ssr: false,
     fetchPolicy: 'cache-first',
   });

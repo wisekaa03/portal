@@ -9,34 +9,32 @@ import Head from 'next/head';
 // #region Imports Local
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { MEDIA_EDIT, MEDIA, FOLDERS } from '../../lib/queries';
+import { EDIT_FILE, FILE, FOLDER } from '../../lib/queries';
 import { Media } from '../../src/media/models/media.dto';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { Data } from '../../lib/types';
 import snackbarUtils from '../../lib/snackbar-utils';
 import MediaEditComponent from '../../components/media/edit';
+import { MediaFolder } from '../../src/media/models/media.folder.dto';
 // #endregion
 
 const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Media | undefined>();
-  const [updated, setUpdated] = useState<Media | undefined>();
+  const [folders, setFolders] = useState<MediaFolder[]>([]);
+  // const [updated, setUpdated] = useState<Media | undefined>();
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
 
-  const {
-    data: foldersData,
-    loading: foldersLoading,
-    error: foldersError,
-  }: QueryResult<Data<'Folders', any>> = useQuery(FOLDERS, { ssr: false });
-  const [getMedia, { loading, error, data }] = useLazyQuery(MEDIA, { ssr: false });
-  const [mediaEdit] = useMutation(MEDIA_EDIT);
-
-  console.log(foldersData);
+  const { data: folderData, loading: folderLoading, error: folderError }: QueryResult<Data<'Folder', any>> = useQuery(
+    FOLDER,
+  );
+  const [getFile, { loading, error, data }] = useLazyQuery(FILE);
+  const [editFile] = useMutation(EDIT_FILE);
 
   const handleUpload = (): void => {
     attachments.forEach((file: DropzoneFile) => {
-      mediaEdit({
+      editFile({
         variables: {
-          ...updated,
+          // ...updated,
           attachment: file.file,
         },
       });
@@ -47,14 +45,14 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     if (query.id) {
       const { id } = query;
 
-      getMedia({
+      getFile({
         variables: { id },
       });
-      setUpdated({ id } as any);
+      // setUpdated({ id } as any);
     } else {
       setCurrent(undefined);
     }
-  }, [getMedia, query]);
+  }, [getFile, query]);
 
   useEffect(() => {
     if (!loading && !error && data?.media) {
@@ -66,10 +64,10 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     if (error) {
       snackbarUtils.error(error);
     }
-    if (foldersError) {
-      snackbarUtils.error(foldersError);
+    if (folderError) {
+      snackbarUtils.error(folderError);
     }
-  }, [error, foldersError]);
+  }, [error, folderError]);
 
   return (
     <>
@@ -79,7 +77,8 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       <Page {...rest}>
         <MediaEditComponent
           loading={loading}
-          foldersLoading={foldersLoading}
+          foldersLoading={folderLoading}
+          folderData={folderData?.folder}
           current={current}
           attachments={attachments}
           setAttachments={setAttachments}

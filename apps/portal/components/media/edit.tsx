@@ -13,7 +13,8 @@ import { useTranslation } from '../../lib/i18n-client';
 import Loading from '../loading';
 import Dropzone from '../dropzone';
 import { TreeView, TreeItem } from '../tree-view';
-import { MediaEditComponentProps } from './types';
+import { MediaEditComponentProps, MediaFolderTreeVirtual } from './types';
+import { MediaFolder } from '../../src/media/models/media.folder.dto';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,9 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const commonFolder = <TreeItem nodeId="/" labelText="Общая" />;
+
 const MediaEditComponent: FC<MediaEditComponentProps> = ({
   loading,
   foldersLoading,
+  folderData,
   current,
   attachments,
   setAttachments,
@@ -48,6 +52,60 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+
+  const folders = folderData
+    ? folderData
+        .reduce((acc: MediaFolderTreeVirtual[], cur: MediaFolder) => {
+          const { pathname } = cur;
+          const tree = pathname.split('/').filter((item) => !!item);
+
+          if (tree.length === 0) {
+            return [];
+          }
+
+          const recursive = (childs: MediaFolderTreeVirtual[], arr: string[], idx = 0): MediaFolderTreeVirtual[] => {
+            if (arr.length === 1 || arr.length - 1 === idx) {
+              if (!childs.find((r) => r.id === arr[idx])) {
+                return [...childs, { id: arr[idx], childs: [] }];
+              }
+
+              return childs;
+            }
+
+            const elem = childs.find((r) => r.id === arr[idx]);
+
+            if (elem) {
+              elem.childs = recursive(elem.childs, arr, idx + 1);
+
+              return childs;
+            }
+
+            return [...childs, { id: arr[idx], childs: recursive([], arr, idx + 1) }];
+          };
+
+          return recursive(acc, tree);
+        }, [])
+        .reduce(
+          (acc: React.ReactElement[], cur: MediaFolderTreeVirtual) => {
+            const recursive = (child: MediaFolderTreeVirtual, path = '/'): React.ReactNode => {
+              const name = `${path}${child.id}`;
+
+              if (child.childs.length === 0) {
+                return <TreeItem key={name} nodeId={name} labelText={child.id} />;
+              }
+
+              return (
+                <TreeItem key={name} nodeId={name} labelText={child.id}>
+                  {child.childs.map((c) => recursive(c, `${name}/`))}
+                </TreeItem>
+              );
+            };
+
+            return [...acc, recursive(cur)];
+          },
+          [commonFolder],
+        )
+    : [];
 
   return (
     <Box display="flex" flexDirection="column">
@@ -68,8 +126,9 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
           <Box display="flex" className={classes.dropBox} flexDirection="column">
             <Loading activate={foldersLoading} full color="secondary">
               <TreeView>
-                <TreeItem nodeId="1" labelText="Directory" />
-                <TreeItem nodeId="2" labelText="Directory" />
+                {React.Children.map(folders, (child: React.ReactElement) => (
+                  <React.Fragment key={child.key}>{child}</React.Fragment>
+                ))}
               </TreeView>
             </Loading>
           </Box>

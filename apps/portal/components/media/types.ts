@@ -1,6 +1,7 @@
 /** @format */
 
 import { Media } from '@app/portal/media/models/media.dto';
+import { MediaFolder } from '@app/portal/media/models/media.folder.dto';
 import { DropzoneFile } from '../dropzone/types';
 
 export interface MediaComponentProps {
@@ -15,6 +16,7 @@ export interface MediaComponentProps {
 export interface MediaEditComponentProps {
   loading: boolean;
   foldersLoading: boolean;
+  folderData?: MediaFolder[];
   current?: Media;
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
@@ -29,3 +31,8 @@ export interface MediaQueryProps {
   file: string;
   content: Buffer;
 }
+
+export type MediaFolderTreeVirtual = {
+  id: string;
+  childs: MediaFolderTreeVirtual[];
+};
