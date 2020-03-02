@@ -82,10 +82,6 @@ service:
   nodePort: 30300
   nodePort_debug: 30301
 
-  externalIPs:
-    - 10.10.5.70
-    - 10.10.5.71
-
 tls:
   enabled: false
 
