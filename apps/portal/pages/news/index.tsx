@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useContext } from 'react';
+import React, { useState /* , useContext */ } from 'react';
 import Head from 'next/head';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -31,8 +31,9 @@ import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
 import Loading from '../../components/loading';
 import { format } from '../../lib/dayjs';
 import { LARGE_RESOLUTION } from '../../lib/constants';
-import { ProfileContext } from '../../lib/context';
+// import { ProfileContext } from '../../lib/context';
 import { Data } from '../../lib/types';
+import IsAdmin from '../../components/isAdmin';
 // #endregion
 
 // TODO: Import jodit-react:
@@ -134,7 +135,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
   const classes = useStyles({});
   const { loading, data, error }: QueryResult<Data<'news', NewsProps[]>> = useQuery(NEWS, { ssr: false });
   const [current, setCurrent] = useState<NewsProps>(null);
-  const profile = useContext(ProfileContext);
+  // const profile = useContext(ProfileContext);
 
   const newsId = query?.id;
 
@@ -227,7 +228,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                         <Typography variant="body2" color="textSecondary" component="p">
                           {format(news.updatedAt, i18n)}
                         </Typography>
-                        {profile.user && profile.user.isAdmin && (
+                        <IsAdmin>
                           <>
                             <IconButton
                               className={classes.icons}
@@ -242,7 +243,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                               <EditIcon fontSize="small" />
                             </IconButton>
                           </>
-                        )}
+                        </IsAdmin>
                         <IconButton size="small" color="secondary" onClick={handleCurrent(news)} aria-label="more">
                           <MoreIcon fontSize="small" />
                         </IconButton>
@@ -250,11 +251,11 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                     </Card>
                   );
                 })}
-                {profile.user && profile.user.isAdmin && (
+                <IsAdmin>
                   <Fab color="primary" className={classes.add} onClick={handleEdit()} aria-label="add">
                     <AddIcon />
                   </Fab>
-                )}
+                </IsAdmin>
               </div>
             </div>
           </div>
