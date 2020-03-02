@@ -149,7 +149,6 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
         query: NEWS,
       },
     ],
-    awaitRefetchQueries: true,
   });
 
   const [deleteNews] = useMutation(NEWS_DELETE, {
@@ -158,13 +157,12 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
         query: NEWS,
       },
     ],
-    awaitRefetchQueries: true,
   });
 
   const handleEdit = (news?: NewsProps) => (): void => {};
 
   const handleDelete = (news: NewsProps) => (): void => {
-    if (news && news.id) {
+    if (news?.id) {
       deleteNews({ variables: { id: news.id } });
     }
   };
@@ -209,7 +207,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
             )}
             <div className={classes.container}>
               <div>
-                {data.news.map((news: NewsProps) => {
+                {data?.news?.map((news: NewsProps) => {
                   // TODO: regexp может быть улучшен
                   const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
                   const anchor = `news-${news.id}`;
