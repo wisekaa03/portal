@@ -3,12 +3,14 @@
 // #region Imports NPM
 import React from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, TextField, InputBase } from '@material-ui/core';
 import MuiTreeView from '@material-ui/lab/TreeView';
 import MuiTreeItem, { TreeItemProps as MuiTreeItemProps } from '@material-ui/lab/TreeItem';
 import DirectoryIcon from '@material-ui/icons/Folder';
+import AddIcon from '@material-ui/icons/AddCircleOutlineRounded';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import clsx from 'clsx';
 // import DirectorySharedIcon from '@material-ui/icons/FolderShared';
 // import FileIcon from '@material-ui/icons/Note';
 // #endregion
@@ -17,6 +19,8 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 type TreeItemProps = MuiTreeItemProps & {
   labelInfo?: string;
+  createItem?: string;
+  handleCreateItem?: React.Dispatch<React.SetStateAction<string>>;
   labelText: string;
 };
 
@@ -24,11 +28,18 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       'color': theme.palette.secondary.main,
-      '&:focus > $content': {
+      '&$selected:focus > $content $label, &$selected > $content $label:hover': {
+        backgroundColor: 'unset',
+      },
+      '&:focus > $content:not($action)': {
         backgroundColor: fade(theme.palette.secondary.main, 0.9),
         color: '#fff',
       },
+      '&$selected > $content $label': {
+        backgroundColor: 'inherit',
+      },
     },
+    selected: {},
     content: {
       'color': theme.palette.secondary.main,
       'borderTopRightRadius': theme.spacing(2),
@@ -42,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: fade(theme.palette.secondary.main, 0.2),
       },
     },
+    action: {},
     group: {
       'marginLeft': 0,
       '& $content': {
@@ -50,8 +62,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     expanded: {},
     label: {
-      fontWeight: 'inherit',
-      color: 'inherit',
+      'fontWeight': 'inherit',
+      'color': 'inherit',
+      '&:hover': {
+        backgroundColor: 'unset',
+      },
     },
     labelRoot: {
       display: 'flex',
@@ -65,33 +80,65 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'inherit',
       flexGrow: 1,
     },
+    input: {
+      color: theme.palette.secondary.main,
+      fontSize: '.875rem',
+    },
   }),
 );
 
-export const TreeItem = ({ labelText, labelInfo, ...rest }: TreeItemProps): React.ReactElement => {
+export const TreeItem = ({
+  labelText,
+  labelInfo,
+  createItem,
+  handleCreateItem,
+  ...rest
+}: TreeItemProps): React.ReactElement => {
   const classes = useStyles({});
+
+  const action = createItem !== undefined;
+
+  const handleChangeItem = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    handleCreateItem(event.currentTarget.value);
+  };
 
   return (
     <MuiTreeItem
       label={
         <div className={classes.labelRoot}>
-          <DirectoryIcon color="inherit" className={classes.labelIcon} />
-          <Typography variant="body2" className={classes.labelText}>
-            {labelText}
-          </Typography>
-          {labelInfo && (
-            <Typography variant="caption" color="inherit">
-              {labelInfo}
-            </Typography>
+          {action ? (
+            <>
+              <AddIcon color="inherit" className={classes.labelIcon} />
+              <InputBase
+                color="secondary"
+                value={createItem}
+                onChange={handleChangeItem}
+                placeholder={labelText}
+                className={classes.input}
+              />
+            </>
+          ) : (
+            <>
+              <DirectoryIcon color="inherit" className={classes.labelIcon} />
+              <Typography variant="body2" className={classes.labelText}>
+                {labelText}
+              </Typography>
+              {labelInfo && (
+                <Typography variant="caption" color="inherit">
+                  {labelInfo}
+                </Typography>
+              )}
+            </>
           )}
         </div>
       }
       classes={{
         root: classes.root,
-        content: classes.content,
+        content: clsx(classes.content, { [classes.action]: action }),
         expanded: classes.expanded,
         group: classes.group,
         label: classes.label,
+        selected: classes.selected,
       }}
       {...rest}
     />
