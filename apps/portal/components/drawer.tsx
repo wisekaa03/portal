@@ -105,7 +105,7 @@ const urls: UrlProps[] = [
   {
     icon: ServicesIcon,
     text: 'common:services',
-    link: '/services',
+    link: '/services/IT',
     admin: false,
   },
   { icon: CalendarIcon, text: 'common:calendar', link: '/calendar', admin: false },

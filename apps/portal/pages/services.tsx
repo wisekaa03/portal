@@ -144,6 +144,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
                   initialState.category = currentCategory;
                 }
               }
+            } else if (service === 'k0001') {
+              return;
             }
           }
         }

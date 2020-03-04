@@ -19,6 +19,7 @@ import JoditEditor from '../jodit';
 import Dropzone from '../dropzone';
 import Button from '../ui/button';
 import RefreshButton from '../ui/refresh-button';
+import HR from '../../public/images/svg/itapps/HR.svg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -144,6 +145,18 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   linkQuery={{ department: ticket.department?.code }}
                 />
               ))}
+              {/* Евгений */}
+              <ServicesElement
+                key="k0001"
+                withLink
+                url="http://srvsd-01.khgk.local/anketa833/"
+                element={{
+                  code: 'k0001',
+                  name: 'Департамент по персоналу - Форма на подбор персонала',
+                  avatar: HR,
+                }}
+                linkQuery={{ department: ticket.department?.code }}
+              />
             </Box>
             <Box className={classes.container} style={{ minHeight: contentHeight }}>
               {categories.map((current) => (

@@ -46,7 +46,7 @@ const getElement = (query: ServicesElementLinkQueryProps): ServicesElementType =
   return !query ? 'department' : 'service' in query ? 'category' : 'service';
 };
 
-const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, linkQuery, withLink }) => {
+const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, linkQuery, url, withLink }) => {
   const classes = useStyles({});
 
   let linkAs = pathname;
@@ -60,11 +60,13 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, li
       condition={withLink}
       wrapper={(children) => (
         <Link
-          href={{
-            pathname,
-            query: { ...linkQuery, [getElement(linkQuery)]: element.code },
-          }}
-          as={`${linkAs}/${element.code}`}
+          href={
+            url || {
+              pathname,
+              query: { ...linkQuery, [getElement(linkQuery)]: element.code },
+            }
+          }
+          as={url || `${linkAs}/${element.code}`}
         >
           {children}
         </Link>

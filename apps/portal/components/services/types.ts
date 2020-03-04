@@ -46,6 +46,7 @@ export interface ServicesElementProps {
   active?: string;
   base64?: boolean;
   linkQuery?: ServicesElementLinkQueryProps;
+  url?: string;
 }
 
 export interface ServicesSuccessProps {
