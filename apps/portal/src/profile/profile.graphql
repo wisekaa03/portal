@@ -148,6 +148,8 @@ type Query {
 
   searchSuggestions(search: String): [String]
 
+  profileFieldSelection(field: String): [String]
+
 }
 
 type Mutation {
