@@ -54,14 +54,7 @@ export const AUTO_COLLAPSE_ROUTES = [
   /* '/mail' */
 ];
 
-export const TICKET_STATUSES = [
-  'Все заявки',
-  'Принят к выполнению',
-  'Эскалация',
-  'Черновик',
-  'Зарегистрирован',
-  'Завершен',
-];
+export const TICKET_STATUSES = ['Все заявки', 'В работе', 'Регистрация', 'Завершение', 'Приостановлено', 'Выполнено'];
 
 export const ADMIN_GROUP = 'web master';
 
