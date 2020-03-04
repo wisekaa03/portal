@@ -39,29 +39,30 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const CreateFolderItem = ({ nodeId, handleCreate, depth = 0 }): React.ReactElement => {
+  const { t } = useTranslation();
+
+  return <TreeItem nodeId={nodeId} labelText={t('media:addFolder')} depth={depth} handleCreate={handleCreate} />;
+};
+
+const CommonFolderItem = (): React.ReactElement => {
+  const { t } = useTranslation();
+
+  return <TreeItem key="/" nodeId="/" labelText={t('media:control.shared')} />;
+};
+
 const MediaEditComponent: FC<MediaEditComponentProps> = ({
   loading,
   foldersLoading,
   folderData,
   current,
-  newFolder,
-  setNewFolder,
+  handleCreateFolder,
   attachments,
   setAttachments,
   handleUpload,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
-
-  const CreateFolderItem = ({ nodeId, folder, handleFolder }): React.ReactElement => (
-    <TreeItem nodeId={nodeId} labelText={t('media:addFolder')} createItem={folder} handleCreateItem={handleFolder} />
-  );
-
-  const commonFolderItem = (
-    <TreeItem key="/" nodeId="/" labelText={t('media:control.shared')}>
-      <CreateFolderItem nodeId="new /" folder={newFolder} handleFolder={setNewFolder} />
-    </TreeItem>
-  );
 
   const folders = folderData
     ? folderData
@@ -97,23 +98,20 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
         }, [])
         .reduce(
           (acc: React.ReactElement[], cur: MediaFolderTreeVirtual) => {
-            const recursive = (child: MediaFolderTreeVirtual, path = '/'): React.ReactNode => {
-              const name = `${path}${child.id}`;
-
-              if (child.childs.length === 0) {
-                return <TreeItem key={name} nodeId={name} labelText={child.id} />;
-              }
+            const recursive = (child: MediaFolderTreeVirtual, path?: string, depth = 0): React.ReactNode => {
+              const name = `${path || ''}/${child.id}`;
 
               return (
-                <TreeItem key={name} nodeId={name} labelText={child.id}>
-                  {child.childs.map((c) => recursive(c, `${name}/`))}
+                <TreeItem key={name} nodeId={name} labelText={child.id} depth={depth}>
+                  {child.childs.map((c) => recursive(c, name, depth + 1))}
+                  <CreateFolderItem nodeId={`/${name}/`} depth={depth + 1} handleCreate={handleCreateFolder} />
                 </TreeItem>
               );
             };
 
             return [...acc, recursive(cur)];
           },
-          [commonFolderItem],
+          [<CommonFolderItem />],
         )
     : [];
 
@@ -139,6 +137,7 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
                 {React.Children.map(folders, (child: React.ReactElement) => (
                   <React.Fragment key={child.key}>{child}</React.Fragment>
                 ))}
+                <CreateFolderItem nodeId="//" handleCreate={handleCreateFolder} />
               </TreeView>
             </Loading>
           </Box>

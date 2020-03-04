@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React from 'react';
+import React, { useState } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, TextField, InputBase } from '@material-ui/core';
 import MuiTreeView from '@material-ui/lab/TreeView';
@@ -19,9 +19,10 @@ import clsx from 'clsx';
 
 type TreeItemProps = MuiTreeItemProps & {
   labelInfo?: string;
-  createItem?: string;
-  handleCreateItem?: React.Dispatch<React.SetStateAction<string>>;
+  pathname?: string;
+  handleCreate?: (_: string) => void;
   labelText: string;
+  depth?: number;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
         color: '#fff',
       },
       '&$selected > $content $label': {
-        backgroundColor: 'inherit',
+        backgroundColor: 'unset',
       },
     },
     selected: {},
@@ -84,22 +85,42 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.secondary.main,
       fontSize: '.875rem',
     },
+    parentNode: {
+      '& ul li $content': {
+        paddingLeft: `calc(var(--node-depth) * ${theme.spacing(2)}px)`,
+      },
+    },
   }),
 );
 
 export const TreeItem = ({
   labelText,
   labelInfo,
-  createItem,
-  handleCreateItem,
+  handleCreate,
+  depth = 0,
   ...rest
 }: TreeItemProps): React.ReactElement => {
   const classes = useStyles({});
 
-  const action = createItem !== undefined;
+  const [value, setValue] = useState<string>('');
+
+  const action = handleCreate !== undefined;
 
   const handleChangeItem = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    handleCreateItem(event.currentTarget.value);
+    setValue(event.currentTarget.value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    if (event.keyCode === 13) {
+      // TODO: элемент создающий новую папку имеет nodeId вида '/${parentNodeName}' (слеш вначале)
+      const { nodeId } = rest;
+      const pathname = value ? `${nodeId.substring(1)}${value.trim()}` : '';
+
+      if (pathname) {
+        handleCreate(pathname);
+        setValue('');
+      }
+    }
   };
 
   return (
@@ -111,7 +132,9 @@ export const TreeItem = ({
               <AddIcon color="inherit" className={classes.labelIcon} />
               <InputBase
                 color="secondary"
-                value={createItem}
+                value={value}
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={handleKeyDown}
                 onChange={handleChangeItem}
                 placeholder={labelText}
                 className={classes.input}
@@ -132,6 +155,12 @@ export const TreeItem = ({
           )}
         </div>
       }
+      style={
+        {
+          '--node-depth': depth,
+        } as any
+      }
+      className={rest.children ? classes.parentNode : undefined}
       classes={{
         root: classes.root,
         content: clsx(classes.content, { [classes.action]: action }),
