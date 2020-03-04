@@ -158,7 +158,7 @@ export class ProfileService {
       .cache(true)
       .getMany();
 
-    return result.reduce((accumulator: string[], cur: any) => {
+    return result.reduce((accumulator: string[], cur: ProfileEntity) => {
       if (accumulator.length >= 7) return accumulator;
 
       const lower = search
@@ -168,13 +168,13 @@ export class ProfileService {
       let showing = '';
 
       if (lower.some((l) => cur.fullName.toLowerCase().includes(l))) {
-        showing = cur.fullName;
+        showing = cur.fullName || '';
       } else if (lower.some((l) => cur.department && cur.department.toLowerCase().includes(l))) {
-        showing = cur.department;
+        showing = cur.department || '';
       } else if (lower.some((l) => cur.company && cur.company.toLowerCase().includes(l))) {
-        showing = cur.company;
+        showing = cur.company || '';
       } else if (lower.some((l) => cur.title && cur.title.toLowerCase().includes(l))) {
-        showing = cur.title;
+        showing = cur.title || '';
       }
 
       if (accumulator.includes(showing) || showing === '') return accumulator;
@@ -347,6 +347,33 @@ export class ProfileService {
 
       throw error;
     });
+
+  /**
+   * Profile field selection
+   *
+   * @param {string} fieldSelection - the field selection
+   * @returns {string[]} - Field selection
+   * @throws {Error} - Exception
+   */
+  fieldSelection = async (
+    field: 'company' | 'department' | 'otdel' | 'country' | 'region' | 'town' | 'street' | 'postalCode',
+  ): Promise<string[]> => {
+    const query = this.profileRepository.createQueryBuilder('profile');
+
+    const result = await query
+      .orderBy(`profile.${field}`, 'ASC')
+      .distinctOn([`profile.${field}`])
+      .cache(true)
+      .getMany();
+
+    return result.reduce((accumulator: string[], cur: ProfileEntity) => {
+      if (typeof cur[field] === 'string' && cur[field]) {
+        return [...accumulator, cur[field] || ''];
+      }
+
+      return accumulator;
+    }, []);
+  };
 
   /**
    * changeProfile

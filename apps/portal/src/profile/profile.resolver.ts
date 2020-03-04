@@ -54,6 +54,22 @@ export class ProfileResolver {
   }
 
   /**
+   * GraphQL query: profileFieldSelection
+   *
+   * @param {string} fieldSelection - the field selection (company, department, division (otdel),
+   *                                  country, region, town, street, postalCode)
+   * @returns {Promise<string[]>}
+   */
+  @Query()
+  @UseGuards(GqlAuthGuard)
+  async profileFieldSelection(
+    @Args('field')
+    field: 'company' | 'department' | 'otdel' | 'country' | 'region' | 'town' | 'street' | 'postalCode',
+  ): Promise<string[]> {
+    return this.profileService.fieldSelection(field);
+  }
+
+  /**
    * GraphQL query: searchSuggestions
    *
    * @param {string} search - The search suggestions string
