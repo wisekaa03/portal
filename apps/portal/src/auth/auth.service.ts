@@ -26,8 +26,8 @@ export class AuthService {
   /**
    * Validate a user
    *
-   * @param {username} Username
-   * @returns {UserRespone}
+   * @param {Express.Request} request
+   * @returns {Promise<UserResponse>} Validated user
    * @throws {UnauthorizedException}
    */
   public validate = async (request: Express.Request): Promise<UserResponse> => {
@@ -42,7 +42,8 @@ export class AuthService {
    * Login a user
    *
    * @param {UserLogin} - User login data transfer object
-   * @returns {UserResponse} - User response
+   * @param {Express.Request} req Request where the user comes from
+   * @returns {Promise<UserResponse>} User response
    * @throws {Error} - Exception
    */
   async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
@@ -155,8 +156,9 @@ export class AuthService {
   /**
    * User Email login
    *
-   * @param {email, password} - User Email, password
-   * @returns {response} - User response
+   * @param {string} email User Email
+   * @param {string} password User Password
+   * @returns {Promise<any>} User response
    */
   loginEmail = async (email: string, password: string): Promise<any> =>
     this.httpService

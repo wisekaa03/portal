@@ -52,26 +52,26 @@ export class GroupService {
   /**
    * Group by Identificator
    *
-   * @param {string} loginIdentificator - group object GUID
-   * @param {boolean} cache - cache true/false
-   * @return {GroupEntity | undefined} - Group
+   * @param {string} loginIdentificator Group object GUID
+   * @param {boolean} [cache = true] Cache true/false
+   * @return {Promise<GroupEntity | undefined>} Group
    */
-  groupByIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
+  groupByIdentificator = async (loginIdentificator: string, cache: any = true): Promise<GroupEntity | undefined> =>
     this.groupRepository.findOne({ where: { loginIdentificator }, cache });
 
   /**
    * Create
    *
-   * @param {Group} - The group
-   * @returns {GroupEntity} - The group entity
+   * @param {Group} group The group
+   * @returns {GroupEntity} The group entity after create
    */
   create = (group: Group): GroupEntity => this.groupRepository.create(group);
 
   /**
    * Bulk Save
    *
-   * @param {GroupEntity[]} - The groups
-   * @returns {GroupEntity[]} - The groups
+   * @param {GroupEntity[]} group The groups
+   * @returns {Promise<GroupEntity[]>} The groups after save
    */
   bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[]> =>
     this.groupRepository.save(group).catch((error) => {
@@ -81,10 +81,10 @@ export class GroupService {
     });
 
   /**
-   * Save
+   * Save the group
    *
-   * @param {GroupEntity} - The group
-   * @returns {GroupEntity} - The group
+   * @param {GroupEntity} group The group
+   * @returns {Promise<GroupEntity>} The group
    */
   save = async (group: GroupEntity): Promise<GroupEntity> =>
     this.groupRepository.save(group).catch((error) => {
