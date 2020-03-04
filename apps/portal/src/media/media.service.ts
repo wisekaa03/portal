@@ -90,7 +90,9 @@ export class MediaService {
     this.logService.log(`Folder: id={${id}}`, 'MediaService');
 
     // TODO: сделать чтобы выводилось постранично
-    return this.mediaFolderRepository.find(id ? { id } : undefined);
+    // TODO: убрал id, пока выводим все каталоги
+    // TODO: так же думаю надо сделать чтобы зависимые таблицы подтягивались всегда иначе ошибка ot null
+    return this.mediaFolderRepository.find({ relations: ['createdUser', 'updatedUser'] });
   };
 
   /**

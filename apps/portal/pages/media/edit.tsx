@@ -9,7 +9,7 @@ import Head from 'next/head';
 // #region Imports Local
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { EDIT_FILE, FILE, FOLDER } from '../../lib/queries';
+import { EDIT_FILE, FILE, FOLDER, EDIT_FOLDER } from '../../lib/queries';
 import { Media } from '../../src/media/models/media.dto';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { Data } from '../../lib/types';
@@ -20,7 +20,6 @@ import { MediaFolder } from '../../src/media/models/media.folder.dto';
 
 const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Media | undefined>();
-  const [newFolder, setNewFolder] = useState<string>('');
   // const [updated, setUpdated] = useState<Media | undefined>();
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
 
@@ -28,7 +27,9 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     FOLDER,
   );
   const [getFile, { loading, error, data }] = useLazyQuery(FILE);
+
   const [editFile] = useMutation(EDIT_FILE);
+  const [editFolder] = useMutation(EDIT_FOLDER);
 
   const handleUpload = (): void => {
     attachments.forEach((file: DropzoneFile) => {
@@ -38,6 +39,13 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           attachment: file.file,
         },
       });
+    });
+  };
+
+  const handleCreateFolder = (pathname: string): void => {
+    editFolder({
+      refetchQueries: [{ query: FOLDER }],
+      variables: { pathname },
     });
   };
 
@@ -79,8 +87,7 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           loading={loading}
           foldersLoading={folderLoading}
           folderData={folderData?.folder}
-          newFolder={newFolder}
-          setNewFolder={setNewFolder}
+          handleCreateFolder={handleCreateFolder}
           current={current}
           attachments={attachments}
           setAttachments={setAttachments}
