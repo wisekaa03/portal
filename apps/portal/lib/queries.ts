@@ -239,7 +239,7 @@ export const SEARCH_SUGGESTIONS = gql`
 `;
 
 export const PROFILE_FIELD_SELECTION = gql`
-  query ProfileFieldSelection($field: String) {
+  query ProfileFieldSelection($field: FieldSelection) {
     profileFieldSelection(field: $field)
   }
 `;

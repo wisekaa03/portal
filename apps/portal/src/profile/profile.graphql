@@ -140,6 +140,17 @@ input ProfileSettingsInput {
   notShowing: Boolean
 }
 
+enum FieldSelection {
+  company
+  department
+  otdel
+  country
+  region
+  town
+  street
+  postalCode
+}
+
 type Query {
 
   profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean): ProfileConnection!
@@ -148,7 +159,7 @@ type Query {
 
   searchSuggestions(search: String): [String]
 
-  profileFieldSelection(field: String): [String]
+  profileFieldSelection(field: FieldSelection): [String]
 
 }
 
