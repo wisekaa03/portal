@@ -64,8 +64,14 @@ const useStyles = makeStyles((theme: Theme) =>
       'padding': 0,
 
       '& > li': {
-        minHeight: '48px',
+        minHeight: 48,
         padding: theme.spacing(0.5, 0.5, 0.5, 2),
+      },
+    },
+    telephone: {
+      'marginLeft': -32,
+      '& > svg': {
+        marginRight: theme.spacing(),
       },
     },
     disabled: {
@@ -96,6 +102,8 @@ const ProfileName = withStyles((theme) => ({
   root: {
     margin: theme.spacing(0.5),
     fontWeight: 500,
+    maxWidth: 300,
+    textAlign: 'center',
   },
 }))(({ classes, profile, type }: PhonebookProfileNameProps) => (
   <h2 className={classes.root}>{profile ? profile[type] : <Skeleton variant="rect" width={120} />}</h2>
@@ -240,25 +248,25 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
                   </Box>
                 )}
                 {profile?.mobile && (
-                  <Box display="flex" alignItems="center" justifyContent="center">
+                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
                     <PhoneAndroidRounded />
                     <span>{profile.mobile}</span>
                   </Box>
                 )}
                 {profile?.telephone && (
-                  <Box display="flex" alignItems="center" justifyContent="center">
+                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
                     <CallEndRounded />
                     <span>{profile.telephone}</span>
                   </Box>
                 )}
                 {profile?.workPhone && (
-                  <Box display="flex" alignItems="center" justifyContent="center">
+                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
                     <PhoneRounded />
                     <span>{profile.workPhone}</span>
                   </Box>
                 )}
                 {profile?.username && (
-                  <Box display="flex" alignItems="center" justifyContent="center">
+                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
                     <PersonRounded />
                     <span>{profile.username}</span>
                   </Box>
