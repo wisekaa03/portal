@@ -66,7 +66,12 @@ export class ProfileResolver {
     @Args('field')
     field: 'company' | 'department' | 'otdel' | 'country' | 'region' | 'town' | 'street' | 'postalCode',
   ): Promise<string[]> {
-    return this.profileService.fieldSelection(field);
+    if (['company', 'department', 'otdel', 'country', 'region', 'town', 'street', 'postalCode'].includes(field)) {
+      return this.profileService.fieldSelection(field);
+    }
+
+    const error = new Error('Unknown field selection');
+    throw GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
   }
 
   /**
