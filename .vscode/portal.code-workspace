@@ -18,7 +18,7 @@
     "jest.restartJestOnSnapshotUpdate": true,
     "javascript.format.enable": false,
     "typescript.format.enable": false,
-    "files.autoSave": "onWindowChange",
+    "files.autoSave": "off",
     "editor.formatOnSave": true,
     "[html]": {
       "editor.formatOnSave": false
@@ -37,9 +37,7 @@
     },
     "[javascriptreact]": {
       "editor.formatOnSave": false
-    },
-    "[typescript]": {
-      "editor.formatOnSave": false
+    },the field selection
     },
     "[typescriptreact]": {
       "editor.formatOnSave": false
