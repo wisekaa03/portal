@@ -31,14 +31,16 @@ interface CopyButtonProps extends IconButtonProps {
   text: string;
 }
 
-const CopyButton = ({ text }: CopyButtonProps): React.ReactElement => {
+const CopyButton = ({ text, ...rest }: CopyButtonProps): React.ReactElement => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleOpen = (): void => {
-    setOpen(true);
+  const handleOpen = (_: string, result: boolean): void => {
+    if (result) {
+      setOpen(true);
+    }
   };
 
   const handleClose = (): void => {
@@ -64,7 +66,7 @@ const CopyButton = ({ text }: CopyButtonProps): React.ReactElement => {
           placement="top"
           arrow
         >
-          <IconButton className={classes.root} size="small" aria-label="copy">
+          <IconButton className={classes.root} size="small" aria-label="copy" {...rest}>
             <FileCopyIcon />
           </IconButton>
         </Tooltip>

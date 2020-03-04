@@ -266,6 +266,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
                 {profile?.email && (
                   <Box display="flex" alignItems="center" justifyContent="center">
                     <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
+                    <CopyButton style={{ marginLeft: '8px' }} text={profile.email} />
                   </Box>
                 )}
               </>
