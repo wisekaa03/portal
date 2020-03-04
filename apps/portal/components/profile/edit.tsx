@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
@@ -191,9 +192,12 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
   loadingProfile,
   loadingChanged,
+  loadingFieldSelection,
+  fieldSelection,
   hasUpdate,
   profile,
   onDrop,
+  handleFieldSelection,
   handleChange,
   handleBirthday,
   handleSave,
@@ -362,17 +366,27 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       />
                     </MuiPickersUtilsProvider>
                   </div>
-                  {others.map((field) => (
-                    <div key={field}>
-                      <TextFieldComponent
-                        disabled={loadingChanged}
-                        handleChange={handleChange}
-                        field={field}
-                        value={profile[field]}
-                        InputProps={InputProps}
-                      />
-                    </div>
-                  ))}
+                  {others.map((field) => {
+                    return (
+                      <div key={field}>
+                        <Autocomplete
+                          autoHighlight
+                          loading={loadingFieldSelection}
+                          options={fieldSelection}
+                          renderInput={(params) => (
+                            <TextFieldComponent
+                              disabled={loadingChanged}
+                              handleChange={handleChange}
+                              field={field}
+                              value={profile[field]}
+                              InputProps={InputProps}
+                              {...params}
+                            />
+                          )}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </>
             ) : (

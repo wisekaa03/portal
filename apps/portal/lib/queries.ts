@@ -238,6 +238,12 @@ export const SEARCH_SUGGESTIONS = gql`
   }
 `;
 
+export const PROFILE_FIELD_SELECTION = gql`
+  query ProfileFieldSelection($field: String) {
+    profileFieldSelection(field: $field)
+  }
+`;
+
 /**---------------------------------------------------------------------------------------------------------------------------------------
  * NEWS
  */

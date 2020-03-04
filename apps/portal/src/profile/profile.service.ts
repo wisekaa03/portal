@@ -138,6 +138,19 @@ export class ProfileService {
 
     const result = await query
       .orderBy('profile.lastName', 'ASC')
+      .select([
+        'profile.lastName',
+        'profile.firstName',
+        'profile.middleName',
+        'profile.username',
+        'profile.department',
+        'profile.title',
+        'profile.company',
+        'profile.otdel',
+        'profile.telephone',
+        'profile.workPhone',
+        'profile.mobile',
+      ])
       .distinctOn([
         'profile.lastName',
         'profile.firstName',
@@ -361,6 +374,7 @@ export class ProfileService {
     const query = this.profileRepository.createQueryBuilder('profile');
 
     const result = await query
+      .select(`profile.${field}`)
       .orderBy(`profile.${field}`, 'ASC')
       .distinctOn([`profile.${field}`])
       .cache(true)

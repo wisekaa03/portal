@@ -3,13 +3,13 @@
 // #region Imports NPM
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import Head from 'next/head';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
 import { Profile } from '../../src/profile/models/profile.dto';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '../../lib/queries';
+import { PROFILE, CHANGE_PROFILE, CURRENT_USER, PROFILE_FIELD_SELECTION } from '../../lib/queries';
 import { resizeImage } from '../../lib/utils';
 import { ProfileContext } from '../../lib/context';
 import { format } from '../../lib/dayjs';
@@ -21,6 +21,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Profile | undefined>();
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
+  const [fieldSelection, setFieldSelection] = useState<string[]>();
 
   const { user } = useContext(ProfileContext);
   const { id } = query;
@@ -29,6 +30,11 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery(PROFILE, {
     variables: { id },
   });
+
+  const [getFieldSelection, { loading: loadingFieldSelection, data: dataFieldSelection }] = useLazyQuery(
+    PROFILE_FIELD_SELECTION,
+    {},
+  );
 
   const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(
     CHANGE_PROFILE,
@@ -63,6 +69,10 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     },
     [current],
   );
+
+  const handleFieldSelection = (field: 'country'): void => {
+    getFieldSelection({ variables: { field } });
+  };
 
   const handleChange = (name: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const el: EventTarget & HTMLInputElement = e.target;
@@ -102,6 +112,10 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   }, [dataProfile, isAdmin, id, user]);
 
   useEffect(() => {
+    setFieldSelection(dataFieldSelection);
+  }, [dataFieldSelection]);
+
+  useEffect(() => {
     if (errorProfile) {
       snackbarUtils.error(errorProfile);
     }
@@ -123,6 +137,9 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
           profile={current}
           hasUpdate={(!!updated || !!thumbnailPhoto) && !loadingChanged}
           onDrop={onDrop}
+          loadingFieldSelection={loadingFieldSelection}
+          fieldSelection={fieldSelection}
+          handleFieldSelection={handleFieldSelection}
           handleChange={handleChange}
           handleBirthday={handleBirthday}
           handleSave={handleSave}
