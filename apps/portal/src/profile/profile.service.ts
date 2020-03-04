@@ -364,9 +364,10 @@ export class ProfileService {
   /**
    * Profile field selection
    *
-   * @param {string} fieldSelection - the field selection
-   * @returns {string[]} - Field selection
-   * @throws {Error} - Exception
+   * @param {string} field Field: 'company' | 'department' | 'otdel' | 'country' |
+   *                              'region' | 'town' | 'street' | 'postalCode'
+   * @returns {Promise<string[]>} Field selection
+   * @throws {Error} Exception
    */
   fieldSelection = async (
     field: 'company' | 'department' | 'otdel' | 'country' | 'region' | 'town' | 'street' | 'postalCode',

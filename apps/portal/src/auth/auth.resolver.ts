@@ -27,8 +27,7 @@ export class AuthResolver {
   /**
    * GraphQL query: me
    *
-   * @param req - request.User
-   * @returns {UserResponse}
+   * @returns {UserResponse} Response user
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -39,9 +38,9 @@ export class AuthResolver {
   /**
    * GraphQL mutation: login
    *
-   * @param username - username
-   * @param password - password
-   * @returns {UserResponse}
+   * @param {string} username Username
+   * @param {string} password Password
+   * @returns {Promise<UserResponse>} User response from DB
    * @throws {GraphQLError}
    */
   @Mutation()
@@ -103,8 +102,7 @@ export class AuthResolver {
   /**
    * GraphQL mutation: logout
    *
-   * @param {Request} req - the Request (app.module.ts GraphQL: "context: ({ req, res }) => ({ req, res })")
-   * @returns {boolean} - the true/false of logout
+   * @returns {Promise<boolean>} The true/false of logout
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -122,7 +120,7 @@ export class AuthResolver {
   /**
    * GraphQL mutation: cacheReset
    *
-   * @returns {boolean}
+   * @returns {Promise<boolean>} Cache reset true/false
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)

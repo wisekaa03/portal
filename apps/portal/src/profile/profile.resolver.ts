@@ -56,9 +56,9 @@ export class ProfileResolver {
   /**
    * GraphQL query: profileFieldSelection
    *
-   * @param {string} fieldSelection - the field selection (company, department, division (otdel),
-   *                                  country, region, town, street, postalCode)
-   * @returns {Promise<string[]>}
+   * @param {string} field Field: 'company' | 'department' | 'otdel' | 'country' |
+   *                              'region' | 'town' | 'street' | 'postalCode'
+   * @returns {Promise<string[]>} Field selection
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -72,8 +72,8 @@ export class ProfileResolver {
   /**
    * GraphQL query: searchSuggestions
    *
-   * @param {string} search - The search suggestions string
-   * @returns {Promise<string[]>} - The search suggestions
+   * @param {string} search The search suggestions string
+   * @returns {Promise<string[]>} The search suggestions
    */
   @Query()
   @UseGuards(GqlAuthGuard)

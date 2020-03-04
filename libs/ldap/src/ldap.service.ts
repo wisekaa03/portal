@@ -49,7 +49,9 @@ export class LdapService extends EventEmitter {
   /**
    * Create an LDAP class.
    *
-   * @param {Object} opts - Config options
+   * @param {LdapModuleOptions} opts Config options
+   * @param {LogService} logger Logger service
+   * @param {ConfigService} configService Config service
    * @constructor
    */
   constructor(
@@ -735,8 +737,7 @@ export class LdapService extends EventEmitter {
   /**
    * Unbind connections
    *
-   * @param {voidCallback} callback - Callback
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   public async close(): Promise<boolean> {
     // It seems to be OK just to call unbind regardless of if the
