@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'gap': `${theme.spacing()}px`,
       'justifyItems': 'flex-start',
       'alignItems': 'center',
+      'height': '100%',
       // '&:not($formControl)': {
       'cursor': 'pointer',
       // },
@@ -67,8 +68,9 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, li
             }
           }
           as={url || `${linkAs}/${element.code}`}
+          passHref
         >
-          {children}
+          {url ? <a target="_blank">{children}</a> : children}
         </Link>
       )}
     >
