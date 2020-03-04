@@ -6,17 +6,18 @@ import React, { useState } from 'react';
 // import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { MobileStepper, Card, Paper, Typography, Button, Box, IconButton } from '@material-ui/core';
-import { ArrowBackRounded, KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
+import { ArrowBackRounded, KeyboardArrowLeft, KeyboardArrowRight, FileCopy, Settings } from '@material-ui/icons';
+
 import SwipeableViews from 'react-swipeable-views';
 // #endregion
 // #region Imports Local
 import { nextI18next } from '../../lib/i18n-client';
 import { HelpDataProps, PhonebookHelpProps } from './types';
-import Img1 from '../../public/images/jpeg/help/phonebook/img1.png';
-import Img2 from '../../public/images/jpeg/help/phonebook/img2.png';
-import Img3 from '../../public/images/jpeg/help/phonebook/img3.png';
-import Img4 from '../../public/images/jpeg/help/phonebook/img4.png';
-import Img5 from '../../public/images/jpeg/help/phonebook/img5.png';
+import Img1 from '../../public/images/png/help/phonebook/img1.png';
+import Img2 from '../../public/images/png/help/phonebook/img2.png';
+import Img3 from '../../public/images/png/help/phonebook/img3.png';
+import Img4 from '../../public/images/png/help/phonebook/img4.png';
+import Img5 from '../../public/images/png/help/phonebook/img5.png';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -82,8 +83,9 @@ const helpData: HelpDataProps[] = [
           <li>Внутренний телефон</li>
         </ul>
         <Typography variant="body1">
-          После ввода более трёх символов в поисковую строку адресная книга отобразит все соответствующие строки.
-          Например при вводе цифр 1112 отобразится список системных администраторов с телефоном 1112
+          После ввода более трёх символов в форму поиска адресная книга отобразит все строки с найденными значениями вне
+          зависимости от того, в каком из вышеперечисленных столбцов найдена информация. Например, при вводе цифр 1112
+          отобразится список системных администраторов с телефоном 1112
         </Typography>
       </>
     ),
@@ -92,13 +94,19 @@ const helpData: HelpDataProps[] = [
     id: 1,
     image: Img2,
     text: (
-      <Typography variant="body1">
-        При нажатии на строку адресной книги в появившемся всплывающем окне отобразится подробная информация о
-        сотруднике. Здесь активными являются строки «Компания», «Департамент», «Должность», «Отдел», «Руководитель».
-        Например при нажатии на «Департамент» отобразятся все сотрудники данного департамента. При нажатии на строку
-        «Руководитель» откроется карточка руководителя сотрудника. Для копирования информации в буфер обмена нажмите
-        кнопку справа от строки.
-      </Typography>
+      <>
+        <Typography variant="body1">
+          При нажатии на строку адресной книги в появившемся всплывающем окне отобразится подробная информация о
+          сотруднике. Здесь активными являются строки: «Компания», «Департамент», «Должность», «Отдел», «Руководитель» и
+          e-mail. Например, при нажатии на «Департамент» отобразятся все сотрудники данного департамента. При нажатии на
+          строку «Руководитель» откроется карточка руководителя сотрудника. При нажатии на e-mail откроется форма
+          отправки почты с заполненным адресатом.
+        </Typography>
+        <Typography variant="body1">
+          Для удобства пользователей iMac копирование информации в буфер обмена осуществляется нажатием кнопки{' '}
+          <FileCopy style={{ opacity: 0.6 }} fontSize="small" /> справа от строки.
+        </Typography>
+      </>
     ),
   },
   {
@@ -107,10 +115,8 @@ const helpData: HelpDataProps[] = [
     text: (
       <>
         <Typography variant="body1">
-          Поисковая строка адресной книги поддерживает комбинированные запросы набранные через знак плюс.
-        </Typography>
-        <Typography variant="body1">
-          Например, чтобы отобразить всех сотрудников департамента ИТ наберите в поисковой строке
+          Для удобства пользователей iMac копирование информации в буфер обмена осуществляется нажатием кнопки справа от
+          строки.
         </Typography>
         <Box textAlign="center">
           <b>Деп + ит</b>
@@ -124,12 +130,13 @@ const helpData: HelpDataProps[] = [
     image: Img4,
     text: (
       <>
-        <Typography variant="body1">
-          Чтобы отобразить всех бухгалтеров компании ООО «Нефтебитум», наберите в поисковой строке
-        </Typography>
+        <Typography variant="body1">В появившемся выпадающем списке выберите «Департамент ИТ и разработки».</Typography>
         <Box textAlign="center">
-          <b>Нефте + бухг</b>
+          <b>1112 + поддерж</b>
         </Box>
+        <Typography variant="body1">
+          Адресная книга отобразит всех специалистов поддержки пользователей департамента ИТ и разработки с номером 1112
+        </Typography>
       </>
     ),
   },
@@ -137,12 +144,17 @@ const helpData: HelpDataProps[] = [
     id: 4,
     image: Img5,
     text: (
-      <Typography variant="body1">
-        Для настройки отображения колонок адресной книги используйте значок шестерёнки в правом верхнем углу. В
-        появившемся всплывающем окне отметьте галочками какую информацию Вам нужно отобразить и нажмите кнопку
-        «Применить». Эти настройки запоминаются в профиле пользователя и не сбиваются после выхода из адресной книги.
-        Для настройки отображения колонок в значения по умолчанию используйте кнопку «Сброс».
-      </Typography>
+      <>
+        <Typography variant="body1">
+          Для настройки отображения колонок адресной книги используйте значок{' '}
+          <Settings style={{ opacity: 0.6 }} fontSize="small" /> в правом верхнем углу. В появившемся всплывающем окне
+          отметьте галочками какую информацию Вам нужно отобразить. Затем нажмите кнопку «Применить». Эти настройки
+          запоминаются в профиле пользователя и не сбиваются после выхода из адресной книги.
+        </Typography>
+        <Typography variant="body1">
+          Для настройки отображения колонок в значения по умолчанию используйте кнопку «Сбросить».
+        </Typography>
+      </>
     ),
   },
 ];
