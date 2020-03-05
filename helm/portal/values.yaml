@@ -15,7 +15,6 @@ fullnameOverride: "portal"
 
 # App
 PORT: 4000
-PORT_DEBUG: 9229
 
 # DB
 DATABASE_URI: "postgres://postgres:1234567890@postgresql.default.svc.cluster.local:5432/portaldb"

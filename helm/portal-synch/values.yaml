@@ -17,7 +17,6 @@ signatureShedule: "10 * * * *"
 
 # App
 PORT: 4222
-PORT_DEBUG: 9229
 
 service:
   type: LoadBalancer

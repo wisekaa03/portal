@@ -135,7 +135,6 @@ The `.env` file is like this:
 ```bash
 # App
 PORT=4000
-PORT_DEBUG=9229
 
 # DB
 DATABASE_URI="postgres://postgres:1234567890@postgresql.database:5432/postgres"

@@ -65,8 +65,6 @@ spec:
           env:
             - name: PORT
               value: {{ .Values.PORT | default "4222" | quote }}
-            - name: PORT_DEBUG
-              value: {{ .Values.PORT_DEBUG | default "9229" | quote }}
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:

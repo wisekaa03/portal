@@ -82,7 +82,6 @@ helm_development:
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
         --set PORT="${PORT}" \
-        --set PORT_DEBUG="${PORT_DEBUG}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
@@ -130,7 +129,6 @@ helm_development:
         --set nameOverride="portal-synch-stage" \
         --set fullnameOverride="portal-synch-stage" \
         --set PORT="${PORT_MICROSERVICE}" \
-        --set PORT_DEBUG="${PORT_DEBUG}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
 
@@ -152,7 +150,6 @@ helm_production:
         --set service.nodePort="30300" \
         --set service.nodePort_debug="30301" \
         --set PORT="${PORT}" \
-        --set PORT_DEBUG="${PORT_DEBUG}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
@@ -197,6 +194,5 @@ helm_production:
         --install --namespace=${PRODUCTION_NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
         --set PORT="${PORT_MICROSERVICE}" \
-        --set PORT_DEBUG="${PORT_DEBUG}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"

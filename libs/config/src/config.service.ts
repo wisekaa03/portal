@@ -42,10 +42,6 @@ export class ConfigService {
       PORT: Joi.number()
         .integer()
         .required(),
-      PORT_DEBUG: Joi.number()
-        .empty('')
-        .integer()
-        .optional(),
       DATABASE_URI: Joi.string().required(),
       DATABASE_URI_RD: Joi.string().required(),
       DATABASE_SCHEMA: Joi.string().required(),

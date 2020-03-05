@@ -3,7 +3,6 @@
 cat <<EOF > .env
 # App
 PORT="${PORT}"
-PORT_DEBUG="${PORT_DEBUG}"
 
 # Database
 DATABASE_URI="${DATABASE_URI}"
