@@ -1,7 +1,8 @@
 {
   "title": "Portal: Profile",
   "edit": {
-    "title": "Portal: edit user \"{{current}}\""
+    "title": "Portal: edit user \"{{current}}\"",
+      "notFound": "Not found"
   },
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",

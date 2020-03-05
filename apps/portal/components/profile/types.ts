@@ -44,20 +44,17 @@ export interface ProfileEditComponentProps {
   isAdmin: boolean;
   loadingProfile: boolean;
   loadingChanged: boolean;
-  loadingFieldSelection: boolean;
-  fieldSelection: string[];
   hasUpdate: boolean;
   profile?: Profile;
   onDrop: (_: any) => Promise<void>;
-  handleFieldSelection: (field: string) => void;
-  handleChange: (_: keyof Profile) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
   handleBirthday: (_: Date | null) => void;
   handleSave: () => void;
 }
 
 export interface TextFieldComponentProps {
   disabled: boolean;
-  handleChange: (_: keyof Profile) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
   field: keyof Profile;
   value?: any;
   InputProps: any;

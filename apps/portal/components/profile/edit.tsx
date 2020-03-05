@@ -5,7 +5,6 @@ import React, { FC } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
-  TextField,
   IconButton,
   InputAdornment,
   Divider,
@@ -17,7 +16,6 @@ import {
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
@@ -32,7 +30,8 @@ import { useTranslation } from '../../lib/i18n-client';
 import Button from '../ui/button';
 import { Gender } from '../../src/shared/interfaces';
 import { DropzoneWrapper } from '../dropzone';
-import { ProfileEditComponentProps, TextFieldComponentProps } from './types';
+import { ProfileEditComponentProps } from './types';
+import ProfileTextFieldComponent from './text-field';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -155,23 +154,6 @@ const endAdornment = (
   </InputAdornment>
 );
 
-const TextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, handleChange, field, value, InputProps }) => {
-  const { t } = useTranslation();
-
-  return (
-    <TextField
-      fullWidth
-      disabled={disabled}
-      onChange={handleChange(field)}
-      color="secondary"
-      value={value || ''}
-      label={t(`phonebook:fields.${field}`)}
-      variant="outlined"
-      InputProps={InputProps}
-    />
-  );
-};
-
 const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
 const companyes: (keyof Profile)[] = ['company', 'department', 'otdel', 'title'];
 const langs: (keyof Profile)[] = ['companyeng', 'departmenteng', 'otdeleng', 'positioneng'];
@@ -192,12 +174,9 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
   loadingProfile,
   loadingChanged,
-  loadingFieldSelection,
-  fieldSelection,
   hasUpdate,
   profile,
   onDrop,
-  handleFieldSelection,
   handleChange,
   handleBirthday,
   handleSave,
@@ -249,7 +228,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                     </Box>
                     <div className={classes.nameBlock}>
                       {names.map((field) => (
-                        <TextFieldComponent
+                        <ProfileTextFieldComponent
                           key={field}
                           disabled={loadingChanged}
                           handleChange={handleChange}
@@ -304,7 +283,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       </div>
                     </div>
                     <div className={classes.nameEngBlock}>
-                      <TextFieldComponent
+                      <ProfileTextFieldComponent
                         disabled={loadingChanged}
                         handleChange={handleChange}
                         field="nameeng"
@@ -315,7 +294,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   </div>
                   <div className={classes.nameBlock}>
                     {companyes.map((field) => (
-                      <TextFieldComponent
+                      <ProfileTextFieldComponent
                         key={field}
                         disabled={loadingChanged}
                         handleChange={handleChange}
@@ -327,7 +306,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   </div>
                   <div className={classes.nameBlock}>
                     {langs.map((field) => (
-                      <TextFieldComponent
+                      <ProfileTextFieldComponent
                         key={field}
                         disabled={loadingChanged}
                         handleChange={handleChange}
@@ -341,7 +320,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                 <Divider className={classes.hr} />
                 <div className={classes.secondBlock}>
                   <div>
-                    <TextFieldComponent
+                    <ProfileTextFieldComponent
                       disabled={loadingChanged}
                       handleChange={handleChange}
                       field="manager"
@@ -366,27 +345,17 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       />
                     </MuiPickersUtilsProvider>
                   </div>
-                  {others.map((field) => {
-                    return (
-                      <div key={field}>
-                        <Autocomplete
-                          autoHighlight
-                          loading={loadingFieldSelection}
-                          options={fieldSelection}
-                          renderInput={(params) => (
-                            <TextFieldComponent
-                              disabled={loadingChanged}
-                              handleChange={handleChange}
-                              field={field}
-                              value={profile[field]}
-                              InputProps={InputProps}
-                              {...params}
-                            />
-                          )}
-                        />
-                      </div>
-                    );
-                  })}
+                  {others.map((field) => (
+                    <div key={field}>
+                      <ProfileTextFieldComponent
+                        disabled={loadingChanged}
+                        handleChange={handleChange}
+                        field={field}
+                        value={profile[field]}
+                        InputProps={InputProps}
+                      />
+                    </div>
+                  ))}
                 </div>
               </>
             ) : (

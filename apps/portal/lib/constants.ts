@@ -104,3 +104,17 @@ export const PHONEBOOK_HIDDEN_COLS = ['disabled', 'notShowing'];
 export const PHONEBOOK_ROW_HEIGHT = 72;
 
 // ////////////////////////////////
+
+// ////////// PROFILE ///////////
+export const PROFILE_AUTOCOMPLETE_FIELDS = [
+  'company',
+  'department',
+  'otdel',
+  'country',
+  'region',
+  'town',
+  'street',
+  'postalCode',
+];
+
+// ////////////////////////////////
