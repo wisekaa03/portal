@@ -116,8 +116,8 @@ const helpData: HelpDataProps[] = [
     text: (
       <>
         <Typography variant="body1">
-          Для удобства пользователей iMac копирование информации в буфер обмена осуществляется нажатием кнопки справа от
-          строки.
+          Поисковая строка адресной книги поддерживает комбинированные запросы, набранные через знак «+». Например,
+          чтобы отобразить всех сотрудников департамента ИТ наберите в поисковой строке
         </Typography>
         <Box textAlign="center">
           <b>Деп + ит</b>
@@ -131,7 +131,7 @@ const helpData: HelpDataProps[] = [
     image: Img4,
     text: (
       <>
-        <Typography variant="body1">В появившемся выпадающем списке выберите «Департамент ИТ и разработки».</Typography>
+        <Typography variant="body1">При вводе в поисковую форму</Typography>
         <Box textAlign="center">
           <b>1112 + поддерж</b>
         </Box>
