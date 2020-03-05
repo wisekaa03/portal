@@ -2,7 +2,9 @@
   "title": "Portal: Profile",
   "edit": {
     "title": "Portal: edit user \"{{current}}\"",
-      "notFound": "Not found"
+    "notFound": "Not found",
+    "clear": "Clear",
+    "open": "Open"
   },
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",
