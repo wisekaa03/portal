@@ -67,7 +67,7 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
       <Autocomplete
         autoHighlight
         clearOnEscape
-        // freeSolo TODO: включить, если понадобится создавать элемент не из списка
+        freeSolo
         noOptionsText={t('profile:edit.notFound')}
         open={open}
         onOpen={handleOpen}
