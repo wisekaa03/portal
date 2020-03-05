@@ -1,6 +1,6 @@
 stages:
-  - test_build
   - build
+  - docker
   - deploy
 
 variables:
@@ -10,13 +10,25 @@ variables:
   RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
 
-build:
+prepare:
   image: node:13
-  stage: test_build
+  stage: build
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}-build"
+    paths:
+      - node_modules/
+  script:
+    - env && echo -n "node version " && node -v
+    # - apt-get upgrade && apt-get install -y openssl libpq-dev
+    - yarn install --production=true
+
+build_development:
+  image: node:13
+  stage: build
   environment:
     name: development
   cache:
-    key: "${CI_COMMIT_REF_SLUG}"
+    key: "${CI_COMMIT_REF_SLUG}-development"
     paths:
       - node_modules/
       - apps/portal/.next/cache/
@@ -34,21 +46,33 @@ build:
       - dist
     expire_in: 16 hours
 
-prepare:
+build_production:
   image: node:13
-  stage: test_build
+  stage: build
+  environment:
+    name: production
   cache:
-    key: "${CI_COMMIT_REF_SLUG}-build"
+    key: "${CI_COMMIT_REF_SLUG}-production"
     paths:
       - node_modules/
+      - apps/portal/.next/cache/
   script:
     - env && echo -n "node version " && node -v
-    # - apt-get upgrade && apt-get install -y openssl libpq-dev
-    - yarn install --production=true
+    - yarn install --production=false
+    - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
+    - ./entrypoint.sh test -u || true
+    - time yarn build
+    - time yarn build:synch
+    - time yarn build:synchJob
+  artifacts:
+    paths:
+      - .next/
+      - dist
+    expire_in: 16 hours
 
-docker_build:
+docker:
   image: docker:latest
-  stage: build
+  stage: docker
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
@@ -76,7 +100,7 @@ helm_development:
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
-        --install --namespace=${DEVELOPMENT_NAMESPACE} \
+        --install --namespace=${NAMESPACE} \
         --debug --values helm/portal/values.yaml \
         --set replicaCount="1" \
         --set nameOverride="portal-stage" \
@@ -125,7 +149,7 @@ helm_development:
     # Portal-synch
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-synch \
-        --install --namespace=${DEVELOPMENT_NAMESPACE} \
+        --install --namespace=${NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
         --set replicaCount="1" \
         --set nameOverride="portal-synch-stage" \
@@ -147,7 +171,7 @@ helm_production:
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
-        --install --namespace=${PRODUCTION_NAMESPACE} \
+        --install --namespace=${NAMESPACE} \
         --debug --values helm/portal/values.yaml \
         --set service.nodePort="30300" \
         --set service.nodePort_debug="30301" \
@@ -193,7 +217,7 @@ helm_production:
     # Portal-synch
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-synch \
-        --install --namespace=${PRODUCTION_NAMESPACE} \
+        --install --namespace=${NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
