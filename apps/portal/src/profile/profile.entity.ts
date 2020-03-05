@@ -230,6 +230,12 @@ export class ProfileEntity {
   positioneng: string;
 
   @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  accessCard: string;
+
+  @Column({
     type: 'boolean',
     nullable: false,
     default: false,

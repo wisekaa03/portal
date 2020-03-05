@@ -28,7 +28,6 @@ type Profile {
   mobile: String
   email: String
 
-  # ИНН
   employeeID: String
 
   companyeng: String
@@ -36,6 +35,8 @@ type Profile {
   departmenteng: String
   otdeleng: String
   positioneng: String
+
+  accessCard: String
 
   country: String
   postalCode: String
@@ -129,6 +130,8 @@ input ProfileSettingsInput {
   departmenteng: String
   otdeleng: String
   positioneng: String
+
+  accessCard: String
 
   country: String
   postalCode: String

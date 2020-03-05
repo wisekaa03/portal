@@ -33,49 +33,51 @@ export interface Profile {
 
   gender: Gender;
 
-  country: string;
+  country?: string;
 
-  postalCode: string;
+  postalCode?: string;
 
-  region: string;
+  region?: string;
 
-  town: string;
+  town?: string;
 
-  street: string;
+  street?: string;
 
-  room: string;
+  room?: string;
 
   employeeID?: string;
 
-  company: string;
+  company?: string;
 
   department?: string;
 
   otdel?: string;
 
-  title: string;
+  title?: string;
 
   managerId?: string;
 
   manager?: Profile | undefined;
 
-  telephone: string;
+  telephone?: string;
 
-  workPhone: string;
+  workPhone?: string;
 
-  mobile: string;
+  mobile?: string;
 
-  fax: string;
+  fax?: string;
 
-  companyeng: string;
+  companyeng?: string;
 
-  nameeng: string;
+  nameeng?: string;
 
-  departmenteng: string;
+  departmenteng?: string;
 
-  otdeleng: string;
+  otdeleng?: string;
 
-  positioneng: string;
+  positioneng?: string;
+
+  accessCard?: string;
 
   disabled: boolean;
 
