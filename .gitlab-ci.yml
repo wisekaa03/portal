@@ -1,8 +1,7 @@
 stages:
   - test_build
   - build
-  - development
-  - production
+  - deploy
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -65,7 +64,9 @@ docker_build:
 
 helm_development:
   image: dtzar/helm-kubectl:latest
-  stage: development
+  stage: deploy
+  environment:
+    name: development
   dependencies: []
   allow_failure: false
   script:
@@ -135,7 +136,9 @@ helm_development:
 
 helm_production:
   image: dtzar/helm-kubectl:latest
-  stage: production
+  stage: deploy
+  environment:
+    name: production
   dependencies: []
   when: manual
   allow_failure: false
