@@ -297,6 +297,7 @@ export class ProfileService {
       departmenteng,
       otdeleng,
       positioneng,
+      accessCard: ldapUser['msDS-cloudExtensionAttribute13'],
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       notShowing: !!(parseInt(ldapUser.flags, 10) === 1),

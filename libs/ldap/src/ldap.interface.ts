@@ -62,180 +62,208 @@ export interface LdapResponseUser extends SearchEntryObject {
   /**
    * Ldap response groups
    */
-  groups: any | LdapResonseGroup[];
+  'groups': any | LdapResonseGroup[];
 
   /**
    * Country
    */
-  c: string;
+  'c': string;
 
   /**
    * Common name
    */
-  cn: string;
+  'cn': string;
 
   /**
    * Country expanded
    */
-  co: string;
+  'co': string;
 
   /**
    * Comment
    */
-  comment: string;
+  'comment': string;
 
   /**
    * Company
    */
-  company: string;
+  'company': string;
 
   /**
    * Country code
    */
-  countryCode: string;
+  'countryCode': string;
 
   /**
    * Department name
    */
-  department: string;
+  'department': string;
 
   /**
    * Description
    */
-  description: string;
+  'description': string;
 
   /**
    * Display name
    */
-  displayName: string;
+  'displayName': string;
 
   /**
    * Distinguished name
    */
-  distinguishedName: string;
+  'distinguishedName': string;
 
   /**
    * DN
    */
-  dn: string;
+  'dn': string;
 
   /**
    * Employee ID
    */
-  employeeID: string;
+  'employeeID': string;
 
   /**
    * Given name
    */
-  givenName: string;
+  'givenName': string;
 
   /**
    * Additional flags
    */
-  flags: string;
+  'flags': string;
 
   /**
    * Locality
    */
-  l: string;
+  'l': string;
 
   // Logon, logoff
-  logonCount: string;
-  lastLogoff: string;
-  lastLogon: string;
-  lastLogonTimestamp: string;
+  'logonCount': string;
+  'lastLogoff': string;
+  'lastLogon': string;
+  'lastLogonTimestamp': string;
 
   // Lockout time
-  lockoutTime: string;
+  'lockoutTime': string;
 
   // E-mail
-  mail: string;
-  otherMailbox: string[];
+  'mail': string;
+  'otherMailbox': string[];
 
   // Member of groups
-  memberOf: string[];
+  'memberOf': string[];
 
   // middle name
-  middleName: string;
+  'middleName': string;
 
   // Mobile phone
-  mobile: string;
+  'mobile': string;
 
   // Manager Profile ?
-  manager: string;
+  'manager': string;
 
   // Name
-  name: string;
+  'name': string;
 
   // Object category
-  objectCategory: string;
+  'objectCategory': string;
 
-  objectClass: string[];
+  'objectClass': string[];
 
   // Object GUID - ID in ldap
-  objectGUID: string;
+  'objectGUID': string;
 
   // Other telephone
-  otherTelephone: string;
+  'otherTelephone': string;
 
   // Postal code
-  postalCode: string;
+  'postalCode': string;
 
   /**
    * Office name
    */
-  physicalDeliveryOfficeName: string;
+  'physicalDeliveryOfficeName': string;
 
   /**
    * SAM account name
    */
-  sAMAccountName: string;
+  'sAMAccountName': string;
 
-  sAMAccountType: string;
+  'sAMAccountType': string;
 
   /**
    * Family name
    */
-  sn: string;
+  'sn': string;
 
   /**
    * Region
    */
-  st: string;
+  'st': string;
 
   /**
    * Street address
    */
-  streetAddress: string;
+  'streetAddress': string;
 
   /**
    * Telephone number
    */
-  telephoneNumber: string;
+  'telephoneNumber': string;
 
   /**
    * Fax number
    */
-  facsimileTelephoneNumber: string;
+  'facsimileTelephoneNumber': string;
 
   /**
    * Thumbnail photo
    */
-  thumbnailPhoto: string;
+  'thumbnailPhoto': string;
 
   /**
    * Work title
    */
-  title: string;
+  'title': string;
 
-  userAccountControl: string;
+  'userAccountControl': string;
 
-  wWWHomePage: string;
+  'wWWHomePage': string;
 
-  userPrincipalName: string;
+  'userPrincipalName': string;
 
-  whenChanged: string;
-  whenCreated: string;
+  'whenChanged': string;
+  'whenCreated': string;
+
+  /* Active Directory */
+  'msDS-cloudExtensionAttribute1': string;
+  'msDS-cloudExtensionAttribute2': string;
+
+  /* In our AD: Date of birth */
+  'msDS-cloudExtensionAttribute3': string;
+
+  'msDS-cloudExtensionAttribute4': string;
+  'msDS-cloudExtensionAttribute5': string;
+  'msDS-cloudExtensionAttribute6': string;
+  'msDS-cloudExtensionAttribute7': string;
+  'msDS-cloudExtensionAttribute8': string;
+  'msDS-cloudExtensionAttribute9': string;
+  'msDS-cloudExtensionAttribute10': string;
+  'msDS-cloudExtensionAttribute11': string;
+  'msDS-cloudExtensionAttribute12': string;
+
+  /* In our AD: access card (pass) */
+  'msDS-cloudExtensionAttribute13': string;
+
+  'msDS-cloudExtensionAttribute14': string;
+  'msDS-cloudExtensionAttribute15': string;
+  'msDS-cloudExtensionAttribute16': string;
+  'msDS-cloudExtensionAttribute17': string;
+  'msDS-cloudExtensionAttribute18': string;
+  'msDS-cloudExtensionAttribute19': string;
+  'msDS-cloudExtensionAttribute20': string;
 }
 
 interface GroupSearchFilterFunction {
@@ -408,4 +436,24 @@ export const ldapADattributes = [
   'userAccountControl',
   'whenChanged',
   'whenCreated',
+  'msDS-cloudExtensionAttribute1',
+  'msDS-cloudExtensionAttribute2',
+  'msDS-cloudExtensionAttribute3',
+  'msDS-cloudExtensionAttribute4',
+  'msDS-cloudExtensionAttribute5',
+  'msDS-cloudExtensionAttribute6',
+  'msDS-cloudExtensionAttribute7',
+  'msDS-cloudExtensionAttribute8',
+  'msDS-cloudExtensionAttribute9',
+  'msDS-cloudExtensionAttribute10',
+  'msDS-cloudExtensionAttribute11',
+  'msDS-cloudExtensionAttribute12',
+  'msDS-cloudExtensionAttribute13',
+  'msDS-cloudExtensionAttribute14',
+  'msDS-cloudExtensionAttribute15',
+  'msDS-cloudExtensionAttribute16',
+  'msDS-cloudExtensionAttribute17',
+  'msDS-cloudExtensionAttribute18',
+  'msDS-cloudExtensionAttribute19',
+  'msDS-cloudExtensionAttribute20',
 ];
