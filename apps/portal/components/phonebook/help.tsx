@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: 'relative',
-      maxWidth: '80vw',
+      width: '80vw',
+      maxWidth: 1400,
       flexGrow: 1,
     },
     backButton: {

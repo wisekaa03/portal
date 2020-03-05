@@ -380,7 +380,7 @@ export class ProfileService {
 
     if (ifManager) {
       query
-        .andWhere(
+        .where(
           new Brackets((qb) => {
             qb.where('profile.department = :department').orWhere('profile.department IS NULL');
           }),
