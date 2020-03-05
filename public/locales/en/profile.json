@@ -4,7 +4,8 @@
     "title": "Portal: edit user \"{{current}}\"",
     "notFound": "Not found",
     "clear": "Clear",
-    "open": "Open"
+    "open": "Open",
+    "loading": "Loading..."
   },
   "btnEdit": "Анкета",
   "btnEquipment": "Закрепленное оборудование",

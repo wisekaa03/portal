@@ -68,9 +68,11 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
         autoHighlight
         clearOnEscape
         freeSolo
+        forcePopupIcon
         noOptionsText={t('profile:edit.notFound')}
         clearText={t('profile:edit.clear')}
         openText={t('profile:edit.open')}
+        loadingText={t('profile:edit.loading')}
         open={open}
         onOpen={handleOpen}
         onClose={handleClose}
