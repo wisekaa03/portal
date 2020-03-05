@@ -18,6 +18,7 @@ import { UserEntity } from '../user/user.entity';
 import { LoginService, Gender } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
 import { constructUploads } from '../shared/upload';
+import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
 // #endregion
 
 @Injectable()
@@ -371,20 +372,45 @@ export class ProfileService {
    * @throws {Error} Exception
    */
   fieldSelection = async (
-    field: 'company' | 'department' | 'otdel' | 'country' | 'region' | 'town' | 'street' | 'postalCode',
+    field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number],
+    department?: string,
   ): Promise<string[]> => {
     const query = this.profileRepository.createQueryBuilder('profile');
+    const ifManager = field === 'manager' && department;
+
+    if (ifManager) {
+      query
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where('profile.department = :department').orWhere('profile.department IS NULL');
+          }),
+        )
+        .orderBy('profile.lastName', 'ASC');
+    } else {
+      query
+        .select(`profile.${field}`)
+        .orderBy(`profile.${field}`, 'ASC')
+        .distinctOn([`profile.${field}`]);
+    }
 
     const result = await query
-      .select(`profile.${field}`)
-      .orderBy(`profile.${field}`, 'ASC')
-      .distinctOn([`profile.${field}`])
+      .andWhere('profile.notShowing = :notShowing')
+      .andWhere('profile.disabled = :disabled')
+      .setParameters({
+        department,
+        notShowing: false,
+        disabled: false,
+      })
       .cache(true)
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
-      if (typeof cur[field] === 'string' && cur[field]) {
-        return [...accumulator, cur[field] || ''];
+      const data = ifManager
+        ? `${cur.lastName || ''} ${cur.firstName || ''} ${cur.middleName || ''}`
+        : cur[field as keyof ProfileEntity];
+
+      if (typeof data === 'string' && data) {
+        return [...accumulator, data];
       }
 
       return accumulator;

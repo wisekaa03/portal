@@ -15,6 +15,7 @@ import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 import { Profile } from './models/profile.dto';
 import { GQLError, GQLErrorCode } from '../shared/gqlerror';
+import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
 // #endregion
 
 @Resolver('Profile')
@@ -64,10 +65,11 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   async profileFieldSelection(
     @Args('field')
-    field: 'company' | 'department' | 'otdel' | 'country' | 'region' | 'town' | 'street' | 'postalCode',
+    field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number],
+    @Args('department') department: string,
   ): Promise<string[]> {
-    if (['company', 'department', 'otdel', 'country', 'region', 'town', 'street', 'postalCode'].includes(field)) {
-      return this.profileService.fieldSelection(field);
+    if (PROFILE_AUTOCOMPLETE_FIELDS.includes(field)) {
+      return this.profileService.fieldSelection(field, department);
     }
 
     const error = new Error('Unknown field selection');

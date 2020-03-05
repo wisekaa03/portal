@@ -325,7 +325,8 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       handleChange={handleChange}
                       field="manager"
                       value={profile.manager?.fullName}
-                      InputProps={{ readOnly: true }}
+                      department={profile.department}
+                      InputProps={InputProps}
                     />
                   </div>
                   <div>

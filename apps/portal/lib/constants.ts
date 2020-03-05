@@ -115,6 +115,7 @@ export const PROFILE_AUTOCOMPLETE_FIELDS = [
   'town',
   'street',
   'postalCode',
+  'manager',
 ];
 
 // ////////////////////////////////

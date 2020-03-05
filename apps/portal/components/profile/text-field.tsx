@@ -19,21 +19,19 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
   handleChange,
   field,
   value,
+  department,
   InputProps,
 }) => {
   const { t } = useTranslation();
   const autocomplete = PROFILE_AUTOCOMPLETE_FIELDS.includes(field);
+
   const [options, setOptions] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
   const [getOptions, { loading, data, error }] = useLazyQuery(PROFILE_FIELD_SELECTION);
 
-  const handleFieldSelection = (variable = 'country') => (): void => {
-    getOptions({ variables: { field: variable } });
-  };
-
   const handleOpen = (): void => {
-    handleFieldSelection(field)();
+    getOptions({ variables: { field, department } });
     setOpen(true);
   };
 
@@ -67,7 +65,7 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
       <Autocomplete
         autoHighlight
         clearOnEscape
-        freeSolo
+        freeSolo={field !== 'manager'}
         forcePopupIcon
         noOptionsText={t('profile:edit.notFound')}
         clearText={t('profile:edit.clear')}

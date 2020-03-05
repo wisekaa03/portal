@@ -57,5 +57,6 @@ export interface TextFieldComponentProps {
   handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
   field: keyof Profile;
   value?: any;
+  department?: string;
   InputProps: any;
 }

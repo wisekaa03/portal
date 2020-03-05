@@ -152,6 +152,7 @@ enum FieldSelection {
   town
   street
   postalCode
+  manager
 }
 
 type Query {
@@ -162,7 +163,7 @@ type Query {
 
   searchSuggestions(search: String): [String]
 
-  profileFieldSelection(field: FieldSelection): [String]
+  profileFieldSelection(field: FieldSelection!, department: String): [String]
 
 }
 
