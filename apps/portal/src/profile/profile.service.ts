@@ -93,8 +93,8 @@ export class ProfileService {
    * @param id string
    * @return Profile
    */
-  profile = async (id: string): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne(id, { relations: ['manager'], cache: true });
+  profile = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
+    this.profileRepository.findOne(id, { relations: ['manager'], cache });
 
   /**
    * Profile by Identificator
@@ -102,8 +102,8 @@ export class ProfileService {
    * @param loginIdentificator string
    * @return Profile
    */
-  profileByIdentificator = async (loginIdentificator: string): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne({ where: { loginIdentificator }, cache: true });
+  profileByIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity | undefined> =>
+    this.profileRepository.findOne({ where: { loginIdentificator }, cache });
 
   /**
    * searchSuggestions

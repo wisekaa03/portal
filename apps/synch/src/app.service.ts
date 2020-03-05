@@ -117,7 +117,7 @@ export class SynchService {
   };
 
   private createProfile = async (ldapUser: LdapResponseUser): Promise<ProfileEntity> => {
-    const profile = await this.profileService.profileByIdentificator(ldapUser.objectGUID);
+    const profile = await this.profileService.profileByIdentificator(ldapUser.objectGUID, false);
 
     let manager: LdapResponseUser | ProfileEntity | undefined =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager
@@ -125,7 +125,7 @@ export class SynchService {
         : undefined;
 
     if (manager && manager.objectGUID) {
-      manager = await this.profileService.profileByIdentificator(manager.objectGUID);
+      manager = await this.profileService.profileByIdentificator(manager.objectGUID, false);
     }
 
     let comment;
@@ -207,7 +207,7 @@ export class SynchService {
   };
 
   private createGroup = async (ldapGroup: LdapResonseGroup): Promise<GroupEntity> => {
-    const group = await this.groupService.groupByIdentificator(ldapGroup.objectGUID);
+    const group = await this.groupService.groupByIdentificator(ldapGroup.objectGUID, false);
 
     const groupEntity: Group = {
       ...group,

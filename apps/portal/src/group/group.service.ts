@@ -56,7 +56,7 @@ export class GroupService {
    * @param {boolean} [cache = true] Cache true/false
    * @return {Promise<GroupEntity | undefined>} Group
    */
-  groupByIdentificator = async (loginIdentificator: string, cache: any = true): Promise<GroupEntity | undefined> =>
+  groupByIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
     this.groupRepository.findOne({ where: { loginIdentificator }, cache });
 
   /**
