@@ -79,7 +79,6 @@ service:
   type: LoadBalancer
 
   nodePort: 30300
-  nodePort_debug: 30301
 
   externalIPs:
    - 10.10.205.40
