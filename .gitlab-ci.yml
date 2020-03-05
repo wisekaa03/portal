@@ -13,6 +13,8 @@ variables:
 build:
   image: node:13
   stage: test_build
+  environment:
+    name: development
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
