@@ -53,7 +53,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
         this.logService.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
       } else {
-        this.logService.error(`${request.method} ${request.url}`, JSON.stringify(errorResponse), 'ExceptionFilter');
+        this.logService.error(`${request.method} ${request.url}`, errorResponse, 'ExceptionFilter');
       }
 
       response.status(status);

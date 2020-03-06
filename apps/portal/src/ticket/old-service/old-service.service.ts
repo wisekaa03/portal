@@ -139,7 +139,7 @@ export class OldTicketService {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
-        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error, error, 'OldTicketService');
 
         throw SoapError(error);
       });
@@ -172,7 +172,7 @@ export class OldTicketService {
           });
         }),
       ).catch((error: Error) => {
-        this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error.message, error, 'OldTicketService');
 
         throw error;
       });
@@ -213,7 +213,7 @@ export class OldTicketService {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
-        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error, error, 'OldTicketService');
 
         throw SoapError(error);
       });
@@ -247,7 +247,7 @@ export class OldTicketService {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
-        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error, error, 'OldTicketService');
 
         throw SoapError(error);
       });
@@ -278,7 +278,7 @@ export class OldTicketService {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
-        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error, error, 'OldTicketService');
 
         throw SoapError(error);
       });
@@ -335,7 +335,7 @@ export class OldTicketService {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
-        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error, error, 'OldTicketService');
 
         throw SoapError(error);
       });
@@ -376,7 +376,7 @@ export class OldTicketService {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');
 
-        this.logService.error(error, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error, error, 'OldTicketService');
 
         throw SoapError(error);
       });

@@ -56,7 +56,7 @@ export class AuthService {
       )
       .then((user) => user?.toResponseObject(req?.sessionID || ''))
       .catch((error: Error) => {
-        this.logService.error('Error: not found user', JSON.stringify(error), 'AuthService');
+        this.logService.error('Error: not found user', error, 'AuthService');
 
         throw error;
       });

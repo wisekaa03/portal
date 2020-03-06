@@ -53,7 +53,7 @@ export class SoapService {
         return client as SoapClient;
       })
       .catch((error: SoapFault) => {
-        this.logger.error('SOAP connect error: ', JSON.stringify(error), 'SOAP Service');
+        this.logger.error('SOAP connect error: ', error, 'SOAP Service');
 
         throw SoapError(error);
       });

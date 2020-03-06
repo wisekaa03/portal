@@ -17,21 +17,18 @@ export class ImageService {
   imageResize = async (originalImage: Buffer, width = 48, height = 48): Promise<Buffer | undefined> =>
     !originalImage.toString('utf8').match(/^<!DOCTYPE/)
       ? Sharp(originalImage)
-        .resize(width, height)
-        .toBuffer()
-        .catch((error) => {
-          if (process.env.NODE_ENV !== 'production') {
+          .resize(width, height)
+          .toBuffer()
+          .catch((error) => {
             this.logService.error(
-              // eslint-disable-next-line max-len
               `Error converting image: width=${width}, height=${height}, originalImage=${originalImage
                 .toString('utf8')
-                .slice(0, 10)}`,
+                .slice(0, 20)}`,
               error,
               'ImageService',
             );
-          }
 
-          return undefined;
-        })
+            return originalImage;
+          })
       : undefined;
 }

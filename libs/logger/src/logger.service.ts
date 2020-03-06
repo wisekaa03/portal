@@ -34,9 +34,13 @@ export class LogService extends Logger implements TypeOrmLogger {
     }
   }
 
-  error(message: any, trace?: string, context?: string): void {
+  error(message: any, trace?: object | string, context?: string): void {
     if (dev) {
-      super.error(message, trace, context);
+      if (typeof trace === 'object') {
+        super.error(message, JSON.stringify(trace), context);
+      } else {
+        super.error(message, trace, context);
+      }
     } else {
       console.error(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message, trace);
     }

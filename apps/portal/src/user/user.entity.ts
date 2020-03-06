@@ -44,15 +44,15 @@ export class UserEntity {
   @Column('text')
   password: string;
 
+  @RelationId((user: UserEntity) => user.groups)
+  groupIds: string[];
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @ManyToMany((type) => GroupEntity, { onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
   groups: GroupEntity[];
-
-  @RelationId((user: UserEntity) => user.groups)
-  groupIds: string[];
 
   @Column({
     type: 'boolean',

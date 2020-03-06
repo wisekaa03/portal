@@ -62,7 +62,7 @@ export class AuthResolver {
 
     req.logIn(user, (error: Error) => {
       if (error) {
-        this.logService.error('Error when logging in:', JSON.stringify(error), 'AuthResolver');
+        this.logService.error('Error when logging in:', error, 'AuthResolver');
 
         throw GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
@@ -92,7 +92,7 @@ export class AuthResolver {
           throw new Error('Undefined mailSession error.');
         })
         .catch((error: Error) => {
-          this.logService.error('Unable to login in mail', JSON.stringify(error), 'AuthResolver');
+          this.logService.error('Unable to login in mail', error, 'AuthResolver');
         });
     }
 

@@ -46,7 +46,7 @@ export default (configService: ConfigService, logService: LogService, store: Ses
 
     return sess;
   } catch (error) {
-    logService.error('cannot install', JSON.stringify(error), 'Session');
+    logService.error('cannot install', error, 'Session');
 
     throw error;
   }

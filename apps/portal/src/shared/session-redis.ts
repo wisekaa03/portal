@@ -22,7 +22,7 @@ export default (configService: ConfigService, logService: LogService): Session.S
 
     return sess;
   } catch (error) {
-    logService.error('Error when installing', error.toString(), 'Session');
+    logService.error('Error when installing', error, 'Session');
 
     throw error;
   }

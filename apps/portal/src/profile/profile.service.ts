@@ -221,12 +221,21 @@ export class ProfileService {
   /**
    * Create or Update user profiles
    *
-   * @param {LdapResponseUser} - The LDAP user
-   * @param {UserEntity} - User from Database
-   * @returns {ProfileEntity} - The profile entity
-   * @throws {Error} - Exception
+   * @param {LdapResponseUser} ldapUser The LDAP user
+   * @param {ProfileEntity} profile Profile from Database
+   * @param {number} [count = 1] Count for manager
+   * @param {boolean} [save = true] Save the profile
+   * @param {boolean} [cache = true] Cache the result
+   * @returns {Promise<ProfileEntity | undefined>} The profile entity
+   * @throws {Error} Exception
    */
-  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, count = 1): Promise<ProfileEntity | undefined> {
+  async createFromLdap(
+    ldapUser: LdapResponseUser,
+    profile?: ProfileEntity,
+    count = 1,
+    save = true,
+    cache = true,
+  ): Promise<ProfileEntity> {
     const manager =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager
         ? await this.createLdapDN(ldapUser.manager, count)
@@ -266,7 +275,7 @@ export class ProfileService {
     const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
     const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
 
-    const profile: Profile = {
+    const data: Profile = {
       dn: ldapUser.dn,
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID,
@@ -304,28 +313,26 @@ export class ProfileService {
       notShowing: !!(parseInt(ldapUser.flags, 10) === 1),
       thumbnailPhoto: (thumbnailPhoto as unknown) as string,
       thumbnailPhoto40: (thumbnailPhoto40 as unknown) as string,
+      createdAt: new Date(ldapUser.whenCreated),
+      updatedAt: new Date(ldapUser.whenChanged),
     };
 
-    if (user && user.profile) {
-      profile.id = user.profile.id;
+    if (profile) {
+      data.id = profile.id;
       // profile.createdAt = user.profile.createdAt;
       // profile.updatedAt = user.profile.updatedAt;
     } else {
       const profileSave = await this.profileRepository.findOne({
         where: { loginIdentificator: ldapUser.objectGUID },
+        cache,
       });
 
-      profile.createdAt = new Date(ldapUser.whenCreated);
-      profile.updatedAt = new Date(ldapUser.whenChanged);
-
       if (profileSave) {
-        profile.id = profileSave.id;
-        // profile.createdAt = profileSave.createdAt;
-        // profile.updatedAt = profileSave.updatedAt;
+        data.id = profileSave.id;
       }
     }
 
-    return this.save(this.profileRepository.create(profile));
+    return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);
   }
 
   /**
@@ -344,7 +351,7 @@ export class ProfileService {
    */
   bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
-      this.logService.error('Unable to save data(s) in `profile`', JSON.stringify(error), 'ProfileService');
+      this.logService.error('Unable to save data(s) in `profile`', error, 'ProfileService');
 
       throw error;
     });
@@ -358,7 +365,7 @@ export class ProfileService {
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'ProfileService');
+      this.logService.error('Unable to save data in `profile`', error, 'ProfileService');
 
       throw error;
     });
@@ -459,7 +466,7 @@ export class ProfileService {
           modification.thumbnailPhoto = file;
         }),
       ).catch((error: Error) => {
-        this.logService.error(error.message, JSON.stringify(error), 'OldTicketService');
+        this.logService.error(error.message, error, 'OldTicketService');
 
         throw error;
       });

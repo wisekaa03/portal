@@ -183,7 +183,7 @@ export class LdapService extends EventEmitter {
    */
   private handleErrorAdmin(error: Ldap.Error): void {
     if (`${error.code}` !== 'ECONNRESET') {
-      this.logger.error(`admin emitted error: [${error.code}]`, JSON.stringify(error), 'LDAP');
+      this.logger.error(`admin emitted error: [${error.code}]`, error, 'LDAP');
     }
     this.adminBound = false;
   }
@@ -197,7 +197,7 @@ export class LdapService extends EventEmitter {
    */
   private handleErrorUser(error: Ldap.Error): void {
     if (`${error.code}` !== 'ECONNRESET') {
-      this.logger.error(`user emitted error: [${error.code}]`, JSON.stringify(error), 'LDAP');
+      this.logger.error(`user emitted error: [${error.code}]`, error, 'LDAP');
     }
     // this.adminBound = false;
   }
@@ -210,7 +210,7 @@ export class LdapService extends EventEmitter {
    * @returns {void}
    */
   private handleConnectError(error: Ldap.Error): void {
-    this.logger.error(`emitted error: [${error.code}]`, JSON.stringify(error), 'LDAP');
+    this.logger.error(`emitted error: [${error.code}]`, error, 'LDAP');
   }
 
   /**
@@ -232,7 +232,7 @@ export class LdapService extends EventEmitter {
     return new Promise<boolean>((resolve, reject) =>
       this.adminClient.bind(this.bindDN, this.bindCredentials, (error: Ldap.Error) => {
         if (error) {
-          this.logger.error('bind error:', error.toString(), 'LDAP');
+          this.logger.error('bind error:', error, 'LDAP');
           this.adminBound = false;
 
           return reject(new Error(error.message));
@@ -279,12 +279,12 @@ export class LdapService extends EventEmitter {
             options,
             (searchErr: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
               if (searchErr) {
-                this.logger.error('LDAP Error:', JSON.stringify(searchErr), 'LDAP');
+                this.logger.error('LDAP Error:', searchErr, 'LDAP');
 
                 return reject(new Error(searchErr.message));
               }
               if (typeof searchResult !== 'object') {
-                this.logger.error('The search returns null results:', JSON.stringify(searchResult), 'LDAP');
+                this.logger.error('The search returns null results:', searchResult, 'LDAP');
 
                 return reject(
                   new Error(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`),
@@ -416,7 +416,7 @@ export class LdapService extends EventEmitter {
           }),
       )
       .catch((error: Error) => {
-        this.logger.error(`user search error: ${error.name}`, JSON.stringify(error), 'LDAP');
+        this.logger.error(`user search error: ${error.name}`, error, 'LDAP');
 
         throw error;
       });
@@ -460,7 +460,7 @@ export class LdapService extends EventEmitter {
           }),
       )
       .catch((error: Error) => {
-        this.logger.error(`group search error: ${error.name}`, JSON.stringify(error), 'LDAP');
+        this.logger.error(`group search error: ${error.name}`, error, 'LDAP');
 
         throw error;
       });
@@ -522,7 +522,7 @@ export class LdapService extends EventEmitter {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error('Search by DN error:', JSON.stringify(error), 'LDAP');
+        this.logger.error('Search by DN error:', error, 'LDAP');
 
         return undefined;
       });
@@ -560,7 +560,7 @@ export class LdapService extends EventEmitter {
         return undefined;
       })
       .catch((error: Error) => {
-        this.logger.error('Synchronize error:', JSON.stringify(error), 'LDAP');
+        this.logger.error('Synchronize error:', error, 'LDAP');
 
         return undefined;
       });
@@ -590,7 +590,7 @@ export class LdapService extends EventEmitter {
             // If a password, then we try to connect with user's login and password, and try to modify
             this.userClient.bind(dn, password, (bindErr?: Ldap.Error): any => {
               if (bindErr) {
-                this.logger.error('bind error:', JSON.stringify(bindErr), 'LDAP');
+                this.logger.error('bind error:', bindErr, 'LDAP');
 
                 return reject(bindErr);
               }
@@ -600,7 +600,7 @@ export class LdapService extends EventEmitter {
                 data,
                 async (searchErr: Ldap.Error | null): Promise<void> => {
                   if (searchErr) {
-                    this.logger.error(`Modify error "${dn}"`, JSON.stringify(searchErr), 'LDAP');
+                    this.logger.error(`Modify error "${dn}"`, searchErr, 'LDAP');
 
                     reject(searchErr);
                   }
@@ -627,7 +627,7 @@ export class LdapService extends EventEmitter {
               data,
               async (searchErr: Ldap.Error | null): Promise<void> => {
                 if (searchErr) {
-                  this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, JSON.stringify(searchErr), 'LDAP');
+                  this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, searchErr, 'LDAP');
 
                   reject(searchErr);
                 }
@@ -684,7 +684,7 @@ export class LdapService extends EventEmitter {
 
     // 1. Find the user DN in question.
     const foundUser = await this.findUser(username).catch((error: Error) => {
-      this.logger.error(`Not found user: "${username}"`, JSON.stringify(error), 'LDAP');
+      this.logger.error(`Not found user: "${username}"`, error, 'LDAP');
 
       throw error;
     });
@@ -701,7 +701,7 @@ export class LdapService extends EventEmitter {
         password,
         async (bindErr?: Ldap.Error): Promise<unknown | LdapResponseUser> => {
           if (bindErr) {
-            this.logger.error('bind error:', JSON.stringify(bindErr), 'LDAP');
+            this.logger.error('bind error:', bindErr, 'LDAP');
 
             return reject(new Error(bindErr.message));
           }
@@ -725,7 +725,7 @@ export class LdapService extends EventEmitter {
 
             return resolve(userWithGroups as LdapResponseUser);
           } catch (error) {
-            this.logger.error('Authenticate:', JSON.stringify(error), 'LDAP');
+            this.logger.error('Authenticate:', error, 'LDAP');
 
             return reject(new Error(`Authenticate: ${JSON.stringify(error)}`));
           }
