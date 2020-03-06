@@ -51,6 +51,8 @@ export class UserService {
    * Reads by Username
    *
    * @param {string} username User ID
+   * @param {boolean} [isDisabled = true] Is this user disabled
+   * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
    * @returns {UserEntity | undefined} The user
    */
   readByUsername = async (
@@ -76,10 +78,10 @@ export class UserService {
   /**
    * Reads by ID
    *
-   * @param {string} id - User ID
-   * @param {boolean} isDisabled - Is this user disabled
-   * @param {boolean} isRelation - boolean | 'profile' | 'groups' = true
-   * @returns {UserEntity | undefined} - The user
+   * @param {string} id User ID
+   * @param {boolean} [isDisabled = true] Is this user disabled
+   * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
+   * @returns {UserEntity | undefined} The user
    */
   readById = async (
     id: string,
@@ -104,20 +106,25 @@ export class UserService {
   /**
    * Create a User with Ldap params
    *
-   * @param {LdapResponseUser} ldapUser - Ldap user
-   * @param {UserEntity} user - User
+   * @param {LdapResponseUser} ldapUser Ldap user
+   * @param {UserEntity} user User
+   * @param {boolean} [save = true] Save the profile
+   * @param {boolean} [cache = true] Cache the result
+   * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error}
    */
-  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity): Promise<UserEntity> {
+  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true, cache = true): Promise<UserEntity> {
     const defaultSettings: UserSettings = {
       lng: 'ru',
     };
 
-    const profile = await this.profileService.createFromLdap(ldapUser, user).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`', JSON.stringify(error), 'UserService');
+    const profile = await this.profileService
+      .createFromLdap(ldapUser, user?.profile, 1, true, cache)
+      .catch((error: Error) => {
+        this.logService.error('Unable to save data in `profile`', error, 'UserService');
 
-      throw error;
-    });
+        throw error;
+      });
     if (!profile) {
       this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
 
@@ -130,7 +137,7 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.createFromUser(ldapUser).catch((error) => {
-      this.logService.error('Unable to save data in `group`', JSON.stringify(error), 'UserService');
+      this.logService.error('Unable to save data in `group`', error, 'UserService');
 
       return undefined;
     });
@@ -149,14 +156,14 @@ export class UserService {
       profile: (profile as unknown) as Profile,
     };
 
-    return this.save(this.create(data));
+    return save ? this.save(this.userRepository.create(data)) : this.userRepository.create(data);
   }
 
   /**
    * Synchronization
    *
-   * @param {Request} - why it is here?
-   * @returns {boolean} - The result of synchronization
+   * @param {Request} _req Express.Request
+   * @returns {Promise<boolean | null>} The result of synchronization
    */
   synchronization = async (_req?: Request): Promise<boolean | null> =>
     this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
@@ -164,21 +171,21 @@ export class UserService {
   /**
    * Create
    *
-   * @param {User} user - The user
-   * @returns {UserEntity} - The user entity
+   * @param {User} user The user
+   * @returns {UserEntity} The user entity
    */
   create = (user: User): UserEntity => this.userRepository.create(user);
 
   /**
    * Save
    *
-   * @param {UserEntity[]} - The users
-   * @returns {UserEntity[]} - The users
-   * @throws {Error} - Exception
+   * @param {UserEntity[]} user The users
+   * @returns {Promise<UserEntity[]>} The return users after save
+   * @throws {Error} Exception
    */
   bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data(s) in `user`', JSON.stringify(error), 'UserService');
+      this.logService.error('Unable to save data(s) in `user`', error, 'UserService');
 
       throw error;
     });
@@ -186,13 +193,13 @@ export class UserService {
   /**
    * Save
    *
-   * @param {UserEntity} - The user
-   * @returns {UserEntity} - The user
-   * @throws {Error} - Exception
+   * @param {UserEntity} user The user
+   * @returns {Promise<UserEntity>} The return user after save
+   * @throws {Error} Exception
    */
   save = async (user: UserEntity): Promise<UserEntity> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data in `user`', JSON.stringify(error), 'UserService');
+      this.logService.error('Unable to save data in `user`', error, 'UserService');
 
       throw error;
     });
