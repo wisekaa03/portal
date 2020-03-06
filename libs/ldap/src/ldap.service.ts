@@ -570,19 +570,14 @@ export class LdapService extends EventEmitter {
    * Modify using the admin client.
    *
    * @private
-   * @param {string} dn - LDAP Distiguished Name
-   * @param {Ldap.Change | Ldap.Change[]} data - LDAP modify data
-   * @param {string} username - The optional parameter
-   * @param {string} password - The optional parameter
-   * @returns {boolean} - The result
+   * @param {string} dn LDAP Distiguished Name
+   * @param {Ldap.Change[]} data LDAP modify data
+   * @param {string} username The optional parameter
+   * @param {string} password The optional parameter
+   * @returns {boolean} The result
    * @throws {Ldap.Error}
    */
-  public async modify(
-    dn: string,
-    data: Ldap.Change | Ldap.Change[],
-    username?: string,
-    password?: string,
-  ): Promise<boolean> {
+  public async modify(dn: string, data: Ldap.Change[], username?: string, password?: string): Promise<boolean> {
     return this.adminBind().then(
       () =>
         new Promise<boolean>((resolve, reject) => {
@@ -627,9 +622,16 @@ export class LdapService extends EventEmitter {
               data,
               async (searchErr: Ldap.Error | null): Promise<void> => {
                 if (searchErr) {
+                  data.forEach((d, i, a) => {
+                    if (d.modification.type === 'thumbnailPhoto') {
+                      a[i].modification.vals = '';
+                    }
+                  });
                   this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, searchErr, 'LDAP');
 
                   reject(searchErr);
+
+                  return;
                 }
 
                 this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`, 'LDAP');
