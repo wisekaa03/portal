@@ -12,8 +12,6 @@ import { SYNCHRONIZATION } from '../../synch/src/app.constants';
 
 const dev = process.env.NODE_ENV !== 'production';
 
-const logger = new LogService();
-
 async function bootstrap(configService: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
     url: configService.get<string>('MICROSERVICE_URL'),
@@ -26,7 +24,10 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
 
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
 bootstrap(configService)
-  .then((result) => logger.log(`Result: ${result}`, 'Synch job'))
+  .then((result) => {
+    process.exit(0);
+    throw new Error(`Result: ${result}`, 'Synch job');
+  })
   .catch((error) => {
-    logger.error(`Result: ${JSON.stringify(error)}`, 'Synch job');
+    throw new Error(`Result: ${JSON.stringify(error)}`, 'Synch job');
   });
