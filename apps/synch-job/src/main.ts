@@ -25,9 +25,8 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
 bootstrap(configService)
   .then((result) => {
-    process.exit(0);
-    throw new Error(`Result: ${result}`, 'Synch job');
+    return process.exit(result ? 0 : 1);
   })
   .catch((error) => {
-    throw new Error(`Result: ${JSON.stringify(error)}`, 'Synch job');
+    throw new Error(`Synch job: Result: ${JSON.stringify(error)}`);
   });
