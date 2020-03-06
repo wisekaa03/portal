@@ -162,23 +162,25 @@ export class LdapService extends EventEmitter {
    * Format a GUID
    *
    * @public
-   * @param {string} objectGUID - GUID in AD
-   * @returns {string} - string GUID
+   * @param {string} objectGUID GUID in Active Directory notation
+   * @returns {string} string GUID
    */
   GUIDtoString = (objectGUID: string): string =>
-    Buffer.from(objectGUID, 'base64')
-      .toString('hex')
-      .replace(
-        /^(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)$/,
-        '$4$3$2$1-$6$5-$8$7-$10$9-$16$15$14$13$12$11',
-      )
-      .toUpperCase();
+    (objectGUID &&
+      Buffer.from(objectGUID, 'base64')
+        .toString('hex')
+        .replace(
+          /^(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)(..)$/,
+          '$4$3$2$1-$6$5-$8$7-$10$9-$16$15$14$13$12$11',
+        )
+        .toUpperCase()) ||
+    '';
 
   /**
    * Mark admin client unbound so reconnect works as expected and re-emit the error
    *
    * @private
-   * @param {Ldap.Error} error - The error to be logged and emitted
+   * @param {Ldap.Error} error The error to be logged and emitted
    * @returns {void}
    */
   private handleErrorAdmin(error: Ldap.Error): void {
@@ -293,34 +295,35 @@ export class LdapService extends EventEmitter {
 
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {
-                const { object } = entry;
-                // eslint-disable-next-line no-restricted-syntax
-                for (const prop in object) {
-                  if (/;binary$/.test(prop)) {
-                    object[prop.replace(/;binary$/, '')] = object[prop];
-                    delete object[prop];
+                const object: Ldap.SearchEntryObject = Object.keys(entry.object).reduce((o, k: string) => {
+                  if (/;binary$/.test(k)) {
+                    // eslint-disable-next-line no-param-reassign
+                    k = k.replace(/;binary$/, '');
                   }
-                }
-                if (object.hasOwnProperty('objectGUID')) {
-                  object.objectGUID = this.GUIDtoString(object.objectGUID as string);
-                }
-                if (object.hasOwnProperty('dn')) {
-                  object.dn = object.dn.toLowerCase();
-                }
-                if (object.hasOwnProperty('sAMAccountName')) {
-                  object.sAMAccountName = (object.sAMAccountName as string).toLowerCase();
-                }
-                if (object.hasOwnProperty('whenCreated')) {
-                  object.whenCreated = dayjs((object.whenCreated as string).replace(/\.0Z/, ''), {
-                    format: 'YYYYMMDDHHmmssSSSS',
-                  }).format('YYYY-MM-DD HH:mm:ss');
-                }
-                if (object.hasOwnProperty('whenChanged')) {
-                  object.whenChanged = dayjs((object.whenChanged as string).replace(/\.0Z/, ''), {
-                    format: 'YYYYMMDDHHmmssSSSS',
-                  }).format('YYYY-MM-DD HH:mm:ss');
-                }
+                  switch (k) {
+                    case 'objectGUID':
+                      return { ...o, objectGUID: this.GUIDtoString(entry.object['objectGUID;binary'] as string) };
+                    case 'thumbnailPhoto':
+                      return { ...o, thumbnailPhoto: entry.object['thumbnailPhoto;binary'] };
+                    case 'dn':
+                      return { ...o, dn: entry.object.dn.toLowerCase() };
+                    case 'sAMAccountName':
+                      return { ...o, sAMAccountName: (entry.object.sAMAccountName as string).toLowerCase() };
+                    case 'whenCreated':
+                    case 'whenChanged':
+                      return {
+                        ...o,
+                        [k]: dayjs((entry.object[k] as string).replace(/\.0Z/, ''), {
+                          format: 'YYYYMMDDHHmmssSSSS',
+                        }).format('YYYY-MM-DD HH:mm:ss'),
+                      };
+                    default:
+                  }
+                  return { ...o, [k]: entry.object[k] };
+                }, {} as Ldap.SearchEntryObject);
+
                 items.push(object);
+
                 if (this.opts.includeRaw === true) {
                   items[items.length - 1].raw = (entry.raw as unknown) as string;
                 }
@@ -402,7 +405,7 @@ export class LdapService extends EventEmitter {
         (result) =>
           new Promise<undefined | Ldap.SearchEntryObject>((resolve, reject) => {
             if (!result) {
-              throw new Error('No result from search.');
+              return reject(new Error('No result from search.'));
             }
 
             switch (result.length) {
@@ -426,8 +429,8 @@ export class LdapService extends EventEmitter {
    * Find groups for given user
    *
    * @private
-   * @param {Object} user - The LDAP user object
-   * @returns {void} - Result handling callback
+   * @param {Ldap.SearchEntryObject} user The LDAP user object
+   * @returns {Promise<Ldap.SearchEntryObject>} Result handling callback
    */
   private async findGroups(user: Ldap.SearchEntryObject): Promise<Ldap.SearchEntryObject> {
     if (!user) {
@@ -450,18 +453,13 @@ export class LdapService extends EventEmitter {
     }
 
     return this.search(this.opts.groupSearchBase || this.opts.searchBase, opts)
-      .then(
-        (result) =>
-          new Promise<Ldap.SearchEntryObject>((resolve) => {
-            // eslint-disable-next-line no-param-reassign
-            (user.groups as unknown) = result;
-
-            return resolve(user);
-          }),
-      )
+      .then((result) => {
+        // eslint-disable-next-line no-param-reassign
+        (user.groups as unknown) = result;
+        return user;
+      })
       .catch((error: Error) => {
         this.logger.error(`group search error: ${error.name}`, error, 'LDAP');
-
         throw error;
       });
   }
@@ -469,7 +467,8 @@ export class LdapService extends EventEmitter {
   /**
    * Search user by DN
    *
-   * @returns {undefined | LdapResponseUser[]} - User in LDAP
+   * @param {string} userByDN user distinguished name
+   * @returns {Promise<undefined | LdapResponseUser>} User in LDAP
    */
   public async searchByDN(userByDN: string): Promise<undefined | LdapResponseUser> {
     if (this.userCache) {
@@ -531,10 +530,10 @@ export class LdapService extends EventEmitter {
   /**
    * Synchronize users
    *
-   * @returns {undefined | LdapResponseUser[]} - User in LDAP
+   * @returns {undefined | LdapResponseUser[]} User in LDAP
    * @throws {Error}
    */
-  public async synchronization(): Promise<undefined | LdapResponseUser[]> {
+  public async synchronization(): Promise<LdapResponseUser[]> {
     const opts = {
       filter: this.opts.searchFilterAllUsers,
       scope: this.opts.searchScopeAllUsers,
@@ -549,20 +548,19 @@ export class LdapService extends EventEmitter {
     return this.search(this.opts.searchBaseAllUsers, opts)
       .then((synch) => {
         if (synch) {
-          synch.forEach(async (u) => {
-            await this.getGroups(u);
+          synch.forEach((u) => {
+            this.getGroups(u);
           });
+
           return synch as LdapResponseUser[];
         }
 
         this.logger.error('Synchronize unknown error.', undefined, 'LDAP');
-
-        return undefined;
+        throw new Error('Synchronize unknown error.');
       })
       .catch((error: Error) => {
         this.logger.error('Synchronize error:', error, 'LDAP');
-
-        return undefined;
+        throw new Error(`Synchronize error: ${JSON.stringify(error)}`);
       });
   }
 
@@ -624,6 +622,7 @@ export class LdapService extends EventEmitter {
                 if (searchErr) {
                   data.forEach((d, i, a) => {
                     if (d.modification.type === 'thumbnailPhoto') {
+                      // eslint-disable-next-line no-param-reassign
                       a[i].modification.vals = '';
                     }
                   });

@@ -23,8 +23,8 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async synchronization(@Context('req') req: Request): Promise<boolean | null> {
-    return this.userService.synchronization(req) || null;
+  async synchronization(@Context('req') req: Request): Promise<boolean> {
+    return this.userService.synchronization(req);
   }
 
   /**

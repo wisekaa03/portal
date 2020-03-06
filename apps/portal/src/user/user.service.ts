@@ -52,13 +52,15 @@ export class UserService {
    *
    * @param {string} username User ID
    * @param {boolean} [isDisabled = true] Is this user disabled
-   * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
+   * @param {boolean | 'profile' | 'groups'} [isRelation = true] The relation of this user
+   * @param {boolean} [cache = true] The cache result
    * @returns {UserEntity | undefined} The user
    */
   readByUsername = async (
     username: string,
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
+    cache = true,
   ): Promise<UserEntity | undefined> => {
     const where: Record<any, any> = { username };
 
@@ -71,7 +73,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: true,
+      cache,
     });
   };
 
@@ -163,9 +165,9 @@ export class UserService {
    * Synchronization
    *
    * @param {Request} _req Express.Request
-   * @returns {Promise<boolean | null>} The result of synchronization
+   * @returns {Promise<boolean>} The result of synchronization
    */
-  synchronization = async (_req?: Request): Promise<boolean | null> =>
+  synchronization = async (_req?: Request): Promise<boolean> =>
     this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
 
   /**

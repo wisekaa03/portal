@@ -25,18 +25,18 @@ export class SynchService {
     const ldapUsers = await this.ldapService.synchronization();
 
     if (ldapUsers) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const ldapUser of ldapUsers) {
+      ldapUsers.forEach(async (ldapUser) => {
         if (ldapUser.sAMAccountName) {
-          // eslint-disable-next-line no-await-in-loop
-          const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false, false);
-          // eslint-disable-next-line no-await-in-loop
-          await this.userService.createFromLdap(ldapUser, user, true, false);
+          const user = await this.userService.readByUsername(ldapUser.sAMAccountName, false, false, false);
+          try {
+            await this.userService.createFromLdap(ldapUser, user, true, false);
+          } catch (error) {
+            this.logService.error(`Error with "${ldapUser.sAMAccountName}"`, error, 'Synch');
+          }
         } else {
-          // eslint-disable-next-line no-await-in-loop
           await this.profileService.createFromLdap(ldapUser, undefined, 1, true, false);
         }
-      }
+      });
 
       this.logService.log('--- End of synchronization: true ---', 'Synch');
       return true;
