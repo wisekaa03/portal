@@ -133,11 +133,13 @@ module.exports = function(api) {
     config.env.production.plugins.push('transform-member-expression-literals');
     // This plugin allows Babel to transform boolean literals into !0 for true and !1 for false.
     config.env.production.plugins.push('transform-minify-booleans');
+
     // Inlines bindings when possible. Tries to evaluate expressions and prunes unreachable as a result.
     config.env.production.plugins.push([
       'minify-dead-code-elimination',
       { keepFnName: true, keepFnArgs: false, keepClassName: true },
     ]);
+
     // Configurable "search and replace" plugin. Replaces matching nodes in the tree with
     // a given replacement node. For example you can replace process.NODE_ENV with "production"
     config.env.production.plugins.push([
