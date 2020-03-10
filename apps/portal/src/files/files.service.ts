@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Brackets } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -90,35 +90,8 @@ export class FilesService {
   folder = async (user: UserResponse, id?: string): Promise<FilesFolderResponse[]> => {
     this.logService.log(`Folder: id={${id}}`, 'FilesService');
 
-    const query = this.filesFolderRepository.createQueryBuilder('files_folder');
-    if (id) {
-      query
-        .where(
-          new Brackets((qb) => {
-            qb.where('("files_folder"."id" = :id)')
-              .andWhere('("files_folder"."userId" = :userId')
-              .orWhere('"files_folder"."userId" IS NULL)');
-          }),
-        )
-        .setParameters({
-          id,
-          userId: user.id,
-        });
-    } else {
-      query
-        .where(
-          new Brackets((qb) => {
-            qb.andWhere('"files_folder"."userId" = :userId').orWhere('"files_folder"."userId" IS NULL');
-          }),
-        )
-        .setParameters({
-          userId: user.id,
-        });
-    }
-
-    return query
-      .cache(true)
-      .getMany()
+    return this.filesFolderRepository
+      .find({ where: [{ ...(id ? { id } : {}) }, { user }, { user: IsNull() }], cache: true })
       .then((folders: FilesFolderEntity[]) => folders.map((folder) => folder.toResponseObject()));
   };
 
