@@ -18,6 +18,8 @@ export interface MediaEditComponentProps {
   foldersLoading: boolean;
   folderData?: MediaFolder[];
   current?: Media;
+  folder: string;
+  setFolder: React.Dispatch<React.SetStateAction<string>>;
   handleCreateFolder: (_: string) => void;
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;

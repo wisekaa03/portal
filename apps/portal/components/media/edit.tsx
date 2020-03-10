@@ -55,6 +55,8 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
   loading,
   foldersLoading,
   folderData,
+  folder,
+  setFolder,
   current,
   handleCreateFolder,
   attachments,
@@ -133,7 +135,7 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
           </Box>
           <Box display="flex" className={classes.dropBox} flexDirection="column">
             <Loading activate={foldersLoading} full color="secondary">
-              <TreeView>
+              <TreeView selected={folder} setSelected={setFolder}>
                 {React.Children.map(folders, (child: React.ReactElement) => (
                   <React.Fragment key={child.key}>{child}</React.Fragment>
                 ))}

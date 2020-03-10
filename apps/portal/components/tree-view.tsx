@@ -3,8 +3,8 @@
 // #region Imports NPM
 import React, { useState } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Typography, TextField, InputBase } from '@material-ui/core';
-import MuiTreeView from '@material-ui/lab/TreeView';
+import { Typography, InputBase } from '@material-ui/core';
+import MuiTreeView, { TreeViewProps as MuiTreeViewProps } from '@material-ui/lab/TreeView';
 import MuiTreeItem, { TreeItemProps as MuiTreeItemProps } from '@material-ui/lab/TreeItem';
 import DirectoryIcon from '@material-ui/icons/Folder';
 import AddIcon from '@material-ui/icons/AddCircleOutlineRounded';
@@ -25,18 +25,26 @@ type TreeItemProps = MuiTreeItemProps & {
   depth?: number;
 };
 
+type TreeViewProps = MuiTreeViewProps & {
+  selected: string;
+  setSelected: React.Dispatch<React.SetStateAction<string>>;
+};
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       'color': theme.palette.secondary.main,
-      '&$selected:focus > $content $label, &$selected > $content $label:hover': {
-        backgroundColor: 'unset',
-      },
-      '&:focus > $content:not($action)': {
+      '&$selected:focus > $content $label, &$selected > $content $label, &$selected > $content $label:hover': {
+        borderTopRightRadius: theme.spacing(2),
+        borderBottomRightRadius: theme.spacing(2),
         backgroundColor: fade(theme.palette.secondary.main, 0.9),
         color: '#fff',
       },
-      '&$selected > $content $label': {
+      // '&:focus > $content:not($action)': {
+      //   backgroundColor: fade(theme.palette.secondary.main, 0.9),
+      //   color: '#fff',
+      // },
+      '&:focus > $content $label': {
         backgroundColor: 'unset',
       },
     },
@@ -174,9 +182,18 @@ export const TreeItem = ({
   );
 };
 
-export const TreeView = ({ children }): React.ReactElement => {
+export const TreeView = ({ selected, setSelected, children }: TreeViewProps): React.ReactElement => {
+  const handleSelected = (_: React.ChangeEvent<{}>, nodeIds: string): void => {
+    // TODO: ноды с двумя слешами - инпуты для создания каталога, выделять не нужно
+    if (!nodeIds.includes('//')) {
+      setSelected(nodeIds);
+    }
+  };
+
   return (
     <MuiTreeView
+      selected={selected}
+      onNodeSelect={handleSelected}
       defaultCollapseIcon={<ArrowDropDownIcon />}
       defaultExpandIcon={<ArrowRightIcon />}
       defaultEndIcon={<div style={{ width: 24 }} />}
