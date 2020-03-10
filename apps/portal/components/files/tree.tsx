@@ -6,26 +6,26 @@ import React, { FC } from 'react';
 // #region Imports Local
 import { useTranslation } from '../../lib/i18n-client';
 import { TreeView, TreeItem } from '../tree-view';
-import { MediaTreeComponentProps, MediaFolderTreeVirtual } from './types';
-import { MediaFolder } from '../../src/media/models/media.folder.dto';
+import { FilesTreeComponentProps, FilesFolderTreeVirtual } from './types';
+import { FilesFolder } from '../../src/files/models/files.folder.dto';
 // #endregion
 
 const CreateFolderItem = ({ nodeId, handleCreate, depth = 0 }): React.ReactElement => {
   const { t } = useTranslation();
 
-  return <TreeItem nodeId={nodeId} labelText={t('media:addFolder')} depth={depth} handleCreate={handleCreate} />;
+  return <TreeItem nodeId={nodeId} labelText={t('files:addFolder')} depth={depth} handleCreate={handleCreate} />;
 };
 
 const CommonFolderItem = (): React.ReactElement => {
   const { t } = useTranslation();
 
-  return <TreeItem key="/" nodeId="/" labelText={t('media:control.shared')} />;
+  return <TreeItem key="/" nodeId="/" labelText={t('files:control.shared')} />;
 };
 
-const MediaTreeComponent: FC<MediaTreeComponentProps> = ({ data, item, setItem, handleCreateItem }) => {
+const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data, item, setItem, handleCreateItem }) => {
   const items = data
     ? data
-        .reduce((acc: MediaFolderTreeVirtual[], cur: MediaFolder) => {
+        .reduce((acc: FilesFolderTreeVirtual[], cur: FilesFolder) => {
           const { pathname } = cur;
           const tree = pathname.split('/').filter((i) => !!i);
 
@@ -33,7 +33,7 @@ const MediaTreeComponent: FC<MediaTreeComponentProps> = ({ data, item, setItem, 
             return [];
           }
 
-          const recursive = (childs: MediaFolderTreeVirtual[], arr: string[], idx = 0): MediaFolderTreeVirtual[] => {
+          const recursive = (childs: FilesFolderTreeVirtual[], arr: string[], idx = 0): FilesFolderTreeVirtual[] => {
             if (arr.length === 1 || arr.length - 1 === idx) {
               if (!childs.find((r) => r.id === arr[idx])) {
                 return [...childs, { id: arr[idx], childs: [] }];
@@ -56,8 +56,8 @@ const MediaTreeComponent: FC<MediaTreeComponentProps> = ({ data, item, setItem, 
           return recursive(acc, tree);
         }, [])
         .reduce(
-          (acc: React.ReactElement[], cur: MediaFolderTreeVirtual) => {
-            const recursive = (child: MediaFolderTreeVirtual, path?: string, depth = 0): React.ReactNode => {
+          (acc: React.ReactElement[], cur: FilesFolderTreeVirtual) => {
+            const recursive = (child: FilesFolderTreeVirtual, path?: string, depth = 0): React.ReactNode => {
               const name = `${path || ''}/${child.id}`;
 
               return (
@@ -84,4 +84,4 @@ const MediaTreeComponent: FC<MediaTreeComponentProps> = ({ data, item, setItem, 
   );
 };
 
-export default MediaTreeComponent;
+export default FilesTreeComponent;

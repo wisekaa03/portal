@@ -7,28 +7,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { LogService } from '@app/logger';
 // import { ConfigService } from '@app/config';
-import { MediaResolver } from './media.resolver';
-import { MediaService } from './media.service';
+import { FilesResolver } from './files.resolver';
+import { FilesService } from './files.service';
 import { UserService } from '../user/user.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));
 
-describe('MediaResolver', () => {
-  let resolver: MediaResolver;
+describe('FilesResolver', () => {
+  let resolver: FilesResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
-        MediaResolver,
-        { provide: MediaService, useValue: serviceMock },
+        FilesResolver,
+        { provide: FilesService, useValue: serviceMock },
         { provide: LogService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
       ],
     }).compile();
 
-    resolver = module.get<MediaResolver>(MediaResolver);
+    resolver = module.get<FilesResolver>(FilesResolver);
   });
 
   it('should be defined', () => {

@@ -6,8 +6,8 @@
 import { UserEntity } from '../../user/user.entity';
 // #endregion
 
-// #region MediaFolder
-export interface MediaFolder {
+// #region FilesFolder
+export interface FilesFolder {
   id?: string;
   createdUser?: UserEntity;
   updatedUser?: UserEntity;

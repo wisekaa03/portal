@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -13,21 +13,22 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER } from '../../lib/queries';
 // import { ProfileContext } from '../../lib/context';
 import { Data } from '../../lib/types';
-import { FileQueryProps } from '../../components/media/types';
-import MediaComponent from '../../components/media';
+import { FilesQueryProps } from '../../components/files/types';
+import FilesComponent from '../../components/files';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { DropzoneFile } from '../../components/dropzone/types';
 // #endregion
 
-const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [folderName, setFolderName] = useState<string>('/');
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
+  const [showDropzone, setShowDropzone] = useState<boolean>(false);
 
   const {
     data: fileData,
     loading: fileLoading,
     error: fileError,
-  }: QueryResult<Data<'file', FileQueryProps[]>> = useQuery(FILE, {
+  }: QueryResult<Data<'file', FilesQueryProps[]>> = useQuery(FILE, {
     // ssr: false,
     fetchPolicy: 'cache-first',
   });
@@ -56,6 +57,10 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         },
       });
     });
+  };
+
+  const handleOpenDropzone = (): void => {
+    setShowDropzone(true);
   };
 
   // const [current, setCurrent] = useState<FileQueryProps | undefined>();
@@ -98,10 +103,10 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   return (
     <>
       <Head>
-        <title>{t('media:title')}</title>
+        <title>{t('files:title')}</title>
       </Head>
       <Page {...rest}>
-        <MediaComponent
+        <FilesComponent
           fileLoading={fileLoading}
           folderLoading={folderLoading}
           fileData={fileData?.file}
@@ -109,6 +114,8 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           folderName={folderName}
           setFolderName={setFolderName}
           handleCreateFolder={handleCreateFolder}
+          showDropzone={showDropzone}
+          handleOpenDropzone={handleOpenDropzone}
           attachments={attachments}
           setAttachments={setAttachments}
           handleUploadFile={handleUploadFile}
@@ -118,8 +125,8 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-MediaPage.getInitialProps = () => ({
-  namespacesRequired: includeDefaultNamespaces(['media']),
+FilesPage.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['files']),
 });
 
-export default nextI18next.withTranslation('news')(MediaPage);
+export default nextI18next.withTranslation('files')(FilesPage);

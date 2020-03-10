@@ -1,7 +1,7 @@
 /** @format */
 
-import { Media } from '@app/portal/media/models/media.dto';
-import { MediaFolder } from '@app/portal/media/models/media.folder.dto';
+import { Files } from '@app/portal/files/models/files.dto';
+import { FilesFolder } from '@app/portal/files/models/files.folder.dto';
 import { DropzoneFile } from '../dropzone/types';
 
 // export interface MediaComponentProps {
@@ -13,27 +13,29 @@ import { DropzoneFile } from '../dropzone/types';
 //   handleDelete: (_: MediaQueryProps) => () => void;
 // }
 
-export interface MediaComponentProps {
+export interface FilesComponentProps {
   fileLoading: boolean;
   folderLoading: boolean;
-  fileData?: FileQueryProps[];
-  folderData?: MediaFolder[];
+  fileData?: FilesQueryProps[];
+  folderData?: FilesFolder[];
   folderName: string;
   setFolderName: React.Dispatch<React.SetStateAction<string>>;
   handleCreateFolder: (_: string) => void;
+  showDropzone: boolean;
+  handleOpenDropzone: () => void;
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   handleUploadFile: () => void;
 }
 
-export interface MediaTreeComponentProps {
-  data?: MediaFolder[];
+export interface FilesTreeComponentProps {
+  data?: FilesFolder[];
   item: string;
   setItem: React.Dispatch<React.SetStateAction<string>>;
   handleCreateItem: (_: string) => void;
 }
 
-export interface FileQueryProps {
+export interface FilesQueryProps {
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -42,7 +44,7 @@ export interface FileQueryProps {
   content: Buffer;
 }
 
-export type MediaFolderTreeVirtual = {
+export type FilesFolderTreeVirtual = {
   id: string;
-  childs: MediaFolderTreeVirtual[];
+  childs: FilesFolderTreeVirtual[];
 };

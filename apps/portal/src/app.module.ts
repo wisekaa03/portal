@@ -38,9 +38,9 @@ import { TicketAttachmentsModule } from './ticket/attachments/attachments.module
 import { TicketCommentsModule } from './ticket/comments/comments.module';
 import { TicketOldServiceModule } from './ticket/old-service/old-service.module';
 import { NewsEntity } from './news/news.entity';
-import { MediaModule } from './media/media.module';
-import { MediaFolderEntity } from './media/media.folder.entity';
-import { MediaEntity } from './media/media.entity';
+import { FilesModule } from './files/files.module';
+import { FilesFolderEntity } from './files/files.folder.entity';
+import { FilesEntity } from './files/files.entity';
 import { Upload } from './shared/upload.scalar';
 // #endregion
 
@@ -173,8 +173,8 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
             GroupEntity,
             UserEntity,
             NewsEntity,
-            MediaFolderEntity,
-            MediaEntity,
+            FilesFolderEntity,
+            FilesEntity,
             TicketDepartmentModule,
             TicketGroupServiceModule,
             TicketServiceModule,
@@ -226,7 +226,7 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     HomeModule,
     // #endregion
 
-    // #region Ticket
+    // #region Ticket module
     TicketDepartmentModule,
     TicketServiceModule,
     TicketGroupServiceModule,
@@ -236,11 +236,11 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     TicketOldServiceModule,
     // #endregion
 
-    // #region Media
-    MediaModule,
+    // #region Files module
+    FilesModule,
     // #endregion
 
-    // #region Health
+    // #region Health module
     TerminusModule.forRootAsync({
       inject: [TypeOrmHealthIndicator],
       useFactory: (db) => getTerminusOptions(db),

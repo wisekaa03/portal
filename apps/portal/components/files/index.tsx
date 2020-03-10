@@ -2,19 +2,18 @@
 
 // #region Imports NPM
 import React, { FC } from 'react';
-import Link from 'next/link';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 // #endregion
 // #region Imports Local
-import Button from '../ui/button';
+import { FilesComponentProps } from './types';
+import IsAdmin from '../isAdmin';
 import { useTranslation } from '../../lib/i18n-client';
 import Loading from '../loading';
 import Dropzone from '../dropzone';
-import { MediaComponentProps } from './types';
-import MediaTreeComponent from './tree';
-import IsAdmin from '../isAdmin';
+import FilesTreeComponent from './tree';
+
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const MediaComponent: FC<MediaComponentProps> = ({
+const FilesComponent: FC<FilesComponentProps> = ({
   fileLoading,
   folderLoading,
   fileData,
@@ -52,6 +51,8 @@ const MediaComponent: FC<MediaComponentProps> = ({
   folderName,
   setFolderName,
   handleCreateFolder,
+  showDropzone,
+  handleOpenDropzone,
   attachments,
   setAttachments,
   handleUploadFile,
@@ -72,7 +73,7 @@ const MediaComponent: FC<MediaComponentProps> = ({
           </Box> */}
           <Box display="flex" className={classes.dropBox} flexDirection="column">
             <Loading activate={folderLoading} full color="secondary">
-              <MediaTreeComponent
+              <FilesTreeComponent
                 data={folderData}
                 item={folderName}
                 setItem={setFolderName}
@@ -80,13 +81,17 @@ const MediaComponent: FC<MediaComponentProps> = ({
               />
             </Loading>
           </Box>
-          <Box display="flex" className={classes.dropBox} flexDirection="column">
-            <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
-          </Box>
+          {showDropzone && (
+            <Box display="flex" className={classes.dropBox} flexDirection="column">
+              <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
+            </Box>
+          )}
           <IsAdmin>
-            <Fab color="primary" className={classes.fab} aria-label="add">
-              <AddIcon />
-            </Fab>
+            {!showDropzone && (
+              <Fab color="primary" className={classes.fab} aria-label="add" onClick={handleOpenDropzone}>
+                <AddIcon />
+              </Fab>
+            )}
           </IsAdmin>
         </>
       </Loading>
@@ -94,4 +99,4 @@ const MediaComponent: FC<MediaComponentProps> = ({
   );
 };
 
-export default MediaComponent;
+export default FilesComponent;

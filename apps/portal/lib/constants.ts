@@ -18,7 +18,7 @@ export const ADMIN_PAGES = [
   '/faq',
   '/meetings',
   '/news',
-  '/media',
+  '/files',
   // '/settings',
   '/admin',
 ];
@@ -30,7 +30,7 @@ export const HIDDEN_PAGES = [
   '/faq',
   '/meetings',
   '/news',
-  '/media',
+  '/files',
   // '/settings',
   '/admin',
 ];
@@ -44,7 +44,7 @@ export const ALLOW_REDIRECT_PAGES = [
   '/calendar',
   '/faq',
   '/meetings',
-  '/media',
+  '/files',
   '/news',
   '/settings',
   '/admin',

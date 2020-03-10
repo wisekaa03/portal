@@ -36,8 +36,8 @@ spec:
               containerPort: {{ .Values.PORT | default 4000 }}
               protocol: TCP
           volumeMounts:
-            - name: portal-media
-              mountPath: /media
+            - name: portal-files
+              mountPath: /files
           livenessProbe:
             httpGet:
               path: /health

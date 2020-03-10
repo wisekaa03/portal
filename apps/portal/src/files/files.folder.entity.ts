@@ -13,11 +13,10 @@ import {
 // #endregion
 // #region Imports Local
 import { UserEntity } from '../user/user.entity';
-import { MediaFolderEntity } from './media.folder.entity';
 // #endregion
 
-@Entity('media')
-export class MediaEntity {
+@Entity('files_folder')
+export class FilesFolderEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -27,31 +26,16 @@ export class MediaEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({
-    type: 'varchar',
-    nullable: false,
-  })
-  title: string;
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => MediaFolderEntity, { nullable: false })
+  @ManyToOne((type: any) => UserEntity, { nullable: true })
   @JoinColumn()
-  folder: MediaFolderEntity;
-
-  // TODO: это ссылка на файл, который будет лежать где-то... продумать.
-  @Column({
-    type: 'varchar',
-    nullable: false,
-    default: '',
-  })
-  filename: string;
+  user: UserEntity;
 
   @Column({
     type: 'varchar',
     nullable: false,
-    default: '',
   })
-  mimetype: string;
+  pathname: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @ManyToOne((type: any) => UserEntity, { nullable: false })
