@@ -118,8 +118,8 @@ helm_development:
         --install --namespace=${NAMESPACE} \
         --debug --values helm/portal/values.yaml \
         --set replicaCount="1" \
-        --set nameOverride="portal-stage" \
-        --set fullnameOverride="portal-stage" \
+        --set nameOverride="portal-dev" \
+        --set fullnameOverride="portal-dev" \
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
         --set PORT="${PORT}" \
@@ -167,8 +167,8 @@ helm_development:
         --install --namespace=${NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
         --set replicaCount="1" \
-        --set nameOverride="portal-synch-stage" \
-        --set fullnameOverride="portal-synch-stage" \
+        --set nameOverride="portal-synch-dev" \
+        --set fullnameOverride="portal-synch-dev" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
