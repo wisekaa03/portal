@@ -90,18 +90,17 @@ export class FilesService {
   folder = async (user: UserResponse, id?: string): Promise<FilesFolderResponse[]> => {
     this.logService.log(`Folder: id={${id}}`, 'FilesService');
 
-    // TODO: сделать чтобы выводилось постранично
-    // TODO: убрал id, пока выводим все каталоги
-    // TODO: так же думаю надо сделать чтобы зависимые таблицы подтягивались всегда иначе ошибка ot null
-    const userFiles = await this.filesFolderRepository
-      .find({ user })
-      .then((files: FilesFolderEntity[]) => files.map((file: FilesFolderEntity) => file.toResponseObject()));
+    const query = this.filesFolderRepository.createQueryBuilder('files_folder');
 
-    const shareFiles = await this.filesFolderRepository
-      .find({ user: undefined })
-      .then((files: FilesFolderEntity[]) => files.map((file: FilesFolderEntity) => file.toResponseObject()));
-
-    return { ...userFiles, ...shareFiles };
+    return query
+      .where('"files_folder"."userId" = :userId')
+      .orWhere('"files_folder"."userId" = null')
+      .setParameters({
+        userId: user.id,
+      })
+      .cache(true)
+      .getMany()
+      .then((folders: FilesFolderEntity[]) => folders.map((folder) => folder.toResponseObject()));
   };
 
   /**
