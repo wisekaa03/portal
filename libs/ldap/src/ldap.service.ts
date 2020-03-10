@@ -296,30 +296,29 @@ export class LdapService extends EventEmitter {
               const items: Ldap.SearchEntryObject[] = [];
               searchResult.on('searchEntry', (entry: Ldap.SearchEntry) => {
                 const object: Ldap.SearchEntryObject = Object.keys(entry.object).reduce((o, k: string) => {
+                  let key = k;
                   if (/;binary$/.test(k)) {
-                    // eslint-disable-next-line no-param-reassign
-                    k = k.replace(/;binary$/, '');
+                    key = k.replace(/;binary$/, '');
                   }
-                  switch (k) {
+                  switch (key) {
                     case 'objectGUID':
-                      return { ...o, objectGUID: this.GUIDtoString(entry.object['objectGUID;binary'] as string) };
-                    case 'thumbnailPhoto':
-                      return { ...o, thumbnailPhoto: entry.object['thumbnailPhoto;binary'] };
+                      return { ...o, [key]: this.GUIDtoString(entry.object[k] as string) };
                     case 'dn':
-                      return { ...o, dn: entry.object.dn.toLowerCase() };
+                      return { ...o, [key]: (entry.object[k] as string).toLowerCase() };
                     case 'sAMAccountName':
-                      return { ...o, sAMAccountName: (entry.object.sAMAccountName as string).toLowerCase() };
+                      return { ...o, [key]: (entry.object[k] as string).toLowerCase() };
                     case 'whenCreated':
                     case 'whenChanged':
                       return {
                         ...o,
-                        [k]: dayjs((entry.object[k] as string).replace(/\.0Z/, ''), {
+                        [key]: dayjs((entry.object[k] as string).replace(/\.0Z/, ''), {
                           format: 'YYYYMMDDHHmmssSSSS',
                         }).format('YYYY-MM-DD HH:mm:ss'),
                       };
                     default:
                   }
-                  return { ...o, [k]: entry.object[k] };
+                  // 'thumbnailPhoto' and 'jpegPhoto' is falling there
+                  return { ...o, [key]: entry.object[k] };
                 }, {} as Ldap.SearchEntryObject);
 
                 items.push(object);

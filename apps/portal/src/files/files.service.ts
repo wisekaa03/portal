@@ -28,7 +28,7 @@ export class FilesService {
   /**
    * Get file(s)
    *
-   * @param {string} - id of media, optional
+   * @param {string} id of media (optional)
    * @return {FilesEntity[]}
    */
   file = async (id?: string): Promise<FilesEntity[]> => {
@@ -83,7 +83,7 @@ export class FilesService {
   /**
    * Get folder
    *
-   * @param {string} - id of folder, optional
+   * @param {string} id of folder (optional)
    * @return {FilesFolderEntity[]}
    */
   folder = async (id?: string): Promise<FilesFolderEntity[]> => {
@@ -98,7 +98,7 @@ export class FilesService {
   /**
    * Edit folder
    *
-   * @param {Folder}
+   * @param {FilesFolder}
    * @return {FilesFolderEntity}
    */
   editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<FilesFolderEntity> => {

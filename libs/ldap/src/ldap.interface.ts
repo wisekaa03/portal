@@ -224,6 +224,11 @@ export interface LdapResponseUser extends SearchEntryObject {
   'thumbnailPhoto': string;
 
   /**
+   * Jpeg photo
+   */
+  'jpegPhoto': string[];
+
+  /**
    * Work title
    */
   'title': string;
@@ -395,6 +400,7 @@ export interface LdapModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> 
 
 export const ldapADattributes = [
   'thumbnailPhoto;binary',
+  // 'jpegPhoto;binary',
   'objectGUID;binary',
   // 'objectSid;binary',
   'c',

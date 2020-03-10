@@ -123,7 +123,7 @@ const FilesEditComponent: FC<FilesEditComponentProps> = ({
         <>
           <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
             <Box display="flex" mb={1}>
-              <Link href={{ pathname: '/media' }} as="/media" passHref>
+              <Link href={{ pathname: '/files' }} as="/files" passHref>
                 <IconButton>
                   <ArrowBackIcon />
                 </IconButton>

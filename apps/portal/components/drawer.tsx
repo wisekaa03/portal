@@ -115,7 +115,7 @@ const urls: UrlProps[] = [
   {
     icon: MediaIcon,
     text: 'common:media',
-    link: '/media',
+    link: '/files',
     admin: false,
   },
   { icon: SettingsIcon, text: 'common:settings', link: '/settings', admin: false },

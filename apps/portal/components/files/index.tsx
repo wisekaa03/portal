@@ -178,8 +178,8 @@ const FilesComponent: FC<FilesComponentProps> = ({
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                         <Link
-                          href={{ pathname: '/media/edit', query: { id: media.id } }}
-                          as={`/media/edit?id=${media.id}`}
+                          href={{ pathname: '/files/edit', query: { id: media.id } }}
+                          as={`/files/edit?id=${media.id}`}
                           passHref
                         >
                           <IconButton size="small" color="secondary" aria-label="edit">
@@ -195,7 +195,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
                 );
               })}
             <IsAdmin>
-              <Link href={{ pathname: '/media/edit' }} as="/media/edit" passHref>
+              <Link href={{ pathname: '/files/edit' }} as="/files/edit" passHref>
                 <Fab color="primary" className={classes.fab} aria-label="add">
                   <AddIcon />
                 </Fab>
