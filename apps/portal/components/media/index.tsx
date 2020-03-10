@@ -3,96 +3,38 @@
 // #region Imports NPM
 import React, { FC } from 'react';
 import Link from 'next/link';
-import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardHeader,
-  Typography,
-  CardContent,
-  CardActions,
-  Fab,
-  IconButton,
-} from '@material-ui/core';
+import { Box, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreIcon from '@material-ui/icons/MoreHoriz';
-import CloseIcon from '@material-ui/icons/Close';
 // #endregion
 // #region Imports Local
-import { MediaComponentProps } from './types';
-import IsAdmin from '../isAdmin';
+import Button from '../ui/button';
 import { useTranslation } from '../../lib/i18n-client';
 import Loading from '../loading';
-import { format } from '../../lib/dayjs';
-import { LARGE_RESOLUTION } from '../../lib/constants';
+import Dropzone from '../dropzone';
+import { MediaComponentProps } from './types';
+import MediaTreeComponent from './tree';
+import IsAdmin from '../isAdmin';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    selected: {
-      [`@media (min-width:${LARGE_RESOLUTION}px)`]: {
-        gridTemplateColumns: '5fr 2fr',
-      },
-      '& $container': {
-        'display': 'grid',
-        'flex': 1,
-        '& > div': {
-          gridTemplateColumns: '1fr',
-          padding: theme.spacing(4),
-          [`@media (max-width:${LARGE_RESOLUTION - 1}px)`]: {
-            display: 'none',
-          },
-        },
+    dropBox: {
+      padding: theme.spacing(1, 2),
+    },
+    firstBlock: {
+      display: 'grid',
+      gap: `${theme.spacing(2)}px`,
+      width: '100%',
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '1fr 1fr',
       },
     },
-    container: {
-      'overflow': 'auto',
-      '& > div': {
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        padding: theme.spacing(6),
-        gap: `${theme.spacing(4)}px`,
-        gridAutoRows: 'max-content',
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        [theme.breakpoints.up('md')]: {
-          gridTemplateColumns: '1fr 1fr',
-        },
-        [theme.breakpoints.up('lg')]: {
-          gridTemplateColumns: '1fr 1fr 1fr',
-        },
-      },
+    sharedOrUser: {
+      flexDirection: 'row',
     },
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    cardCurrent: {
-      flexGrow: 1,
-      height: 'fit-content',
-    },
-    content: {
-      'padding': theme.spacing(),
-      '& img': {
-        maxWidth: '100%',
-        height: 'auto',
-      },
-    },
-    action: {
-      'flex': 1,
-      'justifyContent': 'space-between',
-      'alignItems': 'flex-end',
-      '& p': {
-        padding: theme.spacing(0.5),
-      },
-    },
-    icons: {
-      marginLeft: 'auto !important',
+    treeView: {
+      textAlign: 'left',
     },
     fab: {
       position: 'absolute',
@@ -103,108 +45,52 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const MediaComponent: FC<MediaComponentProps> = ({
-  loading,
-  current,
-  data,
-  handleCurrent,
-  handleCloseCurrent,
-  handleDelete,
+  fileLoading,
+  folderLoading,
+  fileData,
+  folderData,
+  folderName,
+  setFolderName,
+  handleCreateFolder,
+  attachments,
+  setAttachments,
+  handleUploadFile,
 }) => {
   const classes = useStyles({});
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <Loading activate={loading} noMargin type="linear" variant="indeterminate">
-      <Box
-        display="grid"
-        className={clsx({
-          [classes.selected]: current,
-        })}
-      >
-        {current && (
-          <Box display="flex" overflow={['hidden', 'auto']} padding={4}>
-            <Card className={classes.cardCurrent}>
-              <CardHeader
-                action={
-                  <IconButton aria-label="close" onClick={handleCloseCurrent}>
-                    <CloseIcon />
-                  </IconButton>
-                }
-                title={current.title}
-                subheader={format(current.updatedAt, i18n)}
+    <Box display="flex" flexDirection="column">
+      <Loading activate={fileLoading} noMargin type="linear" variant="indeterminate">
+        <>
+          {/* <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
+            <Box display="flex" mb={1}>
+              <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
+                <Button onClick={handleUploadFile}>{t(`media:${current ? 'edit' : 'add'}`)}</Button>
+              </Box>
+            </Box>
+          </Box> */}
+          <Box display="flex" className={classes.dropBox} flexDirection="column">
+            <Loading activate={folderLoading} full color="secondary">
+              <MediaTreeComponent
+                data={folderData}
+                item={folderName}
+                setItem={setFolderName}
+                handleCreateItem={handleCreateFolder}
               />
-              <CardContent>
-                <div
-                  className={classes.content}
-                  // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{ __html: current.file }}
-                />
-              </CardContent>
-            </Card>
+            </Loading>
           </Box>
-        )}
-        <div className={classes.container}>
-          <div>
-            {data &&
-              data.map((media) => {
-                const anchor = `media-${media.id}`;
-
-                return (
-                  <Card id={anchor} key={media.id} className={classes.card}>
-                    <CardActionArea onClick={handleCurrent(media)}>
-                      <CardMedia
-                        component="img"
-                        height={current ? 150 : 200}
-                        // image={media.content ? media.content : null}
-                      />
-                      <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          {media.title}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions className={classes.action}>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        {format(media.updatedAt, i18n)}
-                      </Typography>
-                      <IsAdmin>
-                        <IconButton
-                          className={classes.icons}
-                          size="small"
-                          color="secondary"
-                          onClick={handleDelete(media)}
-                          aria-label="delete"
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                        <Link
-                          href={{ pathname: '/media/edit', query: { id: media.id } }}
-                          as={`/media/edit?id=${media.id}`}
-                          passHref
-                        >
-                          <IconButton size="small" color="secondary" aria-label="edit">
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </IsAdmin>
-                      <IconButton size="small" color="secondary" onClick={handleCurrent(media)} aria-label="more">
-                        <MoreIcon fontSize="small" />
-                      </IconButton>
-                    </CardActions>
-                  </Card>
-                );
-              })}
-            <IsAdmin>
-              <Link href={{ pathname: '/media/edit' }} as="/media/edit" passHref>
-                <Fab color="primary" className={classes.fab} aria-label="add">
-                  <AddIcon />
-                </Fab>
-              </Link>
-            </IsAdmin>
-          </div>
-        </div>
-      </Box>
-    </Loading>
+          <Box display="flex" className={classes.dropBox} flexDirection="column">
+            <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
+          </Box>
+          <IsAdmin>
+            <Fab color="primary" className={classes.fab} aria-label="add">
+              <AddIcon />
+            </Fab>
+          </IsAdmin>
+        </>
+      </Loading>
+    </Box>
   );
 };
 
