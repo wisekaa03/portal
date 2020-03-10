@@ -8037,9 +8037,9 @@ ejs@^2.6.1, ejs@^2.7.4:
   integrity sha512-7vmuyh5+kuUyJKePhQfRQBhXV5Ce+RnaeeQArKu1EAMpL3WbgMt5WG6uQZpEVvYSSsxMXRKOewtDk9RaTKXRlA==
 
 electron-to-chromium@^1.3.247, electron-to-chromium@^1.3.322, electron-to-chromium@^1.3.363:
-  version "1.3.373"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.373.tgz#645de7a1c093cb614e2716738347818f930923ff"
-  integrity sha512-an1SVTwALJisKbNt11LNs6quecjAt8qtnKFdDq37VVHIIjmdD1mpdcI00e+wM3gWyMWAdTYNtTArz3xodX0zqg==
+  version "1.3.374"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.374.tgz#eb539bfcac8ec51de417038548c3bc93745134bb"
+  integrity sha512-M4Y9onOJ4viRk3A4M/LH+r9+1zQioRZJvGJn/S/o7KaBJQLgFiaHMUlDwM0QMJd5ki6hFxKiWdC6jp5Ub0zMmw==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -9430,7 +9430,7 @@ file-loader@^5.1.0:
     loader-utils "^1.4.0"
     schema-utils "^2.5.0"
 
-file-saver@eligrey/FileSaver.js#1.3.8:
+"file-saver@github:eligrey/FileSaver.js#1.3.8":
   version "1.3.8"
   resolved "https://codeload.github.com/eligrey/FileSaver.js/tar.gz/e865e37af9f9947ddcced76b549e27dc45c1cb2e"
 
@@ -11367,9 +11367,9 @@ inquirer@^6.2.2, inquirer@^6.4.1:
     through "^2.3.6"
 
 inquirer@^7.0.0:
-  version "7.0.6"
-  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-7.0.6.tgz#ee4ff0ea7ecda5324656fe665878790f66df7d0c"
-  integrity sha512-7SVO4h+QIdMq6XcqIqrNte3gS5MzCCKZdsq9DO4PJziBFNYzP3PGFbDjgadDb//MCahzgjCxvQ/O2wa7kx9o4w==
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-7.1.0.tgz#1298a01859883e17c7264b82870ae1034f92dd29"
+  integrity sha512-5fJMWEmikSYu0nv/flMc475MhGbB7TSPd/2IpFV4I4rMklboCH2rQjYY5kKiYGHqUF9gvaambupcJFFG9dvReg==
   dependencies:
     ansi-escapes "^4.2.1"
     chalk "^3.0.0"
@@ -14663,7 +14663,7 @@ node-notifier@^6.0.0:
     shellwords "^0.1.1"
     which "^1.3.1"
 
-node-pre-gyp@0.14.0, node-pre-gyp@^0.14.0:
+node-pre-gyp@*, node-pre-gyp@0.14.0, node-pre-gyp@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
   integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
@@ -14746,14 +14746,14 @@ noms@0.0.0:
     inherits "^2.0.1"
     readable-stream "~1.0.31"
 
-nookies@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/nookies/-/nookies-2.0.8.tgz#e1e72349d7b5ea24ef7e96900346e8764a6851d1"
-  integrity sha512-aSJqgRxcEf4BjLjsKP/Ypc9bo0VO1mHrJp+2+1tnQUVHszcM27Ysfh0Go8thUf5eArW4lA5wfnXaEDRg+zc2wA==
+nookies@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/nookies/-/nookies-2.1.1.tgz#89658d0e75d32911e1614635fa62cf3dfd002eae"
+  integrity sha512-ciGuW6z5nKRRmu3mobdoN/oKFflKuNOp2H5viAcdlE21/PxjDk/2Oo3bLq3Y10yNfr0gIvKV0rfRPqrtRSz3iw==
   dependencies:
     cookie "^0.4.0"
     jsmin "^1.0.1"
-    set-cookie-parser "^2.2.1"
+    set-cookie-parser "^2.4.3"
 
 noop-logger@^0.1.1:
   version "0.1.1"
@@ -18631,7 +18631,7 @@ set-blocking@^2.0.0, set-blocking@~2.0.0:
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
   integrity sha1-BF+XgtARrppoA93TgrJDkrPYkPc=
 
-set-cookie-parser@^2.2.1, set-cookie-parser@^2.4.1:
+set-cookie-parser@^2.4.1, set-cookie-parser@^2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.4.3.tgz#9c917e75698a5633511c3c6a3435f334faabc240"
   integrity sha512-+Eovq+TUyhqwUe+Ac9EaPlfEZOcQyy7uUPhcbEXEIsH73x/gOU56RO8wZDZW98fu3vSxhcPjuKDo1mIrmM7ixw==
@@ -19794,9 +19794,9 @@ tar-stream@^1.5.2:
     xtend "^4.0.0"
 
 tar-stream@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-2.1.1.tgz#e188b1dd74b940b9efc4a832a9a2dc957845937c"
-  integrity sha512-GZjLk64XcE/58qwIc1ZfXGqTSE4OutPMEkfBE/oh9eJ4x1eMRjYkgrLrav7PzddpvIpSJSGi8FgNNYXdB9Vumg==
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-2.1.2.tgz#6d5ef1a7e5783a95ff70b69b97455a5968dc1325"
+  integrity sha512-UaF6FoJ32WqALZGOIAApXx+OdxhekNMChu6axLJR85zMMjXKWFGjbIRe+J6P4UnRGg9rAwWvbTT0oI7hD/Un7Q==
   dependencies:
     bl "^4.0.1"
     end-of-stream "^1.4.1"

@@ -148,7 +148,7 @@
     "next-fonts": "^1.0.3",
     "next-i18next": "^4.2.0",
     "next-workbox-webpack-plugin": "^2.1.1",
-    "nookies": "^2.0.8",
+    "nookies": "^2.1.1",
     "notistack": "^0.9.9",
     "object-assign": "^4.1.1",
     "passport": "^0.4.1",
