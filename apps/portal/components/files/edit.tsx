@@ -13,7 +13,7 @@ import { useTranslation } from '../../lib/i18n-client';
 import Loading from '../loading';
 import Dropzone from '../dropzone';
 import { TreeView, TreeItem } from '../tree-view';
-import { MediaEditComponentProps, MediaFolderTreeVirtual } from './types';
+import { FilesEditComponentProps, FilesFolderTreeVirtual } from './types';
 import { FilesFolder } from '../../src/files/models/files.folder.dto';
 // #endregion
 
@@ -51,7 +51,7 @@ const CommonFolderItem = (): React.ReactElement => {
   return <TreeItem key="/" nodeId="/" labelText={t('media:control.shared')} />;
 };
 
-const MediaEditComponent: FC<MediaEditComponentProps> = ({
+const FilesEditComponent: FC<FilesEditComponentProps> = ({
   loading,
   foldersLoading,
   folderData,
@@ -68,7 +68,7 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
 
   const folders = folderData
     ? folderData
-        .reduce((acc: MediaFolderTreeVirtual[], cur: FilesFolder) => {
+        .reduce((acc: FilesFolderTreeVirtual[], cur: FilesFolder) => {
           const { pathname } = cur;
           const tree = pathname.split('/').filter((item) => !!item);
 
@@ -76,7 +76,7 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
             return [];
           }
 
-          const recursive = (childs: MediaFolderTreeVirtual[], arr: string[], idx = 0): MediaFolderTreeVirtual[] => {
+          const recursive = (childs: FilesFolderTreeVirtual[], arr: string[], idx = 0): FilesFolderTreeVirtual[] => {
             if (arr.length === 1 || arr.length - 1 === idx) {
               if (!childs.find((r) => r.id === arr[idx])) {
                 return [...childs, { id: arr[idx], childs: [] }];
@@ -99,8 +99,8 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
           return recursive(acc, tree);
         }, [])
         .reduce(
-          (acc: React.ReactElement[], cur: MediaFolderTreeVirtual) => {
-            const recursive = (child: MediaFolderTreeVirtual, path?: string, depth = 0): React.ReactNode => {
+          (acc: React.ReactElement[], cur: FilesFolderTreeVirtual) => {
+            const recursive = (child: FilesFolderTreeVirtual, path?: string, depth = 0): React.ReactNode => {
               const name = `${path || ''}/${child.id}`;
 
               return (
@@ -152,4 +152,4 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
   );
 };
 
-export default MediaEditComponent;
+export default FilesEditComponent;

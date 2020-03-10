@@ -13,26 +13,26 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-
 import { FILE, EDIT_FILE, DELETE_FILE } from '../../lib/queries';
 import { ProfileContext } from '../../lib/context';
 import { Data } from '../../lib/types';
-import { MediaQueryProps } from '../../components/media/types';
-import MediaComponent from '../../components/media';
+import { FilesQueryProps } from '../../components/files/types';
+import FilesComponent from '../../components/files';
 import snackbarUtils from '../../lib/snackbar-utils';
 // #endregion
 
-const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  const { loading, data, error }: QueryResult<Data<'Media', MediaQueryProps[]>> = useQuery(FILE, {
+const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+  const { loading, data, error }: QueryResult<Data<'Files', FilesQueryProps[]>> = useQuery(FILE, {
     // ssr: false,
     fetchPolicy: 'cache-first',
   });
-  const [current, setCurrent] = useState<MediaQueryProps | undefined>();
+  const [current, setCurrent] = useState<FilesQueryProps | undefined>();
   // const profile = useContext(ProfileContext);
   const router = useRouter();
   // const mediaId = router && router.query && router.query.id;
 
-  const handleCurrent = (media: MediaQueryProps) => (): void => {
+  const handleCurrent = (media: FilesQueryProps) => (): void => {
     setCurrent(media);
   };
 
-  const [deleteMedia] = useMutation(DELETE_FILE, {
+  const [deleteFiles] = useMutation(DELETE_FILE, {
     refetchQueries: [
       {
         query: FILE,
@@ -41,9 +41,9 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     awaitRefetchQueries: true,
   });
 
-  const handleDelete = (media: MediaQueryProps) => (): void => {
+  const handleDelete = (media: FilesQueryProps) => (): void => {
     if (media && media.id) {
-      deleteMedia({ variables: { id: media.id } });
+      deleteFiles({ variables: { id: media.id } });
     }
   };
 
@@ -63,7 +63,7 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <title>{t('media:title')}</title>
       </Head>
       <Page {...rest}>
-        <MediaComponent
+        <FilesComponent
           loading={loading}
           current={current}
           data={data?.media}
@@ -76,8 +76,8 @@ const MediaPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-MediaPage.getInitialProps = () => ({
+FilesPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['media']),
 });
 
-export default nextI18next.withTranslation('news')(MediaPage);
+export default nextI18next.withTranslation('news')(FilesPage);

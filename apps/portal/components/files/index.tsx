@@ -24,7 +24,7 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import CloseIcon from '@material-ui/icons/Close';
 // #endregion
 // #region Imports Local
-import { MediaComponentProps } from './types';
+import { FilesComponentProps } from './types';
 import IsAdmin from '../isAdmin';
 import { useTranslation } from '../../lib/i18n-client';
 import Loading from '../loading';
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const MediaComponent: FC<MediaComponentProps> = ({
+const FilesComponent: FC<FilesComponentProps> = ({
   loading,
   current,
   data,
@@ -208,4 +208,4 @@ const MediaComponent: FC<MediaComponentProps> = ({
   );
 };
 
-export default MediaComponent;
+export default FilesComponent;

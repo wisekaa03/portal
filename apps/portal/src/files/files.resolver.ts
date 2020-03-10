@@ -28,7 +28,7 @@ export class FilesResolver {
    * GraphQL query: media get
    *
    * @param {string} - id of media, optional
-   * @returns {MediaEntity[]}
+   * @returns {FilesEntity[]}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -37,13 +37,13 @@ export class FilesResolver {
   }
 
   /**
-   * GraphQL mutation: editMedia
+   * GraphQL mutation: editFile
    *
    * @param {Request} - Express request
    * @param {Promise<FileUpload>} - Attachment
    * @param {string} - id of folder
    * @param {string} - id of media, optional
-   * @returns {MediaEntity} - media entity
+   * @returns {FilesEntity} - media entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -64,7 +64,7 @@ export class FilesResolver {
   }
 
   /**
-   * GraphQL mutation: deleteMedia
+   * GraphQL mutation: deleteFile
    *
    * @param {string} - id of media
    * @returns {boolean} - true/false of delete media
@@ -79,7 +79,7 @@ export class FilesResolver {
    * GraphQL query: folder
    *
    * @param {string} - id of folder, optional
-   * @returns {MediaFolderEntity[]} - Folder entity
+   * @returns {FilesFolderEntity[]} - Folder entity
    */
   @Query()
   @UseGuards(GqlAuthGuard)
@@ -94,7 +94,7 @@ export class FilesResolver {
    * @param {string} - Pathname (without /)
    * @param {string} - "shared" or "user ID"
    * @param {string} - ID of folder
-   * @returns {MediaFolderEntity} - Media folder entity
+   * @returns {FilesFolderEntity} - Files folder entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)

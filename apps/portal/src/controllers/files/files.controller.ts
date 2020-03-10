@@ -9,17 +9,17 @@ import { RenderableResponse } from 'nest-next-2';
 import { SessionGuard } from '@app/portal/guards/session.guard';
 // #endregion
 
-@Controller('media')
-export class MediaController {
+@Controller('files')
+export class FilesController {
   @Get()
   @UseGuards(SessionGuard)
   public async media(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('media');
+    return res.render('files');
   }
 
   @Get('edit')
   @UseGuards(SessionGuard)
   public async edit(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('media/edit');
+    return res.render('files/edit');
   }
 }

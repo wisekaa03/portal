@@ -14,11 +14,11 @@ import { Files } from '../../src/files/models/files.dto';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { Data } from '../../lib/types';
 import snackbarUtils from '../../lib/snackbar-utils';
-import MediaEditComponent from '../../components/media/edit';
+import FilesEditComponent from '../../components/files/edit';
 import { FilesFolder } from '../../src/files/models/files.folder.dto';
 // #endregion
 
-const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
+const FilesEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Files | undefined>();
   const [folder, setFolder] = useState<string>('/');
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
@@ -84,7 +84,7 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
         <title>{t(`media:title`)}</title>
       </Head>
       <Page {...rest}>
-        <MediaEditComponent
+        <FilesEditComponent
           loading={loading}
           foldersLoading={folderLoading}
           folderData={folderData?.folder}
@@ -101,9 +101,9 @@ const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   );
 };
 
-MediaEditPage.getInitialProps = ({ query }) => ({
+FilesEditPage.getInitialProps = ({ query }) => ({
   query,
   namespacesRequired: includeDefaultNamespaces(['media']),
 });
 
-export default nextI18next.withTranslation('media')(MediaEditPage);
+export default nextI18next.withTranslation('media')(FilesEditPage);

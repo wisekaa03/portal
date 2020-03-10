@@ -4,16 +4,16 @@ import { Files } from '@app/portal/files/models/files.dto';
 import { FilesFolder } from '@app/portal/files/models/files.folder.dto';
 import { DropzoneFile } from '../dropzone/types';
 
-export interface MediaComponentProps {
+export interface FilesComponentProps {
   loading: boolean;
-  current?: MediaQueryProps;
-  data: MediaQueryProps[];
-  handleCurrent: (_: MediaQueryProps) => () => void;
+  current?: FilesQueryProps;
+  data: FilesQueryProps[];
+  handleCurrent: (_: FilesQueryProps) => () => void;
   handleCloseCurrent: () => void;
-  handleDelete: (_: MediaQueryProps) => () => void;
+  handleDelete: (_: FilesQueryProps) => () => void;
 }
 
-export interface MediaEditComponentProps {
+export interface FilesEditComponentProps {
   loading: boolean;
   foldersLoading: boolean;
   folderData?: FilesFolder[];
@@ -26,7 +26,7 @@ export interface MediaEditComponentProps {
   handleUpload: () => void;
 }
 
-export interface MediaQueryProps {
+export interface FilesQueryProps {
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -35,7 +35,7 @@ export interface MediaQueryProps {
   content: Buffer;
 }
 
-export type MediaFolderTreeVirtual = {
+export type FilesFolderTreeVirtual = {
   id: string;
-  childs: MediaFolderTreeVirtual[];
+  childs: FilesFolderTreeVirtual[];
 };

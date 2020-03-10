@@ -226,7 +226,7 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     HomeModule,
     // #endregion
 
-    // #region Ticket
+    // #region Ticket module
     TicketDepartmentModule,
     TicketServiceModule,
     TicketGroupServiceModule,
@@ -236,11 +236,11 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     TicketOldServiceModule,
     // #endregion
 
-    // #region Media
+    // #region Files module
     FilesModule,
     // #endregion
 
-    // #region Health
+    // #region Health module
     TerminusModule.forRootAsync({
       inject: [TypeOrmHealthIndicator],
       useFactory: (db) => getTerminusOptions(db),

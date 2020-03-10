@@ -15,7 +15,7 @@ import { MeetingsController } from './meetings/meetings.controller';
 import { NewsController } from './news/news.controller';
 import { PhonebookController } from './phonebook/phonebook.controller';
 import { ProfileController } from './profile/profile.controller';
-import { MediaController } from './media/media.controller';
+import { FilesController } from './files/files.controller';
 import { SettingsController } from './settings/settings.controller';
 // #endregion
 
@@ -33,7 +33,7 @@ import { SettingsController } from './settings/settings.controller';
     NewsController,
     PhonebookController,
     ProfileController,
-    MediaController,
+    FilesController,
     SettingsController,
   ],
 })
