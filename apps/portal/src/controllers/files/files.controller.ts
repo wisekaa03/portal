@@ -2,7 +2,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards, Param } from '@nestjs/common';
 import { RenderableResponse } from 'nest-next-2';
 // #endregion
 // #region Imports Local
@@ -13,13 +13,13 @@ import { SessionGuard } from '@app/portal/guards/session.guard';
 export class FilesController {
   @Get()
   @UseGuards(SessionGuard)
-  public async media(@Res() res: RenderableResponse): Promise<void> {
+  public async files(@Res() res: RenderableResponse): Promise<void> {
     return res.render('files');
   }
 
-  @Get('edit')
+  @Get(':id')
   @UseGuards(SessionGuard)
-  public async edit(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('files/edit');
+  public async edit(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
+    return res.render('files', { id });
   }
 }

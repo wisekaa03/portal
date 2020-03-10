@@ -26,9 +26,9 @@ export class FilesResolver {
   ) {}
 
   /**
-   * GraphQL query: media get
+   * GraphQL query: files get
    *
-   * @param {string} - id of media, optional
+   * @param {string} - id of files, optional
    * @returns {FilesEntity[]}
    */
   @Query()
@@ -43,8 +43,8 @@ export class FilesResolver {
    * @param {Request} - Express request
    * @param {Promise<FileUpload>} - Attachment
    * @param {string} - id of folder
-   * @param {string} - id of media, optional
-   * @returns {FilesEntity} - media entity
+   * @param {string} - id of files, optional
+   * @returns {FilesEntity} - files entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -67,8 +67,8 @@ export class FilesResolver {
   /**
    * GraphQL mutation: deleteFile
    *
-   * @param {string} - id of media
-   * @returns {boolean} - true/false of delete media
+   * @param {string} - id of files
+   * @returns {boolean} - true/false of delete files
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)

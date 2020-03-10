@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'color': theme.palette.secondary.main,
       'borderTopRightRadius': theme.spacing(2),
       'borderBottomRightRadius': theme.spacing(2),
-      'paddingRight': theme.spacing(),
+      // 'paddingRight': theme.spacing(),
       'fontWeight': theme.typography.fontWeightMedium,
       '$expanded > &': {
         fontWeight: theme.typography.fontWeightRegular,

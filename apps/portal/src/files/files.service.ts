@@ -29,7 +29,7 @@ export class FilesService {
   /**
    * Get file(s)
    *
-   * @param {string} id of media (optional)
+   * @param {string} id of files (optional)
    * @return {FilesEntity[]}
    */
   file = async (id?: string): Promise<FilesEntity[]> => {
@@ -68,10 +68,10 @@ export class FilesService {
   };
 
   /**
-   * Delete media
+   * Delete files
    *
-   * @param {string} - id of media
-   * @return {boolean} - true/false of delete media
+   * @param {string} - id of files
+   * @return {boolean} - true/false of delete files
    */
   deleteFile = async (id: string): Promise<boolean> => {
     this.logService.log(`Edit: id={${id}}`, 'FilesService');

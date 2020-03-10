@@ -4,26 +4,35 @@ import { Files } from '@app/portal/files/models/files.dto';
 import { FilesFolder } from '@app/portal/files/models/files.folder.dto';
 import { DropzoneFile } from '../dropzone/types';
 
-export interface FilesComponentProps {
-  loading: boolean;
-  current?: FilesQueryProps;
-  data: FilesQueryProps[];
-  handleCurrent: (_: FilesQueryProps) => () => void;
-  handleCloseCurrent: () => void;
-  handleDelete: (_: FilesQueryProps) => () => void;
-}
+// export interface MediaComponentProps {
+//   loading: boolean;
+//   current?: MediaQueryProps;
+//   data: MediaQueryProps[];
+//   handleCurrent: (_: MediaQueryProps) => () => void;
+//   handleCloseCurrent: () => void;
+//   handleDelete: (_: MediaQueryProps) => () => void;
+// }
 
-export interface FilesEditComponentProps {
-  loading: boolean;
-  foldersLoading: boolean;
+export interface FilesComponentProps {
+  fileLoading: boolean;
+  folderLoading: boolean;
+  fileData?: FilesQueryProps[];
   folderData?: FilesFolder[];
-  current?: Files;
-  folder: string;
-  setFolder: React.Dispatch<React.SetStateAction<string>>;
+  folderName: string;
+  setFolderName: React.Dispatch<React.SetStateAction<string>>;
   handleCreateFolder: (_: string) => void;
+  showDropzone: boolean;
+  handleOpenDropzone: () => void;
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
-  handleUpload: () => void;
+  handleUploadFile: () => void;
+}
+
+export interface FilesTreeComponentProps {
+  data?: FilesFolder[];
+  item: string;
+  setItem: React.Dispatch<React.SetStateAction<string>>;
+  handleCreateItem: (_: string) => void;
 }
 
 export interface FilesQueryProps {

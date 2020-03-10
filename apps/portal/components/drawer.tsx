@@ -114,7 +114,7 @@ const urls: UrlProps[] = [
   { icon: NewsIcon, text: 'common:news', link: '/news', admin: false },
   {
     icon: MediaIcon,
-    text: 'common:media',
+    text: 'common:files',
     link: '/files',
     admin: false,
   },
