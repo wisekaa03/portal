@@ -20,6 +20,6 @@ type Query {
 }
 
 type Mutation {
-  editFolder(pathname: String!, userId: ID, id: ID): Folder
+  editFolder(pathname: String!, shared: Boolean!, id: ID): Folder
   deleteFolder(id: ID!): Boolean
 }

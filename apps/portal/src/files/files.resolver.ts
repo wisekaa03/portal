@@ -79,16 +79,14 @@ export class FilesResolver {
   /**
    * GraphQL query: folder
    *
-   * @param {string} - id of folder, optional
-   * @returns {FilesFolderEntity[]} - Folder entity
+   * @param {string} id of folder (optional)
+   * @returns {Promise<FilesFolderResponse[]>} Folder entity
    */
   @Query()
   @UseGuards(GqlAuthGuard)
   async folder(@Context('req') req: Request, @Args('id') id?: string): Promise<FilesFolderResponse[]> {
-    const user = await this.userService.readById((req.user as UserResponse).id, true, false);
-
-    if (user) {
-      return this.filesService.folder(user, id);
+    if (req.user) {
+      return this.filesService.folder(req.user as UserResponse, id);
     }
 
     throw new UnauthorizedException();
@@ -97,26 +95,23 @@ export class FilesResolver {
   /**
    * GraphQL mutation: editFolder
    *
-   * @param {Request} - Express request
-   * @param {string} - Pathname (without /)
-   * @param {string} - "shared" or "user ID"
-   * @param {string} - ID of folder
-   * @returns {FilesFolderEntity} - Files folder entity
+   * @param {Request} req Express request
+   * @param {string} pathname Pathname
+   * @param {boolean} shared this is a shared folder or not ?
+   * @param {string} id of folder (optional)
+   * @returns {Promise<FilesFolderResponse>} Files folder entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async editFolder(
     @Context('req') req: Request,
     @Args('pathname') pathname: string,
-    @Args('userId') userId?: string,
+    @Args('shared') shared: boolean,
     @Args('id') id?: string,
-  ): Promise<FilesFolderEntity> {
-    const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
-
-    if (updatedUser) {
-      const user = userId ? await this.userService.readById(userId, true, false) : undefined;
-
-      return this.filesService.editFolder({ pathname, user, id, updatedUser });
+  ): Promise<FilesFolderResponse> {
+    if (req.user) {
+      const user = req.user as UserResponse;
+      return this.filesService.editFolder({ pathname, user: shared ? undefined : user, id, updatedUser: user });
     }
 
     throw new UnauthorizedException();
@@ -125,8 +120,8 @@ export class FilesResolver {
   /**
    * GraphQL mutation: deleteFolder
    *
-   * @param {string} - id of folder
-   * @returns {boolean} - true/false of delete folder
+   * @param {string} id of folder
+   * @returns {boolean} true/false of delete folder
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)

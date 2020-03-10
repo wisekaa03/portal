@@ -84,24 +84,32 @@ export class FilesService {
   /**
    * Get folder
    *
+   * @param {UserResponse} user shared or user defined
    * @param {string} id of folder (optional)
-   * @return {FilesFolderResponse[]}
+   * @return {Promise<FilesFolderResponse[]>}
    */
   folder = async (user: UserResponse, id?: string): Promise<FilesFolderResponse[]> => {
     this.logService.log(`Folder: id={${id}}`, 'FilesService');
 
-    return this.filesFolderRepository
-      .find({ where: [{ ...(id ? { id } : {}) }, { user }, { user: IsNull() }], cache: true })
+    const where: Record<any, any> = [{ user }, { user: IsNull() }];
+    if (id) {
+      where.push({ id });
+    }
+
+    const result = await this.filesFolderRepository
+      .find({ where, cache: true })
       .then((folders: FilesFolderEntity[]) => folders.map((folder) => folder.toResponseObject()));
+
+    return result;
   };
 
   /**
    * Edit folder
    *
    * @param {FilesFolder}
-   * @return {FilesFolderEntity}
+   * @return {Promise<FilesFolderResponse>}
    */
-  editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<FilesFolderEntity> => {
+  editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<FilesFolderResponse> => {
     this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'FilesService');
 
     // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
@@ -117,16 +125,19 @@ export class FilesService {
       id,
     };
 
-    return this.filesFolderRepository.save(this.filesFolderRepository.create(data)).catch((error: Error) => {
-      throw error;
-    });
+    return this.filesFolderRepository
+      .save(this.filesFolderRepository.create(data))
+      .then((folder) => folder.toResponseObject())
+      .catch((error: Error) => {
+        throw error;
+      });
   };
 
   /**
    * Delete folder
    *
-   * @param {string} - id of folder
-   * @return {boolean} - true/false of delete folder
+   * @param {string} id of folder
+   * @return {Promise<boolean>} true/false of delete folder
    */
   deleteFolder = async (id: string): Promise<boolean> => {
     this.logService.log(`Edit folder: id={${id}}`, 'FilesService');

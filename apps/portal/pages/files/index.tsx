@@ -29,8 +29,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     loading: fileLoading,
     error: fileError,
   }: QueryResult<Data<'file', FilesQueryProps[]>> = useQuery(FILE, {
-    // ssr: false,
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'no-cache',
   });
 
   const { data: folderData, loading: folderLoading, error: folderError }: QueryResult<Data<'folder', any>> = useQuery(
