@@ -43,7 +43,8 @@
     "postalCode": "Индекс",
     "disabled": "Уволен",
     "notShowing": "Скрытый пользователь",
-    "gender": "Пол"
+    "gender": "Пол",
+    "accessCard": "Карта доступа"
   },
   "profile": {
     "hide": "Скрыть профиль",

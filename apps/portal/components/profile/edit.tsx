@@ -168,6 +168,7 @@ const others: (keyof Profile)[] = [
   'street',
   'postalCode',
   'employeeID',
+  'accessCard',
 ];
 
 const ProfileEditComponent: FC<ProfileEditComponentProps> = ({

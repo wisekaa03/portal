@@ -43,7 +43,8 @@
     "postalCode": "Postal code",
     "disabled": "Dismissed",
     "notShowing": "Hidden user",
-    "gender": "Gender"
+    "gender": "Gender",
+    "accessCard": "Access card"
   },
   "profile": {
     "hide": "Hide profile",

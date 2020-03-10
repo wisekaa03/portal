@@ -42,6 +42,7 @@ const PROFILE_FRAGMENT = gql`
     region
     town
     street
+    accessCard
     updatedAt
     createdAt
     disabled
