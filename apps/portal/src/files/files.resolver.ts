@@ -14,6 +14,7 @@ import { FilesEntity } from './files.entity';
 import { FilesService } from './files.service';
 import { UserResponse } from '../user/user.entity';
 import { UserService } from '../user/user.service';
+import { FilesFolderResponse } from './models/files.folder.dto';
 // #endregion
 
 @Resolver('Files')
@@ -83,8 +84,14 @@ export class FilesResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async folder(@Args('id') id?: string): Promise<FilesFolderEntity[]> {
-    return this.filesService.folder(id);
+  async folder(@Context('req') req: Request, @Args('id') id?: string): Promise<FilesFolderResponse[]> {
+    const user = await this.userService.readById((req.user as UserResponse).id, true, false);
+
+    if (user) {
+      return this.filesService.folder(user, id);
+    }
+
+    throw new UnauthorizedException();
   }
 
   /**

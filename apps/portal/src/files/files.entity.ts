@@ -34,7 +34,12 @@ export class FilesEntity {
   title: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => FilesFolderEntity, { nullable: false })
+  @ManyToOne((type: any) => FilesFolderEntity, {
+    nullable: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn()
   folder: FilesFolderEntity;
 
@@ -54,12 +59,12 @@ export class FilesEntity {
   mimetype: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity, { nullable: false })
+  @ManyToOne((type: any) => UserEntity, { nullable: false, onDelete: 'SET NULL', onUpdate: 'CASCADE', eager: true })
   @JoinColumn()
   createdUser: UserEntity;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity, { nullable: false })
+  @ManyToOne((type: any) => UserEntity, { nullable: false, onDelete: 'SET NULL', onUpdate: 'CASCADE', eager: true })
   @JoinColumn()
   updatedUser: UserEntity;
 }

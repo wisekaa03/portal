@@ -10,7 +10,8 @@ import { LogService } from '@app/logger';
 import { FilesEntity } from './files.entity';
 import { Files } from './models/files.dto';
 import { FilesFolderEntity } from './files.folder.entity';
-import { FilesFolder } from './models/files.folder.dto';
+import { FilesFolder, FilesFolderResponse } from './models/files.folder.dto';
+import { UserResponse } from '../user/user.entity';
 // #endregion
 
 @Injectable()
@@ -84,15 +85,23 @@ export class FilesService {
    * Get folder
    *
    * @param {string} id of folder (optional)
-   * @return {FilesFolderEntity[]}
+   * @return {FilesFolderResponse[]}
    */
-  folder = async (id?: string): Promise<FilesFolderEntity[]> => {
+  folder = async (user: UserResponse, id?: string): Promise<FilesFolderResponse[]> => {
     this.logService.log(`Folder: id={${id}}`, 'FilesService');
 
     // TODO: сделать чтобы выводилось постранично
     // TODO: убрал id, пока выводим все каталоги
     // TODO: так же думаю надо сделать чтобы зависимые таблицы подтягивались всегда иначе ошибка ot null
-    return this.filesFolderRepository.find({ relations: ['createdUser', 'updatedUser'] });
+    const userFiles = await this.filesFolderRepository
+      .find({ user })
+      .then((files: FilesFolderEntity[]) => files.map((file: FilesFolderEntity) => file.toResponseObject()));
+
+    const shareFiles = await this.filesFolderRepository
+      .find({ user: undefined })
+      .then((files: FilesFolderEntity[]) => files.map((file: FilesFolderEntity) => file.toResponseObject()));
+
+    return { ...userFiles, ...shareFiles };
   };
 
   /**

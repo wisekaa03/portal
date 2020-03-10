@@ -1,3 +1,9 @@
+enum FILES_RIGHT {
+  ALL
+  READ
+  WRITE
+}
+
 type Folder {
   id: ID!
   createdUser: User!
@@ -6,6 +12,7 @@ type Folder {
   updatedAt: Date!
   user: User
   pathname: String!
+  right: FILES_RIGHT!
 }
 
 type Query {

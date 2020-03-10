@@ -12,8 +12,6 @@ import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
 import { UserService } from './user.service';
-// import { ProfileModule } from '../profile/profile.module';
-// import { GroupModule } from '../group/group.module';
 import { ProfileService } from '../profile/profile.service';
 import { GroupService } from '../group/group.service';
 // #endregion
@@ -65,8 +63,6 @@ describe('UserService', () => {
         { provide: ProfileService, useValue: serviceMock },
         { provide: GroupService, useValue: serviceMock },
         { provide: getRepositoryToken(UserEntity), useValue: repositoryMock },
-        // { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
-        // { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
       ],
     }).compile();
 

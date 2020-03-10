@@ -13,6 +13,7 @@ import {
 // #endregion
 // #region Imports Local
 import { UserEntity } from '../user/user.entity';
+import { FILES_RIGHT, FilesFolderResponse } from './models/files.folder.dto';
 // #endregion
 
 @Entity('files_folder')
@@ -27,7 +28,7 @@ export class FilesFolderEntity {
   updatedAt: Date;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity, { nullable: true })
+  @ManyToOne((type: any) => UserEntity, { nullable: true, onDelete: 'SET NULL', onUpdate: 'CASCADE', eager: true })
   @JoinColumn()
   user: UserEntity;
 
@@ -38,12 +39,16 @@ export class FilesFolderEntity {
   pathname: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity, { nullable: false })
+  @ManyToOne((type: any) => UserEntity, { nullable: false, onDelete: 'SET NULL', onUpdate: 'CASCADE', eager: true })
   @JoinColumn()
   createdUser: UserEntity;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity, { nullable: false })
+  @ManyToOne((type: any) => UserEntity, { nullable: false, onDelete: 'SET NULL', onUpdate: 'CASCADE', eager: true })
   @JoinColumn()
   updatedUser: UserEntity;
+
+  toResponseObject = (): FilesFolderResponse => {
+    return { right: FILES_RIGHT.ALL, ...this };
+  };
 }
