@@ -46,5 +46,6 @@ export interface FilesQueryProps {
 
 export type FilesFolderTreeVirtual = {
   id: string;
+  name?: string;
   childs: FilesFolderTreeVirtual[];
 };
