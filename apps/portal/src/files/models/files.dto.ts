@@ -5,11 +5,11 @@
 // #region Imports Local
 import { FileUpload } from 'graphql-upload';
 import { UserEntity } from '../../user/user.entity';
-import { MediaFolderEntity } from '../media.folder.entity';
+import { FilesFolderEntity } from '../files.folder.entity';
 // #endregion
 
 // #region Profile
-export interface Media {
+export interface Files {
   id?: string;
   createdUser?: UserEntity;
   updatedUser?: UserEntity;
@@ -19,7 +19,7 @@ export interface Media {
 
   title: string;
 
-  folder?: MediaFolderEntity | string;
+  folder?: FilesFolderEntity | string;
   filename?: string;
   mimetype?: string;
 

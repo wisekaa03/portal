@@ -10,16 +10,16 @@ import Head from 'next/head';
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
 import { EDIT_FILE, FILE, FOLDER, EDIT_FOLDER } from '../../lib/queries';
-import { Media } from '../../src/media/models/media.dto';
+import { Files } from '../../src/files/models/files.dto';
 import { DropzoneFile } from '../../components/dropzone/types';
 import { Data } from '../../lib/types';
 import snackbarUtils from '../../lib/snackbar-utils';
 import MediaEditComponent from '../../components/media/edit';
-import { MediaFolder } from '../../src/media/models/media.folder.dto';
+import { FilesFolder } from '../../src/files/models/files.folder.dto';
 // #endregion
 
 const MediaEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
-  const [current, setCurrent] = useState<Media | undefined>();
+  const [current, setCurrent] = useState<Files | undefined>();
   const [folder, setFolder] = useState<string>('/');
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
 

@@ -9,18 +9,18 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { MediaFolderEntity } from './media.folder.entity';
-import { MediaEntity } from './media.entity';
-import { MediaService } from './media.service';
+import { FilesFolderEntity } from './files.folder.entity';
+import { FilesEntity } from './files.entity';
+import { FilesService } from './files.service';
 import { UserResponse } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 // #endregion
 
-@Resolver('Media')
-export class MediaResolver {
+@Resolver('Files')
+export class FilesResolver {
   constructor(
     private readonly logService: LogService,
-    private readonly mediaService: MediaService,
+    private readonly filesService: FilesService,
     private readonly userService: UserService,
   ) {}
 
@@ -32,8 +32,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async file(@Args('id') id?: string): Promise<MediaEntity[]> {
-    return this.mediaService.file(id);
+  async file(@Args('id') id?: string): Promise<FilesEntity[]> {
+    return this.filesService.file(id);
   }
 
   /**
@@ -52,7 +52,7 @@ export class MediaResolver {
     @Args('attachment') attachment: Promise<FileUpload>,
     @Args('folder') folder: string,
     @Args('id') id?: string,
-  ): Promise<MediaEntity> {
+  ): Promise<FilesEntity> {
     const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
 
     if (updatedUser) {
@@ -72,7 +72,7 @@ export class MediaResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async deleteFile(@Args('id') id: string): Promise<boolean> {
-    return !!id && this.mediaService.deleteFile(id);
+    return !!id && this.filesService.deleteFile(id);
   }
 
   /**
@@ -83,8 +83,8 @@ export class MediaResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async folder(@Args('id') id?: string): Promise<MediaFolderEntity[]> {
-    return this.mediaService.folder(id);
+  async folder(@Args('id') id?: string): Promise<FilesFolderEntity[]> {
+    return this.filesService.folder(id);
   }
 
   /**
@@ -103,13 +103,13 @@ export class MediaResolver {
     @Args('pathname') pathname: string,
     @Args('userId') userId?: string,
     @Args('id') id?: string,
-  ): Promise<MediaFolderEntity> {
+  ): Promise<FilesFolderEntity> {
     const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
 
     if (updatedUser) {
       const user = userId ? await this.userService.readById(userId, true, false) : undefined;
 
-      return this.mediaService.editFolder({ pathname, user, id, updatedUser });
+      return this.filesService.editFolder({ pathname, user, id, updatedUser });
     }
 
     throw new UnauthorizedException();
@@ -124,6 +124,6 @@ export class MediaResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async deleteFolder(@Args('id') id: string): Promise<boolean> {
-    return !!id && this.mediaService.deleteFolder(id);
+    return !!id && this.filesService.deleteFolder(id);
   }
 }

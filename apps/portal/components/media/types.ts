@@ -1,7 +1,7 @@
 /** @format */
 
-import { Media } from '@app/portal/media/models/media.dto';
-import { MediaFolder } from '@app/portal/media/models/media.folder.dto';
+import { Files } from '@app/portal/files/models/files.dto';
+import { FilesFolder } from '@app/portal/files/models/files.folder.dto';
 import { DropzoneFile } from '../dropzone/types';
 
 export interface MediaComponentProps {
@@ -16,8 +16,8 @@ export interface MediaComponentProps {
 export interface MediaEditComponentProps {
   loading: boolean;
   foldersLoading: boolean;
-  folderData?: MediaFolder[];
-  current?: Media;
+  folderData?: FilesFolder[];
+  current?: Files;
   folder: string;
   setFolder: React.Dispatch<React.SetStateAction<string>>;
   handleCreateFolder: (_: string) => void;

@@ -14,7 +14,7 @@ import Loading from '../loading';
 import Dropzone from '../dropzone';
 import { TreeView, TreeItem } from '../tree-view';
 import { MediaEditComponentProps, MediaFolderTreeVirtual } from './types';
-import { MediaFolder } from '../../src/media/models/media.folder.dto';
+import { FilesFolder } from '../../src/files/models/files.folder.dto';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -68,7 +68,7 @@ const MediaEditComponent: FC<MediaEditComponentProps> = ({
 
   const folders = folderData
     ? folderData
-        .reduce((acc: MediaFolderTreeVirtual[], cur: MediaFolder) => {
+        .reduce((acc: MediaFolderTreeVirtual[], cur: FilesFolder) => {
           const { pathname } = cur;
           const tree = pathname.split('/').filter((item) => !!item);
 

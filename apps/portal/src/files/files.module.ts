@@ -7,11 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // #region Imports Local
 import { LoggerModule } from '@app/logger';
 import { ConfigModule } from '@app/config';
-import { MediaService } from './media.service';
-import { MediaResolver } from './media.resolver';
+import { FilesService } from './files.service';
+import { FilesResolver } from './files.resolver';
 import { UserModule } from '../user/user.module';
-import { MediaEntity } from './media.entity';
-import { MediaFolderEntity } from './media.folder.entity';
+import { FilesEntity } from './files.entity';
+import { FilesFolderEntity } from './files.folder.entity';
 // #endregion
 
 @Module({
@@ -24,9 +24,9 @@ import { MediaFolderEntity } from './media.folder.entity';
     UserModule,
 
     // #region TypeORM
-    TypeOrmModule.forFeature([MediaFolderEntity, MediaEntity]),
+    TypeOrmModule.forFeature([FilesFolderEntity, FilesEntity]),
     // #endregion
   ],
-  providers: [MediaService, MediaResolver],
+  providers: [FilesService, FilesResolver],
 })
-export class MediaModule {}
+export class FilesModule {}

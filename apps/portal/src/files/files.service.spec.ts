@@ -9,7 +9,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #region Imports Local
 import { LogService } from '@app/logger';
 // import { ConfigService } from '@app/config';
-import { MediaService } from './media.service';
+import { FilesService } from './files.service';
 import { UserService } from '../user/user.service';
 import { ProfileService } from '../profile/profile.service';
 // #endregion
@@ -23,7 +23,7 @@ const repositoryMock = jest.fn(() => ({
 }));
 
 @Entity()
-class MediaEntity {
+class FilesEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -32,7 +32,7 @@ class MediaEntity {
 }
 
 @Entity()
-class MediaFolderEntity {
+class FilesFolderEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -40,8 +40,8 @@ class MediaFolderEntity {
   name?: string;
 }
 
-describe('MediaService', () => {
-  let service: MediaService;
+describe('FilesService', () => {
+  let service: FilesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -52,24 +52,24 @@ describe('MediaService', () => {
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [MediaEntity, MediaFolderEntity],
+              entities: [FilesEntity, FilesFolderEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([MediaEntity, MediaFolderEntity]),
+        TypeOrmModule.forFeature([FilesEntity, FilesFolderEntity]),
       ],
       providers: [
-        MediaService,
+        FilesService,
         { provide: LogService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
-        { provide: getRepositoryToken(MediaEntity), useValue: repositoryMock },
-        { provide: getRepositoryToken(MediaFolderEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(FilesEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(FilesFolderEntity), useValue: repositoryMock },
       ],
     }).compile();
 
-    service = module.get<MediaService>(MediaService);
+    service = module.get<FilesService>(FilesService);
   });
 
   it('should be defined', () => {
