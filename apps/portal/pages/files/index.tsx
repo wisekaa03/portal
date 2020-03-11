@@ -17,6 +17,7 @@ import { FilesQueryProps } from '../../components/files/types';
 import FilesComponent from '../../components/files';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { DropzoneFile } from '../../components/dropzone/types';
+import { FILES_SHARED_NAME } from '../../lib/constants';
 // #endregion
 
 const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
@@ -40,9 +41,11 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [uploadFile] = useMutation(EDIT_FILE);
 
   const handleCreateFolder = (pathname: string): void => {
+    const shared = pathname.startsWith(`/${FILES_SHARED_NAME}`);
+
     createFolder({
       refetchQueries: [{ query: FOLDER }],
-      variables: { pathname },
+      variables: { pathname, shared },
     });
   };
 

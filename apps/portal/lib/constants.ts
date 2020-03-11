@@ -119,3 +119,7 @@ export const PROFILE_AUTOCOMPLETE_FIELDS = [
 ];
 
 // ////////////////////////////////
+
+// ////////// PROFILE ///////////
+export const FILES_SHARED_NAME = 'shared';
+// ////////////////////////////////

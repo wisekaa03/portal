@@ -9,6 +9,7 @@ import { TreeView, TreeItem } from '../tree-view';
 import { FilesTreeComponentProps, FilesFolderTreeVirtual } from './types';
 import { FilesFolder } from '../../src/files/models/files.folder.dto';
 import { ProfileContext } from '../../lib/context';
+import { FILES_SHARED_NAME } from '../../lib/constants';
 // #endregion
 
 const CreateFolderItem = ({ nodeId, handleCreate, depth = 0 }): React.ReactElement => {
@@ -21,7 +22,6 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data, item, setItem, 
   const { user } = useContext(ProfileContext);
   const { t } = useTranslation();
 
-  const SHARED_FOLDER_ID = 'shared';
   const SHARED_FOLDER_NAME = t('files:control.shared');
   const USER_FOLDER_ID = user?.username;
   const USER_FOLDER_NAME = user?.profile.fullName;
@@ -57,12 +57,12 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data, item, setItem, 
     return recursive(acc, tree);
   }, []);
 
-  const sharedFolder = adaptedData.find((cur) => cur.id === SHARED_FOLDER_ID);
+  const sharedFolder = adaptedData.find((cur) => cur.id === FILES_SHARED_NAME);
 
   if (sharedFolder) {
     sharedFolder.name = SHARED_FOLDER_NAME;
   } else {
-    adaptedData.push({ id: SHARED_FOLDER_ID, name: SHARED_FOLDER_NAME, childs: [] });
+    adaptedData.push({ id: FILES_SHARED_NAME, name: SHARED_FOLDER_NAME, childs: [] });
   }
 
   const userFolder = adaptedData.find((cur) => cur.id === USER_FOLDER_ID);
