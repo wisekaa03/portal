@@ -12,12 +12,11 @@ import { ProfileContext } from '../../lib/context';
 import { FILES_SHARED_NAME } from '../../lib/constants';
 // #endregion
 
-const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setItem, handleEdit, handleDelete }) => {
+const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setItem, handleEdit }) => {
   const { user } = useContext(ProfileContext);
   const { t } = useTranslation();
 
   const USER_FOLDER_ID = user?.username;
-  const USER_FOLDER_NAME = user?.profile.fullName;
 
   const defaultFolders: FilesFolder[] = [{ pathname: `/${FILES_SHARED_NAME}` }, { pathname: `/${USER_FOLDER_ID}` }];
 
@@ -60,9 +59,9 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
       const recursive = (child: FilesFolderTreeVirtual, depth = 0): React.ReactNode => {
         const name =
           child.name === FILES_SHARED_NAME
-            ? t('files:control.shared')
+            ? t('files:sharedFolder')
             : child.name === USER_FOLDER_ID
-            ? USER_FOLDER_NAME
+            ? t('files:userFolder')
             : child.name;
 
         return (
@@ -73,7 +72,6 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
             id={child.id}
             active={child.pathname === item}
             handleEdit={handleEdit}
-            handleDelete={handleDelete}
             depth={depth}
           >
             {child.childs.map((c) => recursive(c, depth + 1))}

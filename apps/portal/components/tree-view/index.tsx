@@ -174,28 +174,15 @@ export const TreeItem = ({
   active,
   nodeId,
   handleEdit,
-  handleDelete,
   depth = 0,
   ...rest
 }: TreeItemProps): React.ReactElement => {
   const classes = useStyles({});
 
-  const handleCreateItem = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+  const handleEditItem = (type: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.stopPropagation();
 
-    handleEdit(nodeId);
-  };
-
-  const handleEditItem = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    event.stopPropagation();
-
-    handleEdit(nodeId, id);
-  };
-
-  const handleDeleteItem = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    event.stopPropagation();
-
-    handleDelete(id);
+    handleEdit(nodeId, type, id);
   };
 
   return (
@@ -209,15 +196,15 @@ export const TreeItem = ({
           </Typography>
           {active && (
             <Box mr={1}>
-              <IconButton className={classes.action} size="small" onClick={handleCreateItem}>
+              <IconButton className={classes.action} size="small" onClick={handleEditItem(1)}>
                 <AddIcon />
               </IconButton>
               {!!id && (
                 <>
-                  <IconButton className={classes.action} size="small" onClick={handleEditItem}>
+                  <IconButton className={classes.action} size="small" onClick={handleEditItem(2)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton className={classes.action} size="small" onClick={handleDeleteItem}>
+                  <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
                     <DeleteIcon />
                   </IconButton>
                 </>

@@ -53,8 +53,8 @@ const FilesComponent: FC<FilesComponentProps> = ({
   showDropzone,
   handleOpenDropzone,
   handleEditFolder,
-  handleDeleteFolder,
   openFolderDialog,
+  handleAcceptFolderDialog,
   handleCloseFolderDialog,
   folderDialogName,
   handleFolderDialogName,
@@ -84,13 +84,13 @@ const FilesComponent: FC<FilesComponentProps> = ({
                   item={folderName}
                   setItem={setFolderName}
                   handleEdit={handleEditFolder}
-                  handleDelete={handleDeleteFolder}
                 />
                 <FilesDialogComponent
                   open={openFolderDialog}
                   handleClose={handleCloseFolderDialog}
                   input={folderDialogName}
                   handleInput={handleFolderDialogName}
+                  handleAccept={handleAcceptFolderDialog}
                 />
               </>
             </Loading>

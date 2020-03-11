@@ -12,11 +12,11 @@ export interface FilesComponentProps {
   setFolderName: React.Dispatch<React.SetStateAction<string>>;
   showDropzone: boolean;
   handleOpenDropzone: () => void;
-  handleEditFolder: (_: string, __?: string) => void;
-  handleDeleteFolder: (_: string) => void;
-  openFolderDialog: boolean;
+  handleEditFolder: (_: string, __: number, ___?: string) => void;
+  openFolderDialog: number;
   folderDialogName: string;
   handleFolderDialogName: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleAcceptFolderDialog: (_: number) => void;
   handleCloseFolderDialog: () => void;
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
@@ -26,8 +26,7 @@ export interface FilesComponentProps {
 export interface FilesTreeComponentProps {
   data?: FilesFolder[];
   item: string;
-  handleEdit: (_: string, __?: string) => void;
-  handleDelete: (_: string) => void;
+  handleEdit: (_: string, __: number, ___?: string) => void;
   setItem: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -48,8 +47,9 @@ export type FilesFolderTreeVirtual = {
 };
 
 export type FilesDialogComponentProps = {
-  open: boolean;
+  open: number;
   input: string;
+  handleAccept: (_: number) => void;
   handleInput: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleClose: () => void;
 };

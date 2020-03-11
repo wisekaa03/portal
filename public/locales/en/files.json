@@ -4,10 +4,10 @@
   "edit": "Edit file",
   "delete": "Delete file",
   "more": "Learn more",
+  "sharedFolder": "Shared",
+  "userFolder": "User",
   "addFolder": "Create Folder",
-  "control": {
-    "sharedOrUser": "Directory",
-    "shared": "Shared",
-    "user": "User"
-  }
+  "editFolder": "Edit Folder",
+  "deleteFolder": "Delete Folder",
+  "confirmDelete": "Confirm delete folder {{input}}?"
 }
