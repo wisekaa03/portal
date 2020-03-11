@@ -10,10 +10,10 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #region Imports Local
 import Page from '../../layouts/main';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER } from '../../lib/queries';
+import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER, DELETE_FOLDER } from '../../lib/queries';
 // import { ProfileContext } from '../../lib/context';
 import { Data } from '../../lib/types';
-import { FilesQueryProps } from '../../components/files/types';
+import { FilesQueryProps, FolderDialogState } from '../../components/files/types';
 import FilesComponent from '../../components/files';
 import snackbarUtils from '../../lib/snackbar-utils';
 import { DropzoneFile } from '../../components/dropzone/types';
@@ -24,6 +24,8 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [folderName, setFolderName] = useState<string>('/');
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
   const [showDropzone, setShowDropzone] = useState<boolean>(false);
+  const [openFolderDialog, setOpenFolderDialog] = useState<boolean>(false);
+  const [folderDialog, setFolderDialog] = useState<FolderDialogState>({ pathname: '', name: '' });
 
   const {
     data: fileData,
@@ -37,17 +39,34 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     FOLDER,
   );
 
-  const [createFolder] = useMutation(EDIT_FOLDER);
-  const [uploadFile] = useMutation(EDIT_FILE);
+  const [editFolder] = useMutation(EDIT_FOLDER);
+  const [deleteFolder] = useMutation(DELETE_FOLDER);
 
-  const handleCreateFolder = (pathname: string): void => {
-    const shared = pathname.startsWith(`/${FILES_SHARED_NAME}`);
+  const handleEditFolder = (pathname: string, id?: string): void => {
+    if (id) {
+      const folders = pathname.split('/');
 
-    createFolder({
-      refetchQueries: [{ query: FOLDER }],
-      variables: { pathname, shared },
-    });
+      setFolderDialog({ id, pathname, name: folders[folders.length - 1] });
+    } else {
+      setFolderDialog({ pathname, name: '' });
+    }
+
+    setOpenFolderDialog(true);
+
+    // editFolder({
+    //   refetchQueries: [{ query: FOLDER }],
+    //   variables: { pathname, shared: true },
+    // });
   };
+
+  const handleDeleteFolder = (id: string): void => {
+    // deleteFolder({
+    //   refetchQueries: [{ query: FOLDER }],
+    //   variables: { id },
+    // });
+  };
+
+  const [uploadFile] = useMutation(EDIT_FILE);
 
   const handleUploadFile = (): void => {
     attachments.forEach((file: DropzoneFile) => {
@@ -63,6 +82,14 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleOpenDropzone = (): void => {
     setShowDropzone(true);
+  };
+
+  const handleFolderDialogName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    setFolderDialog({ ...folderDialog, name: event.currentTarget.value });
+  };
+
+  const handleCloseFolderDialog = (): void => {
+    setOpenFolderDialog(false);
   };
 
   // const [current, setCurrent] = useState<FileQueryProps | undefined>();
@@ -115,9 +142,14 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           folderData={folderData?.folder}
           folderName={folderName}
           setFolderName={setFolderName}
-          handleCreateFolder={handleCreateFolder}
           showDropzone={showDropzone}
           handleOpenDropzone={handleOpenDropzone}
+          handleEditFolder={handleEditFolder}
+          handleDeleteFolder={handleDeleteFolder}
+          handleCloseFolderDialog={handleCloseFolderDialog}
+          openFolderDialog={openFolderDialog}
+          folderDialogName={folderDialog.name}
+          handleFolderDialogName={handleFolderDialogName}
           attachments={attachments}
           setAttachments={setAttachments}
           handleUploadFile={handleUploadFile}

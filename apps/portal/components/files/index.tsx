@@ -13,7 +13,7 @@ import { useTranslation } from '../../lib/i18n-client';
 import Loading from '../loading';
 import Dropzone from '../dropzone';
 import FilesTreeComponent from './tree';
-
+import FilesDialogComponent from './dialog';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,9 +50,14 @@ const FilesComponent: FC<FilesComponentProps> = ({
   folderData,
   folderName,
   setFolderName,
-  handleCreateFolder,
   showDropzone,
   handleOpenDropzone,
+  handleEditFolder,
+  handleDeleteFolder,
+  openFolderDialog,
+  handleCloseFolderDialog,
+  folderDialogName,
+  handleFolderDialogName,
   attachments,
   setAttachments,
   handleUploadFile,
@@ -73,12 +78,21 @@ const FilesComponent: FC<FilesComponentProps> = ({
           </Box> */}
           <Box display="flex" className={classes.dropBox} flexDirection="column">
             <Loading activate={folderLoading} full color="secondary">
-              <FilesTreeComponent
-                data={folderData}
-                item={folderName}
-                setItem={setFolderName}
-                handleCreateItem={handleCreateFolder}
-              />
+              <>
+                <FilesTreeComponent
+                  data={folderData}
+                  item={folderName}
+                  setItem={setFolderName}
+                  handleEdit={handleEditFolder}
+                  handleDelete={handleDeleteFolder}
+                />
+                <FilesDialogComponent
+                  open={openFolderDialog}
+                  handleClose={handleCloseFolderDialog}
+                  input={folderDialogName}
+                  handleInput={handleFolderDialogName}
+                />
+              </>
             </Loading>
           </Box>
           {showDropzone && (

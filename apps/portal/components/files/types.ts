@@ -1,17 +1,7 @@
 /** @format */
 
-import { Files } from '@app/portal/files/models/files.dto';
 import { FilesFolder } from '@app/portal/files/models/files.folder.dto';
 import { DropzoneFile } from '../dropzone/types';
-
-// export interface MediaComponentProps {
-//   loading: boolean;
-//   current?: MediaQueryProps;
-//   data: MediaQueryProps[];
-//   handleCurrent: (_: MediaQueryProps) => () => void;
-//   handleCloseCurrent: () => void;
-//   handleDelete: (_: MediaQueryProps) => () => void;
-// }
 
 export interface FilesComponentProps {
   fileLoading: boolean;
@@ -20,9 +10,14 @@ export interface FilesComponentProps {
   folderData?: FilesFolder[];
   folderName: string;
   setFolderName: React.Dispatch<React.SetStateAction<string>>;
-  handleCreateFolder: (_: string) => void;
   showDropzone: boolean;
   handleOpenDropzone: () => void;
+  handleEditFolder: (_: string, __?: string) => void;
+  handleDeleteFolder: (_: string) => void;
+  openFolderDialog: boolean;
+  folderDialogName: string;
+  handleFolderDialogName: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleCloseFolderDialog: () => void;
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   handleUploadFile: () => void;
@@ -31,8 +26,9 @@ export interface FilesComponentProps {
 export interface FilesTreeComponentProps {
   data?: FilesFolder[];
   item: string;
+  handleEdit: (_: string, __?: string) => void;
+  handleDelete: (_: string) => void;
   setItem: React.Dispatch<React.SetStateAction<string>>;
-  handleCreateItem: (_: string) => void;
 }
 
 export interface FilesQueryProps {
@@ -45,7 +41,21 @@ export interface FilesQueryProps {
 }
 
 export type FilesFolderTreeVirtual = {
-  id: string;
-  name?: string;
+  id?: string;
+  name: string;
+  pathname: string;
   childs: FilesFolderTreeVirtual[];
+};
+
+export type FilesDialogComponentProps = {
+  open: boolean;
+  input: string;
+  handleInput: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleClose: () => void;
+};
+
+export type FolderDialogState = {
+  id?: string;
+  pathname: string;
+  name: string;
 };
