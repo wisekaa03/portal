@@ -5,7 +5,7 @@ import React, { FC, useContext } from 'react';
 // #endregion
 // #region Imports Local
 import { useTranslation } from '../../lib/i18n-client';
-import { TreeView, TreeItem } from '../tree-view';
+import { TreeView, TreeItemDefault, TreeItemCreator } from '../tree-view';
 import { FilesTreeComponentProps, FilesFolderTreeVirtual } from './types';
 import { FilesFolder } from '../../src/files/models/files.folder.dto';
 import { ProfileContext } from '../../lib/context';
@@ -15,7 +15,7 @@ import { FILES_SHARED_NAME } from '../../lib/constants';
 const CreateFolderItem = ({ nodeId, handleCreate, depth = 0 }): React.ReactElement => {
   const { t } = useTranslation();
 
-  return <TreeItem nodeId={nodeId} labelText={t('files:addFolder')} depth={depth} handleCreate={handleCreate} />;
+  return <TreeItemCreator nodeId={nodeId} labelText={t('files:addFolder')} depth={depth} handleCreate={handleCreate} />;
 };
 
 const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data, item, setItem, handleCreateItem }) => {
@@ -78,10 +78,10 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data, item, setItem, 
       const name = `${path || ''}/${child.id}`;
 
       return (
-        <TreeItem key={name} nodeId={name} labelText={child.name || child.id} depth={depth}>
+        <TreeItemDefault key={name} nodeId={name} labelText={child.name || child.id} depth={depth}>
           {child.childs.map((c) => recursive(c, name, depth + 1))}
           <CreateFolderItem nodeId={`/${name}/`} depth={depth + 1} handleCreate={handleCreateItem} />
-        </TreeItem>
+        </TreeItemDefault>
       );
     };
 

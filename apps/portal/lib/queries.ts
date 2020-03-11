@@ -364,7 +364,7 @@ export const FOLDER = gql`
 
 export const EDIT_FOLDER = gql`
   mutation EditFolder($id: ID, $shared: Boolean!, $pathname: String!) {
-    editFolder(id: $id, pathname: $pathname) {
+    editFolder(id: $id, shared: $shared, pathname: $pathname) {
       id
       createdUser {
         id

@@ -4,31 +4,16 @@
 import React, { useState } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, InputBase } from '@material-ui/core';
-import MuiTreeView, { TreeViewProps as MuiTreeViewProps } from '@material-ui/lab/TreeView';
-import MuiTreeItem, { TreeItemProps as MuiTreeItemProps } from '@material-ui/lab/TreeItem';
+import MuiTreeView from '@material-ui/lab/TreeView';
+import MuiTreeItem from '@material-ui/lab/TreeItem';
 import DirectoryIcon from '@material-ui/icons/Folder';
 import AddIcon from '@material-ui/icons/AddCircleOutlineRounded';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import clsx from 'clsx';
-// import DirectorySharedIcon from '@material-ui/icons/FolderShared';
-// import FileIcon from '@material-ui/icons/Note';
 // #endregion
 // #region Imports Local
+import { TreeItemDefaultProps, TreeItemCreatorProps, TreeViewProps, TreeItemProps } from './types';
 // #endregion
-
-type TreeItemProps = MuiTreeItemProps & {
-  labelInfo?: string;
-  pathname?: string;
-  handleCreate?: (_: string) => void;
-  labelText: string;
-  depth?: number;
-};
-
-type TreeViewProps = MuiTreeViewProps & {
-  selected: string;
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
-};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,10 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: fade(theme.palette.secondary.main, 0.9),
         color: '#fff',
       },
-      // '&:focus > $content:not($action)': {
-      //   backgroundColor: fade(theme.palette.secondary.main, 0.9),
-      //   color: '#fff',
-      // },
       '&:focus > $content $label': {
         backgroundColor: 'unset',
       },
@@ -53,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
       'color': theme.palette.secondary.main,
       'borderTopRightRadius': theme.spacing(2),
       'borderBottomRightRadius': theme.spacing(2),
-      // 'paddingRight': theme.spacing(),
       'fontWeight': theme.typography.fontWeightMedium,
       '$expanded > &': {
         fontWeight: theme.typography.fontWeightRegular,
@@ -62,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: fade(theme.palette.secondary.main, 0.2),
       },
     },
-    action: {},
     group: {
       'marginLeft': 0,
       '& $content': {
@@ -82,17 +61,6 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       padding: theme.spacing(0.5, 0),
     },
-    labelIcon: {
-      marginRight: theme.spacing(),
-    },
-    labelText: {
-      fontWeight: 'inherit',
-      flexGrow: 1,
-    },
-    input: {
-      color: theme.palette.secondary.main,
-      fontSize: '.875rem',
-    },
     parentNode: {
       '& ul li $content': {
         paddingLeft: `calc(var(--node-depth) * ${theme.spacing(2)}px)`,
@@ -101,27 +69,66 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const TreeItem = ({
+const useStylesDefault = makeStyles((theme: Theme) =>
+  createStyles({
+    icon: {
+      marginRight: theme.spacing(),
+    },
+    text: {
+      fontWeight: 'inherit',
+      flexGrow: 1,
+    },
+  }),
+);
+
+const useStylesCreator = makeStyles((theme: Theme) =>
+  createStyles({
+    icon: {
+      marginRight: theme.spacing(),
+    },
+    input: {
+      color: theme.palette.secondary.main,
+      fontSize: '.875rem',
+    },
+  }),
+);
+
+export const TreeItemDefault = ({ labelText, labelInfo, ...rest }: TreeItemDefaultProps): React.ReactElement => {
+  const classes = useStylesDefault({});
+
+  return (
+    <TreeItem
+      label={
+        <>
+          <DirectoryIcon color="inherit" className={classes.icon} />
+          <Typography variant="body2" className={classes.text}>
+            {labelText}
+          </Typography>
+          {labelInfo && (
+            <Typography variant="caption" color="inherit">
+              {labelInfo}
+            </Typography>
+          )}
+        </>
+      }
+      {...rest}
+    />
+  );
+};
+
+export const TreeItemCreator = ({
   labelText,
-  labelInfo,
   handleCreate,
-  depth = 0,
+  nodeId,
   ...rest
-}: TreeItemProps): React.ReactElement => {
-  const classes = useStyles({});
+}: TreeItemCreatorProps): React.ReactElement => {
+  const classes = useStylesCreator({});
 
   const [value, setValue] = useState<string>('');
-
-  const action = handleCreate !== undefined;
-
-  const handleChangeItem = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setValue(event.currentTarget.value);
-  };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     if (event.keyCode === 13) {
       // TODO: элемент создающий новую папку имеет nodeId вида '/${parentNodeName}' (слеш вначале)
-      const { nodeId } = rest;
       const pathname = value ? `${nodeId.substring(1)}${value.trim()}` : '';
 
       if (pathname) {
@@ -131,38 +138,38 @@ export const TreeItem = ({
     }
   };
 
+  const handleChangeItem = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    setValue(event.currentTarget.value);
+  };
+
+  return (
+    <TreeItem
+      nodeId={nodeId}
+      label={
+        <>
+          <AddIcon color="inherit" className={classes.icon} />
+          <InputBase
+            color="secondary"
+            value={value}
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={handleKeyDown}
+            onChange={handleChangeItem}
+            placeholder={labelText}
+            className={classes.input}
+          />
+        </>
+      }
+      {...rest}
+    />
+  );
+};
+
+const TreeItem = ({ label, depth = 0, ...rest }: TreeItemProps): React.ReactElement => {
+  const classes = useStyles({});
+
   return (
     <MuiTreeItem
-      label={
-        <div className={classes.labelRoot}>
-          {action ? (
-            <>
-              <AddIcon color="inherit" className={classes.labelIcon} />
-              <InputBase
-                color="secondary"
-                value={value}
-                onClick={(event) => event.stopPropagation()}
-                onKeyDown={handleKeyDown}
-                onChange={handleChangeItem}
-                placeholder={labelText}
-                className={classes.input}
-              />
-            </>
-          ) : (
-            <>
-              <DirectoryIcon color="inherit" className={classes.labelIcon} />
-              <Typography variant="body2" className={classes.labelText}>
-                {labelText}
-              </Typography>
-              {labelInfo && (
-                <Typography variant="caption" color="inherit">
-                  {labelInfo}
-                </Typography>
-              )}
-            </>
-          )}
-        </div>
-      }
+      label={<div className={classes.labelRoot}>{label}</div>}
       style={
         {
           '--node-depth': depth,
@@ -171,7 +178,7 @@ export const TreeItem = ({
       className={rest.children ? classes.parentNode : undefined}
       classes={{
         root: classes.root,
-        content: clsx(classes.content, { [classes.action]: action }),
+        content: classes.content,
         expanded: classes.expanded,
         group: classes.group,
         label: classes.label,
