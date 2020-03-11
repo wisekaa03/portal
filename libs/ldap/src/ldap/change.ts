@@ -3,7 +3,6 @@
 
 // Copyright 2011 Mark Cavage, Inc.  All rights reserved.
 
-import { ok } from 'assert-plus';
 import { Attribute } from './attribute';
 
 export class Change {
@@ -122,8 +121,6 @@ export class Change {
     obj: Record<any, any>,
     scalar: any,
   ): any => {
-    ok(Array.isArray(change.modification.vals));
-
     const { type } = change.modification;
     const { vals } = change.modification;
     let data = obj[type];
