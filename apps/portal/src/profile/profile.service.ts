@@ -11,10 +11,9 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
-import { LdapService, LdapResponseUser } from '@app/ldap';
-import { ProfileEntity } from './profile.entity';
+import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
 import { Profile } from './models/profile.dto';
-import { UserEntity } from '../user/user.entity';
+import { ProfileEntity } from './profile.entity';
 import { LoginService, Gender } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
 import { constructUploads } from '../shared/upload';
@@ -426,11 +425,11 @@ export class ProfileService {
 
   /**
    * changeProfile
-   * @param {Request} req - Express Request
-   * @param {Profile} profile - Profile params
-   * @param {Promise<FileUpload>} thumbnailPhoto - Avatar
-   * @returns {ProfileEntity} - The corrected ProfileEntity
-   * @throws {Error} - Exception
+   * @param {Request} req Express Request
+   * @param {Profile} profile Profile params
+   * @param {Promise<FileUpload>} thumbnailPhoto Avatar
+   * @returns {Promise<ProfileEntity>} The corrected ProfileEntity
+   * @throws {Error} Exception
    */
   async changeProfile(req: Request, profile: Profile, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
     // В резолвере проверка на юзера уже есть
@@ -458,19 +457,6 @@ export class ProfileService {
       // TODO: продумать варианты отчистки и безопасности
       return typeof value === 'string' ? value.trim() : value;
     };
-
-    if (thumbnailPhoto) {
-      await Promise.all(
-        await constructUploads([thumbnailPhoto], ({ /* filename, */ file }) => {
-          // TODO: сохранить в профиле пользователя картинку
-          modification.thumbnailPhoto = file;
-        }),
-      ).catch((error: Error) => {
-        this.logService.error(error.message, error, 'OldTicketService');
-
-        throw error;
-      });
-    }
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
@@ -556,7 +542,6 @@ export class ProfileService {
     if (Object.keys(modification.comment).length === 0) {
       delete modification.comment;
     } else {
-      // если сломался синтаксис, в адешке все перепишется
       let oldComment = {};
 
       try {
@@ -567,18 +552,34 @@ export class ProfileService {
       modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
     }
 
-    if (!Object.keys(modification).length) {
-      throw new Error(GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE);
-    }
-
     const ldapUpdated = Object.keys(modification).map(
       (key) =>
-        new Ldap.Change({
+        new Change({
           operation: 'replace',
-          modification: { [key]: modification[key] },
+          modification: new Attribute({ type: key, vals: modification[key] }),
         }),
     );
 
+    if (thumbnailPhoto) {
+      await Promise.all(
+        await constructUploads([thumbnailPhoto], ({ file }) => {
+          ldapUpdated.push(
+            new Change({
+              operation: 'replace',
+              modification: new Attribute({ type: 'thumbnailPhoto', vals: file }),
+            }),
+          );
+        }),
+      ).catch((error: Error) => {
+        this.logService.error(error.message, error, 'ProfileService');
+
+        throw error;
+      });
+    }
+
+    if (ldapUpdated.length < 1) {
+      throw new Error(GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE);
+    }
     await this.ldapService
       .modify(
         created.dn,

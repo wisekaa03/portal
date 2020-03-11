@@ -581,6 +581,13 @@ export class LdapService extends EventEmitter {
           if (password) {
             // If a password, then we try to connect with user's login and password, and try to modify
             this.userClient.bind(dn, password, (bindErr?: Ldap.Error): any => {
+              data.forEach((d, i, a) => {
+                if (d.modification.type === 'thumbnailPhoto' || d.modification.type === 'jpegPhoto') {
+                  // eslint-disable-next-line no-param-reassign
+                  a[i].modification.vals = '...skipped...';
+                }
+              });
+
               if (bindErr) {
                 this.logger.error('bind error:', bindErr, 'LDAP');
 
@@ -618,13 +625,14 @@ export class LdapService extends EventEmitter {
               dn,
               data,
               async (searchErr: Ldap.Error | null): Promise<void> => {
+                data.forEach((d, i, a) => {
+                  if (d.modification.type === 'thumbnailPhoto' || d.modification.type === 'jpegPhoto') {
+                    // eslint-disable-next-line no-param-reassign
+                    a[i].modification.vals = '...skipped...';
+                  }
+                });
+
                 if (searchErr) {
-                  data.forEach((d, i, a) => {
-                    if (d.modification.type === 'thumbnailPhoto') {
-                      // eslint-disable-next-line no-param-reassign
-                      a[i].modification.vals = '';
-                    }
-                  });
                   this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, searchErr, 'LDAP');
 
                   reject(searchErr);
