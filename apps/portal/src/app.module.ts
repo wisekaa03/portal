@@ -21,7 +21,7 @@ import { CacheInterceptorProvider } from '@app/cache.interceptor';
 // import { HttpErrorFilter } from './filters/http-error.filter';
 import { DateScalar } from './shared/date.scalar';
 import { ByteArrayScalar } from './shared/bytearray.scalar';
-import { HomeModule } from './controllers/controllers.module';
+import { ControllersModule } from './controllers/controllers.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { NewsModule } from './news/news.module';
@@ -222,8 +222,8 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     NewsModule,
     // #endregion
 
-    // #region Home page
-    HomeModule,
+    // #region Controllers module
+    ControllersModule,
     // #endregion
 
     // #region Ticket module

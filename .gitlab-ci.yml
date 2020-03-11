@@ -22,7 +22,6 @@ prepare:
       - node_modules/
   script:
     - env && echo -n "node version " && node -v
-    # - apt-get upgrade && apt-get install -y openssl libpq-dev
     - yarn install --production=true
 
 build_development:
@@ -94,7 +93,6 @@ docker:
     - |
       \
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
-    # TODO: авторизация по логину, пока нету, так что у нас в открытом доступе по docker-registry.kngk.org лежит куча portal-ов
     # - docker login
     - docker build --tag ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${DOCKER_REGISTRY}/${CONTAINER_IMAGE}
@@ -118,8 +116,6 @@ helm_development:
         --install --namespace=${NAMESPACE} \
         --debug --values helm/portal/values.yaml \
         --set replicaCount="1" \
-        --set nameOverride="portal-dev" \
-        --set fullnameOverride="portal-dev" \
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
         --set PORT="${PORT}" \
@@ -167,8 +163,6 @@ helm_development:
         --install --namespace=${NAMESPACE} \
         --debug --values helm/portal-synch/values.yaml \
         --set replicaCount="1" \
-        --set nameOverride="portal-synch-dev" \
-        --set fullnameOverride="portal-synch-dev" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"

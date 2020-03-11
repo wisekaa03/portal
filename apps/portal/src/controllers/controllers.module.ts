@@ -37,4 +37,4 @@ import { SettingsController } from './settings/settings.controller';
     SettingsController,
   ],
 })
-export class HomeModule {}
+export class ControllersModule {}
