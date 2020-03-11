@@ -1,6 +1,6 @@
 /** @format */
 
-// Copyright 2011 Mark Cavage, Inc.  All rights reserved.
+// Copyright 2020 Stanislav V Vyalyi.  All rights reserved.
 
 export const Protocol = {
   // Misc

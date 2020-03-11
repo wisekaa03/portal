@@ -88,12 +88,12 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           <Card className={classes.card}>
             <CardActions disableSpacing>
               <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleSync}>
-                {!syncLoading ? t('admin:synch:synch') : t('admin:synch:wait')}
+                {!syncLoading ? t('admin:sync:sync') : t('admin:sync:wait')}
               </Button>
             </CardActions>
             <CardContent>
               <Typography color="textSecondary" component="p">
-                {t('admin:synch:description')}
+                {t('admin:sync:description')}
               </Typography>
             </CardContent>
           </Card>

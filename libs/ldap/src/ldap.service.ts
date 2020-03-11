@@ -16,10 +16,11 @@ import {
   LDAP_OPTIONS,
   LdapModuleOptions,
   LDAPCache,
-  LDAP_SYNCH,
+  LDAP_SYNC,
   LdapResponseUser,
   ldapADattributes,
 } from './ldap.interface';
+import { Change } from './ldap/change';
 // #endregion
 
 @Injectable()
@@ -545,13 +546,13 @@ export class LdapService extends EventEmitter {
     }
 
     return this.search(this.opts.searchBaseAllUsers, opts)
-      .then((synch) => {
-        if (synch) {
-          synch.forEach((u) => {
+      .then((sync) => {
+        if (sync) {
+          sync.forEach((u) => {
             this.getGroups(u);
           });
 
-          return synch as LdapResponseUser[];
+          return sync as LdapResponseUser[];
         }
 
         this.logger.error('Synchronize unknown error.', undefined, 'LDAP');
@@ -568,13 +569,13 @@ export class LdapService extends EventEmitter {
    *
    * @private
    * @param {string} dn LDAP Distiguished Name
-   * @param {Ldap.Change[]} data LDAP modify data
+   * @param {Change[]} data LDAP modify data
    * @param {string} username The optional parameter
    * @param {string} password The optional parameter
    * @returns {boolean} The result
    * @throws {Ldap.Error}
    */
-  public async modify(dn: string, data: Ldap.Change[], username?: string, password?: string): Promise<boolean> {
+  public async modify(dn: string, data: Change[], username?: string, password?: string): Promise<boolean> {
     return this.adminBind().then(
       () =>
         new Promise<boolean>((resolve, reject) => {

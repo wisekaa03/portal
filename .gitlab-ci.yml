@@ -7,7 +7,7 @@ variables:
   DOCKER_DRIVER: overlay2
   PREFIX: ""
   RELEASE_NAME: ${PREFIX}${CI_PROJECT_NAME}
-  RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-synch
+  RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-sync
   CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
 
 prepare:
@@ -43,8 +43,8 @@ build_development:
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u || true
     - time yarn build
-    - time yarn build:synch
-    - time yarn build:synchJob
+    - time yarn build:sync
+    - time yarn build:syncJob
   artifacts:
     paths:
       - .next/
@@ -70,8 +70,8 @@ build_production:
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u || true
     - time yarn build
-    - time yarn build:synch
-    - time yarn build:synchJob
+    - time yarn build:sync
+    - time yarn build:syncJob
   artifacts:
     paths:
       - .next/
@@ -157,11 +157,11 @@ helm_development:
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
-    # Portal-synch
+    # Portal-sync
     - |
-      helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-synch \
+      helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
         --install --namespace=${NAMESPACE} \
-        --debug --values helm/portal-synch/values.yaml \
+        --debug --values helm/portal-sync/values.yaml \
         --set replicaCount="1" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
@@ -226,11 +226,11 @@ helm_production:
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"
-    # Portal-synch
+    # Portal-sync
     - |
-      helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-synch \
+      helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
         --install --namespace=${NAMESPACE} \
-        --debug --values helm/portal-synch/values.yaml \
+        --debug --values helm/portal-sync/values.yaml \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}"

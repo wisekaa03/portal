@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": false,
     "experimentalDecorators": true,
-    "outDir": "../../dist/apps/synch-job"
+    "outDir": "../../dist/apps/sync-job"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]

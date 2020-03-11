@@ -10,7 +10,7 @@ import { Request } from 'express';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { LdapService, LdapResponseUser } from '@app/ldap';
-import { SYNCHRONIZATION_SERVICE, SYNCHRONIZATION } from '../../../synch/src/app.constants';
+import { LDAP_SYNC, LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
 import { UserEntity, UserResponse } from './user.entity';
 import { User, UserSettings } from './models/user.dto';
 import { ProfileService } from '../profile/profile.service';
@@ -25,7 +25,7 @@ import { GroupEntity } from '../group/group.entity';
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(SYNCHRONIZATION_SERVICE) private readonly client: ClientProxy,
+    @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
     private readonly logService: LogService,
     private readonly ldapService: LdapService,
     private readonly profileService: ProfileService,
@@ -167,8 +167,7 @@ export class UserService {
    * @param {Request} _req Express.Request
    * @returns {Promise<boolean>} The result of synchronization
    */
-  synchronization = async (_req?: Request): Promise<boolean> =>
-    this.client.send<boolean>(SYNCHRONIZATION, []).toPromise();
+  synchronization = async (_req?: Request): Promise<boolean> => this.client.send<boolean>(LDAP_SYNC, []).toPromise();
 
   /**
    * Create

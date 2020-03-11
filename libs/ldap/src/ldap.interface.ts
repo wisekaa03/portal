@@ -6,7 +6,7 @@ import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ClientOptions, SearchEntryObject } from 'ldapjs';
 // #endregion
 
-export const LDAP_SYNCH = 'SYNCHRONIZATION';
+export const LDAP_SYNC = 'SYNC';
 export const LDAP_OPTIONS = 'LDAP_OPTIONS';
 
 export type Scope = 'base' | 'one' | 'sub';

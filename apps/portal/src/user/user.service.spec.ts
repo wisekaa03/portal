@@ -10,7 +10,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
-import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
+import { LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
 import { UserService } from './user.service';
 import { ProfileService } from '../profile/profile.service';
 import { GroupService } from '../group/group.service';
@@ -57,7 +57,7 @@ describe('UserService', () => {
       providers: [
         UserService,
         { provide: LogService, useValue: serviceMock },
-        { provide: SYNCHRONIZATION_SERVICE, useValue: serviceMock },
+        { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
         { provide: ClientProxy, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },

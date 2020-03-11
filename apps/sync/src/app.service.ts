@@ -8,12 +8,10 @@ import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { UserService } from '../../portal/src/user/user.service';
 import { ProfileService } from '../../portal/src/profile/profile.service';
-import { UserEntity } from '../../portal/src/user/user.entity';
-import { ProfileEntity } from '../../portal/src/profile/profile.entity';
 // #endregion
 
 @Injectable()
-export class SynchService {
+export class SyncService {
   constructor(
     private readonly logService: LogService,
     private readonly ldapService: LdapService,

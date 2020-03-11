@@ -1,7 +1,7 @@
 /** @format */
 /* eslint-disable import/no-extraneous-dependencies */
 
-// Copyright 2011 Mark Cavage, Inc.  All rights reserved.
+// Copyright 2020 Stanislav V Vyaliy.  All rights reserved.
 
 import asn1 from 'asn1';
 
@@ -12,10 +12,20 @@ export class Attribute {
 
   public type: any;
 
+  /**
+   * Get vals
+   *
+   * @returns {string | Buffer}
+   */
   get vals(): string | Buffer {
     return this._vals.map((v: any) => v.toString(this.bufferEncoding(this.type)));
   }
 
+  /**
+   * Set vals
+   *
+   * @param {string | Buffer} vals
+   */
   set vals(vals: string | Buffer) {
     this._vals = [];
     if (Array.isArray(vals)) {
@@ -27,11 +37,21 @@ export class Attribute {
     }
   }
 
+  /**
+   * Get buffers
+   *
+   * @returns {Record<any, any>} buffers
+   */
   get buffers(): Record<any, any> {
     return this._vals;
   }
 
-  get json(): Record<any, any> {
+  /**
+   * Get json
+   *
+   * @returns {Record<string, any>} { type, vals }
+   */
+  get json(): Record<string, any> {
     return {
       type: this.type,
       vals: this.vals,

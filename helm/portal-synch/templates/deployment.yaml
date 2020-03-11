@@ -29,7 +29,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["start:synch"]
+          args: ["start:sync"]
           ports:
             - name: microsvc
               containerPort: {{ .Values.PORT | default 4222 }}

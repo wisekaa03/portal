@@ -5,19 +5,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
 import { AppController } from './app.controller';
-import { SynchService } from './app.service';
+import { SyncService } from './app.service';
 // #endregion
 
 jest.mock('./app.service');
 
-describe('Synch controller', () => {
+describe('Sync controller', () => {
   let appController: AppController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       imports: [],
-      providers: [SynchService],
+      providers: [SyncService],
     }).compile();
 
     appController = app.get<AppController>(AppController);

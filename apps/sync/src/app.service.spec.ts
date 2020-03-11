@@ -9,7 +9,7 @@ import { I18nService } from 'nestjs-i18n';
 // import { ConfigModule, ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
-import { SynchService } from './app.service';
+import { SyncService } from './app.service';
 import { GroupService } from '../../portal/src/group/group.service';
 import { UserService } from '../../portal/src/user/user.service';
 import { ProfileService } from '../../portal/src/profile/profile.service';
@@ -18,14 +18,14 @@ import { ImageService } from '../../../libs/image/src/image.service';
 
 const serviceMock = jest.fn(() => ({}));
 
-describe('Synch service', () => {
-  let libs: SynchService;
+describe('Sync service', () => {
+  let libs: SyncService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
-        SynchService,
+        SyncService,
         { provide: I18nService, useValue: serviceMock },
         { provide: LogService, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
@@ -36,7 +36,7 @@ describe('Synch service', () => {
       ],
     }).compile();
 
-    libs = module.get<SynchService>(SynchService);
+    libs = module.get<SyncService>(SyncService);
   });
 
   it('should be defined', () => {

@@ -1,5 +1,5 @@
 apiVersion: v1
-appVersion: "1.0"
-description: Portal-synch helm chart for Kubernetes
-name: portal-synch
+appVersion: "1.1"
+description: Portal-sync helm chart for Kubernetes
+name: portal-sync
 version: 1.0

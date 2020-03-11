@@ -6,8 +6,8 @@ import { ClientRedis } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
-import { SYNCHRONIZATION } from '../../synch/src/app.constants';
+// import { LogService } from '@app/logger';
+import { LDAP_SYNC } from '../../sync/src/app.constants';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -19,7 +19,7 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
 
   await client.connect();
 
-  return client.send<boolean>(SYNCHRONIZATION, []).toPromise();
+  return client.send<boolean>(LDAP_SYNC, []).toPromise();
 }
 
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));

@@ -81,13 +81,13 @@ elif [ -n "$*" -a "$1" = "start" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
   $NODE .next/nest/main.js
 
-elif [ -n "$*" -a "$1" = "start:synch" ]; then
+elif [ -n "$*" -a "$1" = "start:sync" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  $NODE dist/apps/synch/main.js
+  $NODE dist/apps/sync/main.js
 
-elif [ -n "$*" -a "$1" = "start:synchJob" ]; then
+elif [ -n "$*" -a "$1" = "start:syncJob" ]; then
   $NODE ./node_modules/typeorm/cli.js schema:sync
-  $NODE dist/apps/synch-job/main.js
+  $NODE dist/apps/sync-job/main.js
 
 elif [ -n "$*" ]; then
   NODE_ENV=development

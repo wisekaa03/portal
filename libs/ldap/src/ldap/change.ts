@@ -1,7 +1,7 @@
 /** @format */
 /* eslint-disable import/no-extraneous-dependencies */
 
-// Copyright 2011 Mark Cavage, Inc.  All rights reserved.
+// Copyright 2020 Stanislav V Vyaliy.  All rights reserved.
 
 import { Attribute } from './attribute';
 
@@ -10,7 +10,7 @@ export class Change {
 
   private _operation: number;
 
-  get operation(): string {
+  get operation(): 'add' | 'delete' | 'replace' {
     switch (this._operation) {
       case 0x00:
         return 'add';
@@ -23,8 +23,8 @@ export class Change {
     }
   }
 
-  set operation(val: string) {
-    switch (val.toLowerCase()) {
+  set operation(val: 'add' | 'delete' | 'replace') {
+    switch (val) {
       case 'add':
         this._operation = 0x00;
         break;

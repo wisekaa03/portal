@@ -20,22 +20,22 @@
         "tsConfigPath": "apps/portal/tsconfig.app.json"
       }
     },
-    "synch": {
+    "sync": {
       "type": "application",
-      "root": "apps/synch",
+      "root": "apps/sync",
       "entryFile": "main",
-      "sourceRoot": "apps/synch/src",
+      "sourceRoot": "apps/sync/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/synch/tsconfig.app.json"
+        "tsConfigPath": "apps/sync/tsconfig.app.json"
       }
     },
-    "synch-job": {
+    "sync-job": {
       "type": "application",
-      "root": "apps/synch-job",
+      "root": "apps/sync-job",
       "entryFile": "main",
-      "sourceRoot": "apps/synch-job/src",
+      "sourceRoot": "apps/sync-job/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/synch-job/tsconfig.app.json"
+        "tsConfigPath": "apps/sync-job/tsconfig.app.json"
       }
     },
     "soap": {

@@ -58,10 +58,6 @@ apps/portal/components/
 apps/portal/layouts/
 apps/portal/lib/
 apps/portal/pages/
-# public/
-# src/
-# apps/portal/
-# apps/synchronization/
 target/
 typings/
 

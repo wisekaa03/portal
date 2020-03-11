@@ -8,7 +8,7 @@ import { Transport, ClientProxyFactory } from '@nestjs/microservices';
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule } from '@app/logger';
-import { SYNCHRONIZATION_SERVICE } from '../../../synch/src/app.constants';
+import { LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { ProfileModule } from '../profile/profile.module';
@@ -36,7 +36,7 @@ import { GroupModule } from '../group/group.module';
     UserResolver,
 
     {
-      provide: SYNCHRONIZATION_SERVICE,
+      provide: LDAP_SYNC_SERVICE,
       useFactory: (configService: ConfigService) => {
         return ClientProxyFactory.create({
           transport: Transport.REDIS,

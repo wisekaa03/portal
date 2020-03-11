@@ -40,11 +40,11 @@
       "@app/portal/*": [
         "apps/portal/src/*"
       ],
-      "@app/synch": [
-        "apps/synch/src"
+      "@app/sync": [
+        "apps/sync/src"
       ],
-      "@app/synch/*": [
-        "apps/synch/src/*"
+      "@app/sync/*": [
+        "apps/sync/src/*"
       ],
       "@app/soap": [
         "libs/soap/src"
