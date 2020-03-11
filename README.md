@@ -77,20 +77,7 @@ $ createuser -P -l portal
 $ createdb portal -O portaldb
 ```
 
-#### For Windows Users
-
-##### Python
-
-Because Portal uses [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js), we need a Python:
-
-- Download an installer at <https://www.python.org/downloads/windows>
-- Install with "Add Python 3.X to PATH" checked
-
-##### [windows-build-tools](https://github.com/felixrieseberg/windows-build-tools)
-
-- Run `npm install --global --production windows-build-tools` from an elevated PowerShell or CMD.exe **as Administrator**
-
-##### PostgreSQL
+#### PostgreSQL
 
 - Download an installer at <https://www.postgresql.org/download/windows>
 - Run the installer with a flag `--install_runtimes 0` like this:
@@ -99,7 +86,7 @@ Because Portal uses [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)
 > postgresql-11.2-1-windows-x64.exe --install_runtimes 0
 ```
 
-##### pgAdmin
+#### pgAdmin
 
 - Download a latest installer at <https://www.pgadmin.org/download>
 - Run the pgAdmin and login with a root user
@@ -217,11 +204,11 @@ We use Kubernetes/Docker production.
 
 ## Trouble Shootings
 
-### Node.js v10 vs v12
+### Node.js v10 vs v13
 
-We use Node.js **v12**, so if you use v10, please `rm -f yarn.lock`:
+We use Node.js **v13**, so if you use v10, please `rm -f yarn.lock`:
 
-(Because Node.js v10 and v12 are incompatible in terms of no coexistence. APIs are compatible.)
+(Because Node.js v10 and v13 are incompatible in terms of no coexistence. APIs are compatible.)
 
 ```bash
 # remove incompatible dependencies
