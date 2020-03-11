@@ -40,7 +40,11 @@ export default {
     const { t } = useTranslationRef;
 
     errors.graphQLErrors.forEach(({ message }) => {
-      this.show(t('common:error', { message }));
+      if (typeof message === 'object') {
+        this.show(t('common:error', { message: (message as any).error }));
+      } else {
+        this.show(t('common:error', { message }));
+      }
     });
 
     if (errors.networkError) {
