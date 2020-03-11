@@ -91,9 +91,13 @@ export class FilesService {
   folder = async (user: UserResponse, id?: string): Promise<FilesFolderResponse[]> => {
     this.logService.log(`Folder: id={${id}}`, 'FilesService');
 
-    const where: Record<any, any> = [{ user }, { user: IsNull() }];
+    const where: Record<any, any> = [];
     if (id) {
-      where.push({ id });
+      where.push({ id, user });
+      where.push({ id, user: IsNull() });
+    } else {
+      where.push({ user });
+      where.push({ user: IsNull() });
     }
 
     const result = await this.filesFolderRepository
