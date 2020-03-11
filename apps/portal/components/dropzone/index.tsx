@@ -101,6 +101,11 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       maxWidth: thumbHeight + theme.spacing(),
     },
+    name: {
+      maxWidth: '100%',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
   }),
 );
 
@@ -217,7 +222,7 @@ const Dropzone = ({
                       )}
                     </div>
                   </div>
-                  <span>{file.file.name}</span>
+                  <span className={classes.name}>{file.file.name}</span>
                 </>
               </Badge>
             ))}
