@@ -9,5 +9,12 @@
   "addFolder": "Create Folder",
   "editFolder": "Edit Folder",
   "deleteFolder": "Delete Folder",
-  "confirmDelete": "Confirm delete folder {{input}}?"
+  "confirmDelete": "Confirm delete folder {{input}}?",
+  "notFound": "Files not found",
+  "table": {
+    "name": "Name",
+    "date": "Date",
+    "type": "Type",
+    "size": "Size"
+  }
 }

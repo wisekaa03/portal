@@ -2,7 +2,17 @@
 // #region Imports NPM
 import React, { FC } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, Fab } from '@material-ui/core';
+import {
+  Box,
+  Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 // #endregion
 // #region Imports Local
@@ -25,7 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const FilesTableComponent: FC<FilesTableComponentProps> = ({ search, handleSearch }) => {
+const HeaderLabels = ['name', 'date', 'type', 'size'];
+
+const FilesTableComponent: FC<FilesTableComponentProps> = ({ data, search, handleSearch }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
@@ -35,6 +47,26 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({ search, handleSearc
         <Search value={search} handleChange={handleSearch} />
         <RefreshButton noAbsolute dense />
       </Box>
+      {data.length === 0 ? (
+        <Box display="flex" justifyContent="center" mt={2} color="gray">
+          <Typography variant="h5">{t('files:notFound')}</Typography>
+        </Box>
+      ) : (
+        <Paper elevation={0}>
+          <TableContainer>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  {HeaderLabels.map((col) => (
+                    <TableCell key={col}>{t(`files:table.${col}`)}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody />
+            </Table>
+          </TableContainer>
+        </Paper>
+      )}
     </div>
   );
 };

@@ -12,6 +12,7 @@ export interface FilesComponentProps {
   setFolderName: React.Dispatch<React.SetStateAction<string>>;
   showDropzone: boolean;
   handleOpenDropzone: () => void;
+  handleCloseDropzone: () => void;
   handleEditFolder: (_: string, __: number, ___?: string) => void;
   openFolderDialog: number;
   folderDialogName: string;
@@ -64,6 +65,7 @@ export type FolderDialogState = {
 };
 
 export type FilesTableComponentProps = {
+  data?: FilesQueryProps[];
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };

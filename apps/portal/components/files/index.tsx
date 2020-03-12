@@ -15,12 +15,19 @@ import Dropzone from '../dropzone';
 import FilesTreeComponent from './tree';
 import FilesDialogComponent from './dialog';
 import FilesTableComponent from './table';
+import Button from '../ui/button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dropBox: {
       padding: theme.spacing(1, 2),
+    },
+    dropBoxActions: {
+      'marginBottom': theme.spacing(),
+      '& > button:first-child': {
+        marginRight: theme.spacing(),
+      },
     },
     firstBlock: {
       display: 'grid',
@@ -53,6 +60,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
   setFolderName,
   showDropzone,
   handleOpenDropzone,
+  handleCloseDropzone,
   handleEditFolder,
   openFolderDialog,
   handleAcceptFolderDialog,
@@ -100,6 +108,12 @@ const FilesComponent: FC<FilesComponentProps> = ({
           </Box>
           {showDropzone && (
             <Box display="flex" className={classes.dropBox} flexDirection="column">
+              <Box className={classes.dropBoxActions}>
+                <Button disabled={attachments.length === 0}>{t('common:accept')}</Button>
+                <Button actionType="cancel" onClick={handleCloseDropzone}>
+                  {t('common:cancel')}
+                </Button>
+              </Box>
               <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
             </Box>
           )}
@@ -110,7 +124,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
               </Fab>
             )}
           </IsAdmin>
-          <FilesTableComponent search={search} handleSearch={handleSearch} />
+          <FilesTableComponent data={fileData} search={search} handleSearch={handleSearch} />
         </>
       </Loading>
     </Box>

@@ -76,6 +76,11 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setShowDropzone(true);
   };
 
+  const handleCloseDropzone = (): void => {
+    setShowDropzone(false);
+    setAttachments([]);
+  };
+
   const handleFolderDialogName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setFolderDialog({ ...folderDialog, name: event.currentTarget.value });
   };
@@ -162,6 +167,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           setFolderName={setFolderName}
           showDropzone={showDropzone}
           handleOpenDropzone={handleOpenDropzone}
+          handleCloseDropzone={handleCloseDropzone}
           handleEditFolder={handleEditFolder}
           handleAcceptFolderDialog={handleAcceptFolderDialog}
           handleCloseFolderDialog={handleCloseFolderDialog}
