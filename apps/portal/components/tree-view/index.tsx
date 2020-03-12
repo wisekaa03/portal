@@ -172,6 +172,7 @@ export const TreeItem = ({
   labelText,
   id,
   active,
+  parent,
   nodeId,
   handleEdit,
   depth = 0,
@@ -204,9 +205,11 @@ export const TreeItem = ({
                   <IconButton className={classes.action} size="small" onClick={handleEditItem(2)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
-                    <DeleteIcon />
-                  </IconButton>
+                  {!parent && (
+                    <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
                 </>
               )}
             </Box>

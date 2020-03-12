@@ -44,8 +44,12 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleEditFolder = (pathname: string, type: number, id?: string): void => {
     if (type > 1 && id) {
-      const folders = pathname.split('/');
-      setFolderDialog({ id, pathname, name: folders[folders.length - 1] });
+      const folders = pathname.split('/').filter((f) => !!f);
+      const oldName = folders[folders.length - 1];
+      folders.pop();
+      const newPathname = `/${folders.join('/')}`;
+
+      setFolderDialog({ id, pathname: newPathname, oldName, name: oldName });
     } else {
       setFolderDialog({ pathname, name: '' });
     }
@@ -82,15 +86,19 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         variables: { id: folderDialog.id },
       });
     } else {
+      const pathname = `${folderDialog.pathname}/${folderDialog.name}`;
+
       editFolder({
         refetchQueries: [{ query: FOLDER }],
         variables: {
           id: folderDialog.id,
-          pathname: folderDialog.pathname,
-          shared: folderDialog.pathname.startsWith(`/${FILES_SHARED_NAME}`),
+          pathname,
+          shared: pathname.startsWith(`/${FILES_SHARED_NAME}`),
         },
       });
     }
+
+    setOpenFolderDialog(0);
   };
 
   const handleCloseFolderDialog = (): void => {

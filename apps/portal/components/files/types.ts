@@ -57,5 +57,6 @@ export type FilesDialogComponentProps = {
 export type FolderDialogState = {
   id?: string;
   pathname: string;
+  oldName?: string;
   name: string;
 };

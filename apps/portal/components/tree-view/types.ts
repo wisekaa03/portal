@@ -7,6 +7,7 @@ export type TreeItemProps = MuiTreeItemProps & {
   labelText: string;
   id: string;
   active: boolean;
+  parent: boolean;
   handleEdit: (_: string, __: number, ___?: string) => void;
   depth?: number;
 };

@@ -64,6 +64,8 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
             ? t('files:userFolder')
             : child.name;
 
+        const childs = child.childs.map((c) => recursive(c, depth + 1));
+
         return (
           <TreeItem
             key={child.pathname}
@@ -71,10 +73,11 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
             labelText={name}
             id={child.id}
             active={child.pathname === item}
+            parent={childs.length > 0}
             handleEdit={handleEdit}
             depth={depth}
           >
-            {child.childs.map((c) => recursive(c, depth + 1))}
+            {childs}
           </TreeItem>
         );
       };
