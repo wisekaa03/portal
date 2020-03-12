@@ -196,6 +196,7 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
              * Default value is 1000 which is equivalent to 1 second.
              */
             duration: configService.get<number>('DATABASE_REDIS_TTL'),
+            max: 10000,
           },
         } as TypeOrmModuleOptions;
       },

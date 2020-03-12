@@ -32,12 +32,15 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
 
   const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(
     CHANGE_PROFILE,
-    id
+    id === user?.profile?.id
       ? {
           refetchQueries: [
             {
               query: PROFILE,
               variables: { id },
+            },
+            {
+              query: CURRENT_USER,
             },
           ],
         }
@@ -46,9 +49,6 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
             {
               query: PROFILE,
               variables: { id },
-            },
-            {
-              query: CURRENT_USER,
             },
           ],
         },

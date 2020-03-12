@@ -7,6 +7,7 @@ import gql from 'graphql-tag';
 
 const PROFILE_FRAGMENT = gql`
   fragment ProfileProps on Profile {
+    id
     username
     firstName
     lastName

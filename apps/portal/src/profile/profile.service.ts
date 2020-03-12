@@ -337,19 +337,20 @@ export class ProfileService {
   /**
    * Create profile
    *
-   * @param {Profile} - Profile
-   * @returns {ProfileEntity} - Profile entity
+   * @param {Profile} profile Profile
+   * @returns {Promise<ProfileEntity>} Profile entity
    */
   create = async (profile: Profile): Promise<ProfileEntity> => this.profileRepository.create(profile);
 
   /**
    * Bulk Save
    *
-   * @param {ProfileEntity[]} - The profiles
-   * @returns {ProfileEntity[]} - The profiles
+   * @param {ProfileEntity[]} profiles The profile before save
+   * @returns {Promise<ProfileEntity[]>} The profile after save
+   * @throws {Error} Exception
    */
-  bulkSave = async (profile: ProfileEntity[]): Promise<ProfileEntity[]> =>
-    this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
+  bulkSave = async (profiles: ProfileEntity[]): Promise<ProfileEntity[]> =>
+    this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
       this.logService.error('Unable to save data(s) in `profile`', error, 'ProfileService');
 
       throw error;
@@ -358,9 +359,9 @@ export class ProfileService {
   /**
    * Save
    *
-   * @param {ProfileEntity} - The profile
-   * @returns {ProfileEntity} - The profile
-   * @throws {Error} - Exception
+   * @param {ProfileEntity} profile The profile before save
+   * @returns {Promise<ProfileEntity>} The profile after save
+   * @throws {Error} Exception
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
@@ -449,7 +450,7 @@ export class ProfileService {
       throw new Error('Ldap is not connected.');
     }
 
-    const modification: any = {
+    const modification: Record<string, any> = {
       comment: {},
     };
 
@@ -563,6 +564,7 @@ export class ProfileService {
     if (thumbnailPhoto) {
       await Promise.all(
         await constructUploads([thumbnailPhoto], ({ file }) => {
+          modification.thumbnailPhoto = file;
           ldapUpdated.push(
             new Change({
               operation: 'replace',
@@ -607,10 +609,14 @@ export class ProfileService {
       : {};
     const result = this.profileRepository.merge(created, profile, thumbnail as ProfileEntity);
 
-    if (req.session!.passport.user.profile.id === result.id) {
-      req.session!.passport.user.profile = result;
-    }
+    return this.save(result).then(async (profileUpdated) => {
+      if (req.session!.passport.user.profile.id === profileUpdated.id) {
+        req.session!.passport.user.profile = profileUpdated;
+      }
 
-    return this.save(result);
+      await this.profileRepository.manager.connection!.queryResultCache!.synchronize();
+
+      return profileUpdated;
+    });
   }
 }
