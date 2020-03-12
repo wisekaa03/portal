@@ -89,7 +89,7 @@ export class ProfileService {
       }
     });
 
-    return query.setParameters(parameters).cache('profile', this.dbCacheTtl);
+    return query.setParameters(parameters); // .cache('profile', this.dbCacheTtl);
   };
 
   /**
@@ -101,7 +101,7 @@ export class ProfileService {
   profile = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(id, {
       relations: ['manager'],
-      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+      // cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
     });
 
   /**
@@ -113,7 +113,7 @@ export class ProfileService {
   profileByIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne({
       where: { loginIdentificator },
-      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      // cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
 
   /**
@@ -180,7 +180,7 @@ export class ProfileService {
         notShowing: false,
         disabled: false,
       })
-      .cache({ id: 'profile_searchSuggestions', milliseconds: this.dbCacheTtl })
+      // .cache({ id: 'profile_searchSuggestions', milliseconds: this.dbCacheTtl })
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
@@ -335,7 +335,7 @@ export class ProfileService {
     } else {
       const profileSave = await this.profileRepository.findOne({
         where: { loginIdentificator: ldapUser.objectGUID },
-        cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+        // cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
       });
 
       if (profileSave) {
@@ -420,7 +420,7 @@ export class ProfileService {
         notShowing: false,
         disabled: false,
       })
-      .cache({ id: 'profile_fieldSelection', milliseconds: this.dbCacheTtl })
+      // .cache({ id: 'profile_fieldSelection', milliseconds: this.dbCacheTtl })
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
