@@ -3,6 +3,7 @@
   "add": "Create file",
   "edit": "Edit file",
   "delete": "Delete file",
+  "download": "Download file",
   "more": "Learn more",
   "sharedFolder": "Shared",
   "userFolder": "User",
