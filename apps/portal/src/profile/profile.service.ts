@@ -615,6 +615,7 @@ export class ProfileService {
       }
 
       await this.profileRepository.manager.connection!.queryResultCache!.synchronize();
+      await this.profileRepository.manager.connection!.queryResultCache!.remove([]);
 
       return profileUpdated;
     });
