@@ -53,7 +53,9 @@ const FilesDialogComponent: FC<FilesDialogComponentProps> = ({
         <Button onClick={handleClose} actionType="cancel">
           {t('common:cancel')}
         </Button>
-        <Button onClick={() => handleAccept(open)}>{t('common:accept')}</Button>
+        <Button disabled={open < 3 && input.length < 4} onClick={() => handleAccept(open)}>
+          {t('common:accept')}
+        </Button>
       </DialogActions>
     </Dialog>
   );

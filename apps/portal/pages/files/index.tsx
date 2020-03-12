@@ -20,8 +20,10 @@ import { DropzoneFile } from '../../components/dropzone/types';
 import { FILES_SHARED_NAME } from '../../lib/constants';
 // #endregion
 
+const SHARED = `/${FILES_SHARED_NAME}`;
+
 const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  const [folderName, setFolderName] = useState<string>('/');
+  const [folderName, setFolderName] = useState<string>(SHARED);
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
   const [showDropzone, setShowDropzone] = useState<boolean>(false);
   const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);
@@ -32,6 +34,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     data: fileData,
     loading: fileLoading,
     error: fileError,
+    refetch: fileRefetch,
   }: QueryResult<Data<'file', FilesQueryProps[]>> = useQuery(FILE, {
     fetchPolicy: 'no-cache',
   });
@@ -40,8 +43,28 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     FOLDER,
   );
 
-  const [editFolder] = useMutation(EDIT_FOLDER);
-  const [deleteFolder] = useMutation(DELETE_FOLDER);
+  const [editFolder] = useMutation(EDIT_FOLDER, {
+    update(cache, { data: { editFolder: result } }) {
+      const { folder } = cache.readQuery({ query: FOLDER });
+      const data = folder.filter((f) => f.id !== result.id);
+
+      cache.writeQuery({
+        query: FOLDER,
+        data: { folder: [...data, result] },
+      });
+    },
+  });
+  const [deleteFolder] = useMutation(DELETE_FOLDER, {
+    update(cache, { data: { deleteFolder: result } }) {
+      const { folder } = cache.readQuery({ query: FOLDER });
+      const data = folder.filter((f) => f.id !== result.id);
+
+      cache.writeQuery({
+        query: FOLDER,
+        data: { folder: data },
+      });
+    },
+  });
 
   const handleEditFolder = (pathname: string, type: number, id?: string): void => {
     if (type > 1 && id) {
@@ -88,18 +111,16 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleAcceptFolderDialog = (type: number): void => {
     if (type > 2) {
       deleteFolder({
-        refetchQueries: [{ query: FOLDER }],
         variables: { id: folderDialog.id },
       });
     } else {
       const pathname = `${folderDialog.pathname}/${folderDialog.name}`;
 
       editFolder({
-        refetchQueries: [{ query: FOLDER }],
         variables: {
           id: folderDialog.id,
           pathname,
-          shared: pathname.startsWith(`/${FILES_SHARED_NAME}`),
+          shared: pathname.startsWith(SHARED),
         },
       });
     }
@@ -165,6 +186,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           folderData={folderData?.folder}
           folderName={folderName}
           setFolderName={setFolderName}
+          fileRefetch={fileRefetch}
           showDropzone={showDropzone}
           handleOpenDropzone={handleOpenDropzone}
           handleCloseDropzone={handleCloseDropzone}
