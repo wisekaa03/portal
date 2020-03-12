@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'left',
     },
     fab: {
+      zIndex: 1,
       position: 'absolute',
       bottom: theme.spacing(2),
       right: 18 + theme.spacing(2),

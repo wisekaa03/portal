@@ -388,9 +388,7 @@ export const EDIT_FOLDER = gql`
 
 export const DELETE_FOLDER = gql`
   mutation DeleteFolder($id: ID!) {
-    deleteFolder(id: $id) {
-      id
-    }
+    deleteFolder(id: $id)
   }
 `;
 /**---------------------------------------------------------------------------------------------------------------------------------------

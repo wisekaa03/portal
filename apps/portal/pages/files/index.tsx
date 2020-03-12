@@ -57,7 +57,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [deleteFolder] = useMutation(DELETE_FOLDER, {
     update(cache, { data: { deleteFolder: result } }) {
       const { folder } = cache.readQuery({ query: FOLDER });
-      const data = folder.filter((f) => f.id !== result.id);
+      const data = folder.filter((f) => f.id !== result);
 
       cache.writeQuery({
         query: FOLDER,
