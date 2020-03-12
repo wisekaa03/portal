@@ -8,13 +8,18 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-// import { ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
 import { FilesService } from './files.service';
 import { UserService } from '../user/user.service';
 import { ProfileService } from '../profile/profile.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));
+jest.mock('@app/config/config.service', () => ({
+  ConfigService: jest.fn().mockImplementation(() => ({
+    get: jest.fn(),
+  })),
+}));
 const repositoryMock = jest.fn(() => ({
   metadata: {
     columns: [],
@@ -61,6 +66,7 @@ describe('FilesService', () => {
       ],
       providers: [
         FilesService,
+        ConfigService,
         { provide: LogService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
