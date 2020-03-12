@@ -26,6 +26,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [showDropzone, setShowDropzone] = useState<boolean>(false);
   const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);
   const [folderDialog, setFolderDialog] = useState<FolderDialogState>({ pathname: '', name: '' });
+  const [search, setSearch] = useState<string>('');
 
   const {
     data: fileData,
@@ -105,6 +106,10 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setOpenFolderDialog(0);
   };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearch(event.currentTarget.value);
+  };
+
   // const [current, setCurrent] = useState<FileQueryProps | undefined>();
   // const profile = useContext(ProfileContext);
   // const router = useRouter();
@@ -166,6 +171,8 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           attachments={attachments}
           setAttachments={setAttachments}
           handleUploadFile={handleUploadFile}
+          search={search}
+          handleSearch={handleSearch}
         />
       </Page>
     </>

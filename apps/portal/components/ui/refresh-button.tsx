@@ -34,15 +34,19 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.secondary.main,
       },
     },
+    dense: {
+      padding: theme.spacing(0.5),
+    },
   }),
 );
 
 interface RefreshButtonProps extends IconButtonProps {
   noAbsolute?: boolean;
   disableBackground?: boolean;
+  dense?: boolean;
 }
 
-const RefreshButton = ({ onClick, noAbsolute, disableBackground }: RefreshButtonProps): React.ReactElement => {
+const RefreshButton = ({ onClick, noAbsolute, disableBackground, dense }: RefreshButtonProps): React.ReactElement => {
   const classes = useStyles({});
 
   return (
@@ -50,6 +54,7 @@ const RefreshButton = ({ onClick, noAbsolute, disableBackground }: RefreshButton
       className={clsx(classes.root, {
         [classes.absolute]: !noAbsolute,
         [classes.background]: !disableBackground,
+        [classes.dense]: dense,
       })}
       onClick={onClick}
       aria-label="refresh"

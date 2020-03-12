@@ -14,6 +14,7 @@ import Loading from '../loading';
 import Dropzone from '../dropzone';
 import FilesTreeComponent from './tree';
 import FilesDialogComponent from './dialog';
+import FilesTableComponent from './table';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,6 +62,8 @@ const FilesComponent: FC<FilesComponentProps> = ({
   attachments,
   setAttachments,
   handleUploadFile,
+  search,
+  handleSearch,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -102,11 +105,12 @@ const FilesComponent: FC<FilesComponentProps> = ({
           )}
           <IsAdmin>
             {!showDropzone && (
-              <Fab color="primary" className={classes.fab} aria-label="add" onClick={handleOpenDropzone}>
+              <Fab color="secondary" className={classes.fab} aria-label="add" onClick={handleOpenDropzone}>
                 <AddIcon />
               </Fab>
             )}
           </IsAdmin>
+          <FilesTableComponent search={search} handleSearch={handleSearch} />
         </>
       </Loading>
     </Box>

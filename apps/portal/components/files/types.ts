@@ -21,6 +21,8 @@ export interface FilesComponentProps {
   attachments: DropzoneFile[];
   setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   handleUploadFile: () => void;
+  search: string;
+  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface FilesTreeComponentProps {
@@ -59,4 +61,9 @@ export type FolderDialogState = {
   pathname: string;
   oldName?: string;
   name: string;
+};
+
+export type FilesTableComponentProps = {
+  search: string;
+  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
