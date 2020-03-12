@@ -58,6 +58,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
   folderData,
   folderName,
   setFolderName,
+  fileRefetch,
   showDropzone,
   handleOpenDropzone,
   handleCloseDropzone,
@@ -124,7 +125,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
               </Fab>
             )}
           </IsAdmin>
-          <FilesTableComponent data={fileData} search={search} handleSearch={handleSearch} />
+          <FilesTableComponent data={fileData} refetchData={fileRefetch} search={search} handleSearch={handleSearch} />
         </>
       </Loading>
     </Box>
