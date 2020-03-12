@@ -1,34 +1,21 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState } from 'react';
+import React from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { useMutation } from '@apollo/react-hooks';
-import {
-  Typography,
-  TextField,
-  IconButton,
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from '@material-ui/core';
+import { Typography, IconButton, Box, Tooltip } from '@material-ui/core';
 import MuiTreeView from '@material-ui/lab/TreeView';
 import MuiTreeItem from '@material-ui/lab/TreeItem';
 import DirectoryIcon from '@material-ui/icons/FolderRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import AddIcon from '@material-ui/icons/AddCircleOutlineRounded';
-import DoneIcon from '@material-ui/icons/DoneRounded';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 // #endregion
 // #region Imports Local
 import { TreeViewProps, TreeItemProps } from './types';
-import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER, DELETE_FOLDER } from '../../lib/queries';
-import { FILES_SHARED_NAME } from '../../lib/constants';
+import { useTranslation } from '../../lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -95,79 +82,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-// export const TreeItemCreator = ({ labelText, nodeId, ...rest }: TreeItemCreatorProps): React.ReactElement => {
-//   const classes = useStylesCreator({});
-
-//   const [value, setValue] = useState<string>('');
-//   const ifValid = value.length > 3;
-
-//   const [editFolder] = useMutation(EDIT_FOLDER);
-//   const [deleteFolder] = useMutation(DELETE_FOLDER);
-
-//   const handleDeleteFolder = (id: string): void => {
-//     deleteFolder({
-//       refetchQueries: [{ query: FOLDER }],
-//       variables: { id },
-//     });
-//   };
-
-//   const handleComplete = (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-//     if (event) {
-//       event.stopPropagation();
-//     }
-
-//     // TODO: элемент создающий новую папку имеет nodeId вида '/${parentNodeName}' (слеш вначале)
-//     const pathname = value ? `${nodeId.substring(1)}${value.trim()}` : '';
-//     const shared = pathname.startsWith(`/${FILES_SHARED_NAME}`);
-
-//     if (pathname) {
-//       editFolder({
-//         refetchQueries: [{ query: FOLDER }],
-//         variables: { pathname, shared },
-//       });
-//       setValue('');
-//     }
-//   };
-
-//   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-//     if (ifValid && event.keyCode === 13) {
-//       handleComplete();
-//     }
-//   };
-
-//   const handleChangeItem = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-//     setValue(event.currentTarget.value);
-//   };
-
-//   return (
-//     <TreeItem
-//       nodeId={nodeId}
-//       label={
-//         <>
-//           <AddIcon color="inherit" className={classes.icon} />
-//           <InputBase
-//             color="secondary"
-//             value={value}
-//             onClick={(event) => event.stopPropagation()}
-//             onKeyDown={handleKeyDown}
-//             onChange={handleChangeItem}
-//             placeholder={labelText}
-//             className={classes.input}
-//           />
-//           {ifValid && (
-//             <Box mr={1}>
-//               <IconButton size="small" onClick={handleComplete}>
-//                 <DoneIcon />
-//               </IconButton>
-//             </Box>
-//           )}
-//         </>
-//       }
-//       {...rest}
-//     />
-//   );
-// };
-
 export const TreeItem = ({
   labelText,
   id,
@@ -179,6 +93,7 @@ export const TreeItem = ({
   ...rest
 }: TreeItemProps): React.ReactElement => {
   const classes = useStyles({});
+  const { t } = useTranslation();
 
   const handleEditItem = (type: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.stopPropagation();
@@ -197,18 +112,24 @@ export const TreeItem = ({
           </Typography>
           {active && (
             <Box mr={1}>
-              <IconButton className={classes.action} size="small" onClick={handleEditItem(1)}>
-                <AddIcon />
-              </IconButton>
+              <Tooltip title={t('files:addFolder')} enterDelay={1000}>
+                <IconButton className={classes.action} size="small" onClick={handleEditItem(1)}>
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
               {!!id && (
                 <>
-                  <IconButton className={classes.action} size="small" onClick={handleEditItem(2)}>
-                    <EditIcon />
-                  </IconButton>
-                  {!parent && (
-                    <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
-                      <DeleteIcon />
+                  <Tooltip title={t('files:editFolder')} enterDelay={1000}>
+                    <IconButton className={classes.action} size="small" onClick={handleEditItem(2)}>
+                      <EditIcon />
                     </IconButton>
+                  </Tooltip>
+                  {!parent && (
+                    <Tooltip title={t('files:deleteFolder')} enterDelay={1000}>
+                      <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   )}
                 </>
               )}
