@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0, max-classes-per-file:0 */
+/* eslint spaced-comment:0, max-classes-per-file:0 */
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
@@ -10,11 +10,17 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { ProfileService } from './profile.service';
 import { GroupService } from '../group/group.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));
+jest.mock('@app/config/config.service', () => ({
+  ConfigService: jest.fn().mockImplementation(() => ({
+    get: jest.fn(),
+  })),
+}));
 const repositoryMock = jest.fn(() => ({
   metadata: {
     columns: [],
@@ -54,6 +60,7 @@ describe('ProfileService', () => {
       ],
       providers: [
         ProfileService,
+        ConfigService,
         { provide: LogService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: GroupService, useValue: serviceMock },
