@@ -117,7 +117,7 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
         >
           <InputBase
             ref={searchRef}
-            placeholder={t('phonebook:search')}
+            placeholder={t('common:search')}
             value={search}
             onChange={handleCurrentSearch}
             fullWidth
