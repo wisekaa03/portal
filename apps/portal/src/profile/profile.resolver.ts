@@ -91,7 +91,7 @@ export class ProfileResolver {
   /**
    * GraphQL query: profile
    *
-   * @param {string} id - optional id of param
+   * @param {string} id optional id of profile
    * @returns {ProfilesEntity | undefined}
    */
   @Query()
@@ -103,9 +103,9 @@ export class ProfileResolver {
   /**
    * GraphQL mutation: changeProfile
    *
-   * @param {Request} req - The request from which I try to compose user
-   * @param {Profile} profile - The profile
-   * @param {Promise<FileUpload>} thumbnailPhoto - Avatar
+   * @param {Request} req The request from which I try to compose user
+   * @param {Profile} profile The profile
+   * @param {Promise<FileUpload>} thumbnailPhoto Avatar
    * @returns {Promise<ProfileEntity>}
    */
   @Mutation()

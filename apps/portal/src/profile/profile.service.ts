@@ -89,7 +89,7 @@ export class ProfileService {
       }
     });
 
-    return query.setParameters(parameters).cache('profile', this.dbCacheTtl);
+    return query.setParameters(parameters).cache(true);
   };
 
   /**
@@ -180,7 +180,7 @@ export class ProfileService {
         notShowing: false,
         disabled: false,
       })
-      .cache({ id: 'profile_searchSuggestions', milliseconds: this.dbCacheTtl })
+      .cache(true)
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
@@ -415,7 +415,7 @@ export class ProfileService {
         notShowing: false,
         disabled: false,
       })
-      .cache({ id: 'profile_fieldSelection', milliseconds: this.dbCacheTtl })
+      .cache(true)
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
