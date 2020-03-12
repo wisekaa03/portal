@@ -7,6 +7,7 @@ import { Repository, IsNull } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { FilesEntity } from './files.entity';
 import { Files } from './models/files.dto';
 import { FilesFolderEntity } from './files.folder.entity';
@@ -16,15 +17,19 @@ import { UserResponse } from '../user/user.entity';
 
 @Injectable()
 export class FilesService {
+  dbCacheTtl = 10000;
+
   constructor(
     private readonly logService: LogService,
-    // private readonly configService: ConfigService,
+    private readonly configService: ConfigService,
     // private readonly userService: UserService,
     @InjectRepository(FilesEntity)
     private readonly filesRepository: Repository<FilesEntity>,
     @InjectRepository(FilesFolderEntity)
     private readonly filesFolderRepository: Repository<FilesFolderEntity>,
-  ) {}
+  ) {
+    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
+  }
 
   /**
    * Get file(s)
@@ -101,7 +106,7 @@ export class FilesService {
     }
 
     const result = await this.filesFolderRepository
-      .find({ where, cache: true })
+      .find({ where, cache: { id: 'folder', milliseconds: this.dbCacheTtl } })
       .then((folders: FilesFolderEntity[]) => folders.map((folder) => folder.toResponseObject()));
 
     return result;
@@ -114,7 +119,10 @@ export class FilesService {
    * @return {Promise<FilesFolderResponse>}
    */
   editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<FilesFolderResponse> => {
-    this.logService.log(`Edit: ${JSON.stringify({ pathname, id, user, updatedUser })}`, 'FilesService');
+    this.logService.log(
+      `Edit: ${JSON.stringify({ pathname, id, user: user?.username, updatedUser: updatedUser?.username })}`,
+      'FilesService',
+    );
 
     // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
     // const folderPathname = await this.mediaFolderRepository.findOne({ pathname });
@@ -131,7 +139,11 @@ export class FilesService {
 
     return this.filesFolderRepository
       .save(this.filesFolderRepository.create(data))
-      .then((folder) => folder.toResponseObject())
+      .then(async (folder) => {
+        await this.filesFolderRepository.manager.connection!.queryResultCache!.remove(['folder']);
+
+        return folder.toResponseObject();
+      })
       .catch((error: Error) => {
         throw error;
       });
@@ -141,13 +153,13 @@ export class FilesService {
    * Delete folder
    *
    * @param {string} id of folder
-   * @return {Promise<boolean>} true/false of delete folder
+   * @return {Promise<string | undefined>} id of deleted folder
    */
-  deleteFolder = async (id: string): Promise<boolean> => {
+  deleteFolder = async (id: string): Promise<string | undefined> => {
     this.logService.log(`Edit folder: id={${id}}`, 'FilesService');
 
     const deleteResult = await this.filesFolderRepository.delete({ id });
 
-    return !!(deleteResult.affected && deleteResult.affected > 0);
+    return !!deleteResult.affected ? id : undefined;
   };
 }

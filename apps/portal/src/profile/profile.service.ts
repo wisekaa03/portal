@@ -9,6 +9,7 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
+import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
@@ -22,6 +23,8 @@ import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
 
 @Injectable()
 export class ProfileService {
+  dbCacheTtl = 10000;
+
   locale = undefined;
 
   format = {
@@ -37,10 +40,13 @@ export class ProfileService {
   constructor(
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
+    private readonly configService: ConfigService,
     private readonly logService: LogService,
     private readonly imageService: ImageService,
     private readonly ldapService: LdapService,
-  ) {}
+  ) {
+    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
+  }
 
   /**
    * Get profiles
@@ -83,7 +89,7 @@ export class ProfileService {
       }
     });
 
-    return query.setParameters(parameters).cache(true);
+    return query.setParameters(parameters).cache('profile', this.dbCacheTtl);
   };
 
   /**
@@ -93,7 +99,10 @@ export class ProfileService {
    * @return Profile
    */
   profile = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne(id, { relations: ['manager'], cache });
+    this.profileRepository.findOne(id, {
+      relations: ['manager'],
+      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+    });
 
   /**
    * Profile by Identificator
@@ -102,7 +111,10 @@ export class ProfileService {
    * @return Profile
    */
   profileByIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne({ where: { loginIdentificator }, cache });
+    this.profileRepository.findOne({
+      where: { loginIdentificator },
+      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+    });
 
   /**
    * searchSuggestions
@@ -168,7 +180,7 @@ export class ProfileService {
         notShowing: false,
         disabled: false,
       })
-      .cache(true)
+      .cache({ id: 'profile_searchSuggestions', milliseconds: this.dbCacheTtl })
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
@@ -323,7 +335,7 @@ export class ProfileService {
     } else {
       const profileSave = await this.profileRepository.findOne({
         where: { loginIdentificator: ldapUser.objectGUID },
-        cache,
+        cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
       });
 
       if (profileSave) {
@@ -408,7 +420,7 @@ export class ProfileService {
         notShowing: false,
         disabled: false,
       })
-      .cache(true)
+      .cache({ id: 'profile_fieldSelection', milliseconds: this.dbCacheTtl })
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
@@ -614,8 +626,12 @@ export class ProfileService {
         req.session!.passport.user.profile = profileUpdated;
       }
 
-      await this.profileRepository.manager.connection!.queryResultCache!.synchronize();
-      await this.profileRepository.manager.connection!.queryResultCache!.remove([]);
+      await this.profileRepository.manager.connection!.queryResultCache!.remove([
+        'profile',
+        'profile_id',
+        'profile_searchSuggestions',
+        'profile_loginIdentificator',
+      ]);
 
       return profileUpdated;
     });

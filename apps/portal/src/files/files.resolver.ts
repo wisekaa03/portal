@@ -125,7 +125,7 @@ export class FilesResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async deleteFolder(@Args('id') id: string): Promise<boolean> {
-    return !!id && this.filesService.deleteFolder(id);
+  async deleteFolder(@Args('id') id: string): Promise<string | undefined> {
+    return id ? this.filesService.deleteFolder(id) : undefined;
   }
 }
