@@ -8,6 +8,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
@@ -17,6 +18,11 @@ import { GroupService } from '../group/group.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));
+jest.mock('@app/config/config.service', () => ({
+  ConfigService: jest.fn().mockImplementation(() => ({
+    get: jest.fn(),
+  })),
+}));
 const repositoryMock = jest.fn(() => ({
   metadata: {
     columns: [],
@@ -56,6 +62,7 @@ describe('UserService', () => {
       ],
       providers: [
         UserService,
+        ConfigService,
         { provide: LogService, useValue: serviceMock },
         { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
         { provide: ClientProxy, useValue: serviceMock },

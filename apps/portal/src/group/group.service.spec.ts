@@ -7,11 +7,17 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { GroupService } from './group.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));
+jest.mock('@app/config/config.service', () => ({
+  ConfigService: jest.fn().mockImplementation(() => ({
+    get: jest.fn(),
+  })),
+}));
 // const repositoryMock = jest.fn(() => ({
 //   metadata: {
 //     columns: [],
@@ -47,7 +53,7 @@ describe('GroupService', () => {
         }),
         TypeOrmModule.forFeature([GroupEntity]),
       ],
-      providers: [GroupService, { provide: LogService, useValue: serviceMock }],
+      providers: [GroupService, ConfigService, { provide: LogService, useValue: serviceMock }],
     }).compile();
 
     service = module.get<GroupService>(GroupService);
