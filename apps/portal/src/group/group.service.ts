@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
 import { Group } from './models/group.dto';
@@ -15,11 +16,16 @@ import { LoginService } from '../shared/interfaces';
 
 @Injectable()
 export class GroupService {
+  dbCacheTtl = 10000;
+
   constructor(
+    private readonly configService: ConfigService,
     private readonly logService: LogService,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
-  ) {}
+  ) {
+    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
+  }
 
   /**
    * Create or Update user groups
@@ -63,7 +69,10 @@ export class GroupService {
    * @return {Promise<GroupEntity | undefined>} Group
    */
   groupByIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
-    this.groupRepository.findOne({ where: { loginIdentificator }, cache });
+    this.groupRepository.findOne({
+      where: { loginIdentificator },
+      cache: cache ? { id: 'group_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+    });
 
   /**
    * Create

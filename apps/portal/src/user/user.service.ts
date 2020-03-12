@@ -9,6 +9,7 @@ import { Request } from 'express';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { LdapService, LdapResponseUser } from '@app/ldap';
 import { LDAP_SYNC, LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
 import { UserEntity, UserResponse } from './user.entity';
@@ -24,15 +25,20 @@ import { GroupEntity } from '../group/group.entity';
 
 @Injectable()
 export class UserService {
+  dbCacheTtl = 10000;
+
   constructor(
     @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
     private readonly logService: LogService,
+    private readonly configService: ConfigService,
     private readonly ldapService: LdapService,
     private readonly profileService: ProfileService,
     private readonly groupService: GroupService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  ) {
+    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
+  }
 
   /**
    * Compare password
@@ -53,7 +59,7 @@ export class UserService {
    * @param {string} username User ID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean | 'profile' | 'groups'} [isRelation = true] The relation of this user
-   * @param {boolean} [cache = true] The cache result
+   * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity | undefined} The user
    */
   readByUsername = async (
@@ -73,7 +79,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache,
+      cache: cache ? { id: 'user', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -83,12 +89,14 @@ export class UserService {
    * @param {string} id User ID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
+   * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity | undefined} The user
    */
   readById = async (
     id: string,
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
+    cache = true,
   ): Promise<UserEntity | undefined> => {
     const where: Record<any, any> = { id };
 
@@ -101,7 +109,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: true,
+      cache: cache ? { id: 'user', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -111,7 +119,7 @@ export class UserService {
    * @param {LdapResponseUser} ldapUser Ldap user
    * @param {UserEntity} user User
    * @param {boolean} [save = true] Save the profile
-   * @param {boolean} [cache = true] Cache the result
+   * @param {boolean} [cache = true] whether to cache results
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error}
    */
@@ -138,7 +146,7 @@ export class UserService {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups: GroupEntity[] | undefined = await this.groupService.createFromUser(ldapUser).catch((error) => {
+    const groups: GroupEntity[] | undefined = await this.groupService.createFromUser(ldapUser, false).catch((error) => {
       this.logService.error('Unable to save data in `group`', error, 'UserService');
 
       return undefined;
