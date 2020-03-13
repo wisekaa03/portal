@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import React, { FC, useState } from 'react';
-import { Badge, Typography, Fab } from '@material-ui/core';
+import { Badge, Typography, Fab, Tooltip } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BaseDropzone, { DropzoneState, useDropzone } from 'react-dropzone';
@@ -222,7 +222,9 @@ const Dropzone = ({
                       )}
                     </div>
                   </div>
-                  <span className={classes.name}>{file.file.name}</span>
+                  <Tooltip title={file.file.name}>
+                    <span className={classes.name}>{file.file.name}</span>
+                  </Tooltip>
                 </>
               </Badge>
             ))}
