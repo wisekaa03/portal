@@ -4,7 +4,7 @@
 import React, { FC, useContext } from 'react';
 import { fade, Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery, Tooltip } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 // #endregion
@@ -141,21 +141,22 @@ const DrawerComponent: FC<DrawerProps> = ({ open, isMobile, handleOpen }) => {
           .map((url) => (
             <li key={url.link}>
               <Link href={url.link} passHref>
-                <ListItem
-                  button
-                  selected={pathname.startsWith(url.link)}
-                  classes={{
-                    root: classes.item,
-                    selected: classes.itemSelected,
-                  }}
-                  component="a"
-                  title={t(url.text)}
-                >
-                  <ListItemIcon>
-                    <Icon mask={url.icon} color="secondary" />
-                  </ListItemIcon>
-                  <ListItemText primary={t(url.text)} />
-                </ListItem>
+                <Tooltip title={t(url.text)} enterDelay={1000}>
+                  <ListItem
+                    button
+                    selected={pathname.startsWith(url.link)}
+                    classes={{
+                      root: classes.item,
+                      selected: classes.itemSelected,
+                    }}
+                    component="a"
+                  >
+                    <ListItemIcon>
+                      <Icon mask={url.icon} color="secondary" />
+                    </ListItemIcon>
+                    <ListItemText primary={t(url.text)} />
+                  </ListItem>
+                </Tooltip>
               </Link>
             </li>
           ))}

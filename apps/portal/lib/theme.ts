@@ -39,6 +39,13 @@ const theme = createMuiTheme({
 });
 
 theme.overrides = {
+  MuiTooltip: {
+    tooltip: {
+      color: '#000',
+      backgroundColor: '#fff',
+      boxShadow: theme.shadows[3],
+    },
+  },
   MuiToolbar: {
     root: {
       height: '64px',

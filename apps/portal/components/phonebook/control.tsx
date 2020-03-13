@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(7),
     },
     icon: {
+      'color': theme.palette.secondary.main,
       'opacity': 0.6,
       'transition': `all 200ms ${theme.transitions.easing.easeOut} 0ms`,
 
@@ -105,7 +106,7 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
           justifyContent="center"
           className={classes.searchIcon}
         >
-          <SearchIcon />
+          <SearchIcon color="secondary" />
         </Box>
         <Tooltip
           open={openTooltip}
@@ -151,13 +152,17 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
           </Paper>
         </Popper>
       </Box>
-      <IconButton className={classes.icon} onClick={handleHelpOpen}>
-        <HelpIcon />
-      </IconButton>
+      <Tooltip title={t('common:help')}>
+        <IconButton className={classes.icon} onClick={handleHelpOpen}>
+          <HelpIcon />
+        </IconButton>
+      </Tooltip>
       <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
-      <IconButton className={classes.icon} onClick={handleSettingsOpen}>
-        <SettingsIcon />
-      </IconButton>
+      <Tooltip title={t('common:settings')}>
+        <IconButton className={classes.icon} onClick={handleSettingsOpen}>
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
