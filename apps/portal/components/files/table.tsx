@@ -17,6 +17,9 @@ import {
   DialogActions,
   IconButton,
   Tooltip,
+  ListItem,
+  ListItemText,
+  List,
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
@@ -45,6 +48,12 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       color: theme.palette.secondary.main,
     },
+    fileIcon: {
+      color: theme.palette.secondary.main,
+      position: 'absolute',
+      top: theme.spacing(2),
+      left: theme.spacing(2),
+    },
     editIcon: {
       position: 'absolute',
       top: theme.spacing(2),
@@ -52,7 +61,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       minWidth: 500,
-      minHeight: 350,
+    },
+    list: {
+      'padding': 0,
+      '& > li': {
+        display: 'grid',
+        gridTemplateColumns: '1fr 3fr',
+        minHeight: theme.spacing(5),
+      },
     },
   }),
 );
@@ -98,7 +114,14 @@ const fakeData: any = [
   { id: '30', name: 'Очень длинное название файла 31', date: new Date(), type: 'jpg', size: 140 },
 ];
 
-const FilesTableComponent: FC<FilesTableComponentProps> = ({ data, refetchData, search, handleSearch }) => {
+const FilesTableComponent: FC<FilesTableComponentProps> = ({
+  data,
+  refetchData,
+  search,
+  handleSearch,
+  handleDownload,
+  handleDelete,
+}) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   const theme = useTheme();
@@ -160,26 +183,44 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({ data, refetchData, 
           </AutoSizer>
           <Dialog open={open} onClose={handleClose} classes={{ paper: classes.paper }}>
             <DialogContent>
-              <Box display="grid">
-                <Box>
-                  <DescriptionIcon className={classes.icon} fontSize="large" />
+              <Box display="grid" gridGap={16}>
+                <Box display="flex" justifyContent="center">
+                  <DescriptionIcon className={classes.fileIcon} fontSize="large" />
+                  <Typography variant="subtitle1">{detail.name}</Typography>
                   <Tooltip title={t('files:edit')}>
                     <IconButton className={classes.editIcon} size="small">
                       <EditIcon className={classes.icon} />
                     </IconButton>
                   </Tooltip>
                 </Box>
-                <Box>{detail.name}</Box>
+                <Box>
+                  <Paper>
+                    <List className={classes.list}>
+                      <ListItem divider>
+                        <ListItemText primary={t('files:table.date')} />
+                        <ListItemText primary={format(detail.date, 'DD.MM.YYYY')} />
+                      </ListItem>
+                      <ListItem divider>
+                        <ListItemText primary={t('files:table.type')} />
+                        <ListItemText primary={detail.type} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={t('files:table.size')} />
+                        <ListItemText primary={`${detail.size} kb`} />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Box>
               </Box>
             </DialogContent>
             <DialogActions>
               <Tooltip title={t('files:download')}>
-                <IconButton>
+                <IconButton onClick={handleDownload}>
                   <GetAppIcon className={classes.icon} />
                 </IconButton>
               </Tooltip>
               <Tooltip title={t('files:delete')}>
-                <IconButton>
+                <IconButton onClick={handleDelete}>
                   <DeleteIcon className={classes.icon} />
                 </IconButton>
               </Tooltip>

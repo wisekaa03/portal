@@ -74,6 +74,8 @@ const FilesComponent: FC<FilesComponentProps> = ({
   handleUploadFile,
   search,
   handleSearch,
+  handleDownload,
+  handleDelete,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -126,7 +128,14 @@ const FilesComponent: FC<FilesComponentProps> = ({
               </Fab>
             )}
           </IsAdmin>
-          <FilesTableComponent data={fileData} refetchData={fileRefetch} search={search} handleSearch={handleSearch} />
+          <FilesTableComponent
+            data={fileData}
+            refetchData={fileRefetch}
+            search={search}
+            handleSearch={handleSearch}
+            handleDownload={handleDownload}
+            handleDelete={handleDelete}
+          />
         </>
       </Loading>
     </Box>

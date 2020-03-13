@@ -136,6 +136,14 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     setSearch(event.currentTarget.value);
   };
 
+  const handleDownload = (): void => {
+    // /
+  };
+
+  const handleDelete = (): void => {
+    // /
+  };
+
   // const [current, setCurrent] = useState<FileQueryProps | undefined>();
   // const profile = useContext(ProfileContext);
   // const router = useRouter();
@@ -201,6 +209,8 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           handleUploadFile={handleUploadFile}
           search={search}
           handleSearch={handleSearch}
+          handleDownload={handleDownload}
+          handleDelete={handleDelete}
         />
       </Page>
     </>

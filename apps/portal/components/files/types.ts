@@ -25,6 +25,8 @@ export interface FilesComponentProps {
   handleUploadFile: () => void;
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDownload: () => void;
+  handleDelete: () => void;
 }
 
 export interface FilesTreeComponentProps {
@@ -70,6 +72,8 @@ export type FilesTableComponentProps = {
   refetchData: () => void;
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDownload: () => void;
+  handleDelete: () => void;
 };
 
 export type FilesTableHeaderProps = {
