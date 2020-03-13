@@ -106,8 +106,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
       <Paper ref={headerRef} square className={classes.header}>
         <Tabs
           value={currentTab}
-          indicatorColor="primary"
-          textColor="primary"
+          indicatorColor="secondary"
+          textColor="secondary"
           onChange={(_: any, tab: number): void => handleCurrentTab(tab)}
         >
           <Tab label={t('services:tabs.tab1')} />
