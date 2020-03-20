@@ -69,6 +69,8 @@ export const MOCK_PROFILE: UserContext = {
     settings: {},
     profile: {
       username: '',
+      loginService: LoginService.LDAP,
+      loginIdentificator: '',
       dn: '',
       firstName: '',
       lastName: '',

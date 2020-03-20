@@ -46,7 +46,7 @@ export class NewsResolver {
   ): Promise<NewsEntity> {
     const userId = req.user as UserResponse;
     if (userId) {
-      const user = await this.userService.readById(userId.id);
+      const user = await this.userService.byId(userId.id);
       if (user) {
         return this.newsService.editNews({ title, excerpt, content, user, id });
       }

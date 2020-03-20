@@ -54,7 +54,7 @@ export class FilesResolver {
     @Args('folder') folder: string,
     @Args('id') id?: string,
   ): Promise<FilesEntity> {
-    const updatedUser = await this.userService.readById((req.user as UserResponse).id, true, false);
+    const updatedUser = await this.userService.byId((req.user as UserResponse).id, true, false);
 
     if (updatedUser) {
       // eslint-disable-next-line no-debugger
