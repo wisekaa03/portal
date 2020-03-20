@@ -1,5 +1,4 @@
 /** @format */
-/* eslint max-classes-per-file:0 */
 
 // #region Imports NPM
 // import { IsNotEmpty } from 'class-validator';
@@ -9,10 +8,14 @@ import { Profile } from '../../profile/models/profile.dto';
 import { Group } from '../../group/models/group.dto';
 import { ColumnNames } from '../../../components/phonebook/types';
 import { GroupEntity } from '../../group/group.entity';
+import { LoginService } from '../../shared/interfaces';
 // #endregion
 
 export interface BaseUser {
   id?: string;
+
+  loginService: LoginService;
+  loginIdentificator: string;
 
   username: string;
 

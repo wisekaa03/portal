@@ -17,7 +17,7 @@ export class GqlAuthGuard implements CanActivate {
       return true;
     }
 
-    throw GQLError({ code: GQLErrorCode.UNAUTHENTICATED });
+    throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED });
   }
 
   getResponse = (context: ExecutionContext): Express.Session => {

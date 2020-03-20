@@ -53,18 +53,18 @@ export class AuthResolver {
   ): Promise<UserResponse> {
     const user = await this.authService
       .login({ username: username.toLowerCase(), password }, req)
-      .catch((error: Error) => {
-        throw GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
+      .catch(async (error: Error) => {
+        throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       });
 
     // Чтобы в дальнейшем был пароль, в частности, в SOAP
     user.passwordFrontend = password;
 
-    req.logIn(user, (error: Error) => {
+    req.logIn(user, async (error: Error) => {
       if (error) {
         this.logService.error('Error when logging in:', error, 'AuthResolver');
 
-        throw GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
+        throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
     });
 

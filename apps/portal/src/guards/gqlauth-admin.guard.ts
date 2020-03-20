@@ -17,7 +17,7 @@ export class IsAdminGuard implements CanActivate {
       return true;
     }
 
-    throw GQLError({ code: GQLErrorCode.UNAUTHORIZED });
+    throw await GQLError({ code: GQLErrorCode.UNAUTHORIZED });
   }
 
   getResponse = (context: ExecutionContext): Express.Session => {

@@ -73,7 +73,7 @@ export class ProfileResolver {
     }
 
     const error = new Error('Unknown field selection');
-    throw GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
+    throw await GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
   }
 
   /**
@@ -116,8 +116,8 @@ export class ProfileResolver {
     @Args('profile') profile: Profile,
     @Args('thumbnailPhoto') thumbnailPhoto: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
-    return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch((error: Error) => {
-      throw GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
+    return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch(async (error: Error) => {
+      throw await GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
     });
   }
 }

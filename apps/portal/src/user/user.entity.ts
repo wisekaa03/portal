@@ -37,6 +37,22 @@ export class UserEntity {
 
   @Column({
     type: 'varchar',
+    length: 10,
+    nullable: false,
+    default: LoginService.LOCAL,
+  })
+  loginService: LoginService;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true,
+    unique: true,
+  })
+  loginIdentificator: string;
+
+  @Column({
+    type: 'varchar',
     unique: true,
   })
   username: string;

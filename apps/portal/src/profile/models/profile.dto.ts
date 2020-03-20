@@ -3,17 +3,12 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { LoginService, Gender } from '../../shared/interfaces';
+import { Gender } from '../../shared/interfaces';
 // #endregion
 
 // #region Profile
 export interface Profile {
   id?: string;
-
-  loginService: LoginService;
-
-  // in ldap, we store a GUID entry
-  loginIdentificator: string;
 
   username: string;
 

@@ -114,6 +114,36 @@ export class UserService {
   };
 
   /**
+   * Reads by Login identificator (LDAP ObjectGUID)
+   *
+   * @param {string} loginIdentificator LDAP: Object GUID
+   * @param {boolean} [isDisabled = true] Is this user disabled
+   * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
+   * @param {boolean} [cache = true] whether to cache results
+   * @returns {UserEntity | undefined} The user
+   */
+  readByLoginIdentificator = async (
+    loginIdentificator: string,
+    isDisabled = true,
+    isRelations: boolean | 'profile' | 'groups' = true,
+    cache = true,
+  ): Promise<UserEntity | undefined> => {
+    const where: Record<any, any> = { loginIdentificator };
+
+    if (isDisabled) {
+      where.disabled = false;
+    }
+
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
+
+    return this.userRepository.findOne({
+      where,
+      relations,
+      cache: cache ? { id: 'user', milliseconds: this.dbCacheTtl } : false,
+    });
+  };
+
+  /**
    * Create a User with Ldap params
    *
    * @param {LdapResponseUser} ldapUser Ldap user
@@ -123,18 +153,16 @@ export class UserService {
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error}
    */
-  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true, cache = true): Promise<UserEntity> {
+  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
     const defaultSettings: UserSettings = {
       lng: 'ru',
     };
 
-    const profile = await this.profileService
-      .createFromLdap(ldapUser, user?.profile, 1, true, cache)
-      .catch((error: Error) => {
-        this.logService.error('Unable to save data in `profile`', error, 'UserService');
+    const profile = await this.profileService.createFromLdap(ldapUser, user?.profile, 1, true).catch((error: Error) => {
+      this.logService.error('Unable to save data in `profile`', error, 'UserService');
 
-        throw error;
-      });
+      throw error;
+    });
     if (!profile) {
       this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
 
@@ -158,6 +186,8 @@ export class UserService {
       updatedAt: new Date(ldapUser.whenChanged),
       username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
+      loginService: LoginService.LDAP,
+      loginIdentificator: ldapUser.objectGUID,
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       groups,

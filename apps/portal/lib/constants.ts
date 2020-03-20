@@ -62,12 +62,12 @@ export const ADMIN_GROUP = 'web master';
 export const MOCK_PROFILE: UserContext = {
   user: {
     isAdmin: true,
+    loginService: LoginService.LDAP,
+    loginIdentificator: '',
     username: '',
     disabled: false,
     settings: {},
     profile: {
-      loginService: LoginService.LDAP,
-      loginIdentificator: '',
       username: '',
       dn: '',
       firstName: '',

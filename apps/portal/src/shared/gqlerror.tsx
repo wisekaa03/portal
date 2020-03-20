@@ -25,30 +25,36 @@ interface GQLErrorParams {
   i18n?: I18nService;
 }
 
-export const GQLError = ({ error, i18n, code = GQLErrorCode.UNAUTHENTICATED }: GQLErrorParams): GraphQLError => {
+export const GQLError = async ({
+  error,
+  i18n,
+  code = GQLErrorCode.UNAUTHENTICATED,
+}: GQLErrorParams): Promise<GraphQLError> => {
   let message: string;
 
   switch (code) {
     case GQLErrorCode.UNAUTHENTICATED:
-      message = i18n ? i18n.translate('auth.UNAUTHENTICATED') : 'Not authenticated';
+      message = i18n ? await i18n.translate('auth.UNAUTHENTICATED') : 'Not authenticated';
       break;
     case GQLErrorCode.UNAUTHENTICATED_LOGIN:
-      message = i18n ? i18n.translate('auth.LOGIN_INCORRECT') : 'Invalid username/password';
+      message = i18n ? await i18n.translate('auth.LOGIN_INCORRECT') : 'Invalid username/password';
       break;
     case GQLErrorCode.UNAUTHORIZED:
-      message = i18n ? i18n.translate('auth.UNAUTHORIZED') : 'Not authorized';
+      message = i18n ? await i18n.translate('auth.UNAUTHORIZED') : 'Not authorized';
       break;
     case GQLErrorCode.INSUFF_RIGHTS_AD:
-      message = i18n ? i18n.translate('auth.INSUFF_RIGHTS_AD') : 'Not enough right to edit Active Directory';
+      message = i18n ? await i18n.translate('auth.INSUFF_RIGHTS_AD') : 'Not enough right to edit Active Directory';
       break;
     case GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE:
-      message = i18n ? i18n.translate('auth.NO_FIELDS_ARE_FILLED_WITH_PROFILE') : 'No fields are filled with profile';
+      message = i18n
+        ? await i18n.translate('auth.NO_FIELDS_ARE_FILLED_WITH_PROFILE')
+        : 'No fields are filled with profile';
       break;
     case GQLErrorCode.CONSTRAINT_VIOLATION_ERROR:
-      message = i18n ? i18n.translate('auth.CONSTRAINT_VIOLATION_ERROR') : 'Constraint violation error';
+      message = i18n ? await i18n.translate('auth.CONSTRAINT_VIOLATION_ERROR') : 'Constraint violation error';
       break;
     default:
-      message = i18n ? i18n.translate('auth.SERVER_ERROR') : 'Server error';
+      message = i18n ? await i18n.translate('auth.SERVER_ERROR') : 'Server error';
       break;
   }
 

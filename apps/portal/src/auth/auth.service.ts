@@ -49,12 +49,12 @@ export class AuthService {
   async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
+    const ldapUser = await this.ldapService.authenticate(username, password);
+    const user = await this.userService.readByLoginIdentificator(ldapUser.objectGUID, true, 'profile');
+
     return this.userService
-      .createFromLdap(
-        await this.ldapService.authenticate(username, password),
-        await this.userService.readByUsername(username, true, 'profile'),
-      )
-      .then((user) => user?.toResponseObject(req?.sessionID || ''))
+      .createFromLdap(ldapUser, user)
+      .then((u) => u?.toResponseObject(req?.sessionID || ''))
       .catch((error: Error) => {
         this.logService.error('Error: not found user', error, 'AuthService');
 

@@ -15,7 +15,7 @@ import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
 import { Profile } from './models/profile.dto';
 import { ProfileEntity } from './profile.entity';
-import { LoginService, Gender } from '../shared/interfaces';
+import { Gender } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
 import { constructUploads } from '../shared/upload';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
@@ -102,18 +102,6 @@ export class ProfileService {
     this.profileRepository.findOne(id, {
       relations: ['manager'],
       cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
-    });
-
-  /**
-   * Profile by Identificator
-   *
-   * @param loginIdentificator string
-   * @return Profile
-   */
-  profileByIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne({
-      where: { loginIdentificator },
-      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
 
   /**
@@ -245,7 +233,6 @@ export class ProfileService {
     profile?: ProfileEntity,
     count = 1,
     save = true,
-    cache = true,
   ): Promise<ProfileEntity> {
     const manager =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager
@@ -288,8 +275,6 @@ export class ProfileService {
 
     const data: Profile = {
       dn: ldapUser.dn,
-      loginService: LoginService.LDAP,
-      loginIdentificator: ldapUser.objectGUID,
       username: ldapUser.sAMAccountName,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
@@ -330,12 +315,6 @@ export class ProfileService {
 
     if (profile) {
       data.id = profile.id;
-    } else {
-      const profileSave = await this.profileByIdentificator(ldapUser.objectGUID, cache);
-
-      if (profileSave) {
-        data.id = profileSave.id;
-      }
     }
 
     return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);

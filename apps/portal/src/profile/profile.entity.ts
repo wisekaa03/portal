@@ -16,7 +16,7 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { Gender, LoginService } from '../shared/interfaces';
+import { Gender } from '../shared/interfaces';
 // #endregion
 
 @Entity('profile')
@@ -29,22 +29,6 @@ export class ProfileEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column({
-    type: 'varchar',
-    length: 10,
-    nullable: false,
-    default: LoginService.LOCAL,
-  })
-  loginService: LoginService;
-
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: true,
-    unique: true,
-  })
-  loginIdentificator: string;
 
   @Column({
     type: 'varchar',
