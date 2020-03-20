@@ -158,11 +158,18 @@ export class UserService {
       lng: 'ru',
     };
 
-    const profile = await this.profileService.createFromLdap(ldapUser, user?.profile, 1, true).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`', error, 'UserService');
+    const profile = await this.profileService
+      .createFromLdap(
+        ldapUser,
+        user.profile ? await this.profileService.profileByUsername(ldapUser.sAMAccountName) : undefined,
+        1,
+        true,
+      )
+      .catch((error: Error) => {
+        this.logService.error('Unable to save data in `profile`', error, 'UserService');
 
-      throw error;
-    });
+        throw error;
+      });
     if (!profile) {
       this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
 

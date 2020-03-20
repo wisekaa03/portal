@@ -98,8 +98,20 @@ export class ProfileService {
    * @param id string
    * @return Profile
    */
-  profile = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
+  profileByID = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(id, {
+      relations: ['manager'],
+      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+    });
+
+  /**
+   * Profile by username
+   *
+   * @param id string
+   * @return Profile
+   */
+  profileByUsername = async (username: string, cache = true): Promise<ProfileEntity | undefined> =>
+    this.profileRepository.findOne(username, {
       relations: ['manager'],
       cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
     });
