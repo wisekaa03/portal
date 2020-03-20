@@ -97,9 +97,9 @@ export class ProfileService {
    *
    * @param {string} id ID of profile
    * @param {boolean} cache From cache
-   * @return {Promise<ProfileEntity>} Profile
+   * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byID = async (id: string, cache = true): Promise<ProfileEntity> =>
+  byID = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(id, {
       relations: ['manager'],
       cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
@@ -110,9 +110,9 @@ export class ProfileService {
    *
    * @param {string} username Username
    * @param {boolean} cache From cache
-   * @return {Promise<ProfileEntity>} Profile
+   * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byUsername = async (username: string, cache = true): Promise<ProfileEntity> =>
+  byUsername = async (username: string, cache = true): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(username, {
       relations: ['manager'],
       cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
@@ -123,9 +123,9 @@ export class ProfileService {
    *
    * @param {string} id LoginIdentificator (LDAP: ObjectGUID)
    * @param {boolean} cache From cache
-   * @return {Promise<ProfileEntity>} Profile
+   * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byLoginIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity> =>
+  byLoginIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity | undefined> =>
     this.profileRepository.findOne(loginIdentificator, {
       relations: ['manager'],
       cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
