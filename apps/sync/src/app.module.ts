@@ -6,7 +6,7 @@
 import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { I18nModule } from 'nestjs-i18n';
+import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -38,9 +38,11 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../.
     I18nModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      parser: I18nJsonParser,
       useFactory: async (configService: ConfigService) => ({
-        path: configService.i18nPath,
-        filePattern: configService.i18nFilePattern,
+        parserOptions: {
+          path: configService.i18nPath,
+        },
         fallbackLanguage: configService.fallbackLanguage,
         resolvers: [],
       }),

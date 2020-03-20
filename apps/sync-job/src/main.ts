@@ -6,11 +6,12 @@ import { ClientRedis } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-// import { LogService } from '@app/logger';
+import { LogService } from '@app/logger';
 import { LDAP_SYNC } from '../../sync/src/app.constants';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
+const logger = new LogService();
 
 async function bootstrap(configService: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
@@ -25,6 +26,8 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
 bootstrap(configService)
   .then((result) => {
+    logger.log(`Microservice returns: ${result}`, 'syncJob');
+
     return process.exit(result ? 0 : 1);
   })
   .catch((error) => {

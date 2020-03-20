@@ -119,7 +119,7 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
         fallbackLanguage: configService.fallbackLanguage,
         resolvers: [
           { use: QueryResolver, options: ['lang', 'locale', 'l'] },
-          new HeaderResolver(['x-custom-lang']),
+          new HeaderResolver(),
           AcceptLanguageResolver,
           new CookieResolver(['lang', 'locale', 'l']),
         ],
