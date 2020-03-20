@@ -48,39 +48,9 @@ export class UserService {
    * @returns {UserEntity | undefined} The user
    */
   comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
-    const user = await this.readByUsername(username);
+    const user = await this.byUsername(username);
 
     return user?.comparePassword(password) ? user : undefined;
-  };
-
-  /**
-   * Reads by Username
-   *
-   * @param {string} username User ID
-   * @param {boolean} [isDisabled = true] Is this user disabled
-   * @param {boolean | 'profile' | 'groups'} [isRelation = true] The relation of this user
-   * @param {boolean} [cache = true] whether to cache results
-   * @returns {UserEntity | undefined} The user
-   */
-  readByUsername = async (
-    username: string,
-    isDisabled = true,
-    isRelations: boolean | 'profile' | 'groups' = true,
-    cache = true,
-  ): Promise<UserEntity | undefined> => {
-    const where: Record<any, any> = { username };
-
-    if (isDisabled) {
-      where.disabled = false;
-    }
-
-    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
-
-    return this.userRepository.findOne({
-      where,
-      relations,
-      cache: cache ? { id: 'user', milliseconds: this.dbCacheTtl } : false,
-    });
   };
 
   /**
@@ -92,7 +62,7 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity | undefined} The user
    */
-  readById = async (
+  byId = async (
     id: string,
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
@@ -109,7 +79,37 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'user', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
+    });
+  };
+
+  /**
+   * Reads by Username
+   *
+   * @param {string} username User ID
+   * @param {boolean} [isDisabled = true] Is this user disabled
+   * @param {boolean | 'profile' | 'groups'} [isRelation = true] The relation of this user
+   * @param {boolean} [cache = true] whether to cache results
+   * @returns {UserEntity | undefined} The user
+   */
+  byUsername = async (
+    username: string,
+    isDisabled = true,
+    isRelations: boolean | 'profile' | 'groups' = true,
+    cache = true,
+  ): Promise<UserEntity | undefined> => {
+    const where: Record<any, any> = { username };
+
+    if (isDisabled) {
+      where.disabled = false;
+    }
+
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
+
+    return this.userRepository.findOne({
+      where,
+      relations,
+      cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -122,7 +122,7 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity | undefined} The user
    */
-  readByLoginIdentificator = async (
+  byLoginIdentificator = async (
     loginIdentificator: string,
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
@@ -139,7 +139,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'user', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -161,7 +161,7 @@ export class UserService {
     const profile = await this.profileService
       .createFromLdap(
         ldapUser,
-        user.profile ? await this.profileService.profileByUsername(ldapUser.sAMAccountName) : undefined,
+        user?.profile ? await this.profileService.byLoginIdentificator(ldapUser.sAMAccountName) : undefined,
         1,
         true,
       )
@@ -259,7 +259,7 @@ export class UserService {
    */
   async settings(req: Request, value: UserSettings): Promise<UserResponse | boolean> {
     if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
-      const user: UserEntity | undefined = await this.readById(req.session.passport.user.id, false, 'profile');
+      const user: UserEntity | undefined = await this.byId(req.session.passport.user.id, false, 'profile');
 
       if (user) {
         let newSettings = { ...user.settings };

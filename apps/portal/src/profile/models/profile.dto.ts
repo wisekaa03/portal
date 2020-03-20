@@ -3,12 +3,15 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { Gender } from '../../shared/interfaces';
+import { Gender, LoginService } from '../../shared/interfaces';
 // #endregion
 
 // #region Profile
 export interface Profile {
   id?: string;
+
+  loginService: LoginService;
+  loginIdentificator: string;
 
   username: string;
 

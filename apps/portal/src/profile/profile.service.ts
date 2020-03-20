@@ -15,7 +15,7 @@ import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
 import { Profile } from './models/profile.dto';
 import { ProfileEntity } from './profile.entity';
-import { Gender } from '../shared/interfaces';
+import { Gender, LoginService } from '../shared/interfaces';
 import { GQLErrorCode } from '../shared/gqlerror';
 import { constructUploads } from '../shared/upload';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
@@ -51,9 +51,9 @@ export class ProfileService {
   /**
    * Get profiles
    *
-   * @param {string} string - The search string
-   * @param {boolean} disabled - The disabled
-   * @param {boolean} notShowing - The not showing
+   * @param {string} string The search string
+   * @param {boolean} disabled The disabled flag
+   * @param {boolean} notShowing The not showing flag
    * @return {SelectQueryBuilder<ProfileEntity>}
    */
   getProfiles = (search: string, disabled: boolean, notShowing: boolean): SelectQueryBuilder<ProfileEntity> => {
@@ -95,10 +95,11 @@ export class ProfileService {
   /**
    * Profile by ID
    *
-   * @param id string
-   * @return Profile
+   * @param {string} id ID of profile
+   * @param {boolean} cache From cache
+   * @return {Promise<ProfileEntity>} Profile
    */
-  profileByID = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
+  byID = async (id: string, cache = true): Promise<ProfileEntity> =>
     this.profileRepository.findOne(id, {
       relations: ['manager'],
       cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
@@ -107,20 +108,35 @@ export class ProfileService {
   /**
    * Profile by username
    *
-   * @param id string
-   * @return Profile
+   * @param {string} username Username
+   * @param {boolean} cache From cache
+   * @return {Promise<ProfileEntity>} Profile
    */
-  profileByUsername = async (username: string, cache = true): Promise<ProfileEntity | undefined> =>
+  byUsername = async (username: string, cache = true): Promise<ProfileEntity> =>
     this.profileRepository.findOne(username, {
       relations: ['manager'],
-      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
+    });
+
+  /**
+   * Profile by LoginIdentificator
+   *
+   * @param {string} id LoginIdentificator (LDAP: ObjectGUID)
+   * @param {boolean} cache From cache
+   * @return {Promise<ProfileEntity>} Profile
+   */
+  byLoginIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity> =>
+    this.profileRepository.findOne(loginIdentificator, {
+      relations: ['manager'],
+      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
 
   /**
    * searchSuggestions
    *
-   * @param {string} - Search string
-   * @throws {Error} - Exception
+   * @param {string} search Search string
+   * @return {Promise<string[]>} The search suggestions
+   * @throws {Error} Exception
    */
   searchSuggestions = async (search: string): Promise<string[]> => {
     const query = this.profileRepository
@@ -211,9 +227,9 @@ export class ProfileService {
   /**
    * Create or update by user DN
    *
-   * @param {string} - User by DN
-   * @param {number} - Count
-   * @returns {ProfileEntity}
+   * @param {string} userByDN User by DN
+   * @param {number} count
+   * @returns {Promise<ProfileEntity | undefined>} Profile entity
    */
   async createLdapDN(userByDN: string, count: number): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
@@ -237,7 +253,7 @@ export class ProfileService {
    * @param {number} [count = 1] Count for manager
    * @param {boolean} [save = true] Save the profile
    * @param {boolean} [cache = true] Cache the result
-   * @returns {Promise<ProfileEntity | undefined>} The profile entity
+   * @returns {Promise<ProfileEntity>} The profile entity
    * @throws {Error} Exception
    */
   async createFromLdap(
@@ -288,6 +304,8 @@ export class ProfileService {
     const data: Profile = {
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
+      loginService: LoginService.LDAP,
+      loginIdentificator: ldapUser.objectGUID,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName,
