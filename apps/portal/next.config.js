@@ -10,9 +10,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer');
 
 const optimizedImages = require('next-optimized-images');
 
-const withCSS = require('@zeit/next-css');
-const withSass = require('@zeit/next-sass');
-
 const withFonts = require('next-fonts');
 
 const withPlugins = require('next-compose-plugins');
@@ -208,17 +205,6 @@ const plugins = [
       },
     },
   ],
-  [
-    withCSS,
-    {
-      // cssModules: true,
-      // cssLoaderOptions: {
-      //   importLoaders: true,
-      // },
-      postcssLoaderOptions: {},
-    },
-  ],
-  [withSass /* , { cssModules: true } */],
   [withFonts, { enableSvg: false }],
   [
     withBundleAnalyzer,
