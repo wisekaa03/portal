@@ -53,7 +53,7 @@ export class AuthService {
     const user = await this.userService.byLoginIdentificator(ldapUser.objectGUID, true, 'profile');
 
     return this.userService
-      .createFromLdap(ldapUser, user)
+      .fromLdap(ldapUser, user)
       .then((u) => u?.toResponseObject(req?.sessionID || ''))
       .catch((error: Error) => {
         this.logService.error('Error: not found user', error, 'AuthService');

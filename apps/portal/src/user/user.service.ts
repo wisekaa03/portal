@@ -153,15 +153,15 @@ export class UserService {
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error}
    */
-  async createFromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
+  async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
     const defaultSettings: UserSettings = {
       lng: 'ru',
     };
 
     const profile = await this.profileService
-      .createFromLdap(
+      .fromLdap(
         ldapUser,
-        user?.profile ? await this.profileService.byLoginIdentificator(ldapUser.sAMAccountName) : undefined,
+        user?.profile ? await this.profileService.byLoginIdentificator(ldapUser.objectGUID) : undefined,
       )
       .catch((error: Error) => {
         this.logService.error('Unable to save data in `profile`', error, 'UserService');
@@ -179,11 +179,13 @@ export class UserService {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups: GroupEntity[] | undefined = await this.groupService.createFromUser(ldapUser, false).catch((error) => {
-      this.logService.error('Unable to save data in `group`', error, 'UserService');
+    const groups: GroupEntity[] | undefined = await this.groupService
+      .fromLdapUser(ldapUser, false)
+      .catch((error: Error) => {
+        this.logService.error('Unable to save data in `group`', error, 'UserService');
 
-      return undefined;
-    });
+        return undefined;
+      });
 
     const data: User = {
       id: user?.id,

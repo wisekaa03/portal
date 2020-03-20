@@ -27,12 +27,12 @@ export class SyncService {
         if (ldapUser.sAMAccountName) {
           const user = await this.userService.byLoginIdentificator(ldapUser.objectGUID, false, false, false);
           try {
-            await this.userService.createFromLdap(ldapUser, user, true);
+            await this.userService.fromLdap(ldapUser, user, true);
           } catch (error) {
             this.logService.error(`Error with "${ldapUser.sAMAccountName}"`, error, 'Synch');
           }
         } else {
-          await this.profileService.createFromLdap(ldapUser, undefined, 1, true);
+          await this.profileService.fromLdap(ldapUser, undefined, 1, true);
         }
       });
 

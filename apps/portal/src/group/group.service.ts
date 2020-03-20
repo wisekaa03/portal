@@ -35,14 +35,14 @@ export class GroupService {
    * @returns {Promise<GroupEntity[]>} The group entity
    * @throws {Error} Exception
    */
-  async createFromUser(ldap: LdapResponseUser, cache = true): Promise<GroupEntity[]> {
+  async fromLdapUser(ldap: LdapResponseUser, cache = true): Promise<GroupEntity[]> {
     const groups: GroupEntity[] = [];
 
     if (ldap.groups) {
       // eslint-disable-next-line no-restricted-syntax
       for (const ldapGroup of ldap.groups as LdapResonseGroup[]) {
         // eslint-disable-next-line no-await-in-loop
-        const updateId = await this.groupByIdentificator(ldapGroup.objectGUID, cache);
+        const updateId = await this.byIdentificator(ldapGroup.objectGUID, cache);
 
         const group: Group = {
           ...updateId,
@@ -68,7 +68,7 @@ export class GroupService {
    * @param {boolean} [cache = true] Cache true/false
    * @return {Promise<GroupEntity | undefined>} Group
    */
-  groupByIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
+  byIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
     this.groupRepository.findOne({
       where: { loginIdentificator },
       cache: cache ? { id: 'group_loginIdentificator', milliseconds: this.dbCacheTtl } : false,

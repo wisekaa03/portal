@@ -231,12 +231,12 @@ export class ProfileService {
    * @param {number} count
    * @returns {Promise<ProfileEntity | undefined>} Profile entity
    */
-  async createLdapDN(userByDN: string, count: number): Promise<ProfileEntity | undefined> {
+  async fromLdapDN(userByDN: string, count: number): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
       const ldapUser = await this.ldapService.searchByDN(userByDN);
 
       if (ldapUser) {
-        return this.createFromLdap(ldapUser, undefined, count + 1);
+        return this.fromLdap(ldapUser, undefined, count + 1);
       }
     } else {
       this.logService.log(`The LDAP count > 10, manager is not inserted: ${userByDN}`, 'ProfileService');
@@ -256,16 +256,9 @@ export class ProfileService {
    * @returns {Promise<ProfileEntity>} The profile entity
    * @throws {Error} Exception
    */
-  async createFromLdap(
-    ldapUser: LdapResponseUser,
-    profile?: ProfileEntity,
-    count = 1,
-    save = true,
-  ): Promise<ProfileEntity> {
+  async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, count = 1, save = true): Promise<ProfileEntity> {
     const manager =
-      ldapUser.manager && ldapUser.dn !== ldapUser.manager
-        ? await this.createLdapDN(ldapUser.manager, count)
-        : undefined;
+      ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
 
     let comment: any;
     try {
