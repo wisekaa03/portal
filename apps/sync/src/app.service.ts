@@ -25,7 +25,7 @@ export class SyncService {
     if (ldapUsers) {
       ldapUsers.forEach(async (ldapUser) => {
         if (ldapUser.sAMAccountName) {
-          const user = await this.userService.readByLoginIdentificator(ldapUser.objectGUID, false, false, false);
+          const user = await this.userService.byLoginIdentificator(ldapUser.objectGUID, false, false, false);
           try {
             await this.userService.createFromLdap(ldapUser, user, true);
           } catch (error) {
