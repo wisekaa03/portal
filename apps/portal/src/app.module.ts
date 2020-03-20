@@ -6,7 +6,14 @@
 import { resolve } from 'path';
 // import { APP_FILTER } from '@nestjs/core';
 import { Module, CacheModule } from '@nestjs/common';
-import { I18nModule, QueryResolver, HeaderResolver } from 'nestjs-i18n';
+import {
+  I18nModule,
+  QueryResolver,
+  HeaderResolver,
+  I18nJsonParser,
+  CookieResolver,
+  AcceptLanguageResolver,
+} from 'nestjs-i18n';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next-2';
@@ -104,11 +111,18 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     I18nModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      parser: I18nJsonParser,
       useFactory: async (configService: ConfigService) => ({
-        path: configService.i18nPath,
-        filePattern: configService.i18nFilePattern,
+        parserOptions: {
+          path: configService.i18nPath,
+        },
         fallbackLanguage: configService.fallbackLanguage,
-        resolvers: [new QueryResolver(['lang', 'locale', 'l']), new HeaderResolver()],
+        resolvers: [
+          { use: QueryResolver, options: ['lang', 'locale', 'l'] },
+          new HeaderResolver(['x-custom-lang']),
+          AcceptLanguageResolver,
+          new CookieResolver(['lang', 'locale', 'l']),
+        ],
       }),
     }),
     // #endregion
