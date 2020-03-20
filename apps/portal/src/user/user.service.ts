@@ -162,8 +162,6 @@ export class UserService {
       .createFromLdap(
         ldapUser,
         user?.profile ? await this.profileService.byLoginIdentificator(ldapUser.sAMAccountName) : undefined,
-        1,
-        true,
       )
       .catch((error: Error) => {
         this.logService.error('Unable to save data in `profile`', error, 'UserService');
