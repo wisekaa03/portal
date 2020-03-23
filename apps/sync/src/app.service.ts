@@ -20,6 +20,8 @@ export class SyncService {
   ) {}
 
   synchronization = async (): Promise<boolean> => {
+    // TODO: profiles that not in AD but in DB
+
     const ldapUsers = await this.ldapService.synchronization();
 
     if (ldapUsers) {
