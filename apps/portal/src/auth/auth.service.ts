@@ -50,7 +50,7 @@ export class AuthService {
     this.logService.debug(`User login: username = "${username}"`, 'AuthService');
 
     const ldapUser = await this.ldapService.authenticate(username, password);
-    const user = await this.userService.byLoginIdentificator(ldapUser.objectGUID, true, 'profile');
+    const user = await this.userService.byLoginIdentificator(ldapUser.objectGUID);
 
     return this.userService
       .fromLdap(ldapUser, user)

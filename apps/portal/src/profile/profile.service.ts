@@ -99,11 +99,20 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byID = async (id: string, cache = true): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne(id, {
-      relations: ['manager'],
+  byID = async (
+    id: string,
+    isRelations: boolean | 'manager' = true,
+    cache = true,
+  ): Promise<ProfileEntity | undefined> => {
+    const where: Record<any, any> = { id };
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
+
+    return this.profileRepository.findOne({
+      where,
+      relations,
       cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
     });
+  };
 
   /**
    * Profile by username
@@ -112,11 +121,20 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byUsername = async (username: string, cache = true): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne(username, {
-      relations: ['manager'],
+  byUsername = async (
+    username: string,
+    isRelations: boolean | 'manager' = true,
+    cache = true,
+  ): Promise<ProfileEntity | undefined> => {
+    const where: Record<any, any> = { username };
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
+
+    return this.profileRepository.findOne({
+      where,
+      relations,
       cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
     });
+  };
 
   /**
    * Profile by LoginIdentificator
@@ -125,11 +143,20 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byLoginIdentificator = async (loginIdentificator: string, cache = true): Promise<ProfileEntity | undefined> =>
-    this.profileRepository.findOne(loginIdentificator, {
-      relations: ['manager'],
+  byLoginIdentificator = async (
+    loginIdentificator: string,
+    isRelations: boolean | 'manager' = true,
+    cache = true,
+  ): Promise<ProfileEntity | undefined> => {
+    const where: Record<any, any> = { loginIdentificator };
+    const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
+
+    return this.profileRepository.findOne({
+      where,
+      relations,
       cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
+  };
 
   /**
    * searchSuggestions

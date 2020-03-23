@@ -159,10 +159,7 @@ export class UserService {
     };
 
     const profile = await this.profileService
-      .fromLdap(
-        ldapUser,
-        user?.profile ? await this.profileService.byLoginIdentificator(ldapUser.objectGUID) : undefined,
-      )
+      .fromLdap(ldapUser, await this.profileService.byLoginIdentificator(ldapUser.objectGUID))
       .catch((error: Error) => {
         this.logService.error('Unable to save data in `profile`', error, 'UserService');
 
