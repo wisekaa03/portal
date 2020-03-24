@@ -67,8 +67,7 @@
     ]
   },
   "resolutions": {
-    "**/**/graphql-upload": "^10.0.0",
-    "**/**/webpack": "^4.42.0"
+    "**/**/graphql-upload": "^10.0.0"
   },
   "private": true,
   "engines": {
@@ -90,7 +89,7 @@
     "@material-ui/styles": "^4.9.6",
     "@nestjs/common": "^7.0.5",
     "@nestjs/core": "^7.0.5",
-    "@nestjs/graphql": "^7.0.14",
+    "@nestjs/graphql": "^7.0.15",
     "@nestjs/microservices": "^7.0.5",
     "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.5",
