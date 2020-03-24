@@ -164,13 +164,8 @@ export class OldTicketService {
     const Attaches: Attaches1C = { Вложение: [] };
 
     if (attachments) {
-      await Promise.all(
-        await constructUploads(attachments, ({ filename, file }) => {
-          Attaches['Вложение'].push({
-            DFile: file.toString('base64'),
-            NFile: filename,
-          });
-        }),
+      await constructUploads(attachments, ({ filename, file }) =>
+        Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: Error) => {
         this.logService.error(error.message, error, 'OldTicketService');
 
@@ -236,13 +231,8 @@ export class OldTicketService {
     const Attaches: Attaches1C = { Вложение: [] };
 
     if (attachments) {
-      await Promise.all(
-        await constructUploads(attachments, ({ filename, file }) => {
-          Attaches['Вложение'].push({
-            DFile: file.toString('base64'),
-            NFile: filename,
-          });
-        }),
+      await constructUploads(attachments, ({ filename, file }) =>
+        Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: SoapFault) => {
         this.logService.verbose(client.lastRequest, 'OldTicketService');
         this.logService.verbose(client.lastResponse, 'OldTicketService');

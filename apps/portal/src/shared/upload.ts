@@ -6,41 +6,47 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 // #endregion
 
+export interface FileUploadBuffer extends Pick<FileUpload, 'filename' | 'mimetype' | 'encoding'> {
+  file: Buffer;
+}
+
 /**
  * Constructing Uploads
  *
  * @param attachments {Promise<FileUpload>[]}
- * @param callback {(upload: { filename: string; mimetype: string; file: Buffer }) => void}
- * @returns {Promise<Promise<boolean>[]>}
+ * @param callback {(upload: FileUploadBuffer) => any}
+ * @returns {Promise<any[]>}
  */
 export const constructUploads = async (
   attachments: Promise<FileUpload>[],
-  callback: (upload: { filename: string; mimetype: string; file: Buffer }) => void,
-): Promise<Promise<boolean>[]> =>
-  Promise.all(attachments)
-    .then((attach: FileUpload[]): Promise<boolean>[] => {
-      return attach.map((value: FileUpload) => {
-        const { filename, mimetype, createReadStream } = value;
-
-        return new Promise<boolean>((resolve, reject) => {
+  callback: (upload: FileUploadBuffer) => any,
+): Promise<any[]> => {
+  return (
+    Promise.all(attachments)
+      .then((attach: FileUpload[]): Promise<FileUploadBuffer>[] =>
+        attach.map((value: FileUpload) => {
+          const { createReadStream, ...rest } = value;
           const bufs: any[] = [];
 
-          return createReadStream()
-            .on('error', (error) => {
-              reject(error);
-            })
-            .on('data', (chunk) => {
-              bufs.push(chunk);
-            })
-            .on('end', () => {
-              // eslint-disable-next-line promise/no-callback-in-promise
-              callback({ filename, mimetype, file: Buffer.concat(bufs) });
-
-              resolve(true);
-            });
-        });
-      });
-    })
-    .catch((error: Error) => {
-      throw error;
-    });
+          return new Promise<FileUploadBuffer>((resolve, reject) => {
+            createReadStream()
+              .on('error', (error) => {
+                reject(error);
+              })
+              .on('data', (chunk) => {
+                bufs.push(chunk);
+              })
+              .on('end', () => {
+                resolve({ ...rest, file: Buffer.concat(bufs) });
+              });
+          });
+        }),
+      )
+      .then((filesPromise: Promise<FileUploadBuffer>[]) => Promise.all(filesPromise))
+      // eslint-disable-next-line promise/no-callback-in-promise
+      .then((files: FileUploadBuffer[]) => files.map((file: FileUploadBuffer) => callback(file)))
+      .catch((error: Error) => {
+        throw error;
+      })
+  );
+};

@@ -599,20 +599,15 @@ export class ProfileService {
     );
 
     if (thumbnailPhoto) {
-      await Promise.all(
-        await constructUploads([thumbnailPhoto], ({ file }) => {
-          modification.thumbnailPhoto = file;
-          ldapUpdated.push(
-            new Change({
-              operation: 'replace',
-              modification: new Attribute({ type: 'thumbnailPhoto', vals: file }),
-            }),
-          );
-        }),
-      ).catch((error: Error) => {
-        this.logService.error(error.message, error, 'ProfileService');
+      await constructUploads([thumbnailPhoto], ({ file }) => {
+        modification.thumbnailPhoto = file;
 
-        throw error;
+        return ldapUpdated.push(
+          new Change({
+            operation: 'replace',
+            modification: new Attribute({ type: 'thumbnailPhoto', vals: file }),
+          }),
+        );
       });
     }
 
