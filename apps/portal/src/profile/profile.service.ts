@@ -110,7 +110,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+      cache, // cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -132,7 +132,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
+      cache, // cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -154,7 +154,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      cache, // cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -284,11 +284,10 @@ export class ProfileService {
    * @throws {Error} Exception
    */
   async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, count = 1, save = true): Promise<ProfileEntity> {
-    // const manager =
-    //   ldapUser.manager && ldapUser.dn !== ldapUser.manager ?
-    // await this.fromLdapDN(ldapUser.manager, count) : undefined;
+    const manager =
+      ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
 
-    const manager = undefined;
+    // const manager = undefined;
 
     let comment: any;
     try {
@@ -324,7 +323,15 @@ export class ProfileService {
     const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
     const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
 
+    let id: string | undefined;
+    if (profile) {
+      id = profile.id;
+    } else {
+      id = (await this.byLoginIdentificator(ldapUser.objectGUID, false, false))?.id;
+    }
+
     const data: Profile = {
+      id,
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
       loginService: LoginService.LDAP,
@@ -365,10 +372,6 @@ export class ProfileService {
       createdAt: new Date(ldapUser.whenCreated),
       updatedAt: new Date(ldapUser.whenChanged),
     };
-
-    if (profile) {
-      data.id = profile.id;
-    }
 
     return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);
   }

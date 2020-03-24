@@ -79,7 +79,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
+      cache, // cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -109,7 +109,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
+      cache, // cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -139,7 +139,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      cache, // cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -158,13 +158,11 @@ export class UserService {
       lng: 'ru',
     };
 
-    const profile = await this.profileService
-      .fromLdap(ldapUser, await this.profileService.byLoginIdentificator(ldapUser.objectGUID))
-      .catch((error: Error) => {
-        this.logService.error('Unable to save data in `profile`', error, 'UserService');
+    const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
+      this.logService.error('Unable to save data in `profile`', error, 'UserService');
 
-        throw error;
-      });
+      throw error;
+    });
     if (!profile) {
       this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
 
@@ -182,8 +180,14 @@ export class UserService {
       return undefined;
     });
 
+    let id: string | undefined;
+    if (user) {
+      id = user.id;
+    } else {
+      id = (await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false))?.id;
+    }
     const data: User = {
-      id: user?.id,
+      id,
       createdAt: new Date(ldapUser.whenCreated),
       updatedAt: new Date(ldapUser.whenChanged),
       username: ldapUser.sAMAccountName,
