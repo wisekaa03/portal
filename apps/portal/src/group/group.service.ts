@@ -48,29 +48,31 @@ export class GroupService {
    * @throws {Error} Exception
    */
   async fromLdap(ldap: LdapResponseUser): Promise<GroupEntity[]> {
-    const groups: GroupEntity[] = [];
+    const groups: any[] = [];
 
     if (ldap.groups) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const ldapGroup of ldap.groups as LdapResonseGroup[]) {
-        // eslint-disable-next-line no-await-in-loop
-        const updated = await this.byIdentificator(ldapGroup.objectGUID, false);
+      ldap.groups.forEach((ldapGroup: LdapResonseGroup) => {
+        groups.push(
+          this.byIdentificator(ldapGroup.objectGUID, false)
+            .then((updated) => {
+              const group: Group = {
+                ...updated,
+                loginService: LoginService.LDAP,
+                loginIdentificator: ldapGroup.objectGUID,
+                name: ldapGroup.sAMAccountName,
+                dn: ldapGroup.dn,
+              };
 
-        const group: Group = {
-          ...updated,
-          loginService: LoginService.LDAP,
-          loginIdentificator: ldapGroup.objectGUID,
-          name: ldapGroup.sAMAccountName,
-          dn: ldapGroup.dn,
-        };
-
-        groups.push(this.groupRepository.create(group));
-      }
-
-      await this.bulkSave(groups);
+              return this.groupRepository.save(this.groupRepository.create(group));
+            })
+            .catch((error: Error) => {
+              this.logService.error('Unable to save data in `group`', error, 'GroupService');
+            }),
+        );
+      });
     }
 
-    return groups;
+    return Promise.all(groups);
   }
 
   /**
@@ -89,7 +91,7 @@ export class GroupService {
    */
   bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[]> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logService.error('Unable to save data in `groups`', error, 'GroupService');
+      this.logService.error('Unable to save data in `group`', error, 'GroupService');
 
       throw error;
     });

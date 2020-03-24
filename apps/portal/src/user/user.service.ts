@@ -139,7 +139,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache, // cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
   };
 

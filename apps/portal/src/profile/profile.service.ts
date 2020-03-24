@@ -154,7 +154,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache, // cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -263,7 +263,7 @@ export class ProfileService {
       const ldapUser = await this.ldapService.searchByDN(userByDN);
 
       if (ldapUser) {
-        return this.fromLdap(ldapUser, await this.byLoginIdentificator(ldapUser.objectGUID), true, count + 1);
+        return this.fromLdap(ldapUser, undefined, true, count + 1);
       }
     } else {
       this.logService.log(`The LDAP count > 10, manager is not inserted: ${userByDN}`, 'ProfileService');
