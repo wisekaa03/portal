@@ -284,8 +284,11 @@ export class ProfileService {
    * @throws {Error} Exception
    */
   async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, count = 1, save = true): Promise<ProfileEntity> {
-    const manager =
-      ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
+    // const manager =
+    //   ldapUser.manager && ldapUser.dn !== ldapUser.manager ?
+    // await this.fromLdapDN(ldapUser.manager, count) : undefined;
+
+    const manager = undefined;
 
     let comment: any;
     try {
