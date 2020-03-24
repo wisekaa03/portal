@@ -176,13 +176,11 @@ export class UserService {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups: GroupEntity[] | undefined = await this.groupService
-      .fromLdapUser(ldapUser, false)
-      .catch((error: Error) => {
-        this.logService.error('Unable to save data in `group`', error, 'UserService');
+    const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
+      this.logService.error('Unable to save data in `group`', error, 'UserService');
 
-        return undefined;
-      });
+      return undefined;
+    });
 
     const data: User = {
       id: user?.id,
