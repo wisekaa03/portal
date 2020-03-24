@@ -28,24 +28,36 @@ export class GroupService {
   }
 
   /**
+   * Group by Identificator
+   *
+   * @param {string} loginIdentificator Group object GUID
+   * @param {boolean} [cache = true] Cache true/false
+   * @return {Promise<GroupEntity | undefined>} Group
+   */
+  byIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
+    this.groupRepository.findOne({
+      where: { loginIdentificator },
+      cache: cache ? { id: 'group_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+    });
+
+  /**
    * Create or Update user groups
    *
    * @param {LdapResponseUser} ldapUser The LDAP user
-   * @param {boolean} [cache = true] Cache the result
    * @returns {Promise<GroupEntity[]>} The group entity
    * @throws {Error} Exception
    */
-  async fromLdapUser(ldap: LdapResponseUser, cache = true): Promise<GroupEntity[]> {
+  async fromLdap(ldap: LdapResponseUser): Promise<GroupEntity[]> {
     const groups: GroupEntity[] = [];
 
     if (ldap.groups) {
       // eslint-disable-next-line no-restricted-syntax
       for (const ldapGroup of ldap.groups as LdapResonseGroup[]) {
         // eslint-disable-next-line no-await-in-loop
-        const updateId = await this.byIdentificator(ldapGroup.objectGUID, cache);
+        const updated = await this.byIdentificator(ldapGroup.objectGUID, false);
 
         const group: Group = {
-          ...updateId,
+          ...updated,
           loginService: LoginService.LDAP,
           loginIdentificator: ldapGroup.objectGUID,
           name: ldapGroup.sAMAccountName,
@@ -60,19 +72,6 @@ export class GroupService {
 
     return groups;
   }
-
-  /**
-   * Group by Identificator
-   *
-   * @param {string} loginIdentificator Group object GUID
-   * @param {boolean} [cache = true] Cache true/false
-   * @return {Promise<GroupEntity | undefined>} Group
-   */
-  byIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
-    this.groupRepository.findOne({
-      where: { loginIdentificator },
-      cache: cache ? { id: 'group_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
-    });
 
   /**
    * Create

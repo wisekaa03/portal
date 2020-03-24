@@ -27,14 +27,13 @@ export class SyncService {
     if (ldapUsers) {
       ldapUsers.forEach(async (ldapUser) => {
         if (ldapUser.sAMAccountName) {
-          const user = await this.userService.byLoginIdentificator(ldapUser.objectGUID, false, false, false);
           try {
-            await this.userService.fromLdap(ldapUser, user, true);
+            await this.userService.fromLdap(ldapUser);
           } catch (error) {
             this.logService.error(`Error with "${ldapUser.sAMAccountName}"`, error, 'Synch');
           }
         } else {
-          await this.profileService.fromLdap(ldapUser, undefined, 1, true);
+          await this.profileService.fromLdap(ldapUser);
         }
       });
 

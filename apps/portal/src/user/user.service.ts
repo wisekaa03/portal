@@ -79,7 +79,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache, // cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -109,7 +109,7 @@ export class UserService {
     return this.userRepository.findOne({
       where,
       relations,
-      cache, // cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -149,7 +149,6 @@ export class UserService {
    * @param {LdapResponseUser} ldapUser Ldap user
    * @param {UserEntity} user User
    * @param {boolean} [save = true] Save the profile
-   * @param {boolean} [cache = true] whether to cache results
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error}
    */
@@ -174,20 +173,18 @@ export class UserService {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
+    const groups: GroupEntity[] | undefined = await this.groupService.fromLdap(ldapUser).catch((error: Error) => {
       this.logService.error('Unable to save data in `group`', error, 'UserService');
 
       return undefined;
     });
 
-    let id: string | undefined;
-    if (user) {
-      id = user.id;
-    } else {
-      id = (await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false))?.id;
+    if (!user) {
+      // eslint-disable-next-line no-param-reassign
+      user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false);
     }
     const data: User = {
-      id,
+      ...user,
       createdAt: new Date(ldapUser.whenCreated),
       updatedAt: new Date(ldapUser.whenChanged),
       username: ldapUser.sAMAccountName,
@@ -198,7 +195,7 @@ export class UserService {
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       groups,
       isAdmin: groups ? Boolean(groups.find((group) => group.name.toLowerCase() === ADMIN_GROUP)) : false,
-      settings: user?.settings ? user.settings : defaultSettings,
+      settings: user ? user.settings : defaultSettings,
       profile: (profile as unknown) as Profile,
     };
 

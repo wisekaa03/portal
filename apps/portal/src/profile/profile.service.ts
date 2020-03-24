@@ -110,7 +110,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache, // cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -132,7 +132,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache, // cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -255,15 +255,15 @@ export class ProfileService {
    * Create or update by user DN
    *
    * @param {string} userByDN User by DN
-   * @param {number} count
+   * @param {number} [count = 1] Count for manager
    * @returns {Promise<ProfileEntity | undefined>} Profile entity
    */
-  async fromLdapDN(userByDN: string, count: number): Promise<ProfileEntity | undefined> {
+  async fromLdapDN(userByDN: string, count = 1): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
       const ldapUser = await this.ldapService.searchByDN(userByDN);
 
       if (ldapUser) {
-        return this.fromLdap(ldapUser, await this.byLoginIdentificator(ldapUser.objectGUID), count + 1);
+        return this.fromLdap(ldapUser, await this.byLoginIdentificator(ldapUser.objectGUID), true, count + 1);
       }
     } else {
       this.logService.log(`The LDAP count > 10, manager is not inserted: ${userByDN}`, 'ProfileService');
@@ -277,17 +277,14 @@ export class ProfileService {
    *
    * @param {LdapResponseUser} ldapUser The LDAP user
    * @param {ProfileEntity} profile Profile from Database
-   * @param {number} [count = 1] Count for manager
    * @param {boolean} [save = true] Save the profile
-   * @param {boolean} [cache = true] Cache the result
+   * @param {number} [count = 1] Count for manager
    * @returns {Promise<ProfileEntity>} The profile entity
    * @throws {Error} Exception
    */
-  async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, count = 1, save = true): Promise<ProfileEntity> {
+  async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, save = true, count = 1): Promise<ProfileEntity> {
     const manager =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
-
-    // const manager = undefined;
 
     let comment: any;
     try {
@@ -323,15 +320,13 @@ export class ProfileService {
     const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
     const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
 
-    let id: string | undefined;
-    if (profile) {
-      id = profile.id;
-    } else {
-      id = (await this.byLoginIdentificator(ldapUser.objectGUID, false, false))?.id;
+    if (!profile) {
+      // eslint-disable-next-line no-param-reassign
+      profile = await this.byLoginIdentificator(ldapUser.objectGUID, false, false);
     }
 
     const data: Profile = {
-      id,
+      ...profile,
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
       loginService: LoginService.LDAP,
