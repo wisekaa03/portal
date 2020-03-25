@@ -9,7 +9,6 @@ import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory
 import { Order } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
-import { Profile } from '../src/profile/models/profile.dto';
 import { UserContext } from '../src/user/models/user.dto';
 import { ColumnNames } from '../components/phonebook/types';
 // #endregion
@@ -55,12 +54,6 @@ export interface ApolloDocumentProps extends DocumentContext {
 
 export interface Data<K, T> {
   [K: string]: T;
-}
-
-export interface ProfileProps extends Profile {
-  pageInfo: any;
-  edges: any;
-  totalCount: any;
 }
 
 export interface ProfileQueryProps {
