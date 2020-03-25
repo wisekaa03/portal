@@ -4,9 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useLazyQuery, QueryLazyOptions } from '@apollo/react-hooks';
-import { ApolloQueryResult } from 'apollo-client';
-import { QueryResult } from 'react-apollo';
+import { useLazyQuery } from '@apollo/react-hooks';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
@@ -168,14 +166,18 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
       ssr: false,
     });
 
+    // TODO: what the fck ? useLazyQuery returns old data... :(
     useEffect(() => {
-      if (!loading && !error) {
-        getProfile({
-          variables: { id: profileId },
-        });
-        setProfile(data?.profile);
+      getProfile({
+        variables: { id: profileId },
+      });
+    }, [getProfile, profileId]);
+
+    useEffect(() => {
+      if (!loading && !error && data) {
+        setProfile(data.profile);
       }
-    }, [getProfile, profile, data, profileId, loading, error]);
+    }, [setProfile, data, loading, error]);
 
     const handleProfile = (prof: Profile) => (): void => {
       if (!prof.disabled && !prof.notShowing) {
