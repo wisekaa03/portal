@@ -55,9 +55,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const largeWidth = useMediaQuery('(min-width:1600px)');
 
   const router = useRouter();
-  const profile = useContext(ProfileContext);
+  const me = useContext(ProfileContext);
 
-  const defaultColumns = profile?.user?.settings?.phonebook?.columns as ColumnNames[] | null;
+  const defaultColumns = me?.user?.settings?.phonebook?.columns || null;
 
   const [columns, setColumns] = useState<ColumnNames[]>(
     defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
@@ -75,7 +75,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const isAdmin = Boolean(profile?.user?.isAdmin);
+  const isAdmin = Boolean(me?.user?.isAdmin);
 
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
@@ -94,7 +94,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
         after: '',
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
-        // TODO: для админов
+        // TODO: for admins only
         notShowing: isAdmin && columns.includes('notShowing'),
       },
       fetchPolicy: 'cache-and-network',
