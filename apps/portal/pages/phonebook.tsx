@@ -4,7 +4,7 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { QueryResult } from 'react-apollo';
-import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery, useMutation, QueryLazyOptions } from '@apollo/react-hooks';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Box, useMediaQuery } from '@material-ui/core';
@@ -79,9 +79,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
 
-  const [
-    getSearchSuggestions,
-    { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError },
+  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError }]: [
+    (options: QueryLazyOptions<{ search: string }>) => void,
+    QueryResult<Data<'searchSuggestions', string[]>>,
   ] = useLazyQuery(SEARCH_SUGGESTIONS, { ssr: false });
 
   const { loading, data, error, fetchMore, refetch }: QueryResult<Data<'profiles', ProfileProps>> = useQuery(

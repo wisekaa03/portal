@@ -49,7 +49,7 @@ export interface Column {
 }
 
 export interface ProfileProps extends WithTranslation {
-  profileId: string | false;
+  profileId: string;
   handleClose(): void;
   handleSearch(text: string): void;
 }

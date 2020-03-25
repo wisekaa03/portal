@@ -4,7 +4,8 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, QueryLazyOptions } from '@apollo/react-hooks';
+import { QueryResult } from 'react-apollo';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
@@ -22,6 +23,7 @@ import IsAdmin from '../../isAdmin';
 import { ComposeLink } from '../../compose-link';
 import snackbarUtils from '../../../lib/snackbar-utils';
 import CopyButton from '../../ui/copy-button';
+import { Data } from '../../../lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -160,12 +162,17 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
 
     const [controlEl, setControlEl] = useState<HTMLElement | null>(null);
 
-    const [getProfile, { loading, error, data }] = useLazyQuery(PROFILE, { ssr: false });
+    const [getProfile, { loading, error, data }]: [
+      (options: QueryLazyOptions<{ id: string }>) => void,
+      QueryResult<Data<'profile', Profile>>,
+    ] = useLazyQuery(PROFILE, { ssr: false });
 
     useEffect(() => {
-      getProfile({
-        variables: { id: profileId },
-      });
+      if (profileId) {
+        getProfile({
+          variables: { id: profileId },
+        });
+      }
     }, [getProfile, profileId]);
 
     const handleProfile = (profile: Profile) => (): void => {
