@@ -164,12 +164,10 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
     const [profile, setProfile] = useState<Profile>(null);
     const [controlEl, setControlEl] = useState<HTMLElement | null>(null);
 
-    const [getProfile, { loading, error, data, refetch }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(
-      PROFILE,
-      { ssr: false },
-    );
+    const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(PROFILE, {
+      ssr: false,
+    });
 
-    // const profile = !loading && !error && data?.profile;
     useEffect(() => {
       if (!loading && !error) {
         getProfile({
@@ -177,12 +175,7 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
         });
         setProfile(data?.profile);
       }
-
-      // async function refetchData(): Promise<ApolloQueryResult<Data<'profile', Profile>>> {
-      //   return refetch({ variables: { id: profileId } });
-      // }
-      // refetchData();
-    }, [getProfile, profile, data, refetch, profileId, loading, error]);
+    }, [getProfile, profile, data, profileId, loading, error]);
 
     const handleProfile = (prof: Profile) => (): void => {
       if (!prof.disabled && !prof.notShowing) {
