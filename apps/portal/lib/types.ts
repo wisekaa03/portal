@@ -6,10 +6,12 @@ import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext } from 'next/document';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
+import { Order } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
 import { Profile } from '../src/profile/models/profile.dto';
 import { UserContext } from '../src/user/models/user.dto';
+import { ColumnNames } from '../components/phonebook/types';
 // #endregion
 
 // export interface GqlErrorMessage {
@@ -59,4 +61,13 @@ export interface ProfileProps extends Profile {
   pageInfo: any;
   edges: any;
   totalCount: any;
+}
+
+export interface ProfileQueryProps {
+  first: number;
+  after: string;
+  orderBy: Order<ColumnNames>;
+  search: string;
+  disabled: boolean;
+  notShowing: boolean;
 }

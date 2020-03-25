@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useLazyQuery, QueryLazyOptions } from '@apollo/react-hooks';
+import { ApolloQueryResult } from 'apollo-client';
 import { QueryResult } from 'react-apollo';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -160,26 +161,34 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
     const classes = useStyles({});
 
+    const [profile, setProfile] = useState<Profile>(null);
     const [controlEl, setControlEl] = useState<HTMLElement | null>(null);
 
-    const [getProfile, { loading, error, data }]: [
-      (options: QueryLazyOptions<{ id: string }>) => void,
-      QueryResult<Data<'profile', Profile>>,
-    ] = useLazyQuery(PROFILE, { ssr: false });
+    const [getProfile, { loading, error, data, refetch }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(
+      PROFILE,
+      { ssr: false },
+    );
 
+    // const profile = !loading && !error && data?.profile;
     useEffect(() => {
-      if (profileId) {
+      if (!loading && !error) {
         getProfile({
           variables: { id: profileId },
         });
+        setProfile(data?.profile);
       }
-    }, [getProfile, profileId]);
 
-    const handleProfile = (profile: Profile) => (): void => {
-      if (!profile.disabled && !profile.notShowing) {
+      // async function refetchData(): Promise<ApolloQueryResult<Data<'profile', Profile>>> {
+      //   return refetch({ variables: { id: profileId } });
+      // }
+      // refetchData();
+    }, [getProfile, profile, data, refetch, profileId, loading, error]);
+
+    const handleProfile = (prof: Profile) => (): void => {
+      if (!prof.disabled && !prof.notShowing) {
         getProfile({
           variables: {
-            id: profile.id,
+            id: prof.id,
           },
         });
       }
@@ -199,8 +208,6 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
     const handleCloseControl = (): void => {
       setControlEl(null);
     };
-
-    const profile = !loading && !error && data?.profile;
 
     useEffect(() => {
       if (error) {

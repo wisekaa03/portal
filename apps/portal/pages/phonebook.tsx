@@ -3,8 +3,7 @@
 // #region Imports NPM
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import { QueryResult } from 'react-apollo';
-import { useQuery, useLazyQuery, useMutation, QueryLazyOptions } from '@apollo/react-hooks';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Box, useMediaQuery } from '@material-ui/core';
@@ -24,8 +23,9 @@ import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-cli
 import useDebounce from '../lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '../lib/queries';
 import { ProfileContext } from '../lib/context';
-import { Data, ProfileProps } from '../lib/types';
+import { Data, ProfileProps, ProfileQueryProps } from '../lib/types';
 import snackbarUtils from '../lib/snackbar-utils';
+import { UserSettings } from '../src/user/models/user.dto';
 // #endregion
 
 const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
@@ -77,14 +77,14 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const isAdmin = Boolean(profile?.user?.isAdmin);
 
-  const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
+  const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
-  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError }]: [
-    (options: QueryLazyOptions<{ search: string }>) => void,
-    QueryResult<Data<'searchSuggestions', string[]>>,
-  ] = useLazyQuery(SEARCH_SUGGESTIONS, { ssr: false });
+  const [
+    getSearchSuggestions,
+    { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError },
+  ] = useLazyQuery<Data<'searchSuggestions', string[]>, { search: string }>(SEARCH_SUGGESTIONS, { ssr: false });
 
-  const { loading, data, error, fetchMore, refetch }: QueryResult<Data<'profiles', ProfileProps>> = useQuery(
+  const { loading, data, error, fetchMore, refetch } = useQuery<Data<'profiles', ProfileProps>, ProfileQueryProps>(
     PROFILES(getGraphQLColumns(columns)),
     {
       ssr: false,
