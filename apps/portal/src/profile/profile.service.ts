@@ -172,7 +172,7 @@ export class ProfileService {
       .andWhere('profile.disabled = :disabled');
 
     search.split('+').forEach((value) => {
-      const cleared = value.trim() !== '' ? `'%${value.trim()}%'` : '';
+      const cleared = value !== '' ? `'%${value}%'` : '';
 
       if (cleared) {
         query.andWhere(
