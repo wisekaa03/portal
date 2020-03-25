@@ -127,7 +127,7 @@
     "graphql-tag": "^2.10.3",
     "graphql-tag-pluck": "^0.8.7",
     "graphql-upload": "^10.0.0",
-    "helmet": "^3.21.3",
+    "helmet": "^3.22.0",
     "i18next": "^19.3.3",
     "i18next-browser-languagedetector": "^4.0.2",
     "is-mobile": "^2.2.1",
