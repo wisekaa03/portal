@@ -4,7 +4,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
-import { FetchResult } from 'apollo-link';
 import queryString from 'query-string';
 import Router from 'next/router';
 
@@ -34,19 +33,22 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     password: '',
   });
 
-  const [login, { loading, error }] = useMutation(LOGIN, {
-    update: (_cache, { data }: FetchResult<Data<'data', UserResponse>>) => {
-      if (data?.login) {
-        setStorage(SESSION, data.login.session || '');
-        client.resetStore();
+  const [login, { loading, error }] = useMutation<Data<'login', UserResponse>, { username: string; password: string }>(
+    LOGIN,
+    {
+      update: (_cache, { data }) => {
+        if (data?.login) {
+          setStorage(SESSION, data.login.session || '');
+          client.resetStore();
 
-        const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
-        Router.push(redirect as string);
-      } else {
-        removeStorage(SESSION);
-      }
+          const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
+          Router.push(redirect as string);
+        } else {
+          removeStorage(SESSION);
+        }
+      },
     },
-  });
+  );
 
   const handleValues = (name: keyof LoginValuesProps) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const el: EventTarget & HTMLInputElement = e.target;

@@ -41,12 +41,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const {
-    loading: loadingServices,
-    data: dataServices,
-    error: errorServices,
-    refetch: refetchServices,
-  }: QueryResult<Data<'OldTicketService', OldService[]>> = useQuery(OLD_TICKET_SERVICE, {
+  const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
+    Data<'OldTicketService', OldService[]>,
+    void
+  >(OLD_TICKET_SERVICE, {
     ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
