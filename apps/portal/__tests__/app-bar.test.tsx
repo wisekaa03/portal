@@ -8,8 +8,8 @@ import { createShallow } from '@material-ui/core/test-utils';
 import { Toolbar, Popover, IconButton } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import AppBar from '../components/app-bar';
-import { LOGOUT, SYNC } from '../lib/queries';
+import { LOGOUT, SYNC } from '@lib/queries';
+import AppBar from '@front/components/app-bar';
 // #endregion
 
 describe('AppBar component', () => {

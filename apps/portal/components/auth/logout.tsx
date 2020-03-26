@@ -6,11 +6,11 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Button, Card, CardContent, FormControl } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import Loading from '../loading';
-import Background2 from '../../public/images/svg/background2.svg';
-import Logo from '../../public/images/svg/logo.svg';
-import { useTranslation } from '../../lib/i18n-client';
-import { LogoutPageProps } from './types';
+import Loading from '@front/components/loading';
+import Background2 from '@public/images/svg/background2.svg';
+import Logo from '@public/images/svg/logo.svg';
+import { useTranslation } from '@lib/i18n-client';
+import { LogoutPageProps } from '@lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

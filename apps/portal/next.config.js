@@ -3,6 +3,7 @@
 
 // #region Imports NPM
 const { resolve } = require('path');
+
 const DotenvWebpackPlugin = require('dotenv-webpack');
 const NextWorkboxWebpackPlugin = require('next-workbox-webpack-plugin');
 
@@ -16,6 +17,7 @@ const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
 // #endregion
 // #region Imports Local
+const resolveTsconfigPaths = require('../../tsconfig-paths-to-webpack-alias');
 // #endregion
 
 function withCustomWebpack(conf = {}) {
@@ -27,6 +29,7 @@ function withCustomWebpack(conf = {}) {
       alias: {
         ...config.resolve.alias,
         'google-libphonenumber': resolve(__dirname, './libphonenumber-stub.js'),
+        ...resolveTsconfigPaths({ tsconfigPaths: '../../tsconfig.json' }),
       },
     };
 

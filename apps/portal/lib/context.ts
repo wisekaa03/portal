@@ -4,8 +4,8 @@
 import React from 'react';
 // #endregion
 // #region Imports Local
-import { UserContext } from '../src/user/models/user.dto';
-import { HeaderProps } from '../components/phonebook/types';
+import { HeaderProps } from '@lib/types';
+import { UserContext } from '@back/user/models/user.dto';
 // #endregion
 
 /**

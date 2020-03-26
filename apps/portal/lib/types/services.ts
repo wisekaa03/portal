@@ -1,7 +1,7 @@
 /** @format */
 
-import { OldCategory, OldService } from '@app/portal/ticket/old-service/models/old-service.interface';
-import { DropzoneFile } from '../dropzone/types';
+import { OldCategory, OldService } from '@back/ticket/old-service/models/old-service.interface';
+import { DropzoneFile } from '@lib/types';
 
 export type ServicesElementType = 'department' | 'service' | 'category';
 

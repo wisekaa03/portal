@@ -22,21 +22,21 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import { format } from '../../lib/dayjs';
-import Avatar from '../ui/avatar';
-import Loading from '../loading';
-import { useTranslation } from '../../lib/i18n-client';
-import { LARGE_RESOLUTION, TICKET_STATUSES } from '../../lib/constants';
-import BaseIcon from '../ui/icon';
-import Dropzone from '../dropzone';
-import Button from '../ui/button';
-import Iframe from '../iframe';
-import { ComposeLink } from '../compose-link';
-import TicketIconNew from '../../public/images/svg/ticket/ticket_new.svg';
-import TicketIconPause from '../../public/images/svg/ticket/ticket_pause.svg';
-import TicketIconWorked from '../../public/images/svg/ticket/ticket_worked.svg';
-import TicketIconComplete from '../../public/images/svg/ticket/ticket_complete.svg';
-import { ProfileTicketInfoCardProps, ProfileTicketComponentProps } from './types';
+import { format } from '@lib/dayjs';
+import { useTranslation } from '@lib/i18n-client';
+import { LARGE_RESOLUTION, TICKET_STATUSES } from '@lib/constants';
+import { ProfileTicketInfoCardProps, ProfileTicketComponentProps } from '@lib/types';
+import Avatar from '@front/components/ui/avatar';
+import Loading from '@front/components/loading';
+import BaseIcon from '@front/components/ui/icon';
+import Dropzone from '@front/components/dropzone';
+import Button from '@front/components/ui/button';
+import Iframe from '@front/components/iframe';
+import { ComposeLink } from '@front/components/compose-link';
+import TicketIconNew from '@public/images/svg/ticket/ticket_new.svg';
+import TicketIconPause from '@public/images/svg/ticket/ticket_pause.svg';
+import TicketIconWorked from '@public/images/svg/ticket/ticket_worked.svg';
+import TicketIconComplete from '@public/images/svg/ticket/ticket_complete.svg';
 // #endregion
 
 const getTicketStatusIcon = (status: string): any => {

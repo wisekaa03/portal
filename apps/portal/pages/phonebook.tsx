@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef, Ref, Component } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
@@ -10,23 +10,22 @@ import { Box, useMediaQuery } from '@material-ui/core';
 import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
-import PhonebookControl from '../components/phonebook/control';
-import PhonebookTable from '../components/phonebook/table';
-import PhonebookProfile from '../components/phonebook/profile';
-import PhonebookSettings from '../components/phonebook/settings';
-import PhonebookHelp from '../components/phonebook/help';
-import { ColumnNames } from '../components/phonebook/types';
-import Modal from '../components/ui/modal';
-import Loading from '../components/loading';
-import Page from '../layouts/main';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
-import useDebounce from '../lib/debounce';
-import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '../lib/queries';
-import { ProfileContext } from '../lib/context';
-import { Data, ProfileQueryProps } from '../lib/types';
-import snackbarUtils from '../lib/snackbar-utils';
-import { UserSettings } from '../src/user/models/user.dto';
-import { Profile } from '../src/profile/models/profile.dto';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
+import { Data, ProfileQueryProps, ColumnNames } from '@lib/types';
+import useDebounce from '@lib/debounce';
+import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '@lib/queries';
+import { MaterialUI } from '@front/layout';
+import { ProfileContext } from '@lib/context';
+import snackbarUtils from '@lib/snackbar-utils';
+import PhonebookSearch from '@front/components/phonebook/search';
+import PhonebookTable from '@front/components/phonebook/table';
+import PhonebookProfile from '@front/components/phonebook/profile';
+import PhonebookSettings from '@front/components/phonebook/settings';
+import PhonebookHelp from '@front/components/phonebook/help';
+import Modal from '@front/components/ui/modal';
+import Loading from '@front/components/loading';
+import { UserSettings } from '@back/user/models/user.dto';
+import { Profile } from '@back/profile/models/profile.dto';
 // #endregion
 
 const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
@@ -248,9 +247,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('phonebook:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <Box display="flex" flexDirection="column">
-          <PhonebookControl
+          <PhonebookSearch
             searchRef={searchRef}
             search={_search}
             suggestions={suggestionsFiltered}
@@ -273,7 +272,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           />
           <Loading activate={loading} noMargin type="linear" variant="indeterminate" />
         </Box>
-      </Page>
+      </MaterialUI>
       <Modal open={Boolean(query.id)} onClose={handleProfileClose}>
         <PhonebookProfile profileId={query.id} handleClose={handleProfileClose} handleSearch={setSearch} />
       </Modal>

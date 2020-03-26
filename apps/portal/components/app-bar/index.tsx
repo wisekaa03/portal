@@ -11,18 +11,16 @@ import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 // #endregion
 // #region Imports Local
-import HeaderBg from '../../public/images/jpeg/header_bg.jpg';
-import PopoverBg from '../../public/images/png/profile_popover_bg.png';
-import LogoMin from '../../public/images/png/logo_min.png';
-import { useTranslation } from '../../lib/i18n-client';
-import { ProfileContext } from '../../lib/context';
-import Avatar from '../ui/avatar';
-import { AppBarComponentProps } from './types';
-
+import LogoMin from '@public/images/png/logo_min.png';
+import HeaderBg from '@public/images/jpeg/header_bg.jpg';
+import PopoverBg from '@public/images/png/profile_popover_bg.png';
+import { useTranslation } from '@lib/i18n-client';
+import { ProfileContext } from '@lib/context';
+import { AppBarComponentProps, appBarHeight } from '@lib/types';
+import Avatar from '@front/components/ui/avatar';
 // #endregion
 
 const avatarHeight = 48;
-export const appBarHeight = 64;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

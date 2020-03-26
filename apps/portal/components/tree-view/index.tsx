@@ -14,8 +14,8 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 // #endregion
 // #region Imports Local
-import { TreeViewProps, TreeItemProps } from './types';
-import { useTranslation } from '../../lib/i18n-client';
+import { useTranslation } from '@lib/i18n-client';
+import { TreeViewProps, TreeItemProps } from '@lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

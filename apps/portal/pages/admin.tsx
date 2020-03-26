@@ -8,10 +8,10 @@ import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { SYNC, CACHE } from '../lib/queries';
-import snackbarUtils from '../lib/snackbar-utils';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { SYNC, CACHE } from '@lib/queries';
+import snackbarUtils from '@lib/snackbar-utils';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -83,7 +83,7 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('admin:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <div className={classes.root}>
           <Card className={classes.card}>
             <CardActions disableSpacing>
@@ -110,7 +110,7 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             </CardContent>
           </Card>
         </div>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

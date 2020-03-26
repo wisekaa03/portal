@@ -10,8 +10,8 @@ import { red, blueGrey } from '@material-ui/core/colors';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import { PHONEBOOK_HIDDEN_COLS, PHONEBOOK_ROW_HEIGHT } from '../../lib/constants';
-import Avatar from '../ui/avatar';
+import { PHONEBOOK_HIDDEN_COLS, PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
+import Avatar from '@front/components/ui/avatar';
 import { allColumns } from './settings';
 
 // #endregion

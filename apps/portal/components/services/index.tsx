@@ -8,18 +8,16 @@ import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import { ServicesWrapperProps } from './types';
-// import ServicesTab from './tab';
+import { useTranslation } from '@lib/i18n-client';
+import { ServicesWrapperProps, appBarHeight } from '@lib/types';
+import Button from '@front/components/ui/button';
+import RefreshButton from '@front/components/ui/refresh-button';
+import HR from '@public/images/svg/itapps/HR.svg';
+import Loading from '@front/components/loading';
+import JoditEditor from '@front/components/jodit';
+import Dropzone from '@front/components/dropzone';
 import ServicesSuccess from './success';
-import { appBarHeight } from '../app-bar';
 import ServicesElement from './element';
-import { useTranslation } from '../../lib/i18n-client';
-import Loading from '../loading';
-import JoditEditor from '../jodit';
-import Dropzone from '../dropzone';
-import Button from '../ui/button';
-import RefreshButton from '../ui/refresh-button';
-import HR from '../../public/images/svg/itapps/HR.svg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

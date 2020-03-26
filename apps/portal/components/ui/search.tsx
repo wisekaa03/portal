@@ -6,7 +6,7 @@ import { Box, InputBase } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 // #endregion
 // #region Imports Local
-import { useTranslation } from '../../lib/i18n-client';
+import { useTranslation } from '@lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

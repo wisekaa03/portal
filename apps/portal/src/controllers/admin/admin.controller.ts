@@ -5,7 +5,7 @@ import { Controller, Get, UseGuards, Res } from '@nestjs/common';
 import { RenderableResponse } from 'nest-next-2';
 // #endregion
 // #region Imports Local
-import { SessionGuard } from '../../guards/session.guard';
+import { SessionGuard } from '@back/guards/session.guard';
 // #endregion
 
 @Controller('admin')

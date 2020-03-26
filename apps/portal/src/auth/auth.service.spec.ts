@@ -8,8 +8,8 @@ import { HttpService } from '@nestjs/common';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapService } from '@app/ldap';
+import { UserService } from '@back/user/user.service';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));

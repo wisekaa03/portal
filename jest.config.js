@@ -15,16 +15,23 @@ module.exports = {
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
     '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/apps/portal/__mocks__/fileMock.js',
-    '\\.(css|less)$': '<rootDir>/apps/portal/__mocks__/fileMock.js',
+    '\\.(css|scss|sass|less)$': '<rootDir>/apps/portal/__mocks__/fileMock.js',
   },
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
+    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
     '^.+\\.svg$': 'jest-svg-transformer',
     '^.+\\.js$': 'babel-jest',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/(*.)+(spec|test).[jt]s?(x)'],
   setupFiles: ['./jest.setup.ts'],
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/target/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.git/',
+    '<rootDir>/dist/',
+    '<rootDir>/.next/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/.local/',
+  ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
   globals: {
     'ts-jest': {

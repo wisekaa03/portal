@@ -9,15 +9,15 @@ import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import BaseIcon from '../ui/icon';
-import { useTranslation } from '../../lib/i18n-client';
-import BoxWithRef from '../../lib/box-ref';
-import { format } from '../../lib/dayjs';
-import Select from '../ui/select';
-import Loading from '../loading';
-import { TICKET_STATUSES } from '../../lib/constants';
-import RefreshButton from '../ui/refresh-button';
-import { ProfileTicketsComponentProps, ProfileTicketsCardProps } from './types';
+import { format } from '@lib/dayjs';
+import { useTranslation } from '@lib/i18n-client';
+import { TICKET_STATUSES } from '@lib/constants';
+import BoxWithRef from '@lib/box-ref';
+import { ProfileTicketsComponentProps, ProfileTicketsCardProps } from '@lib/types';
+import BaseIcon from '@front/components/ui/icon';
+import Select from '@front/components/ui/select';
+import Loading from '@front/components/loading';
+import RefreshButton from '@front/components/ui/refresh-button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

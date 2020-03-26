@@ -6,15 +6,15 @@ import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
-import { Profile } from '../../src/profile/models/profile.dto';
-import Page from '../../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '../../lib/queries';
-import { resizeImage } from '../../lib/utils';
-import { ProfileContext } from '../../lib/context';
-import { format } from '../../lib/dayjs';
-import snackbarUtils from '../../lib/snackbar-utils';
-import ProfileEditComponent from '../../components/profile/edit';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
+import { resizeImage } from '@lib/utils';
+import { ProfileContext } from '@lib/context';
+import { format } from '@lib/dayjs';
+import snackbarUtils from '@lib/snackbar-utils';
+import { Profile } from '@back/profile/models/profile.dto';
+import ProfileEditComponent from '@front/components/profile/edit';
 // #endregion
 
 const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
@@ -115,7 +115,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
       <Head>
         <title>{t('profile:edit.title', { current: current?.fullName })}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <ProfileEditComponent
           isAdmin={isAdmin}
           loadingProfile={loadingProfile}
@@ -127,7 +127,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
           handleBirthday={handleBirthday}
           handleSave={handleSave}
         />
-      </Page>
+      </MaterialUI>
     </>
   );
 };

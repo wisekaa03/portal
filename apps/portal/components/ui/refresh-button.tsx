@@ -9,7 +9,7 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import { useTranslation } from '../../lib/i18n-client';
+import { useTranslation } from '@lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

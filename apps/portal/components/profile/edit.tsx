@@ -22,15 +22,15 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 // #endregion
 // #region Imports Local
-import { Profile } from '@app/portal/profile/models/profile.dto';
-import IsAdmin from '../isAdmin';
-import Avatar from '../ui/avatar';
-import Loading from '../loading';
-import { useTranslation } from '../../lib/i18n-client';
-import Button from '../ui/button';
-import { Gender } from '../../src/shared/interfaces';
-import { DropzoneWrapper } from '../dropzone';
-import { ProfileEditComponentProps } from './types';
+import { useTranslation } from '@lib/i18n-client';
+import { ProfileEditComponentProps } from '@lib/types';
+import { Profile } from '@back/profile/models/profile.dto';
+import { Gender } from '@back/shared/interfaces';
+import IsAdmin from '@front/components/isAdmin';
+import Avatar from '@front/components/ui/avatar';
+import Loading from '@front/components/loading';
+import Button from '@front/components/ui/button';
+import { DropzoneWrapper } from '@front/components/dropzone';
 import ProfileTextFieldComponent from './text-field';
 // #endregion
 

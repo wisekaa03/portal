@@ -6,9 +6,9 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { FilesDialogComponentProps } from './types';
-import Button from '../ui/button';
-import { useTranslation } from '../../lib/i18n-client';
+import { useTranslation } from '@lib/i18n-client';
+import { FilesDialogComponentProps } from '@lib/types';
+import Button from '@front/components/ui/button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

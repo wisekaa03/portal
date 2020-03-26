@@ -2,12 +2,11 @@
 
 // #region Imports NPM
 import React from 'react';
-
-// import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-// import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
-import { VerticalCenter } from './verticalcenter';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+// #endregion
+// #region Imports Local
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
+import { VerticalCenter } from '@front/components/verticalcenter';
 // #endregion
 
 // #region Imports Local

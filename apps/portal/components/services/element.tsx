@@ -8,9 +8,9 @@ import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import { ServicesElementProps, ServicesElementLinkQueryProps, ServicesElementType } from './types';
-import BaseIcon from '../ui/icon';
-import ConditionalWrapper from '../../lib/conditional-wrapper';
+import { ServicesElementProps, ServicesElementLinkQueryProps, ServicesElementType } from '@lib/types';
+import ConditionalWrapper from '@lib/conditional-wrapper';
+import BaseIcon from '@front/components/ui/icon';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

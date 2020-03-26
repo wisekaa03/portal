@@ -6,9 +6,9 @@ import Head from 'next/head';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
-import Iframe from '../components/iframe';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
+import { MaterialUI } from '@front/layout';
+import Iframe from '@front/components/iframe';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles(() =>
@@ -25,9 +25,9 @@ const MeetingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('meeting:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <Iframe url={url} sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
-      </Page>
+      </MaterialUI>
     </>
   );
 };

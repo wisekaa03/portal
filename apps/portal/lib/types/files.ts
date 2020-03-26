@@ -1,7 +1,7 @@
 /** @format */
 
-import { FilesFolder } from '@app/portal/files/models/files.folder.dto';
-import { DropzoneFile } from '../dropzone/types';
+import { FilesFolder } from '@back/files/models/files.folder.dto';
+import { DropzoneFile } from './dropzone';
 
 export interface FilesComponentProps {
   fileLoading: boolean;

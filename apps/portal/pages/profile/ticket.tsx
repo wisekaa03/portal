@@ -7,15 +7,14 @@ import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
-import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
-import Page from '../../layouts/main';
-import { format } from '../../lib/dayjs';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '../../lib/queries';
-import { DropzoneFile } from '../../components/dropzone/types';
-import { Data } from '../../lib/types';
-import ProfileTicketComponent from '../../components/profile/ticket';
-import snackbarUtils from '../../lib/snackbar-utils';
+import { MaterialUI } from '@front/layout';
+import { OldTicket } from '@back/ticket/old-service/models/old-service.interface';
+import { format } from '@lib/dayjs';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '@lib/queries';
+import { Data, DropzoneFile } from '@lib/types';
+import ProfileTicketComponent from '@front/components/profile/ticket';
+import snackbarUtils from '@lib/snackbar-utils';
 // #endregion
 
 const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
@@ -99,7 +98,7 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
           }`}
         </title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <ProfileTicketComponent
           loading={loading}
           loadingEdit={loadingEdit}
@@ -111,7 +110,7 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
           handleAccept={handleAccept}
           handleClose={handleClose}
         />
-      </Page>
+      </MaterialUI>
     </>
   );
 };

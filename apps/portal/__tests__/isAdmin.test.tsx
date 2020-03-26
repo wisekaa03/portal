@@ -4,9 +4,9 @@ import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
 
-import { ProfileContext } from '../lib/context';
-import IsAdminComponent from '../components/isAdmin';
-import { MOCK_PROFILE } from '../lib/constants';
+import { MOCK_PROFILE } from '@lib/constants';
+import { ProfileContext } from '@lib/context';
+import IsAdminComponent from '@front/components/isAdmin';
 
 describe('IsAdmin Component', () => {
   let shallow: typeof Shallow;

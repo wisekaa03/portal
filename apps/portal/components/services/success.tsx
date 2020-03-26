@@ -9,11 +9,10 @@ import SendIcon from '@material-ui/icons/SendOutlined';
 import ReactToPrint from 'react-to-print';
 // #endregion
 // #region Imports Local
-import { ServicesSuccessProps, ServicesSuccessCardProps } from './types';
-import { ComposeButton } from '../compose-link';
-import Button from '../ui/button';
-import { useTranslation } from '../../lib/i18n-client';
-import { format } from '../../lib/dayjs';
+import { ServicesSuccessProps, ServicesSuccessCardProps } from '@lib/types';
+import Button from '@front/components/ui/button';
+import { useTranslation } from '@lib/i18n-client';
+import { format } from '@lib/dayjs';
 // #endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;

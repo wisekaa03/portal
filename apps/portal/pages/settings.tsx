@@ -8,10 +8,10 @@ import { Button, Paper, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
-import { ProfileContext } from '../lib/context';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { USER_SETTINGS } from '../lib/queries';
+import { MaterialUI } from '@front/layout';
+import { ProfileContext } from '@lib/context';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { USER_SETTINGS } from '@lib/queries';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,7 +48,7 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('setting:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <div className={classes.root}>
           <ProfileContext.Consumer>
             {(context) => (
@@ -68,7 +68,7 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             )}
           </ProfileContext.Consumer>
         </div>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

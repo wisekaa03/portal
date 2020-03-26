@@ -7,7 +7,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 // #endregion
 // #region Imports Local
-import NoImage from '../../../../public/images/svg/noimage.svg';
+import NoImage from '@public/images/svg/noimage.svg';
 // #endregion
 
 const iconWidth = 24;

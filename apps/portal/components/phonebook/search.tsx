@@ -17,10 +17,9 @@ import {
 import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon } from '@material-ui/icons';
 // #endregion
 // #region Imports Local
-import { PhonebookControlProps } from './types';
-import RefreshButton from '../ui/refresh-button';
-import { useTranslation } from '../../lib/i18n-client';
-
+import { PhonebookSearchProps } from '@lib/types';
+import RefreshButton from '@front/components/ui/refresh-button';
+import { useTranslation } from '@lib/i18n-client';
 // #endregion
 
 const panelHeight = 48;
@@ -65,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const PhonebookControl: FC<PhonebookControlProps> = ({
+const PhonebookSearch: FC<PhonebookSearchProps> = ({
   searchRef,
   search,
   suggestions,
@@ -167,4 +166,4 @@ const PhonebookControl: FC<PhonebookControlProps> = ({
   );
 };
 
-export default PhonebookControl;
+export default PhonebookSearch;

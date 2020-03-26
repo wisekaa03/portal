@@ -8,16 +8,14 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
-import { OldService, OldCategory } from '@app/portal/ticket/old-service/models/old-service.interface';
-import ServicesIcon from '../../../public/images/svg/icons/services.svg';
-import ServicesComponent from '../components/services';
-import { DropzoneFile } from '../components/dropzone/types';
-import { ServicesTicketProps, ServicesCreatedProps } from '../components/services/types';
-import Page from '../layouts/main';
-import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '../lib/queries';
-import { Data } from '../lib/types';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import snackbarUtils from '../lib/snackbar-utils';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { Data, DropzoneFile, ServicesTicketProps, ServicesCreatedProps } from '@lib/types';
+import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
+import snackbarUtils from '@lib/snackbar-utils';
+import { OldService, OldCategory } from '@back/ticket/old-service/models/old-service.interface';
+import ServicesIcon from '@public/images/svg/icons/services.svg';
+import ServicesComponent from '@front/components/services';
+import { MaterialUI } from '@front/layout';
 // #endregion
 
 const departments = [
@@ -205,7 +203,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
             : t('services:title.title')}
         </title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <ServicesComponent
           contentRef={contentRef}
           titleRef={titleRef}
@@ -228,7 +226,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           handleSubmit={handleSubmit}
           handleResetTicket={handleResetTicket}
         />
-      </Page>
+      </MaterialUI>
     </>
   );
 };

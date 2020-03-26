@@ -20,10 +20,10 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { v4 as uuidv4 } from 'uuid';
 // #endregion
 // #region Imports Local
-import Page from '../../layouts/main';
-import Loading from '../../components/loading';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { ProfileContext } from '../../lib/context';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { ProfileContext } from '@lib/context';
+import Loading from '@front/components/loading';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -59,7 +59,7 @@ const ProfileEquipmentPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('profile:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <Box display="flex" flexDirection="column">
           <Loading activate={!profile?.user} noMargin type="linear" variant="indeterminate" />
           <Box display="flex" flexDirection="column" p={2}>
@@ -103,7 +103,7 @@ const ProfileEquipmentPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             </Box>
           </Box>
         </Box>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

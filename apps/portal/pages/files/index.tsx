@@ -8,16 +8,13 @@ import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
-import Page from '../../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER, DELETE_FOLDER } from '../../lib/queries';
-// import { ProfileContext } from '../../lib/context';
-import { Data } from '../../lib/types';
-import { FilesQueryProps, FolderDialogState } from '../../components/files/types';
-import FilesComponent from '../../components/files';
-import snackbarUtils from '../../lib/snackbar-utils';
-import { DropzoneFile } from '../../components/dropzone/types';
-import { FILES_SHARED_NAME } from '../../lib/constants';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER, DELETE_FOLDER } from '@lib/queries';
+import { FILES_SHARED_NAME } from '@lib/constants';
+import { Data, FilesQueryProps, FolderDialogState, DropzoneFile } from '@lib/types';
+import snackbarUtils from '@lib/snackbar-utils';
+import FilesComponent from '@front/components/files';
 // #endregion
 
 const SHARED = `/${FILES_SHARED_NAME}`;
@@ -186,7 +183,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('files:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <FilesComponent
           fileLoading={fileLoading}
           folderLoading={folderLoading}
@@ -212,7 +209,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           handleDownload={handleDownload}
           handleDelete={handleDelete}
         />
-      </Page>
+      </MaterialUI>
     </>
   );
 };

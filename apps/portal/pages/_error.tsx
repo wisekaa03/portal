@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Grid } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { I18nPage, Trans, includeDefaultNamespaces, nextI18next } from '../lib/i18n-client';
+import { I18nPage, Trans, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme) => ({

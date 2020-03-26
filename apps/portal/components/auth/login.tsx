@@ -17,11 +17,11 @@ import {
 } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { LoginComponentProps } from './types';
-import Loading from '../loading';
-import Background2 from '../../public/images/svg/background2.svg';
-import Logo from '../../public/images/svg/logo.svg';
-import { useTranslation } from '../../lib/i18n-client';
+import { useTranslation } from '@lib/i18n-client';
+import { LoginComponentProps } from '@lib/types';
+import Loading from '@front/components/loading';
+import Background2 from '@public/images/svg/background2.svg';
+import Logo from '@public/images/svg/logo.svg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const LoginComponent: FC<LoginComponentProps> = ({
+export const LoginComponent: FC<LoginComponentProps> = ({
   usernameRef,
   passwordRef,
   values,
@@ -170,5 +170,3 @@ const LoginComponent: FC<LoginComponentProps> = ({
     </Box>
   );
 };
-
-export default LoginComponent;

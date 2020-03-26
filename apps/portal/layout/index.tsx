@@ -8,13 +8,14 @@ import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
-import AppBarComponent, { appBarHeight } from '../components/app-bar';
-import DrawerComponent from '../components/drawer';
-import { ProfileContext } from '../lib/context';
-import { LOGOUT, USER_SETTINGS } from '../lib/queries';
-import { removeStorage } from '../lib/session-storage';
-import { SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '../lib/constants';
-import Cookie from '../lib/cookie';
+import { ProfileContext } from '@lib/context';
+import { appBarHeight } from '@lib/types';
+import { LOGOUT, USER_SETTINGS } from '@lib/queries';
+import { removeStorage } from '@lib/session-storage';
+import { SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '@lib/constants';
+import Cookie from '@lib/cookie';
+import AppBarComponent from '@front/components/app-bar';
+import DrawerComponent from '@front/components/drawer';
 // #endregion
 
 const useStyles = makeStyles((/* theme: Theme */) =>
@@ -32,7 +33,7 @@ const useStyles = makeStyles((/* theme: Theme */) =>
     },
   }));
 
-const MainLayout: FC = ({ children }) => {
+export const MaterialUI: FC = ({ children }) => {
   const classes = useStyles({});
 
   const profile = useContext(ProfileContext);
@@ -126,5 +127,3 @@ const MainLayout: FC = ({ children }) => {
     </Box>
   );
 };
-
-export default MainLayout;

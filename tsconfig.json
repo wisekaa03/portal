@@ -28,6 +28,42 @@
     "experimentalDecorators": true,
     "baseUrl": "./",
     "paths": {
+      "@public": [
+        "public"
+      ],
+      "@public/*": [
+        "public/*"
+      ],
+      "@front/layout": [
+        "apps/portal/layout"
+      ],
+      "@front/layout/*": [
+        "apps/portal/layout/*"
+      ],
+      "@lib": [
+        "apps/portal/lib"
+      ],
+      "@lib/*": [
+        "apps/portal/lib/*"
+      ],
+      "@back": [
+        "apps/portal/src"
+      ],
+      "@back/*": [
+        "apps/portal/src/*"
+      ],
+      "@front/components": [
+        "apps/portal/components"
+      ],
+      "@front/components/*": [
+        "apps/portal/components/*"
+      ],
+      "@front/pages": [
+        "apps/portal/pages"
+      ],
+      "@front/pages/*": [
+        "apps/portal/pages/*"
+      ],
       "@app/images": [
         "public/images"
       ],

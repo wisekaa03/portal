@@ -28,12 +28,12 @@ import DescriptionIcon from '@material-ui/icons/DescriptionRounded';
 import AutoSizer from 'react-virtualized-auto-sizer';
 // #endregion
 // #region Imports Local
-import { FilesTableComponentProps, FilesTableHeaderProps } from './types';
-import { useTranslation } from '../../lib/i18n-client';
-import Loading from '../loading';
-import Search from '../ui/search';
-import RefreshButton from '../ui/refresh-button';
-import { format } from '../../lib/dayjs';
+import { useTranslation } from '@lib/i18n-client';
+import { format } from '@lib/dayjs';
+import { FilesTableComponentProps, FilesTableHeaderProps } from '@lib/types';
+import Loading from '@front/components/loading';
+import Search from '@front/components/ui/search';
+import RefreshButton from '@front/components/ui/refresh-button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -6,19 +6,17 @@ import Head from 'next/head';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import Router from 'next/router';
-
 // #endregion
 // #region Imports Local
-import LoginComponent from '../../components/auth/login';
-import { LoginValuesProps, LoginPageProps } from '../../components/auth/types';
-import snackbarUtils from '../../lib/snackbar-utils';
-import { LOGIN } from '../../lib/queries';
-import { Data } from '../../lib/types';
-import { FIRST_PAGE, SESSION } from '../../lib/constants';
-import { UserResponse } from '../../src/user/user.entity';
-import { setStorage, removeStorage } from '../../lib/session-storage';
-import { I18nPage, includeDefaultNamespaces, nextI18next } from '../../lib/i18n-client';
-import Cookie from '../../lib/cookie';
+import { Data, LoginValuesProps, LoginPageProps } from '@lib/types';
+import { setStorage, removeStorage } from '@lib/session-storage';
+import { FIRST_PAGE, SESSION } from '@lib/constants';
+import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
+import Cookie from '@lib/cookie';
+import { LOGIN } from '@lib/queries';
+import snackbarUtils from '@lib/snackbar-utils';
+import { LoginComponent } from '@front/components/auth/login';
+import { UserResponse } from '@back/user/user.entity';
 // #endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {

@@ -3,9 +3,9 @@
 // #region Imports NPM
 import React, { ComponentType } from 'react';
 import objectAssign from 'object-assign';
-import { IframeInterface } from './types';
 // #endregion
 // #region Imports Local
+import { IframeInterface } from '@lib/types';
 // #endregion
 
 const Iframe: ComponentType<IframeInterface> = ({

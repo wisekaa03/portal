@@ -16,10 +16,10 @@ import {
 } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { nextI18next, useTranslation } from '../../lib/i18n-client';
-import { Column, ColumnNames, SettingsProps } from './types';
-import Button from '../ui/button';
-import HeaderBg from '../../../../public/images/jpeg/header_bg.jpg';
+import { nextI18next, useTranslation } from '@lib/i18n-client';
+import { Column, ColumnNames, SettingsProps } from '@lib/types';
+import Button from '@front/components/ui/button';
+import HeaderBg from '@public/images/jpeg/header_bg.jpg';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,12 +1,58 @@
 /** @format */
 
-// #region Imports NPM
+// #region Import NPM
+// import React from 'react';
 import { WithTranslation } from 'next-i18next';
-import { Order } from 'typeorm-graphql-pagination';
+import { AppContext, AppInitialProps } from 'next/app';
+import { DocumentContext } from 'next/document';
+import { ApolloClient, ApolloQueryResult } from 'apollo-client';
+import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
+import { Order, Connection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
-import { Profile } from '@app/portal/profile/models/profile.dto';
+import { UserContext } from '@back/user/models/user.dto';
+import { Profile } from '@back/profile/models/profile.dto';
+
+export * from './app-bar';
+export * from './auth';
+export * from './dropzone';
+export * from './files';
+export * from './iframe';
+export * from './profile';
+export * from './services';
+export * from './treeview';
 // #endregion
+
+interface StyleProps {
+  width?: number;
+  minWidth?: number;
+  maxWidth?: number;
+}
+
+export interface WithApolloState<TCache = NormalizedCacheObject> {
+  data?: TCache;
+}
+
+export interface ApolloInitialProps<TCache = NormalizedCacheObject> extends AppInitialProps {
+  apolloState: WithApolloState<TCache>;
+  currentLanguage?: string;
+}
+
+export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppContext {
+  apolloClient: ApolloClient<NormalizedCacheObject>;
+  apolloState: WithApolloState<TCache>;
+  disableGeneration?: boolean;
+  context: UserContext;
+}
+
+export interface ApolloDocumentProps extends DocumentContext {
+  apolloClient: ApolloClient<NormalizedCacheObject>;
+  currentLanguage?: string;
+}
+
+export interface Data<K, T> {
+  [K: string]: T;
+}
 
 export type ColumnNames =
   | 'lastName'
@@ -36,16 +82,33 @@ export type ColumnNames =
   | 'disabled'
   | 'notShowing';
 
-interface StyleProps {
-  width?: number;
-  minWidth?: number;
-  maxWidth?: number;
-}
 export interface Column {
   name: ColumnNames;
   admin: boolean;
   defaultStyle: StyleProps;
   largeStyle: StyleProps;
+}
+
+export interface ProfileQueryProps {
+  first: number;
+  after: string;
+  orderBy: Order<ColumnNames>;
+  search: string;
+  disabled: boolean;
+  notShowing: boolean;
+}
+
+export interface PhonebookSearchProps {
+  searchRef: React.MutableRefObject<HTMLInputElement>;
+  search: string;
+  suggestions: string[];
+  refetch: (variables?: ProfileQueryProps) => Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;
+  handleSearch: React.ChangeEventHandler<HTMLInputElement>;
+  handleSugClose: (_: React.MouseEvent<EventTarget>) => void;
+  handleSugKeyDown: (_: React.KeyboardEvent) => void;
+  handleSugClick: (_: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  handleHelpOpen: () => void;
+  handleSettingsOpen: () => void;
 }
 
 export interface ProfileProps extends WithTranslation {
@@ -75,20 +138,6 @@ export interface HeaderProps {
   orderBy: Order<ColumnNames>;
   handleSort: (column: ColumnNames) => () => void;
   largeWidth: boolean;
-}
-
-export interface PhonebookControlProps {
-  searchRef: React.MutableRefObject<HTMLInputElement>;
-  search: string;
-  suggestions: string[];
-  // TODO: вписать нормальный тип
-  refetch: any;
-  handleSearch: React.ChangeEventHandler<HTMLInputElement>;
-  handleSugClose: (_: React.MouseEvent<EventTarget>) => void;
-  handleSugKeyDown: (_: React.KeyboardEvent) => void;
-  handleSugClick: (_: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
-  handleHelpOpen: () => void;
-  handleSettingsOpen: () => void;
 }
 
 export interface TableProps {

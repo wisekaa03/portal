@@ -1,13 +1,13 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 import Head from 'next/head';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
+import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
 import { VerticalCenter } from '../components/verticalcenter';
 // #endregion
@@ -28,13 +28,13 @@ const HomePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('common:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <VerticalCenter horizontal>
           <Paper className={classes.root}>
             <Typography>Извините, данный модуль пока не готов.</Typography>
           </Paper>
         </VerticalCenter>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

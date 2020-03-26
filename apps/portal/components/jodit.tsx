@@ -1,7 +1,12 @@
 /** @format */
+
+// #region Imports NPM
 import React, { forwardRef, Component, RefForwardingComponent } from 'react';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
+// #endregion
+// #region Imports Local
+// #endregion
 
 const JoditReact = dynamic(() => import('jodit-react'), { ssr: false });
 

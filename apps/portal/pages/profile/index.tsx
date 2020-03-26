@@ -8,17 +8,17 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import Box from '@material-ui/core/Box';
 // #endregion
 // #region Imports Local
-import { OldTicket } from '@app/portal/ticket/old-service/models/old-service.interface';
-import { OLD_TICKETS, USER_SETTINGS } from '../../lib/queries';
-import Page from '../../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
+import { OldTicket } from '@back/ticket/old-service/models/old-service.interface';
+import { OLD_TICKETS, USER_SETTINGS } from '@lib/queries';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
-import { ProfileContext } from '../../lib/context';
-import { TICKET_STATUSES } from '../../lib/constants';
-import snackbarUtils from '../../lib/snackbar-utils';
-import { Data } from '../../lib/types';
-import ProfileInfoComponent from '../../components/profile/info';
-import ProfileTicketsComponent from '../../components/profile/tickets';
+import { ProfileContext } from '@lib/context';
+import { TICKET_STATUSES } from '@lib/constants';
+import snackbarUtils from '@lib/snackbar-utils';
+import { Data } from '@lib/types';
+import ProfileInfoComponent from '@front/components/profile/info';
+import ProfileTicketsComponent from '@front/components/profile/tickets';
 // #endregion
 
 const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
@@ -80,7 +80,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('profile:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <Box display="flex" flexDirection="column" p={1}>
           <ProfileInfoComponent />
           <ProfileTicketsComponent
@@ -93,7 +93,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             handleStatus={handleStatus}
           />
         </Box>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

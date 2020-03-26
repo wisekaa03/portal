@@ -13,16 +13,21 @@ import { red } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
 import { Profile } from '@app/portal/profile/models/profile.dto';
+import { nextI18next } from '@lib/i18n-client';
+import {
+  Data,
+  ProfileProps,
+  PhonebookProfileModule,
+  PhonebookProfileNameProps,
+  PhonebookProfileFieldProps,
+} from '@lib/types';
+import Avatar from '@front/components/ui/avatar';
+import { PROFILE } from '@lib/queries';
+import IsAdmin from '@front/components/isAdmin';
+import { ComposeLink } from '@front/components/compose-link';
+import snackbarUtils from '@lib/snackbar-utils';
+import CopyButton from '@front/components/ui/copy-button';
 import PhonebookProfileControl from './control';
-import { nextI18next } from '../../../lib/i18n-client';
-import { ProfileProps, PhonebookProfileModule, PhonebookProfileNameProps, PhonebookProfileFieldProps } from '../types';
-import Avatar from '../../ui/avatar';
-import { PROFILE } from '../../../lib/queries';
-import IsAdmin from '../../isAdmin';
-import { ComposeLink } from '../../compose-link';
-import snackbarUtils from '../../../lib/snackbar-utils';
-import CopyButton from '../../ui/copy-button';
-import { Data } from '../../../lib/types';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -155,7 +160,7 @@ const ProfileField = withStyles((theme) => ({
   );
 });
 
-const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
+const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
     const classes = useStyles({});
 
@@ -343,4 +348,4 @@ const ProfileComponent = React.forwardRef<React.Component, ProfileProps>(
   },
 );
 
-export default nextI18next.withTranslation('phonebook')(ProfileComponent);
+export default nextI18next.withTranslation('phonebook')(PhonebookProfile);

@@ -7,7 +7,7 @@ import { LinearProgress, CircularProgress, Box } from '@material-ui/core';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import ConditionalWrapper from '../lib/conditional-wrapper';
+import ConditionalWrapper from '@lib/conditional-wrapper';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

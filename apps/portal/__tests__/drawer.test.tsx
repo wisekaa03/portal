@@ -6,9 +6,9 @@ import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 // #endregion
 // #region Imports Local
-import Drawer from '../components/drawer';
-import { ProfileContext } from '../lib/context';
-import { MOCK_PROFILE } from '../lib/constants';
+import Drawer from '@front/components/drawer';
+// import { ProfileContext } from '../lib/context';
+// import { MOCK_PROFILE } from '../lib/constants';
 // #endregion
 
 jest.mock('next/router', () => ({

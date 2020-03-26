@@ -4,9 +4,9 @@
 // import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
+import { ColumnNames } from '@lib/types';
 import { Profile } from '../../profile/models/profile.dto';
 import { Group } from '../../group/models/group.dto';
-import { ColumnNames } from '../../../components/phonebook/types';
 import { GroupEntity } from '../../group/group.entity';
 import { LoginService } from '../../shared/interfaces';
 // #endregion

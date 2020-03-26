@@ -1,11 +1,13 @@
 /** @format */
 
+// #region Imports NPM
 import { ApolloQueryResult } from 'apollo-client';
-
-import { Profile } from '../../src/profile/models/profile.dto';
-import { OldUser, OldTicket } from '../../src/ticket/old-service/models/old-service.interface';
-import { Data } from '../../lib/types';
-import { DropzoneFile } from '../dropzone/types';
+// #endregion
+// #region Imports Local
+import { Profile } from '@back/profile/models/profile.dto';
+import { OldUser, OldTicket } from '@back/ticket/old-service/models/old-service.interface';
+import { Data, DropzoneFile } from '@lib/types';
+// #endregion
 
 export interface ProfileTicketsComponentProps {
   loading: boolean;

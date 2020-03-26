@@ -10,7 +10,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { ClickAwayListener } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { useTranslation } from '../../lib/i18n-client';
+import { useTranslation } from '@lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

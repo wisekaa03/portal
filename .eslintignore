@@ -1,4 +1,5 @@
 .git
+.local
 .vscode
 apps/portal/src/database/migrations
 dist

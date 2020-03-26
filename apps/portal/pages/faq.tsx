@@ -7,9 +7,9 @@ import { Paper, Typography } from '@material-ui/core';
 import Head from 'next/head';
 // #endregion
 // #region Imports Local
-import Page from '../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../lib/i18n-client';
-import { VerticalCenter } from '../components/verticalcenter';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { VerticalCenter } from '@front/components/verticalcenter';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,13 +28,13 @@ const FAQPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('faq:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <VerticalCenter horizontal>
           <Paper className={classes.root}>
             <Typography>Извините, база знаний пока не готова.</Typography>
           </Paper>
         </VerticalCenter>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

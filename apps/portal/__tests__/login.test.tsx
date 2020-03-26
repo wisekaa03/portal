@@ -6,8 +6,8 @@ import { createShallow } from '@material-ui/core/test-utils';
 import { TextField, Button } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import Login from '../pages/auth/login';
-import { LoginPageProps } from '../components/auth/types';
+import { LoginPageProps } from '@lib/types';
+import Login from '@front/pages/auth/login';
 // #endregion
 
 describe('Login page', () => {

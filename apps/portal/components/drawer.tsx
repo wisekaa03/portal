@@ -9,22 +9,22 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 // #endregion
 // #region Imports Local
-import { useTranslation } from '../lib/i18n-client';
-import DrawerBg from '../../../public/images/jpeg/drawer_bg.jpg';
-import Icon from './ui/icon';
-import CalendarIcon from '../../../public/images/svg/icons/calendar.svg';
-import ServicesIcon from '../../../public/images/svg/icons/services.svg';
-import FaqIcon from '../../../public/images/svg/icons/faq.svg';
-import ProfileIcon from '../../../public/images/svg/icons/profile.svg';
-import MailIcon from '../../../public/images/svg/icons/mail.svg';
-import MediaIcon from '../../../public/images/svg/icons/media.svg';
-import MeetingIcon from '../../../public/images/svg/icons/meeting.svg';
-import NewsIcon from '../../../public/images/svg/icons/news.svg';
-import PhonebookIcon from '../../../public/images/svg/icons/phonebook.svg';
-import SettingsIcon from '../../../public/images/svg/icons/settings.svg';
-import AdminIcon from '../../../public/images/svg/icons/admin.svg';
-import { ProfileContext } from '../lib/context';
-import { ADMIN_PAGES } from '../lib/constants';
+import { useTranslation } from '@lib/i18n-client';
+import { ProfileContext } from '@lib/context';
+import { ADMIN_PAGES } from '@lib/constants';
+import Icon from '@front/components/ui/icon';
+import DrawerBg from '@public/images/jpeg/drawer_bg.jpg';
+import CalendarIcon from '@public/images/svg/icons/calendar.svg';
+import ServicesIcon from '@public/images/svg/icons/services.svg';
+import FaqIcon from '@public/images/svg/icons/faq.svg';
+import ProfileIcon from '@public/images/svg/icons/profile.svg';
+import MailIcon from '@public/images/svg/icons/mail.svg';
+import MediaIcon from '@public/images/svg/icons/media.svg';
+import MeetingIcon from '@public/images/svg/icons/meeting.svg';
+import NewsIcon from '@public/images/svg/icons/news.svg';
+import PhonebookIcon from '@public/images/svg/icons/phonebook.svg';
+import SettingsIcon from '@public/images/svg/icons/settings.svg';
+import AdminIcon from '@public/images/svg/icons/admin.svg';
 // #endregion
 
 const drawerWidth = 256;

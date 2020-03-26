@@ -7,15 +7,15 @@ import { Box, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 // #endregion
 // #region Imports Local
-import { FilesComponentProps } from './types';
-import IsAdmin from '../isAdmin';
-import { useTranslation } from '../../lib/i18n-client';
-import Loading from '../loading';
-import Dropzone from '../dropzone';
+import { useTranslation } from '@lib/i18n-client';
+import { FilesComponentProps } from '@lib/types';
+import Button from '@front/components/ui/button';
+import IsAdmin from '@front/components/isAdmin';
+import Loading from '@front/components/loading';
+import Dropzone from '@front/components/dropzone';
 import FilesTreeComponent from './tree';
 import FilesDialogComponent from './dialog';
 import FilesTableComponent from './table';
-import Button from '../ui/button';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>

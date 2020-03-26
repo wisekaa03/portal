@@ -25,15 +25,14 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import CloseIcon from '@material-ui/icons/Close';
 // #endregion
 // #region Imports Local
-import Page from '../../layouts/main';
-import { includeDefaultNamespaces, nextI18next, I18nPage } from '../../lib/i18n-client';
-import { NEWS, NEWS_EDIT, NEWS_DELETE } from '../../lib/queries';
-import Loading from '../../components/loading';
-import { format } from '../../lib/dayjs';
-import { LARGE_RESOLUTION } from '../../lib/constants';
-// import { ProfileContext } from '../../lib/context';
-import { Data } from '../../lib/types';
-import IsAdmin from '../../components/isAdmin';
+import { MaterialUI } from '@front/layout';
+import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import { NEWS, NEWS_EDIT, NEWS_DELETE } from '@lib/queries';
+import { format } from '@lib/dayjs';
+import { LARGE_RESOLUTION } from '@lib/constants';
+import { Data } from '@lib/types';
+import Loading from '@front/components/loading';
+import IsAdmin from '@front/components/isAdmin';
 // #endregion
 
 // TODO: Import jodit-react:
@@ -176,7 +175,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
       <Head>
         <title>{t('news:title')}</title>
       </Head>
-      <Page {...rest}>
+      <MaterialUI {...rest}>
         <Loading activate={loading || !data || !data.news} noMargin type="linear" variant="indeterminate">
           <div
             className={clsx(classes.root, {
@@ -258,7 +257,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
             </div>
           </div>
         </Loading>
-      </Page>
+      </MaterialUI>
     </>
   );
 };

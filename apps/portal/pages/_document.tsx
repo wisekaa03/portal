@@ -10,9 +10,9 @@ import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 // #endregion
 // #region Imports Local
-import { ApolloDocumentProps } from '../lib/types';
-import theme from '../lib/theme';
-import { nextI18next } from '../lib/i18n-client';
+import { ApolloDocumentProps } from '@lib/types';
+import theme from '@lib/theme';
+import { nextI18next } from '@lib/i18n-client';
 // #endregion
 
 // Resolution order

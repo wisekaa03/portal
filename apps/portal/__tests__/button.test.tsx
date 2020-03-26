@@ -4,7 +4,7 @@ import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import React from 'react';
 
-import ButtonComponent, { ButtonBaseProps } from '../components/ui/button';
+import ButtonComponent, { ButtonBaseProps } from '@front/components/ui/button';
 
 describe('Button Component', () => {
   let shallow: typeof Shallow;

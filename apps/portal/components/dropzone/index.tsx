@@ -11,8 +11,8 @@ import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
 // #endregion
 // #region Imports Local
-import { DropzoneFile, DropzoneProps } from './types';
-import { nextI18next, useTranslation } from '../../lib/i18n-client';
+import { nextI18next, useTranslation } from '@lib/i18n-client';
+import { DropzoneFile, DropzoneProps } from '@lib/types';
 // #endregion
 
 const thumbHeight = 100;
