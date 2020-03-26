@@ -1,25 +1,25 @@
 /** @format */
 
 // #region Imports NPM
+import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
-import { FileUpload } from 'graphql-upload';
-import { UserEntity } from '../../user/user.entity';
-import { FilesFolderEntity } from '../files.folder.entity';
+import { User } from './user.dto';
+import { FilesFolder } from './files.folder.dto';
 // #endregion
 
 // #region Profile
 export interface Files {
   id?: string;
-  createdUser?: UserEntity;
-  updatedUser?: UserEntity;
+  createdUser?: User;
+  updatedUser?: User;
 
   createdAt?: Date;
   updatedAt?: Date;
 
   title: string;
 
-  folder?: FilesFolderEntity | string;
+  folder?: FilesFolder | string;
   filename?: string;
   mimetype?: string;
 

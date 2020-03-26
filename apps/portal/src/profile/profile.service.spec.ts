@@ -11,8 +11,8 @@ import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { GroupService } from '@back/group/group.service';
 import { ProfileService } from './profile.service';
-import { GroupService } from '../group/group.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));

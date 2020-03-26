@@ -4,11 +4,8 @@
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
+import { FileUploadBuffer } from '@lib/types';
 // #endregion
-
-export interface FileUploadBuffer extends Pick<FileUpload, 'filename' | 'mimetype' | 'encoding'> {
-  file: Buffer;
-}
 
 /**
  * Constructing Uploads

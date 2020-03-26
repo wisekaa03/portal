@@ -6,8 +6,6 @@ import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
-import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
-import { constructUploads } from '../../shared/upload';
 import {
   OldService,
   OldCategory,
@@ -17,8 +15,10 @@ import {
   OldUser,
   OldFile,
   OldTicketEditInput,
-} from './models/old-service.interface';
-import clearHtml from '../../../lib/clear-html';
+} from '@lib/types';
+import clearHtml from '@lib/clear-html';
+import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
+import { constructUploads } from '@back/shared/upload';
 // #endregion
 
 export interface Attaches1CFile {

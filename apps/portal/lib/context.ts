@@ -1,11 +1,10 @@
 /** @format */
 
 // #region Import NPM
-import React from 'react';
+import { createContext } from 'react';
 // #endregion
 // #region Imports Local
-import { HeaderProps } from '@lib/types';
-import { UserContext } from '@back/user/models/user.dto';
+import { HeaderProps, UserContext } from '@lib/types';
 // #endregion
 
 /**
@@ -14,6 +13,6 @@ import { UserContext } from '@back/user/models/user.dto';
  * EVERY component that needs access to it. So we only do that once here, near
  * the top, then put the user object in React Context for ease of access.
  */
-export const ProfileContext = React.createContext<UserContext>({ user: undefined });
+export const ProfileContext = createContext<UserContext>({ user: undefined });
 
-export const PhonebookHeaderContext = React.createContext<HeaderProps | undefined>(undefined);
+export const PhonebookHeaderContext = createContext<HeaderProps | undefined>(undefined);

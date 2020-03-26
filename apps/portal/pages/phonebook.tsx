@@ -11,7 +11,7 @@ import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 // #endregion
 // #region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-import { Data, ProfileQueryProps, ColumnNames } from '@lib/types';
+import { Data, ProfileQueryProps, ColumnNames, UserSettings, Profile } from '@lib/types';
 import useDebounce from '@lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '@lib/queries';
 import { MaterialUI } from '@front/layout';
@@ -24,8 +24,6 @@ import PhonebookSettings from '@front/components/phonebook/settings';
 import PhonebookHelp from '@front/components/phonebook/help';
 import Modal from '@front/components/ui/modal';
 import Loading from '@front/components/loading';
-import { UserSettings } from '@back/user/models/user.dto';
-import { Profile } from '@back/profile/models/profile.dto';
 // #endregion
 
 const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];

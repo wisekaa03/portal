@@ -8,12 +8,12 @@ import { Transport, ClientProxyFactory } from '@nestjs/microservices';
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggerModule } from '@app/logger';
-import { LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
+import { LDAP_SYNC_SERVICE } from '@lib/constants';
+import { ProfileModule } from '@back/profile/profile.module';
+import { GroupModule } from '@back/group/group.module';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
-import { ProfileModule } from '../profile/profile.module';
 import { UserResolver } from './user.resolver';
-import { GroupModule } from '../group/group.module';
 // #endregion
 
 @Module({

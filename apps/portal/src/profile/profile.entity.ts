@@ -16,7 +16,7 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { Gender, LoginService } from '../shared/interfaces';
+import { Gender, LoginService } from '@lib/types';
 // #endregion
 
 @Entity('profile')

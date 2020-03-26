@@ -9,9 +9,9 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { UserService } from '@back/user/user.service';
+import { ProfileService } from '@back/profile/profile.service';
 import { FilesService } from './files.service';
-import { UserService } from '../user/user.service';
-import { ProfileService } from '../profile/profile.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));

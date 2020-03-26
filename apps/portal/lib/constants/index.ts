@@ -3,9 +3,11 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { LoginService, Gender } from '../src/shared/interfaces';
-import { UserContext } from '../src/user/models/user.dto';
+import { LoginService, Gender, UserContext } from '@lib/types';
 // #endregion
+
+export * from './app-bar';
+export * from './ldap-sync';
 
 export const AUTH_PAGE = '/auth/login';
 export const FIRST_PAGE = '/phonebook';

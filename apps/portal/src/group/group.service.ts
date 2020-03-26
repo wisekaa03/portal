@@ -6,12 +6,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { LoginService, Group } from '@lib/types';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
-import { Group } from './models/group.dto';
-import { LoginService } from '../shared/interfaces';
 // #endregion
 
 @Injectable()

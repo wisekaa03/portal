@@ -7,14 +7,13 @@ import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
-import { MaterialUI } from '@front/layout';
-import { OldTicket } from '@back/ticket/old-service/models/old-service.interface';
 import { format } from '@lib/dayjs';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '@lib/queries';
-import { Data, DropzoneFile } from '@lib/types';
-import ProfileTicketComponent from '@front/components/profile/ticket';
+import { Data, OldTicket, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
+import { MaterialUI } from '@front/layout';
+import ProfileTicketComponent from '@front/components/profile/ticket';
 // #endregion
 
 const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {

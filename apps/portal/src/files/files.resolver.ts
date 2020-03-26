@@ -7,14 +7,13 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
+import { FilesFolderResponse } from '@lib/types';
 import { LogService } from '@app/logger';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { FilesFolderEntity } from './files.folder.entity';
+import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
+import { UserResponse } from '@back/user/user.entity';
+import { UserService } from '@back/user/user.service';
 import { FilesEntity } from './files.entity';
 import { FilesService } from './files.service';
-import { UserResponse } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { FilesFolderResponse } from './models/files.folder.dto';
 // #endregion
 
 @Resolver('Files')

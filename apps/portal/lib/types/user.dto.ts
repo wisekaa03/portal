@@ -4,11 +4,10 @@
 // import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
-import { ColumnNames } from '@lib/types';
-import { Profile } from '../../profile/models/profile.dto';
-import { Group } from '../../group/models/group.dto';
-import { GroupEntity } from '../../group/group.entity';
-import { LoginService } from '../../shared/interfaces';
+import { ColumnNames } from './profile';
+import { LoginService } from './login-service';
+import { Profile } from './profile.dto';
+import { Group } from './group.dto';
 // #endregion
 
 export interface BaseUser {
@@ -23,7 +22,7 @@ export interface BaseUser {
 
   disabled: boolean;
 
-  groups?: Group[] | GroupEntity[];
+  groups?: Group[];
 
   groupIds?: string[];
 

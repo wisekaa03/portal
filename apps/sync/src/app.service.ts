@@ -6,8 +6,8 @@ import { Injectable } from '@nestjs/common';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
-import { UserService } from '../../portal/src/user/user.service';
-import { ProfileService } from '../../portal/src/profile/profile.service';
+import { UserService } from '@back/user/user.service';
+import { ProfileService } from '@back/profile/profile.service';
 // #endregion
 
 @Injectable()

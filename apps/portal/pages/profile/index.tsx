@@ -8,15 +8,14 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import Box from '@material-ui/core/Box';
 // #endregion
 // #region Imports Local
-import { OldTicket } from '@back/ticket/old-service/models/old-service.interface';
 import { OLD_TICKETS, USER_SETTINGS } from '@lib/queries';
-import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '@lib/context';
 import { TICKET_STATUSES } from '@lib/constants';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Data } from '@lib/types';
+import { Data, OldTicket } from '@lib/types';
+import { MaterialUI } from '@front/layout';
 import ProfileInfoComponent from '@front/components/profile/info';
 import ProfileTicketsComponent from '@front/components/profile/tickets';
 // #endregion

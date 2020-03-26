@@ -9,7 +9,8 @@ import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { ServicesWrapperProps, appBarHeight } from '@lib/types';
+import { appBarHeight } from '@lib/constants';
+import { ServicesWrapperProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import HR from '@public/images/svg/itapps/HR.svg';

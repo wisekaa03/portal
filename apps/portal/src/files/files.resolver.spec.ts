@@ -7,9 +7,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 // #region Imports Local
 import { LogService } from '@app/logger';
 // import { ConfigService } from '@app/config';
+import { UserService } from '@back/user/user.service';
 import { FilesResolver } from './files.resolver';
 import { FilesService } from './files.service';
-import { UserService } from '../user/user.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));

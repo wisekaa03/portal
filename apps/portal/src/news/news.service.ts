@@ -7,10 +7,10 @@ import { Repository } from 'typeorm';
 // import { Observable } from 'rxjs';
 // #endregion
 // #region Imports Local
+import { News } from '@lib/types';
 // import { LogService } from '@app/logger';
 // import { ConfigService } from '@app/config';
 // import { UserService } from '../user/user.service';
-import { News } from './models/news.dto';
 import { NewsEntity } from './news.entity';
 // #endregion
 

@@ -9,7 +9,7 @@ export interface LoginPageProps {
 
 export interface LogoutPageProps {
   loading: boolean;
-  logout: MutationFunction;
+  logout: MutationFunction<boolean>;
 }
 
 export interface LoginComponentProps {

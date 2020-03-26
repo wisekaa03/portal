@@ -7,7 +7,7 @@ import { ClientRedis } from '@nestjs/microservices';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
-import { LDAP_SYNC } from '../../sync/src/app.constants';
+import { LDAP_SYNC } from '@lib/constants';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';

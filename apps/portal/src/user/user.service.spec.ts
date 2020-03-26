@@ -11,10 +11,10 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
-import { LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
+import { LDAP_SYNC_SERVICE } from '@lib/constants';
+import { ProfileService } from '@back/profile/profile.service';
+import { GroupService } from '@back/group/group.service';
 import { UserService } from './user.service';
-import { ProfileService } from '../profile/profile.service';
-import { GroupService } from '../group/group.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));

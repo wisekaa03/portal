@@ -11,16 +11,12 @@ import { Request } from 'express';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapService, LdapResponseUser } from '@app/ldap';
-import { LDAP_SYNC, LDAP_SYNC_SERVICE } from '../../../sync/src/app.constants';
+import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
+import { LoginService, Profile, User, UserSettings } from '@lib/types';
+import { ProfileService } from '@back/profile/profile.service';
+import { GroupService } from '@back/group/group.service';
+import { GroupEntity } from '@back/group/group.entity';
 import { UserEntity, UserResponse } from './user.entity';
-import { User, UserSettings } from './models/user.dto';
-import { ProfileService } from '../profile/profile.service';
-import { Profile } from '../profile/models/profile.dto';
-import { GroupService } from '../group/group.service';
-import { LoginService } from '../shared/interfaces';
-import { ADMIN_GROUP } from '../../lib/constants';
-import { Group } from '../group/models/group.dto';
-import { GroupEntity } from '../group/group.entity';
 // #endregion
 
 @Injectable()

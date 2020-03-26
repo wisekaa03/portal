@@ -5,12 +5,12 @@ import { Injectable, UnauthorizedException, HttpService } from '@nestjs/common';
 import Redis from 'redis';
 // #endregion
 // #region Imports Local
+import { UserLogin } from '@lib/types';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
-import { UserLogin } from '../user/models/user.dto';
-import { UserService } from '../user/user.service';
-import { UserResponse } from '../user/user.entity';
+import { UserService } from '@back/user/user.service';
+import { UserResponse } from '@back/user/user.entity';
 // #endregion
 
 @Injectable()

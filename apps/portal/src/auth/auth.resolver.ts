@@ -9,10 +9,10 @@ import { I18nService } from 'nestjs-i18n';
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
+import { UserResponse } from '@back/user/user.entity';
+import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 import { AuthService } from './auth.service';
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { UserResponse } from '../user/user.entity';
-import { GQLError, GQLErrorCode } from '../shared/gqlerror';
 // #endregion
 
 @Resolver()

@@ -6,14 +6,14 @@ import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
-import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import { format } from '@lib/dayjs';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Profile } from '@back/profile/models/profile.dto';
+import { Profile } from '@lib/types';
+import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 // #endregion
 

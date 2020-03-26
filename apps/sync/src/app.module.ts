@@ -13,14 +13,14 @@ import { ConfigModule, ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { LoggerModule, LogService } from '@app/logger';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
+import { UserModule } from '@back/user/user.module';
+import { UserEntity } from '@back/user/user.entity';
+import { ProfileModule } from '@back/profile/profile.module';
+import { ProfileEntity } from '@back/profile/profile.entity';
+import { GroupModule } from '@back/group/group.module';
+import { GroupEntity } from '@back/group/group.entity';
 import { AppController } from './app.controller';
 import { SyncService } from './app.service';
-import { UserModule } from '../../portal/src/user/user.module';
-import { UserEntity } from '../../portal/src/user/user.entity';
-import { ProfileModule } from '../../portal/src/profile/profile.module';
-import { ProfileEntity } from '../../portal/src/profile/profile.entity';
-import { GroupModule } from '../../portal/src/group/group.module';
-import { GroupEntity } from '../../portal/src/group/group.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';

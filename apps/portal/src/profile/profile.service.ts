@@ -9,16 +9,15 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
+import { Profile, Gender, LoginService } from '@lib/types';
+import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
-import { Profile } from './models/profile.dto';
+import { GQLErrorCode } from '@back/shared/gqlerror';
+import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
-import { Gender, LoginService } from '../shared/interfaces';
-import { GQLErrorCode } from '../shared/gqlerror';
-import { constructUploads } from '../shared/upload';
-import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
 // #endregion
 
 @Injectable()

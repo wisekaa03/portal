@@ -8,5 +8,3 @@ export interface AppBarComponentProps {
   handlePopoverClose: () => void;
   handleLogout: () => void;
 }
-
-export const appBarHeight = 64;

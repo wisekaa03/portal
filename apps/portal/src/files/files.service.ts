@@ -6,13 +6,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { Files, FilesFolder, FilesFolderResponse } from '@lib/types';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { UserResponse } from '@back/user/user.entity';
 import { FilesEntity } from './files.entity';
-import { Files } from './models/files.dto';
 import { FilesFolderEntity } from './files.folder.entity';
-import { FilesFolder, FilesFolderResponse } from './models/files.folder.dto';
-import { UserResponse } from '../user/user.entity';
 // #endregion
 
 @Injectable()

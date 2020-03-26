@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../user/user.entity';
-import { FILES_RIGHT, FilesFolderResponse } from './models/files.folder.dto';
+import { FILES_RIGHT, FilesFolderResponse } from '@lib/types';
+import { UserEntity } from '@back/user/user.entity';
 // #endregion
 
 @Entity('files_folder')

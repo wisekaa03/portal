@@ -5,13 +5,13 @@ import React from 'react';
 import AvatarMui from '@material-ui/core/Avatar';
 // #endregion
 // #region Imports Local
+import { Profile } from '@lib/types';
 import Alien from '@public/images/svg/photo/alien-blue.svg';
 import Man from '@public/images/svg/photo/man-blue.svg';
 import Woman from '@public/images/svg/photo/woman-blue.svg';
-import { Profile } from '@back/profile/models/profile.dto';
 // #endregion
 
-interface AvatarProps {
+export interface AvatarProps {
   profile?: Profile;
   alt: string;
   base64?: string;
@@ -19,6 +19,9 @@ interface AvatarProps {
   className?: string;
 }
 
+/**
+ * DOCUMENT THIS
+ */
 const Avatar = ({ profile, fullSize = false, base64, ...rest }: AvatarProps): React.ReactElement => {
   let src = 'data:image/png;base64,';
 

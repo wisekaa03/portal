@@ -7,9 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // #region Imports Local
 import { LoggerModule } from '@app/logger';
 import { ConfigModule } from '@app/config';
+import { UserModule } from '@back/user/user.module';
 import { FilesService } from './files.service';
 import { FilesResolver } from './files.resolver';
-import { UserModule } from '../user/user.module';
 import { FilesEntity } from './files.entity';
 import { FilesFolderEntity } from './files.folder.entity';
 // #endregion

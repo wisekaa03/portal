@@ -23,9 +23,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 // #endregion
 // #region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { ProfileEditComponentProps } from '@lib/types';
-import { Profile } from '@back/profile/models/profile.dto';
-import { Gender } from '@back/shared/interfaces';
+import { Gender, Profile, ProfileEditComponentProps } from '@lib/types';
 import IsAdmin from '@front/components/isAdmin';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';

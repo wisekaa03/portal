@@ -12,10 +12,10 @@ import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded, Cal
 import { red } from '@material-ui/core/colors';
 // #endregion
 // #region Imports Local
-import { Profile } from '@app/portal/profile/models/profile.dto';
 import { nextI18next } from '@lib/i18n-client';
 import {
   Data,
+  Profile,
   ProfileProps,
   PhonebookProfileModule,
   PhonebookProfileNameProps,

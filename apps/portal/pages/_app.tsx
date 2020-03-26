@@ -21,14 +21,13 @@ import url from 'url';
 import theme from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
-import { ApolloAppProps, Data } from '@lib/types';
+import { ApolloAppProps, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import Cookie from '@lib/cookie';
 import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '@lib/constants';
-import { User, UserContext } from '@back/user/models/user.dto';
 // #endregion
 
 /**

@@ -5,11 +5,10 @@ import React, { FC, useContext } from 'react';
 // #endregion
 // #region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { FilesTreeComponentProps, FilesFolderTreeVirtual } from '@lib/types';
+import { FilesTreeComponentProps, FilesFolderTreeVirtual, FilesFolder } from '@lib/types';
 import { ProfileContext } from '@lib/context';
 import { FILES_SHARED_NAME } from '@lib/constants';
 import { TreeView, TreeItem } from '@front/components/tree-view';
-import { FilesFolder } from '@back/files/models/files.folder.dto';
 // #endregion
 
 const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setItem, handleEdit }) => {

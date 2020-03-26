@@ -3,7 +3,8 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { Gender, LoginService } from '../../shared/interfaces';
+import { Gender } from './gender';
+import { LoginService } from './login-service';
 // #endregion
 
 // #region Profile

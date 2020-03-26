@@ -3,7 +3,7 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../../user/user.entity';
+import { User } from './user.dto';
 // #endregion
 
 // #region Profile
@@ -20,6 +20,6 @@ export interface News {
 
   content: string;
 
-  user?: UserEntity;
+  user?: User;
 }
 // #endregion

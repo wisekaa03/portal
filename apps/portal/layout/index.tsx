@@ -9,10 +9,9 @@ import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 // #endregion
 // #region Imports Local
 import { ProfileContext } from '@lib/context';
-import { appBarHeight } from '@lib/types';
 import { LOGOUT, USER_SETTINGS } from '@lib/queries';
 import { removeStorage } from '@lib/session-storage';
-import { SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '@lib/constants';
+import { appBarHeight, SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '@lib/constants';
 import Cookie from '@lib/cookie';
 import AppBarComponent from '@front/components/app-bar';
 import DrawerComponent from '@front/components/drawer';

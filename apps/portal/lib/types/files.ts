@@ -1,6 +1,6 @@
 /** @format */
 
-import { FilesFolder } from '@back/files/models/files.folder.dto';
+import { FilesFolder } from './files.folder.dto';
 import { DropzoneFile } from './dropzone';
 
 export interface FilesComponentProps {

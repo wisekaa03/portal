@@ -1,11 +1,9 @@
 /** @format */
 
-/** @format */
-
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { LoginService } from '../../shared/interfaces';
+import { LoginService } from './login-service';
 // #endregion
 
 // #region Group

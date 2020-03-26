@@ -6,7 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from './user.service';
 import { UserResponse } from './user.entity';
 // #endregion

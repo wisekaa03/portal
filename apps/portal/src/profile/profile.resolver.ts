@@ -9,13 +9,13 @@ import { I18nService } from 'nestjs-i18n';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { IsAdminGuard } from '../guards/gqlauth-admin.guard';
+import { Profile } from '@lib/types';
+import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
+import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
+import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
+import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
-import { Profile } from './models/profile.dto';
-import { GQLError, GQLErrorCode } from '../shared/gqlerror';
-import { PROFILE_AUTOCOMPLETE_FIELDS } from '../../lib/constants';
 // #endregion
 
 @Resolver('Profile')

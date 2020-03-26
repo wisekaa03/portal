@@ -16,7 +16,8 @@ import HeaderBg from '@public/images/jpeg/header_bg.jpg';
 import PopoverBg from '@public/images/png/profile_popover_bg.png';
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
-import { AppBarComponentProps, appBarHeight } from '@lib/types';
+import { appBarHeight } from '@lib/constants';
+import { AppBarComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
 // #endregion
 

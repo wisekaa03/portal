@@ -9,11 +9,11 @@ import { I18nService } from 'nestjs-i18n';
 // import { ConfigModule, ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
+import { ImageService } from '@app/image/image.service';
+import { GroupService } from '@back/group/group.service';
+import { UserService } from '@back/user/user.service';
+import { ProfileService } from '@back/profile/profile.service';
 import { SyncService } from './app.service';
-import { GroupService } from '../../portal/src/group/group.service';
-import { UserService } from '../../portal/src/user/user.service';
-import { ProfileService } from '../../portal/src/profile/profile.service';
-import { ImageService } from '../../../libs/image/src/image.service';
 // #endregion
 
 const serviceMock = jest.fn(() => ({}));

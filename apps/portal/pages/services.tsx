@@ -5,14 +5,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { QueryResult } from 'react-apollo';
 // #endregion
 // #region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { Data, DropzoneFile, ServicesTicketProps, ServicesCreatedProps } from '@lib/types';
+import { Data, DropzoneFile, ServicesTicketProps, ServicesCreatedProps, OldService, OldCategory } from '@lib/types';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
-import { OldService, OldCategory } from '@back/ticket/old-service/models/old-service.interface';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';

@@ -3,7 +3,7 @@
 // #region Imports NPM
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../../user/user.entity';
+import { User } from './user.dto';
 // #endregion
 
 // #region FilesFolder
@@ -15,13 +15,13 @@ export enum FILES_RIGHT {
 
 export interface FilesFolder {
   id?: string;
-  createdUser?: UserEntity;
-  updatedUser?: UserEntity;
+  createdUser?: User;
+  updatedUser?: User;
 
   createdAt?: Date;
   updatedAt?: Date;
 
-  user?: UserEntity;
+  user?: User;
 
   pathname: string;
 }

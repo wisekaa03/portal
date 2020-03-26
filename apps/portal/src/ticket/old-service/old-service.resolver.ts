@@ -9,16 +9,10 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { SoapAuthentication } from '@app/soap';
-import { GqlAuthGuard } from '../../guards/gqlauth.guard';
-import {
-  OldService,
-  OldTicket,
-  OldTicketNewInput,
-  OldTicketNew,
-  OldTicketEditInput,
-} from './models/old-service.interface';
+import { OldService, OldTicket, OldTicketNewInput, OldTicketNew, OldTicketEditInput } from '@lib/types';
+import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
+import { UserResponse } from '@back/user/user.entity';
 import { OldTicketService } from './old-service.service';
-import { UserResponse } from '../../user/user.entity';
 // #endregion
 
 @Resolver('OldTicketResolver')

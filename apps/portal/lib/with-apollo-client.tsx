@@ -19,12 +19,12 @@ import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 // #endregion
 // #region Imports Local
-import { UserContext } from '@app/portal/user/models/user.dto';
+import { UserContext } from '@lib/types';
+import { GQLErrorCode } from '@back/shared/gqlerror';
 import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
-import { GQLErrorCode } from '../src/shared/gqlerror';
 import { AUTH_PAGE } from './constants';
 // #endregion
 

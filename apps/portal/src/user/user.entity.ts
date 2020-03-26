@@ -18,10 +18,9 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { UserSettings, MailSessionProps } from './models/user.dto';
-import { ProfileEntity } from '../profile/profile.entity';
-import { GroupEntity } from '../group/group.entity';
-import { LoginService } from '../shared/interfaces';
+import { LoginService, UserSettings, MailSessionProps } from '@lib/types';
+import { ProfileEntity } from '@back/profile/profile.entity';
+import { GroupEntity } from '@back/group/group.entity';
 // #endregion
 
 @Entity('user')
