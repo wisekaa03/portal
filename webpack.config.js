@@ -6,9 +6,9 @@ console.log(`-- Webpack <${NODE_ENV}> build --`);
 
 module.exports = (options) => {
   const config =
-    NODE_ENV !== 'production'
-      ? require('./webpack.development.js')(options)
-      : require('./webpack.production.js')(options);
+    NODE_ENV === 'production'
+      ? require('./webpack.production.js')(options)
+      : require('./webpack.development.js')(options);
   const entry = NODE_ENV !== 'production' ? ['webpack/hot/poll?100', options.entry] : [options.entry];
 
   const c = {

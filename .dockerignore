@@ -58,7 +58,7 @@ apps/portal/components/
 apps/portal/layouts/
 apps/portal/lib/
 apps/portal/pages/
-target/
+.local/
 typings/
 
 tsconfig.json

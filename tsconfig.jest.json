@@ -18,6 +18,6 @@
     ".nest",
     ".next",
     "node_modules",
-    "target"
+    ".local"
   ]
 }

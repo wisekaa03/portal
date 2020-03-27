@@ -22,6 +22,6 @@
     "**/*.spec.*",
     "**/*.test.*",
     "jest.setup.ts",
-    "target"
+    ".local"
   ]
 }
