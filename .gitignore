@@ -1,4 +1,5 @@
 /.git
+ormconfig.js
 
 # Logs
 logs

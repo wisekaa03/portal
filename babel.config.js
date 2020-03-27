@@ -14,17 +14,17 @@ module.exports = function (api) {
   const constantsPresets = ['@babel/typescript'];
 
   const constantsPlugins = [
-    'babel-plugin-react-require',
+    // 'babel-plugin-react-require',
     ['@babel/plugin-proposal-optional-chaining', { loose: false }],
-    '@babel/proposal-class-properties',
-    '@babel/plugin-syntax-dynamic-import',
+    // '@babel/plugin-syntax-dynamic-import',
     // ['@babel/plugin-proposal-decorators', { legacy: true }],
-    [
-      '@babel/plugin-proposal-object-rest-spread',
-      {
-        useBuiltIns: true,
-      },
-    ],
+    // ['@babel/proposal-class-properties', { loose: true }],
+    // [
+    //   '@babel/plugin-proposal-object-rest-spread',
+    //   {
+    //     useBuiltIns: true,
+    //   },
+    // ],
     [
       'module-resolver',
       {

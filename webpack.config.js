@@ -1,6 +1,7 @@
 /** @format */
+/* eslint global-require:0 */
 
-const resolveTsconfigPaths = require('./tsconfig-paths-to-webpack-alias');
+// const resolveTsconfigPaths = require('./tsconfig-paths-to-webpack-alias');
 
 const { NODE_ENV = 'development' } = process.env;
 
@@ -17,14 +18,14 @@ module.exports = (options) => {
     ...options,
     ...config,
     entry: [...entry],
-    plugins: [...options.plugins, ...config.plugins],
-    stats: { ...options.stats, ...config.stats },
+    plugins: [...config.plugins],
+    stats: { ...config.stats },
   };
 
-  c.resolve.alias = {
-    ...c.resolve.alias,
-    ...resolveTsconfigPaths({ tsconfigPaths: './tsconfig.json' }),
-  };
+  // c.resolve.alias = {
+  //   ...c.resolve.alias,
+  //   ...resolveTsconfigPaths({ tsconfigPaths: './tsconfig.json' }),
+  // };
 
   // Babel
   c.module.rules.unshift({

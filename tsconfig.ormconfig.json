@@ -8,12 +8,14 @@
     "allowJs": false,
     "outDir": "./.next/nest",
     "baseUrl": "./",
+    "isolatedModules": false,
     "experimentalDecorators": true
   },
   "include": [
-    "libs/config/src/config.service.ts",
+    "ormconfig.ts",
     "apps/portal/src/**/*.entity.ts",
-    "typings",
+    "libs/config/src/config.service.ts",
+    "typings"
   ],
   "exclude": [
     ".next",
