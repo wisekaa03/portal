@@ -26,29 +26,38 @@ import { LoggerModule, LogService } from '@app/logger';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { CacheInterceptorProvider } from '@app/cache.interceptor';
 // import { HttpErrorFilter } from './filters/http-error.filter';
-import { DateScalar } from './shared/date.scalar';
-import { ByteArrayScalar } from './shared/bytearray.scalar';
-import { ControllersModule } from './controllers/controllers.module';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { NewsModule } from './news/news.module';
-import { ProfileModule } from './profile/profile.module';
-import { ProfileEntity } from './profile/profile.entity';
-import { UserEntity } from './user/user.entity';
-import { GroupModule } from './group/group.module';
-import { GroupEntity } from './group/group.entity';
-import { TicketDepartmentModule } from './ticket/department/department.module';
-import { TicketServiceModule } from './ticket/service/service.module';
-import { TicketGroupServiceModule } from './ticket/group-service/group-service.module';
-import { TicketsModule } from './ticket/tickets/tickets.module';
-import { TicketAttachmentsModule } from './ticket/attachments/attachments.module';
-import { TicketCommentsModule } from './ticket/comments/comments.module';
-import { TicketOldServiceModule } from './ticket/old-service/old-service.module';
-import { NewsEntity } from './news/news.entity';
-import { FilesModule } from './files/files.module';
-import { FilesFolderEntity } from './files/files.folder.entity';
-import { FilesEntity } from './files/files.entity';
-import { Upload } from './shared/upload.scalar';
+
+import { DateScalar } from '@back/shared/date.scalar';
+import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
+import { ControllersModule } from '@back/controllers/controllers.module';
+import { AuthModule } from '@back/auth/auth.module';
+import { UserModule } from '@back/user/user.module';
+import { NewsModule } from '@back/news/news.module';
+import { ProfileModule } from '@back/profile/profile.module';
+import { GroupModule } from '@back/group/group.module';
+import { TicketDepartmentModule } from '@back/ticket/department/department.module';
+import { TicketServiceModule } from '@back/ticket/service/service.module';
+import { TicketGroupServiceModule } from '@back/ticket/group-service/group-service.module';
+import { TicketsModule } from '@back/ticket/tickets/tickets.module';
+import { TicketAttachmentsModule } from '@back/ticket/attachments/attachments.module';
+import { TicketCommentsModule } from '@back/ticket/comments/comments.module';
+import { TicketOldServiceModule } from '@back/ticket/old-service/old-service.module';
+import { Upload } from '@back/shared/upload.scalar';
+
+import { GroupEntity } from '@back/group/group.entity';
+import { ProfileEntity } from '@back/profile/profile.entity';
+import { UserEntity } from '@back/user/user.entity';
+import { NewsEntity } from '@back/news/news.entity';
+import { FilesModule } from '@back/files/files.module';
+import { FilesFolderEntity } from '@back/files/files.folder.entity';
+import { FilesEntity } from '@back/files/files.entity';
+
+import { TicketAttachmentsEntity } from '@back/ticket/attachments/attachments.entity';
+import { TicketCommentsEntity } from '@back/ticket/comments/comments.entity';
+import { TicketDepartmentEntity } from '@back/ticket/department/department.entity';
+import { TicketGroupServiceEntity } from '@back/ticket/group-service/group-service.entity';
+import { TicketServiceEntity } from '@back/ticket/service/service.entity';
+import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -183,18 +192,18 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
             ? true
             : JSON.parse(configService.get('DATABASE_LOGGING')),
           entities: [
-            ProfileEntity,
             GroupEntity,
+            ProfileEntity,
             UserEntity,
             NewsEntity,
             FilesFolderEntity,
             FilesEntity,
-            TicketDepartmentModule,
-            TicketGroupServiceModule,
-            TicketServiceModule,
-            TicketsModule,
-            TicketAttachmentsModule,
-            TicketCommentsModule,
+            TicketDepartmentEntity,
+            TicketGroupServiceEntity,
+            TicketServiceEntity,
+            TicketsEntity,
+            TicketAttachmentsEntity,
+            TicketCommentsEntity,
           ],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
           cache: {

@@ -10,8 +10,8 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { UserEntity } from '../../user/user.entity';
-import { TicketDepartmentEntity } from '../department/department.entity';
+import { UserEntity } from '@back/user/user.entity';
+import { TicketDepartmentEntity } from '@back/ticket/department/department.entity';
 // #endregion
 // #region Imports Local
 // #endregion

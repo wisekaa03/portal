@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../../user/user.entity';
-import { TicketGroupServiceEntity } from '../group-service/group-service.entity';
+import { UserEntity } from '@back/user/user.entity';
+import { TicketGroupServiceEntity } from '@back/ticket/group-service/group-service.entity';
 // #endregion
 
 @Entity('ticket_service')

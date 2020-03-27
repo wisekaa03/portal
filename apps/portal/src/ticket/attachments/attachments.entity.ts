@@ -4,9 +4,9 @@
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToOne } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../../user/user.entity';
-import { TicketsEntity } from '../tickets/tickets.entity';
-import { TicketCommentsEntity } from '../comments/comments.entity';
+import { UserEntity } from '@back/user/user.entity';
+import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
+import { TicketCommentsEntity } from '@back/ticket/comments/comments.entity';
 // #endregion
 
 @Entity('ticket_attachments')

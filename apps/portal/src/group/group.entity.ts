@@ -4,7 +4,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { LoginService } from '@lib/types';
+import { LoginService } from '@lib/types/login-service';
 // #endregion
 
 @Entity('group')

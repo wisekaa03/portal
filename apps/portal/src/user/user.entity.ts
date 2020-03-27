@@ -18,7 +18,8 @@ import {
 import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { LoginService, UserSettings, MailSessionProps } from '@lib/types';
+import { LoginService } from '@lib/types/login-service';
+import { UserSettings, MailSessionProps } from '@lib/types/user.dto';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupEntity } from '@back/group/group.entity';
 // #endregion

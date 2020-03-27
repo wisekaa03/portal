@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '@back/user/user.entity';
 // #endregion
 
 @Entity('news')

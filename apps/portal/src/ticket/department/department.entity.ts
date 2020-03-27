@@ -10,7 +10,7 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { UserEntity } from '../../user/user.entity';
+import { UserEntity } from '@back/user/user.entity';
 // #endregion
 // #region Imports Local
 // #endregion

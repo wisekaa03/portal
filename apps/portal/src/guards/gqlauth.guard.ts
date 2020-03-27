@@ -5,7 +5,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 // #endregion
 // #region Imports Local
-import { GQLError, GQLErrorCode } from '../shared/gqlerror';
+import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 // #endregion
 
 @Injectable()
