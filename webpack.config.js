@@ -1,5 +1,7 @@
 /** @format */
 
+const resolveTsconfigPaths = require('./tsconfig-paths-to-webpack-alias');
+
 const { NODE_ENV = 'development' } = process.env;
 
 console.log(`-- Webpack <${NODE_ENV}> build --`);
@@ -19,8 +21,10 @@ module.exports = (options) => {
     stats: { ...options.stats, ...config.stats },
   };
 
-  // console.log('Options:', options);
-  // console.log('Config:', c);
+  c.resolve.alias = {
+    ...c.resolve.alias,
+    ...resolveTsconfigPaths({ tsconfigPaths: './tsconfig.json' }),
+  };
 
   // Babel
   c.module.rules.unshift({
@@ -28,12 +32,13 @@ module.exports = (options) => {
     use: [{ loader: 'babel-loader' }],
   });
 
-  // c.output.ecmaVersion = 2020;
-
   // console.log('Config.module.rules:', c.module.rules);
   // c.module.rules.forEach((rule) => {
   //   console.log(`Config.module.rules.use "${rule.test}":`, rule.use);
   // });
+
+  // console.log('Options:', options);
+  // console.log('Config:', c);
 
   return c;
 };
