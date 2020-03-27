@@ -18,6 +18,7 @@ module.exports = function (api) {
     ['@babel/plugin-proposal-optional-chaining', { loose: false }],
     '@babel/proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
+    // ['@babel/plugin-proposal-decorators', { legacy: true }],
     [
       '@babel/plugin-proposal-object-rest-spread',
       {
