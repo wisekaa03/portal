@@ -1,28 +1,24 @@
 .vscode
 
-.git
-.gitignore
+.git*
 doc/
 
 *.map
 
 .editorconfig
 
-.eslintignore
-.eslintrc.js
+.eslint*
 
 .gitlab-ci.yml
 
 .prettierignore
-prettier.config.js
-postcss.config.js
+prettier.*
+postcss.*
 
-apollo.client.js
-babel.config.js
+apollo.client.*
+babel.*
 
-jest.config.js
-jest.setup.ts
-tsconfig.jest.json
+jest.*
 
 README.md
 LICENSE
@@ -51,6 +47,7 @@ node_modules/@types/
 node_modules/**/*.ts
 node_modules/**/*.tsx
 node_modules/.yarn-integrity
+tsconfig-paths-to-webpack-alias.*
 
 webpack.*
 
@@ -62,4 +59,5 @@ apps/portal/pages/
 typings/
 
 tsconfig.json
-tsconfig.*.json
+tsconfig.jest.json
+tsconfig.server.json

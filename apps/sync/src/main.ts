@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
@@ -15,7 +15,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const logger = new LogService();
 
 async function bootstrap(configService: ConfigService): Promise<void> {
-  const server = await NestFactory.createMicroservice(AppModule, {
+  const server = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     logger,
     transport: Transport.REDIS,
     options: {

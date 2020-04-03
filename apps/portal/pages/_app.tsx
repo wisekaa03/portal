@@ -134,10 +134,12 @@ class MainApp extends App<ApolloAppProps> {
                 horizontal: 'center',
               }}
             >
-              <SnackbarUtilsConfigurator />
-              <CurrentComponent context={context} router={router} ctx={ctx}>
-                <Component {...pageProps} />
-              </CurrentComponent>
+              <>
+                <SnackbarUtilsConfigurator />
+                <CurrentComponent context={context} router={router} ctx={ctx}>
+                  <Component {...pageProps} />
+                </CurrentComponent>
+              </>
             </SnackbarProvider>
           </StylesProvider>
         </ThemeProvider>
