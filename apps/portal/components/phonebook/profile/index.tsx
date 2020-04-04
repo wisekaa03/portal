@@ -310,15 +310,15 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                       onClick={handleSearchClose}
                     />
                     <ProfileField
-                      title={t(`phonebook:fields.title`)}
-                      profile={profile}
-                      field="title"
-                      onClick={handleSearchClose}
-                    />
-                    <ProfileField
                       title={t(`phonebook:fields.otdel`)}
                       profile={profile}
                       field="otdel"
+                      onClick={handleSearchClose}
+                    />
+                    <ProfileField
+                      title={t(`phonebook:fields.title`)}
+                      profile={profile}
+                      field="title"
                       onClick={handleSearchClose}
                     />
                     <ProfileField
