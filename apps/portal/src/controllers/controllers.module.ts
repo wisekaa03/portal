@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Module } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 // #endregion
 // #region Imports Local
 import { AdminController } from './admin/admin.controller';
@@ -17,10 +18,15 @@ import { PhonebookController } from './phonebook/phonebook.controller';
 import { ProfileController } from './profile/profile.controller';
 import { FilesController } from './files/files.controller';
 import { SettingsController } from './settings/settings.controller';
+import { HealthController } from './health/health.controller';
 // #endregion
 
 @Module({
-  imports: [],
+  imports: [
+    // #region Health module
+    TerminusModule,
+    // #endregion
+  ],
   controllers: [
     AdminController,
     AuthController,
@@ -35,6 +41,7 @@ import { SettingsController } from './settings/settings.controller';
     ProfileController,
     FilesController,
     SettingsController,
+    HealthController,
   ],
 })
 export class ControllersModule {}

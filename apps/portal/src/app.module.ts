@@ -16,9 +16,8 @@ import {
 } from 'nestjs-i18n';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { RenderModule } from 'nest-next-2';
+import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
-import { TerminusModule, TypeOrmHealthIndicator, TerminusModuleOptions } from '@nestjs/terminus';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -63,20 +62,6 @@ import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
 const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV !== 'test';
 const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../..', '.env');
-
-const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions => ({
-  endpoints: [
-    {
-      // The health check will be available with /health
-      url: '/health',
-      // All the indicator which will be checked when requesting /health
-      healthIndicators: [
-        // Set the timeout for a response to 400ms
-        async () => db.pingCheck('database', { timeout: 400 }),
-      ],
-    },
-  ],
-});
 
 @Module({
   imports: [
@@ -171,57 +156,59 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
           'Database',
         );
 
-        return {
-          name: 'default',
-          keepConnectionAlive: true,
-          type: 'postgres',
-          replication: {
-            master: { url: configService.get<string>('DATABASE_URI') },
-            slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
-          },
-          schema: configService.get<string>('DATABASE_SCHEMA'),
-          uuidExtension: 'pgcrypto',
-          logger,
-          synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
-          dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-          logging: dev
-            ? true
-            : configService.get('DATABASE_LOGGING') === 'false'
-            ? false
-            : configService.get('DATABASE_LOGGING') === 'true'
-            ? true
-            : JSON.parse(configService.get('DATABASE_LOGGING')),
-          entities: [
-            GroupEntity,
-            ProfileEntity,
-            UserEntity,
-            NewsEntity,
-            FilesFolderEntity,
-            FilesEntity,
-            TicketDepartmentEntity,
-            TicketGroupServiceEntity,
-            TicketServiceEntity,
-            TicketsEntity,
-            TicketAttachmentsEntity,
-            TicketCommentsEntity,
-          ],
-          migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-          cache: {
-            type: 'redis', // "ioredis/cluster"
-            options: {
-              url: configService.get<string>('DATABASE_REDIS_URI'),
-              scaleReads: 'slave',
+        return (
+          {
+            name: 'default',
+            keepConnectionAlive: true,
+            type: 'postgres',
+            replication: {
+              master: { url: configService.get<string>('DATABASE_URI') },
+              slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
             },
-            alwaysEnabled: true,
-            /**
-             * Time in milliseconds in which cache will expire.
-             * This can be setup per-query.
-             * Default value is 1000 which is equivalent to 1 second.
-             */
-            duration: configService.get<number>('DATABASE_REDIS_TTL'),
-            max: 10000,
-          },
-        } as TypeOrmModuleOptions;
+            schema: configService.get<string>('DATABASE_SCHEMA'),
+            uuidExtension: 'pgcrypto',
+            logger,
+            synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+            dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
+            logging: dev
+              ? true
+              : configService.get('DATABASE_LOGGING') === 'false'
+              ? false
+              : configService.get('DATABASE_LOGGING') === 'true'
+              ? true
+              : JSON.parse(configService.get('DATABASE_LOGGING')),
+            entities: [
+              GroupEntity,
+              ProfileEntity,
+              UserEntity,
+              NewsEntity,
+              FilesFolderEntity,
+              FilesEntity,
+              TicketDepartmentEntity,
+              TicketGroupServiceEntity,
+              TicketServiceEntity,
+              TicketsEntity,
+              TicketAttachmentsEntity,
+              TicketCommentsEntity,
+            ],
+            migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
+            cache: {
+              type: 'redis', // "ioredis/cluster"
+              options: {
+                url: configService.get<string>('DATABASE_REDIS_URI'),
+                scaleReads: 'slave',
+              },
+              alwaysEnabled: true,
+              /**
+               * Time in milliseconds in which cache will expire.
+               * This can be setup per-query.
+               * Default value is 1000 which is equivalent to 1 second.
+               */
+              duration: configService.get<number>('DATABASE_REDIS_TTL'),
+              max: 10000,
+            },
+          } as TypeOrmModuleOptions
+        );
       },
     }),
     // #endregion
@@ -246,10 +233,6 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     NewsModule,
     // #endregion
 
-    // #region Controllers module
-    ControllersModule,
-    // #endregion
-
     // #region Ticket module
     TicketDepartmentModule,
     TicketServiceModule,
@@ -264,11 +247,8 @@ const getTerminusOptions = (db: TypeOrmHealthIndicator): TerminusModuleOptions =
     FilesModule,
     // #endregion
 
-    // #region Health module
-    TerminusModule.forRootAsync({
-      inject: [TypeOrmHealthIndicator],
-      useFactory: (db) => getTerminusOptions(db),
-    }),
+    // #region Controllers module
+    ControllersModule,
     // #endregion
   ],
 

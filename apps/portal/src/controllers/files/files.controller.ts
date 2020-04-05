@@ -1,12 +1,11 @@
 /** @format */
-/** @format */
 
 // #region Imports NPM
 import { Controller, Get, Res, UseGuards, Param } from '@nestjs/common';
-import { RenderableResponse } from 'nest-next-2';
+import { RenderableResponse } from 'nest-next';
 // #endregion
 // #region Imports Local
-import { SessionGuard } from '@app/portal/guards/session.guard';
+import { SessionGuard } from '@back/guards/session.guard';
 // #endregion
 
 @Controller('files')

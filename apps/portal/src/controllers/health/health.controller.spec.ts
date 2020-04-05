@@ -4,18 +4,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
-import { FilesController } from './files.controller';
+import { HealthController } from './health.controller';
 // #endregion
 
-describe('Files Controller', () => {
-  let controller: FilesController;
+describe('Health Controller', () => {
+  let controller: HealthController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [FilesController],
+      controllers: [HealthController],
     }).compile();
 
-    controller = module.get<FilesController>(FilesController);
+    controller = module.get<HealthController>(HealthController);
   });
 
   it('should be defined', () => {

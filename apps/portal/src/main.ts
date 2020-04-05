@@ -14,7 +14,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { HttpException } from '@nestjs/common';
-import { RenderModule, RenderService } from 'nest-next-2';
+import { RenderModule, RenderService } from 'nest-next';
 import Next from 'next';
 import 'reflect-metadata';
 // #endregion
