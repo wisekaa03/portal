@@ -233,7 +233,7 @@ export class LdapService extends EventEmitter {
     this.logger.log(`bind: ${this.bindDN} ...`, 'LDAP');
 
     return new Promise<boolean>((resolve, reject) =>
-      this.adminClient.bind(this.bindDN, this.bindCredentials, (error: Ldap.Error) => {
+      this.adminClient.bind(this.bindDN, this.bindCredentials, (error) => {
         if (error) {
           this.logger.error('bind error:', error, 'LDAP');
           this.adminBound = false;
@@ -581,7 +581,7 @@ export class LdapService extends EventEmitter {
         new Promise<boolean>((resolve, reject) => {
           if (password) {
             // If a password, then we try to connect with user's login and password, and try to modify
-            this.userClient.bind(dn, password, (bindErr?: Ldap.Error): any => {
+            this.userClient.bind(dn, password, (error): any => {
               data.forEach((d, i, a) => {
                 if (d.modification.type === 'thumbnailPhoto' || d.modification.type === 'jpegPhoto') {
                   // eslint-disable-next-line no-param-reassign
@@ -589,10 +589,10 @@ export class LdapService extends EventEmitter {
                 }
               });
 
-              if (bindErr) {
-                this.logger.error('bind error:', bindErr, 'LDAP');
+              if (error) {
+                this.logger.error('bind error:', error, 'LDAP');
 
-                return reject(bindErr);
+                return reject(error);
               }
 
               return this.userClient.modify(
@@ -708,7 +708,7 @@ export class LdapService extends EventEmitter {
       this.userClient.bind(
         foundUser[this.opts.bindProperty || 'dn'],
         password,
-        async (bindErr?: Ldap.Error): Promise<unknown | LdapResponseUser> => {
+        async (bindErr): Promise<unknown | LdapResponseUser> => {
           if (bindErr) {
             this.logger.error('bind error:', bindErr, 'LDAP');
 

@@ -127,6 +127,7 @@
     }
   },
   "include": [
+    "typings/global.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],

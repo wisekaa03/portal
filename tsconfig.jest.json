@@ -11,6 +11,7 @@
     "target": "es2017"
   },
   "include": [
+    "typings/global.d.ts",
     "apps/**/*.ts",
     "apps/**/*.tsx"
   ],

@@ -16,7 +16,7 @@
     "apps/portal/src/**/*.entity.ts",
     "apps/portal/lib/types/*.ts",
     "libs/config/src/config.service.ts",
-    "typings"
+    "typings/global.d.ts"
   ],
   "exclude": [
     ".next",
