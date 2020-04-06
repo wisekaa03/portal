@@ -4,10 +4,9 @@ declare let __DEV__: boolean;
 declare let __SERVER__: boolean;
 
 declare module 'cache-manager-redis-store';
-declare module '@graphile-contrib/pgdbi';
-declare module 'next-i18next/dist/commonjs/utils';
-declare module 'apollo-cache-instorage';
-declare module 'css-mediaquery';
+// declare module 'next-i18next/dist/commonjs/utils';
+// declare module 'apollo-cache-instorage';
+// declare module 'css-mediaquery';
 
 declare namespace NodeJS {
   interface Global extends NodeJS.Global {

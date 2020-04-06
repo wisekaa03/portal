@@ -51,7 +51,6 @@ apps/portal/components/
 apps/portal/layouts/
 apps/portal/pages/
 .local/
-typings/
 
 tsconfig.jest.json
 tsconfig.server.json
