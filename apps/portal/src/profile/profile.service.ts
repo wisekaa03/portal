@@ -176,7 +176,10 @@ export class ProfileService {
       if (cleared) {
         query.andWhere(
           new Brackets((qb) => {
-            qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
+            qb.where(`profile.lastName iLike ${cleared}`)
+              .orWhere(`profile.firstName iLike ${cleared}`)
+              .orWhere(`profile.middleName iLike ${cleared}`)
+              .orWhere(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
               .orWhere(`profile.username iLike ${cleared}`)
               .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
@@ -226,7 +229,7 @@ export class ProfileService {
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
-      if (accumulator.length >= 7) return accumulator;
+      // if (accumulator.length >= 7) return accumulator;
 
       const lower = search
         .toLowerCase()
