@@ -229,7 +229,7 @@ export class ProfileService {
       .getMany();
 
     return result.reduce((accumulator: string[], cur: ProfileEntity) => {
-      // if (accumulator.length >= 7) return accumulator;
+      // if (accumulator.length >= 10) return accumulator;
 
       const lower = search
         .toLowerCase()
