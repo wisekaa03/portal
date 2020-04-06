@@ -1,5 +1,6 @@
 /** @format */
-// / <reference types="../../../typings/global" />
+// eslint-disable-next-line spaced-comment
+/// <reference types="../../../typings/global" />
 
 // #region Imports NPM
 import { resolve } from 'path';
