@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { TerminusModule } from '@nestjs/terminus';
 // #endregion
 // #region Imports Local
 import { HealthController } from './health.controller';
@@ -12,6 +13,7 @@ describe('Health Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [TerminusModule],
       controllers: [HealthController],
     }).compile();
 
