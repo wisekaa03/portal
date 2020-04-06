@@ -49,7 +49,6 @@ webpack.*
 
 apps/portal/components/
 apps/portal/layouts/
-apps/portal/lib/
 apps/portal/pages/
 .local/
 typings/
