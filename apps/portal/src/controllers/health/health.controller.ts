@@ -15,6 +15,6 @@ export class HealthController {
   @Get()
   @HealthCheck()
   public readiness(): Promise<HealthCheckResult> {
-    return this.health.check([() => async () => this.db.pingCheck('database', { timeout: 400 })]);
+    return this.health.check([() => this.db.pingCheck('database', { timeout: 400 })]);
   }
 }
