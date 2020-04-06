@@ -48,7 +48,7 @@ export class LoggingInterceptor implements NestInterceptor {
       case 'http':
       default: {
         const req = context.switchToHttp().getRequest<Request>();
-        let username = (req?.session?.passport?.user as UserResponse)?.username;
+        let username = (req?.session?.passport?.user as UserResponse)?.username || '';
 
         // HTTP requests
         if (req) {
