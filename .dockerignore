@@ -58,6 +58,5 @@ apps/portal/pages/
 .local/
 typings/
 
-tsconfig.json
 tsconfig.jest.json
 tsconfig.server.json
