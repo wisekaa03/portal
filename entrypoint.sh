@@ -63,7 +63,7 @@ MEETING_URL="${MEETING_URL}"
 EOF
 
 export NODE=`which node`
-export TSNODE=`which ts-node`
+export TSNODE="./node_modules/.bin/ts-node"
 export NODE_OPTIONS=--max_old_space_size=1024
 export NODE_PG_FORCE_NATIVE=true
 export NODE_ENV=${NODE_ENV:=production}
