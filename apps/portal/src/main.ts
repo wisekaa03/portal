@@ -8,6 +8,7 @@ import { NestApplicationOptions, HttpException } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { RenderService, RenderModule } from 'nest-next';
+import { ParsedUrlQuery } from 'querystring';
 import Next from 'next';
 // import { v4 as uuidv4 } from 'uuid';
 import nextI18NextMiddleware from 'next-i18next/middleware';
@@ -164,13 +165,15 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   const renderer = server.get(RenderModule);
   renderer.register(server, app, { dev, viewsDir: '' });
   const service = server.get(RenderService);
-  service.setErrorHandler(async (err: HttpException, req: Request, res: Response) => {
-    const status = err.getStatus();
-    if (status === 403 || status === 401) {
-      res.status(302);
-      res.location(`/auth/login?redirect=${encodeURI(req.url)}`);
-    }
-  });
+  service.setErrorHandler(
+    async (err: HttpException, req: Request, res: Response, _pathname: any, _query: ParsedUrlQuery): Promise<any> => {
+      const status = err.getStatus();
+      if (status === 403 || status === 401) {
+        res.status(302);
+        res.location(`/auth/login?redirect=${encodeURI(req.url)}`);
+      }
+    },
+  );
   // #endregion
 
   // #region Start server
