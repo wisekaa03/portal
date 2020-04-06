@@ -29,7 +29,7 @@
         "TS_NODE_PROJECT": "tsconfig.server.json"
       },
       "args": [
-        "${workspaceFolder}/server/main.ts"
+        "${workspaceFolder}/apps/portal/src/main.ts"
       ]
     }
   ]

@@ -5,6 +5,7 @@
 // #region Imports NPM
 import { resolve } from 'path';
 // import { APP_FILTER } from '@nestjs/core';
+import Next from 'next';
 import { Module, CacheModule } from '@nestjs/common';
 import {
   I18nModule,
@@ -74,7 +75,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #endregion
 
     // #region Next RenderModule
-    RenderModule,
+    RenderModule.forRootAsync(Next({ dev, dir: 'apps/portal' })),
     // #endregion
 
     // #region Cache Manager - Redis

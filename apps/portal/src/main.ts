@@ -4,8 +4,8 @@
 // import { IncomingMessage } from 'http';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
+import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
 import { Request, Response } from 'express';
 // import { v4 as uuidv4 } from 'uuid';
 import nextI18NextMiddleware from 'next-i18next/middleware';
@@ -13,18 +13,16 @@ import passport from 'passport';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import { HttpException } from '@nestjs/common';
-import { RenderModule, RenderService } from 'nest-next';
-import Next from 'next';
+// import Next from 'next';
 import 'reflect-metadata';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
-import { AppModule } from './app.module';
-import { nextI18next } from '../lib/i18n-client';
-import sessionRedis from './shared/session-redis';
-import session from './shared/session';
+import { nextI18next } from '@lib/i18n-client';
+import sessionRedis from '@back/shared/session-redis';
+import session from '@back/shared/session';
+import { AppModule } from '@back/app.module';
 // #endregion
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -41,31 +39,9 @@ const nestjsOptions: NestApplicationOptions = {
 // #endregion
 
 async function bootstrap(configService: ConfigService): Promise<void> {
-  // #region Next
-  const app = Next({
-    dev,
-    dir: resolve(__dirname, dev ? '../../../apps/portal' : '../..'),
-    quiet: false,
-  });
-  await app.prepare();
-  // #endregion
-
   // #region Create NestJS server
   const server: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
   server.useLogger(logger);
-  // #endregion
-
-  // #region Next Render
-  const renderer = server.get(RenderModule);
-  renderer.register(server, app, { dev, viewsDir: '' });
-  const service = server.get(RenderService);
-  service.setErrorHandler(async (err: HttpException, req: Request, res: Response) => {
-    const status = err.getStatus();
-    if (status === 403 || status === 401) {
-      res.status(302);
-      res.location(`/auth/login?redirect=${encodeURI(req.url)}`);
-    }
-  });
   // #endregion
 
   // #region X-Response-Time
