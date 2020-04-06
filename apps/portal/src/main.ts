@@ -4,16 +4,17 @@
 // import { IncomingMessage } from 'http';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
-import { NestApplicationOptions } from '@nestjs/common';
+import { NestApplicationOptions, HttpException } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
+import { RenderService, RenderModule } from 'nest-next';
+import Next from 'next';
 // import { v4 as uuidv4 } from 'uuid';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-// import Next from 'next';
 import 'reflect-metadata';
 // #endregion
 // #region Imports Local
@@ -150,6 +151,25 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     next();
     // res.set('X-Server-ID', res);
     res.removeHeader('X-Powered-By');
+  });
+  // #endregion
+
+  // #region Next
+  const app = Next({
+    dev,
+    dir: dev ? 'apps/portal' : '',
+    quiet: false,
+  });
+  await app.prepare();
+  const renderer = server.get(RenderModule);
+  renderer.register(server, app, { dev, viewsDir: '' });
+  const service = server.get(RenderService);
+  service.setErrorHandler(async (err: HttpException, req: Request, res: Response) => {
+    const status = err.getStatus();
+    if (status === 403 || status === 401) {
+      res.status(302);
+      res.location(`/auth/login?redirect=${encodeURI(req.url)}`);
+    }
   });
   // #endregion
 

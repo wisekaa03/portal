@@ -13,12 +13,12 @@ export class FilesController {
   @Get()
   @UseGuards(SessionGuard)
   public async files(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('files');
+    res.render('files');
   }
 
   @Get(':id')
   @UseGuards(SessionGuard)
   public async edit(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
-    return res.render('files', { id });
+    res.render('files', { id });
   }
 }

@@ -13,6 +13,6 @@ export class NewsController {
   @Get()
   @UseGuards(SessionGuard)
   public async news(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('news');
+    res.render('news');
   }
 }

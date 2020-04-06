@@ -13,6 +13,6 @@ export class FaqController {
   @Get()
   @UseGuards(SessionGuard)
   public async faq(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('faq');
+    res.render('faq');
   }
 }

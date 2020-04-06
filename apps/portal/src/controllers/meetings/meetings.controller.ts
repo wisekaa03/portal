@@ -13,6 +13,6 @@ export class MeetingsController {
   @Get()
   @UseGuards(SessionGuard)
   public async phonebook(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('meetings');
+    res.render('meetings');
   }
 }

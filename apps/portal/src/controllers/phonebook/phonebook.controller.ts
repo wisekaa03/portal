@@ -12,12 +12,12 @@ export class PhonebookController {
   @Get()
   @UseGuards(SessionGuard)
   public async phonebook(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('phonebook');
+    res.render('phonebook');
   }
 
   @Get(':id')
   @UseGuards(SessionGuard)
   public async phonebookProfile(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
-    return res.render('phonebook', { id });
+    res.render('phonebook', { id });
   }
 }

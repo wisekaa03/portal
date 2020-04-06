@@ -13,13 +13,13 @@ export class ServicesController {
   @Get()
   @UseGuards(SessionGuard)
   public async services(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('services');
+    res.render('services');
   }
 
   @Get(':department')
   @UseGuards(SessionGuard)
   public async department(@Res() res: RenderableResponse, @Param('department') department: string): Promise<void> {
-    return res.render('services', { department });
+    res.render('services', { department });
   }
 
   @Get(':department/:service')
@@ -29,7 +29,7 @@ export class ServicesController {
     @Param('department') department: string,
     @Param('service') service: string,
   ): Promise<void> {
-    return res.render('services', { department, service });
+    res.render('services', { department, service });
   }
 
   @Get(':department/:service/:category')
@@ -40,6 +40,6 @@ export class ServicesController {
     @Param('service') service: string,
     @Param('category') category: string,
   ): Promise<void> {
-    return res.render('services', { department, service, category });
+    res.render('services', { department, service, category });
   }
 }

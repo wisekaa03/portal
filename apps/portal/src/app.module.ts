@@ -1,6 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0 */
-/// <reference types="../../../typings/global" />
+// / <reference types="../../../typings/global" />
 
 // #region Imports NPM
 import { resolve } from 'path';
@@ -64,6 +63,60 @@ const dev = process.env.NODE_ENV !== 'production';
 const test = process.env.NODE_ENV !== 'test';
 const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../..', '.env');
 
+// #region TypeOrm config options
+const typeOrmPostgres = (configService: ConfigService, logger: LogService): TypeOrmModuleOptions => ({
+  name: 'default',
+  keepConnectionAlive: true,
+  type: 'postgres',
+  replication: {
+    master: { url: configService.get<string>('DATABASE_URI') },
+    slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
+  },
+  schema: configService.get<string>('DATABASE_SCHEMA'),
+  uuidExtension: 'pgcrypto',
+  logger,
+  synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+  dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
+  logging: dev
+    ? true
+    : configService.get('DATABASE_LOGGING') === 'false'
+    ? false
+    : configService.get('DATABASE_LOGGING') === 'true'
+    ? true
+    : JSON.parse(configService.get('DATABASE_LOGGING')),
+  entities: [
+    GroupEntity,
+    ProfileEntity,
+    UserEntity,
+    NewsEntity,
+    FilesFolderEntity,
+    FilesEntity,
+    TicketDepartmentEntity,
+    TicketGroupServiceEntity,
+    TicketServiceEntity,
+    TicketsEntity,
+    TicketAttachmentsEntity,
+    TicketCommentsEntity,
+  ],
+  migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
+  cache: {
+    type: 'redis', // "ioredis/cluster"
+    options: {
+      url: configService.get<string>('DATABASE_REDIS_URI'),
+      scaleReads: 'slave',
+      max: 10000,
+    },
+    alwaysEnabled: true,
+    /**
+     * Time in milliseconds in which cache will expire.
+     * This can be setup per-query.
+     * Default value is 1000 which is equivalent to 1 second.
+     */
+    duration: configService.get<number>('DATABASE_REDIS_TTL'),
+  },
+});
+// #endregion
+
 @Module({
   imports: [
     // #region Logging module
@@ -75,7 +128,8 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
     // #endregion
 
     // #region Next RenderModule
-    RenderModule.forRootAsync(Next({ dev, dir: dev ? 'apps/portal' : '' })),
+    // TODO: появляется NOT FOUND перед загрузкой страницы
+    RenderModule, // .forRootAsync(Next({ dev, dir: dev ? 'apps/portal' : '', quiet: false })),
     // #endregion
 
     // #region Cache Manager - Redis
@@ -157,57 +211,7 @@ const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../.
           'Database',
         );
 
-        return {
-          name: 'default',
-          keepConnectionAlive: true,
-          type: 'postgres',
-          replication: {
-            master: { url: configService.get<string>('DATABASE_URI') },
-            slaves: [{ url: configService.get<string>('DATABASE_URI_RD') }],
-          },
-          schema: configService.get<string>('DATABASE_SCHEMA'),
-          uuidExtension: 'pgcrypto',
-          logger,
-          synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
-          dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-          logging: dev
-            ? true
-            : configService.get('DATABASE_LOGGING') === 'false'
-            ? false
-            : configService.get('DATABASE_LOGGING') === 'true'
-            ? true
-            : JSON.parse(configService.get('DATABASE_LOGGING')),
-          entities: [
-            GroupEntity,
-            ProfileEntity,
-            UserEntity,
-            NewsEntity,
-            FilesFolderEntity,
-            FilesEntity,
-            TicketDepartmentEntity,
-            TicketGroupServiceEntity,
-            TicketServiceEntity,
-            TicketsEntity,
-            TicketAttachmentsEntity,
-            TicketCommentsEntity,
-          ],
-          migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-          cache: {
-            type: 'redis', // "ioredis/cluster"
-            options: {
-              url: configService.get<string>('DATABASE_REDIS_URI'),
-              scaleReads: 'slave',
-            },
-            alwaysEnabled: true,
-            /**
-             * Time in milliseconds in which cache will expire.
-             * This can be setup per-query.
-             * Default value is 1000 which is equivalent to 1 second.
-             */
-            duration: configService.get<number>('DATABASE_REDIS_TTL'),
-            max: 10000,
-          },
-        } as TypeOrmModuleOptions;
+        return typeOrmPostgres(configService, logger);
       },
     }),
     // #endregion

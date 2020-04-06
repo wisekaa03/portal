@@ -13,6 +13,6 @@ export class MailController {
   @Get()
   @UseGuards(SessionGuard)
   public async mail(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('mail');
+    res.render('mail');
   }
 }

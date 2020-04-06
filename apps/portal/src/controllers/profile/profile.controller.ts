@@ -13,19 +13,19 @@ export class ProfileController {
   @Get()
   @UseGuards(SessionGuard)
   public async profile(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('profile');
+    res.render('profile');
   }
 
   @Get('edit')
   @UseGuards(SessionGuard)
   public async editMe(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('profile/edit');
+    res.render('profile/edit');
   }
 
   @Get('edit/:id')
   @UseGuards(SessionGuard)
   public async editProfile(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
-    return res.render('profile/edit', { id });
+    res.render('profile/edit', { id });
   }
 
   @Get('ticket/:id/:type')
@@ -35,12 +35,12 @@ export class ProfileController {
     @Param('id') id: string,
     @Param('type') type: string,
   ): Promise<void> {
-    return res.render('profile/ticket', { id, type });
+    res.render('profile/ticket', { id, type });
   }
 
   @Get('equipment')
   @UseGuards(SessionGuard)
   public async equipment(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('profile/equipment');
+    res.render('profile/equipment');
   }
 }

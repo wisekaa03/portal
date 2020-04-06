@@ -13,6 +13,6 @@ export class CalendarController {
   @Get()
   @UseGuards(SessionGuard)
   public async calendar(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('calendar');
+    res.render('calendar');
   }
 }

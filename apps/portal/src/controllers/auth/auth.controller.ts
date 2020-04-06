@@ -13,12 +13,12 @@ import { SessionGuard } from '@back/guards/session.guard';
 export class AuthController {
   @Get('login')
   public async login(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('auth/login');
+    res.render('auth/login');
   }
 
   @Get('logout')
   @UseGuards(SessionGuard)
   public async logout(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('auth/logout');
+    res.render('auth/logout');
   }
 }

@@ -13,6 +13,6 @@ export class HomeController {
   @Get()
   @UseGuards(SessionGuard)
   public async showHome(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('index');
+    res.render('index');
   }
 }

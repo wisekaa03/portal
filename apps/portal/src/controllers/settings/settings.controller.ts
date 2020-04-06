@@ -13,6 +13,6 @@ export class SettingsController {
   @Get()
   @UseGuards(SessionGuard)
   public async settings(@Res() res: RenderableResponse): Promise<void> {
-    return res.render('settings');
+    res.render('settings');
   }
 }
