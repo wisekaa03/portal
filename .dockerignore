@@ -44,7 +44,6 @@ coverage/
 package.json
 
 node_modules/.yarn-integrity
-tsconfig-paths-to-webpack-alias.*
 
 webpack.*
 
