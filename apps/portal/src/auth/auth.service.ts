@@ -2,15 +2,21 @@
 
 // #region Imports NPM
 import { Injectable, UnauthorizedException, HttpService } from '@nestjs/common';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { AxiosResponse } from 'axios';
+import { Request } from 'express';
+import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
 // #endregion
 // #region Imports Local
-import { UserLogin } from '@lib/types';
+import { User } from '@lib/types/user.dto';
+import { MailSession } from '@lib/types/auth';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
-import { UserResponse } from '@back/user/user.entity';
+import { UserEntity } from '@back/user/user.entity';
+import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 // #endregion
 
 @Injectable()
@@ -21,49 +27,50 @@ export class AuthService {
     private readonly logService: LogService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    private readonly i18n: I18nService,
   ) {}
 
   /**
    * Validate a user
    *
-   * @param {Express.Request} request
-   * @returns {Promise<UserResponse>} Validated user
+   * @async
+   * @function validate
+   * @param {Request} request
+   * @returns {Promise<User>} Validated user
    * @throws {UnauthorizedException}
    */
-  public validate = async (request: Express.Request): Promise<UserResponse> => {
-    if (request && request.session && request.session.passport && request.session.passport.user) {
-      return request.session.passport.user;
-    }
-
-    throw new UnauthorizedException();
-  };
+  public validate = async (req: Request): Promise<User> =>
+    req?.session?.passport?.user || GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, i18n: this.i18n });
 
   /**
    * Login a user
    *
-   * @param {UserLogin} - User login data transfer object
+   * @async
+   * @method login
+   * @param {string} username User login
+   * @param {string} password User password
    * @param {Express.Request} req Request where the user comes from
-   * @returns {Promise<UserResponse>} User response
-   * @throws {Error} - Exception
+   * @returns {UserEntity} User entity
+   * @throws {Error} Exception
    */
-  async login({ username, password }: UserLogin, req?: Express.Request): Promise<UserResponse> {
-    this.logService.debug(`User login: username = "${username}"`, 'AuthService');
+  async login({ username, password }: { username: string; password: string }): Promise<UserEntity> {
+    this.logService.debug(`User login: username = "${username}"`, AuthService.name);
 
     const ldapUser = await this.ldapService.authenticate(username, password);
 
-    return this.userService
-      .fromLdap(ldapUser)
-      .then((u) => u?.toResponseObject(req?.sessionID || ''))
-      .catch((error: Error) => {
-        this.logService.error('Error: not found user', error, 'AuthService');
+    return this.userService.fromLdap(ldapUser).catch((error: Error) => {
+      this.logService.error('Error: not found user', error, AuthService.name);
 
-        throw error;
-      });
+      throw error;
+    });
   }
 
   /**
-   * User LDAP login
+   * Cache reset. Returns true/false if successful cache reset.
    *
+   * @async
+   * @function cacheReset
+   * @returns {boolean} The true/false if successful cache reset
    */
   cacheReset = async (): Promise<boolean> => {
     let sessionStoreReset = false;
@@ -79,11 +86,11 @@ export class AuthService {
       try {
         redisDatabase.flushdb();
 
-        this.logService.log('Reset database cache.', 'AuthService');
+        this.logService.log('Reset database cache.', AuthService.name);
 
         databaseStoreReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset database cache:', error, 'AuthService');
+        this.logService.error('Unable to reset database cache:', error, AuthService.name);
       }
 
       redisDatabase.quit();
@@ -97,11 +104,11 @@ export class AuthService {
       try {
         redisLdap.flushdb();
 
-        this.logService.log('Reset LDAP cache.', 'AuthService');
+        this.logService.log('Reset LDAP cache.', AuthService.name);
 
         ldapCacheReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset LDAP cache:', error, 'AuthService');
+        this.logService.error('Unable to reset LDAP cache:', error, AuthService.name);
       }
 
       redisLdap.quit();
@@ -115,11 +122,11 @@ export class AuthService {
       try {
         redisHttp.flushdb();
 
-        this.logService.log('Reset HTTP cache.', 'AuthService');
+        this.logService.log('Reset HTTP cache.', AuthService.name);
 
         httpStoreReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset LDAP cache:', error, 'AuthService');
+        this.logService.error('Unable to reset LDAP cache:', error, AuthService.name);
       }
 
       redisHttp.quit();
@@ -133,16 +140,16 @@ export class AuthService {
       try {
         redisSession.flushdb();
 
-        this.logService.log('Reset session cache.', 'AuthService');
+        this.logService.log('Reset session cache.', AuthService.name);
       } catch (error) {
-        this.logService.error('Unable to reset session cache:', error, 'AuthService');
+        this.logService.error('Unable to reset session cache:', error, AuthService.name);
       }
 
       redisSession.quit();
 
       sessionStoreReset = true;
     } catch (error) {
-      this.logService.error('Error in cache reset, session store', error, 'AuthService');
+      this.logService.error('Error in cache reset, session store', error, AuthService.name);
     }
 
     if (databaseStoreReset && sessionStoreReset && ldapCacheReset && httpStoreReset) {
@@ -155,13 +162,15 @@ export class AuthService {
   /**
    * User Email login
    *
+   * @async
+   * @method loginEmail
    * @param {string} email User Email
    * @param {string} password User Password
-   * @returns {Promise<any>} User response
+   * @returns {AxiosResponse<MainSession>}
    */
-  loginEmail = async (email: string, password: string): Promise<any> =>
+  loginEmail = async (email: string, password: string): Promise<AxiosResponse<MailSession>> =>
     this.httpService
-      .post(this.configService.get<string>('MAIL_LOGIN_URL'), {
+      .post<MailSession>(this.configService.get<string>('MAIL_LOGIN_URL'), {
         email,
         password,
       })

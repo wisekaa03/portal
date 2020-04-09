@@ -156,17 +156,13 @@ enum FieldSelection {
 }
 
 type Query {
-
   profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean): ProfileConnection!
-
   profile(id: ID): Profile
-
   searchSuggestions(search: String): [String]
-
   profileFieldSelection(field: FieldSelection!, department: String): [String]
 
 }
 
 type Mutation {
-  changeProfile(profile: ProfileSettingsInput, thumbnailPhoto: Upload): Profile
+  changeProfile(profile: ProfileSettingsInput!, thumbnailPhoto: Upload): Profile
 }

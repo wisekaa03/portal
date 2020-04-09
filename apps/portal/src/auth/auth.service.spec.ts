@@ -3,6 +3,7 @@
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
@@ -28,6 +29,7 @@ describe('AuthService', () => {
       imports: [],
       providers: [
         AuthService,
+        { provide: I18nService, useValue: serviceMock },
         { provide: ConfigService, useValue: serviceMock },
         { provide: HttpService, useValue: serviceMock },
         { provide: LogService, useValue: serviceMock },

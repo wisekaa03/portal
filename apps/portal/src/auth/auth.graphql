@@ -1,13 +1,10 @@
 type Query {
   me: User!
-
-  # isLoggedIn: Boolean!
+  login(username: String!, password: String!): Boolean!
+  loginEmail: Boolean!
 }
 
 type Mutation {
-  login(username: String!, password: String!): User
-
-  logout: Boolean
-
-  cacheReset: Boolean
+  logout: Boolean!
+  cacheReset: Boolean!
 }

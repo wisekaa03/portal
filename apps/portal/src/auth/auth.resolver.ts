@@ -7,10 +7,11 @@ import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
+import { User } from '@lib/types/user.dto';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
-import { UserResponse } from '@back/user/user.entity';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 import { AuthService } from './auth.service';
 // #endregion
@@ -25,65 +26,85 @@ export class AuthResolver {
   ) {}
 
   /**
-   * GraphQL query: me
+   * This a self user.
    *
-   * @returns {UserResponse} Response user
+   * @async
+   * @method me
+   * @returns {User} User in database
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async me(@Context('req') req: Request): Promise<UserResponse | null> {
-    return req.user as UserResponse;
+  async me(@CurrentUser() user: User): Promise<User> {
+    return user;
   }
 
   /**
-   * GraphQL mutation: login
+   * Login user with password provided. True if login successful. Throws error if login is incorrect.
    *
+   * @async
+   * @method login
    * @param {string} username Username
    * @param {string} password Password
-   * @returns {Promise<UserResponse>} User response from DB
+   * @returns {boolean} True if a login successfull
    * @throws {GraphQLError}
    */
-  @Mutation()
+  @Query()
   async login(
     @Args('username') username: string,
     @Args('password') password: string,
     @Context('req') req: Request,
-    // FIX: в GraphQLModule.forRoot({ context: ({ req, res }) => ({ req, res }) })
-    @Context('res') res: Response,
-  ): Promise<UserResponse> {
+  ): Promise<boolean> {
     const user = await this.authService
-      .login({ username: username.toLowerCase(), password }, req)
+      .login({ username: username.toLowerCase(), password })
       .catch(async (error: Error) => {
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       });
 
-    // Чтобы в дальнейшем был пароль, в частности, в SOAP
-    user.passwordFrontend = password;
-
     req.logIn(user, async (error: Error) => {
       if (error) {
-        this.logService.error('Error when logging in:', error, 'AuthResolver');
+        this.logService.error('Error when logging in:', error, AuthResolver.name);
 
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
     });
 
-    if (user.profile && user.profile.email) {
-      await this.authService
+    req!.session!.password = password;
+
+    return true;
+  }
+
+  /**
+   * Login user in a email software. Throws error if login is incorrect.
+   *
+   * @async
+   * @method loginEmail
+   * @returns {boolean} True if a login successfull
+   * @throws {GraphQLError}
+   */
+  @Query()
+  async loginEmail(
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Context('req') req: Request,
+    @Context('res') res: Response,
+  ): Promise<boolean> {
+    if (user.profile.email) {
+      return this.authService
         .loginEmail(user.profile.email, password)
         .then((response) => {
-          if (response.data && response.data.sessid && response.data.sessauth) {
+          const { sessid, sessauth } = response.data;
+          if (sessid && sessauth) {
             const options = {
               // domain: '.portal.i-npz.ru',
               maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
             };
 
-            res.cookie('roundcube_sessid', response.data.sessid, options);
-            res.cookie('roundcube_sessauth', response.data.sessauth, options);
+            res.cookie('roundcube_sessid', sessid, options);
+            res.cookie('roundcube_sessauth', sessauth, options);
 
-            user.mailSession = {
-              sessid: response.data.sessid,
-              sessauth: response.data.sessauth,
+            req!.session!.mailSession = {
+              sessid,
+              sessauth,
             };
 
             return true;
@@ -92,25 +113,30 @@ export class AuthResolver {
           throw new Error('Undefined mailSession error.');
         })
         .catch((error: Error) => {
-          this.logService.error('Unable to login in mail', error, 'AuthResolver');
+          this.logService.error('Unable to login in mail', error, AuthResolver.name);
+
+          return false;
         });
     }
 
-    return user;
+    return false;
   }
 
   /**
-   * GraphQL mutation: logout
+   * Logout a user.
    *
-   * @returns {Promise<boolean>} The true/false of logout
+   * @async
+   * @method logout
+   * @returns {boolean} The true/false of logout
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') req: Request): Promise<boolean> {
-    this.logService.debug('User logout', 'AuthResolver');
+    this.logService.debug('User logout', AuthResolver.name);
 
     if (req.session) {
       req.logOut();
+
       return true;
     }
 
@@ -118,14 +144,16 @@ export class AuthResolver {
   }
 
   /**
-   * GraphQL mutation: cacheReset
+   * Cache reset.
    *
-   * @returns {Promise<boolean>} Cache reset true/false
+   * @async
+   * @method cacheReset
+   * @returns {boolean} Cache reset true/false
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async cacheReset(): Promise<boolean> {
-    this.logService.debug('Cache reset', 'AuthResolver');
+    this.logService.debug('Cache reset', AuthResolver.name);
 
     return this.authService.cacheReset();
   }

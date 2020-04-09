@@ -1,14 +1,14 @@
 /** @format */
 
 // #region Imports NPM
-import { Resolver, Context, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { Request } from 'express';
 // #endregion
 // #region Imports Local
+import { User, UserSettings } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from './user.service';
-import { UserResponse } from './user.entity';
+import { CurrentUser } from './user.decorator';
 // #endregion
 
 @Resolver()
@@ -16,28 +16,32 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   /**
-   * GraphQL query: synchronization
+   * Synchronization from LDAP
+   * TODO: show that synchronization is in progress
    *
-   * @param req
-   * @returns {Boolean}
+   * @async
+   * @returns {boolean}
    */
-  @Mutation()
+  @Mutation('syncLdap')
   @UseGuards(GqlAuthGuard)
-  async synchronization(@Context('req') req: Request): Promise<boolean> {
-    return this.userService.synchronization(req);
+  async syncLdap(): Promise<boolean> {
+    return this.userService.syncLdap();
   }
 
   /**
-   * GraphQL query: settingsDrawer
-   * TODO: вставить сюда synchronizationRunning, или куда-нибудь, чтобы показывать что идет синхронизация
+   * User settings
    *
-   * @param req
-   * @param value
-   * @returns {Boolean}
+   * @async
+   * @param {UserSettings} value User settings
+   * @returns {UserSettings} Accomplished settings
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async userSettings(@Context('req') req: Request, @Args('value') value: any): Promise<UserResponse | boolean> {
-    return this.userService.settings(req, value) || null;
+  async userSettings(@CurrentUser() user: User, @Args('value') value: UserSettings | any): Promise<UserSettings> {
+    // TODO: settings dont work ?
+    // eslint-disable-next-line no-param-reassign
+    user.settings = this.userService.settings(user, value);
+
+    return this.userService.save(this.userService.create(user)).then((save) => save.settings);
   }
 }

@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0, prettier/prettier:0 */
+/* eslint spaced-comment:0 */
 /// <reference types="../../../typings/global" />
 
 // #region Imports NPM

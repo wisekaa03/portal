@@ -7,19 +7,16 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeInsert,
-  BeforeUpdate,
   JoinColumn,
   OneToOne,
   ManyToMany,
   JoinTable,
   RelationId,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { LoginService } from '@lib/types/login-service';
-import { UserSettings, MailSessionProps } from '@lib/types/user.dto';
+import { UserSettings } from '@lib/types/user.dto';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupEntity } from '@back/group/group.entity';
 // #endregion
@@ -97,29 +94,4 @@ export class UserEntity {
   @OneToOne((type: any) => ProfileEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   profile: ProfileEntity;
-
-  @BeforeUpdate()
-  @BeforeInsert()
-  async hashPassword(): Promise<void> {
-    this.password =
-      this.password === `$${LoginService.LDAP}` ? `$${LoginService.LDAP}` : await bcrypt.hash(this.password, 10);
-  }
-
-  comparePassword = async (attempt: string | undefined): Promise<boolean> =>
-    bcrypt.compare(attempt || '', this.password);
-
-  toResponseObject = (session: string): UserResponse => {
-    if (this.profile) {
-      this.profile.fullName = `${this.profile.lastName} ${this.profile.firstName} ${this.profile.middleName}`;
-    }
-    return { session, ...this };
-  };
 }
-
-// #region User response
-export interface UserResponse extends Omit<UserEntity, 'comparePassword, toResponseObject'>, Express.User {
-  session?: string;
-  mailSession?: MailSessionProps;
-  passwordFrontend?: string;
-}
-// #endregion

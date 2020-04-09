@@ -6,17 +6,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
+import bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
-import { LdapService, LdapResponseUser } from '@app/ldap';
+import { LdapResponseUser } from '@app/ldap';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
 import { LoginService, Profile, User, UserSettings } from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
-import { UserEntity, UserResponse } from './user.entity';
+import { UserEntity } from './user.entity';
 // #endregion
 
 @Injectable()
@@ -27,7 +28,6 @@ export class UserService {
     @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
     private readonly logService: LogService,
     private readonly configService: ConfigService,
-    private readonly ldapService: LdapService,
     private readonly profileService: ProfileService,
     private readonly groupService: GroupService,
     @InjectRepository(UserEntity)
@@ -46,25 +46,26 @@ export class UserService {
   comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
     const user = await this.byUsername(username);
 
-    return user?.comparePassword(password) ? user : undefined;
+    return bcrypt.compare(password, user.password) ? user : undefined;
   };
 
   /**
    * Reads by ID
    *
+   * @async
    * @param {string} id User ID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
    * @param {boolean} [cache = true] whether to cache results
-   * @returns {UserEntity | undefined} The user
+   * @returns {UserEntity} The user
    */
   byId = async (
     id: string,
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
     cache = true,
-  ): Promise<UserEntity | undefined> => {
-    const where: Record<any, any> = { id };
+  ): Promise<UserEntity> => {
+    const where: Record<string, any> = { id };
 
     if (isDisabled) {
       where.disabled = false;
@@ -72,7 +73,7 @@ export class UserService {
 
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
 
-    return this.userRepository.findOne({
+    return this.userRepository.findOneOrFail({
       where,
       relations,
       cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
@@ -82,19 +83,20 @@ export class UserService {
   /**
    * Reads by Username
    *
+   * @async
    * @param {string} username User ID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean | 'profile' | 'groups'} [isRelation = true] The relation of this user
    * @param {boolean} [cache = true] whether to cache results
-   * @returns {UserEntity | undefined} The user
+   * @returns {UserEntity} The user
    */
   byUsername = async (
     username: string,
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
     cache = true,
-  ): Promise<UserEntity | undefined> => {
-    const where: Record<any, any> = { username };
+  ): Promise<UserEntity> => {
+    const where: Record<string, any> = { username };
 
     if (isDisabled) {
       where.disabled = false;
@@ -102,7 +104,7 @@ export class UserService {
 
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
 
-    return this.userRepository.findOne({
+    return this.userRepository.findOneOrFail({
       where,
       relations,
       cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
@@ -112,6 +114,7 @@ export class UserService {
   /**
    * Reads by Login identificator (LDAP ObjectGUID)
    *
+   * @async
    * @param {string} loginIdentificator LDAP: Object GUID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
@@ -123,8 +126,8 @@ export class UserService {
     isDisabled = true,
     isRelations: boolean | 'profile' | 'groups' = true,
     cache = true,
-  ): Promise<UserEntity | undefined> => {
-    const where: Record<any, any> = { loginIdentificator };
+  ): Promise<UserEntity> => {
+    const where: Record<string, any> = { loginIdentificator };
 
     if (isDisabled) {
       where.disabled = false;
@@ -132,7 +135,7 @@ export class UserService {
 
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['profile', 'groups'] : [];
 
-    return this.userRepository.findOne({
+    return this.userRepository.findOneOrFail({
       where,
       relations,
       cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
@@ -142,6 +145,7 @@ export class UserService {
   /**
    * Create a User with Ldap params
    *
+   * @async
    * @param {LdapResponseUser} ldapUser Ldap user
    * @param {UserEntity} user User
    * @param {boolean} [save = true] Save the profile
@@ -199,12 +203,12 @@ export class UserService {
   }
 
   /**
-   * Synchronization
+   * LDAP synchronization
    *
-   * @param {Request} _req Express.Request
-   * @returns {Promise<boolean>} The result of synchronization
+   * @async
+   * @returns {boolean} The result of synchronization
    */
-  synchronization = async (_req?: Request): Promise<boolean> => this.client.send<boolean>(LDAP_SYNC, []).toPromise();
+  syncLdap = async (): Promise<boolean> => this.client.send<boolean>(LDAP_SYNC, []).toPromise();
 
   /**
    * Create
@@ -217,13 +221,14 @@ export class UserService {
   /**
    * Save
    *
+   * @async
    * @param {UserEntity[]} user The users
    * @returns {Promise<UserEntity[]>} The return users after save
    * @throws {Error} Exception
    */
   bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data(s) in `user`', error, 'UserService');
+      this.logService.error('Unable to save data(s) in `user`', error, UserService.name);
 
       throw error;
     });
@@ -231,52 +236,39 @@ export class UserService {
   /**
    * Save
    *
+   * @async
    * @param {UserEntity} user The user
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error} Exception
    */
   save = async (user: UserEntity): Promise<UserEntity> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data in `user`', error, 'UserService');
+      this.logService.error('Unable to save data in `user`', error, UserService.name);
 
       throw error;
     });
 
   /**
-   * Settings
+   * Save the settings
    *
    * @param {req} Request
    * @param {string} value settings object
    * @returns {boolean}
    */
-  async settings(req: Request, value: UserSettings): Promise<UserResponse | boolean> {
-    if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.id) {
-      const user: UserEntity | undefined = await this.byId(req.session.passport.user.id, false, 'profile');
+  settings(user: User, value: UserSettings): UserSettings {
+    let settings = { ...user.settings };
 
-      if (user) {
-        let newSettings = { ...user.settings };
-
-        (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
-          if (typeof value[key] === 'object') {
-            newSettings = {
-              ...newSettings,
-              [key]: { ...((newSettings[key] as unknown) as object), ...((value[key] as unknown) as object) },
-            };
-          } else {
-            newSettings = { ...newSettings, [key]: value[key] };
-          }
-        });
-
-        user.settings = newSettings;
-        this.save(user);
-
-        (user as UserResponse).passwordFrontend = req.session.passport.user.passwordFrontend;
-        req.session.passport.user = user;
-
-        return user as UserResponse;
+    (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
+      if (typeof value[key] === 'object') {
+        settings = {
+          ...settings,
+          [key]: { ...((settings[key] as unknown) as object), ...((value[key] as unknown) as object) },
+        };
+      } else {
+        settings = { ...settings, [key]: value[key] };
       }
-    }
+    });
 
-    return false;
+    return settings;
   }
 }

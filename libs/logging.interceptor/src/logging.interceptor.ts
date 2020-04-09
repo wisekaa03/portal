@@ -10,9 +10,9 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
+import { User } from '@lib/types/user.dto';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config/config.service';
-import { UserResponse } from '../../../apps/portal/src/user/user.entity';
 // #endregion
 
 export type AppGraphQLExecutionContext = GraphQLExecutionContext;
@@ -48,7 +48,7 @@ export class LoggingInterceptor implements NestInterceptor {
       case 'http':
       default: {
         const req = context.switchToHttp().getRequest<Request>();
-        let username = (req?.session?.passport?.user as UserResponse)?.username || '';
+        let username = (req?.session?.passport?.user as User)?.username || '';
 
         // HTTP requests
         if (req) {
@@ -72,7 +72,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
         const address = gqlCtx?.req?.client?.remoteAddress;
-        username = (gqlCtx?.req?.session?.passport?.user as UserResponse)?.username;
+        username = (gqlCtx?.req?.session?.passport?.user as User)?.username;
 
         const values = info.variableValues;
         if (values['password']) {

@@ -26,7 +26,7 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
 bootstrap(configService)
   .then((result) => {
-    logger.log(`Microservice returns: ${result}`, 'syncJob');
+    logger.log(`Microservice returns: ${result}`, 'Sync LDAP Job');
 
     return process.exit(result ? 0 : 1);
   })

@@ -3,20 +3,20 @@
 // #region Imports NPM
 import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
+import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import Router from 'next/router';
 // #endregion
 // #region Imports Local
 import { Data, LoginValuesProps, LoginPageProps } from '@lib/types';
-import { setStorage, removeStorage } from '@lib/session-storage';
-import { FIRST_PAGE, SESSION } from '@lib/constants';
+// import { setStorage, removeStorage } from '@lib/session-storage';
+import { FIRST_PAGE } from '@lib/constants';
+import { User } from '@lib/types/user.dto';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import Cookie from '@lib/cookie';
 import { LOGIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
-import { UserResponse } from '@back/user/user.entity';
 // #endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
@@ -31,18 +31,15 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     password: '',
   });
 
-  const [login, { loading, error }] = useMutation<Data<'login', UserResponse>, { username: string; password: string }>(
+  const [login, { loading, error }] = useLazyQuery<Data<'login', boolean>, { username: string; password: string }>(
     LOGIN,
     {
-      update: (_cache, { data }) => {
-        if (data?.login) {
-          setStorage(SESSION, data.login.session || '');
+      onCompleted: (data) => {
+        if (data.login) {
           client.resetStore();
 
           const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
           Router.push(redirect as string);
-        } else {
-          removeStorage(SESSION);
         }
       },
     },

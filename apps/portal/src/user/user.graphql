@@ -1,21 +1,13 @@
 type User {
   id: ID!
-  session: String!
-  mailSession: MailSession
+  createdAt: Date!
+  updatedAt: Date!
   username: String!
+  disabled: Boolean!
+  isAdmin: Boolean!
+  settings: UserSettings!
+  groups: [Group!]
   profile: Profile!
-  disabled: Boolean
-  isAdmin: Boolean
-  groups: [Group]
-  settings: UserSettings
-  createdAt: Date
-  updatedAt: Date
-}
-
-type MailSession {
-  error: String
-  sessid: String
-  sessauth: String
 }
 
 type UserSettingsTicket {
@@ -34,7 +26,6 @@ input UserSettingsPhonebookInput {
   columns: [String]
 }
 
-
 type UserSettings {
   lng: String
   drawer: Boolean
@@ -50,6 +41,6 @@ input UserSettingsInput {
 }
 
 type Mutation {
-  synchronization: Boolean
-  userSettings(value: UserSettingsInput): User
+  syncLdap: Boolean
+  userSettings(value: UserSettingsInput): UserSettings
 }

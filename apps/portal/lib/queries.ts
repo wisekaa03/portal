@@ -132,8 +132,8 @@ export const CURRENT_USER = gql`
 `;
 
 export const SYNC = gql`
-  mutation Synchronization {
-    synchronization
+  mutation SyncLdap {
+    syncLdap
   }
 `;
 
@@ -144,15 +144,8 @@ export const CACHE = gql`
 `;
 
 export const LOGIN = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      session
-      mailSession {
-        error
-        sessid
-        sessauth
-      }
-    }
+  query Login($username: String!, $password: String!) {
+    login(username: $username, password: $password)
   }
 `;
 

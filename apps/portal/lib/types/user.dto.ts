@@ -1,7 +1,6 @@
 /** @format */
 
 // #region Imports NPM
-// import { IsNotEmpty } from 'class-validator';
 // #endregion
 // #region Imports Local
 import { ColumnNames } from './profile';
@@ -46,26 +45,6 @@ export interface UserToSave extends BaseUser {
   profile: Profile | string;
 }
 
-// #region User login
-export interface UserLogin {
-  // @IsNotEmpty()
-  username: string;
-
-  // @IsNotEmpty()
-  password: string;
-}
-// #endregion
-
-// #region User register
-export interface UserRegister {
-  username: string;
-
-  password: string;
-
-  isAdmin: boolean;
-}
-// #endregion
-
 // #region User settings
 interface UserSettingsTicket {
   status?: string | null;
@@ -88,13 +67,5 @@ export interface UserContext {
   user?: User;
   language?: string;
   isMobile?: boolean;
-}
-// #endregion
-
-// #region Email Session Props
-export interface MailSessionProps {
-  error?: string;
-  sessid?: string;
-  sessauth?: string;
 }
 // #endregion

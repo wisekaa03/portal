@@ -24,7 +24,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   });
   server.useLogger(logger);
 
-  await server.listen(() => logger.log('Microservice is listening', 'Bootstrap'));
+  await server.listen(() => logger.log('Microservice is listening', 'Sync LDAP'));
 }
 
 const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));

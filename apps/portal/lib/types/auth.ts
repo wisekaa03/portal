@@ -1,6 +1,7 @@
 /** @format */
 
 import { MutationFunction } from 'react-apollo';
+import { User } from './user.dto';
 
 export interface LoginPageProps {
   initUsername: string;
@@ -27,3 +28,19 @@ export interface LoginValuesProps {
   username: string;
   password: string;
 }
+
+// #region Email Session Props
+export interface MailSession {
+  error?: string;
+  sessid?: string;
+  sessauth?: string;
+}
+// #endregion
+
+// #region User response
+export interface UserSession {
+  user: User;
+  mailSession?: MailSession;
+  passwordFrontend?: string;
+}
+// #endregion

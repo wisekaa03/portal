@@ -6,10 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { Files, FilesFolder, FilesFolderResponse } from '@lib/types';
+import { Files, FilesFolder, FilesFolderResponse, User } from '@lib/types';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
-import { UserResponse } from '@back/user/user.entity';
 import { FilesEntity } from './files.entity';
 import { FilesFolderEntity } from './files.folder.entity';
 // #endregion
@@ -92,7 +91,7 @@ export class FilesService {
    * @param {string} id of folder (optional)
    * @return {Promise<FilesFolderResponse[]>}
    */
-  folder = async (user: UserResponse, id?: string): Promise<FilesFolderResponse[]> => {
+  folder = async (user: User, id?: string): Promise<FilesFolderResponse[]> => {
     this.logService.log(`Folder: id={${id}}`, 'FilesService');
 
     const where: Record<any, any> = [];

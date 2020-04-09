@@ -18,7 +18,7 @@ import { SyncService } from './app.service';
 
 const serviceMock = jest.fn(() => ({}));
 
-describe('Sync service', () => {
+describe(SyncService.name, () => {
   let libs: SyncService;
 
   beforeEach(async () => {

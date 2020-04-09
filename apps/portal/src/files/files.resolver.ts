@@ -7,11 +7,11 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
-import { FilesFolderResponse } from '@lib/types';
+import { User, FilesFolderResponse } from '@lib/types';
 import { LogService } from '@app/logger';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
-import { UserResponse } from '@back/user/user.entity';
 import { UserService } from '@back/user/user.service';
+import { CurrentUser } from '@back/user/user.decorator';
 import { FilesEntity } from './files.entity';
 import { FilesService } from './files.service';
 // #endregion
@@ -37,28 +37,25 @@ export class FilesResolver {
   }
 
   /**
-   * GraphQL mutation: editFile
+   * Edit file
    *
-   * @param {Request} - Express request
-   * @param {Promise<FileUpload>} - Attachment
-   * @param {string} - id of folder
-   * @param {string} - id of files, optional
-   * @returns {FilesEntity} - files entity
+   * @async
+   * @param {@CurrentUser() User} user The current user
+   * @param {Promise<FileUpload>} attachment Attachments files
+   * @param {string} filder ID of folder
+   * @param {string} id ID of files, optional
+   * @returns {FilesEntity} files entity
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async editFile(
-    @Context('req') req: Request,
+    @CurrentUser() user: User,
     @Args('attachment') attachment: Promise<FileUpload>,
     @Args('folder') folder: string,
     @Args('id') id?: string,
   ): Promise<FilesEntity> {
-    const updatedUser = await this.userService.byId((req.user as UserResponse).id, true, false);
-
-    if (updatedUser) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-    }
+    // eslint-disable-next-line no-debugger
+    debugger;
 
     throw new UnauthorizedException();
   }
@@ -83,9 +80,9 @@ export class FilesResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async folder(@Context('req') req: Request, @Args('id') id?: string): Promise<FilesFolderResponse[]> {
-    if (req.user) {
-      return this.filesService.folder(req.user as UserResponse, id);
+  async folder(@CurrentUser() user: User, @Args('id') id?: string): Promise<FilesFolderResponse[]> {
+    if (user) {
+      return this.filesService.folder(user, id);
     }
 
     throw new UnauthorizedException();
@@ -103,13 +100,12 @@ export class FilesResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async editFolder(
-    @Context('req') req: Request,
+    @CurrentUser() user: User,
     @Args('pathname') pathname: string,
     @Args('shared') shared: boolean,
     @Args('id') id?: string,
   ): Promise<FilesFolderResponse> {
-    if (req.user) {
-      const user = req.user as UserResponse;
+    if (user) {
       return this.filesService.editFolder({ pathname, user: shared ? undefined : user, id, updatedUser: user });
     }
 

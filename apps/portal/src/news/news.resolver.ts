@@ -1,16 +1,16 @@
 /** @format */
 
 // #region Imports NPM
-import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { GqlAuthGuard } from '../guards/gqlauth.guard';
-import { IsAdminGuard } from '../guards/gqlauth-admin.guard';
+import { User } from '@lib/types/user.dto';
+import { CurrentUser } from '@back/user/user.decorator';
+import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
+import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
+import { UserService } from '@back/user/user.service';
 import { NewsService } from './news.service';
-import { UserResponse } from '../user/user.entity';
-import { UserService } from '../user/user.service';
 import { NewsEntity } from './news.entity';
 // #endregion
 
@@ -38,18 +38,14 @@ export class NewsResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async editNews(
-    @Context('req') req: Request,
+    @CurrentUser() user: User,
     @Args('title') title: string,
     @Args('excerpt') excerpt: string,
     @Args('content') content: string,
     @Args('id') id: string,
   ): Promise<NewsEntity> {
-    const userId = req.user as UserResponse;
-    if (userId) {
-      const user = await this.userService.byId(userId.id);
-      if (user) {
-        return this.newsService.editNews({ title, excerpt, content, user, id });
-      }
+    if (user) {
+      return this.newsService.editNews({ title, excerpt, content, user, id });
     }
 
     throw new UnauthorizedException();

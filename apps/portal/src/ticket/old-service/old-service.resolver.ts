@@ -11,7 +11,8 @@ import { ConfigService } from '@app/config';
 import { SoapAuthentication } from '@app/soap';
 import { OldService, OldTicket, OldTicketNewInput, OldTicketNew, OldTicketEditInput } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
-import { UserResponse } from '@back/user/user.entity';
+import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
+import { User } from '@lib/types/user.dto';
 import { OldTicketService } from './old-service.service';
 // #endregion
 
@@ -20,57 +21,52 @@ export class OldTicketResolver {
   constructor(private readonly configService: ConfigService, private readonly ticketOldService: OldTicketService) {}
 
   /**
-   * GraphQL query: GetService
+   * (Old) Get service
    *
+   * @async
    * @returns {OldService[]}
+   * @throws {UnauthorizedException}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async OldTicketService(@Context('req') req: Request): Promise<OldService[]> {
-    const user = req.user as UserResponse;
+  async OldTicketService(@CurrentUser() user: User, @PasswordFrontend() password: string): Promise<OldService[]> {
+    const authentication = {
+      username: user.username,
+      password,
+      domain: this.configService.get<string>('SOAP_DOMAIN'),
+    } as SoapAuthentication;
 
-    if (user) {
-      const authentication = {
-        username: user.username,
-        password: user.passwordFrontend as string,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
-      } as SoapAuthentication;
-
-      return this.ticketOldService.OldTicketService(authentication).catch((error: Error) => {
-        throw new UnauthorizedException(error.message);
-      });
-    }
-
-    throw new UnauthorizedException();
+    return this.ticketOldService.OldTicketService(authentication).catch((error: Error) => {
+      throw new UnauthorizedException(error.message);
+    });
   }
 
   /**
-   * GraphQL mutation: TicketNew
+   * (Old) Ticket new
    *
+   * @async
+   * @method OldTicketNew
+   * @param {OldTicketNewInput} ticket subject, body, serviceID and others
+   * @param {Promise<FileUpload>[]} attachments Array of attchments
    * @returns {OldTicketNew}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketNew(
-    @Context('req') req: Request,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
     @Args('ticket') ticket: OldTicketNewInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
   ): Promise<OldTicketNew> {
-    const user = req.user as UserResponse;
+    const authentication = {
+      username: user.username,
+      password,
+      domain: this.configService.get<string>('SOAP_DOMAIN'),
+    } as SoapAuthentication;
 
-    if (user) {
-      const authentication = {
-        username: user.username,
-        password: user.passwordFrontend as string,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
-      } as SoapAuthentication;
-
-      return this.ticketOldService.OldTicketNew(authentication, ticket, attachments).catch((error: Error) => {
-        throw new UnauthorizedException(error.message);
-      });
-    }
-
-    throw new UnauthorizedException();
+    return this.ticketOldService.OldTicketNew(authentication, ticket, attachments).catch((error: Error) => {
+      throw new UnauthorizedException(error.message);
+    });
   }
 
   /**
@@ -81,16 +77,15 @@ export class OldTicketResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketEdit(
-    @Context('req') req: Request,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
     @Args('ticket') ticket: OldTicketEditInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
   ): Promise<OldTicket> {
-    const user = req.user as UserResponse;
-
     if (user) {
       const authentication = {
         username: user.username,
-        password: user.passwordFrontend as string,
+        password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
@@ -109,13 +104,15 @@ export class OldTicketResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async OldTickets(@Context('req') req: Request, @Args('status') status: string): Promise<OldService[]> {
-    const user = req.user as UserResponse;
-
+  async OldTickets(
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('status') status: string,
+  ): Promise<OldService[]> {
     if (user) {
       const authentication = {
         username: user.username,
-        password: user.passwordFrontend as string,
+        password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
@@ -135,16 +132,15 @@ export class OldTicketResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async OldTicketDescription(
-    @Context('req') req: Request,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
     @Args('code') code: string,
     @Args('type') type: string,
   ): Promise<OldService> {
-    const user = req.user as UserResponse;
-
     if (user) {
       const authentication = {
         username: user.username,
-        password: user.passwordFrontend as string,
+        password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 

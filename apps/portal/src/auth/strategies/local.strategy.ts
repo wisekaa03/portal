@@ -1,13 +1,14 @@
 /** @format */
 
 // #region Imports NPM
+import { Request } from 'express';
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 // #endregion
 // #region Imports Local
+import { User } from '@lib/types/user.dto';
 import { AuthService } from '../auth.service';
-import { UserResponse } from '../../user/user.entity';
 // #endregion
 
 @Injectable()
@@ -16,6 +17,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  validate = async (_username: string, _password: string, request: Express.Request): Promise<UserResponse> =>
-    this.authService.validate(request);
+  validate = async (_username: string, _password: string, req: Request): Promise<User> =>
+    this.authService.validate(req);
 }
