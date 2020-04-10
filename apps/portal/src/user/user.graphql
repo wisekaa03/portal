@@ -42,5 +42,5 @@ input UserSettingsInput {
 
 type Mutation {
   syncLdap: Boolean
-  userSettings(value: UserSettingsInput): UserSettings
+  userSettings(value: UserSettingsInput): User
 }

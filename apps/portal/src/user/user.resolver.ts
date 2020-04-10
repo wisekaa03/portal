@@ -37,11 +37,11 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async userSettings(@CurrentUser() user: User, @Args('value') value: UserSettings | any): Promise<UserSettings> {
+  async userSettings(@CurrentUser() user: User, @Args('value') value: UserSettings | any): Promise<User> {
     // TODO: settings dont work ?
     // eslint-disable-next-line no-param-reassign
     user.settings = this.userService.settings(user, value);
 
-    return this.userService.save(this.userService.create(user)).then((save) => save.settings);
+    return this.userService.save(this.userService.create(user));
   }
 }
