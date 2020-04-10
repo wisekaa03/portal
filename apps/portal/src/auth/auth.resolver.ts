@@ -53,6 +53,7 @@ export class AuthResolver {
     @Args('username') username: string,
     @Args('password') password: string,
     @Context('req') req: Request,
+    @Context('res') res: Response,
   ): Promise<boolean> {
     const user = await this.authService
       .login({ username: username.toLowerCase(), password })
@@ -67,6 +68,42 @@ export class AuthResolver {
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
     });
+
+    if (user.profile.email) {
+      await this.authService
+        .loginEmail(user.profile.email, password)
+        .then(
+          (response) => {
+            const { sessid, sessauth } = response.data;
+            if (sessid && sessauth) {
+              const options = {
+                domain: '.portal.i-npz.ru',
+                maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
+              };
+
+              res.cookie('roundcube_sessid', sessid, options);
+              res.cookie('roundcube_sessauth', sessauth, options);
+
+              req!.session!.mailSession = {
+                sessid,
+                sessauth,
+              };
+
+              return true;
+            }
+
+            throw new Error('Undefined mailSession error.');
+          },
+          () => {
+            return false;
+          },
+        )
+        .catch((error: Error) => {
+          this.logService.error('Unable to login in mail', error, AuthResolver.name);
+
+          return false;
+        });
+    }
 
     req!.session!.password = password;
 
