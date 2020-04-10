@@ -77,7 +77,7 @@ export class AuthResolver {
             const { sessid, sessauth } = response.data;
             if (sessid && sessauth) {
               const options = {
-                domain: '.portal.i-npz.ru',
+                // domain: '.portal.i-npz.ru',
                 maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
               };
 
