@@ -21,6 +21,7 @@ import ProfileIcon from '@public/images/svg/icons/profile.svg';
 import MailIcon from '@public/images/svg/icons/mail.svg';
 import MediaIcon from '@public/images/svg/icons/media.svg';
 import MeetingIcon from '@public/images/svg/icons/meeting.svg';
+import VCSIcon from '@public/images/svg/icons/vcs.svg';
 import NewsIcon from '@public/images/svg/icons/news.svg';
 import PhonebookIcon from '@public/images/svg/icons/phonebook.svg';
 import SettingsIcon from '@public/images/svg/icons/settings.svg';
@@ -108,6 +109,12 @@ const urls: UrlProps[] = [
     link: '/services/IT',
     admin: false,
   },
+  {
+    icon: VCSIcon,
+    text: 'common:vcs',
+    link: 'https://vcs.i-npz.ru',
+    admin: false,
+  },
   { icon: CalendarIcon, text: 'common:calendar', link: '/calendar', admin: false },
   { icon: FaqIcon, text: 'common:faq', link: '/faq', admin: false },
   { icon: MeetingIcon, text: 'common:meeting', link: '/meetings', admin: false },
@@ -150,6 +157,7 @@ const DrawerComponent: FC<DrawerProps> = ({ open, isMobile, handleOpen }) => {
                       selected: classes.itemSelected,
                     }}
                     component="a"
+                    target={url.link.startsWith('http') ? '_blank' : '_self'}
                   >
                     <ListItemIcon>
                       <Icon mask={url.icon} color="secondary" />

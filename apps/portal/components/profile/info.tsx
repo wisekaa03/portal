@@ -7,9 +7,9 @@ import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles'
 import { Box, Button } from '@material-ui/core';
 // #endregion
 // #region Imports Local
-import { useTranslation } from '../../lib/i18n-client';
-import Avatar from '../ui/avatar';
-import { ProfileContext } from '../../lib/context';
+import { useTranslation } from '@lib/i18n-client';
+import { ProfileContext } from '@lib/context';
+import Avatar from '@front/components/ui/avatar';
 // #endregion
 
 const avatarHeight = 180;
