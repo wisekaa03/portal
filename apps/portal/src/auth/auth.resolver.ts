@@ -91,27 +91,32 @@ export class AuthResolver {
     if (user.profile.email) {
       return this.authService
         .loginEmail(user.profile.email, password)
-        .then((response) => {
-          const { sessid, sessauth } = response.data;
-          if (sessid && sessauth) {
-            const options = {
-              // domain: '.portal.i-npz.ru',
-              maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
-            };
+        .then(
+          (response) => {
+            const { sessid, sessauth } = response.data;
+            if (sessid && sessauth) {
+              const options = {
+                // domain: '.portal.i-npz.ru',
+                maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
+              };
 
-            res.cookie('roundcube_sessid', sessid, options);
-            res.cookie('roundcube_sessauth', sessauth, options);
+              res.cookie('roundcube_sessid', sessid, options);
+              res.cookie('roundcube_sessauth', sessauth, options);
 
-            req!.session!.mailSession = {
-              sessid,
-              sessauth,
-            };
+              req!.session!.mailSession = {
+                sessid,
+                sessauth,
+              };
 
-            return true;
-          }
+              return true;
+            }
 
-          throw new Error('Undefined mailSession error.');
-        })
+            throw new Error('Undefined mailSession error.');
+          },
+          () => {
+            return false;
+          },
+        )
         .catch((error: Error) => {
           this.logService.error('Unable to login in mail', error, AuthResolver.name);
 
