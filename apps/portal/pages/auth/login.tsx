@@ -3,15 +3,13 @@
 // #region Imports NPM
 import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import Router from 'next/router';
 // #endregion
 // #region Imports Local
-import { Data, LoginValuesProps, LoginPageProps } from '@lib/types';
-// import { setStorage, removeStorage } from '@lib/session-storage';
+import { Data, LoginValuesProps, LoginPageProps, Login } from '@lib/types';
 import { FIRST_PAGE } from '@lib/constants';
-import { User } from '@lib/types/user.dto';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import Cookie from '@lib/cookie';
 import { LOGIN } from '@lib/queries';
@@ -20,8 +18,6 @@ import { LoginComponent } from '@front/components/auth/login';
 // #endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
-  const client = useApolloClient();
-
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -31,13 +27,13 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     password: '',
   });
 
-  const [login, { loading, error }] = useLazyQuery<Data<'login', boolean>, { username: string; password: string }>(
+  const [login, { loading, error }] = useLazyQuery<Data<'login', Login>, { username: string; password: string }>(
     LOGIN,
     {
+      ssr: false,
+      fetchPolicy: 'no-cache',
       onCompleted: (data) => {
         if (data.login) {
-          client.resetStore();
-
           const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
           Router.push(redirect as string);
         }

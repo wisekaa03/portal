@@ -44,7 +44,8 @@ export class ConfigService {
   private validateInput(envConfig: EnvConfig<any>): EnvConfig<any> {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any().empty('').optional(),
-      PORT: Joi.number().integer().required(),
+      PORT: Joi.number().integer().default(80).required(),
+      PORT_SSL: Joi.number().integer().empty('').default(443).optional(),
       DATABASE_URI: Joi.string().required(),
       DATABASE_URI_RD: Joi.string().required(),
       DATABASE_SCHEMA: Joi.string().required(),

@@ -11,7 +11,6 @@ import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
 import { createUploadLink } from 'apollo-upload-client';
-import fetch from 'isomorphic-fetch';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 // import { InStorageCache } from 'apollo-cache-instorage';
 // import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
@@ -68,6 +67,9 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
   let cache: InMemoryCache;
 
   if (__SERVER__) {
+    // eslint-disable-next-line global-require
+    const fetch = require('node-fetch');
+
     global.fetch = fetch;
 
     httpLink = createHttpLink({

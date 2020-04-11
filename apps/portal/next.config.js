@@ -40,27 +40,6 @@ function withCustomWebpack(conf = {}) {
         __SERVER__: JSON.stringify(isServer),
       }),
       new DotenvWebpackPlugin({ path: resolve(__dirname, '../../.env') }),
-      // new Webpack.IgnorePlugin({
-      //   checkResource(resource) {
-      //     const lazyImports = [
-      //       // '@nestjs/microservices',
-      //       // '@nestjs/platform-express',
-      //       // 'class-validator',
-      //       // 'class-transformer',
-      //       // 'google-libphonenumber',
-      //       // 'cache-manager',
-      //     ];
-      //     if (!lazyImports.includes(resource)) {
-      //       return false;
-      //     }
-      //     try {
-      //       require.resolve(resource);
-      //     } catch (err) {
-      //       return true;
-      //     }
-      //     return false;
-      //   },
-      // }),
     ];
 
     if (!isServer && !dev) {
@@ -117,7 +96,6 @@ function withCustomWebpack(conf = {}) {
     // debugger;
 
     // config.externals = [...(config.externals || []), nodeExternals()];
-
     // console.log(isServer ? 'Server' : 'Client', config);
 
     return webpack(config, { isServer, ...rest });
@@ -137,7 +115,7 @@ const plugins = [
       imagesName: '[name]-[hash].[ext]',
       handleImages: ['jpeg', 'png', 'svg', 'webp', 'gif'],
       optimizeImages: true,
-      optimizeImagesInDev: true,
+      optimizeImagesInDev: false,
       mozjpeg: {
         quality: 80,
       },

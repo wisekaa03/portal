@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
+import { Login, LoginEmail } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
@@ -45,7 +46,7 @@ export class AuthResolver {
    * @method login
    * @param {string} username Username
    * @param {string} password Password
-   * @returns {boolean} True if a login successfull
+   * @returns {Login} The login response
    * @throws {GraphQLError}
    */
   @Query()
@@ -54,7 +55,9 @@ export class AuthResolver {
     @Args('password') password: string,
     @Context('req') req: Request,
     @Context('res') res: Response,
-  ): Promise<boolean> {
+  ): Promise<Login> {
+    let email: LoginEmail = { login: false };
+
     const user = await this.authService
       .login({ username: username.toLowerCase(), password })
       .catch(async (error: Error) => {
@@ -70,44 +73,19 @@ export class AuthResolver {
     });
 
     if (user.profile.email) {
-      await this.authService
-        .loginEmail(user.profile.email, password)
-        .then(
-          (response) => {
-            const { sessid, sessauth } = response.data;
-            if (sessid && sessauth) {
-              const options = {
-                // domain: '.portal.i-npz.ru',
-                maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
-              };
+      email = await this.authService.loginEmail(user.profile.email, password, req, res).catch((error: Error) => {
+        this.logService.error('Unable to login in mail', error, AuthResolver.name);
 
-              res.cookie('roundcube_sessid', sessid, options);
-              res.cookie('roundcube_sessauth', sessauth, options);
-
-              req!.session!.mailSession = {
-                sessid,
-                sessauth,
-              };
-
-              return true;
-            }
-
-            throw new Error('Undefined mailSession error.');
-          },
-          () => {
-            return false;
-          },
-        )
-        .catch((error: Error) => {
-          this.logService.error('Unable to login in mail', error, AuthResolver.name);
-
-          return false;
-        });
+        return {
+          login: false,
+          error: error.toString(),
+        };
+      });
     }
 
     req!.session!.password = password;
 
-    return true;
+    return { login: true, email };
   }
 
   /**
@@ -120,48 +98,19 @@ export class AuthResolver {
    */
   @Query()
   async loginEmail(
-    @CurrentUser() user: User,
-    @PasswordFrontend() password: string,
     @Context('req') req: Request,
     @Context('res') res: Response,
-  ): Promise<boolean> {
-    if (user.profile.email) {
-      return this.authService
-        .loginEmail(user.profile.email, password)
-        .then(
-          (response) => {
-            const { sessid, sessauth } = response.data;
-            if (sessid && sessauth) {
-              const options = {
-                // domain: '.portal.i-npz.ru',
-                maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
-              };
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<LoginEmail> {
+    return this.authService.loginEmail(user?.profile.email || '', password || '', req, res).catch((error: Error) => {
+      this.logService.error('Unable to login in mail', error, AuthResolver.name);
 
-              res.cookie('roundcube_sessid', sessid, options);
-              res.cookie('roundcube_sessauth', sessauth, options);
-
-              req!.session!.mailSession = {
-                sessid,
-                sessauth,
-              };
-
-              return true;
-            }
-
-            throw new Error('Undefined mailSession error.');
-          },
-          () => {
-            return false;
-          },
-        )
-        .catch((error: Error) => {
-          this.logService.error('Unable to login in mail', error, AuthResolver.name);
-
-          return false;
-        });
-    }
-
-    return false;
+      return {
+        login: false,
+        error: error.toString(),
+      };
+    });
   }
 
   /**

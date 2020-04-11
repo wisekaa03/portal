@@ -29,6 +29,7 @@ module.exports = {
     '<rootDir>/.git/',
     '<rootDir>/dist/',
     '<rootDir>/.next/',
+    '<rootDir>/apps/portal/.next/',
     '<rootDir>/node_modules/',
     '<rootDir>/.local/',
   ],

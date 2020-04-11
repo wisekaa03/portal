@@ -1,22 +1,21 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, UnauthorizedException, HttpService } from '@nestjs/common';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { AxiosResponse } from 'axios';
-import { Request } from 'express';
+import { Injectable, HttpService } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
 // #endregion
 // #region Imports Local
+import { EmailSession } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
-import { MailSession } from '@lib/types/auth';
 import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
+import { LoginEmail } from '../../lib/types/auth';
 // #endregion
 
 @Injectable()
@@ -168,11 +167,37 @@ export class AuthService {
    * @param {string} password User Password
    * @returns {AxiosResponse<MainSession>}
    */
-  loginEmail = async (email: string, password: string): Promise<AxiosResponse<MailSession>> =>
+  loginEmail = async (email: string, password: string, req: Request, res: Response): Promise<LoginEmail> =>
     this.httpService
-      .post<MailSession>(this.configService.get<string>('MAIL_LOGIN_URL'), {
+      .post<EmailSession>(this.configService.get<string>('MAIL_LOGIN_URL'), {
         email,
         password,
       })
-      .toPromise();
+      .toPromise()
+      .then(
+        (response) => {
+          const { sessid, sessauth } = response.data;
+          if (sessid && sessauth && sessauth !== '-del-') {
+            const options = {
+              domain: '.i-npz.ru',
+              maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
+            };
+
+            res.cookie('roundcube_sessid', sessid, options);
+            res.cookie('roundcube_sessauth', sessauth, options);
+
+            req!.session!.mailSession = {
+              sessid,
+              sessauth,
+            };
+
+            return { login: true };
+          }
+
+          throw new Error('Mail login and password did not match');
+        },
+        (reson: Error) => {
+          throw reson;
+        },
+      );
 }

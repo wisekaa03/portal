@@ -7,7 +7,7 @@ import { User } from '@lib/types/user.dto';
 // #endregion
 
 export const CurrentUser = createParamDecorator<any, any, User>(
-  (_data: unknown, context: ExecutionContext) => GqlExecutionContext.create(context).getContext().req.user,
+  (_data: unknown, context: ExecutionContext) => GqlExecutionContext.create(context).getContext().req.user || undefined,
 );
 
 /**
@@ -15,5 +15,5 @@ export const CurrentUser = createParamDecorator<any, any, User>(
  */
 export const PasswordFrontend = createParamDecorator<any, any, string>(
   (_data: unknown, context: ExecutionContext) =>
-    GqlExecutionContext.create(context).getContext().req?.session?.password,
+    GqlExecutionContext.create(context).getContext().req?.session?.password || undefined,
 );

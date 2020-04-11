@@ -15,6 +15,7 @@ fullnameOverride: "portal"
 
 # App
 PORT: 4000
+PORT_SSL: 4443
 
 # DB
 DATABASE_URI: "postgres://postgres:1234567890@postgresql.default.svc.cluster.local:5432/portaldb"
@@ -79,6 +80,7 @@ service:
   type: LoadBalancer
 
   nodePort: 30300
+  nodePort_ssl: 30301
 
   externalIPs:
    - 10.10.205.40

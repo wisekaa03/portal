@@ -1,12 +1,14 @@
 /** @format */
 
 // #region Imports NPM
-// import { IncomingMessage } from 'http';
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions, HttpException } from '@nestjs/common';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { Request, Response } from 'express';
+import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
+import express from 'express';
 import { RenderService, RenderModule } from 'nest-next';
 import { ParsedUrlQuery } from 'querystring';
 import Next from 'next';
@@ -36,22 +38,43 @@ const nestjsOptions: NestApplicationOptions = {
     credentials: true,
   },
   logger,
-  // httpsOptions: {},
 };
 // #endregion
 
 async function bootstrap(configService: ConfigService): Promise<void> {
-  // #region Create NestJS server
-  const server: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, nestjsOptions);
-  server.useLogger(logger);
+  let httpsServer = false;
+
+  // #region Create NestJS app
+  if (fs.lstatSync(resolve(__dirname, dev ? '' : '..', 'secure')).isDirectory()) {
+    const secureDir = fs.readdirSync(resolve(__dirname, dev ? '' : '..', 'secure'));
+    if (secureDir.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
+      httpsServer = true;
+      logger.log('Using HTTPS certificate', 'Bootstrap');
+
+      nestjsOptions.httpsOptions = {
+        requestCert: false,
+        rejectUnauthorized: false,
+        key: fs.readFileSync(resolve(__dirname, dev ? '' : '..', 'secure/private.key')),
+        cert: fs.readFileSync(resolve(__dirname, dev ? '' : '..', 'secure/private.crt')),
+      };
+    } else {
+      logger.error('There are not enough files "private.crt" and "private.key" in "secure" directory."', 'Bootstrap');
+    }
+  }
+  const server = express();
+  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(server),
+  );
+  app.useLogger(logger);
   // #endregion
 
   // #region X-Response-Time
-  // server.use(responseTime());
+  // app.use(responseTime());
   // #endregion
 
   // #region Improve security
-  // server.use(helmet.ieNoOpen());
+  // app.use(helmet.ieNoOpen());
 
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
@@ -92,7 +115,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   scriptSrc.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
-  if (process.env.NODE_ENV !== 'production') {
+  if (dev) {
     scriptSrc.push("'unsafe-eval'");
     scriptSrc.push('https://cdn.jsdelivr.net');
     styleSrc.push('https://fonts.googleapis.com');
@@ -100,10 +123,13 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
+    frameSrc.push(`https://localhost.portal.i-npz.ru:${configService.get<number>('PORT_SSL')}`);
+    frameSrc.push(`http://localhost.portal.i-npz.ru:${configService.get<number>('PORT')}`);
+    frameSrc.push(`https://localhost:${configService.get<number>('PORT_SSL')}`);
     frameSrc.push(`http://localhost:${configService.get<number>('PORT')}`);
   }
 
-  server.use(
+  app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc,
@@ -122,51 +148,57 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Enable json response
-  server.use(bodyParser.urlencoded({ extended: true }));
-  server.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
   // #endregion
 
   // #region Enable cookie
-  server.use(cookieParser());
+  app.use(cookieParser());
   // #endregion
 
   // #region Session and passport initialization
   const store = sessionRedis(configService, logger);
-  server.use(session(configService, logger, store));
+  app.use(session(configService, logger, store));
 
-  server.use(passport.initialize());
-  server.use(passport.session());
+  app.use(passport.initialize());
+  app.use(passport.session());
   // #endregion
 
   // #region Static files
-  server.useStaticAssets(resolve(__dirname, dev ? '../../..' : '../..', 'public/'));
+  app.useStaticAssets(resolve(__dirname, dev ? '../../..' : '../..', 'public/'));
   // #endregion
 
   // #region Locale I18n
-  server.use(nextI18NextMiddleware(nextI18next));
+  app.use(nextI18NextMiddleware(nextI18next));
   // #endregion
 
   // #region Next.JS locals
-  server.use('*', (_req: Request, res: Response, next: Function) => {
+  app.use('*', (_req: Request, res: Response, next: Function) => {
     // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     next();
     // res.set('X-Server-ID', res);
-    res.removeHeader('X-Powered-By');
+    // res.removeHeader('X-Powered-By');
   });
   // #endregion
 
   // #region Next
-  const app = Next({
+  const appNextjs = Next({
     dev,
     dir: dev ? 'apps/portal' : '',
     quiet: false,
   });
-  await app.prepare();
-  const renderer = server.get(RenderModule);
-  renderer.register(server, app, { dev, viewsDir: '' });
-  const service = server.get(RenderService);
+  await appNextjs.prepare();
+  const renderer = app.get(RenderModule);
+  renderer.register(app, appNextjs, { dev, viewsDir: '' });
+  const service = app.get(RenderService);
   service.setErrorHandler(
-    async (err: HttpException, req: Request, res: Response, _pathname: any, _query: ParsedUrlQuery): Promise<any> => {
+    async (
+      err: HttpException,
+      req: express.Request,
+      res: express.Response,
+      _pathname: any,
+      _query: ParsedUrlQuery,
+    ): Promise<any> => {
       const status = err.getStatus();
       if (status === 403 || status === 401) {
         res.status(302);
@@ -177,14 +209,21 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Start server
-  await server.listen(configService.get<number>('PORT'));
-  logger.log(`Server running on port ${configService.get('PORT')}`, 'Bootstrap');
+  await app.init();
+
+  http.createServer(server).listen(configService.get<number>('PORT'));
+  logger.log(`HTTP running on port ${configService.get('PORT')}`, 'Bootstrap');
+
+  if (httpsServer) {
+    https.createServer(server).listen(configService.get<number>('PORT_SSL'));
+    logger.log(`HTTPS running on port ${configService.get('PORT_SSL')}`, 'Bootstrap');
+  }
   // #endregion
 
   // #region Webpack-HMR
   if (module.hot) {
     module.hot.accept();
-    module.hot.dispose(async () => server.close());
+    module.hot.dispose(async () => app.close());
   }
   // #endregion
 }

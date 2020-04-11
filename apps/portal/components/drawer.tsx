@@ -148,7 +148,7 @@ const DrawerComponent: FC<DrawerProps> = ({ open, isMobile, handleOpen }) => {
           .map((url) => (
             <li key={url.link}>
               <Link href={url.link} passHref>
-                <Tooltip title={t(url.text)} enterDelay={1000}>
+                <Tooltip title={t(url.text) || ''} enterDelay={1000}>
                   <ListItem
                     button
                     selected={pathname.startsWith(url.link)}

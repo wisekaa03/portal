@@ -7,7 +7,7 @@ import React from 'react';
 
 import App from '@front/pages';
 
-describe('App', () => {
+describe('Next.JS Front App', () => {
   let shallow: typeof Shallow;
   const props = {
     namespacesRequired: [],

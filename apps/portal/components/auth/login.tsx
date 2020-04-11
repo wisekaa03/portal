@@ -107,7 +107,7 @@ export const LoginComponent: FC<LoginComponentProps> = ({
             <Typography className={classes.title} variant="h4">
               {t('common:authorization')}
             </Typography>
-            <Tooltip title={t('login:tooltip')} placement="top" leaveDelay={3000}>
+            <Tooltip title={t('login:tooltip') || ''} placement="top" leaveDelay={3000}>
               <FormControl className={classes.formControl} fullWidth variant="outlined">
                 <TextField
                   inputRef={usernameRef}

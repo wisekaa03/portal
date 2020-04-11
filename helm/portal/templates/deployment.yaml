@@ -35,6 +35,9 @@ spec:
             - name: http
               containerPort: {{ .Values.PORT | default 4000 }}
               protocol: TCP
+            - name: https
+              containerPort: {{ .Values.PORT_SSL | default 4443 }}
+              protocol: TCP
           volumeMounts:
             - name: portal-files
               mountPath: /files
@@ -69,6 +72,8 @@ spec:
           env:
             - name: PORT
               value: {{ .Values.PORT | default "4000" | quote }}
+            - name: PORT_SSL
+              value: {{ .Values.PORT_SSL | default "4443" | quote }}
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:

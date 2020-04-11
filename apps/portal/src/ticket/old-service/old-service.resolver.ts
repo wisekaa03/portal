@@ -29,9 +29,9 @@ export class OldTicketResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async OldTicketService(@CurrentUser() user: User, @PasswordFrontend() password: string): Promise<OldService[]> {
+  async OldTicketService(@CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<OldService[]> {
     const authentication = {
-      username: user.username,
+      username: user?.username,
       password,
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
@@ -53,13 +53,13 @@ export class OldTicketResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketNew(
-    @CurrentUser() user: User,
-    @PasswordFrontend() password: string,
     @Args('ticket') ticket: OldTicketNewInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
   ): Promise<OldTicketNew> {
     const authentication = {
-      username: user.username,
+      username: user?.username,
       password,
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
@@ -77,14 +77,14 @@ export class OldTicketResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async OldTicketEdit(
-    @CurrentUser() user: User,
-    @PasswordFrontend() password: string,
     @Args('ticket') ticket: OldTicketEditInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
   ): Promise<OldTicket> {
     if (user) {
       const authentication = {
-        username: user.username,
+        username: user?.username,
         password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
@@ -105,13 +105,13 @@ export class OldTicketResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async OldTickets(
-    @CurrentUser() user: User,
-    @PasswordFrontend() password: string,
     @Args('status') status: string,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
   ): Promise<OldService[]> {
     if (user) {
       const authentication = {
-        username: user.username,
+        username: user?.username,
         password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
@@ -132,14 +132,14 @@ export class OldTicketResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async OldTicketDescription(
-    @CurrentUser() user: User,
-    @PasswordFrontend() password: string,
     @Args('code') code: string,
     @Args('type') type: string,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
   ): Promise<OldService> {
     if (user) {
       const authentication = {
-        username: user.username,
+        username: user?.username,
         password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;

@@ -11,6 +11,8 @@ ENV NODE_ENV ${NODE_ENV}
 
 ARG PORT=4000
 ENV PORT ${PORT}
+ARG PORT_SSL=4443
+ENV PORT_SSL ${PORT_SSL}
 
 # Database
 ARG DATABASE_URI=postgres://postgres:1234567890@localhost:5432/portaldb
@@ -128,7 +130,7 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 COPY . ./
 
 # EXPOSE
-EXPOSE ${PORT}
+EXPOSE ${PORT} ${PORT_SSL}
 
 # YARN START
 ENTRYPOINT [ "./entrypoint.sh" ]

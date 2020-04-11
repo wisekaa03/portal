@@ -1,7 +1,17 @@
+type LoginEmail {
+  login: Boolean!
+  error: String
+}
+
+type Login {
+  login: Boolean
+  email: LoginEmail
+}
+
 type Query {
   me: User!
-  login(username: String!, password: String!): Boolean!
-  loginEmail: Boolean!
+  login(username: String!, password: String!): Login!
+  loginEmail: LoginEmail!
 }
 
 type Mutation {
