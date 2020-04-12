@@ -20358,9 +20358,9 @@ xhr@^2.0.1:
     xtend "^4.0.0"
 
 xml-crypto@^1.4.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/xml-crypto/-/xml-crypto-1.4.1.tgz#4b4e179aff7a26060d7dd00c05a661c9499ea138"
-  integrity sha512-Q1S0v/txfWBtgCilON/ALqvNSJ4MY5qkGQgyqmed39zN+B4hfQDnlM6elm34PvbexDXk8ldXp7AI4jkahy5DVg==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/xml-crypto/-/xml-crypto-1.5.0.tgz#f9f05351ffb2af2946959a94d4dcb509589021eb"
+  integrity sha512-PL0A2tTqwDwjSQQ00/f8FOlGdtsPCrBkNjFtBsdYaSPJUxxUAi/K0MmGGfFAGsPLxWew3UmOq8rydI1e7tPPZg==
   dependencies:
     xmldom "0.1.27"
     xpath "0.0.27"

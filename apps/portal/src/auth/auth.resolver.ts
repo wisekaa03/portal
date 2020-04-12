@@ -85,7 +85,7 @@ export class AuthResolver {
 
     req!.session!.password = password;
 
-    return { login: true, email };
+    return { user, email };
   }
 
   /**

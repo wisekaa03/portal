@@ -46,7 +46,7 @@ export interface LoginEmail {
 
 // #region Login response
 export interface Login {
-  login: boolean;
+  user: User;
   email: LoginEmail;
 }
 // #endregion

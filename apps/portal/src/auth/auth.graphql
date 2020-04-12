@@ -4,8 +4,8 @@ type LoginEmail {
 }
 
 type Login {
-  login: Boolean
   email: LoginEmail
+  user: User
 }
 
 type Query {

@@ -57,6 +57,7 @@ export const MaterialUI: FC = ({ children }) => {
   const [logout] = useMutation(LOGOUT, {
     onCompleted: () => {
       removeStorage(SESSION);
+      removeStorage('user');
       Cookie.remove(process.env.SESSION_NAME || 'portal');
 
       client

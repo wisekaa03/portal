@@ -146,13 +146,39 @@ export const CACHE = gql`
 export const LOGIN = gql`
   query Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
-      login
+      user {
+        id
+        username
+        updatedAt
+        createdAt
+        isAdmin
+        settings {
+          lng
+          drawer
+          ticket {
+            status
+          }
+          phonebook {
+            columns
+          }
+        }
+        profile {
+          ...ProfileProps
+          thumbnailPhoto40
+          thumbnailPhoto
+        }
+        groups {
+          id
+          name
+        }
+      }
       email {
         login
         error
       }
     }
   }
+  ${PROFILE_FRAGMENT}
 `;
 
 export const LOGOUT = gql`
@@ -204,7 +230,7 @@ export const PROFILE = gql`
 `;
 
 export const CHANGE_PROFILE = gql`
-  mutation ChangeProfile($profile: ProfileSettingsInput, $thumbnailPhoto: Upload) {
+  mutation ChangeProfile($profile: ProfileSettingsInput!, $thumbnailPhoto: Upload) {
     changeProfile(profile: $profile, thumbnailPhoto: $thumbnailPhoto) {
       id
     }

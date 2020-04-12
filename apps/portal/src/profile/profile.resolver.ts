@@ -114,7 +114,7 @@ export class ProfileResolver {
   async changeProfile(
     @Context('req') req: Request,
     @Args('profile') profile: Profile,
-    @Args('thumbnailPhoto') thumbnailPhoto: Promise<FileUpload>,
+    @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
     return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch(async (error: Error) => {
       throw await GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });

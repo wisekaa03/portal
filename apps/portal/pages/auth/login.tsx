@@ -3,7 +3,7 @@
 // #region Imports NPM
 import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useApolloClient } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import Router from 'next/router';
 // #endregion
@@ -15,6 +15,7 @@ import Cookie from '@lib/cookie';
 import { LOGIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
+import { setStorage } from '@lib/session-storage';
 // #endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
@@ -34,6 +35,10 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
       fetchPolicy: 'no-cache',
       onCompleted: (data) => {
         if (data.login) {
+          const { user } = data.login;
+
+          setStorage('user', JSON.stringify(user));
+
           const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
           Router.push(redirect as string);
         }
