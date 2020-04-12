@@ -164,5 +164,5 @@ type Query {
 }
 
 type Mutation {
-  changeProfile(profile: ProfileSettingsInput!, thumbnailPhoto: Upload): Profile
+  changeProfile(profile: ProfileSettingsInput, thumbnailPhoto: Upload): Profile
 }

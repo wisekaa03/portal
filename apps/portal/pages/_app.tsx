@@ -28,6 +28,7 @@ import Cookie from '@lib/cookie';
 import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '@lib/constants';
+import { getStorage } from '@lib/session-storage';
 // #endregion
 
 /**
@@ -39,7 +40,7 @@ const CurrentComponent: React.FC<{
   router: NextRouter;
   children: React.ReactNode;
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
-  // const [user, setUser] = useState<User>(undefined);
+  let user: User = null;
 
   const pathname = ctx?.asPath || router?.asPath;
   const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
@@ -47,32 +48,42 @@ const CurrentComponent: React.FC<{
   if (__SERVER__) {
     const { req, res }: { req?: any; res?: any } = ctx || {};
     const isAuthPage = pathname.startsWith(AUTH_PAGE);
-    const user = req?.session?.passport?.user as User;
+    const userServer: User = req?.session?.passport?.user;
 
     if (res) {
-      if (!user) {
+      if (!userServer) {
         if (!isAuthPage) {
           res.status(401);
           res.redirect(url.format(redirectUrl));
 
           throw new UnauthorizedException();
         }
-      } else if (isAuthPage || (!user.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page)))) {
+      } else if (isAuthPage || (!userServer.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page)))) {
         res.status(401);
         res.redirect(FIRST_PAGE);
       }
+
+      user = userServer;
     }
   } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME] && !pathname.startsWith(AUTH_PAGE)) {
     router.push(redirectUrl);
-
-    throw new UnauthorizedException();
   }
+
+  // if (!__SERVER__ && !user) {
+  //   try {
+  //     user = JSON.parse(getStorage('user'));
+  //   } catch (error) {
+  //     router.push(AUTH_PAGE);
+  //   }
+  // }
 
   const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
 
-  return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
+  return <ProfileContext.Provider value={{ ...context, user: user || data?.me }}>{children}</ProfileContext.Provider>;
+
+  // return <ProfileContext.Provider value={{ ...context, user }}>{children}</ProfileContext.Provider>;
 };
 
 /**
@@ -87,16 +98,16 @@ class MainApp extends App<ApolloAppProps> {
     }
 
     // Service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/_next/static/sw.js')
-        .then((/* registration */) => {
-          return console.log('service worker registration successful');
-        })
-        .catch((err) => {
-          console.warn('service worker registration failed', err.message);
-        });
-    }
+    // if ('serviceWorker' in navigator) {
+    //   navigator.serviceWorker
+    //     .register('/_next/static/sw.js')
+    //     .then((/* registration */) => {
+    //       return console.log('service worker registration successful');
+    //     })
+    //     .catch((err) => {
+    //       console.warn('service worker registration failed', err.message);
+    //     });
+    // }
   }
 
   render(): React.ReactElement {

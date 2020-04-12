@@ -181,7 +181,11 @@ export class UserService {
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false);
+      user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false).catch(() => {
+        this.logService.log(`New user ${ldapUser.sAMAccountName}`, UserService.name);
+
+        return undefined;
+      });
     }
     const data: User = {
       ...user,
