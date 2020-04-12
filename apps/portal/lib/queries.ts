@@ -145,7 +145,13 @@ export const CACHE = gql`
 
 export const LOGIN = gql`
   query Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
+    login(username: $username, password: $password) {
+      login
+      email {
+        login
+        error
+      }
+    }
   }
 `;
 

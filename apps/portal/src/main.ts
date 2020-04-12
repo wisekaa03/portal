@@ -2,7 +2,7 @@
 
 // #region Imports NPM
 import http from 'http';
-import https from 'https';
+import https, { ServerOptions } from 'https';
 import fs from 'fs';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
@@ -31,31 +31,30 @@ import { AppModule } from '@back/app.module';
 
 const dev = process.env.NODE_ENV !== 'production';
 
-// #region NestJS options
-const logger = new LogService();
-const nestjsOptions: NestApplicationOptions = {
-  cors: {
-    credentials: true,
-  },
-  logger,
-};
-// #endregion
-
 async function bootstrap(configService: ConfigService): Promise<void> {
-  let httpsServer = false;
+  let httpsServer: boolean | ServerOptions = false;
+
+  // #region NestJS options
+  const logger = new LogService();
+  const nestjsOptions: NestApplicationOptions = {
+    cors: {
+      credentials: true,
+    },
+    logger,
+  };
+  // #endregion
 
   // #region Create NestJS app
-  if (fs.lstatSync(resolve(__dirname, dev ? '' : '..', 'secure')).isDirectory()) {
-    const secureDir = fs.readdirSync(resolve(__dirname, dev ? '' : '..', 'secure'));
+  if (fs.lstatSync(resolve(__dirname, dev ? '../../..' : '..', 'secure')).isDirectory()) {
+    const secureDir = fs.readdirSync(resolve(__dirname, dev ? '../../..' : '..', 'secure'));
     if (secureDir.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
-      httpsServer = true;
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
-      nestjsOptions.httpsOptions = {
+      httpsServer = {
         requestCert: false,
         rejectUnauthorized: false,
-        key: fs.readFileSync(resolve(__dirname, dev ? '' : '..', 'secure/private.key')),
-        cert: fs.readFileSync(resolve(__dirname, dev ? '' : '..', 'secure/private.crt')),
+        key: fs.readFileSync(resolve(__dirname, dev ? '../../..' : '..', 'secure/private.key')),
+        cert: fs.readFileSync(resolve(__dirname, dev ? '../../..' : '..', 'secure/private.crt')),
       };
     } else {
       logger.error('There are not enough files "private.crt" and "private.key" in "secure" directory."', 'Bootstrap');
@@ -65,6 +64,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(server),
+    nestjsOptions,
   );
   app.useLogger(logger);
   // #endregion
@@ -215,7 +215,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   logger.log(`HTTP running on port ${configService.get('PORT')}`, 'Bootstrap');
 
   if (httpsServer) {
-    https.createServer(server).listen(configService.get<number>('PORT_SSL'));
+    https.createServer(httpsServer, server).listen(configService.get<number>('PORT_SSL'));
     logger.log(`HTTPS running on port ${configService.get('PORT_SSL')}`, 'Bootstrap');
   }
   // #endregion
