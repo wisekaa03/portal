@@ -108,7 +108,7 @@ export class OldTicketService {
       .kngk_GetRoutesAsync({ log: authentication.username })
       .then((result: any) => {
         this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketService`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketService`);
+        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketService`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
           return result[0]['return']['Услуга'].map(
@@ -188,7 +188,7 @@ export class OldTicketService {
       })
       .then((result: any) => {
         this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketNew`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketNew`);
+        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketNew`);
 
         if (result && result[0] && result[0]['return']) {
           return {
@@ -256,7 +256,7 @@ export class OldTicketService {
       })
       .then((result: any) => {
         this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
+        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
 
         if (result && result[0] && result[0]['return']) {
           return createTicket(result[0]['return']);
@@ -298,7 +298,7 @@ export class OldTicketService {
       })
       .then((result: any) => {
         this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTickets`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTickets`);
+        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTickets`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Задача'] === 'object') {
           let response = result[0]['return']['Задача'];
@@ -361,7 +361,7 @@ export class OldTicketService {
       })
       .then((result: any) => {
         this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketDescription`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketDescription`);
+        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketDescription`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
           return createTicket(result[0]['return']);
