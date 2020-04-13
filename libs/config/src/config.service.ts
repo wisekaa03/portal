@@ -80,8 +80,6 @@ export class ConfigService {
       MICROSERVICE_URL: Joi.string().required(),
 
       SOAP_URL: Joi.string().required(),
-      SOAP_USER: Joi.string().empty('').optional(),
-      SOAP_PASS: Joi.string().empty('').optional(),
       SOAP_DOMAIN: Joi.string().optional(),
 
       NEWS_URL: Joi.string().empty('').optional(),

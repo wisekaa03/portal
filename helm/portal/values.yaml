@@ -57,8 +57,6 @@ LDAP_REDIS_TTL: 300
 MICROSERVICE_URL: "redis://redis.default.svc.cluster.local:6379"
 
 SOAP_URL: "https://soap1c"
-SOAP_USER: "admin"
-SOAP_PASS: "supersecret"
 SOAP_DOMAIN: "EXAMPLE"
 
 NEWS_URL: "https://news"

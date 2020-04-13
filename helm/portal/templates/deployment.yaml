@@ -218,16 +218,6 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: SOAP_URL
-            - name: SOAP_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SOAP_USER
-            - name: SOAP_PASS
-              valueFrom:
-                configMapKeyRef:
-                  name: portal-configmap
-                  key: SOAP_PASS
             - name: SOAP_DOMAIN
               valueFrom:
                 configMapKeyRef:
