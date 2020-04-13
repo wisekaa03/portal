@@ -19,6 +19,8 @@ import { setStorage } from '@lib/session-storage';
 // #endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
+  const client = useApolloClient();
+
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -35,8 +37,9 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
       fetchPolicy: 'no-cache',
       onCompleted: (data) => {
         if (data.login) {
-          const { user } = data.login;
+          client.resetStore();
 
+          const { user } = data.login;
           setStorage('user', JSON.stringify(user));
 
           const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
