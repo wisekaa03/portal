@@ -85,11 +85,11 @@ export class AuthService {
       try {
         redisDatabase.flushdb();
 
-        this.logService.log('Reset database cache.', AuthService.name);
+        this.logService.log('Reset database cache.', `${AuthService.name}:cacheReset`);
 
         databaseStoreReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset database cache:', error, AuthService.name);
+        this.logService.error('Unable to reset database cache:', error, `${AuthService.name}:cacheReset`);
       }
 
       redisDatabase.quit();
@@ -103,11 +103,11 @@ export class AuthService {
       try {
         redisLdap.flushdb();
 
-        this.logService.log('Reset LDAP cache.', AuthService.name);
+        this.logService.log('Reset LDAP cache.', `${AuthService.name}:cacheReset`);
 
         ldapCacheReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset LDAP cache:', error, AuthService.name);
+        this.logService.error('Unable to reset LDAP cache:', error, `${AuthService.name}:cacheReset`);
       }
 
       redisLdap.quit();
@@ -121,11 +121,11 @@ export class AuthService {
       try {
         redisHttp.flushdb();
 
-        this.logService.log('Reset HTTP cache.', AuthService.name);
+        this.logService.log('Reset HTTP cache.', `${AuthService.name}:cacheReset`);
 
         httpStoreReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset LDAP cache:', error, AuthService.name);
+        this.logService.error('Unable to reset LDAP cache:', error, `${AuthService.name}:cacheReset`);
       }
 
       redisHttp.quit();
@@ -139,16 +139,16 @@ export class AuthService {
       try {
         redisSession.flushdb();
 
-        this.logService.log('Reset session cache.', AuthService.name);
+        this.logService.log('Reset session cache.', `${AuthService.name}:cacheReset`);
       } catch (error) {
-        this.logService.error('Unable to reset session cache:', error, AuthService.name);
+        this.logService.error('Unable to reset session cache:', error, `${AuthService.name}:cacheReset`);
       }
 
       redisSession.quit();
 
       sessionStoreReset = true;
     } catch (error) {
-      this.logService.error('Error in cache reset, session store', error, AuthService.name);
+      this.logService.error('Error in cache reset, session store', error, `${AuthService.name}:cacheReset`);
     }
 
     if (databaseStoreReset && sessionStoreReset && ldapCacheReset && httpStoreReset) {
