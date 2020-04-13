@@ -12,7 +12,7 @@ import bcrypt from 'bcrypt';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
-import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
+import { TICKET_STATUSES, ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
 import { LoginService, Profile, User, UserSettings } from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
@@ -155,6 +155,10 @@ export class UserService {
   async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
     const defaultSettings: UserSettings = {
       lng: 'ru',
+      drawer: true,
+      ticket: {
+        status: TICKET_STATUSES[0],
+      },
     };
 
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
