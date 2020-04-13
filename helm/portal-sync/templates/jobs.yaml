@@ -24,6 +24,11 @@ spec:
             env:
               - name: PORT
                 value: {{ .Values.PORT | default "4222" | quote }}
+              - name: DOMAIN
+                valueFrom:
+                  configMapKeyRef:
+                    name: portal-configmap
+                    key: DOMAIN
               - name: DATABASE_URI
                 valueFrom:
                   configMapKeyRef:

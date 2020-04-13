@@ -30,18 +30,22 @@ export class SyncService {
           try {
             await this.userService.fromLdap(ldapUser);
           } catch (error) {
-            this.logService.error(`Error with "${ldapUser.sAMAccountName}"`, error, SyncService.name);
+            this.logService.error(
+              `Error with "${ldapUser.sAMAccountName}"`,
+              error,
+              `${SyncService.name}:synchronization`,
+            );
           }
         } else {
           await this.profileService.fromLdap(ldapUser);
         }
       });
 
-      this.logService.log('--- End of synchronization: true ---', SyncService.name);
+      this.logService.log('--- End of synchronization: true ---', `${SyncService.name}:synchronization`);
       return true;
     }
 
-    this.logService.log('--- End of synchronization: false ---', SyncService.name);
+    this.logService.log('--- End of synchronization: false ---', `${SyncService.name}:synchronization`);
     return false;
   };
 }

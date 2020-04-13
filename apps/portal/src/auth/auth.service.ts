@@ -179,7 +179,7 @@ export class AuthService {
           const { sessid, sessauth } = response.data;
           if (sessid && sessauth && sessauth !== '-del-') {
             const options = {
-              domain: '.i-npz.ru',
+              domain: `.${this.configService.get<string>('DOMAIN')}`,
               maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
             };
 

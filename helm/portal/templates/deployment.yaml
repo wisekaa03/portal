@@ -74,6 +74,11 @@ spec:
               value: {{ .Values.PORT | default "4000" | quote }}
             - name: PORT_SSL
               value: {{ .Values.PORT_SSL | default "4443" | quote }}
+            - name: DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DOMAIN
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:

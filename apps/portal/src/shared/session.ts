@@ -28,7 +28,7 @@ export default (configService: ConfigService, logService: LogService, store: Ses
       // genid: () => genuuid(),
       cookie: {
         path: '/',
-        // domain: '',
+        domain: `.${configService.get<string>('DOMAIN')}`,
         // secure: process.env.PROTOCOL === 'https',
         // expires: false,
         httpOnly: false,

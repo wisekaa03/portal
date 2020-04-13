@@ -123,8 +123,12 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push(`https://localhost.portal.i-npz.ru:${configService.get<number>('PORT_SSL')}`);
-    frameSrc.push(`http://localhost.portal.i-npz.ru:${configService.get<number>('PORT')}`);
+    frameSrc.push(
+      `https://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT_SSL')}`,
+    );
+    frameSrc.push(
+      `http://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT')}`,
+    );
     frameSrc.push(`https://localhost:${configService.get<number>('PORT_SSL')}`);
     frameSrc.push(`http://localhost:${configService.get<number>('PORT')}`);
   }

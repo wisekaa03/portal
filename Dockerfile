@@ -13,6 +13,8 @@ ARG PORT=4000
 ENV PORT ${PORT}
 ARG PORT_SSL=4443
 ENV PORT_SSL ${PORT_SSL}
+ARG DOMAIN=example.com
+ENV DOMAIN ${DOMAIN}
 
 # Database
 ARG DATABASE_URI=postgres://postgres:1234567890@localhost:5432/portaldb

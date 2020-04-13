@@ -66,7 +66,7 @@ export class AuthResolver {
 
     req.logIn(user, async (error: Error) => {
       if (error) {
-        this.logService.error('Error when logging in:', error, AuthResolver.name);
+        this.logService.error('Error when logging in:', error, `${AuthResolver.name}:login`);
 
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
@@ -74,7 +74,7 @@ export class AuthResolver {
 
     if (user.profile.email) {
       email = await this.authService.loginEmail(user.profile.email, password, req, res).catch((error: Error) => {
-        this.logService.error('Unable to login in mail', error, AuthResolver.name);
+        this.logService.error('Unable to login in mail', error, `${AuthResolver.name}:login`);
 
         return {
           login: false,
@@ -104,7 +104,7 @@ export class AuthResolver {
     @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
     return this.authService.loginEmail(user?.profile.email || '', password || '', req, res).catch((error: Error) => {
-      this.logService.error('Unable to login in mail', error, AuthResolver.name);
+      this.logService.error('Unable to login in mail', error, `${AuthResolver.name}:loginEmail`);
 
       return {
         login: false,
@@ -123,7 +123,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') req: Request): Promise<boolean> {
-    this.logService.debug('User logout', AuthResolver.name);
+    this.logService.debug('User logout', `${AuthResolver.name}:logout`);
 
     if (req.session) {
       req.logOut();
@@ -144,7 +144,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async cacheReset(): Promise<boolean> {
-    this.logService.debug('Cache reset', AuthResolver.name);
+    this.logService.debug('Cache reset', `${AuthResolver.name}:cacheReset`);
 
     return this.authService.cacheReset();
   }

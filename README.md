@@ -136,6 +136,7 @@ The `.env` file is like this:
 # App
 PORT=4000
 PORT_SSL=4443
+DOMAIN="example.com"
 
 # DB
 DATABASE_URI="postgres://postgres:1234567890@postgresql.database:5432/postgres"
