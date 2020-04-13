@@ -44,13 +44,13 @@ export interface OldTicket {
 
 export interface OldUser {
   name: string;
-  avatar: string;
-  email: string;
-  telephone: string;
-  company: string;
-  department: string;
-  otdel: string;
-  position: string;
+  avatar?: string;
+  email?: string;
+  telephone?: string;
+  company?: string;
+  department?: string;
+  otdel?: string;
+  position?: string;
 }
 
 export interface OldTicketNewInput {

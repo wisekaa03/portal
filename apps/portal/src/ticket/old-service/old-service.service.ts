@@ -38,8 +38,8 @@ const createUser = (user: any): OldUser | null => {
       email: user['ОсновнойEmail'],
       telephone: user['ОсновнойТелефон'],
       company: user['Организация'],
-      department: user['Подразделение'].split(', ')[0],
-      otdel: user['Подразделение'].split(', ')[1],
+      department: user['Подразделение'] ? user['Подразделение'].split(', ')[0] : '',
+      otdel: user['Подразделение'] ? user['Подразделение'].split(', ')[1] : '',
       position: user['Должность'],
     };
   }
