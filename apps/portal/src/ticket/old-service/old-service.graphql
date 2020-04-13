@@ -17,13 +17,13 @@ type OldService {
 
 type OldUser {
   name: String!
-  avatar: String!
-  email: String!
-  telephone: String!
-  company: String!
-  department: String!
-  otdel: String!
-  position: String!
+  avatar: String
+  email: String
+  telephone: String
+  company: String
+  department: String
+  otdel: String
+  position: String
 }
 
 type OldFile {
