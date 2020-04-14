@@ -70,8 +70,9 @@ export class OldTicketResolver {
   }
 
   /**
-   * GraphQL mutation: TicketEdit
+   * (Old) Ticket edit
    *
+   * @async
    * @returns {OldTicket}
    */
   @Mutation()
@@ -98,8 +99,9 @@ export class OldTicketResolver {
   }
 
   /**
-   * GraphQL query: GetTickets
+   * Tickets list
    *
+   * @async
    * @returns {OldTicket[]}
    */
   @Query()
@@ -125,8 +127,9 @@ export class OldTicketResolver {
   }
 
   /**
-   * GraphQL query: GetTicketDescription
+   * Ticket description
    *
+   * @async
    * @returns {OldTicket}
    */
   @Query()

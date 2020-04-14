@@ -37,7 +37,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     refetch: refetchTickets,
   }: QueryResult<Data<'OldTickets', OldTicket[]>> = useQuery(OLD_TICKETS, {
     ssr: false,
-    variables: { status: status === TICKET_STATUSES[0] ? '' : status },
+    variables: { status },
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });

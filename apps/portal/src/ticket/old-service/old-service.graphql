@@ -50,12 +50,6 @@ type OldTicket {
   files: [OldFile]
 }
 
-type Query {
-  OldTicketService: [OldService!]!
-  OldTickets(status: String): [OldTicket!]!
-  OldTicketDescription(code: String, type: String): OldTicket
-}
-
 type OldTicketNew {
   code: String!
   name: String!
@@ -79,6 +73,12 @@ input OldTicketEditInput {
   code: String!
   type: String!
   comment: String!
+}
+
+type Query {
+  OldTicketService: [OldService!]!
+  OldTickets(status: String): [OldTicket!]!
+  OldTicketDescription(code: String, type: String): OldTicket
 }
 
 type Mutation {

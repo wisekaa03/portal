@@ -112,7 +112,7 @@ const urls: UrlProps[] = [
   {
     icon: VCSIcon,
     text: 'common:vcs',
-    link: 'https://vcs.i-npz.ru',
+    link: `https://vcs.${process.env.DOMAIN}`,
     admin: false,
   },
   { icon: CalendarIcon, text: 'common:calendar', link: '/calendar', admin: false },

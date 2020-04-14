@@ -96,8 +96,10 @@ export class OldTicketService {
   /**
    * Ticket get service and categories
    *
-   * @param {SoapAuthentication} authentication - Soap authentication
-   * @returns {OldService[]} - Services and Categories
+   * @async
+   * @method OldTicketService
+   * @param {SoapAuthentication} authentication Soap authentication
+   * @returns {OldService[]} Services and Categories
    */
   OldTicketService = async (authentication: SoapAuthentication): Promise<OldService[]> => {
     const client = await this.soapService.connect(authentication).catch((error) => {
@@ -150,7 +152,12 @@ export class OldTicketService {
   /**
    * New ticket
    *
-   * @returns {OldTicketNew} - new ticket creation
+   * @async
+   * @method OldTicketNew
+   * @param {SoapAuthentication} authentication Soap authentication
+   * @param {OldTicketNewInput} ticket
+   * @param {Promise<FileUpload>[]} attachments Attachments
+   * @returns {OldTicketNew} New ticket creation
    */
   OldTicketNew = async (
     authentication: SoapAuthentication,
@@ -217,7 +224,10 @@ export class OldTicketService {
   /**
    * Edit ticket
    *
-   * @returns {OldTicket} - new ticket creation
+   * @async
+   * @method OldTicketEdit
+   * @param {SoapAuthentication} authentication Soap authentication
+   * @returns {OldTicket} Ticket for editing
    */
   OldTicketEdit = async (
     authentication: SoapAuthentication,
@@ -275,11 +285,11 @@ export class OldTicketService {
   };
 
   /**
-   * Tickets
+   * Tickets list
    *
    * @async
    * @method OldTickets
-   * @param {SoapAuthentication} authentication - Soap authentication
+   * @param {SoapAuthentication} authentication Soap authentication
    * @param {string} Status
    * @returns {OldService[]}
    */

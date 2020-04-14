@@ -59,6 +59,7 @@ const description = (statusCode?: number): string => {
 
 const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
   const classes = useStyles({});
+  const href = `mailto:webmaster@${process.env.DOMAIN}`;
 
   return (
     <div className={classes.root}>
@@ -78,7 +79,7 @@ const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
 
             <Typography component="p">
               <Trans i18nKey="error:explanation">
-                <a href="mailto:webmaster@i-npz.ru">email</a>
+                <a href={href}>email</a>
               </Trans>
             </Typography>
           </Paper>
