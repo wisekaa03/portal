@@ -147,25 +147,51 @@ const DrawerComponent: FC<DrawerProps> = ({ open, isMobile, handleOpen }) => {
           .filter((url) => !ADMIN_PAGES.includes(url.link) || profile.user?.isAdmin)
           .map((url) => (
             <li key={url.link}>
-              <Link href={url.link} passHref>
+              {url.link.startsWith('http') ? (
                 <Tooltip title={t(url.text) || ''} enterDelay={1000}>
-                  <ListItem
-                    button
-                    selected={pathname.startsWith(url.link)}
-                    classes={{
-                      root: classes.item,
-                      selected: classes.itemSelected,
-                    }}
-                    component="a"
-                    target={url.link.startsWith('http') ? '_blank' : '_self'}
+                  <a
+                    href={url.link}
+                    className="MuiButtonBase-root MuiListItem-root MuiListItem-button"
+                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <ListItemIcon>
-                      <Icon mask={url.icon} color="secondary" />
-                    </ListItemIcon>
-                    <ListItemText primary={t(url.text)} />
-                  </ListItem>
+                    <ListItem
+                      button
+                      selected={pathname.startsWith(url.link)}
+                      classes={{
+                        root: classes.item,
+                        selected: classes.itemSelected,
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Icon mask={url.icon} color="secondary" />
+                      </ListItemIcon>
+                      <ListItemText primary={t(url.text)} />
+                    </ListItem>
+                  </a>
                 </Tooltip>
-              </Link>
+              ) : (
+                <Link href={url.link}>
+                  <Tooltip title={t(url.text) || ''} enterDelay={1000}>
+                    <ListItem
+                      button
+                      selected={pathname.startsWith(url.link)}
+                      classes={{
+                        root: classes.item,
+                        selected: classes.itemSelected,
+                      }}
+                      component="a"
+                      target={url.link.startsWith('http') ? '_blank' : undefined}
+                    >
+                      <ListItemIcon>
+                        <Icon mask={url.icon} color="secondary" />
+                      </ListItemIcon>
+                      <ListItemText primary={t(url.text)} />
+                    </ListItem>
+                  </Tooltip>
+                </Link>
+              )}
             </li>
           ))}
       </List>
