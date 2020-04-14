@@ -171,7 +171,6 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
       ssr: false,
     });
 
-    // TODO: what the fck ? useLazyQuery returns old data... :(
     useEffect(() => {
       getProfile({
         variables: { id: profileId },

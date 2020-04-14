@@ -3,7 +3,7 @@
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
+import { Repository, Brackets, SelectQueryBuilder, FindConditions } from 'typeorm';
 import Ldap from 'ldapjs';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
@@ -103,13 +103,13 @@ export class ProfileService {
     isRelations: boolean | 'manager' = true,
     cache = true,
   ): Promise<ProfileEntity | undefined> => {
-    const where: Record<any, any> = { id };
+    const where: FindConditions<ProfileEntity> = { id };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'profile_id', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `profile_id_${id}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -125,13 +125,13 @@ export class ProfileService {
     isRelations: boolean | 'manager' = true,
     cache = true,
   ): Promise<ProfileEntity | undefined> => {
-    const where: Record<any, any> = { username };
+    const where: FindConditions<ProfileEntity> = { username };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'profile_username', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `profile_username_${username}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -147,13 +147,13 @@ export class ProfileService {
     isRelations: boolean | 'manager' = true,
     cache = true,
   ): Promise<ProfileEntity | undefined> => {
-    const where: Record<any, any> = { loginIdentificator };
+    const where: FindConditions<ProfileEntity> = { loginIdentificator };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: 'profile_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `profile_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -648,10 +648,11 @@ export class ProfileService {
         req.session!.passport.user.profile = profileUpdated;
       }
 
+      // TODO:  разобраться
       await this.profileRepository.manager.connection!.queryResultCache!.remove([
         'profile',
         'profile_id',
-        'profile_loginIdentificator',
+        'profile_LI',
         'profile_searchSuggestions',
         'profile_fieldSelection',
       ]);

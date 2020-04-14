@@ -97,7 +97,7 @@ export class ProfileResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async profile(@Args('id') id: string): Promise<ProfileEntity | undefined> {
-    return this.profileService.byID(id) || null;
+    return this.profileService.byID(id) || undefined;
   }
 
   /**

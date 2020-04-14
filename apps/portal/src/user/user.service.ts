@@ -4,7 +4,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
-import { Repository } from 'typeorm';
+import { Repository, FindConditions } from 'typeorm';
 import { Request } from 'express';
 import bcrypt from 'bcrypt';
 // #endregion
@@ -39,6 +39,8 @@ export class UserService {
   /**
    * Compare password
    *
+   * @async
+   * @method comparePassword
    * @param {string} username User
    * @param {string} password Password
    * @returns {UserEntity | undefined} The user
@@ -53,6 +55,7 @@ export class UserService {
    * Reads by ID
    *
    * @async
+   * @method byId
    * @param {string} id User ID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
@@ -65,7 +68,7 @@ export class UserService {
     isRelations: boolean | 'profile' | 'groups' = true,
     cache = true,
   ): Promise<UserEntity> => {
-    const where: Record<string, any> = { id };
+    const where: FindConditions<UserEntity> = { id };
 
     if (isDisabled) {
       where.disabled = false;
@@ -76,7 +79,7 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: cache ? { id: 'user_id', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `user_id_${id}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -96,7 +99,7 @@ export class UserService {
     isRelations: boolean | 'profile' | 'groups' = true,
     cache = true,
   ): Promise<UserEntity> => {
-    const where: Record<string, any> = { username };
+    const where: FindConditions<UserEntity> = { username };
 
     if (isDisabled) {
       where.disabled = false;
@@ -107,7 +110,7 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: cache ? { id: 'user_username', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `user_username_${username}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -127,7 +130,7 @@ export class UserService {
     isRelations: boolean | 'profile' | 'groups' = true,
     cache = true,
   ): Promise<UserEntity> => {
-    const where: Record<string, any> = { loginIdentificator };
+    const where: FindConditions<UserEntity> = { loginIdentificator };
 
     if (isDisabled) {
       where.disabled = false;
@@ -138,7 +141,7 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: cache ? { id: 'user_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `user_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -162,12 +165,16 @@ export class UserService {
     };
 
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`', error, 'UserService');
+      this.logService.error('Unable to save data in `profile`', error, `${UserService.name}:fromLdap`);
 
       throw error;
     });
     if (!profile) {
-      this.logService.error('Unable to save data in `profile`. Unknown error.', undefined, 'UserService');
+      this.logService.error(
+        'Unable to save data in `profile`. Unknown error.',
+        undefined,
+        `${UserService.name}:fromLdap`,
+      );
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
@@ -178,7 +185,7 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logService.error('Unable to save data in `group`', error, 'UserService');
+      this.logService.error('Unable to save data in `group`', error, `${UserService.name}:fromLdap`);
 
       return undefined;
     });
@@ -186,7 +193,7 @@ export class UserService {
     if (!user) {
       // eslint-disable-next-line no-param-reassign
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false).catch(() => {
-        this.logService.log(`New user ${ldapUser.sAMAccountName}`, UserService.name);
+        this.logService.log(`New user ${ldapUser.sAMAccountName}`, `${UserService.name}:fromLdap`);
 
         return undefined;
       });
@@ -236,7 +243,7 @@ export class UserService {
    */
   bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data(s) in `user`', error, UserService.name);
+      this.logService.error('Unable to save data(s) in `user`', error, `${UserService.name}:bulkSave`);
 
       throw error;
     });
@@ -251,7 +258,7 @@ export class UserService {
    */
   save = async (user: UserEntity): Promise<UserEntity> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data in `user`', error, UserService.name);
+      this.logService.error('Unable to save data in `user`', error, `${UserService.name}:save`);
 
       throw error;
     });
