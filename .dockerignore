@@ -2,6 +2,8 @@
 
 .git*
 doc/
+ssl.conf
+.yarnrc
 
 *.map
 
