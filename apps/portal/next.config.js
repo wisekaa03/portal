@@ -38,9 +38,11 @@ function withCustomWebpack(conf = {}) {
       new Webpack.DefinePlugin({
         __DEV__: JSON.stringify(dev),
         __SERVER__: JSON.stringify(isServer),
+        // __DOMAIN__: JSON.stringify(),
       }),
       new DotenvWebpackPlugin({ path: resolve(__dirname, '../../.env') }),
     ];
+    console.log('Dotenv', resolve(__dirname, '../../.env'));
 
     if (!isServer && !dev) {
       config.plugins.push(
