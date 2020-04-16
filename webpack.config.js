@@ -1,7 +1,9 @@
 /** @format */
 /* eslint global-require:0 */
 
-// const resolveTsconfigPaths = require('./tsconfig-paths-to-webpack-alias');
+const { resolve } = require('path');
+const DotenvWebpackPlugin = require('dotenv-webpack');
+const Webpack = require('webpack');
 
 const { NODE_ENV = 'development' } = process.env;
 
@@ -18,7 +20,14 @@ module.exports = (options) => {
     ...options,
     ...config,
     entry: [...entry],
-    plugins: [...config.plugins],
+    plugins: [
+      ...config.plugins,
+      new Webpack.DefinePlugin({
+        __DEV__: JSON.stringify(NODE_ENV === 'development'),
+        __SERVER__: JSON.stringify(true),
+      }),
+      new DotenvWebpackPlugin({ path: resolve(__dirname, '.env') }),
+    ],
     stats: { ...config.stats },
   };
 

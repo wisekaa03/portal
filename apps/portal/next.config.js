@@ -2,6 +2,7 @@
 /* eslint no-param-reassign: 0, @typescript-eslint/explicit-function-return-type: 0 */
 
 // #region Imports NPM
+const fs = require('fs');
 const { resolve } = require('path');
 
 const DotenvWebpackPlugin = require('dotenv-webpack');
@@ -38,11 +39,14 @@ function withCustomWebpack(conf = {}) {
       new Webpack.DefinePlugin({
         __DEV__: JSON.stringify(dev),
         __SERVER__: JSON.stringify(isServer),
-        // __DOMAIN__: JSON.stringify(),
       }),
       new DotenvWebpackPlugin({ path: resolve(__dirname, '../../.env') }),
     ];
-    console.log('Dotenv', resolve(__dirname, '../../.env'));
+    const envFile = fs.readFileSync(resolve(__dirname, '../../.env'), { encoding: 'utf8' });
+    if (envFile) {
+      console.log('Env file:', envFile);
+      console.log(`Dotenv ${isServer ? 'Server' : 'Client'}`, resolve(__dirname, '../../.env'));
+    }
 
     if (!isServer && !dev) {
       config.plugins.push(
