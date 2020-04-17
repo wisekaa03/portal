@@ -10,7 +10,6 @@ import { LogService } from '@app/logger';
 import { LDAP_SYNC } from '@lib/constants';
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
 const logger = new LogService();
 
 async function bootstrap(configService: ConfigService): Promise<boolean> {
@@ -23,7 +22,7 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
   return client.send<boolean>(LDAP_SYNC, []).toPromise();
 }
 
-const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.env'));
 bootstrap(configService)
   .then((result) => {
     logger.log(`Microservice returns: ${result}`, 'Sync LDAP Job');

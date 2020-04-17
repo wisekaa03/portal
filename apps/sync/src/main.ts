@@ -11,7 +11,6 @@ import { LogService } from '@app/logger';
 import { AppModule } from './app.module';
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
 const logger = new LogService();
 
 async function bootstrap(configService: ConfigService): Promise<void> {
@@ -27,5 +26,5 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   await server.listen(() => logger.log('Microservice is listening', 'Sync LDAP'));
 }
 
-const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../../..', '.env'));
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.env'));
 bootstrap(configService);

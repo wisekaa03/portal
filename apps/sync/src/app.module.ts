@@ -23,9 +23,7 @@ import { AppController } from './app.controller';
 import { SyncService } from './app.service';
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV !== 'test';
-const env = resolve(__dirname, dev ? (test ? '../../..' : '../../..') : '../../..', '.env');
+const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : '../../..', '.env');
 
 @Module({
   imports: [

@@ -60,9 +60,7 @@ import { TicketServiceEntity } from '@back/ticket/service/service.entity';
 import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
-const test = process.env.NODE_ENV !== 'test';
-const env = resolve(__dirname, dev ? (test ? '../../..' : '../../../..') : '../..', '.env');
+const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../../..') : '../..', '.env');
 
 // #region TypeOrm config options
 const typeOrmPostgres = (configService: ConfigService, logger: LogService): TypeOrmModuleOptions => ({
@@ -78,7 +76,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: LogService): Type
   logger,
   synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
   dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-  logging: dev
+  logging: __DEV__
     ? true
     : configService.get('DATABASE_LOGGING') === 'false'
     ? false
@@ -180,8 +178,8 @@ const typeOrmPostgres = (configService: ConfigService, logger: LogService): Type
     // #region GraphQL
     Upload,
     GraphQLModule.forRoot({
-      debug: dev,
-      playground: dev
+      debug: __DEV__,
+      playground: __DEV__
         ? {
             settings: {
               // Когда в playground режиме, нажмите settings и добавте строку:

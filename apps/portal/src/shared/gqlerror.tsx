@@ -7,8 +7,6 @@ import { I18nService } from 'nestjs-i18n';
 // #region Imports Local
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
-
 export enum GQLErrorCode {
   UNAUTHENTICATED = 'UNAUTHENTICATED',
   UNAUTHENTICATED_LOGIN = 'UNAUTHENTICATED_LOGIN',
@@ -58,5 +56,5 @@ export const GQLError = async ({
       break;
   }
 
-  return new GraphQLError(message, undefined, undefined, undefined, undefined, dev ? error : undefined, { code });
+  return new GraphQLError(message, undefined, undefined, undefined, undefined, __DEV__ ? error : undefined, { code });
 };

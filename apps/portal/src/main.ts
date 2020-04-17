@@ -29,8 +29,6 @@ import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
-
 async function bootstrap(configService: ConfigService): Promise<void> {
   let httpsServer: boolean | ServerOptions = false;
 
@@ -45,16 +43,16 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Create NestJS app
-  if (fs.lstatSync(resolve(__dirname, dev ? '../../..' : '..', 'secure')).isDirectory()) {
-    const secureDir = fs.readdirSync(resolve(__dirname, dev ? '../../..' : '..', 'secure'));
+  if (fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory()) {
+    const secureDir = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDir.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
       httpsServer = {
         requestCert: false,
         rejectUnauthorized: false,
-        key: fs.readFileSync(resolve(__dirname, dev ? '../../..' : '..', 'secure/private.key')),
-        cert: fs.readFileSync(resolve(__dirname, dev ? '../../..' : '..', 'secure/private.crt')),
+        key: fs.readFileSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure/private.key')),
+        cert: fs.readFileSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure/private.crt')),
       };
     } else {
       logger.error('There are not enough files "private.crt" and "private.key" in "secure" directory."', 'Bootstrap');
@@ -115,7 +113,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   scriptSrc.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
-  if (dev) {
+  if (__DEV__) {
     scriptSrc.push("'unsafe-eval'");
     scriptSrc.push('https://cdn.jsdelivr.net');
     styleSrc.push('https://fonts.googleapis.com');
@@ -169,7 +167,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Static files
-  app.useStaticAssets(resolve(__dirname, dev ? '../../..' : '../..', 'public/'));
+  app.useStaticAssets(resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/'));
   // #endregion
 
   // #region Locale I18n
@@ -187,13 +185,13 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   // #region Next
   const appNextjs = Next({
-    dev,
-    dir: dev ? 'apps/portal' : '',
+    dev: __DEV__,
+    dir: __DEV__ ? 'apps/portal' : '',
     quiet: false,
   });
   await appNextjs.prepare();
   const renderer = app.get(RenderModule);
-  renderer.register(app, appNextjs, { dev, viewsDir: '' });
+  renderer.register(app, appNextjs, { dev: __DEV__, viewsDir: '' });
   const service = app.get(RenderService);
   service.setErrorHandler(
     async (
@@ -232,5 +230,5 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 }
 
-const configService = new ConfigService(resolve(__dirname, dev ? '../../..' : '../..', '.env'));
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env'));
 bootstrap(configService);

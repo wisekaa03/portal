@@ -9,3 +9,5 @@ enzyme.configure({ adapter: new Adapter() });
 
 global.__SERVER__ = true;
 global.__DEV__ = true;
+global.__PRODUCTION__ = false;
+global.__TEST__ = true;

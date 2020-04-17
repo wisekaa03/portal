@@ -24,6 +24,8 @@ module.exports = (options) => {
       ...config.plugins,
       new Webpack.DefinePlugin({
         __DEV__: JSON.stringify(NODE_ENV === 'development'),
+        __PRODUCTION__: JSON.stringify(NODE_ENV === 'production'),
+        __TEST__: JSON.stringify(NODE_ENV === 'test'),
         __SERVER__: JSON.stringify(true),
       }),
       new DotenvWebpackPlugin({ path: resolve(__dirname, '.env') }),

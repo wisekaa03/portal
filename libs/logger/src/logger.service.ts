@@ -5,8 +5,6 @@ import { Logger as TypeOrmLogger } from 'typeorm';
 import { Logger } from '@nestjs/common';
 // #endregion
 
-const dev = process.env.NODE_ENV !== 'production';
-
 export class LogService extends Logger implements TypeOrmLogger {
   locale = undefined;
 
@@ -20,6 +18,10 @@ export class LogService extends Logger implements TypeOrmLogger {
     second: '2-digit',
   };
 
+  // constructor() {
+  //   super();
+  // }
+
   log(message: any, context?: string): void {
     let m = message;
     let c = context;
@@ -27,7 +29,7 @@ export class LogService extends Logger implements TypeOrmLogger {
       m = c;
       c = 'Database: Log';
     }
-    if (dev) {
+    if (__DEV__) {
       super.log(m, c);
     } else {
       console.log(`${new Date().toLocaleString(this.locale, this.format)} -`, `${c} -`, m);
@@ -35,7 +37,7 @@ export class LogService extends Logger implements TypeOrmLogger {
   }
 
   error(message: any, trace?: object | string, context?: string): void {
-    if (dev) {
+    if (__DEV__) {
       if (typeof trace === 'object') {
         super.error(message, JSON.stringify(trace), context);
       } else {
@@ -47,7 +49,7 @@ export class LogService extends Logger implements TypeOrmLogger {
   }
 
   warn(message: any, context?: string): void {
-    if (dev) {
+    if (__DEV__) {
       super.warn(message, context);
     } else {
       console.warn(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -55,7 +57,7 @@ export class LogService extends Logger implements TypeOrmLogger {
   }
 
   debug(message: any, context?: string): void {
-    if (dev) {
+    if (__DEV__) {
       super.debug(message, context);
     } else {
       console.debug(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -63,7 +65,7 @@ export class LogService extends Logger implements TypeOrmLogger {
   }
 
   verbose(message: any, context?: string): void {
-    if (dev) {
+    if (__DEV__) {
       super.verbose(message, context);
     } else {
       console.info(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
@@ -83,9 +85,7 @@ export class LogService extends Logger implements TypeOrmLogger {
    * From TypeORM: logQuery
    */
   logQuery(message: any): void {
-    if (dev) {
-      this.verbose(message, 'Database: Query');
-    }
+    this.verbose(message, 'Database: Query');
   }
 
   /**

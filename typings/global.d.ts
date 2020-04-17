@@ -1,6 +1,8 @@
 /** @format */
 
 declare let __DEV__: boolean;
+declare let __PRODUCTION__: boolean;
+declare let __TEST__: boolean;
 declare let __SERVER__: boolean;
 
 declare module 'cache-manager-redis-store';
@@ -13,6 +15,8 @@ declare namespace NodeJS {
     fetch: Function;
     __SERVER__?: boolean;
     __DEV__?: boolean;
+    __PRODUCTION__?: boolean;
+    __TEST__?: boolean;
   }
 }
 
