@@ -110,6 +110,7 @@ helm_development:
   allow_failure: false
   script:
     - env
+    - echo ${RELEASE_NAME}
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
@@ -181,6 +182,7 @@ helm_production:
   allow_failure: false
   script:
     - env
+    - echo ${RELEASE_NAME}
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
