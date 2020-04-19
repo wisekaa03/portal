@@ -113,9 +113,7 @@ helm_development:
     - echo ${RELEASE_NAME}
     # Portal
     - |
-      helm upgrade ${RELEASE_NAME} helm/portal \
-        --install --namespace=${NAMESPACE} \
-        --debug --values helm/portal/values.yaml \
+      helm upgrade \
         --set replicaCount="1" \
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
@@ -158,7 +156,10 @@ helm_development:
         --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
-        --set image.tag="${CI_BUILD_REF}"
+        --set image.tag="${CI_BUILD_REF}" \
+        --install --namespace=${NAMESPACE} \
+        --debug --values helm/portal/values.yaml \
+        ${RELEASE_NAME} helm/portal
     # Portal-sync
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
@@ -185,9 +186,7 @@ helm_production:
     - echo ${RELEASE_NAME}
     # Portal
     - |
-      helm upgrade ${RELEASE_NAME} helm/portal \
-        --install --namespace=${NAMESPACE} \
-        --debug --values helm/portal/values.yaml \
+      helm upgrade \
         --set service.nodePort="30300" \
         --set service.nodePort_debug="30301" \
         --set PORT="${PORT}" \
@@ -229,7 +228,10 @@ helm_production:
         --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
-        --set image.tag="${CI_BUILD_REF}"
+        --set image.tag="${CI_BUILD_REF}" \
+        --install --namespace=${NAMESPACE} \
+        --debug --values helm/portal/values.yaml \
+        ${RELEASE_NAME} helm/portal
     # Portal-sync
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \

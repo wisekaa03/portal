@@ -68,9 +68,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
   if (__SERVER__) {
     // eslint-disable-next-line global-require
-    const fetch = require('node-fetch');
-
-    global.fetch = fetch;
+    global.fetch = require('node-fetch');
 
     httpLink = createHttpLink({
       uri: `http://localhost:${process.env.PORT}/graphql`,
