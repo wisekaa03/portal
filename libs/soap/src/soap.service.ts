@@ -5,7 +5,7 @@ import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
 // #endregion
@@ -26,7 +26,7 @@ export class SoapService {
    */
   constructor(
     @Inject(SOAP_OPTIONS) public readonly opts: SoapOptions,
-    private readonly logger: LogService,
+    private readonly logger: Logger,
     private readonly configService: ConfigService,
   ) {}
 

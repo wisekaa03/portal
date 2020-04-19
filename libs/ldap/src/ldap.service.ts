@@ -10,7 +10,7 @@ import bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import dayjs from 'dayjs';
 import {
   LDAP_OPTIONS,
@@ -57,7 +57,7 @@ export class LdapService extends EventEmitter {
    */
   constructor(
     @Inject(LDAP_OPTIONS) private readonly opts: LdapModuleOptions,
-    private readonly logger: LogService,
+    private readonly logger: Logger,
     private readonly configService: ConfigService,
   ) {
     super();

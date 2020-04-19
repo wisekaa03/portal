@@ -2,9 +2,9 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { LoggerModule } from '@app/logger';
 import { NewsController } from './news.controller';
 // #endregion
 

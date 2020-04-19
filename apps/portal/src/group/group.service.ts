@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { LoginService, Group } from '@lib/types';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
@@ -19,7 +19,7 @@ export class GroupService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly logService: LogService,
+    private readonly logService: Logger,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {

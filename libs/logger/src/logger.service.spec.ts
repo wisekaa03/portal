@@ -2,20 +2,22 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LogService } from './logger.service';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
+import { Logger } from './logger.service';
 // #endregion
 
-describe('LogService', () => {
-  let service: LogService;
+describe(Logger.name, () => {
+  let service: Logger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LogService],
+      imports: [LoggerModule.forRoot()],
+      providers: [{ provide: 'pino-params', useValue: {} }, Logger],
     }).compile();
 
-    service = module.get<LogService>(LogService);
+    service = module.get<Logger>(Logger);
   });
 
   it('should be defined', () => {

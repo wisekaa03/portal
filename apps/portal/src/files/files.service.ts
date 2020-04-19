@@ -7,7 +7,7 @@ import { Repository, IsNull } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { Files, FilesFolder, FilesFolderResponse, User } from '@lib/types';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { FilesEntity } from './files.entity';
 import { FilesFolderEntity } from './files.folder.entity';
@@ -18,7 +18,7 @@ export class FilesService {
   dbCacheTtl = 10000;
 
   constructor(
-    private readonly logService: LogService,
+    private readonly logService: Logger,
     private readonly configService: ConfigService,
     // private readonly userService: UserService,
     @InjectRepository(FilesEntity)

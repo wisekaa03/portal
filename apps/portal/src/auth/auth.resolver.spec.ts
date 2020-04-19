@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
@@ -30,7 +30,7 @@ describe('AuthResolver', () => {
       providers: [
         AuthResolver,
         { provide: ConfigService, useValue: serviceMock },
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: AuthService, useValue: serviceMock },
         { provide: I18nService, useValue: serviceMock },
       ],

@@ -2,10 +2,10 @@
 
 // #region Imports NPM
 import { Module } from '@nestjs/common';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
-import { LoggerModule } from '@app/logger';
 import { SoapModule } from '@app/soap';
 import { OldTicketResolver } from './old-service.resolver';
 import { OldTicketService } from './old-service.service';

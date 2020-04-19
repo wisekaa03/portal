@@ -7,10 +7,10 @@ import Redis from 'redis';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 // #endregion
 
-export default (configService: ConfigService, logService: LogService): Session.Store => {
+export default (configService: ConfigService, logService: Logger): Session.Store => {
   try {
     const sess = new (RedisSessionStore(Session))({
       client: Redis.createClient({

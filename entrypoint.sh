@@ -5,6 +5,7 @@ cat <<EOF > .env
 PORT="${PORT}"
 PORT_SSL="${PORT_SSL}"
 DOMAIN="${DOMAIN}"
+LOGLEVEL="${LOGLEVEL}"
 
 # Database
 DATABASE_URI="${DATABASE_URI}"

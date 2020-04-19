@@ -8,14 +8,14 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 import { AUTH_PAGE } from '../../lib/constants';
 // #endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-  constructor(private readonly logService: LogService) {}
+  constructor(private readonly logService: Logger) {}
 
   catch(exception: Error | HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();

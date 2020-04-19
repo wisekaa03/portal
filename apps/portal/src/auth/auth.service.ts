@@ -9,7 +9,7 @@ import Redis from 'redis';
 // #region Imports Local
 import { EmailSession } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
@@ -23,7 +23,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
-    private readonly logService: LogService,
+    private readonly logService: Logger,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly i18n: I18nService,

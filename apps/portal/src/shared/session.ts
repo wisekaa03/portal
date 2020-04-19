@@ -6,10 +6,10 @@ import Express from 'express';
 // #endreion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 // #endregion
 
-export default (configService: ConfigService, logService: LogService, store: Session.Store): Express.RequestHandler => {
+export default (configService: ConfigService, logService: Logger, store: Session.Store): Express.RequestHandler => {
   try {
     const sess = Session({
       secret: configService.get<string>('SESSION_SECRET'),

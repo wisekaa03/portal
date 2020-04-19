@@ -70,6 +70,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: DOMAIN
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: LOGLEVEL
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:

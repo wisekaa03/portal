@@ -3,9 +3,9 @@
 // #region Imports NPM
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { LoggerModule } from '@app/logger';
 import { ConfigModule } from '@app/config';
 import { NewsService } from './news.service';
 import { NewsResolver } from './news.resolver';

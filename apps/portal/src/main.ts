@@ -18,11 +18,12 @@ import passport from 'passport';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import { PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { nextI18next } from '@lib/i18n-client';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
@@ -33,7 +34,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   let httpsServer: boolean | ServerOptions = false;
 
   // #region NestJS options
-  const logger = new LogService();
+  const logger = new Logger(new PinoLogger({}), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
@@ -55,7 +56,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
         cert: fs.readFileSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure/private.crt')),
       };
     } else {
-      logger.error('There are not enough files "private.crt" and "private.key" in "secure" directory."', 'Bootstrap');
+      logger.error(
+        'There are not enough files "private.crt" and "private.key" in "secure" directory."',
+        undefined,
+        'Bootstrap',
+      );
     }
   }
   const server = express();
@@ -64,7 +69,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     new ExpressAdapter(server),
     nestjsOptions,
   );
-  app.useLogger(logger);
+  app.useLogger(app.get(Logger));
   // #endregion
 
   // #region X-Response-Time

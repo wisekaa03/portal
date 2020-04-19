@@ -2,25 +2,11 @@
 
 // #region Imports NPM
 import { Logger as TypeOrmLogger } from 'typeorm';
-import { Logger } from '@nestjs/common';
+import { Logger as PinoLogger } from 'nestjs-pino';
 // #endregion
 
-export class LogService extends Logger implements TypeOrmLogger {
+export class Logger extends PinoLogger implements TypeOrmLogger {
   locale = undefined;
-
-  format = {
-    hour12: false,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  };
-
-  // constructor() {
-  //   super();
-  // }
 
   log(message: any, context?: string): void {
     let m = message;
@@ -29,47 +15,27 @@ export class LogService extends Logger implements TypeOrmLogger {
       m = c;
       c = 'Database: Log';
     }
-    if (__DEV__) {
-      super.log(m, c);
-    } else {
-      console.log(`${new Date().toLocaleString(this.locale, this.format)} -`, `${c} -`, m);
-    }
+    super.log(m, c);
   }
 
   error(message: any, trace?: object | string, context?: string): void {
-    if (__DEV__) {
-      if (typeof trace === 'object') {
-        super.error(message, JSON.stringify(trace), context);
-      } else {
-        super.error(message, trace, context);
-      }
+    if (typeof trace === 'object') {
+      super.error(message, JSON.stringify(trace), context);
     } else {
-      console.error(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message, trace);
+      super.error(message, trace, context);
     }
   }
 
   warn(message: any, context?: string): void {
-    if (__DEV__) {
-      super.warn(message, context);
-    } else {
-      console.warn(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
-    }
+    super.warn(message, context);
   }
 
   debug(message: any, context?: string): void {
-    if (__DEV__) {
-      super.debug(message, context);
-    } else {
-      console.debug(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
-    }
+    super.debug(message, context);
   }
 
   verbose(message: any, context?: string): void {
-    if (__DEV__) {
-      super.verbose(message, context);
-    } else {
-      console.info(`${new Date().toLocaleString(this.locale, this.format)} -`, `${context} -`, message);
-    }
+    super.verbose(message, context);
   }
 
   /**

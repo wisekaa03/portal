@@ -6,6 +6,7 @@ metadata:
 {{ include "portal.labels" . | indent 4 }}
 data:
   DOMAIN: {{ .Values.DOMAIN | default "example.com" | quote }}
+  LOGLEVEL: {{ .Values.LOGLEVEL | default "debug" | quote }}
 
   DATABASE_URI: {{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
   DATABASE_URI_RD: {{ .Values.DATABASE_URI_RD | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}

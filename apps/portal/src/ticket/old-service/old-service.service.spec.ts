@@ -2,7 +2,7 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { SoapService } from '@app/soap';
 import { OldTicketService } from './old-service.service';
 
@@ -22,7 +22,7 @@ describe('OldServiceService', () => {
       imports: [],
       providers: [
         OldTicketService,
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: ConfigService, useValue: serviceMock },
         { provide: SoapService, useValue: serviceMock },
       ],

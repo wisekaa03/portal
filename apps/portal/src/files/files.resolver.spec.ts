@@ -5,7 +5,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 // import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
 import { FilesResolver } from './files.resolver';
@@ -23,7 +23,7 @@ describe('FilesResolver', () => {
       providers: [
         FilesResolver,
         { provide: FilesService, useValue: serviceMock },
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
       ],
     }).compile();

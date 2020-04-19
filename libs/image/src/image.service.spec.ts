@@ -4,7 +4,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
-import { LogService } from '../../logger/src';
+import { Logger } from '../../logger/src';
 import { ImageService } from './image.service';
 // #endregion
 
@@ -21,7 +21,7 @@ describe('ImageService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [ImageService, { provide: LogService, useValue: serviceMock }],
+      providers: [ImageService, { provide: Logger, useValue: serviceMock }],
     }).compile();
 
     service = module.get<ImageService>(ImageService);

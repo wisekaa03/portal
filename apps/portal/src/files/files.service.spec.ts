@@ -7,7 +7,7 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
@@ -67,7 +67,7 @@ describe('FilesService', () => {
       providers: [
         FilesService,
         ConfigService,
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
         { provide: getRepositoryToken(FilesEntity), useValue: repositoryMock },

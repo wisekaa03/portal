@@ -77,7 +77,7 @@ module.exports = function (api) {
       [
         '@babel/preset-react',
         {
-          development: true,
+          // development: true,
         },
       ],
       ...constantsPresets,
@@ -99,7 +99,7 @@ module.exports = function (api) {
       [
         '@babel/preset-react',
         {
-          development: true,
+          // development: true,
         },
       ],
       ...constantsPresets,

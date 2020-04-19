@@ -5,11 +5,10 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { Repository, FindConditions } from 'typeorm';
-import { Request } from 'express';
+import { PinoLogger } from 'nestjs-pino';
 import bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
 import { TICKET_STATUSES, ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
@@ -26,14 +25,15 @@ export class UserService {
 
   constructor(
     @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
-    private readonly logService: LogService,
     private readonly configService: ConfigService,
+    private readonly logger: PinoLogger,
     private readonly profileService: ProfileService,
     private readonly groupService: GroupService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
+    this.logger.setContext(UserService.name);
   }
 
   /**
@@ -165,16 +165,12 @@ export class UserService {
     };
 
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`', error, `${UserService.name}:fromLdap`);
+      this.logger.error('Unable to save data in `profile`', error);
 
       throw error;
     });
     if (!profile) {
-      this.logService.error(
-        'Unable to save data in `profile`. Unknown error.',
-        undefined,
-        `${UserService.name}:fromLdap`,
-      );
+      this.logger.error('Unable to save data in `profile`. Unknown error.');
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
@@ -185,7 +181,7 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logService.error('Unable to save data in `group`', error, `${UserService.name}:fromLdap`);
+      this.logger.error('Unable to save data in `group`', error);
 
       return undefined;
     });
@@ -193,7 +189,7 @@ export class UserService {
     if (!user) {
       // eslint-disable-next-line no-param-reassign
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false).catch(() => {
-        this.logService.log(`New user ${ldapUser.sAMAccountName}`, `${UserService.name}:fromLdap`);
+        this.logger.info(`New user ${ldapUser.sAMAccountName}`);
 
         return undefined;
       });
@@ -243,7 +239,7 @@ export class UserService {
    */
   bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data(s) in `user`', error, `${UserService.name}:bulkSave`);
+      this.logger.error('Unable to save data(s) in `user`', error);
 
       throw error;
     });
@@ -258,7 +254,7 @@ export class UserService {
    */
   save = async (user: UserEntity): Promise<UserEntity> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logService.error('Unable to save data in `user`', error, `${UserService.name}:save`);
+      this.logger.error('Unable to save data in `user`', error);
 
       throw error;
     });

@@ -6,7 +6,7 @@ import { HttpService } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
@@ -29,10 +29,10 @@ describe('AuthService', () => {
       imports: [],
       providers: [
         AuthService,
-        { provide: I18nService, useValue: serviceMock },
         { provide: ConfigService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
+        { provide: I18nService, useValue: serviceMock },
         { provide: HttpService, useValue: serviceMock },
-        { provide: LogService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
       ],

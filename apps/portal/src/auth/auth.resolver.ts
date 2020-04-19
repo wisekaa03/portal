@@ -9,7 +9,7 @@ import { I18nService } from 'nestjs-i18n';
 // #region Imports Local
 import { Login, LoginEmail } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -22,7 +22,7 @@ export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly logService: LogService,
+    private readonly logService: Logger,
     private readonly i18n: I18nService,
   ) {}
 

@@ -4,10 +4,10 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 // import { JwtModule } from '@nestjs/jwt';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
-import { LoggerModule } from '@app/logger';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { UserModule } from '@back/user/user.module';
 import { AuthService } from './auth.service';

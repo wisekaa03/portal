@@ -8,7 +8,7 @@ import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
 import { User, FilesFolderResponse } from '@lib/types';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser } from '@back/user/user.decorator';
@@ -19,7 +19,7 @@ import { FilesService } from './files.service';
 @Resolver('Files')
 export class FilesResolver {
   constructor(
-    private readonly logService: LogService,
+    private readonly logService: Logger,
     private readonly filesService: FilesService,
     private readonly userService: UserService,
   ) {}

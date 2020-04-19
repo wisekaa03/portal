@@ -9,7 +9,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 // #region Imports Local
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { GroupService } from '@back/group/group.service';
 import { ProfileService } from './profile.service';
@@ -61,7 +61,7 @@ describe('ProfileService', () => {
       providers: [
         ProfileService,
         ConfigService,
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: GroupService, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },

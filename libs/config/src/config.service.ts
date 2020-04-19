@@ -48,6 +48,7 @@ export class ConfigService {
       PORT: Joi.number().integer().default(80).required(),
       PORT_SSL: Joi.number().integer().empty('').default(443).optional(),
       DOMAIN: Joi.string().default('example.com').empty('').required(),
+      LOGLEVEL: Joi.string().default('info').empty('').required(),
 
       DATABASE_URI: Joi.string().required(),
       DATABASE_URI_RD: Joi.string().required(),

@@ -7,12 +7,12 @@ import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger/logger.service';
+import { Logger } from '@app/logger';
 // #endregion
 
 @Injectable()
 export class HttpCacheInterceptor extends CacheInterceptor {
-  constructor(cacheManager: any, reflector: any, private readonly logService: LogService) {
+  constructor(cacheManager: any, reflector: any, private readonly logService: Logger) {
     super(cacheManager, reflector);
   }
 

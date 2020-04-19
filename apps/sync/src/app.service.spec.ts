@@ -7,7 +7,7 @@ import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
 // import { ConfigModule, ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image/image.service';
 import { GroupService } from '@back/group/group.service';
@@ -27,7 +27,7 @@ describe(SyncService.name, () => {
       providers: [
         SyncService,
         { provide: I18nService, useValue: serviceMock },
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },

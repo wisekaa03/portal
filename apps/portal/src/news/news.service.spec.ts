@@ -7,7 +7,7 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { NewsService } from './news.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user/user.service';
@@ -53,7 +53,7 @@ describe('NewsService', () => {
       ],
       providers: [
         NewsService,
-        { provide: LogService, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
         { provide: getRepositoryToken(NewsEntity), useValue: repositoryMock },

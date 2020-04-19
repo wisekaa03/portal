@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import {
   OldService,
   OldCategory,
@@ -91,7 +91,7 @@ const createTicket = (ticket: any): OldTicket => ({
 export class OldTicketService {
   private service: OldService[];
 
-  constructor(private readonly logService: LogService, private readonly soapService: SoapService) {}
+  constructor(private readonly logger: Logger, private readonly soapService: SoapService) {}
 
   /**
    * Ticket get service and categories
@@ -109,8 +109,8 @@ export class OldTicketService {
     this.service = await client
       .kngk_GetRoutesAsync({ log: authentication.username })
       .then((result: any) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketService`);
-        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketService`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketService`);
+        // this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketService`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
           return result[0]['return']['Услуга'].map(
@@ -138,10 +138,10 @@ export class OldTicketService {
         return [];
       })
       .catch((error: SoapFault) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketService`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketService`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketService`);
+        this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketService`);
 
-        this.logService.error(error, error, `${OldTicketService.name}:OldTicketService`);
+        this.logger.error(error, error, `${OldTicketService.name}:OldTicketService`);
 
         throw SoapError(error);
       });
@@ -174,7 +174,7 @@ export class OldTicketService {
       await constructUploads(attachments, ({ filename, file }) =>
         Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: Error) => {
-        this.logService.error(error.message, error, `${OldTicketService.name}:OldTicketNew`);
+        this.logger.error(error.message, error, `${OldTicketService.name}:OldTicketNew`);
 
         throw error;
       });
@@ -194,8 +194,8 @@ export class OldTicketService {
         Attaches,
       })
       .then((result: any) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketNew`);
-        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketNew`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketNew`);
+        // this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketNew`);
 
         if (result && result[0] && result[0]['return']) {
           return {
@@ -212,10 +212,10 @@ export class OldTicketService {
         return {};
       })
       .catch((error: SoapFault) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketNew`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketNew`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketNew`);
+        this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketNew`);
 
-        this.logService.error(error, error, `${OldTicketService.name}:OldTicketNew`);
+        this.logger.error(error, error, `${OldTicketService.name}:OldTicketNew`);
 
         throw SoapError(error);
       });
@@ -244,10 +244,10 @@ export class OldTicketService {
       await constructUploads(attachments, ({ filename, file }) =>
         Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: SoapFault) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
 
-        this.logService.error(error, error, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.error(error, error, `${OldTicketService.name}:OldTicketEdit`);
 
         throw SoapError(error);
       });
@@ -265,8 +265,8 @@ export class OldTicketService {
         AutorComment: authentication.username,
       })
       .then((result: any) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
-        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
+        // this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
 
         if (result && result[0] && result[0]['return']) {
           return createTicket(result[0]['return']);
@@ -275,10 +275,10 @@ export class OldTicketService {
         return {};
       })
       .catch((error: SoapFault) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketEdit`);
 
-        this.logService.error(error, error, `${OldTicketService.name}:OldTicketEdit`);
+        this.logger.error(error, error, `${OldTicketService.name}:OldTicketEdit`);
 
         throw SoapError(error);
       });
@@ -307,8 +307,8 @@ export class OldTicketService {
         Alltask: false,
       })
       .then((result: any) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTickets`);
-        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTickets`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTickets`);
+        // this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTickets`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Задача'] === 'object') {
           let response = result[0]['return']['Задача'];
@@ -334,10 +334,10 @@ export class OldTicketService {
         return [];
       })
       .catch((error: SoapFault) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTickets`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTickets`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTickets`);
+        this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTickets`);
 
-        this.logService.error(error, error, `${OldTicketService.name}:OldTickets`);
+        this.logger.error(error, error, `${OldTicketService.name}:OldTickets`);
 
         throw SoapError(error);
       });
@@ -370,8 +370,8 @@ export class OldTicketService {
         Type: type,
       })
       .then((result: any) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketDescription`);
-        // this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketDescription`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketDescription`);
+        // this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketDescription`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
           return createTicket(result[0]['return']);
@@ -380,10 +380,10 @@ export class OldTicketService {
         return {};
       })
       .catch((error: SoapFault) => {
-        this.logService.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketDescription`);
-        this.logService.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketDescription`);
+        this.logger.verbose(`Request: ${client.lastRequest}`, `${OldTicketService.name}:OldTicketDescription`);
+        this.logger.verbose(`Response: ${client.lastResponse}`, `${OldTicketService.name}:OldTicketDescription`);
 
-        this.logService.error(error, error, `${OldTicketService.name}:OldTicketDescription`);
+        this.logger.error(error, error, `${OldTicketService.name}:OldTicketDescription`);
 
         throw SoapError(error);
       });

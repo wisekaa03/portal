@@ -4,7 +4,7 @@
 import { Injectable } from '@nestjs/common';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
@@ -13,7 +13,7 @@ import { ProfileService } from '@back/profile/profile.service';
 @Injectable()
 export class SyncService {
   constructor(
-    private readonly logService: LogService,
+    private readonly logService: Logger,
     private readonly ldapService: LdapService,
     private readonly userService: UserService,
     private readonly profileService: ProfileService,

@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
 import { User } from '@lib/types/user.dto';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config/config.service';
 // #endregion
 
@@ -21,7 +21,7 @@ export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 export class LoggingInterceptor implements NestInterceptor {
   microserviceUrl: string;
 
-  constructor(private readonly logService: LogService, private readonly configService: ConfigService) {
+  constructor(private readonly logService: Logger, private readonly configService: ConfigService) {
     this.microserviceUrl = configService.get<string>('MICROSERVICE_URL');
   }
 

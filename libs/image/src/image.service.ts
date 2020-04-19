@@ -6,12 +6,12 @@ import { Injectable } from '@nestjs/common';
 import Sharp from 'sharp';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 // #endregion
 
 @Injectable()
 export class ImageService {
-  constructor(private readonly logService: LogService) {}
+  constructor(private readonly logService: Logger) {}
 
   // eslint-disable-next-line no-confusing-arrow
   imageResize = async (originalImage: Buffer, width = 48, height = 48): Promise<Buffer | undefined> =>
