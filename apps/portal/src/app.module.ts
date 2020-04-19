@@ -140,7 +140,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     // #region Next RenderModule
     // TODO: появляется NOT FOUND перед загрузкой страницы
-    RenderModule, // .forRootAsync(Next({ dev, dir: dev ? 'apps/portal' : '', quiet: false })),
+    RenderModule, // .forRootAsync(Next({ dev: __DEV__, dir: __DEV__ ? 'apps/portal' : '', quiet: false })),
     // #endregion
 
     // #region Cache Manager - Redis

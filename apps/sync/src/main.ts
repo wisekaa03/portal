@@ -4,14 +4,15 @@
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { PinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { Logger } from '@app/logger';
 import { AppModule } from './app.module';
 // #endregion
 
-const logger = new LogService();
+const logger = new Logger(new PinoLogger({}), {});
 
 async function bootstrap(configService: ConfigService): Promise<void> {
   const server = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {

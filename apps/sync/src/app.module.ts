@@ -30,7 +30,7 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
   imports: [
     // #region Config & Log module
     ConfigModule.register(env),
-    LoggerModule,
+    LoggerModule.forRoot(),
     // #endregion
 
     // #region Locale I18n
