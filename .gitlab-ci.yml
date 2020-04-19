@@ -110,10 +110,9 @@ helm_development:
   allow_failure: false
   script:
     - env
-    - echo ${RELEASE_NAME}
     # Portal
     - |
-      helm upgrade \
+      helm upgrade ${RELEASE_NAME} helm/portal \
         --set replicaCount="1" \
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
@@ -158,8 +157,7 @@ helm_development:
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}" \
         --install --namespace=${NAMESPACE} \
-        --debug --values helm/portal/values.yaml \
-        ${RELEASE_NAME} helm/portal
+        --debug --values helm/portal/values.yaml
     # Portal-sync
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
@@ -183,10 +181,9 @@ helm_production:
   allow_failure: false
   script:
     - env
-    - echo ${RELEASE_NAME}
     # Portal
     - |
-      helm upgrade \
+      helm upgrade ${RELEASE_NAME} helm/portal \
         --set service.nodePort="30300" \
         --set service.nodePort_debug="30301" \
         --set PORT="${PORT}" \
@@ -230,8 +227,7 @@ helm_production:
         --set image.repository="${DOCKER_REGISTRY}/${RELEASE_NAME}" \
         --set image.tag="${CI_BUILD_REF}" \
         --install --namespace=${NAMESPACE} \
-        --debug --values helm/portal/values.yaml \
-        ${RELEASE_NAME} helm/portal
+        --debug --values helm/portal/values.yaml
     # Portal-sync
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
