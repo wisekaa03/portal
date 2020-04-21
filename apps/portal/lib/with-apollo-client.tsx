@@ -12,10 +12,12 @@ import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { Response } from 'express';
 // import { InStorageCache } from 'apollo-cache-instorage';
 // import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
+import { Logger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { UserContext } from '@lib/types';
@@ -32,6 +34,7 @@ interface CreateClientProps {
   cookie?: string;
 }
 
+let logger: Console | Logger = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
 const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
@@ -44,21 +47,29 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     };
   });
 
-  const errorLink = onError(({ graphQLErrors, networkError /* , response, operation */ }): any => {
-    if (graphQLErrors) {
-      // TODO: реализовать https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-error
-      graphQLErrors.forEach(({ message, locations, path, extensions }): void => {
-        console.error('[GraphQL error]: Message:', message, 'Location:', locations, 'Path:', path);
+  const errorLink = onError(({ graphQLErrors, networkError /* , response, operation */ }) => {
+    if (__SERVER__) {
+      if (graphQLErrors) {
+        graphQLErrors.forEach(({ message /* , path, locations, extensions */ }): void => {
+          logger!.error(message, message.toString(), 'GraphQL error');
+        });
+      }
+      if (networkError) {
+        logger!.error(networkError, networkError.toString(), 'Network error');
+      }
+    } else {
+      if (graphQLErrors) {
+        graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
+          logger!.error(message, message.toString(), 'GraphQL error');
 
-        if (!__SERVER__) {
           if (extensions.code === GQLErrorCode.UNAUTHENTICATED) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
           }
-        }
-      });
-    }
-    if (networkError) {
-      console.error('[Network error]:', networkError);
+        });
+      }
+      if (networkError) {
+        logger!.error(networkError, networkError.toString(), 'Network error');
+      }
     }
   });
 
@@ -148,6 +159,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
 
       if (__SERVER__) {
+        // eslint-disable-next-line global-require
+        // logger = new (await import('@app/logger/logger.service')).Logger(new PinoLogger({}), {});
+
         try {
           const { getDataFromTree } = await import('@apollo/react-ssr');
 
@@ -181,7 +195,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
             message = false;
           }
           if (message) {
-            console.error('withApolloClient getDataFromTree:', error);
+            logger!.error('withApolloClient getDataFromTree', error.toString(), 'getDataFromTree');
           }
         }
 
@@ -209,6 +223,13 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
     }
 
     public render(): React.ReactElement {
+      if (__SERVER__) {
+        const res = this.props.ctx?.res as Response;
+        if (res) {
+          logger = res?.locals?.nestLogger;
+        }
+      }
+
       return <MainApp apolloClient={this.apolloClient} {...this.props} />;
     }
   };

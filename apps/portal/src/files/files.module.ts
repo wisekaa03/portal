@@ -3,10 +3,9 @@
 // #region Imports NPM
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { ConfigModule } from '@app/config';
+import { LogModule } from '@app/logger';
 import { UserModule } from '@back/user/user.module';
 import { FilesService } from './files.service';
 import { FilesResolver } from './files.resolver';
@@ -16,10 +15,7 @@ import { FilesFolderEntity } from './files.folder.entity';
 
 @Module({
   imports: [
-    // #region Config module
-    ConfigModule,
-    LoggerModule,
-    // #endregion
+    LogModule,
 
     UserModule,
 

@@ -2,15 +2,15 @@
 
 // #region Imports NPM
 import { Module, Global } from '@nestjs/common';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
+import { LogModule } from '@app/logger';
 import { ImageService } from './image.service';
 // #endregion
 
 @Global()
 @Module({
-  imports: [LoggerModule],
+  imports: [LogModule],
   providers: [ImageService],
   exports: [ImageService],
 })

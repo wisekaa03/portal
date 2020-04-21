@@ -6,12 +6,14 @@ import { Injectable } from '@nestjs/common';
 import Sharp from 'sharp';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 // #endregion
 
 @Injectable()
 export class ImageService {
-  constructor(private readonly logService: Logger) {}
+  constructor(private readonly logger: LogService) {
+    logger.setContext(ImageService.name);
+  }
 
   // eslint-disable-next-line no-confusing-arrow
   imageResize = async (originalImage: Buffer, width = 48, height = 48): Promise<Buffer | undefined> =>
@@ -20,12 +22,11 @@ export class ImageService {
           .resize(width, height)
           .toBuffer()
           .catch((error) => {
-            this.logService.error(
+            this.logger.error(
               `Error converting image: width=${width}, height=${height}, originalImage=${originalImage
                 .toString('utf8')
                 .slice(0, 20)}`,
               error,
-              'ImageService',
             );
 
             return originalImage;

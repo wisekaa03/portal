@@ -40,7 +40,7 @@ import { nextI18next } from '@lib/i18n-client';
 interface MainDocumentInitialProps extends DocumentInitialProps {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   currentLanguage: string | undefined;
-  nonce?: string;
+  // nonce?: string;
   req?: IncomingMessage;
 }
 
@@ -71,7 +71,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
   static async getInitialProps(ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> {
     const sheets = new ServerStyleSheets();
-    const { apolloClient, renderPage: originalRenderPage, req } = ctx;
+    const { apolloClient, renderPage: originalRenderPage, req, res } = ctx;
 
     const lng = req && lngFromReq(req);
 

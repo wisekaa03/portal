@@ -1,7 +1,6 @@
 /** @format */
 
 // #region Imports NPM
-import { IncomingMessage } from 'http';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Request } from 'express';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
@@ -10,8 +9,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { User } from '@lib/types/user.dto';
-import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config/config.service';
 // #endregion
 
@@ -21,28 +20,27 @@ export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 export class LoggingInterceptor implements NestInterceptor {
   microserviceUrl: string;
 
-  constructor(private readonly logService: Logger, private readonly configService: ConfigService) {
+  constructor(private readonly logger: LogService, private readonly configService: ConfigService) {
     this.microserviceUrl = configService.get<string>('MICROSERVICE_URL');
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const now = Date.now();
     const type = context.getType();
-
     switch (type) {
       case 'rpc': {
         const info = context.switchToRpc().getContext();
 
-        return next
-          .handle()
-          .pipe(
-            tap(() =>
-              this.logService.log(
-                `${JSON.stringify(info.args)} - ${this.microserviceUrl} - ${Date.now() - now}ms`,
-                'NestMicroservice',
-              ),
+        return next.handle().pipe(
+          tap(() =>
+            this.logger.log(
+              {
+                info: info.args,
+                url: this.microserviceUrl,
+              },
+              'NestMicroservice',
             ),
-          );
+          ),
+        );
       }
 
       case 'http':
@@ -52,18 +50,9 @@ export class LoggingInterceptor implements NestInterceptor {
 
         // HTTP requests
         if (req) {
-          const { method, url, socket } = req;
+          // const { method, url, socket } = req;
 
-          return next
-            .handle()
-            .pipe(
-              tap(() =>
-                this.logService.log(
-                  `"${username}" - ${method} ${url} - ${req.method} - ${socket.remoteAddress} - ${Date.now() - now}ms`,
-                  context.getClass().name,
-                ),
-              ),
-            );
+          return next.handle().pipe(tap(() => this.logger.log({ username }, context.getClass().name)));
         }
 
         // GraphQL requests
@@ -71,7 +60,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        const address = gqlCtx?.req?.client?.remoteAddress;
+        // const address = gqlCtx?.req?.client?.remoteAddress;
         username = (gqlCtx?.req?.session?.passport?.user as User)?.username;
 
         const values = info.variableValues;
@@ -79,18 +68,19 @@ export class LoggingInterceptor implements NestInterceptor {
           values['password'] = '* MASKED *';
         }
 
-        return next
-          .handle()
-          .pipe(
-            tap(() =>
-              this.logService.log(
-                `"${username}"` +
-                  ` - ${info.parentType.name} "${info.fieldName}"` +
-                  ` - ${JSON.stringify(values)} - ${address} - ${Date.now() - now}ms`,
-                resolverName,
-              ),
+        return next.handle().pipe(
+          tap(() =>
+            this.logger.log(
+              {
+                username,
+                parentType: info.parentType.name,
+                fieldName: info.fieldName,
+                values: Object.keys(values).length > 0 && values,
+              },
+              resolverName,
             ),
-          );
+          ),
+        );
       }
     }
   }

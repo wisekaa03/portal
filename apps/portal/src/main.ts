@@ -23,18 +23,19 @@ import 'reflect-metadata';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 import { nextI18next } from '@lib/i18n-client';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
+import { pinoOptions } from './shared/pino.options';
 // #endregion
 
-async function bootstrap(configService: ConfigService): Promise<void> {
+async function bootstrap(config: ConfigService): Promise<void> {
   let httpsServer: boolean | ServerOptions = false;
 
   // #region NestJS options
-  const logger = new Logger(new PinoLogger({}), {});
+  const logger: LogService = new LogService(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
@@ -69,7 +70,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     new ExpressAdapter(server),
     nestjsOptions,
   );
-  app.useLogger(app.get(Logger));
+  app.useLogger(logger);
   // #endregion
 
   // #region X-Response-Time
@@ -89,7 +90,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   const frameSrc = ["'self'"];
   const defaultSrc = ["'self'"];
 
-  const mailUrl = configService.get<string>('MAIL_URL');
+  const mailUrl = config.get<string>('MAIL_URL');
   if (mailUrl.match(/http/)) {
     imgSrc.push(mailUrl);
     fontSrc.push(mailUrl);
@@ -97,7 +98,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     defaultSrc.push(mailUrl);
   }
 
-  const newsUrl = configService.get<string>('NEWS_URL');
+  const newsUrl = config.get<string>('NEWS_URL');
   if (newsUrl.match(/http/)) {
     imgSrc.push(newsUrl);
     fontSrc.push(newsUrl);
@@ -105,12 +106,12 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     defaultSrc.push(newsUrl);
   }
 
-  const newsApiUrl = configService.get<string>('NEWS_API_URL');
+  const newsApiUrl = config.get<string>('NEWS_API_URL');
   if (newsApiUrl.match(/http/)) {
     imgSrc.push(newsApiUrl);
   }
 
-  const meetingUrl = configService.get<string>('MEETING_URL');
+  const meetingUrl = config.get<string>('MEETING_URL');
   if (meetingUrl.match(/http/)) {
     frameSrc.push(meetingUrl);
   }
@@ -126,14 +127,10 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push(
-      `https://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT_SSL')}`,
-    );
-    frameSrc.push(
-      `http://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT')}`,
-    );
-    frameSrc.push(`https://localhost:${configService.get<number>('PORT_SSL')}`);
-    frameSrc.push(`http://localhost:${configService.get<number>('PORT')}`);
+    frameSrc.push(`https://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT_SSL')}`);
+    frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
+    frameSrc.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
+    frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
   }
 
   app.use(
@@ -164,8 +161,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Session and passport initialization
-  const store = sessionRedis(configService, logger);
-  app.use(session(configService, logger, store));
+  const store = sessionRedis(config, logger);
+  app.use(session(config, logger, store));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -180,8 +177,9 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #endregion
 
   // #region Next.JS locals
-  app.use('*', (_req: Request, res: Response, next: Function) => {
+  app.use('*', (_req: Request, res: express.Response, next: Function) => {
     // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
+    res.locals.nestLogger = logger;
     next();
     // res.set('X-Server-ID', res);
     // res.removeHeader('X-Powered-By');
@@ -218,12 +216,12 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   // #region Start server
   await app.init();
 
-  http.createServer(server).listen(configService.get<number>('PORT'));
-  logger.log(`HTTP running on port ${configService.get('PORT')}`, 'Bootstrap');
+  http.createServer(server).listen(config.get<number>('PORT'));
+  logger.log(`HTTP running on port ${config.get('PORT')}`, 'Bootstrap');
 
   if (httpsServer) {
-    https.createServer(httpsServer, server).listen(configService.get<number>('PORT_SSL'));
-    logger.log(`HTTPS running on port ${configService.get('PORT_SSL')}`, 'Bootstrap');
+    https.createServer(httpsServer, server).listen(config.get<number>('PORT_SSL'));
+    logger.log(`HTTPS running on port ${config.get('PORT_SSL')}`, 'Bootstrap');
   }
   // #endregion
 

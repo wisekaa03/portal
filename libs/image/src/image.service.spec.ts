@@ -4,24 +4,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 // #endregion
 // #region Imports Local
-import { Logger } from '../../logger/src';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { ImageService } from './image.service';
 // #endregion
 
-const serviceMock = jest.fn(() => ({
-  ConfigService: jest.fn().mockImplementation(() => ({
-    get: jest.fn(),
-  })),
-}));
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
+
+// const serviceMock = jest.fn(() => ({}));
 jest.mock('sharp');
 
-describe('ImageService', () => {
+describe(ImageService.name, () => {
   let service: ImageService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [ImageService, { provide: Logger, useValue: serviceMock }],
+      providers: [ConfigService, LogService, ImageService],
     }).compile();
 
     service = module.get<ImageService>(ImageService);

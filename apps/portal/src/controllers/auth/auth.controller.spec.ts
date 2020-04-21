@@ -9,8 +9,7 @@ import { ConfigService } from '@app/config';
 import { AuthController } from './auth.controller';
 // #endregion
 
-jest.mock('@app/config/config.service');
-jest.mock('@app/logger/logger.service');
+const serviceMock = jest.fn(() => ({}));
 
 describe('Auth Controller', () => {
   let controller: AuthController;
@@ -19,7 +18,7 @@ describe('Auth Controller', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PassportModule.register({ defaultStrategy: 'local', session: true })],
       controllers: [AuthController],
-      providers: [ConfigService],
+      providers: [{ provide: ConfigService, useValue: serviceMock }],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

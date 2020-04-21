@@ -5,8 +5,8 @@ import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger/log.service';
 import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
 // #endregion
 
@@ -26,9 +26,11 @@ export class SoapService {
    */
   constructor(
     @Inject(SOAP_OPTIONS) public readonly opts: SoapOptions,
-    private readonly logger: Logger,
+    private readonly logger: LogService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    logger.setContext(SoapService.name);
+  }
 
   async connect(authentication?: SoapAuthentication): Promise<SoapClient> {
     if (authentication && authentication.username && authentication.password) {
@@ -53,7 +55,7 @@ export class SoapService {
         return client as SoapClient;
       })
       .catch((error: SoapFault) => {
-        this.logger.error('SOAP connect error: ', error, 'SOAP Service');
+        this.logger.error('SOAP connect error: ', error.toString());
 
         throw SoapError(error);
       });

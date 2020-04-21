@@ -5,23 +5,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
-import { ConfigService } from '@app/config';
+import { ConfigService } from '@app/config/config.service';
+import { LogService } from '@app/logger/log.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 // #endregion
 
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
+
 const serviceMock = jest.fn(() => ({}));
-// const repositoryMock = jest.fn(() => ({
-//   metadata: {
-//     columns: [],
-//     relations: [],
-//   },
-// }));
 
-// jest.mock('../guards/gqlauth.guard');
-
-describe('AuthResolver', () => {
+describe(AuthResolver.name, () => {
   let resolver: AuthResolver;
 
   beforeEach(async () => {
@@ -29,8 +24,8 @@ describe('AuthResolver', () => {
       imports: [],
       providers: [
         AuthResolver,
-        { provide: ConfigService, useValue: serviceMock },
-        { provide: Logger, useValue: serviceMock },
+        ConfigService,
+        LogService,
         { provide: AuthService, useValue: serviceMock },
         { provide: I18nService, useValue: serviceMock },
       ],

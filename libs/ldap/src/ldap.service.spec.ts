@@ -2,17 +2,16 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { ConfigModule } from '@app/config';
-import { Logger } from '@app/logger';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { LdapService } from './ldap.service';
-import { LdapModule } from './ldap.module';
-import { LdapModuleOptions } from './ldap.interface';
+import { LDAP_OPTIONS } from './ldap.interface';
 // #endregion
 
-const serviceMock = jest.fn(() => ({}));
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
 
 jest.mock('cache-manager');
 jest.mock('cache-manager-redis-store', () => ({
@@ -24,24 +23,15 @@ jest.mock('ldapjs', () => ({
   }),
 }));
 
-jest.mock('@app/config/config.service');
+// const serviceMock = jest.fn(() => ({}));
 
-describe('LdapService', () => {
+describe(LdapService.name, () => {
   let ldap: LdapService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.register('.env'),
-        LoggerModule.forRoot(),
-
-        LdapModule.registerAsync({
-          useFactory: () => {
-            return {} as LdapModuleOptions;
-          },
-        }),
-      ],
-      providers: [{ provide: Logger, useValue: serviceMock }],
+      imports: [],
+      providers: [{ provide: LDAP_OPTIONS, useValue: {} }, ConfigService, LogService, LdapService],
     }).compile();
 
     ldap = module.get<LdapService>(LdapService);

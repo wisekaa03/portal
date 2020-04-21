@@ -5,7 +5,7 @@
 // #region Imports NPM
 import { resolve } from 'path';
 // import { APP_FILTER } from '@nestjs/core';
-import Next from 'next';
+// import Next from 'next';
 import { Module, CacheModule } from '@nestjs/common';
 import {
   I18nModule,
@@ -18,11 +18,10 @@ import {
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
-import { LoggerModule } from 'nestjs-pino';
 import redisCacheStore from 'cache-manager-redis-store';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
+import { LogModule, LogService } from '@app/logger';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { CacheInterceptorProvider } from '@app/cache.interceptor';
@@ -64,7 +63,7 @@ import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
 const env = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env');
 
 // #region TypeOrm config options
-const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
+const typeOrmPostgres = (configService: ConfigService, logger: LogService): TypeOrmModuleOptions => ({
   name: 'default',
   keepConnectionAlive: true,
   type: 'postgres',
@@ -124,18 +123,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
     // #endregion
 
     // #region Logging module
-    LoggerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => {
-        return {
-          pinoHttp: {
-            prettyPrint: __DEV__,
-            level: config.get<string>('LOGLEVEL'),
-          },
-        };
-      },
-    }),
+    LogModule,
     // #endregion
 
     // #region Next RenderModule
@@ -145,10 +133,10 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     // #region Cache Manager - Redis
     CacheModule.registerAsync({
-      imports: [ConfigModule, LoggerModule],
-      inject: [ConfigService, Logger],
-      useFactory: async (configService: ConfigService, logService: Logger) => {
-        logService.debug(
+      imports: [LogModule],
+      inject: [ConfigService, LogService],
+      useFactory: async (configService: ConfigService, logger: LogService) => {
+        logger.debug(
           `install cache: ` +
             `url="${configService.get('HTTP_REDIS_URI')}", ` +
             `ttl=${configService.get('HTTP_REDIS_TTL')}s, ` +
@@ -169,7 +157,6 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     // #region Locale I18n
     I18nModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       parser: I18nJsonParser,
       useFactory: async (configService: ConfigService) => ({
@@ -210,9 +197,9 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     // #region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, LoggerModule],
-      inject: [ConfigService, Logger],
-      useFactory: async (configService: ConfigService, logger: Logger) => {
+      imports: [LogModule],
+      inject: [ConfigService, LogService],
+      useFactory: async (configService: ConfigService, logger: LogService) => {
         logger.debug(
           `Replication: ` +
             `master url="${configService.get<string>('DATABASE_URI')}, ` +

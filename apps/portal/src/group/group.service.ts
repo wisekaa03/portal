@@ -6,8 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { LoginService, Group } from '@lib/types';
-import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
 import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
@@ -19,16 +19,19 @@ export class GroupService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly logService: Logger,
+    private readonly logger: LogService,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {
+    logger.setContext(GroupService.name);
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
 
   /**
    * Group by Identificator
    *
+   * @async
+   * @method byIdentificator
    * @param {string} loginIdentificator Group object GUID
    * @param {boolean} [cache = true] Cache true/false
    * @return {Promise<GroupEntity | undefined>} Group
@@ -65,7 +68,7 @@ export class GroupService {
               return this.groupRepository.save(this.groupRepository.create(group));
             })
             .catch((error: Error) => {
-              this.logService.error('Unable to save data in `group`', error, 'GroupService');
+              this.logger.error('Unable to save data in `group`', error);
             }),
         );
       });
@@ -90,7 +93,7 @@ export class GroupService {
    */
   bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[]> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logService.error('Unable to save data in `group`', error, 'GroupService');
+      this.logger.error('Unable to save data in `group`', error);
 
       throw error;
     });
@@ -103,7 +106,7 @@ export class GroupService {
    */
   save = async (group: GroupEntity): Promise<GroupEntity> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logService.error('Unable to save data in `group`', error, 'GroupService');
+      this.logger.error('Unable to save data in `group`', error);
 
       throw error;
     });

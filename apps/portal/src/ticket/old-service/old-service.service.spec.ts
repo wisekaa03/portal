@@ -2,9 +2,12 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 import { SoapService } from '@app/soap';
 import { OldTicketService } from './old-service.service';
+
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -14,18 +17,13 @@ const serviceMock = jest.fn(() => ({}));
 //   },
 // }));
 
-describe('OldServiceService', () => {
+describe(OldTicketService.name, () => {
   let service: OldTicketService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [
-        OldTicketService,
-        { provide: Logger, useValue: serviceMock },
-        { provide: ConfigService, useValue: serviceMock },
-        { provide: SoapService, useValue: serviceMock },
-      ],
+      providers: [ConfigService, LogService, OldTicketService, { provide: SoapService, useValue: serviceMock }],
     }).compile();
 
     service = module.get<OldTicketService>(OldTicketService);

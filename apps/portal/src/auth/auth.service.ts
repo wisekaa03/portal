@@ -7,15 +7,14 @@ import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
 // #endregion
 // #region Imports Local
-import { EmailSession } from '@lib/types/auth';
+import { LoginEmail, EmailSession } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
-import { Logger } from '@app/logger';
-import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
+import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
-import { LoginEmail } from '../../lib/types/auth';
 // #endregion
 
 @Injectable()
@@ -23,11 +22,13 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
-    private readonly logService: Logger,
+    private readonly logger: LogService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly i18n: I18nService,
-  ) {}
+  ) {
+    logger.setContext(AuthService.name);
+  }
 
   /**
    * Validate a user
@@ -53,12 +54,12 @@ export class AuthService {
    * @throws {Error} Exception
    */
   async login({ username, password }: { username: string; password: string }): Promise<UserEntity> {
-    this.logService.debug(`User login: username = "${username}"`, AuthService.name);
+    this.logger.debug(`User login: username = "${username}"`);
 
     const ldapUser = await this.ldapService.authenticate(username, password);
 
     return this.userService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logService.error('Error: not found user', error, AuthService.name);
+      this.logger.error('Error: not found user', error);
 
       throw error;
     });
@@ -85,11 +86,11 @@ export class AuthService {
       try {
         redisDatabase.flushdb();
 
-        this.logService.log('Reset database cache.', `${AuthService.name}:cacheReset`);
+        this.logger.log('Reset database cache');
 
         databaseStoreReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset database cache:', error, `${AuthService.name}:cacheReset`);
+        this.logger.error('Unable to reset database cache:', error);
       }
 
       redisDatabase.quit();
@@ -103,11 +104,11 @@ export class AuthService {
       try {
         redisLdap.flushdb();
 
-        this.logService.log('Reset LDAP cache.', `${AuthService.name}:cacheReset`);
+        this.logger.log('Reset LDAP cache');
 
         ldapCacheReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset LDAP cache:', error, `${AuthService.name}:cacheReset`);
+        this.logger.error('Unable to reset LDAP cache:', error);
       }
 
       redisLdap.quit();
@@ -121,11 +122,11 @@ export class AuthService {
       try {
         redisHttp.flushdb();
 
-        this.logService.log('Reset HTTP cache.', `${AuthService.name}:cacheReset`);
+        this.logger.log('Reset HTTP cache');
 
         httpStoreReset = true;
       } catch (error) {
-        this.logService.error('Unable to reset LDAP cache:', error, `${AuthService.name}:cacheReset`);
+        this.logger.error('Unable to reset LDAP cache:', error);
       }
 
       redisHttp.quit();
@@ -139,16 +140,16 @@ export class AuthService {
       try {
         redisSession.flushdb();
 
-        this.logService.log('Reset session cache.', `${AuthService.name}:cacheReset`);
+        this.logger.log('Reset session cache');
       } catch (error) {
-        this.logService.error('Unable to reset session cache:', error, `${AuthService.name}:cacheReset`);
+        this.logger.error('Unable to reset session cache:', error);
       }
 
       redisSession.quit();
 
       sessionStoreReset = true;
     } catch (error) {
-      this.logService.error('Error in cache reset, session store', error, `${AuthService.name}:cacheReset`);
+      this.logger.error('Error in cache reset, session store', error);
     }
 
     if (databaseStoreReset && sessionStoreReset && ldapCacheReset && httpStoreReset) {

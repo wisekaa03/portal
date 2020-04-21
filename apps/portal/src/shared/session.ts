@@ -6,10 +6,10 @@ import Express from 'express';
 // #endreion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 // #endregion
 
-export default (configService: ConfigService, logService: Logger, store: Session.Store): Express.RequestHandler => {
+export default (configService: ConfigService, logger: LogService, store: Session.Store): Express.RequestHandler => {
   try {
     const sess = Session({
       secret: configService.get<string>('SESSION_SECRET'),
@@ -37,7 +37,7 @@ export default (configService: ConfigService, logService: Logger, store: Session
       },
     });
 
-    logService.debug(
+    logger.debug(
       `OK: name=${configService.get<string>('SESSION_NAME')}, ` +
         `cookie ttl=${configService.get<number>('SESSION_COOKIE_TTL')}ms, ` +
         `secret="${configService.get<string>('SESSION_SECRET') ? '{MASKED}' : ''}" `,
@@ -46,7 +46,7 @@ export default (configService: ConfigService, logService: Logger, store: Session
 
     return sess;
   } catch (error) {
-    logService.error('cannot install', error, 'Session');
+    logger.error('cannot install', error, 'Session');
 
     throw error;
   }

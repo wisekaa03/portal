@@ -55,8 +55,10 @@ export class ProfileResolver {
   }
 
   /**
-   * GraphQL query: profileFieldSelection
+   * Profile field selection
    *
+   * @async
+   * @method profileFieldSelection
    * @param {string} field Field: 'company' | 'department' | 'otdel' | 'country' |
    *                              'region' | 'town' | 'street' | 'postalCode'
    * @returns {Promise<string[]>} Field selection
@@ -77,8 +79,10 @@ export class ProfileResolver {
   }
 
   /**
-   * GraphQL query: searchSuggestions
+   * Search suggestions
    *
+   * @async
+   * @method searchSuggestions
    * @param {string} search The search suggestions string
    * @returns {Promise<string[]>} The search suggestions
    */
@@ -89,20 +93,23 @@ export class ProfileResolver {
   }
 
   /**
-   * GraphQL query: profile
+   * Profile
    *
+   * @async
    * @param {string} id optional id of profile
    * @returns {ProfilesEntity | undefined}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
   async profile(@Args('id') id: string): Promise<ProfileEntity | undefined> {
-    return this.profileService.byID(id) || undefined;
+    return this.profileService.byId(id) || undefined;
   }
 
   /**
-   * GraphQL mutation: changeProfile
+   * Change profile
    *
+   * @async
+   * @method changeProfile
    * @param {Request} req The request from which I try to compose user
    * @param {Profile} profile The profile
    * @param {Promise<FileUpload>} thumbnailPhoto Avatar

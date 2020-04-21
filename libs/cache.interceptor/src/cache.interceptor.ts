@@ -7,12 +7,12 @@ import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 // #endregion
 
 @Injectable()
 export class HttpCacheInterceptor extends CacheInterceptor {
-  constructor(cacheManager: any, reflector: any, private readonly logService: Logger) {
+  constructor(cacheManager: any, reflector: any, private readonly logger: LogService) {
     super(cacheManager, reflector);
   }
 
@@ -30,7 +30,8 @@ export class HttpCacheInterceptor extends CacheInterceptor {
       const req = context.switchToHttp().getRequest<Request>();
       if (req && req.method === 'GET') {
         // TODO: доделать все-таки кэш, не получается из-за связки nest с next, разобраться
-        // this.logService.log(`Cache: "${req.url}". Session: "${req.session && req.session.id}"`, 'CacheInterceptor');
+        // this.logger.log(`Cache: "${req.url}". Session: "${req.session && req.session.id}"`,
+        //      HttpCacheInterceptor.name);
         // const url = httpAdapter.getRequestUrl(req);
         // return `${url}$${req.headers.cookie}`;
       }

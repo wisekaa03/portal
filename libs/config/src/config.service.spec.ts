@@ -3,12 +3,12 @@
 // #region Imports NPM
 import { join } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from './config.service';
 // #endregion
 // #region Imports Local
+import { ConfigService } from './config.service';
 // #endregion
 
-describe('ConfigService', () => {
+describe(ConfigService.name, () => {
   let config: ConfigService;
 
   beforeEach(async () => {

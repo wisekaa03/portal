@@ -7,8 +7,8 @@ import { Repository, IsNull } from 'typeorm';
 // #endregion
 // #region Imports Local
 import { Files, FilesFolder, FilesFolderResponse, User } from '@lib/types';
-import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { FilesEntity } from './files.entity';
 import { FilesFolderEntity } from './files.folder.entity';
 // #endregion
@@ -18,7 +18,7 @@ export class FilesService {
   dbCacheTtl = 10000;
 
   constructor(
-    private readonly logService: Logger,
+    private readonly logger: LogService,
     private readonly configService: ConfigService,
     // private readonly userService: UserService,
     @InjectRepository(FilesEntity)
@@ -26,6 +26,7 @@ export class FilesService {
     @InjectRepository(FilesFolderEntity)
     private readonly filesFolderRepository: Repository<FilesFolderEntity>,
   ) {
+    logger.setContext(FilesService.name);
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
 
@@ -36,7 +37,7 @@ export class FilesService {
    * @return {FilesEntity[]}
    */
   file = async (id?: string): Promise<FilesEntity[]> => {
-    this.logService.log(`Files entity: id={${id}}`, 'FilesService');
+    this.logger.log(`Files entity: id={${id}}`);
 
     // TODO: сделать чтобы выводилось постранично
     return this.filesRepository.find(id ? { id } : undefined);
@@ -49,10 +50,7 @@ export class FilesService {
    * @return {FilesEntity}
    */
   editFile = async ({ title, folder, filename, mimetype, updatedUser, id }: Files): Promise<FilesEntity> => {
-    this.logService.log(
-      `Edit: ${JSON.stringify({ title, folder, filename, mimetype, updatedUser, id })}`,
-      'FilesService',
-    );
+    this.logger.log(`Edit: ${JSON.stringify({ title, folder, filename, mimetype, updatedUser, id })}`);
 
     const folderEntity = await this.filesFolderRepository.findOne(folder as string);
 
@@ -77,7 +75,7 @@ export class FilesService {
    * @return {boolean} - true/false of delete files
    */
   deleteFile = async (id: string): Promise<boolean> => {
-    this.logService.log(`Edit: id={${id}}`, 'FilesService');
+    this.logger.log(`Edit: id={${id}}`);
 
     const deleteResult = await this.filesRepository.delete({ id });
 
@@ -92,7 +90,7 @@ export class FilesService {
    * @return {Promise<FilesFolderResponse[]>}
    */
   folder = async (user: User, id?: string): Promise<FilesFolderResponse[]> => {
-    this.logService.log(`Folder: id={${id}}`, 'FilesService');
+    this.logger.log(`Folder: id={${id}}`);
 
     const where: Record<any, any> = [];
     if (id) {
@@ -117,9 +115,8 @@ export class FilesService {
    * @return {Promise<FilesFolderResponse>}
    */
   editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<FilesFolderResponse> => {
-    this.logService.log(
+    this.logger.log(
       `Edit: ${JSON.stringify({ pathname, id, user: user?.username, updatedUser: updatedUser?.username })}`,
-      'FilesService',
     );
 
     // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
@@ -154,7 +151,7 @@ export class FilesService {
    * @return {Promise<string | undefined>} id of deleted folder
    */
   deleteFolder = async (id: string): Promise<string | undefined> => {
-    this.logService.log(`Edit folder: id={${id}}`, 'FilesService');
+    this.logger.log(`Edit folder: id={${id}}`);
 
     const deleteResult = await this.filesFolderRepository.delete({ id });
 

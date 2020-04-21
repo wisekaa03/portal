@@ -7,11 +7,15 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
+import { ConfigService } from '@app/config/config.service';
+import { LogService } from '@app/logger/log.service';
 import { NewsService } from './news.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user/user.service';
 // #endregion
+
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 const repositoryMock = jest.fn(() => ({
@@ -30,9 +34,7 @@ class NewsEntity {
   name?: string;
 }
 
-// jest.mock('../guards/gqlauth.guard');
-
-describe('NewsService', () => {
+describe(NewsService.name, () => {
   let service: NewsService;
 
   beforeEach(async () => {
@@ -52,8 +54,9 @@ describe('NewsService', () => {
         TypeOrmModule.forFeature([NewsEntity]),
       ],
       providers: [
+        ConfigService,
+        LogService,
         NewsService,
-        { provide: Logger, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
         { provide: getRepositoryToken(NewsEntity), useValue: repositoryMock },

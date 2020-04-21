@@ -7,19 +7,17 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
 import { FilesService } from './files.service';
 // #endregion
 
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
+
 const serviceMock = jest.fn(() => ({}));
-jest.mock('@app/config/config.service', () => ({
-  ConfigService: jest.fn().mockImplementation(() => ({
-    get: jest.fn(),
-  })),
-}));
 const repositoryMock = jest.fn(() => ({
   metadata: {
     columns: [],
@@ -65,9 +63,9 @@ describe('FilesService', () => {
         TypeOrmModule.forFeature([FilesEntity, FilesFolderEntity]),
       ],
       providers: [
-        FilesService,
         ConfigService,
-        { provide: Logger, useValue: serviceMock },
+        LogService,
+        FilesService,
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
         { provide: getRepositoryToken(FilesEntity), useValue: repositoryMock },

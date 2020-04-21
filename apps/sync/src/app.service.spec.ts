@@ -6,8 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-// import { ConfigModule, ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image/image.service';
 import { GroupService } from '@back/group/group.service';
@@ -15,6 +15,9 @@ import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
 import { SyncService } from './app.service';
 // #endregion
+
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 
@@ -25,9 +28,10 @@ describe(SyncService.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
+        ConfigService,
+        LogService,
         SyncService,
         { provide: I18nService, useValue: serviceMock },
-        { provide: Logger, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },

@@ -11,8 +11,6 @@ import { ProfileService } from './profile.service';
 
 const serviceMock = jest.fn(() => ({}));
 
-// jest.mock('../guards/gqlauth.guard');
-
 describe('ProfileResolver', () => {
   let resolver: ProfileResolver;
 

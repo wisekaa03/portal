@@ -4,10 +4,10 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 // import { JwtModule } from '@nestjs/jwt';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
+import { LogModule } from '@app/logger';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { UserModule } from '@back/user/user.module';
 import { AuthService } from './auth.service';
@@ -19,10 +19,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
-    // #region Logger module, Config module
-    LoggerModule,
-    ConfigModule,
-    // #endregion
+    LogModule,
 
     // #region Passport module
     PassportModule.register({ session: true, defaultStrategy: 'local' }),
@@ -38,7 +35,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 
     // #region LDAP Module
     LdapModule.registerAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {

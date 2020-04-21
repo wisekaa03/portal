@@ -6,11 +6,10 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { ConfigService } from '@app/config/config.service';
+import { LogService } from '@app/logger/log.service';
 import { LdapService } from '@app/ldap';
 import { LDAP_SYNC_SERVICE } from '@lib/constants';
 import { ProfileService } from '@back/profile/profile.service';
@@ -18,12 +17,10 @@ import { GroupService } from '@back/group/group.service';
 import { UserService } from './user.service';
 // #endregion
 
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
+
 const serviceMock = jest.fn(() => ({}));
-jest.mock('@app/config/config.service', () => ({
-  ConfigService: jest.fn().mockImplementation(() => ({
-    get: jest.fn(),
-  })),
-}));
 const repositoryMock = jest.fn(() => ({
   metadata: {
     columns: [],
@@ -40,16 +37,12 @@ class UserEntity {
   name?: string;
 }
 
-// jest.mock('../guards/gqlauth.guard');
-
 describe('UserService', () => {
   let service: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule.forRoot(),
-
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
@@ -64,9 +57,9 @@ describe('UserService', () => {
         TypeOrmModule.forFeature([UserEntity]),
       ],
       providers: [
-        UserService,
         ConfigService,
-        { provide: Logger, useValue: serviceMock },
+        LogService,
+        UserService,
         { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
         { provide: ClientProxy, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },

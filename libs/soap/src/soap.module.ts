@@ -1,14 +1,16 @@
 /** @format */
 
 // #region Imports NPM
-import { DynamicModule, Module, Provider, Type, Global } from '@nestjs/common';
+import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
 // #endregion
 // #region Imports Local
+import { LogModule, LogService } from '@app/logger';
 import { SOAP_OPTIONS, SoapOptions, SoapOptionsFactory, SoapModuleAsyncOptions } from './soap.interface';
 import { SoapService } from './soap.service';
 // #endregion
 
 @Module({
+  imports: [LogModule],
   providers: [SoapService],
   exports: [SoapService],
 })

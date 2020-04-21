@@ -8,14 +8,16 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
-import { AUTH_PAGE } from '../../lib/constants';
+import { AUTH_PAGE } from '@lib/constants';
 // #endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-  constructor(private readonly logService: Logger) {}
+  constructor(private readonly logger: LogService) {
+    logger.setContext(HttpErrorFilter.name);
+  }
 
   catch(exception: Error | HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -51,9 +53,9 @@ export class HttpErrorFilter implements ExceptionFilter {
         return;
       }
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-        this.logService.error(`${request.method} ${request.url}`, exception.stack, 'ExceptionFilter');
+        this.logger.error(`${request.method} ${request.url}`, exception.stack);
       } else {
-        this.logService.error(`${request.method} ${request.url}`, errorResponse, 'ExceptionFilter');
+        this.logger.error(`${request.method} ${request.url}`, errorResponse);
       }
 
       response.status(status);
@@ -64,7 +66,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       const context: AppGraphQLExecutionContext = GqlExecutionContext.create(host as ExecutionContext);
       const info = context.getInfo();
 
-      this.logService.error(`${info.parentType.name} "${info.fieldName}": ${message}`, undefined, 'ExceptionFilter');
+      this.logger.error(`${info.parentType.name} "${info.fieldName}": ${message}`);
       // #endregion
     }
   }

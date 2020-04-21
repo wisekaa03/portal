@@ -4,10 +4,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transport, ClientProxyFactory } from '@nestjs/microservices';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
+import { LogModule } from '@app/logger';
 import { LDAP_SYNC_SERVICE } from '@lib/constants';
 import { ProfileModule } from '@back/profile/profile.module';
 import { GroupModule } from '@back/group/group.module';
@@ -18,10 +18,7 @@ import { UserResolver } from './user.resolver';
 
 @Module({
   imports: [
-    // #region Config & Log module
-    ConfigModule,
-    LoggerModule,
-    // #endregion
+    LogModule,
 
     GroupModule,
     ProfileModule,

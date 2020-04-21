@@ -7,10 +7,10 @@ import Redis from 'redis';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 // #endregion
 
-export default (configService: ConfigService, logService: Logger): Session.Store => {
+export default (configService: ConfigService, logger: LogService): Session.Store => {
   try {
     const sess = new (RedisSessionStore(Session))({
       client: Redis.createClient({
@@ -18,11 +18,11 @@ export default (configService: ConfigService, logService: Logger): Session.Store
       }),
     });
 
-    logService.debug(`Redis: url="${configService.get<string>('SESSION_REDIS_URI')}"`, 'Session');
+    logger.debug(`Redis: url="${configService.get<string>('SESSION_REDIS_URI')}"`, 'Session');
 
     return sess;
   } catch (error) {
-    logService.error('Error when installing', error, 'Session');
+    logger.error('Error when installing', error, 'Session');
 
     throw error;
   }

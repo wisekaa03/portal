@@ -2,21 +2,19 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
+// import { LogModule } from '@app/logger';
 import { MailController } from './mail.controller';
 // #endregion
 
-jest.mock('@app/logger/logger.service');
-
-describe('MailController', () => {
+describe(MailController.name, () => {
   let controller: MailController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MailController],
-      imports: [LoggerModule],
+      imports: [],
       providers: [],
     }).compile();
 

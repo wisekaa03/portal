@@ -5,7 +5,7 @@ import * as CacheManager from 'cache-manager';
 import { PinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 import { HttpCacheInterceptor } from './cache.interceptor';
 // #endregion
 
@@ -14,6 +14,6 @@ jest.mock('cache-manager');
 
 describe('CacheInterceptor', () => {
   it('should be defined', () => {
-    expect(new HttpCacheInterceptor(CacheManager, {}, new Logger(new PinoLogger({}), {}))).toBeDefined();
+    expect(new HttpCacheInterceptor(CacheManager, {}, new LogService(new PinoLogger({}), {}))).toBeDefined();
   });
 });

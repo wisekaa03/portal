@@ -7,12 +7,11 @@ import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
-import { Logger } from '@app/logger';
+import { LogModule, LogService } from '@app/logger';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { UserModule } from '@back/user/user.module';
 import { UserEntity } from '@back/user/user.entity';
@@ -30,12 +29,11 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
   imports: [
     // #region Config & Log module
     ConfigModule.register(env),
-    LoggerModule.forRoot(),
+    LogModule,
     // #endregion
 
     // #region Locale I18n
     I18nModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       parser: I18nJsonParser,
       useFactory: async (configService: ConfigService) => ({
@@ -50,7 +48,6 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
 
     // #region LDAP Module
     LdapModule.registerAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
@@ -79,9 +76,8 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
 
     // #region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, LoggerModule],
-      inject: [ConfigService, Logger],
-      useFactory: async (configService: ConfigService, logger: Logger) =>
+      inject: [ConfigService, LogService],
+      useFactory: async (configService: ConfigService, logger: LogService) =>
         ({
           name: 'default',
           keepConnectionAlive: true,

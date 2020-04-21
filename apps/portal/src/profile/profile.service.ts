@@ -12,7 +12,7 @@ import { FileUpload } from 'graphql-upload';
 import { Profile, Gender, LoginService } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
-import { Logger } from '@app/logger';
+import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
 import { GQLErrorCode } from '@back/shared/gqlerror';
@@ -40,10 +40,11 @@ export class ProfileService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
     private readonly configService: ConfigService,
-    private readonly logService: Logger,
+    private readonly logger: LogService,
     private readonly imageService: ImageService,
     private readonly ldapService: LdapService,
   ) {
+    logger.setContext(ProfileService.name);
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
 
@@ -94,11 +95,13 @@ export class ProfileService {
   /**
    * Profile by ID
    *
+   * @async
+   * @method byId
    * @param {string} id ID of profile
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byID = async (
+  byId = async (
     id: string,
     isRelations: boolean | 'manager' = true,
     cache = true,
@@ -268,7 +271,7 @@ export class ProfileService {
         return this.fromLdap(ldapUser, undefined, true, count + 1);
       }
     } else {
-      this.logService.log(`The LDAP count > 10, manager is not inserted: ${userByDN}`, 'ProfileService');
+      this.logger.log(`The LDAP count > 10, manager is not inserted: ${userByDN}`);
     }
 
     return undefined;
@@ -390,7 +393,7 @@ export class ProfileService {
    */
   bulkSave = async (profiles: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
-      this.logService.error('Unable to save data(s) in `profile`', error, 'ProfileService');
+      this.logger.error('Unable to save data(s) in `profile`', error);
 
       throw error;
     });
@@ -404,7 +407,7 @@ export class ProfileService {
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
-      this.logService.error('Unable to save data in `profile`', error, 'ProfileService');
+      this.logger.error('Unable to save data in `profile`', error);
 
       throw error;
     });

@@ -6,12 +6,15 @@ import { HttpService } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
 // #region Imports Local
-import { Logger } from '@app/logger';
 import { ConfigService } from '@app/config';
+import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { AuthService } from './auth.service';
 // #endregion
+
+jest.mock('@app/config/config.service');
+jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -21,16 +24,16 @@ const serviceMock = jest.fn(() => ({}));
 //   },
 // }));
 
-describe('AuthService', () => {
+describe(AuthService.name, () => {
   let service: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
+        ConfigService,
+        LogService,
         AuthService,
-        { provide: ConfigService, useValue: serviceMock },
-        { provide: Logger, useValue: serviceMock },
         { provide: I18nService, useValue: serviceMock },
         { provide: HttpService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },

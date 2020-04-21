@@ -1,12 +1,20 @@
 /** @format */
 
 // #region Imports NPM
+import { Injectable, Scope, Inject } from '@nestjs/common';
 import { Logger as TypeOrmLogger } from 'typeorm';
-import { Logger as PinoLogger } from 'nestjs-pino';
+import { Logger, PinoLogger, Params } from 'nestjs-pino';
 // #endregion
 
-export class Logger extends PinoLogger implements TypeOrmLogger {
-  locale = undefined;
+@Injectable({ scope: Scope.TRANSIENT })
+export class LogService extends Logger implements TypeOrmLogger {
+  constructor(private readonly pinoLogger: PinoLogger, @Inject('pino-params') { renameContext }: Params) {
+    super(pinoLogger, { renameContext });
+  }
+
+  setContext(context: string): void {
+    this.pinoLogger.setContext(context);
+  }
 
   log(message: any, context?: string): void {
     let m = message;
@@ -26,26 +34,17 @@ export class Logger extends PinoLogger implements TypeOrmLogger {
     }
   }
 
-  warn(message: any, context?: string): void {
-    super.warn(message, context);
-  }
+  // warn(message: any, context?: string): void {
+  //   this.pinoLogger.warn(message, context);
+  // }
 
-  debug(message: any, context?: string): void {
-    super.debug(message, context);
-  }
+  // debug(message: any, context?: string): void {
+  //   this.pinoLogger.debug(message, context);
+  // }
 
-  verbose(message: any, context?: string): void {
-    super.verbose(message, context);
-  }
-
-  /**
-   * From app.use(morgan('dev', { stream: logger })) - the request/response logging
-   *
-   * @param {string} message Message string
-   */
-  write(message: string): void {
-    this.verbose(message.replace(/\n/, ''), 'Request');
-  }
+  // verbose(message: any, context?: string): void {
+  //   this.pinoLogger.verbose(message, context);
+  // }
 
   /**
    * From TypeORM: logQuery

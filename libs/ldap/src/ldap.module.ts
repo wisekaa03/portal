@@ -2,17 +2,17 @@
 
 // #region Imports NPM
 import { DynamicModule, Module, Provider, Type, Global } from '@nestjs/common';
-import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { ConfigModule } from '@app/config';
+// import { ConfigModule } from '@app/config';
+import { LogModule } from '@app/logger';
 import { LdapService } from './ldap.service';
 import { LDAP_OPTIONS, LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './ldap.interface';
 // #endregion
 
 @Global()
 @Module({
-  imports: [LoggerModule, ConfigModule],
+  imports: [LogModule],
   providers: [LdapService],
   exports: [LdapService],
 })

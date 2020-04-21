@@ -3,12 +3,12 @@
 // #region Imports NPM
 import { Resolver, Query, Mutation, Context, Args } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
+// import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
+import { LogService } from '@app/logger';
 import { User, FilesFolderResponse } from '@lib/types';
-import { Logger } from '@app/logger';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser } from '@back/user/user.decorator';
@@ -19,10 +19,12 @@ import { FilesService } from './files.service';
 @Resolver('Files')
 export class FilesResolver {
   constructor(
-    private readonly logService: Logger,
+    private readonly logger: LogService,
     private readonly filesService: FilesService,
     private readonly userService: UserService,
-  ) {}
+  ) {
+    logger.setContext(FilesResolver.name);
+  }
 
   /**
    * GraphQL query: files get
