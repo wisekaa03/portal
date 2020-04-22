@@ -110,6 +110,8 @@ helm_development:
   allow_failure: false
   script:
     - env
+    - echo "Kubectl version" && kubectl version
+    - echo "Helm version" && helm version
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
@@ -181,6 +183,8 @@ helm_production:
   allow_failure: false
   script:
     - env
+    - echo "Kubectl version" && kubectl version
+    - echo "Helm version" && helm version
     # Portal
     - |
       helm upgrade ${RELEASE_NAME} helm/portal \
@@ -189,7 +193,7 @@ helm_production:
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
-        --set LOGLEVEL="${LOGLEVEL}" \        
+        --set LOGLEVEL="${LOGLEVEL}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
