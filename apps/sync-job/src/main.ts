@@ -13,7 +13,7 @@ import { LogService } from '@app/logger';
 import { LDAP_SYNC } from '@lib/constants';
 // #endregion
 
-const logger = new LogService(new PinoLogger({}));
+const logger = new LogService(new PinoLogger({}), {});
 
 async function bootstrap(configService: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
