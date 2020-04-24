@@ -43,7 +43,6 @@ build_development:
     paths:
       - .next/
       - dist
-    expire_in: 16 hours
 
 build_production:
   image: node:13
@@ -67,7 +66,6 @@ build_production:
     paths:
       - .next/
       - dist
-    expire_in: 16 hours
 
 docker:
   image: docker:latest
