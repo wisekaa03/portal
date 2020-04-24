@@ -13,9 +13,6 @@ variables:
 prepare:
   image: node:13
   stage: build
-  except:
-    changes:
-      - "*.md"
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
@@ -29,9 +26,6 @@ build_development:
   stage: build
   environment:
     name: development
-  except:
-    changes:
-      - "*.md"
   cache:
     key: "${CI_COMMIT_REF_SLUG}-development"
     paths:
@@ -56,9 +50,6 @@ build_production:
   stage: build
   environment:
     name: production
-  except:
-    changes:
-      - "*.md"
   cache:
     key: "${CI_COMMIT_REF_SLUG}-production"
     paths:
@@ -81,9 +72,6 @@ build_production:
 docker:
   image: docker:latest
   stage: docker
-  except:
-    changes:
-      - "*.md"
   cache:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
@@ -101,9 +89,6 @@ docker:
 helm_development:
   image: dtzar/helm-kubectl:latest
   stage: deploy
-  except:
-    changes:
-      - "*.md"
   environment:
     name: development
   dependencies: []
@@ -173,9 +158,6 @@ helm_development:
 helm_production:
   image: dtzar/helm-kubectl:latest
   stage: deploy
-  except:
-    changes:
-      - "*.md"
   environment:
     name: production
   dependencies: []
