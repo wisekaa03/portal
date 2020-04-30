@@ -5,7 +5,7 @@ import React, { FC, useState } from 'react';
 import { Badge, Typography, Fab, Tooltip } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BaseDropzone, { DropzoneState, useDropzone } from 'react-dropzone';
+import BaseDropzone, { DropzoneState, useDropzone, FileRejection } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
@@ -160,15 +160,15 @@ const Dropzone = ({
     setFiles(files.filter((file: DropzoneFile) => file.id !== index));
   };
 
-  const handleDropRejected = (rejectedFiles: File[]): void => {
+  const handleDropRejected = (rejectedFiles: FileRejection[]): void => {
     updateError();
 
     rejectedFiles.forEach((rejectedFile) => {
-      if (!acceptedFiles.includes(rejectedFile.type)) {
+      if (!acceptedFiles.includes(rejectedFile.file.type)) {
         updateError(t('dropzone:acceptedFiles'));
       }
 
-      if (rejectedFile.size > maxFileSize) {
+      if (rejectedFile.file.size > maxFileSize) {
         updateError(t('dropzone:maxFileSize'));
       }
     });
