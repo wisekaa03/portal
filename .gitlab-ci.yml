@@ -5,10 +5,6 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  PREFIX: ""
-  RELEASE_NAME: ${PREFIX}${CI_PROJECT_NAME}
-  RELEASE_NAME_SYNCH: ${PREFIX}${CI_PROJECT_NAME}-sync
-  CONTAINER_IMAGE: ${PREFIX}${CI_PROJECT_NAME}:${CI_BUILD_REF}
 
 prepare:
   image: node:13
@@ -75,14 +71,16 @@ docker:
     paths:
       - node_modules/
     policy: pull
+  before_script:
+      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD  $CI_REGISTRY
   script:
+    - env
     - |
       \
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
-    # - docker login
-    - docker build --tag ${CONTAINER_IMAGE} .
-    - docker tag ${CONTAINER_IMAGE} ${CI_REGISTRY_IMAGE}:${CI_BUILD_REF}
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_BUILD_REF}
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
 
 helm_development:
   image: dtzar/helm-kubectl:latest
@@ -97,7 +95,7 @@ helm_development:
     - echo "Helm version" && helm version
     # Portal
     - |
-      helm upgrade ${RELEASE_NAME} helm/portal \
+      helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set replicaCount="1" \
         --set service.nodePort="30400" \
         --set service.nodePort_debug="30401" \
@@ -140,18 +138,18 @@ helm_development:
         --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
-        --set image.tag="${CI_BUILD_REF}" \
+        --set image.tag="${CI_COMMIT_SHA}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
     # Portal-sync
     - |
-      helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
+      helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
         --set replicaCount="1" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
-        --set image.tag="${CI_BUILD_REF}"
+        --set image.tag="${CI_COMMIT_SHA}"
 
 helm_production:
   image: dtzar/helm-kubectl:latest
@@ -167,7 +165,7 @@ helm_production:
     - echo "Helm version" && helm version
     # Portal
     - |
-      helm upgrade ${RELEASE_NAME} helm/portal \
+      helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set service.nodePort="30300" \
         --set service.nodePort_debug="30301" \
         --set PORT="${PORT}" \
@@ -209,14 +207,14 @@ helm_production:
         --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
-        --set image.tag="${CI_BUILD_REF}" \
+        --set image.tag="${CI_COMMIT_SHA}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
     # Portal-sync
     - |
-      helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
+      helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
-        --set image.tag="${CI_BUILD_REF}"
+        --set image.tag="${CI_COMMIT_SHA}"
