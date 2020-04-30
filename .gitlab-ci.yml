@@ -141,12 +141,12 @@ helm_development:
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_BUILD_REF}" \
-        --install --namespace=${NAMESPACE} \
+        --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
     # Portal-sync
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
-        --install --namespace=${NAMESPACE} \
+        --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
         --set replicaCount="1" \
         --set PORT="${PORT_MICROSERVICE}" \
@@ -210,12 +210,12 @@ helm_production:
         --set MEETING_URL="${MEETING_URL}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_BUILD_REF}" \
-        --install --namespace=${NAMESPACE} \
+        --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
     # Portal-sync
     - |
       helm upgrade ${RELEASE_NAME_SYNCH} helm/portal-sync \
-        --install --namespace=${NAMESPACE} \
+        --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
         --set PORT="${PORT_MICROSERVICE}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
