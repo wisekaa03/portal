@@ -5,7 +5,7 @@
 replicaCount: 4
 
 image:
-  repository: docker.dev.i-npz.ru/portal
+  repository: registry.kube.i-npz.ru/portal
   tag: latest
   pullPolicy: Always
 
