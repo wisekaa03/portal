@@ -13,8 +13,10 @@ prepare:
     key: "${CI_COMMIT_REF_SLUG}-build"
     paths:
       - node_modules/
+  before_script:
+    - env
+    - echo -n "node version " && node -v
   script:
-    - env && echo -n "node version " && node -v
     - yarn install --production=true
 
 build_development:
@@ -27,8 +29,10 @@ build_development:
     paths:
       - node_modules/
       - apps/portal/.next/cache/
+  before_script:
+    - env
+    - echo -n "node version " && node -v
   script:
-    - env && echo -n "node version " && node -v
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u || true
@@ -50,8 +54,10 @@ build_production:
     paths:
       - node_modules/
       - apps/portal/.next/cache/
+  before_script:
+    - env
+    - echo -n "node version " && node -v
   script:
-    - env && echo -n "node version " && node -v
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
     - ./entrypoint.sh test -u || true
@@ -72,15 +78,14 @@ docker:
       - node_modules/
     policy: pull
   before_script:
+    - env
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - env
     - |
       \
       if [ ! -d "node_modules" ]; then echo '!! CACHE NOT EXIST !!'; exit SIGINT; fi
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --build-arg BUILD_INLINE_CACHE=1 --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker push $CI_REGISTRY_IMAGE:latest
 
 helm_development:
   image: dtzar/helm-kubectl:latest
@@ -89,10 +94,11 @@ helm_development:
     name: development
   dependencies: []
   allow_failure: false
-  script:
+  before_script:
     - env
     - echo "Kubectl version" && kubectl version
     - echo "Helm version" && helm version
+  script:
     # Portal
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
@@ -159,10 +165,11 @@ helm_production:
   dependencies: []
   when: manual
   allow_failure: false
-  script:
+  before_script:
     - env
     - echo "Kubectl version" && kubectl version
     - echo "Helm version" && helm version
+  script:
     # Portal
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
