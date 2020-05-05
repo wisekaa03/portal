@@ -1,0 +1,16 @@
+{
+    "cSpell.ignoreWords": [
+        "browserslist",
+        "dev",
+        "extfile",
+        "genrsa",
+        "json",
+        "ormconfig",
+        "postversion",
+        "preversion",
+        "signkey",
+        "tsconfig",
+        "typeorm",
+        "urandom"
+    ]
+}
