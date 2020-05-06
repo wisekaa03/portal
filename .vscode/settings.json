@@ -1,8 +1,11 @@
 {
     "cSpell.ignoreWords": [
         "browserslist",
+        "context",
+        "describe",
         "dev",
         "dtzar",
+        "endregion",
         "extfile",
         "genrsa",
         "json",
@@ -16,6 +19,9 @@
         "signkey",
         "tsconfig",
         "typeorm",
-        "urandom"
-    ]
+        "urandom",
+        "with"
+    ],
+    "prettier.packageManager": "yarn",
+    "code-runner.enableAppInsights": false,
 }

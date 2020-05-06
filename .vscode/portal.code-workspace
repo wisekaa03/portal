@@ -37,7 +37,9 @@
     },
     "[javascriptreact]": {
       "editor.formatOnSave": false
-    },the field selection
+    },
+    "[typescript]": {
+      "editor.formatOnSave": false
     },
     "[typescriptreact]": {
       "editor.formatOnSave": false
@@ -171,6 +173,7 @@
     },
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
-    }
+    },
+    "npm.packageManager": "yarn"
   }
 }
