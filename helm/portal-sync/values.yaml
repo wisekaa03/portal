@@ -11,7 +11,7 @@ image:
 
 imageCredentials:
   enabled: true
-  name: registry-portal-sync-credentials
+  name: portal-sync-registry
   registry: docker-registry.mycompany.com
   username: docker-reg-user
   password: XXXXXXXXXXXX
