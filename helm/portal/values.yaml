@@ -9,7 +9,12 @@ image:
   tag: latest
   pullPolicy: Always
 
-imagePullSecrets: []
+imageCredentials:
+  name: registry-portal-credentials
+  registry: docker-registry.mycompany.com
+  username: docker-reg-user
+  password: XXXXXXXXXXXX
+
 nameOverride: "portal"
 fullnameOverride: "portal"
 
