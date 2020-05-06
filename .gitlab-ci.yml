@@ -79,7 +79,7 @@ docker:
     policy: pull
   before_script:
     - env
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - |
       \
@@ -145,7 +145,7 @@ helm_development:
         --set MEETING_URL="${MEETING_URL}" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_REGISTRY_USER}" \
-        --set imageCredentials.password="${CI_REGISTRY_PASSWORD}" \
+        --set imageCredentials.password="${CI_JOB_TOKEN}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}" \
         --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
@@ -162,7 +162,7 @@ helm_development:
         --set PORT="${PORT_MICROSERVICE}" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_REGISTRY_USER}" \
-        --set imageCredentials.password="${CI_REGISTRY_PASSWORD}" \
+        --set imageCredentials.password="${CI_JOB_TOKEN}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}"
 
@@ -224,7 +224,7 @@ helm_production:
         --set MEETING_URL="${MEETING_URL}" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_REGISTRY_USER}" \
-        --set imageCredentials.password="${CI_REGISTRY_PASSWORD}" \
+        --set imageCredentials.password="${CI_JOB_TOKEN}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}" \
         --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
@@ -240,6 +240,6 @@ helm_production:
         --set PORT="${PORT_MICROSERVICE}" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_REGISTRY_USER}" \
-        --set imageCredentials.password="${CI_REGISTRY_PASSWORD}" \
+        --set imageCredentials.password="${CI_JOB_TOKEN}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}"
