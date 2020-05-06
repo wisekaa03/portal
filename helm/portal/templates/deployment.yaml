@@ -23,8 +23,10 @@ spec:
         app.kubernetes.io/name: {{ include "portal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.image.tag }}
     spec:
+      {{- if .Values.imageCredentials.enabled -}}
       imagePullSecrets:
       - name: {{ .Values.imageCredentials.name }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

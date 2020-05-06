@@ -5,11 +5,12 @@
 replicaCount: 4
 
 image:
-  repository: registry.example.com/portal
+  repository: docker-registry.mycompany.com/portal
   tag: latest
   pullPolicy: Always
 
 imageCredentials:
+  enabled: true
   name: registry-portal-credentials
   registry: docker-registry.mycompany.com
   username: docker-reg-user
@@ -88,25 +89,25 @@ service:
   nodePort_ssl: 30301
 
   externalIPs:
-   - 10.10.205.40
-   - 10.10.205.41
+  - 10.10.205.40
 
 tls:
-  enabled: false
+  enabled: true
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
   hosts:
-    - host: portal.production.svc.cluster.local
+    - host: portal.kube.i-npz.ru
       paths: []
 
-  tls: []
-  #  - secretNamls e: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: portal-tls
+      hosts:
+        - portal.kube.i-npz.ru
 
 ## Liveness and Readiness probe values.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/

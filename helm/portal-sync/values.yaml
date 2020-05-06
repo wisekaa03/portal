@@ -5,11 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: registry.example.com/portal
+  repository: docker-registry.mycompany.com/portal
   tag: latest
   pullPolicy: Always
 
 imageCredentials:
+  enabled: true
   name: registry-portal-sync-credentials
   registry: docker-registry.mycompany.com
   username: docker-reg-user
