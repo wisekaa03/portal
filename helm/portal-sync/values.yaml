@@ -40,7 +40,8 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: portal-ldap-sync.production.svc.cluster.local
-      paths: []
+      paths:
+        - /
 
   tls: []
   #  - secretNamls e: chart-example-tls
