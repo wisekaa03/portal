@@ -39,7 +39,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: portal-ldap-sync.production.svc.cluster.local
+    - host: portal-ldap-sync.example.com
       paths:
         - /
 

@@ -101,14 +101,14 @@ ingress:
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-staging"
   hosts:
-    - host: portal.kube.i-npz.ru
+    - host: portal.example.com
       paths:
         - /
 
   tls:
     - secretName: portal-tls
       hosts:
-        - portal.kube.i-npz.ru
+        - portal.example.com
 
 ## Liveness and Readiness probe values.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/

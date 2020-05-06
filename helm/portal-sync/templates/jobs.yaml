@@ -12,7 +12,7 @@ spec:
     spec:
       template:
         spec:
-          {{- if .Values.imageCredentials.enabled -}}
+          {{- if .Values.imageCredentials.enabled }}
           imagePullSecrets:
           - name: {{ .Values.imageCredentials.name }}
           {{- end }}

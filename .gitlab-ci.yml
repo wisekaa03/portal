@@ -148,6 +148,9 @@ helm_development:
         --set imageCredentials.password="${CI_REGISTRY_PASSWORD}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}" \
+        --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
+        --set ingress.hosts[0].host="${INGRESS_HOST}" \
+        --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
     # Portal-sync
@@ -224,6 +227,9 @@ helm_production:
         --set imageCredentials.password="${CI_REGISTRY_PASSWORD}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}" \
+        --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
+        --set ingress.hosts[0].host="${INGRESS_HOST}" \
+        --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
     # Portal-sync
