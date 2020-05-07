@@ -239,6 +239,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: SOAP_DOMAIN
+            - name: OSTICKET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: OSTICKET_URL
             - name: NEWS_URL
               valueFrom:
                 configMapKeyRef:
