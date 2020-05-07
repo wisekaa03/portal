@@ -27,11 +27,21 @@ export class LogService extends Logger implements TypeOrmLogger {
   }
 
   error(message: any, trace?: string | Record<any, any>, context?: string): void {
-    if (typeof trace === 'object') {
-      super.error(message, trace?.stack || trace.toString(), context);
+    let t: string | undefined;
+    let m;
+
+    if (message instanceof Error) {
+      t = message.stack || '';
+      m = message.message;
+    } else if (typeof trace === 'object') {
+      t = trace?.stack || trace.toString();
+      m = message;
     } else {
-      super.error(message, trace, context);
+      t = trace;
+      m = message;
     }
+
+    super.error(m, t, context);
   }
 
   // warn(message: any, context?: string): void {

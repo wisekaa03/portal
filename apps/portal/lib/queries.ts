@@ -437,7 +437,7 @@ export const OLD_TICKET_SERVICE = gql`
           avatar
         }
       }
-      errors
+      error
     }
   }
 `;

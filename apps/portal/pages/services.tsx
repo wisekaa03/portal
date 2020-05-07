@@ -46,7 +46,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
-    Data<'OldTicketService', OldServiceOrError>,
+    Data<'OldTicketService', OldServiceOrError[]>,
     void
   >(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -165,9 +165,16 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [currentTab, titleRef, ticket.title]);
 
   useEffect(() => {
-    setServices((!loadingServices && !errorServices && dataServices?.OldTicketService?.services) || []);
-    if (dataServices?.OldTicketService?.errors) {
-      dataServices!.OldTicketService!.errors.forEach((e) => snackbarUtils.error(e));
+    if (!loadingServices && !errorServices) {
+      setServices(
+        dataServices!.OldTicketService!.reduce((acc, srv) => {
+          if (srv.error) {
+            snackbarUtils.error(srv.error);
+            return acc;
+          }
+          return [...acc, ...srv.services];
+        }, [] as OldService[]),
+      );
     }
   }, [dataServices, errorServices, loadingServices]);
 

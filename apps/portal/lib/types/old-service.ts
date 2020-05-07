@@ -10,8 +10,8 @@ export interface OldCategory {
 }
 
 export interface OldServiceOrError {
-  services: OldService[];
-  errors: string[];
+  services?: OldService[];
+  error?: string;
 }
 
 export interface OldService {

@@ -110,57 +110,58 @@ export class OldTicketService {
    * @param {SoapAuthentication} authentication Soap authentication
    * @returns {OldService[]} Services and Categories
    */
-  OldTicketService = async (authentication: SoapAuthentication): Promise<OldServiceOrError> => {
-    const ticketService: OldServiceOrError = {
-      services: [],
-      errors: [],
-    };
+  OldTicketService = async (authentication: SoapAuthentication): Promise<OldServiceOrError[]> => {
+    const promises: Promise<OldServiceOrError>[] = [];
 
     if (!!this.configService.get<string>('SOAP_URL')) {
       const client = await this.soapService.connect(authentication).catch((error) => {
-        ticketService.errors.push(JSON.stringify(error));
+        promises.push(Promise.resolve({ error: JSON.stringify(error) }));
       });
 
       if (client) {
-        ticketService.services.push(
-          ...(await client
+        promises.push(
+          client
             .kngk_GetRoutesAsync({ log: authentication.username })
             .then((result: any) => {
               this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
 
               if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
-                return result[0]['return']['Услуга'].map(
-                  (service: Record<string, any>) =>
-                    ({
-                      code: service['Код'],
-                      name: service['Наименование'],
-                      description: service['ОписаниеФД'],
-                      group: service['Группа'],
-                      avatar: service['Аватар'],
-                      category: service['СоставУслуги']['ЭлементСоставаУслуги'].map(
-                        (category: Record<string, string>) =>
-                          ({
-                            code: category['Код'],
-                            name: category['Наименование'],
-                            description: category['ОписаниеФД'],
-                            avatar: category['Аватар'] || '',
-                            categoryType: category['ТипЗначенияКатегории'],
-                          } as OldCategory),
-                      ),
-                    } as OldService),
-                );
+                return {
+                  services: [
+                    ...result[0]['return']['Услуга'].map(
+                      (service: Record<string, any>) =>
+                        ({
+                          code: service['Код'],
+                          name: service['Наименование'],
+                          description: service['ОписаниеФД'],
+                          group: service['Группа'],
+                          avatar: service['Аватар'],
+                          category: service['СоставУслуги']['ЭлементСоставаУслуги'].map(
+                            (category: Record<string, string>) =>
+                              ({
+                                code: category['Код'],
+                                name: category['Наименование'],
+                                description: category['ОписаниеФД'],
+                                avatar: category['Аватар'] || '',
+                                categoryType: category['ТипЗначенияКатегории'],
+                              } as OldCategory),
+                          ),
+                        } as OldService),
+                    ),
+                  ],
+                } as OldServiceOrError;
               }
 
-              return [];
+              return {} as OldServiceOrError;
             })
             .catch((error: SoapFault) => {
               this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
               this.logger.verbose(`OldTicketService: [Response] ${client.lastResponse}`);
 
-              this.logger.error(error, error);
+              this.logger.error(error);
 
-              ticketService.errors.push(SoapError(error));
-            })),
+              return { error: SoapError(error) } as OldServiceOrError;
+            }),
         );
       }
     }
@@ -170,14 +171,18 @@ export class OldTicketService {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
         Object.keys(OSTicketURL).forEach((key) => {
-          ticketService.errors.push(`Connection to ${key} failed...`);
+          promises.push(
+            Promise.resolve({
+              error: `Connection to ${key} failed...`,
+            }),
+          );
         });
       } catch (error) {
-        this.logger.error(error, error);
+        this.logger.error(error);
       }
     }
 
-    return ticketService;
+    return Promise.all(promises);
   };
 
   /**
@@ -205,7 +210,7 @@ export class OldTicketService {
       await constructUploads(attachments, ({ filename, file }) =>
         Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: Error) => {
-        this.logger.error(error, error);
+        this.logger.error(error);
 
         throw error;
       });
@@ -246,7 +251,7 @@ export class OldTicketService {
         this.logger.verbose(`OldTicketNew: [Request] ${client.lastRequest}`);
         this.logger.verbose(`OldTicketNew: [Response] ${client.lastResponse}`);
 
-        this.logger.error(error, error);
+        this.logger.error(error);
 
         throw SoapError(error);
       });
@@ -278,7 +283,7 @@ export class OldTicketService {
         this.logger.verbose(`OldTicketEdit: [Request] ${client.lastRequest}`);
         this.logger.verbose(`OldTicketEdit: [Response] ${client.lastResponse}`);
 
-        this.logger.error(error, error);
+        this.logger.error(error);
 
         throw SoapError(error);
       });
@@ -309,7 +314,7 @@ export class OldTicketService {
         this.logger.verbose(`OldTicketEdit: [Request] ${client.lastRequest}`);
         this.logger.verbose(`OldTicketEdit: [Response] ${client.lastResponse}`);
 
-        this.logger.error(error, error);
+        this.logger.error(error);
 
         throw SoapError(error);
       });
@@ -368,7 +373,7 @@ export class OldTicketService {
         this.logger.verbose(`OldTickets: [Request] ${client.lastRequest}`);
         this.logger.verbose(`OldTickets: [Response] ${client.lastResponse}`);
 
-        this.logger.error(error, error);
+        this.logger.error(error);
 
         throw SoapError(error);
       });
@@ -414,7 +419,7 @@ export class OldTicketService {
         this.logger.verbose(`OldTicketDescription: [Request] ${client.lastRequest}`);
         this.logger.verbose(`OldTicketDescription: [Response] ${client.lastResponse}`);
 
-        this.logger.error(error, error);
+        this.logger.error(error);
 
         throw SoapError(error);
       });

@@ -39,7 +39,7 @@ export class OldTicketResolver {
   async OldTicketService(
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<OldServiceOrError> {
+  ): Promise<OldServiceOrError[]> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

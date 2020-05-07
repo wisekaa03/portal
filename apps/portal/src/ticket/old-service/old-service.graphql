@@ -77,11 +77,11 @@ input OldTicketEditInput {
 
 type OldServiceOrError {
   services: [OldService]
-  errors: [String]
+  error: String
 }
 
 type Query {
-  OldTicketService: OldServiceOrError!
+  OldTicketService: [OldServiceOrError]!
   OldTickets(status: String): [OldTicket]!
   OldTicketDescription(code: String, type: String): OldTicket
 }
