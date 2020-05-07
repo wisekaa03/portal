@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@app/config';
 import { LogService } from '@app/logger';
 import { SoapService } from '@app/soap';
+import { HttpModule } from '@nestjs/common';
 import { OldTicketService } from './old-service.service';
 
 jest.mock('@app/config/config.service');
@@ -22,7 +23,7 @@ describe(OldTicketService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [HttpModule],
       providers: [ConfigService, LogService, OldTicketService, { provide: SoapService, useValue: serviceMock }],
     }).compile();
 

@@ -138,6 +138,7 @@ helm_development:
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
         --set SOAP_URL="${SOAP_URL}" \
         --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
+        --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \
@@ -217,6 +218,7 @@ helm_production:
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
         --set SOAP_URL="${SOAP_URL}" \
         --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
+        --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \

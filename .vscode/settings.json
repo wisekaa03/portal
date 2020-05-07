@@ -22,6 +22,7 @@
         "get",
         "gqlauth",
         "gqlerror",
+        "instorage",
         "itapps",
         "json",
         "kngk",

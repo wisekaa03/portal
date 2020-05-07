@@ -64,8 +64,10 @@ LDAP_REDIS_TTL: 300
 
 MICROSERVICE_URL: "redis://redis.default.svc.cluster.local:6379"
 
-SOAP_URL: "https://soap1c"
+SOAP_URL: ""
 SOAP_DOMAIN: "EXAMPLE"
+
+OSTICKET_URL: "{}"
 
 NEWS_URL: "https://news"
 NEWS_API_URL: "https://news/api"
