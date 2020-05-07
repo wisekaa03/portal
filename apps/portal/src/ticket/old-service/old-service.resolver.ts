@@ -47,7 +47,7 @@ export class OldTicketResolver {
    * @async
    * @method OldTicketNew
    * @param {OldTicketNewInput} ticket subject, body, serviceID and others
-   * @param {Promise<FileUpload>[]} attachments Array of attchments
+   * @param {Promise<FileUpload>[]} attachments Array of attachments
    * @returns {OldTicketNew}
    */
   @Mutation()

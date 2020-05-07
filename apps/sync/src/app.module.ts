@@ -76,6 +76,7 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
 
     // #region TypeORM
     TypeOrmModule.forRootAsync({
+      imports: [LogModule],
       inject: [ConfigService, LogService],
       useFactory: async (configService: ConfigService, logger: LogService) =>
         ({

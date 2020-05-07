@@ -181,7 +181,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: LogService): Type
       playground: __DEV__
         ? {
             settings: {
-              // Когда в playground режиме, нажмите settings и добавте строку:
+              // Когда в playground режиме, нажмите settings и добавьте строку:
               'request.credentials': 'same-origin',
             },
           }
