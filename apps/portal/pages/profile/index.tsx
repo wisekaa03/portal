@@ -14,7 +14,7 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-clien
 import { ProfileContext } from '@lib/context';
 import { TICKET_STATUSES } from '@lib/constants';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Data, OldTicket } from '@lib/types';
+import { Data, OldTicket, OldTickets } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileInfoComponent from '@front/components/profile/info';
 import ProfileTicketsComponent from '@front/components/profile/tickets';
@@ -35,7 +35,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     data: dataTickets,
     error: errorTickets,
     refetch: refetchTickets,
-  }: QueryResult<Data<'OldTickets', OldTicket[]>> = useQuery(OLD_TICKETS, {
+  }: QueryResult<Data<'OldTickets', OldTickets[]>> = useQuery(OLD_TICKETS, {
     ssr: false,
     variables: { status },
     fetchPolicy: 'cache-first',
@@ -55,9 +55,13 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   const tickets: OldTicket[] =
-    dataTickets?.OldTickets.filter(
-      (ticket: OldTicket) => ticket.code.includes(search) || ticket.name.includes(search),
-    ) || [];
+    dataTickets?.OldTickets?.reduce((acc, tick) => {
+      if (tick.error) {
+        snackbarUtils.error(tick.error);
+        return acc;
+      }
+      return [...acc, ...tick.tickets];
+    }, []).filter((ticket) => ticket.code.includes(search) || ticket.name.includes(search)) || [];
 
   useEffect(() => {
     if (ticketStatus) {

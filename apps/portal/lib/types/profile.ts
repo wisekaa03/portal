@@ -9,7 +9,7 @@ import { Order, Connection } from 'typeorm-graphql-pagination';
 import { StyleProps, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile } from './profile.dto';
-import { OldUser, OldTicket } from './old-service';
+import { OldUser, OldTicket, OldTickets } from './old-service';
 // #endregion
 
 export type ColumnNames =
@@ -153,7 +153,7 @@ export interface ProfileTicketsComponentProps {
   tickets: OldTicket[];
   status: string;
   search: string;
-  refetchTickets: () => Promise<ApolloQueryResult<Data<'OldTickets', OldTicket[]>>>;
+  refetchTickets: () => Promise<ApolloQueryResult<Data<'OldTickets', OldTickets[]>>>;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }

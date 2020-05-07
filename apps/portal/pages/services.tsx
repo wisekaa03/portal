@@ -15,7 +15,7 @@ import {
   ServicesCreatedProps,
   OldService,
   OldCategory,
-  OldServiceOrError,
+  OldServices,
 } from '@lib/types';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
@@ -46,7 +46,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
-    Data<'OldTicketService', OldServiceOrError[]>,
+    Data<'OldTicketService', OldServices[]>,
     void
   >(OLD_TICKET_SERVICE, {
     ssr: false,

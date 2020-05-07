@@ -1,4 +1,5 @@
 type OldCategory {
+  where: String!
   code: String!
   name: String!
   description: String
@@ -7,6 +8,7 @@ type OldCategory {
 }
 
 type OldService {
+  where: String!
   code: String!
   name: String!
   group: String
@@ -16,6 +18,7 @@ type OldService {
 }
 
 type OldUser {
+  where: String!
   name: String!
   avatar: String
   email: String
@@ -33,6 +36,7 @@ type OldFile {
 }
 
 type OldTicket {
+  where: String!
   code: String!
   type: String
   name: String!
@@ -51,6 +55,7 @@ type OldTicket {
 }
 
 type OldTicketNew {
+  where: String!
   code: String!
   name: String!
   requisiteSource: String!
@@ -75,14 +80,19 @@ input OldTicketEditInput {
   comment: String!
 }
 
-type OldServiceOrError {
+type OldServices {
   services: [OldService]
   error: String
 }
 
+type OldTickets {
+  tickets: [OldTicket]
+  error: String
+}
+
 type Query {
-  OldTicketService: [OldServiceOrError]!
-  OldTickets(status: String): [OldTicket]!
+  OldTicketService: [OldServices]!
+  OldTickets(status: String): [OldTickets]!
   OldTicketDescription(code: String, type: String): OldTicket
 }
 

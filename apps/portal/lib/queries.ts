@@ -416,6 +416,7 @@ export const DELETE_FOLDER = gql`
     deleteFolder(id: $id)
   }
 `;
+
 /**---------------------------------------------------------------------------------------------------------------------------------------
  * Ticket
  */
@@ -424,6 +425,7 @@ export const OLD_TICKET_SERVICE = gql`
   query {
     OldTicketService {
       services {
+        where
         code
         name
         group
@@ -445,13 +447,17 @@ export const OLD_TICKET_SERVICE = gql`
 export const OLD_TICKETS = gql`
   query OldTickets($status: String) {
     OldTickets(status: $status) {
-      code
-      type
-      name
-      description
-      status
-      createdDate
-      avatar
+      tickets {
+        where
+        code
+        type
+        name
+        description
+        status
+        createdDate
+        avatar
+      }
+      error
     }
   }
 `;
@@ -468,6 +474,7 @@ export const OLD_TICKET_DESCRIPTION = gql`
 export const OLD_TICKET_NEW = gql`
   mutation OldTicketNew($ticket: OldTicketNewInput!, $attachments: [Upload]) {
     OldTicketNew(ticket: $ticket, attachments: $attachments) {
+      where
       code
       name
       requisiteSource

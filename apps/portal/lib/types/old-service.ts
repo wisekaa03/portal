@@ -1,6 +1,11 @@
 /** @format */
 import { FileUpload } from 'graphql-upload';
 
+export enum WhereService {
+  Svc1C = '1C',
+  SvcOSTicket = 'OSTicket',
+}
+
 export interface OldCategory {
   code: string;
   name: string;
@@ -9,18 +14,19 @@ export interface OldCategory {
   avatar: string;
 }
 
-export interface OldServiceOrError {
-  services?: OldService[];
-  error?: string;
-}
-
 export interface OldService {
+  where: WhereService;
   code: string;
   name: string;
   group?: string;
   description?: string;
   avatar: string;
   category?: OldCategory[];
+}
+
+export interface OldServices {
+  services?: OldService[];
+  error?: string;
 }
 
 export interface OldFile {
@@ -30,6 +36,7 @@ export interface OldFile {
 }
 
 export interface OldTicket {
+  where: WhereService;
   code: string;
   name: string;
   type?: string;
@@ -45,6 +52,11 @@ export interface OldTicket {
   service?: OldService;
   serviceCategory?: OldCategory;
   files?: OldFile[];
+}
+
+export interface OldTickets {
+  tickets?: OldTicket[];
+  error?: string;
 }
 
 export interface OldUser {
