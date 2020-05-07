@@ -37,10 +37,12 @@ export const SnackbarUtilsConfigurator = (): React.ReactElement => {
 };
 
 export default {
-  error(errors: ApolloError | readonly GraphQLError[]) {
+  error(errors: ApolloError | readonly GraphQLError[] | string) {
     const { t } = useTranslationRef;
 
-    if (errors instanceof ApolloError) {
+    if (typeof errors === 'string') {
+      this.show(t('common:error', { message: errors }));
+    } else if (errors instanceof ApolloError) {
       errors.graphQLErrors.forEach(({ message }) => {
         if (typeof message === 'object') {
           this.show(t('common:error', { message: (message as any).error }));

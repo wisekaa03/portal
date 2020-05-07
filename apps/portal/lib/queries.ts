@@ -423,18 +423,21 @@ export const DELETE_FOLDER = gql`
 export const OLD_TICKET_SERVICE = gql`
   query {
     OldTicketService {
-      code
-      name
-      group
-      description
-      avatar
-      category {
+      services {
         code
         name
+        group
         description
-        categoryType
         avatar
+        category {
+          code
+          name
+          description
+          categoryType
+          avatar
+        }
       }
+      errors
     }
   }
 `;

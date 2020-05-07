@@ -8,7 +8,15 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { Data, DropzoneFile, ServicesTicketProps, ServicesCreatedProps, OldService, OldCategory } from '@lib/types';
+import {
+  Data,
+  DropzoneFile,
+  ServicesTicketProps,
+  ServicesCreatedProps,
+  OldService,
+  OldCategory,
+  OldServiceOrError,
+} from '@lib/types';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
@@ -38,7 +46,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
-    Data<'OldTicketService', OldService[]>,
+    Data<'OldTicketService', OldServiceOrError>,
     void
   >(OLD_TICKET_SERVICE, {
     ssr: false,
@@ -157,7 +165,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [currentTab, titleRef, ticket.title]);
 
   useEffect(() => {
-    setServices((!loadingServices && !errorServices && dataServices?.OldTicketService) || []);
+    setServices((!loadingServices && !errorServices && dataServices?.OldTicketService?.services) || []);
+    if (dataServices?.OldTicketService?.errors) {
+      dataServices!.OldTicketService!.errors.forEach((e) => snackbarUtils.error(e));
+    }
   }, [dataServices, errorServices, loadingServices]);
 
   useEffect(() => {
