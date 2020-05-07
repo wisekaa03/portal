@@ -75,9 +75,14 @@ input OldTicketEditInput {
   comment: String!
 }
 
+type OldServiceOrError {
+  services: [OldService]
+  errors: [String]
+}
+
 type Query {
-  OldTicketService: [OldService!]!
-  OldTickets(status: String): [OldTicket!]!
+  OldTicketService: OldServiceOrError!
+  OldTickets(status: String): [OldTicket]!
   OldTicketDescription(code: String, type: String): OldTicket
 }
 

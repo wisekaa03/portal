@@ -9,6 +9,11 @@ export interface OldCategory {
   avatar: string;
 }
 
+export interface OldServiceOrError {
+  services: OldService[];
+  errors: string[];
+}
+
 export interface OldService {
   code: string;
   name: string;

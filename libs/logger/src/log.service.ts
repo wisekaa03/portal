@@ -26,9 +26,9 @@ export class LogService extends Logger implements TypeOrmLogger {
     super.log(m, c);
   }
 
-  error(message: any, trace?: object | string, context?: string): void {
+  error(message: any, trace?: string | Record<any, any>, context?: string): void {
     if (typeof trace === 'object') {
-      super.error(message, JSON.stringify(trace), context);
+      super.error(message, trace?.stack || trace.toString(), context);
     } else {
       super.error(message, trace, context);
     }

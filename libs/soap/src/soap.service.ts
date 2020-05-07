@@ -13,8 +13,7 @@ import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface'
 export type SoapClient = Client;
 export type SoapFault = ISoapFaultError;
 
-export const SoapError = (error: SoapFault): HttpException =>
-  new HttpException(error.Fault, error.Fault?.statusCode || 500);
+export const SoapError = (error: ISoapFaultError): string => JSON.stringify(error.Fault);
 
 @Injectable()
 export class SoapService {

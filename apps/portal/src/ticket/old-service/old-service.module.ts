@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Module } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -36,6 +36,8 @@ import { OldTicketService } from './old-service.service';
         };
       },
     }),
+
+    HttpModule,
   ],
 
   providers: [OldTicketResolver, OldTicketService],

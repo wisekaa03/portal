@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
@@ -9,7 +9,14 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import { ConfigService } from '@app/config';
 import { SoapAuthentication } from '@app/soap';
-import { OldService, OldTicket, OldTicketNewInput, OldTicketNew, OldTicketEditInput } from '@lib/types';
+import {
+  OldService,
+  OldTicket,
+  OldTicketNewInput,
+  OldTicketNew,
+  OldTicketEditInput,
+  OldServiceOrError,
+} from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { User } from '@lib/types/user.dto';
@@ -25,11 +32,18 @@ export class OldTicketResolver {
    *
    * @async
    * @returns {OldService[]}
-   * @throws {UnauthorizedException}
+   * @throws {UnauthorizedException | HttpException}
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async OldTicketService(@CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<OldService[]> {
+  async OldTicketService(
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<OldServiceOrError> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
     const authentication = {
       username: user?.username,
       password,
@@ -37,7 +51,7 @@ export class OldTicketResolver {
     } as SoapAuthentication;
 
     return this.ticketOldService.OldTicketService(authentication).catch((error: Error) => {
-      throw new UnauthorizedException(error.message);
+      throw new HttpException(error.message, 500);
     });
   }
 

@@ -85,8 +85,10 @@ export class ConfigService {
 
       MICROSERVICE_URL: Joi.string().required(),
 
-      SOAP_URL: Joi.string().required(),
+      SOAP_URL: Joi.string().uri().optional(),
       SOAP_DOMAIN: Joi.string().optional(),
+
+      OSTICKET_URL: Joi.any(),
 
       NEWS_URL: Joi.string().empty('').optional(),
       NEWS_API_URL: Joi.string().empty('').optional(),

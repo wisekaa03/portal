@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpService } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 // #endregion
 // #region Imports Local
@@ -14,8 +14,10 @@ import {
   OldUser,
   OldFile,
   OldTicketEditInput,
+  OldServiceOrError,
 } from '@lib/types';
 import { LogService } from '@app/logger';
+import { ConfigService } from '@app/config/config.service';
 import clearHtml from '@lib/clear-html';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
@@ -91,7 +93,12 @@ const createTicket = (ticket: any): OldTicket => ({
 export class OldTicketService {
   private service: OldService[];
 
-  constructor(private readonly logger: LogService, private readonly soapService: SoapService) {
+  constructor(
+    private readonly logger: LogService,
+    private readonly configService: ConfigService,
+    private readonly soapService: SoapService,
+    private readonly httpService: HttpService,
+  ) {
     logger.setContext(OldTicketService.name);
   }
 
@@ -103,52 +110,74 @@ export class OldTicketService {
    * @param {SoapAuthentication} authentication Soap authentication
    * @returns {OldService[]} Services and Categories
    */
-  OldTicketService = async (authentication: SoapAuthentication): Promise<OldService[]> => {
-    const client = await this.soapService.connect(authentication).catch((error) => {
-      throw error;
-    });
+  OldTicketService = async (authentication: SoapAuthentication): Promise<OldServiceOrError> => {
+    const ticketService: OldServiceOrError = {
+      services: [],
+      errors: [],
+    };
 
-    this.service = await client
-      .kngk_GetRoutesAsync({ log: authentication.username })
-      .then((result: any) => {
-        this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
-        // this.logger.verbose(`OldTicketService: [Response] ${client.lastResponse}`);
-
-        if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
-          return result[0]['return']['Услуга'].map(
-            (service: any) =>
-              ({
-                code: service['Код'],
-                name: service['Наименование'],
-                description: service['ОписаниеФД'],
-                group: service['Группа'],
-                avatar: service['Аватар'],
-                category: service['СоставУслуги']['ЭлементСоставаУслуги'].map(
-                  (category: any) =>
-                    ({
-                      code: category['Код'],
-                      name: category['Наименование'],
-                      description: category['ОписаниеФД'],
-                      avatar: category['Аватар'] || '',
-                      categoryType: category['ТипЗначенияКатегории'],
-                    } as OldCategory),
-                ),
-              } as OldService),
-          );
-        }
-
-        return [];
-      })
-      .catch((error: SoapFault) => {
-        this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
-        this.logger.verbose(`OldTicketService: [Response] ${client.lastResponse}`);
-
-        this.logger.error(error, error);
-
-        throw SoapError(error);
+    if (!!this.configService.get<string>('SOAP_URL')) {
+      const client = await this.soapService.connect(authentication).catch((error) => {
+        ticketService.errors.push(JSON.stringify(error));
       });
 
-    return this.service;
+      if (client) {
+        ticketService.services.push(
+          ...(await client
+            .kngk_GetRoutesAsync({ log: authentication.username })
+            .then((result: any) => {
+              this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
+
+              if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
+                return result[0]['return']['Услуга'].map(
+                  (service: Record<string, any>) =>
+                    ({
+                      code: service['Код'],
+                      name: service['Наименование'],
+                      description: service['ОписаниеФД'],
+                      group: service['Группа'],
+                      avatar: service['Аватар'],
+                      category: service['СоставУслуги']['ЭлементСоставаУслуги'].map(
+                        (category: Record<string, string>) =>
+                          ({
+                            code: category['Код'],
+                            name: category['Наименование'],
+                            description: category['ОписаниеФД'],
+                            avatar: category['Аватар'] || '',
+                            categoryType: category['ТипЗначенияКатегории'],
+                          } as OldCategory),
+                      ),
+                    } as OldService),
+                );
+              }
+
+              return [];
+            })
+            .catch((error: SoapFault) => {
+              this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
+              this.logger.verbose(`OldTicketService: [Response] ${client.lastResponse}`);
+
+              this.logger.error(error, error);
+
+              ticketService.errors.push(SoapError(error));
+            })),
+        );
+      }
+    }
+
+    if (!!this.configService.get<string>('OSTICKET_URL')) {
+      try {
+        const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+
+        Object.keys(OSTicketURL).forEach((key) => {
+          ticketService.errors.push(`Connection to ${key} failed...`);
+        });
+      } catch (error) {
+        this.logger.error(error, error);
+      }
+    }
+
+    return ticketService;
   };
 
   /**

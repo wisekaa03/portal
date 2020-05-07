@@ -4,7 +4,7 @@
 import pino from 'pino';
 import { Params } from 'nestjs-pino';
 
-export const pinoOptions = (level: string): Params => ({
+export const pinoOptions = (level = 'debug'): Params => ({
   pinoHttp: {
     prettyPrint: __DEV__,
     level,
