@@ -92,7 +92,7 @@ service:
   - 10.10.205.40
 
 tls:
-  enabled: true
+  enabled: false
 
 ingress:
   enabled: true

@@ -35,19 +35,22 @@ spec:
             - name: http
               containerPort: {{ .Values.PORT | default 4000 }}
               protocol: TCP
+            {{- if .Values.tls.enabled }}
             - name: https
               containerPort: {{ .Values.PORT_SSL | default 4443 }}
               protocol: TCP
+            {{- end }}
           volumeMounts:
             - name: portal-files
               mountPath: /files
           livenessProbe:
             httpGet:
               path: /health
-              port: http
               {{- if .Values.tls.enabled }}
+              port: https
               scheme: HTTPS
               {{ else }}
+              port: http
               scheme: HTTP
               {{- end }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
@@ -58,10 +61,11 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: http
               {{- if .Values.tls.enabled }}
+              port: https
               scheme: HTTPS
               {{ else }}
+              port: http
               scheme: HTTP
               {{- end }}
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
@@ -72,8 +76,10 @@ spec:
           env:
             - name: PORT
               value: {{ .Values.PORT | default "4000" | quote }}
+            {{- if .Values.tls.enabled }}
             - name: PORT_SSL
               value: {{ .Values.PORT_SSL | default "4443" | quote }}
+            {{- end }}
             - name: DOMAIN
               valueFrom:
                 configMapKeyRef:

@@ -48,7 +48,7 @@ export class ConfigService {
       NODE_ENV: Joi.any().empty('').optional(),
 
       PORT: Joi.number().integer().default(80).required(),
-      PORT_SSL: Joi.number().integer().empty('').default(443).optional(),
+      PORT_SSL: Joi.number().integer().empty('').default(0).optional(),
       DOMAIN: Joi.string().empty('').default('example.com').required(),
       LOGLEVEL: Joi.string().empty('').default('debug').required(),
 

@@ -45,7 +45,10 @@ async function bootstrap(config: ConfigService): Promise<void> {
   // #endregion
 
   // #region Create NestJS app
-  if (fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory()) {
+  if (
+    !!config.get<number>('PORT_SSL') &&
+    fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory()
+  ) {
     const secureDir = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDir.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');

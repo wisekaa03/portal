@@ -3,7 +3,7 @@
 cat <<EOF > .env
 # App
 PORT="${PORT}"
-PORT_SSL="${PORT_SSL}"
+PORT_SSL="${PORT_SSL:-0}"
 DOMAIN="${DOMAIN}"
 LOGLEVEL="${LOGLEVEL}"
 
