@@ -197,8 +197,8 @@ export class AuthService {
 
           throw new Error('Mail login and password did not match');
         },
-        (reson: Error) => {
-          throw reson;
+        (reason: Error) => {
+          throw reason;
         },
       );
 }

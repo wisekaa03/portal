@@ -172,7 +172,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
             snackbarUtils.error(srv.error);
             return acc;
           }
-          return [...acc, ...srv.services];
+          return srv.services ? [...acc, ...srv.services] : acc;
         }, [] as OldService[]),
       );
     }

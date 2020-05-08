@@ -162,7 +162,7 @@ export class OldTicketService {
 
               this.logger.error(error);
 
-              return { error: SoapError(error) } as OldServices;
+              return { error: SoapError(error) };
             }),
         );
       }
@@ -173,11 +173,13 @@ export class OldTicketService {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
         Object.keys(OSTicketURL).forEach((key) => {
-          promises.push(
-            Promise.resolve({
-              error: `Connection to ${key} failed...`,
-            }),
-          );
+          const osTicketService = this.httpService
+            .post<OldServices>(OSTicketURL[key], {})
+            .toPromise()
+            .then((response) => {
+              return response as OldServices;
+            });
+          promises.push(osTicketService);
         });
       } catch (error) {
         this.logger.error(error);
@@ -235,10 +237,10 @@ export class OldTicketService {
                     createdDate: ticket['Дата'],
                     avatar: ticket['Услуга']?.['Аватар'] || '',
                   })),
-                } as OldTickets;
+                };
               }
 
-              return {} as OldTickets;
+              return {};
             })
             .catch((error: SoapFault) => {
               this.logger.verbose(`OldTickets: [Request] ${client.lastRequest}`);
@@ -246,7 +248,7 @@ export class OldTicketService {
 
               this.logger.error(error);
 
-              return { error: SoapError(error) } as OldTickets;
+              return { error: SoapError(error) };
             }),
         );
       }
