@@ -166,15 +166,15 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   useEffect(() => {
     if (!loadingServices && !errorServices) {
-      setServices(
-        dataServices!.OldTicketService!.reduce((acc, srv) => {
-          if (srv.error) {
-            snackbarUtils.error(srv.error);
-            return acc;
-          }
-          return srv.services ? [...acc, ...srv.services] : acc;
-        }, [] as OldService[]),
-      );
+      const svc = dataServices!.OldTicketService!.reduce((acc, srv) => {
+        if (srv.error) {
+          snackbarUtils.error(srv.error);
+          return acc;
+        }
+        return srv.services ? [...acc, ...srv.services] : acc;
+      }, [] as OldService[]);
+
+      setServices(svc);
     }
   }, [dataServices, errorServices, loadingServices]);
 

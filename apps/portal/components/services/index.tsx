@@ -156,30 +156,6 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 }}
                 linkQuery={{ department: ticket.department?.code }}
               />
-              {/* Саша Ощепков, Аудиторы */}
-              <ServicesElement
-                key="k0002"
-                withLink
-                url="https://sv-ticket.i-npz.ru:8443/au/"
-                element={{
-                  code: 'k0002',
-                  name: 'Аудиторы',
-                  avatar: HR,
-                }}
-                linkQuery={{ department: ticket.department?.code }}
-              />
-              {/* Саша Ощепков, Медийные проекты */}
-              <ServicesElement
-                key="k0003"
-                withLink
-                url="https://sv-ticket.i-npz.ru:8443/mp/"
-                element={{
-                  code: 'k0003',
-                  name: 'Медийные проекты',
-                  avatar: HR,
-                }}
-                linkQuery={{ department: ticket.department?.code }}
-              />
             </Box>
             <Box className={classes.container} style={{ minHeight: contentHeight }}>
               {categories.map((current) => (

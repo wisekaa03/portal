@@ -8,7 +8,7 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "target": "es2017"
+    "target": "es2020"
   },
   "include": [
     "typings/global.d.ts",

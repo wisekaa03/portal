@@ -174,10 +174,34 @@ export class OldTicketService {
 
         Object.keys(OSTicketURL).forEach((key) => {
           const osTicketService = this.httpService
-            .post<OldServices>(OSTicketURL[key], {})
+            .post<OldServices[]>(`${OSTicketURL[key]}?req=topic`, {})
             .toPromise()
             .then((response) => {
-              return response as OldServices;
+              if (response.status === 200) {
+                return {
+                  services: [
+                    ...response?.data.map((service: Record<string, any>) => ({
+                      where: WhereService.SvcOSTicket,
+                      code: `${key}-${service['Код']}`,
+                      name: service['Наименование'],
+                      description: service['descr'],
+                      group: service['group'],
+                      avatar: service['avatar'],
+                      category: [
+                        {
+                          code: service['Код'],
+                          name: service['Наименование'],
+                          description: service['descr'],
+                          avatar: service['avatar'],
+                          categoryType: service['typeSection'],
+                        },
+                      ],
+                    })),
+                  ],
+                } as OldServices;
+              }
+
+              return { error: response.statusText };
             });
           promises.push(osTicketService);
         });
@@ -186,7 +210,9 @@ export class OldTicketService {
       }
     }
 
-    return Promise.all(promises);
+    return Promise.allSettled(promises).then((values) =>
+      values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { error: promise.reason?.message })),
+    );
   };
 
   /**
@@ -270,7 +296,9 @@ export class OldTicketService {
       }
     }
 
-    return Promise.all(promises);
+    return Promise.allSettled(promises).then((values) =>
+      values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { error: promise.reason?.message })),
+    );
   };
 
   /**
