@@ -13,7 +13,7 @@ import NoImage from '@public/images/svg/noimage.svg';
 const iconWidth = 24;
 
 interface IconProps {
-  src?: any;
+  src?: string;
   base64?: boolean;
   size?: number;
   material?: boolean;
@@ -48,7 +48,9 @@ const BaseIcon = ({ size, mask, color, material, src, base64 }: IconProps): Reac
     return <Icon className={classes.mask} />;
   }
 
-  const baseType = `data:image/png;base64,`;
+  // <svg = base64: PHN2Z
+  const baseType =
+    src?.match(/^PHN2Z/i) || src?.match(/^<svg/i) ? 'data:image/svg+xml;base64,' : 'data:image/png;base64,';
 
   return (
     <Icon>
