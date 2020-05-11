@@ -170,7 +170,7 @@ export class OldTicketService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    services: {
+                    services: [
                       ...response.data.map((service: Record<string, any>) => ({
                         where: WhereService.SvcOSTicket,
                         code: `${key}-${service['Код']}`,
@@ -179,7 +179,7 @@ export class OldTicketService {
                         group: service['group'],
                         avatar: service['avatar'],
                       })),
-                    },
+                    ],
                   };
                 }
 
