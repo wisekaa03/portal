@@ -26,6 +26,19 @@ import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap
 import { constructUploads } from '@back/shared/upload';
 // #endregion
 
+export const whereService = (key: string): WhereService => {
+  switch (key) {
+    case '1Citil':
+      return WhereService.Svc1Citil;
+    case 'auditors':
+      return WhereService.SvcOSTaudit;
+    case 'media':
+      return WhereService.SvcOSTmedia;
+    default:
+      return WhereService.SvcDefault;
+  }
+};
+
 export interface Attaches1CFile {
   NFile: string;
   DFile: string;
@@ -68,8 +81,8 @@ const createFiles = (files: any): OldFile[] | [] => {
   return [];
 };
 
-const createTicket = (ticket: any): OldTicket => ({
-  where: WhereService.Svc1C,
+const createTicket = (ticket: any, key: string): OldTicket => ({
+  where: whereService(key),
   code: ticket['Код'],
   name: ticket['Наименование'],
   description: clearHtml(ticket['Описание']),
@@ -81,7 +94,7 @@ const createTicket = (ticket: any): OldTicket => ({
   executorUser: createUser(ticket['ТекущийИсполнитель']),
   initiatorUser: createUser(ticket['Инициатор']),
   service: {
-    where: WhereService.Svc1C,
+    where: whereService(key),
     code: ticket['Услуга']?.['Код'] || '',
     name: ticket['Услуга']?.['Наименование'] || '',
     avatar: ticket['Услуга']?.['Аватар'] || '',
@@ -134,14 +147,17 @@ export class OldTicketService {
               ) {
                 return {
                   services: [
-                    ...result[0]['return']['ЭлементСоставаУслуги']?.map((service: Record<string, any>) => ({
-                      where: WhereService.Svc1C,
-                      code: service['Код'],
-                      name: service['Наименование'],
-                      description: service['ОписаниеФД'],
-                      group: service['Группа'],
-                      avatar: service['Аватар'],
-                    })),
+                    ...result[0]['return']['ЭлементСоставаУслуги']?.map(
+                      (service: Record<string, any>) =>
+                        ({
+                          where: whereService('1Citil'),
+                          code: service['Код'],
+                          name: service['Наименование'],
+                          description: service['ОписаниеФД'],
+                          group: service['Группа'],
+                          avatar: service['Аватар'],
+                        } as OldService),
+                    ),
                   ],
                 };
               }
@@ -174,8 +190,8 @@ export class OldTicketService {
                   return {
                     services: [
                       ...response.data.map((service: Record<string, any>) => ({
-                        where: WhereService.SvcOSTicket,
-                        code: `${key}-${service['Код']}`,
+                        where: whereService(key),
+                        code: service['Код'],
                         name: service['Наименование'],
                         description: service['descr'],
                         group: service['group'],
@@ -242,7 +258,7 @@ export class OldTicketService {
 
                 return {
                   tickets: response.map((ticket: any) => ({
-                    where: WhereService.Svc1C,
+                    where: whereService('1Citil'),
                     code: ticket['Код'],
                     type: ticket['ТипОбращения'],
                     name: ticket['Наименование'],
@@ -300,17 +316,29 @@ export class OldTicketService {
                     tickets: [
                       ...response.data.tickets?.map((service: Record<string, any>) => {
                         return {
-                          where: WhereService.SvcOSTicket,
-                          code: `${key}-${service['Код']}`,
-                          name: service['Наименование'],
-                          description: service['descr'],
-                          avatar: service['avatar'],
-                          status: service['status'],
+                          where: whereService(key),
+                          code: service['number'],
                           createdDate: service['created'],
-                        };
+                          // lastUpdate: service['lastupdate'],
+                          status: service['status_name'],
+                          name: service['subject'],
+                          description: service['description'],
+                          initiatorUser: {
+                            name: service['user_name'],
+                          } as OldUser,
+                          executorUser: {
+                            name: service['assignee_user_name'],
+                          } as OldUser,
+                          service: {
+                            where: whereService(key),
+                            code: '',
+                            name: service['topic'],
+                            avatar: '',
+                          } as OldService,
+                        } as OldTicket;
                       }),
                     ],
-                  };
+                  } as OldServices;
                 }
 
                 return { error: 'Not found the data.' };
@@ -452,7 +480,7 @@ export class OldTicketService {
         // this.logger.verbose(`OldTicketEdit: [Response] ${client.lastResponse}`);
 
         if (result && result[0] && result[0]['return']) {
-          return createTicket(result[0]['return']);
+          return createTicket(result[0]['return'], '1Citil');
         }
 
         return {};
@@ -496,7 +524,7 @@ export class OldTicketService {
         // this.logger.verbose(`OldTicketDescription: [Response] ${client.lastResponse}`);
 
         if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
-          return createTicket(result[0]['return']);
+          return createTicket(result[0]['return'], '1Citil');
         }
 
         return {};

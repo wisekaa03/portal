@@ -2,8 +2,10 @@
 import { FileUpload } from 'graphql-upload';
 
 export enum WhereService {
-  Svc1C = '1C',
-  SvcOSTicket = 'OSTicket',
+  Svc1Citil = '1Citil',
+  SvcOSTaudit = 'OSTaudit',
+  SvcOSTmedia = 'OSTmedia',
+  SvcDefault = 'default',
 }
 
 export interface OldService {
