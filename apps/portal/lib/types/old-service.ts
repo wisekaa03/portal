@@ -6,14 +6,6 @@ export enum WhereService {
   SvcOSTicket = 'OSTicket',
 }
 
-export interface OldCategory {
-  code: string;
-  name: string;
-  description?: string;
-  categoryType?: string;
-  avatar: string;
-}
-
 export interface OldService {
   where: WhereService;
   code: string;
@@ -21,7 +13,6 @@ export interface OldService {
   group?: string;
   description?: string;
   avatar: string;
-  category?: OldCategory[];
 }
 
 export interface OldServices {
@@ -50,7 +41,6 @@ export interface OldTicket {
   executorUser?: OldUser | null;
   initiatorUser?: OldUser | null;
   service?: OldService;
-  serviceCategory?: OldCategory;
   files?: OldFile[];
 }
 

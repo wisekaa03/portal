@@ -1,12 +1,3 @@
-type OldCategory {
-  where: String!
-  code: String!
-  name: String!
-  description: String
-  categoryType: String
-  avatar: String
-}
-
 type OldService {
   where: String!
   code: String!
@@ -14,7 +5,6 @@ type OldService {
   group: String
   description: String
   avatar: String
-  category: [OldCategory!]
 }
 
 type OldUser {
@@ -91,7 +81,7 @@ type OldTickets {
 }
 
 type Query {
-  OldTicketService: [OldServices]!
+  OldTicketService(find: String): [OldServices]!
   OldTickets(status: String): [OldTickets]!
   OldTicketDescription(code: String, type: String): OldTicket
 }

@@ -7,7 +7,6 @@ import { FileUpload } from 'graphql-upload';
 // #region Imports Local
 import {
   OldService,
-  OldCategory,
   OldTicketNewInput,
   OldTicketNew,
   OldTicket,
@@ -85,11 +84,6 @@ const createTicket = (ticket: any): OldTicket => ({
     name: ticket['Услуга']?.['Наименование'] || '',
     avatar: ticket['Услуга']?.['Аватар'] || '',
   },
-  serviceCategory: {
-    code: ticket['КатегорияУслуги']?.['Код'] || '',
-    name: ticket['КатегорияУслуги']?.['Наименование'] || '',
-    avatar: ticket['КатегорияУслуги']?.['Аватар'] || '',
-  },
   files: createFiles(ticket['СписокФайлов']?.['Файл'] || undefined),
 });
 
@@ -114,7 +108,7 @@ export class OldTicketService {
    * @param {SoapAuthentication} authentication Soap authentication
    * @returns {OldService[]} Services and Categories
    */
-  OldTicketService = async (authentication: SoapAuthentication): Promise<OldServices[]> => {
+  OldTicketService = async (authentication: SoapAuthentication, find: string): Promise<OldServices[]> => {
     const promises: Promise<OldServices>[] = [];
 
     if (!!this.configService.get<string>('SOAP_URL')) {
@@ -125,30 +119,25 @@ export class OldTicketService {
       if (client) {
         promises.push(
           client
-            .kngk_GetRoutesAsync({ log: authentication.username })
+            .kngk_GetServicesAsync({ log: authentication.username, find })
             .then((result: any) => {
               this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
 
-              if (result && result[0] && result[0]['return'] && typeof result[0]['return']['Услуга'] === 'object') {
+              if (
+                result &&
+                result[0] &&
+                result[0]['return'] &&
+                typeof result[0]['return']['ЭлементСоставаУслуги'] === 'object'
+              ) {
                 return {
                   services: [
-                    ...result[0]['return']['Услуга'].map((service: Record<string, any>) => ({
+                    ...result[0]['return']['ЭлементСоставаУслуги']?.map((service: Record<string, any>) => ({
                       where: WhereService.Svc1C,
                       code: service['Код'],
                       name: service['Наименование'],
                       description: service['ОписаниеФД'],
                       group: service['Группа'],
                       avatar: service['Аватар'],
-                      category: service['СоставУслуги']['ЭлементСоставаУслуги'].map(
-                        (category: Record<string, string>) =>
-                          ({
-                            code: category['Код'],
-                            name: category['Наименование'],
-                            description: category['ОписаниеФД'],
-                            avatar: category['Аватар'] || '',
-                            categoryType: category['ТипЗначенияКатегории'],
-                          } as OldCategory),
-                      ),
                     })),
                   ],
                 };
@@ -180,22 +169,13 @@ export class OldTicketService {
               if (response.status === 200) {
                 return {
                   services: [
-                    ...response?.data.map((service: Record<string, any>) => ({
+                    ...response.data?.map((service: Record<string, any>) => ({
                       where: WhereService.SvcOSTicket,
                       code: `${key}-${service['Код']}`,
                       name: service['Наименование'],
                       description: service['descr'],
                       group: service['group'],
                       avatar: service['avatar'],
-                      category: [
-                        {
-                          code: service['Код'],
-                          name: service['Наименование'],
-                          description: service['descr'],
-                          avatar: service['avatar'],
-                          categoryType: service['typeSection'],
-                        },
-                      ],
                     })),
                   ],
                 } as OldServices;

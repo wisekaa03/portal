@@ -86,11 +86,6 @@ const TICKET_FRAGMENT = gql`
       name
       avatar
     }
-    serviceCategory {
-      code
-      name
-      avatar
-    }
     files {
       code
       name
@@ -431,13 +426,6 @@ export const OLD_TICKET_SERVICE = gql`
         group
         description
         avatar
-        category {
-          code
-          name
-          description
-          categoryType
-          avatar
-        }
       }
       error
     }

@@ -37,7 +37,11 @@ export class OldTicketResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async OldTicketService(@CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<OldServices[]> {
+  async OldTicketService(
+    @Args('find') find?: string,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<OldServices[]> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -48,7 +52,7 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTicketService(authentication).catch((error: Error) => {
+    return this.ticketOldService.OldTicketService(authentication, find || '').catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
