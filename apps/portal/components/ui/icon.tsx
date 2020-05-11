@@ -49,8 +49,11 @@ const BaseIcon = ({ size, mask, color, material, src, base64 }: IconProps): Reac
   }
 
   // <svg = base64: PHN2Z
+  // <?xml = base64: PD94bW
   const baseType =
-    src?.match(/^PHN2Z/i) || src?.match(/^<svg/i) ? 'data:image/svg+xml;base64,' : 'data:image/png;base64,';
+    src?.match(/^PHN2Z/i) || src?.match(/^PD94bW/i) || src?.match(/^<svg/i) || src?.match(/^<?xml/i)
+      ? 'data:image/svg+xml;base64,'
+      : 'data:image/png;base64,';
 
   return (
     <Icon>
