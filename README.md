@@ -2,7 +2,7 @@
 
 [Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport](http://www.passportjs.org/), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
-[![pipeline status](https://git.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://git.i-npz.ru/Project/portal/commits/master)
+[![pipeline status](https://gitlab.kube.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://gitlab.kube.i-npz.ru/Project/portal/commits/master)
 
 ## Features
 
@@ -183,6 +183,9 @@ MICROSERVICE_URL="redis://localhost:6379"
 # SOAP
 SOAP_URL="https://server1c"
 SOAP_DOMAIN="EXAMPLE"
+
+# OSTICKET
+OSTICKET_URL={"auditors": "https://auditors-ticket.example.com/au/portal/ajax.php", "media": "https://media-ticket.example.com/mp/portal/ajax.php"}
 
 # NEWS
 NEWS_URL="https://news/wp/wp-json/wp/v2/posts"
