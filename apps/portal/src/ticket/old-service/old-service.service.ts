@@ -16,6 +16,8 @@ import {
   OldServices,
   OldTickets,
   WhereService,
+  User,
+  OSTicketUser,
 } from '@lib/types';
 import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config/config.service';
@@ -109,7 +111,7 @@ export class OldTicketService {
    * @param {string} find The find string
    * @returns {OldService[]} Services
    */
-  OldTicketService = async (authentication: SoapAuthentication, find: string): Promise<OldServices[]> => {
+  OldTicketService = async (authentication: SoapAuthentication, user: User, find: string): Promise<OldServices[]> => {
     const promises: Promise<OldServices>[] = [];
 
     if (!!this.configService.get<string>('SOAP_URL')) {
@@ -120,7 +122,7 @@ export class OldTicketService {
       if (client) {
         promises.push(
           client
-            .kngk_GetServicesAsync({ log: authentication.username, find })
+            .kngk_GetServicesAsync({ log: user.username, find })
             .then((result: any) => {
               this.logger.verbose(`OldTicketService: [Request] ${client.lastRequest}`);
 
@@ -206,10 +208,11 @@ export class OldTicketService {
    * @async
    * @method OldTickets
    * @param {SoapAuthentication} authentication Soap authentication
+   * @param {User} user User object
    * @param {string} Status
    * @returns {OldService[]}
    */
-  OldTickets = async (authentication: SoapAuthentication, Status: string): Promise<OldTickets[]> => {
+  OldTickets = async (authentication: SoapAuthentication, user: User, Status: string): Promise<OldTickets[]> => {
     const promises: Promise<OldTickets>[] = [];
 
     if (!!this.configService.get<string>('SOAP_URL')) {
@@ -269,12 +272,53 @@ export class OldTicketService {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
+        const userOSTicket = {
+          company: user.profile.company,
+          currentCount: '0',
+          email: user.profile.email,
+          fio: user.profile.fullName,
+          function: user.profile.title,
+          manager: '',
+          phone: user.profile.telephone,
+          phone_ext: user.profile.workPhone,
+          subdivision: user.profile.department,
+          Аватар: user.profile.thumbnailPhoto,
+        } as OSTicketUser;
+
         Object.keys(OSTicketURL).forEach((key) => {
-          promises.push(
-            Promise.resolve({
-              error: `Connection to ${key} failed...`,
-            }),
-          );
+          const osTickets = this.httpService
+            .post<Record<string, any>>(`${OSTicketURL[key]}?req=tickets`, {
+              login: user.username,
+              user: userOSTicket,
+              msg: JSON.stringify({ login: user.username, department: '', opened: true }),
+            })
+            .toPromise()
+            .then((response) => {
+              if (response.status === 200) {
+                if (typeof response.data === 'object') {
+                  return {
+                    tickets: [
+                      ...response.data.tickets?.map((service: Record<string, any>) => {
+                        return {
+                          where: WhereService.SvcOSTicket,
+                          code: `${key}-${service['Код']}`,
+                          name: service['Наименование'],
+                          description: service['descr'],
+                          avatar: service['avatar'],
+                          status: service['status'],
+                          createdDate: service['created'],
+                        };
+                      }),
+                    ],
+                  };
+                }
+
+                return { error: 'Not found the data.' };
+              }
+
+              return { error: response.statusText };
+            });
+          promises.push(osTickets);
         });
       } catch (error) {
         this.logger.error(error);

@@ -86,3 +86,16 @@ export interface OldTicketNew {
   status: string;
   createdDate: Date;
 }
+
+export interface OSTicketUser {
+  company: string;
+  currentCount: string;
+  email: string;
+  fio: string;
+  function: string;
+  manager: string;
+  phone: string;
+  phone_ext: string;
+  subdivision: string;
+  Аватар: string;
+}

@@ -52,7 +52,7 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTicketService(authentication, find || '').catch((error: Error) => {
+    return this.ticketOldService.OldTicketService(authentication, user, find || '').catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -81,7 +81,7 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTickets(authentication, status).catch((error: Error) => {
+    return this.ticketOldService.OldTickets(authentication, user, status).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
