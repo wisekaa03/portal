@@ -106,6 +106,7 @@ export class OldTicketService {
    * @async
    * @method OldTicketService
    * @param {SoapAuthentication} authentication Soap authentication
+   * @param {string} find The find string
    * @returns {OldService[]} Services and Categories
    */
   OldTicketService = async (authentication: SoapAuthentication, find: string): Promise<OldServices[]> => {

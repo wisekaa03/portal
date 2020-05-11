@@ -8,15 +8,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import {
-  Data,
-  DropzoneFile,
-  ServicesTicketProps,
-  ServicesCreatedProps,
-  OldService,
-  OldCategory,
-  OldServices,
-} from '@lib/types';
+import { Data, DropzoneFile, ServicesTicketProps, ServicesCreatedProps, OldService, OldServices } from '@lib/types';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
@@ -39,7 +31,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<OldService[]>([]);
-  const [categories, setCategories] = useState<OldCategory[]>([]);
   const [ticket, setTicket] = useState<ServicesTicketProps>(defaultTicketState);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [body, setBody] = useState<string>('');
@@ -72,7 +63,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const handleResetTicket = (): void => {
     setTicket(defaultTicketState);
-    setCategories([]);
     setBody('');
     setFiles([]);
     router.push(pathname, pathname);
@@ -136,16 +126,16 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
               tab += 1;
               initialState.service = currentService;
 
-              setCategories(currentService.category);
+              // setCategories(currentService.category);
 
-              if (category) {
-                const currentCategory = currentService.category.find((cat) => cat.code === category);
+              // if (category) {
+              //   const currentCategory = currentService.category.find((cat) => cat.code === category);
 
-                if (currentCategory) {
-                  tab += 1;
-                  initialState.category = currentCategory;
-                }
-              }
+              //   if (currentCategory) {
+              //     tab += 1;
+              //     initialState.category = currentCategory;
+              //   }
+              // }
             } else if (service.indexOf('k', 0)) {
               return;
             }
@@ -229,7 +219,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           created={created}
           departments={departments}
           services={services}
-          categories={categories}
           body={body}
           setBody={setBody}
           files={files}
