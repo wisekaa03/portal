@@ -77,7 +77,6 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   created,
   departments,
   services,
-  categories,
   body,
   setBody,
   files,
@@ -157,7 +156,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 linkQuery={{ department: ticket.department?.code }}
               />
             </Box>
-            <Box className={classes.container} style={{ minHeight: contentHeight }}>
+            {/* <Box className={classes.container} style={{ minHeight: contentHeight }}>
               {categories.map((current) => (
                 <ServicesElement
                   key={current.code}
@@ -171,7 +170,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   }}
                 />
               ))}
-            </Box>
+                </Box> */}
             <Box
               style={{ minHeight: contentHeight }}
               display="flex"
