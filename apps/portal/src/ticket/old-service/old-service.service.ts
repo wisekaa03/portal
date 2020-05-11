@@ -101,13 +101,13 @@ export class OldTicketService {
   }
 
   /**
-   * Ticket get service and categories
+   * Ticket get service
    *
    * @async
    * @method OldTicketService
    * @param {SoapAuthentication} authentication Soap authentication
    * @param {string} find The find string
-   * @returns {OldService[]} Services and Categories
+   * @returns {OldService[]} Services
    */
   OldTicketService = async (authentication: SoapAuthentication, find: string): Promise<OldServices[]> => {
     const promises: Promise<OldServices>[] = [];
@@ -168,18 +168,22 @@ export class OldTicketService {
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
-                return {
-                  services: [
-                    ...response.data?.map((service: Record<string, any>) => ({
-                      where: WhereService.SvcOSTicket,
-                      code: `${key}-${service['Код']}`,
-                      name: service['Наименование'],
-                      description: service['descr'],
-                      group: service['group'],
-                      avatar: service['avatar'],
-                    })),
-                  ],
-                } as OldServices;
+                if (typeof response.data === 'object') {
+                  return {
+                    services: {
+                      ...response.data.map((service: Record<string, any>) => ({
+                        where: WhereService.SvcOSTicket,
+                        code: `${key}-${service['Код']}`,
+                        name: service['Наименование'],
+                        description: service['descr'],
+                        group: service['group'],
+                        avatar: service['avatar'],
+                      })),
+                    },
+                  };
+                }
+
+                return { error: 'Not found the data.' };
               }
 
               return { error: response.statusText };
