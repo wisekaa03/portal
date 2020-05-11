@@ -94,7 +94,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   const defaultSrc = ["'self'"];
 
   const mailUrl = config.get<string>('MAIL_URL');
-  if (mailUrl.match(/http/)) {
+  if (mailUrl.match(/^http/i)) {
     imgSrc.push(mailUrl);
     fontSrc.push(mailUrl);
     frameSrc.push(mailUrl);
@@ -102,7 +102,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   }
 
   const newsUrl = config.get<string>('NEWS_URL');
-  if (newsUrl.match(/http/)) {
+  if (newsUrl.match(/^http/i)) {
     imgSrc.push(newsUrl);
     fontSrc.push(newsUrl);
     frameSrc.push(newsUrl);
@@ -110,12 +110,12 @@ async function bootstrap(config: ConfigService): Promise<void> {
   }
 
   const newsApiUrl = config.get<string>('NEWS_API_URL');
-  if (newsApiUrl.match(/http/)) {
+  if (newsApiUrl.match(/^http/i)) {
     imgSrc.push(newsApiUrl);
   }
 
   const meetingUrl = config.get<string>('MEETING_URL');
-  if (meetingUrl.match(/http/)) {
+  if (meetingUrl.match(/^http/i)) {
     frameSrc.push(meetingUrl);
   }
 

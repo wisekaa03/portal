@@ -95,7 +95,7 @@ export class AuthResolver {
    *
    * @async
    * @method loginEmail
-   * @returns {boolean} True if a login successfull
+   * @returns {boolean} True if a login successful
    * @throws {GraphQLError}
    */
   @Query()

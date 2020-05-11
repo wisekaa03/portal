@@ -13,8 +13,7 @@ import { OldTicketService } from './old-service.service';
 
 @Module({
   imports: [
-    // #region Config & Log module
-    ConfigModule,
+    // #region Log module
     LogModule,
     // #endregion
 
