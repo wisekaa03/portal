@@ -13,7 +13,7 @@ import NoImage from '@public/images/svg/noimage.svg';
 const iconWidth = 24;
 
 interface IconProps {
-  src?: string;
+  src?: string | React.ReactSVGElement;
   base64?: boolean;
   size?: number;
   material?: boolean;
@@ -36,28 +36,32 @@ const useStyles = makeStyles<Theme, IconProps, string>((theme: Theme) =>
   }),
 );
 
-const BaseIcon = ({ size, mask, color, material, src, base64 }: IconProps): React.ReactElement => {
+const BaseIcon = ({ size, mask, color, src, base64 }: IconProps): React.ReactElement => {
   const classes = useStyles({ size, mask, color });
-
-  if (material) {
-    const TheIcon = src;
-    return <TheIcon />;
-  }
 
   if (mask) {
     return <Icon className={classes.mask} />;
   }
 
-  // <svg = base64: PHN2Z
-  // <?xml = base64: PD94bW
-  const baseType =
-    src?.match(/^PHN2Z/i) || src?.match(/^PD94bW/i) || src?.match(/^<svg/i) || src?.match(/^<?xml/i)
-      ? 'data:image/svg+xml;base64,'
-      : 'data:image/png;base64,';
+  /* Material Icons */
+  if (typeof src === 'object' && src !== null) {
+    return src;
+  }
+  if (typeof src === 'string' && src !== null) {
+    // <svg = base64: PHN2Z
+    // <?xml = base64: PD94bW
+    const baseType = src.match(/^(PHN2Z|PD94bW|<svg|<?xml)/i) ? 'data:image/svg+xml;base64,' : 'data:image/png;base64,';
+
+    return (
+      <Icon>
+        <img className={classes.root} alt="icon" src={`${base64 ? baseType : ''}${src}`} />
+      </Icon>
+    );
+  }
 
   return (
     <Icon>
-      <img className={classes.root} alt="icon" src={src ? `${base64 ? baseType : ''}${src}` : NoImage} />
+      <img className={classes.root} alt="icon" src={NoImage} />
     </Icon>
   );
 };
