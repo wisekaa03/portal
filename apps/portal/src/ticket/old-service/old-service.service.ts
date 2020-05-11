@@ -48,9 +48,10 @@ export interface Attaches1C {
   Вложение: Attaches1CFile[];
 }
 
-const createUser = (user: any): OldUser | null => {
+const createUser = (user: any, key: string): OldUser | null => {
   if (user) {
     return {
+      where: whereService(key),
       name: user['ФИО'],
       avatar: user['Аватар'] || '',
       email: user['ОсновнойEmail'],
@@ -65,13 +66,14 @@ const createUser = (user: any): OldUser | null => {
   return null;
 };
 
-const createFiles = (files: any): OldFile[] | [] => {
+const createFiles = (files: any, key: string): OldFile[] | [] => {
   if (files) {
     const newFiles = Array.isArray(files) ? files : [files];
 
     return newFiles
       .filter((file) => file['Код'])
       .map((file) => ({
+        where: whereService(key),
         code: file['Код'],
         name: file['Наименование'],
         ext: file['РасширениеФайла'],
@@ -91,15 +93,15 @@ const createTicket = (ticket: any, key: string): OldTicket => ({
   createdDate: ticket['Дата'],
   timeout: ticket['СрокИсполнения'],
   endDate: ticket['ДатаЗавершения'],
-  executorUser: createUser(ticket['ТекущийИсполнитель']),
-  initiatorUser: createUser(ticket['Инициатор']),
+  executorUser: createUser(ticket['ТекущийИсполнитель'], key),
+  initiatorUser: createUser(ticket['Инициатор'], key),
   service: {
     where: whereService(key),
     code: ticket['Услуга']?.['Код'] || '',
     name: ticket['Услуга']?.['Наименование'] || '',
     avatar: ticket['Услуга']?.['Аватар'] || '',
   },
-  files: createFiles(ticket['СписокФайлов']?.['Файл'] || undefined),
+  files: createFiles(ticket['СписокФайлов']?.['Файл'] || undefined, key),
 });
 
 @Injectable()
@@ -396,8 +398,6 @@ export class OldTicketService {
         Title: ticket.title,
         deskr: ticket.body,
         route: ticket.serviceId,
-        category: ticket.categoryId,
-        TypeOfCategory: ticket.categoryType,
         Executor: ticket.executorUser ? ticket.executorUser : '',
         NFile: '',
         DFile: '',

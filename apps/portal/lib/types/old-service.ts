@@ -23,6 +23,7 @@ export interface OldServices {
 }
 
 export interface OldFile {
+  where: WhereService;
   code: string;
   name: string;
   ext: string;
@@ -52,6 +53,7 @@ export interface OldTickets {
 }
 
 export interface OldUser {
+  where: WhereService;
   name: string;
   avatar?: string;
   email?: string;
@@ -63,16 +65,16 @@ export interface OldUser {
 }
 
 export interface OldTicketNewInput {
+  where: WhereService;
   title: string;
   body: string;
   serviceId: string;
-  categoryId: string;
-  categoryType: string;
   executorUser?: string;
   attachments?: Promise<FileUpload>[];
 }
 
 export interface OldTicketEditInput {
+  where: WhereService;
   code: string;
   type: string;
   comment: string;
@@ -80,6 +82,7 @@ export interface OldTicketEditInput {
 }
 
 export interface OldTicketNew {
+  where: WhereService;
   code: string;
   name: string;
   requisiteSource: string;
