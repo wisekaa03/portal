@@ -8,6 +8,7 @@ export type ServicesElementType = 'department' | 'service' | 'category';
 export interface ServicesDepartmentsProps {
   code: string;
   name: string;
+  subtitle?: string;
   avatar: any;
 }
 
@@ -55,7 +56,7 @@ export interface ServicesSuccessProps {
 
 export interface ServicesSuccessCardProps {
   cardRef: React.Ref<any>;
-  classes: Record<'root', string>;
+  classes: Record<'root' | 'title', string>;
   data: ServicesCreatedProps;
 }
 
@@ -66,6 +67,7 @@ export interface ServicesTicketElementProps {
   categoryType?: string;
 }
 
+// TODO: скорректировать после консолидации с беком
 export interface ServicesCreatedProps {
   code?: string;
   name?: string;
@@ -74,6 +76,7 @@ export interface ServicesCreatedProps {
   organization?: string;
   status?: string;
   createdDate?: Date;
+  department?: string;
 }
 
 export interface ServicesTicketProps {

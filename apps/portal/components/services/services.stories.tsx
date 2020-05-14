@@ -4,10 +4,10 @@ import React, { useState, useRef, useCallback, FC } from 'react';
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 
-import { story, withTranslation } from '@lib/index.stories';
 import { ServicesTicketProps, ServicesCreatedProps, OldService, DropzoneFile } from '@lib/types';
-import Services from '@front/components/services';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
+import { story, withTranslation } from './index.stories';
+import Services from './index';
 
 const defaultTicketState: ServicesTicketProps = { title: '' };
 

@@ -38,6 +38,26 @@ const useStyles = makeStyles((theme: Theme) =>
         color: '#000',
       },
     },
+    info: {
+      'display': 'grid',
+      'gap': `${theme.spacing(0.5)}px`,
+      'borderBottom': '1px solid rgba(46, 45, 43, 0.7)',
+      'gridTemplateRows': `repeat(2, ${theme.spacing(3)}px)`,
+      'minWidth': 200,
+
+      '& > $name, & > $subtitle': {
+        display: 'flex',
+        alignItems: 'flex-start',
+      },
+    },
+    name: {
+      fontSize: theme.spacing(2),
+      letterSpacing: 0.15,
+    },
+    subtitle: {
+      fontSize: theme.spacing(1.5),
+      letterSpacing: 0.25,
+    },
   }),
 );
 
@@ -83,9 +103,14 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, li
         <div>
           <BaseIcon base64={base64} src={element.avatar} size={48} />
         </div>
-        <div>
-          <Typography variant="subtitle1">{element.name}</Typography>
-        </div>
+        <Box className={classes.info}>
+          <Typography variant="subtitle1" className={classes.name}>
+            {element.name}
+          </Typography>
+          <Typography variant="subtitle1" className={classes.subtitle}>
+            {element.subtitle}
+          </Typography>
+        </Box>
       </Box>
     </ConditionalWrapper>
   );
