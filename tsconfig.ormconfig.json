@@ -2,6 +2,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "lib": [
+      "ES2018",
+      "ES2020"
+    ],
     "removeComments": true,
     "sourceMap": false,
     "noEmit": false,

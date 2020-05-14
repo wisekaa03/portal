@@ -8,9 +8,12 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "target": "ES2017",
+    "module": "esnext",
+    "target": "es2020",
     "lib": [
+      "es2018",
       "es2020",
+      "esnext"
     ]
   },
   "include": [

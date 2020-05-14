@@ -39,9 +39,19 @@ module.exports = (options) => {
   // };
 
   // Babel
+  // TODO: https://stackoverflow.com/questions/59972341/how-to-make-webpack-accept-optional-chaining-without-babel
   c.module.rules.unshift({
-    test: /.tsx?$/,
-    use: [{ loader: 'babel-loader' }],
+    test: /\.tsx?$/,
+    exclude: /node_modules/,
+    use: [
+      {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env'],
+          plugins: ['@babel/plugin-proposal-optional-chaining', '@babel/plugin-proposal-nullish-coalescing-operator'],
+        },
+      },
+    ],
   });
 
   // console.log('Config.module.rules:', c.module.rules);

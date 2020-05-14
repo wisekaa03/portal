@@ -1,13 +1,6 @@
 /** @format */
-/* eslint func-names:0 */
 
-// #region Imports NPM
-// const path = require('path');
-// #endregion
-// #region Imports Local
-// #endregion
-
-module.exports = function (api) {
+module.exports = (api) => {
   api.cache(true);
 
   // #region Constants
@@ -16,6 +9,7 @@ module.exports = function (api) {
   const constantsPlugins = [
     // 'babel-plugin-react-require',
     ['@babel/plugin-proposal-optional-chaining', { loose: false }],
+    ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: false }],
     // '@babel/plugin-syntax-dynamic-import',
     // ['@babel/plugin-proposal-decorators', { legacy: true }],
     // ['@babel/proposal-class-properties', { loose: true }],
