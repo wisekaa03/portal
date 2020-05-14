@@ -19,7 +19,7 @@
     "category": "Категория услуги"
   },
   "complete": {
-    "code": "Код: {{value}}",
+    "code": "Код обращения: {{value}}",
     "name": "Тема обращения: {{value}}",
     "company": "Организация: {{value}}",
     "service": "Услуга: {{value}}",

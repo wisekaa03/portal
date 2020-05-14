@@ -19,7 +19,7 @@
     "category": "Category"
   },
   "complete": {
-    "code": "Code: {{value}}",
+    "code": "Code appeal: {{value}}",
     "name": "Theme appeal: {{value}}",
     "company": "Company: {{value}}",
     "service": "Service: {{value}}",
