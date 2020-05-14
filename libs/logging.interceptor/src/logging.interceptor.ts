@@ -2,14 +2,14 @@
 
 // #region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Request } from 'express';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 // #endregion
@@ -20,7 +20,10 @@ export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 export class LoggingInterceptor implements NestInterceptor {
   microserviceUrl: string;
 
-  constructor(private readonly logger: LogService, private readonly configService: ConfigService) {
+  constructor(
+    @InjectPinoLogger(LoggingInterceptor.name) private readonly logger: PinoLogger,
+    private readonly configService: ConfigService,
+  ) {
     this.microserviceUrl = configService.get<string>('MICROSERVICE_URL');
   }
 
@@ -32,7 +35,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
         return next.handle().pipe(
           tap(() =>
-            this.logger.log(
+            this.logger.info(
               {
                 info: info.args,
                 url: this.microserviceUrl,
@@ -52,7 +55,7 @@ export class LoggingInterceptor implements NestInterceptor {
         if (req) {
           // const { method, url, socket } = req;
 
-          return next.handle().pipe(tap(() => this.logger.log({ username }, context.getClass().name)));
+          return next.handle().pipe(tap(() => this.logger.info({ username }, context.getClass().name)));
         }
 
         // GraphQL requests
@@ -70,7 +73,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
         return next.handle().pipe(
           tap(() =>
-            this.logger.log(
+            this.logger.info(
               {
                 username,
                 parentType: info.parentType.name,

@@ -5,7 +5,6 @@ import { Module, HttpModule } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
-import { LogModule } from '@app/logger';
 import { SoapModule } from '@app/soap';
 import { OldTicketResolver } from './old-service.resolver';
 import { OldTicketService } from './old-service.service';
@@ -13,10 +12,6 @@ import { OldTicketService } from './old-service.service';
 
 @Module({
   imports: [
-    // #region Log module
-    LogModule,
-    // #endregion
-
     SoapModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

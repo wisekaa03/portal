@@ -1,12 +1,12 @@
 /** @format */
 
 // #region Imports NPM
-import { Injectable, Inject, HttpException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger/log.service';
 import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
 // #endregion
 
@@ -25,11 +25,9 @@ export class SoapService {
    */
   constructor(
     @Inject(SOAP_OPTIONS) public readonly opts: SoapOptions,
-    private readonly logger: LogService,
+    @InjectPinoLogger(SoapService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService,
-  ) {
-    logger.setContext(SoapService.name);
-  }
+  ) {}
 
   async connect(authentication?: SoapAuthentication): Promise<SoapClient> {
     if (authentication && authentication.username && authentication.password) {

@@ -5,14 +5,13 @@ import { DynamicModule, Module, Provider, Type, Global } from '@nestjs/common';
 // #endregion
 // #region Imports Local
 // import { ConfigModule } from '@app/config';
-import { LogModule } from '@app/logger';
 import { LdapService } from './ldap.service';
 import { LDAP_OPTIONS, LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './ldap.interface';
 // #endregion
 
 @Global()
 @Module({
-  imports: [LogModule],
+  imports: [],
   providers: [LdapService],
   exports: [LdapService],
 })

@@ -18,12 +18,11 @@ import passport from 'passport';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import { PinoLogger } from 'nestjs-pino';
+import { Logger, PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { nextI18next } from '@lib/i18n-client';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
@@ -35,7 +34,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   let httpsServer: boolean | ServerOptions = false;
 
   // #region NestJS options
-  const logger: LogService = new LogService(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
+  const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,

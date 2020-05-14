@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Inject, Injectable } from '@nestjs/common';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import Ldap from 'ldapjs';
 import { EventEmitter } from 'events';
 import * as cacheManager from 'cache-manager';
@@ -9,7 +10,6 @@ import * as redisStore from 'cache-manager-redis-store';
 import bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { ConfigService } from '@app/config';
 import dayjs from 'dayjs';
 import {
@@ -57,12 +57,10 @@ export class LdapService extends EventEmitter {
    */
   constructor(
     @Inject(LDAP_OPTIONS) private readonly opts: LdapModuleOptions,
-    private readonly logger: LogService,
+    @InjectPinoLogger(LdapService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService,
   ) {
     super();
-
-    logger.setContext(LdapService.name);
 
     if (opts.cache) {
       this.ttl = configService.get<number>('LDAP_REDIS_TTL');
@@ -134,7 +132,7 @@ export class LdapService extends EventEmitter {
 
     if (opts.reconnect) {
       this.once('installReconnectListener', () => {
-        this.logger.log('install reconnect listener');
+        this.logger.info('install reconnect listener');
         this.adminClient.on('connect', () => this.onConnectAdmin());
       });
     }
@@ -232,7 +230,7 @@ export class LdapService extends EventEmitter {
       throw new Error('bindDN is undefined');
     }
 
-    this.logger.log(`bind: ${this.bindDN} ...`);
+    this.logger.info(`bind: ${this.bindDN} ...`);
 
     return new Promise<boolean>((resolve, reject) =>
       this.adminClient.bind(this.bindDN, this.bindCredentials, (error) => {
@@ -243,7 +241,7 @@ export class LdapService extends EventEmitter {
           return reject(new Error(error.message));
         }
 
-        this.logger.log('bind ok');
+        this.logger.info('bind ok');
         this.adminBound = true;
         if (this.opts.reconnect) {
           this.emit('installReconnectListener');
@@ -607,7 +605,7 @@ export class LdapService extends EventEmitter {
                     reject(searchErr);
                   }
 
-                  this.logger.log(`Modify success "${dn}"`);
+                  this.logger.info(`Modify success "${dn}"`);
 
                   if (this.userCache) {
                     await this.userCache.del(dn);
@@ -643,7 +641,7 @@ export class LdapService extends EventEmitter {
                   return;
                 }
 
-                this.logger.log(`Modify success "${dn}": ${JSON.stringify(data)}`);
+                this.logger.info(`Modify success "${dn}": ${JSON.stringify(data)}`);
 
                 if (this.userCache) {
                   await this.userCache.del(dn);
@@ -755,10 +753,10 @@ export class LdapService extends EventEmitter {
     // client has been bound (e.g. how ldapjs pool destroy does)
     return new Promise<boolean>((resolve) => {
       this.adminClient.unbind(() => {
-        this.logger.log('adminClient: close');
+        this.logger.info('adminClient: close');
 
         this.userClient.unbind(() => {
-          this.logger.log('userClient: close');
+          this.logger.info('userClient: close');
 
           resolve(true);
         });

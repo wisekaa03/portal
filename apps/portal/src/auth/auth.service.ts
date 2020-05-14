@@ -2,6 +2,7 @@
 
 // #region Imports NPM
 import { Injectable, HttpService } from '@nestjs/common';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
@@ -10,7 +11,6 @@ import Redis from 'redis';
 import { LoginEmail, EmailSession } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
@@ -22,13 +22,11 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
-    private readonly logger: LogService,
+    @InjectPinoLogger(AuthService.name) private readonly logger: PinoLogger,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly i18n: I18nService,
-  ) {
-    logger.setContext(AuthService.name);
-  }
+  ) {}
 
   /**
    * Validate a user
@@ -86,7 +84,7 @@ export class AuthService {
       try {
         redisDatabase.flushdb();
 
-        this.logger.log('Reset database cache');
+        this.logger.info('Reset database cache');
 
         databaseStoreReset = true;
       } catch (error) {
@@ -104,7 +102,7 @@ export class AuthService {
       try {
         redisLdap.flushdb();
 
-        this.logger.log('Reset LDAP cache');
+        this.logger.info('Reset LDAP cache');
 
         ldapCacheReset = true;
       } catch (error) {
@@ -122,7 +120,7 @@ export class AuthService {
       try {
         redisHttp.flushdb();
 
-        this.logger.log('Reset HTTP cache');
+        this.logger.info('Reset HTTP cache');
 
         httpStoreReset = true;
       } catch (error) {
@@ -140,7 +138,7 @@ export class AuthService {
       try {
         redisSession.flushdb();
 
-        this.logger.log('Reset session cache');
+        this.logger.info('Reset session cache');
       } catch (error) {
         this.logger.error('Unable to reset session cache:', error);
       }

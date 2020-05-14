@@ -5,7 +5,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { LogModule } from '@app/logger';
 import { ImageModule } from '@app/image';
 import { ProfileEntity } from './profile.entity';
 import { ProfileService } from './profile.service';
@@ -14,8 +13,6 @@ import { ProfileResolver } from './profile.resolver';
 
 @Module({
   imports: [
-    LogModule,
-
     // #region Image module
     ImageModule,
     // #endregion

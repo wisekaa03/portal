@@ -6,16 +6,16 @@
 import { ExceptionFilter, Catch, HttpException, HttpStatus, ArgumentsHost, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 import { AUTH_PAGE } from '@lib/constants';
 // #endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
-  constructor(private readonly logger: LogService) {
+  constructor(@InjectPinoLogger(HttpErrorFilter.name) private readonly logger: PinoLogger) {
     logger.setContext(HttpErrorFilter.name);
   }
 

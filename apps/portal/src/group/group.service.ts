@@ -4,12 +4,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { LoginService, Group } from '@lib/types';
 import { ConfigService } from '@app/config';
-import { LdapResonseGroup, LdapResponseUser } from '@app/ldap';
+import { LdapResponseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
 // #endregion
 
@@ -19,11 +19,10 @@ export class GroupService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly logger: LogService,
+    @InjectPinoLogger(GroupService.name) private readonly logger: PinoLogger,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {
-    logger.setContext(GroupService.name);
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
 
@@ -53,7 +52,7 @@ export class GroupService {
     const groups: any[] = [];
 
     if (ldap.groups) {
-      ldap.groups.forEach((ldapGroup: LdapResonseGroup) => {
+      ldap.groups.forEach((ldapGroup: LdapResponseGroup) => {
         groups.push(
           this.byIdentificator(ldapGroup.objectGUID, false)
             .then((updated) => {

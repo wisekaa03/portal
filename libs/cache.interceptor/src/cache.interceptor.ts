@@ -4,15 +4,19 @@
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ExecutionContext, Injectable, CacheInterceptor } from '@nestjs/common';
 import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request } from 'express';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 // #endregion
 
 @Injectable()
 export class HttpCacheInterceptor extends CacheInterceptor {
-  constructor(cacheManager: any, reflector: any, private readonly logger: LogService) {
+  constructor(
+    cacheManager: any,
+    reflector: any,
+    @InjectPinoLogger(HttpCacheInterceptor.name) private readonly logger: PinoLogger,
+  ) {
     super(cacheManager, reflector);
   }
 

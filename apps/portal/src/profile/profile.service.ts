@@ -7,12 +7,12 @@ import { Repository, Brackets, SelectQueryBuilder, FindConditions } from 'typeor
 import Ldap from 'ldapjs';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { Profile, Gender, LoginService } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
 import { GQLErrorCode } from '@back/shared/gqlerror';
@@ -40,11 +40,10 @@ export class ProfileService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
     private readonly configService: ConfigService,
-    private readonly logger: LogService,
+    @InjectPinoLogger(ProfileService.name) private readonly logger: PinoLogger,
     private readonly imageService: ImageService,
     private readonly ldapService: LdapService,
   ) {
-    logger.setContext(ProfileService.name);
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
 
@@ -271,7 +270,7 @@ export class ProfileService {
         return this.fromLdap(ldapUser, undefined, true, count + 1);
       }
     } else {
-      this.logger.log(`The LDAP count > 10, manager is not inserted: ${userByDN}`);
+      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`);
     }
 
     return undefined;

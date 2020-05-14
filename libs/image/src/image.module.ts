@@ -4,13 +4,12 @@
 import { Module, Global } from '@nestjs/common';
 // #endregion
 // #region Imports Local
-import { LogModule } from '@app/logger';
 import { ImageService } from './image.service';
 // #endregion
 
 @Global()
 @Module({
-  imports: [LogModule],
+  imports: [],
   providers: [ImageService],
   exports: [ImageService],
 })

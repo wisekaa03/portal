@@ -16,7 +16,7 @@ export interface LDAPCache {
   password: string;
 }
 
-export interface LdapResonseGroup extends SearchEntryObject {
+export interface LdapResponseGroup extends SearchEntryObject {
   /**
    * Common name
    */
@@ -62,7 +62,7 @@ export interface LdapResponseUser extends SearchEntryObject {
   /**
    * Ldap response groups
    */
-  'groups': any | LdapResonseGroup[];
+  'groups': any | LdapResponseGroup[];
 
   /**
    * Country

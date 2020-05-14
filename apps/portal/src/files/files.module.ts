@@ -5,7 +5,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // #endregion
 // #region Imports Local
-import { LogModule } from '@app/logger';
 import { UserModule } from '@back/user/user.module';
 import { FilesService } from './files.service';
 import { FilesResolver } from './files.resolver';
@@ -15,8 +14,6 @@ import { FilesFolderEntity } from './files.folder.entity';
 
 @Module({
   imports: [
-    LogModule,
-
     UserModule,
 
     // #region TypeORM

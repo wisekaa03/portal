@@ -4,13 +4,13 @@
 import Session from 'express-session';
 import RedisSessionStore from 'connect-redis';
 import Redis from 'redis';
+import { Logger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 // #endregion
 
-export default (configService: ConfigService, logger: LogService): Session.Store => {
+export default (configService: ConfigService, logger: Logger): Session.Store => {
   try {
     const sess = new (RedisSessionStore(Session))({
       client: Redis.createClient({

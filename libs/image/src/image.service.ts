@@ -3,16 +3,15 @@
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import Sharp from 'sharp';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 // #endregion
 
 @Injectable()
 export class ImageService {
-  constructor(private readonly logger: LogService) {
-    logger.setContext(ImageService.name);
+  constructor(@InjectPinoLogger(ImageService.name) private readonly logger: PinoLogger) {
   }
 
   // eslint-disable-next-line no-confusing-arrow

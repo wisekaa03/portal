@@ -5,9 +5,9 @@ import { Resolver, Query, Mutation, Context, Args } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 // import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { User, FilesFolderResponse } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
@@ -19,12 +19,10 @@ import { FilesService } from './files.service';
 @Resolver('Files')
 export class FilesResolver {
   constructor(
-    private readonly logger: LogService,
+    @InjectPinoLogger(FilesResolver.name) private readonly logger: PinoLogger,
     private readonly filesService: FilesService,
     private readonly userService: UserService,
-  ) {
-    logger.setContext(FilesResolver.name);
-  }
+  ) {}
 
   /**
    * GraphQL query: files get

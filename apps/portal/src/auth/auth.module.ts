@@ -6,8 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 // import { JwtModule } from '@nestjs/jwt';
 // #endregion
 // #region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
-import { LogModule } from '@app/logger';
+import { ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { UserModule } from '@back/user/user.module';
 import { AuthService } from './auth.service';
@@ -19,8 +18,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
-    LogModule,
-
     // #region Passport module
     PassportModule.register({ session: true, defaultStrategy: 'local' }),
     // JwtModule.registerAsync({

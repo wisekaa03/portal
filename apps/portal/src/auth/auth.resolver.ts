@@ -3,6 +3,7 @@
 // #region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 // #endregion
@@ -10,7 +11,6 @@ import { I18nService } from 'nestjs-i18n';
 import { Login, LoginEmail } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
@@ -22,11 +22,9 @@ export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly logger: LogService,
+    @InjectPinoLogger(AuthResolver.name) private readonly logger: PinoLogger,
     private readonly i18n: I18nService,
-  ) {
-    logger.setContext(AuthResolver.name);
-  }
+  ) {}
 
   /**
    * This a self user.

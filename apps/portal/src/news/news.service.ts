@@ -3,12 +3,12 @@
 // #region Imports NPM
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 // import { Observable } from 'rxjs';
 // #endregion
 // #region Imports Local
 import { News } from '@lib/types';
-import { LogService } from '@app/logger';
 // import { ConfigService } from '@app/config';
 // import { UserService } from '../user/user.service';
 import { NewsEntity } from './news.entity';
@@ -17,14 +17,12 @@ import { NewsEntity } from './news.entity';
 @Injectable()
 export class NewsService {
   constructor(
-    private readonly logger: LogService,
+    @InjectPinoLogger(NewsService.name) private readonly logger: PinoLogger,
     // private readonly configService: ConfigService,
     // private readonly userService: UserService,
     @InjectRepository(NewsEntity)
     private readonly newsRepository: Repository<NewsEntity>,
-  ) {
-    logger.setContext(NewsService.name);
-  }
+  ) {}
 
   /**
    * Fetch news

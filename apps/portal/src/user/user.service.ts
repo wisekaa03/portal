@@ -4,12 +4,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository, FindConditions } from 'typeorm';
 import bcrypt from 'bcrypt';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { LdapResponseUser } from '@app/ldap';
 import { TICKET_STATUSES, ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
 import { LoginService, Profile, User, UserSettings } from '@lib/types';
@@ -26,13 +26,12 @@ export class UserService {
   constructor(
     @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
     private readonly configService: ConfigService,
-    private readonly logger: LogService,
+    @InjectPinoLogger(UserService.name) private readonly logger: PinoLogger,
     private readonly profileService: ProfileService,
     private readonly groupService: GroupService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {
-    logger.setContext(UserService.name);
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
 
@@ -189,7 +188,7 @@ export class UserService {
     if (!user) {
       // eslint-disable-next-line no-param-reassign
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false).catch(() => {
-        this.logger.verbose(`New user ${ldapUser.sAMAccountName}`);
+        this.logger.trace(`New user ${ldapUser.sAMAccountName}`);
 
         return undefined;
       });

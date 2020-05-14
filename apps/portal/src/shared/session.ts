@@ -3,13 +3,13 @@
 // #region Imports NPM
 import Session from 'express-session';
 import Express from 'express';
-// #endreion
+import { Logger } from 'nestjs-pino';
+// #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 // #endregion
 
-export default (configService: ConfigService, logger: LogService, store: Session.Store): Express.RequestHandler => {
+export default (configService: ConfigService, logger: Logger, store: Session.Store): Express.RequestHandler => {
   try {
     const sess = Session({
       secret: configService.get<string>('SESSION_SECRET'),
