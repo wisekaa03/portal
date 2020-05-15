@@ -4,22 +4,22 @@
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-import { PinoLogger } from 'nestjs-pino';
+import { PinoLogger, Logger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { pinoOptions } from '@back/shared/pino.options';
 import { AppModule } from './app.module';
 // #endregion
 
-const logger = new LogService(new PinoLogger({}), {});
+async function bootstrap(config: ConfigService): Promise<void> {
+  const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
 
-async function bootstrap(configService: ConfigService): Promise<void> {
   const server = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     logger,
     transport: Transport.REDIS,
     options: {
-      url: configService.get<string>('MICROSERVICE_URL'),
+      url: config.get<string>('MICROSERVICE_URL'),
     },
   });
   server.useLogger(logger);

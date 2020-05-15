@@ -5,19 +5,20 @@
 // #region Imports NPM
 import { resolve } from 'path';
 import { ClientRedis } from '@nestjs/microservices';
-import { PinoLogger } from 'nestjs-pino';
+import { PinoLogger, Logger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
+import { pinoOptions } from '@back/shared/pino.options';
 import { LDAP_SYNC } from '@lib/constants';
 // #endregion
 
-const logger = new LogService(new PinoLogger({}), {});
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.env'));
+const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'))), {});
 
-async function bootstrap(configService: ConfigService): Promise<boolean> {
+async function bootstrap(config: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
-    url: configService.get<string>('MICROSERVICE_URL'),
+    url: config.get<string>('MICROSERVICE_URL'),
   });
 
   await client.connect();
@@ -25,7 +26,6 @@ async function bootstrap(configService: ConfigService): Promise<boolean> {
   return client.send<boolean>(LDAP_SYNC, []).toPromise();
 }
 
-const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.env'));
 bootstrap(configService)
   .then((result) => {
     logger.log(`Microservice returns: ${result}`, 'Sync LDAP Job');
