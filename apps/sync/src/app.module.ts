@@ -7,11 +7,11 @@ import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
+import { LoggerModule, Logger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
-import { LogModule, LogService } from '@app/logger';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { UserModule } from '@back/user/user.module';
 import { UserEntity } from '@back/user/user.entity';
@@ -19,6 +19,8 @@ import { ProfileModule } from '@back/profile/profile.module';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupModule } from '@back/group/group.module';
 import { GroupEntity } from '@back/group/group.entity';
+import { pinoOptions } from '@back/shared/pino.options';
+import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { AppController } from './app.controller';
 import { SyncService } from './app.service';
 // #endregion
@@ -29,7 +31,10 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
   imports: [
     // #region Config & Log module
     ConfigModule.register(env),
-    LogModule,
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),
+    }),
     // #endregion
 
     // #region Locale I18n
@@ -76,9 +81,9 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
 
     // #region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [LogModule],
-      inject: [ConfigService, LogService],
-      useFactory: async (configService: ConfigService, logger: LogService) =>
+      imports: [LoggerModule],
+      inject: [ConfigService, Logger],
+      useFactory: async (configService: ConfigService, logger: Logger) =>
         ({
           name: 'default',
           keepConnectionAlive: true,
@@ -91,7 +96,7 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
           },
           schema: configService.get<string>('DATABASE_SCHEMA'),
           uuidExtension: 'pgcrypto',
-          logger,
+          logger: new TypeOrmLogger(logger),
           synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
           dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
           logging:

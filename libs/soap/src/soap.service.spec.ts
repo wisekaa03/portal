@@ -2,10 +2,10 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { SoapService } from './soap.service';
 import { SOAP_OPTIONS } from './soap.interface';
 // #endregion
@@ -13,7 +13,6 @@ import { SOAP_OPTIONS } from './soap.interface';
 // const serviceMock = jest.fn(() => ({}));
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/logger/log.service');
 jest.mock('soap', () => ({
   createClientAsync: () => undefined,
 }));
@@ -23,8 +22,8 @@ describe(SoapService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
-      providers: [{ provide: SOAP_OPTIONS, useValue: {} }, ConfigService, LogService, SoapService],
+      imports: [LoggerModule.forRoot()],
+      providers: [{ provide: SOAP_OPTIONS, useValue: {} }, ConfigService, SoapService],
     }).compile();
 
     service = module.get<SoapService>(SoapService);

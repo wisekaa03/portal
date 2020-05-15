@@ -2,9 +2,9 @@
 
 // #region Imports NPM
 import { Injectable } from '@nestjs/common';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
-import { LogService } from '@app/logger';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
@@ -13,13 +13,11 @@ import { ProfileService } from '@back/profile/profile.service';
 @Injectable()
 export class SyncService {
   constructor(
-    private readonly logger: LogService,
+    @InjectPinoLogger(SyncService.name) private readonly logger: PinoLogger,
     private readonly ldapService: LdapService,
     private readonly userService: UserService,
     private readonly profileService: ProfileService,
-  ) {
-    logger.setContext(SyncService.name);
-  }
+  ) {}
 
   synchronization = async (): Promise<boolean> => {
     // TODO: profiles that not in AD but in DB
@@ -39,11 +37,11 @@ export class SyncService {
         }
       });
 
-      this.logger.log('--- End of synchronization: true ---');
+      this.logger.info('--- End of synchronization: true ---');
       return true;
     }
 
-    this.logger.log('--- End of synchronization: false ---');
+    this.logger.info('--- End of synchronization: false ---');
     return false;
   };
 }

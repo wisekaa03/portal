@@ -6,7 +6,6 @@ import { PinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config/config.service';
-import { LogService } from '@app/logger';
 import { LoggingInterceptor } from './logging.interceptor';
 // #endregion
 
@@ -16,7 +15,7 @@ jest.mock('@app/config/config.service', () => ({
   })),
 }));
 
-const interceptor = new LoggingInterceptor(new LogService(new PinoLogger({}), {}), new ConfigService(resolve('.env')));
+const interceptor = new LoggingInterceptor(new PinoLogger({}), new ConfigService(resolve('.env')));
 
 describe('LoggingInterceptor', () => {
   it('should be defined', () => {

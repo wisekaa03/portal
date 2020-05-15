@@ -3,17 +3,16 @@
 
 // #region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config/config.service';
-import { LogService } from '@app/logger/log.service';
 import { UserService } from '@back/user/user.service';
 import { FilesResolver } from './files.resolver';
 import { FilesService } from './files.service';
 // #endregion
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 
@@ -22,10 +21,9 @@ describe(FilesResolver.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [LoggerModule.forRoot()],
       providers: [
         ConfigService,
-        LogService,
         FilesResolver,
         { provide: FilesService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },

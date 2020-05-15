@@ -5,10 +5,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config/config.service';
-import { LogService } from '@app/logger/log.service';
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
 import { GroupService } from '@back/group/group.service';
@@ -16,7 +16,6 @@ import { ProfileService } from './profile.service';
 // #endregion
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 const repositoryMock = jest.fn(() => ({
@@ -41,6 +40,7 @@ describe('ProfileService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
@@ -56,7 +56,6 @@ describe('ProfileService', () => {
       ],
       providers: [
         ConfigService,
-        LogService,
         ProfileService,
         { provide: LdapService, useValue: serviceMock },
         { provide: GroupService, useValue: serviceMock },

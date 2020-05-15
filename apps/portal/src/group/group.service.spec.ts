@@ -5,15 +5,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config/config.service';
-import { LogService } from '@app/logger/log.service';
 import { GroupService } from './group.service';
 // #endregion
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/logger/log.service');
 
 // const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -38,6 +37,7 @@ describe(GroupService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
@@ -51,7 +51,7 @@ describe(GroupService.name, () => {
         }),
         TypeOrmModule.forFeature([GroupEntity]),
       ],
-      providers: [GroupService, ConfigService, LogService],
+      providers: [GroupService, ConfigService],
     }).compile();
 
     service = module.get<GroupService>(GroupService);

@@ -1,14 +1,13 @@
 /** @format */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { LoggerModule } from 'nestjs-pino';
 import { ConfigService } from '@app/config';
-import { LogService } from '@app/logger';
 import { SoapService } from '@app/soap';
 import { HttpModule } from '@nestjs/common';
 import { OldTicketService } from './old-service.service';
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -23,8 +22,8 @@ describe(OldTicketService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [HttpModule],
-      providers: [ConfigService, LogService, OldTicketService, { provide: SoapService, useValue: serviceMock }],
+      imports: [LoggerModule.forRoot(), HttpModule],
+      providers: [ConfigService, OldTicketService, { provide: SoapService, useValue: serviceMock }],
     }).compile();
 
     service = module.get<OldTicketService>(OldTicketService);

@@ -6,10 +6,10 @@ import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { LoggerModule } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import { ConfigService } from '@app/config/config.service';
-import { LogService } from '@app/logger/log.service';
 import { LdapService } from '@app/ldap';
 import { LDAP_SYNC_SERVICE } from '@lib/constants';
 import { ProfileService } from '@back/profile/profile.service';
@@ -18,7 +18,6 @@ import { UserService } from './user.service';
 // #endregion
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/logger/log.service');
 
 const serviceMock = jest.fn(() => ({}));
 const repositoryMock = jest.fn(() => ({
@@ -43,6 +42,7 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
@@ -58,7 +58,6 @@ describe('UserService', () => {
       ],
       providers: [
         ConfigService,
-        LogService,
         UserService,
         { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
         { provide: ClientProxy, useValue: serviceMock },
