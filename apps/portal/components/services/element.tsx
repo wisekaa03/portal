@@ -1,62 +1,86 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC } from 'react';
+import React, { FC, useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, Typography } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  IconButton,
+  Popper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+  Paper,
+  ListItemIcon,
+} from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVertRounded';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUpOutlined';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownOutlined';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { ServicesElementProps, ServicesElementLinkQueryProps, ServicesElementType } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
 import BaseIcon from '@front/components/ui/icon';
+import { useTranslation } from '@lib/i18n-client';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      'padding': theme.spacing(),
-      'borderRadius': theme.spacing(0.5),
+      'padding': theme.spacing(2),
+      'borderRadius': theme.spacing(),
       'display': 'grid',
       'gridTemplateColumns': '60px 1fr',
       'gap': `${theme.spacing()}px`,
       'justifyItems': 'flex-start',
       'alignItems': 'center',
       'height': '100%',
-      // '&:not($formControl)': {
+      'width': 'max-content',
       'cursor': 'pointer',
-      // },
       'color': '#484848',
-      // '&:hover:not($active):not($serviceBox) h6': {
-      '&:hover:not($active) h6': {
-        color: '#000',
+      '&:hover:not($active)': {
+        backgroundColor: '#E9F2F5',
       },
     },
-    active: {
-      '& h6': {
-        color: '#000',
-      },
+    active: {},
+    moreOpen: {
+      backgroundColor: '#E9F2F5',
     },
     info: {
-      'display': 'grid',
-      'gap': `${theme.spacing(0.5)}px`,
-      'borderBottom': '1px solid rgba(46, 45, 43, 0.7)',
-      'gridTemplateRows': `repeat(2, ${theme.spacing(3)}px)`,
-      'minWidth': 200,
-
-      '& > $name, & > $subtitle': {
-        display: 'flex',
-        alignItems: 'flex-start',
-      },
+      display: 'grid',
+      gap: `${theme.spacing(0.5)}px`,
+      borderBottom: '1px solid rgba(46, 45, 43, 0.7)',
+      gridTemplateRows: `repeat(2, ${theme.spacing(3)}px)`,
+      gridTemplateColumns: `1fr 24px`,
+      minWidth: 200,
     },
     name: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       fontSize: theme.spacing(2),
       letterSpacing: 0.15,
     },
     subtitle: {
       fontSize: theme.spacing(1.5),
       letterSpacing: 0.25,
+    },
+    more: {
+      'gridRowStart': 1,
+      'gridRowEnd': 3,
+      'gridColumnStart': 2,
+      'padding': theme.spacing(0.25, 0),
+
+      '&:hover': {
+        color: '#808080',
+      },
+    },
+    moreButton: {
+      padding: 0,
     },
   }),
 );
@@ -67,14 +91,46 @@ const getElement = (query: ServicesElementLinkQueryProps): ServicesElementType =
   return !query ? 'department' : 'service' in query ? 'category' : 'service';
 };
 
-const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, linkQuery, url, withLink }) => {
+const ServicesElement: FC<ServicesElementProps> = ({
+  base64,
+  active,
+  element,
+  linkQuery,
+  url,
+  withLink,
+  favorite,
+  setFavorite,
+}) => {
   const classes = useStyles({});
+  const { t } = useTranslation();
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   let linkAs = pathname;
 
   if (withLink && linkQuery) {
     linkAs += `/${Object.values(linkQuery).join('/')}`;
   }
+
+  const handleOpenMore = useCallback((event: React.MouseEvent<HTMLElement>): void => {
+    setAnchor(event.currentTarget);
+  }, []);
+
+  const handleCloseMore = useCallback((): void => {
+    setAnchor(null);
+  }, []);
+
+  const handleFavorite = useCallback(
+    (action) => (event): void => {
+      event.stopPropagation();
+      setFavorite({ id: element.code, action });
+      handleCloseMore();
+    },
+    [element.code, handleCloseMore, setFavorite],
+  );
+
+  useEffect(() => {
+    handleCloseMore();
+  }, [favorite, handleCloseMore]);
 
   return (
     <ConditionalWrapper
@@ -98,11 +154,12 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, li
         boxShadow={active === element.code ? 3 : 0}
         className={clsx(classes.root, {
           [classes.active]: active === element.code,
+          [classes.moreOpen]: !!anchor,
         })}
       >
-        <div>
+        <Box>
           <BaseIcon base64={base64} src={element.avatar} size={48} />
-        </div>
+        </Box>
         <Box className={classes.info}>
           <Typography variant="subtitle1" className={classes.name}>
             {element.name}
@@ -110,6 +167,39 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, element, li
           <Typography variant="subtitle1" className={classes.subtitle}>
             {element.subtitle}
           </Typography>
+          <Box className={classes.more}>
+            {favorite && (
+              <IconButton className={classes.moreButton} onClick={handleOpenMore}>
+                <MoreVertIcon />
+                <Popper placement="bottom-end" open={!!anchor} anchorEl={anchor} transition>
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleCloseMore}>
+                      <MenuList>
+                        <MenuItem onClick={handleFavorite('up')}>
+                          <ListItemIcon>
+                            <KeyboardArrowUpIcon fontSize="small" />
+                          </ListItemIcon>
+                          <Typography variant="inherit">{t('services:favorite.up')}</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={handleFavorite('down')}>
+                          <ListItemIcon>
+                            <KeyboardArrowDownIcon fontSize="small" />
+                          </ListItemIcon>
+                          <Typography variant="inherit">{t('services:favorite.down')}</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={handleFavorite('delete')}>
+                          <ListItemIcon>
+                            <DeleteIcon fontSize="small" />
+                          </ListItemIcon>
+                          <Typography variant="inherit">{t('services:favorite.delete')}</Typography>
+                        </MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Popper>
+              </IconButton>
+            )}
+          </Box>
         </Box>
       </Box>
     </ConditionalWrapper>
