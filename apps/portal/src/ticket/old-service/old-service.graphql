@@ -15,8 +15,8 @@ type OldUser {
   telephone: String
   company: String
   department: String
-  otdel: String
-  position: String
+  division: String
+  title: String
 }
 
 type OldFile {
@@ -25,7 +25,7 @@ type OldFile {
   ext: String
 }
 
-type OldTicket {
+type OldTask {
   where: String!
   code: String!
   type: String
@@ -44,7 +44,7 @@ type OldTicket {
   files: [OldFile]
 }
 
-type OldTicketNew {
+type OldTaskNew {
   where: String!
   code: String!
   name: String!
@@ -55,7 +55,7 @@ type OldTicketNew {
   createdDate: Date!
 }
 
-input OldTicketNewInput {
+input OldTaskNewInput {
   title: String!
   body: String!
   serviceId: String!
@@ -64,7 +64,7 @@ input OldTicketNewInput {
   executorUser: String
 }
 
-input OldTicketEditInput {
+input OldTaskEditInput {
   code: String!
   type: String!
   comment: String!
@@ -75,18 +75,18 @@ type OldServices {
   error: String
 }
 
-type OldTickets {
-  tickets: [OldTicket]
+type OldTasks {
+  tasks: [OldTask]
   error: String
 }
 
 type Query {
   OldTicketService(find: String): [OldServices]!
-  OldTickets(status: String): [OldTickets]!
-  OldTicketDescription(code: String, type: String): OldTicket
+  OldTicketTasks(status: String, find: String): [OldTasks]!
+  OldTicketTaskDescription(code: String, type: String): OldTask
 }
 
 type Mutation {
-  OldTicketNew(ticket: OldTicketNewInput!, attachments: [Upload]): OldTicketNew!
-  OldTicketEdit(ticket: OldTicketEditInput!, attachments: [Upload]): OldTicket!
+  OldTicketTaskNew(task: OldTaskNewInput!, attachments: [Upload]): OldTaskNew!
+  OldTicketTaskEdit(task: OldTaskEditInput!, attachments: [Upload]): OldTask!
 }

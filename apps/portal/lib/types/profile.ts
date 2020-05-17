@@ -9,7 +9,7 @@ import { Order, Connection } from 'typeorm-graphql-pagination';
 import { StyleProps, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile } from './profile.dto';
-import { OldUser, OldTicket, OldTickets } from './old-service';
+import { OldUser, OldTask, OldTasks } from './old-service';
 // #endregion
 
 export type ColumnNames =
@@ -150,23 +150,23 @@ export interface HelpDataProps {
 
 export interface ProfileTicketsComponentProps {
   loading: boolean;
-  tickets: OldTicket[];
+  tickets: OldTask[];
   status: string;
   search: string;
-  refetchTickets: () => Promise<ApolloQueryResult<Data<'OldTickets', OldTickets[]>>>;
+  refetchTickets: () => Promise<ApolloQueryResult<Data<'OldTickets', OldTasks[]>>>;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface ProfileTicketsCardProps {
   classes: Record<'root' | 'content' | 'label' | 'registered' | 'worked', string>;
-  ticket: OldTicket;
+  ticket: OldTask;
 }
 
 export interface ProfileTicketComponentProps {
   loading: boolean;
   loadingEdit: boolean;
-  ticket: OldTicket;
+  ticket: OldTask;
   comment: string;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;

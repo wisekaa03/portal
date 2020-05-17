@@ -12,13 +12,12 @@ export interface OldService {
   where: WhereService;
   code: string;
   name: string;
-  group?: string;
   description?: string;
-  avatar: string;
+  avatar?: string;
 }
 
 export interface OldServices {
-  services?: OldService[];
+  services?: (OldService | null)[];
   error?: string;
 }
 
@@ -26,29 +25,27 @@ export interface OldFile {
   where: WhereService;
   code: string;
   name: string;
-  ext: string;
+  ext?: string;
 }
 
-export interface OldTicket {
+export interface OldTask {
   where: WhereService;
   code: string;
   name: string;
   type?: string;
-  description: string;
+  description?: string;
   descriptionFull?: string;
-  status: string;
-  createdDate: string;
-  avatar?: string;
-  timeout?: string;
+  status?: string;
+  service: OldService | null;
+  createdDate?: string;
   endDate?: string;
-  executorUser?: OldUser | null;
-  initiatorUser?: OldUser | null;
-  service?: OldService;
+  executorUser: OldUser | null;
+  initiatorUser: OldUser | null;
   files?: OldFile[];
 }
 
-export interface OldTickets {
-  tickets?: OldTicket[];
+export interface OldTasks {
+  tasks?: (OldTask | null)[];
   error?: string;
 }
 
@@ -60,11 +57,11 @@ export interface OldUser {
   telephone?: string;
   company?: string;
   department?: string;
-  otdel?: string;
-  position?: string;
+  division?: string;
+  title?: string;
 }
 
-export interface OldTicketNewInput {
+export interface OldTicketTaskNewInput {
   where: WhereService;
   title: string;
   body: string;
@@ -73,7 +70,7 @@ export interface OldTicketNewInput {
   attachments?: Promise<FileUpload>[];
 }
 
-export interface OldTicketEditInput {
+export interface OldTicketTaskEditInput {
   where: WhereService;
   code: string;
   type: string;
@@ -81,15 +78,16 @@ export interface OldTicketEditInput {
   attachments?: Promise<FileUpload>[];
 }
 
-export interface OldTicketNew {
-  where: WhereService;
-  code: string;
-  name: string;
-  requisiteSource: string;
-  category: string;
-  organization: string;
-  status: string;
-  createdDate: Date;
+export interface OldTicketTaskNew {
+  error?: string;
+  where?: WhereService;
+  code?: string;
+  name?: string;
+  requisiteSource?: string;
+  category?: string;
+  organization?: string;
+  status?: string;
+  createdDate?: Date;
 }
 
 export interface OSTicketUser {

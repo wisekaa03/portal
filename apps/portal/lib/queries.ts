@@ -434,8 +434,8 @@ export const OLD_TICKET_SERVICE = gql`
 
 export const OLD_TICKETS = gql`
   query OldTickets($status: String) {
-    OldTickets(status: $status) {
-      tickets {
+    OldTicketTasks(status: $status) {
+      tasks {
         where
         code
         type
@@ -452,7 +452,7 @@ export const OLD_TICKETS = gql`
 
 export const OLD_TICKET_DESCRIPTION = gql`
   query OldTicketDescription($code: String, $type: String) {
-    OldTicketDescription(code: $code, type: $type) {
+    OldTicketTaskDescription(code: $code, type: $type) {
       ...TicketProps
     }
   }
@@ -461,7 +461,7 @@ export const OLD_TICKET_DESCRIPTION = gql`
 
 export const OLD_TICKET_NEW = gql`
   mutation OldTicketNew($ticket: OldTicketNewInput!, $attachments: [Upload]) {
-    OldTicketNew(ticket: $ticket, attachments: $attachments) {
+    OldTicketTaskNew(ticket: $ticket, attachments: $attachments) {
       where
       code
       name
@@ -476,7 +476,7 @@ export const OLD_TICKET_NEW = gql`
 
 export const OLD_TICKET_EDIT = gql`
   mutation OldTicketEdit($ticket: OldTicketEditInput!, $attachments: [Upload]) {
-    OldTicketEdit(ticket: $ticket, attachments: $attachments) {
+    OldTicketTaskEdit(ticket: $ticket, attachments: $attachments) {
       ...TicketProps
     }
   }

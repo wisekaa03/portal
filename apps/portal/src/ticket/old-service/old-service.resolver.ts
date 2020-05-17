@@ -11,12 +11,12 @@ import { ConfigService } from '@app/config';
 import { SoapAuthentication } from '@app/soap';
 import {
   OldService,
-  OldTicket,
-  OldTicketNewInput,
-  OldTicketNew,
-  OldTicketEditInput,
+  OldTask,
+  OldTicketTaskNewInput,
+  OldTicketTaskNew,
+  OldTicketTaskEditInput,
   OldServices,
-  OldTickets,
+  OldTasks,
 } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
@@ -35,7 +35,7 @@ export class OldTicketResolver {
    * @returns {OldServices[]}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query()
+  @Query('OldTicketService')
   @UseGuards(GqlAuthGuard)
   async OldTicketService(
     @Args('find') find?: string,
@@ -64,13 +64,14 @@ export class OldTicketResolver {
    * @param {string} status Status
    * @returns {OldTicket[]}
    */
-  @Query()
+  @Query('OldTicketTasks')
   @UseGuards(GqlAuthGuard)
-  async OldTickets(
+  async OldTicketTasks(
     @Args('status') status: string,
+    @Args('find') find: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<OldTickets[]> {
+  ): Promise<OldTasks[]> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -81,28 +82,30 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTickets(authentication, user, status).catch((error: Error) => {
+    const promise = await this.ticketOldService.OldTasks(authentication, user, status, find).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
+
+    return promise;
   }
 
   /**
    * Ticket new
    *
    * @async
-   * @method OldTicketNew
-   * @param {OldTicketNewInput} ticket subject, body, serviceID and others
+   * @method OldTicketTaskNew
+   * @param {OldTicketTaskNewInput} ticket subject, body, serviceID and others
    * @param {Promise<FileUpload>[]} attachments Array of attachments
    * @returns {OldTicketNew}
    */
-  @Mutation()
+  @Mutation('OldTicketTaskNew')
   @UseGuards(GqlAuthGuard)
-  async OldTicketNew(
-    @Args('ticket') ticket: OldTicketNewInput,
+  async OldTicketTaskNew(
+    @Args('ticket') ticket: OldTicketTaskNewInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<OldTicketNew> {
+  ): Promise<OldTicketTaskNew> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -113,7 +116,7 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTicketNew(authentication, ticket, attachments).catch((error: Error) => {
+    return this.ticketOldService.OldTicketTaskNew(authentication, user, ticket, attachments).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -124,14 +127,14 @@ export class OldTicketResolver {
    * @async
    * @returns {OldTicket}
    */
-  @Mutation()
+  @Mutation('OldTicketTaskEdit')
   @UseGuards(GqlAuthGuard)
-  async OldTicketEdit(
-    @Args('ticket') ticket: OldTicketEditInput,
+  async OldTicketTaskEdit(
+    @Args('ticket') ticket: OldTicketTaskEditInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<OldTicket> {
+  ): Promise<OldTask> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -142,7 +145,7 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTicketEdit(authentication, ticket, attachments).catch((error: Error) => {
+    return this.ticketOldService.OldTicketTaskEdit(authentication, user, ticket, attachments).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -153,9 +156,9 @@ export class OldTicketResolver {
    * @async
    * @returns {OldTicket}
    */
-  @Query()
+  @Query('OldTicketTaskDescription')
   @UseGuards(GqlAuthGuard)
-  async OldTicketDescription(
+  async OldTicketTaskDescription(
     @Args('code') code: string,
     @Args('type') type: string,
     @CurrentUser() user?: User,
@@ -171,7 +174,7 @@ export class OldTicketResolver {
       domain: this.configService.get<string>('SOAP_DOMAIN'),
     } as SoapAuthentication;
 
-    return this.ticketOldService.OldTicketDescription(authentication, code, type).catch((error: Error) => {
+    return this.ticketOldService.OldTicketTaskDescription(authentication, user, code, type).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

@@ -17,28 +17,28 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is failed.
    */
   logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-    this.logger.error(query, error, 'Database: log', parameters, queryRunner);
+    this.logger.error(query, error, 'Database: error', parameters, queryRunner);
   }
 
   /**
    * Logs query that is slow.
    */
   logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-    this.logger.verbose(`Time is slow: ${time}`, 'Database: log', parameters, queryRunner);
+    this.logger.log(`Time is slow: ${time}`, 'Database: slow', parameters, queryRunner);
   }
 
   /**
    * Logs events from the schema build process.
    */
   logSchemaBuild(message: string, queryRunner?: QueryRunner): any {
-    this.logger.verbose(message, 'Database: log', queryRunner);
+    this.logger.log(message, 'Database: schema', queryRunner);
   }
 
   /**
    * Logs events from the migrations run process.
    */
   logMigration(message: string, queryRunner?: QueryRunner): any {
-    this.logger.verbose(message, 'Database: log', queryRunner);
+    this.logger.log(message, 'Database: migration', queryRunner);
   }
 
   /**
