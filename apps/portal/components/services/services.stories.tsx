@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useRef, useCallback, FC } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 
@@ -19,12 +19,9 @@ const departments = [
   },
 ];
 
-type MainProps = {
-  loadingServices: boolean;
-  loadingCreated: boolean;
-};
+const Story = withTranslation('services', Services);
 
-const Main: FC<MainProps> = ({ loadingServices, loadingCreated }) => {
+story.add('Default View', () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [ticket, setTicket] = useState<ServicesTicketProps>(defaultTicketState);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
@@ -54,7 +51,7 @@ const Main: FC<MainProps> = ({ loadingServices, loadingCreated }) => {
   }, []);
 
   return (
-    <Services
+    <Story
       contentRef={contentRef}
       titleRef={titleRef}
       bodyRef={bodyRef}
@@ -67,8 +64,8 @@ const Main: FC<MainProps> = ({ loadingServices, loadingCreated }) => {
       setBody={setBody}
       files={files}
       setFiles={setFiles}
-      loadingServices={loadingServices}
-      loadingCreated={loadingCreated}
+      loadingServices={boolean('Loading Services', false)}
+      loadingCreated={boolean('Loading Created', false)}
       refetchServices={action('Refetch') as any}
       handleCurrentTab={handleCurrentTab}
       handleTitle={handleTitle}
@@ -76,10 +73,4 @@ const Main: FC<MainProps> = ({ loadingServices, loadingCreated }) => {
       handleResetTicket={handleResetTicket}
     />
   );
-};
-
-const Story = withTranslation('services', Main);
-
-story.add('Default View', () => (
-  <Story loadingServices={boolean('Loading Services', false)} loadingCreated={boolean('Loading Created', false)} />
-));
+});
