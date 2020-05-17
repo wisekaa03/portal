@@ -9,15 +9,17 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
 import RestoreOutlinedIcon from '@material-ui/icons/RestoreOutlined';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 
 export interface ButtonBaseProps extends ButtonProps {
-  actionType?: 'accept' | 'cancel' | 'save' | 'print' | 'reset';
+  actionType?: 'accept' | 'cancel' | 'save' | 'print' | 'reset' | 'close';
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       borderRadius: theme.spacing(3),
+      padding: theme.spacing(1.5, 3),
     },
     accept: {
       'color': theme.palette.getContrastText('#DEECEC'),
@@ -59,6 +61,14 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#d2adbf',
       },
     },
+    close: {
+      'color': theme.palette.getContrastText('#C5B7B4'),
+      'backgroundColor': '#C5B7B4',
+
+      '&:hover': {
+        backgroundColor: '#b3a3a0',
+      },
+    },
   }),
 );
 
@@ -78,6 +88,9 @@ const BaseButton = ({ actionType = 'accept', children, className, ...rest }: But
       break;
     case 'reset':
       icon = <RestoreOutlinedIcon />;
+      break;
+    case 'close':
+      icon = <CloseOutlinedIcon />;
       break;
     default:
       icon = <CheckCircleIcon />;
