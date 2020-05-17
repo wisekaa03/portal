@@ -40,6 +40,11 @@ export interface ServicesElementLinkQueryProps {
   category?: string;
 }
 
+type ServicesFavoriteProps = {
+  id: string;
+  action: 'up' | 'down' | 'delete';
+};
+
 export interface ServicesElementProps {
   element: ServicesDepartmentsProps;
   withLink?: boolean;
@@ -47,11 +52,18 @@ export interface ServicesElementProps {
   base64?: boolean;
   linkQuery?: ServicesElementLinkQueryProps;
   url?: string;
+  favorite?: boolean;
+  setFavorite?: (_: ServicesFavoriteProps) => void;
 }
 
 export interface ServicesSuccessProps {
-  classes: Record<'root', string>;
+  classes: Record<'root' | 'actions', string>;
   data: ServicesCreatedProps;
+}
+
+export interface ServicesErrorProps {
+  name: string;
+  onClose: () => void;
 }
 
 export interface ServicesSuccessCardProps {
@@ -76,7 +88,7 @@ export interface ServicesCreatedProps {
   organization?: string;
   status?: string;
   createdDate?: Date;
-  department?: string;
+  service?: string;
 }
 
 export interface ServicesTicketProps {

@@ -1,23 +1,20 @@
 /** @format */
 
-import React, { FC } from 'react';
+import React from 'react';
 import { text, date } from '@storybook/addon-knobs';
 
-import { ServicesCreatedProps } from '@lib/types';
 import { story, withTranslation } from './index.stories';
 import Success from './success';
 
-const Main: FC<ServicesCreatedProps> = (data) => {
-  return <Success data={data} />;
-};
-
-const Story = withTranslation('services', Main);
+const Story = withTranslation('services', Success);
 
 story.add('Success', () => (
   <Story
-    code={text('Код обращения', 'KfN-01661')}
-    category={text('Услуга', '1C:Консолидация')}
-    department={text('Департамент', 'Департамент ИТ')}
-    createdDate={date('Дата', new Date())}
+    data={{
+      code: text('Код обращения', 'KfN-01661'),
+      service: text('Сервис', '1C:Консолидация'),
+      category: text('Услуга', 'Не работает'),
+      createdDate: date('Дата', new Date()),
+    }}
   />
 ));
