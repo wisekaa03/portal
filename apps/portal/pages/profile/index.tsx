@@ -54,7 +54,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     });
   };
 
-  const tickets: OldTask[] =
+  const tasks: OldTask[] =
     dataTickets?.OldTicketTasks?.reduce((acc, tick) => {
       if (tick.error) {
         snackbarUtils.error(tick.error);
@@ -88,7 +88,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           <ProfileInfoComponent />
           <ProfileTicketsComponent
             loading={loadingTickets}
-            tickets={tickets}
+            tasks={tasks}
             status={status}
             search={search}
             refetchTickets={refetchTickets}

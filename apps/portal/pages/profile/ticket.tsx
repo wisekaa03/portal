@@ -10,7 +10,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import { format } from '@lib/dayjs';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '@lib/queries';
-import { Data, OldTicket, DropzoneFile } from '@lib/types';
+import { Data, OldTask, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import ProfileTicketComponent from '@front/components/profile/ticket';
@@ -20,7 +20,7 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error }: QueryResult<Data<'OldTicketDescription', OldTicket>> = useQuery(
+  const { loading, data, error }: QueryResult<Data<'OldTicketTaskDescription', OldTask>> = useQuery(
     OLD_TICKET_DESCRIPTION,
     {
       ssr: false,

@@ -197,7 +197,7 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
                   </ListItem>
                   <ListItem divider>
                     <ListItemText primary={t('phonebook:fields.title')} />
-                    <ListItemText primary={profile.position} />
+                    <ListItemText primary={profile.title} />
                   </ListItem>
                   <ListItem divider>
                     <ListItemText primary={t('phonebook:fields.telephone')} />

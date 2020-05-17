@@ -114,9 +114,9 @@ const ProfileTicketsCard = withStyles((theme) => ({
   worked: {
     color: '#3aad0b',
   },
-}))(({ classes, ticket }: ProfileTicketsCardProps) => {
+}))(({ classes, task }: ProfileTicketsCardProps) => {
   const { t, i18n } = useTranslation();
-  const { code: id, type, avatar, name, description, status, createdDate } = ticket;
+  const { code: id, type, service, name, description, status, createdDate } = task;
 
   return (
     <Card className={classes.root}>
@@ -125,7 +125,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
-                <BaseIcon base64 src={avatar} size={36} />
+                <BaseIcon base64 src={service.avatar} size={36} />
               </div>
               <div>
                 <Typography variant="subtitle2">{name}</Typography>
@@ -159,7 +159,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
 
 const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
   loading,
-  tickets,
+  tasks,
   status,
   search,
   refetchTickets,
@@ -213,8 +213,8 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
         justifyContent="center"
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-          {tickets.length > 0 ? (
-            tickets.map((ticket) => <ProfileTicketsCard key={ticket.code} ticket={ticket} />)
+          {tasks.length > 0 ? (
+            tasks.map((task) => <ProfileTicketsCard key={task.code} task={task} />)
           ) : (
             <Typography className={classes.notFounds} variant="h4">
               {t('profile:ticket.notFounds')}

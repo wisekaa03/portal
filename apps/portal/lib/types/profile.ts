@@ -150,7 +150,7 @@ export interface HelpDataProps {
 
 export interface ProfileTicketsComponentProps {
   loading: boolean;
-  tickets: OldTask[];
+  tasks: OldTask[];
   status: string;
   search: string;
   refetchTickets: () => Promise<ApolloQueryResult<Data<'OldTickets', OldTasks[]>>>;
@@ -160,7 +160,7 @@ export interface ProfileTicketsComponentProps {
 
 export interface ProfileTicketsCardProps {
   classes: Record<'root' | 'content' | 'label' | 'registered' | 'worked', string>;
-  ticket: OldTask;
+  task: OldTask;
 }
 
 export interface ProfileTicketComponentProps {
