@@ -163,10 +163,9 @@ export const serviceOST = (service: Record<string, any>, key: string): TkService
   service && service !== null
     ? {
         where: whereService(key),
-        code: service['Код'],
-        name: service['Наименование'],
-        description: service['descr'],
-        // group: service['group'],
+        code: service['code'],
+        name: service['name'],
+        description: service['description'],
         avatar: service['avatar'],
       }
     : null;
@@ -184,10 +183,9 @@ export const routesOST = (route: Record<string, any>, key: string): TkRoute | nu
   route && route !== null
     ? {
         where: whereService(key),
-        code: route['Код'],
-        name: route['Наименование'],
-        description: route['descr'],
-        // group: route['group'],
+        code: route['code'],
+        name: route['name'],
+        description: route['description'],
         avatar: route['avatar'],
         services: route['services']?.map((service: Record<string, any>) => serviceOST(service, key)),
       }

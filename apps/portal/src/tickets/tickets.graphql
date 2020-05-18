@@ -2,7 +2,6 @@ type TkService {
   where: String!
   code: String!
   name: String!
-  group: String
   description: String
   avatar: String
 }

@@ -102,7 +102,7 @@ export class TicketsService {
 
         Object.keys(OSTicketURL).forEach((key) => {
           const osTicketService = this.httpService
-            .post<TicketsService[]>(`${OSTicketURL[key]}?req=topic`, {})
+            .post<TicketsService[]>(`${OSTicketURL[key]}?req=routes`, {})
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
