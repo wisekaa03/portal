@@ -20,7 +20,7 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { taskSOAP, serviceSOAP, AttachesSOAP, serviceOSTicket, taskOSTicket } from './tickets.util';
+import { taskSOAP, AttachesSOAP, serviceOSTicket, taskOSTicket, routesSOAP } from './tickets.util';
 // #endregion
 
 /**
@@ -69,9 +69,9 @@ export class TicketsService {
               if (result?.[0]?.['return']) {
                 if (typeof result[0]['return']['Сервис'] === 'object') {
                   return {
-                    services: [
-                      ...result[0]['return']['Услуга']?.map((service: Record<string, any>) =>
-                        serviceSOAP(service, TkWhere.Svc1Citil),
+                    routes: [
+                      ...result[0]['return']['Сервис']?.map((routes: Record<string, any>) =>
+                        routesSOAP(routes, TkWhere.Svc1Citil),
                       ),
                     ],
                   };

@@ -91,7 +91,28 @@ export const serviceSOAP = (service: Record<string, any>, key: string): TkServic
         code: service['Код'],
         name: service['Наименование'],
         description: service['Описание'],
+        route: service['СервисВладелец'],
         avatar: service['Аватар'],
+      }
+    : null;
+
+/**
+ * Сервис в представлении 1C SOAP:
+ * - Код
+ * - Наименование
+ * - Описание
+ * - Аватар
+ */
+// eslint-disable-next-line no-confusing-arrow
+export const routesSOAP = (route: Record<string, any>, key: string): TkRoute | null =>
+  route && route !== null
+    ? {
+        where: whereService(key),
+        code: route['Код'],
+        name: route['Наименование'],
+        description: route['Описание'],
+        avatar: route['Аватар'],
+        services: route['Услуга'].map((service: Record<string, any>) => serviceSOAP(service, key)),
       }
     : null;
 

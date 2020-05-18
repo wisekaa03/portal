@@ -13,6 +13,7 @@ export interface TkService {
   code: string;
   name: string;
   description?: string;
+  route?: string;
   avatar?: string;
 }
 
