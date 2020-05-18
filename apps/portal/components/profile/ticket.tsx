@@ -33,10 +33,10 @@ import Dropzone from '@front/components/dropzone';
 import Button from '@front/components/ui/button';
 import Iframe from '@front/components/iframe';
 import { ComposeLink } from '@front/components/compose-link';
-import TicketIconNew from '@public/images/svg/ticket/ticket_new.svg';
-import TicketIconPause from '@public/images/svg/ticket/ticket_pause.svg';
-import TicketIconWorked from '@public/images/svg/ticket/ticket_worked.svg';
-import TicketIconComplete from '@public/images/svg/ticket/ticket_complete.svg';
+import TicketIconNew from '@public/images/svg/task/task_new.svg';
+import TicketIconPause from '@public/images/svg/task/task_pause.svg';
+import TicketIconWorked from '@public/images/svg/task/task_worked.svg';
+import TicketIconComplete from '@public/images/svg/task/task_complete.svg';
 // #endregion
 
 const getTicketStatusIcon = (status: string): any => {
@@ -220,7 +220,7 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
 const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
   loading,
   loadingEdit,
-  ticket,
+  task,
   comment,
   files,
   setFiles,
@@ -241,10 +241,10 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
             </IconButton>
           </Link>
         </Box>
-        {!ticket ? (
+        {!task ? (
           <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
             <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-              {t('profile:ticket.notFound')}
+              {t('profile:task.notFound')}
             </Typography>
           </Loading>
         ) : (
@@ -255,17 +255,17 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
                   <Typography className={classes.cardHeaderTitle} variant="h6">
-                    {t('profile:ticket.header', {
-                      ticket: ticket.code,
-                      date: format(ticket.createdDate, i18n),
+                    {t('profile:task.header', {
+                      task: task.code,
+                      date: format(task.createdDate, i18n),
                     })}
                   </Typography>
                 }
               />
-              <CardContent>{ticket.name}</CardContent>
+              <CardContent>{task.name}</CardContent>
             </Card>
-            <ProfileTicketInfoCard header={t('profile:tickets.headers.author')} profile={ticket.initiatorUser} />
-            <ProfileTicketInfoCard header={t('profile:tickets.headers.executor')} profile={ticket.executorUser} />
+            <ProfileTicketInfoCard header={t('profile:tasks.headers.author')} profile={task.initiatorUser} />
+            <ProfileTicketInfoCard header={t('profile:tasks.headers.executor')} profile={task.executorUser} />
             <Card className={clsx(classes.fullRow, classes.rounded, classes.background)}>
               <CardContent className={classes.cardContent}>
                 <Box className={classes.statusBox}>
@@ -275,15 +275,15 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
                       disableTypography
                       title={
                         <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                          {t('profile:tickets.headers.service')}
+                          {t('profile:tasks.headers.service')}
                         </Typography>
                       }
                     />
                     <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
                       <Box textAlign="center">
-                        <BaseIcon base64 src={ticket?.service.avatar} size={48} />
+                        <BaseIcon base64 src={task?.service.avatar} size={48} />
                       </Box>
-                      <span>{ticket?.service.name}</span>
+                      <span>{task?.service.name}</span>
                     </CardContent>
                   </Card>
                   <Card>
@@ -292,15 +292,15 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
                       disableTypography
                       title={
                         <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                          {t('profile:tickets.headers.status')}
+                          {t('profile:tasks.headers.status')}
                         </Typography>
                       }
                     />
                     <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
                       <Box textAlign="center">
-                        <BaseIcon src={getTicketStatusIcon(ticket.status)} size={48} />
+                        <BaseIcon src={getTicketStatusIcon(task.status)} size={48} />
                       </Box>
-                      <span>{ticket.status}</span>
+                      <span>{task.status}</span>
                     </CardContent>
                   </Card>
                 </Box>
@@ -312,26 +312,26 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
                   <Typography className={classes.cardHeaderTitle} variant="h6">
-                    {t('profile:tickets.headers.description')}
+                    {t('profile:tasks.headers.description')}
                   </Typography>
                 }
               />
-              <CardContent dangerouslySetInnerHTML={{ __html: ticket.description }} />
+              <CardContent dangerouslySetInnerHTML={{ __html: task.description }} />
             </Card>
-            {ticket.files.length > 0 && (
+            {task.files.length > 0 && (
               <Card className={classes.fullRow}>
                 <CardHeader
                   disableTypography
                   className={clsx(classes.cardHeader, classes.background)}
                   title={
                     <Typography className={classes.cardHeaderTitle} variant="h6">
-                      {t('profile:tickets.headers.files')}
+                      {t('profile:tasks.headers.files')}
                     </Typography>
                   }
                 />
                 <CardContent>
                   <Box display="flex" flexDirection="column">
-                    {ticket.files.map((file) => (
+                    {task.files.map((file) => (
                       <Typography variant="subtitle1" key={file.code}>
                         {`${file.name}.${file.ext}`}
                       </Typography>
@@ -346,15 +346,15 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
                   <Typography className={classes.cardHeaderTitle} variant="h6">
-                    {t('profile:tickets.headers.comments')}
+                    {t('profile:tasks.headers.comments')}
                   </Typography>
                 }
               />
               <CardContent>
-                <Iframe srcDoc={ticket.descriptionFull} />
+                <Iframe srcDoc={task.descriptionFull} />
               </CardContent>
             </Card>
-            {ticket.status !== 'Завершен' && (
+            {task.status !== 'Завершен' && (
               <Loading
                 activate={loadingEdit}
                 full
@@ -372,7 +372,7 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
                     rows={5}
                     type="text"
                     color="secondary"
-                    label={t('profile:tickets.comment.add')}
+                    label={t('profile:tasks.comment.add')}
                     variant="outlined"
                   />
                 </FormControl>
