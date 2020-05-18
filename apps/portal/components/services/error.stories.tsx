@@ -9,4 +9,4 @@ import ServicesError from './error';
 
 const Story = withTranslation('services', ServicesError);
 
-story.add('Error', () => <Story name={text('DB Name', 'OS_TICKET')} onClose={action('Close')} />);
+story.add('Error', () => <Story name={text('DB Name', 'OS_TICKET')} onClose={() => action('Close')()} />);
