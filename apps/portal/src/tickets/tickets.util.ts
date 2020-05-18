@@ -112,7 +112,7 @@ export const routesSOAP = (route: Record<string, any>, key: string): TkRoute | n
         name: route['Наименование'],
         description: route['Описание'],
         avatar: route['Аватар'],
-        services: route['Услуга']?.map((service: Record<string, any>) => serviceSOAP(service, key)),
+        services: route['СписокУслуг']?.['Услуга']?.map((service: Record<string, any>) => serviceSOAP(service, key)),
       }
     : null;
 

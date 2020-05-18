@@ -7,11 +7,10 @@
   },
   "success": "User appeal registered.",
   "tabs": {
-    "tab1": "Department",
+    "tab1": "Routes",
     "tab2": "Service",
-    "tab3": "Category",
-    "tab4": "Ticket",
-    "tab5": "Acknowledgment"
+    "tab3": "Edit ticket",
+    "tab4": "Acknowledgment"
   },
   "form": {
     "title": "Title",
