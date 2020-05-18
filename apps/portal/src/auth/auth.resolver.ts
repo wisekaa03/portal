@@ -56,7 +56,7 @@ export class AuthResolver {
     @Context('req') req: Request,
     @Context('res') res: Response,
   ): Promise<Login> {
-    let email: LoginEmail = { login: false };
+    const email: LoginEmail = { login: false };
 
     const user = await this.authService
       .login({ username: username.toLowerCase(), password })
@@ -71,17 +71,6 @@ export class AuthResolver {
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
     });
-
-    if (user.profile.email) {
-      email = await this.authService.loginEmail(user.profile.email, password, req, res).catch((error: Error) => {
-        this.logger.error('Unable to login in mail', error);
-
-        return {
-          login: false,
-          error: error.toString(),
-        };
-      });
-    }
 
     req!.session!.password = password;
 
