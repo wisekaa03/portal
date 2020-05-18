@@ -34,6 +34,6 @@ import { TicketsService } from './tickets.service';
     HttpModule,
   ],
 
-  providers: [TicketsService],
+  providers: [TicketsService, TicketsResolver],
 })
 export class TicketsModule {}
