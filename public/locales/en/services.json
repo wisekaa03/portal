@@ -1,20 +1,16 @@
 {
   "title": {
     "title": "Portal: Ticket",
-    "department": "Portal: Ticket, Department \"{{department}}\"",
-    "service": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\"",
-    "category": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\", Category \"{{category}}\""
+    "service": "Portal: Ticket, Service \"{{service}}\""
   },
   "success": "User appeal registered.",
   "tabs": {
-    "tab1": "Department",
-    "tab2": "Service",
-    "tab3": "Category",
-    "tab4": "Ticket",
-    "tab5": "Acknowledgment"
+    "tab1": "Service",
+    "tab2": "Ticket"
   },
   "form": {
     "title": "Title",
+    "service": "Servce",
     "text": "Description",
     "category": "Category"
   },
@@ -40,5 +36,9 @@
   "errors": {
     "smallTitle": "Слишком короткий заголовок обращения",
     "smallBody": "Необходимо подробнее описать проблему"
+  },
+  "headers": {
+    "favorites": "Избранные услуги",
+    "list": "Список сервисов"
   }
 }
