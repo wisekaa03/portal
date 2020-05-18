@@ -112,7 +112,7 @@ export const routesSOAP = (route: Record<string, any>, key: string): TkRoute | n
         name: route['Наименование'],
         description: route['Описание'],
         avatar: route['Аватар'],
-        services: route['Услуга'].map((service: Record<string, any>) => serviceSOAP(service, key)),
+        services: route['Услуга']?.map((service: Record<string, any>) => serviceSOAP(service, key)),
       }
     : null;
 
@@ -159,7 +159,7 @@ export const taskSOAP = (task: Record<string, any>, key: string): TkTask | null 
  * - avatar
  */
 // eslint-disable-next-line no-confusing-arrow
-export const serviceOSTicket = (service: Record<string, any>, key: string): TkService | null =>
+export const serviceOST = (service: Record<string, any>, key: string): TkService | null =>
   service && service !== null
     ? {
         where: whereService(key),
@@ -168,6 +168,28 @@ export const serviceOSTicket = (service: Record<string, any>, key: string): TkSe
         description: service['descr'],
         // group: service['group'],
         avatar: service['avatar'],
+      }
+    : null;
+
+/**
+ * Сервис в представлении OSTicket:
+ * - Код
+ * - Наименование
+ * - descr
+ * - group - ?
+ * - avatar
+ */
+// eslint-disable-next-line no-confusing-arrow
+export const routesOST = (route: Record<string, any>, key: string): TkRoute | null =>
+  route && route !== null
+    ? {
+        where: whereService(key),
+        code: route['Код'],
+        name: route['Наименование'],
+        description: route['descr'],
+        // group: route['group'],
+        avatar: route['avatar'],
+        services: route['services']?.map((service: Record<string, any>) => serviceOST(service, key)),
       }
     : null;
 
@@ -187,7 +209,7 @@ export const serviceOSTicket = (service: Record<string, any>, key: string): TkSe
  * - Услуга
  */
 // eslint-disable-next-line no-confusing-arrow
-export const taskOSTicket = (task: Record<string, any>, key: string): TkTask | null =>
+export const taskOST = (task: Record<string, any>, key: string): TkTask | null =>
   task && task !== null
     ? {
         where: whereService(key),

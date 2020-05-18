@@ -20,7 +20,7 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { taskSOAP, AttachesSOAP, serviceOSTicket, taskOSTicket, routesSOAP } from './tickets.util';
+import { taskSOAP, AttachesSOAP, taskOST, routesOST, routesSOAP } from './tickets.util';
 // #endregion
 
 /**
@@ -55,8 +55,8 @@ export class TicketsService {
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        promises.push(Promise.resolve({ error: JSON.stringify(error) }));
+      const client = await this.soapService.connect(authentication).catch((error: Error) => {
+        promises.push(Promise.resolve({ error: error.toString() }));
       });
 
       if (client) {
@@ -68,13 +68,13 @@ export class TicketsService {
 
               if (result?.[0]?.['return']) {
                 if (typeof result[0]['return']['Сервис'] === 'object') {
-                  return {
-                    routes: [
-                      ...result[0]['return']['Сервис']?.map((routes: Record<string, any>) =>
-                        routesSOAP(routes, TkWhere.Svc1Citil),
-                      ),
-                    ],
-                  };
+                  const routes = result[0]['return']['Сервис'];
+
+                  if (Array.isArray(routes)) {
+                    return {
+                      routes: [...routes.map((route: Record<string, any>) => routesSOAP(route, TkWhere.Svc1Citil))],
+                    };
+                  }
                 }
                 return {};
               }
@@ -108,7 +108,7 @@ export class TicketsService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    services: [...response.data.map((service: Record<string, any>) => serviceOSTicket(service, key))],
+                    routes: [...response.data.map((route: Record<string, any>) => routesOST(route, key))],
                   };
                 }
 
@@ -226,7 +226,7 @@ export class TicketsService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    tasks: [...response.data.tickets?.map((task: Record<string, any>) => taskOSTicket(task, key))],
+                    tasks: [...response.data.tickets?.map((task: Record<string, any>) => taskOST(task, key))],
                   };
                 }
 
