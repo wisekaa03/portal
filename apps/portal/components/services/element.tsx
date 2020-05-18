@@ -22,7 +22,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
-import { ServicesElementProps, ServicesElementLinkQueryProps, ServicesElementType } from '@lib/types';
+import { ServicesElementProps } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
 import BaseIcon from '@front/components/ui/icon';
 import { useTranslation } from '@lib/i18n-client';
@@ -46,7 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#E9F2F5',
       },
     },
-    active: {},
+    active: {
+      padding: 0,
+      cursor: 'default',
+    },
     moreOpen: {
       backgroundColor: '#E9F2F5',
     },
@@ -87,15 +90,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const pathname = '/services';
 
-const getElement = (query: ServicesElementLinkQueryProps): ServicesElementType => {
-  return !query ? 'department' : 'service' in query ? 'category' : 'service';
-};
-
 const ServicesElement: FC<ServicesElementProps> = ({
   base64,
   active,
   element,
-  linkQuery,
   url,
   withLink,
   favorite,
@@ -104,12 +102,6 @@ const ServicesElement: FC<ServicesElementProps> = ({
   const classes = useStyles({});
   const { t } = useTranslation();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-
-  let linkAs = pathname;
-
-  if (withLink && linkQuery) {
-    linkAs += `/${Object.values(linkQuery).join('/')}`;
-  }
 
   const handleOpenMore = useCallback((event: React.MouseEvent<HTMLElement>): void => {
     setAnchor(event.currentTarget);
@@ -140,10 +132,10 @@ const ServicesElement: FC<ServicesElementProps> = ({
           href={
             url || {
               pathname,
-              query: { ...linkQuery, [getElement(linkQuery)]: element.code },
+              query: { route: element.code },
             }
           }
-          as={url || `${linkAs}/${element.code}`}
+          as={url || `${pathname}/${element.code}`}
           passHref
         >
           {url ? <a target="_blank">{children}</a> : children}
@@ -151,9 +143,8 @@ const ServicesElement: FC<ServicesElementProps> = ({
       )}
     >
       <Box
-        boxShadow={active === element.code ? 3 : 0}
         className={clsx(classes.root, {
-          [classes.active]: active === element.code,
+          [classes.active]: active,
           [classes.moreOpen]: !!anchor,
         })}
       >

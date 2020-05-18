@@ -1,9 +1,10 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useCallback, useMemo } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, TextField } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem } from '@material-ui/core';
+import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
 // #endregion
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       flex: 1,
     },
-    container: {
+    blockContainer: {
       display: 'grid',
       gap: `${theme.spacing()}px ${theme.spacing(4)}px`,
       padding: theme.spacing(2, 4),
@@ -65,29 +66,61 @@ const useStyles = makeStyles((theme: Theme) =>
         marginRight: theme.spacing(),
       },
     },
+    blockTitle: {
+      'fontWeight': 500,
+      'fontSize': '14px',
+      'lineHeight': '21px',
+      'background': '#F7FBFA',
+      'boxShadow': '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      'borderRadius': theme.spacing(),
+      'padding': theme.spacing(2, 4, 2, 9),
+
+      '&:not(:first-child)': {
+        marginTop: theme.spacing(2),
+      },
+    },
+    blockTitleWithIcon: {
+      padding: theme.spacing(2, 4),
+      display: 'flex',
+      alignItems: 'center',
+    },
+    titleIcon: {
+      color: theme.palette.secondary.main,
+      display: 'flex',
+      marginRight: theme.spacing(2),
+    },
+    select: {
+      '&:focus': {
+        backgroundColor: 'transparent',
+      },
+    },
   }),
 );
 
+const MINIMAL_BODY_LENGTH = 10;
+
 const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,
-  titleRef,
+  serviceRef,
   bodyRef,
   currentTab,
-  ticket,
+  task,
   created,
-  departments,
-  services,
+  routes,
+  favorites,
   body,
   setBody,
   files,
   setFiles,
-  loadingServices,
+  submitted,
+  loadingRoutes,
   loadingCreated,
-  refetchServices,
+  refetchRoutes,
   handleCurrentTab,
-  handleTitle,
+  handleService,
   handleSubmit,
   handleResetTicket,
+  handleFavorites,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -97,54 +130,75 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
     : '100%';
 
-  const invalidTitle = ticket.title.length < 10 && body.length > 0;
+  const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
+  const handleAddFavorite = useCallback(() => handleFavorites({ id: task.route.code, action: 'add' }), [
+    handleFavorites,
+    task,
+  ]);
+
+  const isFavorite = useMemo<boolean>(() => !!favorites.find(({ code }) => code === task.route?.code), [
+    task,
+    favorites,
+  ]);
+  const enableBody = useMemo<boolean>(
+    () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
+    [task],
+  );
+  const notValid = useMemo<boolean>(() => !enableBody || body.length < MINIMAL_BODY_LENGTH, [enableBody, body]);
+
+  // TODO: разобраться для чего категории
+  const category = routes.length ? routes[0].categories : [];
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
       <Paper ref={headerRef} square className={classes.header}>
-        <Tabs
-          value={currentTab}
-          indicatorColor="secondary"
-          textColor="secondary"
-          onChange={(_: any, tab: number): void => handleCurrentTab(tab)}
-        >
+        <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
           <Tab label={t('services:tabs.tab1')} />
-          <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
-          <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
-          <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
-          <Tab disabled={!created} label={t('services:tabs.tab5')} />
+          <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
         </Tabs>
       </Paper>
-      <Loading activate={loadingServices} full type="circular" color="secondary" disableShrink size={48}>
+      <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
         <>
-          {currentTab < 4 && <RefreshButton onClick={() => refetchServices()} />}
+          {!submitted && <RefreshButton onClick={refetchRoutes} />}
           <SwipeableViews
             ref={contentRef}
             animateHeight
-            disabled={!ticket.department}
+            disabled={!task.route}
             index={currentTab}
             className={classes.body}
             containerStyle={{ flexGrow: 1 }}
             onSwitching={handleCurrentTab}
           >
-            <Box className={classes.container}>
-              {departments.map((current) => (
-                <ServicesElement key={current.code} withLink element={current} active={ticket.department?.code} />
-              ))}
-            </Box>
-            <Box className={classes.container} style={{ minHeight: contentHeight }}>
-              {services.map((current) => (
-                <ServicesElement
-                  key={current.code}
-                  withLink
-                  base64
-                  element={current}
-                  active={ticket.service?.code}
-                  linkQuery={{ department: ticket.department?.code }}
-                />
-              ))}
+            <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
+              {favorites.length > 0 && (
+                <>
+                  <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
+                    <Box className={classes.titleIcon}>
+                      <StarBorderIcon />
+                    </Box>
+                    {t('services:headers.favorites')}
+                  </Box>
+                  <Box className={classes.blockContainer}>
+                    {favorites.map((current) => (
+                      <ServicesElement key={current.code} favorite setFavorite={handleFavorites} element={current} />
+                    ))}
+                  </Box>
+                </>
+              )}
+              <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
+              <Box className={classes.blockContainer}>
+                {category.map((current) => (
+                  <ServicesElement
+                    key={current.code}
+                    withLink
+                    // base64
+                    element={current}
+                  />
+                ))}
+              </Box>
               {/* Евгений */}
-              <ServicesElement
+              {/* TODO: если все еще актуально, доделать */}
+              {/* <ServicesElement
                 key="k0001"
                 withLink
                 url="http://srvsd-01.khgk.local/anketa833/"
@@ -153,79 +207,75 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   name: 'Департамент по персоналу - Форма на подбор персонала',
                   avatar: HR,
                 }}
-                linkQuery={{ department: ticket.department?.code }}
-              />
+              /> */}
             </Box>
-            {/* <Box className={classes.container} style={{ minHeight: contentHeight }}>
-              {categories.map((current) => (
-                <ServicesElement
-                  key={current.code}
-                  withLink
-                  base64
-                  element={current}
-                  active={ticket.category?.code}
-                  linkQuery={{
-                    department: ticket.department?.code,
-                    service: ticket.service?.code,
-                  }}
-                />
-              ))}
-                </Box> */}
             <Box
               style={{ minHeight: contentHeight }}
               display="flex"
               flexDirection="column"
               alignItems="center"
               justifyContent="center"
+              p={3}
             >
-              {ticket.department && ticket.service && ticket.category && (
-                <Box display="grid" className={classes.formControl}>
-                  <ServicesElement element={ticket.department} />
-                  <ServicesElement base64 element={ticket.service} />
-                  <ServicesElement base64 element={ticket.category} />
-                </Box>
+              {/* TODO: добавить логику вывода ошибки */}
+              {submitted ? (
+                <Loading
+                  activate={loadingCreated || !created}
+                  full
+                  type="circular"
+                  color="secondary"
+                  disableShrink
+                  size={48}
+                >
+                  <ServicesSuccess data={created} />
+                </Loading>
+              ) : (
+                <>
+                  {task.route && (
+                    <Box display="grid" gridTemplateColumns="1fr 1fr" gridGap="8px" className={classes.formControl}>
+                      <ServicesElement /* base64 */ element={task.route} active />
+                      <Box display="flex" justifyContent="flex-end" alignItems="center">
+                        {!isFavorite && (
+                          <Button actionType="favorite" onClick={handleAddFavorite}>
+                            {t('common:favorite')}
+                          </Button>
+                        )}
+                      </Box>
+                    </Box>
+                  )}
+                  <FormControl className={classes.formControl} variant="outlined">
+                    <Select
+                      value={task.service?.code || '0'}
+                      inputRef={serviceRef}
+                      onChange={handleService}
+                      classes={{
+                        select: classes.select,
+                      }}
+                    >
+                      <MenuItem value="0">{t('services:form.service')}</MenuItem>
+                      {task.route?.services?.map((service) => (
+                        <MenuItem key={service.code} value={service.code}>
+                          {service.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl className={classes.formControl} variant="outlined">
+                    <JoditEditor ref={bodyRef} value={body} onChange={setBody} disabled={!enableBody} />
+                  </FormControl>
+                  <FormControl className={classes.formControl} variant="outlined">
+                    <Dropzone files={files} setFiles={setFiles} />
+                  </FormControl>
+                  <FormControl className={clsx(classes.formControl, classes.formAction)}>
+                    <Button actionType="cancel" onClick={handleResetTicket}>
+                      {t('common:cancel')}
+                    </Button>
+                    <Button onClick={handleSubmit} disabled={notValid}>
+                      {t('common:accept')}
+                    </Button>
+                  </FormControl>
+                </>
               )}
-              <FormControl className={classes.formControl} variant="outlined">
-                <TextField
-                  inputRef={titleRef}
-                  error={invalidTitle}
-                  value={ticket.title}
-                  onChange={handleTitle}
-                  type="text"
-                  label={t('services:form.title')}
-                  variant="outlined"
-                />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <JoditEditor ref={bodyRef} value={body} onChange={setBody} />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <Dropzone files={files} setFiles={setFiles} />
-              </FormControl>
-              <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                <Button actionType="cancel" onClick={handleResetTicket}>
-                  {t('common:cancel')}
-                </Button>
-                <Button onClick={handleSubmit}>{t('common:accept')}</Button>
-              </FormControl>
-            </Box>
-            <Box
-              style={{ minHeight: contentHeight }}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Loading
-                activate={loadingCreated || !created}
-                full
-                type="circular"
-                color="secondary"
-                disableShrink
-                size={48}
-              >
-                <ServicesSuccess data={created} />
-              </Loading>
             </Box>
           </SwipeableViews>
         </>

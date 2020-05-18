@@ -2,55 +2,42 @@
 
 import { DropzoneFile } from './dropzone';
 import { OldService } from './old-service';
-
-export type ServicesElementType = 'department' | 'service' | 'category';
-
-export interface ServicesDepartmentsProps {
-  code: string;
-  name: string;
-  subtitle?: string;
-  avatar: any;
-}
+import { TkRoutes, TkRoute, TkService } from './tickets';
 
 export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
-  titleRef: React.Ref<HTMLInputElement>;
+  serviceRef: React.Ref<HTMLSelectElement>;
   bodyRef: React.Ref<any>;
   currentTab: number;
-  ticket: ServicesTicketProps;
+  task: ServicesTicketProps;
   created: ServicesCreatedProps;
-  departments: ServicesDepartmentsProps[];
-  services: OldService[];
+  routes?: TkRoutes[];
+  favorites: TicketsElementProps[];
   body: string;
   setBody: React.Dispatch<React.SetStateAction<string>>;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
-  loadingServices: boolean;
+  submitted: boolean;
+  loadingRoutes: boolean;
   loadingCreated: boolean;
-  refetchServices: () => Promise<any>;
+  refetchRoutes: () => Promise<any>;
   handleCurrentTab: (_: number) => void;
-  handleTitle: (_: React.ChangeEvent<HTMLInputElement>) => void;
+  handleService: (_: React.ChangeEvent<HTMLSelectElement>) => void;
   handleSubmit: () => void;
   handleResetTicket: () => void;
+  handleFavorites: (_: ServicesFavoriteProps) => void;
 }
 
-export interface ServicesElementLinkQueryProps {
-  department: string;
-  service?: string;
-  category?: string;
-}
-
-type ServicesFavoriteProps = {
+export type ServicesFavoriteProps = {
   id: string;
-  action: 'up' | 'down' | 'delete';
+  action: 'up' | 'down' | 'add' | 'delete';
 };
 
 export interface ServicesElementProps {
-  element: ServicesDepartmentsProps;
+  element: TicketsElementProps;
   withLink?: boolean;
-  active?: string;
+  active?: boolean;
   base64?: boolean;
-  linkQuery?: ServicesElementLinkQueryProps;
   url?: string;
   favorite?: boolean;
   setFavorite?: (_: ServicesFavoriteProps) => void;
@@ -72,11 +59,12 @@ export interface ServicesSuccessCardProps {
   data: ServicesCreatedProps;
 }
 
-export interface ServicesTicketElementProps {
+export interface TicketsElementProps {
   code: string;
   name: string;
-  avatar: any;
+  avatar?: any;
   categoryType?: string;
+  subtitle?: string;
 }
 
 // TODO: скорректировать после консолидации с беком
@@ -91,9 +79,8 @@ export interface ServicesCreatedProps {
   service?: string;
 }
 
+// TODO: проработать тикет в соответствии с изменениями
 export interface ServicesTicketProps {
-  department?: ServicesTicketElementProps;
-  service?: ServicesTicketElementProps;
-  category?: ServicesTicketElementProps;
-  title: string;
+  route?: TkRoute;
+  service?: TkService;
 }
