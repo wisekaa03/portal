@@ -144,7 +144,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
     [task],
   );
-  const notValid = useMemo<boolean>(() => !enableBody || body.length < MINIMAL_BODY_LENGTH, [enableBody, body]);
+  const notValid = useMemo<boolean>(() => !enableBody || body.trim().length < MINIMAL_BODY_LENGTH, [enableBody, body]);
 
   // TODO: разобраться для чего категории
   const category = routes.length ? routes[0].categories : [];

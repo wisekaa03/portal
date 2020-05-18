@@ -5,14 +5,16 @@ import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 
 import {
-  ServicesTicketProps,
+  ServicesTaskProps,
   ServicesCreatedProps,
   DropzoneFile,
   TicketsElementProps,
   ServicesWrapperProps,
+  TkRoutes,
+  TkWhere,
+  TkRoute,
 } from '@lib/types';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
-import { TkRoutes, TkWhere, TkRoute } from '@lib/types/tickets';
 import { story, withTranslation } from './index.stories';
 import Services from './index';
 
@@ -55,13 +57,13 @@ const mockRoutes: TkRoutes[] = [
   },
 ];
 
-const defaultTicketState: ServicesTicketProps = { route: mockFavorites[0] };
+const defaultTicketState: ServicesTaskProps = { route: mockFavorites[0] };
 
 const Story: FC<ServicesWrapperProps> = withTranslation('services', Services);
 
 story.add('Default View', () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const [task, setTask] = useState<ServicesTicketProps>(defaultTicketState);
+  const [task, setTask] = useState<ServicesTaskProps>(defaultTicketState);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [routes, setRoutes] = useState<TkRoutes[]>(mockRoutes);

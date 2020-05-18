@@ -29,6 +29,7 @@ export * from './profile';
 export * from './services';
 export * from './treeview';
 export * from './user.dto';
+export * from './tickets';
 // #endregion
 
 export interface WithApolloState<TCache = NormalizedCacheObject> {

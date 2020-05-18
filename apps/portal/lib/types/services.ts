@@ -1,7 +1,6 @@
 /** @format */
 
 import { DropzoneFile } from './dropzone';
-import { OldService } from './old-service';
 import { TkRoutes, TkRoute, TkService } from './tickets';
 
 export interface ServicesWrapperProps {
@@ -9,7 +8,7 @@ export interface ServicesWrapperProps {
   serviceRef: React.Ref<HTMLSelectElement>;
   bodyRef: React.Ref<any>;
   currentTab: number;
-  task: ServicesTicketProps;
+  task: ServicesTaskProps;
   created: ServicesCreatedProps;
   routes?: TkRoutes[];
   favorites: TicketsElementProps[];
@@ -80,7 +79,7 @@ export interface ServicesCreatedProps {
 }
 
 // TODO: проработать тикет в соответствии с изменениями
-export interface ServicesTicketProps {
+export interface ServicesTaskProps {
   route?: TkRoute;
   service?: TkService;
 }
