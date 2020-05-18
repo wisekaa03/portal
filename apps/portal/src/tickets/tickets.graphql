@@ -1,4 +1,4 @@
-type OldService {
+type TkService {
   where: String!
   code: String!
   name: String!
@@ -7,7 +7,16 @@ type OldService {
   avatar: String
 }
 
-type OldUser {
+type TkRoute {
+  where: String!
+  code: String!
+  name: String!
+  description: String
+  avatar: String
+  services: [TkService!]
+}
+
+type TkUser {
   where: String!
   name: String!
   avatar: String
@@ -19,13 +28,13 @@ type OldUser {
   title: String
 }
 
-type OldFile {
-  code: String
-  name: String
+type TkFile {
+  code: String!
+  name: String!
   ext: String
 }
 
-type OldTask {
+type TkTask {
   where: String!
   code: String!
   type: String
@@ -37,14 +46,14 @@ type OldTask {
   avatar: String
   endDate: String
   timeout: String
-  executorUser: OldUser
-  initiatorUser: OldUser
-  service: OldService
-  serviceCategory: OldService
-  files: [OldFile]
+  executorUser: TkUser
+  initiatorUser: TkUser
+  service: TkService
+  serviceCategory: TkService
+  files: [TkFile!]
 }
 
-type OldTaskNew {
+type TkTaskNew {
   where: String!
   code: String!
   name: String!
@@ -55,7 +64,7 @@ type OldTaskNew {
   createdDate: Date!
 }
 
-input OldTaskNewInput {
+input TkTaskNewInput {
   title: String!
   body: String!
   serviceId: String!
@@ -64,29 +73,29 @@ input OldTaskNewInput {
   executorUser: String
 }
 
-input OldTaskEditInput {
+input TkTaskEditInput {
   code: String!
   type: String!
   comment: String!
 }
 
-type OldServices {
-  services: [OldService]
+type TkRoutes {
+  routes: [TkRoute]
   error: String
 }
 
-type OldTasks {
-  tasks: [OldTask]
+type TkTasks {
+  tasks: [TkTask]
   error: String
 }
 
 type Query {
-  OldTicketService(find: String): [OldServices]!
-  OldTicketTasks(status: String, find: String): [OldTasks]!
-  OldTicketTaskDescription(code: String, type: String): OldTask
+  TicketsRoutes: [TkRoutes!]
+  TicketsTasks(status: String, find: String): [TkTasks!]
+  TicketsTaskDescription(code: String, type: String): TkTask
 }
 
 type Mutation {
-  OldTicketTaskNew(task: OldTaskNewInput!, attachments: [Upload]): OldTaskNew!
-  OldTicketTaskEdit(task: OldTaskEditInput!, attachments: [Upload]): OldTask!
+  TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew!
+  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTask!
 }

@@ -9,29 +9,9 @@ import { UserEntity } from '@back/user/user.entity';
 import { NewsEntity } from '@back/news/news.entity';
 import { FilesFolderEntity } from '@back/files/files.folder.entity';
 import { FilesEntity } from '@back/files/files.entity';
-
-import { TicketAttachmentsEntity } from '@back/ticket/attachments/attachments.entity';
-import { TicketCommentsEntity } from '@back/ticket/comments/comments.entity';
-import { TicketDepartmentEntity } from '@back/ticket/department/department.entity';
-import { TicketGroupServiceEntity } from '@back/ticket/group-service/group-service.entity';
-import { TicketServiceEntity } from '@back/ticket/service/service.entity';
-import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
 // #endregion
 
-const entities = [
-  GroupEntity,
-  ProfileEntity,
-  UserEntity,
-  NewsEntity,
-  FilesFolderEntity,
-  FilesEntity,
-  TicketDepartmentEntity,
-  TicketGroupServiceEntity,
-  TicketServiceEntity,
-  TicketsEntity,
-  TicketAttachmentsEntity,
-  TicketCommentsEntity,
-];
+const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity, FilesFolderEntity, FilesEntity];
 // const entities = ['apps/portal/src/**/*.entity.ts'];
 // const entities = ['./.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];

@@ -7,21 +7,20 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 // #endregion
 // #region Imports Local
 import {
-  OldService,
-  OldTask,
-  OldServices,
-  OldTasks,
-  WhereService,
-  User,
-  OSTicketUser,
-  OldTicketTaskNew,
-  OldTicketTaskNewInput,
-  OldTicketTaskEditInput,
-} from '@lib/types';
+  TkRoutes,
+  TkTasks,
+  TkWhere,
+  TkUserOST,
+  TkTaskNewInput,
+  TkTaskNew,
+  TkTaskEditInput,
+  TkTask,
+} from '@lib/types/tickets';
+import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { taskSOAP, serviceSOAP, AttachesSOAP, serviceOSTicket, taskOSTicket } from './old-service.util';
+import { taskSOAP, serviceSOAP, AttachesSOAP, serviceOSTicket, taskOSTicket } from './tickets.util';
 // #endregion
 
 /**
@@ -29,28 +28,33 @@ import { taskSOAP, serviceSOAP, AttachesSOAP, serviceOSTicket, taskOSTicket } fr
  * @class
  */
 @Injectable()
-export class OldTicketService {
+export class TicketsService {
   constructor(
-    @InjectPinoLogger(OldTicketService.name) private readonly logger: PinoLogger,
+    @InjectPinoLogger(TicketsService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
     private readonly httpService: HttpService,
   ) {}
 
   /**
-   * Tickets: get array of services
+   * Tickets: get array of routes and services
    *
    * @async
-   * @method OldTicketService
-   * @param {SoapAuthentication} authentication Soap authentication
+   * @method TicketsRoutes
    * @param {User} user User object
-   * @param {string} find The find string
-   * @returns {OldServices[]} Services
+   * @param {string} password The Password
+   * @returns {TkRoutes[]} Services
    */
-  OldTicketService = async (authentication: SoapAuthentication, user: User, Find: string): Promise<OldServices[]> => {
-    const promises: Promise<OldServices>[] = [];
+  TicketsRoutes = async (user: User, password: string): Promise<TkRoutes[]> => {
+    const promises: Promise<TkRoutes>[] = [];
 
     if (!!this.configService.get<string>('SOAP_URL')) {
+      const authentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      } as SoapAuthentication;
+
       const client = await this.soapService.connect(authentication).catch((error) => {
         promises.push(Promise.resolve({ error: JSON.stringify(error) }));
       });
@@ -58,16 +62,16 @@ export class OldTicketService {
       if (client) {
         promises.push(
           client
-            .GetServicesAsync({ Log: user.username, Find })
+            .GetRoutesAsync({ Log: user.username })
             .then((result: any) => {
               this.logger.info(`OldTicketService: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.['return']) {
-                if (typeof result[0]['return']['Услуга'] === 'object') {
+                if (typeof result[0]['return']['Сервис'] === 'object') {
                   return {
                     services: [
                       ...result[0]['return']['Услуга']?.map((service: Record<string, any>) =>
-                        serviceSOAP(service, WhereService.Svc1Citil),
+                        serviceSOAP(service, TkWhere.Svc1Citil),
                       ),
                     ],
                   };
@@ -98,7 +102,7 @@ export class OldTicketService {
 
         Object.keys(OSTicketURL).forEach((key) => {
           const osTicketService = this.httpService
-            .post<OldServices[]>(`${OSTicketURL[key]}?req=topic`, {})
+            .post<TicketsService[]>(`${OSTicketURL[key]}?req=topic`, {})
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
@@ -129,22 +133,23 @@ export class OldTicketService {
    * Tasks list
    *
    * @async
-   * @method OldTasks
-   * @param {SoapAuthentication} authentication Soap authentication
+   * @method TicketsTasks
    * @param {User} user User object
+   * @param {string} password The Password
    * @param {string} Status The status
    * @param {string} Find The find string
-   * @returns {OldTasks[]}
+   * @returns {TkTasks[]}
    */
-  OldTasks = async (
-    authentication: SoapAuthentication,
-    user: User,
-    Status: string,
-    Find: string,
-  ): Promise<OldTasks[]> => {
-    const promises: Promise<OldTasks>[] = [];
+  TicketsTasks = async (user: User, password: string, Status: string, Find: string): Promise<TkTasks[]> => {
+    const promises: Promise<TkTasks>[] = [];
 
     if (!!this.configService.get<string>('SOAP_URL')) {
+      const authentication: SoapAuthentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      };
+
       const client = await this.soapService.connect(authentication).catch((error) => {
         promises.push(Promise.resolve({ error: JSON.stringify(error) }));
       });
@@ -169,7 +174,7 @@ export class OldTicketService {
                     : [result[0]['return']['Задача']];
 
                   return {
-                    tasks: [...tasks.map((task: any) => taskSOAP(task, WhereService.Svc1Citil))],
+                    tasks: [...tasks.map((task: any) => taskSOAP(task, TkWhere.Svc1Citil))],
                   };
                 }
                 return {};
@@ -207,7 +212,7 @@ export class OldTicketService {
           phone_ext: user.profile.workPhone,
           subdivision: user.profile.department,
           Аватар: user.profile.thumbnailPhoto,
-        } as OSTicketUser;
+        } as TkUserOST;
 
         Object.keys(OSTicketURL).forEach((key) => {
           const osTickets = this.httpService
@@ -246,21 +251,27 @@ export class OldTicketService {
    * New task
    *
    * @async
-   * @method OldTicketTaskNew
-   * @param {SoapAuthentication} authentication Soap authentication
+   * @method TicketsTaskNew
    * @param {User} user User object
+   * @param {string} password The Password
    * @param {OldTicketTaskNewInput} ticket Ticket object
    * @param {Promise<FileUpload>[]} attachments Attachments
    * @returns {OldTicketTaskNew} New ticket creation
    */
-  OldTicketTaskNew = async (
-    authentication: SoapAuthentication,
+  TicketsTaskNew = async (
     user: User,
-    ticket: OldTicketTaskNewInput,
+    password: string,
+    ticket: TkTaskNewInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<OldTicketTaskNew> => {
+  ): Promise<TkTaskNew> => {
     /* 1C SOAP */
-    if (ticket.where === WhereService.Svc1Citil) {
+    if (ticket.where === TkWhere.Svc1Citil) {
+      const authentication: SoapAuthentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      };
+
       const client = await this.soapService.connect(authentication).catch((error) => {
         throw error;
       });
@@ -317,7 +328,7 @@ export class OldTicketService {
     }
 
     /* OSTicket service */
-    if (ticket.where === WhereService.SvcOSTaudit || ticket.where === WhereService.SvcOSTmedia) {
+    if (ticket.where === TkWhere.SvcOSTaudit || ticket.where === TkWhere.SvcOSTmedia) {
       return {
         error: 'Cannot connect to OSTicket',
       };
@@ -332,18 +343,24 @@ export class OldTicketService {
    * Edit task
    *
    * @async
-   * @method OldTicketTaskEdit
-   * @param {SoapAuthentication} authentication Soap authentication
+   * @method TicketsTaskEdit
    * @param {User} user User object
+   * @param {string} password The Password
    * @returns {OldTask} Ticket for editing
    */
-  OldTicketTaskEdit = async (
-    authentication: SoapAuthentication,
+  TicketsTaskEdit = async (
     user: User,
-    ticket: OldTicketTaskEditInput,
+    password: string,
+    ticket: TkTaskEditInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<OldTask> => {
+  ): Promise<TkTask> => {
     // TODO: дописать
+    const authentication: SoapAuthentication = {
+      username: user?.username,
+      password,
+      domain: this.configService.get<string>('SOAP_DOMAIN'),
+    };
+
     const client = await this.soapService.connect(authentication).catch((error) => {
       throw error;
     });
@@ -394,19 +411,20 @@ export class OldTicketService {
    * Task description
    *
    * @async
-   * @method OldTicketDescription
-   * @param {SoapAuthentication} authentication Soap authentication
+   * @method TicketsTaskDescription
    * @param {User} user User object
+   * @param {string} password The Password
    * @param {string} status
    * @param {string} type
    * @returns {OldService}
    */
-  OldTicketTaskDescription = async (
-    authentication: SoapAuthentication,
-    user: User,
-    status: string,
-    type: string,
-  ): Promise<OldService> => {
+  TicketsTaskDescription = async (user: User, password: string, status: string, type: string): Promise<TkTask> => {
+    const authentication = {
+      username: user?.username,
+      password,
+      domain: this.configService.get<string>('SOAP_DOMAIN'),
+    } as SoapAuthentication;
+
     const client = await this.soapService.connect(authentication).catch((error) => {
       throw error;
     });

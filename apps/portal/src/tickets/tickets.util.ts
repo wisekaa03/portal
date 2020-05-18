@@ -1,6 +1,6 @@
 /** @format */
 
-import { OldService, OldTask, OldUser, OldFile, WhereService } from '@lib/types';
+import { TkWhere, TkRoute, TkService, TkTask, TkUser, TkFile } from '@lib/types';
 import clearHtml from '@lib/clear-html';
 
 export interface AttachesSOAPFile {
@@ -15,16 +15,16 @@ export interface AttachesSOAP {
 /**
  * На какой сервис отправлять сообщения.
  */
-export const whereService = (key: string | keyof WhereService): WhereService => {
+export const whereService = (key: string | keyof TkWhere): TkWhere => {
   switch (key) {
-    case '1Citil' || WhereService.Svc1Citil:
-      return WhereService.Svc1Citil;
-    case 'auditors' || WhereService.SvcOSTaudit:
-      return WhereService.SvcOSTaudit;
-    case 'media' || WhereService.SvcOSTmedia:
-      return WhereService.SvcOSTmedia;
+    case '1Citil' || TkWhere.Svc1Citil:
+      return TkWhere.Svc1Citil;
+    case 'auditors' || TkWhere.SvcOSTaudit:
+      return TkWhere.SvcOSTaudit;
+    case 'media' || TkWhere.SvcOSTmedia:
+      return TkWhere.SvcOSTmedia;
     default:
-      return WhereService.SvcDefault;
+      return TkWhere.SvcDefault;
   }
 };
 
@@ -43,7 +43,7 @@ export const whereService = (key: string | keyof WhereService): WhereService => 
  * - КаналТелефонии
  */
 // eslint-disable-next-line no-confusing-arrow
-export const userSOAP = (user: Record<string, any>, key: string): OldUser | null =>
+export const userSOAP = (user: Record<string, any>, key: string): TkUser | null =>
   user && user !== null
     ? {
         where: whereService(key),
@@ -58,7 +58,7 @@ export const userSOAP = (user: Record<string, any>, key: string): OldUser | null
       }
     : null;
 
-export const filesSOAP = (files: any, key: string): OldFile[] | [] => {
+export const filesSOAP = (files: any, key: string): TkFile[] | [] => {
   if (files) {
     const newFiles = Array.isArray(files) ? files : [files];
 
@@ -84,7 +84,7 @@ export const filesSOAP = (files: any, key: string): OldFile[] | [] => {
  * - Аватар
  */
 // eslint-disable-next-line no-confusing-arrow
-export const serviceSOAP = (service: Record<string, any>, key: string): OldService | null =>
+export const serviceSOAP = (service: Record<string, any>, key: string): TkService | null =>
   service && service !== null
     ? {
         where: whereService(key),
@@ -110,7 +110,7 @@ export const serviceSOAP = (service: Record<string, any>, key: string): OldServi
  * - Услуга
  */
 // eslint-disable-next-line no-confusing-arrow
-export const taskSOAP = (task: Record<string, any>, key: string): OldTask | null =>
+export const taskSOAP = (task: Record<string, any>, key: string): TkTask | null =>
   task && task !== null
     ? {
         where: whereService(key),
@@ -138,7 +138,7 @@ export const taskSOAP = (task: Record<string, any>, key: string): OldTask | null
  * - avatar
  */
 // eslint-disable-next-line no-confusing-arrow
-export const serviceOSTicket = (service: Record<string, any>, key: string): OldService | null =>
+export const serviceOSTicket = (service: Record<string, any>, key: string): TkService | null =>
   service && service !== null
     ? {
         where: whereService(key),
@@ -166,7 +166,7 @@ export const serviceOSTicket = (service: Record<string, any>, key: string): OldS
  * - Услуга
  */
 // eslint-disable-next-line no-confusing-arrow
-export const taskOSTicket = (task: Record<string, any>, key: string): OldTask | null =>
+export const taskOSTicket = (task: Record<string, any>, key: string): TkTask | null =>
   task && task !== null
     ? {
         where: whereService(key),

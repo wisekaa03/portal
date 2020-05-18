@@ -1,56 +1,65 @@
 /** @format */
 import { FileUpload } from 'graphql-upload';
 
-export enum WhereService {
+export enum TkWhere {
   Svc1Citil = '1Citil',
   SvcOSTaudit = 'OSTaudit',
   SvcOSTmedia = 'OSTmedia',
   SvcDefault = 'default',
 }
 
-export interface OldService {
-  where: WhereService;
+export interface TkService {
+  where: TkWhere;
   code: string;
   name: string;
   description?: string;
   avatar?: string;
 }
 
-export interface OldServices {
-  services?: (OldService | null)[];
+export interface TkRoute {
+  where: TkWhere;
+  code: string;
+  name: string;
+  description?: string;
+  avatar?: string;
+  services?: (TkService | null)[];
+}
+
+export interface TkRoutes {
+  categories?: (TkRoute | null)[];
   error?: string;
 }
 
-export interface OldFile {
-  where: WhereService;
+export interface TkFile {
+  where: TkWhere;
   code: string;
   name: string;
   ext?: string;
 }
 
-export interface OldTask {
-  where: WhereService;
+export interface TkTask {
+  where: TkWhere;
   code: string;
   name: string;
   type?: string;
   description?: string;
   descriptionFull?: string;
   status?: string;
-  service: OldService | null;
+  service: TkService | null;
   createdDate?: string;
   endDate?: string;
-  executorUser: OldUser | null;
-  initiatorUser: OldUser | null;
-  files?: OldFile[];
+  executorUser: TkUser | null;
+  initiatorUser: TkUser | null;
+  files?: TkFile[];
 }
 
-export interface OldTasks {
-  tasks?: (OldTask | null)[];
+export interface TkTasks {
+  tasks?: (TkTask | null)[];
   error?: string;
 }
 
-export interface OldUser {
-  where: WhereService;
+export interface TkUser {
+  where: TkWhere;
   name: string;
   avatar?: string;
   email?: string;
@@ -61,8 +70,8 @@ export interface OldUser {
   title?: string;
 }
 
-export interface OldTicketTaskNewInput {
-  where: WhereService;
+export interface TkTaskNewInput {
+  where: TkWhere;
   title: string;
   body: string;
   serviceId: string;
@@ -70,17 +79,17 @@ export interface OldTicketTaskNewInput {
   attachments?: Promise<FileUpload>[];
 }
 
-export interface OldTicketTaskEditInput {
-  where: WhereService;
+export interface TkTaskEditInput {
+  where: TkWhere;
   code: string;
   type: string;
   comment: string;
   attachments?: Promise<FileUpload>[];
 }
 
-export interface OldTicketTaskNew {
+export interface TkTaskNew {
   error?: string;
-  where?: WhereService;
+  where?: TkWhere;
   code?: string;
   name?: string;
   requisiteSource?: string;
@@ -90,7 +99,7 @@ export interface OldTicketTaskNew {
   createdDate?: Date;
 }
 
-export interface OSTicketUser {
+export interface TkUserOST {
   company: string;
   currentCount: string;
   email: string;

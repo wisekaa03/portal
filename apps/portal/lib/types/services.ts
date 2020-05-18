@@ -1,7 +1,7 @@
 /** @format */
 
 import { DropzoneFile } from './dropzone';
-import { OldService } from './old-service';
+import { TkService } from './tickets';
 
 export type ServicesElementType = 'department' | 'service' | 'category';
 
@@ -19,7 +19,7 @@ export interface ServicesWrapperProps {
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
   departments: ServicesDepartmentsProps[];
-  services: OldService[];
+  services: TkService[];
   body: string;
   setBody: React.Dispatch<React.SetStateAction<string>>;
   files: DropzoneFile[];

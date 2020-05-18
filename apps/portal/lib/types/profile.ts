@@ -9,7 +9,7 @@ import { Order, Connection } from 'typeorm-graphql-pagination';
 import { StyleProps, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile } from './profile.dto';
-import { OldUser, OldTask, OldTasks } from './old-service';
+import { TkUser, TkTask, TkTasks } from './tickets';
 // #endregion
 
 export type ColumnNames =
@@ -150,23 +150,23 @@ export interface HelpDataProps {
 
 export interface ProfileTicketsComponentProps {
   loading: boolean;
-  tasks: OldTask[];
+  tasks: TkTask[];
   status: string;
   search: string;
-  refetchTickets: () => Promise<ApolloQueryResult<Data<'OldTickets', OldTasks[]>>>;
+  refetchTickets: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks[]>>>;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface ProfileTicketsCardProps {
   classes: Record<'root' | 'content' | 'label' | 'registered' | 'worked', string>;
-  task: OldTask;
+  task: TkTask;
 }
 
 export interface ProfileTicketComponentProps {
   loading: boolean;
   loadingEdit: boolean;
-  ticket: OldTask;
+  task: TkTask;
   comment: string;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
@@ -178,7 +178,7 @@ export interface ProfileTicketComponentProps {
 export interface ProfileTicketInfoCardProps {
   classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
   header: string;
-  profile: OldUser;
+  profile: TkUser;
 }
 
 export interface ProfileEditComponentProps {

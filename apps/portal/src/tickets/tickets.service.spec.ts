@@ -5,7 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { HttpModule } from '@nestjs/common';
-import { OldTicketService } from './old-service.service';
+import { TicketsService } from './tickets.service';
 
 jest.mock('@app/config/config.service');
 
@@ -17,16 +17,16 @@ const serviceMock = jest.fn(() => ({}));
 //   },
 // }));
 
-describe(OldTicketService.name, () => {
-  let service: OldTicketService;
+describe(TicketsService.name, () => {
+  let service: TicketsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule.forRoot(), HttpModule],
-      providers: [ConfigService, OldTicketService, { provide: SoapService, useValue: serviceMock }],
+      providers: [ConfigService, TicketsService, { provide: SoapService, useValue: serviceMock }],
     }).compile();
 
-    service = module.get<OldTicketService>(OldTicketService);
+    service = module.get<TicketsService>(TicketsService);
   });
 
   it('should be defined', () => {

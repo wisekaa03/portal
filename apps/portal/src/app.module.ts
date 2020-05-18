@@ -35,13 +35,6 @@ import { UserModule } from '@back/user/user.module';
 import { NewsModule } from '@back/news/news.module';
 import { ProfileModule } from '@back/profile/profile.module';
 import { GroupModule } from '@back/group/group.module';
-import { TicketDepartmentModule } from '@back/ticket/department/department.module';
-import { TicketServiceModule } from '@back/ticket/service/service.module';
-import { TicketGroupServiceModule } from '@back/ticket/group-service/group-service.module';
-import { TicketsModule } from '@back/ticket/tickets/tickets.module';
-import { TicketAttachmentsModule } from '@back/ticket/attachments/attachments.module';
-import { TicketCommentsModule } from '@back/ticket/comments/comments.module';
-import { TicketOldServiceModule } from '@back/ticket/old-service/old-service.module';
 import { Upload } from '@back/shared/upload.scalar';
 
 import { GroupEntity } from '@back/group/group.entity';
@@ -51,13 +44,6 @@ import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
 import { FilesFolderEntity } from '@back/files/files.folder.entity';
 import { FilesEntity } from '@back/files/files.entity';
-
-import { TicketAttachmentsEntity } from '@back/ticket/attachments/attachments.entity';
-import { TicketCommentsEntity } from '@back/ticket/comments/comments.entity';
-import { TicketDepartmentEntity } from '@back/ticket/department/department.entity';
-import { TicketGroupServiceEntity } from '@back/ticket/group-service/group-service.entity';
-import { TicketServiceEntity } from '@back/ticket/service/service.entity';
-import { TicketsEntity } from '@back/ticket/tickets/tickets.entity';
 
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
@@ -86,20 +72,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
     : configService.get('DATABASE_LOGGING') === 'true'
     ? true
     : JSON.parse(configService.get('DATABASE_LOGGING')),
-  entities: [
-    GroupEntity,
-    ProfileEntity,
-    UserEntity,
-    NewsEntity,
-    FilesFolderEntity,
-    FilesEntity,
-    TicketDepartmentEntity,
-    TicketGroupServiceEntity,
-    TicketServiceEntity,
-    TicketsEntity,
-    TicketAttachmentsEntity,
-    TicketCommentsEntity,
-  ],
+  entities: [GroupEntity, ProfileEntity, UserEntity, NewsEntity, FilesFolderEntity, FilesEntity],
   migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
   cache: {
     type: 'redis', // "ioredis/cluster"
@@ -238,16 +211,6 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     // #region News
     NewsModule,
-    // #endregion
-
-    // #region Ticket module
-    TicketDepartmentModule,
-    TicketServiceModule,
-    TicketGroupServiceModule,
-    TicketsModule,
-    TicketAttachmentsModule,
-    TicketCommentsModule,
-    TicketOldServiceModule,
     // #endregion
 
     // #region Files module
