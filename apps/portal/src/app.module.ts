@@ -40,6 +40,7 @@ import { Upload } from '@back/shared/upload.scalar';
 import { GroupEntity } from '@back/group/group.entity';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { UserEntity } from '@back/user/user.entity';
+import { TicketsModule } from '@back/tickets/tickets.module';
 import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
 import { FilesFolderEntity } from '@back/files/files.folder.entity';
@@ -215,6 +216,10 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     // #region Files module
     FilesModule,
+    // #endregion
+
+    // #region Tickets module
+    TicketsModule,
     // #endregion
 
     // #region Controllers module
