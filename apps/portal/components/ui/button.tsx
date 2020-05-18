@@ -10,9 +10,10 @@ import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
 import RestoreOutlinedIcon from '@material-ui/icons/RestoreOutlined';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
 
 export interface ButtonBaseProps extends ButtonProps {
-  actionType?: 'accept' | 'cancel' | 'save' | 'print' | 'reset' | 'close';
+  actionType?: 'accept' | 'cancel' | 'save' | 'print' | 'reset' | 'close' | 'favorite';
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -69,6 +70,14 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#b3a3a0',
       },
     },
+    favorite: {
+      'color': theme.palette.getContrastText('#DEECEC'),
+      'backgroundColor': '#DEECEC',
+
+      '&:hover': {
+        backgroundColor: '#cbdada',
+      },
+    },
   }),
 );
 
@@ -91,6 +100,9 @@ const BaseButton = ({ actionType = 'accept', children, className, ...rest }: But
       break;
     case 'close':
       icon = <CloseOutlinedIcon />;
+      break;
+    case 'favorite':
+      icon = <StarBorderOutlinedIcon />;
       break;
     default:
       icon = <CheckCircleIcon />;
