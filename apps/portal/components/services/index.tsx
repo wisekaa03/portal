@@ -73,7 +73,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   titleRef,
   bodyRef,
   currentTab,
-  ticket,
+  task,
   created,
   departments,
   services,
@@ -97,7 +97,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
     : '100%';
 
-  const invalidTitle = ticket.title.length < 10 && body.length > 0;
+  const invalidTitle = task.title.length < 10 && body.length > 0;
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -109,9 +109,9 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           onChange={(_: any, tab: number): void => handleCurrentTab(tab)}
         >
           <Tab label={t('services:tabs.tab1')} />
-          <Tab disabled={!ticket.department} label={t('services:tabs.tab2')} />
-          <Tab disabled={!ticket.service} label={t('services:tabs.tab3')} />
-          <Tab disabled={!ticket.category} label={t('services:tabs.tab4')} />
+          <Tab disabled={!task.department} label={t('services:tabs.tab2')} />
+          <Tab disabled={!task.service} label={t('services:tabs.tab3')} />
+          <Tab disabled={!task.category} label={t('services:tabs.tab4')} />
           <Tab disabled={!created} label={t('services:tabs.tab5')} />
         </Tabs>
       </Paper>
@@ -121,7 +121,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           <SwipeableViews
             ref={contentRef}
             animateHeight
-            disabled={!ticket.department}
+            disabled={!task.department}
             index={currentTab}
             className={classes.body}
             containerStyle={{ flexGrow: 1 }}
@@ -129,7 +129,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           >
             <Box className={classes.container}>
               {departments.map((current) => (
-                <ServicesElement key={current.code} withLink element={current} active={ticket.department?.code} />
+                <ServicesElement key={current.code} withLink element={current} active={task.department?.code} />
               ))}
             </Box>
             <Box className={classes.container} style={{ minHeight: contentHeight }}>
@@ -139,8 +139,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   withLink
                   base64
                   element={current}
-                  active={ticket.service?.code}
-                  linkQuery={{ department: ticket.department?.code }}
+                  active={task.service?.code}
+                  linkQuery={{ department: task.department?.code }}
                 />
               ))}
               {/* Евгений */}
@@ -153,7 +153,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   name: 'Департамент по персоналу - Форма на подбор персонала',
                   avatar: HR,
                 }}
-                linkQuery={{ department: ticket.department?.code }}
+                linkQuery={{ department: task.department?.code }}
               />
             </Box>
             {/* <Box className={classes.container} style={{ minHeight: contentHeight }}>
@@ -163,10 +163,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   withLink
                   base64
                   element={current}
-                  active={ticket.category?.code}
+                  active={task.category?.code}
                   linkQuery={{
-                    department: ticket.department?.code,
-                    service: ticket.service?.code,
+                    department: task.department?.code,
+                    service: task.service?.code,
                   }}
                 />
               ))}
@@ -178,18 +178,18 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               alignItems="center"
               justifyContent="center"
             >
-              {ticket.department && ticket.service && ticket.category && (
+              {task.department && task.service && task.category && (
                 <Box display="grid" className={classes.formControl}>
-                  <ServicesElement element={ticket.department} />
-                  <ServicesElement base64 element={ticket.service} />
-                  <ServicesElement base64 element={ticket.category} />
+                  <ServicesElement element={task.department} />
+                  <ServicesElement base64 element={task.service} />
+                  <ServicesElement base64 element={task.category} />
                 </Box>
               )}
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
                   inputRef={titleRef}
                   error={invalidTitle}
-                  value={ticket.title}
+                  value={task.title}
                   onChange={handleTitle}
                   type="text"
                   label={t('services:form.title')}

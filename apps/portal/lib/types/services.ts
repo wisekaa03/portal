@@ -8,7 +8,7 @@ export type ServicesElementType = 'department' | 'service' | 'category';
 export interface ServicesDepartmentsProps {
   code: string;
   name: string;
-  avatar: any;
+  avatar?: any;
 }
 
 export interface ServicesWrapperProps {
@@ -16,7 +16,7 @@ export interface ServicesWrapperProps {
   titleRef: React.Ref<HTMLInputElement>;
   bodyRef: React.Ref<any>;
   currentTab: number;
-  ticket: ServicesTicketProps;
+  task: ServicesTaskProps;
   created: ServicesCreatedProps;
   departments: ServicesDepartmentsProps[];
   services: OldService[];
@@ -62,7 +62,7 @@ export interface ServicesSuccessCardProps {
 export interface ServicesTicketElementProps {
   code: string;
   name: string;
-  avatar: any;
+  avatar?: any;
   categoryType?: string;
 }
 
@@ -76,7 +76,7 @@ export interface ServicesCreatedProps {
   createdDate?: Date;
 }
 
-export interface ServicesTicketProps {
+export interface ServicesTaskProps {
   department?: ServicesTicketElementProps;
   service?: ServicesTicketElementProps;
   category?: ServicesTicketElementProps;

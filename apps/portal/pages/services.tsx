@@ -8,7 +8,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { Data, DropzoneFile, ServicesTicketProps, ServicesCreatedProps, OldService, OldServices } from '@lib/types';
+import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, OldService, OldServices } from '@lib/types';
 import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
@@ -24,14 +24,14 @@ const departments = [
   },
 ];
 
-const defaultTicketState: ServicesTicketProps = { title: '' };
+const defaultTicketState: ServicesTaskProps = { title: '' };
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
   const router = useRouter();
 
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [services, setServices] = useState<OldService[]>([]);
-  const [ticket, setTicket] = useState<ServicesTicketProps>(defaultTicketState);
+  const [task, setTask] = useState<ServicesTaskProps>(defaultTicketState);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
@@ -58,20 +58,20 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   };
 
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setTicket({ ...ticket, title: event.target.value });
+    setTask({ ...task, title: event.target.value });
   };
 
   const handleResetTicket = (): void => {
-    setTicket(defaultTicketState);
+    setTask(defaultTicketState);
     setBody('');
     setFiles([]);
     router.push(pathname, pathname);
   };
 
   const handleSubmit = (): void => {
-    const { service, category } = ticket;
+    const { service, category } = task;
 
-    const cleanedTitle = ticket.title.trim();
+    const cleanedTitle = task.title.trim();
     const cleanedBody = body.trim();
 
     // TODO: продумать
@@ -144,15 +144,15 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
       }
 
       setCurrentTab(tab);
-      setTicket(initialState);
+      setTask(initialState);
     }
-  }, [services, setTicket, setCurrentTab, query]);
+  }, [services, setTask, setCurrentTab, query]);
 
   useEffect(() => {
-    if (currentTab === 3 && ticket.title.trim().length === 0 && titleRef.current) {
+    if (currentTab === 3 && task.title.trim().length === 0 && titleRef.current) {
       titleRef.current.focus();
     }
-  }, [currentTab, titleRef, ticket.title]);
+  }, [currentTab, titleRef, task.title]);
 
   useEffect(() => {
     if (!loadingServices && !errorServices) {
@@ -191,20 +191,20 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     <>
       <Head>
         <title>
-          {ticket.category
+          {task.category
             ? t('services:title.category', {
-                department: ticket.department?.name,
-                service: ticket.service?.name,
-                category: ticket.category.name,
+                department: task.department?.name,
+                service: task.service?.name,
+                category: task.category.name,
               })
-            : ticket.service
+            : task.service
             ? t('services:title.service', {
-                department: ticket.department?.name,
-                service: ticket.service.name,
+                department: task.department?.name,
+                service: task.service.name,
               })
-            : ticket.department
+            : task.department
             ? t('services:title.department', {
-                department: ticket.department.name,
+                department: task.department.name,
               })
             : t('services:title.title')}
         </title>
@@ -215,7 +215,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           titleRef={titleRef}
           bodyRef={bodyRef}
           currentTab={currentTab}
-          ticket={ticket}
+          task={task}
           created={created}
           departments={departments}
           services={services}
