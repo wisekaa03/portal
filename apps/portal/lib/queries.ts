@@ -480,7 +480,7 @@ export const TICKETS_TASK_NEW = gql`
   }
 `;
 
-export const TICKETS_EDIT = gql`
+export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($ticket: OldTicketEditInput!, $attachments: [Upload]) {
     TicketsTaskEdit(ticket: $ticket, attachments: $attachments) {
       ...TicketProps

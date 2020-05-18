@@ -8,13 +8,13 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import Box from '@material-ui/core/Box';
 // #endregion
 // #region Imports Local
-import { OLD_TICKETS, USER_SETTINGS } from '@lib/queries';
+import { TICKETS_TASKS, USER_SETTINGS } from '@lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '@lib/context';
 import { TICKET_STATUSES } from '@lib/constants';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Data, OldTask, OldTasks } from '@lib/types';
+import { Data, TkTask, TkTasks } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileInfoComponent from '@front/components/profile/info';
 import ProfileTicketsComponent from '@front/components/profile/tickets';
@@ -35,7 +35,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     data: dataTickets,
     error: errorTickets,
     refetch: refetchTickets,
-  }: QueryResult<Data<'OldTicketTasks', OldTasks[]>> = useQuery(OLD_TICKETS, {
+  }: QueryResult<Data<'TicketsTasks', TkTasks[]>> = useQuery(TICKETS_TASKS, {
     ssr: false,
     variables: { status },
     fetchPolicy: 'cache-first',
@@ -54,8 +54,8 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     });
   };
 
-  const tasks: OldTask[] =
-    dataTickets?.OldTicketTasks?.reduce((acc, tick) => {
+  const tasks: TkTask[] =
+    dataTickets?.TicketsTasks?.reduce((acc, tick) => {
       if (tick.error) {
         snackbarUtils.error(tick.error);
         return acc;

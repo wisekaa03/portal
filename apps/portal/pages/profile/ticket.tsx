@@ -9,8 +9,8 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #region Imports Local
 import { format } from '@lib/dayjs';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { OLD_TICKET_DESCRIPTION, OLD_TICKET_EDIT } from '@lib/queries';
-import { Data, OldTask, DropzoneFile } from '@lib/types';
+import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT } from '@lib/queries';
+import { Data, TkTask, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import ProfileTicketComponent from '@front/components/profile/ticket';
@@ -20,8 +20,8 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error }: QueryResult<Data<'OldTicketTaskDescription', OldTask>> = useQuery(
-    OLD_TICKET_DESCRIPTION,
+  const { loading, data, error }: QueryResult<Data<'TicketsTaskDescription', TkTask>> = useQuery(
+    TICKETS_TASK_DESCRIPTION,
     {
       ssr: false,
       variables: {
@@ -32,10 +32,10 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
     },
   );
 
-  const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(OLD_TICKET_EDIT, {
+  const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
     update(cache, { data: { OldTicketEdit } }) {
       cache.writeQuery({
-        query: OLD_TICKET_DESCRIPTION,
+        query: TICKETS_TASK_DESCRIPTION,
         variables: {
           code: query.id,
           type: query.type,
@@ -81,17 +81,17 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
     }
   }, [errorEdit, error]);
 
-  const ticket = data?.OldTicketDescription;
+  const task = data?.TicketsTaskDescription;
 
   return (
     <>
       <Head>
         <title>
           {`${t('profile:title')}: ${
-            ticket
+            task
               ? t('profile:ticket.header', {
-                  ticket: ticket.code,
-                  date: format(ticket.createdDate, i18n),
+                  ticket: task.code,
+                  date: format(task.createdDate, i18n),
                 })
               : ''
           }`}
@@ -101,7 +101,7 @@ const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactEl
         <ProfileTicketComponent
           loading={loading}
           loadingEdit={loadingEdit}
-          ticket={ticket}
+          task={task}
           comment={comment}
           files={files}
           setFiles={setFiles}
