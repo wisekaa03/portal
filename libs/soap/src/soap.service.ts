@@ -13,7 +13,15 @@ import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface'
 export type SoapClient = Client;
 export type SoapFault = ISoapFaultError;
 
-export const SoapError = (error: ISoapFaultError): string => JSON.stringify(error.Fault);
+// eslint-disable-next-line no-confusing-arrow
+export const SoapError = (error: ISoapFaultError | Error): Error =>
+  error instanceof Error
+    ? error
+    : new Error(
+        typeof (error.Fault as any).faultstring === 'string'
+          ? (error.Fault as any).faultstring
+          : (error.Fault as any).Reason?.Text,
+      );
 
 @Injectable()
 export class SoapService {
@@ -29,6 +37,13 @@ export class SoapService {
     private readonly configService: ConfigService,
   ) {}
 
+  /**
+   * Connect the SOAP service
+   *
+   * @param {SoapAuthentication} authentication SOAP authentication
+   * @returns {SoapClient} Client with the needed SOAP functions
+   * @throws {Error}
+   */
   async connect(authentication?: SoapAuthentication): Promise<SoapClient> {
     if (authentication && authentication.username && authentication.password) {
       this.opts.options = {
@@ -51,8 +66,8 @@ export class SoapService {
         }
         return client as SoapClient;
       })
-      .catch((error: SoapFault) => {
-        this.logger.error('SOAP connect error: ', error.toString());
+      .catch((error: ISoapFaultError | Error) => {
+        this.logger.error(`SOAP connect error: ${error.toString()}`, [{ error }]);
 
         throw SoapError(error);
       });
