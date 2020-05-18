@@ -145,7 +145,7 @@
     "next-workbox-webpack-plugin": "^2.1.1",
     "node-fetch": "^2.6.0",
     "nookies": "^2.3.0",
-    "notistack": "^0.9.15",
+    "notistack": "^0.9.16",
     "object-assign": "^4.1.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

@@ -10473,9 +10473,9 @@ i18next-http-backend@^1.0.8:
     node-fetch "2.6.0"
 
 i18next-http-middleware@>=1.0.2:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/i18next-http-middleware/-/i18next-http-middleware-1.0.7.tgz#84390ae7e4d95b4a73f7cde5d9f9e771dde27054"
-  integrity sha512-wvS6afR/dTLZ6ej4FajgYg9Wk7fkrvffzuLsLpsk0iNGsu5xzRIN2G9IArSFrn040Sord8INydJrs+6VJuM6Kg==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/i18next-http-middleware/-/i18next-http-middleware-1.1.0.tgz#2a689660316f0666660895ef76a178e98ca8170f"
+  integrity sha512-KMJLaKhc1CeFsUA65VKG3pjbro41/fCQ9Mrl9QFPUZLgjBo0Y5XSaFlTJCzFYgMbyiHukgCBOkmKNeaAsH4qMg==
 
 i18next@^19.0.3, i18next@^19.4.4:
   version "19.4.4"
@@ -14113,10 +14113,10 @@ normalize-url@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-notistack@^0.9.15:
-  version "0.9.15"
-  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.9.15.tgz#a7dce867b6ec700dfbac413035b583c3ed3c25e3"
-  integrity sha512-YnuEd7mW136iV4tpwXr4M46y8lNP3+NhiYuxNvijqIB8UQ9D1wy2XS8NzuAg9WTh0P5tOu0t8aMtZKJir9VUqw==
+notistack@^0.9.16:
+  version "0.9.16"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.9.16.tgz#26567fe8cf8b1f963ed802b592439731624f41fd"
+  integrity sha512-+q1KKj2XkU+mKnbp9PbVkRLSLfVYnPJGi+MHT+N9Pm3nZUMVtbjDFodwdv/RoEldvkXKCROnecayUFMwLOiIQA==
   dependencies:
     clsx "^1.1.0"
     hoist-non-react-statics "^3.3.0"
