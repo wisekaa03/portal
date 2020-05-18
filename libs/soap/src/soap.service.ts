@@ -61,7 +61,7 @@ export class SoapService {
 
     return createClientAsync(this.opts.url, this.opts.options, this.opts.endpoint)
       .then((client: Client) => {
-        if (this.opts.options && this.opts.options.wsdl_options && this.opts.options.wsdl_options.ntlm) {
+        if (this.opts.options?.wsdl_options?.ntlm) {
           client.setSecurity(new NTLMSecurity(this.opts.options.wsdl_options));
         }
         return client as SoapClient;
