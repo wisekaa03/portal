@@ -1,11 +1,11 @@
 /** @format */
 
 import { DropzoneFile } from './dropzone';
-import { TkService } from './tickets';
+import { TkService, TkRoutes } from './tickets';
 
 export type ServicesElementType = 'department' | 'service' | 'category';
 
-export interface ServicesDepartmentsProps {
+export interface ServicesRouteProps {
   code: string;
   name: string;
   avatar?: any;
@@ -18,15 +18,15 @@ export interface ServicesWrapperProps {
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
-  departments: ServicesDepartmentsProps[];
-  services: TkService[];
+  routes?: TkRoutes[];
+  services?: TkService[];
   body: string;
   setBody: React.Dispatch<React.SetStateAction<string>>;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
-  loadingServices: boolean;
+  loadingRoutes: boolean;
   loadingCreated: boolean;
-  refetchServices: () => Promise<any>;
+  refetchRoutes: () => Promise<any>;
   handleCurrentTab: (_: number) => void;
   handleTitle: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: () => void;
@@ -34,13 +34,12 @@ export interface ServicesWrapperProps {
 }
 
 export interface ServicesElementLinkQueryProps {
-  department: string;
+  route?: string;
   service?: string;
-  category?: string;
 }
 
 export interface ServicesElementProps {
-  element: ServicesDepartmentsProps;
+  element: ServicesRouteProps;
   withLink?: boolean;
   active?: string;
   base64?: boolean;
@@ -59,7 +58,7 @@ export interface ServicesSuccessCardProps {
   data: ServicesCreatedProps;
 }
 
-export interface ServicesTicketElementProps {
+export interface TicketsElementProps {
   code: string;
   name: string;
   avatar?: any;
@@ -77,8 +76,7 @@ export interface ServicesCreatedProps {
 }
 
 export interface ServicesTaskProps {
-  department?: ServicesTicketElementProps;
-  service?: ServicesTicketElementProps;
-  category?: ServicesTicketElementProps;
+  route?: TicketsElementProps;
+  service?: TicketsElementProps;
   title: string;
 }

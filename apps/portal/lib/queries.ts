@@ -416,25 +416,31 @@ export const DELETE_FOLDER = gql`
  * Ticket
  */
 
-export const OLD_TICKET_SERVICE = gql`
+export const TICKETS_ROUTES = gql`
   query {
-    OldTicketService {
-      services {
+    TicketsRoutes {
+      routes {
         where
         code
         name
-        group
         description
         avatar
+        services {
+          where
+          code
+          name
+          description
+          avatar
+        }
       }
       error
     }
   }
 `;
 
-export const OLD_TICKETS = gql`
-  query OldTickets($status: String) {
-    OldTicketTasks(status: $status) {
+export const TICKETS_TASKS = gql`
+  query TicketsTask($status: String) {
+    TicketsTasks(status: $status) {
       tasks {
         where
         code
@@ -450,18 +456,18 @@ export const OLD_TICKETS = gql`
   }
 `;
 
-export const OLD_TICKET_DESCRIPTION = gql`
-  query OldTicketDescription($code: String, $type: String) {
-    OldTicketTaskDescription(code: $code, type: $type) {
+export const TICKETS_TASK_DESCRIPTION = gql`
+  query TicketsTaskDescription($code: String, $type: String) {
+    TicketsTaskDescription(code: $code, type: $type) {
       ...TicketProps
     }
   }
   ${TICKET_FRAGMENT}
 `;
 
-export const OLD_TICKET_NEW = gql`
-  mutation OldTicketNew($ticket: OldTicketNewInput!, $attachments: [Upload]) {
-    OldTicketTaskNew(ticket: $ticket, attachments: $attachments) {
+export const TICKETS_TASK_NEW = gql`
+  mutation TicketsTaskNew($ticket: OldTicketNewInput!, $attachments: [Upload]) {
+    TicketsTaskNew(ticket: $ticket, attachments: $attachments) {
       where
       code
       name
@@ -474,9 +480,9 @@ export const OLD_TICKET_NEW = gql`
   }
 `;
 
-export const OLD_TICKET_EDIT = gql`
-  mutation OldTicketEdit($ticket: OldTicketEditInput!, $attachments: [Upload]) {
-    OldTicketTaskEdit(ticket: $ticket, attachments: $attachments) {
+export const TICKETS_EDIT = gql`
+  mutation TicketsEdit($ticket: OldTicketEditInput!, $attachments: [Upload]) {
+    TicketsTaskEdit(ticket: $ticket, attachments: $attachments) {
       ...TicketProps
     }
   }

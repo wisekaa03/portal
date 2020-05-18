@@ -75,15 +75,15 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   currentTab,
   task,
   created,
-  departments,
+  routes,
   services,
   body,
   setBody,
   files,
   setFiles,
-  loadingServices,
+  loadingRoutes,
   loadingCreated,
-  refetchServices,
+  refetchRoutes,
   handleCurrentTab,
   handleTitle,
   handleSubmit,
@@ -109,38 +109,39 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           onChange={(_: any, tab: number): void => handleCurrentTab(tab)}
         >
           <Tab label={t('services:tabs.tab1')} />
-          <Tab disabled={!task.department} label={t('services:tabs.tab2')} />
+          <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
           <Tab disabled={!task.service} label={t('services:tabs.tab3')} />
-          <Tab disabled={!task.category} label={t('services:tabs.tab4')} />
           <Tab disabled={!created} label={t('services:tabs.tab5')} />
         </Tabs>
       </Paper>
-      <Loading activate={loadingServices} full type="circular" color="secondary" disableShrink size={48}>
+      <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
         <>
-          {currentTab < 4 && <RefreshButton onClick={() => refetchServices()} />}
+          {currentTab < 4 && <RefreshButton onClick={() => refetchRoutes()} />}
           <SwipeableViews
             ref={contentRef}
             animateHeight
-            disabled={!task.department}
+            disabled={!task.route}
             index={currentTab}
             className={classes.body}
             containerStyle={{ flexGrow: 1 }}
             onSwitching={handleCurrentTab}
           >
             <Box className={classes.container}>
-              {departments.map((current) => (
-                <ServicesElement key={current.code} withLink element={current} active={task.department?.code} />
-              ))}
+              {routes?.map((route) =>
+                route?.routes?.map((r) => (
+                  <ServicesElement key={r.code} withLink element={r} active={task.route?.code} />
+                )),
+              )}
             </Box>
             <Box className={classes.container} style={{ minHeight: contentHeight }}>
-              {services.map((current) => (
+              {services?.map((current) => (
                 <ServicesElement
                   key={current.code}
                   withLink
                   base64
                   element={current}
                   active={task.service?.code}
-                  linkQuery={{ department: task.department?.code }}
+                  linkQuery={{ route: task.route?.code }}
                 />
               ))}
               {/* Евгений */}
@@ -153,7 +154,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   name: 'Департамент по персоналу - Форма на подбор персонала',
                   avatar: HR,
                 }}
-                linkQuery={{ department: task.department?.code }}
+                linkQuery={{ route: task.route?.code }}
               />
             </Box>
             {/* <Box className={classes.container} style={{ minHeight: contentHeight }}>
@@ -178,11 +179,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               alignItems="center"
               justifyContent="center"
             >
-              {task.department && task.service && task.category && (
+              {task.route && task.service && (
                 <Box display="grid" className={classes.formControl}>
-                  <ServicesElement element={task.department} />
+                  <ServicesElement base64 element={task.route} />
                   <ServicesElement base64 element={task.service} />
-                  <ServicesElement base64 element={task.category} />
                 </Box>
               )}
               <FormControl className={classes.formControl} variant="outlined">

@@ -8,21 +8,13 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // #endregion
 // #region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, OldService, OldServices } from '@lib/types';
-import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
+import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, TkService, TkRoutes } from '@lib/types';
+import { TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 // #endregion
-
-const departments = [
-  {
-    code: 'IT',
-    name: 'Департамент ИТ',
-    avatar: ServicesIcon,
-  },
-];
 
 const defaultTicketState: ServicesTaskProps = { title: '' };
 
@@ -30,23 +22,23 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const router = useRouter();
 
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const [services, setServices] = useState<OldService[]>([]);
+  const [routes, setRoutes] = useState<TkRoutes[]>([]);
   const [task, setTask] = useState<ServicesTaskProps>(defaultTicketState);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
-    Data<'OldTicketService', OldServices[]>,
+  const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
+    Data<'TicketRoutes', TkRoutes[]>,
     void
-  >(OLD_TICKET_SERVICE, {
+  >(TICKETS_ROUTES, {
     ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
 
   const [createTicket, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
-    OLD_TICKET_NEW,
+    TICKETS_TASK_NEW,
   );
 
   const contentRef = useRef(null);
@@ -69,7 +61,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   };
 
   const handleSubmit = (): void => {
-    const { service, category } = task;
+    const { route, service } = task;
 
     const cleanedTitle = task.title.trim();
     const cleanedBody = body.trim();
@@ -93,8 +85,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
         title: cleanedTitle,
         body: cleanedBody,
         serviceId: service ? service.code : null,
-        categoryId: category ? category.code : null,
-        categoryType: category ? category.categoryType : null,
+        categoryId: route ? route.code : null,
+        categoryType: route ? route.categoryType : null,
       },
       attachments: files.map((file: DropzoneFile) => file.file),
     };
@@ -108,45 +100,39 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   };
 
   useEffect(() => {
-    if (!__SERVER__ && services) {
-      const { department, service, category } = query;
+    if (!__SERVER__ && routes) {
+      const { route, service } = query;
       const initialState = { ...defaultTicketState };
-      let tab = 0;
+      const tab = 0;
 
-      if (department) {
-        initialState.department = departments.find((dep) => dep.code === department);
-
-        if (initialState.department) {
-          tab += 1;
-
-          if (service) {
-            const currentService = services.find((ser) => ser.code === service);
-
-            if (currentService) {
-              tab += 1;
-              initialState.service = currentService;
-
-              // setCategories(currentService.category);
-
-              // if (category) {
-              //   const currentCategory = currentService.category.find((cat) => cat.code === category);
-
-              //   if (currentCategory) {
-              //     tab += 1;
-              //     initialState.category = currentCategory;
-              //   }
-              // }
-            } else if (service.indexOf('k', 0)) {
-              return;
-            }
-          }
-        }
+      if (route) {
+        // initialState.route = r.routes.forEach(() => routes.find((r) =>  => code === route);
+        // if (initialState.department) {
+        //   tab += 1;
+        //   if (routes) {
+        //     const currentService = routes.find((route) => route.routes.toString() === service);
+        //     if (currentService) {
+        //       tab += 1;
+        //       // initialState.service = currentService;
+        //       // setCategories(currentService.category);
+        //       if (service) {
+        //         // const currentCategory = currentService.category.find((cat) => cat.code === category);
+        //         // if (currentCategory) {
+        //         //   tab += 1;
+        //         //   initialState.category = currentCategory;
+        //         // }
+        //       }
+        //     } else if (service.indexOf('k', 0)) {
+        //       return;
+        //     }
+        //   }
+        // }
       }
 
       setCurrentTab(tab);
       setTask(initialState);
     }
-  }, [services, setTask, setCurrentTab, query]);
+  }, [routes, setTask, setCurrentTab, query]);
 
   useEffect(() => {
     if (currentTab === 3 && task.title.trim().length === 0 && titleRef.current) {
@@ -155,18 +141,18 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [currentTab, titleRef, task.title]);
 
   useEffect(() => {
-    if (!loadingServices && !errorServices) {
-      const svc = dataServices!.OldTicketService!.reduce((acc, srv) => {
-        if (srv.error) {
-          snackbarUtils.error(srv.error);
-          return acc;
-        }
-        return srv.services ? [...acc, ...srv.services] : acc;
-      }, [] as OldService[]);
-
-      setServices(svc);
+    if (!loadingRoutes && !errorRoutes) {
+      setRoutes(
+        dataRoutes!.TicketsRoutes!.reduce((acc, srv) => {
+          if (srv.error) {
+            snackbarUtils.error(srv.error);
+            return acc;
+          }
+          return srv ? [...acc, srv] : acc;
+        }, [] as TkRoutes[]),
+      );
     }
-  }, [dataServices, errorServices, loadingServices]);
+  }, [dataRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
     setCreated(!loadingCreated && !errorCreated && dataCreated?.OldTicketNew);
@@ -182,29 +168,28 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     if (errorCreated) {
       snackbarUtils.error(errorCreated);
     }
-    if (errorServices) {
-      snackbarUtils.error(errorServices);
+    if (errorRoutes) {
+      snackbarUtils.error(errorRoutes);
     }
-  }, [errorCreated, errorServices]);
+  }, [errorCreated, errorRoutes]);
 
   return (
     <>
       <Head>
         <title>
-          {task.category
+          {task.route
             ? t('services:title.category', {
-                department: task.department?.name,
+                route: task.route?.name,
                 service: task.service?.name,
-                category: task.category.name,
               })
             : task.service
             ? t('services:title.service', {
-                department: task.department?.name,
+                route: task.route?.name,
                 service: task.service.name,
               })
-            : task.department
+            : task.route
             ? t('services:title.department', {
-                department: task.department.name,
+                route: task.route.name,
               })
             : t('services:title.title')}
         </title>
@@ -217,15 +202,14 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           currentTab={currentTab}
           task={task}
           created={created}
-          departments={departments}
-          services={services}
+          routes={routes}
           body={body}
           setBody={setBody}
           files={files}
           setFiles={setFiles}
-          loadingServices={loadingServices}
+          loadingRoutes={loadingRoutes}
           loadingCreated={loadingCreated}
-          refetchServices={refetchServices}
+          refetchRoutes={refetchRoutes}
           handleCurrentTab={handleCurrentTab}
           handleTitle={handleTitle}
           handleSubmit={handleSubmit}
