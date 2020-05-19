@@ -15,13 +15,13 @@ import {
   TkTaskNew,
   TkTaskEditInput,
   TkTask,
+  TkTaskDescriptionInput,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { taskSOAP, AttachesSOAP, taskOST, routesOST, routeSOAP } from './tickets.util';
-import { TkTaskDescriptionInput } from '../../lib/types/tickets';
 //#endregion
 
 /**
@@ -256,9 +256,9 @@ export class TicketsService {
    * @method TicketsTaskNew
    * @param {User} user User object
    * @param {string} password The Password
-   * @param {TkTaskNewInput} ticket Ticket object
+   * @param {TkTaskNewInput} task Ticket object
    * @param {Promise<FileUpload>[]} attachments Attachments
-   * @returns {TkTaskNew} New ticket creation
+   * @returns {TkTaskNew} New task creation
    */
   TicketsTaskNew = async (
     user: User,
@@ -295,6 +295,7 @@ export class TicketsService {
           Log: user.username,
           Title: task.title,
           Description: task.body,
+          Route: task.route,
           Service: task.service,
           Executor: task.executorUser ? task.executorUser : '',
           Attaches,
@@ -302,22 +303,22 @@ export class TicketsService {
         .then((result: any) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
-          if (result && result[0] && result[0]['return']) {
+          const ret = result?.[0]?.['return'];
+          if (ret && typeof ret === 'object') {
             return {
-              code: result[0]['return']['Код'],
-              name: result[0]['return']['Наименование'],
-              requisiteSource: result[0]['return']['РеквизитИсточника'],
-              category: result[0]['return']['КатегорияУслуги'],
-              organization: result[0]['return']['Организация'],
-              status: result[0]['return']['ТекущийСтатус'],
-              createdDate: result[0]['return']['ВремяСоздания'],
+              where: TkWhere.SOAP1C,
+              code: ret['Код'],
+              name: ret['Наименование'],
+              route: ret['ИмяСервиса'],
+              service: ret['ИмяУслуги'],
+              organization: ret['Организация'],
+              status: ret['ТекущийСтатус'],
+              createdDate: new Date(ret['ВремяСоздания']),
             };
           }
 
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
-          return {
-            error: 'Not connected to SOAP',
-          };
+          throw new Error('Not connected to SOAP');
         })
         .catch((error: SoapFault) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
@@ -330,14 +331,10 @@ export class TicketsService {
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
-      return {
-        error: 'Cannot connect to OSTicket',
-      };
+      throw new Error('Not implemented');
     }
 
-    return {
-      error: '"where" is not exists in task',
-    };
+    throw new Error('Can not use a default route');
   };
 
   /**
@@ -349,7 +346,7 @@ export class TicketsService {
    * @param {string} password The Password
    * @param {TkTaskEditInput} task The task which will be editing
    * @param {FileUpload} attachments Attachments object
-   * @returns {TkTask} Ticket for editing
+   * @returns {TkTask} Task for editing
    */
   TicketsTaskEdit = async (
     user: User,
@@ -357,54 +354,65 @@ export class TicketsService {
     task: TkTaskEditInput,
     attachments?: Promise<FileUpload>[],
   ): Promise<TkTask> => {
-    const authentication: SoapAuthentication = {
-      username: user?.username,
-      password,
-      domain: this.configService.get<string>('SOAP_DOMAIN'),
-    };
+    /* 1C SOAP */
+    if (task.where === TkWhere.SOAP1C) {
+      const authentication: SoapAuthentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      };
 
-    const client = await this.soapService.connect(authentication).catch((error) => {
-      throw error;
-    });
-
-    const Attaches: AttachesSOAP = { Вложение: [] };
-
-    if (attachments) {
-      await constructUploads(attachments, ({ filename, file }) =>
-        Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
-      ).catch((error: SoapFault) => {
-        this.logger.error(error);
-        throw SoapError(error);
+      const client = await this.soapService.connect(authentication).catch((error) => {
+        throw error;
       });
+
+      const Attaches: AttachesSOAP = { Вложение: [] };
+
+      if (attachments) {
+        await constructUploads(attachments, ({ filename, file }) =>
+          Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
+        ).catch((error: SoapFault) => {
+          this.logger.error(error);
+
+          throw SoapError(error);
+        });
+      }
+
+      return client
+        .EditTaskAsync({
+          TaskId: task.code,
+          Executor: '',
+          NewComment: task.comment,
+          AutorComment: user.username,
+          Attaches,
+        })
+        .then((result: any) => {
+          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+
+          if (result?.[0]?.['return']) {
+            return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
+          }
+
+          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
+          return {
+            error: 'Not connected to SOAP',
+          };
+        })
+        .catch((error: SoapFault) => {
+          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
+          this.logger.error(error);
+
+          throw SoapError(error);
+        });
     }
 
-    return client
-      .EditTaskAsync({
-        TaskId: task.code,
-        NewComment: task.comment,
-        Executor: '',
-        Attaches,
-        AutorComment: user.username,
-      })
-      .then((result: any) => {
-        this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+    /* OSTicket service */
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+      throw new Error('Not implemented');
+    }
 
-        if (result && result[0] && result[0]['return']) {
-          return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
-        }
-
-        this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
-        return {
-          error: 'Not connected to SOAP',
-        };
-      })
-      .catch((error: SoapFault) => {
-        this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
-        this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
-        this.logger.error(error);
-
-        throw SoapError(error);
-      });
+    throw new Error('Can not use a default route');
   };
 
   /**
@@ -418,6 +426,7 @@ export class TicketsService {
    * @returns {TkTask}
    */
   TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkTask> => {
+    /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const authentication = {
         username: user?.username,
@@ -436,7 +445,7 @@ export class TicketsService {
         .then((result: any) => {
           this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
 
-          if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
+          if (result?.[0]?.['return'] && typeof result[0]['return'] === 'object') {
             return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
           }
 

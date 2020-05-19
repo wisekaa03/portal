@@ -15,13 +15,16 @@ export interface AttachesSOAP {
 /**
  * На какой сервис отправлять сообщения.
  */
-export const whereService = (key: string | TkWhere): TkWhere => {
-  switch (key) {
-    case '1Citil' || TkWhere.SOAP1C:
+export const whereService = (where: string | TkWhere): TkWhere => {
+  switch (where) {
+    case TkWhere.SOAP1C:
+    case '1Citil':
       return TkWhere.SOAP1C;
-    case 'auditors' || TkWhere.OSTaudit:
+    case TkWhere.OSTaudit:
+    case 'auditors':
       return TkWhere.OSTaudit;
-    case 'media' || TkWhere.OSTmedia:
+    case TkWhere.OSTmedia:
+    case 'media':
       return TkWhere.OSTmedia;
     default:
       return TkWhere.Default;
@@ -120,7 +123,7 @@ export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkCom
   comment && comment !== null
     ? {
         where: whereService(where),
-        date: comment['Дата'],
+        date: new Date(comment['Дата']),
         authorLogin: comment['ЛогинАвтора'],
         body: comment['Текст'],
         task: comment['Владелец'],
@@ -168,10 +171,15 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
         description: clearHtml(task['Описание']),
         descriptionFull: task['ОписаниеФД'],
         status: task['Статус'],
-        createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : task['Дата'],
+        createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : new Date(task['Дата']),
         timeoutDate:
-          task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : task['СрокИсполнения'],
-        endDate: task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : task['ДатаЗавершения'],
+          task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z'
+            ? null
+            : new Date(task['СрокИсполнения']),
+        endDate:
+          task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z'
+            ? null
+            : new Date(task['ДатаЗавершения']),
         executorUser: userSOAP(task['ТекущийИсполнитель'], where),
         initiatorUser: userSOAP(task['Инициатор'], where),
         route: routeSOAP(task['Сервис'], where),
@@ -268,8 +276,8 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
         descriptionFull: undefined,
         status: task['status_name'],
         createdDate: task['created'],
-        timeoutDate: undefined,
-        endDate: undefined,
+        timeoutDate: null,
+        endDate: null,
         initiatorUser: {
           where: whereService(where),
           name: task['user_name'],
