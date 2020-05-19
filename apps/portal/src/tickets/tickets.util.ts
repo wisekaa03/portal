@@ -1,6 +1,6 @@
 /** @format */
 
-import { TkWhere, TkRoute, TkService, TkTask, TkUser, TkFile } from '@lib/types';
+import { TkWhere, TkRoute, TkService, TkTask, TkUser, TkFile, TkAuthorComments, TkComment } from '@lib/types';
 import clearHtml from '@lib/clear-html';
 
 export interface AttachesSOAPFile {
@@ -58,22 +58,18 @@ export const userSOAP = (user: Record<string, any>, key: string): TkUser | null 
       }
     : null;
 
-export const filesSOAP = (files: any, key: string): TkFile[] | [] => {
-  if (files) {
-    const newFiles = Array.isArray(files) ? files : [files];
-
-    return newFiles
-      .filter((file) => file['Код'])
-      .map((file) => ({
-        where: whereService(key),
-        code: file['Код'],
-        name: file['Наименование'],
-        ext: file['РасширениеФайла'],
-      }));
-  }
-
-  return [];
-};
+// eslint-disable-next-line no-confusing-arrow
+export const filesSOAP = (files: Record<string, any>, key: string): TkFile[] | null =>
+  files && files !== null
+    ? files
+        // .filter((file: Record<string, any>) => file['Код'])
+        .map((file: Record<string, any>) => ({
+          where: whereService(key),
+          code: file['Код'],
+          name: file['Наименование'],
+          ext: file['РасширениеФайла'],
+        }))
+    : null;
 
 /**
  * Услуга в представлении 1C SOAP:
@@ -104,7 +100,7 @@ export const serviceSOAP = (service: Record<string, any>, key: string): TkServic
  * - Аватар
  */
 // eslint-disable-next-line no-confusing-arrow
-export const routesSOAP = (route: Record<string, any>, key: string): TkRoute | null =>
+export const routeSOAP = (route: Record<string, any>, key: string): TkRoute | null =>
   route && route !== null
     ? {
         where: whereService(key),
@@ -113,6 +109,37 @@ export const routesSOAP = (route: Record<string, any>, key: string): TkRoute | n
         description: route['Описание'],
         avatar: route['Аватар'],
         services: route['СписокУслуг']?.['Услуга']?.map((service: Record<string, any>) => serviceSOAP(service, key)),
+      }
+    : null;
+
+/**
+ * Комментарии в представлении 1C SOAP
+ */
+// eslint-disable-next-line no-confusing-arrow
+export const commentSOAP = (comment: Record<string, any>, key: string): TkComment | null =>
+  comment && comment !== null
+    ? {
+        where: whereService(key),
+        date: comment['Дата'],
+        authorLogin: comment['ЛогинАвтора'],
+        body: comment['Текст'],
+        task: comment['Владелец'],
+        code: comment['Код'],
+        parentCode: comment['КодРодителя'],
+      }
+    : null;
+
+/**
+ * АвторКомментария и Комментарии в представлении 1C SOAP
+ */
+// eslint-disable-next-line no-confusing-arrow
+export const authorCommentsSOAP = (comments: Record<string, any>, key: string): TkAuthorComments | null =>
+  comments && comments !== null
+    ? {
+        users: comments['Авторы']?.['АвторКомментария']?.map((user: Record<string, any>) => userSOAP(user, key)),
+        comments: comments['Комментарии']?.['Комментарий']?.map((comment: Record<string, any>) =>
+          commentSOAP(comment, key),
+        ),
       }
     : null;
 
@@ -137,18 +164,41 @@ export const taskSOAP = (task: Record<string, any>, key: string): TkTask | null 
         where: whereService(key),
         code: task['Код'],
         name: task['Наименование'],
+        type: task['ТипОбращения'],
         description: clearHtml(task['Описание']),
         descriptionFull: task['ОписаниеФД'],
         status: task['Статус'],
-        createdDate: task['Дата'],
-        // timeout: ticket['СрокИсполнения'],
-        endDate: task['ДатаЗавершения'],
+        createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : task['Дата'],
+        timeoutDate:
+          task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : task['СрокИсполнения'],
+        endDate: task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : task['ДатаЗавершения'],
         executorUser: userSOAP(task['ТекущийИсполнитель'], key),
         initiatorUser: userSOAP(task['Инициатор'], key),
+        route: routeSOAP(task['Сервис'], key),
         service: serviceSOAP(task['Услуга'], key),
-        files: filesSOAP(task['СписокФайлов']?.['Файл'] || undefined, key),
+        availableAction: task['ДоступноеДействие'],
+        availableStages: task['ДоступныеЭтапы'],
+        files: filesSOAP(task['СписокФайлов']?.['Файл'], key),
+        comments: authorCommentsSOAP(task['КомментарииЗадачи'], key),
       }
     : null;
+
+export const filesOST = (files: any, key: string): TkFile[] => {
+  if (files) {
+    const filesArray = Array.isArray(files) ? files : [files];
+
+    return filesArray
+      .filter((file) => file['Код'])
+      .map((file) => ({
+        where: whereService(key),
+        code: file['Код'],
+        name: file['Наименование'],
+        ext: file['РасширениеФайла'],
+      }));
+  }
+
+  return [];
+};
 
 /**
  * Услуга в представлении OSTicket:
@@ -211,13 +261,15 @@ export const taskOST = (task: Record<string, any>, key: string): TkTask | null =
   task && task !== null
     ? {
         where: whereService(key),
+        type: undefined,
         code: task['number'],
         name: task['subject'],
         description: task['description'],
+        descriptionFull: undefined,
         status: task['status_name'],
         createdDate: task['created'],
-        // timeout: ticket['СрокИсполнения'],
-        // endDate: task['ДатаЗавершения'],
+        timeoutDate: undefined,
+        endDate: undefined,
         initiatorUser: {
           where: whereService(key),
           name: task['user_name'],
@@ -231,6 +283,9 @@ export const taskOST = (task: Record<string, any>, key: string): TkTask | null =
           code: '',
           name: task['topic'],
         },
-        // files: filesSOAP(task['СписокФайлов']?.['Файл'] || undefined, key),
+        availableAction: undefined,
+        availableStages: undefined,
+        files: filesOST(task['files']?.['file'], key),
+        comments: null,
       }
     : null;

@@ -38,6 +38,21 @@ export interface TkFile {
   ext?: string;
 }
 
+export interface TkComment {
+  where: TkWhere;
+  date: string;
+  authorLogin: string;
+  body: string;
+  task: string;
+  code: string;
+  parentCode: string;
+}
+
+export interface TkAuthorComments {
+  users: TkUser[] | null;
+  comments: TkComment[] | null;
+}
+
 export interface TkTask {
   where: TkWhere;
   code: string;
@@ -46,12 +61,17 @@ export interface TkTask {
   description?: string;
   descriptionFull?: string;
   status?: string;
+  route?: TkService | null;
   service: TkService | null;
   createdDate?: string;
+  timeoutDate?: string;
   endDate?: string;
   executorUser: TkUser | null;
   initiatorUser: TkUser | null;
-  files?: TkFile[];
+  availableAction?: string;
+  availableStages?: string;
+  files: TkFile[] | null;
+  comments: TkAuthorComments | null;
 }
 
 export interface TkTasks {
@@ -75,7 +95,7 @@ export interface TkTaskNewInput {
   where: TkWhere;
   title: string;
   body: string;
-  serviceId: string;
+  service: string;
   executorUser?: string;
   attachments?: Promise<FileUpload>[];
 }
@@ -86,6 +106,11 @@ export interface TkTaskEditInput {
   type: string;
   comment: string;
   attachments?: Promise<FileUpload>[];
+}
+
+export interface TkTaskDescriptionInput {
+  where: TkWhere;
+  code: string;
 }
 
 export interface TkTaskNew {
