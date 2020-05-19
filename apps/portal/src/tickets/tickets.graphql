@@ -95,7 +95,6 @@ input TkTaskNewInput {
 input TkTaskEditInput {
   where: String!
   code: String!
-  type: String!
   comment: String!
 }
 
@@ -117,7 +116,7 @@ type TkTasks {
 type Query {
   TicketsRoutes: [TkRoutes!]
   TicketsTasks(status: String, find: String): [TkTasks!]
-  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask
+  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask!
 }
 
 type Mutation {

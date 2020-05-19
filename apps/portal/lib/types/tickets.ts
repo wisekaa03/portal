@@ -94,7 +94,6 @@ export interface TkUser {
 export interface TkTaskEditInput {
   where: TkWhere;
   code: string;
-  type: string;
   comment: string;
   attachments?: Promise<FileUpload>[];
 }
