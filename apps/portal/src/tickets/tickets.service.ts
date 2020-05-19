@@ -65,7 +65,7 @@ export class TicketsService {
           client
             .GetRoutesAsync({ Log: user.username })
             .then((result: any) => {
-              this.logger.info(`OldTicketService: [Request] ${client.lastRequest}`);
+              this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.['return']) {
                 if (typeof result[0]['return']['Сервис'] === 'object') {
@@ -73,22 +73,21 @@ export class TicketsService {
 
                   if (Array.isArray(routes)) {
                     return {
-                      routes: [...routes.map((route: Record<string, any>) => routeSOAP(route, TkWhere.Svc1Citil))],
+                      routes: [...routes.map((route: Record<string, any>) => routeSOAP(route, TkWhere.SOAP1C))],
                     };
                   }
                 }
                 return {};
               }
 
-              this.logger.info(`OldTicketService: [Response] ${client.lastResponse}`);
+              this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
               return {
                 error: 'Not connected to SOAP',
               };
             })
             .catch((error: SoapFault) => {
-              this.logger.info(`OldTicketService: [Request] ${client.lastRequest}`);
-              this.logger.info(`OldTicketService: [Response] ${client.lastResponse}`);
-
+              this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
+              this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
               return { error: SoapError(error) };
@@ -101,19 +100,19 @@ export class TicketsService {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
-        Object.keys(OSTicketURL).forEach((key) => {
+        Object.keys(OSTicketURL).forEach((where) => {
           const osTicketService = this.httpService
-            .post<TicketsService[]>(`${OSTicketURL[key]}?req=routes`, {})
+            .post<TicketsService[]>(`${OSTicketURL[where]}?req=routes`, {})
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    routes: [...response.data.map((route: Record<string, any>) => routesOST(route, key))],
+                    routes: [...response.data.map((route: Record<string, any>) => routesOST(route, where as TkWhere))],
                   };
                 }
 
-                return { error: `Not found the OSTicket data in ${key}` };
+                return { error: `Not found the OSTicket data in "${where}"` };
               }
 
               return { error: response.statusText };
@@ -166,7 +165,7 @@ export class TicketsService {
               AllTask: false,
             })
             .then((result: any) => {
-              this.logger.info(`OldTickets: [Request] ${client.lastRequest}`);
+              this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.['return']) {
                 if (typeof result[0]['return']['Задача'] === 'object') {
@@ -175,21 +174,20 @@ export class TicketsService {
                     : [result[0]['return']['Задача']];
 
                   return {
-                    tasks: [...tasks.map((task: any) => taskSOAP(task, TkWhere.Svc1Citil))],
+                    tasks: [...tasks.map((task: any) => taskSOAP(task, TkWhere.SOAP1C))],
                   };
                 }
                 return {};
               }
 
-              this.logger.info(`OldTickets: [Response] ${client.lastResponse}`);
+              this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               return {
                 error: 'Not connected to SOAP',
               };
             })
             .catch((error: SoapFault) => {
-              this.logger.info(`OldTickets: [Request] ${client.lastRequest}`);
-              this.logger.info(`OldTickets: [Response] ${client.lastResponse}`);
-
+              this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
+              this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
               return { error: SoapError(error) };
@@ -215,9 +213,9 @@ export class TicketsService {
           Аватар: user.profile.thumbnailPhoto,
         } as TkUserOST;
 
-        Object.keys(OSTicketURL).forEach((key) => {
+        Object.keys(OSTicketURL).forEach((where) => {
           const osTickets = this.httpService
-            .post<Record<string, any>>(`${OSTicketURL[key]}?req=tickets`, {
+            .post<Record<string, any>>(`${OSTicketURL[where]}?req=tickets`, {
               login: user.username,
               user: userOSTicket,
               msg: JSON.stringify({ login: user.username, department: '', opened: true }),
@@ -227,11 +225,13 @@ export class TicketsService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    tasks: [...response.data.tickets?.map((task: Record<string, any>) => taskOST(task, key))],
+                    tasks: [
+                      ...response.data.tickets?.map((task: Record<string, any>) => taskOST(task, where as TkWhere)),
+                    ],
                   };
                 }
 
-                return { error: `Not found the OSTicket data in ${key}` };
+                return { error: `Not found the OSTicket data in ${where}` };
               }
 
               return { error: response.statusText };
@@ -266,7 +266,7 @@ export class TicketsService {
     attachments?: Promise<FileUpload>[],
   ): Promise<TkTaskNew> => {
     /* 1C SOAP */
-    if (task.where === TkWhere.Svc1Citil) {
+    if (task.where === TkWhere.SOAP1C) {
       const authentication: SoapAuthentication = {
         username: user?.username,
         password,
@@ -299,7 +299,7 @@ export class TicketsService {
           Attaches,
         })
         .then((result: any) => {
-          this.logger.info(`OldTicketNew: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
           if (result && result[0] && result[0]['return']) {
             return {
@@ -313,15 +313,14 @@ export class TicketsService {
             };
           }
 
-          this.logger.info(`OldTicketNew: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           return {
             error: 'Not connected to SOAP',
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`OldTicketNew: [Request] ${client.lastRequest}`);
-          this.logger.info(`OldTicketNew: [Response] ${client.lastResponse}`);
-
+          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
           throw SoapError(error);
@@ -329,7 +328,7 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (task.where === TkWhere.SvcOSTaudit || task.where === TkWhere.SvcOSTmedia) {
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
       return {
         error: 'Cannot connect to OSTicket',
       };
@@ -357,7 +356,6 @@ export class TicketsService {
     task: TkTaskEditInput,
     attachments?: Promise<FileUpload>[],
   ): Promise<TkTask> => {
-    // TODO: дописать
     const authentication: SoapAuthentication = {
       username: user?.username,
       password,
@@ -388,22 +386,20 @@ export class TicketsService {
         AutorComment: user.username,
       })
       .then((result: any) => {
-        this.logger.info(`OldTicketEdit: [Request] ${client.lastRequest}`);
+        this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
 
         if (result && result[0] && result[0]['return']) {
-          return taskSOAP(result[0]['return'], '1Citil');
+          return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
         }
 
-        this.logger.info(`OldTicketEdit: [Response] ${client.lastResponse}`);
-
+        this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
         return {
           error: 'Not connected to SOAP',
         };
       })
       .catch((error: SoapFault) => {
-        this.logger.info(`OldTicketEdit: [Request] ${client.lastRequest}`);
-        this.logger.info(`OldTicketEdit: [Response] ${client.lastResponse}`);
-
+        this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+        this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
         this.logger.error(error);
 
         throw SoapError(error);
@@ -421,7 +417,7 @@ export class TicketsService {
    * @returns {TkTask}
    */
   TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkTask> => {
-    if (task.where === TkWhere.Svc1Citil) {
+    if (task.where === TkWhere.SOAP1C) {
       const authentication = {
         username: user?.username,
         password,
@@ -437,22 +433,20 @@ export class TicketsService {
           TaskId: task.code,
         })
         .then((result: any) => {
-          this.logger.info(`OldTicketDescription: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
 
           if (result && result[0] && result[0]['return'] && typeof result[0]['return'] === 'object') {
-            return taskSOAP(result[0]['return'], TkWhere.Svc1Citil);
+            return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
           }
 
-          this.logger.info(`OldTicketDescription: [Response] ${client.lastResponse}`);
-
+          this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
           return {
             error: 'Not connected to SOAP',
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`OldTicketDescription: [Request] ${client.lastRequest}`);
-          this.logger.info(`OldTicketDescription: [Response] ${client.lastResponse}`);
-
+          this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
           throw SoapError(error);
@@ -460,10 +454,10 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (task.where === TkWhere.SvcOSTaudit || task.where === TkWhere.SvcOSTmedia) {
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
       throw new Error('Not implemented');
     }
 
-    throw new Error('Can not use a default.');
+    throw new Error('Can not use a default route');
   };
 }

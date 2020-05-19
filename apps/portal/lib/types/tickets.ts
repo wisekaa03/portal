@@ -2,10 +2,10 @@
 import { FileUpload } from 'graphql-upload';
 
 export enum TkWhere {
-  Svc1Citil = '1Citil',
-  SvcOSTaudit = 'OSTaudit',
-  SvcOSTmedia = 'OSTmedia',
-  SvcDefault = 'default',
+  SOAP1C = 'SOAP1C',
+  OSTaudit = 'OSTaudit',
+  OSTmedia = 'OSTmedia',
+  Default = 'default',
 }
 
 export interface TkService {
