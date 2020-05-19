@@ -53,7 +53,7 @@ type TkTask {
   code: String!
   type: String
   name: String!
-  description: String!
+  description: String
   descriptionFull: String
   status: String!
   avatar: String

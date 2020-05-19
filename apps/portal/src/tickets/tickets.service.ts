@@ -200,11 +200,12 @@ export class TicketsService {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
-        const userOSTicket = {
+        const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+
+        const userOST = {
           company: user.profile.company,
-          currentCount: '0',
           email: user.profile.email,
-          fio: user.profile.fullName,
+          fio,
           function: user.profile.title,
           manager: '',
           phone: user.profile.telephone,
@@ -215,10 +216,10 @@ export class TicketsService {
 
         Object.keys(OSTicketURL).forEach((where) => {
           const osTickets = this.httpService
-            .post<Record<string, any>>(`${OSTicketURL[where]}?req=tickets`, {
+            .post<Record<string, any>>(`${OSTicketURL[where]}?req=tasks`, {
               login: user.username,
-              user: userOSTicket,
-              msg: JSON.stringify({ login: user.username, department: '', opened: true }),
+              user: JSON.stringify(userOST),
+              msg: JSON.stringify({ login: fio, departament: '', opened: true }),
             })
             .toPromise()
             .then((response) => {
@@ -226,7 +227,7 @@ export class TicketsService {
                 if (typeof response.data === 'object') {
                   return {
                     tasks: [
-                      ...response.data.tickets?.map((task: Record<string, any>) => taskOST(task, where as TkWhere)),
+                      ...response.data.tasks?.map((task: Record<string, any>) => taskOST(task, where as TkWhere)),
                     ],
                   };
                 }
