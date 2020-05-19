@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
-// #endregion
+//#endregion
 
 @Injectable()
 export class SyncService {

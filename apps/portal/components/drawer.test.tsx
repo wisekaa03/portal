@@ -1,15 +1,15 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import Drawer from '@front/components/drawer';
 // import { ProfileContext } from '../lib/context';
 // import { MOCK_PROFILE } from '../lib/constants';
-// #endregion
+//#endregion
 
 jest.mock('next/router', () => ({
   useRouter() {

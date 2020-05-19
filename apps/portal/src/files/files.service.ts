@@ -1,17 +1,17 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { Repository, IsNull } from 'typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { Files, FilesFolder, FilesFolderResponse, User } from '@lib/types';
 import { ConfigService } from '@app/config';
 import { FilesEntity } from './files.entity';
 import { FilesFolderEntity } from './files.folder.entity';
-// #endregion
+//#endregion
 
 @Injectable()
 export class FilesService {

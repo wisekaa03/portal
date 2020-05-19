@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { getStorage } from '../session-storage';
 import { SESSION } from '../constants';
-// #endregion
+//#endregion
 
 export default {
   Me: {

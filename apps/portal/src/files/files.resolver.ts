@@ -1,20 +1,20 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Resolver, Query, Mutation, Context, Args } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 // import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { User, FilesFolderResponse } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser } from '@back/user/user.decorator';
 import { FilesEntity } from './files.entity';
 import { FilesService } from './files.service';
-// #endregion
+//#endregion
 
 @Resolver('Files')
 export class FilesResolver {

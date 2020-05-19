@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,11 +10,11 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { UserEntity } from '@back/user/user.entity';
 import { FilesFolderEntity } from './files.folder.entity';
-// #endregion
+//#endregion
 
 @Entity('files')
 export class FilesEntity {

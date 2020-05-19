@@ -1,15 +1,15 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useContext } from 'react';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { FilesTreeComponentProps, FilesFolderTreeVirtual, FilesFolder } from '@lib/types';
 import { ProfileContext } from '@lib/context';
 import { FILES_SHARED_NAME } from '@lib/constants';
 import { TreeView, TreeItem } from '@front/components/tree-view';
-// #endregion
+//#endregion
 
 const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setItem, handleEdit }) => {
   const { user } = useContext(ProfileContext);

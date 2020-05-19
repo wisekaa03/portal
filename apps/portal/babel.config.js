@@ -1,16 +1,16 @@
 /** @format */
 /* eslint func-names:0 */
 
-// #region Imports NPM
+//#region Imports NPM
 // const path = require('path');
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 module.exports = function (api) {
   api.cache(true);
 
-  // #region Constants
+  //#region Constants
   const constantsPresets = [
     [
       'next/babel',
@@ -78,9 +78,9 @@ module.exports = function (api) {
       'icons',
     ],
   ];
-  // #endregion
+  //#endregion
 
-  // #region Development
+  //#region Development
   const devProd = {
     presets: [
       [
@@ -103,9 +103,9 @@ module.exports = function (api) {
     ],
     plugins: [...constantsPlugins],
   };
-  // #endregion
+  //#endregion
 
-  // #region Production
+  //#region Production
   const prodProd = {
     presets: [
       [
@@ -122,9 +122,9 @@ module.exports = function (api) {
     ],
     plugins: [...constantsPlugins],
   };
-  // #endregion
+  //#endregion
 
-  // #region Test
+  //#region Test
   const testProd = {
     presets: [
       [
@@ -145,9 +145,9 @@ module.exports = function (api) {
     ],
     plugins: [...constantsPlugins],
   };
-  // #endregion
+  //#endregion
 
-  // #region Config
+  //#region Config
   const config = {
     env: {
       development: {
@@ -163,9 +163,9 @@ module.exports = function (api) {
       },
     },
   };
-  // #endregion
+  //#endregion
 
-  // #region Production Plugins
+  //#region Production Plugins
   if (process.env.NODE_ENV === 'production') {
     // For variable assignments, this removes rvals that evaluate to undefined (vars in functions only).
     // For functions, this removes return arguments that evaluate to undefined.
@@ -290,7 +290,7 @@ module.exports = function (api) {
     // In: if (bar !== null); Out: if (null !== bar);
     config.env.development.plugins.push('minify-flip-comparisons');
   }
-  // #endregion
+  //#endregion
 
   // console.warn('process.env:', process.env);
   // console.warn('config:', config);

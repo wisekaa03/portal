@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module, HttpModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 // import { JwtModule } from '@nestjs/jwt';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { UserModule } from '@back/user/user.module';
@@ -14,11 +14,11 @@ import { AuthResolver } from './auth.resolver';
 import { CookieSerializer } from './cookie.serializer';
 import { LocalStrategy } from './strategies/local.strategy';
 // import { JwtStrategy } from './strategies/jwt.strategy';
-// #endregion
+//#endregion
 
 @Module({
   imports: [
-    // #region Passport module
+    //#region Passport module
     PassportModule.register({ session: true, defaultStrategy: 'local' }),
     // JwtModule.registerAsync({
     //   useFactory: async () => {
@@ -28,9 +28,9 @@ import { LocalStrategy } from './strategies/local.strategy';
     //     };
     //   },
     // }),
-    // #endregion
+    //#endregion
 
-    // #region LDAP Module
+    //#region LDAP Module
     LdapModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
@@ -56,15 +56,15 @@ import { LocalStrategy } from './strategies/local.strategy';
         } as LdapModuleOptions;
       },
     }),
-    // #endregion
+    //#endregion
 
-    // #region Users module
+    //#region Users module
     UserModule,
-    // #endregion
+    //#endregion
 
-    // #region HTTP service
+    //#region HTTP service
     HttpModule,
-    // #endregion
+    //#endregion
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer /* , JwtStrategy */],
   exports: [PassportModule, AuthService],

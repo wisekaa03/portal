@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Import NPM
+//#region Import NPM
 // import React from 'react';
 import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext } from 'next/document';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { UserContext } from './user.dto';
 
 export * from './app-bar';
@@ -29,7 +29,7 @@ export * from './profile';
 export * from './services';
 export * from './treeview';
 export * from './user.dto';
-// #endregion
+//#endregion
 
 export interface WithApolloState<TCache = NormalizedCacheObject> {
   data?: TCache;

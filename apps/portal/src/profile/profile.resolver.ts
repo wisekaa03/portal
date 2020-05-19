@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { Request } from 'express';
 import { I18nService } from 'nestjs-i18n';
 import { FileUpload } from 'graphql-upload';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { Profile } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -16,7 +16,7 @@ import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
-// #endregion
+//#endregion
 
 @Resolver('Profile')
 export class ProfileResolver {

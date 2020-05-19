@@ -1,18 +1,18 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TextField, OutlinedTextFieldProps, CircularProgress } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTranslation } from 'react-i18next';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { TextFieldComponentProps } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { PROFILE_FIELD_SELECTION } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
-// #endregion
+//#endregion
 
 const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
   disabled,

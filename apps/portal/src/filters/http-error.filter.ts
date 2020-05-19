@@ -2,16 +2,16 @@
 
 // TODO: DEPRECATED: Next.JS is forwarding through RenderService -> setErrorHandler
 
-// #region Imports NPM
+//#region Imports NPM
 import { ExceptionFilter, Catch, HttpException, HttpStatus, ArgumentsHost, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 import { AUTH_PAGE } from '@lib/constants';
-// #endregion
+//#endregion
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
@@ -38,7 +38,7 @@ export class HttpErrorFilter implements ExceptionFilter {
     }
 
     if (response.status && request.method && request.url) {
-      // #region HTTP query
+      //#region HTTP query
       const errorResponse = {
         code: status,
         timestamp: new Date().toLocaleString('ru'),
@@ -60,14 +60,14 @@ export class HttpErrorFilter implements ExceptionFilter {
 
       response.status(status);
       response.render('/_error');
-      // #endregion
+      //#endregion
     } else {
-      // #region GraphQL query
+      //#region GraphQL query
       const context: AppGraphQLExecutionContext = GqlExecutionContext.create(host as ExecutionContext);
       const info = context.getInfo();
 
       this.logger.error(`${info.parentType.name} "${info.fieldName}": ${message}`);
-      // #endregion
+      //#endregion
     }
   }
 }

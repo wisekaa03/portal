@@ -1,16 +1,16 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import { VerticalCenter } from '@front/components/verticalcenter';
-// #endregion
+//#endregion
 
-// #region Imports Local
-// #endregion
+//#region Imports Local
+//#endregion
 
 // const useStyles = makeStyles((theme: Theme) =>
 //   createStyles({

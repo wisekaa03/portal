@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Logger } from '@nestjs/common';
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ClientOptions, SearchEntryObject } from 'ldapjs';
-// #endregion
+//#endregion
 
 export const LDAP_SYNC = 'LDAP_SYNC';
 export const LDAP_OPTIONS = 'LDAP_OPTIONS';

@@ -1,17 +1,17 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { AuthService } from './auth.service';
-// #endregion
+//#endregion
 
 jest.mock('@app/config/config.service');
 

@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,13 +13,13 @@ import {
   JoinTable,
   RelationId,
 } from 'typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LoginService } from '@lib/types/login-service';
 import { UserSettings } from '@lib/types/user.dto';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupEntity } from '@back/group/group.entity';
-// #endregion
+//#endregion
 
 @Entity('user')
 export class UserEntity {

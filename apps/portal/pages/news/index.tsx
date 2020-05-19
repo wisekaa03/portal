@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState /* , useContext */ } from 'react';
 import Head from 'next/head';
 import clsx from 'clsx';
@@ -23,8 +23,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import CloseIcon from '@material-ui/icons/Close';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { NEWS, NEWS_EDIT, NEWS_DELETE } from '@lib/queries';
@@ -33,7 +33,7 @@ import { LARGE_RESOLUTION } from '@lib/constants';
 import { Data } from '@lib/types';
 import Loading from '@front/components/loading';
 import IsAdmin from '@front/components/isAdmin';
-// #endregion
+//#endregion
 
 // TODO: Import jodit-react:
 // import dynamic from 'next/dynamic';

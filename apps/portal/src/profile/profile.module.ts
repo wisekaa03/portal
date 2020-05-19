@@ -1,25 +1,25 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ImageModule } from '@app/image';
 import { ProfileEntity } from './profile.entity';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
-// #endregion
+//#endregion
 
 @Module({
   imports: [
-    // #region Image module
+    //#region Image module
     ImageModule,
-    // #endregion
+    //#endregion
 
-    // #region TypeORM
+    //#region TypeORM
     TypeOrmModule.forFeature([ProfileEntity]),
-    // #endregion
+    //#endregion
   ],
   providers: [ProfileService, ProfileResolver],
   exports: [ProfileService],

@@ -1,18 +1,18 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 // import { Observable } from 'rxjs';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { News } from '@lib/types';
 // import { ConfigService } from '@app/config';
 // import { UserService } from '../user/user.service';
 import { NewsEntity } from './news.entity';
-// #endregion
+//#endregion
 
 @Injectable()
 export class NewsService {

@@ -1,16 +1,16 @@
 /** @format */
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config/config.service';
 import { UserService } from '@back/user/user.service';
 import { FilesResolver } from './files.resolver';
 import { FilesService } from './files.service';
-// #endregion
+//#endregion
 
 jest.mock('@app/config/config.service');
 

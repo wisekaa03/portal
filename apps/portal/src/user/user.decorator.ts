@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { User } from '@lib/types/user.dto';
-// #endregion
+//#endregion
 
 export const CurrentUser = createParamDecorator<any, any, User>(
   (_data: unknown, context: ExecutionContext) => GqlExecutionContext.create(context).getContext().req.user || undefined,

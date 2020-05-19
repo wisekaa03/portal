@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, TkService, TkRoutes } from '@lib/types';
 import { TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
@@ -14,7 +14,7 @@ import snackbarUtils from '@lib/snackbar-utils';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
-// #endregion
+//#endregion
 
 const defaultTicketState: ServicesTaskProps = { title: '' };
 

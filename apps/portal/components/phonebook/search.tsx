@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useState } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
@@ -15,12 +15,12 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon } from '@material-ui/icons';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { PhonebookSearchProps } from '@lib/types';
 import RefreshButton from '@front/components/ui/refresh-button';
 import { useTranslation } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const panelHeight = 48;
 

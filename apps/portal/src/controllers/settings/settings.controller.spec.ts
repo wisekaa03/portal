@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { SettingsController } from './settings.controller';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 describe('Settings Controller', () => {
   let controller: SettingsController;

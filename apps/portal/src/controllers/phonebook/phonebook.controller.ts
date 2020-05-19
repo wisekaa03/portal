@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Controller, Get, Res, UseGuards, Param } from '@nestjs/common';
 import { RenderableResponse } from 'nest-next';
-// #endregion
+//#endregion
 import { SessionGuard } from '@back/guards/session.guard';
-// #endregion
+//#endregion
 
 @Controller('phonebook')
 export class PhonebookController {

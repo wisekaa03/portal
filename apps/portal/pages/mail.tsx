@@ -1,16 +1,16 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import Head from 'next/head';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import queryString from 'query-string';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { MaterialUI } from '@front/layout';
 import Iframe from '@front/components/iframe';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles(() =>
   createStyles({

@@ -1,13 +1,13 @@
 /** @format */
 /* eslint prettier/prettier: 0 */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import Sharp from 'sharp';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 @Injectable()
 export class ImageService {

@@ -1,18 +1,18 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useEffect } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { SYNC, CACHE } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

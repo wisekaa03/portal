@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -14,11 +14,11 @@ import {
   RelationId,
   AfterLoad,
 } from 'typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { Gender } from '@lib/types/gender';
 import { LoginService } from '@lib/types/login-service';
-// #endregion
+//#endregion
 
 @Entity('profile')
 export class ProfileEntity {

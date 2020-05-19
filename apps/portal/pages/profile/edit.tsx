@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
@@ -15,7 +15,7 @@ import snackbarUtils from '@lib/snackbar-utils';
 import { Profile } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
-// #endregion
+//#endregion
 
 const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();

@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
 import dayjs from 'dayjs';
-// #endregion
+//#endregion
 
 @Scalar('Date')
 export class DateScalar {

@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config/config.service';
-// #endregion
+//#endregion
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

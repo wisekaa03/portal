@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { join } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from './config.service';
-// #endregion
+//#endregion
 
 describe(ConfigService.name, () => {
   let config: ConfigService;

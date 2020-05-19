@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { User } from './user.dto';
-// #endregion
+//#endregion
 
-// #region FilesFolder
+//#region FilesFolder
 export enum FILES_RIGHT {
   READ = 1,
   WRITE = 2,
@@ -29,4 +29,4 @@ export interface FilesFolder {
 export interface FilesFolderResponse extends FilesFolder {
   right: FILES_RIGHT;
 }
-// #endregion
+//#endregion

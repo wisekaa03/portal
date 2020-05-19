@@ -1,5 +1,5 @@
 /** @format */
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useState } from 'react';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
@@ -26,15 +26,15 @@ import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import DescriptionIcon from '@material-ui/icons/DescriptionRounded';
 import AutoSizer from 'react-virtualized-auto-sizer';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
 import { FilesTableComponentProps, FilesTableHeaderProps } from '@lib/types';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
 import RefreshButton from '@front/components/ui/refresh-button';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

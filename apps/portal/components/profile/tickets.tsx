@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useRef } from 'react';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import { Box, InputBase, Card, CardActionArea, CardContent, Typography, Divider } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { format } from '@lib/dayjs';
 import { useTranslation } from '@lib/i18n-client';
 import { TICKET_STATUSES } from '@lib/constants';
@@ -18,7 +18,7 @@ import BaseIcon from '@front/components/ui/icon';
 import Select from '@front/components/ui/select';
 import Loading from '@front/components/loading';
 import RefreshButton from '@front/components/ui/refresh-button';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

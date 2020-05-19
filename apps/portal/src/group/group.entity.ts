@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LoginService } from '@lib/types/login-service';
-// #endregion
+//#endregion
 
 @Entity('group')
 export class GroupEntity {

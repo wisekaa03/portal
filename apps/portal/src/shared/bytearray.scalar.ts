@@ -1,9 +1,9 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
-// #endregion
+//#endregion
 
 @Scalar('ByteArray')
 export class ByteArrayScalar {

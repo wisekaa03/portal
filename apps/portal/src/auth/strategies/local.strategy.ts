@@ -1,15 +1,15 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Request } from 'express';
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { User } from '@lib/types/user.dto';
 import { AuthService } from '../auth.service';
-// #endregion
+//#endregion
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {

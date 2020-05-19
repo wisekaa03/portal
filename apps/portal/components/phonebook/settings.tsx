@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState } from 'react';
 // import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -14,13 +14,13 @@ import {
   Checkbox,
   CardActions,
 } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
 import { Column, ColumnNames, SettingsProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import HeaderBg from '@public/images/jpeg/header_bg.jpg';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

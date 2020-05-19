@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module, HttpModule } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { SoapModule } from '@app/soap';
 import { TicketsResolver } from './tickets.resolver';
 import { TicketsService } from './tickets.service';
-// #endregion
+//#endregion
 
 @Module({
   imports: [

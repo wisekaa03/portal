@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { ColumnNames } from './profile';
 import { LoginService } from './login-service';
 import { Profile } from './profile.dto';
 import { Group } from './group.dto';
-// #endregion
+//#endregion
 
 export interface BaseUser {
   id?: string;
@@ -34,18 +34,18 @@ export interface BaseUser {
   updatedAt?: Date;
 }
 
-// #region User
+//#region User
 export interface User extends BaseUser {
   profile: Profile;
   profileId?: string;
 }
-// #endregion
+//#endregion
 
 export interface UserToSave extends BaseUser {
   profile: Profile | string;
 }
 
-// #region User settings
+//#region User settings
 interface UserSettingsTicket {
   status?: string | null;
 }
@@ -60,12 +60,12 @@ export interface UserSettings {
   ticket?: UserSettingsTicket | null;
   phonebook?: UserSettingsPhonebook | null;
 }
-// #endregion
+//#endregion
 
-// #region User context
+//#region User context
 export interface UserContext {
   user?: User;
   language?: string;
   isMobile?: boolean;
 }
-// #endregion
+//#endregion

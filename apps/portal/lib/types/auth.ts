@@ -29,24 +29,24 @@ export interface LoginValuesProps {
   password: string;
 }
 
-// #region Email session
+//#region Email session
 export interface EmailSession {
   error?: string;
   sessid?: string;
   sessauth?: string;
 }
-// #endregion
+//#endregion
 
-// #region Login email
+//#region Login email
 export interface LoginEmail {
   login: boolean;
   error?: string;
 }
-// #endregion
+//#endregion
 
-// #region Login response
+//#region Login response
 export interface Login {
   user: User;
   email: LoginEmail;
 }
-// #endregion
+//#endregion

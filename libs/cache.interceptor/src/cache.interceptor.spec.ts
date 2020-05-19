@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import * as CacheManager from 'cache-manager';
 import { PinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { HttpCacheInterceptor } from './cache.interceptor';
-// #endregion
+//#endregion
 
 jest.mock('@nestjs/common/cache/interceptors/cache.interceptor');
 jest.mock('cache-manager');

@@ -1,15 +1,15 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { FilesDialogComponentProps } from '@lib/types';
 import Button from '@front/components/ui/button';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -2,16 +2,16 @@
 /* eslint spaced-comment:0 */
 /// <reference types="../../../typings/global" />
 
-// #region Imports NPM
+//#region Imports NPM
 import { resolve } from 'path';
 import { ClientRedis } from '@nestjs/microservices';
 import { PinoLogger, Logger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { pinoOptions } from '@back/shared/pino.options';
 import { LDAP_SYNC } from '@lib/constants';
-// #endregion
+//#endregion
 
 const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.env'));
 const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'))), {});

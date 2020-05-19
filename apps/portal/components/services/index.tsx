@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useRef } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Tabs, Tab, Box, FormControl, TextField } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
 import { ServicesWrapperProps } from '@lib/types';
@@ -19,7 +19,7 @@ import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

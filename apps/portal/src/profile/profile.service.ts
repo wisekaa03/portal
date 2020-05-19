@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions } from 'typeorm';
@@ -8,8 +8,8 @@ import Ldap from 'ldapjs';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { Profile, Gender, LoginService } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
@@ -18,7 +18,7 @@ import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
 import { GQLErrorCode } from '@back/shared/gqlerror';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
-// #endregion
+//#endregion
 
 @Injectable()
 export class ProfileService {

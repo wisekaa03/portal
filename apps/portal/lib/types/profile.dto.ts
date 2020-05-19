@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { Gender } from './gender';
 import { LoginService } from './login-service';
-// #endregion
+//#endregion
 
-// #region Profile
+//#region Profile
 export interface Profile {
   id?: string;
 
@@ -90,4 +90,4 @@ export interface Profile {
 
   updatedAt?: Date;
 }
-// #endregion
+//#endregion

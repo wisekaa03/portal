@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { resolve } from 'path';
 import { PinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config/config.service';
 import { LoggingInterceptor } from './logging.interceptor';
-// #endregion
+//#endregion
 
 jest.mock('@app/config/config.service', () => ({
   ConfigService: jest.fn().mockImplementation(() => ({

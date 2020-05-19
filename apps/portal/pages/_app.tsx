@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { NextPageContext } from 'next';
 import App from 'next/app';
@@ -16,8 +16,8 @@ import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
 import { SnackbarProvider } from 'notistack';
 import url from 'url';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import theme from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
@@ -29,7 +29,7 @@ import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '@lib/constants';
 import { getStorage } from '@lib/session-storage';
-// #endregion
+//#endregion
 
 /**
  * Current login: ME

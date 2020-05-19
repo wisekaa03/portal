@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module, Global } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ImageService } from './image.service';
-// #endregion
+//#endregion
 
 @Global()
 @Module({

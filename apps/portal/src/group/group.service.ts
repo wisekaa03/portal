@@ -1,17 +1,17 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LoginService, Group } from '@lib/types';
 import { ConfigService } from '@app/config';
 import { LdapResponseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
-// #endregion
+//#endregion
 
 @Injectable()
 export class GroupService {

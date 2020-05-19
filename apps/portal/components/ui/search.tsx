@@ -1,13 +1,13 @@
 /** @format */
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, InputBase } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

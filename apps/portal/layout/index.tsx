@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useState, useEffect, useContext } from 'react';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ProfileContext } from '@lib/context';
 import { LOGOUT, USER_SETTINGS } from '@lib/queries';
 import { removeStorage } from '@lib/session-storage';
@@ -15,7 +15,7 @@ import { appBarHeight, SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } fr
 import Cookie from '@lib/cookie';
 import AppBarComponent from '@front/components/app-bar';
 import DrawerComponent from '@front/components/drawer';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((/* theme: Theme */) =>
   createStyles({

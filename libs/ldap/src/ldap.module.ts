@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { DynamicModule, Module, Provider, Type, Global } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 // import { ConfigModule } from '@app/config';
 import { LdapService } from './ldap.service';
 import { LDAP_OPTIONS, LdapModuleOptions, LdapModuleAsyncOptions, LdapOptionsFactory } from './ldap.interface';
-// #endregion
+//#endregion
 
 @Global()
 @Module({

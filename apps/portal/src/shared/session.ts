@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import Session from 'express-session';
 import Express from 'express';
 import { Logger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
-// #endregion
+//#endregion
 
 export default (configService: ConfigService, logger: Logger, store: Session.Store): Express.RequestHandler => {
   try {

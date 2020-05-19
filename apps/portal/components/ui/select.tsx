@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState, useRef, useEffect } from 'react';
 import { FormControl, InputLabel, MenuItem, Select as MuiSelect } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 
 interface SelectProps {
   label: string;

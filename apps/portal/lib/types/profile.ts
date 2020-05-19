@@ -1,16 +1,16 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { ApolloQueryResult } from 'apollo-client';
 import { WithTranslation } from 'next-i18next';
 import { Order, Connection } from 'typeorm-graphql-pagination';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { StyleProps, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile } from './profile.dto';
 import { TkUser, TkTask, TkTasks } from './tickets';
-// #endregion
+//#endregion
 
 export type ColumnNames =
   | 'lastName'

@@ -1,14 +1,14 @@
 /** @format */
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import { TextField, Button } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LoginPageProps } from '@lib/types';
 import Login from '@front/pages/auth/login';
-// #endregion
+//#endregion
 
 describe('Login page', () => {
   let shallow: typeof Shallow;

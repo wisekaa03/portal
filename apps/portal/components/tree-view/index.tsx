@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, IconButton, Box, Tooltip } from '@material-ui/core';
@@ -12,11 +12,11 @@ import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import AddIcon from '@material-ui/icons/AddCircleOutlineRounded';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { TreeViewProps, TreeItemProps } from '@lib/types';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

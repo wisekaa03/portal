@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
-// #endregion
+//#endregion
 
 @Injectable()
 export class GqlAuthGuard implements CanActivate {

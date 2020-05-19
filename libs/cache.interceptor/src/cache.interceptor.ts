@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ExecutionContext, Injectable, CacheInterceptor } from '@nestjs/common';
 import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request } from 'express';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 @Injectable()
 export class HttpCacheInterceptor extends CacheInterceptor {
@@ -46,9 +46,9 @@ export class HttpCacheInterceptor extends CacheInterceptor {
 }
 
 export const CacheInterceptorProvider =
-  // #region Cache interceptor
+  //#region Cache interceptor
   {
     provide: APP_INTERCEPTOR,
     useClass: HttpCacheInterceptor,
   };
-// #endregion
+//#endregion

@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import Head from 'next/head';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Grid } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { I18nPage, Trans, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme) => ({
   root: {},

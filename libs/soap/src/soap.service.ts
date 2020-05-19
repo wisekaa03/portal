@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
-// #endregion
+//#endregion
 
 export type SoapClient = Client;
 export type SoapFault = ISoapFaultError;

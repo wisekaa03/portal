@@ -1,17 +1,17 @@
 /** @format */
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ImageService } from '@app/image';
 import { NewsResolver } from './news.resolver';
 import { NewsService } from './news.service';
 import { UserService } from '../user/user.service';
-// #endregion
+//#endregion
 
 const serviceMock = jest.fn(() => ({}));
 

@@ -1,17 +1,17 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import Link from 'next/link';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ServicesElementProps, ServicesElementLinkQueryProps, ServicesElementType } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
 import BaseIcon from '@front/components/ui/icon';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

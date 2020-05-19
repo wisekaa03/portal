@@ -1,18 +1,18 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import Head from 'next/head';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { USER_SETTINGS } from '@lib/queries';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

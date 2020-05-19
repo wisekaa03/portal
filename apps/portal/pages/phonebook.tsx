@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState, useContext, useEffect, useRef, Ref, Component } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
@@ -8,8 +8,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import { Data, ProfileQueryProps, ColumnNames, UserSettings, Profile } from '@lib/types';
 import useDebounce from '@lib/debounce';
@@ -24,7 +24,7 @@ import PhonebookSettings from '@front/components/phonebook/settings';
 import PhonebookHelp from '@front/components/phonebook/help';
 import Modal from '@front/components/ui/modal';
 import Loading from '@front/components/loading';
-// #endregion
+//#endregion
 
 const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
 const columnsSM: ColumnNames[] = [...columnsXS, 'title'];

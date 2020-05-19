@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, ReactElement } from 'react';
 import Link from 'next/link';
 import { ListChildComponentProps } from 'react-window';
@@ -8,13 +8,13 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { TableRow, TableCell } from '@material-ui/core';
 import { red, blueGrey } from '@material-ui/core/colors';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { PHONEBOOK_HIDDEN_COLS, PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import Avatar from '@front/components/ui/avatar';
 import { allColumns } from './settings';
 
-// #endregion
+//#endregion
 
 const useStyles = makeStyles(() =>
   createStyles({

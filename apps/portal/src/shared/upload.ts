@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { FileUpload } from 'graphql-upload';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { FileUploadBuffer } from '@lib/types';
-// #endregion
+//#endregion
 
 /**
  * Constructing Uploads

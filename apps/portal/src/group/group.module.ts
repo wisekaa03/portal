@@ -1,19 +1,19 @@
 /** @format */
-// #region Imports NPM
+//#region Imports NPM
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { GroupService } from './group.service';
 import { GroupResolver } from './group.resolver';
 import { GroupEntity } from './group.entity';
-// #endregion
+//#endregion
 
 @Module({
   imports: [
-    // #region TypeORM
+    //#region TypeORM
     TypeOrmModule.forFeature([GroupEntity]),
-    // #endregion
+    //#endregion
   ],
   providers: [GroupService, GroupResolver],
 

@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { User } from '@lib/types/user.dto';
 import { CurrentUser } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -12,7 +12,7 @@ import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
 import { UserService } from '@back/user/user.service';
 import { NewsService } from './news.service';
 import { NewsEntity } from './news.entity';
-// #endregion
+//#endregion
 
 @Resolver('News')
 export class NewsResolver {

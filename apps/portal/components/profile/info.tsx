@@ -1,16 +1,16 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Button } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import Avatar from '@front/components/ui/avatar';
-// #endregion
+//#endregion
 
 const avatarHeight = 180;
 

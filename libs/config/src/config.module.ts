@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module, DynamicModule, Global } from '@nestjs/common';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { CONFIG_OPTIONS, ConfigService } from './config.service';
-// #endregion
+//#endregion
 
 @Global()
 @Module({})

@@ -10,10 +10,10 @@
 		"prefix": "format",
 		"body": [
 			"",
-			"// #region Imports NPM",
-			"// #endregion",
-			"// #region Imports Local",
-			"$0// #endregion",
+			"//#region Imports NPM",
+			"//#endregion",
+			"//#region Imports Local",
+			"$0//#endregion",
 		],
 		"description": "format code snippet"
 	}

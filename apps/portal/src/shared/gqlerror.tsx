@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { GraphQLError } from 'graphql';
 import { I18nService } from 'nestjs-i18n';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 export enum GQLErrorCode {
   UNAUTHENTICATED = 'UNAUTHENTICATED',

@@ -1,20 +1,20 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Table, TableBody } from '@material-ui/core';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import { PhonebookHeaderContext } from '@lib/context';
 import { TableProps } from '@lib/types';
 import PhonebookHeader from './header';
 import PhonebookRow from './row';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles(() =>
   createStyles({

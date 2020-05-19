@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { NewsController } from './news.controller';
-// #endregion
+//#endregion
 
 describe('NewsController', () => {
   let controller: NewsController;

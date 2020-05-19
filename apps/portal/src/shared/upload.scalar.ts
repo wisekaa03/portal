@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Scalar } from '@nestjs/graphql';
 import { GraphQLUpload } from 'graphql-upload';
 import { ValueNode } from 'graphql';
 import Maybe from 'graphql/tsutils/Maybe';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 @Scalar('Upload')
 export class Upload {

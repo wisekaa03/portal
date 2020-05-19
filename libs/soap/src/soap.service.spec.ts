@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { SoapService } from './soap.service';
 import { SOAP_OPTIONS } from './soap.interface';
-// #endregion
+//#endregion
 
 // const serviceMock = jest.fn(() => ({}));
 

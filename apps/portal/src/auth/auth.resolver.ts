@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { Login, LoginEmail } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
@@ -15,7 +15,7 @@ import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 import { AuthService } from './auth.service';
-// #endregion
+//#endregion
 
 @Resolver()
 export class AuthResolver {

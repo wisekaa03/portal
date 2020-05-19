@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import stateAuthentication from './authentication';
 // import { StateLinkNetworkStatus } from './network-status';
-// #endregion
+//#endregion
 
 export default {
   ...stateAuthentication,

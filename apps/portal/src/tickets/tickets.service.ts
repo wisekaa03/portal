@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable, HttpService } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import {
   TkRoutes,
   TkTasks,
@@ -22,7 +22,7 @@ import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap
 import { constructUploads } from '@back/shared/upload';
 import { taskSOAP, AttachesSOAP, taskOST, routesOST, routeSOAP } from './tickets.util';
 import { TkTaskDescriptionInput } from '../../lib/types/tickets';
-// #endregion
+//#endregion
 
 /**
  * Tickets class

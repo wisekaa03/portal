@@ -2,14 +2,14 @@
 /* eslint spaced-comment:0 */
 /// <reference types="../../../typings/global" />
 
-// #region Imports NPM
+//#region Imports NPM
 import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
 import { LoggerModule, Logger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
@@ -23,21 +23,21 @@ import { pinoOptions } from '@back/shared/pino.options';
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { AppController } from './app.controller';
 import { SyncService } from './app.service';
-// #endregion
+//#endregion
 
 const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : '../../..', '.env');
 
 @Module({
   imports: [
-    // #region Config & Log module
+    //#region Config & Log module
     ConfigModule.register(env),
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),
     }),
-    // #endregion
+    //#endregion
 
-    // #region Locale I18n
+    //#region Locale I18n
     I18nModule.forRootAsync({
       inject: [ConfigService],
       parser: I18nJsonParser,
@@ -49,9 +49,9 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
         resolvers: [],
       }),
     }),
-    // #endregion
+    //#endregion
 
-    // #region LDAP Module
+    //#region LDAP Module
     LdapModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
@@ -77,9 +77,9 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
         } as LdapModuleOptions;
       },
     }),
-    // #endregion
+    //#endregion
 
-    // #region TypeORM
+    //#region TypeORM
     TypeOrmModule.forRootAsync({
       imports: [LoggerModule],
       inject: [ConfigService, Logger],
@@ -116,11 +116,11 @@ const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : 
           },
         } as TypeOrmModuleOptions),
     }),
-    // #endregion
+    //#endregion
 
-    // #region TypeORM
+    //#region TypeORM
     TypeOrmModule.forFeature([ProfileEntity, GroupEntity, UserEntity]),
-    // #endregion
+    //#endregion
 
     UserModule,
 
