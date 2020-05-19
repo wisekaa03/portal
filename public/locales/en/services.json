@@ -1,7 +1,7 @@
 {
   "title": {
     "title": "Portal: Ticket",
-    "service": "Portal: Ticket, Service \"{{service}}\""
+    "route": "Portal: Ticket, Service \"{{route}}\""
   },
   "success": "User appeal registered.",
   "tabs": {

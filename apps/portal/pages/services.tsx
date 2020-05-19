@@ -17,7 +17,6 @@ import {
   ServicesFavoriteProps,
   TkRoutes,
 } from '@lib/types';
-import { OLD_TICKET_SERVICE, OLD_TICKET_NEW } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
@@ -34,18 +33,19 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
-  const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
-    Data<'OldTicketService', OldServices[]>,
-    void
-  >(OLD_TICKET_SERVICE, {
-    ssr: false,
-    fetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
-  });
+  // TODO: доделать api
+  // const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
+  //   Data<'OldTicketService', OldServices[]>,
+  //   void
+  // >(OLD_TICKET_SERVICE, {
+  //   ssr: false,
+  //   fetchPolicy: 'cache-first',
+  //   notifyOnNetworkStatusChange: true,
+  // });
 
-  const [createTicket, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
-    OLD_TICKET_NEW,
-  );
+  // const [createTicket, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
+  //   OLD_TICKET_NEW,
+  // );
 
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
@@ -91,9 +91,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
       attachments: files.map((file: DropzoneFile) => file.file),
     };
 
-    createTicket({
-      variables,
-    });
+    // createTicket({
+    //   variables,
+    // });
 
     setCreated({});
     setCurrentTab(4);
@@ -143,14 +143,14 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     }
   }, [contentRef, files]);
 
-  useEffect(() => {
-    if (errorCreated) {
-      snackbarUtils.error(errorCreated);
-    }
-    if (errorServices) {
-      snackbarUtils.error(errorServices);
-    }
-  }, [errorCreated, errorServices]);
+  // useEffect(() => {
+  //   if (errorCreated) {
+  //     snackbarUtils.error(errorCreated);
+  //   }
+  //   if (errorServices) {
+  //     snackbarUtils.error(errorServices);
+  //   }
+  // }, [errorCreated, errorServices]);
 
   // TODO: нужен масив избранных сервисов
   // TODO: нужна мутация на изменения избранных сервисов
@@ -158,9 +158,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   return (
     <>
       <Head>
-        <title>
-          {task.service ? t('services:title.service', { service: task.service.name }) : t('services:title.title')}
-        </title>
+        <title>{task.route ? t('services:title.route', { route: task.route.name }) : t('services:title.title')}</title>
       </Head>
       <MaterialUI {...rest}>
         <ServicesComponent
@@ -177,9 +175,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           files={files}
           setFiles={setFiles}
           submitted={submitted}
-          loadingRoutes={loadingServices}
-          loadingCreated={loadingCreated}
-          refetchRoutes={refetchServices}
+          loadingRoutes
+          loadingCreated
+          refetchRoutes={(() => {}) as any}
           handleCurrentTab={setCurrentTab}
           handleService={handleService}
           handleSubmit={handleSubmit}
