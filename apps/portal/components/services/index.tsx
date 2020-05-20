@@ -245,6 +245,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                       <ServicesElement
                         key={current.code}
                         favorite
+                        withLink
                         setFavorite={updateFavorites}
                         element={current}
                         isUp={current.priority > 0}
