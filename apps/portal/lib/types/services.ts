@@ -1,70 +1,76 @@
 /** @format */
 
 import { DropzoneFile } from './dropzone';
-import { TkService, TkRoutes } from './tickets';
-
-export type ServicesElementType = 'department' | 'service' | 'category';
-
-export interface ServicesRouteProps {
-  code: string;
-  name: string;
-  avatar?: any;
-}
+import { TkRoutes, TkRoute, TkService } from './tickets';
+import { UserSettingsTaskFavorite } from './user.dto';
 
 export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
-  titleRef: React.Ref<HTMLInputElement>;
+  serviceRef: React.Ref<HTMLSelectElement>;
   bodyRef: React.Ref<any>;
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
   routes?: TkRoutes[];
-  services?: TkService[];
+  favorites: UserSettingsTaskFavorite[] | null;
   body: string;
   setBody: React.Dispatch<React.SetStateAction<string>>;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
+  submitted: boolean;
   loadingRoutes: boolean;
   loadingCreated: boolean;
   refetchRoutes: () => Promise<any>;
   handleCurrentTab: (_: number) => void;
-  handleTitle: (_: React.ChangeEvent<HTMLInputElement>) => void;
+  handleService: (_: React.ChangeEvent<HTMLSelectElement>) => void;
   handleSubmit: () => void;
   handleResetTicket: () => void;
+  handleFavorites: (_: UserSettingsTaskFavorite[]) => void;
 }
 
-export interface ServicesElementLinkQueryProps {
-  route?: string;
-  service?: string;
-}
+export type ServicesFavoriteProps = {
+  id: string;
+  action: 'up' | 'down' | 'add' | 'delete';
+};
 
 export interface ServicesElementProps {
-  element: ServicesRouteProps;
+  element: TaskElementProps;
   withLink?: boolean;
-  active?: string;
+  active?: boolean;
   base64?: boolean;
-  linkQuery?: ServicesElementLinkQueryProps;
   url?: string;
+  favorite?: boolean;
+  setFavorite?: (_: ServicesFavoriteProps) => void;
+  isUp?: boolean;
+  isDown?: boolean;
 }
 
 export interface ServicesSuccessProps {
-  classes: Record<'root', string>;
+  classes: Record<'root' | 'actions', string>;
   data: ServicesCreatedProps;
+}
+
+export interface ServicesErrorProps {
+  name: string;
+  onClose: () => void;
 }
 
 export interface ServicesSuccessCardProps {
   cardRef: React.Ref<any>;
-  classes: Record<'root', string>;
+  classes: Record<'root' | 'title', string>;
   data: ServicesCreatedProps;
 }
 
-export interface TicketsElementProps {
+export interface TaskElementProps {
   code: string;
   name: string;
   avatar?: any;
   categoryType?: string;
+  subtitle?: string;
+  priority?: number;
 }
 
+// TODO: скорректировать после консолидации с беком
 export interface ServicesCreatedProps {
   code?: string;
   name?: string;
@@ -73,10 +79,11 @@ export interface ServicesCreatedProps {
   organization?: string;
   status?: string;
   createdDate?: Date;
+  service?: string;
 }
 
+// TODO: проработать тикет в соответствии с изменениями
 export interface ServicesTaskProps {
-  route?: TicketsElementProps;
-  service?: TicketsElementProps;
-  title: string;
+  route?: TkRoute;
+  service?: TkService;
 }

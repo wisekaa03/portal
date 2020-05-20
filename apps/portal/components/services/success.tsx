@@ -19,64 +19,78 @@ const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
 
 const ServicesSuccessCard = withStyles((theme) => ({
   root: {
-    'padding': theme.spacing(2),
+    'padding': theme.spacing(3, 3, 2),
     'width': '100%',
-    '& h5': {
-      marginBottom: theme.spacing(),
-    },
-    '& h5, & h6': {
-      textAlign: 'center',
+
+    '& h6': {
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: '16px',
+      lineHeight: '24px',
+      color: 'rgba(0, 0, 0, 0.541327)',
     },
   },
+  title: {
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: '20px',
+    lineHeight: '23px',
+    marginBottom: theme.spacing(4),
+  },
 }))(({ cardRef, classes, data }: ServicesSuccessCardProps) => {
-  const { code, name, organization, category, requisiteSource, status, createdDate } = data;
+  const { code, category, createdDate, service } = data;
   const { t, i18n } = useTranslation();
 
   return (
     <CardContent ref={cardRef} className={classes.root}>
-      <Typography variant="h5">{t('services:success')}</Typography>
+      <Typography variant="h5" className={classes.title}>
+        {t('services:success')}
+      </Typography>
       <Typography variant="subtitle1">{t('services:complete.code', { value: code })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.name', { value: name })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.company', { value: organization })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.service', { value: category })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.category', { value: requisiteSource })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
+      <Typography variant="subtitle1">{t('services:complete.service', { value: service })}</Typography>
+      <Typography variant="subtitle1">{t('services:complete.category', { value: category })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.date', { value: format(createdDate, i18n) })}</Typography>
     </CardContent>
   );
 });
 
-const ServicesSuccess = withStyles({
+const ServicesSuccess = withStyles((theme) => ({
   root: {
     width: '90vw',
     maxWidth: '600px',
+    borderRadius: 2,
+    boxShadow: '0px 19px 38px rgba(0, 0, 0, 0.3), 0px 15px 12px rgba(0, 0, 0, 0.22)',
   },
-})(({ classes, data }: ServicesSuccessProps) => {
+  actions: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: theme.spacing(3),
+  },
+}))(({ classes, data }: ServicesSuccessProps) => {
   const { t } = useTranslation();
   const cardRef = useRef(null);
 
   return (
     <Card className={classes.root}>
       <ServicesSuccessCard cardRef={cardRef} data={data} />
-      <CardActions>
-        <Box display="flex" flexGrow={1} justifyContent="space-around" p={2}>
-          {/*
+      <CardActions className={classes.actions}>
+        {/*
           <ComposeButton variant="contained" startIcon={<SendIcon />} rounded body={`<p>Код заявки: ${data.code}</p>`}>
             {t('common:send')}
           </ComposeButton> */}
-          <ReactToPdf targetRef={cardRef} filename={`ticket_${data.code}.pdf`}>
-            {({ toPdf }) => (
-              <Button onClick={toPdf} actionType="save">
-                {t('common:save')}
-              </Button>
-            )}
-          </ReactToPdf>
-          <ReactToPrint
-            trigger={() => <Button actionType="print">{t('common:print')}</Button>}
-            content={() => cardRef.current}
-            copyStyles
-          />
-        </Box>
+        <ReactToPdf targetRef={cardRef} filename={`ticket_${data.code}.pdf`}>
+          {({ toPdf }) => (
+            <Button onClick={toPdf} actionType="save">
+              {t('common:save')}
+            </Button>
+          )}
+        </ReactToPdf>
+        <ReactToPrint
+          trigger={() => <Button actionType="print">{t('common:print')}</Button>}
+          content={() => cardRef.current}
+          copyStyles
+        />
       </CardActions>
     </Card>
   );

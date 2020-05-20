@@ -1,24 +1,21 @@
 {
   "title": {
     "title": "Portal: Ticket",
-    "department": "Portal: Ticket, Department \"{{department}}\"",
-    "service": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\"",
-    "category": "Portal: Ticket, Department \"{{department}}\", Service \"{{service}}\", Category \"{{category}}\""
+    "route": "Portal: Ticket, Service \"{{route}}\""
   },
   "success": "User appeal registered.",
   "tabs": {
-    "tab1": "Routes",
-    "tab2": "Service",
-    "tab3": "Edit ticket",
-    "tab4": "Acknowledgment"
+    "tab1": "Service",
+    "tab2": "Ticket"
   },
   "form": {
     "title": "Title",
+    "service": "Servce",
     "text": "Description",
     "category": "Category"
   },
   "complete": {
-    "code": "Code: {{value}}",
+    "code": "Code appeal: {{value}}",
     "name": "Theme appeal: {{value}}",
     "company": "Company: {{value}}",
     "service": "Service: {{value}}",
@@ -26,8 +23,22 @@
     "status": "Status: {{value}}",
     "date": "Date: {{value}}"
   },
+  "error": {
+    "title": "Сервис временно недоступен",
+    "body1": "Нет связи с {{name}}",
+    "body2": "Информация о заявке выслана на электронную почту соответствующего департамента. После восстановления связи заявка будет зарегистрирована в системе учёта заявок."
+  },
+  "favorite": {
+    "up": "Increase priority",
+    "down": "Lower priority",
+    "delete": "Remove from favorites"
+  },
   "errors": {
     "smallTitle": "Слишком короткий заголовок обращения",
     "smallBody": "Необходимо подробнее описать проблему"
+  },
+  "headers": {
+    "favorites": "Избранные услуги",
+    "list": "Список сервисов"
   }
 }

@@ -1,16 +1,17 @@
 /** @format */
 
 // #region Imports NPM
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useCallback, useMemo } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, TextField } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem } from '@material-ui/core';
+import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
 // #endregion
 // #region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
-import { ServicesWrapperProps } from '@lib/types';
+import { ServicesWrapperProps, ServicesFavoriteProps, TaskElementProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import HR from '@public/images/svg/itapps/HR.svg';
@@ -19,6 +20,9 @@ import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
+import { UserSettingsTaskFavorite } from '../../lib/types/user.dto';
+import { TkRoute, TkRoutes } from '../../lib/types/tickets';
+import ServicesError from './error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       flex: 1,
     },
-    container: {
+    blockContainer: {
       display: 'grid',
       gap: `${theme.spacing()}px ${theme.spacing(4)}px`,
       padding: theme.spacing(2, 4),
@@ -65,29 +69,61 @@ const useStyles = makeStyles((theme: Theme) =>
         marginRight: theme.spacing(),
       },
     },
+    blockTitle: {
+      'fontWeight': 500,
+      'fontSize': '14px',
+      'lineHeight': '21px',
+      'background': '#F7FBFA',
+      'boxShadow': '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      'borderRadius': theme.spacing(),
+      'padding': theme.spacing(2, 4, 2, 9),
+
+      '&:not(:first-child)': {
+        marginTop: theme.spacing(2),
+      },
+    },
+    blockTitleWithIcon: {
+      padding: theme.spacing(2, 4),
+      display: 'flex',
+      alignItems: 'center',
+    },
+    titleIcon: {
+      color: theme.palette.secondary.main,
+      display: 'flex',
+      marginRight: theme.spacing(2),
+    },
+    select: {
+      '&:focus': {
+        backgroundColor: 'transparent',
+      },
+    },
   }),
 );
 
+const MINIMAL_BODY_LENGTH = 10;
+
 const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,
-  titleRef,
+  serviceRef,
   bodyRef,
   currentTab,
   task,
   created,
   routes,
-  services,
+  favorites,
   body,
   setBody,
   files,
   setFiles,
+  submitted,
   loadingRoutes,
   loadingCreated,
   refetchRoutes,
   handleCurrentTab,
-  handleTitle,
+  handleService,
   handleSubmit,
   handleResetTicket,
+  handleFavorites,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -97,26 +133,92 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     ? `calc(100vh - ${appBarHeight}px - ${headerRef.current.clientHeight}px)`
     : '100%';
 
-  const invalidTitle = task.title.length < 10 && body.length > 0;
+  const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
+  const updateFavorites = useCallback(
+    ({ id, action }: ServicesFavoriteProps) => {
+      let result;
+      const priority = favorites.find((favorite) => favorite.id === id)?.priority;
+
+      switch (action) {
+        case 'delete':
+          result = favorites.filter((favorite) => favorite.id !== id);
+          break;
+        case 'up':
+        case 'down':
+          result = favorites.reduce(
+            (acc: UserSettingsTaskFavorite[], { id: curId, priority: curPriority }: UserSettingsTaskFavorite) => {
+              const newCurrent = { id: curId, priority: curPriority };
+              const sym = action === 'up' ? 1 : -1;
+
+              if (curId === id) {
+                newCurrent.priority -= sym;
+              } else if (curPriority === priority - sym) {
+                newCurrent.priority += sym;
+              }
+
+              return [...acc, newCurrent];
+            },
+            [],
+          );
+          break;
+        default:
+          result = [...favorites, { id, priority: favorites.length }];
+          break;
+      }
+
+      handleFavorites(result);
+    },
+    [favorites, handleFavorites],
+  );
+  const handleAddFavorite = useCallback(() => updateFavorites({ id: task.route.code, action: 'add' }), [
+    updateFavorites,
+    task,
+  ]);
+
+  const allRoutes = useMemo<TkRoute[]>(() => {
+    if (routes.length === 0) {
+      return [];
+    }
+
+    return routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], []);
+  }, [routes]);
+  const allFavorites = useMemo<TaskElementProps[]>(
+    () =>
+      allRoutes
+        .reduce((acc: TaskElementProps[], cur: TaskElementProps) => {
+          const curFavorite = favorites.find(({ id }) => id === cur.code);
+          if (curFavorite) {
+            return [...acc, { ...cur, priority: curFavorite.priority }];
+          }
+
+          return acc;
+        }, [])
+        .sort((a, b) => a.priority - b.priority),
+    [allRoutes, favorites],
+  );
+  // TODO: выбор первой ошибки из списка
+  const errorString = useMemo<string>(() => routes.find(({ error }) => !!error)?.error || '', [routes]);
+  const isFavorite = useMemo<boolean>(() => !!allFavorites.find(({ code }) => code === task.route?.code), [
+    task,
+    allFavorites,
+  ]);
+  const enableBody = useMemo<boolean>(
+    () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
+    [task],
+  );
+  const notValid = useMemo<boolean>(() => !enableBody || body.trim().length < MINIMAL_BODY_LENGTH, [enableBody, body]);
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
       <Paper ref={headerRef} square className={classes.header}>
-        <Tabs
-          value={currentTab}
-          indicatorColor="secondary"
-          textColor="secondary"
-          onChange={(_: any, tab: number): void => handleCurrentTab(tab)}
-        >
+        <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
           <Tab label={t('services:tabs.tab1')} />
           <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
-          <Tab disabled={!task.service} label={t('services:tabs.tab3')} />
-          <Tab disabled={!created} label={t('services:tabs.tab5')} />
         </Tabs>
       </Paper>
       <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
         <>
-          {currentTab < 4 && <RefreshButton onClick={() => refetchRoutes()} />}
+          {!submitted && <RefreshButton onClick={refetchRoutes} />}
           <SwipeableViews
             ref={contentRef}
             animateHeight
@@ -126,26 +228,43 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
             containerStyle={{ flexGrow: 1 }}
             onSwitching={handleCurrentTab}
           >
-            <Box className={classes.container}>
-              {routes?.map((route) =>
-                route?.routes?.map((r) => (
-                  <ServicesElement key={r.code} withLink element={r} active={task.route?.code} />
-                )),
+            <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
+              {allFavorites.length > 0 && (
+                <>
+                  <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
+                    <Box className={classes.titleIcon}>
+                      <StarBorderIcon />
+                    </Box>
+                    {t('services:headers.favorites')}
+                  </Box>
+                  <Box className={classes.blockContainer}>
+                    {allFavorites.map((current) => (
+                      <ServicesElement
+                        key={current.code}
+                        favorite
+                        setFavorite={updateFavorites}
+                        element={current}
+                        isUp={current.priority > 0}
+                        isDown={current.priority < allFavorites.length - 1}
+                      />
+                    ))}
+                  </Box>
+                </>
               )}
-            </Box>
-            <Box className={classes.container} style={{ minHeight: contentHeight }}>
-              {services?.map((current) => (
-                <ServicesElement
-                  key={current.code}
-                  withLink
-                  base64
-                  element={current}
-                  active={task.service?.code}
-                  linkQuery={{ route: task.route?.code }}
-                />
-              ))}
+              <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
+              <Box className={classes.blockContainer}>
+                {allRoutes.map((current) => (
+                  <ServicesElement
+                    key={current.code}
+                    withLink
+                    // base64
+                    element={current}
+                  />
+                ))}
+              </Box>
               {/* Евгений */}
-              <ServicesElement
+              {/* TODO: если все еще актуально, доделать */}
+              {/* <ServicesElement
                 key="k0001"
                 withLink
                 url="http://srvsd-01.khgk.local/anketa833/"
@@ -154,78 +273,78 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   name: 'Департамент по персоналу - Форма на подбор персонала',
                   avatar: HR,
                 }}
-                linkQuery={{ route: task.route?.code }}
-              />
+              /> */}
             </Box>
-            {/* <Box className={classes.container} style={{ minHeight: contentHeight }}>
-              {categories.map((current) => (
-                <ServicesElement
-                  key={current.code}
-                  withLink
-                  base64
-                  element={current}
-                  active={task.category?.code}
-                  linkQuery={{
-                    department: task.department?.code,
-                    service: task.service?.code,
-                  }}
-                />
-              ))}
-                </Box> */}
             <Box
               style={{ minHeight: contentHeight }}
               display="flex"
               flexDirection="column"
               alignItems="center"
               justifyContent="center"
+              p={3}
             >
-              {task.route && task.service && (
-                <Box display="grid" className={classes.formControl}>
-                  <ServicesElement base64 element={task.route} />
-                  <ServicesElement base64 element={task.service} />
-                </Box>
+              {submitted ? (
+                <Loading
+                  activate={loadingCreated || !created}
+                  full
+                  type="circular"
+                  color="secondary"
+                  disableShrink
+                  size={48}
+                >
+                  {!!errorString ? (
+                    <ServicesError name={errorString} onClose={handleResetTicket} />
+                  ) : (
+                    <ServicesSuccess data={created} />
+                  )}
+                </Loading>
+              ) : (
+                <>
+                  {task.route && (
+                    <Box display="grid" gridTemplateColumns="1fr 1fr" gridGap="8px" className={classes.formControl}>
+                      <ServicesElement /* base64 */ element={task.route} active />
+                      <Box display="flex" justifyContent="flex-end" alignItems="center">
+                        {!isFavorite && (
+                          <Button actionType="favorite" onClick={handleAddFavorite}>
+                            {t('common:favorite')}
+                          </Button>
+                        )}
+                      </Box>
+                    </Box>
+                  )}
+                  <FormControl className={classes.formControl} variant="outlined">
+                    <Select
+                      value={task.service?.code || '0'}
+                      inputRef={serviceRef}
+                      onChange={handleService}
+                      classes={{
+                        select: classes.select,
+                      }}
+                    >
+                      <MenuItem value="0">{t('services:form.service')}</MenuItem>
+                      {task.route?.services?.map((service) => (
+                        <MenuItem key={service.code} value={service.code}>
+                          {service.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl className={classes.formControl} variant="outlined">
+                    <JoditEditor ref={bodyRef} value={body} onChange={setBody} disabled={!enableBody} />
+                  </FormControl>
+                  <FormControl className={classes.formControl} variant="outlined">
+                    <Dropzone files={files} setFiles={setFiles} />
+                  </FormControl>
+                  <FormControl className={clsx(classes.formControl, classes.formAction)}>
+                    <Button actionType="cancel" onClick={handleResetTicket}>
+                      {t('common:cancel')}
+                    </Button>
+                    <Button onClick={handleSubmit} disabled={notValid}>
+                      {t('common:accept')}
+                    </Button>
+                  </FormControl>
+                </>
               )}
-              <FormControl className={classes.formControl} variant="outlined">
-                <TextField
-                  inputRef={titleRef}
-                  error={invalidTitle}
-                  value={task.title}
-                  onChange={handleTitle}
-                  type="text"
-                  label={t('services:form.title')}
-                  variant="outlined"
-                />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <JoditEditor ref={bodyRef} value={body} onChange={setBody} />
-              </FormControl>
-              <FormControl className={classes.formControl} variant="outlined">
-                <Dropzone files={files} setFiles={setFiles} />
-              </FormControl>
-              <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                <Button actionType="cancel" onClick={handleResetTicket}>
-                  {t('common:cancel')}
-                </Button>
-                <Button onClick={handleSubmit}>{t('common:accept')}</Button>
-              </FormControl>
-            </Box>
-            <Box
-              style={{ minHeight: contentHeight }}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Loading
-                activate={loadingCreated || !created}
-                full
-                type="circular"
-                color="secondary"
-                disableShrink
-                size={48}
-              >
-                <ServicesSuccess data={created} />
-              </Loading>
             </Box>
           </SwipeableViews>
         </>
