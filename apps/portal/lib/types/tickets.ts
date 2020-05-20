@@ -136,3 +136,5 @@ export interface TkUserOST {
   subdivision: string;
   Аватар: string;
 }
+
+export type RecordsOST = Record<string, Array<Record<string, Record<string, any>>>>;

@@ -16,6 +16,7 @@ import {
   TkTaskEditInput,
   TkTask,
   TkTaskDescriptionInput,
+  RecordsOST,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
@@ -102,13 +103,13 @@ export class TicketsService {
 
         Object.keys(OSTicketURL).forEach((where) => {
           const osTicketService = this.httpService
-            .post<TicketsService[]>(`${OSTicketURL[where]}?req=routes`, {})
+            .post<RecordsOST>(`${OSTicketURL[where]}?req=routes`, {})
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    routes: [...response.data.map((route: Record<string, any>) => routesOST(route, where as TkWhere))],
+                    routes: [...response.data?.routes?.map((route) => routesOST(route, where as TkWhere))],
                   };
                 }
 
@@ -216,7 +217,7 @@ export class TicketsService {
 
         Object.keys(OSTicketURL).forEach((where) => {
           const osTickets = this.httpService
-            .post<Record<string, any>>(`${OSTicketURL[where]}?req=tasks`, {
+            .post<RecordsOST>(`${OSTicketURL[where]}?req=tasks`, {
               login: user.username,
               user: JSON.stringify(userOST),
               msg: JSON.stringify({ login: fio, departament: '', opened: true }),
@@ -226,9 +227,7 @@ export class TicketsService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    tasks: [
-                      ...response.data.tasks?.map((task: Record<string, any>) => taskOST(task, where as TkWhere)),
-                    ],
+                    tasks: [...response.data?.tasks?.map((task) => taskOST(task, where as TkWhere))],
                   };
                 }
 
@@ -465,6 +464,37 @@ export class TicketsService {
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+      if (!!this.configService.get<string>('OSTICKET_URL')) {
+        try {
+          const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+
+          Object.keys(OSTicketURL)
+            .filter((where) => where === task.where)
+            .forEach(async (where) => {
+              await this.httpService
+                .post<RecordsOST>(`${OSTicketURL[where]}?req=description`, {})
+                .toPromise()
+                .then((response) => {
+                  if (response.status === 200) {
+                    if (typeof response.data === 'object') {
+                      return {
+                        routes: [...response.data?.description?.map((route) => routesOST(route, where as TkWhere))],
+                      };
+                    }
+
+                    return { error: `Not found the OSTicket data in "${where}"` };
+                  }
+
+                  return { error: response.statusText };
+                });
+            });
+        } catch (error) {
+          this.logger.error(error);
+
+          throw error;
+        }
+      }
+
       throw new Error('Not implemented');
     }
 
