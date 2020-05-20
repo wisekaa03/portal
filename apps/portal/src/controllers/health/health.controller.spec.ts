@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { TerminusModule } from '@nestjs/terminus';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { HealthController } from './health.controller';
-// #endregion
+//#endregion
 
 describe('Health Controller', () => {
   let controller: HealthController;

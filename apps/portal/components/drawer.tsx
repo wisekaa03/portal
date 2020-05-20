@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useContext } from 'react';
 import { fade, Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery, Tooltip } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { ADMIN_PAGES } from '@lib/constants';
@@ -26,7 +26,7 @@ import NewsIcon from '@public/images/svg/icons/news.svg';
 import PhonebookIcon from '@public/images/svg/icons/phonebook.svg';
 import SettingsIcon from '@public/images/svg/icons/settings.svg';
 import AdminIcon from '@public/images/svg/icons/admin.svg';
-// #endregion
+//#endregion
 
 const drawerWidth = 256;
 

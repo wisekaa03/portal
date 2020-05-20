@@ -1,18 +1,18 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { Component, forwardRef, RefForwardingComponent } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { TableRow, TableCell, TableSortLabel } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import Box from '@lib/box-ref';
 import { PhonebookHeaderContext } from '@lib/context';
 import { PHONEBOOK_HIDDEN_COLS, PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import { useTranslation } from '@lib/i18n-client';
 import { HeaderPropsRef } from '@lib/types';
 import { allColumns } from './settings';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

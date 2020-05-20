@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import NextI18Next, { WithTranslation } from 'next-i18next';
 import { useTranslation as originalUseTranslation } from 'react-i18next';
 import { NextComponentType, NextPageContext } from 'next';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 const detectionOrder: string[] = [];
 

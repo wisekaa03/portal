@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { FilesComponentProps } from '@lib/types';
 import Button from '@front/components/ui/button';
@@ -16,7 +16,7 @@ import Dropzone from '@front/components/dropzone';
 import FilesTreeComponent from './tree';
 import FilesDialogComponent from './dialog';
 import FilesTableComponent from './table';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

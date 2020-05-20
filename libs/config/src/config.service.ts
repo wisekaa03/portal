@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 import Joi from '@hapi/joi';
 import { Inject } from '@nestjs/common';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 export const CONFIG_OPTIONS = 'CONFIG_OPTIONS';
 

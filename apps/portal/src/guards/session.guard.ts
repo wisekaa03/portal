@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 @Injectable()
 export class SessionGuard implements CanActivate {

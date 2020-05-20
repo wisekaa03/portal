@@ -1,9 +1,9 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
-// #endregion
+//#region Imports NPM
+//#endregion
+//#region Imports Local
+//#endregion
 
 export const getStorage = (name: string): string => (__SERVER__ ? '' : sessionStorage.getItem(name) || '');
 

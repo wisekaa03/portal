@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository, FindConditions } from 'typeorm';
 import bcrypt from 'bcrypt';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
 import { TICKET_STATUSES, ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
@@ -17,7 +17,7 @@ import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
 import { UserEntity } from './user.entity';
-// #endregion
+//#endregion
 
 @Injectable()
 export class UserService {
@@ -158,9 +158,7 @@ export class UserService {
     const defaultSettings: UserSettings = {
       lng: 'ru',
       drawer: true,
-      ticket: {
-        status: TICKET_STATUSES[0],
-      },
+      taskStatus: TICKET_STATUSES[0],
     };
 
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {

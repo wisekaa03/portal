@@ -1,19 +1,19 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
 import { Box, Typography, Card, CardContent, CardActions } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/SendOutlined';
 import ReactToPrint from 'react-to-print';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ServicesSuccessProps, ServicesSuccessCardProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-// #endregion
+//#endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
 

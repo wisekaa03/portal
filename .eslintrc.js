@@ -12,7 +12,7 @@ module.exports = {
     'jest',
     'promise',
     'prettier',
-    'jsx-a11y'
+    'jsx-a11y',
   ],
   settings: {
     'react': {
@@ -45,7 +45,7 @@ module.exports = {
     'prettier/@typescript-eslint',
     'prettier/babel',
     'prettier/react',
-    'plugin:jsx-a11y/recommended'
+    'plugin:jsx-a11y/recommended',
   ],
   parserOptions: {
     sourceType: 'module',
@@ -99,7 +99,6 @@ module.exports = {
     'react-hooks/exhaustive-deps': 1,
     'no-underscore-dangle': 0,
     'import/no-unresolved': 0,
-    'import/extensions': 0,
     'react/prop-types': 0,
     'global-require': 1,
     'no-plusplus': [
@@ -159,16 +158,8 @@ module.exports = {
         optionalDependencies: true,
       },
     ],
-    'import/extensions': [
-      'error',
-      'always',
-      {
-        js: 'never',
-        jsx: 'never',
-        ts: 'never',
-        tsx: 'never',
-      },
-    ],
+    'spaced-comment': ['error', 'always', { markers: ['#region', '#endregion'] }],
+    'import/extensions': 0,
     'react/forbid-prop-types': 'off',
     'no-var-requires': 'off',
     'arrow-body-style': 0,
@@ -209,14 +200,10 @@ module.exports = {
       },
     ],
     'unicorn/prevent-abbreviations': 'off',
-    'import/extensions': 0,
     'no-empty-function': 0,
-    'import/no-default-export': 0,
     'unicorn/filename-case': 0,
     '@typescript-eslint/explicit-member-accessibility': 0,
-    '@typescript-eslint/no-empty-interface': 1,
     'no-empty-pattern': 0,
-    '@typescript-eslint/no-non-null-assertion': 0,
     '@typescript-eslint/no-parameter-properties': [
       'error',
       {

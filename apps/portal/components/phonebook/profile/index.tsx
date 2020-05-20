@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -10,8 +10,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
 import { ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded, CallEndRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { nextI18next } from '@lib/i18n-client';
 import {
   Data,
@@ -28,7 +28,7 @@ import { ComposeLink } from '@front/components/compose-link';
 import snackbarUtils from '@lib/snackbar-utils';
 import CopyButton from '@front/components/ui/copy-button';
 import PhonebookProfileControl from './control';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -2,7 +2,7 @@
 // eslint-disable-next-line spaced-comment
 /// <reference types="../../../typings/global" />
 
-// #region Imports NPM
+//#region Imports NPM
 import { resolve } from 'path';
 // import { APP_FILTER } from '@nestjs/core';
 // import Next from 'next';
@@ -20,8 +20,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { CacheInterceptorProvider } from '@app/cache.interceptor';
@@ -48,11 +48,11 @@ import { FilesEntity } from '@back/files/files.entity';
 
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
-// #endregion
+//#endregion
 
 const env = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env');
 
-// #region TypeOrm config options
+//#region TypeOrm config options
 const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
   name: 'default',
   keepConnectionAlive: true,
@@ -91,27 +91,27 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
     duration: configService.get<number>('DATABASE_REDIS_TTL'),
   },
 });
-// #endregion
+//#endregion
 
 @Module({
   imports: [
-    // #region Config module
+    //#region Config module
     ConfigModule.register(env),
-    // #endregion
+    //#endregion
 
-    // #region Logging module
+    //#region Logging module
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),
     }),
-    // #endregion
+    //#endregion
 
-    // #region Next RenderModule
+    //#region Next RenderModule
     // TODO: появляется NOT FOUND перед загрузкой страницы
     RenderModule, // .forRootAsync(Next({ dev: __DEV__, dir: __DEV__ ? 'apps/portal' : '', quiet: false })),
-    // #endregion
+    //#endregion
 
-    // #region Cache Manager - Redis
+    //#region Cache Manager - Redis
     CacheModule.registerAsync({
       imports: [LoggerModule],
       inject: [ConfigService, Logger],
@@ -133,9 +133,9 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
         };
       },
     }),
-    // #endregion
+    //#endregion
 
-    // #region Locale I18n
+    //#region Locale I18n
     I18nModule.forRootAsync({
       inject: [ConfigService],
       parser: I18nJsonParser,
@@ -152,9 +152,9 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
         ],
       }),
     }),
-    // #endregion
+    //#endregion
 
-    // #region GraphQL
+    //#region GraphQL
     Upload,
     GraphQLModule.forRoot({
       debug: __DEV__,
@@ -173,9 +173,9 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
       },
       context: ({ req, res }) => ({ req, res }),
     }),
-    // #endregion
+    //#endregion
 
-    // #region TypeORM
+    //#region TypeORM
     TypeOrmModule.forRootAsync({
       imports: [LoggerModule],
       inject: [ConfigService, Logger],
@@ -192,48 +192,48 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
         return typeOrmPostgres(configService, logger);
       },
     }),
-    // #endregion
+    //#endregion
 
-    // #region Profile
+    //#region Profile
     ProfileModule,
-    // #endregion
+    //#endregion
 
-    // #region Authentication
+    //#region Authentication
     AuthModule,
-    // #endregion
+    //#endregion
 
-    // #region Groups
+    //#region Groups
     GroupModule,
-    // #endregion
+    //#endregion
 
-    // #region Users
+    //#region Users
     UserModule,
-    // #endregion
+    //#endregion
 
-    // #region News
+    //#region News
     NewsModule,
-    // #endregion
+    //#endregion
 
-    // #region Files module
+    //#region Files module
     FilesModule,
-    // #endregion
+    //#endregion
 
-    // #region Tickets module
+    //#region Tickets module
     TicketsModule,
-    // #endregion
+    //#endregion
 
-    // #region Controllers module
+    //#region Controllers module
     ControllersModule,
-    // #endregion
+    //#endregion
   ],
 
   providers: [
-    // #region GraphQL
+    //#region GraphQL
     DateScalar,
     ByteArrayScalar,
-    // #endregion
+    //#endregion
 
-    // #region Errors
+    //#region Errors
     // TODO: Next.JS is forwarding through RenderService -> setErrorHandler
     // {
     //   provide: APP_FILTER,
@@ -242,19 +242,19 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
     //     return new HttpErrorFilter(logService);
     //   },
     // },
-    // #endregion
+    //#endregion
 
     LoggingInterceptorProvider,
 
     CacheInterceptorProvider,
 
-    // #region GraphQL interceptor
+    //#region GraphQL interceptor
     // {
     // TODO: сделать чтобы IntrospectionQuery блокировался до тех пор пока кто-либо не воспользуется login
     //   provide: APP_INTERCEPTOR,
     //   useClass: GraphQLInterceptor,
     // },
-    // #endregion
+    //#endregion
   ],
 })
 export class AppModule {}

@@ -7,8 +7,8 @@ import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem } from '@material-
 import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps, TaskElementProps } from '@lib/types';

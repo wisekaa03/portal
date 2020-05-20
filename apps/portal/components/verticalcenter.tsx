@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 const useStyles = makeStyles(() =>
   createStyles({

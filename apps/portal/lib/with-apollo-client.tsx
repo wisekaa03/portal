@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { AppContext } from 'next/app';
 import Head from 'next/head';
@@ -18,8 +18,8 @@ import { Response } from 'express';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 import { Logger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { UserContext } from '@lib/types';
 import { GQLErrorCode } from '@back/shared/gqlerror';
 import { nextI18next } from './i18n-client';
@@ -27,7 +27,7 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
 import { AUTH_PAGE } from './constants';
-// #endregion
+//#endregion
 
 interface CreateClientProps {
   initialState?: any;

@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useLazyQuery, useApolloClient } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import Router from 'next/router';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { Data, LoginValuesProps, LoginPageProps, Login } from '@lib/types';
 import { FIRST_PAGE } from '@lib/constants';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
@@ -16,7 +16,7 @@ import { LOGIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
 import { setStorage } from '@lib/session-storage';
-// #endregion
+//#endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
   const client = useApolloClient();

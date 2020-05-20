@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { LoginService, Gender, UserContext } from '@lib/types';
-// #endregion
+//#endregion
 
 export * from './app-bar';
 export * from './ldap-sync';

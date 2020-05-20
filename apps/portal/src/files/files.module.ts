@@ -1,24 +1,24 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { UserModule } from '@back/user/user.module';
 import { FilesService } from './files.service';
 import { FilesResolver } from './files.resolver';
 import { FilesEntity } from './files.entity';
 import { FilesFolderEntity } from './files.folder.entity';
-// #endregion
+//#endregion
 
 @Module({
   imports: [
     UserModule,
 
-    // #region TypeORM
+    //#region TypeORM
     TypeOrmModule.forFeature([FilesFolderEntity, FilesEntity]),
-    // #endregion
+    //#endregion
   ],
   providers: [FilesService, FilesResolver],
 })

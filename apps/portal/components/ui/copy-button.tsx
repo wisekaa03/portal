@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState, useEffect } from 'react';
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -8,10 +8,10 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ClickAwayListener } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

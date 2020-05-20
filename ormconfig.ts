@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports Local
+//#region Imports Local
 import { ConfigService } from '@app/config/config.service';
 
 import { GroupEntity } from '@back/group/group.entity';
@@ -9,7 +9,7 @@ import { UserEntity } from '@back/user/user.entity';
 import { NewsEntity } from '@back/news/news.entity';
 import { FilesFolderEntity } from '@back/files/files.folder.entity';
 import { FilesEntity } from '@back/files/files.entity';
-// #endregion
+//#endregion
 
 const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity, FilesFolderEntity, FilesEntity];
 // const entities = ['apps/portal/src/**/*.entity.ts'];

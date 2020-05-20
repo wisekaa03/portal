@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import Session from 'express-session';
 import RedisSessionStore from 'connect-redis';
 import Redis from 'redis';
 import { Logger } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
-// #endregion
+//#endregion
 
 export default (configService: ConfigService, logger: Logger): Session.Store => {
   try {

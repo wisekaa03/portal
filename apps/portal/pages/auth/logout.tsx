@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { nextI18next, includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
 import { LOGOUT } from '../../lib/queries';
 import LogoutComponent from '../../components/auth/logout';
@@ -14,7 +14,7 @@ import { removeStorage } from '../../lib/session-storage';
 import { SESSION, AUTH_PAGE, FIRST_PAGE } from '../../lib/constants';
 import snackbarUtils from '../../lib/snackbar-utils';
 import Cookie from '../../lib/cookie';
-// #endregion
+//#endregion
 
 const Logout: I18nPage = ({ t }): React.ReactElement => {
   const client = useApolloClient();

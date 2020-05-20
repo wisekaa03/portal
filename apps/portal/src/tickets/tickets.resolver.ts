@@ -1,20 +1,26 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-import { Request } from 'express';
+import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
 import { FileUpload } from 'graphql-upload';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
+import {
+  TkRoutes,
+  TkTasks,
+  TkTaskNew,
+  TkTaskNewInput,
+  TkTaskEditInput,
+  TkTaskDescriptionInput,
+  TkTask,
+} from '@lib/types/tickets';
+import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
-import { SoapAuthentication } from '@app/soap';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
-import { User } from '@lib/types/user.dto';
 import { TicketsService } from './tickets.service';
-import { TkRoutes, TkTasks, TkTaskNew, TkTaskNewInput, TkTaskEditInput, TkTask } from '../../lib/types/tickets';
-// #endregion
+//#endregion
 
 @Resolver('TicketsResolver')
 export class TicketsResolver {
@@ -59,11 +65,9 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    const promise = await this.ticketsService.TicketsTasks(user, password, status, find).catch((error: Error) => {
+    return this.ticketsService.TicketsTasks(user, password, status, find).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
-
-    return promise;
   }
 
   /**
@@ -71,7 +75,7 @@ export class TicketsResolver {
    *
    * @async
    * @method TicketsTaskNew
-   * @param {TkTaskNewInput} ticket subject, body, serviceID and others
+   * @param {TkTaskNewInput} task subject, body, service and others
    * @param {Promise<FileUpload>[]} attachments Array of attachments
    * @returns {TkTaskNew}
    * @throws {UnauthorizedException | HttpException}
@@ -79,7 +83,7 @@ export class TicketsResolver {
   @Mutation('TicketsTaskNew')
   @UseGuards(GqlAuthGuard)
   async TicketsTaskNew(
-    @Args('ticket') ticket: TkTaskNewInput,
+    @Args('task') task: TkTaskNewInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -88,7 +92,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskNew(user, password, ticket, attachments).catch((error: Error) => {
+    return this.ticketsService.TicketsTaskNew(user, password, task, attachments).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -103,7 +107,7 @@ export class TicketsResolver {
   @Mutation('TicketsTaskEdit')
   @UseGuards(GqlAuthGuard)
   async TicketsTaskEdit(
-    @Args('ticket') ticket: TkTaskEditInput,
+    @Args('task') task: TkTaskEditInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -112,7 +116,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskEdit(user, password, ticket, attachments).catch((error: Error) => {
+    return this.ticketsService.TicketsTaskEdit(user, password, task, attachments).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -127,8 +131,7 @@ export class TicketsResolver {
   @Query('TicketsTaskDescription')
   @UseGuards(GqlAuthGuard)
   async TicketsTaskDescription(
-    @Args('code') code: string,
-    @Args('type') type: string,
+    @Args('task') task: TkTaskDescriptionInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkTask> {
@@ -136,7 +139,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskDescription(user, password, code, type).catch((error: Error) => {
+    return this.ticketsService.TicketsTaskDescription(user, password, task).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

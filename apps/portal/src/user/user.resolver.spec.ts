@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 // import { resolve } from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
-// #endregion
+//#endregion
 
 const serviceMock = jest.fn(() => ({}));
 

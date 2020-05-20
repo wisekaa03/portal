@@ -1,16 +1,16 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { shallow as Shallow } from 'enzyme';
 import { createShallow } from '@material-ui/core/test-utils';
 import { Toolbar, Popover, IconButton } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LOGOUT, SYNC } from '@lib/queries';
 import AppBar from '@front/components/app-bar';
-// #endregion
+//#endregion
 
 describe('AppBar component', () => {
   const mockOpen = jest.fn();

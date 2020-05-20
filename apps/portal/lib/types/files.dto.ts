@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { FileUpload } from 'graphql-upload';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { User } from './user.dto';
 import { FilesFolder } from './files.folder.dto';
-// #endregion
+//#endregion
 
-// #region Profile
+//#region Profile
 export interface Files {
   id?: string;
   createdUser?: User;
@@ -25,4 +25,4 @@ export interface Files {
 
   content?: Promise<FileUpload>;
 }
-// #endregion
+//#endregion

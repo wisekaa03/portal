@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
@@ -8,11 +8,11 @@ import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-// #endregion
+//#endregion
 
 export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 
@@ -90,9 +90,9 @@ export class LoggingInterceptor implements NestInterceptor {
 }
 
 export const LoggingInterceptorProvider =
-  // #region Logging interceptor
+  //#region Logging interceptor
   {
     provide: APP_INTERCEPTOR,
     useClass: LoggingInterceptor,
   };
-// #endregion
+//#endregion

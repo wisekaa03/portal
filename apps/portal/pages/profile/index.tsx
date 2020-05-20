@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useContext, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import Box from '@material-ui/core/Box';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { TICKETS_TASKS, USER_SETTINGS } from '@lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
@@ -18,14 +18,14 @@ import { Data, TkTask, TkTasks } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileInfoComponent from '@front/components/profile/info';
 import ProfileTicketsComponent from '@front/components/profile/tickets';
-// #endregion
+//#endregion
 
 const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
   // const search = useDebounce(_search, 300);
 
-  const ticketStatus = profile?.user?.settings?.ticket?.status as string | null;
-  const [status, setStatus] = useState<string>(ticketStatus || TICKET_STATUSES[0]);
+  const taskStatus = profile?.user?.settings?.taskStatus as string | null;
+  const [status, setStatus] = useState<string>(taskStatus || TICKET_STATUSES[0]);
   const [search, setSearch] = useState<string>('');
 
   const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
@@ -64,10 +64,10 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }, []).filter((task) => task.code.includes(search) || task.name.includes(search)) || [];
 
   useEffect(() => {
-    if (ticketStatus) {
-      setStatus(ticketStatus);
+    if (taskStatus) {
+      setStatus(taskStatus);
     }
-  }, [ticketStatus]);
+  }, [taskStatus]);
 
   useEffect(() => {
     if (errorTickets) {

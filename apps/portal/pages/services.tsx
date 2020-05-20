@@ -5,8 +5,8 @@ import React, { useState, useEffect, useRef, useCallback, useContext } from 'rea
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import {
   Data,

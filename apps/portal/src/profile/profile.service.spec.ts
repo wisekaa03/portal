@@ -1,19 +1,19 @@
 /** @format */
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config/config.service';
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
 import { GroupService } from '@back/group/group.service';
 import { ProfileService } from './profile.service';
-// #endregion
+//#endregion
 
 jest.mock('@app/config/config.service');
 

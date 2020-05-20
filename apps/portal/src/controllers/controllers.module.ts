@@ -1,10 +1,10 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { AdminController } from './admin/admin.controller';
 import { AuthController } from './auth/auth.controller';
 import { CalendarController } from './calendar/calendar.controller';
@@ -19,13 +19,13 @@ import { ProfileController } from './profile/profile.controller';
 import { FilesController } from './files/files.controller';
 import { SettingsController } from './settings/settings.controller';
 import { HealthController } from './health/health.controller';
-// #endregion
+//#endregion
 
 @Module({
   imports: [
-    // #region Health module
+    //#region Health module
     TerminusModule,
-    // #endregion
+    //#endregion
   ],
   controllers: [
     AdminController,

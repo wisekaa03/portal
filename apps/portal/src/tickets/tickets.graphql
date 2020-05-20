@@ -33,49 +33,74 @@ type TkFile {
   ext: String
 }
 
+type TkAuthorComments {
+  users: [TkUser]
+  comments: [TkComment]
+}
+
+type TkComment {
+  where: String!
+  date: Date
+  authorLogin: String
+  body: String
+  task: String
+  code: String
+  parentCode: String
+}
+
 type TkTask {
   where: String!
   code: String!
   type: String
   name: String!
-  description: String!
+  description: String
   descriptionFull: String
   status: String!
-  createdDate: Date!
   avatar: String
-  endDate: String
-  timeout: String
-  executorUser: TkUser
-  initiatorUser: TkUser
   service: TkService
-  serviceCategory: TkService
+  createdDate: Date!
+  endDate: Date
+  timeoutDate: Date
+  initiatorUser: TkUser!
+  executorUser: TkUser
+  availableAction: String
+  availableStages: String
   files: [TkFile!]
+  comments: TkAuthorComments
 }
 
 type TkTaskNew {
   where: String!
   code: String!
   name: String!
-  requisiteSource: String!
-  category: String!
+  route: String!
+  service: String!
   organization: String!
   status: String!
   createdDate: Date!
 }
 
 input TkTaskNewInput {
+  where: String!
   title: String!
   body: String!
-  serviceId: String!
-  categoryId: String!
-  categoryType: String!
+  # Route Id
+  route: String!
+  #  Service Id
+  service: String!
+  # Login
   executorUser: String
 }
 
 input TkTaskEditInput {
+  where: String!
   code: String!
-  type: String!
   comment: String!
+}
+
+input TkTaskDescriptionInput {
+  where: String!
+  code: String!
 }
 
 type TkRoutes {
@@ -91,7 +116,7 @@ type TkTasks {
 type Query {
   TicketsRoutes: [TkRoutes!]
   TicketsTasks(status: String, find: String): [TkTasks!]
-  TicketsTaskDescription(code: String, type: String): TkTask
+  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask!
 }
 
 type Mutation {

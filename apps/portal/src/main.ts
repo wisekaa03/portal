@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import http from 'http';
 import https, { ServerOptions } from 'https';
 import fs from 'fs';
@@ -20,20 +20,20 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { Logger, PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { nextI18next } from '@lib/i18n-client';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
 import { pinoOptions } from './shared/pino.options';
-// #endregion
+//#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
   let httpsServer: boolean | ServerOptions = false;
 
-  // #region NestJS options
+  //#region NestJS options
   const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
@@ -41,9 +41,9 @@ async function bootstrap(config: ConfigService): Promise<void> {
     },
     logger,
   };
-  // #endregion
+  //#endregion
 
-  // #region Create NestJS app
+  //#region Create NestJS app
   if (
     !!config.get<number>('PORT_SSL') &&
     fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory()
@@ -73,13 +73,13 @@ async function bootstrap(config: ConfigService): Promise<void> {
     nestjsOptions,
   );
   app.useLogger(logger);
-  // #endregion
+  //#endregion
 
-  // #region X-Response-Time
+  //#region X-Response-Time
   // app.use(responseTime());
-  // #endregion
+  //#endregion
 
-  // #region Improve security
+  //#region Improve security
   // app.use(helmet.ieNoOpen());
 
   // TODO: Как сделать nonce ?
@@ -151,34 +151,34 @@ async function bootstrap(config: ConfigService): Promise<void> {
       },
     }),
   );
-  // #endregion
+  //#endregion
 
-  // #region Enable json response
+  //#region Enable json response
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  // #endregion
+  //#endregion
 
-  // #region Enable cookie
+  //#region Enable cookie
   app.use(cookieParser());
-  // #endregion
+  //#endregion
 
-  // #region Session and passport initialization
+  //#region Session and passport initialization
   const store = sessionRedis(config, logger);
   app.use(session(config, logger, store));
 
   app.use(passport.initialize());
   app.use(passport.session());
-  // #endregion
+  //#endregion
 
-  // #region Static files
+  //#region Static files
   app.useStaticAssets(resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/'));
-  // #endregion
+  //#endregion
 
-  // #region Locale I18n
+  //#region Locale I18n
   app.use(nextI18NextMiddleware(nextI18next));
-  // #endregion
+  //#endregion
 
-  // #region Next.JS locals
+  //#region Next.JS locals
   app.use('*', (_req: Request, res: express.Response, next: Function) => {
     // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     res.locals.nestLogger = logger;
@@ -186,9 +186,9 @@ async function bootstrap(config: ConfigService): Promise<void> {
     // res.set('X-Server-ID', res);
     // res.removeHeader('X-Powered-By');
   });
-  // #endregion
+  //#endregion
 
-  // #region Next
+  //#region Next
   const appNextjs = Next({
     dev: __DEV__,
     dir: __DEV__ ? 'apps/portal' : '',
@@ -213,9 +213,9 @@ async function bootstrap(config: ConfigService): Promise<void> {
       }
     },
   );
-  // #endregion
+  //#endregion
 
-  // #region Start server
+  //#region Start server
   await app.init();
 
   http.createServer(server).listen(config.get<number>('PORT'));
@@ -225,14 +225,14 @@ async function bootstrap(config: ConfigService): Promise<void> {
     https.createServer(httpsServer, server).listen(config.get<number>('PORT_SSL'));
     logger.log(`HTTPS running on port ${config.get('PORT_SSL')}`, 'Bootstrap');
   }
-  // #endregion
+  //#endregion
 
-  // #region Webpack-HMR
+  //#region Webpack-HMR
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(async () => app.close());
   }
-  // #endregion
+  //#endregion
 }
 
 const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env'));

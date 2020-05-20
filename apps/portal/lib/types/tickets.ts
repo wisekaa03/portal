@@ -2,10 +2,10 @@
 import { FileUpload } from 'graphql-upload';
 
 export enum TkWhere {
-  Svc1Citil = '1Citil',
-  SvcOSTaudit = 'OSTaudit',
-  SvcOSTmedia = 'OSTmedia',
-  SvcDefault = 'default',
+  SOAP1C = 'SOAP1C',
+  OSTaudit = 'OSTaudit',
+  OSTmedia = 'OSTmedia',
+  Default = 'default',
 }
 
 export interface TkService {
@@ -38,6 +38,21 @@ export interface TkFile {
   ext?: string;
 }
 
+export interface TkComment {
+  where: TkWhere;
+  date: Date;
+  authorLogin: string;
+  body: string;
+  task: string;
+  code: string;
+  parentCode: string;
+}
+
+export interface TkAuthorComments {
+  users: TkUser[] | null;
+  comments: TkComment[] | null;
+}
+
 export interface TkTask {
   where: TkWhere;
   code: string;
@@ -46,12 +61,17 @@ export interface TkTask {
   description?: string;
   descriptionFull?: string;
   status?: string;
+  route?: TkService | null;
   service: TkService | null;
-  createdDate?: string;
-  endDate?: string;
+  createdDate: Date | null;
+  timeoutDate: Date | null;
+  endDate: Date | null;
   executorUser: TkUser | null;
   initiatorUser: TkUser | null;
-  files?: TkFile[];
+  availableAction?: string;
+  availableStages?: string;
+  files: TkFile[] | null;
+  comments: TkAuthorComments | null;
 }
 
 export interface TkTasks {
@@ -71,33 +91,37 @@ export interface TkUser {
   title?: string;
 }
 
-export interface TkTaskNewInput {
-  where: TkWhere;
-  title: string;
-  body: string;
-  serviceId: string;
-  executorUser?: string;
-  attachments?: Promise<FileUpload>[];
-}
-
 export interface TkTaskEditInput {
   where: TkWhere;
   code: string;
-  type: string;
   comment: string;
   attachments?: Promise<FileUpload>[];
 }
 
+export interface TkTaskDescriptionInput {
+  where: TkWhere;
+  code: string;
+}
+
+export interface TkTaskNewInput {
+  where: TkWhere;
+  title: string;
+  body: string;
+  route: string;
+  service: string;
+  executorUser?: string;
+  attachments?: Promise<FileUpload>[];
+}
+
 export interface TkTaskNew {
-  error?: string;
-  where?: TkWhere;
-  code?: string;
-  name?: string;
-  requisiteSource?: string;
-  category?: string;
-  organization?: string;
-  status?: string;
-  createdDate?: Date;
+  where: TkWhere;
+  code: string;
+  name: string;
+  route: string;
+  service: string;
+  organization: string;
+  status: string;
+  createdDate: Date;
 }
 
 export interface TkUserOST {
@@ -112,3 +136,5 @@ export interface TkUserOST {
   subdivision: string;
   Аватар: string;
 }
+
+export type RecordsOST = Record<string, Array<Record<string, Record<string, any>>>>;

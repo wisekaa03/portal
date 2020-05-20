@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import { Palette } from '@material-ui/core/styles/createPalette';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import NoImage from '@public/images/svg/noimage.svg';
-// #endregion
+//#endregion
 
 const iconWidth = 24;
 

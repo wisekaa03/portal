@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Injectable, HttpService } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { LoginEmail, EmailSession } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
@@ -15,7 +15,7 @@ import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
 import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
-// #endregion
+//#endregion
 
 @Injectable()
 export class AuthService {

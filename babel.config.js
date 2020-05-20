@@ -3,7 +3,7 @@
 module.exports = (api) => {
   api.cache(true);
 
-  // #region Constants
+  //#region Constants
   const constantsPresets = ['@babel/typescript'];
 
   const constantsPlugins = [
@@ -63,9 +63,9 @@ module.exports = (api) => {
       'icons',
     ],
   ];
-  // #endregion
+  //#endregion
 
-  // #region Development
+  //#region Development
   const devProd = {
     presets: [
       [
@@ -78,16 +78,16 @@ module.exports = (api) => {
     ],
     plugins: [...constantsPlugins],
   };
-  // #endregion
+  //#endregion
 
-  // #region Production
+  //#region Production
   const prodProd = {
     presets: ['@babel/preset-react', ...constantsPresets],
     plugins: [...constantsPlugins],
   };
-  // #endregion
+  //#endregion
 
-  // #region Test
+  //#region Test
   const testProd = {
     presets: [
       [
@@ -100,9 +100,9 @@ module.exports = (api) => {
     ],
     plugins: [...constantsPlugins],
   };
-  // #endregion
+  //#endregion
 
-  // #region Config
+  //#region Config
   const config = {
     env: {
       development: {
@@ -118,9 +118,9 @@ module.exports = (api) => {
       },
     },
   };
-  // #endregion
+  //#endregion
 
-  // #region Production Plugins
+  //#region Production Plugins
   if (process.env.NODE_ENV === 'production') {
     // This plugin inlines consecutive property assignments, array pushes, etc.
     config.env.production.plugins.push('transform-inline-consecutive-adds');
@@ -242,7 +242,7 @@ module.exports = (api) => {
     // In: if (bar !== null); Out: if (null !== bar);
     config.env.development.plugins.push('minify-flip-comparisons');
   }
-  // #endregion
+  //#endregion
 
   // console.warn('process.env:', process.env);
   // console.warn('config:', config);

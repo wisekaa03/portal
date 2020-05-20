@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { LdapService } from './ldap.service';
 import { LDAP_OPTIONS } from './ldap.interface';
-// #endregion
+//#endregion
 
 jest.mock('@app/config/config.service');
 

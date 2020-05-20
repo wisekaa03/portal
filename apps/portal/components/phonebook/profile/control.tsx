@@ -1,16 +1,16 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, Children } from 'react';
 import Link from 'next/link';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, ClickAwayListener, MenuList, MenuItem, Popper } from '@material-ui/core';
 import { MoreVertRounded as MoreVertIcon } from '@material-ui/icons';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { PhonebookProfileControlProps } from '@lib/types';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles(() =>
   createStyles({

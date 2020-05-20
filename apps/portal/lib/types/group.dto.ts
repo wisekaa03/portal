@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { LoginService } from './login-service';
-// #endregion
+//#endregion
 
-// #region Group
+//#region Group
 export interface Group {
   id?: string;
 
@@ -23,4 +23,4 @@ export interface Group {
 
   updatedAt?: Date;
 }
-// #endregion
+//#endregion

@@ -1,7 +1,7 @@
 /** @format */
 /* eslint no-param-reassign: 0, @typescript-eslint/explicit-function-return-type: 0 */
 
-// #region Imports NPM
+//#region Imports NPM
 const { resolve } = require('path');
 
 require('dotenv').config({ path: resolve(__dirname, '../../.env') });
@@ -15,10 +15,10 @@ const withFonts = require('next-fonts');
 
 const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 const resolveTsconfigPaths = require('../../tsconfig-paths-to-webpack-alias');
-// #endregion
+//#endregion
 
 function withCustomWebpack(conf = {}) {
   const { webpack } = conf;

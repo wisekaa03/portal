@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useContext } from 'react';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ProfileContext } from '@lib/context';
-// #endregion
+//#endregion
 
 const IsAdmin = ({ children }: any): React.ReactElement => {
   const profile = useContext(ProfileContext);

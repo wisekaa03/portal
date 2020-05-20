@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 // import { LogModule } from '@app/logger';
 import { MailController } from './mail.controller';
-// #endregion
+//#endregion
 
 describe(MailController.name, () => {
   let controller: MailController;

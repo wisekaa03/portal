@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
-// #endregion
-// #region Imports Local
+//#region Imports NPM
+//#endregion
+//#region Imports Local
 import { User } from './user.dto';
-// #endregion
+//#endregion
 
-// #region Profile
+//#region Profile
 export interface News {
   id?: string;
 
@@ -22,4 +22,4 @@ export interface News {
 
   user?: User;
 }
-// #endregion
+//#endregion

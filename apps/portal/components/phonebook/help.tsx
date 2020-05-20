@@ -1,14 +1,14 @@
 /** @format */
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { MobileStepper, Card, Paper, Typography, Button, Box, IconButton } from '@material-ui/core';
 import { ArrowBackRounded, KeyboardArrowLeft, KeyboardArrowRight, FileCopy, Settings } from '@material-ui/icons';
 import SwipeableViews from 'react-swipeable-views';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { nextI18next } from '@lib/i18n-client';
 import { HelpDataProps, PhonebookHelpProps } from '@lib/types';
 import Img1 from '@public/images/png/help/phonebook/img1.png';
@@ -16,7 +16,7 @@ import Img2 from '@public/images/png/help/phonebook/img2.png';
 import Img3 from '@public/images/png/help/phonebook/img3.png';
 import Img4 from '@public/images/png/help/phonebook/img4.png';
 import Img5 from '@public/images/png/help/phonebook/img5.png';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

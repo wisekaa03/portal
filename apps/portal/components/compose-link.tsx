@@ -1,14 +1,14 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React from 'react';
 import Link, { LinkProps } from '@material-ui/core/Link';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
-// #endregion
+//#endregion
+//#region Imports Local
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

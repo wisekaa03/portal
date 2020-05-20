@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
@@ -9,8 +9,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import LogoMin from '@public/images/png/logo_min.png';
 import HeaderBg from '@public/images/jpeg/header_bg.jpg';
 import PopoverBg from '@public/images/png/profile_popover_bg.png';
@@ -19,7 +19,7 @@ import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';
 import { AppBarComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
-// #endregion
+//#endregion
 
 const avatarHeight = 48;
 

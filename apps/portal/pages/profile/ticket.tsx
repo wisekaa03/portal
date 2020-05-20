@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { format } from '@lib/dayjs';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT } from '@lib/queries';
@@ -14,7 +14,7 @@ import { Data, TkTask, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import ProfileTicketComponent from '@front/components/profile/ticket';
-// #endregion
+//#endregion
 
 const ProfileTicketPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);

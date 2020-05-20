@@ -1,13 +1,13 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useEffect, useState } from 'react';
 // import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER, DELETE_FOLDER } from '@lib/queries';
@@ -15,7 +15,7 @@ import { FILES_SHARED_NAME } from '@lib/constants';
 import { Data, FilesQueryProps, FolderDialogState, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import FilesComponent from '@front/components/files';
-// #endregion
+//#endregion
 
 const SHARED = `/${FILES_SHARED_NAME}`;
 

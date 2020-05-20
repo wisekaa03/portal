@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { fade, Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
@@ -20,8 +20,8 @@ import {
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { format } from '@lib/dayjs';
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TICKET_STATUSES } from '@lib/constants';
@@ -37,7 +37,7 @@ import TicketIconNew from '@public/images/svg/task/task_new.svg';
 import TicketIconPause from '@public/images/svg/task/task_pause.svg';
 import TicketIconWorked from '@public/images/svg/task/task_worked.svg';
 import TicketIconComplete from '@public/images/svg/task/task_complete.svg';
-// #endregion
+//#endregion
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {

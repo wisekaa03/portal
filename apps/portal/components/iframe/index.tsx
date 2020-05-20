@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { ComponentType } from 'react';
 import objectAssign from 'object-assign';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { IframeInterface } from '@lib/types';
-// #endregion
+//#endregion
 
 const Iframe: ComponentType<IframeInterface> = ({
   url,

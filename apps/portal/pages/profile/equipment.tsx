@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useContext } from 'react';
 import Head from 'next/head';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -18,13 +18,13 @@ import {
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { v4 as uuidv4 } from 'uuid';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import Loading from '@front/components/loading';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

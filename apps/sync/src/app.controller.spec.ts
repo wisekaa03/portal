@@ -1,12 +1,12 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { AppController } from './app.controller';
 import { SyncService } from './app.service';
-// #endregion
+//#endregion
 
 jest.mock('./app.service');
 

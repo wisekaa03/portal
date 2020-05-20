@@ -1,12 +1,12 @@
 /** @format */
 /* eslint max-classes-per-file:0 */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 import { LoggerModule } from 'nestjs-pino';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image/image.service';
@@ -14,7 +14,7 @@ import { GroupService } from '@back/group/group.service';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
 import { SyncService } from './app.service';
-// #endregion
+//#endregion
 
 jest.mock('@app/config/config.service');
 

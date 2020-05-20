@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import { Inject, Injectable } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import Ldap from 'ldapjs';
@@ -8,8 +8,8 @@ import { EventEmitter } from 'events';
 import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 import bcrypt from 'bcrypt';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ConfigService } from '@app/config';
 import dayjs from 'dayjs';
 import {
@@ -21,7 +21,7 @@ import {
   ldapADattributes,
 } from './ldap.interface';
 import { Change } from './ldap/change';
-// #endregion
+//#endregion
 
 @Injectable()
 export class LdapService extends EventEmitter {

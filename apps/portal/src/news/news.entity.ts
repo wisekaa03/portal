@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,10 +10,10 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { UserEntity } from '@back/user/user.entity';
-// #endregion
+//#endregion
 
 @Entity('news')
 export class NewsEntity {

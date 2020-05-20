@@ -1,11 +1,11 @@
 /** @format */
 
-// #region Import NPM
+//#region Import NPM
 import { createContext } from 'react';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { HeaderProps, UserContext } from '@lib/types';
-// #endregion
+//#endregion
 
 /**
  * Yes the user object is stored in Apollo state but we don't want to have to
