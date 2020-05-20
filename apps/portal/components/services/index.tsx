@@ -141,7 +141,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
       switch (action) {
         case 'delete':
-          result = favorites.filter((favorite) => favorite.id !== id);
+          result = favorites
+            .filter((favorite) => favorite.id !== id)
+            .sort((a, b) => a.priority - b.priority)
+            .map((favorite, index) => ({ ...favorite, priority: index }));
           break;
         case 'up':
         case 'down':
