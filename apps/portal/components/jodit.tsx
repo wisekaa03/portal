@@ -42,17 +42,18 @@ const config = {
 interface JoditEditorComponentProps {
   value: string;
   onChange: any;
+  disabled?: boolean;
 }
 
 const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorComponentProps> = (
-  { value, onChange },
+  { value, onChange, disabled },
   ref,
 ) => (
   // TODO: не поддерживает ref WTF???
   <JoditReact
     // ref={ref}
     value={value}
-    config={config}
+    config={{ ...config, readonly: !!disabled }}
     // preferred to use only this option to update the content for performance reasons
     onBlur={onChange}
     onChange={() => {}}
