@@ -27,7 +27,7 @@ export interface TkRoute {
 }
 
 export interface TkRoutes {
-  categories?: (TkRoute | null)[];
+  routes?: (TkRoute | null)[];
   error?: string;
 }
 

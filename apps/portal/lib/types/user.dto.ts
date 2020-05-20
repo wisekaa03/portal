@@ -54,11 +54,21 @@ interface UserSettingsPhonebook {
   columns?: ColumnNames[] | null;
 }
 
+export interface UserSettingsTaskFavorite {
+  id: string;
+  priority: number;
+}
+
+interface UserSettingsTask {
+  favorites?: UserSettingsTaskFavorite[] | null;
+}
+
 export interface UserSettings {
   lng?: 'ru' | 'en' | null;
   drawer?: boolean | null;
   ticket?: UserSettingsTicket | null;
   phonebook?: UserSettingsPhonebook | null;
+  task?: UserSettingsTask | null;
 }
 // #endregion
 

@@ -2,6 +2,7 @@
 
 import { DropzoneFile } from './dropzone';
 import { TkRoutes, TkRoute, TkService } from './tickets';
+import { UserSettingsTaskFavorite } from './user.dto';
 
 export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
@@ -11,7 +12,7 @@ export interface ServicesWrapperProps {
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
   routes?: TkRoutes[];
-  favorites: TicketsElementProps[];
+  favorites: UserSettingsTaskFavorite[] | null;
   body: string;
   setBody: React.Dispatch<React.SetStateAction<string>>;
   files: DropzoneFile[];
@@ -24,7 +25,7 @@ export interface ServicesWrapperProps {
   handleService: (_: React.ChangeEvent<HTMLSelectElement>) => void;
   handleSubmit: () => void;
   handleResetTicket: () => void;
-  handleFavorites: (_: ServicesFavoriteProps) => void;
+  handleFavorites: (_: UserSettingsTaskFavorite[]) => void;
 }
 
 export type ServicesFavoriteProps = {
@@ -33,13 +34,15 @@ export type ServicesFavoriteProps = {
 };
 
 export interface ServicesElementProps {
-  element: TicketsElementProps;
+  element: TaskElementProps;
   withLink?: boolean;
   active?: boolean;
   base64?: boolean;
   url?: string;
   favorite?: boolean;
   setFavorite?: (_: ServicesFavoriteProps) => void;
+  isUp?: boolean;
+  isDown?: boolean;
 }
 
 export interface ServicesSuccessProps {
@@ -58,12 +61,13 @@ export interface ServicesSuccessCardProps {
   data: ServicesCreatedProps;
 }
 
-export interface TicketsElementProps {
+export interface TaskElementProps {
   code: string;
   name: string;
   avatar?: any;
   categoryType?: string;
   subtitle?: string;
+  priority?: number;
 }
 
 // TODO: скорректировать после консолидации с беком

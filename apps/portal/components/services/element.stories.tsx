@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react';
-import { text } from '@storybook/addon-knobs';
+import { text, boolean } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
 
 import Service1 from '@public/images/svg/itapps/app_1.svg';
@@ -22,6 +22,8 @@ story.add('Element', () => (
       }}
       favorite
       setFavorite={action('Favorite')}
+      isUp={!boolean('is FirstElement', false)}
+      isDown={!boolean('is LastElement', false)}
     />
     <Story
       element={{

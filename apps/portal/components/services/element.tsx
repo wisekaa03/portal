@@ -98,6 +98,8 @@ const ServicesElement: FC<ServicesElementProps> = ({
   withLink,
   favorite,
   setFavorite,
+  isUp,
+  isDown,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -166,18 +168,22 @@ const ServicesElement: FC<ServicesElementProps> = ({
                   <Paper>
                     <ClickAwayListener onClickAway={handleCloseMore}>
                       <MenuList>
-                        <MenuItem onClick={handleFavorite('up')}>
-                          <ListItemIcon>
-                            <KeyboardArrowUpIcon fontSize="small" />
-                          </ListItemIcon>
-                          <Typography variant="inherit">{t('services:favorite.up')}</Typography>
-                        </MenuItem>
-                        <MenuItem onClick={handleFavorite('down')}>
-                          <ListItemIcon>
-                            <KeyboardArrowDownIcon fontSize="small" />
-                          </ListItemIcon>
-                          <Typography variant="inherit">{t('services:favorite.down')}</Typography>
-                        </MenuItem>
+                        {isUp && (
+                          <MenuItem onClick={handleFavorite('up')}>
+                            <ListItemIcon>
+                              <KeyboardArrowUpIcon fontSize="small" />
+                            </ListItemIcon>
+                            <Typography variant="inherit">{t('services:favorite.up')}</Typography>
+                          </MenuItem>
+                        )}
+                        {isDown && (
+                          <MenuItem onClick={handleFavorite('down')}>
+                            <ListItemIcon>
+                              <KeyboardArrowDownIcon fontSize="small" />
+                            </ListItemIcon>
+                            <Typography variant="inherit">{t('services:favorite.down')}</Typography>
+                          </MenuItem>
+                        )}
                         <MenuItem onClick={handleFavorite('delete')}>
                           <ListItemIcon>
                             <DeleteIcon fontSize="small" />

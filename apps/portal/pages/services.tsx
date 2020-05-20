@@ -1,7 +1,7 @@
 /** @format */
 
 // #region Imports NPM
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -13,13 +13,15 @@ import {
   DropzoneFile,
   ServicesTaskProps,
   ServicesCreatedProps,
-  OldServices,
   ServicesFavoriteProps,
   TkRoutes,
+  UserSettings,
 } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
+import { ProfileContext } from '@lib/context';
+import { USER_SETTINGS } from '@lib/queries';
 // #endregion
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
@@ -32,6 +34,12 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
+
+  const me = useContext(ProfileContext);
+
+  const favorites = me?.user?.settings?.task?.favorites || null;
+
+  const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
   // TODO: доделать api
   // const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
@@ -64,8 +72,20 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     setBody('');
     setFiles([]);
     setCurrentTab(0);
+    setSubmitted(false);
     router.push(pathname, pathname);
   };
+
+  const handleFavorites = useCallback(
+    (data) => {
+      userSettings({
+        variables: {
+          value: { task: { favorites: data } },
+        },
+      });
+    },
+    [userSettings],
+  );
 
   const handleSubmit = (): void => {
     const { route, service } = task;
@@ -152,9 +172,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   //   }
   // }, [errorCreated, errorServices]);
 
-  // TODO: нужен масив избранных сервисов
-  // TODO: нужна мутация на изменения избранных сервисов
-
   return (
     <>
       <Head>
@@ -169,7 +186,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           task={task}
           created={created}
           routes={routes}
-          favorites={[]}
+          favorites={favorites}
           body={body}
           setBody={setBody}
           files={files}
@@ -182,7 +199,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           handleService={handleService}
           handleSubmit={handleSubmit}
           handleResetTicket={handleResetTicket}
-          handleFavorites={(props: ServicesFavoriteProps) => {}}
+          handleFavorites={handleFavorites}
         />
       </MaterialUI>
     </>

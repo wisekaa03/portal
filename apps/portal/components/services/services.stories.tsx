@@ -2,23 +2,23 @@
 
 import React, { FC, useState, useRef, useCallback, useEffect } from 'react';
 import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean, text } from '@storybook/addon-knobs';
 
 import {
   ServicesTaskProps,
   ServicesCreatedProps,
   DropzoneFile,
-  TicketsElementProps,
   ServicesWrapperProps,
   TkRoutes,
   TkWhere,
   TkRoute,
+  UserSettingsTaskFavorite,
 } from '@lib/types';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
 import { story, withTranslation } from './index.stories';
 import Services from './index';
 
-const mockFavorites: TkRoute[] = [
+const mockRoutes: TkRoute[] = [
   {
     where: TkWhere.SvcDefault,
     code: '1',
@@ -51,23 +51,30 @@ const mockFavorites: TkRoute[] = [
   },
 ];
 
-const mockRoutes: TkRoutes[] = [
-  {
-    categories: [...mockFavorites],
-  },
+const mockFavorites: UserSettingsTaskFavorite[] = [
+  { id: '1', priority: 1 },
+  { id: '3', priority: 0 },
+  { id: '2', priority: 2 },
 ];
 
-const defaultTicketState: ServicesTaskProps = { route: mockFavorites[0] };
+const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };
 
 const Story: FC<ServicesWrapperProps> = withTranslation('services', Services);
 
 story.add('Default View', () => {
+  const mockData: TkRoutes[] = [
+    {
+      routes: [...mockRoutes],
+      error: text('Error DB', 'OS_TICKET'),
+    },
+  ];
+
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [task, setTask] = useState<ServicesTaskProps>(defaultTicketState);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
-  const [routes, setRoutes] = useState<TkRoutes[]>(mockRoutes);
-  const [favorites, setFavorites] = useState<TicketsElementProps[]>(mockFavorites);
+  const [routes, setRoutes] = useState<TkRoutes[]>(mockData);
+  const [favorites, setFavorites] = useState<UserSettingsTaskFavorite[]>(mockFavorites);
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
@@ -89,6 +96,7 @@ story.add('Default View', () => {
     setBody('');
     setFiles([]);
     setCurrentTab(0);
+    setSubmitted(false);
   }, []);
 
   const handleSubmit = useCallback((): void => {
@@ -130,7 +138,7 @@ story.add('Default View', () => {
       handleService={handleService}
       handleSubmit={handleSubmit}
       handleResetTicket={handleResetTicket}
-      handleFavorites={action('Favorites')}
+      handleFavorites={setFavorites}
     />
   );
 });

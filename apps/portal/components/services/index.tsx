@@ -11,7 +11,7 @@ import clsx from 'clsx';
 // #region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
-import { ServicesWrapperProps } from '@lib/types';
+import { ServicesWrapperProps, ServicesFavoriteProps, TaskElementProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import HR from '@public/images/svg/itapps/HR.svg';
@@ -20,6 +20,9 @@ import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
+import { UserSettingsTaskFavorite } from '../../lib/types/user.dto';
+import { TkRoute, TkRoutes } from '../../lib/types/tickets';
+import ServicesError from './error';
 // #endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -131,23 +134,79 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     : '100%';
 
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
-  const handleAddFavorite = useCallback(() => handleFavorites({ id: task.route.code, action: 'add' }), [
-    handleFavorites,
+  const updateFavorites = useCallback(
+    ({ id, action }: ServicesFavoriteProps) => {
+      let result;
+      const priority = favorites.find((favorite) => favorite.id === id)?.priority;
+
+      switch (action) {
+        case 'delete':
+          result = favorites.filter((favorite) => favorite.id !== id);
+          break;
+        case 'up':
+        case 'down':
+          result = favorites.reduce(
+            (acc: UserSettingsTaskFavorite[], { id: curId, priority: curPriority }: UserSettingsTaskFavorite) => {
+              const newCurrent = { id: curId, priority: curPriority };
+              const sym = action === 'up' ? 1 : -1;
+
+              if (curId === id) {
+                newCurrent.priority -= sym;
+              } else if (curPriority === priority - sym) {
+                newCurrent.priority += sym;
+              }
+
+              return [...acc, newCurrent];
+            },
+            [],
+          );
+          break;
+        default:
+          result = [...favorites, { id, priority: favorites.length }];
+          break;
+      }
+
+      handleFavorites(result);
+    },
+    [favorites, handleFavorites],
+  );
+  const handleAddFavorite = useCallback(() => updateFavorites({ id: task.route.code, action: 'add' }), [
+    updateFavorites,
     task,
   ]);
 
-  const isFavorite = useMemo<boolean>(() => !!favorites.find(({ code }) => code === task.route?.code), [
+  const allRoutes = useMemo<TkRoute[]>(() => {
+    if (routes.length === 0) {
+      return [];
+    }
+
+    return routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], []);
+  }, [routes]);
+  const allFavorites = useMemo<TaskElementProps[]>(
+    () =>
+      allRoutes
+        .reduce((acc: TaskElementProps[], cur: TaskElementProps) => {
+          const curFavorite = favorites.find(({ id }) => id === cur.code);
+          if (curFavorite) {
+            return [...acc, { ...cur, priority: curFavorite.priority }];
+          }
+
+          return acc;
+        }, [])
+        .sort((a, b) => a.priority - b.priority),
+    [allRoutes, favorites],
+  );
+  // TODO: выбор первой ошибки из списка
+  const errorString = useMemo<string>(() => routes.find(({ error }) => !!error)?.error || '', [routes]);
+  const isFavorite = useMemo<boolean>(() => !!allFavorites.find(({ code }) => code === task.route?.code), [
     task,
-    favorites,
+    allFavorites,
   ]);
   const enableBody = useMemo<boolean>(
     () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
     [task],
   );
   const notValid = useMemo<boolean>(() => !enableBody || body.trim().length < MINIMAL_BODY_LENGTH, [enableBody, body]);
-
-  // TODO: разобраться для чего категории
-  const category = routes.length ? routes[0].categories : [];
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -170,7 +229,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
             onSwitching={handleCurrentTab}
           >
             <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
-              {favorites.length > 0 && (
+              {allFavorites.length > 0 && (
                 <>
                   <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
                     <Box className={classes.titleIcon}>
@@ -179,15 +238,22 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     {t('services:headers.favorites')}
                   </Box>
                   <Box className={classes.blockContainer}>
-                    {favorites.map((current) => (
-                      <ServicesElement key={current.code} favorite setFavorite={handleFavorites} element={current} />
+                    {allFavorites.map((current) => (
+                      <ServicesElement
+                        key={current.code}
+                        favorite
+                        setFavorite={updateFavorites}
+                        element={current}
+                        isUp={current.priority > 0}
+                        isDown={current.priority < allFavorites.length - 1}
+                      />
                     ))}
                   </Box>
                 </>
               )}
               <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
               <Box className={classes.blockContainer}>
-                {category.map((current) => (
+                {allRoutes.map((current) => (
                   <ServicesElement
                     key={current.code}
                     withLink
@@ -217,7 +283,6 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               justifyContent="center"
               p={3}
             >
-              {/* TODO: добавить логику вывода ошибки */}
               {submitted ? (
                 <Loading
                   activate={loadingCreated || !created}
@@ -227,7 +292,11 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   disableShrink
                   size={48}
                 >
-                  <ServicesSuccess data={created} />
+                  {!!errorString ? (
+                    <ServicesError name={errorString} onClose={handleResetTicket} />
+                  ) : (
+                    <ServicesSuccess data={created} />
+                  )}
                 </Loading>
               ) : (
                 <>
