@@ -24,8 +24,8 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
   // const search = useDebounce(_search, 300);
 
-  const ticketStatus = profile?.user?.settings?.ticket?.status as string | null;
-  const [status, setStatus] = useState<string>(ticketStatus || TICKET_STATUSES[0]);
+  const taskStatus = profile?.user?.settings?.taskStatus as string | null;
+  const [status, setStatus] = useState<string>(taskStatus || TICKET_STATUSES[0]);
   const [search, setSearch] = useState<string>('');
 
   const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
@@ -64,10 +64,10 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }, []).filter((task) => task.code.includes(search) || task.name.includes(search)) || [];
 
   useEffect(() => {
-    if (ticketStatus) {
-      setStatus(ticketStatus);
+    if (taskStatus) {
+      setStatus(taskStatus);
     }
-  }, [ticketStatus]);
+  }, [taskStatus]);
 
   useEffect(() => {
     if (errorTickets) {

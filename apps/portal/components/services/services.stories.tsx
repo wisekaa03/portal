@@ -20,31 +20,31 @@ import Services from './index';
 
 const mockRoutes: TkRoute[] = [
   {
-    where: TkWhere.SvcDefault,
+    where: TkWhere.Default,
     code: '1',
     name: 'Сервис 1',
     avatar: ServicesIcon,
     services: [
       {
-        where: TkWhere.SvcDefault,
+        where: TkWhere.Default,
         code: '4',
         name: 'Не работает',
       },
       {
-        where: TkWhere.SvcDefault,
+        where: TkWhere.Default,
         code: '5',
         name: 'Заказать услугу',
       },
     ],
   },
   {
-    where: TkWhere.SvcDefault,
+    where: TkWhere.Default,
     code: '2',
     name: 'Сервис 2',
     avatar: ServicesIcon,
   },
   {
-    where: TkWhere.SvcDefault,
+    where: TkWhere.Default,
     code: '3',
     name: 'Сервис 3',
     avatar: ServicesIcon,

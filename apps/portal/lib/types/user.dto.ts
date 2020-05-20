@@ -46,10 +46,6 @@ export interface UserToSave extends BaseUser {
 }
 
 //#region User settings
-interface UserSettingsTicket {
-  status?: string | null;
-}
-
 interface UserSettingsPhonebook {
   columns?: ColumnNames[] | null;
 }
@@ -66,8 +62,8 @@ interface UserSettingsTask {
 export interface UserSettings {
   lng?: 'ru' | 'en' | null;
   drawer?: boolean | null;
-  ticket?: UserSettingsTicket | null;
   phonebook?: UserSettingsPhonebook | null;
+  taskStatus?: string | null;
   task?: UserSettingsTask | null;
 }
 //#endregion

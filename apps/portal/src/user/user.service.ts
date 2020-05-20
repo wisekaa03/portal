@@ -158,9 +158,7 @@ export class UserService {
     const defaultSettings: UserSettings = {
       lng: 'ru',
       drawer: true,
-      ticket: {
-        status: TICKET_STATUSES[0],
-      },
+      taskStatus: TICKET_STATUSES[0],
     };
 
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
