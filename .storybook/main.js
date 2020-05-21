@@ -11,16 +11,26 @@ module.exports = {
     '@storybook/addon-links/register',
     'storybook-addon-i18n/register',
     '@storybook/addons',
-    '@storybook/preset-typescript',
+    {
+      name: '@storybook/preset-typescript',
+      options: {
+        tsLoaderOptions: {
+          configFile: '../apps/portal/tsconfig.json',
+        }
+      }
+    }
   ],
   webpackFinal: async (config) => {
+
     config.resolve = {
       ...(config.resolve || []),
       alias: {
         ...config.resolve.alias,
-        ...resolveTsconfigPaths({ tsconfigPaths: '../tsconfig.json' }),
+        ...resolveTsconfigPaths({ tsconfigPaths: '../apps/portal/tsconfig.json' }),
       },
     };
+
+    // console.log(config);
 
     return config;
   },
