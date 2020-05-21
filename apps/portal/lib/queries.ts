@@ -52,7 +52,9 @@ const PROFILE_FRAGMENT = gql`
 `;
 
 const TICKET_FRAGMENT = gql`
-  fragment TicketProps on OldTicket {
+  fragment TicketProps on TkTask {
+    where
+    id
     code
     name
     description
@@ -60,7 +62,7 @@ const TICKET_FRAGMENT = gql`
     status
     createdDate
     endDate
-    timeout
+    timeoutDate
     executorUser {
       name
       avatar
@@ -68,8 +70,8 @@ const TICKET_FRAGMENT = gql`
       telephone
       company
       department
-      otdel
-      position
+      division
+      title
     }
     initiatorUser {
       name
@@ -78,18 +80,26 @@ const TICKET_FRAGMENT = gql`
       telephone
       company
       department
-      otdel
-      position
+      division
+      title
+    }
+    route {
+      code
+      name
+      description
+      avatar
     }
     service {
       code
       name
+      description
       avatar
     }
     files {
       code
       name
       ext
+      body
     }
   }
 `;
@@ -439,8 +449,8 @@ export const TICKETS_ROUTES = gql`
 `;
 
 export const TICKETS_TASKS = gql`
-  query TicketsTask($status: String) {
-    TicketsTasks(status: $status) {
+  query TicketsTasks($status: String) {
+    TicketsTasks(task: { status: $status }) {
       tasks {
         where
         code
@@ -448,8 +458,21 @@ export const TICKETS_TASKS = gql`
         name
         description
         status
+        route {
+          where
+          code
+          name
+          description
+          avatar
+        }
+        service {
+          where
+          code
+          name
+          description
+          avatar
+        }
         createdDate
-        avatar
       }
       error
     }
@@ -457,8 +480,8 @@ export const TICKETS_TASKS = gql`
 `;
 
 export const TICKETS_TASK_DESCRIPTION = gql`
-  query TicketsTaskDescription($code: String, $type: String) {
-    TicketsTaskDescription(code: $code, type: $type) {
+  query TicketsTaskDescription($where: String, $code: String) {
+    TicketsTaskDescription(task: { where: $where, code: $code }) {
       ...TicketProps
     }
   }
@@ -466,8 +489,8 @@ export const TICKETS_TASK_DESCRIPTION = gql`
 `;
 
 export const TICKETS_TASK_NEW = gql`
-  mutation TicketsTaskNew($ticket: OldTicketNewInput!, $attachments: [Upload]) {
-    TicketsTaskNew(ticket: $ticket, attachments: $attachments) {
+  mutation TicketsTaskNew($task: TicketsTaskNewInput!, $attachments: [Upload]) {
+    TicketsTaskNew(task: $task, attachments: $attachments) {
       where
       code
       name
@@ -481,8 +504,8 @@ export const TICKETS_TASK_NEW = gql`
 `;
 
 export const TICKETS_TASK_EDIT = gql`
-  mutation TicketsEdit($ticket: OldTicketEditInput!, $attachments: [Upload]) {
-    TicketsTaskEdit(ticket: $ticket, attachments: $attachments) {
+  mutation TicketsEdit($task: TicketsTaskEditInput!, $attachments: [Upload]) {
+    TicketsTaskEdit(task: $task, attachments: $attachments) {
       ...TicketProps
     }
   }

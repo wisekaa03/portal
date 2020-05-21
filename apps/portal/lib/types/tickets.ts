@@ -58,6 +58,7 @@ export interface TkAuthorComments {
 
 export interface TkTask {
   where: TkWhere;
+  id?: string;
   code: string;
   name: string;
   type?: string;
