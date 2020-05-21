@@ -175,12 +175,12 @@ export class TicketsService {
 
               if (result?.[0]?.['return']) {
                 if (typeof result[0]['return'] === 'object') {
-                  const users = Array.isArray(result[0]['return']['Пользователи'])
-                    ? result[0]['return']['Пользователи']
-                    : [result[0]['return']['Пользователи']];
-                  const tasks = Array.isArray(result[0]['return']['Задания'])
-                    ? result[0]['return']['Задания']
-                    : [result[0]['return']['Задания']];
+                  const users = Array.isArray(result[0]['return']?.['Пользователи']?.['Пользователь'])
+                    ? result[0]['return']['Пользователи']['Пользователь']
+                    : [result[0]['return']?.['Пользователи']?.['Пользователь']];
+                  const tasks = Array.isArray(result[0]['return']?.['Задания']?.['Задание'])
+                    ? result[0]['return']['Задания']['Задание']
+                    : [result[0]['return']?.['Задания']?.['Задание']];
 
                   return {
                     users: [...users.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C))],

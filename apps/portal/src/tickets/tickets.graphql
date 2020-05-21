@@ -30,9 +30,12 @@ type TkUser {
 }
 
 type TkFile {
+  where: String!
   code: String!
   name: String!
   ext: String
+  body: String
+  mime: String
 }
 
 type TkAuthorComments {
@@ -53,6 +56,7 @@ type TkComment {
 
 type TkTask {
   where: String!
+  id: String
   code: String!
   name: String!
   type: String
@@ -84,26 +88,31 @@ type TkTaskNew {
 }
 
 input TkTaskNewInput {
-  where: String!
-  title: String!
-  body: String!
+  where: String
+  title: String
+  body: String
   # Route Id
-  route: String!
+  route: String
   #  Service Id
-  service: String!
+  service: String
   # Login
   executorUser: String
 }
 
 input TkTaskEditInput {
-  where: String!
-  code: String!
-  comment: String!
+  where: String
+  code: String
+  comment: String
 }
 
 input TkTaskDescriptionInput {
-  where: String!
-  code: String!
+  where: String
+  code: String
+}
+
+input TkTasksInput {
+  status: String
+  find: String
 }
 
 type TkRoutes {
@@ -118,7 +127,7 @@ type TkTasks {
 
 type Query {
   TicketsRoutes: [TkRoutes!]
-  TicketsTasks(status: String, find: String): [TkTasks!]
+  TicketsTasks(task: TkTasksInput): [TkTasks!]
   TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask
 }
 
