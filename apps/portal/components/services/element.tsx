@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -20,13 +20,13 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUpOutlined';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import clsx from 'clsx';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ServicesElementProps } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
 import BaseIcon from '@front/components/ui/icon';
 import { useTranslation } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -21,8 +21,8 @@ import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
-import { USER_SETTINGS } from '@lib/queries';
-// #endregion
+import { USER_SETTINGS, TICKETS_TASKS, TICKETS_TASK_NEW } from '@lib/queries';
+//#endregion
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
   const router = useRouter();
@@ -42,18 +42,18 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
   // TODO: доделать api
-  // const { loading: loadingServices, data: dataServices, error: errorServices, refetch: refetchServices } = useQuery<
-  //   Data<'OldTicketService', OldServices[]>,
-  //   void
-  // >(OLD_TICKET_SERVICE, {
-  //   ssr: false,
-  //   fetchPolicy: 'cache-first',
-  //   notifyOnNetworkStatusChange: true,
-  // });
+  const { loading: loadingTasks, data: dataTasks, error: errorTasks, refetch: refetchTasks } = useQuery<
+    Data<'TicketsTasks', TkRoutes[]>,
+    void
+  >(TICKETS_TASKS, {
+    ssr: false,
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  });
 
-  // const [createTicket, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
-  //   OLD_TICKET_NEW,
-  // );
+  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
+    TICKETS_TASK_NEW,
+  );
 
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
@@ -138,24 +138,23 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     }
   }, [routes, setTask, setCurrentTab, query]);
 
-  // TODO: доработать данные
-  // useEffect(() => {
-  //   if (!loadingServices && !errorServices) {
-  //     const svc = dataServices!.OldTicketService!.reduce((acc, srv) => {
-  //       if (srv.error) {
-  //         snackbarUtils.error(srv.error);
-  //         return acc;
-  //       }
-  //       return srv.services ? [...acc, ...srv.services] : acc;
-  //     }, [] as OldService[]);
+  useEffect(() => {
+    if (!loadingTasks && !errorTasks && !dataTasks) {
+      setRoutes(
+        dataTasks.TicketsTasks?.reduce((acc, srv) => {
+          if (srv.error) {
+            snackbarUtils.error(srv.error);
+            return acc;
+          }
+          return srv ? [...acc, srv] : acc;
+        }, [] as TkRoutes[]),
+      );
+    }
+  }, [dataTasks, errorTasks, loadingTasks]);
 
-  //     setServices(svc);
-  //   }
-  // }, [dataServices, errorServices, loadingServices]);
-
-  // useEffect(() => {
-  //   setCreated(!loadingCreated && !errorCreated && dataCreated?.OldTicketNew);
-  // }, [dataCreated, errorCreated, loadingCreated]);
+  useEffect(() => {
+    setCreated(!loadingCreated && !errorCreated && dataCreated?.TicketsTasks);
+  }, [dataCreated, errorCreated, loadingCreated]);
 
   useEffect(() => {
     if (contentRef.current) {

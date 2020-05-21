@@ -1,15 +1,15 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Card, CardContent, CardActions } from '@material-ui/core';
-// #endregion
-// #region Imports Local
+//#endregion
+//#region Imports Local
 import { ServicesErrorProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import { useTranslation } from '@lib/i18n-client';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

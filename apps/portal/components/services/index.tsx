@@ -1,6 +1,6 @@
 /** @format */
 
-// #region Imports NPM
+//#region Imports NPM
 import React, { FC, useRef, useCallback, useMemo } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem } from '@material-ui/core';
@@ -23,7 +23,7 @@ import ServicesElement from './element';
 import { UserSettingsTaskFavorite } from '../../lib/types/user.dto';
 import { TkRoute, TkRoutes } from '../../lib/types/tickets';
 import ServicesError from './error';
-// #endregion
+//#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
