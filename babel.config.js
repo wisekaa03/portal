@@ -4,7 +4,15 @@ module.exports = (api) => {
   api.cache(true);
 
   //#region Constants
-  const constantsPresets = ['@babel/typescript'];
+  const constantsPresets = [
+    [
+      '@babel/preset-env',
+      {
+        useBuiltIns: false,
+      },
+    ],
+    '@babel/typescript',
+  ];
 
   const constantsPlugins = [
     // 'babel-plugin-react-require',

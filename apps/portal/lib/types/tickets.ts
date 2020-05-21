@@ -36,6 +36,8 @@ export interface TkFile {
   code: string;
   name: string;
   ext?: string;
+  mime?: string;
+  body?: string;
 }
 
 export interface TkComment {
@@ -46,6 +48,7 @@ export interface TkComment {
   task: string;
   code: string;
   parentCode: string;
+  files?: TkFile[] | null;
 }
 
 export interface TkAuthorComments {
@@ -60,8 +63,8 @@ export interface TkTask {
   type?: string;
   description?: string;
   descriptionFull?: string;
-  status?: string;
-  route?: TkService | null;
+  status: string;
+  route: TkRoute | null;
   service: TkService | null;
   createdDate: Date | null;
   timeoutDate: Date | null;
@@ -81,7 +84,9 @@ export interface TkTasks {
 
 export interface TkUser {
   where: TkWhere;
+  id?: string;
   name: string;
+  login?: string;
   avatar?: string;
   email?: string;
   telephone?: string;

@@ -134,7 +134,7 @@ export class TicketsResolver {
     @Args('task') task: TkTaskDescriptionInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTask> {
+  ): Promise<TkTask | null | undefined> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

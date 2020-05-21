@@ -83,6 +83,9 @@ dist
 # nuxt.js build output
 .nuxt
 
+# storybook
+storybook-*
+
 # vuepress build output
 .vuepress/dist
 

@@ -22,7 +22,7 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { taskSOAP, AttachesSOAP, taskOST, routesOST, routeSOAP } from './tickets.util';
+import { taskSOAP, AttachesSOAP, taskOST, routesOST, routeSOAP, whereService, userSOAP } from './tickets.util';
 //#endregion
 
 /**
@@ -158,23 +158,32 @@ export class TicketsService {
       if (client) {
         promises.push(
           client
-            .GetTaskAsync({
-              Log: user.username,
-              Dept: '',
-              Status,
-              Executor: false,
-              AllTask: false,
+            .GetTasksAsync({
+              Filter: {
+                Users: {
+                  Log: user.username,
+                },
+                Departments: {},
+                Statuses: {
+                  Status,
+                },
+                Context: {},
+              },
             })
             .then((result: any) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.['return']) {
-                if (typeof result[0]['return']['Задача'] === 'object') {
-                  const tasks = Array.isArray(result[0]['return']['Задача'])
-                    ? result[0]['return']['Задача']
-                    : [result[0]['return']['Задача']];
+                if (typeof result[0]['return'] === 'object') {
+                  const users = Array.isArray(result[0]['return']['Пользователи'])
+                    ? result[0]['return']['Пользователи']
+                    : [result[0]['return']['Пользователи']];
+                  const tasks = Array.isArray(result[0]['return']['Задания'])
+                    ? result[0]['return']['Задания']
+                    : [result[0]['return']['Задания']];
 
                   return {
+                    users: [...users.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C))],
                     tasks: [...tasks.map((task: any) => taskSOAP(task, TkWhere.SOAP1C))],
                   };
                 }
@@ -202,7 +211,6 @@ export class TicketsService {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
         const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
-
         const userOST = {
           company: user.profile.company,
           email: user.profile.email,
@@ -424,7 +432,11 @@ export class TicketsService {
    * @param {TkTaskDescriptionInput} task Task description
    * @returns {TkTask}
    */
-  TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkTask> => {
+  TicketsTaskDescription = async (
+    user: User,
+    password: string,
+    task: TkTaskDescriptionInput,
+  ): Promise<TkTask | null | undefined> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const authentication = {
@@ -468,26 +480,44 @@ export class TicketsService {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
-          Object.keys(OSTicketURL)
-            .filter((where) => where === task.where)
-            .forEach(async (where) => {
-              await this.httpService
-                .post<RecordsOST>(`${OSTicketURL[where]}?req=description`, {})
+          const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+          const userOST = {
+            company: user.profile.company,
+            email: user.profile.email,
+            fio,
+            function: user.profile.title,
+            manager: '',
+            phone: user.profile.telephone,
+            phone_ext: user.profile.workPhone,
+            subdivision: user.profile.department,
+            Аватар: user.profile.thumbnailPhoto,
+          } as TkUserOST;
+
+          return Object.keys(OSTicketURL)
+            .filter((where) => whereService(where) === whereService(task.where))
+            .map((where) =>
+              this.httpService
+                .post<RecordsOST>(`${OSTicketURL[where]}?req=description`, {
+                  login: user.username,
+                  user: JSON.stringify(userOST),
+                  msg: JSON.stringify({ login: fio, code: task.code }),
+                })
                 .toPromise()
                 .then((response) => {
                   if (response.status === 200) {
                     if (typeof response.data === 'object') {
-                      return {
-                        routes: [...response.data?.description?.map((route) => routesOST(route, where as TkWhere))],
-                      };
+                      if (typeof response.data.error === 'string') {
+                        throw new Error(response.data.error);
+                      } else {
+                        return taskOST(response.data?.description, task.where);
+                      }
                     }
-
-                    return { error: `Not found the OSTicket data in "${where}"` };
+                    throw new Error(`Not found the OSTicket data in "${task.where}"`);
                   }
-
-                  return { error: response.statusText };
-                });
-            });
+                  throw new Error(response.statusText);
+                }),
+            )
+            .pop();
         } catch (error) {
           this.logger.error(error);
 

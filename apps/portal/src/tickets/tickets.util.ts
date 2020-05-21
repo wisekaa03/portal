@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-confusing-arrow:0 */
 
 import { TkWhere, TkRoute, TkService, TkTask, TkUser, TkFile, TkAuthorComments, TkComment } from '@lib/types';
 import clearHtml from '@lib/clear-html';
@@ -45,23 +46,22 @@ export const whereService = (where: string | TkWhere): TkWhere => {
  * - Логин
  * - КаналТелефонии
  */
-// eslint-disable-next-line no-confusing-arrow
 export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | null =>
   user && user !== null
     ? {
         where: whereService(where),
+        id: user['Ref'],
         name: user['ФИО'],
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],
         telephone: user['ОсновнойТелефон'],
         company: user['Организация'],
-        department: user['Подразделение'] ? user['Подразделение'].split(', ')[0] : '',
-        division: user['Подразделение'] ? user['Подразделение'].split(', ')[1] : '',
+        department: user['Подразделение']?.split(', ')[0],
+        division: user['Подразделение']?.split(', ')[1],
         title: user['Должность'],
       }
     : null;
 
-// eslint-disable-next-line no-confusing-arrow
 export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] | null =>
   files && files !== null
     ? files
@@ -82,7 +82,6 @@ export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] 
  * - СервисВладелец - ?
  * - Аватар
  */
-// eslint-disable-next-line no-confusing-arrow
 export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkService | null =>
   service && service !== null
     ? {
@@ -102,7 +101,6 @@ export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkSer
  * - Описание
  * - Аватар
  */
-// eslint-disable-next-line no-confusing-arrow
 export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute | null =>
   route && route !== null
     ? {
@@ -118,7 +116,6 @@ export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute |
 /**
  * Комментарии в представлении 1C SOAP
  */
-// eslint-disable-next-line no-confusing-arrow
 export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkComment | null =>
   comment && comment !== null
     ? {
@@ -135,7 +132,6 @@ export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkCom
 /**
  * АвторКомментария и Комментарии в представлении 1C SOAP
  */
-// eslint-disable-next-line no-confusing-arrow
 export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere): TkAuthorComments | null =>
   comments && comments !== null
     ? {
@@ -160,7 +156,6 @@ export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere
  * - Сервис - ?
  * - Услуга
  */
-// eslint-disable-next-line no-confusing-arrow
 export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | null =>
   task && task !== null
     ? {
@@ -216,7 +211,6 @@ export const filesOST = (files: any, where: TkWhere): TkFile[] => {
  * - group - ?
  * - avatar
  */
-// eslint-disable-next-line no-confusing-arrow
 export const serviceOST = (service: Record<string, any>, where: TkWhere): TkService | null =>
   service && service !== null
     ? {
@@ -236,7 +230,6 @@ export const serviceOST = (service: Record<string, any>, where: TkWhere): TkServ
  * - group - ?
  * - avatar
  */
-// eslint-disable-next-line no-confusing-arrow
 export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute | null =>
   route && route !== null
     ? {
@@ -247,6 +240,47 @@ export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute |
         avatar: route['avatar'],
         services: route['services']?.map((service: Record<string, any>) => serviceOST(service, where)),
       }
+    : null;
+
+/**
+ * Описание в представлении OSTicket:
+ */
+export const commentsOST = (comments: Record<string, any>, where: TkWhere, task: string): TkAuthorComments =>
+  comments && comments !== null && Array.isArray(comments)
+    ? comments.reduce(
+        (acc: TkAuthorComments, comment: Record<string, any>) => {
+          return {
+            users: acc.users?.concat([
+              {
+                where: whereService(where),
+                name: comment['user'],
+                login: comment['user'],
+                email: comment['email'],
+              },
+            ]),
+            comments: acc.comments?.concat([
+              {
+                where: whereService(where),
+                date: new Date(comment['created']),
+                body: comment['body'],
+                task,
+                code: comment['id'],
+                parentCode: '',
+                authorLogin: comment['user'],
+                files: [
+                  ...comment['attachments']?.map((file: Record<string, any>) => ({
+                    code: file['code'],
+                    name: file['name'],
+                    mime: file['mime'],
+                    body: file['body'],
+                  })),
+                ],
+              },
+            ]),
+          };
+        },
+        { users: [], comments: [] },
+      )
     : null;
 
 /**
@@ -264,7 +298,6 @@ export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute |
  * - Сервис - ?
  * - Услуга
  */
-// eslint-disable-next-line no-confusing-arrow
 export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | null =>
   task && task !== null
     ? {
@@ -272,20 +305,29 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
         type: undefined,
         code: task['number'],
         name: task['subject'],
-        description: task['description'],
+        description: typeof task['description'] === 'string' ? task['description'] : task['description']?.[0]?.body,
         descriptionFull: undefined,
         status: task['status_name'],
-        createdDate: task['created'],
-        timeoutDate: null,
+        createdDate: new Date(task['created']),
+        timeoutDate: new Date(task['dateOfCompletion']),
         endDate: null,
         initiatorUser: {
           where: whereService(where),
-          name: task['user_name'],
+          name: task['owner_user_name'],
+          company: task['owner_company'],
+          department: task['owner_dept'],
+          email: task['owner_email'],
+          telephone: task['owner_phone'],
         },
         executorUser: {
           where: whereService(where),
           name: task['assignee_user_name'],
+          email: task['assignee_email'],
+          company: task['assignee_company'],
+          department: task['assignee_dept'],
+          telephone: task['assignee_phone'],
         },
+        route: null,
         service: {
           where: whereService(where),
           code: '',
@@ -293,7 +335,7 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
         },
         availableAction: undefined,
         availableStages: undefined,
-        files: filesOST(task['files']?.['file'], where),
-        comments: null,
+        files: null,
+        comments: commentsOST(task['description'], where, task['number']),
       }
     : null;

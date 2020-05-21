@@ -17,7 +17,9 @@ type TkRoute {
 
 type TkUser {
   where: String!
+  id: String
   name: String!
+  login: String
   avatar: String
   email: String
   telephone: String
@@ -46,22 +48,23 @@ type TkComment {
   task: String
   code: String
   parentCode: String
+  files: [TkFile!]
 }
 
 type TkTask {
   where: String!
   code: String!
-  type: String
   name: String!
+  type: String
   description: String
   descriptionFull: String
   status: String!
-  avatar: String
+  route: TkRoute
   service: TkService
-  createdDate: Date!
+  createdDate: Date
   endDate: Date
   timeoutDate: Date
-  initiatorUser: TkUser!
+  initiatorUser: TkUser
   executorUser: TkUser
   availableAction: String
   availableStages: String
@@ -116,10 +119,10 @@ type TkTasks {
 type Query {
   TicketsRoutes: [TkRoutes!]
   TicketsTasks(status: String, find: String): [TkTasks!]
-  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask!
+  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask
 }
 
 type Mutation {
   TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew!
-  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTask!
+  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTask
 }
