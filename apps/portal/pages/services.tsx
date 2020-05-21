@@ -22,6 +22,7 @@ import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { USER_SETTINGS, TICKETS_TASKS, TICKETS_TASK_NEW } from '@lib/queries';
+import { TkTaskNew } from '@lib/types/tickets';
 //#endregion
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
@@ -51,9 +52,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     notifyOnNetworkStatusChange: true,
   });
 
-  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation(
-    TICKETS_TASK_NEW,
-  );
+  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<
+    Data<'TicketsTaskNew', TkTaskNew>
+  >(TICKETS_TASK_NEW);
 
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
@@ -139,7 +140,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [routes, setTask, setCurrentTab, query]);
 
   useEffect(() => {
-    if (!loadingTasks && !errorTasks && !dataTasks) {
+    if (!loadingTasks && !errorTasks && typeof dataTasks === 'object') {
       setRoutes(
         dataTasks.TicketsTasks?.reduce((acc, srv) => {
           if (srv.error) {
@@ -153,8 +154,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [dataTasks, errorTasks, loadingTasks]);
 
   useEffect(() => {
-    setCreated(!loadingCreated && !errorCreated && dataCreated?.TicketsTasks);
-  }, [dataCreated, errorCreated, loadingCreated]);
+    setCreated(!loadingCreated && !errorCreated && dataCreated?.TicketsTaskNew);
+  }, [dataCreated?.TicketsTaskNew, errorCreated, loadingCreated]);
 
   useEffect(() => {
     if (contentRef.current) {
