@@ -71,6 +71,7 @@
   },
   "os": [],
   "resolutions": {
+    "**/**/graphql-upload": "^10.0.0",
     "**/next-i18next/**/core-js": "^2",
     "**/prop-types/**/core-js": "^2"
   },
