@@ -64,7 +64,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
 }) => {
   const classes = useStyles({});
 
-  if (activate) {
+  if (!activate) {
     return children ? React.Children.map(children, (child) => <>{child}</>) : <></>;
   }
 
