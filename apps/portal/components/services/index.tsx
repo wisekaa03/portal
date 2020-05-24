@@ -245,6 +245,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     {allFavorites.map((current) => (
                       <ServicesElement
                         key={current.code}
+                        base64
                         favorite
                         withLink
                         setFavorite={updateFavorites}
@@ -261,6 +262,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 {allRoutes.map((current) => (
                   <ServicesElement
                     key={current.code}
+                    base64
                     withLink
                     // base64
                     element={current}
