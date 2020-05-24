@@ -82,6 +82,8 @@ module.exports = {
         proseWrap: 'never',
       },
     ],
+    '@typescript-eslint/camelcase': 0,
+    '@typescript-eslint/naming-convention': 0,
     'react/jsx-props-no-spreading': 0,
     // TODO: this is a bug
     '@typescript-eslint/no-implied-eval': 0,

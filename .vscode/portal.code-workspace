@@ -5,6 +5,8 @@
     }
   ],
   "settings": {
+    "extensions.autoUpdate": false,
+    "extensions.autoCheckUpdates": false,
     "browser-preview.chromeExecutable": "/opt/brave.com/brave/brave",
     // "editor.fontFamily": "Fira Code",
     "editor.fontFamily": "Fira Code Retina",

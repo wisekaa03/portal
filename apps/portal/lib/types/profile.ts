@@ -195,7 +195,7 @@ export interface ProfileEditComponentProps {
 
 export interface TextFieldComponentProps {
   disabled: boolean;
-  handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<Record<any, any>>) => void;
   field: keyof Profile;
   value?: any;
   department?: string;
