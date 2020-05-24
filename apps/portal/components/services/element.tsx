@@ -116,10 +116,10 @@ const ServicesElement: FC<ServicesElementProps> = ({
   const handleFavorite = useCallback(
     (action) => (event): void => {
       event.stopPropagation();
-      setFavorite({ id: element.code, action });
+      setFavorite({ id: element.code, where: element.where, action });
       handleCloseMore();
     },
-    [element.code, handleCloseMore, setFavorite],
+    [element.where, element.code, handleCloseMore, setFavorite],
   );
 
   useEffect(() => {
@@ -134,10 +134,10 @@ const ServicesElement: FC<ServicesElementProps> = ({
           href={
             url || {
               pathname,
-              query: { route: element.code },
+              query: { where: element.where, route: element.code },
             }
           }
-          as={url || `${pathname}/${element.code}`}
+          as={url || `${pathname}/${element.where}/${element.code}`}
           passHref
         >
           {url ? <a target="_blank">{children}</a> : children}

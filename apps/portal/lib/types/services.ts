@@ -30,6 +30,7 @@ export interface ServicesWrapperProps {
 
 export type ServicesFavoriteProps = {
   id: string;
+  where: string;
   action: 'up' | 'down' | 'add' | 'delete';
 };
 
@@ -62,10 +63,10 @@ export interface ServicesSuccessCardProps {
 }
 
 export interface TaskElementProps {
+  where: string;
   code: string;
   name: string;
   avatar?: any;
-  categoryType?: string;
   subtitle?: string;
   priority?: number;
 }

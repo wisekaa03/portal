@@ -173,10 +173,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     },
     [favorites, handleFavorites],
   );
-  const handleAddFavorite = useCallback(() => updateFavorites({ id: task.route.code, action: 'add' }), [
-    updateFavorites,
-    task,
-  ]);
+  const handleAddFavorite = useCallback(
+    () => updateFavorites({ id: task.route.code, where: task.route.where, action: 'add' }),
+    [updateFavorites, task],
+  );
 
   const allRoutes = useMemo<TkRoute[]>(() => {
     if (routes.length === 0) {
