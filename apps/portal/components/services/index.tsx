@@ -135,25 +135,28 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
-    ({ id, action }: ServicesFavoriteProps) => {
+    ({ id, where, action }: ServicesFavoriteProps) => {
       let result;
-      const priority = favorites.find((favorite) => favorite.id === id)?.priority;
+      const priority = favorites.find((favorite) => favorite.id === id && favorite.where === where)?.priority;
 
       switch (action) {
         case 'delete':
           result = favorites
-            .filter((favorite) => favorite.id !== id)
+            .filter((favorite) => favorite.id !== id && favorite.where !== where)
             .sort((a, b) => a.priority - b.priority)
             .map((favorite, index) => ({ ...favorite, priority: index }));
           break;
         case 'up':
         case 'down':
           result = favorites.reduce(
-            (acc: UserSettingsTaskFavorite[], { id: curId, priority: curPriority }: UserSettingsTaskFavorite) => {
-              const newCurrent = { id: curId, priority: curPriority };
+            (
+              acc: UserSettingsTaskFavorite[],
+              { id: curId, where: curWhere, priority: curPriority }: UserSettingsTaskFavorite,
+            ) => {
+              const newCurrent = { id: curId, where: curWhere, priority: curPriority };
               const sym = action === 'up' ? 1 : -1;
 
-              if (curId === id) {
+              if (curId === id && curWhere === where) {
                 newCurrent.priority -= sym;
               } else if (curPriority === priority - sym) {
                 newCurrent.priority += sym;
@@ -165,7 +168,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           );
           break;
         default:
-          result = [...favorites, { id, priority: favorites.length }];
+          result = [...favorites, { id, where, priority: favorites.length }];
           break;
       }
 
@@ -190,7 +193,9 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
       allRoutes
         .reduce((acc: TaskElementProps[], cur: TaskElementProps) => {
           const curFavorite =
-            typeof favorites === 'object' && favorites !== null && favorites.find(({ id }) => id === cur.code);
+            typeof favorites === 'object' &&
+            favorites !== null &&
+            favorites.find(({ id, where }) => id === cur.code && where === cur.where);
           if (curFavorite) {
             return [...acc, { ...cur, priority: curFavorite.priority }];
           }
@@ -202,10 +207,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   );
   // TODO: выбор первой ошибки из списка
   const errorString = useMemo<string>(() => routes.find(({ error }) => !!error)?.error || '', [routes]);
-  const isFavorite = useMemo<boolean>(() => !!allFavorites.find(({ code }) => code === task.route?.code), [
-    task,
-    allFavorites,
-  ]);
+  const isFavorite = useMemo<boolean>(
+    () => !!allFavorites.find(({ where, code }) => code === task.route?.code && where === task.route?.where),
+    [task, allFavorites],
+  );
   const enableBody = useMemo<boolean>(
     () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
     [task],

@@ -52,6 +52,7 @@ interface UserSettingsPhonebook {
 
 export interface UserSettingsTaskFavorite {
   id: string;
+  where: string;
   priority: number;
 }
 
