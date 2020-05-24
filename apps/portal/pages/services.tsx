@@ -102,19 +102,18 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
     // TODO: доработать данные
     const variables = {
-      ticket: {
+      task: {
         // title: cleanedTitle,
         body: cleanedBody,
-        // serviceId: service ? service.code : null,
-        // categoryId: category ? category.code : null,
-        // categoryType: category ? category.categoryType : null,
+        route: route.code,
+        service: service.code,
       },
       attachments: files.map((file: DropzoneFile) => file.file),
     };
 
-    // createTicket({
-    //   variables,
-    // });
+    createTask({
+      variables,
+    });
 
     setCreated({});
     setCurrentTab(4);

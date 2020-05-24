@@ -189,7 +189,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     () =>
       allRoutes
         .reduce((acc: TaskElementProps[], cur: TaskElementProps) => {
-          const curFavorite = favorites.find(({ id }) => id === cur.code);
+          const curFavorite =
+            typeof favorites === 'object' && favorites !== null && favorites.find(({ id }) => id === cur.code);
           if (curFavorite) {
             return [...acc, { ...cur, priority: curFavorite.priority }];
           }
