@@ -192,8 +192,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           files={files}
           setFiles={setFiles}
           submitted={submitted}
-          loadingRoutes
-          loadingCreated
+          loadingRoutes={loadingRoutes}
+          loadingCreated={loadingCreated}
           handleCurrentTab={setCurrentTab}
           handleService={handleService}
           handleSubmit={handleSubmit}
