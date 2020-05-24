@@ -61,7 +61,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         return acc;
       }
       return [...acc, ...tick.tasks];
-    }, []).filter((task) => task.code.includes(search) || task.name.includes(search)) || [];
+    }, []).filter((task) => task?.code.includes(search) || task?.name.includes(search)) || [];
 
   useEffect(() => {
     if (taskStatus) {

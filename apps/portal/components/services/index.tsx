@@ -18,10 +18,10 @@ import HR from '@public/images/svg/itapps/HR.svg';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
+import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
+import { TkRoute, TkRoutes } from '@lib/types/tickets';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
-import { UserSettingsTaskFavorite } from '../../lib/types/user.dto';
-import { TkRoute, TkRoutes } from '../../lib/types/tickets';
 import ServicesError from './error';
 //#endregion
 
