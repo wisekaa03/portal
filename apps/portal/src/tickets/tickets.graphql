@@ -121,6 +121,7 @@ type TkRoutes {
 }
 
 type TkTasks {
+  users: [TkUser]
   tasks: [TkTask]
   error: String
 }

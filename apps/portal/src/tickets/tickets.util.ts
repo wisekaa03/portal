@@ -175,8 +175,8 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
           task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z'
             ? null
             : new Date(task['ДатаЗавершения']),
-        executorUser: userSOAP(task['ТекущийИсполнитель'], where),
-        initiatorUser: userSOAP(task['Инициатор'], where),
+        executorUser: task['ТекущийИсполнитель'],
+        initiatorUser: task['Инициатор'],
         route: routeSOAP(task['Сервис'], where),
         service: serviceSOAP(task['Услуга'], where),
         availableAction: task['ДоступноеДействие'],
@@ -186,7 +186,7 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
       }
     : null;
 
-export const filesOST = (files: any, where: TkWhere): TkFile[] => {
+export const filesOST = (files: Record<string, any>, where: TkWhere): TkFile[] => {
   if (files) {
     const filesArray = Array.isArray(files) ? files : [files];
 
