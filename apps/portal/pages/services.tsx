@@ -21,7 +21,7 @@ import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
-import { USER_SETTINGS, TICKETS_TASKS, TICKETS_TASK_NEW } from '@lib/queries';
+import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
 import { TkTaskNew } from '@lib/types/tickets';
 //#endregion
 
@@ -43,10 +43,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
   // TODO: доделать api
-  const { loading: loadingTasks, data: dataTasks, error: errorTasks, refetch: refetchTasks } = useQuery<
-    Data<'TicketsTasks', TkRoutes[]>,
+  const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
+    Data<'TicketsRoutes', TkRoutes[]>,
     void
-  >(TICKETS_TASKS, {
+  >(TICKETS_ROUTES, {
     ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
@@ -140,9 +140,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [routes, setTask, setCurrentTab, query]);
 
   useEffect(() => {
-    if (!loadingTasks && !errorTasks && typeof dataTasks === 'object') {
+    if (!loadingRoutes && !errorRoutes && typeof dataRoutes === 'object') {
       setRoutes(
-        dataTasks.TicketsTasks?.reduce((acc, srv) => {
+        dataRoutes.TicketsRoutes?.reduce((acc, srv) => {
           if (srv.error) {
             snackbarUtils.error(srv.error);
             return acc;
@@ -151,7 +151,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
         }, [] as TkRoutes[]),
       );
     }
-  }, [dataTasks, errorTasks, loadingTasks]);
+  }, [dataRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
     setCreated(!loadingCreated && !errorCreated && dataCreated?.TicketsTaskNew);
@@ -163,14 +163,14 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     }
   }, [contentRef, files]);
 
-  // useEffect(() => {
-  //   if (errorCreated) {
-  //     snackbarUtils.error(errorCreated);
-  //   }
-  //   if (errorServices) {
-  //     snackbarUtils.error(errorServices);
-  //   }
-  // }, [errorCreated, errorServices]);
+  useEffect(() => {
+    if (errorCreated) {
+      snackbarUtils.error(errorCreated);
+    }
+    if (errorRoutes) {
+      snackbarUtils.error(errorRoutes);
+    }
+  }, [errorCreated, errorRoutes]);
 
   return (
     <>
@@ -183,6 +183,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           serviceRef={serviceRef}
           bodyRef={bodyRef}
           currentTab={currentTab}
+          refetchRoutes={refetchRoutes}
           task={task}
           created={created}
           routes={routes}
@@ -194,7 +195,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           submitted={submitted}
           loadingRoutes
           loadingCreated
-          refetchRoutes={(() => {}) as any}
           handleCurrentTab={setCurrentTab}
           handleService={handleService}
           handleSubmit={handleSubmit}
