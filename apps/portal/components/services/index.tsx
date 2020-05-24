@@ -249,7 +249,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   <Box className={classes.blockContainer}>
                     {allFavorites.map((current) => (
                       <ServicesElement
-                        key={current.code}
+                        key={`${current.where}-${current.code}`}
                         base64
                         favorite
                         withLink
