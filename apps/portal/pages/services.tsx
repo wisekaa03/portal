@@ -100,7 +100,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
       return;
     }
 
-    // TODO: доработать данные
     const variables = {
       task: {
         where: service.where,
@@ -131,14 +130,15 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           }),
           {} as TkRoute,
         );
-        if (rt) {
-          task.route = rt;
+        if (typeof rt === 'object' && rt !== null) {
+          setTask({ route: rt });
           setCurrentTab(1);
+        } else {
+          setTask({});
         }
-        // setTask(initialState);
       }
     }
-  }, [task, routes, setTask, setCurrentTab, query]);
+  }, [routes, setTask, setCurrentTab, query]);
 
   useEffect(() => {
     if (!loadingRoutes && !errorRoutes && typeof dataRoutes === 'object') {
