@@ -67,7 +67,7 @@ export interface TaskElementProps {
   code: string;
   name: string;
   avatar?: any;
-  subtitle?: string;
+  description?: string;
   priority?: number;
 }
 

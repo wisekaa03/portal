@@ -158,7 +158,7 @@ const ServicesElement: FC<ServicesElementProps> = ({
             {element.name}
           </Typography>
           <Typography variant="subtitle1" className={classes.subtitle}>
-            {element.subtitle}
+            {element.description}
           </Typography>
           <Box className={classes.more}>
             {favorite && (
