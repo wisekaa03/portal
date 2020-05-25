@@ -116,21 +116,23 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     });
 
     setCreated({});
-    setCurrentTab(4);
+    setCurrentTab(2);
   };
 
   useEffect(() => {
     if (!__SERVER__ && routes) {
       const { where, route } = query;
-      if (where && route) {
-        const currentWhere = routes.find(({ routes: r }) => r.find((rs) => rs.where === where && rs.code === route));
-        if (currentWhere) {
+      if (where && route && routes) {
+        task.route = routes
+          .find(({ routes: r }) => r.find((rs) => rs.where === where && rs.code === route))
+          .routes.pop();
+        if (task.route) {
           setCurrentTab(1);
         }
         // setTask(initialState);
       }
     }
-  }, [routes, setTask, setCurrentTab, query]);
+  }, [task, routes, setTask, setCurrentTab, query]);
 
   useEffect(() => {
     if (!loadingRoutes && !errorRoutes && typeof dataRoutes === 'object') {

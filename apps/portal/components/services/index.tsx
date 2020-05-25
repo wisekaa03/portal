@@ -265,13 +265,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
               <Box className={classes.blockContainer}>
                 {allRoutes.map((current) => (
-                  <ServicesElement
-                    key={current.code}
-                    base64
-                    withLink
-                    // base64
-                    element={current}
-                  />
+                  <ServicesElement key={current.code} base64 withLink element={current} />
                 ))}
               </Box>
               {/* Евгений */}
@@ -314,7 +308,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 <>
                   {task.route && (
                     <Box display="grid" gridTemplateColumns="1fr 1fr" gridGap="8px" className={classes.formControl}>
-                      <ServicesElement /* base64 */ element={task.route} active />
+                      <ServicesElement base64 element={task.route} active />
                       <Box display="flex" justifyContent="flex-end" alignItems="center">
                         {!isFavorite && (
                           <Button actionType="favorite" onClick={handleAddFavorite}>
@@ -334,7 +328,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                       }}
                     >
                       <MenuItem value="0">{t('services:form.service')}</MenuItem>
-                      {task.route?.services?.map((service) => (
+                      {task?.route?.services?.map((service) => (
                         <MenuItem key={service.code} value={service.code}>
                           {service.name}
                         </MenuItem>
