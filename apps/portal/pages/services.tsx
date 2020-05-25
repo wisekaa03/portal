@@ -103,7 +103,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     // TODO: доработать данные
     const variables = {
       task: {
-        // title: cleanedTitle,
+        where: service.where,
+        title: service.name,
         body: cleanedBody,
         route: route.code,
         service: service.code,
@@ -123,10 +124,11 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     if (!__SERVER__ && routes) {
       const { where, route } = query;
       if (where && route && routes) {
-        task.route = routes
+        const rt = routes
           .find(({ routes: r }) => r.find((rs) => rs.where === where && rs.code === route))
-          .routes.pop();
-        if (task.route) {
+          ?.routes?.pop();
+        if (rt) {
+          task.route = rt;
           setCurrentTab(1);
         }
         // setTask(initialState);

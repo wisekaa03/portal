@@ -489,13 +489,13 @@ export const TICKETS_TASK_DESCRIPTION = gql`
 `;
 
 export const TICKETS_TASK_NEW = gql`
-  mutation TicketsTaskNew($task: TicketsTaskNewInput!, $attachments: [Upload]) {
+  mutation TicketsTaskNew($task: TkTaskNewInput!, $attachments: [Upload]) {
     TicketsTaskNew(task: $task, attachments: $attachments) {
       where
       code
       name
-      requisiteSource
-      category
+      route
+      service
       organization
       status
       createdDate
@@ -504,7 +504,7 @@ export const TICKETS_TASK_NEW = gql`
 `;
 
 export const TICKETS_TASK_EDIT = gql`
-  mutation TicketsEdit($task: TicketsTaskEditInput!, $attachments: [Upload]) {
+  mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
     TicketsTaskEdit(task: $task, attachments: $attachments) {
       ...TicketProps
     }
