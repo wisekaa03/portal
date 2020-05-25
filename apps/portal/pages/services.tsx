@@ -22,7 +22,7 @@ import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
-import { TkWhere, TkTaskNew } from '@lib/types/tickets';
+import { TkRoute, TkTaskNew } from '@lib/types/tickets';
 //#endregion
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
@@ -117,16 +117,20 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     });
 
     setCreated({});
-    setCurrentTab(2);
+    // setCurrentTab(2);
   };
 
   useEffect(() => {
     if (!__SERVER__ && routes) {
       const { where, route } = query;
-      if (where && route && routes) {
-        const rt = routes
-          .find(({ routes: r }) => r.find((rs) => rs.where === where && rs.code === route))
-          ?.routes?.pop();
+      if (where && route && routes.length > 0) {
+        const rt = routes.reduce(
+          (acc, val) => ({
+            ...acc,
+            ...val.routes?.filter((v) => v.code === route && v.where === where)?.pop(),
+          }),
+          {} as TkRoute,
+        );
         if (rt) {
           task.route = rt;
           setCurrentTab(1);
