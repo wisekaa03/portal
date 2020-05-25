@@ -16,30 +16,19 @@ export class ServicesController {
     res.render('services');
   }
 
-  @Get(':department')
+  @Get(':where')
   @UseGuards(SessionGuard)
-  public async department(@Res() res: RenderableResponse, @Param('department') department: string): Promise<void> {
-    res.render('services', { department });
+  public async department(@Res() res: RenderableResponse, @Param('where') where: string): Promise<void> {
+    res.render('services', { where });
   }
 
-  @Get(':department/:service')
+  @Get(':where/:route')
   @UseGuards(SessionGuard)
   public async service(
     @Res() res: RenderableResponse,
-    @Param('department') department: string,
-    @Param('service') service: string,
+    @Param('where') where: string,
+    @Param('route') route: string,
   ): Promise<void> {
-    res.render('services', { department, service });
-  }
-
-  @Get(':department/:service/:category')
-  @UseGuards(SessionGuard)
-  public async category(
-    @Res() res: RenderableResponse,
-    @Param('department') department: string,
-    @Param('service') service: string,
-    @Param('category') category: string,
-  ): Promise<void> {
-    res.render('services', { department, service, category });
+    res.render('services', { where, route });
   }
 }
