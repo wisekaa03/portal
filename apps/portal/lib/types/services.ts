@@ -71,19 +71,16 @@ export interface TaskElementProps {
   priority?: number;
 }
 
-// TODO: скорректировать после консолидации с беком
 export interface ServicesCreatedProps {
   code?: string;
   name?: string;
-  requisiteSource?: string;
-  category?: string;
   organization?: string;
   status?: string;
   createdDate?: Date;
+  route?: string;
   service?: string;
 }
 
-// TODO: проработать тикет в соответствии с изменениями
 export interface ServicesTaskProps {
   route?: TkRoute;
   service?: TkService;

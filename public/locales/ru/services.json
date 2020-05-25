@@ -17,9 +17,9 @@
   "complete": {
     "code": "Код обращения: {{value}}",
     "name": "Тема обращения: {{value}}",
-    "company": "Организация: {{value}}",
-    "service": "Сервис: {{value}}",
-    "category": "Услуга: {{value}}",
+    "organization": "Организация: {{value}}",
+    "route": "Сервис: {{value}}",
+    "service": "Услуга: {{value}}",
     "status": "Статус: {{value}}",
     "date": "Дата: {{value}}"
   },

@@ -10,16 +10,16 @@
   },
   "form": {
     "title": "Title",
-    "service": "Servce",
+    "service": "Service",
     "text": "Description",
     "category": "Category"
   },
   "complete": {
-    "code": "Code appeal: {{value}}",
-    "name": "Theme appeal: {{value}}",
-    "company": "Company: {{value}}",
+    "code": "Code: {{value}}",
+    "name": "Subject: {{value}}",
+    "organization": "Company: {{value}}",
+    "route": "Route: {{value}}",
     "service": "Service: {{value}}",
-    "category": "Category: {{value}}",
     "status": "Status: {{value}}",
     "date": "Date: {{value}}"
   },

@@ -38,7 +38,7 @@ const ServicesSuccessCard = withStyles((theme) => ({
     marginBottom: theme.spacing(4),
   },
 }))(({ cardRef, classes, data }: ServicesSuccessCardProps) => {
-  const { code, category, createdDate, service } = data;
+  const { code, route, createdDate, service, organization, status, name } = data;
   const { t, i18n } = useTranslation();
 
   return (
@@ -46,9 +46,12 @@ const ServicesSuccessCard = withStyles((theme) => ({
       <Typography variant="h5" className={classes.title}>
         {t('services:success')}
       </Typography>
+      <Typography variant="subtitle1">{t('services:complete.name', { value: name })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.code', { value: code })}</Typography>
+      <Typography variant="subtitle1">{t('services:complete.route', { value: route })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.service', { value: service })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.category', { value: category })}</Typography>
+      <Typography variant="subtitle1">{t('services:complete.organization', { value: organization })}</Typography>
+      <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.date', { value: format(createdDate, i18n) })}</Typography>
     </CardContent>
   );

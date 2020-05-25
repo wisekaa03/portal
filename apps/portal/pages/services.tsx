@@ -117,7 +117,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     });
 
     setCreated({});
-    // setCurrentTab(2);
+    setSubmitted(true);
   };
 
   useEffect(() => {
