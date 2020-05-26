@@ -87,7 +87,7 @@ export class TicketsResolver {
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTaskNew> {
+  ): Promise<TkTaskNew | undefined | null> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

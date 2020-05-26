@@ -80,10 +80,10 @@ type TkTaskNew {
   where: String!
   code: String!
   name: String!
-  route: String!
+  route: String
   service: String!
-  organization: String!
-  status: String!
+  organization: String
+  status: String
   createdDate: Date!
 }
 

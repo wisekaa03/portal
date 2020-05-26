@@ -1,8 +1,18 @@
 /** @format */
 /* eslint no-confusing-arrow:0 */
 
-import { TkWhere, TkRoute, TkService, TkTask, TkUser, TkFile, TkAuthorComments, TkComment } from '@lib/types';
 import clearHtml from '@lib/clear-html';
+import {
+  TkTaskNew,
+  TkWhere,
+  TkRoute,
+  TkService,
+  TkTask,
+  TkUser,
+  TkFile,
+  TkAuthorComments,
+  TkComment,
+} from '@lib/types';
 
 export interface AttachesSOAPFile {
   NFile: string;
@@ -31,6 +41,10 @@ export const whereService = (where: string | TkWhere): TkWhere => {
       return TkWhere.Default;
   }
 };
+
+/**
+ * SOAP1C
+ */
 
 /**
  * User в представлении 1C SOAP:
@@ -79,7 +93,7 @@ export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] 
  * - Код
  * - Наименование
  * - Описание
- * - СервисВладелец - ?
+ * - СервисВладелец - Сервис (route) которому принадлежит данная услуга
  * - Аватар
  */
 export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkService | null =>
@@ -186,6 +200,16 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
       }
     : null;
 
+/**
+ * OSTicket
+ */
+
+/**
+ * Файлы в представлении OSTicket:
+ * - Код
+ * - Наименование
+ * - РасширениеФайла
+ */
 export const filesOST = (files: Record<string, any>, where: TkWhere): TkFile[] => {
   if (files) {
     const filesArray = Array.isArray(files) ? files : [files];
@@ -337,5 +361,30 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
         availableStages: undefined,
         files: null,
         comments: commentsOST(task['description'], where, task['number']),
+      }
+    : null;
+
+/**
+ * Новая задача в представлении OSTicket:
+ * - number: Код
+ * - name - Наименование
+ * - route - Сервис
+ * - service - Услуга
+ * - company - Компания
+ * - status - Статус
+ * - creationDateTime - Дата создания
+ */
+export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | null =>
+  task && task !== null
+    ? {
+        where: whereService(where),
+        // id: task['ticket'],
+        code: task['number'],
+        name: task['name'],
+        route: task['route'] || '000000001',
+        service: task['service'],
+        organization: task['company'],
+        status: task['status'] || 'New',
+        createdDate: new Date(task['creationDateTime']),
       }
     : null;

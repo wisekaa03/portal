@@ -123,10 +123,10 @@ export interface TkTaskNew {
   where: TkWhere;
   code: string;
   name: string;
-  route: string;
+  route?: string;
   service: string;
-  organization: string;
-  status: string;
+  organization?: string;
+  status?: string;
   createdDate: Date;
 }
 

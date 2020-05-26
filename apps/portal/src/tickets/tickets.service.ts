@@ -22,7 +22,7 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { taskSOAP, AttachesSOAP, taskOST, routesOST, routeSOAP, whereService, userSOAP } from './tickets.util';
+import { taskSOAP, AttachesSOAP, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
 //#endregion
 
 /**
@@ -272,7 +272,19 @@ export class TicketsService {
     password: string,
     task: TkTaskNewInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<TkTaskNew> => {
+  ): Promise<TkTaskNew | undefined | null> => {
+    const Attaches: AttachesSOAP = { Вложение: [] };
+
+    if (attachments) {
+      await constructUploads(attachments, ({ filename, file }) =>
+        Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
+      ).catch((error: Error) => {
+        this.logger.error(error);
+
+        throw error;
+      });
+    }
+
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const authentication: SoapAuthentication = {
@@ -284,18 +296,6 @@ export class TicketsService {
       const client = await this.soapService.connect(authentication).catch((error) => {
         throw error;
       });
-
-      const Attaches: AttachesSOAP = { Вложение: [] };
-
-      if (attachments) {
-        await constructUploads(attachments, ({ filename, file }) =>
-          Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
-        ).catch((error: Error) => {
-          this.logger.error(error);
-
-          throw error;
-        });
-      }
 
       return client
         .NewTaskAsync({
@@ -338,6 +338,61 @@ export class TicketsService {
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+      if (!!this.configService.get<string>('OSTICKET_URL')) {
+        try {
+          const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+
+          const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+          const userOST = {
+            company: user.profile.company,
+            email: user.profile.email,
+            fio,
+            function: user.profile.title,
+            manager: '',
+            phone: user.profile.telephone,
+            phone_ext: user.profile.workPhone,
+            subdivision: user.profile.department,
+            Аватар: user.profile.thumbnailPhoto,
+          } as TkUserOST;
+
+          return Object.keys(OSTicketURL)
+            .filter((where) => whereService(where) === whereService(task.where))
+            .map((where) =>
+              this.httpService
+                .post<RecordsOST>(`${OSTicketURL[where]}?req=new`, {
+                  user: JSON.stringify(userOST),
+                  msg: JSON.stringify({
+                    title: task.title,
+                    descr: task.body,
+                    route: task.route,
+                    service: task.service,
+                    executor: task.executorUser,
+                  }),
+                  files: JSON.stringify(Attaches),
+                })
+                .toPromise()
+                .then((response) => {
+                  if (response.status === 200) {
+                    if (typeof response.data === 'object') {
+                      if (typeof response.data.error === 'string') {
+                        throw new Error(response.data.error);
+                      } else {
+                        return newOST(response.data, task.where);
+                      }
+                    }
+                    throw new Error(`Not found the OSTicket data in "${task.where}"`);
+                  }
+                  throw new Error(response.statusText);
+                }),
+            )
+            .pop();
+        } catch (error) {
+          this.logger.error(error);
+
+          throw error;
+        }
+      }
+
       throw new Error('Not implemented');
     }
 
