@@ -45,6 +45,7 @@ interface RefreshButtonProps extends IconButtonProps {
   noAbsolute?: boolean;
   disableBackground?: boolean;
   dense?: boolean;
+  onClick: () => void;
 }
 
 const RefreshButton = ({ onClick, noAbsolute, disableBackground, dense }: RefreshButtonProps): React.ReactElement => {
@@ -59,7 +60,7 @@ const RefreshButton = ({ onClick, noAbsolute, disableBackground, dense }: Refres
           [classes.background]: !disableBackground,
           [classes.dense]: dense,
         })}
-        onClick={onClick}
+        onClick={() => onClick()}
         aria-label="refresh"
       >
         <SyncIcon />
