@@ -14,7 +14,6 @@ import { appBarHeight, MINIMAL_BODY_LENGTH } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps, TaskElementProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
-import HR from '@public/images/svg/itapps/HR.svg';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
@@ -213,7 +212,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
     [task],
   );
-  const notValid = useMemo<boolean>(() => !enableBody || body.trim().length < MINIMAL_BODY_LENGTH, [enableBody, body]);
+  const notValid = useMemo<boolean>(() => !enableBody /* || body.trim().length < MINIMAL_BODY_LENGTH */, [
+    enableBody,
+    /* body, */
+  ]);
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -263,7 +265,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
               <Box className={classes.blockContainer}>
                 {allRoutes.map((current) => (
-                  <ServicesElement key={current.code} base64 withLink element={current} />
+                  <ServicesElement key={`${current.where}-${current.code}`} base64 withLink element={current} />
                 ))}
               </Box>
               {/* Евгений */}
