@@ -51,12 +51,13 @@ interface UserSettingsPhonebook {
 }
 
 export interface UserSettingsTaskFavorite {
-  id: string;
   where: string;
+  code: string;
   priority: number;
 }
 
 interface UserSettingsTask {
+  status?: string | null;
   favorites?: UserSettingsTaskFavorite[] | null;
 }
 
@@ -64,7 +65,6 @@ export interface UserSettings {
   lng?: 'ru' | 'en' | null;
   drawer?: boolean | null;
   phonebook?: UserSettingsPhonebook | null;
-  taskStatus?: string | null;
   task?: UserSettingsTask | null;
 }
 //#endregion

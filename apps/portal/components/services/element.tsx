@@ -116,7 +116,7 @@ const ServicesElement: FC<ServicesElementProps> = ({
   const handleFavorite = useCallback(
     (action) => (event): void => {
       event.stopPropagation();
-      setFavorite({ id: element.code, where: element.where, action });
+      setFavorite({ code: element.code, where: element.where, action });
       handleCloseMore();
     },
     [element.where, element.code, handleCloseMore, setFavorite],

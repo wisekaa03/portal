@@ -25,7 +25,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const profile = useContext(ProfileContext);
   // const search = useDebounce(_search, 300);
 
-  const taskStatus = profile?.user?.settings?.taskStatus as string | null;
+  const taskStatus = profile?.user?.settings?.task?.status;
   const [status, setStatus] = useState<string>(taskStatus || TICKET_STATUSES[0]);
   const [search, setSearch] = useState<string>('');
 

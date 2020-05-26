@@ -32,7 +32,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const me = useContext(ProfileContext);
 
-  const favorites = me?.user?.settings?.task?.favorites || null;
+  const favorites = me?.user?.settings?.task?.favorites || [];
 
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 

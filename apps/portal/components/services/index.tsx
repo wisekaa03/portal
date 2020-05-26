@@ -11,14 +11,14 @@ import clsx from 'clsx';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight, MINIMAL_BODY_LENGTH } from '@lib/constants';
-import { ServicesWrapperProps, ServicesFavoriteProps, TaskElementProps } from '@lib/types';
+import { ServicesWrapperProps, ServicesFavoriteProps, PriorityTkService } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
-import { TkRoute, TkRoutes } from '@lib/types/tickets';
+import { TkService, TkRoute, TkRoutes } from '@lib/types/tickets';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
 import ServicesError from './error';
@@ -133,14 +133,17 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
-    ({ id, where, action }: ServicesFavoriteProps) => {
-      let result;
-      const priority = favorites.find((favorite) => favorite.id === id && favorite.where === where)?.priority;
+    ({ code, where, action }: ServicesFavoriteProps) => {
+      let result = [];
+      const priority =
+        typeof favorites === 'object' && favorites !== null
+          ? favorites.find((favorite) => favorite.code === code && favorite.where === where)?.priority
+          : 0;
 
       switch (action) {
         case 'delete':
           result = favorites
-            .filter((favorite) => favorite.id !== id && favorite.where !== where)
+            .filter((favorite) => favorite.code !== code && favorite.where !== where)
             .sort((a, b) => a.priority - b.priority)
             .map((favorite, index) => ({ ...favorite, priority: index }));
           break;
@@ -149,12 +152,12 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           result = favorites.reduce(
             (
               acc: UserSettingsTaskFavorite[],
-              { id: curId, where: curWhere, priority: curPriority }: UserSettingsTaskFavorite,
+              { code: curCode, where: curWhere, priority: curPriority }: UserSettingsTaskFavorite,
             ) => {
-              const newCurrent = { id: curId, where: curWhere, priority: curPriority };
+              const newCurrent = { code: curCode, where: curWhere, priority: curPriority };
               const sym = action === 'up' ? 1 : -1;
 
-              if (curId === id && curWhere === where) {
+              if (curCode === code && curWhere === where) {
                 newCurrent.priority -= sym;
               } else if (curPriority === priority - sym) {
                 newCurrent.priority += sym;
@@ -166,7 +169,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           );
           break;
         default:
-          result = [...favorites, { id, where, priority: favorites.length }];
+          result = [...favorites, { code, where, priority: favorites.length }];
           break;
       }
 
@@ -175,37 +178,44 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     [favorites, handleFavorites],
   );
   const handleAddFavorite = useCallback(
-    () => updateFavorites({ id: task.route.code, where: task.route.where, action: 'add' }),
+    () => updateFavorites({ code: task.service.code, where: task.service.where, action: 'add' }),
     [updateFavorites, task],
   );
 
   const allRoutes = useMemo<TkRoute[]>(() => {
-    if (routes.length === 0) {
-      return [];
-    }
-
-    return routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], []);
+    return typeof routes === 'object' && routes !== null && routes.length === 0
+      ? []
+      : routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], []);
   }, [routes]);
-  const allFavorites = useMemo<TaskElementProps[]>(
-    () =>
-      allRoutes
-        .reduce((acc: TaskElementProps[], cur: TaskElementProps) => {
-          const curFavorite =
-            typeof favorites === 'object' &&
-            favorites !== null &&
-            favorites.find(({ id, where }) => id === cur.code && where === cur.where);
-          if (curFavorite) {
-            return [...acc, { ...cur, priority: curFavorite.priority }];
-          }
 
-          return acc;
-        }, [])
-        .sort((a, b) => a.priority - b.priority),
-    [allRoutes, favorites],
-  );
+  const allServices = useMemo<TkService[]>(() => {
+    return typeof routes === 'object' && routes !== null && routes.length === 0
+      ? []
+      : routes.reduce(
+          (acc: TkService[], cur: TkRoutes) => [...acc, ...(cur?.routes?.flatMap((r) => r.services) || [])],
+          [],
+        );
+  }, [routes]);
+
+  const allFavorites = useMemo<PriorityTkService[]>(() => {
+    return typeof favorites === 'object' && favorites !== null && favorites.length > 0
+      ? favorites.reduce(
+          (acc, val) => [
+            ...acc,
+            ...allServices
+              .filter(({ where: curWhere, code: curCode }) => val.code === curCode && val.where === curWhere)
+              .map((cur) => ({ ...cur, priority: val.priority })),
+          ],
+          [] as PriorityTkService[],
+        )
+      : [];
+  }, [allServices, favorites]);
 
   const isFavorite = useMemo<boolean>(
-    () => !!allFavorites.find(({ where, code }) => code === task.route?.code && where === task.route?.where),
+    () =>
+      typeof allFavorites === 'object' &&
+      allFavorites !== null &&
+      !!allFavorites.find(({ where, code }) => code === task.service?.code && where === task.service?.where),
     [task, allFavorites],
   );
   const enableBody = useMemo<boolean>(

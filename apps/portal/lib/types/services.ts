@@ -31,13 +31,13 @@ export interface ServicesWrapperProps {
 }
 
 export type ServicesFavoriteProps = {
-  id: string;
   where: string;
+  code: string;
   action: 'up' | 'down' | 'add' | 'delete';
 };
 
 export interface ServicesElementProps {
-  element: TaskElementProps;
+  element: PriorityTkService;
   withLink?: boolean;
   active?: boolean;
   base64?: boolean;
@@ -65,12 +65,7 @@ export interface ServicesSuccessCardProps {
   data: ServicesCreatedProps;
 }
 
-export interface TaskElementProps {
-  where: string;
-  code: string;
-  name: string;
-  avatar?: any;
-  description?: string;
+export interface PriorityTkService extends TkService {
   priority?: number;
 }
 

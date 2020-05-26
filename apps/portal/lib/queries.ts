@@ -115,8 +115,13 @@ export const CURRENT_USER = gql`
       settings {
         lng
         drawer
-        ticket {
+        task {
           status
+          favorites {
+            where
+            code
+            priority
+          }
         }
         phonebook {
           columns
@@ -249,11 +254,16 @@ export const USER_SETTINGS = gql`
       settings {
         lng
         drawer
-        ticket {
-          status
-        }
         phonebook {
           columns
+        }
+        task {
+          status
+          favorites {
+            where
+            code
+            priority
+          }
         }
       }
     }
