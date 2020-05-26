@@ -1,4 +1,5 @@
 /** @format */
+/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React from 'react';
@@ -91,7 +92,7 @@ const CurrentComponent: React.FC<{
  */
 class MainApp extends App<ApolloAppProps> {
   componentDidMount(): void {
-    // Remove the server-sie injectsed CSS
+    // Remove the server-sie injected CSS
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
       jssStyles.parentNode!.removeChild(jssStyles);

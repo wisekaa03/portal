@@ -1,4 +1,6 @@
 /** @format */
+/* eslint import/no-default-export: 0 */
+
 import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 type CookieOptionsType = { [key: string]: string | number };

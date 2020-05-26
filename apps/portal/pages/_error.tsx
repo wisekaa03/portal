@@ -1,4 +1,5 @@
 /** @format */
+/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import Head from 'next/head';

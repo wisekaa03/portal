@@ -1,4 +1,5 @@
 /** @format */
+/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useState /* , useContext */ } from 'react';
