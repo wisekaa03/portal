@@ -109,6 +109,7 @@ story.add('Default View', () => {
   }, [task, body, files]);
 
   const showFavorites = boolean('Show Favorites', true);
+  const errorCreated = null;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -124,6 +125,7 @@ story.add('Default View', () => {
       currentTab={currentTab}
       task={task}
       created={created}
+      errorCreated={errorCreated}
       routes={routes}
       favorites={showFavorites ? favorites : []}
       body={body}
