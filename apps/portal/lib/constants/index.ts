@@ -9,6 +9,7 @@ import { LoginService, Gender, UserContext } from '@lib/types';
 export * from './app-bar';
 export * from './ldap-sync';
 
+export const MINIMAL_BODY_LENGTH = 10;
 export const AUTH_PAGE = '/auth/login';
 export const FIRST_PAGE = '/phonebook';
 export const SESSION = 'session';

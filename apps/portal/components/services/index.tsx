@@ -10,7 +10,7 @@ import clsx from 'clsx';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { appBarHeight } from '@lib/constants';
+import { appBarHeight, MINIMAL_BODY_LENGTH } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps, TaskElementProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
@@ -99,8 +99,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-const MINIMAL_BODY_LENGTH = 10;
 
 const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,

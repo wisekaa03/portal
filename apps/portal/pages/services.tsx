@@ -8,15 +8,8 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import {
-  Data,
-  DropzoneFile,
-  ServicesTaskProps,
-  ServicesCreatedProps,
-  ServicesFavoriteProps,
-  TkRoutes,
-  UserSettings,
-} from '@lib/types';
+import { MINIMAL_BODY_LENGTH } from '@lib/constants';
+import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, TkRoutes, UserSettings } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
@@ -93,7 +86,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
     const cleanedBody = body.trim();
 
-    if (cleanedBody.length < 10) {
+    if (cleanedBody.length < MINIMAL_BODY_LENGTH) {
       snackbarUtils.show(t('services:errors.smallBody'));
       // bodyRef.current.focus();
 
