@@ -31,13 +31,12 @@ export interface ServicesWrapperProps {
 }
 
 export type ServicesFavoriteProps = {
-  where: string;
-  code: string;
+  route: UserSettingsTaskFavorite;
   action: 'up' | 'down' | 'add' | 'delete';
 };
 
 export interface ServicesElementProps {
-  element: PriorityTkService;
+  element: UserSettingsTaskFavorite;
   withLink?: boolean;
   active?: boolean;
   base64?: boolean;
@@ -63,10 +62,6 @@ export interface ServicesSuccessCardProps {
   cardRef: React.Ref<any>;
   classes: Record<'root' | 'title', string>;
   data: ServicesCreatedProps;
-}
-
-export interface PriorityTkService extends TkService {
-  priority?: number;
 }
 
 export interface ServicesCreatedProps {

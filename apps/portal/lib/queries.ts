@@ -121,6 +121,10 @@ export const CURRENT_USER = gql`
             where
             code
             priority
+            service {
+              where
+              code
+            }
           }
         }
         phonebook {
@@ -165,8 +169,17 @@ export const LOGIN = gql`
         settings {
           lng
           drawer
-          ticket {
+          task {
             status
+            favorites {
+              where
+              code
+              priority
+              service {
+                where
+                code
+              }
+            }
           }
           phonebook {
             columns
@@ -263,6 +276,10 @@ export const USER_SETTINGS = gql`
             where
             code
             priority
+            service {
+              where
+              code
+            }
           }
         }
       }

@@ -7,6 +7,7 @@ import { ColumnNames } from './profile';
 import { LoginService } from './login-service';
 import { Profile } from './profile.dto';
 import { Group } from './group.dto';
+import { TkService, TkRoute } from './tickets';
 //#endregion
 
 export interface BaseUser {
@@ -46,14 +47,18 @@ export interface UserToSave extends BaseUser {
 }
 
 //#region User settings
-interface UserSettingsPhonebook {
+export interface UserSettingsPhonebook {
   columns?: ColumnNames[] | null;
 }
 
-export interface UserSettingsTaskFavorite {
-  where: string;
-  code: string;
-  priority: number;
+export interface UserSettingsTaskFavoriteService extends Omit<TkService, 'name'> {
+  name?: string;
+}
+
+export interface UserSettingsTaskFavorite extends Omit<TkRoute, 'name' | 'services'> {
+  name?: string;
+  priority?: number;
+  service?: UserSettingsTaskFavoriteService;
 }
 
 interface UserSettingsTask {

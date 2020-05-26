@@ -18,17 +18,28 @@ export class ServicesController {
 
   @Get(':where')
   @UseGuards(SessionGuard)
-  public async department(@Res() res: RenderableResponse, @Param('where') where: string): Promise<void> {
+  public async where(@Res() res: RenderableResponse, @Param('where') where: string): Promise<void> {
     res.render('services', { where });
   }
 
   @Get(':where/:route')
   @UseGuards(SessionGuard)
-  public async service(
+  public async route(
     @Res() res: RenderableResponse,
     @Param('where') where: string,
     @Param('route') route: string,
   ): Promise<void> {
     res.render('services', { where, route });
+  }
+
+  @Get(':where/:route/:service')
+  @UseGuards(SessionGuard)
+  public async service(
+    @Res() res: RenderableResponse,
+    @Param('where') where: string,
+    @Param('route') route: string,
+    @Param('service') service: string,
+  ): Promise<void> {
+    res.render('services', { where, route, service });
   }
 }

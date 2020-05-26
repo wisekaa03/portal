@@ -52,9 +52,9 @@ const mockRoutes: TkRoute[] = [
 ];
 
 const mockFavorites: UserSettingsTaskFavorite[] = [
-  { id: '1', where: TkWhere.SOAP1C, priority: 1 },
-  { id: '3', where: TkWhere.SOAP1C, priority: 0 },
-  { id: '2', where: TkWhere.SOAP1C, priority: 2 },
+  { code: '1', where: TkWhere.SOAP1C, service: { where: TkWhere.SOAP1C, code: '0000001' }, priority: 1 },
+  { code: '3', where: TkWhere.SOAP1C, service: { where: TkWhere.SOAP1C, code: '0000002' }, priority: 0 },
+  { code: '2', where: TkWhere.SOAP1C, service: { where: TkWhere.SOAP1C, code: '0000003' }, priority: 2 },
 ];
 
 const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };

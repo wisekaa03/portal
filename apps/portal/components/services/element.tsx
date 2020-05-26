@@ -116,10 +116,17 @@ const ServicesElement: FC<ServicesElementProps> = ({
   const handleFavorite = useCallback(
     (action) => (event): void => {
       event.stopPropagation();
-      setFavorite({ code: element.code, where: element.where, action });
+      setFavorite({
+        route: {
+          code: element.code,
+          where: element.where,
+          service: { code: element.service.code, where: element.service.where },
+        },
+        action,
+      });
       handleCloseMore();
     },
-    [element.where, element.code, handleCloseMore, setFavorite],
+    [element, handleCloseMore, setFavorite],
   );
 
   useEffect(() => {

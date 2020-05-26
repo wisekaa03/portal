@@ -10,10 +10,16 @@ type User {
   profile: Profile!
 }
 
+type UserSettingsTaskFavoriteService {
+  where: String
+  code: String
+}
+
 type UserSettingsTaskFavorite {
   where: String
   code: String
   priority: Int
+  service: UserSettingsTaskFavoriteService
 }
 
 type UserSettingsTask {
@@ -21,9 +27,15 @@ type UserSettingsTask {
   favorites: [UserSettingsTaskFavorite]
 }
 
+input UserSettingsTaskFavoriteServiceInput {
+  where: String
+  code: String
+}
+
 input UserSettingsTaskFavoriteInput {
   where: String
   code: String
+  service: UserSettingsTaskFavoriteServiceInput
   priority: Int
 }
 
