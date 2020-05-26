@@ -301,7 +301,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   {!!errorCreated ? (
                     <ServicesError error={errorCreated} onClose={handleResetTicket} />
                   ) : (
-                    <ServicesSuccess data={created} />
+                    <ServicesSuccess data={created} onClose={handleResetTicket} />
                   )}
                 </Loading>
               ) : (

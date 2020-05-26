@@ -70,7 +70,7 @@ const ServicesSuccess = withStyles((theme) => ({
     justifyContent: 'space-between',
     padding: theme.spacing(3),
   },
-}))(({ classes, data }: ServicesSuccessProps) => {
+}))(({ classes, data, onClose }: ServicesSuccessProps) => {
   const { t } = useTranslation();
   const cardRef = useRef(null);
 
@@ -94,6 +94,9 @@ const ServicesSuccess = withStyles((theme) => ({
           content={() => cardRef.current}
           copyStyles
         />
+        <Button onClick={onClose} actionType="close">
+          {t('common:close')}
+        </Button>
       </CardActions>
     </Card>
   );

@@ -51,6 +51,7 @@ export interface ServicesElementProps {
 export interface ServicesSuccessProps {
   classes: Record<'root' | 'actions', string>;
   data: ServicesCreatedProps;
+  onClose: () => void;
 }
 
 export interface ServicesErrorProps {
