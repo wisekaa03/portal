@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
+import { ApolloError } from 'apollo-client';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Card, CardContent, CardActions } from '@material-ui/core';
 //#endregion
@@ -45,9 +46,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ServicesError: FC<ServicesErrorProps> = ({ name, onClose }) => {
+const ServicesError: FC<ServicesErrorProps> = ({ error, onClose }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+
+  const name = error instanceof ApolloError ? error.message : error;
 
   return (
     <Card className={classes.root}>

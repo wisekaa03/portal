@@ -160,6 +160,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   useEffect(() => {
     if (errorCreated) {
       snackbarUtils.error(errorCreated);
+      setCreated({});
     }
     if (errorRoutes) {
       snackbarUtils.error(errorRoutes);
@@ -180,6 +181,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           refetchRoutes={refetchRoutes}
           task={task}
           created={created}
+          errorCreated={errorCreated}
           routes={routes}
           favorites={favorites}
           body={body}

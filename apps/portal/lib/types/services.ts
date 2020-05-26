@@ -1,5 +1,6 @@
 /** @format */
 
+import { ApolloError } from 'apollo-client';
 import { DropzoneFile } from './dropzone';
 import { TkRoutes, TkRoute, TkService } from './tickets';
 import { UserSettingsTaskFavorite } from './user.dto';
@@ -11,6 +12,7 @@ export interface ServicesWrapperProps {
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
+  errorCreated: ApolloError;
   routes?: TkRoutes[];
   favorites: UserSettingsTaskFavorite[] | null;
   body: string;
@@ -52,7 +54,7 @@ export interface ServicesSuccessProps {
 }
 
 export interface ServicesErrorProps {
-  name: string;
+  error: ApolloError | string;
   onClose: () => void;
 }
 

@@ -104,6 +104,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   serviceRef,
   bodyRef,
   currentTab,
+  errorCreated,
   task,
   created,
   routes,
@@ -202,8 +203,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
         .sort((a, b) => a.priority - b.priority),
     [allRoutes, favorites],
   );
-  // TODO: выбор первой ошибки из списка
-  const errorString = useMemo<string>(() => routes.find(({ error }) => !!error)?.error || '', [routes]);
+
   const isFavorite = useMemo<boolean>(
     () => !!allFavorites.find(({ where, code }) => code === task.route?.code && where === task.route?.where),
     [task, allFavorites],
@@ -298,8 +298,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   disableShrink
                   size={48}
                 >
-                  {!!errorString ? (
-                    <ServicesError name={errorString} onClose={handleResetTicket} />
+                  {!!errorCreated ? (
+                    <ServicesError error={errorCreated} onClose={handleResetTicket} />
                   ) : (
                     <ServicesSuccess data={created} />
                   )}
