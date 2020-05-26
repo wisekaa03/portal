@@ -169,7 +169,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           );
           break;
         default:
-          result = [...favorites, { code, where, priority: favorites.length }];
+          result = [
+            ...favorites.map((f) => ({ where: f.where, code: f.code, priority: f.priority })),
+            { code, where, priority: favorites.length },
+          ];
           break;
       }
 
