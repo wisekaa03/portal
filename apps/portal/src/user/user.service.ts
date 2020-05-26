@@ -158,7 +158,10 @@ export class UserService {
     const defaultSettings: UserSettings = {
       lng: 'ru',
       drawer: true,
-      taskStatus: TICKET_STATUSES[0],
+      task: {
+        status: TICKET_STATUSES[0],
+        favorites: [],
+      },
     };
 
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
@@ -270,7 +273,10 @@ export class UserService {
       if (typeof value[key] === 'object') {
         settings = {
           ...settings,
-          [key]: { ...((settings[key] as unknown) as object), ...((value[key] as unknown) as object) },
+          [key]: {
+            ...((settings[key] as unknown) as Record<string, any>),
+            ...((value[key] as unknown) as Record<string, any>),
+          },
         };
       } else {
         settings = { ...settings, [key]: value[key] };

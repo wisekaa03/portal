@@ -10,12 +10,26 @@ type User {
   profile: Profile!
 }
 
-type UserSettingsTicket {
-  status: String
+type UserSettingsTaskFavorite {
+  where: String
+  code: String
+  priority: Int
 }
 
-input UserSettingsTicketInput {
+type UserSettingsTask {
   status: String
+  favorites: [UserSettingsTaskFavorite]
+}
+
+input UserSettingsTaskFavoriteInput {
+  where: String
+  code: String
+  priority: Int
+}
+
+input UserSettingsTaskInput {
+  status: String
+  favorites: [UserSettingsTaskFavoriteInput]
 }
 
 type UserSettingsPhonebook {
@@ -29,15 +43,15 @@ input UserSettingsPhonebookInput {
 type UserSettings {
   lng: String
   drawer: Boolean
-  ticket: UserSettingsTicket
   phonebook: UserSettingsPhonebook
+  task: UserSettingsTask
 }
 
 input UserSettingsInput {
   lng: String
   drawer: Boolean
-  ticket: UserSettingsTicketInput
   phonebook: UserSettingsPhonebookInput
+  task: UserSettingsTaskInput
 }
 
 type Mutation {

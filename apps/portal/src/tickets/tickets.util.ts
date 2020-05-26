@@ -42,7 +42,7 @@ export const whereService = (where: string | TkWhere): TkWhere => {
   }
 };
 
-/**
+/** *******************************************************************************************
  * SOAP1C
  */
 
@@ -200,7 +200,7 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
       }
     : null;
 
-/**
+/** *******************************************************************************************
  * OSTicket
  */
 
