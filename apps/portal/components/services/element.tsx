@@ -57,9 +57,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gap: `${theme.spacing(0.5)}px`,
       borderBottom: '1px solid rgba(46, 45, 43, 0.7)',
-      gridTemplateRows: `repeat(2, ${theme.spacing(3)}px)`,
+      gridTemplateRows: `repeat(3, ${theme.spacing(3)}px)`,
       gridTemplateColumns: `1fr 24px`,
       minWidth: 200,
+      width: 400,
+      maxWidth: 400,
     },
     name: {
       overflow: 'hidden',
