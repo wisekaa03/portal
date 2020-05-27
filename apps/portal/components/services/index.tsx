@@ -136,27 +136,40 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
     ({ route: curRoute, action }: ServicesFavoriteProps) => {
-      const { where, code, service } = curRoute;
+      const {
+        where,
+        code,
+        service: { where: srvWhere, code: srvCode },
+      } = curRoute;
 
       let result = [];
-      const priority =
-        typeof favorites === 'object' && favorites !== null
-          ? favorites.find((favorite) => favorite.code === code && favorite.where === where)?.priority
-          : 0;
+      const favCur =
+        Array.isArray(favorites) &&
+        favorites
+          .filter(
+            (favorite) =>
+              favorite.service?.where === srvWhere &&
+              favorite.service?.code === srvCode &&
+              favorite.code === code &&
+              favorite.where === where,
+          )
+          .pop();
+
+      const priority = favCur?.priority || favorites.length;
 
       switch (action) {
         case 'delete':
           result = favorites
-            .filter(
-              (favorite) =>
-                favorite?.code !== code &&
-                favorite?.where !== where &&
-                favorite?.service?.where === service?.where &&
-                favorite?.service?.code === service?.code,
-            )
+            .filter((favorite) => favorite !== favCur)
             .sort((a, b) => a.priority - b.priority)
-            .map((favorite, index) => ({ ...favorite, priority: index }));
+            .map((favorite, index) => ({
+              where: favorite.where,
+              code: favorite.code,
+              service: { where: favorite.service.where, code: favorite.service.code },
+              priority: index,
+            }));
           break;
+
         case 'up':
         case 'down':
           result = favorites.reduce(
@@ -178,6 +191,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
             [],
           );
           break;
+
+        case 'add':
         default:
           result = [
             ...favorites.map(
@@ -189,9 +204,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   priority: f?.priority,
                 },
             ),
-            { code, where, service, priority: favorites.length },
+            { code, where, service: { where: srvWhere, code: srvCode }, priority },
           ];
-          break;
       }
 
       handleFavorites(result);
@@ -267,16 +281,16 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   const isFavorite = useMemo<boolean>(
     () =>
-      typeof allFavorites === 'object' &&
-      allFavorites !== null &&
+      task &&
+      Array.isArray(allFavorites) &&
       !!allFavorites.find(
-        ({ where, code, service }) =>
+        ({ where, code, service: { code: srvCode } }) =>
+          typeof query === 'object' &&
           code === task.route?.code &&
-          where === task.route.where &&
-          service?.code === task.service?.code &&
-          service?.where === task.service?.where,
+          where === task.route?.where &&
+          srvCode === query.service,
       ),
-    [task, allFavorites],
+    [task, query, allFavorites],
   );
 
   const enableBody = useMemo<boolean>(
@@ -288,7 +302,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     /* body, */
   ]);
 
-  const favService = useMemo<string>(() => typeof query === 'object' && query.service, [query]);
+  const favService = useMemo<string>(() => (typeof query === 'object' && query.service) || task.service?.code || '0', [
+    query,
+    task,
+  ]);
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -393,7 +410,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   )}
                   <FormControl className={classes.formControl} variant="outlined">
                     <Select
-                      value={task.service?.code || favService}
+                      value={favService}
                       inputRef={serviceRef}
                       onChange={handleService}
                       classes={{

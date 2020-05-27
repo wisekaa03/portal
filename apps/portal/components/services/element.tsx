@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: `1fr 24px`,
       minWidth: 200,
       width: 400,
-      maxWidth: 400,
+      // maxWidth: 400,
     },
     name: {
       overflow: 'hidden',

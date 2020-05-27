@@ -36,7 +36,6 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
-  // TODO: доделать api
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
     Data<'TicketsRoutes', TkRoutes[]>,
     void
