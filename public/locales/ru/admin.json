@@ -9,5 +9,10 @@
     "cache": "Очистить",
     "description": "Очистить Redis Cache",
     "wait": "... Очищаю ..."
+  },
+  "clearSettings": {
+    "clear": "Удалить User settings",
+    "description": "Удалить данные User Settings",
+    "wait": "... Удаляю ..."
   }
 }

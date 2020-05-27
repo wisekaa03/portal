@@ -177,6 +177,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
         <ServicesComponent
           contentRef={contentRef}
           serviceRef={serviceRef}
+          query={query}
           bodyRef={bodyRef}
           currentTab={currentTab}
           refetchRoutes={refetchRoutes}

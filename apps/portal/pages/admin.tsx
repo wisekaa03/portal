@@ -11,7 +11,8 @@ import Head from 'next/head';
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { SYNC, CACHE } from '@lib/queries';
+import { SYNC, CACHE, USER_SETTINGS, defaultUserSettings } from '@lib/queries';
+import { UserSettings } from '@lib/types/user.dto';
 import snackbarUtils from '@lib/snackbar-utils';
 //#endregion
 
@@ -59,6 +60,15 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     // },
   });
 
+  const [clearSettings, { loading: clearSettingsLoading, error: clearSettingsError }] = useMutation<
+    UserSettings,
+    { value: UserSettings }
+  >(USER_SETTINGS, {
+    // onCompleted() {
+    //   setCacheLoading(false);
+    // },
+  });
+
   const handleSync = (): void => {
     // setSyncLoading(true);
     sync();
@@ -69,6 +79,15 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     cache();
   };
 
+  const handleClearSettings = (): void => {
+    // setCacheLoading(true);
+    clearSettings({
+      variables: {
+        value: defaultUserSettings,
+      },
+    });
+  };
+
   useEffect(() => {
     if (errorsCache) {
       snackbarUtils.error(errorsCache);
@@ -77,7 +96,11 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     if (errorsSynch) {
       snackbarUtils.error(errorsSynch);
     }
-  }, [errorsCache, errorsSynch]);
+
+    if (clearSettingsError) {
+      snackbarUtils.error(clearSettingsError);
+    }
+  }, [clearSettingsError, errorsCache, errorsSynch]);
 
   return (
     <>
@@ -107,6 +130,18 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
             <CardContent>
               <Typography color="textSecondary" component="p">
                 {t('admin:cache:description')}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card className={classes.card}>
+            <CardActions disableSpacing>
+              <Button fullWidth disabled={clearSettingsLoading} color="secondary" onClick={handleClearSettings}>
+                {!cacheLoading ? t('admin:clearSettings:clear') : t('admin:clearSettings:wait')}
+              </Button>
+            </CardActions>
+            <CardContent>
+              <Typography color="textSecondary" component="p">
+                {t('admin:clearSettings:description')}
               </Typography>
             </CardContent>
           </Card>

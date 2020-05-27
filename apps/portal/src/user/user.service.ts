@@ -11,11 +11,12 @@ import bcrypt from 'bcrypt';
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
-import { TICKET_STATUSES, ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
+import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
 import { LoginService, Profile, User, UserSettings } from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
+import { defaultUserSettings } from '@lib/queries';
 import { UserEntity } from './user.entity';
 //#endregion
 
@@ -155,15 +156,6 @@ export class UserService {
    * @throws {Error}
    */
   async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
-    const defaultSettings: UserSettings = {
-      lng: 'ru',
-      drawer: true,
-      task: {
-        status: TICKET_STATUSES[0],
-        favorites: [],
-      },
-    };
-
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
       this.logger.error('Unable to save data in `profile`', error);
 
@@ -206,7 +198,7 @@ export class UserService {
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
       groups,
       isAdmin: groups ? Boolean(groups.find((group) => group.name.toLowerCase() === ADMIN_GROUP)) : false,
-      settings: user ? user.settings : defaultSettings,
+      settings: user ? user.settings : defaultUserSettings,
       profile: (profile as unknown) as Profile,
     };
 

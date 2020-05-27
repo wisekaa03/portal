@@ -9,6 +9,7 @@ export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
   serviceRef: React.Ref<HTMLSelectElement>;
   bodyRef: React.Ref<any>;
+  query: Record<string, string>;
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;

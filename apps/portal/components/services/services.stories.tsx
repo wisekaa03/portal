@@ -110,6 +110,7 @@ story.add('Default View', () => {
 
   const showFavorites = boolean('Show Favorites', true);
   const errorCreated = null;
+  const query = {};
 
   useEffect(() => {
     if (contentRef.current) {
@@ -121,6 +122,7 @@ story.add('Default View', () => {
     <Story
       contentRef={contentRef}
       serviceRef={serviceRef}
+      query={query}
       bodyRef={bodyRef}
       currentTab={currentTab}
       task={task}

@@ -17,10 +17,11 @@ import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
-import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
+import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteService } from '@lib/types/user.dto';
 import { TkService, TkRoute, TkRoutes } from '@lib/types/tickets';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
+import ServicesElementFavorites from './element.favorites';
 import ServicesError from './error';
 //#endregion
 
@@ -103,6 +104,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,
   serviceRef,
   bodyRef,
+  query,
   currentTab,
   errorCreated,
   task,
@@ -145,7 +147,13 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
       switch (action) {
         case 'delete':
           result = favorites
-            .filter((favorite) => favorite.code !== code && favorite.where !== where)
+            .filter(
+              (favorite) =>
+                favorite?.code !== code &&
+                favorite?.where !== where &&
+                favorite?.service?.where === service?.where &&
+                favorite?.service?.code === service?.code,
+            )
             .sort((a, b) => a.priority - b.priority)
             .map((favorite, index) => ({ ...favorite, priority: index }));
           break;
@@ -154,9 +162,9 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           result = favorites.reduce(
             (
               acc: UserSettingsTaskFavorite[],
-              { code: curCode, where: curWhere, priority: curPriority }: UserSettingsTaskFavorite,
+              { code: curCode, where: curWhere, service: curService, priority: curPriority }: UserSettingsTaskFavorite,
             ) => {
-              const newCurrent = { code: curCode, where: curWhere, priority: curPriority };
+              const newCurrent = { code: curCode, where: curWhere, service: curService, priority: curPriority };
               const sym = action === 'up' ? 1 : -1;
 
               if (curCode === code && curWhere === where) {
@@ -222,24 +230,38 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   const allFavorites = useMemo<UserSettingsTaskFavorite[]>(() => {
     return typeof favorites === 'object' && favorites !== null && favorites.length > 0
-      ? favorites.reduce(
-          (acc, val) => [
-            ...acc,
-            ...allRoutes.filter(({ where: curWhere, code: curCode, services: curServices }) => {
-              return (
-                val.where === curWhere &&
-                val.code === curCode &&
-                curServices.reduce((a, v) => {
-                  if (val.service?.where === v.where && val.service?.code === v.code) {
-                    return { ...a, ...v };
-                  }
-                  return a;
-                }, {})
-              );
-            }),
-          ],
-          [],
-        )
+      ? allRoutes.reduce((acc, { where, code, services }) => {
+          const rt = services.reduce((cum, service) => {
+            const f = favorites
+              .filter(
+                ({ where: favWhere, code: favCode, service: favService }) =>
+                  favWhere === where &&
+                  favCode === code &&
+                  service.where === favService.where &&
+                  service.code === favService.code,
+              )
+              .pop();
+
+            if (f) {
+              return [
+                ...cum,
+                {
+                  ...f,
+                  service: {
+                    ...f.service,
+                    name: service.name,
+                    description: service.description,
+                    avatar: service.avatar,
+                  },
+                },
+              ];
+            }
+
+            return cum;
+          }, [] as UserSettingsTaskFavoriteService[]);
+
+          return [...acc, ...rt];
+        }, [] as UserSettingsTaskFavorite[])
       : [];
   }, [allRoutes, favorites]);
 
@@ -247,7 +269,13 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     () =>
       typeof allFavorites === 'object' &&
       allFavorites !== null &&
-      !!allFavorites.find(({ where, code }) => code === task.service?.code && where === task.service?.where),
+      !!allFavorites.find(
+        ({ where, code, service }) =>
+          code === task.route?.code &&
+          where === task.route.where &&
+          service?.code === task.service?.code &&
+          service?.where === task.service?.where,
+      ),
     [task, allFavorites],
   );
 
@@ -259,6 +287,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     enableBody,
     /* body, */
   ]);
+
+  const favService = useMemo<string>(() => typeof query === 'object' && query.service, [query]);
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -291,8 +321,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   </Box>
                   <Box className={classes.blockContainer}>
                     {allFavorites.map((current) => (
-                      <ServicesElement
-                        key={`${current.where}-${current.code}`}
+                      <ServicesElementFavorites
+                        key={`fav-${current.service.where}-${current.service.code}`}
                         base64
                         favorite
                         withLink
@@ -363,7 +393,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   )}
                   <FormControl className={classes.formControl} variant="outlined">
                     <Select
-                      value={task.service?.code || '0'}
+                      value={task.service?.code || favService}
                       inputRef={serviceRef}
                       onChange={handleService}
                       classes={{
