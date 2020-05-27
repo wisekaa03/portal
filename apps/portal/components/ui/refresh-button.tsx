@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     absolute: {
       position: 'absolute',
-      top: '65px',
+      top: '5px',
       right: '5px',
       zIndex: 100,
     },
