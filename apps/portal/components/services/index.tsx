@@ -288,7 +288,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           typeof query === 'object' &&
           code === task.route?.code &&
           where === task.route?.where &&
-          srvCode === query.service,
+          srvCode === task.service?.code,
       ),
     [task, query, allFavorites],
   );
@@ -297,10 +297,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
     [task],
   );
-  const notValid = useMemo<boolean>(() => !enableBody /* || body.trim().length < MINIMAL_BODY_LENGTH */, [
-    enableBody,
-    /* body, */
-  ]);
+  const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
 
   const favService = useMemo<string>(() => (typeof query === 'object' && query.service) || task.service?.code || '0', [
     query,

@@ -108,6 +108,7 @@ const ServicesElementFavorites: FC<ServicesElementProps> = ({
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const handleOpenMore = useCallback((event: React.MouseEvent<HTMLElement>): void => {
+    event.preventDefault();
     setAnchor(event.currentTarget);
   }, []);
 

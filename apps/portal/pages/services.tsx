@@ -114,7 +114,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   useEffect(() => {
     if (!__SERVER__ && routes) {
-      const { where, route } = query;
+      const { where, route, service } = query;
       if (where && route && routes.length > 0) {
         const rt = routes.reduce(
           (acc, val) => ({
@@ -124,7 +124,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           {} as TkRoute,
         );
         if (typeof rt === 'object' && rt !== null) {
-          setTask({ route: rt });
+          setTask({ route: rt, service: rt.services?.filter(({ code: srvCode }) => srvCode === service).pop() });
           setCurrentTab(1);
         } else {
           setTask({});
