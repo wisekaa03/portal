@@ -475,20 +475,28 @@ export class ProfileService {
    */
   async changeProfile(req: Request, profile: Profile, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
     // В резолвере проверка на юзера уже есть
-    if (!req.session!.passport!.user!.profile!.id) {
+    if (!req.session?.passport?.user?.profile?.id) {
       throw new Error('Not authorized');
     }
 
-    const updated = { id: req.session!.passport.user.profile.id, ...profile };
+    const updated = { id: req.session.passport.user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
     if (!created) {
       throw new Error('Profile repository: "created" is null');
     }
 
-    const ldapUser = await this.ldapService.searchByDN(created.dn);
+    let ldapUser = await this.ldapService.searchByDN(created.dn);
     if (!ldapUser) {
-      throw new Error('Ldap is not connected.');
+      ldapUser = await this.ldapService.searchByDN(created.dn, false);
+      if (!ldapUser) {
+        ldapUser = await this.ldapService.searchByUsername(created.username, false);
+        if (!ldapUser) {
+          throw new Error('Ldap is not connected.');
+        } else {
+          created.dn = ldapUser.dn;
+        }
+      }
     }
 
     const modification: Record<string, any> = {
@@ -496,7 +504,7 @@ export class ProfileService {
     };
 
     const clean = (value: any): string | number | boolean => {
-      // TODO: продумать варианты отчистки и безопасности
+      // TODO: продумать варианты очистки и безопасности
       return typeof value === 'string' ? value.trim() : value;
     };
 
@@ -620,7 +628,7 @@ export class ProfileService {
     }
     await this.ldapService
       .modify(
-        created.dn,
+        ldapUser.dn,
         ldapUpdated,
         created.username,
         // TODO: .modify with password parameter
@@ -646,12 +654,12 @@ export class ProfileService {
     const result = this.profileRepository.merge(created, profile, thumbnail as ProfileEntity);
 
     return this.save(result).then(async (profileUpdated) => {
-      if (req.session!.passport.user.profile.id === profileUpdated.id) {
-        req.session!.passport.user.profile = profileUpdated;
+      if (req.session?.passport.user.profile.id === profileUpdated.id) {
+        req.session.passport.user.profile = profileUpdated;
       }
 
       // TODO:  разобраться
-      await this.profileRepository.manager.connection!.queryResultCache!.remove([
+      await this.profileRepository.manager.connection?.queryResultCache?.remove([
         'profile',
         'profile_id',
         'profile_LI',

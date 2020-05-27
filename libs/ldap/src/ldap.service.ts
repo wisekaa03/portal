@@ -373,12 +373,12 @@ export class LdapService extends EventEmitter {
    * @returns {undefined} - If user is not found but no error happened, result is undefined.
    * @throws {Error}
    */
-  private async findUser(username: string): Promise<undefined | Ldap.SearchEntryObject> {
+  private async findUser(username: string, cache = true): Promise<undefined | Ldap.SearchEntryObject> {
     if (!username) {
       throw new Error('empty username');
     }
 
-    if (this.userCache) {
+    if (cache && this.userCache) {
       // Check cache. 'cached' is `{user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(username);
       if (cached && cached.user && cached.user.sAMAccountName) {
@@ -465,13 +465,51 @@ export class LdapService extends EventEmitter {
   }
 
   /**
+   * Search user by Username
+   *
+   * @param {string} userByUsername user name
+   * @returns {Promise<undefined | LdapResponseUser>} User in LDAP
+   */
+  public async searchByUsername(userByUsername: string, cache = true): Promise<undefined | LdapResponseUser> {
+    if (cache && this.userCache) {
+      // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
+      const cached: LDAPCache = await this.userCache.get<LDAPCache>(userByUsername);
+      if (cached && cached.user && cached.user.sAMAccountName) {
+        this.logger.debug(`From cache: ${cached.user.sAMAccountName}`);
+
+        return cached.user as LdapResponseUser;
+      }
+    }
+
+    return this.findUser(userByUsername)
+      .then((search) => {
+        const user = search as LdapResponseUser;
+
+        if (user && this.userCache) {
+          this.logger.debug(`To cache: ${user.dn}`);
+          this.userCache.set<LDAPCache>(user.dn, { user, password: '' }, this.ttl);
+
+          this.logger.debug(`To cache: ${user.sAMAccountName}`);
+          this.userCache.set<LDAPCache>(user.sAMAccountName, { user, password: '' }, this.ttl);
+        }
+
+        return user;
+      })
+      .catch((error: Error) => {
+        this.logger.error('Search by Username error:', error);
+
+        return undefined;
+      });
+  }
+
+  /**
    * Search user by DN
    *
    * @param {string} userByDN user distinguished name
    * @returns {Promise<undefined | LdapResponseUser>} User in LDAP
    */
-  public async searchByDN(userByDN: string): Promise<undefined | LdapResponseUser> {
-    if (this.userCache) {
+  public async searchByDN(userByDN: string, cache = true): Promise<undefined | LdapResponseUser> {
+    if (cache && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(userByDN);
       if (cached && cached.user && cached.user.sAMAccountName) {

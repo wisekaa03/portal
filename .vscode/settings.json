@@ -30,6 +30,7 @@
         "gqlauth",
         "gqlerror",
         "instorage",
+        "insuff",
         "itapps",
         "json",
         "kngk",
@@ -81,7 +82,8 @@
         "uuidv",
         "webm",
         "with",
-        "ощепков"
+        "ощепков",
+        "юзера"
     ],
     "prettier.packageManager": "yarn",
     "code-runner.enableAppInsights": false
