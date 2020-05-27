@@ -61,14 +61,24 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     [task],
   );
 
-  const handleResetTicket = (): void => {
+  const handleResetTicket = useCallback((): void => {
     setTask({});
     setBody('');
     setFiles([]);
     setCurrentTab(0);
     setSubmitted(false);
     router.push(pathname, pathname);
-  };
+  }, [router, pathname, setTask, setBody, setFiles, setCurrentTab, setSubmitted]);
+
+  const handleCurrentTab = useCallback(
+    (tab) => {
+      if (tab === 0) {
+        handleResetTicket();
+      }
+      setCurrentTab(tab);
+    },
+    [setCurrentTab, handleResetTicket],
+  );
 
   const handleFavorites = useCallback(
     (data) => {
@@ -192,7 +202,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           submitted={submitted}
           loadingRoutes={loadingRoutes}
           loadingCreated={loadingCreated}
-          handleCurrentTab={setCurrentTab}
+          handleCurrentTab={handleCurrentTab}
           handleService={handleService}
           handleSubmit={handleSubmit}
           handleResetTicket={handleResetTicket}
