@@ -163,7 +163,7 @@ export interface ProfileTicketsCardProps {
   task: TkTask;
 }
 
-export interface ProfileTicketComponentProps {
+export interface ProfileTaskComponentProps {
   loading: boolean;
   loadingEdit: boolean;
   task: TkTask;
@@ -175,7 +175,7 @@ export interface ProfileTicketComponentProps {
   handleClose: () => void;
 }
 
-export interface ProfileTicketInfoCardProps {
+export interface ProfileTaskInfoCardProps {
   classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
   header: string;
   profile: TkUser;

@@ -57,7 +57,7 @@ export const AUTO_COLLAPSE_ROUTES = [
   /* '/mail' */
 ];
 
-export const TICKET_STATUSES = ['Регистрация', 'В работе', 'Выполнено', 'Завершено'];
+export const TASK_STATUSES = ['Регистрация', 'В работе', 'Выполнено', 'Завершено'];
 
 export const ADMIN_GROUP = 'web master';
 

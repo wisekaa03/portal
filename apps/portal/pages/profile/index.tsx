@@ -13,12 +13,12 @@ import { TICKETS_TASKS, USER_SETTINGS } from '@lib/queries';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 // import useDebounce from '../../lib/debounce';
 import { ProfileContext } from '@lib/context';
-import { TICKET_STATUSES } from '@lib/constants';
+import { TASK_STATUSES } from '@lib/constants';
 import snackbarUtils from '@lib/snackbar-utils';
 import { Data, TkTask, TkTasks } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileInfoComponent from '@front/components/profile/info';
-import ProfileTicketsComponent from '@front/components/profile/tickets';
+import ProfileTasksComponent from '@front/components/profile/tasks';
 //#endregion
 
 const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
@@ -26,7 +26,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // const search = useDebounce(_search, 300);
 
   const taskStatus = profile?.user?.settings?.task?.status;
-  const [status, setStatus] = useState<string>(taskStatus || TICKET_STATUSES[0]);
+  const [status, setStatus] = useState<string>(taskStatus || TASK_STATUSES[0]);
   const [search, setSearch] = useState<string>('');
 
   const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
@@ -87,7 +87,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <MaterialUI {...rest}>
         <Box display="flex" flexDirection="column" p={1}>
           <ProfileInfoComponent />
-          <ProfileTicketsComponent
+          <ProfileTasksComponent
             loading={loadingTickets}
             tasks={tasks}
             status={status}

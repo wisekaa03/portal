@@ -24,8 +24,8 @@ import clsx from 'clsx';
 //#region Imports Local
 import { format } from '@lib/dayjs';
 import { useTranslation } from '@lib/i18n-client';
-import { LARGE_RESOLUTION, TICKET_STATUSES } from '@lib/constants';
-import { ProfileTicketInfoCardProps, ProfileTicketComponentProps } from '@lib/types';
+import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
+import { ProfileTaskInfoCardProps, ProfileTaskComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import BaseIcon from '@front/components/ui/icon';
@@ -33,25 +33,25 @@ import Dropzone from '@front/components/dropzone';
 import Button from '@front/components/ui/button';
 import Iframe from '@front/components/iframe';
 import { ComposeLink } from '@front/components/compose-link';
-import TicketIconNew from '@public/images/svg/task/task_new.svg';
-import TicketIconPause from '@public/images/svg/task/task_pause.svg';
-import TicketIconWorked from '@public/images/svg/task/task_worked.svg';
-import TicketIconComplete from '@public/images/svg/task/task_complete.svg';
+import TaskIconNew from '@public/images/svg/task/task_new.svg';
+import TaskIconPause from '@public/images/svg/task/task_pause.svg';
+import TaskIconWorked from '@public/images/svg/task/task_worked.svg';
+import TaskIconComplete from '@public/images/svg/task/task_complete.svg';
 //#endregion
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
-    case TICKET_STATUSES[2]:
-    case TICKET_STATUSES[3]:
-      return TicketIconPause;
-    case TICKET_STATUSES[4]:
-      return TicketIconNew;
-    case TICKET_STATUSES[1]:
-      return TicketIconWorked;
-    case TICKET_STATUSES[5]:
-      return TicketIconComplete;
+    case TASK_STATUSES[2]:
+    case TASK_STATUSES[3]:
+      return TaskIconPause;
+    case TASK_STATUSES[4]:
+      return TaskIconNew;
+    case TASK_STATUSES[1]:
+      return TaskIconWorked;
+    case TASK_STATUSES[5]:
+      return TaskIconComplete;
     default:
-      return TicketIconPause;
+      return TaskIconPause;
   }
 };
 
@@ -161,7 +161,7 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
       gridTemplateColumns: '1fr 2fr',
     },
   },
-}))(({ classes, header, profile }: ProfileTicketInfoCardProps) => {
+}))(({ classes, header, profile }: ProfileTaskInfoCardProps) => {
   const { t } = useTranslation();
 
   return (
@@ -217,7 +217,7 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
   );
 });
 
-const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
+const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
   loading,
   loadingEdit,
   task,
@@ -394,4 +394,4 @@ const ProfileTicketComponent: FC<ProfileTicketComponentProps> = ({
   );
 };
 
-export default ProfileTicketComponent;
+export default ProfileTaskComponent;

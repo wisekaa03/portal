@@ -11,7 +11,7 @@ import clsx from 'clsx';
 //#region Imports Local
 import { format } from '@lib/dayjs';
 import { useTranslation } from '@lib/i18n-client';
-import { TICKET_STATUSES } from '@lib/constants';
+import { TASK_STATUSES } from '@lib/constants';
 import BoxWithRef from '@lib/box-ref';
 import { ProfileTicketsComponentProps, ProfileTicketsCardProps } from '@lib/types';
 import BaseIcon from '@front/components/ui/icon';
@@ -199,7 +199,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
           <RefreshButton noAbsolute onClick={() => refetchTickets()} />
         </Box>
         <Box display="flex" justifyContent="flex-end">
-          <Select label={t('profile:tickets.status')} items={TICKET_STATUSES} value={status} onChange={handleStatus} />
+          <Select label={t('profile:tickets.status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
         </Box>
       </Box>
       <BoxWithRef

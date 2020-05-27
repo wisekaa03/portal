@@ -179,7 +179,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Next.JS locals
-  app.use('*', (_req: Request, res: express.Response, next: Function) => {
+  app.use('*', (_req: Request, res: express.Response, next: () => void) => {
     // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     res.locals.nestLogger = logger;
     next();

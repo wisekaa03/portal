@@ -5,7 +5,7 @@
 import gql from 'graphql-tag';
 //#endregion
 //#region  Imports Local
-import { TICKET_STATUSES } from './constants/index';
+import { TASK_STATUSES } from './constants/index';
 import { UserSettings } from './types/user.dto';
 //#endregion
 
@@ -13,7 +13,7 @@ export const defaultUserSettings: UserSettings = {
   lng: 'ru',
   drawer: true,
   task: {
-    status: TICKET_STATUSES[0],
+    status: TASK_STATUSES[0],
     favorites: [],
   },
 };
