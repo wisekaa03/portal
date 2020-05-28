@@ -281,20 +281,23 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   const isFavorite = useMemo<boolean>(
     () =>
-      task &&
-      Array.isArray(allFavorites) &&
-      !!allFavorites.find(
-        ({ where, code, service: { code: srvCode } }) =>
-          typeof query === 'object' &&
-          code === task.route?.code &&
-          where === task.route?.where &&
-          srvCode === task.service?.code,
-      ),
+      (task &&
+        task.route &&
+        task.service &&
+        Array.isArray(allFavorites) &&
+        !!allFavorites.find(
+          ({ where, code, service: { code: srvCode } }) =>
+            typeof query === 'object' &&
+            code === task.route?.code &&
+            where === task.route?.where &&
+            srvCode === task.service?.code,
+        )) ??
+      true,
     [task, query, allFavorites],
   );
 
   const enableBody = useMemo<boolean>(
-    () => Boolean(task.route?.code && task.service?.code && task.service?.code !== '0'),
+    () => Boolean(task.route?.code && task.service?.code && task.service.code !== '0'),
     [task],
   );
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
@@ -433,7 +436,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                       {t('common:cancel')}
                     </Button>
                     <Button onClick={handleSubmit} disabled={notValid}>
-                      {t('common:accept')}
+                      {t('common:send')}
                     </Button>
                   </FormControl>
                 </>
