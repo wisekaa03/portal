@@ -127,7 +127,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
               <div>
                 <BaseIcon base64 src={service.avatar} size={36} />
               </div>
-              <div>
+              <div style={{ overflow: 'hidden' }}>
                 <Typography variant="subtitle2">{name}</Typography>
               </div>
               <div>
