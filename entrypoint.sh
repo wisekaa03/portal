@@ -78,8 +78,10 @@ export NODE_ENV=${NODE_ENV:=production}
 
 if [ -n "$*" -a "$1" = "test" ]; then
   NODE_ENV=test
-  $TSNODE -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync
   node_modules/.bin/jest $2 $3 $4 $5
+
+elif [ -n "$*" -a "$1" = "schema" ]; then
+  $TSNODE -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync
 
 elif [ -n "$*" -a "$1" = "start" ]; then
   $NODE .next/nest/main.js
