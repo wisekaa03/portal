@@ -1,6 +1,7 @@
 /** @format */
 
 import { ApolloError } from 'apollo-client';
+import { ChangeEvent } from 'react';
 import { DropzoneFile } from './dropzone';
 import { TkRoutes, TkRoute, TkService } from './tickets';
 import { UserSettingsTaskFavorite } from './user.dto';
@@ -8,7 +9,8 @@ import { UserSettingsTaskFavorite } from './user.dto';
 export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
   serviceRef: React.Ref<HTMLSelectElement>;
-  bodyRef: React.Ref<any>;
+  subjectRef: React.Ref<any>;
+  // bodyRef: React.Ref<any>;
   query: Record<string, string>;
   currentTab: number;
   task: ServicesTaskProps;
@@ -16,6 +18,8 @@ export interface ServicesWrapperProps {
   errorCreated: ApolloError;
   routes?: TkRoutes[];
   favorites: UserSettingsTaskFavorite[] | null;
+  subject: string;
+  setSubject: React.Dispatch<React.SetStateAction<string>>;
   body: string;
   setBody: React.Dispatch<React.SetStateAction<string>>;
   files: DropzoneFile[];
@@ -67,7 +71,7 @@ export interface ServicesSuccessCardProps {
 
 export interface ServicesCreatedProps {
   code?: string;
-  name?: string;
+  subject?: string;
   organization?: string;
   status?: string;
   createdDate?: Date;

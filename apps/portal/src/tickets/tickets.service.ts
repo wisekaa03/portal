@@ -128,6 +128,23 @@ export class TicketsService {
     return Promise.allSettled(promises).then((values) =>
       values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { error: promise.reason?.message })),
     );
+    // .then((value?: TkRoutes[]) => {
+    //   if (value) {
+    //     const rt = value.reduce((acc, val, cur, arr) => {
+    //       if (val.error) {
+    //         return [...acc, { error: val.error }];
+    //       }
+
+    //       val.routes.reduce();
+
+    //       return [...acc, val];
+    //     }, [] as TkRoutes[]);
+
+    //     return rt;
+    //   }
+
+    //   return null;
+    // });
   };
 
   /**
@@ -300,7 +317,7 @@ export class TicketsService {
       return client
         .NewTaskAsync({
           Log: user.username,
-          Title: task.title,
+          Title: task.subject,
           Description: task.body,
           Route: task.route,
           Service: task.service,
@@ -315,13 +332,13 @@ export class TicketsService {
             return {
               where: TkWhere.SOAP1C,
               code: ret['Код'],
-              name: ret['Наименование'],
+              subject: ret['Наименование'],
               route: ret['ИмяСервиса'],
               service: ret['ИмяУслуги'],
               organization: ret['Организация'],
               status: ret['ТекущийСтатус'],
               createdDate: new Date(ret['ВремяСоздания']),
-            };
+            } as TkTaskNew;
           }
 
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
@@ -362,7 +379,7 @@ export class TicketsService {
                 .post<RecordsOST>(`${OSTicketURL[where]}?req=new`, {
                   user: JSON.stringify(userOST),
                   msg: JSON.stringify({
-                    title: task.title,
+                    title: task.subject,
                     descr: task.body,
                     route: task.route,
                     service: task.service,

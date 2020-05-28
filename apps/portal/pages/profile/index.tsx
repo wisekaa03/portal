@@ -50,7 +50,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
     userSettings({
       variables: {
-        value: { ticket: { status: event.target.value } },
+        value: { task: { status: event.target.value === 'Все' ? '' : event.target.value } },
       },
     });
   };

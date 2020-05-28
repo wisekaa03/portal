@@ -9,7 +9,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { MINIMAL_BODY_LENGTH } from '@lib/constants';
+import { MINIMAL_SUBJECT_LENGTH, MINIMAL_BODY_LENGTH } from '@lib/constants';
 import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, TkRoutes, UserSettings } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
@@ -27,6 +27,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [task, setTask] = useState<ServicesTaskProps>({});
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
+  const [subject, setSubject] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
@@ -51,7 +52,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
-  const bodyRef = useRef(null);
+  const subjectRef = useRef(null);
+  // const bodyRef = useRef(null);
 
   const handleService = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -94,8 +96,14 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const handleSubmit = (): void => {
     const { route, service } = task;
 
-    const cleanedBody = body.trim();
+    if (subject.length < MINIMAL_SUBJECT_LENGTH) {
+      snackbarUtils.show(t('services:errors.smallSubject'));
+      subjectRef.current.focus();
 
+      return;
+    }
+
+    const cleanedBody = body.trim();
     if (cleanedBody.length < MINIMAL_BODY_LENGTH) {
       snackbarUtils.show(t('services:errors.smallBody'));
       // bodyRef.current.focus();
@@ -106,7 +114,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     const variables = {
       task: {
         where: service.where,
-        title: service.name,
+        subject,
         body: cleanedBody,
         route: route.code,
         service: service.code,
@@ -187,7 +195,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           contentRef={contentRef}
           serviceRef={serviceRef}
           query={query}
-          bodyRef={bodyRef}
+          // bodyRef={bodyRef}
+          subjectRef={subjectRef}
           currentTab={currentTab}
           refetchRoutes={refetchRoutes}
           task={task}
@@ -195,6 +204,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           errorCreated={errorCreated}
           routes={routes}
           favorites={favorites}
+          subject={subject}
+          setSubject={setSubject}
           body={body}
           setBody={setBody}
           files={files}

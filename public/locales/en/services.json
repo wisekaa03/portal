@@ -9,7 +9,7 @@
     "tab2": "Ticket"
   },
   "form": {
-    "title": "Title",
+    "subject": "Subject",
     "service": "Service",
     "text": "Description",
     "category": "Category"
@@ -34,7 +34,7 @@
     "delete": "Remove from favorites"
   },
   "errors": {
-    "smallTitle": "Слишком короткий заголовок обращения",
+    "smallSubject": "Слишком короткий заголовок обращения",
     "smallBody": "Необходимо подробнее описать проблему"
   },
   "headers": {

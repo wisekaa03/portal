@@ -116,22 +116,22 @@ const ProfileTicketsCard = withStyles((theme) => ({
   },
 }))(({ classes, task }: ProfileTicketsCardProps) => {
   const { t, i18n } = useTranslation();
-  const { code: id, type, service, name, description, status, createdDate } = task;
+  const { where, code: id, service, subject, body, smallBody, status, createdDate } = task;
 
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <Link href={{ pathname: '/profile/ticket', query: { id, type } }} as={`/profile/ticket/${id}/${type}`}>
+        <Link href={{ pathname: '/profile/task', query: { where, code: id } }} as={`/profile/task/${where}/${id}`}>
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
                 <BaseIcon base64 src={service.avatar} size={36} />
               </div>
               <div style={{ overflow: 'hidden' }}>
-                <Typography variant="subtitle2">{name}</Typography>
+                <Typography variant="subtitle2">{subject}</Typography>
               </div>
               <div>
-                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: description }} />
+                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: body }} />
               </div>
             </div>
             <Divider />

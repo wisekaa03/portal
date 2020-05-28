@@ -14,6 +14,8 @@ import {
   TkComment,
 } from '@lib/types';
 
+export const SMALL_BODY_STRING = 250;
+
 export interface AttachesSOAPFile {
   NFile: string;
   DFile: string;
@@ -175,10 +177,9 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
     ? {
         where: whereService(where),
         code: task['Код'],
-        name: task['Наименование'],
-        type: task['ТипОбращения'],
-        description: clearHtml(task['Описание']),
-        descriptionFull: task['ОписаниеФД'],
+        subject: task['Наименование'],
+        body: clearHtml(task['Описание']),
+        smallBody: clearHtml(task['Описание'], SMALL_BODY_STRING),
         status: task['Статус'],
         createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : new Date(task['Дата']),
         timeoutDate:
@@ -326,11 +327,13 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
   task && task !== null
     ? {
         where: whereService(where),
-        type: undefined,
         code: task['number'],
-        name: task['subject'],
-        description: typeof task['description'] === 'string' ? task['description'] : task['description']?.[0]?.body,
-        descriptionFull: undefined,
+        subject: task['subject'],
+        smallBody:
+          typeof task['description'] === 'string'
+            ? task['description']?.substring(0, SMALL_BODY_STRING)
+            : task['description']?.[0]?.body?.substring(0, SMALL_BODY_STRING),
+        body: typeof task['description'] === 'string' ? task['description'] : task['description']?.[0]?.body,
         status: task['status_name'],
         createdDate: new Date(task['created']),
         timeoutDate: new Date(task['dateOfCompletion']),
@@ -380,7 +383,7 @@ export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | n
         where: whereService(where),
         // id: task['ticket'],
         code: task['number'],
-        name: task['name'],
+        subject: task['name'],
         route: task['route'] || '000000001',
         service: task['service'],
         organization: task['company'],

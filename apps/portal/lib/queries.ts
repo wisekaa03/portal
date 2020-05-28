@@ -66,14 +66,13 @@ const PROFILE_FRAGMENT = gql`
   }
 `;
 
-const TICKET_FRAGMENT = gql`
-  fragment TicketProps on TkTask {
+const TICKETS_TASK_FRAGMENT = gql`
+  fragment TaskProps on TkTask {
     where
     id
     code
-    name
-    description
-    descriptionFull
+    subject
+    body
     status
     createdDate
     endDate
@@ -497,8 +496,9 @@ export const TICKETS_TASKS = gql`
         where
         code
         type
-        name
-        description
+        subject
+        body
+        smallBody
         status
         route {
           where
@@ -524,10 +524,10 @@ export const TICKETS_TASKS = gql`
 export const TICKETS_TASK_DESCRIPTION = gql`
   query TicketsTaskDescription($where: String, $code: String) {
     TicketsTaskDescription(task: { where: $where, code: $code }) {
-      ...TicketProps
+      ...TaskProps
     }
   }
-  ${TICKET_FRAGMENT}
+  ${TICKETS_TASK_FRAGMENT}
 `;
 
 export const TICKETS_TASK_NEW = gql`
@@ -535,7 +535,7 @@ export const TICKETS_TASK_NEW = gql`
     TicketsTaskNew(task: $task, attachments: $attachments) {
       where
       code
-      name
+      subject
       route
       service
       organization
@@ -548,8 +548,8 @@ export const TICKETS_TASK_NEW = gql`
 export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
     TicketsTaskEdit(task: $task, attachments: $attachments) {
-      ...TicketProps
+      ...TaskProps
     }
   }
-  ${TICKET_FRAGMENT}
+  ${TICKETS_TASK_FRAGMENT}
 `;

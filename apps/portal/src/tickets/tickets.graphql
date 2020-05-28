@@ -58,10 +58,10 @@ type TkTask {
   where: String!
   id: String
   code: String!
-  name: String!
   type: String
-  description: String
-  descriptionFull: String
+  subject: String!
+  body: String
+  smallBody: String
   status: String!
   route: TkRoute
   service: TkService
@@ -79,7 +79,7 @@ type TkTask {
 type TkTaskNew {
   where: String!
   code: String!
-  name: String!
+  subject: String!
   route: String
   service: String!
   organization: String
@@ -89,7 +89,7 @@ type TkTaskNew {
 
 input TkTaskNewInput {
   where: String
-  title: String
+  subject: String
   body: String
   # Route Id
   route: String

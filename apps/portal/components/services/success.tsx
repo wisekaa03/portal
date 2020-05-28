@@ -38,7 +38,7 @@ const ServicesSuccessCard = withStyles((theme) => ({
     marginBottom: theme.spacing(4),
   },
 }))(({ cardRef, classes, data }: ServicesSuccessCardProps) => {
-  const { code, route, createdDate, service, organization, status, name } = data;
+  const { code, route, createdDate, service, organization, status, subject } = data;
   const { t, i18n } = useTranslation();
 
   return (
@@ -46,7 +46,7 @@ const ServicesSuccessCard = withStyles((theme) => ({
       <Typography variant="h5" className={classes.title}>
         {t('services:success')}
       </Typography>
-      <Typography variant="subtitle1">{t('services:complete.name', { value: name })}</Typography>
+      <Typography variant="subtitle1">{t('services:complete.name', { value: subject })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.code', { value: code })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.route', { value: route })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.service', { value: service })}</Typography>

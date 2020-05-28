@@ -60,10 +60,9 @@ export interface TkTask {
   where: TkWhere;
   id?: string;
   code: string;
-  name: string;
-  type?: string;
-  description?: string;
-  descriptionFull?: string;
+  subject: string;
+  smallBody?: string;
+  body?: string;
   status: string;
   route: TkRoute | null;
   service: TkService | null;
@@ -111,7 +110,7 @@ export interface TkTaskDescriptionInput {
 
 export interface TkTaskNewInput {
   where: TkWhere;
-  title: string;
+  subject: string;
   body: string;
   route: string;
   service: string;
@@ -122,7 +121,7 @@ export interface TkTaskNewInput {
 export interface TkTaskNew {
   where: TkWhere;
   code: string;
-  name: string;
+  subject: string;
   route?: string;
   service: string;
   organization?: string;

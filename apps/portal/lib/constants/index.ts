@@ -9,7 +9,8 @@ import { LoginService, Gender, UserContext } from '@lib/types';
 export * from './app-bar';
 export * from './ldap-sync';
 
-export const MINIMAL_BODY_LENGTH = 10;
+export const MINIMAL_SUBJECT_LENGTH = 10;
+export const MINIMAL_BODY_LENGTH = 30;
 export const AUTH_PAGE = '/auth/login';
 export const FIRST_PAGE = '/phonebook';
 export const SESSION = 'session';
@@ -57,7 +58,7 @@ export const AUTO_COLLAPSE_ROUTES = [
   /* '/mail' */
 ];
 
-export const TASK_STATUSES = ['Регистрация', 'В работе', 'Выполнено', 'Завершено'];
+export const TASK_STATUSES = ['Все', 'Регистрация', 'В работе', 'Выполнено', 'Завершено'];
 
 export const ADMIN_GROUP = 'web master';
 

@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { FC, useRef, useCallback, useMemo } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
@@ -103,7 +103,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,
   serviceRef,
-  bodyRef,
+  subjectRef,
+  // bodyRef,
   query,
   currentTab,
   errorCreated,
@@ -111,6 +112,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   created,
   routes,
   favorites,
+  subject,
+  setSubject,
   body,
   setBody,
   files,
@@ -426,7 +429,20 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     </Select>
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
-                    <JoditEditor ref={bodyRef} value={body} onChange={setBody} disabled={!enableBody} />
+                    <TextField
+                      ref={subjectRef}
+                      value={subject}
+                      onChange={(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                        setSubject(event.target.value);
+                      }}
+                      variant="outlined"
+                      disabled={!enableBody}
+                      label={t('services:form.subject')}
+                    />
+                  </FormControl>
+                  <FormControl className={classes.formControl} variant="outlined">
+                    {/* ref={bodyRef} */}
+                    <JoditEditor value={body} onChange={setBody} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     <Dropzone files={files} setFiles={setFiles} />
