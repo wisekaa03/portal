@@ -255,9 +255,9 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                     <span>{t(`phonebook:fields.notShowing`)}</span>
                   </Box>
                 )}
-                {profile?.nameeng && (
+                {profile?.nameEng && (
                   <Box display="flex" alignItems="center" justifyContent="center">
-                    <span>{profile.nameeng}</span>
+                    <span>{profile.nameEng}</span>
                   </Box>
                 )}
                 {profile?.mobile && (
@@ -303,15 +303,21 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                       onClick={handleSearchClose}
                     />
                     <ProfileField
+                      title={t(`phonebook:fields.management`)}
+                      profile={profile}
+                      field="management"
+                      onClick={handleSearchClose}
+                    />
+                    <ProfileField
                       title={t(`phonebook:fields.department`)}
                       profile={profile}
                       field="department"
                       onClick={handleSearchClose}
                     />
                     <ProfileField
-                      title={t(`phonebook:fields.otdel`)}
+                      title={t(`phonebook:fields.division`)}
                       profile={profile}
-                      field="otdel"
+                      field="division"
                       onClick={handleSearchClose}
                     />
                     <ProfileField

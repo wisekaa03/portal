@@ -17,8 +17,10 @@ type Profile {
 
   company: String
   title: String
+
+  management: String
   department: String
-  otdel: String
+  division: String
 
   manager: Profile
 
@@ -30,11 +32,12 @@ type Profile {
 
   employeeID: String
 
-  companyeng: String
-  nameeng: String
-  departmenteng: String
-  otdeleng: String
-  positioneng: String
+  companyEng: String
+  nameEng: String
+  managementEng: String
+  departmentEng: String
+  divisionEng: String
+  positionEng: String
 
   accessCard: String
 
@@ -62,13 +65,15 @@ enum ProfileOrderField {
   fullName
   nameeng
   company
-  companyeng
+  companyEng
+  management
+  managementEng
   department
-  departmenteng
-  otdel
-  otdeleng
+  departmentEng
+  division
+  divisionEng
   title
-  positioneng
+  positionEng
   telephone
   mobile
   workPhone
@@ -116,8 +121,10 @@ input ProfileSettingsInput {
 
   company: String
   title: String
+  
+  management: String
   department: String
-  otdel: String
+  division: String
 
   telephone: String
   workPhone: String
@@ -125,11 +132,11 @@ input ProfileSettingsInput {
   mobile: String
   email: String
 
-  companyeng: String
-  nameeng: String
-  departmenteng: String
-  otdeleng: String
-  positioneng: String
+  companyEng: String
+  nameEng: String
+  departmentEng: String
+  otdelEng: String
+  positionEng: String
 
   accessCard: String
 
@@ -145,8 +152,9 @@ input ProfileSettingsInput {
 
 enum FieldSelection {
   company
+  management
   department
-  otdel
+  division
   country
   region
   town

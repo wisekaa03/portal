@@ -153,8 +153,8 @@ const endAdornment = (
 );
 
 const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
-const companyes: (keyof Profile)[] = ['company', 'department', 'otdel', 'title'];
-const langs: (keyof Profile)[] = ['companyeng', 'departmenteng', 'otdeleng', 'positioneng'];
+const companyes: (keyof Profile)[] = ['company', 'management', 'department', 'division', 'title'];
+const langs: (keyof Profile)[] = ['companyEng', 'managementEng', 'departmentEng', 'divisionEng', 'positionEng'];
 const others: (keyof Profile)[] = [
   'email',
   'telephone',
@@ -285,8 +285,8 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       <ProfileTextFieldComponent
                         disabled={loadingChanged}
                         handleChange={handleChange}
-                        field="nameeng"
-                        value={profile.nameeng}
+                        field="nameEng"
+                        value={profile.nameEng}
                         InputProps={InputProps}
                       />
                     </div>

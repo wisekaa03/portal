@@ -59,7 +59,7 @@ export class ProfileResolver {
    *
    * @async
    * @method profileFieldSelection
-   * @param {string} field Field: 'company' | 'department' | 'otdel' | 'country' |
+   * @param {string} field Field: 'company' | 'management' | 'department' | 'division' | 'country' |
    *                              'region' | 'town' | 'street' | 'postalCode'
    * @returns {Promise<string[]>} Field selection
    */

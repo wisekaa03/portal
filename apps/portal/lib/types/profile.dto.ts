@@ -48,9 +48,11 @@ export interface Profile {
 
   company?: string;
 
+  management?: string;
+
   department?: string;
 
-  otdel?: string;
+  division?: string;
 
   title?: string;
 
@@ -66,15 +68,17 @@ export interface Profile {
 
   fax?: string;
 
-  companyeng?: string;
+  companyEng?: string;
 
-  nameeng?: string;
+  nameEng?: string;
 
-  departmenteng?: string;
+  managementEng?: string;
 
-  otdeleng?: string;
+  departmentEng?: string;
 
-  positioneng?: string;
+  divisionEng?: string;
+
+  positionEng?: string;
 
   accessCard?: string;
 

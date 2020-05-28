@@ -155,13 +155,19 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
+  management?: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   department?: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  otdel?: string;
+  division?: string;
 
   @Column({
     type: 'varchar',
@@ -204,31 +210,37 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
-  companyeng: string;
+  companyEng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  nameeng: string;
+  nameEng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  departmenteng: string;
+  managementEng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  otdeleng: string;
+  departmentEng: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  positioneng: string;
+  divisionEng: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  positionEng: string;
 
   @Column({
     type: 'varchar',

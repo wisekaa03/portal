@@ -113,7 +113,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'nameeng',
+    name: 'nameEng',
     admin: false,
     defaultStyle: { minWidth: 160, maxWidth: 160 },
     largeStyle: { minWidth: 180, maxWidth: 180 },
@@ -131,9 +131,21 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'companyeng',
+    name: 'companyEng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 270, maxWidth: 270 },
+  },
+  {
+    name: 'management',
+    admin: false,
+    defaultStyle: { minWidth: 260, maxWidth: 260 },
+    largeStyle: { minWidth: 270, maxWidth: 270 },
+  },
+  {
+    name: 'managementEng',
+    admin: false,
+    defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
@@ -143,19 +155,19 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'departmenteng',
+    name: 'departmentEng',
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'otdel',
+    name: 'division',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'otdeleng',
+    name: 'divisionEng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
@@ -167,7 +179,7 @@ export const allColumns: Column[] = [
     largeStyle: { minWidth: 240, maxWidth: 240 },
   },
   {
-    name: 'positioneng',
+    name: 'positionEng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 240, maxWidth: 240 },

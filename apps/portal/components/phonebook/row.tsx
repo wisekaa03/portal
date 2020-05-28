@@ -92,16 +92,18 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
               break;
             }
 
-            case 'nameeng':
+            case 'nameEng':
             case 'username':
             case 'company':
-            case 'companyeng':
+            case 'companyEng':
+            case 'management':
+            case 'managementEng':
             case 'department':
-            case 'departmenteng':
-            case 'otdel':
-            case 'otdeleng':
+            case 'departmentEng':
+            case 'division':
+            case 'divisionEng':
             case 'title':
-            case 'positioneng':
+            case 'positionEng':
             case 'room':
             case 'telephone':
             case 'fax':

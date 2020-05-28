@@ -76,9 +76,10 @@ export class ProfileService {
           new Brackets((qb) => {
             qb.where(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
               .orWhere(`profile.username iLike ${cleared}`)
-              .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
-              .orWhere(`profile.otdel iLike ${cleared}`)
+              .orWhere(`profile.management iLike ${cleared}`)
+              .orWhere(`profile.department iLike ${cleared}`)
+              .orWhere(`profile.division iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
               .orWhere(`profile.telephone iLike ${cleared}`)
               .orWhere(`profile.workPhone iLike ${cleared}`)
@@ -183,9 +184,10 @@ export class ProfileService {
               .orWhere(`profile.middleName iLike ${cleared}`)
               .orWhere(`profile.lastName || ' ' || profile.firstName || ' ' || profile.middleName iLike ${cleared}`)
               .orWhere(`profile.username iLike ${cleared}`)
-              .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.company iLike ${cleared}`)
-              .orWhere(`profile.otdel iLike ${cleared}`)
+              .orWhere(`profile.management iLike ${cleared}`)
+              .orWhere(`profile.department iLike ${cleared}`)
+              .orWhere(`profile.division iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
               .orWhere(`profile.telephone iLike ${cleared}`)
               .orWhere(`profile.workPhone iLike ${cleared}`)
@@ -205,7 +207,9 @@ export class ProfileService {
         'profile.department',
         'profile.title',
         'profile.company',
-        'profile.otdel',
+        'profile.management',
+        'profile.department',
+        'profile.division',
         'profile.telephone',
         'profile.workPhone',
         'profile.mobile',
@@ -218,7 +222,9 @@ export class ProfileService {
         'profile.department',
         'profile.title',
         'profile.company',
-        'profile.otdel',
+        'profile.management',
+        'profile.department',
+        'profile.division',
         'profile.telephone',
         'profile.workPhone',
         'profile.mobile',
@@ -241,8 +247,12 @@ export class ProfileService {
 
       if (lower.some((l) => cur.fullName.toLowerCase().includes(l))) {
         showing = cur.fullName || '';
+      } else if (lower.some((l) => cur.management && cur.management.toLowerCase().includes(l))) {
+        showing = cur.management || '';
       } else if (lower.some((l) => cur.department && cur.department.toLowerCase().includes(l))) {
         showing = cur.department || '';
+      } else if (lower.some((l) => cur.division && cur.division.toLowerCase().includes(l))) {
+        showing = cur.division || '';
       } else if (lower.some((l) => cur.company && cur.company.toLowerCase().includes(l))) {
         showing = cur.company || '';
       } else if (lower.some((l) => cur.title && cur.title.toLowerCase().includes(l))) {
@@ -297,11 +307,12 @@ export class ProfileService {
       comment = {};
     }
     const {
-      companyeng = undefined,
-      nameeng = undefined,
-      departmenteng = undefined,
-      otdeleng = undefined,
-      positioneng = undefined,
+      companyEng = undefined,
+      nameEng = undefined,
+      managementEng = undefined,
+      departmentEng = undefined,
+      divisionEng = undefined,
+      positionEng = undefined,
       gender = undefined,
     } = comment;
 
@@ -318,8 +329,6 @@ export class ProfileService {
     const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
-
-    const [department, otdel] = ldapUser.department ? ldapUser.department.split(/\s*,\s*/, 2) : [undefined, undefined];
 
     const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
     const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
@@ -346,8 +355,9 @@ export class ProfileService {
       region: ldapUser.st,
       street: ldapUser.streetAddress,
       company: ldapUser.company,
-      department,
-      otdel,
+      management: ldapUser.department,
+      department: ldapUser['msDS-cloudExtensionAttribute6'],
+      division: ldapUser['msDS-cloudExtensionAttribute7'],
       title: ldapUser.title,
       manager: (manager as unknown) as Profile | undefined,
       email: ldapUser.mail,
@@ -357,11 +367,12 @@ export class ProfileService {
       fax: ldapUser.facsimileTelephoneNumber,
       room: ldapUser.physicalDeliveryOfficeName,
       employeeID: ldapUser.employeeID,
-      companyeng,
-      nameeng,
-      departmenteng,
-      otdeleng,
-      positioneng,
+      companyEng,
+      nameEng,
+      managementEng,
+      departmentEng,
+      divisionEng,
+      positionEng,
       accessCard: ldapUser['msDS-cloudExtensionAttribute13'],
       // eslint-disable-next-line no-bitwise
       disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
@@ -414,7 +425,7 @@ export class ProfileService {
   /**
    * Profile field selection
    *
-   * @param {string} field Field: 'company' | 'department' | 'otdel' | 'country' |
+   * @param {string} field Field: 'company' | 'management' | 'department' | 'division' | 'country' |
    *                              'region' | 'town' | 'street' | 'postalCode'
    * @returns {Promise<string[]>} Field selection
    * @throws {Error} Exception
@@ -430,7 +441,9 @@ export class ProfileService {
       query
         .where(
           new Brackets((qb) => {
+            qb.where('profile.management = :management').orWhere('profile.management IS NULL');
             qb.where('profile.department = :department').orWhere('profile.department IS NULL');
+            qb.where('profile.division = :division').orWhere('profile.division IS NULL');
           }),
         )
         .orderBy('profile.lastName', 'ASC');
@@ -531,11 +544,12 @@ export class ProfileService {
             }
             break;
           case 'birthday':
-          case 'companyeng':
-          case 'nameeng':
-          case 'departmenteng':
-          case 'otdeleng':
-          case 'positioneng':
+          case 'companyEng':
+          case 'nameEng':
+          case 'managementEng':
+          case 'departmentEng':
+          case 'divisionEng':
+          case 'positionEng':
             modification.comment = { ...modification.comment, [key]: value };
             break;
           case 'country':
@@ -571,10 +585,14 @@ export class ProfileService {
           case 'notShowing':
             modification.flags = value ? '1' : '0';
             break;
+          case 'management':
+            modification.department = value;
+            break;
           case 'department':
-          case 'otdel':
-            created[key] = value as string;
-            modification.department = [created.department, created.otdel].join(', ');
+            modification['msDS-cloudExtensionAttribute6'] = value;
+            break;
+          case 'division':
+            modification['msDS-cloudExtensionAttribute7'] = value;
             break;
           // имена ключей совпадают
           case 'postalCode':
