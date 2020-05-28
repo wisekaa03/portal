@@ -41,14 +41,12 @@ import TaskIconComplete from '@public/images/svg/task/task_complete.svg';
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
-    case TASK_STATUSES[2]:
-    case TASK_STATUSES[3]:
-      return TaskIconPause;
-    case TASK_STATUSES[4]:
+    case 'Регистрация':
       return TaskIconNew;
-    case TASK_STATUSES[1]:
+    case 'В работе':
       return TaskIconWorked;
-    case TASK_STATUSES[5]:
+    case 'Выполнено':
+    case 'Завершено':
       return TaskIconComplete;
     default:
       return TaskIconPause;
@@ -262,7 +260,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   </Typography>
                 }
               />
-              <CardContent>{task.name}</CardContent>
+              <CardContent>{task.subject}</CardContent>
             </Card>
             <ProfileTicketInfoCard header={t('profile:tasks.headers.author')} profile={task.initiatorUser} />
             <ProfileTicketInfoCard header={t('profile:tasks.headers.executor')} profile={task.executorUser} />
@@ -316,7 +314,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   </Typography>
                 }
               />
-              <CardContent dangerouslySetInnerHTML={{ __html: task.description }} />
+              <CardContent dangerouslySetInnerHTML={{ __html: task.body }} />
             </Card>
             {task.files.length > 0 && (
               <Card className={classes.fullRow}>
@@ -351,7 +349,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                 }
               />
               <CardContent>
-                <Iframe srcDoc={task.descriptionFull} />
+                <Iframe srcDoc={task.body} />
               </CardContent>
             </Card>
             {task.status !== 'Завершен' && (
