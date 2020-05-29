@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '&::after': {
         content: '", "',
       },
+      '&:last-child::after': {
+        content: '""',
+      },
     },
     description: {
       gridArea: '2/1/2/3',
@@ -185,16 +188,18 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
             <a className={clsx(classes.a, classes.comma)}>{cur.name}</a>
           </Link>
         ))}
-        <Link
-          href={{
-            pathname,
-            query: { where: route.where, route: route.code },
-          }}
-          as={`${pathname}/${route.where}/${route.code}`}
-          passHref
-        >
-          <a className={classes.a}>{t('common:more')}</a>
-        </Link>
+        {route.services.length !== allServices.length && (
+          <Link
+            href={{
+              pathname,
+              query: { where: route.where, route: route.code },
+            }}
+            as={`${pathname}/${route.where}/${route.code}`}
+            passHref
+          >
+            <a className={classes.a}>{t('common:more')}</a>
+          </Link>
+        )}
       </Box>
     </Box>
   );
