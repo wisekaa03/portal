@@ -50,6 +50,7 @@ export class TicketsService {
   TicketsRoutes = async (user: User, password: string): Promise<TkRoutes[]> => {
     const promises: Promise<TkRoutes>[] = [];
 
+    /* 1C SOAP */
     if (!!this.configService.get<string>('SOAP_URL')) {
       const authentication = {
         username: user?.username,
@@ -97,6 +98,7 @@ export class TicketsService {
       }
     }
 
+    /* OSTicket service */
     if (!!this.configService.get<string>('OSTICKET_URL')) {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
@@ -161,6 +163,7 @@ export class TicketsService {
   TicketsTasks = async (user: User, password: string, Status: string, Find: string): Promise<TkTasks[]> => {
     const promises: Promise<TkTasks>[] = [];
 
+    /* 1C SOAP */
     if (!!this.configService.get<string>('SOAP_URL')) {
       const authentication: SoapAuthentication = {
         username: user?.username,
@@ -223,6 +226,7 @@ export class TicketsService {
       }
     }
 
+    /* OSTicket service */
     if (!!this.configService.get<string>('OSTICKET_URL')) {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));

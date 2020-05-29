@@ -26,8 +26,8 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
     {
       ssr: false,
       variables: {
+        where: query.where,
         code: query.id,
-        type: query.type,
       },
       fetchPolicy: 'cache-and-network',
     },
