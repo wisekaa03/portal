@@ -70,7 +70,8 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
       fontSize: theme.spacing(2),
       letterSpacing: 0.15,
-      color: '#0173c1',
+      color: '#31312F',
+      // color: '#0173c1',
     },
     subtitle: {
       fontSize: theme.spacing(1.5),

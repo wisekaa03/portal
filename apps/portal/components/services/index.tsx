@@ -300,15 +300,18 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   );
 
   const enableBody = useMemo<boolean>(
-    () => Boolean(task.route?.code && task.service?.code && task.service.code !== '0'),
+    () => Boolean(task.route?.code && task.service?.code && task.service.code === '0'),
     [task],
   );
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
 
-  const favService = useMemo<string>(() => (typeof query === 'object' && query.service) || task.service?.code || '0', [
-    query,
-    task,
-  ]);
+  const favService = useMemo<string>(
+    () =>
+      (typeof query === 'object' && query.service) ||
+      task.service?.code ||
+      task.route?.services?.filter((el) => el.name === 'Прочее')?.pop()?.code,
+    [query, task],
+  );
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -420,7 +423,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                         select: classes.select,
                       }}
                     >
-                      <MenuItem value="0">{t('services:form.service')}</MenuItem>
+                      {/* <MenuItem value="0">{t('services:form.service')}</MenuItem> */}
                       {task?.route?.services?.map((service) => (
                         <MenuItem key={service.code} value={service.code}>
                           {service.name}

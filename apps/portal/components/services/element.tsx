@@ -53,18 +53,27 @@ const useStyles = makeStyles((theme: Theme) =>
       // maxWidth: 400,
     },
     name: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      fontSize: theme.spacing(2),
-      letterSpacing: 0.15,
-      color: '#0173c1',
+      'overflow': 'hidden',
+      'textOverflow': 'ellipsis',
+      'whiteSpace': 'nowrap',
+      'fontSize': theme.spacing(2),
+      'letterSpacing': 0.15,
+      'color': '#31312F',
+      // 'color': '#0173c1',
+      '&:hover': {
+        // color: '#000',
+        color: '#0173c1',
+        // color: '#013e83',
+      },
     },
     a: {
       'textDecoration': 'none',
-      'color': '#0173c1',
+      'color': '#31312F',
+      // 'color': '#0173c1',
       '&:hover': {
-        color: '#013e83',
+        // color: '#000',
+        // color: '#013e83',
+        color: '#0173c1',
       },
     },
     comma: {
@@ -83,10 +92,10 @@ const useStyles = makeStyles((theme: Theme) =>
     subtitle: {
       'fontSize': theme.spacing(1.5),
       'letterSpacing': 0.25,
-      'color': '#0173c1',
+      // 'color': '#0173c1',
       'display': 'inline-flex',
       '&:hover': {
-        color: '#013e83',
+        // color: '#013e83',
       },
     },
     more: {
@@ -116,7 +125,10 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
     () =>
       route.services?.reduce(
         // eslint-disable-next-line no-confusing-arrow
-        (acc, srv) => (!active && acc.reduce((a, v) => `${a}${v.name}`, '').length > 150 ? acc : [...acc, srv]),
+        (acc, srv) =>
+          (!active && srv.name === 'Прочее') || acc.reduce((a, v) => `${a}${v.name}`, '').length > 150
+            ? acc
+            : [...acc, srv],
         [] as TkService[],
       ),
     [route, active],
