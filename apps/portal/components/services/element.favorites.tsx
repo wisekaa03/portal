@@ -22,7 +22,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
-import { ServicesElementProps } from '@lib/types';
+import { ServicesElementFavProps } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
 import BaseIcon from '@front/components/ui/icon';
 import { useTranslation } from '@lib/i18n-client';
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'gap': `${theme.spacing()}px`,
       'justifyItems': 'flex-start',
       'alignItems': 'center',
+      'alignContent': 'flex-start',
       'height': '100%',
       'width': 'max-content',
       'cursor': 'pointer',
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
     info: {
       display: 'grid',
       gap: `${theme.spacing(0.5)}px`,
-      borderBottom: '1px solid rgba(46, 45, 43, 0.7)',
+      // borderBottom: '1px solid rgba(46, 45, 43, 0.7)',
       gridTemplateRows: `repeat(3, ${theme.spacing(3)}px)`,
       gridTemplateColumns: `1fr 24px`,
       minWidth: 200,
@@ -69,6 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
       fontSize: theme.spacing(2),
       letterSpacing: 0.15,
+      color: '#0173c1',
     },
     subtitle: {
       fontSize: theme.spacing(1.5),
@@ -92,10 +94,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const pathname = '/services';
 
-const ServicesElementFavorites: FC<ServicesElementProps> = ({
+const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   base64,
   active,
-  element,
+  route,
   url,
   withLink,
   favorite,
@@ -121,15 +123,15 @@ const ServicesElementFavorites: FC<ServicesElementProps> = ({
       event.stopPropagation();
       setFavorite({
         route: {
-          code: element.code,
-          where: element.where,
-          service: { code: element.service.code, where: element.service.where },
+          code: route.code,
+          where: route.where,
+          service: { code: route.service.code, where: route.service.where },
         },
         action,
       });
       handleCloseMore();
     },
-    [element, handleCloseMore, setFavorite],
+    [route, handleCloseMore, setFavorite],
   );
 
   useEffect(() => {
@@ -144,10 +146,10 @@ const ServicesElementFavorites: FC<ServicesElementProps> = ({
           href={
             url || {
               pathname,
-              query: { where: element.where, route: element.code, service: element.service.code },
+              query: { where: route.where, route: route.code, service: route.service.code },
             }
           }
-          as={url || `${pathname}/${element.where}/${element.code}/${element.service.code}`}
+          as={url || `${pathname}/${route.where}/${route.code}/${route.service.code}`}
           passHref
         >
           {url ? <a target="_blank">{children}</a> : children}
@@ -161,14 +163,14 @@ const ServicesElementFavorites: FC<ServicesElementProps> = ({
         })}
       >
         <Box>
-          <BaseIcon base64={base64} src={element.service.avatar} size={48} />
+          <BaseIcon base64={base64} src={route.service.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
           <Typography variant="subtitle1" className={classes.name}>
-            {element.service.name}
+            {route.service.name}
           </Typography>
           <Typography variant="subtitle1" className={classes.subtitle}>
-            {element.service.description}
+            {route.service.description}
           </Typography>
           <Box className={classes.more}>
             {favorite && (

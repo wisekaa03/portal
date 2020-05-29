@@ -41,7 +41,15 @@ export type ServicesFavoriteProps = {
 };
 
 export interface ServicesElementProps {
-  element: UserSettingsTaskFavorite;
+  route: TkRoute;
+  withLink?: boolean;
+  active?: boolean;
+  base64?: boolean;
+  url?: string;
+}
+
+export interface ServicesElementFavProps {
+  route: UserSettingsTaskFavorite;
   withLink?: boolean;
   active?: boolean;
   base64?: boolean;

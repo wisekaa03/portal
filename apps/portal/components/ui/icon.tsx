@@ -26,6 +26,7 @@ const useStyles = makeStyles<Theme, IconProps, string>((theme: Theme) =>
     root: ({ size }) => ({
       width: size || iconWidth,
       height: size || iconWidth,
+      verticalAlign: 'middle',
     }),
     mask: ({ mask, color }) => ({
       '-webkit-mask-size': 'cover',

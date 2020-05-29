@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { FC, PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 
 interface ConditionalWrapperProps {
   condition: boolean;
