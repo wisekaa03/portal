@@ -25,7 +25,7 @@ signatureShedule: "10 * * * *"
 PORT: 4222
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
 
   # nodePort: 30300
   # nodePort_debug: 30301

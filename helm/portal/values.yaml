@@ -85,13 +85,13 @@ persistence:
   size: 100Gi
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
 
   # nodePort: 30300
   # nodePort_ssl: 30301
 
-  externalIPs:
-  - 10.10.205.40
+  # externalIPs:
+  # - 10.10.205.40
 
 tls:
   enabled: false

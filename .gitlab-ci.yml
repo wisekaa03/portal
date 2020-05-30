@@ -100,10 +100,9 @@ helm_development:
     - echo "Helm version" && helm version
   script:
     # Portal
-    # --set service.nodePort="30400" \
-    # --set service.nodePort_debug="30401" \
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
+        --set service.type="ClusterIP" \
         --set replicaCount="1" \
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
@@ -159,6 +158,7 @@ helm_development:
       helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
+        --set service.type="ClusterIP" \
         --set replicaCount="1" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
@@ -181,10 +181,9 @@ helm_production:
     - echo "Helm version" && helm version
   script:
     # Portal
-    # --set service.nodePort="30300" \
-    # --set service.nodePort_debug="30301" \
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
+        --set service.type="ClusterIP" \
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
@@ -239,6 +238,7 @@ helm_production:
       helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
+        --set service.type="ClusterIP" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
