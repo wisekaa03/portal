@@ -100,11 +100,11 @@ helm_development:
     - echo "Helm version" && helm version
   script:
     # Portal
+    # --set service.nodePort="30400" \
+    # --set service.nodePort_debug="30401" \
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set replicaCount="1" \
-        --set service.nodePort="30400" \
-        --set service.nodePort_debug="30401" \
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
@@ -181,10 +181,10 @@ helm_production:
     - echo "Helm version" && helm version
   script:
     # Portal
+    # --set service.nodePort="30300" \
+    # --set service.nodePort_debug="30301" \
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
-        --set service.nodePort="30300" \
-        --set service.nodePort_debug="30301" \
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
