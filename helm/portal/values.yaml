@@ -87,8 +87,8 @@ persistence:
 service:
   type: LoadBalancer
 
-  nodePort: 30300
-  nodePort_ssl: 30301
+  # nodePort: 30300
+  # nodePort_ssl: 30301
 
   externalIPs:
   - 10.10.205.40
