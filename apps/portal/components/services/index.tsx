@@ -251,11 +251,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           const rt = services.reduce((cum, service) => {
             const f = favorites
               .filter(
-                ({ where: favWhere, code: favCode, service: favService }) =>
-                  favWhere === where &&
-                  favCode === code &&
-                  service.where === favService.where &&
-                  service.code === favService.code,
+                ({ where: favWhere, code: favCode, service: fsrv }) =>
+                  favWhere === where && favCode === code && service.code === fsrv.code,
               )
               .pop();
 
@@ -309,7 +306,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     () =>
       (typeof query === 'object' && query.service) ||
       task.service?.code ||
-      task.route?.services?.filter((el) => el.name === 'Прочее')?.pop()?.code,
+      task.route?.services?.filter((s) => s.name === 'Прочее')?.pop()?.code,
     [query, task],
   );
 
