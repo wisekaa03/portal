@@ -134,12 +134,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     if (!__SERVER__ && routes) {
       const { where, route, service } = query;
       if (where && route && routes.length > 0) {
-        const rt = routes
-          .reduce(
-            (acc, val) => [...acc, val.routes?.find((v) => v.code === route && v.where === where)],
-            [] as TkRoute[],
-          )
-          .pop();
+        const rt = routes.reduce(
+          (acc, val) => ({ ...acc, ...val.routes?.find((v) => v.code === route && v.where === where) }),
+          {} as TkRoute,
+        );
         console.log('Routes', rt);
         if (typeof rt === 'object' && rt !== null) {
           setTask({ route: rt, service: rt.services?.find(({ code: srvCode }) => srvCode === service) });
