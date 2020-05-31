@@ -300,9 +300,13 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
 
   const favService = useMemo<string>(
-    () => query.service || task.service?.code || task.route?.services?.filter((s) => s.name === 'Прочее').pop()?.code,
+    () => task.service?.code || query.service || task.route?.services?.filter((s) => s.name === 'Прочее').pop()?.code,
     [query, task],
   );
+
+  console.warn('enableBody', enableBody);
+  console.warn('favService', isFavorite);
+  console.warn('favService', favService);
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
