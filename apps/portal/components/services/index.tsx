@@ -231,9 +231,9 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   );
 
   const allRoutes = useMemo<TkRoute[]>(() => {
-    return typeof routes === 'object' && routes !== null && routes.length === 0
-      ? []
-      : routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], []);
+    return Array.isArray(routes) && routes.length > 0
+      ? routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], [])
+      : [];
   }, [routes]);
 
   // const allServices = useMemo<TkService[]>(() => {
@@ -296,17 +296,11 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     [task, query, allFavorites],
   );
 
-  const enableBody = useMemo<boolean>(
-    () => Boolean(task.route?.code /* && task.service?.code && task.service.code === '0' */),
-    [task],
-  );
+  const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [task]);
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
 
   const favService = useMemo<string>(
-    () =>
-      (typeof query === 'object' && query.service) ||
-      task.service?.code ||
-      task.route?.services?.filter((s) => s.name === 'Прочее')?.pop()?.code,
+    () => query.service || task.service?.code || task.route?.services?.filter((s) => s.name === 'Прочее').pop()?.code,
     [query, task],
   );
 

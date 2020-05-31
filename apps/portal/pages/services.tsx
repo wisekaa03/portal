@@ -145,11 +145,11 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           setTask({ route: rt, service: rt.services?.filter(({ code: srvCode }) => srvCode === service).pop() });
           setCurrentTab(1);
         } else {
-          setTask({});
+          handleResetTicket();
         }
       }
     }
-  }, [routes, setTask, setCurrentTab, query]);
+  }, [routes, setTask, setCurrentTab, handleResetTicket, query]);
 
   useEffect(() => {
     if (!loadingRoutes && !errorRoutes && typeof dataRoutes === 'object') {
