@@ -299,11 +299,8 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [task]);
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
 
-  const favService = useMemo<string>(
-    () =>
-      query.service || task.service?.code /* || task.route?.services?.filter((s) => s.name === 'Прочее').pop()?.code */,
-    [query, task],
-  );
+  const favService =
+    query.service || task.service?.code; /* || task.route?.services?.filter((s) => s.name === 'Прочее').pop()?.code */
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
