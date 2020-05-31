@@ -297,7 +297,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   );
 
   const enableBody = useMemo<boolean>(
-    () => Boolean(task.route?.code && task.service?.code && task.service.code === '0'),
+    () => Boolean(task.route?.code /* && task.service?.code && task.service.code === '0' */),
     [task],
   );
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
