@@ -153,71 +153,59 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
   // >
 
   return (
-    <Box
-      className={clsx(classes.root, {
-        [classes.active]: active,
-        [classes.moreOpen]: !!anchor,
-      })}
+    <Link
+      key={`a-${route.where}-${route.code}`}
+      href={{
+        pathname,
+        query: { where: route.where, route: route.code },
+      }}
+      as={`${pathname}/${route.where}/${route.code}`}
+      passHref
     >
-      <>
+      <Box
+        className={clsx(classes.root, {
+          [classes.active]: active,
+          [classes.moreOpen]: !!anchor,
+        })}
+      >
         <Box>
-          <Link
-            key={`a-${route.where}-${route.code}`}
-            href={{
-              pathname,
-              query: { where: route.where, route: route.code },
-            }}
-            as={`${pathname}/${route.where}/${route.code}`}
-            passHref
-          >
-            <BaseIcon base64={base64} src={route.avatar} size={48} />
-          </Link>
+          <BaseIcon base64={base64} src={route.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
-          <Link
-            key={`n-${route.where}-${route.code}`}
-            href={{
-              pathname,
-              query: { where: route.where, route: route.code },
-            }}
-            as={`${pathname}/${route.where}/${route.code}`}
-            passHref
-          >
-            <Typography variant="subtitle1" className={classes.name}>
-              {route.name}
-            </Typography>
-          </Link>
+          <Typography variant="subtitle1" className={classes.name}>
+            {route.name}
+          </Typography>
         </Box>
-      </>
-      <Box className={classes.description}>
-        {allServices.map((cur: TkService) => (
-          <Link
-            key={`${route.where}-${route.code}-${cur.code}`}
-            href={{
-              pathname,
-              query: { where: route.where, route: route.code, service: cur.code },
-            }}
-            as={`${pathname}/${route.where}/${route.code}/${cur.code}`}
-            passHref
-          >
-            <a className={clsx(classes.a, classes.comma)}>{cur.name}</a>
-          </Link>
-        ))}
-        {route.services.length !== allServices.length && (
-          <Link
-            key={`m-${route.where}-${route.code}`}
-            href={{
-              pathname,
-              query: { where: route.where, route: route.code },
-            }}
-            as={`${pathname}/${route.where}/${route.code}`}
-            passHref
-          >
-            <a className={classes.a}>{t('common:more')}</a>
-          </Link>
-        )}
+        <Box className={classes.description}>
+          {allServices.map((cur: TkService) => (
+            <Link
+              key={`${route.where}-${route.code}-${cur.code}`}
+              href={{
+                pathname,
+                query: { where: route.where, route: route.code, service: cur.code },
+              }}
+              as={`${pathname}/${route.where}/${route.code}/${cur.code}`}
+              passHref
+            >
+              <a className={clsx(classes.a, classes.comma)}>{cur.name}</a>
+            </Link>
+          ))}
+          {route.services.length !== allServices.length && (
+            <Link
+              key={`m-${route.where}-${route.code}`}
+              href={{
+                pathname,
+                query: { where: route.where, route: route.code },
+              }}
+              as={`${pathname}/${route.where}/${route.code}`}
+              passHref
+            >
+              <a className={classes.a}>{t('common:more')}</a>
+            </Link>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Link>
   );
 };
 
