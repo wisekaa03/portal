@@ -162,6 +162,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
       <>
         <Box>
           <Link
+            key={`a-${route.where}-${route.code}`}
             href={{
               pathname,
               query: { where: route.where, route: route.code },
@@ -174,6 +175,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
         </Box>
         <Box className={classes.info}>
           <Link
+            key={`n-${route.where}-${route.code}`}
             href={{
               pathname,
               query: { where: route.where, route: route.code },
@@ -190,6 +192,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
       <Box className={classes.description}>
         {allServices.map((cur: TkService) => (
           <Link
+            key={`${route.where}-${route.code}-${cur.code}`}
             href={{
               pathname,
               query: { where: route.where, route: route.code, service: cur.code },
@@ -202,6 +205,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
         ))}
         {route.services.length !== allServices.length && (
           <Link
+            key={`m-${route.where}-${route.code}`}
             href={{
               pathname,
               query: { where: route.where, route: route.code },
