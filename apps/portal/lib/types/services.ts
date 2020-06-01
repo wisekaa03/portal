@@ -11,12 +11,11 @@ export interface ServicesWrapperProps {
   serviceRef: React.Ref<HTMLSelectElement>;
   subjectRef: React.Ref<HTMLInputElement>;
   bodyRef: React.Ref<Component<Record<string, any>, Record<string, any>, any>>;
-  query: Record<string, string>;
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
   errorCreated: ApolloError;
-  routes?: TkRoutes[];
+  routes?: TkRoute[];
   favorites: UserSettingsTaskFavorite[] | null;
   subject: string;
   setSubject: React.Dispatch<React.SetStateAction<string>>;

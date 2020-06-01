@@ -105,7 +105,6 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   serviceRef,
   subjectRef,
   bodyRef,
-  query,
   currentTab,
   errorCreated,
   task,
@@ -227,79 +226,28 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
         },
         action: 'add',
       }),
-    [updateFavorites, task],
+    [updateFavorites, task.route, task.service],
   );
-
-  const allRoutes = useMemo<TkRoute[]>(() => {
-    return Array.isArray(routes) && routes.length > 0
-      ? routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], [])
-      : [];
-  }, [routes]);
-
-  // const allServices = useMemo<TkService[]>(() => {
-  //   return typeof routes === 'object' && routes !== null && routes.length === 0
-  //     ? []
-  //     : routes.reduce(
-  //         (acc: TkService[], cur: TkRoutes) => [...acc, ...(cur?.routes?.flatMap((r) => r.services) || [])],
-  //         [],
-  //       );
-  // }, [routes]);
-
-  const allFavorites = useMemo<UserSettingsTaskFavorite[]>(() => {
-    return typeof favorites === 'object' && favorites !== null && favorites.length > 0
-      ? allRoutes.reduce((acc, { where, code, services }) => {
-          const rt = services.reduce((cum, service) => {
-            const f = favorites
-              .filter(
-                ({ where: favWhere, code: favCode, service: fsrv }) =>
-                  favWhere === where && favCode === code && service.code === fsrv.code,
-              )
-              .pop();
-
-            if (f) {
-              return [
-                ...cum,
-                {
-                  ...f,
-                  service: {
-                    ...f.service,
-                    name: service.name,
-                    description: service.description,
-                    avatar: service.avatar,
-                  },
-                },
-              ];
-            }
-
-            return cum;
-          }, [] as UserSettingsTaskFavoriteService[]);
-
-          return [...acc, ...rt];
-        }, [] as UserSettingsTaskFavorite[])
-      : [];
-  }, [allRoutes, favorites]);
 
   const isFavorite = useMemo<boolean>(
     () =>
-      (task &&
-        task.route &&
+      (task.route &&
         task.service &&
-        Array.isArray(allFavorites) &&
-        !!allFavorites.find(
-          ({ where, code, service: { code: srvCode } }) =>
-            typeof query === 'object' &&
-            code === task.route?.code &&
-            where === task.route?.where &&
-            srvCode === task.service?.code,
+        Array.isArray(favorites) &&
+        !!favorites.find(
+          ({ where, code, service: { code: serviceCode } }) =>
+            code === task.route?.code && where === task.route?.where && serviceCode === task.service?.code,
         )) ??
       true,
-    [task, query, allFavorites],
+    [task.route, task.service, favorites],
   );
 
-  const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [task]);
-  const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
-
-  const service = task.service?.code || '';
+  const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [
+    task.route?.code,
+    task.service?.code,
+  ]);
+  // const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
+  const service = useMemo<string>(() => task.service?.code || '', [task.service?.code]);
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -322,7 +270,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
             onSwitching={handleCurrentTab}
           >
             <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
-              {allFavorites.length > 0 && (
+              {favorites.length > 0 && (
                 <>
                   <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
                     <Box className={classes.titleIcon}>
@@ -331,7 +279,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     {t('services:headers.favorites')}
                   </Box>
                   <Box className={classes.blockContainer}>
-                    {allFavorites.map((current) => (
+                    {favorites.map((current) => (
                       <ServicesElementFavorites
                         key={`fav-${current.service.where}-${current.service.code}`}
                         base64
@@ -340,7 +288,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                         setFavorite={updateFavorites}
                         route={current}
                         isUp={current.priority > 0}
-                        isDown={current.priority < allFavorites.length - 1}
+                        isDown={current.priority < favorites.length - 1}
                       />
                     ))}
                   </Box>
@@ -348,7 +296,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               )}
               <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
               <Box className={classes.blockContainer}>
-                {allRoutes.map((current) => (
+                {routes.map((current) => (
                   <ServicesElement key={`${current.where}-${current.code}`} base64 withLink route={current} />
                 ))}
               </Box>
@@ -432,8 +380,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
-                    {/* ref={bodyRef} */}
-                    <JoditEditor ref={bodyRef} value={body} onBlur={setBody} disabled={!enableBody} />
+                    <JoditEditor ref={bodyRef} value={body} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     <Dropzone files={files} setFiles={setFiles} />
@@ -442,7 +389,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     <Button actionType="cancel" onClick={handleResetTicket}>
                       {t('common:cancel')}
                     </Button>
-                    <Button onClick={handleSubmit} disabled={notValid}>
+                    <Button onClick={handleSubmit} disabled={!enableBody}>
                       {t('common:send')}
                     </Button>
                   </FormControl>
