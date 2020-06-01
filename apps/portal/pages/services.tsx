@@ -2,7 +2,7 @@
 /* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
-import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useContext, Component } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -52,8 +52,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
-  const subjectRef = useRef(null);
-  // const bodyRef = useRef(null);
+  const subjectRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<Component<Record<string, any>, Record<string, any>, any>>(null);
 
   const handleService = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -195,7 +195,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           contentRef={contentRef}
           serviceRef={serviceRef}
           query={query}
-          // bodyRef={bodyRef}
+          bodyRef={bodyRef}
           subjectRef={subjectRef}
           currentTab={currentTab}
           refetchRoutes={refetchRoutes}

@@ -1,7 +1,7 @@
 /** @format */
 
 import { ApolloError } from 'apollo-client';
-import { ChangeEvent } from 'react';
+import { Component } from 'react';
 import { DropzoneFile } from './dropzone';
 import { TkRoutes, TkRoute, TkService } from './tickets';
 import { UserSettingsTaskFavorite } from './user.dto';
@@ -9,8 +9,8 @@ import { UserSettingsTaskFavorite } from './user.dto';
 export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
   serviceRef: React.Ref<HTMLSelectElement>;
-  subjectRef: React.Ref<any>;
-  // bodyRef: React.Ref<any>;
+  subjectRef: React.Ref<HTMLInputElement>;
+  bodyRef: React.Ref<Component<Record<string, any>, Record<string, any>, any>>;
   query: Record<string, string>;
   currentTab: number;
   task: ServicesTaskProps;

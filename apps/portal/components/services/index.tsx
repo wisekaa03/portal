@@ -18,7 +18,7 @@ import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteService } from '@lib/types/user.dto';
-import { TkService, TkRoute, TkRoutes } from '@lib/types/tickets';
+import { TkRoute, TkRoutes } from '@lib/types/tickets';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
 import ServicesElementFavorites from './element.favorites';
@@ -104,7 +104,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   contentRef,
   serviceRef,
   subjectRef,
-  // bodyRef,
+  bodyRef,
   query,
   currentTab,
   errorCreated,
@@ -422,18 +422,18 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   <FormControl className={classes.formControl} variant="outlined">
                     <TextField
                       ref={subjectRef}
+                      disabled={!enableBody}
                       value={subject}
                       onChange={(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                         setSubject(event.target.value);
                       }}
                       variant="outlined"
-                      disabled={!enableBody}
                       label={t('services:form.subject')}
                     />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     {/* ref={bodyRef} */}
-                    <JoditEditor value={body} onChange={setBody} disabled={!enableBody} />
+                    <JoditEditor ref={bodyRef} value={body} onBlur={setBody} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     <Dropzone files={files} setFiles={setFiles} />

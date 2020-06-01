@@ -1,9 +1,10 @@
 /** @format */
 
 //#region Imports NPM
-import React, { forwardRef, Component, RefForwardingComponent } from 'react';
+import React, { forwardRef, LegacyRef, Component, RefForwardingComponent } from 'react';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
+// import JoditReact from 'jodit-react';
 //#endregion
 //#region Imports Local
 //#endregion
@@ -41,22 +42,23 @@ const config = {
 
 interface JoditEditorComponentProps {
   value: string;
-  onChange: any;
+  onBlur?: React.Dispatch<React.SetStateAction<string>>;
+  onChange?: React.Dispatch<React.SetStateAction<string>>;
   disabled?: boolean;
 }
 
 const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorComponentProps> = (
-  { value, onChange, disabled },
+  { value, onBlur, disabled },
   ref,
 ) => (
   // TODO: не поддерживает ref WTF???
   <JoditReact
-    // ref={ref}
+    // ref={ref as LegacyRef<JoditReact>}
     value={value}
     config={{ ...config, readonly: !!disabled }}
     // preferred to use only this option to update the content for performance reasons
-    onBlur={onChange}
-    onChange={() => {}}
+    onBlur={onBlur}
+    // onChange={() => {}}
   />
 );
 
