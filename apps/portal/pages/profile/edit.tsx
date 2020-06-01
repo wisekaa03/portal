@@ -24,15 +24,14 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
   const { user } = useContext(ProfileContext);
-  const { id } = query;
+  const id = query?.id || user?.profile?.id;
   const { isAdmin } = user || { isAdmin: false };
 
   const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery(PROFILE, {
     variables: { id },
   });
 
-  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(
-    CHANGE_PROFILE,
+  const changeProfileRefetchQueries =
     id === user?.profile?.id
       ? {
           refetchQueries: [
@@ -44,6 +43,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
               query: CURRENT_USER,
             },
           ],
+          awaitRefetchQueries: true,
         }
       : {
           refetchQueries: [
@@ -52,7 +52,12 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
               variables: { id },
             },
           ],
-        },
+          awaitRefetchQueries: true,
+        };
+
+  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation(
+    CHANGE_PROFILE,
+    changeProfileRefetchQueries,
   );
 
   const onDrop = useCallback(
