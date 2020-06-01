@@ -299,8 +299,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [task]);
   const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
 
-  const favService =
-    query.service || task.service?.code; /* || task.route?.services?.filter((s) => s.name === 'Прочее').pop()?.code */
+  const service = task.service?.code || '';
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
@@ -393,7 +392,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 <>
                   {task.route && (
                     <Box display="grid" gridTemplateColumns="1fr 300px" gridGap="8px" className={classes.formControl}>
-                      <ServicesElement base64 route={task.route} active />
+                      <ServicesElement key={`t-${task.route}`} base64 route={task.route} active />
                       <Box display="flex" justifyContent="flex-end" alignItems="center">
                         {!isFavorite && (
                           <Button actionType="favorite" onClick={handleAddFavorite}>
@@ -405,17 +404,17 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   )}
                   <FormControl className={classes.formControl} variant="outlined">
                     <Select
-                      value={favService}
+                      value={service}
                       inputRef={serviceRef}
                       onChange={handleService}
                       classes={{
                         select: classes.select,
                       }}
                     >
-                      {/* <MenuItem value="0">{t('services:form.service')}</MenuItem> */}
-                      {task?.route?.services?.map((service) => (
-                        <MenuItem key={service.code} value={service.code}>
-                          {service.name}
+                      {/* <MenuItem value="0">{t('services:form.service')}</MenuItem>*/}
+                      {task?.route?.services?.map((srv) => (
+                        <MenuItem key={srv.code} value={srv.code}>
+                          {srv.name}
                         </MenuItem>
                       ))}
                     </Select>

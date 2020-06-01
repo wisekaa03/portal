@@ -130,7 +130,7 @@ module.exports = function (api) {
       [
         '@babel/preset-env',
         {
-          targets: 'node 13',
+          targets: 'node 14',
           useBuiltIns: false,
           ignoreBrowserslistConfig: true,
         },

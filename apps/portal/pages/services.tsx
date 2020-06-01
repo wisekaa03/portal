@@ -138,13 +138,12 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           (acc, val) => ({ ...acc, ...val.routes?.find((v) => v.code === route && v.where === where) }),
           {} as TkRoute,
         );
-        console.error('Routes', rt);
         if (typeof rt === 'object' && rt !== null) {
-          const tService = rt.services?.find(({ code: srvCode }) => srvCode === service);
-          console.error('Service', tService);
+          const tService = service
+            ? rt.services?.find(({ code: srvCode }) => srvCode === service)
+            : rt.services?.find(({ name }) => name === 'Прочее');
           setTask({ route: rt, service: tService });
           setCurrentTab(1);
-          // serviceRef.current.
         } else {
           handleResetTicket();
         }
