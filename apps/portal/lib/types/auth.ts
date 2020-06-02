@@ -19,8 +19,8 @@ export interface LoginComponentProps {
   values: LoginValuesProps;
   loading: boolean;
   handleValues: (_: keyof LoginValuesProps) => (__: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: () => void;
-  handleKeyDown: (_: React.KeyboardEvent) => void;
+  handleSubmit: (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleKeyDown: (_: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export interface LoginValuesProps {

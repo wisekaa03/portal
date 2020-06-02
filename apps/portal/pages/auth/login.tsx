@@ -13,7 +13,7 @@ import { Data, LoginValuesProps, LoginPageProps, Login } from '@lib/types';
 import { FIRST_PAGE } from '@lib/constants';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import Cookie from '@lib/cookie';
-import { LOGIN } from '@lib/queries';
+import { CURRENT_USER, LOGIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
 import { setStorage } from '@lib/session-storage';
@@ -38,9 +38,13 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
       fetchPolicy: 'no-cache',
       onCompleted: (data) => {
         if (data.login) {
-          client.resetStore();
-
           const { user } = data.login;
+          client.writeQuery({
+            query: CURRENT_USER,
+            data: {
+              me: user,
+            },
+          });
           setStorage('user', JSON.stringify(user));
 
           const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
@@ -57,8 +61,10 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (): void => {
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     const { username, password } = values;
+
+    event.preventDefault();
 
     if (username.trim() === '') {
       usernameRef.current!.focus();
@@ -69,9 +75,9 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent): void => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === 'Enter') {
-      handleSubmit();
+      handleSubmit((event as unknown) as React.MouseEvent<HTMLButtonElement, MouseEvent>);
     }
   };
 

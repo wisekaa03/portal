@@ -36,9 +36,10 @@ export interface WithApolloState<TCache = NormalizedCacheObject> {
 }
 
 export interface ApolloInitialProps<TCache = NormalizedCacheObject> extends AppInitialProps {
-  apolloState: WithApolloState<TCache>;
+  apolloState?: WithApolloState<TCache>;
+  initialLanguage?: string;
   currentLanguage?: string;
-  context: UserContext;
+  context?: UserContext;
 }
 
 export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppContext {

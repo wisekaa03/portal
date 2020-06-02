@@ -72,9 +72,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
   static async getInitialProps(ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> {
     const sheets = new ServerStyleSheets();
-    const { apolloClient, renderPage: originalRenderPage, req, res } = ctx;
-
-    const lng = req && lngFromReq(req);
+    const { apolloClient, renderPage: originalRenderPage, req } = ctx;
 
     ctx.renderPage = () =>
       originalRenderPage({
@@ -85,6 +83,8 @@ class MainDocument extends Document<MainDocumentInitialProps> {
     const initialProps = await Document.getInitialProps(ctx);
 
     // const nonce = res && (res as any).locals && (res as any).locals.nonce;
+
+    const lng = ctx.currentLanguage || lngFromReq(req!);
     const currentLanguage = lng || nextI18next.i18n.language || nextI18next.config.defaultLanguage;
 
     return {

@@ -7,7 +7,7 @@ import { NextPageContext } from 'next';
 import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
-import { UnauthorizedException } from '@nestjs/common';
+// import { UnauthorizedException } from '@nestjs/common';
 // import { Response, Request } from 'express';
 import { QueryResult } from 'react-apollo';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
@@ -16,7 +16,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
 import 'typeface-roboto';
 import { SnackbarProvider } from 'notistack';
-import url from 'url';
+// import url from 'url';
 //#endregion
 //#region Imports Local
 import theme from '@lib/theme';
@@ -25,8 +25,8 @@ import { ProfileContext } from '@lib/context';
 import { ApolloAppProps, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
-import Cookie from '@lib/cookie';
-import getRedirect from '@lib/get-redirect';
+// import Cookie from '@lib/cookie';
+// import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '@lib/constants';
 // import { getStorage } from '@lib/session-storage';
@@ -41,50 +41,41 @@ const CurrentComponent: React.FC<{
   router: NextRouter;
   children: React.ReactNode;
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
-  let user: User | undefined;
-
   const pathname = ctx?.asPath || router?.asPath;
-  const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
+  // const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
 
-  if (__SERVER__) {
-    const { req, res }: { req?: any; res?: any } = ctx || {};
-    const isAuthPage = pathname.startsWith(AUTH_PAGE);
-    const userServer: User = req?.session?.passport?.user;
+  // if (__SERVER__) {
+  //   const { req, res }: { req?: any; res?: any } = ctx || {};
+  //   const isAuthPage = pathname.startsWith(AUTH_PAGE);
+  //   const userServer: User = req?.session?.passport?.user;
 
-    if (res) {
-      if (!userServer) {
-        if (!isAuthPage) {
-          res.status(401);
-          res.redirect(url.format(redirectUrl));
+  //   if (res) {
+  //     if (!userServer) {
+  //       if (!isAuthPage) {
+  //         res.status(401);
+  //         res.redirect(url.format(redirectUrl));
 
-          throw new UnauthorizedException();
-        }
-      } else if (isAuthPage || (!userServer.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page)))) {
-        res.status(401);
-        res.redirect(FIRST_PAGE);
-      }
-
-      user = userServer;
-    }
-  } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME || 'session'] && !pathname.startsWith(AUTH_PAGE)) {
-    router.push(redirectUrl);
-  }
-
-  // if (!__SERVER__ && !user) {
-  //   try {
-  //     user = JSON.parse(getStorage('user'));
-  //   } catch (error) {
-  //     router.push(AUTH_PAGE);
+  //         throw new UnauthorizedException();
+  //       }
+  //     } else if (isAuthPage || (!userServer.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page)))) {
+  //       res.status(401);
+  //       res.redirect(FIRST_PAGE);
+  //     }
   //   }
+  // } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME || 'session'] && !pathname.startsWith(AUTH_PAGE)) {
+  //   router.push(redirectUrl);
   // }
 
+  if (__SERVER__ || pathname.startsWith(AUTH_PAGE)) {
+    return <ProfileContext.Provider value={context}>{children}</ProfileContext.Provider>;
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
 
-  return <ProfileContext.Provider value={{ ...context, user: user || data?.me }}>{children}</ProfileContext.Provider>;
-
-  // return <ProfileContext.Provider value={{ ...context, user }}>{children}</ProfileContext.Provider>;
+  return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
 };
 
 /**

@@ -13,7 +13,7 @@ import { setContext } from 'apollo-link-context';
 import { createHttpLink } from 'apollo-link-http';
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 // import { InStorageCache } from 'apollo-cache-instorage';
 // import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
@@ -21,14 +21,13 @@ import { isMobile as checkMobile } from 'is-mobile';
 import { Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { UserContext } from '@lib/types';
+import { User, UserContext } from '@lib/types';
 import { GQLErrorCode } from '@back/shared/gqlerror';
-import { nextI18next } from './i18n-client';
+// import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
 import { AUTH_PAGE } from './constants';
-
 //#endregion
 
 interface CreateClientProps {
@@ -151,21 +150,17 @@ export const withApolloClient = (
     static displayName = 'withApolloClient(MainApp)';
 
     public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<ApolloInitialProps> {
-      // const apolloState: WithApolloState = {};
-      const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
-
-      const language = (ctx.req && lngFromReq(ctx.req)) || nextI18next.i18n.language || '';
-      const isMobile = ctx.req ? checkMobile({ ua: ctx.req.headers['user-agent'] }) : false;
-
-      const context: UserContext = { isMobile, language };
-
-      const appProps = MainApp.getInitialProps
-        ? await MainApp.getInitialProps({ AppTree, Component, router, ctx })
-        : { pageProps: {} };
+      const appProps =
+        typeof MainApp.getInitialProps === 'function'
+          ? await MainApp.getInitialProps({ AppTree, Component, router, ctx })
+          : { pageProps: { apolloState: null } };
 
       if (__SERVER__) {
-        // eslint-disable-next-line global-require
-        // logger = new (await import('@app/logger/logger.service')).Logger(new PinoLogger({}), {});
+        const user: User | undefined = (ctx.req as Request)?.session?.passport?.user as User;
+        const language = user?.settings?.lng || lngFromReq(ctx?.req) || 'en';
+        const isMobile = checkMobile({ ua: ctx.req?.headers['user-agent'] }) ?? false;
+        const context: UserContext = { user, isMobile, language };
+        const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
         try {
           const { getDataFromTree } = await import('@apollo/react-ssr');
@@ -207,22 +202,24 @@ export const withApolloClient = (
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
+
+        // TODO: Не получается сделать чтобы отображалось одинаково на серваке и на клиенте. Посмотреть.
+        context.user = undefined;
+
+        return {
+          ...appProps,
+          context,
+          apolloState: apolloClient.cache.extract(),
+        };
       }
 
-      // Extract query data from the Apollo store
-      const apolloState = apolloClient.cache.extract();
+      const language = appProps.initialLanguage;
 
-      // Extract query data from the Apollo store
       // On the client side, initApollo() below will return the SAME Apollo
       // Client object over repeated calls, to preserve state.
-      return {
-        ...appProps,
-        context,
-        apolloState,
-      };
+      return { ...appProps, context: { isMobile: false, language } };
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public constructor(props: any) {
       super(props);
       this.apolloClient = initApollo({ initialState: props.apolloState });
