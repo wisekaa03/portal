@@ -112,20 +112,20 @@ export const TreeItem = ({
           </Typography>
           {active && (
             <Box mr={1}>
-              <Tooltip title={t('files:addFolder')} enterDelay={1000}>
+              <Tooltip title={t('files:addFolder') || ''} enterDelay={1000}>
                 <IconButton className={classes.action} size="small" onClick={handleEditItem(1)}>
                   <AddIcon />
                 </IconButton>
               </Tooltip>
               {!!id && (
                 <>
-                  <Tooltip title={t('files:editFolder')} enterDelay={1000}>
+                  <Tooltip title={t('files:editFolder') || ''} enterDelay={1000}>
                     <IconButton className={classes.action} size="small" onClick={handleEditItem(2)}>
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
                   {!parent && (
-                    <Tooltip title={t('files:deleteFolder')} enterDelay={1000}>
+                    <Tooltip title={t('files:deleteFolder') || ''} enterDelay={1000}>
                       <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
                         <DeleteIcon />
                       </IconButton>
@@ -157,7 +157,7 @@ export const TreeItem = ({
 };
 
 export const TreeView = ({ selected, setSelected, children }: TreeViewProps): React.ReactElement => {
-  const handleSelected = (_: React.ChangeEvent<{}>, nodeIds: string): void => {
+  const handleSelected = (_: React.ChangeEvent<Record<string, any>>, nodeIds: string): void => {
     setSelected(nodeIds);
   };
 

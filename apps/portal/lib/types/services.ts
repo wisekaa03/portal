@@ -14,8 +14,8 @@ export interface ServicesWrapperProps {
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;
-  errorCreated: ApolloError;
-  routes?: TkRoute[];
+  errorCreated?: ApolloError;
+  routes?: (TkRoute | null)[];
   favorites: UserSettingsTaskFavorite[] | null;
   subject: string;
   setSubject: React.Dispatch<React.SetStateAction<string>>;

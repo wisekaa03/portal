@@ -125,13 +125,13 @@ const ProfileTicketsCard = withStyles((theme) => ({
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
-                <BaseIcon base64 src={service.avatar} size={36} />
+                <BaseIcon base64 src={service?.avatar} size={36} />
               </div>
               <div style={{ overflow: 'hidden' }}>
                 <Typography variant="subtitle2">{subject}</Typography>
               </div>
               <div>
-                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: body }} />
+                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: body || '' }} />
               </div>
             </div>
             <Divider />
@@ -147,7 +147,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
                   {status}
                 </span>
               </span>
-              <span>{t('profile:tickets.date', { value: format(createdDate, i18n) })}</span>
+              <span>{t('profile:tickets.date', { value: format(createdDate || '', i18n) })}</span>
               <span>{t('profile:tickets.id', { value: id })}</span>
             </Box>
           </CardContent>
@@ -170,7 +170,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
   const { t } = useTranslation();
   const ticketBox = useRef(null);
 
-  const maxHeight = ticketBox.current ? `calc(100vh - ${ticketBox.current.offsetTop}px)` : '100%';
+  const maxHeight = ticketBox.current ? `calc(100vh - ${(ticketBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={1} px={2}>
@@ -214,7 +214,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           {tasks.length > 0 ? (
-            tasks.map((task) => <ProfileTicketsCard key={task.code} task={task} />)
+            tasks.map((task) => task && <ProfileTicketsCard key={task.code} task={task} />)
           ) : (
             <Typography className={classes.notFounds} variant="h4">
               {t('profile:ticket.notFounds')}

@@ -3,6 +3,7 @@
 
 //#region Imports NPM
 import gql from 'graphql-tag';
+import { DocumentNode } from 'graphql';
 //#endregion
 //#region  Imports Local
 import { TASK_STATUSES } from './constants/index';
@@ -224,7 +225,7 @@ export const LOGOUT = gql`
   }
 `;
 
-export const PROFILES = (_columns: string): any => gql`
+export const PROFILES = (_columns: string): DocumentNode => gql`
   query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String, $disabled: Boolean, $notShowing: Boolean) {
     profiles(first: $first, after: $after, orderBy: $orderBy, search: $search, disabled: $disabled, notShowing: $notShowing) {
       totalCount

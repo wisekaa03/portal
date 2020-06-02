@@ -135,7 +135,7 @@ const ProfileField = withStyles((theme) => ({
   let text = '';
 
   if (profile) {
-    text = field !== 'manager' ? profile[field] : profile.manager?.fullName || '';
+    text = field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '';
   }
 
   return (
@@ -164,7 +164,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
     const classes = useStyles({});
 
-    const [profile, setProfile] = useState<Profile>(null);
+    const [profile, setProfile] = useState<Profile | undefined>(undefined);
     const [controlEl, setControlEl] = useState<HTMLElement | null>(null);
 
     const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(PROFILE, {
@@ -184,7 +184,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
     }, [setProfile, data, loading, error]);
 
     const handleProfile = (prof: Profile) => (): void => {
-      if (!prof.disabled && !prof.notShowing) {
+      if (!prof.disabled && !prof.notShowing && prof.id) {
         getProfile({
           variables: {
             id: prof.id,
@@ -292,7 +292,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                 )}
               </>
             </Box>
-            {!error && (
+            {!error && profile && (
               <Box className={clsx(classes.grid, classes.gridFull)}>
                 <Paper>
                   <List className={classes.list}>

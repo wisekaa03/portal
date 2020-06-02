@@ -61,9 +61,9 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     const { username, password } = values;
 
     if (username.trim() === '') {
-      usernameRef.current.focus();
+      usernameRef.current!.focus();
     } else if (password.trim() === '') {
-      passwordRef.current.focus();
+      passwordRef.current!.focus();
     } else {
       login({ variables: { username, password } });
     }
@@ -84,7 +84,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
   }, [values.save, values.username]);
 
   useEffect(() => {
-    if (usernameRef.current && initUsername) {
+    if (usernameRef.current && initUsername && passwordRef.current) {
       passwordRef.current.focus();
     }
   }, [usernameRef, passwordRef, initUsername]);
@@ -92,7 +92,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
   useEffect(() => {
     if (error) {
       snackbarUtils.error(error);
-      passwordRef.current.focus();
+      passwordRef.current!.focus();
     }
   }, [passwordRef, error]);
 

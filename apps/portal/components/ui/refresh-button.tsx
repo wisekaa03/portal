@@ -53,7 +53,7 @@ const RefreshButton = ({ onClick, noAbsolute, disableBackground, dense }: Refres
   const { t } = useTranslation();
 
   return (
-    <Tooltip title={t('common:refresh')}>
+    <Tooltip title={t('common:refresh') || ''}>
       <IconButton
         className={clsx(classes.root, {
           [classes.absolute]: !noAbsolute,

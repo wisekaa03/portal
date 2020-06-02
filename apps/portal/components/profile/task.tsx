@@ -255,7 +255,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   <Typography className={classes.cardHeaderTitle} variant="h6">
                     {t('profile:task.header', {
                       task: task.code,
-                      date: format(task.createdDate, i18n),
+                      date: format(task.createdDate || '', i18n),
                     })}
                   </Typography>
                 }
@@ -279,9 +279,9 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                     />
                     <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
                       <Box textAlign="center">
-                        <BaseIcon base64 src={task?.service.avatar} size={48} />
+                        <BaseIcon base64 src={task.service?.avatar} size={48} />
                       </Box>
-                      <span>{task?.service.name}</span>
+                      <span>{task.service?.name}</span>
                     </CardContent>
                   </Card>
                   <Card>
@@ -314,9 +314,9 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   </Typography>
                 }
               />
-              <CardContent dangerouslySetInnerHTML={{ __html: task.body }} />
+              <CardContent dangerouslySetInnerHTML={{ __html: task?.body ?? '' }} />
             </Card>
-            {task.files.length > 0 && (
+            {Array.isArray(task?.files) && task.files.length > 0 && (
               <Card className={classes.fullRow}>
                 <CardHeader
                   disableTypography
@@ -329,7 +329,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                 />
                 <CardContent>
                   <Box display="flex" flexDirection="column">
-                    {task.files.map((file) => (
+                    {task?.files?.map((file) => (
                       <Typography variant="subtitle1" key={file.code}>
                         {`${file.name}.${file.ext}`}
                       </Typography>

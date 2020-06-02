@@ -3,13 +3,13 @@
 import React, { PropsWithChildren } from 'react';
 
 interface ConditionalWrapperProps {
-  condition: boolean;
+  condition?: boolean;
   wrapper: (children: any) => JSX.Element;
   children: any;
 }
 
 const ConditionalWrapper = ({
-  condition,
+  condition = true,
   wrapper,
   children,
 }: PropsWithChildren<ConditionalWrapperProps>): JSX.Element => {

@@ -62,7 +62,7 @@ const CopyButton = ({ text, ...rest }: CopyButtonProps): React.ReactElement => {
           disableFocusListener
           disableHoverListener
           disableTouchListener
-          title={t('common:copied')}
+          title={t('common:copied') || ''}
           placement="top"
           arrow
         >

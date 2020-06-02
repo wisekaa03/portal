@@ -52,7 +52,9 @@ const ServicesSuccessCard = withStyles((theme) => ({
       <Typography variant="subtitle1">{t('services:complete.service', { value: service })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.organization', { value: organization })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.date', { value: format(createdDate, i18n) })}</Typography>
+      <Typography variant="subtitle1">
+        {t('services:complete.date', { value: format(createdDate || '', i18n) })}
+      </Typography>
     </CardContent>
   );
 });

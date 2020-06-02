@@ -42,12 +42,14 @@ const mockRoutes: TkRoute[] = [
     code: '2',
     name: 'Сервис 2',
     avatar: ServicesIcon,
+    services: [],
   },
   {
     where: TkWhere.Default,
     code: '3',
     name: 'Сервис 3',
     avatar: ServicesIcon,
+    services: [],
   },
 ];
 
@@ -73,7 +75,7 @@ story.add('Default View', () => {
   const [task, setTask] = useState<ServicesTaskProps>(defaultTicketState);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
-  const [routes, setRoutes] = useState<TkRoutes[]>(mockData);
+  const [routes, setRoutes] = useState<TkRoute[]>(mockRoutes);
   const [favorites, setFavorites] = useState<UserSettingsTaskFavorite[]>(mockFavorites);
   const [subject, setSubject] = useState<string>('');
   const [body, setBody] = useState<string>('');
@@ -82,11 +84,11 @@ story.add('Default View', () => {
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
   const subjectRef = useRef(null);
-  // const bodyRef = useRef(null);
+  const bodyRef = useRef(null);
 
   const handleService = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>): void => {
-      const service = task.route?.services?.find(({ code }) => code === event.target.value);
+      const service = task.route?.services?.find((srv) => srv?.code === event.target.value) ?? undefined;
       setTask({ ...task, service });
     },
     [task],
@@ -111,12 +113,12 @@ story.add('Default View', () => {
   }, [task, body, files]);
 
   const showFavorites = boolean('Show Favorites', true);
-  const errorCreated = null;
+  const errorCreated = undefined;
   const query = {};
 
   useEffect(() => {
     if (contentRef.current) {
-      contentRef.current.updateHeight();
+      (contentRef.current as any).updateHeight();
     }
   }, [contentRef, files]);
 
@@ -124,9 +126,8 @@ story.add('Default View', () => {
     <Story
       contentRef={contentRef}
       serviceRef={serviceRef}
-      query={query}
       subjectRef={subjectRef}
-      // bodyRef={bodyRef}
+      bodyRef={bodyRef}
       currentTab={currentTab}
       task={task}
       created={created}

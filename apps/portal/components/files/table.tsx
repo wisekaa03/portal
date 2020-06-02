@@ -187,7 +187,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                 <Box display="flex" justifyContent="center">
                   <DescriptionIcon className={classes.fileIcon} fontSize="large" />
                   <Typography variant="subtitle1">{detail.name}</Typography>
-                  <Tooltip title={t('files:edit')}>
+                  <Tooltip title={t('files:edit') || ''}>
                     <IconButton className={classes.editIcon} size="small">
                       <EditIcon className={classes.icon} />
                     </IconButton>
@@ -214,12 +214,12 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
               </Box>
             </DialogContent>
             <DialogActions>
-              <Tooltip title={t('files:download')}>
+              <Tooltip title={t('files:download') || ''}>
                 <IconButton onClick={handleDownload}>
                   <GetAppIcon className={classes.icon} />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t('files:delete')}>
+              <Tooltip title={t('files:delete') || ''}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon className={classes.icon} />
                 </IconButton>

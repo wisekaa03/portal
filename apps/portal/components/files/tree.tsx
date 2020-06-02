@@ -70,7 +70,7 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
             key={child.pathname}
             nodeId={child.pathname}
             labelText={name}
-            id={child.id}
+            id={child.id || '0'}
             active={child.pathname === item}
             parent={childs.length > 0}
             handleEdit={handleEdit}
@@ -87,7 +87,7 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
   return (
     <TreeView selected={item} setSelected={setItem}>
       {React.Children.map(items, (child: React.ReactElement) => (
-        <React.Fragment key={child.key}>{child}</React.Fragment>
+        <React.Fragment key={child.key || '0'}>{child}</React.Fragment>
       ))}
     </TreeView>
   );

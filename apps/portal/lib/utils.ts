@@ -26,7 +26,7 @@ export const resizeImage = (file: Blob): Promise<string | ArrayBuffer> =>
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       const img = new Image();
-      img.src = e.target.result as string;
+      img.src = e.target?.result as string;
       img.onload = () => {
         const elem = document.createElement('canvas');
         let { width, height } = img;
@@ -45,10 +45,12 @@ export const resizeImage = (file: Blob): Promise<string | ArrayBuffer> =>
         elem.height = height;
 
         const ctx = elem.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        ctx.canvas.toBlob((blob: Blob) => {
-          resolve(toBase64(blob));
-        });
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          ctx.canvas.toBlob((blob: Blob) => {
+            resolve(toBase64(blob));
+          });
+        }
       };
 
       reader.onerror = (error) => reject(error);

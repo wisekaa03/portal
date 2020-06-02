@@ -23,7 +23,7 @@ export interface TkRoute {
   name: string;
   description?: string;
   avatar?: string;
-  services?: (TkService | null)[];
+  services: (TkService | null)[];
 }
 
 export interface TkRoutes {

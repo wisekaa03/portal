@@ -111,7 +111,7 @@ const PhonebookSearch: FC<PhonebookSearchProps> = ({
           open={openTooltip}
           onOpen={handleOpenTooltip}
           onClose={handleCloseTooltip}
-          title={t('phonebook:help.search')}
+          title={t('phonebook:help.search') || ''}
           interactive
           placement="top-start"
         >
@@ -151,13 +151,13 @@ const PhonebookSearch: FC<PhonebookSearchProps> = ({
           </Paper>
         </Popper>
       </Box>
-      <Tooltip title={t('common:help')}>
+      <Tooltip title={t('common:help') || ''}>
         <IconButton className={classes.icon} onClick={handleHelpOpen}>
           <HelpIcon />
         </IconButton>
       </Tooltip>
       <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
-      <Tooltip title={t('common:settings')}>
+      <Tooltip title={t('common:settings') || ''}>
         <IconButton className={classes.icon} onClick={handleSettingsOpen}>
           <SettingsIcon />
         </IconButton>

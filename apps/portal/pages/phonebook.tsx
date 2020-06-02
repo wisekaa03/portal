@@ -2,7 +2,7 @@
 /* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
-import React, { useState, useContext, useEffect, useRef, Ref, Component } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
@@ -72,7 +72,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [_search, setSearch] = useState<string>('');
   const search = useDebounce(_search, 300);
 
-  const searchRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<HTMLInputElement>();
 
   const isAdmin = Boolean(me?.user?.isAdmin);
 
@@ -114,7 +114,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   }, [error, suggestionsError, errorSettings]);
 
   // TODO: тут 2 варианта: либо под каждую диагональ свои дефолтные колонки,
-  // TODO: либо нет подстановки дефольных колонок, если есть в settings
+  // TODO: либо нет подстановки дефолтных колонок, если есть в settings
   // useEffect(() => {
   //   setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
   // }, [lgUp, mdUp, smUp]);
@@ -132,33 +132,41 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   }, [suggestionsLoading, suggestionsData, _search]);
 
   const fetchFunction = (): any =>
-    fetchMore({
+    fetchMore<
+      Data<'profile', Connection<Profile>>,
+      ProfileQueryProps,
+      'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing'
+    >({
       query: PROFILES(getGraphQLColumns(columns)),
       variables: {
         orderBy,
-        after: data.profiles.pageInfo.endCursor,
+        after: data?.profiles.pageInfo.endCursor || '',
         first: 100,
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
         notShowing: isAdmin && columns.includes('notShowing'),
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
+        if (fetchMoreResult) {
+          const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
 
-        if (edges.length === 0) return prev;
-        const clean: string[] = [];
+          if (edges.length === 0) return prev;
+          const clean: string[] = [];
 
-        return {
-          ...prev,
-          profiles: {
-            ...prev.profiles,
-            totalCount,
-            edges: [...prev.profiles.edges, ...edges].filter(
-              (edge) => !clean.includes(edge.node.id) && clean.push(edge.node.id),
-            ),
-            pageInfo,
-          },
-        };
+          return {
+            ...prev,
+            profiles: {
+              ...prev.profiles,
+              totalCount,
+              edges: [...prev.profiles.edges, ...edges].filter(
+                (edge) => !clean.includes(edge.node.id || '') && clean.push(edge.node.id || ''),
+              ),
+              pageInfo,
+            },
+          };
+        }
+
+        return prev;
       },
     }).catch((err) => snackbarUtils.error(err));
 
@@ -272,9 +280,11 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           <Loading activate={loading} noMargin type="linear" variant="indeterminate" />
         </Box>
       </MaterialUI>
-      <Modal open={Boolean(query.id)} onClose={handleProfileClose}>
-        <PhonebookProfile profileId={query.id} handleClose={handleProfileClose} handleSearch={setSearch} />
-      </Modal>
+      {query && (
+        <Modal open={Boolean(query.id)} onClose={handleProfileClose}>
+          <PhonebookProfile profileId={query.id} handleClose={handleProfileClose} handleSearch={setSearch} />
+        </Modal>
+      )}
       <Modal open={helpOpen} onClose={handleHelpClose}>
         <PhonebookHelp onClose={handleHelpClose} />
       </Modal>

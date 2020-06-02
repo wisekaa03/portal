@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React from 'react';
+import { NextComponentType } from 'next';
 import { AppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -27,6 +28,7 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
 import { AUTH_PAGE } from './constants';
+
 //#endregion
 
 interface CreateClientProps {
@@ -62,7 +64,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
           logger!.error(message, message.toString(), 'GraphQL error');
 
-          if (extensions.code === GQLErrorCode.UNAUTHENTICATED) {
+          if (extensions?.code === GQLErrorCode.UNAUTHENTICATED) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
           }
         });
@@ -139,15 +141,16 @@ const initApollo = (options: CreateClientProps): ApolloClient<NormalizedCacheObj
   return browserApolloClient;
 };
 
-export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
+export const withApolloClient = (
+  MainApp: NextComponentType<AppContext, ApolloInitialProps, ApolloAppProps>,
+): NextComponentType<AppContext, ApolloInitialProps, ApolloAppProps> =>
   class Apollo extends React.Component<ApolloAppProps> {
     private apolloClient: ApolloClient<NormalizedCacheObject>;
 
     // eslint-disable-next-line react/static-property-placement
     static displayName = 'withApolloClient(MainApp)';
 
-    public static async getInitialProps(appCtx: AppContext): Promise<ApolloInitialProps> {
-      const { AppTree, Component, router, ctx } = appCtx;
+    public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<ApolloInitialProps> {
       // const apolloState: WithApolloState = {};
       const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
@@ -156,7 +159,9 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
       const context: UserContext = { isMobile, language };
 
-      const appProps = MainApp.getInitialProps ? await MainApp.getInitialProps(appCtx) : { pageProps: {} };
+      const appProps = MainApp.getInitialProps
+        ? await MainApp.getInitialProps({ AppTree, Component, router, ctx })
+        : { pageProps: {} };
 
       if (__SERVER__) {
         // eslint-disable-next-line global-require
@@ -167,8 +172,8 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
 
           await getDataFromTree(
             <AppTree
-              disableGeneration
               {...appProps}
+              disableGeneration
               ctx={ctx}
               Component={Component}
               router={router}
@@ -183,13 +188,13 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
           // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
           let message = true;
           if (error instanceof ApolloError) {
-            message = error.graphQLErrors.some(
-              ({ extensions }): boolean =>
-                !!!(
-                  extensions.code === GQLErrorCode.UNAUTHENTICATED ||
+            // eslint-disable-next-line no-confusing-arrow
+            message = error.graphQLErrors.some(({ extensions }): boolean =>
+              extensions
+                ? extensions.code === GQLErrorCode.UNAUTHENTICATED ||
                   extensions.code === GQLErrorCode.UNAUTHENTICATED_LOGIN ||
                   extensions.code === GQLErrorCode.UNAUTHORIZED
-                ),
+                : false,
             );
           } else if (error?.status === 401) {
             message = false;
@@ -217,6 +222,7 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       };
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public constructor(props: any) {
       super(props);
       this.apolloClient = initApollo({ initialState: props.apolloState });
@@ -226,10 +232,10 @@ export const withApolloClient = (MainApp: any /* typeof NextApp */): Function =>
       if (__SERVER__) {
         const res = this.props.ctx?.res as Response;
         if (res) {
-          logger = res?.locals?.nestLogger;
+          logger = res.locals?.nestLogger;
         }
       }
 
-      return <MainApp apolloClient={this.apolloClient} {...this.props} />;
+      return <MainApp {...this.props} apolloClient={this.apolloClient} />;
     }
   };

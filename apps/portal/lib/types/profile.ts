@@ -59,7 +59,7 @@ export interface ProfileQueryProps {
 }
 
 export interface PhonebookSearchProps {
-  searchRef: React.MutableRefObject<HTMLInputElement>;
+  searchRef: React.MutableRefObject<HTMLInputElement | undefined>;
   search: string;
   suggestions: string[];
   refetch: (variables?: ProfileQueryProps) => Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;
@@ -113,13 +113,13 @@ export interface TableProps {
 
 export interface PhonebookProfileControlProps {
   controlEl: HTMLElement | null;
-  profileId: string;
+  profileId?: string;
   handleControl: (event: React.MouseEvent<HTMLElement>) => void;
   handleCloseControl: () => void;
 }
 
 export interface PhonebookProfileModule<T extends string | number | symbol> {
-  profile: Profile;
+  profile?: Profile;
   classes: Record<T, string>;
 }
 
@@ -153,7 +153,7 @@ export interface HelpDataProps {
 
 export interface ProfileTicketsComponentProps {
   loading: boolean;
-  tasks: TkTask[];
+  tasks: (TkTask | null)[];
   status: string;
   search: string;
   refetchTickets: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks[]>>>;
@@ -181,7 +181,7 @@ export interface ProfileTaskComponentProps {
 export interface ProfileTaskInfoCardProps {
   classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
   header: string;
-  profile: TkUser;
+  profile: TkUser | null;
 }
 
 export interface ProfileEditComponentProps {

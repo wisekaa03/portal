@@ -134,7 +134,7 @@ interface NewsProps {
 const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   const { loading, data, error }: QueryResult<Data<'news', NewsProps[]>> = useQuery(NEWS, { ssr: false });
-  const [current, setCurrent] = useState<NewsProps>(null);
+  const [current, setCurrent] = useState<NewsProps | null>(null);
   // const profile = useContext(ProfileContext);
 
   const newsId = query?.id;
@@ -215,7 +215,11 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                   return (
                     <Card id={anchor} key={news.id} className={classes.card}>
                       <CardActionArea onClick={handleCurrent(news)}>
-                        <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : null} />
+                        <CardMedia
+                          component="img"
+                          height={current ? 150 : 200}
+                          image={images ? images[0] : undefined}
+                        />
                         <CardContent>
                           <Typography variant="body2" color="textSecondary" component="p">
                             {news.title}

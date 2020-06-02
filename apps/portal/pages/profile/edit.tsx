@@ -62,7 +62,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      if (acceptedFiles.length) {
+      if (current && acceptedFiles.length) {
         setThumbnail(acceptedFiles[0]);
         setCurrent({ ...current, thumbnailPhoto: (await resizeImage(acceptedFiles[0])) as string });
       }
@@ -74,7 +74,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     const el: EventTarget & HTMLInputElement = e.target;
     const value: string | boolean | number = val || (el.type === 'checkbox' ? el.checked : el.value);
 
-    if (isAdmin) {
+    if (isAdmin && current && updated) {
       const result = name === 'gender' ? +value : value;
 
       setCurrent({ ...current, [name]: result });
@@ -83,8 +83,10 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   };
 
   const handleBirthday = (value: Date | null): void => {
-    setCurrent({ ...current, birthday: new Date(value) });
-    setUpdated({ ...updated, birthday: new Date(format(value, 'YYYY-MM-DD')) });
+    if (current && updated) {
+      setCurrent({ ...current, birthday: value ? new Date(value) : undefined });
+      setUpdated({ ...updated, birthday: value ? new Date(format(value, 'YYYY-MM-DD')) : undefined });
+    }
   };
 
   const handleSave = (): void => {

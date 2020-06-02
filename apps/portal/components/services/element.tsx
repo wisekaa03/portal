@@ -122,15 +122,18 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const allServices = useMemo<TkService[]>(
+    // eslint-disable-next-line no-confusing-arrow
     () =>
-      route.services?.reduce(
-        // eslint-disable-next-line no-confusing-arrow
-        (acc, srv) =>
-          (!active && srv.name === 'Прочее') || acc.reduce((a, v) => `${a}${v.name}`, '').length > 150
-            ? acc
-            : [...acc, srv],
-        [] as TkService[],
-      ),
+      Array.isArray(route.services) && route.services.length > 0
+        ? route.services.reduce(
+            // eslint-disable-next-line no-confusing-arrow
+            (acc, srv) =>
+              !srv || (!active && srv?.name === 'Прочее') || acc.reduce((a, v) => `${a}${v.name}`, '').length > 150
+                ? acc
+                : [...acc, srv],
+            [] as TkService[],
+          )
+        : [],
     [route, active],
   );
 

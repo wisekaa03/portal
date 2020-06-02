@@ -131,7 +131,7 @@ module.exports = {
         ImportDeclaration: 'first',
       },
     ],
-    '@typescript-eslint/no-non-null-assertion': 1,
+    '@typescript-eslint/no-non-null-assertion': 0,
     '@typescript-eslint/no-explicit-any': 0,
     'no-unused-vars': [
       'warn',

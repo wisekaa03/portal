@@ -16,7 +16,7 @@ import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
-import { TkRoute, TkTaskNew } from '@lib/types/tickets';
+import { TkWhere, TkRoute, TkTaskNew } from '@lib/types/tickets';
 import { UserSettingsTaskFavoriteService, UserSettingsTaskFavorite } from '@lib/types/user.dto';
 //#endregion
 
@@ -58,7 +58,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const handleService = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>): void => {
-      const service = task.route?.services?.find(({ code }) => code === event.target.value);
+      const service = task.route?.services?.find((srv) => srv?.code === event.target.value) || undefined;
       setTask({ ...task, service });
     },
     [task],
@@ -70,7 +70,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     setFiles([]);
     setCurrentTab(0);
     setSubmitted(false);
-    router.push(pathname, pathname);
+    router.push(pathname || '/services', pathname);
   }, [router, pathname, setTask, setBody, setFiles, setCurrentTab, setSubmitted]);
 
   const handleCurrentTab = useCallback(
@@ -99,7 +99,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
     if (subject.length < MINIMAL_SUBJECT_LENGTH) {
       snackbarUtils.show(t('services:errors.smallSubject'));
-      subjectRef.current.focus();
+      subjectRef.current!.focus();
 
       return;
     }
@@ -114,11 +114,11 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
     const variables = {
       task: {
-        where: service.where,
+        where: service?.where,
         subject,
         body: cleanedBody,
-        route: route.code,
-        service: service.code,
+        route: route?.code,
+        service: service?.code,
       },
       attachments: files.map((file: DropzoneFile) => file.file),
     };
@@ -132,17 +132,18 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   };
 
   useEffect(() => {
-    if (Array.isArray(routes) && routes.length > 0) {
+    if (query && Array.isArray(routes) && routes.length > 0) {
       const { where, route: routeCode, service: serviceCode } = query;
       if (where && routeCode) {
         const route = routes.reduce(
-          (acc, val) => ({ ...acc, ...val.routes?.find((v) => v.code === routeCode && v.where === where) }),
+          (acc, val) => ({ ...acc, ...val.routes?.find((v) => v && v.code === routeCode && v.where === where) }),
           {} as TkRoute,
         );
         if (typeof route === 'object' && route !== null) {
-          const service = serviceCode
-            ? route.services?.find(({ code: srvCode }) => srvCode === serviceCode)
-            : route.services?.find(({ name }) => name === 'Прочее');
+          const service =
+            (serviceCode
+              ? route.services?.find((srv) => srv?.code === serviceCode)
+              : route.services?.find((srv) => srv?.name === 'Прочее')) || undefined;
           setTask({ route, service });
           setCurrentTab(1);
         } else {
@@ -167,14 +168,14 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [dataRoutes?.TicketsRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
-    setCreated(!loadingCreated && !errorCreated && dataCreated?.TicketsTaskNew);
+    setCreated((!loadingCreated && !errorCreated && dataCreated?.TicketsTaskNew) || {});
   }, [dataCreated?.TicketsTaskNew, errorCreated, loadingCreated]);
 
-  useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.updateHeight();
-    }
-  }, [contentRef, files]);
+  // useEffect(() => {
+  //   if (contentRef.current) {
+  //     contentRef.current.updateHeight();
+  //   }
+  // }, [contentRef, files]);
 
   useEffect(() => {
     if (errorCreated) {
@@ -186,39 +187,49 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     }
   }, [errorCreated, errorRoutes]);
 
-  const allRoutes = useMemo<TkRoute[]>(() => {
+  const allRoutes = useMemo<(TkRoute | null)[]>(() => {
     return Array.isArray(routes) && routes.length > 0
       ? routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], [])
       : [];
   }, [routes]);
 
   const allFavorites = useMemo<UserSettingsTaskFavorite[]>(() => {
-    return typeof favorites === 'object' && favorites !== null && favorites.length > 0
-      ? allRoutes.reduce((acc, { where, code, services }) => {
-          const rt = services.reduce((cum, service) => {
-            const f = favorites
-              .filter(
-                ({ where: favWhere, code: favCode, service: fSrv }) =>
-                  favWhere === where && favCode === code && service.code === fSrv.code,
-              )
-              .pop();
-            if (f) {
-              return [
-                ...cum,
-                {
-                  ...f,
-                  service: {
-                    ...f.service,
-                    name: service.name,
-                    description: service.description,
-                    avatar: service.avatar,
-                  },
-                },
-              ];
-            }
-            return cum;
-          }, [] as UserSettingsTaskFavoriteService[]);
-          return [...acc, ...rt];
+    return Array.isArray(favorites) && favorites.length > 0
+      ? allRoutes.reduce((acc, rout) => {
+          if (rout) {
+            const rt =
+              rout.services.reduce((cum, service) => {
+                if (service) {
+                  const f = favorites
+                    .filter(
+                      ({ where: favWhere, code: favCode, service: fSrv }) =>
+                        favWhere === rout.where && favCode === rout.code && service.code === fSrv?.code,
+                    )
+                    .pop();
+                  if (f) {
+                    return [
+                      ...cum,
+                      {
+                        ...f,
+                        service: {
+                          where: f?.service?.where || TkWhere.Default,
+                          code: f?.service?.code || '0',
+                          name: service.name,
+                          description: service.description,
+                          avatar: service.avatar,
+                        },
+                      },
+                    ];
+                  }
+                }
+
+                return cum;
+              }, [] as UserSettingsTaskFavoriteService[]) || [];
+
+            return [...acc, ...rt];
+          }
+
+          return acc;
         }, [] as UserSettingsTaskFavorite[])
       : [];
   }, [allRoutes, favorites]);

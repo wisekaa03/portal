@@ -28,9 +28,9 @@ export interface Profile {
 
   email: string;
 
-  birthday: Date;
+  birthday?: Date;
 
-  gender: Gender;
+  gender?: Gender;
 
   country?: string;
 

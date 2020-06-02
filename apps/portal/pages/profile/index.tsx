@@ -2,7 +2,7 @@
 /* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -55,14 +55,23 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     });
   };
 
-  const tasks: TkTask[] =
-    dataTickets?.TicketsTasks?.reduce((acc, tick) => {
-      if (tick.error) {
-        snackbarUtils.error(tick.error);
-        return acc;
-      }
-      return [...acc, ...tick.tasks];
-    }, []).filter((task) => task?.code.includes(search) || task?.name.includes(search)) || [];
+  const tasks = useMemo<(TkTask | null)[]>(
+    // eslint-disable-next-line no-confusing-arrow
+    () =>
+      dataTickets
+        ? dataTickets.TicketsTasks.reduce((acc, tick) => {
+            if (tick.error) {
+              snackbarUtils.error(tick.error);
+              return acc;
+            }
+            return tick.tasks ? [...acc, ...tick.tasks] : acc;
+            // eslint-disable-next-line no-confusing-arrow
+          }, [] as TkTask[]).filter((task) =>
+            task ? task.code.includes(search) || task.subject.includes(search) : false,
+          )
+        : [],
+    [search, dataTickets],
+  );
 
   useEffect(() => {
     if (taskStatus) {

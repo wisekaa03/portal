@@ -4,11 +4,11 @@
 //#region Imports NPM
 import React from 'react';
 import { NextPageContext } from 'next';
-import App from 'next/app';
+import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { UnauthorizedException } from '@nestjs/common';
-import { Response, Request } from 'express';
+// import { Response, Request } from 'express';
 import { QueryResult } from 'react-apollo';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
@@ -29,7 +29,7 @@ import Cookie from '@lib/cookie';
 import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '@lib/constants';
-import { getStorage } from '@lib/session-storage';
+// import { getStorage } from '@lib/session-storage';
 //#endregion
 
 /**
@@ -41,7 +41,7 @@ const CurrentComponent: React.FC<{
   router: NextRouter;
   children: React.ReactNode;
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
-  let user: User = null;
+  let user: User | undefined;
 
   const pathname = ctx?.asPath || router?.asPath;
   const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
@@ -66,7 +66,7 @@ const CurrentComponent: React.FC<{
 
       user = userServer;
     }
-  } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME] && !pathname.startsWith(AUTH_PAGE)) {
+  } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME || 'session'] && !pathname.startsWith(AUTH_PAGE)) {
     router.push(redirectUrl);
   }
 
@@ -90,7 +90,7 @@ const CurrentComponent: React.FC<{
 /**
  * App
  */
-class MainApp extends App<ApolloAppProps> {
+class MainApp extends NextApp<ApolloAppProps> {
   componentDidMount(): void {
     // Remove the server-sie injected CSS
     const jssStyles = document.querySelector('#jss-server-side');

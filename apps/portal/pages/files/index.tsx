@@ -43,24 +43,28 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [editFolder] = useMutation(EDIT_FOLDER, {
     update(cache, { data: { editFolder: result } }) {
-      const { folder } = cache.readQuery({ query: FOLDER });
-      const data = folder.filter((f) => f.id !== result.id);
+      const query = cache.readQuery<any>({ query: FOLDER });
+      const data = query?.folder.filter((f) => f.id !== result.id);
 
-      cache.writeQuery({
-        query: FOLDER,
-        data: { folder: [...data, result] },
-      });
+      if (data) {
+        cache.writeQuery({
+          query: FOLDER,
+          data: { folder: [...data, result] },
+        });
+      }
     },
   });
   const [deleteFolder] = useMutation(DELETE_FOLDER, {
     update(cache, { data: { deleteFolder: result } }) {
-      const { folder } = cache.readQuery({ query: FOLDER });
-      const data = folder.filter((f) => f.id !== result);
+      const query = cache.readQuery<any>({ query: FOLDER });
+      const data = query?.folder.filter((f) => f.id !== result);
 
-      cache.writeQuery({
-        query: FOLDER,
-        data: { folder: data },
-      });
+      if (data) {
+        cache.writeQuery({
+          query: FOLDER,
+          data: { folder: data },
+        });
+      }
     },
   });
 

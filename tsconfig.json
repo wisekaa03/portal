@@ -17,6 +17,7 @@
     "isolatedModules": true,
     "stripInternal": true,
     "strict": true,
+    "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,

@@ -122,14 +122,16 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   const handleFavorite = useCallback(
     (action) => (event): void => {
       event.stopPropagation();
-      setFavorite({
-        route: {
-          code: route.code,
-          where: route.where,
-          service: { code: route.service.code, where: route.service.where },
-        },
-        action,
-      });
+      if (typeof setFavorite === 'function' && route.service) {
+        setFavorite({
+          route: {
+            code: route.code,
+            where: route.where,
+            service: { code: route.service.code, where: route.service.where },
+          },
+          action,
+        });
+      }
       handleCloseMore();
     },
     [route, handleCloseMore, setFavorite],
@@ -147,10 +149,10 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
           href={
             url || {
               pathname,
-              query: { where: route.where, route: route.code, service: route.service.code },
+              query: { where: route.where, route: route.code, service: route.service?.code },
             }
           }
-          as={url || `${pathname}/${route.where}/${route.code}/${route.service.code}`}
+          as={url || `${pathname}/${route.where}/${route.code}/${route.service?.code}`}
           passHref
         >
           {url ? <a target="_blank">{children}</a> : children}
@@ -164,14 +166,14 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
         })}
       >
         <Box>
-          <BaseIcon base64={base64} src={route.service.avatar} size={48} />
+          <BaseIcon base64={base64} src={route.service?.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
           <Typography variant="subtitle1" className={classes.name}>
-            {route.service.name}
+            {route.service?.name}
           </Typography>
           <Typography variant="subtitle1" className={classes.subtitle}>
-            {route.service.description}
+            {route.service?.description}
           </Typography>
           <Box className={classes.more}>
             {favorite && (

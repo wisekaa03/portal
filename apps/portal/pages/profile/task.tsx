@@ -15,6 +15,7 @@ import { Data, TkTask, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import ProfileTaskComponent from '@front/components/profile/task';
+import { TkWhere } from '../../lib/types/tickets';
 //#endregion
 
 const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
@@ -26,8 +27,8 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
     {
       ssr: false,
       variables: {
-        where: query.where,
-        code: query.id,
+        where: query?.where || TkWhere.Default,
+        code: query?.id || '0',
       },
       fetchPolicy: 'cache-and-network',
     },
@@ -38,8 +39,8 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
       cache.writeQuery({
         query: TICKETS_TASK_DESCRIPTION,
         variables: {
-          where: query.where,
-          code: query.id,
+          where: query?.where || TkWhere.Default,
+          code: query?.id || '0',
         },
         data: { OldTicketDescription: OldTicketEdit },
       });
@@ -53,8 +54,8 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
   const handleAccept = (): void => {
     const variables = {
       ticket: {
-        code: query.id,
-        type: query.type,
+        where: query?.where || TkWhere.Default,
+        code: query?.id || '0',
         comment,
       },
       attachments: files.map((file: DropzoneFile) => file.file),
@@ -92,24 +93,26 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
             task
               ? t('profile:ticket.header', {
                   ticket: task.code,
-                  date: format(task.createdDate, i18n),
+                  date: task.createdDate ? format(task.createdDate, i18n) : null,
                 })
               : ''
           }`}
         </title>
       </Head>
       <MaterialUI {...rest}>
-        <ProfileTaskComponent
-          loading={loading}
-          loadingEdit={loadingEdit}
-          task={task}
-          comment={comment}
-          files={files}
-          setFiles={setFiles}
-          handleComment={handleComment}
-          handleAccept={handleAccept}
-          handleClose={handleClose}
-        />
+        {task && (
+          <ProfileTaskComponent
+            loading={loading}
+            loadingEdit={loadingEdit}
+            task={task}
+            comment={comment}
+            files={files}
+            setFiles={setFiles}
+            handleComment={handleComment}
+            handleAccept={handleAccept}
+            handleClose={handleClose}
+          />
+        )}
       </MaterialUI>
     </>
   );
