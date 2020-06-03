@@ -23,7 +23,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const router = useRouter();
 
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const [routes, setRoutes] = useState<TkRoutes[]>([]);
+  const [routes, setRoutes] = useState<TkRoute[]>([]);
   const [task, setTask] = useState<ServicesTaskProps>({});
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
@@ -38,7 +38,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
-    Data<'TicketsRoutes', TkRoutes[]>,
+    Data<'TicketsRoutes', TkRoutes>,
     void
   >(TICKETS_ROUTES, {
     ssr: false,
@@ -134,18 +134,12 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     if (query && Array.isArray(routes) && routes.length > 0) {
       const { where, route: routeCode, service: serviceCode } = query;
       if (where && routeCode) {
-        const route = routes.reduce(
-          (accumulator, value) => ({
-            ...accumulator,
-            ...value.routes?.find((v) => v && v.code === routeCode && v.where === where),
-          }),
-          {} as TkRoute,
-        );
-        if (typeof route === 'object' && route !== null) {
+        const route = routes.find((element) => element.where === where && element.code === routeCode);
+        if (route && Object.keys(route).length > 0) {
           const service =
             (serviceCode
-              ? route.services?.find((srv) => srv?.code === serviceCode)
-              : route.services?.find((srv) => srv?.name === 'Прочее')) || undefined;
+              ? route.services?.find((s) => s.code === serviceCode)
+              : route.services?.find((s) => s.name === 'Прочее')) || undefined;
           setTask({ route, service });
           setCurrentTab(1);
         } else {
@@ -157,15 +151,12 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   useEffect(() => {
     if (!loadingRoutes && !errorRoutes && dataRoutes?.TicketsRoutes) {
-      setRoutes(
-        dataRoutes.TicketsRoutes?.reduce((accumulator, srv) => {
-          if (srv.error) {
-            snackbarUtils.error(srv.error);
-            return accumulator;
-          }
-          return srv ? [...accumulator, srv] : accumulator;
-        }, [] as TkRoutes[]),
-      );
+      if (dataRoutes.TicketsRoutes.errors) {
+        dataRoutes.TicketsRoutes.errors?.forEach((error) => snackbarUtils.error(error));
+      }
+      if (dataRoutes.TicketsRoutes.routes) {
+        setRoutes(dataRoutes.TicketsRoutes.routes);
+      }
     }
   }, [dataRoutes?.TicketsRoutes, errorRoutes, loadingRoutes]);
 
@@ -189,52 +180,29 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     }
   }, [errorCreated, errorRoutes]);
 
-  const allRoutes = useMemo<(TkRoute | null)[]>(() => {
-    return Array.isArray(routes) && routes.length > 0
-      ? routes.reduce((accumulator: TkRoute[], current: TkRoutes) => [...accumulator, ...(current.routes || [])], [])
-      : [];
-  }, [routes]);
-
   const allFavorites = useMemo<UserSettingsTaskFavorite[]>(() => {
-    return Array.isArray(favorites) && favorites.length > 0
-      ? allRoutes.reduce((accumulator, rout) => {
-          if (rout) {
-            const rt =
-              rout.services.reduce((cum, service) => {
-                if (service) {
-                  const f = favorites
-                    .filter(
-                      ({ where: favWhere, code: favCode, service: fSrv }) =>
-                        favWhere === rout.where && favCode === rout.code && service.code === fSrv?.code,
-                    )
-                    .pop();
-                  if (f) {
-                    return [
-                      ...cum,
-                      {
-                        ...f,
-                        service: {
-                          where: f?.service?.where || TkWhere.Default,
-                          code: f?.service?.code || '0',
-                          name: service.name,
-                          description: service.description,
-                          avatar: service.avatar,
-                        },
-                      },
-                    ];
-                  }
-                }
-
-                return cum;
-              }, [] as UserSettingsTaskFavoriteService[]) || [];
-
-            return [...accumulator, ...rt];
+    if (Array.isArray(favorites) && favorites.length > 0) {
+      return favorites.reduce((accumulator, fav) => {
+        const route = routes.reduce((accumulator_, route) => {
+          if (route.where === fav.where && route.code === fav.code) {
+            const service = route.services?.find((service) => fav.service?.code === service.code);
+            if (service) {
+              return { ...accumulator_, route: { ...route, priority: fav.priority || 0 }, service: { ...service } };
+            }
           }
+          return accumulator_;
+        }, {} as UserSettingsTaskFavorite);
 
-          return accumulator;
-        }, [] as UserSettingsTaskFavorite[])
-      : [];
-  }, [allRoutes, favorites]);
+        if (Object.keys(route).length > 0) {
+          return [...accumulator, route];
+        }
+
+        return accumulator;
+      }, [] as UserSettingsTaskFavorite[]);
+    }
+
+    return [];
+  }, [routes, favorites]);
 
   return (
     <>
@@ -252,7 +220,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           task={task}
           created={created}
           errorCreated={errorCreated}
-          routes={allRoutes}
+          routes={routes}
           favorites={allFavorites}
           subject={subject}
           setSubject={setSubject}

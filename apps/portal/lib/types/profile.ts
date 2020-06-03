@@ -6,7 +6,7 @@ import { WithTranslation } from 'next-i18next';
 import { Order, Connection } from 'typeorm-graphql-pagination';
 //#endregion
 //#region Imports Local
-import { StyleProps, Data } from './common';
+import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile } from './profile.dto';
 import { TkUser, TkTask, TkTasks } from './tickets';
@@ -45,8 +45,8 @@ export type ColumnNames =
 export interface Column {
   name: ColumnNames;
   admin: boolean;
-  defaultStyle: StyleProps;
-  largeStyle: StyleProps;
+  defaultStyle: StyleProperties;
+  largeStyle: StyleProperties;
 }
 
 export interface ProfileQueryProps {
@@ -156,7 +156,7 @@ export interface ProfileTicketsComponentProps {
   tasks: (TkTask | null)[];
   status: string;
   search: string;
-  refetchTickets: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks[]>>>;
+  refetchTasks: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>>;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }

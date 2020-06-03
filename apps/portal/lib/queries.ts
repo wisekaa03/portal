@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import { DocumentNode } from 'graphql';
 //#endregion
 //#region  Imports Local
-import { TASK_STATUSES } from './constants/index';
+import { TASK_STATUSES } from './constants';
 import { UserSettings } from './types/user.dto';
 //#endregion
 
@@ -485,7 +485,7 @@ export const TICKETS_ROUTES = gql`
           avatar
         }
       }
-      error
+      errors
     }
   }
 `;
@@ -517,7 +517,7 @@ export const TICKETS_TASKS = gql`
         }
         createdDate
       }
-      error
+      errors
     }
   }
 `;

@@ -23,12 +23,12 @@ export interface TkRoute {
   name: string;
   description?: string;
   avatar?: string;
-  services: (TkService | null)[];
+  services?: TkService[];
 }
 
 export interface TkRoutes {
-  routes?: (TkRoute | null)[];
-  error?: string;
+  routes?: TkRoute[];
+  errors?: string[];
 }
 
 export interface TkFile {
@@ -48,12 +48,12 @@ export interface TkComment {
   task: string;
   code: string;
   parentCode: string;
-  files?: TkFile[] | null;
+  files?: TkFile[];
 }
 
 export interface TkAuthorComments {
-  users: TkUser[] | null;
-  comments: TkComment[] | null;
+  users?: TkUser[];
+  comments?: TkComment[];
 }
 
 export interface TkTask {
@@ -64,22 +64,23 @@ export interface TkTask {
   smallBody?: string;
   body?: string;
   status: string;
-  route: TkRoute | null;
-  service: TkService | null;
-  createdDate: Date | null;
-  timeoutDate: Date | null;
-  endDate: Date | null;
-  executorUser: TkUser | null;
-  initiatorUser: TkUser | null;
+  route?: TkRoute;
+  service?: TkService;
+  createdDate?: Date;
+  timeoutDate?: Date;
+  endDate?: Date;
+  executorUser?: TkUser;
+  initiatorUser?: TkUser;
   availableAction?: string;
   availableStages?: string;
-  files: TkFile[] | null;
-  comments: TkAuthorComments | null;
+  files?: TkFile[];
+  comments?: TkAuthorComments;
 }
 
 export interface TkTasks {
-  tasks?: (TkTask | null)[];
-  error?: string;
+  users?: TkUser[];
+  tasks?: TkTask[];
+  errors?: string[];
 }
 
 export interface TkUser {

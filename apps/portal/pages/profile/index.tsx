@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useContext, useState, useMemo, useEffect } from 'react';
@@ -32,13 +31,13 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [userSettings, { error: errorSettings }] = useMutation(USER_SETTINGS);
 
   const {
-    loading: loadingTickets,
-    data: dataTickets,
-    error: errorTickets,
-    refetch: refetchTickets,
-  }: QueryResult<Data<'TicketsTasks', TkTasks[]>> = useQuery(TICKETS_TASKS, {
+    loading: loadingTasks,
+    data: dataTasks,
+    error: errorTasks,
+    refetch: refetchTasks,
+  }: QueryResult<Data<'TicketsTasks', TkTasks>> = useQuery(TICKETS_TASKS, {
     ssr: false,
-    variables: { status },
+    variables: { task: { status, search } },
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
@@ -55,23 +54,17 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     });
   };
 
-  const tasks = useMemo<(TkTask | null)[]>(
-    // eslint-disable-next-line no-confusing-arrow
-    () =>
-      dataTickets
-        ? dataTickets.TicketsTasks.reduce((acc, tick) => {
-            if (tick.error) {
-              snackbarUtils.error(tick.error);
-              return acc;
-            }
-            return tick.tasks ? [...acc, ...tick.tasks] : acc;
-            // eslint-disable-next-line no-confusing-arrow
-          }, [] as TkTask[]).filter((task) =>
-            task ? task.code.includes(search) || task.subject.includes(search) : false,
-          )
-        : [],
-    [search, dataTickets],
-  );
+  const tasks = useMemo<TkTask[]>(() => {
+    if (dataTasks?.TicketsTasks) {
+      if (dataTasks.TicketsTasks.errors) {
+        dataTasks.TicketsTasks.errors?.forEach((error) => snackbarUtils.error(error));
+      }
+      if (dataTasks.TicketsTasks.tasks) {
+        return dataTasks.TicketsTasks.tasks;
+      }
+    }
+    return [];
+  }, [search, dataTasks?.TicketsTasks]);
 
   useEffect(() => {
     if (taskStatus) {
@@ -80,13 +73,13 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   }, [taskStatus]);
 
   useEffect(() => {
-    if (errorTickets) {
-      snackbarUtils.error(errorTickets);
+    if (errorTasks) {
+      snackbarUtils.error(errorTasks);
     }
     if (errorSettings) {
       snackbarUtils.error(errorSettings);
     }
-  }, [errorTickets, errorSettings]);
+  }, [errorTasks, errorSettings]);
 
   return (
     <>
@@ -97,11 +90,11 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <Box display="flex" flexDirection="column" p={1}>
           <ProfileInfoComponent />
           <ProfileTasksComponent
-            loading={loadingTickets}
+            loading={loadingTasks}
             tasks={tasks}
             status={status}
             search={search}
-            refetchTickets={refetchTickets}
+            refetchTasks={refetchTasks}
             handleSearch={handleSearch}
             handleStatus={handleStatus}
           />
