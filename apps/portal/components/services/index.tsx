@@ -129,23 +129,23 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
-  const headerRef = useRef(null);
+  const headerReference = useRef(null);
 
-  const contentHeight = headerRef.current
-    ? `calc(100vh - ${appBarHeight}px - ${(headerRef.current as any)?.clientHeight}px)`
+  const contentHeight = headerReference.current
+    ? `calc(100vh - ${appBarHeight}px - ${(headerReference.current as any)?.clientHeight}px)`
     : '100%';
 
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
-    ({ route: curRoute, action }: ServicesFavoriteProps) => {
-      const { where, code, service } = curRoute;
+    ({ route: currentRoute, action }: ServicesFavoriteProps) => {
+      const { where, code, service } = currentRoute;
 
       if (!service) {
         return;
       }
 
       let result: UserSettingsTaskFavorite[] = [];
-      const favCur =
+      const favCurrent =
         Array.isArray(favorites) && favorites.length > 0
           ? favorites.find(
               (favorite) =>
@@ -154,13 +154,13 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                 favorite.code === code,
             )
           : undefined;
-      const priority = favCur?.priority || favorites?.length || 0;
+      const priority = favCurrent?.priority || favorites?.length || 0;
 
       switch (action) {
         case 'delete':
           result = favorites
             ? favorites
-                .filter((favorite) => favorite !== favCur)
+                .filter((favorite) => favorite !== favCurrent)
                 .sort((a, b) => (a.priority || 0) - (b.priority || 0))
                 .map((favorite, index) => ({
                   where: favorite.where,
@@ -176,29 +176,29 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           result = favorites
             ? favorites.reduce(
                 (
-                  acc: UserSettingsTaskFavorite[],
+                  accumulator: UserSettingsTaskFavorite[],
                   {
-                    code: curCode,
-                    where: curWhere,
-                    service: curService,
-                    priority: curPriority,
+                    code: currentCode,
+                    where: currentWhere,
+                    service: currentService,
+                    priority: currentPriority,
                   }: UserSettingsTaskFavorite,
                 ) => {
                   const newCurrent = {
-                    code: curCode,
-                    where: curWhere,
-                    service: curService,
-                    priority: curPriority || 0,
+                    code: currentCode,
+                    where: currentWhere,
+                    service: currentService,
+                    priority: currentPriority || 0,
                   };
                   const sym = action === 'up' ? 1 : -1;
 
-                  if (curCode === code && curWhere === where) {
+                  if (currentCode === code && currentWhere === where) {
                     newCurrent.priority -= sym;
-                  } else if (curPriority === priority - sym) {
+                  } else if (currentPriority === priority - sym) {
                     newCurrent.priority += sym;
                   }
 
-                  return [...acc, newCurrent];
+                  return [...accumulator, newCurrent];
                 },
                 [],
               )
@@ -262,7 +262,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" position="relative">
-      <Paper ref={headerRef} square className={classes.header}>
+      <Paper ref={headerReference} square className={classes.header}>
         <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
           <Tab label={t('services:tabs.tab1')} />
           <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
@@ -346,7 +346,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   disableShrink
                   size={48}
                 >
-                  {!!errorCreated ? (
+                  {errorCreated ? (
                     <ServicesError error={errorCreated} onClose={handleResetTicket} />
                   ) : (
                     <ServicesSuccess data={created} onClose={handleResetTicket} />
@@ -400,7 +400,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
-                    <JoditEditor ref={bodyRef} value={body} disabled={!enableBody} />
+                    <JoditEditor ref={bodyRef} value={body} onBlur={setBody} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     <Dropzone files={files} setFiles={setFiles} />
