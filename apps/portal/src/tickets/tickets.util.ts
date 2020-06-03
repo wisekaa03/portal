@@ -62,8 +62,8 @@ export const whereService = (where: string | TkWhere): TkWhere => {
  * - Логин
  * - КаналТелефонии
  */
-export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | null =>
-  user && user !== null
+export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | undefined =>
+  Object.keys(user).length > 0
     ? {
         where: whereService(where),
         id: user['Ref'],
@@ -76,10 +76,10 @@ export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | nu
         division: user['Подразделение']?.split(', ')[1],
         title: user['Должность'],
       }
-    : null;
+    : undefined;
 
-export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] | null =>
-  files && files !== null
+export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] | undefined =>
+  Object.keys(files).length > 0
     ? files
         // .filter((file: Record<string, any>) => file['Код'])
         .map((file: Record<string, any>) => ({
@@ -88,7 +88,7 @@ export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] 
           name: file['Наименование'],
           ext: file['РасширениеФайла'],
         }))
-    : null;
+    : undefined;
 
 /**
  * Услуга в представлении 1C SOAP:
@@ -98,8 +98,8 @@ export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] 
  * - СервисВладелец - Сервис (route) которому принадлежит данная услуга
  * - Аватар
  */
-export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkService | null =>
-  service && service !== null
+export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkService | undefined =>
+  Object.keys(service).length > 0
     ? {
         where: whereService(where),
         code: service['Код'],
@@ -108,7 +108,7 @@ export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkSer
         route: service['СервисВладелец'],
         avatar: service['Аватар'],
       }
-    : null;
+    : undefined;
 
 /**
  * Сервис в представлении 1C SOAP:
@@ -117,8 +117,8 @@ export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkSer
  * - Описание
  * - Аватар
  */
-export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute | null =>
-  route && route !== null
+export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute | undefined =>
+  Object.keys(route).length > 0
     ? {
         where: whereService(where),
         code: route['Код'],
@@ -127,13 +127,13 @@ export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute |
         avatar: route['Аватар'],
         services: route['СписокУслуг']?.['Услуга']?.map((service: Record<string, any>) => serviceSOAP(service, where)),
       }
-    : null;
+    : undefined;
 
 /**
  * Комментарии в представлении 1C SOAP
  */
-export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkComment | null =>
-  comment && comment !== null
+export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkComment | undefined =>
+  Object.keys(comment).length > 0
     ? {
         where: whereService(where),
         date: new Date(comment['Дата']),
@@ -143,20 +143,20 @@ export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkCom
         code: comment['Код'],
         parentCode: comment['КодРодителя'],
       }
-    : null;
+    : undefined;
 
 /**
  * АвторКомментария и Комментарии в представлении 1C SOAP
  */
-export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere): TkAuthorComments | null =>
-  comments && comments !== null
+export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere): TkAuthorComments | undefined =>
+  Object.keys(comments).length > 0
     ? {
         users: comments['Авторы']?.['АвторКомментария']?.map((user: Record<string, any>) => userSOAP(user, where)),
         comments: comments['Комментарии']?.['Комментарий']?.map((comment: Record<string, any>) =>
           commentSOAP(comment, where),
         ),
       }
-    : null;
+    : undefined;
 
 /**
  * Задача в представлении 1C SOAP:
@@ -172,8 +172,8 @@ export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere
  * - Сервис - ?
  * - Услуга
  */
-export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | null =>
-  task && task !== null
+export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | undefined =>
+  Object.keys(task).length > 0
     ? {
         where: whereService(where),
         code: task['Код'],
@@ -181,14 +181,14 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
         body: clearHtml(task['Описание']),
         smallBody: clearHtml(task['Описание'], SMALL_BODY_STRING),
         status: task['Статус'],
-        createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? null : new Date(task['Дата']),
+        createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? undefined : new Date(task['Дата']),
         timeoutDate:
           task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z'
-            ? null
+            ? undefined
             : new Date(task['СрокИсполнения']),
         endDate:
           task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z'
-            ? null
+            ? undefined
             : new Date(task['ДатаЗавершения']),
         executorUser: task['ТекущийИсполнитель'],
         initiatorUser: task['Инициатор'],
@@ -199,7 +199,7 @@ export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | nu
         files: filesSOAP(task['СписокФайлов']?.['Файл'], where),
         comments: authorCommentsSOAP(task['КомментарииЗадачи'], where),
       }
-    : null;
+    : undefined;
 
 /** *******************************************************************************************
  * OSTicket
@@ -236,8 +236,8 @@ export const filesOST = (files: Record<string, any>, where: TkWhere): TkFile[] =
  * - group - ?
  * - avatar
  */
-export const serviceOST = (service: Record<string, any>, where: TkWhere): TkService | null =>
-  service && service !== null
+export const serviceOST = (service: Record<string, any>, where: TkWhere): TkService | undefined =>
+  Object.keys(service).length > 0
     ? {
         where: whereService(where),
         code: service['code'],
@@ -245,7 +245,7 @@ export const serviceOST = (service: Record<string, any>, where: TkWhere): TkServ
         description: service['description'],
         avatar: service['avatar'],
       }
-    : null;
+    : undefined;
 
 /**
  * Сервис в представлении OSTicket:
@@ -255,8 +255,8 @@ export const serviceOST = (service: Record<string, any>, where: TkWhere): TkServ
  * - group - ?
  * - avatar
  */
-export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute | null =>
-  route && route !== null
+export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute | undefined =>
+  route
     ? {
         where: whereService(where),
         code: route['code'],
@@ -265,17 +265,17 @@ export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute |
         avatar: route['avatar'],
         services: route['services']?.map((service: Record<string, any>) => serviceOST(service, where)),
       }
-    : null;
+    : undefined;
 
 /**
  * Описание в представлении OSTicket:
  */
 export const commentsOST = (comments: Record<string, any>, where: TkWhere, task: string): TkAuthorComments =>
-  comments && comments !== null && Array.isArray(comments)
+  comments && Array.isArray(comments)
     ? comments.reduce(
-        (acc: TkAuthorComments, comment: Record<string, any>) => {
+        (accumulator: TkAuthorComments, comment: Record<string, any>) => {
           return {
-            users: acc.users?.concat([
+            users: accumulator.users?.concat([
               {
                 where: whereService(where),
                 name: comment['user'],
@@ -283,7 +283,7 @@ export const commentsOST = (comments: Record<string, any>, where: TkWhere, task:
                 email: comment['email'],
               },
             ]),
-            comments: acc.comments?.concat([
+            comments: accumulator.comments?.concat([
               {
                 where: whereService(where),
                 date: new Date(comment['created']),
@@ -306,7 +306,7 @@ export const commentsOST = (comments: Record<string, any>, where: TkWhere, task:
         },
         { users: [], comments: [] },
       )
-    : null;
+    : undefined;
 
 /**
  * Задача в представлении OSTicket:
@@ -323,8 +323,8 @@ export const commentsOST = (comments: Record<string, any>, where: TkWhere, task:
  * - Сервис - ?
  * - Услуга
  */
-export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | null =>
-  task && task !== null
+export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | undefined =>
+  Object.keys(task).length > 0
     ? {
         where: whereService(where),
         code: task['number'],
@@ -337,7 +337,7 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
         status: task['status_name'],
         createdDate: new Date(task['created']),
         timeoutDate: new Date(task['dateOfCompletion']),
-        endDate: null,
+        endDate: undefined,
         initiatorUser: {
           where: whereService(where),
           name: task['owner_user_name'],
@@ -354,7 +354,7 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
           department: task['assignee_dept'],
           telephone: task['assignee_phone'],
         },
-        route: null,
+        route: undefined,
         service: {
           where: whereService(where),
           code: '',
@@ -362,10 +362,10 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
         },
         availableAction: undefined,
         availableStages: undefined,
-        files: null,
+        files: undefined,
         comments: commentsOST(task['description'], where, task['number']),
       }
-    : null;
+    : undefined;
 
 /**
  * Новая задача в представлении OSTicket:
@@ -377,8 +377,8 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | nul
  * - status - Статус
  * - creationDateTime - Дата создания
  */
-export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | null =>
-  task && task !== null
+export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | undefined =>
+  Object.keys(task).length > 0
     ? {
         where: whereService(where),
         // id: task['ticket'],
@@ -390,4 +390,4 @@ export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | n
         status: task['status'] || 'New',
         createdDate: new Date(task['creationDateTime']),
       }
-    : null;
+    : undefined;

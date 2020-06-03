@@ -58,12 +58,12 @@ export interface UserSettingsTaskFavoriteService extends Omit<TkService, 'name'>
 export interface UserSettingsTaskFavorite extends Omit<TkRoute, 'name' | 'services'> {
   name?: string;
   priority?: number;
-  service?: UserSettingsTaskFavoriteService | null;
+  service?: UserSettingsTaskFavoriteService;
 }
 
 interface UserSettingsTask {
   status?: string | null;
-  favorites: UserSettingsTaskFavorite[] | null;
+  favorites?: UserSettingsTaskFavorite[];
 }
 
 export interface UserSettings {

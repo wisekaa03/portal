@@ -47,7 +47,7 @@ export class TicketsService {
    * @param {string} password The Password
    * @returns {TkRoutes[]} Services
    */
-  TicketsRoutes = async (user: User, password: string): Promise<TkRoutes[]> => {
+  TicketsRoutes = async (user: User, password: string): Promise<TkRoutes> => {
     const promises: Promise<TkRoutes>[] = [];
 
     /* 1C SOAP */
@@ -59,7 +59,7 @@ export class TicketsService {
       } as SoapAuthentication;
 
       const client = await this.soapService.connect(authentication).catch((error: Error) => {
-        promises.push(Promise.resolve({ error: error.toString() }));
+        promises.push(Promise.resolve({ errors: [error.toString()] }));
       });
 
       if (client) {
@@ -69,22 +69,19 @@ export class TicketsService {
             .then((result: any) => {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
-              if (result?.[0]?.['return']) {
-                if (typeof result[0]['return']['Сервис'] === 'object') {
-                  const routes = result[0]['return']['Сервис'];
+              if (Object.keys(result?.[0]?.['return']).length > 0) {
+                const routes = result[0]['return']['Сервис'];
 
-                  if (Array.isArray(routes)) {
-                    return {
-                      routes: [...routes.map((route: Record<string, any>) => routeSOAP(route, TkWhere.SOAP1C))],
-                    };
-                  }
+                if (Array.isArray(routes)) {
+                  return {
+                    routes: routes.map((route: Record<string, any>) => routeSOAP(route, TkWhere.SOAP1C)),
+                  };
                 }
-                return {};
               }
 
               this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
               return {
-                error: 'Not connected to SOAP',
+                errors: ['Not connected to SOAP'],
               };
             })
             .catch((error: SoapFault) => {
@@ -92,7 +89,7 @@ export class TicketsService {
               this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { error: new SoapError(error) };
+              return { errors: [new SoapError(error).toString()] };
             }),
         );
       }
@@ -104,54 +101,69 @@ export class TicketsService {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
         Object.keys(OSTicketURL).forEach((where) => {
-          const osTicketService = this.httpService
+          const whereKey = whereService(where);
+
+          switch (whereKey) {
+            case TkWhere.OSTaudit:
+            case TkWhere.OSTmedia:
+              break;
+            case TkWhere.SOAP1C:
+            case TkWhere.Default:
+            default:
+              throw new Error('Can not use a default route');
+          }
+
+          const osTicket = this.httpService
             .post<RecordsOST>(`${OSTicketURL[where]}?req=routes`, {})
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
-                if (typeof response.data === 'object') {
-                  return {
-                    routes: [...response.data?.routes?.map((route) => routesOST(route, where as TkWhere))],
-                  };
+                if (Object.keys(response.data).length > 0) {
+                  if (Array.isArray(response.data.routes)) {
+                    return {
+                      routes: response.data.routes.map((route) => routesOST(route, whereKey)),
+                    } as TkRoutes;
+                  }
                 }
 
-                return { error: `Not found the OSTicket data in "${where}"` };
+                return { errors: [`Not found the OSTicket data in "${where}"`] };
               }
 
-              return { error: response.statusText };
+              return { errors: [response.statusText] };
             });
-          promises.push(osTicketService);
+
+          promises.push(osTicket);
         });
       } catch (error) {
         this.logger.error(error);
       }
     }
 
-    const prom = await Promise.allSettled(promises).then((values) =>
-      values.map((promise) =>
-        promise.status === 'fulfilled' ? promise.value : ({ error: promise.reason?.message } as TkRoutes),
-      ),
-    );
-
-    // prom.then((value: (TkRoutes | null)[]) => {
-    //   if (value) {
-    //     const rt = value.reduce((acc, val, cur, arr) => {
-    //       if (val.error) {
-    //         return [...acc, { error: val.error }];
-    //       }
-
-    //       val.routes.reduce();
-
-    //       return [...acc, val];
-    //     }, [] as TkRoutes[]);
-
-    //     return rt;
-    //   }
-
-    //   return null;
-    // });
-
-    return prom;
+    return Promise.allSettled(promises)
+      .then((values) =>
+        values.map((promise) =>
+          promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] },
+        ),
+      )
+      .then((routes: TkRoutes[]) => {
+        return routes.reduce(
+          (accumulator: TkRoutes, current: TkRoutes) => {
+            if (Array.isArray(current.routes) && current.routes.length > 0) {
+              accumulator.routes = accumulator.routes
+                ?.concat(current.routes)
+                .sort((a, b) => a.name.localeCompare(b.name));
+            }
+            if (Array.isArray(current.errors) && current.errors.length > 0) {
+              accumulator.errors = accumulator.errors?.concat(current.errors);
+            }
+            return accumulator;
+          },
+          { routes: [], errors: [] },
+        );
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
   };
 
   /**
@@ -165,7 +177,7 @@ export class TicketsService {
    * @param {string} Find The find string
    * @returns {TkTasks[]}
    */
-  TicketsTasks = async (user: User, password: string, Status: string, Find: string): Promise<TkTasks[]> => {
+  TicketsTasks = async (user: User, password: string, Status: string, Find: string): Promise<TkTasks> => {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
@@ -177,7 +189,7 @@ export class TicketsService {
       };
 
       const client = await this.soapService.connect(authentication).catch((error) => {
-        promises.push(Promise.resolve({ error: JSON.stringify(error) }));
+        promises.push(Promise.resolve({ errors: [JSON.stringify(error)] }));
       });
 
       if (client) {
@@ -198,26 +210,23 @@ export class TicketsService {
             .then((result: any) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
-              if (result?.[0]?.['return']) {
-                if (typeof result[0]['return'] === 'object') {
-                  const users = Array.isArray(result[0]['return']?.['Пользователи']?.['Пользователь'])
-                    ? result[0]['return']['Пользователи']['Пользователь']
-                    : [result[0]['return']?.['Пользователи']?.['Пользователь']];
-                  const tasks = Array.isArray(result[0]['return']?.['Задания']?.['Задание'])
-                    ? result[0]['return']['Задания']['Задание']
-                    : [result[0]['return']?.['Задания']?.['Задание']];
+              if (Object.keys(result?.[0]?.['return']).length > 0) {
+                const users = Array.isArray(result[0]['return']?.['Пользователи']?.['Пользователь'])
+                  ? result[0]['return']['Пользователи']['Пользователь']
+                  : [result[0]['return']?.['Пользователи']?.['Пользователь']];
+                const tasks = Array.isArray(result[0]['return']?.['Задания']?.['Задание'])
+                  ? result[0]['return']['Задания']['Задание']
+                  : [result[0]['return']?.['Задания']?.['Задание']];
 
-                  return {
-                    users: [...users.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C))],
-                    tasks: [...tasks.map((task: any) => taskSOAP(task, TkWhere.SOAP1C))],
-                  };
-                }
-                return {};
+                return {
+                  users: users.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C)),
+                  tasks: tasks.map((task: Record<string, any>) => taskSOAP(task, TkWhere.SOAP1C)),
+                };
               }
 
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               return {
-                error: 'Not connected to SOAP',
+                errors: ['Not connected to SOAP'],
               };
             })
             .catch((error: SoapFault) => {
@@ -225,7 +234,7 @@ export class TicketsService {
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { error: new SoapError(error) };
+              return { errors: [new SoapError(error).toString()] };
             }),
         );
       }
@@ -250,7 +259,19 @@ export class TicketsService {
         } as TkUserOST;
 
         Object.keys(OSTicketURL).forEach((where) => {
-          const osTickets = this.httpService
+          const whereKey = whereService(where);
+
+          switch (whereKey) {
+            case TkWhere.OSTaudit:
+            case TkWhere.OSTmedia:
+              break;
+            case TkWhere.SOAP1C:
+            case TkWhere.Default:
+            default:
+              throw new Error('Can not use a default route');
+          }
+
+          const osTicket = this.httpService
             .post<RecordsOST>(`${OSTicketURL[where]}?req=tasks`, {
               login: user.username,
               user: JSON.stringify(userOST),
@@ -261,25 +282,48 @@ export class TicketsService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    tasks: [...response.data?.tasks?.map((task) => taskOST(task, where as TkWhere))],
-                  };
+                    tasks: response.data?.tasks?.map((task) => taskOST(task, where as TkWhere)),
+                  } as TkTasks;
                 }
 
-                return { error: `Not found the OSTicket data in ${where}` };
+                return { errors: [`Not found the OSTicket data in ${where}`] };
               }
 
-              return { error: response.statusText };
+              return { errors: [response.statusText] };
             });
-          promises.push(osTickets);
+          promises.push(osTicket);
         });
       } catch (error) {
         this.logger.error(error);
       }
     }
 
-    return Promise.allSettled(promises).then((values) =>
-      values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { error: promise.reason?.message })),
-    );
+    return Promise.allSettled(promises)
+      .then((values) =>
+        values.map((promise) =>
+          promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] },
+        ),
+      )
+      .then((routes: TkTasks[]) => {
+        return routes.reduce(
+          (accumulator: TkTasks, current: TkTasks) => {
+            if (Array.isArray(current.tasks) && current.tasks.length > 0) {
+              accumulator.tasks = accumulator.tasks?.concat(current.tasks);
+            }
+            if (Array.isArray(current.users) && current.users.length > 0) {
+              accumulator.users = accumulator.users?.concat(current.users);
+            }
+            if (Array.isArray(current.errors) && current.errors.length > 0) {
+              accumulator.errors = accumulator.errors?.concat(current.errors);
+            }
+            return accumulator;
+          },
+          { tasks: [], users: [], errors: [] } as TkTasks,
+        );
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
   };
 
   /**
@@ -298,7 +342,7 @@ export class TicketsService {
     password: string,
     task: TkTaskNewInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<TkTaskNew | undefined | null> => {
+  ): Promise<TkTaskNew | undefined> => {
     const Attaches: AttachesSOAP = { Вложение: [] };
 
     if (attachments) {
@@ -367,51 +411,50 @@ export class TicketsService {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(task.where));
+          if (whereKey) {
+            const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+            const userOST = {
+              company: user.profile.company,
+              email: user.profile.email,
+              fio,
+              function: user.profile.title,
+              manager: '',
+              phone: user.profile.telephone,
+              phone_ext: user.profile.workPhone,
+              subdivision: user.profile.department,
+              Аватар: user.profile.thumbnailPhoto,
+            } as TkUserOST;
 
-          const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
-          const userOST = {
-            company: user.profile.company,
-            email: user.profile.email,
-            fio,
-            function: user.profile.title,
-            manager: '',
-            phone: user.profile.telephone,
-            phone_ext: user.profile.workPhone,
-            subdivision: user.profile.department,
-            Аватар: user.profile.thumbnailPhoto,
-          } as TkUserOST;
-
-          return Object.keys(OSTicketURL)
-            .filter((where) => whereService(where) === whereService(task.where))
-            .map((where) =>
-              this.httpService
-                .post<RecordsOST>(`${OSTicketURL[where]}?req=new`, {
-                  user: JSON.stringify(userOST),
-                  msg: JSON.stringify({
-                    title: task.subject,
-                    descr: task.body,
-                    route: task.route,
-                    service: task.service,
-                    executor: task.executorUser,
-                  }),
-                  files: JSON.stringify(Attaches),
-                })
-                .toPromise()
-                .then((response) => {
-                  if (response.status === 200) {
-                    if (typeof response.data === 'object') {
-                      if (typeof response.data.error === 'string') {
-                        throw new TypeError(response.data.error);
-                      } else {
-                        return newOST(response.data, task.where);
-                      }
-                    }
-                    throw new Error(`Not found the OSTicket data in "${task.where}"`);
-                  }
-                  throw new Error(response.statusText);
+            return this.httpService
+              .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=new`, {
+                user: JSON.stringify(userOST),
+                msg: JSON.stringify({
+                  title: task.subject,
+                  descr: task.body,
+                  route: task.route,
+                  service: task.service,
+                  executor: task.executorUser,
                 }),
-            )
-            .pop();
+                files: JSON.stringify(Attaches),
+              })
+              .toPromise()
+              .then((response) => {
+                if (response.status === 200) {
+                  if (Object.keys(response.data).length > 0) {
+                    if (typeof response.data.error === 'string') {
+                      throw new TypeError(response.data.error);
+                    } else {
+                      return newOST(response.data, task.where);
+                    }
+                  }
+
+                  throw new Error(`Not found the OSTicket data in "${whereKey}"`);
+                }
+
+                throw new Error(response.statusText);
+              });
+          }
         } catch (error) {
           this.logger.error(error);
 

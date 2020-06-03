@@ -68,8 +68,8 @@ type TkTask {
   createdDate: Date
   endDate: Date
   timeoutDate: Date
-  initiatorUser: TkUser
-  executorUser: TkUser
+  initiatorUser: String
+  executorUser: String
   availableAction: String
   availableStages: String
   files: [TkFile!]
@@ -117,22 +117,22 @@ input TkTasksInput {
 
 type TkRoutes {
   routes: [TkRoute]
-  error: String
+  errors: [String]
 }
 
 type TkTasks {
   users: [TkUser]
   tasks: [TkTask]
-  error: String
+  errors: [String]
 }
 
 type Query {
-  TicketsRoutes: [TkRoutes!]
-  TicketsTasks(task: TkTasksInput): [TkTasks!]
+  TicketsRoutes: TkRoutes
+  TicketsTasks(task: TkTasksInput): TkTasks
   TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask
 }
 
 type Mutation {
-  TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew!
+  TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew
   TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTask
 }

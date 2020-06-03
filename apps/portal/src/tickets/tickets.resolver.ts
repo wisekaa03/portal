@@ -30,12 +30,12 @@ export class TicketsResolver {
    * Tickets: get array of routes and services
    *
    * @async
-   * @returns {TkRoutes[]}
+   * @returns {TkRoutes}
    * @throws {UnauthorizedException | HttpException}
    */
   @Query('TicketsRoutes')
   @UseGuards(GqlAuthGuard)
-  async TicketsRoutes(@CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<TkRoutes[]> {
+  async TicketsRoutes(@CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<TkRoutes> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -50,7 +50,7 @@ export class TicketsResolver {
    *
    * @async
    * @param {string} status Status
-   * @returns {TkTasks[]}
+   * @returns {TkTasks}
    * @throws {UnauthorizedException | HttpException}
    */
   @Query('TicketsTasks')
@@ -60,7 +60,7 @@ export class TicketsResolver {
     @Args('find') find: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTasks[]> {
+  ): Promise<TkTasks> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -87,7 +87,7 @@ export class TicketsResolver {
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTaskNew | undefined | null> {
+  ): Promise<TkTaskNew | undefined> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
