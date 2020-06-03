@@ -51,7 +51,7 @@ export class TicketsService {
     const promises: Promise<TkRoutes>[] = [];
 
     /* 1C SOAP */
-    if (!!this.configService.get<string>('SOAP_URL')) {
+    if (this.configService.get<string>('SOAP_URL')) {
       const authentication = {
         username: user?.username,
         password,
@@ -92,14 +92,14 @@ export class TicketsService {
               this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { error: SoapError(error) };
+              return { error: new SoapError(error) };
             }),
         );
       }
     }
 
     /* OSTicket service */
-    if (!!this.configService.get<string>('OSTICKET_URL')) {
+    if (this.configService.get<string>('OSTICKET_URL')) {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
@@ -127,10 +127,13 @@ export class TicketsService {
       }
     }
 
-    return Promise.allSettled(promises).then((values) =>
-      values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { error: promise.reason?.message })),
+    const prom = await Promise.allSettled(promises).then((values) =>
+      values.map((promise) =>
+        promise.status === 'fulfilled' ? promise.value : ({ error: promise.reason?.message } as TkRoutes),
+      ),
     );
-    // .then((value?: TkRoutes[]) => {
+
+    // prom.then((value: (TkRoutes | null)[]) => {
     //   if (value) {
     //     const rt = value.reduce((acc, val, cur, arr) => {
     //       if (val.error) {
@@ -147,6 +150,8 @@ export class TicketsService {
 
     //   return null;
     // });
+
+    return prom;
   };
 
   /**
@@ -164,7 +169,7 @@ export class TicketsService {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
-    if (!!this.configService.get<string>('SOAP_URL')) {
+    if (this.configService.get<string>('SOAP_URL')) {
       const authentication: SoapAuthentication = {
         username: user?.username,
         password,
@@ -220,14 +225,14 @@ export class TicketsService {
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { error: SoapError(error) };
+              return { error: new SoapError(error) };
             }),
         );
       }
     }
 
     /* OSTicket service */
-    if (!!this.configService.get<string>('OSTICKET_URL')) {
+    if (this.configService.get<string>('OSTICKET_URL')) {
       try {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
@@ -331,17 +336,17 @@ export class TicketsService {
         .then((result: any) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
-          const ret = result?.[0]?.['return'];
-          if (ret && typeof ret === 'object') {
+          const returnValue = result?.[0]?.['return'];
+          if (returnValue && typeof returnValue === 'object') {
             return {
               where: TkWhere.SOAP1C,
-              code: ret['Код'],
-              subject: ret['Наименование'],
-              route: ret['ИмяСервиса'],
-              service: ret['ИмяУслуги'],
-              organization: ret['Организация'],
-              status: ret['ТекущийСтатус'],
-              createdDate: new Date(ret['ВремяСоздания']),
+              code: returnValue['Код'],
+              subject: returnValue['Наименование'],
+              route: returnValue['ИмяСервиса'],
+              service: returnValue['ИмяУслуги'],
+              organization: returnValue['Организация'],
+              status: returnValue['ТекущийСтатус'],
+              createdDate: new Date(returnValue['ВремяСоздания']),
             } as TkTaskNew;
           }
 
@@ -353,13 +358,13 @@ export class TicketsService {
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw SoapError(error);
+          throw new SoapError(error);
         });
     }
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
-      if (!!this.configService.get<string>('OSTICKET_URL')) {
+      if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
@@ -396,7 +401,7 @@ export class TicketsService {
                   if (response.status === 200) {
                     if (typeof response.data === 'object') {
                       if (typeof response.data.error === 'string') {
-                        throw new Error(response.data.error);
+                        throw new TypeError(response.data.error);
                       } else {
                         return newOST(response.data, task.where);
                       }
@@ -457,7 +462,7 @@ export class TicketsService {
         ).catch((error: SoapFault) => {
           this.logger.error(error);
 
-          throw SoapError(error);
+          throw new SoapError(error);
         });
       }
 
@@ -486,7 +491,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw SoapError(error);
+          throw new SoapError(error);
         });
     }
 
@@ -546,13 +551,13 @@ export class TicketsService {
           this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw SoapError(error);
+          throw new SoapError(error);
         });
     }
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
-      if (!!this.configService.get<string>('OSTICKET_URL')) {
+      if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
@@ -583,7 +588,7 @@ export class TicketsService {
                   if (response.status === 200) {
                     if (typeof response.data === 'object') {
                       if (typeof response.data.error === 'string') {
-                        throw new Error(response.data.error);
+                        throw new TypeError(response.data.error);
                       } else {
                         return taskOST(response.data?.description, task.where);
                       }

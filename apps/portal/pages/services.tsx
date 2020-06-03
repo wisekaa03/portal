@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useState, useEffect, useMemo, useRef, useCallback, useContext, Component } from 'react';
@@ -99,7 +98,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
     if (subject.length < MINIMAL_SUBJECT_LENGTH) {
       snackbarUtils.show(t('services:errors.smallSubject'));
-      subjectRef.current!.focus();
+      subjectRef.current && subjectRef.current.focus();
 
       return;
     }
@@ -136,7 +135,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
       const { where, route: routeCode, service: serviceCode } = query;
       if (where && routeCode) {
         const route = routes.reduce(
-          (acc, val) => ({ ...acc, ...val.routes?.find((v) => v && v.code === routeCode && v.where === where) }),
+          (accumulator, value) => ({
+            ...accumulator,
+            ...value.routes?.find((v) => v && v.code === routeCode && v.where === where),
+          }),
           {} as TkRoute,
         );
         if (typeof route === 'object' && route !== null) {
@@ -156,12 +158,12 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   useEffect(() => {
     if (!loadingRoutes && !errorRoutes && dataRoutes?.TicketsRoutes) {
       setRoutes(
-        dataRoutes.TicketsRoutes?.reduce((acc, srv) => {
+        dataRoutes.TicketsRoutes?.reduce((accumulator, srv) => {
           if (srv.error) {
             snackbarUtils.error(srv.error);
-            return acc;
+            return accumulator;
           }
-          return srv ? [...acc, srv] : acc;
+          return srv ? [...accumulator, srv] : accumulator;
         }, [] as TkRoutes[]),
       );
     }
@@ -189,13 +191,13 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const allRoutes = useMemo<(TkRoute | null)[]>(() => {
     return Array.isArray(routes) && routes.length > 0
-      ? routes.reduce((acc: TkRoute[], cur: TkRoutes) => [...acc, ...(cur.routes || [])], [])
+      ? routes.reduce((accumulator: TkRoute[], current: TkRoutes) => [...accumulator, ...(current.routes || [])], [])
       : [];
   }, [routes]);
 
   const allFavorites = useMemo<UserSettingsTaskFavorite[]>(() => {
     return Array.isArray(favorites) && favorites.length > 0
-      ? allRoutes.reduce((acc, rout) => {
+      ? allRoutes.reduce((accumulator, rout) => {
           if (rout) {
             const rt =
               rout.services.reduce((cum, service) => {
@@ -226,10 +228,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
                 return cum;
               }, [] as UserSettingsTaskFavoriteService[]) || [];
 
-            return [...acc, ...rt];
+            return [...accumulator, ...rt];
           }
 
-          return acc;
+          return accumulator;
         }, [] as UserSettingsTaskFavorite[])
       : [];
   }, [allRoutes, favorites]);
