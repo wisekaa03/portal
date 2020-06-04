@@ -1,4 +1,5 @@
 /** @format */
+/* eslint @typescript-eslint/ban-types:0, @typescript-eslint/no-explicit-any:0 */
 
 declare let __DEV__: boolean;
 declare let __PRODUCTION__: boolean;
@@ -18,6 +19,12 @@ declare namespace NodeJS {
     __PRODUCTION__?: boolean;
     __TEST__?: boolean;
   }
+}
+
+declare module '*.woff2' {
+  const content: any;
+  const className: any;
+  export = content;
 }
 
 declare module '*.svg' {

@@ -2,8 +2,29 @@
 
 import { fade, createMuiTheme } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
+import {
+  RobotoLightCyr,
+  RobotoLightItalicLatin,
+  RobotoLightLatin,
+  RobotoLightItalicCyr,
+  RobotoRegularCyr,
+  RobotoBoldCyr,
+  RobotoThinCyr,
+  RobotoItalicCyr,
+  RobotoRegularLatin,
+  RobotoBoldLatin,
+  RobotoThinLatin,
+  RobotoThinItalicCyr,
+  RobotoBoldItalicCyr,
+  RobotoThinItalicLatin,
+  RobotoBoldItalicLatin,
+  RobotoItalicLatin,
+} from './fonts';
 
 const theme = createMuiTheme({
+  typography: {
+    fontFamily: ['Roboto', 'Arial'].join(','),
+  },
   palette: {
     primary: {
       main: '#2c4373',
@@ -39,6 +60,29 @@ const theme = createMuiTheme({
 });
 
 theme.overrides = {
+  MuiCssBaseline: {
+    '@global': {
+      '@font-face': [
+        RobotoItalicCyr,
+        RobotoRegularCyr,
+        RobotoBoldItalicCyr,
+        RobotoBoldCyr,
+        RobotoLightItalicCyr,
+        RobotoLightCyr,
+        RobotoThinItalicCyr,
+        RobotoThinCyr,
+
+        RobotoItalicLatin,
+        RobotoRegularLatin,
+        RobotoBoldItalicLatin,
+        RobotoBoldLatin,
+        RobotoLightItalicLatin,
+        RobotoLightLatin,
+        RobotoThinItalicLatin,
+        RobotoThinLatin,
+      ],
+    },
+  },
   MuiTooltip: {
     tooltip: {
       color: '#000',

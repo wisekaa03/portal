@@ -89,6 +89,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <MaterialUI {...rest}>
         <Box display="flex" flexDirection="column" p={1}>
           <ProfileInfoComponent />
+          {/* <ProfileInfoComponent /> */}
           <ProfileTasksComponent
             loading={loadingTasks}
             tasks={tasks}

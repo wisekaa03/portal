@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React from 'react';
@@ -14,7 +13,6 @@ import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
-import 'typeface-roboto';
 import { SnackbarProvider } from 'notistack';
 // import url from 'url';
 //#endregion
@@ -28,7 +26,7 @@ import { appWithTranslation } from '@lib/i18n-client';
 // import Cookie from '@lib/cookie';
 // import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
-import { FIRST_PAGE, AUTH_PAGE, HIDDEN_PAGES } from '@lib/constants';
+import { AUTH_PAGE } from '@lib/constants';
 // import { getStorage } from '@lib/session-storage';
 //#endregion
 
@@ -42,29 +40,6 @@ const CurrentComponent: React.FC<{
   children: React.ReactNode;
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
-  // const redirectUrl = { pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } };
-
-  // if (__SERVER__) {
-  //   const { req, res }: { req?: any; res?: any } = ctx || {};
-  //   const isAuthPage = pathname.startsWith(AUTH_PAGE);
-  //   const userServer: User = req?.session?.passport?.user;
-
-  //   if (res) {
-  //     if (!userServer) {
-  //       if (!isAuthPage) {
-  //         res.status(401);
-  //         res.redirect(url.format(redirectUrl));
-
-  //         throw new UnauthorizedException();
-  //       }
-  //     } else if (isAuthPage || (!userServer.isAdmin && HIDDEN_PAGES.some((page) => pathname.startsWith(page)))) {
-  //       res.status(401);
-  //       res.redirect(FIRST_PAGE);
-  //     }
-  //   }
-  // } else if (!Cookie.get(ctx)?.[process.env.SESSION_NAME || 'session'] && !pathname.startsWith(AUTH_PAGE)) {
-  //   router.push(redirectUrl);
-  // }
 
   if (__SERVER__ || pathname.startsWith(AUTH_PAGE)) {
     return <ProfileContext.Provider value={context}>{children}</ProfileContext.Provider>;
@@ -86,7 +61,7 @@ class MainApp extends NextApp<ApolloAppProps> {
     // Remove the server-sie injected CSS
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
-      jssStyles.parentNode!.removeChild(jssStyles);
+      jssStyles.remove();
     }
 
     // Service worker
@@ -107,14 +82,14 @@ class MainApp extends NextApp<ApolloAppProps> {
 
     const ssrMatchMedia = (query: any): any => ({
       matches: mediaQuery.match(query, {
-        width: !!context.isMobile ? 0 : 1280,
+        width: context.isMobile ? 0 : 1280,
       }),
     });
 
     return (
       <ApolloProvider client={apolloClient}>
         <Head>
-          <title>Portal</title>
+          <title>Корпоративный портал</title>
         </Head>
         <ThemeProvider
           theme={{

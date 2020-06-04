@@ -180,7 +180,6 @@
     "subscriptions-transport-ws": "^0.9.16",
     "ts-node": "^8.10.2",
     "tsconfig-paths": "^3.9.0",
-    "typeface-roboto": "^0.0.75",
     "typeorm": "^0.2.25",
     "typeorm-graphql-pagination": "^1.0.0",
     "uuid": "^8.1.0"
