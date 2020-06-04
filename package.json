@@ -284,7 +284,7 @@
     "jest": "^26.0.1",
     "jest-svg-transformer": "^1.0.0",
     "jest-transform-stub": "^2.0.0",
-    "lint-staged": "^10.2.8",
+    "lint-staged": "^10.2.9",
     "lodash": "^4.17.15",
     "lqip-loader": "^2.2.0",
     "node-sass": "^4.14.1",
