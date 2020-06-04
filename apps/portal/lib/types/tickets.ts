@@ -94,6 +94,7 @@ export interface TkUser {
   company?: string;
   department?: string;
   division?: string;
+  manager?: string;
   title?: string;
 }
 

@@ -67,58 +67,6 @@ const PROFILE_FRAGMENT = gql`
   }
 `;
 
-const TICKETS_TASK_FRAGMENT = gql`
-  fragment TaskProps on TkTask {
-    where
-    id
-    code
-    subject
-    body
-    status
-    createdDate
-    endDate
-    timeoutDate
-    executorUser {
-      name
-      avatar
-      email
-      telephone
-      company
-      department
-      division
-      title
-    }
-    initiatorUser {
-      name
-      avatar
-      email
-      telephone
-      company
-      department
-      division
-      title
-    }
-    route {
-      code
-      name
-      description
-      avatar
-    }
-    service {
-      code
-      name
-      description
-      avatar
-    }
-    files {
-      code
-      name
-      ext
-      body
-    }
-  }
-`;
-
 export const CURRENT_USER = gql`
   query Me {
     me {
@@ -468,6 +416,57 @@ export const DELETE_FOLDER = gql`
  * Ticket
  */
 
+const TICKETS_USER_FRAGMENT = gql`
+  fragment TicketsUserProps on TkUser {
+    where
+    id
+    name
+    login
+    avatar
+    email
+    telephone
+    company
+    department
+    division
+    manager
+    title
+  }
+`;
+
+const TICKETS_TASK_FRAGMENT = gql`
+  fragment TicketsTaskProps on TkTask {
+    where
+    id
+    code
+    subject
+    body
+    status
+    createdDate
+    endDate
+    timeoutDate
+    executorUser
+    initiatorUser
+    route {
+      code
+      name
+      description
+      avatar
+    }
+    service {
+      code
+      name
+      description
+      avatar
+    }
+    files {
+      code
+      name
+      ext
+      body
+    }
+  }
+`;
+
 export const TICKETS_ROUTES = gql`
   query {
     TicketsRoutes {
@@ -493,41 +492,27 @@ export const TICKETS_ROUTES = gql`
 export const TICKETS_TASKS = gql`
   query TicketsTasks($status: String) {
     TicketsTasks(task: { status: $status }) {
+      users {
+        ...TicketsUserProps
+      }
       tasks {
-        where
-        code
-        type
-        subject
-        body
-        smallBody
-        status
-        route {
-          where
-          code
-          name
-          description
-          avatar
-        }
-        service {
-          where
-          code
-          name
-          description
-          avatar
-        }
-        createdDate
+        ...TicketsTaskProps
       }
       errors
     }
   }
+  ${TICKETS_USER_FRAGMENT}
+  ${TICKETS_TASK_FRAGMENT}
 `;
 
 export const TICKETS_TASK_DESCRIPTION = gql`
   query TicketsTaskDescription($where: String, $code: String) {
     TicketsTaskDescription(task: { where: $where, code: $code }) {
-      ...TaskProps
+      ...TicketsUserProps
+      ...TicketsTaskProps
     }
   }
+  ${TICKETS_USER_FRAGMENT}
   ${TICKETS_TASK_FRAGMENT}
 `;
 
@@ -549,8 +534,10 @@ export const TICKETS_TASK_NEW = gql`
 export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
     TicketsTaskEdit(task: $task, attachments: $attachments) {
-      ...TaskProps
+      ...TicketsUserProps
+      ...TicketsTaskProps
     }
   }
+  ${TICKETS_USER_FRAGMENT}
   ${TICKETS_TASK_FRAGMENT}
 `;
