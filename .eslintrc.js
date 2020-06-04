@@ -113,6 +113,12 @@ module.exports = {
           props: {
             properties: false,
           },
+          ctx: {
+            context: false,
+          },
+          ext: {
+            extension: false,
+          },
         },
       },
     ],

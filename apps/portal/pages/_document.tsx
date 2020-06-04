@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React from 'react';
@@ -54,7 +53,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
         {/* nonce={nonce} */}
         <Head>
           <meta charSet="utf-8" />
-          <meta name="Description" content="Портал" />
+          <meta name="Description" content="Корпоративный портал" />
           {/* TODO: временно запрещаем индексацию */}
           <meta name="robots" content="noindex" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
@@ -84,7 +83,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
 
     // const nonce = res && (res as any).locals && (res as any).locals.nonce;
 
-    const lng = ctx.currentLanguage || lngFromReq(req!);
+    const lng = ctx.currentLanguage || lngFromReq(req);
     const currentLanguage = lng || nextI18next.i18n.language || nextI18next.config.defaultLanguage;
 
     return {

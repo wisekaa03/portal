@@ -50,7 +50,7 @@ export const MaterialUI: FC = ({ children }) => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(
     !isMobile && !ifModal && !isCollapse && (drawer === undefined || drawer === null ? lgUp : drawer),
   );
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
 
   const [userSettings] = useMutation(USER_SETTINGS);
 
@@ -89,11 +89,11 @@ export const MaterialUI: FC = ({ children }) => {
   };
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorEl(event.currentTarget);
+    setAnchorElement(event.currentTarget);
   };
 
   const handlePopoverClose = (): void => {
-    setAnchorEl(null);
+    setAnchorElement(null);
   };
 
   useEffect(() => {
@@ -111,8 +111,8 @@ export const MaterialUI: FC = ({ children }) => {
   return (
     <Box display="flex" flexDirection="column" style={{ height: '100vh' }}>
       <AppBarComponent
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
+        open={Boolean(anchorElement)}
+        anchorEl={anchorElement}
         handleDrawerOpen={handleDrawerOpen}
         handlePopoverOpen={handlePopoverOpen}
         handlePopoverClose={handlePopoverClose}

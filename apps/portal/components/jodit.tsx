@@ -35,6 +35,9 @@ const config = {
   sourceEditor: 'area',
   placeholder: 'Подробное описание',
   // TODO: ,image,file
+  style: {
+    font: '18px "Roboto", "Arial", "Helvetica"',
+  },
   buttons:
     'eraser,|,align,outdent,indent,|,ul,ol,|,font,fontsize,brush,paragraph,|,table,link,|,' +
     'undo,redo,cut,copy,|,hr,symbol,print,source',
@@ -49,7 +52,7 @@ interface JoditEditorComponentProps {
 
 const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorComponentProps> = (
   { value, onBlur, disabled },
-  reference,
+  ref,
 ) => (
   // TODO: не поддерживает ref WTF???
   <JoditReact
