@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
       'cursor': 'pointer',
       'color': '#484848',
       '&:hover:not($active)': {
-        backgroundColor: '#E9F2F5',
+        'backgroundColor': '#E9F2F5',
+        '-webkit-box-shadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
+        '-moz-box-shadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
+        'boxShadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
       },
     },
     active: {
@@ -127,10 +130,12 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
       Array.isArray(route.services) && route.services.length > 0
         ? route.services.reduce(
             // eslint-disable-next-line no-confusing-arrow
-            (acc, srv) =>
-              !srv || (!active && srv?.name === 'Прочее') || acc.reduce((a, v) => `${a}${v.name}`, '').length > 150
-                ? acc
-                : [...acc, srv],
+            (accumulator, srv) =>
+              !srv ||
+              (!active && srv?.name === 'Прочее') ||
+              accumulator.reduce((a, v) => `${a}${v.name}`, '').length > 150
+                ? accumulator
+                : [...accumulator, srv],
             [] as TkService[],
           )
         : [],
@@ -180,20 +185,20 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
           </Typography>
         </Box>
         <Box className={classes.description}>
-          {allServices.map((cur: TkService) => (
+          {allServices.map((current: TkService) => (
             <Link
-              key={`${route.where}-${route.code}-${cur.code}`}
+              key={`${route.where}-${route.code}-${current.code}`}
               href={{
                 pathname,
-                query: { where: route.where, route: route.code, service: cur.code },
+                query: { where: route.where, route: route.code, service: current.code },
               }}
-              as={`${pathname}/${route.where}/${route.code}/${cur.code}`}
+              as={`${pathname}/${route.where}/${route.code}/${current.code}`}
               passHref
             >
-              <a className={clsx(classes.a, classes.comma)}>{cur.name}</a>
+              <a className={clsx(classes.a, classes.comma)}>{current.name}</a>
             </Link>
           ))}
-          {route.services.length !== allServices.length && (
+          {Array.isArray(route.services) && route.services.length !== allServices.length && (
             <Link
               key={`m-${route.where}-${route.code}`}
               href={{

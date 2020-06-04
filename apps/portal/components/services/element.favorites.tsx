@@ -43,9 +43,10 @@ const useStyles = makeStyles((theme: Theme) =>
       'width': 'max-content',
       'cursor': 'pointer',
       'color': '#484848',
-      '&:hover:not($active)': {
-        backgroundColor: '#E9F2F5',
-      },
+      'backgroundColor': '#E9F2F5',
+      '-webkit-box-shadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
+      '-moz-box-shadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
+      'boxShadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
     },
     active: {
       padding: 0,
