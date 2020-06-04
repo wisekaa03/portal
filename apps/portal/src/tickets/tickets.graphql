@@ -26,6 +26,7 @@ type TkUser {
   company: String
   department: String
   division: String
+  manager: String
   title: String
 }
 

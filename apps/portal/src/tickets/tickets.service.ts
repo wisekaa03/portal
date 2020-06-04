@@ -89,7 +89,7 @@ export class TicketsService {
               this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { errors: [new SoapError(error).toString()] };
+              return { errors: [`SOAP: ${new SoapError(error).toString()}`] };
             }),
         );
       }
@@ -209,18 +209,15 @@ export class TicketsService {
             })
             .then((result: any) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
+              const returnValue = result?.[0]?.['return'];
 
-              if (Object.keys(result?.[0]?.['return']).length > 0) {
-                const users = Array.isArray(result[0]['return']?.['Пользователи']?.['Пользователь'])
-                  ? result[0]['return']['Пользователи']['Пользователь']
-                  : [result[0]['return']?.['Пользователи']?.['Пользователь']];
-                const tasks = Array.isArray(result[0]['return']?.['Задания']?.['Задание'])
-                  ? result[0]['return']['Задания']['Задание']
-                  : [result[0]['return']?.['Задания']?.['Задание']];
+              if (returnValue && Object.keys(returnValue).length > 0) {
+                const users = returnValue['Пользователи']['Пользователь'];
+                const tasks = returnValue['Задания']['Задание'];
 
                 return {
-                  users: users.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C)),
-                  tasks: tasks.map((task: Record<string, any>) => taskSOAP(task, TkWhere.SOAP1C)),
+                  users: users?.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C)),
+                  tasks: tasks?.map((task: Record<string, any>) => taskSOAP(task, TkWhere.SOAP1C)),
                 };
               }
 
@@ -234,7 +231,7 @@ export class TicketsService {
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { errors: [new SoapError(error).toString()] };
+              return { errors: [`SOAP: ${new SoapError(error).toString()}`] };
             }),
         );
       }
@@ -282,7 +279,7 @@ export class TicketsService {
               if (response.status === 200) {
                 if (typeof response.data === 'object') {
                   return {
-                    tasks: response.data?.tasks?.map((task) => taskOST(task, where as TkWhere)),
+                    tasks: response.data?.tasks?.map((task) => taskOST(task, whereKey)),
                   } as TkTasks;
                 }
 
