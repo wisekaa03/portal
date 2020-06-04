@@ -1,5 +1,5 @@
 /** @format */
-/* eslint max-len:0 */
+/* eslint max-len:0, @typescript-eslint/no-explicit-any:0 */
 
 /* Roboto Thin Italic Fonts */
 import RobotoThinItalicCyrExtWoff2 from '@public/fonts/Roboto-ThinItalic-cyrillicext.woff2';
@@ -68,40 +68,36 @@ import RobotoBoldLatinWoff2 from '@public/fonts/Roboto-Bold-latin.woff2';
 
 /* Roboto Thin Italic Fonts */
 export const RobotoThinItalicCyrExt = {
-  '@font-face': {
-    fontFamily: 'Roboto',
-    fontStyle: 'italic',
-    fontWeight: '100',
-    fontDisplay: 'swap',
-    src: `
+  fontFamily: 'Roboto',
+  fontStyle: 'italic',
+  fontWeight: '100',
+  fontDisplay: 'swap' as any,
+  src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
       url(${RobotoThinItalicCyrExtWoff2})
       format('woff2')`,
-    unicodeRange: 'U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F',
-  },
+  unicodeRange: 'U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F',
 };
 
 export const RobotoThinItalicCyr = {
-  '@font-face': {
-    fontFamily: 'Roboto',
-    fontStyle: 'italic',
-    fontWeight: '100',
-    fontDisplay: 'swap',
-    src: `
+  fontFamily: 'Roboto',
+  fontStyle: 'italic',
+  fontWeight: '100',
+  fontDisplay: 'swap' as any,
+  src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
       url(${RobotoThinItalicCyrWoff2})
       format('woff2')`,
-    unicodeRange: 'U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116',
-  },
+  unicodeRange: 'U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116',
 };
 
 export const RobotoThinItalicGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
@@ -114,7 +110,7 @@ export const RobotoThinItalicGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
@@ -127,7 +123,7 @@ export const RobotoThinItalicVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
@@ -140,7 +136,7 @@ export const RobotoThinItalicLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
@@ -153,7 +149,7 @@ export const RobotoThinItalicLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin Italic'),
       local('Roboto-ThinItalic'),
@@ -168,7 +164,7 @@ export const RobotoLightItalicCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -181,7 +177,7 @@ export const RobotoLightItalicCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -194,7 +190,7 @@ export const RobotoLightItalicGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -207,7 +203,7 @@ export const RobotoLightItalicGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -220,7 +216,7 @@ export const RobotoLightItalicVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -233,7 +229,7 @@ export const RobotoLightItalicLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -246,7 +242,7 @@ export const RobotoLightItalicLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'italics',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light Italic'),
       local('Roboto-LightItalic'),
@@ -261,7 +257,7 @@ export const RobotoLightCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -274,7 +270,7 @@ export const RobotoLightCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -287,7 +283,7 @@ export const RobotoLightGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -300,7 +296,7 @@ export const RobotoLightGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -313,7 +309,7 @@ export const RobotoLightVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -326,7 +322,7 @@ export const RobotoLightLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -339,7 +335,7 @@ export const RobotoLightLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '300',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Light'),
       local('Roboto-Light'),
@@ -354,7 +350,7 @@ export const RobotoItalicCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -367,7 +363,7 @@ export const RobotoItalicCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -381,7 +377,7 @@ export const RobotoItalicGreekExt = {
     fontFamily: 'Roboto',
     fontStyle: 'italic',
     fontWeight: '400',
-    fontDisplay: 'swap',
+    fontDisplay: 'swap' as any,
     src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -395,7 +391,7 @@ export const RobotoItalicGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -408,7 +404,7 @@ export const RobotoItalicVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -421,7 +417,7 @@ export const RobotoItalicLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -434,7 +430,7 @@ export const RobotoItalicLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Italic'),
       local('Roboto-Italic'),
@@ -449,7 +445,7 @@ export const RobotoBoldItalicCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -462,7 +458,7 @@ export const RobotoBoldItalicCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -475,7 +471,7 @@ export const RobotoBoldItalicGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -488,7 +484,7 @@ export const RobotoBoldItalicGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -501,7 +497,7 @@ export const RobotoBoldItalicVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -514,7 +510,7 @@ export const RobotoBoldItalicLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -527,7 +523,7 @@ export const RobotoBoldItalicLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'italic',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold Italic'),
       local('Roboto-BoldItalic'),
@@ -542,7 +538,7 @@ export const RobotoThinCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -555,7 +551,7 @@ export const RobotoThinCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -568,7 +564,7 @@ export const RobotoThinGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -581,7 +577,7 @@ export const RobotoThinGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -594,7 +590,7 @@ export const RobotoThinVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -607,7 +603,7 @@ export const RobotoThinLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -620,7 +616,7 @@ export const RobotoThinLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '100',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Thin'),
       local('Roboto-Thin'),
@@ -635,7 +631,7 @@ export const RobotoRegularCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -648,7 +644,7 @@ export const RobotoRegularCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -661,7 +657,7 @@ export const RobotoRegularGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -674,7 +670,7 @@ export const RobotoRegularGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -687,7 +683,7 @@ export const RobotoRegularVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -700,7 +696,7 @@ export const RobotoRegularLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -713,7 +709,7 @@ export const RobotoRegularLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '400',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto'),
       local('Roboto-Regular'),
@@ -728,7 +724,7 @@ export const RobotoBoldCyrExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
@@ -741,7 +737,7 @@ export const RobotoBoldCyr = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
@@ -754,7 +750,7 @@ export const RobotoBoldGreekExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
@@ -767,7 +763,7 @@ export const RobotoBoldGreek = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
@@ -780,7 +776,7 @@ export const RobotoBoldVientamese = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
@@ -793,7 +789,7 @@ export const RobotoBoldLatinExt = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
@@ -806,7 +802,7 @@ export const RobotoBoldLatin = {
   fontFamily: 'Roboto',
   fontStyle: 'normal',
   fontWeight: '700',
-  fontDisplay: 'swap',
+  fontDisplay: 'swap' as any,
   src: `
       local('Roboto Bold'),
       local('Roboto-Bold'),
