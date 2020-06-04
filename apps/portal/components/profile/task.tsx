@@ -162,6 +162,10 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
 }))(({ classes, header, profile }: ProfileTaskInfoCardProps) => {
   const { t } = useTranslation();
 
+  if (typeof profile === 'string') {
+    return <></>;
+  }
+
   return (
     <Card className={classes.root}>
       <CardHeader

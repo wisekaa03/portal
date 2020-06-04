@@ -69,8 +69,8 @@ export interface TkTask {
   createdDate?: Date;
   timeoutDate?: Date;
   endDate?: Date;
-  executorUser?: TkUser;
-  initiatorUser?: TkUser;
+  executorUser?: string;
+  initiatorUser?: string;
   availableAction?: string;
   availableStages?: string;
   files?: TkFile[];

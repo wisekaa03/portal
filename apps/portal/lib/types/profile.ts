@@ -181,7 +181,8 @@ export interface ProfileTaskComponentProps {
 export interface ProfileTaskInfoCardProps {
   classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
   header: string;
-  profile: TkUser | null;
+  // TODO: !!! STRING THERE !!!
+  profile?: TkUser | string;
 }
 
 export interface ProfileEditComponentProps {
@@ -192,7 +193,7 @@ export interface ProfileEditComponentProps {
   profile?: Profile;
   onDrop: (_: any) => Promise<void>;
   handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBirthday: (_: Date | null) => void;
+  handleBirthday: (_?: Date) => void;
   handleSave: () => void;
 }
 
