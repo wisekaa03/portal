@@ -4,6 +4,7 @@
 import { ApolloQueryResult } from 'apollo-client';
 import { WithTranslation } from 'next-i18next';
 import { Order, Connection } from 'typeorm-graphql-pagination';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { StyleProps as StyleProperties, Data } from './common';
@@ -193,7 +194,7 @@ export interface ProfileEditComponentProps {
   profile?: Profile;
   onDrop: (_: any) => Promise<void>;
   handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBirthday: (_?: Date) => void;
+  handleBirthday: (date: MaterialUiPickersDate, value?: string | null | undefined) => void;
   handleSave: () => void;
 }
 

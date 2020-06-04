@@ -16,7 +16,7 @@ import {
 } from '@lib/types';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
 import { story, withTranslation } from './index.stories';
-import Services from './index';
+import Services from '.';
 
 const mockRoutes: TkRoute[] = [
   {
@@ -54,9 +54,9 @@ const mockRoutes: TkRoute[] = [
 ];
 
 const mockFavorites: UserSettingsTaskFavorite[] = [
-  { code: '1', where: TkWhere.SOAP1C, service: { where: TkWhere.SOAP1C, code: '0000001' }, priority: 1 },
-  { code: '3', where: TkWhere.SOAP1C, service: { where: TkWhere.SOAP1C, code: '0000002' }, priority: 0 },
-  { code: '2', where: TkWhere.SOAP1C, service: { where: TkWhere.SOAP1C, code: '0000003' }, priority: 2 },
+  { code: '1', where: TkWhere.SOAP1C, service: { code: '0000001' }, priority: 1 },
+  { code: '3', where: TkWhere.SOAP1C, service: { code: '0000002' }, priority: 0 },
+  { code: '2', where: TkWhere.SOAP1C, service: { code: '0000003' }, priority: 2 },
 ];
 
 const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };
@@ -64,13 +64,10 @@ const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };
 const Story: FC<ServicesWrapperProps> = withTranslation('services', Services);
 
 story.add('Default View', () => {
-  const mockData: TkRoutes[] = [
-    {
-      routes: [...mockRoutes],
-      error: text('Error DB', 'OS_TICKET'),
-    },
-  ];
-
+  const mockData: TkRoutes = {
+    routes: [...mockRoutes],
+    errors: [text('Error DB', 'OS_TICKET')],
+  };
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [task, setTask] = useState<ServicesTaskProps>(defaultTicketState);
   const [submitted, setSubmitted] = useState<boolean>(false);

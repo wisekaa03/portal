@@ -1,10 +1,10 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
@@ -62,7 +62,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      if (current && acceptedFiles.length) {
+      if (current && acceptedFiles.length > 0) {
         setThumbnail(acceptedFiles[0]);
         setCurrent({ ...current, thumbnailPhoto: (await resizeImage(acceptedFiles[0])) as string });
       }
@@ -70,9 +70,9 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     [current],
   );
 
-  const handleChange = (name: keyof Profile, val?: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const el: EventTarget & HTMLInputElement = e.target;
-    const value: string | boolean | number = val || (el.type === 'checkbox' ? el.checked : el.value);
+  const handleChange = (name: keyof Profile, value_: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const element: EventTarget & HTMLInputElement = event.target;
+    const value: string | boolean | number = value_ || (element.type === 'checkbox' ? element.checked : element.value);
 
     if (isAdmin && current && updated) {
       const result = name === 'gender' ? +value : value;
@@ -82,7 +82,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     }
   };
 
-  const handleBirthday = (value: Date | null): void => {
+  const handleBirthday = (date: MaterialUiPickersDate, value?: string | null | undefined): void => {
     if (current && updated) {
       setCurrent({ ...current, birthday: value ? new Date(value) : undefined });
       setUpdated({ ...updated, birthday: value ? new Date(format(value, 'YYYY-MM-DD')) : undefined });

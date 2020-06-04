@@ -7,7 +7,7 @@ import { ColumnNames } from './profile';
 import { LoginService } from './login-service';
 import { Profile } from './profile.dto';
 import { Group } from './group.dto';
-import { TkService, TkRoute } from './tickets';
+import { TkService, TkRoute, TkWhere } from './tickets';
 //#endregion
 
 export interface BaseUser {
@@ -51,7 +51,8 @@ export interface UserSettingsPhonebook {
   columns?: ColumnNames[] | null;
 }
 
-export interface UserSettingsTaskFavoriteService extends Omit<TkService, 'name'> {
+export interface UserSettingsTaskFavoriteService extends Omit<TkService, 'where' | 'name'> {
+  where?: TkWhere;
   name?: string;
 }
 

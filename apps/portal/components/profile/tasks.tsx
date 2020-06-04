@@ -162,7 +162,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
   tasks,
   status,
   search,
-  refetchTickets,
+  refetchTasks,
   handleSearch,
   handleStatus,
 }) => {
@@ -196,7 +196,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
           </Typography>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
-          <RefreshButton noAbsolute onClick={() => refetchTickets()} />
+          <RefreshButton noAbsolute onClick={() => refetchTasks()} />
         </Box>
         <Box display="flex" justifyContent="flex-end">
           <Select label={t('profile:tickets.status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
