@@ -202,8 +202,18 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
             </Box>
           </IsAdmin>
         </Box>
-        <Box display="flex" position="relative" flexDirection="column">
-          <Loading activate={loadingProfile} noMargin type="linear" variant="indeterminate">
+        <Loading
+          activate={loadingProfile}
+          wrapperClasses={classes.loadingBackground}
+          absolute
+          full
+          noMargin
+          type="circular"
+          size={48}
+          color="secondary"
+          variant="indeterminate"
+        >
+          <Box display="flex" position="relative" flexDirection="column">
             {profile ? (
               <>
                 <Loading
@@ -324,7 +334,6 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       handleChange={handleChange}
                       field="manager"
                       value={profile.manager?.fullName}
-                      department={profile.department}
                       InputProps={InputProps}
                     />
                   </div>
@@ -363,8 +372,8 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                 {t('profile:notFound')}
               </Typography>
             )}
-          </Loading>
-        </Box>
+          </Box>
+        </Loading>
       </Box>
     </Box>
   );

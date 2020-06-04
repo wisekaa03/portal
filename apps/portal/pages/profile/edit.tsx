@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useEffect, useState, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
@@ -102,7 +102,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     if (isAdmin && id) {
       if (dataProfile) {
         setCurrent(dataProfile.profile);
-        setUpdated({ id } as any);
+        setUpdated({ id } as Profile);
       }
     } else if (user) {
       setCurrent(user.profile);
@@ -118,6 +118,16 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     }
   }, [errorProfile, errorChanged]);
 
+  const hasUpdate = useMemo<boolean>(() => {
+    if (loadingChanged) {
+      return true;
+    }
+    if (updated && Object.keys(updated).length === 1 && updated.id) {
+      return false;
+    }
+    return !!updated || !!thumbnailPhoto;
+  }, [loadingChanged, thumbnailPhoto, updated]);
+
   return (
     <>
       <Head>
@@ -129,7 +139,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
           loadingProfile={loadingProfile}
           loadingChanged={loadingChanged}
           profile={current}
-          hasUpdate={(!!updated || !!thumbnailPhoto) && !loadingChanged}
+          hasUpdate={hasUpdate}
           onDrop={onDrop}
           handleChange={handleChange}
           handleBirthday={handleBirthday}

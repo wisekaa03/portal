@@ -19,7 +19,6 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
   handleChange,
   field,
   value,
-  department,
   InputProps,
 }) => {
   const { t } = useTranslation();
@@ -28,10 +27,14 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
   const [options, setOptions] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
-  const [getOptions, { loading, data, error }] = useLazyQuery(PROFILE_FIELD_SELECTION);
+  const [getOptions, { loading, data, error }] = useLazyQuery(PROFILE_FIELD_SELECTION, {
+    ssr: false,
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+  });
 
   const handleOpen = (): void => {
-    getOptions({ variables: { field, department } });
+    getOptions({ variables: { field } });
     setOpen(true);
   };
 
@@ -66,6 +69,8 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
         autoHighlight
         clearOnEscape
         freeSolo={field !== 'manager'}
+        // selectOnFocus
+        clearOnBlur={field === 'manager'}
         forcePopupIcon
         noOptionsText={t('profile:edit.notFound')}
         clearText={t('profile:edit.clear')}
@@ -77,18 +82,23 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
         loading={loading}
         options={options}
         value={value}
-        onChange={(event, newValue) => handleChange(field, newValue)(event)}
-        renderInput={(params) => (
+        onChange={(event, newValue) => {
+          // eslint-disable-next-line no-debugger
+          debugger;
+
+          return handleChange(field, newValue)(event);
+        }}
+        renderInput={(parameters) => (
           <TextField
             {...props}
-            {...params}
+            {...parameters}
             InputProps={{
               ...InputProps,
-              ...params.InputProps,
+              ...parameters.InputProps,
               endAdornment: (
                 <>
                   {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
+                  {parameters.InputProps.endAdornment}
                   {/* InputProps.endAdornment */}
                 </>
               ),
