@@ -14354,10 +14354,10 @@ nest-next@^9.2.0:
   dependencies:
     rxjs "^6.4"
 
-nestjs-i18n@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/nestjs-i18n/-/nestjs-i18n-8.0.3.tgz#d3dce506fd387bab16e2e568c23ddf1356845f94"
-  integrity sha512-zl9BlKJickI2nhq/gCGCv5rqEM6H86zWR5Un7Ie7fNtwVAOlF959DdDWEC7VR7lC+KBi6crQdYyBuDFb5CRgXw==
+nestjs-i18n@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/nestjs-i18n/-/nestjs-i18n-8.0.4.tgz#2789f07e043b785c54fa8211ca71106ceaf60bf6"
+  integrity sha512-fpEM/+Gd7aWgPCBrsNcG4GYUtR21NZH9FRSYJQQOC7RAdxRgCilhNNzQ1VXUSUK7e2jj38DIeKXhxSITBoeGyA==
   dependencies:
     accept-language-parser "^1.5.0"
     chalk "^4.0.0"

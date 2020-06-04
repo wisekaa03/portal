@@ -138,7 +138,7 @@
     "ldapjs": "^2.0.0",
     "libpq": "^1.8.9",
     "nest-next": "^9.2.0",
-    "nestjs-i18n": "^8.0.3",
+    "nestjs-i18n": "^8.0.4",
     "nestjs-pino": "^1.2.0",
     "next": "^9.4.4",
     "next-compose-plugins": "^2.2.0",
