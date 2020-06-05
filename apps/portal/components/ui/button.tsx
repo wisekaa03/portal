@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react';
-import { makeStyles, createStyles, Theme, fade, lighten } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme, darken } from '@material-ui/core/styles';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import clsx from 'clsx';
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
@@ -24,10 +24,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     accept: {
       'color': '#fff',
-      'backgroundColor': theme.palette.primary.main,
+      'backgroundColor': '#6AA7C8',
 
       '&:hover': {
-        backgroundColor: lighten(theme.palette.primary.main, 0.3),
+        backgroundColor: darken('#6AA7C8', 0.3),
       },
     },
     cancel: {
@@ -35,47 +35,47 @@ const useStyles = makeStyles((theme: Theme) =>
       'backgroundColor': theme.palette.error.main,
 
       '&:hover': {
-        backgroundColor: lighten(theme.palette.error.main, 0.3),
+        backgroundColor: darken(theme.palette.error.main, 0.3),
       },
     },
     save: {
-      'color': theme.palette.getContrastText('#dee4ec'),
-      'backgroundColor': '#dee4ec',
+      'color': '#fff',
+      'backgroundColor': '#6AA7C8',
 
       '&:hover': {
-        backgroundColor: '#a9b6c7',
+        backgroundColor: darken('#6AA7C8', 0.3),
       },
     },
     print: {
-      'color': theme.palette.getContrastText('#e2e2cd'),
-      'backgroundColor': '#e2e2cd',
+      'color': '#fff',
+      'backgroundColor': '#6AA7C8',
 
       '&:hover': {
-        backgroundColor: '#c7c7a8',
+        backgroundColor: darken('#6AA7C8', 0.3),
       },
     },
     reset: {
-      'color': theme.palette.getContrastText('#e6ccd9'),
-      'backgroundColor': '#e6ccd9',
+      'color': '#fff',
+      'backgroundColor': theme.palette.error.main,
 
       '&:hover': {
-        backgroundColor: '#d2adbf',
+        backgroundColor: darken(theme.palette.error.main, 0.3),
       },
     },
     close: {
-      'color': theme.palette.getContrastText('#C5B7B4'),
-      'backgroundColor': '#C5B7B4',
+      'color': '#fff',
+      'backgroundColor': theme.palette.error.main,
 
       '&:hover': {
-        backgroundColor: '#b3a3a0',
+        backgroundColor: darken(theme.palette.error.main, 0.3),
       },
     },
     favorite: {
-      'color': theme.palette.getContrastText('#DEECEC'),
-      'backgroundColor': '#DEECEC',
+      'color': '#fff',
+      'backgroundColor': '#6AA7C8',
 
       '&:hover': {
-        backgroundColor: '#cbdada',
+        backgroundColor: darken('#6AA7C8', 0.3),
       },
     },
   }),
