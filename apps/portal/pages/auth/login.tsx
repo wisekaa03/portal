@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useRef, useState, useEffect } from 'react';
@@ -54,9 +53,9 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     },
   );
 
-  const handleValues = (name: keyof LoginValuesProps) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const el: EventTarget & HTMLInputElement = e.target;
-    const value: string | boolean = el.type === 'checkbox' ? el.checked : el.value;
+  const handleValues = (name: keyof LoginValuesProps) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const element: EventTarget & HTMLInputElement = event.target;
+    const value: string | boolean = element.type === 'checkbox' ? element.checked : element.value;
 
     setValues({ ...values, [name]: value });
   };
@@ -67,9 +66,13 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     event.preventDefault();
 
     if (username.trim() === '') {
-      usernameRef.current!.focus();
+      if (usernameRef.current) {
+        usernameRef.current.focus();
+      }
     } else if (password.trim() === '') {
-      passwordRef.current!.focus();
+      if (passwordRef.current) {
+        passwordRef.current.focus();
+      }
     } else {
       login({ variables: { username, password } });
     }
@@ -98,7 +101,9 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
   useEffect(() => {
     if (error) {
       snackbarUtils.error(error);
-      passwordRef.current!.focus();
+      if (passwordRef.current) {
+        passwordRef.current.focus();
+      }
     }
   }, [passwordRef, error]);
 
