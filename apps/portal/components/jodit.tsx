@@ -17,6 +17,9 @@ const styles = {
     '.jodit_tooltip': {
       position: 'fixed !important',
     },
+    '.jodit_placeholder': {
+      color: '#31312F!important',
+    },
     '.jodit_container': {
       'border': '2px solid #929fb7',
       'borderRadius': '4px',
