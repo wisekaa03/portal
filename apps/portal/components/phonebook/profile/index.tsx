@@ -66,12 +66,21 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     list: {
-      'color': '#747474',
+      // 'color': '#747474',
       'padding': 0,
 
       '& > li': {
         minHeight: 48,
         padding: theme.spacing(0.5, 0.5, 0.5, 2),
+      },
+    },
+    username: {
+      color: '#6AA7C8',
+    },
+    email: {
+      'color': '#31312F',
+      '&:hover': {
+        textDecoration: 'none',
       },
     },
     telephone: {
@@ -164,8 +173,8 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
   ({ t, profileId, handleClose, handleSearch }, ref) => {
     const classes = useStyles({});
 
-    const [profile, setProfile] = useState<Profile | undefined>(undefined);
-    const [controlEl, setControlEl] = useState<HTMLElement | null>(null);
+    const [profile, setProfile] = useState<Profile | undefined>();
+    const [controlElement, setControlElement] = useState<HTMLElement | null>(null);
 
     const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(PROFILE, {
       ssr: false,
@@ -201,11 +210,11 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
     };
 
     const handleControl = (event: React.MouseEvent<HTMLElement>): void => {
-      setControlEl(event.currentTarget);
+      setControlElement(event.currentTarget);
     };
 
     const handleCloseControl = (): void => {
-      setControlEl(null);
+      setControlElement(null);
     };
 
     useEffect(() => {
@@ -231,7 +240,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                 </Link>
                 <IsAdmin>
                   <PhonebookProfileControl
-                    controlEl={controlEl}
+                    controlEl={controlElement}
                     profileId={profile?.id}
                     handleControl={handleControl}
                     handleCloseControl={handleCloseControl}
@@ -280,13 +289,15 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                 )}
                 {profile?.username && (
                   <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
-                    <PersonRounded />
+                    <PersonRounded className={classes.username} />
                     <span>{profile.username}</span>
                   </Box>
                 )}
                 {profile?.email && (
                   <Box display="flex" alignItems="center" justifyContent="center">
-                    <ComposeLink to={profile.email}>{profile.email}</ComposeLink>
+                    <ComposeLink className={classes.email} to={profile.email}>
+                      {profile.email}
+                    </ComposeLink>
                     <CopyButton style={{ marginLeft: '8px' }} text={profile.email} />
                   </Box>
                 )}

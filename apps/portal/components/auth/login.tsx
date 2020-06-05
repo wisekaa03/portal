@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Theme, makeStyles, createStyles, darken } from '@material-ui/core/styles';
 import {
   Box,
   Typography,
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
       '&:hover, &:disabled': {
         color: '#fff',
-        backgroundColor: 'rgba(106,186,85,0.7)',
+        backgroundColor: darken('#69BA55', 0.3),
       },
 
       '&:disabled': {

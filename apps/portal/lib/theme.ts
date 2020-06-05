@@ -1,6 +1,6 @@
 /** @format */
 
-import { fade, createMuiTheme } from '@material-ui/core/styles';
+import { fade, createMuiTheme, darken } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import {
   RobotoLightCyr,
@@ -60,6 +60,19 @@ const theme = createMuiTheme({
 });
 
 theme.overrides = {
+  MuiPaper: {
+    root: {
+      color: '#31312F',
+    },
+  },
+  MuiSvgIcon: {
+    root: {
+      // 'color': '#6AA7C8',
+      // '&:hover': {
+      //   color: darken('#6AA7C8', 0.3),
+      // },
+    },
+  },
   MuiCssBaseline: {
     '@global': {
       '@font-face': [
@@ -124,8 +137,8 @@ theme.overrides = {
     },
   },
   MuiCheckbox: {
-    root: {
-      color: 'inherit',
+    colorPrimary: {
+      color: '#6AA7C8!important',
     },
   },
   MuiRadio: {

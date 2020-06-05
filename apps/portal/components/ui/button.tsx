@@ -23,59 +23,59 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1.5, 3),
     },
     accept: {
-      'color': '#fff',
-      'backgroundColor': '#6AA7C8',
+      'color': '#31312F',
+      'backgroundColor': '#ECA365',
 
       '&:hover': {
-        backgroundColor: darken('#6AA7C8', 0.3),
+        backgroundColor: '#ECA365',
       },
     },
     cancel: {
-      'color': '#fff',
-      'backgroundColor': theme.palette.error.main,
+      'color': '#31312F',
+      'backgroundColor': '#CACACA',
 
       '&:hover': {
-        backgroundColor: darken(theme.palette.error.main, 0.3),
+        backgroundColor: darken('#CACACA', 0.3),
       },
     },
     save: {
-      'color': '#fff',
-      'backgroundColor': '#6AA7C8',
+      'color': '#31312F',
+      'backgroundColor': '#ECA365',
 
       '&:hover': {
-        backgroundColor: darken('#6AA7C8', 0.3),
+        backgroundColor: '#ECA365',
       },
     },
     print: {
-      'color': '#fff',
-      'backgroundColor': '#6AA7C8',
+      'color': '#31312F',
+      'backgroundColor': '#ECA365',
 
       '&:hover': {
-        backgroundColor: darken('#6AA7C8', 0.3),
+        backgroundColor: '#ECA365',
       },
     },
     reset: {
-      'color': '#fff',
-      'backgroundColor': theme.palette.error.main,
+      'color': '#31312F',
+      'backgroundColor': '#B2BEC9',
 
       '&:hover': {
-        backgroundColor: darken(theme.palette.error.main, 0.3),
+        backgroundColor: '#B3BCC6',
       },
     },
     close: {
-      'color': '#fff',
-      'backgroundColor': theme.palette.error.main,
+      'color': '#31312F',
+      'backgroundColor': '#B2BEC9',
 
       '&:hover': {
-        backgroundColor: darken(theme.palette.error.main, 0.3),
+        backgroundColor: '#B3BCC6',
       },
     },
     favorite: {
-      'color': '#fff',
-      'backgroundColor': '#6AA7C8',
+      'color': '#31312F',
+      'backgroundColor': '#ECA365',
 
       '&:hover': {
-        backgroundColor: darken('#6AA7C8', 0.3),
+        backgroundColor: '#ECA365',
       },
     },
   }),
@@ -112,7 +112,7 @@ const BaseButton = ({ actionType = 'accept', children, className, ...rest }: But
     <Button
       {...rest}
       variant="contained"
-      startIcon={icon}
+      // startIcon={icon}
       className={clsx(classes.root, classes[actionType], className)}
     >
       {children}

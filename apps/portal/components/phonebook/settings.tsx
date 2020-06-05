@@ -32,15 +32,14 @@ const useStyles = makeStyles((theme: Theme) =>
     head: {
       display: 'flex',
       alignItems: 'flex-start',
-      background: `url(${HeaderBg})`,
+      margin: '16px 16px 0 37px',
+      padding: 0,
+      color: '#004A68',
+      // background: `url(${HeaderBg})`,
       backgroundSize: 'cover',
     },
     wrapContent: {
-      padding: theme.spacing(1, 2),
-
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(2, 4),
-      },
+      padding: '0px 32px 0 32px',
     },
     content: {
       padding: theme.spacing(0.5),
@@ -64,7 +63,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     group: {
       boxShadow: '0px 0px 2px rgba(0, 0, 0, 0.2)',
-      padding: theme.spacing(1, 0),
+      backgroundColor: '#fff',
+      margin: theme.spacing(1, 0),
     },
     item: {
       margin: 0,
@@ -272,8 +272,8 @@ const PhonebookSettings = React.forwardRef(
     const { t } = useTranslation();
     const [current, setCurrent] = useState<ColumnNames[]>(columns);
 
-    const handleCheckbox = (name: ColumnNames) => (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setCurrent(e.target.checked ? [name, ...current] : current.filter((el) => el !== name));
+    const handleCheckbox = (name: ColumnNames) => (event: React.ChangeEvent<HTMLInputElement>): void => {
+      setCurrent(event.target.checked ? [name, ...current] : current.filter((element) => element !== name));
     };
 
     const handleAccept = (): void => {
@@ -289,7 +289,7 @@ const PhonebookSettings = React.forwardRef(
         <CardHeader className={classes.head} title={t('phonebook:settings.header')} />
         <CardContent className={classes.wrapContent}>
           <div className={classes.content}>
-            {[...Array(blocks).keys()].map((i) => (
+            {[...new Array(blocks).keys()].map((i) => (
               <FormControl key={i} className={classes.group}>
                 <FormGroup>
                   {renderColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }: Column) => (

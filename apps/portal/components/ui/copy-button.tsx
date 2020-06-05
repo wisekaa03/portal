@@ -17,8 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       'transition': `all 200ms ${theme.transitions.easing.easeOut} 0ms`,
+      'color': '#6AA7C8',
       '&:hover': {
-        color: theme.palette.secondary.main,
+        color: '#6AA7C8',
       },
       '& svg': {
         fontSize: '1rem',
