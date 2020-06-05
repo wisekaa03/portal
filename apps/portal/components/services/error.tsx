@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '90vw',
       maxWidth: '600px',
-      borderRadius: 2,
+      borderRadius: theme.shape.borderRadius,
       boxShadow: '0px 19px 38px rgba(0, 0, 0, 0.3), 0px 15px 12px rgba(0, 0, 0, 0.22)',
     },
     content: {

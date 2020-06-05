@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'lineHeight': '21px',
       'background': '#F7FBFA',
       'boxShadow': '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      'borderRadius': theme.spacing(),
+      'borderRadius': theme.shape.borderRadius,
       'padding': theme.spacing(2, 4, 2, 9),
 
       '&:not(:first-child)': {
@@ -208,15 +208,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
         case 'add':
         default:
           result = [
-            ...(favorites?.map(
-              (f) =>
-                f && {
-                  where: f.where,
-                  code: f.code,
-                  service: { where: f.service?.where || TkWhere.Default, code: f.service?.code || '0' },
-                  priority: f.priority,
-                },
-            ) ?? []),
+            ...(favorites || []),
             { code, where, service: { where: service.where || TkWhere.Default, code: service.code || '0' }, priority },
           ];
       }

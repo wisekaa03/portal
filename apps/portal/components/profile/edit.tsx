@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
     thirdBlock: {
       display: 'grid',
       width: '100%',
+      borderRadius: theme.shape.borderRadius,
     },
     fullNameBlock: {
       [theme.breakpoints.down('xs')]: {
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 220,
       width: 220,
       objectFit: 'contain',
-      borderRadius: theme.spacing(0.5),
+      borderRadius: theme.shape.borderRadius,
     },
     nameBlock: {
       'width': '100%',
@@ -94,6 +95,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'justifyContent': 'center',
       'flexDirection': 'column',
       'padding': theme.spacing(),
+      'borderRadius': theme.shape.borderRadius,
       'backgroundColor': fade(theme.palette.secondary.main, 0.05),
       'color': theme.palette.secondary.main,
       '& > div:not(:last-child)': {
@@ -118,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'zIndex': 100,
       'width': 220,
       'height': 220,
-      'borderRadius': theme.spacing(0.5),
+      'borderRadius': theme.shape.borderRadius,
       'color': '#fff',
       'opacity': 0,
       'transition': theme.transitions.create('opacity', {

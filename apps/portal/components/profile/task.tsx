@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     rounded: {
-      borderRadius: theme.spacing(0.5),
+      borderRadius: theme.shape.borderRadius,
     },
     cardHeader: {
       boxShadow: theme.shadows[3],
@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const ProfileTicketInfoCard = withStyles((theme) => ({
   root: {
-    borderRadius: theme.spacing(0.5),
+    borderRadius: theme.shape.borderRadius,
     background: fade(theme.palette.secondary.main, 0.15),
   },
   center: {

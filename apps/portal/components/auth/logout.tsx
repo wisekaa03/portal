@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: 'rgba(255,255,255,0.5)',
       color: '#2c4373',
       border: 'solid 3px #2c4373',
-      borderRadius: 16,
+      borderRadius: theme.shape.borderRadius,
       paddingLeft: 24,
     },
     typoAuthorization: {
@@ -70,13 +70,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     submitButton: {
-      'borderRadius': 24,
+      'borderRadius': theme.shape.borderRadius,
       'width': 'fit-content',
       'marginTop': theme.spacing(),
 
       '&:disabled': {
         color: '#2c4373',
-        borderRadius: 24,
+        borderRadius: theme.shape.borderRadius,
         marginTop: theme.spacing(),
       },
 

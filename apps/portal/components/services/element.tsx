@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       'padding': theme.spacing(2),
-      'borderRadius': theme.spacing(),
+      'borderRadius': theme.shape.borderRadius,
       'display': 'grid',
       'gridTemplateColumns': '60px 1fr',
       'gap': `${theme.spacing()}px`,

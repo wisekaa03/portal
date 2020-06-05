@@ -52,12 +52,12 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 600,
       maxWidth: '95vw',
       paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(6),
+      paddingBottom: theme.spacing(5),
       paddingLeft: theme.spacing(4),
       paddingRight: theme.spacing(4),
       backgroundColor: 'rgba(255,255,255,0.7)',
       border: 'solid 3px #3C6AA3',
-      borderRadius: 16,
+      borderRadius: theme.shape.borderRadius,
       // paddingLeft: 24,
     },
     title: {
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: 'transparent',
     },
     submit: {
-      'borderRadius': 24,
+      'borderRadius': theme.shape.borderRadius,
       'width': 'fit-content',
       'marginTop': theme.spacing(),
       'color': '#fff',
@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
 
       '&:disabled': {
-        borderRadius: 24,
+        borderRadius: theme.shape.borderRadius,
         marginTop: theme.spacing(),
       },
     },

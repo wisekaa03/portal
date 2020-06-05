@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'alignItems': 'center',
       'backgroundColor': '#fafafa',
       'borderColor': fade(theme.palette[props.color].main, 0.5),
-      'borderRadius': '2px',
+      'borderRadius': theme.shape.borderRadius,
       'borderStyle': 'dashed',
       'borderWidth': '2px',
       'color': fade(theme.palette[props.color].main, 0.5),

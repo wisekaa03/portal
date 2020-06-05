@@ -19,7 +19,7 @@ export interface ButtonBaseProps extends ButtonProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      borderRadius: theme.spacing(3),
+      borderRadius: theme.shape.borderRadius,
       padding: theme.spacing(1.5, 3),
     },
     accept: {

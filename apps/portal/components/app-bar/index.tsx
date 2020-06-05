@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
       minHeight: '150px',
       display: 'grid',
       gridTemplateColumns: `200px ${avatarHeight}px`,
-      borderRadius: theme.spacing(0.5),
+      borderRadius: theme.shape.borderRadius,
     },
     pointer: {
       cursor: 'pointer',

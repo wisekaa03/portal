@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     inputRoot: {
       color: theme.palette.secondary.main,
       backgroundColor: theme.palette.common.white,
-      borderRadius: theme.spacing(),
+      borderRadius: theme.shape.borderRadius,
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),

@@ -13,7 +13,7 @@ import clsx from 'clsx';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     rounded: {
-      borderRadius: theme.spacing(3),
+      borderRadius: theme.shape.borderRadius,
     },
     link: {
       cursor: 'pointer',

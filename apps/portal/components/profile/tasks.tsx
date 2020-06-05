@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'position': 'relative',
       'backgroundColor': fade(theme.palette.common.white, 0.15),
       'width': '100%',
-      'borderRadius': theme.spacing(0.5),
+      'borderRadius': theme.shape.borderRadius,
       'border': `1px solid ${theme.palette.secondary.main}`,
       '&:hover': {
         backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -74,7 +74,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
     'flex': 1,
     'minWidth': 344,
     'maxWidth': 344,
-    'borderRadius': theme.spacing(0.5),
+    'borderRadius': theme.shape.borderRadius,
     'background': fade(theme.palette.secondary.main, 0.15),
     'marginRight': theme.spacing(2),
     'marginBottom': theme.spacing(2),

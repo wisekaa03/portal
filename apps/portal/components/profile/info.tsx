@@ -19,14 +19,14 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: avatarHeight,
       height: avatarHeight,
-      borderRadius: theme.spacing(0.5),
+      borderRadius: theme.shape.borderRadius,
     },
     personal: {
       flex: 1,
       background: fade(theme.palette.secondary.main, 0.15),
       padding: theme.spacing(),
       color: theme.palette.secondary.main,
-      borderRadius: theme.spacing(0.5),
+      borderRadius: theme.shape.borderRadius,
       marginBottom: theme.spacing(),
     },
     links: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       'gridAutoColumns': 180,
       'gridAutoRows': 'minmax(45px, 1fr)',
       '& > a': {
-        borderRadius: theme.spacing(0.5),
+        borderRadius: theme.shape.borderRadius,
         lineHeight: '1.2em',
         textAlign: 'center',
       },
