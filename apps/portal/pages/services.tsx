@@ -142,9 +142,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
               : route.services?.find((s) => s.name === 'Прочее')) || undefined;
           setTask({ route, service });
           setCurrentTab(1);
-        } else {
-          handleResetTicket();
+          return;
         }
+        handleResetTicket();
       }
     }
   }, [routes, setTask, setCurrentTab, handleResetTicket, query]);

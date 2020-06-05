@@ -39,7 +39,8 @@ const config = {
   placeholder: 'Подробное описание',
   // TODO: ,image,file
   style: {
-    font: '18px "Roboto", "Arial", "Helvetica"',
+    font: '16px "Roboto", "Arial", "Helvetica"',
+    backgroundColor: '#F5FDFF',
   },
   buttons:
     'eraser,|,align,outdent,indent,|,ul,ol,|,font,fontsize,brush,paragraph,|,table,link,|,' +

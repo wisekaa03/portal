@@ -97,6 +97,9 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: 'transparent',
       },
     },
+    jodit: {
+      backgroundColor: '#F5FDFF',
+    },
   }),
 );
 
@@ -238,8 +241,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
         task.service &&
         Array.isArray(favorites) &&
         !!favorites.find(
-          ({ where, code, service: svc }) =>
-            code === task.route?.code && where === task.route?.where && svc?.code === task.service?.code,
+          ({ route, service }) =>
+            route?.code === task.route?.code &&
+            route?.where === task.route?.where &&
+            service?.code === task.service?.code,
         )) ??
       true,
     [task.route, task.service, favorites],
@@ -391,7 +396,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                       label={t('services:form.subject')}
                     />
                   </FormControl>
-                  <FormControl className={classes.formControl} variant="outlined">
+                  <FormControl className={clsx(classes.formControl, classes.jodit)} variant="outlined">
                     <JoditEditor ref={bodyRef} value={body} onBlur={setBody} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">

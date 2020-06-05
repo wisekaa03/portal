@@ -121,7 +121,7 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   }, []);
 
   const handleFavorite = useCallback(
-    (action) => (event): void => {
+    (action) => (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
       event.stopPropagation();
       if (typeof setFavorite === 'function' && route.service) {
         setFavorite({
@@ -150,10 +150,10 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
           href={
             url || {
               pathname,
-              query: { where: route.where, route: route.code, service: route.service?.code },
+              query: { where: route.route?.where, route: route.route?.code, service: route.service?.code },
             }
           }
-          as={url || `${pathname}/${route.where}/${route.code}/${route.service?.code}`}
+          as={url || `${pathname}/${route.route?.where}/${route.route?.code}/${route.service?.code}`}
           passHref
         >
           {url ? <a target="_blank">{children}</a> : children}

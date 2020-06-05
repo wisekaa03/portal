@@ -56,9 +56,15 @@ export interface UserSettingsTaskFavoriteService extends Omit<TkService, 'where'
   name?: string;
 }
 
+export interface UserSettingsTaskFavoriteRoute extends Omit<TkRoute, 'where' | 'name'> {
+  where?: TkWhere;
+  name?: string;
+}
+
 export interface UserSettingsTaskFavorite extends Omit<TkRoute, 'name' | 'services'> {
   name?: string;
   priority?: number;
+  route?: UserSettingsTaskFavoriteRoute;
   service?: UserSettingsTaskFavoriteService;
 }
 

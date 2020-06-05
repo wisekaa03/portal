@@ -3,7 +3,7 @@
 import { ApolloError } from 'apollo-client';
 import { Component } from 'react';
 import { DropzoneFile } from './dropzone';
-import { TkRoutes, TkRoute, TkService } from './tickets';
+import { TkRoute, TkService } from './tickets';
 import { UserSettingsTaskFavorite } from './user.dto';
 
 export interface ServicesWrapperProps {

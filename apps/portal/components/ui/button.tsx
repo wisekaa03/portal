@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme, fade, lighten } from '@material-ui/core/styles';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import clsx from 'clsx';
 import HighlightOffIcon from '@material-ui/icons/HighlightOffOutlined';
@@ -23,19 +23,19 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1.5, 3),
     },
     accept: {
-      'color': theme.palette.getContrastText('#DEECEC'),
-      'backgroundColor': '#DEECEC',
+      'color': '#fff',
+      'backgroundColor': theme.palette.primary.main,
 
       '&:hover': {
-        backgroundColor: '#BECDCD',
+        backgroundColor: lighten(theme.palette.primary.main, 0.3),
       },
     },
     cancel: {
-      'color': theme.palette.getContrastText('#ECDEDE'),
-      'backgroundColor': '#ECDEDE',
+      'color': '#fff',
+      'backgroundColor': theme.palette.error.main,
 
       '&:hover': {
-        backgroundColor: '#D9C0C0',
+        backgroundColor: lighten(theme.palette.error.main, 0.3),
       },
     },
     save: {

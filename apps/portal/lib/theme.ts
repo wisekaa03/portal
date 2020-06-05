@@ -97,6 +97,7 @@ theme.overrides = {
   },
   MuiOutlinedInput: {
     root: {
+      'backgroundColor': '#F5FDFF',
       'borderRadius': theme.shape.borderRadius,
       '&:hover:not($focused):not($disabled) $notchedOutline': {
         borderColor: fade(theme.palette.primary.main, 0.75),
@@ -169,13 +170,21 @@ theme.overrides = {
   },
   MuiFormControl: {
     root: {
-      backgroundColor: '#F5FDFF',
       borderRadius: theme.shape.borderRadius,
+    },
+  },
+  MuiSelect: {
+    root: {
+      backgroundColor: '#F5FDFF',
     },
   },
   MuiButton: {
     containedSecondary: {
       color: '#fff',
+    },
+    contained: {
+      color: '#fff',
+      backgroundColor: theme.palette.primary.main,
     },
     outlinedPrimary: {
       'color': '#fff',

@@ -125,11 +125,9 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const allServices = useMemo<TkService[]>(
-    // eslint-disable-next-line no-confusing-arrow
     () =>
       Array.isArray(route.services) && route.services.length > 0
         ? route.services.reduce(
-            // eslint-disable-next-line no-confusing-arrow
             (accumulator, srv) =>
               !srv ||
               (!active && srv?.name === 'Прочее') ||
@@ -141,24 +139,6 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
         : [],
     [route, active],
   );
-
-  //   <ConditionalWrapper
-  //   condition={withLink}
-  //   wrapper={(children) => (
-  //     <Link
-  //       href={
-  //         url || {
-  //           pathname,
-  //           query: { where: route.where, route: route.code },
-  //         }
-  //       }
-  //       as={url || `${pathname}/${route.where}/${route.code}`}
-  //       passHref
-  //     >
-  //       {url ? <a target="_blank">{children}</a> : children}
-  //     </Link>
-  //   )}
-  // >
 
   return (
     <Link
