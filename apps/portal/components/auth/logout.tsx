@@ -9,7 +9,7 @@ import { Typography, Button, Card, CardContent, FormControl } from '@material-ui
 import { useTranslation } from '@lib/i18n-client';
 import { LogoutPageProps } from '@lib/types';
 import Loading from '@front/components/loading';
-import Background2 from '@public/images/svg/background2.svg';
+import Background from '@public/images/svg/background.svg';
 import Logo from '@public/images/svg/logo.svg';
 //#endregion
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundSize: 'cover',
-      backgroundImage: `url(${Background2})`,
+      backgroundImage: `url(${Background})`,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'bottom center',
       height: '100vh',
@@ -98,8 +98,8 @@ const LogoutComponent: FC<LogoutPageProps> = ({ loading, logout }): React.ReactE
       </div>
       <div className={classes.logoutContainer}>
         <form
-          onSubmit={async (e: any): Promise<void> => {
-            e.preventDefault();
+          onSubmit={async (event: any): Promise<void> => {
+            event.preventDefault();
             logout();
           }}
           className={classes.container}
