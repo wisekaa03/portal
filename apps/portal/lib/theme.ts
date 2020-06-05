@@ -148,6 +148,11 @@ theme.overrides = {
       },
     },
   },
+  MuiInputLabel: {
+    root: {
+      color: '#31312F !important',
+    },
+  },
   MuiCard: {
     root: {},
   },
