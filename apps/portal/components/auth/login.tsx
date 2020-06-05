@@ -55,8 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: theme.spacing(6),
       paddingLeft: theme.spacing(4),
       paddingRight: theme.spacing(4),
-      backgroundColor: '#F5FDFF',
-      color: '#3C6AA3',
+      backgroundColor: 'rgba(255,255,255,0.7)',
       border: 'solid 3px #3C6AA3',
       borderRadius: 16,
       // paddingLeft: 24,
@@ -81,6 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#31312F',
       width: '100%',
     },
+    submitBackground: {
+      backgroundColor: 'transparent',
+    },
     submit: {
       'borderRadius': 24,
       'width': 'fit-content',
@@ -90,7 +92,8 @@ const useStyles = makeStyles((theme: Theme) =>
       'border': 'none',
 
       '&:hover, &:disabled': {
-        color: '#2c4373',
+        color: '#fff',
+        backgroundColor: 'rgba(106,186,85,0.7)',
       },
 
       '&:disabled': {
@@ -173,7 +176,7 @@ export const LoginComponent: FC<LoginComponentProps> = ({
           </CardContent>
           <CardActions>
             <Loading activate={loading}>
-              <FormControl style={{ width: '100%' }}>
+              <FormControl className={classes.submitBackground}>
                 <Button
                   className={classes.submit}
                   type="submit"

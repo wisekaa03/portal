@@ -167,6 +167,11 @@ theme.overrides = {
       },
     },
   },
+  MuiFormControl: {
+    root: {
+      backgroundColor: '#F5FDFF',
+    },
+  },
   MuiButton: {
     outlinedPrimary: {
       'color': '#fff',
