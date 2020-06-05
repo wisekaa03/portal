@@ -12,7 +12,6 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 //#endregion
 //#region Imports Local
 import LogoMin from '@public/images/png/logo_min.png';
-import HeaderBg from '@public/images/jpeg/header_bg.jpg';
 import PopoverBg from '@public/images/png/profile_popover_bg.png';
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       zIndex: theme.zIndex.drawer + 1,
-      background: `url(${HeaderBg})`,
+      backgroundColor: '#F5FDFF',
       backgroundSize: 'cover',
     },
     toolbar: {
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     profile: {
       padding: theme.spacing(0.5),
-      background: `url(${PopoverBg})`,
+      backgroundColor: '#F5FDFF',
       minWidth: '200px',
       minHeight: '150px',
       display: 'grid',

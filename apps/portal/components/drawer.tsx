@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import React, { FC, useContext } from 'react';
-import { fade, Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Theme, useTheme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { List, ListItem, ListItemText, ListItemIcon, Drawer, useMediaQuery, Tooltip } from '@material-ui/core';
 import Link from 'next/link';
@@ -13,7 +13,6 @@ import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { ADMIN_PAGES } from '@lib/constants';
 import Icon from '@front/components/ui/icon';
-import DrawerBg from '@public/images/jpeg/drawer_bg.jpg';
 import CalendarIcon from '@public/images/svg/icons/calendar.svg';
 import ServicesIcon from '@public/images/svg/icons/services.svg';
 import FaqIcon from '@public/images/svg/icons/faq.svg';
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
     },
     paper: {
-      background: `url(${DrawerBg})`,
+      backgroundColor: '#F5FDFF',
     },
     drawerOpen: {
       width: drawerWidth,
@@ -64,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     item: {
+      'color': '#3C6AA3',
       '&$itemSelected, &:hover': {
         'color': '#fff',
         '& .MuiIcon-root': {
@@ -71,10 +71,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
       '&$itemSelected, &:hover$itemSelected': {
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: '#6AA7C8',
       },
       '&:hover': {
-        backgroundColor: fade(theme.palette.secondary.main, 0.75),
+        backgroundColor: 'rgba(106,167,200,0.7)',
       },
     },
     itemSelected: {},
