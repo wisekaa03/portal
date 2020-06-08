@@ -144,4 +144,10 @@ export interface TkUserOST {
   Аватар: string;
 }
 
+export interface TkEditTask {
+  users?: TkUser[];
+  task?: TkTask;
+  errors?: string[];
+}
+
 export type RecordsOST = Record<string, Array<Record<string, Record<string, any>>>>;

@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useState, useContext, useEffect, useRef } from 'react';
@@ -146,19 +145,19 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
         disabled: columns.includes('disabled'),
         notShowing: isAdmin && columns.includes('notShowing'),
       },
-      updateQuery: (prev, { fetchMoreResult }) => {
+      updateQuery: (previous, { fetchMoreResult }) => {
         if (fetchMoreResult) {
           const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
 
-          if (edges.length === 0) return prev;
+          if (edges.length === 0) return previous;
           const clean: string[] = [];
 
           return {
-            ...prev,
+            ...previous,
             profiles: {
-              ...prev.profiles,
+              ...previous.profiles,
               totalCount,
-              edges: [...prev.profiles.edges, ...edges].filter(
+              edges: [...previous.profiles.edges, ...edges].filter(
                 (edge) => !clean.includes(edge.node.id || '') && clean.push(edge.node.id || ''),
               ),
               pageInfo,
@@ -166,9 +165,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           };
         }
 
-        return prev;
+        return previous;
       },
-    }).catch((err) => snackbarUtils.error(err));
+    }).catch((error) => snackbarUtils.error(error));
 
   const handleColumns = (values: ColumnNames[]): void => {
     userSettings({
@@ -202,7 +201,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => actionSearch(event.target.value);
 
   const handleSugClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void =>
-    actionSearch(event.currentTarget.innerText);
+    actionSearch(event.currentTarget.textContent || '');
 
   const handleProfileClose = (): void => {
     router.push({ pathname: '/phonebook' });

@@ -9,6 +9,7 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import {
   TkRoutes,
   TkTasks,
+  TkEditTask,
   TkWhere,
   TkUserOST,
   TkTaskNewInput,
@@ -494,7 +495,7 @@ export class TicketsService {
     password: string,
     task: TkTaskEditInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<TkTasks> => {
+  ): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const authentication: SoapAuthentication = {
@@ -566,9 +567,9 @@ export class TicketsService {
    * @param {TkTaskDescriptionInput} task Task description
    * @returns {TkTasks}
    */
-  TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkTasks> => {
+  TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
     /* 1C SOAP */
-    if (task.where === TkWhere.SOAP1C) {
+    if (task.where === TkWhere.SOAP1C && task.code) {
       const authentication = {
         username: user?.username,
         password,
@@ -585,9 +586,19 @@ export class TicketsService {
         })
         .then((result: any) => {
           this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
+          const returnValue = result[0]?.['return'];
 
-          if (result?.[0]?.['return'] && typeof result[0]['return'] === 'object') {
-            return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
+          if (returnValue && Object.keys(returnValue).length > 0) {
+            const usersResult = returnValue['Пользователи']?.['Пользователь'].map((user: any) =>
+              userSOAP(user, task.where),
+            );
+            const taskResult = taskSOAP(returnValue['Задания']?.['Задание']?.['0'], task.where);
+            if (usersResult && taskResult) {
+              return {
+                users: usersResult,
+                task: taskResult,
+              };
+            }
           }
 
           this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);

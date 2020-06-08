@@ -512,7 +512,7 @@ export const TICKETS_TASK_DESCRIPTION = gql`
       users {
         ...TicketsUserProps
       }
-      tasks {
+      task {
         ...TicketsTaskProps
       }
     }

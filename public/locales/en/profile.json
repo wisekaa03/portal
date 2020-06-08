@@ -11,12 +11,12 @@
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Ticket search...",
   "notFound": "Profile not found",
-  "ticket": {
-    "header": "Ticket № {{ticket}} at {{date}}",
-    "notFound": "Ticket not found",
-    "notFounds": "Tickets not found"
+  "task": {
+    "header": "Task № {{ticket}} at {{date}}",
+    "notFound": "Task not found",
+    "notFounds": "Tasks not found"
   },
-  "tickets": {
+  "tasks": {
     "title": "Мои заявки",
     "status": "Status",
     "inWork": "В работе",

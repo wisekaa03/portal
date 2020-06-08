@@ -9,6 +9,7 @@ import { FileUpload } from 'graphql-upload';
 import {
   TkRoutes,
   TkTasks,
+  TkEditTask,
   TkTaskNew,
   TkTaskNewInput,
   TkTaskEditInput,
@@ -111,7 +112,7 @@ export class TicketsResolver {
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTasks> {
+  ): Promise<TkEditTask> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -134,7 +135,7 @@ export class TicketsResolver {
     @Args('task') task: TkTaskDescriptionInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTasks> {
+  ): Promise<TkEditTask> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

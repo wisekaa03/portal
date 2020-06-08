@@ -121,6 +121,12 @@ type TkRoutes {
   errors: [String]
 }
 
+type TkEditTask {
+  users: [TkUser]
+  task: TkTask
+  errors: [String]
+}
+
 type TkTasks {
   users: [TkUser]
   tasks: [TkTask]
@@ -130,10 +136,10 @@ type TkTasks {
 type Query {
   TicketsRoutes: TkRoutes
   TicketsTasks(task: TkTasksInput): TkTasks
-  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTasks
+  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask
 }
 
 type Mutation {
   TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew
-  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTasks
+  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkEditTask
 }

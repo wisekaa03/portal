@@ -11,12 +11,12 @@
   "btnEquipment": "Закрепленное оборудование",
   "searchPlaceholder": "Найти заявку...",
   "notFound": "Карточка сотрудника не найдена",
-  "ticket": {
-    "header": "Ticket № {{ticket}} at {{date}}",
+  "task": {
+    "header": "Task № {{ticket}} at {{date}}",
     "notFound": "Обращение не найдено",
     "notFounds": "Обращения не найдены"
   },
-  "tickets": {
+  "task": {
     "title": "Мои заявки",
     "status": "Статус",
     "inWork": "В работе",

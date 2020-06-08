@@ -10,42 +10,38 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import { format } from '@lib/dayjs';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT } from '@lib/queries';
-import { Data, TkTask, DropzoneFile } from '@lib/types';
+import { Data, TkWhere, TkTasks, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import ProfileTaskComponent from '@front/components/profile/task';
-import { TkWhere } from '../../lib/types/tickets';
+import { TkEditTask } from '../../lib/types/tickets';
 //#endregion
 
 const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error }: QueryResult<Data<'TicketsTaskDescription', TkTask>> = useQuery(
+  const { loading, data, error }: QueryResult<Data<'TicketsTaskDescription', TkEditTask>> = useQuery(
     TICKETS_TASK_DESCRIPTION,
     {
       ssr: false,
       variables: {
-        task: {
-          where: query?.where || TkWhere.Default,
-          code: query?.id || '0',
-        },
+        where: query?.where || TkWhere.Default,
+        code: query?.code || '0',
       },
       fetchPolicy: 'cache-and-network',
     },
   );
 
-  const [oldTicketEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
-    update(cache, { data: { OldTicketEdit } }) {
+  const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
+    update(cache, { data: { TicketsTaskEdit } }) {
       cache.writeQuery({
         query: TICKETS_TASK_DESCRIPTION,
         variables: {
-          task: {
-            where: query?.where || TkWhere.Default,
-            code: query?.id || '0',
-          },
+          where: query?.where || TkWhere.Default,
+          code: query?.code || '0',
         },
-        data: { OldTicketDescription: OldTicketEdit },
+        data: { TicketsTaskDescription: TicketsTaskEdit },
       });
     },
   });
@@ -56,15 +52,13 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
 
   const handleAccept = (): void => {
     const variables = {
-      ticket: {
-        where: query?.where || TkWhere.Default,
-        code: query?.id || '0',
-        comment,
-      },
+      where: query?.where || TkWhere.Default,
+      code: query?.id || '0',
+      comment,
       attachments: files.map((file: DropzoneFile) => file.file),
     };
 
-    oldTicketEdit({
+    TicketsTaskEdit({
       variables,
     });
 
@@ -95,19 +89,19 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
           {`${t('profile:title')}: ${
             task
               ? t('profile:ticket.header', {
-                  ticket: task.code,
-                  date: task.createdDate ? format(task.createdDate, i18n) : null,
+                  ticket: task.task?.code,
+                  date: task.task?.createdDate ? format(task.task?.createdDate, i18n) : null,
                 })
               : ''
           }`}
         </title>
       </Head>
       <MaterialUI {...rest}>
-        {task && (
+        {task?.task && (
           <ProfileTaskComponent
             loading={loading}
             loadingEdit={loadingEdit}
-            task={task}
+            task={task.task}
             comment={comment}
             files={files}
             setFiles={setFiles}
@@ -122,10 +116,10 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
 };
 
 ProfileTaskPage.getInitialProps = ({ query }) => {
-  const { id, type } = query;
+  const { code, where } = query;
 
   return {
-    query: { id, type },
+    query: { code, where },
     namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
   };
 };

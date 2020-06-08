@@ -1,5 +1,4 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useState /* , useContext */ } from 'react';
@@ -159,6 +158,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     ],
   });
 
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleEdit = (news?: NewsProps) => (): void => {};
 
   const handleDelete = (news: NewsProps) => (): void => {
@@ -209,7 +209,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
               <div>
                 {data?.news?.map((news: NewsProps) => {
                   // TODO: regexp может быть улучшен
-                  const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi);
+                  const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/gi);
                   const anchor = `news-${news.id}`;
 
                   return (
