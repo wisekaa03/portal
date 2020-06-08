@@ -81,6 +81,7 @@
         "positioneng",
         "postgresql",
         "postversion",
+        "precache",
         "preversion",
         "roundcube",
         "routes",
