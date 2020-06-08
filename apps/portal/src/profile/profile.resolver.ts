@@ -119,11 +119,11 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async changeProfile(
-    @Context('req') req: Request,
+    @Context('req') request: Request,
     @Args('profile') profile: Profile,
     @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
-    return this.profileService.changeProfile(req, profile, thumbnailPhoto).catch(async (error: Error) => {
+    return this.profileService.changeProfile(request, profile, thumbnailPhoto).catch(async (error: Error) => {
       throw await GQLError({ error, i18n: this.i18n, code: error.message as GQLErrorCode });
     });
   }

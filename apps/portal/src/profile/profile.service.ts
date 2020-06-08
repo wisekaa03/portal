@@ -36,6 +36,11 @@ export class ProfileService {
     // second: '2-digit',
   };
 
+  clean = (value: string | number | boolean): string | number | boolean => {
+    // TODO: продумать варианты очистки и безопасности
+    return typeof value === 'string' ? value.trim() : value;
+  };
+
   constructor(
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
@@ -236,7 +241,7 @@ export class ProfileService {
       .cache(true)
       .getMany();
 
-    return result.reduce((accumulator: string[], cur: ProfileEntity) => {
+    return result.reduce((accumulator: string[], current: ProfileEntity) => {
       // if (accumulator.length >= 10) return accumulator;
 
       const lower = search
@@ -245,18 +250,18 @@ export class ProfileService {
         .map((l) => l.trim());
       let showing = '';
 
-      if (lower.some((l) => cur.fullName.toLowerCase().includes(l))) {
-        showing = cur.fullName || '';
-      } else if (lower.some((l) => cur.management && cur.management.toLowerCase().includes(l))) {
-        showing = cur.management || '';
-      } else if (lower.some((l) => cur.department && cur.department.toLowerCase().includes(l))) {
-        showing = cur.department || '';
-      } else if (lower.some((l) => cur.division && cur.division.toLowerCase().includes(l))) {
-        showing = cur.division || '';
-      } else if (lower.some((l) => cur.company && cur.company.toLowerCase().includes(l))) {
-        showing = cur.company || '';
-      } else if (lower.some((l) => cur.title && cur.title.toLowerCase().includes(l))) {
-        showing = cur.title || '';
+      if (lower.some((l) => current.fullName.toLowerCase().includes(l))) {
+        showing = current.fullName || '';
+      } else if (lower.some((l) => current.management && current.management.toLowerCase().includes(l))) {
+        showing = current.management || '';
+      } else if (lower.some((l) => current.department && current.department.toLowerCase().includes(l))) {
+        showing = current.department || '';
+      } else if (lower.some((l) => current.division && current.division.toLowerCase().includes(l))) {
+        showing = current.division || '';
+      } else if (lower.some((l) => current.company && current.company.toLowerCase().includes(l))) {
+        showing = current.company || '';
+      } else if (lower.some((l) => current.title && current.title.toLowerCase().includes(l))) {
+        showing = current.title || '';
       }
 
       if (accumulator.includes(showing) || showing === '') return accumulator;
@@ -283,7 +288,7 @@ export class ProfileService {
       this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`);
     }
 
-    return undefined;
+    return;
   }
 
   /**
@@ -303,18 +308,10 @@ export class ProfileService {
     let comment: any;
     try {
       comment = JSON.parse(ldapUser.comment);
-    } catch (error) {
+    } catch {
       comment = {};
     }
-    const {
-      companyEng = undefined,
-      nameEng = undefined,
-      managementEng = undefined,
-      departmentEng = undefined,
-      divisionEng = undefined,
-      positionEng = undefined,
-      gender = undefined,
-    } = comment;
+    const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender } = comment;
 
     let { birthday } = comment;
     birthday = !birthday || birthday === '' ? undefined : new Date(Date.parse(birthday));
@@ -375,8 +372,8 @@ export class ProfileService {
       positionEng,
       accessCard: ldapUser['msDS-cloudExtensionAttribute13'],
       // eslint-disable-next-line no-bitwise
-      disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
-      notShowing: !!(parseInt(ldapUser.flags, 10) === 1),
+      disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),
+      notShowing: !!(Number.parseInt(ldapUser.flags, 10) === 1),
       thumbnailPhoto: (thumbnailPhoto as unknown) as string,
       thumbnailPhoto40: (thumbnailPhoto40 as unknown) as string,
       createdAt: new Date(ldapUser.whenCreated),
@@ -465,10 +462,10 @@ export class ProfileService {
       .cache(true)
       .getMany();
 
-    return result.reduce((accumulator: string[], cur: ProfileEntity) => {
+    return result.reduce((accumulator: string[], current: ProfileEntity) => {
       const data = ifManager
-        ? `${cur.lastName || ''} ${cur.firstName || ''} ${cur.middleName || ''}`
-        : cur[field as keyof ProfileEntity];
+        ? `${current.lastName || ''} ${current.firstName || ''} ${current.middleName || ''}`
+        : current[field as keyof ProfileEntity];
 
       if (typeof data === 'string' && data) {
         return [...accumulator, data];
@@ -486,13 +483,17 @@ export class ProfileService {
    * @returns {Promise<ProfileEntity>} The corrected ProfileEntity
    * @throws {Error} Exception
    */
-  async changeProfile(req: Request, profile: Profile, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
+  async changeProfile(
+    request: Request,
+    profile: Profile,
+    thumbnailPhoto?: Promise<FileUpload>,
+  ): Promise<ProfileEntity> {
     // В резолвере проверка на юзера уже есть
-    if (!req.session?.passport?.user?.profile?.id) {
+    if (!request.session?.passport?.user?.profile?.id) {
       throw new Error('Not authorized');
     }
 
-    const updated = { id: req.session.passport.user.profile.id, ...profile };
+    const updated = { id: request.session.passport.user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
     if (!created) {
@@ -516,14 +517,9 @@ export class ProfileService {
       comment: {},
     };
 
-    const clean = (value: any): string | number | boolean => {
-      // TODO: продумать варианты очистки и безопасности
-      return typeof value === 'string' ? value.trim() : value;
-    };
-
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const value = clean((profile as any)[key]);
+        const value = this.clean((profile as any)[key]);
 
         switch (key) {
           case 'firstName':
@@ -615,7 +611,7 @@ export class ProfileService {
       try {
         oldComment = JSON.parse(ldapUser.comment);
         // eslint-disable-next-line no-empty
-      } catch (_) {}
+      } catch {}
 
       modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
     }
@@ -641,7 +637,7 @@ export class ProfileService {
       });
     }
 
-    if (ldapUpdated.length < 1) {
+    if (ldapUpdated.length === 0) {
       throw new Error(GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE);
     }
     await this.ldapService
@@ -672,8 +668,8 @@ export class ProfileService {
     const result = this.profileRepository.merge(created, profile, thumbnail as ProfileEntity);
 
     return this.save(result).then(async (profileUpdated) => {
-      if (req.session?.passport.user.profile.id === profileUpdated.id) {
-        req.session.passport.user.profile = profileUpdated;
+      if (request.session?.passport.user.profile.id === profileUpdated.id) {
+        request.session.passport.user.profile = profileUpdated;
       }
 
       // TODO:  разобраться

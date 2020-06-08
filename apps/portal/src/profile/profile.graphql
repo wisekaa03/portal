@@ -80,6 +80,7 @@ enum ProfileOrderField {
   country
   region
   town
+  email
 }
 
 enum OrderDirection {
