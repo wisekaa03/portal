@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '-webkit-box-shadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
       '-moz-box-shadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
       'boxShadow': '5px 5px 5px -5px rgba(0,0,0,0.5)',
+      '&:hover': {
+        color: '#0173c1',
+      },
     },
     active: {
       padding: 0,
@@ -71,22 +74,21 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
       fontSize: theme.spacing(2),
       letterSpacing: 0.15,
-      color: '#31312F',
-      // color: '#0173c1',
+      // color: '#31312F',
     },
     subtitle: {
       fontSize: theme.spacing(1.5),
       letterSpacing: 0.25,
     },
     more: {
-      'gridRowStart': 1,
-      'gridRowEnd': 3,
-      'gridColumnStart': 2,
-      'padding': theme.spacing(0.25, 0),
+      gridRowStart: 1,
+      gridRowEnd: 3,
+      gridColumnStart: 2,
+      padding: theme.spacing(0.25, 0),
 
-      '&:hover': {
-        color: '#808080',
-      },
+      // '&:hover': {
+      //   color: '#808080',
+      // },
     },
     moreButton: {
       padding: 0,
