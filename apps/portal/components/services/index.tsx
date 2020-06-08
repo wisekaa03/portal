@@ -13,7 +13,7 @@ import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight, MINIMAL_BODY_LENGTH } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps } from '@lib/types';
 import Button from '@front/components/ui/button';
-import RefreshButton from '@front/components/ui/refresh-button';
+import RefreshButton, { RefreshWhere } from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
@@ -266,7 +266,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
       </Paper>
       <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
         <>
-          {!submitted && <RefreshButton where="services" onClick={refetchRoutes} />}
+          {!submitted && <RefreshButton where={RefreshWhere.Service} onClick={refetchRoutes} />}
           <SwipeableViews
             ref={contentRef}
             animateHeight={!!task.route}

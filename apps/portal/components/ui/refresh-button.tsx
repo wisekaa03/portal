@@ -14,6 +14,11 @@ import { useTranslation } from '@lib/i18n-client';
 import ServicesSyncIcon from '@public/images/svg/icons/wait_services.svg';
 //#endregion
 
+export enum RefreshWhere {
+  Default,
+  Service,
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -47,7 +52,7 @@ interface RefreshButtonProps extends IconButtonProps {
   noAbsolute?: boolean;
   disableBackground?: boolean;
   dense?: boolean;
-  where?: string;
+  where?: RefreshWhere;
   onClick: () => void;
 }
 
@@ -63,7 +68,7 @@ const RefreshButton = ({
   let icon: React.ReactElement;
 
   switch (where) {
-    case 'services':
+    case RefreshWhere.Service:
       icon = <BaseIcon src={ServicesSyncIcon} />;
       break;
     default:
