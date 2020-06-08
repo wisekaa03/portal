@@ -85,68 +85,68 @@ async function bootstrap(config: ConfigService): Promise<void> {
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
 
-  const scriptSource = ["'self'", "'unsafe-inline'" /* , nonce */];
-  const styleSource = ["'unsafe-inline'", "'self'"];
-  const imgSource = ["'self'", 'data:', 'blob:'];
-  const fontSource = ["'self'", 'data:'];
-  const frameSource = ["'self'"];
-  const defaultSource = ["'self'"];
+  const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
+  const styleSrc = ["'unsafe-inline'", "'self'"];
+  const imgSrc = ["'self'", 'data:', 'blob:'];
+  const fontSrc = ["'self'", 'data:'];
+  const frameSrc = ["'self'"];
+  const defaultSrc = ["'self'"];
 
   const mailUrl = config.get<string>('MAIL_URL');
   if (mailUrl.match(/^http/i)) {
-    imgSource.push(mailUrl);
-    fontSource.push(mailUrl);
-    frameSource.push(mailUrl);
-    defaultSource.push(mailUrl);
+    imgSrc.push(mailUrl);
+    fontSrc.push(mailUrl);
+    frameSrc.push(mailUrl);
+    defaultSrc.push(mailUrl);
   }
 
   const newsUrl = config.get<string>('NEWS_URL');
   if (newsUrl.match(/^http/i)) {
-    imgSource.push(newsUrl);
-    fontSource.push(newsUrl);
-    frameSource.push(newsUrl);
-    defaultSource.push(newsUrl);
+    imgSrc.push(newsUrl);
+    fontSrc.push(newsUrl);
+    frameSrc.push(newsUrl);
+    defaultSrc.push(newsUrl);
   }
 
   const newsApiUrl = config.get<string>('NEWS_API_URL');
   if (newsApiUrl.match(/^http/i)) {
-    imgSource.push(newsApiUrl);
+    imgSrc.push(newsApiUrl);
   }
 
   const meetingUrl = config.get<string>('MEETING_URL');
   if (meetingUrl.match(/^http/i)) {
-    frameSource.push(meetingUrl);
+    frameSrc.push(meetingUrl);
   }
 
-  scriptSource.push('https://storage.googleapis.com');
+  scriptSrc.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (__DEV__) {
-    scriptSource.push("'unsafe-eval'");
-    scriptSource.push('https://cdn.jsdelivr.net');
-    styleSource.push('https://fonts.googleapis.com');
-    styleSource.push('https://cdn.jsdelivr.net');
-    imgSource.push('https://cdn.jsdelivr.net');
-    imgSource.push('http://cdn.jsdelivr.net');
-    fontSource.push('https://fonts.gstatic.com');
-    frameSource.push(`https://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT_SSL')}`);
-    frameSource.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
-    frameSource.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
-    frameSource.push(`http://localhost:${config.get<number>('PORT')}`);
+    scriptSrc.push("'unsafe-eval'");
+    scriptSrc.push('https://cdn.jsdelivr.net');
+    styleSrc.push('https://fonts.googleapis.com');
+    styleSrc.push('https://cdn.jsdelivr.net');
+    imgSrc.push('https://cdn.jsdelivr.net');
+    imgSrc.push('http://cdn.jsdelivr.net');
+    fontSrc.push('https://fonts.gstatic.com');
+    frameSrc.push(`https://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT_SSL')}`);
+    frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
+    frameSrc.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
+    frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
   }
 
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: defaultSource,
+        defaultSrc,
         // TODO: production != development, will consider this
         // baseUri: ["'none'"],
         objectSrc: ["'none'"],
-        imgSrc: imgSource,
-        fontSrc: fontSource,
-        scriptSrc: scriptSource,
-        frameSrc: frameSource,
-        styleSrc: styleSource,
+        imgSrc,
+        fontSrc,
+        scriptSrc,
+        frameSrc,
+        styleSrc,
         upgradeInsecureRequests: true,
       },
     }),

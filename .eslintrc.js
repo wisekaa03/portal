@@ -119,6 +119,9 @@ module.exports = {
           ext: {
             extension: false,
           },
+          src: {
+            source: false,
+          },
         },
       },
     ],
