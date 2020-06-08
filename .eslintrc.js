@@ -94,7 +94,7 @@ module.exports = {
       },
     ],
     'react/prop-types': 'off',
-    'unicorn/no-null': 'warn',
+    'unicorn/no-null': 'off',
     'unicorn/no-reduce': 'off',
     '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',

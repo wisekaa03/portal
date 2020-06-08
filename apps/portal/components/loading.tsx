@@ -74,7 +74,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
   const classes = useStyles({});
 
   if (!activate) {
-    return children && React.Children.map(children, (child) => <>{child}</>);
+    return (children && React.Children.map(children, (child) => <>{child}</>)) ?? null;
   }
 
   let icon: React.ReactElement | undefined;
