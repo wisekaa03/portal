@@ -4,7 +4,7 @@
 import { Scalar } from '@nestjs/graphql';
 import { GraphQLUpload } from 'graphql-upload';
 import { ValueNode } from 'graphql';
-import Maybe from 'graphql/tsutils/Maybe';
+import { Maybe } from 'graphql/jsutils/Maybe';
 //#endregion
 //#region Imports Local
 //#endregion
