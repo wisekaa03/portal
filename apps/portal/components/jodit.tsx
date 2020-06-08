@@ -15,7 +15,17 @@ const styles = {
   '@global': {
     // Fix jodit_tooltip style
     '.jodit_tooltip': {
-      position: 'fixed !important',
+      position: 'fixed!important',
+    },
+    '.jodit_toolbar': {
+      backgroundColor: '#F5FDFF!important',
+      // color: '#F5FDFF!important',
+    },
+    '.jodit_toolbar .jodit_icon': {
+      color: '#fff',
+    },
+    '.jodit_statusbar': {
+      backgroundColor: '#F5FDFF!important',
     },
     '.jodit_placeholder': {
       color: '#31312F!important',
