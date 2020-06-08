@@ -21,8 +21,16 @@ const styles = {
       border: 'none!important',
       borderBottom: '1px solid #929fb7!important',
       backgroundColor: '#F5FDFF!important',
-      // color: '#F5FDFF!important',
     },
+    '.jodit_icon': {
+      fill: '#6AA7C8!important',
+    },
+    '.jodit_with_dropdownlist-trigger': {
+      color: '#6AA7C8!important',
+      fill: '#6AA7C8!important',
+    },
+
+    '.jodit_toolbar_btn>a': { color: '#6AA7C8!important' },
     '.jodit_toolbar .jodit_icon': {
       color: '#fff',
     },
