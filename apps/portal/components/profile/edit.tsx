@@ -166,6 +166,7 @@ const others: (keyof Profile)[] = [
   'region',
   'town',
   'street',
+  'room',
   'postalCode',
   'employeeID',
   'accessCard',

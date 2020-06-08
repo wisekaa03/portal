@@ -59,6 +59,7 @@ const PROFILE_FRAGMENT = gql`
     region
     town
     street
+    room
     accessCard
     updatedAt
     createdAt

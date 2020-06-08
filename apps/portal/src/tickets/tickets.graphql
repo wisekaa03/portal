@@ -1,7 +1,7 @@
 type TkService {
   where: String!
   code: String!
-  name: String!
+  name: String
   description: String
   avatar: String
 }
@@ -9,7 +9,7 @@ type TkService {
 type TkRoute {
   where: String!
   code: String!
-  name: String!
+  name: String
   description: String
   avatar: String
   services: [TkService!]
@@ -33,7 +33,7 @@ type TkUser {
 type TkFile {
   where: String!
   code: String!
-  name: String!
+  name: String
   ext: String
   body: String
   mime: String

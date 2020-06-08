@@ -63,6 +63,8 @@ enum ProfileOrderField {
   lastName
   middleName
   fullName
+  nameEng
+  username
   nameeng
   company
   companyEng
@@ -76,9 +78,12 @@ enum ProfileOrderField {
   positionEng
   telephone
   mobile
+  fax
+  street
   workPhone
   country
   region
+  room
   town
   email
 }

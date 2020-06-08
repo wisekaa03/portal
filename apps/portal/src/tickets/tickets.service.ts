@@ -277,9 +277,10 @@ export class TicketsService {
             .toPromise()
             .then((response) => {
               if (response.status === 200) {
-                if (typeof response.data === 'object') {
+                const value = response.data;
+                if (value && Object.keys(value).length > 0) {
                   return {
-                    tasks: response.data?.tasks?.map((task) => taskOST(task, whereKey)),
+                    tasks: value.tasks?.map((task) => taskOST(task, whereKey)),
                   } as TkTasks;
                 }
 
