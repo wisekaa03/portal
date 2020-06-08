@@ -43,7 +43,7 @@ const styles = {
       color: '#31312F!important',
     },
     '.jodit_container:not(.jodit_inline) .jodit_workplace': {
-      border: 'none',
+      border: 'none!important',
     },
     '.jodit_container': {
       'border': '2px solid #929fb7',
