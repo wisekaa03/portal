@@ -48,8 +48,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
     !!config.get<number>('PORT_SSL') &&
     fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory()
   ) {
-    const secureDir = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
-    if (secureDir.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
+    const secureDirectory = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
+    if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
       httpsServer = {
@@ -85,68 +85,68 @@ async function bootstrap(config: ConfigService): Promise<void> {
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
 
-  const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
-  const styleSrc = ["'unsafe-inline'", "'self'"];
-  const imgSrc = ["'self'", 'data:', 'blob:'];
-  const fontSrc = ["'self'", 'data:'];
-  const frameSrc = ["'self'"];
-  const defaultSrc = ["'self'"];
+  const scriptSource = ["'self'", "'unsafe-inline'" /* , nonce */];
+  const styleSource = ["'unsafe-inline'", "'self'"];
+  const imgSource = ["'self'", 'data:', 'blob:'];
+  const fontSource = ["'self'", 'data:'];
+  const frameSource = ["'self'"];
+  const defaultSource = ["'self'"];
 
   const mailUrl = config.get<string>('MAIL_URL');
   if (mailUrl.match(/^http/i)) {
-    imgSrc.push(mailUrl);
-    fontSrc.push(mailUrl);
-    frameSrc.push(mailUrl);
-    defaultSrc.push(mailUrl);
+    imgSource.push(mailUrl);
+    fontSource.push(mailUrl);
+    frameSource.push(mailUrl);
+    defaultSource.push(mailUrl);
   }
 
   const newsUrl = config.get<string>('NEWS_URL');
   if (newsUrl.match(/^http/i)) {
-    imgSrc.push(newsUrl);
-    fontSrc.push(newsUrl);
-    frameSrc.push(newsUrl);
-    defaultSrc.push(newsUrl);
+    imgSource.push(newsUrl);
+    fontSource.push(newsUrl);
+    frameSource.push(newsUrl);
+    defaultSource.push(newsUrl);
   }
 
   const newsApiUrl = config.get<string>('NEWS_API_URL');
   if (newsApiUrl.match(/^http/i)) {
-    imgSrc.push(newsApiUrl);
+    imgSource.push(newsApiUrl);
   }
 
   const meetingUrl = config.get<string>('MEETING_URL');
   if (meetingUrl.match(/^http/i)) {
-    frameSrc.push(meetingUrl);
+    frameSource.push(meetingUrl);
   }
 
-  scriptSrc.push('https://storage.googleapis.com');
+  scriptSource.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (__DEV__) {
-    scriptSrc.push("'unsafe-eval'");
-    scriptSrc.push('https://cdn.jsdelivr.net');
-    styleSrc.push('https://fonts.googleapis.com');
-    styleSrc.push('https://cdn.jsdelivr.net');
-    imgSrc.push('https://cdn.jsdelivr.net');
-    imgSrc.push('http://cdn.jsdelivr.net');
-    fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push(`https://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT_SSL')}`);
-    frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
-    frameSrc.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
-    frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
+    scriptSource.push("'unsafe-eval'");
+    scriptSource.push('https://cdn.jsdelivr.net');
+    styleSource.push('https://fonts.googleapis.com');
+    styleSource.push('https://cdn.jsdelivr.net');
+    imgSource.push('https://cdn.jsdelivr.net');
+    imgSource.push('http://cdn.jsdelivr.net');
+    fontSource.push('https://fonts.gstatic.com');
+    frameSource.push(`https://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT_SSL')}`);
+    frameSource.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
+    frameSource.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
+    frameSource.push(`http://localhost:${config.get<number>('PORT')}`);
   }
 
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc,
+        defaultSrc: defaultSource,
         // TODO: production != development, will consider this
         // baseUri: ["'none'"],
         objectSrc: ["'none'"],
-        imgSrc,
-        fontSrc,
-        scriptSrc,
-        frameSrc,
-        styleSrc,
+        imgSrc: imgSource,
+        fontSrc: fontSource,
+        scriptSrc: scriptSource,
+        frameSrc: frameSource,
+        styleSrc: styleSource,
         upgradeInsecureRequests: true,
       },
     }),
@@ -179,9 +179,9 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Next.JS locals
-  app.use('*', (_req: Request, res: express.Response, next: () => void) => {
+  app.use('*', (_request: Request, response: express.Response, next: () => void) => {
     // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
-    res.locals.nestLogger = logger;
+    response.locals.nestLogger = logger;
     next();
     // res.set('X-Server-ID', res);
     // res.removeHeader('X-Powered-By');
@@ -200,16 +200,16 @@ async function bootstrap(config: ConfigService): Promise<void> {
   const service = app.get(RenderService);
   service.setErrorHandler(
     async (
-      err: HttpException,
-      req: express.Request,
-      res: express.Response,
+      error: HttpException,
+      request: express.Request,
+      response: express.Response,
       _pathname: any,
       _query: ParsedUrlQuery,
     ): Promise<any> => {
-      const status = err.getStatus();
+      const status = error.getStatus();
       if (status === 403 || status === 401) {
-        res.status(302);
-        res.location(`/auth/login?redirect=${encodeURI(req.url)}`);
+        response.status(302);
+        response.location(`/auth/login?redirect=${encodeURI(request.url)}`);
       }
     },
   );

@@ -50,7 +50,7 @@ import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
 //#endregion
 
-const env = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env');
+const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env');
 
 //#region TypeOrm config options
 const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
@@ -96,7 +96,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 @Module({
   imports: [
     //#region Config module
-    ConfigModule.register(env),
+    ConfigModule.register(environment),
     //#endregion
 
     //#region Logging module
