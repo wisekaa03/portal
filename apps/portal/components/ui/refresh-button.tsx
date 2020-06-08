@@ -9,7 +9,9 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
+import BaseIcon from './icon';
 import { useTranslation } from '@lib/i18n-client';
+import ServicesSyncIcon from '@public/images/svg/icons/wait_services.svg';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,13 +47,28 @@ interface RefreshButtonProps extends IconButtonProps {
   noAbsolute?: boolean;
   disableBackground?: boolean;
   dense?: boolean;
+  where?: string;
   onClick: () => void;
 }
 
-const RefreshButton = ({ onClick, noAbsolute, disableBackground, dense }: RefreshButtonProps): React.ReactElement => {
+const RefreshButton = ({
+  onClick,
+  noAbsolute,
+  disableBackground,
+  where,
+  dense,
+}: RefreshButtonProps): React.ReactElement => {
   const classes = useStyles({});
   const { t } = useTranslation();
+  let icon: React.ReactElement;
 
+  switch (where) {
+    case 'services':
+      icon = <BaseIcon src={ServicesSyncIcon} />;
+      break;
+    default:
+      icon = <SyncIcon />;
+  }
   return (
     <Tooltip title={t('common:refresh') || ''}>
       <IconButton
@@ -63,7 +80,7 @@ const RefreshButton = ({ onClick, noAbsolute, disableBackground, dense }: Refres
         onClick={() => onClick()}
         aria-label="refresh"
       >
-        <SyncIcon />
+        {icon}
       </IconButton>
     </Tooltip>
   );

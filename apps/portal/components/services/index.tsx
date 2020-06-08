@@ -17,8 +17,8 @@ import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
-import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteService } from '@lib/types/user.dto';
-import { TkWhere, TkRoute, TkRoutes } from '@lib/types/tickets';
+import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
+import { TkWhere } from '@lib/types/tickets';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
 import ServicesElementFavorites from './element.favorites';
@@ -266,7 +266,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
       </Paper>
       <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
         <>
-          {!submitted && <RefreshButton onClick={refetchRoutes} />}
+          {!submitted && <RefreshButton where="services" onClick={refetchRoutes} />}
           <SwipeableViews
             ref={contentRef}
             animateHeight={!!task.route}
