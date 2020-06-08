@@ -7,8 +7,15 @@ import { LinearProgress, CircularProgress, Box } from '@material-ui/core';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
+import BaseIcon from '@front/components/ui/icon';
 import ConditionalWrapper from '@lib/conditional-wrapper';
+import ServicesSyncIcon from '@public/images/svg/icons/wait_services.svg';
 //#endregion
+
+export enum LoadingWhere {
+  Default,
+  Service,
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface LoadingComponentProps {
+  where?: LoadingWhere;
   activate?: boolean;
   variant?: 'determinate' | 'indeterminate' | 'static' | 'buffer' | 'query';
   disableShrink?: boolean;
@@ -49,6 +57,7 @@ interface LoadingComponentProps {
 }
 
 const LoadingComponent: FC<LoadingComponentProps> = ({
+  where = LoadingWhere.Default,
   activate = true,
   variant,
   disableShrink,
@@ -61,11 +70,20 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
   wrapperClasses,
   absolute,
   children,
-}) => {
+}): React.ReactElement => {
   const classes = useStyles({});
 
   if (!activate) {
-    return children ? React.Children.map(children, (child) => <>{child}</>) : <></>;
+    return children && React.Children.map(children, (child) => <>{child}</>);
+  }
+
+  let icon: React.ReactElement | undefined;
+
+  switch (where) {
+    case LoadingWhere.Service:
+      icon = <img src={ServicesSyncIcon} />;
+      break;
+    default:
   }
 
   if (type === 'linear') {
@@ -79,6 +97,28 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
         variant={(variant as 'determinate' | 'indeterminate' | 'buffer' | 'query') || 'indeterminate'}
         className={className}
       />
+    );
+  }
+
+  if (icon) {
+    return (
+      <ConditionalWrapper
+        condition={full}
+        wrapper={(child) => (
+          <Box
+            className={clsx(wrapperClasses, { [classes.absolute]: absolute })}
+            display="flex"
+            height="100%"
+            width="100%"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {child}
+          </Box>
+        )}
+      >
+        {icon}
+      </ConditionalWrapper>
     );
   }
 

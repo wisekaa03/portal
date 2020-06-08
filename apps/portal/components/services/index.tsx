@@ -14,7 +14,7 @@ import { appBarHeight, MINIMAL_BODY_LENGTH } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton, { RefreshWhere } from '@front/components/ui/refresh-button';
-import Loading from '@front/components/loading';
+import Loading, { LoadingWhere } from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
@@ -264,9 +264,17 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
         </Tabs>
       </Paper>
-      <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
+      <Loading
+        where={LoadingWhere.Service}
+        activate={loadingRoutes}
+        full
+        type="circular"
+        color="secondary"
+        disableShrink
+        size={48}
+      >
         <>
-          {!submitted && <RefreshButton where={RefreshWhere.Service} onClick={refetchRoutes} />}
+          {!submitted && <RefreshButton onClick={refetchRoutes} />}
           <SwipeableViews
             ref={contentRef}
             animateHeight={!!task.route}
