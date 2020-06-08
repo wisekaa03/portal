@@ -395,3 +395,23 @@ export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | u
         createdDate: new Date(task['creationDateTime']),
       }
     : undefined;
+
+/**
+ * Новый user в представлении OSTicket:
+ */
+export const userOST = (user: Record<string, any>, where: TkWhere): TkUser | undefined =>
+  user && Object.keys(user).length > 0
+    ? {
+        where: whereService(where),
+        id: user['Ref'],
+        name: user['ФИО'],
+        avatar: user['Аватар'] || '',
+        email: user['ОсновнойEmail'],
+        telephone: user['ОсновнойТелефон'],
+        company: user['Организация'],
+        department: user['Подразделение']?.split(', ')[0],
+        division: user['Подразделение']?.split(', ')[1],
+        manager: user['РуководительНаименование'],
+        title: user['Должность'],
+      }
+    : undefined;

@@ -26,8 +26,10 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
     {
       ssr: false,
       variables: {
-        where: query?.where || TkWhere.Default,
-        code: query?.id || '0',
+        task: {
+          where: query?.where || TkWhere.Default,
+          code: query?.id || '0',
+        },
       },
       fetchPolicy: 'cache-and-network',
     },
@@ -38,8 +40,10 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
       cache.writeQuery({
         query: TICKETS_TASK_DESCRIPTION,
         variables: {
-          where: query?.where || TkWhere.Default,
-          code: query?.id || '0',
+          task: {
+            where: query?.where || TkWhere.Default,
+            code: query?.id || '0',
+          },
         },
         data: { OldTicketDescription: OldTicketEdit },
       });

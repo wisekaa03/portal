@@ -87,7 +87,7 @@ export class TicketsResolver {
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTaskNew | undefined> {
+  ): Promise<TkTaskNew> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -111,7 +111,7 @@ export class TicketsResolver {
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTask> {
+  ): Promise<TkTasks> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -134,7 +134,7 @@ export class TicketsResolver {
     @Args('task') task: TkTaskDescriptionInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<TkTask | null | undefined> {
+  ): Promise<TkTasks> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

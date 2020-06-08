@@ -14,7 +14,6 @@ import {
   TkTaskNewInput,
   TkTaskNew,
   TkTaskEditInput,
-  TkTask,
   TkTaskDescriptionInput,
   RecordsOST,
 } from '@lib/types/tickets';
@@ -22,7 +21,17 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { taskSOAP, AttachesSOAP, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
+import {
+  taskSOAP,
+  AttachesSOAP,
+  userOST,
+  taskOST,
+  routesOST,
+  newOST,
+  routeSOAP,
+  whereService,
+  userSOAP,
+} from './tickets.util';
 //#endregion
 
 /**
@@ -340,7 +349,7 @@ export class TicketsService {
     password: string,
     task: TkTaskNewInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<TkTaskNew | undefined> => {
+  ): Promise<TkTaskNew> => {
     const Attaches: AttachesSOAP = { Вложение: [] };
 
     if (attachments) {
@@ -443,7 +452,10 @@ export class TicketsService {
                     if (typeof response.data.error === 'string') {
                       throw new TypeError(response.data.error);
                     } else {
-                      return newOST(response.data, task.where);
+                      const ticketNew = newOST(response.data, task.where);
+                      if (ticketNew) {
+                        return ticketNew;
+                      }
                     }
                   }
 
@@ -475,14 +487,14 @@ export class TicketsService {
    * @param {string} password The Password
    * @param {TkTaskEditInput} task The task which will be editing
    * @param {FileUpload} attachments Attachments object
-   * @returns {TkTask} Task for editing
+   * @returns {TkTasks} Task for editing
    */
   TicketsTaskEdit = async (
     user: User,
     password: string,
     task: TkTaskEditInput,
     attachments?: Promise<FileUpload>[],
-  ): Promise<TkTask> => {
+  ): Promise<TkTasks> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const authentication: SoapAuthentication = {
@@ -552,13 +564,9 @@ export class TicketsService {
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkTaskDescriptionInput} task Task description
-   * @returns {TkTask}
+   * @returns {TkTasks}
    */
-  TicketsTaskDescription = async (
-    user: User,
-    password: string,
-    task: TkTaskDescriptionInput,
-  ): Promise<TkTask | null | undefined> => {
+  TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkTasks> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const authentication = {
@@ -601,45 +609,49 @@ export class TicketsService {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(task.where));
+          if (whereKey) {
+            const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+            const myUserOST = {
+              company: user.profile.company,
+              email: user.profile.email,
+              fio,
+              function: user.profile.title,
+              manager: '',
+              phone: user.profile.telephone,
+              phone_ext: user.profile.workPhone,
+              subdivision: user.profile.department,
+              Аватар: user.profile.thumbnailPhoto,
+            } as TkUserOST;
 
-          const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
-          const userOST = {
-            company: user.profile.company,
-            email: user.profile.email,
-            fio,
-            function: user.profile.title,
-            manager: '',
-            phone: user.profile.telephone,
-            phone_ext: user.profile.workPhone,
-            subdivision: user.profile.department,
-            Аватар: user.profile.thumbnailPhoto,
-          } as TkUserOST;
-
-          return Object.keys(OSTicketURL)
-            .filter((where) => whereService(where) === whereService(task.where))
-            .map((where) =>
-              this.httpService
-                .post<RecordsOST>(`${OSTicketURL[where]}?req=description`, {
-                  login: user.username,
-                  user: JSON.stringify(userOST),
-                  msg: JSON.stringify({ login: fio, code: task.code }),
-                })
-                .toPromise()
-                .then((response) => {
-                  if (response.status === 200) {
-                    if (typeof response.data === 'object') {
-                      if (typeof response.data.error === 'string') {
-                        throw new TypeError(response.data.error);
-                      } else {
-                        return taskOST(response.data?.description, task.where);
+            return this.httpService
+              .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=description`, {
+                login: user.username,
+                user: JSON.stringify(myUserOST),
+                msg: JSON.stringify({ login: fio, code: task.code }),
+              })
+              .toPromise()
+              .then((response) => {
+                if (response.status === 200) {
+                  if (typeof response.data === 'object') {
+                    if (typeof response.data.error === 'string') {
+                      throw new TypeError(response.data.error);
+                    } else {
+                      const userTask = userOST(response.data?.description, task.where);
+                      const taskTask = taskOST(response.data?.description, task.where);
+                      if (userTask && taskTask) {
+                        return {
+                          users: [userTask],
+                          tasks: [taskTask],
+                        };
                       }
                     }
-                    throw new Error(`Not found the OSTicket data in "${task.where}"`);
                   }
-                  throw new Error(response.statusText);
-                }),
-            )
-            .pop();
+                  throw new Error(`Not found the OSTicket data in "${task.where}"`);
+                }
+                throw new Error(response.statusText);
+              });
+          }
         } catch (error) {
           this.logger.error(error);
 

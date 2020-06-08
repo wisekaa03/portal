@@ -130,10 +130,10 @@ type TkTasks {
 type Query {
   TicketsRoutes: TkRoutes
   TicketsTasks(task: TkTasksInput): TkTasks
-  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTask
+  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkTasks
 }
 
 type Mutation {
   TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew
-  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTask
+  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkTasks
 }

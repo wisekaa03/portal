@@ -509,8 +509,12 @@ export const TICKETS_TASKS = gql`
 export const TICKETS_TASK_DESCRIPTION = gql`
   query TicketsTaskDescription($where: String, $code: String) {
     TicketsTaskDescription(task: { where: $where, code: $code }) {
-      ...TicketsUserProps
-      ...TicketsTaskProps
+      users {
+        ...TicketsUserProps
+      }
+      tasks {
+        ...TicketsTaskProps
+      }
     }
   }
   ${TICKETS_USER_FRAGMENT}
@@ -535,8 +539,12 @@ export const TICKETS_TASK_NEW = gql`
 export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
     TicketsTaskEdit(task: $task, attachments: $attachments) {
-      ...TicketsUserProps
-      ...TicketsTaskProps
+      users {
+        ...TicketsUserProps
+      }
+      tasks {
+        ...TicketsTaskProps
+      }
     }
   }
   ${TICKETS_USER_FRAGMENT}

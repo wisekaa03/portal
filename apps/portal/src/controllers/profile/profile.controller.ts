@@ -12,35 +12,35 @@ import { SessionGuard } from '@back/guards/session.guard';
 export class ProfileController {
   @Get()
   @UseGuards(SessionGuard)
-  public async profile(@Res() res: RenderableResponse): Promise<void> {
-    res.render('profile');
+  public async profile(@Res() response: RenderableResponse): Promise<void> {
+    response.render('profile');
   }
 
   @Get('edit')
   @UseGuards(SessionGuard)
-  public async editMe(@Res() res: RenderableResponse): Promise<void> {
-    res.render('profile/edit');
+  public async editMe(@Res() response: RenderableResponse): Promise<void> {
+    response.render('profile/edit');
   }
 
   @Get('edit/:id')
   @UseGuards(SessionGuard)
-  public async editProfile(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
-    res.render('profile/edit', { id });
+  public async editProfile(@Res() response: RenderableResponse, @Param('id') id: string): Promise<void> {
+    response.render('profile/edit', { id });
   }
 
-  @Get('ticket/:id/:type')
+  @Get('task/:where/:code')
   @UseGuards(SessionGuard)
   public async ticket(
-    @Res() res: RenderableResponse,
-    @Param('id') id: string,
-    @Param('type') type: string,
+    @Res() response: RenderableResponse,
+    @Param('where') where: string,
+    @Param('code') code: string,
   ): Promise<void> {
-    res.render('profile/ticket', { id, type });
+    response.render('profile/task', { where, code });
   }
 
   @Get('equipment')
   @UseGuards(SessionGuard)
-  public async equipment(@Res() res: RenderableResponse): Promise<void> {
-    res.render('profile/equipment');
+  public async equipment(@Res() response: RenderableResponse): Promise<void> {
+    response.render('profile/equipment');
   }
 }
