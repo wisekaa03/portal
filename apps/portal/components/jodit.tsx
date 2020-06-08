@@ -18,6 +18,8 @@ const styles = {
       position: 'fixed!important',
     },
     '.jodit_toolbar': {
+      border: 'none!important',
+      borderBottom: '1px solid #929fb7!important',
       backgroundColor: '#F5FDFF!important',
       // color: '#F5FDFF!important',
     },
@@ -25,10 +27,15 @@ const styles = {
       color: '#fff',
     },
     '.jodit_statusbar': {
+      border: 'none!important',
+      borderTop: '1px solid #929fb7!important',
       backgroundColor: '#F5FDFF!important',
     },
     '.jodit_placeholder': {
       color: '#31312F!important',
+    },
+    '.jodit_container:not(.jodit_inline) .jodit_workplace': {
+      border: 'none',
     },
     '.jodit_container': {
       'border': '2px solid #929fb7',

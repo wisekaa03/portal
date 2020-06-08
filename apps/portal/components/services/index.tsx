@@ -313,18 +313,6 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                       ),
                   )}
               </Box>
-              {/* Евгений */}
-              {/* TODO: если все еще актуально, доделать */}
-              {/* <ServicesElement
-                key="k0001"
-                withLink
-                url="http://srvsd-01.khgk.local/anketa833/"
-                element={{
-                  code: 'k0001',
-                  name: 'Департамент по персоналу - Форма на подбор персонала',
-                  avatar: HR,
-                }}
-              /> */}
             </Box>
             <Box
               style={{ minHeight: contentHeight }}
