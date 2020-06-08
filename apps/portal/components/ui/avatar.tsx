@@ -6,9 +6,9 @@ import AvatarMui from '@material-ui/core/Avatar';
 //#endregion
 //#region Imports Local
 import { Profile } from '@lib/types';
-import Alien from '@public/images/svg/photo/alien-blue.svg';
-import Man from '@public/images/svg/photo/man-blue.svg';
-import Woman from '@public/images/svg/photo/woman-blue.svg';
+import Alien from '@public/images/svg/avatar/alien-blue.svg';
+import Man from '@public/images/svg/avatar/man-blue.svg';
+import Woman from '@public/images/svg/avatar/woman-blue.svg';
 //#endregion
 
 export interface AvatarProps {
@@ -23,10 +23,10 @@ export interface AvatarProps {
  * DOCUMENT THIS
  */
 const Avatar = ({ profile, fullSize = false, base64, ...rest }: AvatarProps): React.ReactElement => {
-  let src = 'data:image/png;base64,';
+  let source = 'data:image/png;base64,';
 
   if (base64) {
-    return <AvatarMui src={src + base64} {...rest} />;
+    return <AvatarMui src={source + base64} {...rest} />;
   }
 
   if (!profile) {
@@ -36,9 +36,9 @@ const Avatar = ({ profile, fullSize = false, base64, ...rest }: AvatarProps): Re
   const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
   const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
 
-  src = photo ? src + photo : gender === 1 ? Man : gender === 2 ? Woman : Alien;
+  source = photo ? source + photo : gender === 1 ? Man : gender === 2 ? Woman : Alien;
 
-  return <AvatarMui src={src} {...rest} />;
+  return <AvatarMui src={source} {...rest} />;
 };
 
 export default Avatar;

@@ -12,7 +12,6 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 //#endregion
 //#region Imports Local
 import LogoMin from '@public/images/png/logo_min.png';
-import PopoverBg from '@public/images/png/profile_popover_bg.png';
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';
