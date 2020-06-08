@@ -42,22 +42,21 @@ const useStyles = makeStyles((theme: Theme) =>
       gap: `${theme.spacing()}px ${theme.spacing(4)}px`,
       padding: theme.spacing(2, 4),
 
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.down('xl')]: {
         padding: theme.spacing(4, 8),
         gridTemplateColumns: '1fr 1fr',
       },
-
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('xl')]: {
         gridTemplateColumns: '1fr 1fr 1fr',
       },
     },
     formControl: {
       marginBottom: theme.spacing(3),
       width: '90%',
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.down('xl')]: {
         width: '80%',
       },
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('xl')]: {
         width: '60%',
       },
     },
