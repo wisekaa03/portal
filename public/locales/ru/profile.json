@@ -12,11 +12,11 @@
   "searchPlaceholder": "Найти заявку...",
   "notFound": "Карточка сотрудника не найдена",
   "task": {
-    "header": "Task № {{ticket}} at {{date}}",
+    "header": "Задание № {{task}} от {{date}}",
     "notFound": "Обращение не найдено",
     "notFounds": "Обращения не найдены"
   },
-  "task": {
+  "tasks": {
     "title": "Мои заявки",
     "status": "Статус",
     "inWork": "В работе",

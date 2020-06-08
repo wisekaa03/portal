@@ -137,7 +137,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
             <Divider />
             <Box display="flex" flexDirection="column" color="gray">
               <span>
-                {t('profile:tickets.status')}:{' '}
+                {t('profile:tasks.status')}:{' '}
                 <span
                   className={clsx({
                     [classes.registered]: status !== 'В работе',
@@ -147,8 +147,8 @@ const ProfileTicketsCard = withStyles((theme) => ({
                   {status}
                 </span>
               </span>
-              <span>{t('profile:tickets.date', { value: format(createdDate || '', i18n) })}</span>
-              <span>{t('profile:tickets.id', { value: id })}</span>
+              <span>{t('profile:tasks.date', { value: format(createdDate || '', i18n) })}</span>
+              <span>{t('profile:tasks.id', { value: id })}</span>
             </Box>
           </CardContent>
         </Link>
@@ -192,14 +192,14 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
         </div>
         <Box display="flex" justifyContent="center" alignItems="center" flexGrow={1} px={1}>
           <Typography color="secondary" variant="h4">
-            {t('profile:tickets.title')}
+            {t('profile:tasks.title')}
           </Typography>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
           <RefreshButton noAbsolute onClick={() => refetchTasks()} />
         </Box>
         <Box display="flex" justifyContent="flex-end">
-          <Select label={t('profile:tickets.status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
+          <Select label={t('profile:tasks.status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
         </Box>
       </Box>
       <BoxWithRef

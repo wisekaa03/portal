@@ -12,7 +12,7 @@
   "searchPlaceholder": "Ticket search...",
   "notFound": "Profile not found",
   "task": {
-    "header": "Task № {{ticket}} at {{date}}",
+    "header": "Task № {{task}} at {{date}}",
     "notFound": "Task not found",
     "notFounds": "Tasks not found"
   },

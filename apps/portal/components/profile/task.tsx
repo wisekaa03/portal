@@ -385,7 +385,9 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   <Button actionType="cancel" onClick={handleClose}>
                     {t('common:cancel')}
                   </Button>
-                  <Button onClick={handleAccept}>{t('common:send')}</Button>
+                  <Button disabled onClick={handleAccept}>
+                    {t('common:send')}
+                  </Button>
                 </FormControl>
               </Loading>
             )}
