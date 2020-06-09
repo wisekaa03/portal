@@ -7,9 +7,8 @@ import { LinearProgress, CircularProgress, Box } from '@material-ui/core';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
-import BaseIcon from '@front/components/ui/icon';
 import ConditionalWrapper from '@lib/conditional-wrapper';
-import ServicesSyncIcon from '@public/images/svg/icons/wait_services.svg';
+import SyncIcon from '@public/images/svg/icons/wait_servers.svg';
 //#endregion
 
 export enum LoadingWhere {
@@ -30,9 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'fixed',
       width: '100%',
     },
-    icon: {
-      width: '10em',
-    },
     absolute: {
       position: 'absolute',
       top: 0,
@@ -44,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface LoadingComponentProps {
-  where?: LoadingWhere;
+  service?: boolean;
   activate?: boolean;
   variant?: 'determinate' | 'indeterminate' | 'static' | 'buffer' | 'query';
   disableShrink?: boolean;
@@ -60,7 +56,7 @@ interface LoadingComponentProps {
 }
 
 const LoadingComponent: FC<LoadingComponentProps> = ({
-  where = LoadingWhere.Default,
+  service = true,
   activate = true,
   variant,
   disableShrink,
@@ -80,15 +76,6 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
     return (children && React.Children.map(children, (child) => <>{child}</>)) ?? null;
   }
 
-  let icon: React.ReactElement | undefined;
-
-  switch (where) {
-    case LoadingWhere.Service:
-      icon = <img className={classes.icon} src={ServicesSyncIcon} />;
-      break;
-    default:
-  }
-
   if (type === 'linear') {
     const className = clsx(classes.loading, {
       [classes.margin]: !noMargin,
@@ -103,7 +90,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
     );
   }
 
-  if (icon) {
+  if (service) {
     return (
       <ConditionalWrapper
         condition={full}
@@ -120,7 +107,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
           </Box>
         )}
       >
-        {icon}
+        <img style={{ width: size || '10em' }} src={SyncIcon} />
       </ConditionalWrapper>
     );
   }
