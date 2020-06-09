@@ -20,17 +20,21 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "runtimeArgs": [
-        "-r",
-        "ts-node/register"
-      ],
-      "env": {
-        "TS_NODE_PROJECT": "tsconfig.server.json"
-      },
+      "name": "Debug Nest Framework",
       "args": [
         "${workspaceFolder}/apps/portal/src/main.ts"
-      ]
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/apps/portal/tsconfig.app.json"
+      },
+      "runtimeArgs": [
+        "--nolazy",
+        "-r", "tsconfig-paths/register",
+        "-r", "ts-node/register"
+      ],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
     }
   ]
 }
