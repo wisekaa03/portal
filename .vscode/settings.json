@@ -82,6 +82,7 @@
         "postgresql",
         "postversion",
         "precache",
+        "prerender",
         "preversion",
         "roundcube",
         "routes",
