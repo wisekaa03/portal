@@ -48,12 +48,12 @@ export class LoggingInterceptor implements NestInterceptor {
 
       case 'http':
       default: {
-        const req = context.switchToHttp().getRequest<Request>();
-        let username = (req?.session?.passport?.user as User)?.username || '';
+        const request = context.switchToHttp().getRequest<Request>();
+        let username = '';
 
         // HTTP requests
-        if (req) {
-          // const { method, url, socket } = req;
+        if (request) {
+          username = (request.session?.passport?.user as User)?.username || '';
 
           return next.handle().pipe(tap(() => this.logger.info({ username }, context.getClass().name)));
         }
@@ -63,7 +63,6 @@ export class LoggingInterceptor implements NestInterceptor {
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        // const address = gqlCtx?.req?.client?.remoteAddress;
         username = (gqlCtx?.req?.session?.passport?.user as User)?.username;
 
         const values = info.variableValues;
