@@ -257,7 +257,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const service = useMemo<string>(() => task.service?.code || '', [task.service?.code]);
 
   return (
-    <Box display="flex" flexDirection="column" position="relative">
+    <Box style={{ overflow: 'hidden' }} display="flex" flexDirection="column" position="relative">
       <Paper ref={headerReference} square className={classes.header}>
         <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
           <Tab label={t('services:tabs.tab1')} />
