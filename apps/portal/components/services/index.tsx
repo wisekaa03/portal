@@ -264,15 +264,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
         </Tabs>
       </Paper>
-      <Loading
-        where={LoadingWhere.Service}
-        activate={loadingRoutes}
-        full
-        type="circular"
-        color="secondary"
-        disableShrink
-        size={48}
-      >
+      <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
         <>
           {!submitted && <RefreshButton onClick={refetchRoutes} />}
           <SwipeableViews
