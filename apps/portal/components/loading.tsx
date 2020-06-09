@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'fixed',
       width: '100%',
     },
+    icon: {
+      width: '10em',
+    },
     absolute: {
       position: 'absolute',
       top: 0,
@@ -81,7 +84,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
 
   switch (where) {
     case LoadingWhere.Service:
-      icon = <img src={ServicesSyncIcon} />;
+      icon = <img className={classes.icon} src={ServicesSyncIcon} />;
       break;
     default:
   }
