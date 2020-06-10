@@ -4,8 +4,8 @@ import React from 'react';
 import { text, boolean } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
 
-import Service1 from '@public/images/svg/itapps/app_1.svg';
-import Service2 from '@public/images/svg/itapps/app_2.svg';
+import Service1 from '@public/images/svg/example/app_1.svg';
+import Service2 from '@public/images/svg/example/app_2.svg';
 import { story, withTranslation } from './index.stories';
 import Element from './element';
 

@@ -14,7 +14,7 @@ import {
   TkRoute,
   UserSettingsTaskFavorite,
 } from '@lib/types';
-import ServicesIcon from '@public/images/svg/icons/services.svg';
+import ServicesIcon from '@public/images/svg/drawer/services.svg';
 import { story, withTranslation } from './index.stories';
 import Services from '.';
 
