@@ -131,7 +131,7 @@
     "graphql-upload": "^11.0.0",
     "helmet": "^3.23.0",
     "i18next": "^19.4.5",
-    "i18next-browser-languagedetector": "^4.2.0",
+    "i18next-browser-languagedetector": "^4.3.0",
     "is-mobile": "^2.2.1",
     "jodit": "^3.3.24",
     "jodit-react": "^1.0.42",
