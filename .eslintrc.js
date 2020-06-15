@@ -125,6 +125,7 @@ module.exports = {
         },
       },
     ],
+    '@typescript-eslint/no-var-requires': 0,
     // '@typescript-eslint/camelcase': 0,
     // '@typescript-eslint/naming-convention': 0,
     // 'react/jsx-props-no-spreading': 0,

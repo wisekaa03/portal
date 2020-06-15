@@ -21,6 +21,7 @@ module.exports = {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
     '^.+\\.svg$': 'jest-svg-transformer',
   },
+  transformIgnorePatterns: ['<rootDir>/node_modules/', '!<rootDir>/node_modules/simple-git'],
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/(*.)+(spec|test).[jt]s?(x)'],
   setupFiles: ['./jest.setup.ts'],
   testPathIgnorePatterns: [
@@ -29,6 +30,7 @@ module.exports = {
     '<rootDir>/.next/',
     '<rootDir>/apps/portal/.next/',
     '<rootDir>/node_modules/',
+    '!<rootDir>/node_modules/simple-git',
     '<rootDir>/.local/',
   ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
