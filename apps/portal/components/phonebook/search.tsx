@@ -89,7 +89,7 @@ const PhonebookSearch: FC<PhonebookSearchProps> = ({
   };
 
   const handleCurrentSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setOpenTooltip(!!!event.target.value);
+    setOpenTooltip(!event.target.value);
     handleSearch(event);
   };
 

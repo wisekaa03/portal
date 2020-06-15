@@ -74,7 +74,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     }
   });
 
-  let clientParams = {};
+  let clientParameters = {};
   let httpLink: ApolloLink;
   let cache: InMemoryCache;
 
@@ -94,7 +94,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       credentials: 'same-origin',
     });
 
-    clientParams = {
+    clientParameters = {
       resolvers: stateResolvers,
     };
 
@@ -124,7 +124,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     ssrMode: __SERVER__,
     link: concat(authLink.concat(errorLink), httpLink),
     cache,
-    ...clientParams,
+    ...clientParameters,
   });
 };
 
@@ -159,7 +159,7 @@ export const withApolloClient = (
         const user: User | undefined = (ctx.req as Request)?.session?.passport?.user as User;
         const language = user?.settings?.lng || lngFromReq(ctx?.req) || 'en';
         const isMobile = checkMobile({ ua: ctx.req?.headers['user-agent'] }) ?? false;
-        const context: UserContext = { user, isMobile, language };
+        const context: UserContext = { user, fontSize: user?.settings?.fontSize || 16, isMobile, language };
         const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
         try {
@@ -227,9 +227,9 @@ export const withApolloClient = (
 
     public render(): React.ReactElement {
       if (__SERVER__) {
-        const res = this.props.ctx?.res as Response;
-        if (res) {
-          logger = res.locals?.nestLogger;
+        const response = this.props.ctx?.res as Response;
+        if (response) {
+          logger = response.locals?.nestLogger;
         }
       }
 

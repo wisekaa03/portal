@@ -75,6 +75,7 @@ interface UserSettingsTask {
 
 export interface UserSettings {
   lng?: 'ru' | 'en' | null;
+  fontSize?: number | null;
   drawer?: boolean | null;
   phonebook?: UserSettingsPhonebook | null;
   task?: UserSettingsTask | null;
@@ -84,6 +85,7 @@ export interface UserSettings {
 //#region User context
 export interface UserContext {
   user?: User;
+  fontSize?: number;
   language?: string;
   isMobile?: boolean;
 }

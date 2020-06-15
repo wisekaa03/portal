@@ -175,6 +175,7 @@ export class UserService {
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdap(ldapUser).catch((error: Error) => {
       this.logger.error('Unable to save data in `group`', error);
 
+      // eslint-disable-next-line unicorn/no-useless-undefined
       return undefined;
     });
 
@@ -183,6 +184,7 @@ export class UserService {
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false).catch(() => {
         this.logger.trace(`New user ${ldapUser.sAMAccountName}`);
 
+        // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined;
       });
     }
@@ -195,7 +197,7 @@ export class UserService {
       loginService: LoginService.LDAP,
       loginIdentificator: ldapUser.objectGUID,
       // eslint-disable-next-line no-bitwise
-      disabled: !!(parseInt(ldapUser.userAccountControl, 10) & 2),
+      disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),
       groups,
       isAdmin: groups ? Boolean(groups.find((group) => group.name.toLowerCase() === ADMIN_GROUP)) : false,
       settings: user ? user.settings : defaultUserSettings,

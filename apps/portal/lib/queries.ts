@@ -78,6 +78,7 @@ export const CURRENT_USER = gql`
       isAdmin
       settings {
         lng
+        fontSize
         drawer
         task {
           status
@@ -132,6 +133,7 @@ export const LOGIN = gql`
         isAdmin
         settings {
           lng
+          fontSize
           drawer
           task {
             status
@@ -230,6 +232,7 @@ export const USER_SETTINGS = gql`
       id
       settings {
         lng
+        fontSize
         drawer
         phonebook {
           columns

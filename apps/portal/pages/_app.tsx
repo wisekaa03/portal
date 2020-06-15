@@ -17,7 +17,7 @@ import { SnackbarProvider } from 'notistack';
 // import url from 'url';
 //#endregion
 //#region Imports Local
-import theme from '@lib/theme';
+import { ThemeUser } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
 import { ApolloAppProps, Data, User, UserContext } from '@lib/types';
@@ -86,22 +86,23 @@ class MainApp extends NextApp<ApolloAppProps> {
       }),
     });
 
+    const themeUser = ThemeUser(context?.fontSize || 14);
+    const themeContext = {
+      ...themeUser,
+      props: {
+        ...themeUser.props,
+        MuiUseMediaQuery: {
+          ssrMatchMedia,
+        },
+      },
+    };
+
     return (
       <ApolloProvider client={apolloClient}>
         <Head>
           <title>Корпоративный портал</title>
         </Head>
-        <ThemeProvider
-          theme={{
-            ...theme,
-            props: {
-              ...theme.props,
-              MuiUseMediaQuery: {
-                ssrMatchMedia,
-              },
-            },
-          }}
-        >
+        <ThemeProvider theme={{ ...themeContext }}>
           <StylesProvider disableGeneration={disableGeneration}>
             <CssBaseline />
             <SnackbarProvider

@@ -1,3 +1,10 @@
 {
-  "title": "Portal: Settings"
+  "title": "Portal: Settings",
+  "changeLanguage": "Change language to Russian",
+  "fontSize": {
+    "title": "Change font size",
+    "small": "Small",
+    "medium": "Medium",
+    "big": "Big"
+  }
 }

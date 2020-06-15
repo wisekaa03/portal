@@ -54,7 +54,7 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
     <TableRow
       component="div"
       className={classes.row}
-      style={{ ...rest, top: `${parseFloat(top as string) + PHONEBOOK_ROW_HEIGHT}px` }}
+      style={{ ...rest, top: `${Number.parseFloat(top as string) + PHONEBOOK_ROW_HEIGHT}px` }}
       hover
     >
       {allColumns

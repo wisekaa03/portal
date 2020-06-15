@@ -11,7 +11,7 @@ import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 //#endregion
 //#region Imports Local
 import { ApolloDocumentProps } from '@lib/types';
-import theme from '@lib/theme';
+// import { ThemeUser } from '@lib/theme';
 import { nextI18next } from '@lib/i18n-client';
 //#endregion
 
@@ -58,7 +58,7 @@ class MainDocument extends Document<MainDocumentInitialProps> {
           <meta name="robots" content="noindex" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           {/* <meta property="csp-nonce" content={this.props.nonce} /> */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          {/* <meta name="theme-color" content={theme.palette.primary.main} /> */}
         </Head>
         <body>
           <Main />

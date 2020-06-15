@@ -54,6 +54,7 @@ input UserSettingsPhonebookInput {
 
 type UserSettings {
   lng: String
+  fontSize: Int
   drawer: Boolean
   phonebook: UserSettingsPhonebook
   task: UserSettingsTask
@@ -61,6 +62,7 @@ type UserSettings {
 
 input UserSettingsInput {
   lng: String
+  fontSize: Int
   drawer: Boolean
   phonebook: UserSettingsPhonebookInput
   task: UserSettingsTaskInput
