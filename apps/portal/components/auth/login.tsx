@@ -175,7 +175,7 @@ export const LoginComponent: FC<LoginComponentProps> = ({
             </Card>
           </CardContent>
           <CardActions>
-            <Loading activate={loading}>
+            <Loading size={47} activate={loading}>
               <FormControl className={classes.submitBackground}>
                 <Button
                   className={classes.submit}
