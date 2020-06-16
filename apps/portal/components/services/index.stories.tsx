@@ -9,12 +9,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { Box } from '@material-ui/core';
 
 import { appWithTranslation, nextI18next } from '@lib/i18n-client';
+import { FONT_SIZE_NORMAL } from '@lib/constants';
 import { MaterialUI_fck } from '@lib/theme';
 
 const story = storiesOf('Services', module);
 
 const withDecorator = (storyFn) => (
-  <ThemeProvider theme={MaterialUI_fck(16)}>
+  <ThemeProvider theme={MaterialUI_fck(FONT_SIZE_NORMAL)}>
     <CssBaseline />
     {storyFn()}
   </ThemeProvider>
