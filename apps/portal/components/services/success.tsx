@@ -25,7 +25,6 @@ const ServicesSuccessCard = withStyles((theme) => ({
     '& h6': {
       fontStyle: 'normal',
       fontWeight: 'normal',
-      fontSize: '16px',
       lineHeight: '24px',
       color: 'rgba(0, 0, 0, 0.541327)',
     },
@@ -33,7 +32,6 @@ const ServicesSuccessCard = withStyles((theme) => ({
   title: {
     fontStyle: 'normal',
     fontWeight: 500,
-    fontSize: '20px',
     lineHeight: '23px',
     marginBottom: theme.spacing(4),
   },

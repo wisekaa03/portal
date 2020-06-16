@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       'color': 'rgba(0, 0, 0, 0.541327)',
       'fontStyle': 'normal',
-      'fontSize': '16px',
       'lineHeight': '24px',
       'padding': theme.spacing(3, 3, 1.5),
 
@@ -40,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       color: 'rgba(0, 0, 0, 0.87)',
       fontWeight: 500,
-      fontSize: '20px',
       lineHeight: '23px',
     },
   }),

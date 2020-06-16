@@ -9,6 +9,10 @@ import { LoginService, Gender, UserContext } from '@lib/types';
 export * from './app-bar';
 export * from './ldap-sync';
 
+export const FONT_SIZE_SMALL = 21;
+export const FONT_SIZE_NORMAL = 16;
+export const FONT_SIZE_BIG = 9;
+
 export const MINIMAL_SUBJECT_LENGTH = 10;
 export const MINIMAL_BODY_LENGTH = 10;
 export const AUTH_PAGE = '/auth/login';

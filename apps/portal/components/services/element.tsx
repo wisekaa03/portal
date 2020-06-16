@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) =>
       'overflow': 'hidden',
       'textOverflow': 'ellipsis',
       'whiteSpace': 'nowrap',
-      'fontSize': theme.spacing(2),
       'letterSpacing': 0.15,
       'color': '#31312F',
       // 'color': '#0173c1',
@@ -91,15 +90,6 @@ const useStyles = makeStyles((theme: Theme) =>
       gridArea: '2/1/2/3',
       width: '100%',
       height: '100%',
-    },
-    subtitle: {
-      'fontSize': theme.spacing(1.5),
-      'letterSpacing': 0.25,
-      // 'color': '#0173c1',
-      'display': 'inline-flex',
-      '&:hover': {
-        // color: '#013e83',
-      },
     },
     more: {
       'gridRowStart': 1,

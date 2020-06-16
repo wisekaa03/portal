@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     profileName: {
       margin: theme.spacing(),
-      fontSize: '16px',
     },
     commonBlock: {
       display: 'grid',

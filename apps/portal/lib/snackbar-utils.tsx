@@ -22,12 +22,12 @@ const InnerSnackbarUtilsConfigurator: React.FC<SnackbarUtilsProps> = (props: Sna
 let useSnackbarRef: WithSnackbarProps;
 let useTranslationRef: any;
 
-const setUseSnackbarRef = (useSnackbarRefProp: WithSnackbarProps): void => {
-  useSnackbarRef = useSnackbarRefProp;
+const setUseSnackbarRef = (useSnackbarRefProperty: WithSnackbarProps): void => {
+  useSnackbarRef = useSnackbarRefProperty;
 };
 
-const setUseTranslationRef = (useTranslationRefProp: any): void => {
-  useTranslationRef = useTranslationRefProp;
+const setUseTranslationRef = (useTranslationRefProperty: any): void => {
+  useTranslationRef = useTranslationRefProperty;
 };
 
 export const SnackbarUtilsConfigurator = (): React.ReactElement => {
@@ -37,7 +37,7 @@ export const SnackbarUtilsConfigurator = (): React.ReactElement => {
 };
 
 export default {
-  error(errors: ApolloError | readonly GraphQLError[] | string) {
+  error(errors: ApolloError | readonly GraphQLError[] | string): void {
     const { t } = useTranslationRef;
 
     if (typeof errors === 'string') {
@@ -66,5 +66,6 @@ export default {
     }
   },
 
-  show: (message: string, variant: VariantType = 'error') => useSnackbarRef.enqueueSnackbar(message, { variant }),
+  show: (message: string, variant: VariantType = 'error'): string | number =>
+    useSnackbarRef.enqueueSnackbar(message, { variant }),
 };

@@ -25,8 +25,7 @@ export const ThemeUser = (fontSize: number): Theme => {
   const theme = createMuiTheme({
     typography: {
       fontFamily: ['Roboto', 'Arial'].join(','),
-      fontSize: fontSize,
-      htmlFontSize: fontSize + 2,
+      htmlFontSize: fontSize,
     },
     palette: {
       primary: {

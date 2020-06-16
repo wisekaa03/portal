@@ -70,7 +70,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     blockTitle: {
       'fontWeight': 500,
-      'fontSize': '14px',
       'lineHeight': '21px',
       'background': '#F7FBFA',
       'boxShadow': '0px 4px 4px rgba(0, 0, 0, 0.25)',

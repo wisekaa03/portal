@@ -27,7 +27,7 @@ import { GQLErrorCode } from '@back/shared/gqlerror';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { ApolloAppProps, ApolloInitialProps } from './types';
-import { AUTH_PAGE } from './constants';
+import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
 //#endregion
 
 interface CreateClientProps {
@@ -159,7 +159,12 @@ export const withApolloClient = (
         const user: User | undefined = (ctx.req as Request)?.session?.passport?.user as User;
         const language = user?.settings?.lng || lngFromReq(ctx?.req) || 'en';
         const isMobile = checkMobile({ ua: ctx.req?.headers['user-agent'] }) ?? false;
-        const context: UserContext = { user, fontSize: user?.settings?.fontSize || 16, isMobile, language };
+        const context: UserContext = {
+          user,
+          fontSize: user?.settings?.fontSize || FONT_SIZE_NORMAL,
+          isMobile,
+          language,
+        };
         const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
         try {

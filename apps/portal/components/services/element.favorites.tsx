@@ -72,12 +72,15 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      fontSize: theme.spacing(2),
       letterSpacing: 0.15,
       // color: '#31312F',
     },
+    oneFavorities: {
+      whiteSpace: 'normal',
+      gridRowStart: 1,
+      gridRowEnd: 4,
+    },
     subtitle: {
-      fontSize: theme.spacing(1.5),
       letterSpacing: 0.25,
     },
     more: {
@@ -172,12 +175,17 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
           <BaseIcon base64={base64} src={route.service?.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
-          <Typography variant="subtitle1" className={classes.name}>
+          <Typography
+            variant="subtitle1"
+            className={clsx(classes.name, { [classes.oneFavorities]: !route.service?.description })}
+          >
             {route.service?.name}
           </Typography>
-          <Typography variant="subtitle1" className={classes.subtitle}>
-            {route.service?.description}
-          </Typography>
+          {route.service?.description && (
+            <Typography variant="subtitle1" className={classes.subtitle}>
+              {route.service.description}
+            </Typography>
+          )}
           <Box className={classes.more}>
             {favorite && (
               <IconButton className={classes.moreButton} onClick={handleOpenMore}>

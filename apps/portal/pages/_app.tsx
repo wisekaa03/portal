@@ -26,7 +26,7 @@ import { appWithTranslation } from '@lib/i18n-client';
 // import Cookie from '@lib/cookie';
 // import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
-import { AUTH_PAGE } from '@lib/constants';
+import { AUTH_PAGE, FONT_SIZE_NORMAL } from '@lib/constants';
 // import { getStorage } from '@lib/session-storage';
 //#endregion
 
@@ -86,7 +86,7 @@ class MainApp extends NextApp<ApolloAppProps> {
       }),
     });
 
-    const themeUser = ThemeUser(context?.fontSize || 14);
+    const themeUser = ThemeUser(context?.fontSize || FONT_SIZE_NORMAL);
     const themeContext = {
       ...themeUser,
       props: {
@@ -98,31 +98,33 @@ class MainApp extends NextApp<ApolloAppProps> {
     };
 
     return (
-      <ApolloProvider client={apolloClient}>
-        <Head>
-          <title>Корпоративный портал</title>
-        </Head>
+      <>
         <ThemeProvider theme={{ ...themeContext }}>
-          <StylesProvider disableGeneration={disableGeneration}>
-            <CssBaseline />
-            <SnackbarProvider
-              maxSnack={3}
-              dense={context.isMobile}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-            >
-              <>
-                <SnackbarUtilsConfigurator />
-                <CurrentComponent context={context} router={router} ctx={ctx}>
-                  <Component {...pageProps} />
-                </CurrentComponent>
-              </>
-            </SnackbarProvider>
-          </StylesProvider>
+          <ApolloProvider client={apolloClient}>
+            <Head>
+              <title>Корпоративный портал</title>
+            </Head>
+            <StylesProvider disableGeneration={disableGeneration}>
+              <CssBaseline />
+              <SnackbarProvider
+                maxSnack={3}
+                dense={context.isMobile}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <>
+                  <SnackbarUtilsConfigurator />
+                  <CurrentComponent context={context} router={router} ctx={ctx}>
+                    <Component {...pageProps} />
+                  </CurrentComponent>
+                </>
+              </SnackbarProvider>
+            </StylesProvider>
+          </ApolloProvider>
         </ThemeProvider>
-      </ApolloProvider>
+      </>
     );
   }
 }

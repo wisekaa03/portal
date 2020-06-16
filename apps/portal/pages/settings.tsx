@@ -10,6 +10,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { TFunction } from 'next-i18next';
 //#endregion
 //#region Imports Local
+import { FONT_SIZE_SMALL, FONT_SIZE_NORMAL, FONT_SIZE_BIG } from '@lib/constants';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
@@ -40,15 +41,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const fontSizeMarks = (t: TFunction) => [
   {
-    value: 9,
+    value: FONT_SIZE_SMALL,
     label: t('setting:fontSize:small'),
   },
   {
-    value: 14,
+    value: FONT_SIZE_NORMAL,
     label: t('setting:fontSize:medium'),
   },
   {
-    value: 21,
+    value: FONT_SIZE_BIG,
     label: t('setting:fontSize:big'),
   },
 ];
@@ -77,7 +78,7 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleFontSize = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number | number[]) => {
-    const fontSize = newValue || 14;
+    const fontSize = newValue || FONT_SIZE_NORMAL;
 
     userSettings({
       variables: {
@@ -119,7 +120,7 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         </Typography>
                         <Box className={classes.fontSize}>
                           <Slider
-                            defaultValue={context.user.settings?.fontSize || 14}
+                            defaultValue={context.user.settings?.fontSize || FONT_SIZE_NORMAL}
                             onChange={handleFontSize}
                             // step={5}
                             marks={fontSizeMarks(t)}
