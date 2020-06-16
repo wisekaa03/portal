@@ -22,6 +22,7 @@ import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { AUTH_PAGE } from '@lib/constants';
+import { changeFontSize } from '@lib/font-size';
 //#endregion
 
 /**
@@ -41,6 +42,11 @@ const CurrentComponent: React.FC<{
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+    onCompleted: (data) => {
+      if (data?.me?.settings?.fontSize) {
+        changeFontSize(data.me.settings.fontSize);
+      }
+    },
     fetchPolicy: 'cache-first',
   });
 

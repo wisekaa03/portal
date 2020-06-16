@@ -8,6 +8,7 @@ import Slider from '@material-ui/core/Slider';
 import { Button, Paper, Typography, CardActions, Card, Box } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import { TFunction } from 'next-i18next';
+import { useRouter } from 'next/router';
 //#endregion
 //#region Imports Local
 import { FONT_SIZE_SMALL, FONT_SIZE_NORMAL, FONT_SIZE_BIG } from '@lib/constants';
@@ -15,8 +16,7 @@ import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { USER_SETTINGS } from '@lib/queries';
-import { CURRENT_USER } from '../lib/queries';
-import { useRouter } from 'next/router';
+import { changeFontSize } from '@lib/font-size';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -59,9 +59,9 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const router = useRouter();
 
   const [userSettings] = useMutation(USER_SETTINGS, {
-    onCompleted: () => {
-      router.reload();
-    },
+    // onCompleted: () => {
+    //   router.reload();
+    // },
   });
 
   const handleLanguage = (previousLng?: 'ru' | 'en' | '' | null) => (): void => {
@@ -79,6 +79,8 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleFontSize = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number | number[]) => {
     const fontSize = newValue || FONT_SIZE_NORMAL;
+
+    changeFontSize(fontSize);
 
     userSettings({
       variables: {
@@ -121,6 +123,7 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
                         <Box className={classes.fontSize}>
                           <Slider
                             defaultValue={context.user.settings?.fontSize || FONT_SIZE_NORMAL}
+                            value={context.user.settings?.fontSize || FONT_SIZE_NORMAL}
                             onChange={handleFontSize}
                             // step={5}
                             marks={fontSizeMarks(t)}
