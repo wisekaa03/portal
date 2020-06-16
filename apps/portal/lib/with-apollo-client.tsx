@@ -222,7 +222,10 @@ export const withApolloClient = (
 
       // On the client side, initApollo() below will return the SAME Apollo
       // Client object over repeated calls, to preserve state.
-      return { ...appProps, context: { isMobile: false, language } };
+      return {
+        ...appProps,
+        context: { isMobile: false, language },
+      };
     }
 
     public constructor(props: any) {

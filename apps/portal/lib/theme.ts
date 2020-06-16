@@ -23,10 +23,11 @@ import {
 
 export const MaterialUI_primary_main = '#2c4373';
 
-export const MaterialUI_fck = (fontSize: number): Theme => {
+export const MaterialUI_fck = (fontSize?: number, ssrMatchMedia?: (query: string) => { matches: boolean }): Theme => {
   const theme = createMuiTheme({
     typography: {
       fontFamily: ['Roboto', 'Arial'].join(','),
+      fontSize,
       htmlFontSize: fontSize,
     },
     palette: {
@@ -63,6 +64,14 @@ export const MaterialUI_fck = (fontSize: number): Theme => {
     },
   });
 
+  if (ssrMatchMedia) {
+    theme.props = {
+      MuiUseMediaQuery: {
+        ssrMatchMedia,
+      },
+    };
+  }
+
   theme.overrides = {
     MuiPaper: {
       root: {
@@ -98,6 +107,9 @@ export const MaterialUI_fck = (fontSize: number): Theme => {
           RobotoThinItalicLatin,
           RobotoThinLatin,
         ],
+        'html': {
+          fontSize,
+        },
       },
     },
     MuiTooltip: {

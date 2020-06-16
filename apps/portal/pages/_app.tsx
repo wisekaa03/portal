@@ -80,32 +80,23 @@ class MainApp extends NextApp<ApolloAppProps> {
   render(): React.ReactElement {
     const { disableGeneration = false, Component, apolloClient, pageProps, context, router, ctx } = this.props;
 
-    const ssrMatchMedia = (query: any): any => ({
+    const ssrMatchMedia = (query: string) => ({
       matches: mediaQuery.match(query, {
         width: context.isMobile ? 0 : 1280,
       }),
     });
 
-    const themeUser = MaterialUI_fck(context?.fontSize || FONT_SIZE_NORMAL);
-    const themeContext = {
-      ...themeUser,
-      props: {
-        ...themeUser.props,
-        MuiUseMediaQuery: {
-          ssrMatchMedia,
-        },
-      },
-    };
+    const themeUser = MaterialUI_fck(context?.fontSize, ssrMatchMedia);
 
     return (
       <>
-        <ThemeProvider theme={{ ...themeContext }}>
-          <ApolloProvider client={apolloClient}>
-            <Head>
-              <title>Корпоративный портал</title>
-            </Head>
-            <StylesProvider disableGeneration={disableGeneration}>
-              <CssBaseline />
+        <StylesProvider disableGeneration={disableGeneration}>
+          <ThemeProvider theme={themeUser}>
+            <CssBaseline />
+            <ApolloProvider client={apolloClient}>
+              <Head>
+                <title>Корпоративный портал</title>
+              </Head>
               <SnackbarProvider
                 maxSnack={3}
                 dense={context.isMobile}
@@ -121,9 +112,9 @@ class MainApp extends NextApp<ApolloAppProps> {
                   </CurrentComponent>
                 </>
               </SnackbarProvider>
-            </StylesProvider>
-          </ApolloProvider>
-        </ThemeProvider>
+            </ApolloProvider>
+          </ThemeProvider>
+        </StylesProvider>
       </>
     );
   }
