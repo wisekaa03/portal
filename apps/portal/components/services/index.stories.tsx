@@ -9,12 +9,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { Box } from '@material-ui/core';
 
 import { appWithTranslation, nextI18next } from '@lib/i18n-client';
-import muiTheme from '@lib/theme';
+import { MaterialUI_fck } from '@lib/theme';
 
 const story = storiesOf('Services', module);
 
 const withDecorator = (storyFn) => (
-  <ThemeProvider theme={muiTheme}>
+  <ThemeProvider theme={MaterialUI_fck(16)}>
     <CssBaseline />
     {storyFn()}
   </ThemeProvider>

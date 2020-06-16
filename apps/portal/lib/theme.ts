@@ -21,7 +21,9 @@ import {
   RobotoItalicLatin,
 } from './fonts';
 
-export const ThemeUser = (fontSize: number): Theme => {
+export const MaterialUI_primary_main = '#2c4373';
+
+export const MaterialUI_fck = (fontSize: number): Theme => {
   const theme = createMuiTheme({
     typography: {
       fontFamily: ['Roboto', 'Arial'].join(','),
@@ -29,7 +31,7 @@ export const ThemeUser = (fontSize: number): Theme => {
     },
     palette: {
       primary: {
-        main: '#2c4373',
+        main: MaterialUI_primary_main,
       },
       secondary: {
         main: '#6AA7C8',

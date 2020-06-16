@@ -17,7 +17,7 @@ import { SnackbarProvider } from 'notistack';
 // import url from 'url';
 //#endregion
 //#region Imports Local
-import { ThemeUser } from '@lib/theme';
+import { MaterialUI_fck } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
 import { ApolloAppProps, Data, User, UserContext } from '@lib/types';
@@ -86,7 +86,7 @@ class MainApp extends NextApp<ApolloAppProps> {
       }),
     });
 
-    const themeUser = ThemeUser(context?.fontSize || FONT_SIZE_NORMAL);
+    const themeUser = MaterialUI_fck(context?.fontSize || FONT_SIZE_NORMAL);
     const themeContext = {
       ...themeUser,
       props: {
