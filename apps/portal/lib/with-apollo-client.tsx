@@ -26,12 +26,12 @@ import { GQLErrorCode } from '@back/shared/gqlerror';
 // import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
-import { ApolloAppProps, ApolloInitialProps } from './types';
+import { AppContextMy, AppInitialPropsMy } from './types';
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
 //#endregion
 
 interface CreateClientProps {
-  initialState?: any;
+  initialState?: NormalizedCacheObject;
   cookie?: string;
 }
 
@@ -52,16 +52,16 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     if (__SERVER__) {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message /* , path, locations, extensions */ }): void => {
-          logger!.error(message, message.toString(), 'GraphQL error');
+          logger.error(message, message.toString(), 'GraphQL error');
         });
       }
       if (networkError) {
-        logger!.error(networkError, networkError.toString(), 'Network error');
+        logger.error(networkError, networkError.toString(), 'Network error');
       }
     } else {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
-          logger!.error(message, message.toString(), 'GraphQL error');
+          logger.error(message, message.toString(), 'GraphQL error');
 
           if (extensions?.code === GQLErrorCode.UNAUTHENTICATED) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
@@ -69,7 +69,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         });
       }
       if (networkError) {
-        logger!.error(networkError, networkError.toString(), 'Network error');
+        logger.error(networkError, networkError.toString(), 'Network error');
       }
     }
   });
@@ -87,7 +87,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       credentials: 'same-origin',
     });
 
-    cache = new InMemoryCache().restore(initialState);
+    cache = new InMemoryCache();
   } else {
     httpLink = createUploadLink({
       uri: `/graphql`,
@@ -99,7 +99,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     };
 
     // TODO: Протестить без него, так как он дает ошибку
-    cache = new InMemoryCache().restore(initialState);
+    cache = new InMemoryCache().restore(initialState || {});
     // TODO: улучшенный контроль за кешем (продумать)
     // cache = new InStorageCache({
     // storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
@@ -141,21 +141,24 @@ const initApollo = (options: CreateClientProps): ApolloClient<NormalizedCacheObj
 };
 
 export const withApolloClient = (
-  MainApp: NextComponentType<AppContext, ApolloInitialProps, ApolloAppProps>,
-): NextComponentType<AppContext, ApolloInitialProps, ApolloAppProps> =>
-  class Apollo extends React.Component<ApolloAppProps> {
+  MainApp: NextComponentType<AppContext, AppInitialPropsMy, AppContextMy>,
+): NextComponentType<AppContext, AppInitialPropsMy, AppContextMy> =>
+  class Apollo extends React.Component<AppContextMy> {
     private apolloClient: ApolloClient<NormalizedCacheObject>;
 
-    // eslint-disable-next-line react/static-property-placement
-    static displayName = 'withApolloClient(MainApp)';
+    static displayName = 'withApolloClient(App)';
 
-    public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<ApolloInitialProps> {
+    public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<AppInitialPropsMy> {
       const appProps =
         typeof MainApp.getInitialProps === 'function'
           ? await MainApp.getInitialProps({ AppTree, Component, router, ctx })
-          : { pageProps: { apolloState: null } };
+          : { pageProps: { apollo: null } };
 
       if (__SERVER__) {
+        if (ctx.res?.finished) {
+          return appProps;
+        }
+
         const user: User | undefined = (ctx.req as Request)?.session?.passport?.user as User;
         const language = user?.settings?.lng || lngFromReq(ctx?.req) || 'en';
         const isMobile = checkMobile({ ua: ctx.req?.headers['user-agent'] }) ?? false;
@@ -200,7 +203,7 @@ export const withApolloClient = (
             message = false;
           }
           if (message) {
-            logger!.error('withApolloClient getDataFromTree', error.toString(), 'getDataFromTree');
+            logger.error('withApolloClient getDataFromTree', error.toString(), 'getDataFromTree');
           }
         }
 
@@ -214,31 +217,26 @@ export const withApolloClient = (
         return {
           ...appProps,
           context,
-          apolloState: apolloClient.cache.extract(),
+          apollo: apolloClient.cache.extract(),
         };
       }
-
-      const language = appProps.initialLanguage;
 
       // On the client side, initApollo() below will return the SAME Apollo
       // Client object over repeated calls, to preserve state.
       return {
         ...appProps,
-        context: { isMobile: false, language },
+        context: { isMobile: false, language: appProps.initialLanguage },
       };
     }
 
-    public constructor(props: any) {
+    public constructor(props: AppContextMy) {
       super(props);
-      this.apolloClient = initApollo({ initialState: props.apolloState });
+      this.apolloClient = initApollo({ initialState: props.apollo });
     }
 
     public render(): React.ReactElement {
       if (__SERVER__) {
-        const response = this.props.ctx?.res as Response;
-        if (response) {
-          logger = response.locals?.nestLogger;
-        }
+        logger = (this.props.ctx?.res as Response)?.locals.nestLogger || console;
       }
 
       return <MainApp {...this.props} apolloClient={this.apolloClient} />;

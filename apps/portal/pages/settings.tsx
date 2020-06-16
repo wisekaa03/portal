@@ -124,8 +124,8 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
                             onChange={handleFontSize}
                             // step={5}
                             marks={fontSizeMarks(t)}
-                            min={9}
-                            max={21}
+                            min={FONT_SIZE_SMALL}
+                            max={FONT_SIZE_BIG}
                           />
                         </Box>
                       </CardActions>

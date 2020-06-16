@@ -12,7 +12,7 @@ import express from 'express';
 import { RenderService, RenderModule } from 'nest-next';
 import { ParsedUrlQuery } from 'querystring';
 import Next from 'next';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';
@@ -180,7 +180,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   //#region Next.JS locals
   app.use('*', (_request: Request, response: express.Response, next: () => void) => {
-    // res.locals.nonce = Buffer.from(uuidv4()).toString('base64');
+    response.locals.nonce = Buffer.from(uuidv4()).toString('base64');
     response.locals.nestLogger = logger;
     next();
     // res.set('X-Server-ID', res);
@@ -203,7 +203,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
       error: HttpException,
       request: express.Request,
       response: express.Response,
-      _pathname: any,
+      _pathname: string,
       _query: ParsedUrlQuery,
     ): Promise<any> => {
       const status = error.getStatus();

@@ -27,8 +27,8 @@ export const MaterialUI_fck = (fontSize?: number, ssrMatchMedia?: (query: string
   const theme = createMuiTheme({
     typography: {
       fontFamily: ['Roboto', 'Arial'].join(','),
-      fontSize,
-      htmlFontSize: fontSize,
+      // fontSize,
+      // htmlFontSize: fontSize ? fontSize + 2 : undefined,
     },
     palette: {
       primary: {

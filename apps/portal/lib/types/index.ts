@@ -3,7 +3,7 @@
 //#region Import NPM
 // import React from 'react';
 import { AppContext, AppInitialProps } from 'next/app';
-import { DocumentContext } from 'next/document';
+import { DocumentContext, DocumentInitialProps } from 'next/document';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
 //#endregion
@@ -31,25 +31,26 @@ export * from './treeview';
 export * from './user.dto';
 //#endregion
 
-export interface WithApolloState<TCache = NormalizedCacheObject> {
-  data?: TCache;
-}
-
-export interface ApolloInitialProps<TCache = NormalizedCacheObject> extends AppInitialProps {
-  apolloState?: WithApolloState<TCache>;
+export interface AppInitialPropsMy<TCache = NormalizedCacheObject> extends AppInitialProps {
   initialLanguage?: string;
-  currentLanguage?: string;
+  language?: string;
   context?: UserContext;
+  apollo?: NormalizedCacheObject;
 }
 
-export interface ApolloAppProps<TCache = NormalizedCacheObject> extends AppContext {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
-  apolloState: WithApolloState<TCache>;
+export interface AppContextMy<TCache = NormalizedCacheObject> extends AppContext {
   disableGeneration?: boolean;
   context: UserContext;
+  apollo: NormalizedCacheObject;
+  apolloClient: ApolloClient<NormalizedCacheObject>;
 }
 
-export interface ApolloDocumentProps extends DocumentContext {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
-  currentLanguage?: string;
+export interface DocumentContextMy extends DocumentContext {
+  language?: string;
+  nonce?: string;
+}
+
+export interface DocumentInitialPropsMy extends DocumentInitialProps {
+  language?: string;
+  nonce?: string;
 }

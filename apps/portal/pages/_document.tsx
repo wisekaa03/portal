@@ -2,15 +2,13 @@
 
 //#region Imports NPM
 import React from 'react';
-import { IncomingMessage } from 'http';
 import Document, { Html, Head, Main, NextScript, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
-import { ApolloClient } from 'apollo-client';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
+import { Response } from 'express';
 //#endregion
 //#region Imports Local
-import { ApolloDocumentProps } from '@lib/types';
+import { DocumentContextMy, DocumentInitialPropsMy } from '@lib/types';
 import { MaterialUI_primary_main } from '@lib/theme';
 import { nextI18next } from '@lib/i18n-client';
 //#endregion
@@ -37,41 +35,32 @@ import { nextI18next } from '@lib/i18n-client';
 // 3. app.render
 // 4. page.render
 
-interface MainDocumentInitialProps extends DocumentInitialProps {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
-  currentLanguage: string | undefined;
-  // nonce?: string;
-  req?: IncomingMessage;
-}
-
-class MainDocument extends Document<MainDocumentInitialProps> {
+class MainDocument extends Document<DocumentInitialPropsMy> {
   render(): React.ReactElement {
-    const { /* nonce, */ currentLanguage } = this.props;
+    const { nonce, language } = this.props;
 
     return (
-      <Html lang={currentLanguage} dir="ltr">
-        {/* nonce={nonce} */}
+      <Html lang={language} dir="ltr">
         <Head>
           <meta charSet="utf-8" />
           <meta name="Description" content="Корпоративный портал" />
           {/* TODO: временно запрещаем индексацию */}
           <meta name="robots" content="noindex" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
-          {/* <meta property="csp-nonce" content={this.props.nonce} /> */}
+          <meta property="csp-nonce" content={nonce} />
           <meta name="theme-color" content={MaterialUI_primary_main} />
         </Head>
         <body>
           <Main />
-          {/* nonce={nonce} */}
-          <NextScript />
+          <NextScript nonce={nonce} />
         </body>
       </Html>
     );
   }
 
-  static async getInitialProps(ctx: ApolloDocumentProps): Promise<MainDocumentInitialProps> {
+  static async getInitialProps(ctx: DocumentContextMy): Promise<DocumentInitialPropsMy> {
     const sheets = new ServerStyleSheets();
-    const { apolloClient, renderPage: originalRenderPage, req } = ctx;
+    const { renderPage: originalRenderPage, req, res } = ctx;
 
     ctx.renderPage = () =>
       originalRenderPage({
@@ -81,16 +70,12 @@ class MainDocument extends Document<MainDocumentInitialProps> {
     // Run the parent `getInitialProps` using `ctx` that now includes our custom `renderPage`
     const initialProps = await Document.getInitialProps(ctx);
 
-    // const nonce = res && (res as any).locals && (res as any).locals.nonce;
-
-    const lng = ctx.currentLanguage || lngFromReq(req);
-    const currentLanguage = lng || nextI18next.i18n.language || nextI18next.config.defaultLanguage;
+    const nonce = (res as Response)?.locals?.nonce;
 
     return {
-      apolloClient,
       ...initialProps,
-      currentLanguage,
-      // nonce,
+      language: ctx.language || lngFromReq(req) || nextI18next.i18n.language || nextI18next.config.defaultLanguage,
+      nonce,
       // Styles fragment is rendered after the app and page rendering finish.
       styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
     };

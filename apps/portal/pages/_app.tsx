@@ -6,28 +6,22 @@ import { NextPageContext } from 'next';
 import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
-// import { UnauthorizedException } from '@nestjs/common';
-// import { Response, Request } from 'express';
 import { QueryResult } from 'react-apollo';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
 import { SnackbarProvider } from 'notistack';
-// import url from 'url';
 //#endregion
 //#region Imports Local
 import { MaterialUI_fck } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
-import { ApolloAppProps, Data, User, UserContext } from '@lib/types';
+import { AppContextMy, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
-// import Cookie from '@lib/cookie';
-// import getRedirect from '@lib/get-redirect';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
-import { AUTH_PAGE, FONT_SIZE_NORMAL } from '@lib/constants';
-// import { getStorage } from '@lib/session-storage';
+import { AUTH_PAGE } from '@lib/constants';
 //#endregion
 
 /**
@@ -56,13 +50,10 @@ const CurrentComponent: React.FC<{
 /**
  * App
  */
-class MainApp extends NextApp<ApolloAppProps> {
+class App extends NextApp<AppContextMy> {
   componentDidMount(): void {
     // Remove the server-sie injected CSS
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles) {
-      jssStyles.remove();
-    }
+    document.querySelector('#jss-server-side')?.remove();
 
     // Service worker
     // if ('serviceWorker' in navigator) {
@@ -120,4 +111,4 @@ class MainApp extends NextApp<ApolloAppProps> {
   }
 }
 
-export default withApolloClient(appWithTranslation(MainApp));
+export default withApolloClient(appWithTranslation(App));
