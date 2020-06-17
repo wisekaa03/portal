@@ -70,7 +70,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     [current],
   );
 
-  const handleChange = (name: keyof Profile, value_: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: keyof Profile, value_?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const element: EventTarget & HTMLInputElement = event.target;
     const value: string | boolean | number = value_ || (element.type === 'checkbox' ? element.checked : element.value);
 

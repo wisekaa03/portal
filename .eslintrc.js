@@ -110,6 +110,7 @@ module.exports = {
       {
         replacements: {
           ref: false,
+          e2e: false,
           props: {
             properties: false,
           },

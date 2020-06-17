@@ -9,8 +9,14 @@ import { FormControl, InputLabel, MenuItem, Select as MuiSelect } from '@materia
 interface SelectProps {
   label: string;
   items: string[];
+  icons?: string[];
   value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void> | void;
+  onChange: (
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: unknown;
+    }>,
+  ) => Promise<void> | void;
   color?: 'primary' | 'secondary';
 }
 
@@ -28,9 +34,9 @@ const Select = ({ label, items, value, onChange, color }: SelectProps): React.Re
     <FormControl variant="outlined">
       <InputLabel ref={inputLabel}>{label}</InputLabel>
       <MuiSelect color={color || 'secondary'} value={value} onChange={onChange} labelWidth={labelWidth}>
-        {items.map((cur) => (
-          <MenuItem key={cur} value={cur}>
-            {cur}
+        {items.map((current) => (
+          <MenuItem key={current} value={current}>
+            {current}
           </MenuItem>
         ))}
       </MuiSelect>

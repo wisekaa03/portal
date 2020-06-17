@@ -4,8 +4,9 @@
     "module": "ESNext",
     "jsx": "preserve",
     "lib": [
-      "dom",
-      "es2018"
+      "DOM",
+      "DOM.Iterable",
+      "ES2018"
     ],
     "moduleResolution": "node",
     "noEmit": true,

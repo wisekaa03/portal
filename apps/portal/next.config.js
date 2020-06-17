@@ -23,7 +23,7 @@ const resolveTsconfigPaths = require('../../tsconfig-paths-to-webpack-alias');
 function withCustomWebpack(config = {}) {
   const { webpack } = config;
 
-  config.webpack = (config, { buildId, dev, isServer /* , defaultLoaders */, ...rest }) => {
+  config.webpack = (config, { isServer, buildId, dev /* , defaultLoaders */, ...rest }) => {
     config.resolve = {
       ...(config.resolve || []),
       alias: {
@@ -68,38 +68,10 @@ function withCustomWebpack(config = {}) {
     //   );
     // }
 
-    // config.stats = {
-    //   ...config.stats,
-    //   // This is optional, but it hides noisey warnings
-    //   warningsFilter: [
-    //     'node_modules/express/lib/view.js',
-    //     'node_modules/@nestjs/common/utils/load-package.util.js',
-    //     'node_modules/@nestjs/core/helpers/load-adapter.js',
-    //     'node_modules/optional/optional.js',
-    //     (/* warning */) => false,
-    //   ],
-    // };
-
-    config.module.rules = [...(config.module.rules || []), ...[]];
-
-    config.module.rules.forEach((rule) => {
-      if (Array.isArray(rule.use)) {
-        rule.use.forEach((m) => {
-          if (m.loader === 'css-loader' && m.options && Object.keys(m.options).includes('minimize')) {
-            // console.warn('HACK: Removing `minimize` option from `css-loader` entries in Webpack config');
-            delete m.options.minimize;
-          }
-        });
-      }
-    });
-
-    // eslint-disable-next-line no-debugger
-    // debugger;
-
     // config.externals = [...(config.externals || []), nodeExternals()];
-    // console.log(isServer ? 'Server' : 'Client', config);
+    console.log(isServer ? 'Server' : 'Client', config);
 
-    return webpack(config, { isServer, ...rest });
+    return webpack(config, { isServer, buildId, dev, ...rest });
   };
 
   return config;

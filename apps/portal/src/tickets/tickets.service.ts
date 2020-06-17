@@ -307,8 +307,8 @@ export class TicketsService {
     }
 
     return Promise.allSettled(promises)
-      .then((values) =>
-        values.map((promise) =>
+      .then((values: PromiseSettledResult<TkTasks>[]) =>
+        values.map((promise: PromiseSettledResult<TkTasks>) =>
           promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] },
         ),
       )
@@ -329,8 +329,8 @@ export class TicketsService {
           { tasks: [], users: [], errors: [] } as TkTasks,
         );
       })
-      .catch((error) => {
-        throw new Error(error);
+      .catch((error: TypeError) => {
+        throw error;
       });
   };
 

@@ -81,7 +81,7 @@ module.exports = function (api) {
   //#endregion
 
   //#region Development
-  const devProd = {
+  const development = {
     presets: [
       [
         '@babel/preset-env',
@@ -106,7 +106,7 @@ module.exports = function (api) {
   //#endregion
 
   //#region Production
-  const prodProd = {
+  const production = {
     presets: [
       [
         '@babel/preset-env',
@@ -125,7 +125,7 @@ module.exports = function (api) {
   //#endregion
 
   //#region Test
-  const testProd = {
+  const test = {
     presets: [
       [
         '@babel/preset-env',
@@ -151,15 +151,15 @@ module.exports = function (api) {
   const config = {
     env: {
       development: {
-        ...devProd,
+        ...development,
       },
 
       production: {
-        ...prodProd,
+        ...production,
       },
 
       test: {
-        ...testProd,
+        ...test,
       },
     },
   };

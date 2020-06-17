@@ -80,7 +80,7 @@ const HeaderLabels: FilesTableHeaderProps[] = [
   { label: 'size', width: 150 },
 ];
 
-const fakeData: any = [
+const fakeData: { id: string; name: string; date: Date; type: string; size: number }[] = [
   { id: '0', name: 'Очень длинное название файла 1', date: new Date(), type: 'jpg', size: 140 },
   { id: '1', name: 'Очень длинное название файла 2', date: new Date(), type: 'doc', size: 140 },
   { id: '2', name: 'Очень длинное название файла 3', date: new Date(), type: 'png', size: 1140 },
@@ -167,12 +167,12 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {filtered.map((cur) => (
-                        <TableRow key={cur.id} hover tabIndex={-1} onClick={() => handleRow(cur)}>
-                          <TableCell>{cur.name}</TableCell>
-                          <TableCell>{format(cur.date, 'DD.MM.YYYY')}</TableCell>
-                          <TableCell>{cur.type}</TableCell>
-                          <TableCell>{cur.size}kb</TableCell>
+                      {filtered.map((current) => (
+                        <TableRow key={current.id} hover tabIndex={-1} onClick={() => handleRow(current)}>
+                          <TableCell>{current.name}</TableCell>
+                          <TableCell>{format(current.date, 'DD.MM.YYYY')}</TableCell>
+                          <TableCell>{current.type}</TableCell>
+                          <TableCell>{current.size}kb</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

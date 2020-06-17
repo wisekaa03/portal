@@ -5,9 +5,6 @@
     }
   ],
   "settings": {
-    "extensions.autoUpdate": false,
-    "extensions.autoCheckUpdates": false,
-    "browser-preview.chromeExecutable": "/opt/brave.com/brave/brave",
     // "editor.fontFamily": "Fira Code",
     "editor.fontFamily": "Fira Code Retina",
     "editor.fontLigatures": true,
@@ -66,22 +63,24 @@
     // "eslint.run": "onType",
     "eslint.trace.server": "verbose",
     "eslint.validate": [
-      {
-        "language": "javascript",
-        "autoFix": true
-      },
-      {
-        "language": "javascriptreact",
-        "autoFix": true
-      },
-      {
-        "language": "typescript",
-        "autoFix": true
-      },
-      {
-        "language": "typescriptreact",
-        "autoFix": true
-      }
+      "css",
+      "graphql",
+      "html",
+      "javascript",
+      "javascriptreact",
+      "json",
+      "json5",
+      "jsonc",
+      "less",
+      "markdown",
+      "mdx",
+      "mongo",
+      "postcss",
+      "scss",
+      "typescript",
+      "typescriptreact",
+      "vue",
+      "yaml"    
     ],
     "prettier.disableLanguages": [
       "vue"
