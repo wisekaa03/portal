@@ -1,3 +1,15 @@
 scalar Date
 scalar ByteArray
 scalar Upload
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}

@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Badge, Typography, Fab, Tooltip } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 //#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
 import { DropzoneFile, DropzoneProps } from '@lib/types';
+import snackbarUtils from '@lib/snackbar-utils';
 //#endregion
 
 const thumbHeight = 100;
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
-    dropzone: (props: any) => ({
+    dropzone: (props: Record<string, 'primary' | 'secondary'>) => ({
       'alignItems': 'center',
       'backgroundColor': '#F5FDFF',
       // 'backgroundColor': '#fafafa',
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 'auto',
       height: '100%',
     },
-    thumb: (props: any) => ({
+    thumb: (props: Record<string, 'primary' | 'secondary'>) => ({
       'display': 'inline-flex',
       'borderRadius': 2,
       'border': `1px solid ${fade(theme.palette[props.color].main, 0.5)}`,
@@ -128,15 +129,29 @@ const Dropzone = ({
   files,
   setFiles,
   filesLimit = 50,
-  acceptedFiles = ['image/*', 'text/*', 'application/*', 'audio/*', 'video/*'],
+  acceptedFiles = [
+    '.xlsx',
+    '.docx',
+    '.pptx',
+    '.rar',
+    '.zip',
+    '.pdf',
+    '.xls',
+    '.doc',
+    '.ppt',
+    'text/*',
+    'image/*',
+    'video/*',
+    'audio/*',
+  ],
   maxFileSize = 100000000,
   color = 'primary',
 }: DropzoneProps): React.ReactElement => {
   const classes = useStyles({ color });
   const { t } = useTranslation();
-  const [error, setError] = useState<string[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const updateError = (value?: string): void => setError(value ? [...error, value] : []);
+  const updateError = (value?: string): void => setErrors(value ? [...errors, value] : []);
 
   const onDrop = (newFiles: File[]): void => {
     if (newFiles.length > filesLimit) {
@@ -176,19 +191,12 @@ const Dropzone = ({
     });
   };
 
-  // useEffect(() => {
-  //   return () => {
-  //     files.forEach((file) => URL.revokeObjectURL(file.preview));
-  //   };
-  // }, [files]);
+  useEffect(() => {
+    errors.forEach((error) => snackbarUtils.error(error));
+  }, [errors]);
 
   return (
-    <BaseDropzone
-      onDrop={onDrop}
-      onDropRejected={handleDropRejected}
-      maxSize={maxFileSize}
-      accept={acceptedFiles.join(',')}
-    >
+    <BaseDropzone onDrop={onDrop} onDropRejected={handleDropRejected} maxSize={maxFileSize} accept={acceptedFiles}>
       {({ getRootProps, getInputProps }: DropzoneState) => (
         <section className={classes.container}>
           <div

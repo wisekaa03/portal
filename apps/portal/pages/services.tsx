@@ -15,8 +15,8 @@ import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
-import { TkWhere, TkRoute, TkTaskNew } from '@lib/types/tickets';
-import { UserSettingsTaskFavoriteService, UserSettingsTaskFavorite } from '@lib/types/user.dto';
+import { TkRoute, TkTaskNew } from '@lib/types/tickets';
+import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
 //#endregion
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {

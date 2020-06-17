@@ -10,7 +10,7 @@ import clsx from 'clsx';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { appBarHeight, MINIMAL_BODY_LENGTH } from '@lib/constants';
+import { appBarHeight } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton, { RefreshWhere } from '@front/components/ui/refresh-button';
@@ -130,10 +130,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
-  const headerReference = useRef(null);
+  const headerReference = useRef<HTMLDivElement>(null);
 
   const contentHeight = headerReference.current
-    ? `calc(100vh - ${appBarHeight}px - ${(headerReference.current as any)?.clientHeight}px)`
+    ? `calc(100vh - ${appBarHeight}px - ${headerReference.current.clientHeight}px)`
     : '100%';
 
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
@@ -268,7 +268,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
           {!submitted && <RefreshButton onClick={refetchRoutes} />}
           <SwipeableViews
             ref={contentRef}
-            animateHeight={!!task.route}
+            // animateHeight={!!task.route}
             disabled={!task.route}
             index={currentTab}
             className={classes.body}
