@@ -78,7 +78,7 @@ const SettingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleFontSize = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number | number[]) => {
-    const fontSize = newValue || FONT_SIZE_NORMAL;
+    const fontSize = (Array.isArray(newValue) ? newValue.pop() : newValue) || FONT_SIZE_NORMAL;
 
     changeFontSize(fontSize);
 
