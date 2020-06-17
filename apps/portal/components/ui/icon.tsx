@@ -53,18 +53,14 @@ const BaseIcon = ({ size, mask, color, src, base64 }: IconProps): React.ReactEle
     // <?xml = base64: PD94bW
     const baseType = src.match(/^(phn2z|pd94bw|<svg|<?xml)/i) ? 'data:image/svg+xml;base64,' : 'data:image/png;base64,';
 
-    return (
-      <Icon>
-        <img className={classes.root} alt="icon" src={`${base64 ? baseType : ''}${src}`} />
-      </Icon>
-    );
+    /* <Icon> */
+    return <img className={classes.root} alt="icon" src={`${base64 ? baseType : ''}${src}`} />;
+    /* </Icon> */
   }
 
-  return (
-    <Icon>
-      <img className={classes.root} alt="icon" src={NoImage} />
-    </Icon>
-  );
+  /* <Icon> */
+  return <img className={classes.root} alt="icon" src={NoImage} />;
+  /* </Icon> */
 };
 
 export default BaseIcon;

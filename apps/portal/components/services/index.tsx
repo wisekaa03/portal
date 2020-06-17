@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { FC, useRef, useCallback, useMemo } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField, Typography } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 import SwipeableViews from 'react-swipeable-views';
 import clsx from 'clsx';
@@ -13,8 +13,8 @@ import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
 import { ServicesWrapperProps, ServicesFavoriteProps } from '@lib/types';
 import Button from '@front/components/ui/button';
-import RefreshButton, { RefreshWhere } from '@front/components/ui/refresh-button';
-import Loading, { LoadingWhere } from '@front/components/loading';
+import RefreshButton from '@front/components/ui/refresh-button';
+import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
@@ -23,6 +23,7 @@ import ServicesSuccess from './success';
 import ServicesElement from './element';
 import ServicesElementFavorites from './element.favorites';
 import ServicesError from './error';
+import BaseIcon from '@front/components/ui/icon';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -97,6 +98,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     jodit: {
       backgroundColor: '#F5FDFF',
+    },
+    margin: {
+      margin: '0 0 0 18px',
     },
   }),
 );
@@ -364,7 +368,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                           (srv) =>
                             srv && (
                               <MenuItem key={srv.code} value={srv.code}>
-                                {srv.name}
+                                <BaseIcon base64 src={srv.avatar} size={21} />
+                                <Typography className={classes.margin} component="span">
+                                  {srv.name}
+                                </Typography>
                               </MenuItem>
                             ),
                         )}
