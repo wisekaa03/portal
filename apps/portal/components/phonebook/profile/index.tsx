@@ -141,11 +141,7 @@ const ProfileField = withStyles((theme) => ({
     cursor: 'pointer',
   },
 }))(({ classes, profile, last, onClick, title, field }: PhonebookProfileFieldProps) => {
-  let text = '';
-
-  if (profile) {
-    text = field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '';
-  }
+  const text = profile ? (field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '') : '';
 
   return (
     <ListItem divider={!last}>
@@ -153,7 +149,7 @@ const ProfileField = withStyles((theme) => ({
         <ListItemText primary={title} />
         <ListItemText
           className={clsx({
-            [classes.pointer]: onClick && profile?.[field],
+            [classes.pointer]: onClick && text,
           })}
           primary={
             profile ? (
@@ -202,7 +198,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
       }
     };
 
-    const handleSearchClose = (text: string | undefined) => (): void => {
+    const handleSearchClose = (text?: string) => (): void => {
       if (!text) return;
 
       handleSearch(text);

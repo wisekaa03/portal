@@ -20,41 +20,41 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
   const defaultFolders: FilesFolder[] = [{ pathname: `/${FILES_SHARED_NAME}` }, { pathname: `/${USER_FOLDER_ID}` }];
 
   const items = [...defaultFolders, ...data]
-    .reduce((acc: FilesFolderTreeVirtual[], cur: FilesFolder) => {
-      const { id, pathname } = cur;
+    .reduce((accumulator: FilesFolderTreeVirtual[], current: FilesFolder) => {
+      const { id, pathname } = current;
       const tree = pathname.split('/').filter((i) => !!i);
 
       if (tree.length === 0) {
-        return acc;
+        return accumulator;
       }
 
-      const recursive = (childs: FilesFolderTreeVirtual[], arr: string[], idx = 0): FilesFolderTreeVirtual[] => {
-        const elem = childs.find((r) => r.name === arr[idx]);
+      const recursive = (childs: FilesFolderTreeVirtual[], array: string[], idx = 0): FilesFolderTreeVirtual[] => {
+        const element = childs.find((r) => r.name === array[idx]);
 
-        if (arr.length === 1 || arr.length - 1 === idx) {
-          if (!elem) {
-            return [...childs, { id, name: arr[idx], pathname, childs: [] }];
+        if (array.length === 1 || array.length - 1 === idx) {
+          if (!element) {
+            return [...childs, { id, name: array[idx], pathname, childs: [] }];
           }
 
-          elem.id = id;
-          elem.name = arr[idx];
-          elem.pathname = pathname;
+          element.id = id;
+          element.name = array[idx];
+          element.pathname = pathname;
 
           return childs;
         }
 
-        if (elem) {
-          elem.childs = recursive(elem.childs, arr, idx + 1);
+        if (element) {
+          element.childs = recursive(element.childs, array, idx + 1);
 
           return childs;
         }
 
-        return [...childs, { id, name: arr[idx], pathname, childs: recursive([], arr, idx + 1) }];
+        return [...childs, { id, name: array[idx], pathname, childs: recursive([], array, idx + 1) }];
       };
 
-      return recursive(acc, tree);
+      return recursive(accumulator, tree);
     }, [])
-    .reduce((acc: React.ReactElement[], cur: FilesFolderTreeVirtual) => {
+    .reduce((accumulator: React.ReactElement[], current: FilesFolderTreeVirtual) => {
       const recursive = (child: FilesFolderTreeVirtual, depth = 0): React.ReactNode => {
         const name =
           child.name === FILES_SHARED_NAME
@@ -81,7 +81,7 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
         );
       };
 
-      return [...acc, recursive(cur)];
+      return [...accumulator, recursive(current)];
     }, []);
 
   return (
