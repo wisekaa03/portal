@@ -30,13 +30,13 @@
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint --fix \"{lib,pages,components,src}/**/*.{js,jsx,ts,tsx}\"",
     "storybook": "start-storybook -p 6006 -s ./public",
+    "build-storybook": "build-storybook",
     "test": "jest",
     "test:next": "jest --watch __tests__",
     "coverage": "yarn test -u --coverage",
     "typeorm": "ts-node -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync",
-    "typeorm:sync": "yarn typeorm schema:sync",
-    "build-storybook": "build-storybook"
+    "typeorm:sync": "yarn typeorm schema:sync"
   },
   "browserslist": [
     "last 2 version",
@@ -284,7 +284,7 @@
     "jest": "^26.0.1",
     "jest-svg-transformer": "^1.0.0",
     "jest-transform-stub": "^2.0.0",
-    "lint-staged": "^10.2.10",
+    "lint-staged": "^10.2.11",
     "lodash": "^4.17.15",
     "lqip-loader": "^2.2.0",
     "node-sass": "^4.14.1",
@@ -293,6 +293,7 @@
     "rimraf": "^3.0.2",
     "sqlite3": "^4.2.0",
     "storybook-addon-i18n": "^5.1.13",
+    "storybook-addon-material-ui": "^0.9.0-alpha.21",
     "storybook-addon-next-router": "^1.0.1",
     "stylelint": "^13.6.0",
     "supertest": "^4.0.2",
