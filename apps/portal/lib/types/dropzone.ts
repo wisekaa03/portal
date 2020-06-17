@@ -10,7 +10,7 @@ export interface DropzoneFile {
 
 export interface DropzoneProps extends WithTranslation {
   files: DropzoneFile[];
-  setFiles: any;
+  setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   filesLimit?: number;
   acceptedFiles?: string[];
   maxFileSize?: number;

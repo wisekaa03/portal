@@ -64,6 +64,7 @@
         "nextjs",
         "noimage",
         "noindex",
+        "nopreview",
         "nosql",
         "ntlm",
         "nullish",

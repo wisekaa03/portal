@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const DropzoneWrapper: FC<{ onDrop: (acceptedFiles: any) => Promise<void> }> = ({ onDrop, children }) => {
+export const DropzoneWrapper: FC<{ onDrop: (acceptedFiles: File[]) => Promise<void> }> = ({ onDrop, children }) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
@@ -127,9 +127,9 @@ const NO_PREVIEW = 'no_preview';
 const Dropzone = ({
   files,
   setFiles,
-  filesLimit = 5,
-  acceptedFiles = ['image/*', '*/*', '.doc'],
-  maxFileSize = 3000000,
+  filesLimit = 50,
+  acceptedFiles = ['image/*', 'text/*', 'application/*', 'audio/*', 'video/*'],
+  maxFileSize = 100000000,
   color = 'primary',
 }: DropzoneProps): React.ReactElement => {
   const classes = useStyles({ color });
@@ -147,9 +147,9 @@ const Dropzone = ({
 
     updateError();
 
-    setFiles((state: any) => [
+    setFiles((state) => [
       ...state,
-      ...newFiles.map((file: File) => ({
+      ...newFiles.map((file) => ({
         file,
         id: uuidv4(),
         preview: file.type.includes('image') ? URL.createObjectURL(file) : NO_PREVIEW,
@@ -159,7 +159,7 @@ const Dropzone = ({
 
   const handleDelete = (index: string) => (): void => {
     updateError();
-    setFiles(files.filter((file: DropzoneFile) => file.id !== index));
+    setFiles(files.filter((file) => file.id !== index));
   };
 
   const handleDropRejected = (rejectedFiles: FileRejection[]): void => {
@@ -202,12 +202,12 @@ const Dropzone = ({
             <p>{t('dropzone:attach')}</p>
           </div>
           <aside className={classes.thumbsContainer}>
-            {files.map((file: DropzoneFile) => (
+            {files.map((element: DropzoneFile) => (
               <Badge
-                key={file.id}
+                key={element.id}
                 className={classes.badge}
                 badgeContent={
-                  <Fab size="small" className={classes.removeBtn} onClick={handleDelete(file.id)}>
+                  <Fab size="small" className={classes.removeBtn} onClick={handleDelete(element.id)}>
                     <DeleteIcon />
                   </Fab>
                 }
@@ -215,17 +215,17 @@ const Dropzone = ({
                 <>
                   <div className={classes.thumb}>
                     <div className={classes.thumbInner}>
-                      {file.preview === NO_PREVIEW ? (
+                      {element.preview === NO_PREVIEW ? (
                         <Typography className={classes.nopreview} variant="h6">
                           {t('dropzone:nopreview')}
                         </Typography>
                       ) : (
-                        <img src={file.preview} className={classes.img} alt={t('dropzone:nopreview')} />
+                        <img src={element.preview} className={classes.img} alt={t('dropzone:nopreview')} />
                       )}
                     </div>
                   </div>
-                  <Tooltip title={file.file.name}>
-                    <span className={classes.name}>{file.file.name}</span>
+                  <Tooltip title={element.file.name}>
+                    <span className={classes.name}>{element.file.name}</span>
                   </Tooltip>
                 </>
               </Badge>

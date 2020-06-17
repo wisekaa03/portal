@@ -385,7 +385,7 @@ export class TicketsService {
           Executor: task.executorUser ? task.executorUser : '',
           Attaches,
         })
-        .then((result: any) => {
+        .then((result?: Record<string, undefined>) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
           const returnValue = result?.[0]?.['return'];
@@ -528,11 +528,12 @@ export class TicketsService {
           AutorComment: user.username,
           Attaches,
         })
-        .then((result: any) => {
+        .then((result?: Record<string, undefined>) => {
           this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
 
-          if (result?.[0]?.['return']) {
-            return taskSOAP(result[0]['return'], TkWhere.SOAP1C);
+          const returnValue = result?.[0]?.['return'];
+          if (returnValue && typeof returnValue === 'object') {
+            return taskSOAP(returnValue, TkWhere.SOAP1C);
           }
 
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);

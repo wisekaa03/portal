@@ -13,8 +13,8 @@ export const FONT_SIZE_SMALL = 11;
 export const FONT_SIZE_NORMAL = 16;
 export const FONT_SIZE_BIG = 21;
 
-export const MINIMAL_SUBJECT_LENGTH = 10;
-export const MINIMAL_BODY_LENGTH = 10;
+export const MINIMAL_SUBJECT_LENGTH = 5;
+export const MINIMAL_BODY_LENGTH = 5;
 export const AUTH_PAGE = '/auth/login';
 export const FIRST_PAGE = '/phonebook';
 export const SESSION = 'session';
