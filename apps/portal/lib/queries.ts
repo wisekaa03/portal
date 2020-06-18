@@ -476,6 +476,19 @@ const TICKETS_TASK_FILES = gql`
 const TICKETS_TASK_COMMENTS = gql`
   fragment TicketsComments on TkComments {
     where
+    code
+    authorLogin
+    body
+    date
+    parentCode
+    files {
+      where
+      id
+      name
+      ext
+      mime
+      body
+    }
   }
 `;
 
@@ -517,29 +530,6 @@ export const TICKETS_TASKS = gql`
       errors
     }
   }
-  ${TICKETS_USER_FRAGMENT}
-  ${TICKETS_TASK_FRAGMENT}
-`;
-
-export const TICKETS_TASK_DESCRIPTION = gql`
-  query TicketsTaskDescription($where: String, $code: String) {
-    TicketsTaskDescription(task: { where: $where, code: $code }) {
-      users {
-        ...TicketsUserProps
-      }
-      task {
-        ...TicketsTaskProps
-        body
-        files {
-          ...TicketsFiles
-        }
-        comments {
-          ...TicketsComments
-        }
-      }
-    }
-  }
-  ${TICKETS_USER_FRAGMENT}
   ${TICKETS_TASK_FRAGMENT}
 `;
 
@@ -558,6 +548,32 @@ export const TICKETS_TASK_NEW = gql`
   }
 `;
 
+export const TICKETS_TASK_DESCRIPTION = gql`
+  query TicketsTaskDescription($where: String, $code: String) {
+    TicketsTaskDescription(task: { where: $where, code: $code }) {
+      users {
+        ...TicketsUserProps
+      }
+      task {
+        ...TicketsTaskProps
+        body
+        availableAction
+        availableStages
+        files {
+          ...TicketsFiles
+        }
+        comments {
+          ...TicketsComments
+        }
+      }
+    }
+  }
+  ${TICKETS_USER_FRAGMENT}
+  ${TICKETS_TASK_FRAGMENT}
+  ${TICKETS_TASK_FILES}
+  ${TICKETS_TASK_COMMENTS}
+`;
+
 export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
     TicketsTaskEdit(task: $task, attachments: $attachments) {
@@ -565,11 +581,22 @@ export const TICKETS_TASK_EDIT = gql`
         ...TicketsUserProps
         body
       }
-      tasks {
+      task {
         ...TicketsTaskProps
+        body
+        availableAction
+        availableStages
+        files {
+          ...TicketsFiles
+        }
+        comments {
+          ...TicketsComments
+        }
       }
     }
   }
   ${TICKETS_USER_FRAGMENT}
   ${TICKETS_TASK_FRAGMENT}
+  ${TICKETS_TASK_FILES}
+  ${TICKETS_TASK_COMMENTS}
 `;

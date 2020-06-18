@@ -39,18 +39,12 @@ type TkFile {
   body: String
 }
 
-type TkAuthorComments {
-  users: [TkUser]
-  comments: [TkComment]
-}
-
 type TkComment {
   where: String!
-  date: Date
+  code: String
   authorLogin: String
   body: String
-  task: String
-  code: String
+  date: Date
   parentCode: String
   files: [TkFile!]
 }
@@ -73,7 +67,7 @@ type TkTask {
   availableAction: String
   availableStages: String
   files: [TkFile!]
-  comments: TkAuthorComments
+  comments: [TkComment!]
 }
 
 type TkTaskNew {
