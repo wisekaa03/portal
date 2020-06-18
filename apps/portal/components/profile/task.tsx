@@ -334,7 +334,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                 <CardContent>
                   <Box display="flex" flexDirection="column">
                     {task?.files?.map((file) => (
-                      <Typography variant="subtitle1" key={file.code}>
+                      <Typography variant="subtitle1" key={file.id}>
                         {`${file.name}.${file.ext}`}
                       </Typography>
                     ))}

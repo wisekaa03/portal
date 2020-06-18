@@ -4,17 +4,16 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
 //#endregion
 //#region Imports Local
 import { format } from '@lib/dayjs';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT } from '@lib/queries';
-import { Data, TkWhere, TkTasks, DropzoneFile } from '@lib/types';
+import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT_FILE } from '@lib/queries';
+import { Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import ProfileTaskComponent from '@front/components/profile/task';
-import { TkEditTask } from '../../lib/types/tickets';
 //#endregion
 
 const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
@@ -32,6 +31,16 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
       fetchPolicy: 'cache-and-network',
     },
   );
+
+  const [getTaskFile, { loading: taskFileLoading, data: taskFileData, error: taskFileError }] = useLazyQuery<
+    Data<'TicketsTaskFile', TkFile>,
+    TkFileInput
+  >(TICKETS_TASK_FILE, { ssr: false });
+
+  const [
+    getCommentFile,
+    { loading: commentFileLoading, data: commentFileData, error: commentFileError },
+  ] = useLazyQuery<Data<'TicketsCommentFile', TkFile>, TkFileInput>(TICKETS_COMMENT_FILE, { ssr: false });
 
   const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
     update(cache, { data: { TicketsTaskEdit } }) {
@@ -105,6 +114,14 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
             comment={comment}
             files={files}
             setFiles={setFiles}
+            taskFile={getTaskFile}
+            taskFileLoading={taskFileLoading}
+            taskFileData={taskFileData}
+            taskFileError={taskFileError}
+            commentFile={getCommentFile}
+            commentFileLoading={commentFileLoading}
+            commentFileData={commentFileData}
+            commentFileError={commentFileError}
             handleComment={handleComment}
             handleAccept={handleAccept}
             handleClose={handleClose}

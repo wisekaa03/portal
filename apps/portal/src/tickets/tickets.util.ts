@@ -85,7 +85,7 @@ export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefi
     : undefined;
 
 export const fileSOAP = (file: TicketsFileSOAP, where: TkWhere): TkFile | undefined =>
-  file && Object.keys(file).length > 0
+  file && Object.keys(file).length > 0 && file['Наименование']
     ? {
         where: whereService(where),
         id: file['Ref'],

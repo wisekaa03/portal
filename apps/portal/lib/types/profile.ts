@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { ApolloQueryResult } from 'apollo-client';
+import { ApolloQueryResult, ApolloError } from 'apollo-client';
 import { WithTranslation } from 'next-i18next';
 import { Order, Connection } from 'typeorm-graphql-pagination';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
@@ -10,7 +10,8 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile } from './profile.dto';
-import { TkUser, TkTask, TkTasks } from './tickets';
+import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
+import { QueryLazyOptions } from '@apollo/react-hooks';
 //#endregion
 
 export type ColumnNames =
@@ -174,6 +175,14 @@ export interface ProfileTaskComponentProps {
   comment: string;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
+  taskFile: (options?: QueryLazyOptions<TkFileInput> | undefined) => void;
+  taskFileLoading: boolean;
+  taskFileData?: Data<'TicketsTaskFile', TkFile>;
+  taskFileError?: ApolloError;
+  commentFile: (options?: QueryLazyOptions<TkFileInput> | undefined) => void;
+  commentFileLoading: boolean;
+  commentFileData?: Data<'TicketsCommentFile', TkFile>;
+  commentFileError?: ApolloError;
   handleComment: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleAccept: () => void;
   handleClose: () => void;

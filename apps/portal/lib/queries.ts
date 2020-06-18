@@ -474,7 +474,7 @@ const TICKETS_TASK_FILES = gql`
 `;
 
 const TICKETS_TASK_COMMENTS = gql`
-  fragment TicketsComments on TkComments {
+  fragment TicketsComments on TkComment {
     where
     code
     authorLogin
@@ -597,4 +597,24 @@ export const TICKETS_TASK_EDIT = gql`
   ${TICKETS_TASK_FRAGMENT}
   ${TICKETS_TASK_FILES}
   ${TICKETS_TASK_COMMENTS}
+`;
+
+export const TICKETS_TASK_FILE = gql`
+  mutation TicketsTaskFile($id: TkFileInput!) {
+    TicketsTaskFile(id: $id) {
+      ...TicketsFiles
+      body
+    }
+  }
+  ${TICKETS_TASK_FILES}
+`;
+
+export const TICKETS_COMMENT_FILE = gql`
+  mutation TicketsCommentFile($id: TkFileInput!) {
+    TicketsCommentFile(id: $id) {
+      ...TicketsFiles
+      body
+    }
+  }
+  ${TICKETS_TASK_FILES}
 `;
