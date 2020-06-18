@@ -9,3 +9,11 @@ export interface StyleProps {
 export interface Data<K, T> {
   [K: string]: T;
 }
+
+interface DataResult_return<K> {
+  return?: K;
+}
+
+export interface DataResultSOAP<K> {
+  0?: DataResult_return<K>;
+}

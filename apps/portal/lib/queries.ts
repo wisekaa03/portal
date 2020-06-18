@@ -466,10 +466,10 @@ const TICKETS_TASK_FRAGMENT = gql`
 
 const TICKETS_TASK_FILES = gql`
   fragment TicketsFiles on TkFile {
+    where
     id
     name
     ext
-    body
   }
 `;
 
@@ -486,8 +486,6 @@ const TICKETS_TASK_COMMENTS = gql`
       id
       name
       ext
-      mime
-      body
     }
   }
 `;

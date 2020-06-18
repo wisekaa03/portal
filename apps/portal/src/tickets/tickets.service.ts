@@ -19,11 +19,18 @@ import {
   RecordsOST,
   TkFileInput,
   TkFile,
+  TicketsRouteSOAP,
+  TicketsUserSOAP,
+  TicketsTaskSOAP,
+  TicketsSOAP_GetRoutes,
+  TicketsSOAP_GetTasks,
+  TicketsSOAP_GetTaskDescription,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
+import { DataResultSOAP } from '@lib/types/common';
 import {
   taskSOAP,
   AttachesSOAP,
@@ -78,17 +85,15 @@ export class TicketsService {
         promises.push(
           client
             .GetRoutesAsync({ Log: user.username })
-            .then((result: any) => {
+            .then((result: DataResultSOAP<TicketsSOAP_GetRoutes>) => {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
-              if (Object.keys(result?.[0]?.['return']).length > 0) {
-                const routes = result[0]['return']['Сервис'];
-
-                if (Array.isArray(routes)) {
-                  return {
-                    routes: routes.map((route: Record<string, any>) => routeSOAP(route, TkWhere.SOAP1C)),
-                  };
-                }
+              if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+                return {
+                  routes: result[0]['return']?.['Сервис']?.map((route: TicketsRouteSOAP) =>
+                    routeSOAP(route, TkWhere.SOAP1C),
+                  ),
+                };
               }
 
               this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
@@ -219,17 +224,17 @@ export class TicketsService {
                 Context: {},
               },
             })
-            .then((result: any) => {
+            .then((result: DataResultSOAP<TicketsSOAP_GetTasks>) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
-              const returnValue = result?.[0]?.['return'];
 
-              if (returnValue && Object.keys(returnValue).length > 0) {
-                const users = returnValue['Пользователи']['Пользователь'];
-                const tasks = returnValue['Задания']['Задание'];
-
+              if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
                 return {
-                  users: users?.map((usr: Record<string, any>) => userSOAP(usr, TkWhere.SOAP1C)),
-                  tasks: tasks?.map((task: Record<string, any>) => taskSOAP(task, TkWhere.SOAP1C)),
+                  users: result[0]['return']?.['Пользователи']?.['Пользователь']?.map((usr: TicketsUserSOAP) =>
+                    userSOAP(usr, TkWhere.SOAP1C),
+                  ),
+                  tasks: result[0]['return']?.['Задания']?.['Задание']?.map((task: TicketsTaskSOAP) =>
+                    taskSOAP(task, TkWhere.SOAP1C),
+                  ),
                 };
               }
 
@@ -387,20 +392,19 @@ export class TicketsService {
           Executor: task.executorUser ? task.executorUser : '',
           Attaches,
         })
-        .then((result?: Record<string, undefined>) => {
+        .then((result?: Record<string, never>) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
-          const returnValue = result?.[0]?.['return'];
-          if (returnValue && typeof returnValue === 'object') {
+          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
             return {
               where: TkWhere.SOAP1C,
-              code: returnValue['Код'],
-              subject: returnValue['Наименование'],
-              route: returnValue['ИмяСервиса'],
-              service: returnValue['ИмяУслуги'],
-              organization: returnValue['Организация'],
-              status: returnValue['ТекущийСтатус'],
-              createdDate: new Date(returnValue['ВремяСоздания']),
+              code: result[0]['return']['Код'],
+              subject: result[0]['return']['Наименование'],
+              route: result[0]['return']['ИмяСервиса'],
+              service: result[0]['return']['ИмяУслуги'],
+              organization: result[0]['return']['Организация'],
+              status: result[0]['return']['ТекущийСтатус'],
+              createdDate: new Date(result[0]['return']['ВремяСоздания']),
             } as TkTaskNew;
           }
 
@@ -482,85 +486,6 @@ export class TicketsService {
   };
 
   /**
-   * Edit task
-   *
-   * @async
-   * @method TicketsTaskEdit
-   * @param {User} user User object
-   * @param {string} password The Password
-   * @param {TkTaskEditInput} task The task which will be editing
-   * @param {FileUpload} attachments Attachments object
-   * @returns {TkTasks} Task for editing
-   */
-  TicketsTaskEdit = async (
-    user: User,
-    password: string,
-    task: TkTaskEditInput,
-    attachments?: Promise<FileUpload>[],
-  ): Promise<TkEditTask> => {
-    /* 1C SOAP */
-    if (task.where === TkWhere.SOAP1C) {
-      const authentication: SoapAuthentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
-      };
-
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        throw error;
-      });
-
-      const Attaches: AttachesSOAP = { Вложение: [] };
-
-      if (attachments) {
-        await constructUploads(attachments, ({ filename, file }) =>
-          Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
-        ).catch((error: SoapFault) => {
-          this.logger.error(error);
-
-          throw new SoapError(error);
-        });
-      }
-
-      return client
-        .EditTaskAsync({
-          TaskId: task.code,
-          Executor: '',
-          NewComment: task.comment,
-          AutorComment: user.username,
-          Attaches,
-        })
-        .then((result?: Record<string, undefined>) => {
-          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
-
-          const returnValue = result?.[0]?.['return'];
-          if (returnValue && typeof returnValue === 'object') {
-            return taskSOAP(returnValue, TkWhere.SOAP1C);
-          }
-
-          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
-          return {
-            error: 'Not connected to SOAP',
-          };
-        })
-        .catch((error: SoapFault) => {
-          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
-          this.logger.error(error);
-
-          throw new SoapError(error);
-        });
-    }
-
-    /* OSTicket service */
-    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
-      throw new Error('Not implemented');
-    }
-
-    throw new Error('Can not use a default route');
-  };
-
-  /**
    * Task description
    *
    * @async
@@ -587,15 +512,16 @@ export class TicketsService {
         .GetTaskDescriptionAsync({
           TaskId: task.code,
         })
-        .then((result: any) => {
+        .then((result?: DataResultSOAP<TicketsSOAP_GetTaskDescription>) => {
           this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
-          const returnValue = result[0]?.['return'];
-
-          if (returnValue && Object.keys(returnValue).length > 0) {
-            const usersResult = returnValue['Пользователи']?.['Пользователь'].map((user: any) =>
+          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+            const usersResult = result[0]['return']['Пользователи']?.['Пользователь']?.map((user: TicketsUserSOAP) =>
               userSOAP(user, task.where),
             );
-            const taskResult = taskSOAP(returnValue['Задания']?.['Задание']?.['0'], task.where);
+            const taskResult = taskSOAP(
+              (result[0]['return']?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0],
+              task.where,
+            );
             if (usersResult && taskResult) {
               return {
                 users: usersResult,
@@ -680,6 +606,84 @@ export class TicketsService {
   };
 
   /**
+   * Edit task
+   *
+   * @async
+   * @method TicketsTaskEdit
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {TkTaskEditInput} task The task which will be editing
+   * @param {FileUpload} attachments Attachments object
+   * @returns {TkTasks} Task for editing
+   */
+  TicketsTaskEdit = async (
+    user: User,
+    password: string,
+    task: TkTaskEditInput,
+    attachments?: Promise<FileUpload>[],
+  ): Promise<TkEditTask> => {
+    /* 1C SOAP */
+    if (task.where === TkWhere.SOAP1C) {
+      const authentication: SoapAuthentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      };
+
+      const client = await this.soapService.connect(authentication).catch((error) => {
+        throw error;
+      });
+
+      const Attaches: AttachesSOAP = { Вложение: [] };
+
+      if (attachments) {
+        await constructUploads(attachments, ({ filename, file }) =>
+          Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
+        ).catch((error: SoapFault) => {
+          this.logger.error(error);
+
+          throw new SoapError(error);
+        });
+      }
+
+      return client
+        .EditTaskAsync({
+          TaskId: task.code,
+          Executor: '',
+          NewComment: task.comment,
+          AutorComment: user.username,
+          Attaches,
+        })
+        .then((result: Record<string, never>) => {
+          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+
+          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+            return taskSOAP(result[0]['return'] as TicketsTaskSOAP, TkWhere.SOAP1C);
+          }
+
+          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
+          return {
+            error: 'Not connected to SOAP',
+          };
+        })
+        .catch((error: SoapFault) => {
+          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
+          this.logger.error(error);
+
+          throw new SoapError(error);
+        });
+    }
+
+    /* OSTicket service */
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+      throw new Error('Not implemented');
+    }
+
+    throw new Error('Can not use a default route');
+  };
+
+  /**
    * Get file of task
    *
    * @async
@@ -706,15 +710,13 @@ export class TicketsService {
         .GetTaskFileAsync({
           Ref: id.ref,
         })
-        .then((result: any) => {
+        .then((result?: Record<string, never>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
-          const returnValue = result[0]?.['return'];
-
-          if (returnValue && Object.keys(returnValue).length > 0) {
+          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
             return {
               where: id['where'],
               id: id['ref'],
-              body: returnValue['ФайлХранилище'],
+              body: result[0]['return']['ФайлХранилище'],
             };
           }
 
@@ -817,15 +819,13 @@ export class TicketsService {
         .GetCommentFileAsync({
           Ref: id.ref,
         })
-        .then((result: any) => {
+        .then((result?: Record<string, never>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
-          const returnValue = result[0]?.['return'];
-
-          if (returnValue && Object.keys(returnValue).length > 0) {
+          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
             return {
               where: id['where'],
               id: id['ref'],
-              body: returnValue['ФайлХранилище'],
+              body: result[0]['return']['ФайлХранилище'],
             };
           }
 

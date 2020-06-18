@@ -33,7 +33,7 @@ export interface TkRoutes {
 
 export interface TkFile {
   where: TkWhere;
-  id?: string;
+  id: string;
   name?: string;
   ext?: string;
   mime?: string;
@@ -42,18 +42,12 @@ export interface TkFile {
 
 export interface TkComment {
   where: TkWhere;
-  date: Date;
-  authorLogin: string;
-  body: string;
-  task: string;
-  code: string;
-  parentCode: string;
+  code?: string;
+  date?: Date;
+  authorLogin?: string;
+  body?: string;
+  parentCode?: string;
   files?: TkFile[];
-}
-
-export interface TkAuthorComments {
-  users?: TkUser[];
-  comments?: TkComment[];
 }
 
 export interface TkTask {
@@ -74,7 +68,7 @@ export interface TkTask {
   availableAction?: string;
   availableStages?: string;
   files?: TkFile[];
-  comments?: TkAuthorComments;
+  comments?: TkComment[];
 }
 
 export interface TkTasks {
@@ -156,3 +150,106 @@ export interface TkEditTask {
 }
 
 export type RecordsOST = Record<string, Array<Record<string, Record<string, any>>>>;
+
+/**
+ * SOAP fields
+ */
+export interface TicketsUserSOAP {
+  Ref: string;
+  ФИО: string;
+  Аватар: string;
+  ОсновнойEmail: string;
+  ОсновнойТелефон: string;
+  Организация: string;
+  Подразделение: string;
+  РуководительНаименование: string;
+  Должность: string;
+}
+
+export interface TicketsUsersSOAP {
+  Пользователь?: TicketsUserSOAP[];
+}
+
+export interface TicketsServiceSOAP {
+  Код: string;
+  Наименование: string;
+  Описание: string;
+  СервисВладелец?: string;
+  Аватар: string;
+}
+
+export interface TicketsServicesSOAP {
+  Услуга: TicketsServiceSOAP[];
+}
+
+export interface TicketsRouteSOAP {
+  Код: string;
+  Наименование: string;
+  Описание: string;
+  Аватар: string;
+  СписокУслуг?: TicketsServicesSOAP;
+}
+
+export interface TicketsSOAP_GetRoutes {
+  Сервис?: TicketsRouteSOAP[];
+}
+
+export interface TicketsFileSOAP {
+  Ref: string;
+  Наименование?: string;
+  РасширениеФайла?: string;
+  MIME?: string;
+  ФайлХранилище?: string;
+}
+
+export interface TicketsFilesSOAP {
+  Файл: TicketsFileSOAP[];
+}
+
+export interface TicketsCommentSOAP {
+  where: TkWhere;
+  date: Date;
+  // Ref
+  authorLogin: string;
+  body: string;
+  code: string;
+  parentCode: string;
+  files: TicketsFilesSOAP;
+}
+
+export interface TicketsCommentsSOAP {
+  Комментарий: TicketsCommentSOAP[];
+}
+
+export interface TicketsTaskSOAP {
+  Ref: string;
+  Код: string;
+  Наименование: string;
+  Описание?: string;
+  Статус: string;
+  Дата?: Date;
+  СрокИсполнения?: Date;
+  ДатаЗавершения?: Date;
+  ТекущийИсполнитель: string;
+  Инициатор: string;
+  Сервис: TicketsRouteSOAP;
+  Услуга: TicketsServiceSOAP;
+  ДоступноеДействие?: string;
+  ДоступныеЭтапы?: string;
+  Файлы?: TicketsFilesSOAP;
+  Комментарии?: TicketsCommentsSOAP;
+}
+
+export interface TicketsTasksSOAP {
+  Задание?: TicketsTaskSOAP[];
+}
+
+export interface TicketsSOAP_GetTasks {
+  Пользователи?: TicketsUsersSOAP;
+  Задания?: TicketsTasksSOAP;
+}
+
+export interface TicketsSOAP_GetTaskDescription {
+  Пользователи?: TicketsUsersSOAP;
+  Задания?: TicketsTasksSOAP;
+}

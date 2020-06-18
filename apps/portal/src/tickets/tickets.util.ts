@@ -10,8 +10,13 @@ import {
   TkTask,
   TkUser,
   TkFile,
-  TkAuthorComments,
   TkComment,
+  TicketsTaskSOAP,
+  TicketsCommentSOAP,
+  TicketsFileSOAP,
+  TicketsRouteSOAP,
+  TicketsServiceSOAP,
+  TicketsUserSOAP,
 } from '@lib/types';
 
 export const SMALL_BODY_STRING = 250;
@@ -62,7 +67,7 @@ export const whereService = (where: string | TkWhere): TkWhere => {
  * - Логин
  * - КаналТелефонии
  */
-export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | undefined =>
+export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefined =>
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
@@ -79,16 +84,16 @@ export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | un
       }
     : undefined;
 
-export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] | undefined =>
-  files && Object.keys(files).length > 0
-    ? files.map((file: Record<string, any>) => ({
+export const fileSOAP = (file: TicketsFileSOAP, where: TkWhere): TkFile | undefined =>
+  file && Object.keys(file).length > 0
+    ? {
         where: whereService(where),
         id: file['Ref'],
         name: file['Наименование'],
         ext: file['РасширениеФайла'],
         mime: file['MIME'],
         body: file['ФайлХранилище'],
-      }))
+      }
     : undefined;
 
 /**
@@ -99,7 +104,7 @@ export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] 
  * - СервисВладелец - Сервис (route) которому принадлежит данная услуга
  * - Аватар
  */
-export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkService | undefined =>
+export const serviceSOAP = (service: TicketsServiceSOAP, where: TkWhere): TkService | undefined =>
   service && Object.keys(service).length > 0
     ? {
         where: whereService(where),
@@ -118,7 +123,7 @@ export const serviceSOAP = (service: Record<string, any>, where: TkWhere): TkSer
  * - Описание
  * - Аватар
  */
-export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute | undefined =>
+export const routeSOAP = (route: TicketsRouteSOAP, where: TkWhere): TkRoute | undefined =>
   route && Object.keys(route).length > 0
     ? {
         where: whereService(where),
@@ -126,36 +131,34 @@ export const routeSOAP = (route: Record<string, any>, where: TkWhere): TkRoute |
         name: route['Наименование'],
         description: route['Описание'],
         avatar: route['Аватар'],
-        services: route['СписокУслуг']?.['Услуга']?.map((service: Record<string, any>) => serviceSOAP(service, where)),
+        services: route['СписокУслуг']?.['Услуга']
+          ? route['СписокУслуг']['Услуга'].reduce((accumulator, element) => {
+              const service = serviceSOAP(element, where);
+              if (service) {
+                return [...accumulator, service];
+              }
+              return accumulator;
+            }, [])
+          : undefined,
       }
     : undefined;
 
 /**
  * Комментарии в представлении 1C SOAP
  */
-export const commentSOAP = (comment: Record<string, any>, where: TkWhere): TkComment | undefined =>
+export const commentSOAP = (comment: TicketsCommentSOAP, where: TkWhere): TkComment | undefined =>
   comment && Object.keys(comment).length > 0
     ? {
         where: whereService(where),
         date: new Date(comment['Дата']),
-        authorLogin: comment['ЛогинАвтора'],
+        authorLogin: comment['Автор'],
         body: comment['Текст'],
-        task: comment['Владелец'],
         code: comment['Код'],
         parentCode: comment['КодРодителя'],
-      }
-    : undefined;
-
-/**
- * АвторКомментария и Комментарии в представлении 1C SOAP
- */
-export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere): TkAuthorComments | undefined =>
-  comments && Object.keys(comments).length > 0
-    ? {
-        users: comments['Авторы']?.['АвторКомментария']?.map((user: Record<string, any>) => userSOAP(user, where)),
-        comments: comments['Комментарии']?.['Комментарий']?.map((comment: Record<string, any>) =>
-          commentSOAP(comment, where),
-        ),
+        files:
+          comment['Файлы'] &&
+          Object.keys(comment['Файлы']).length > 0 &&
+          comment['Файлы']['Файл']?.map((file: TicketsFileSOAP) => fileSOAP(file, where)),
       }
     : undefined;
 
@@ -173,33 +176,52 @@ export const authorCommentsSOAP = (comments: Record<string, any>, where: TkWhere
  * - Сервис - ?
  * - Услуга
  */
-export const taskSOAP = (task: Record<string, any>, where: TkWhere): TkTask | undefined =>
+export const taskSOAP = (task: TicketsTaskSOAP, where: TkWhere): TkTask | undefined =>
   task && Object.keys(task).length > 0
     ? {
         where: whereService(where),
         id: task['Ref'],
         code: task['Код'],
         subject: task['Наименование'],
-        body: clearHtml(task['Описание']),
-        smallBody: clearHtml(task['Описание'], SMALL_BODY_STRING),
+        body: task['Описание'] && clearHtml(task['Описание']),
+        smallBody: task['Описание'] && clearHtml(task['Описание'], SMALL_BODY_STRING),
         status: task['Статус'],
-        createdDate: task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? undefined : new Date(task['Дата']),
+        createdDate:
+          !task['Дата'] || task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? undefined : task['Дата'],
         timeoutDate:
-          task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z'
+          !task['СрокИсполнения'] || task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z'
             ? undefined
-            : new Date(task['СрокИсполнения']),
+            : task['СрокИсполнения'],
         endDate:
-          task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z'
+          !task['ДатаЗавершения'] || task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z'
             ? undefined
-            : new Date(task['ДатаЗавершения']),
+            : task['ДатаЗавершения'],
         executorUser: task['ТекущийИсполнитель'],
         initiatorUser: task['Инициатор'],
         route: routeSOAP(task['Сервис'], where),
         service: serviceSOAP(task['Услуга'], where),
         availableAction: task['ДоступноеДействие'],
         availableStages: task['ДоступныеЭтапы'],
-        files: filesSOAP(task['СписокФайлов']?.['Файл'], where),
-        comments: authorCommentsSOAP(task['КомментарииЗадачи'], where),
+        files:
+          task['Файлы'] && Object.keys(task['Файлы']).length > 0
+            ? task['Файлы']['Файл'].reduce((accumulator, element) => {
+                const file = fileSOAP(element, where);
+                if (file) {
+                  return [...accumulator, file];
+                }
+                return accumulator;
+              }, [])
+            : undefined,
+        comments:
+          task['Комментарии'] && Object.keys(task['Комментарии']).length > 0
+            ? task['Комментарии']['Комментарий'].reduce((accumulator, element) => {
+                const comment = commentSOAP(element, where);
+                if (comment) {
+                  return [...accumulator, comment];
+                }
+                return accumulator;
+              }, [])
+            : undefined,
       }
     : undefined;
 
@@ -273,43 +295,42 @@ export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute |
 /**
  * Описание в представлении OSTicket:
  */
-export const commentsOST = (comments: Record<string, any>, where: TkWhere, task: string): TkAuthorComments =>
-  comments && Array.isArray(comments)
-    ? comments.reduce(
-        (accumulator: TkAuthorComments, comment: Record<string, any>) => {
-          return {
-            users: accumulator.users?.concat([
-              {
-                where: whereService(where),
-                name: comment['user'],
-                login: comment['user'],
-                email: comment['email'],
-              },
-            ]),
-            comments: accumulator.comments?.concat([
-              {
-                where: whereService(where),
-                date: new Date(comment['created']),
-                body: comment['body'],
-                task,
-                code: comment['id'],
-                parentCode: '',
-                authorLogin: comment['user'],
-                files: [
-                  ...comment['attachments']?.map((file: Record<string, any>) => ({
-                    code: file['code'],
-                    name: file['name'],
-                    mime: file['mime'],
-                    body: file['body'],
-                  })),
-                ],
-              },
-            ]),
-          };
-        },
-        { users: [], comments: [] },
-      )
-    : undefined;
+export const commentsOST = (comments: Record<string, any>, where: TkWhere, task: string): TkComment[] | undefined => [];
+// comments && Array.isArray(comments)
+//   ? comments.reduce(
+//       (accumulator: TkComment[], comment: Record<string, any>) => {
+//         return {
+//           users: accumulator.users?.concat([
+//             {
+//               where: whereService(where),
+//               name: comment['user'],
+//               login: comment['user'],
+//               email: comment['email'],
+//             },
+//           ]),
+//           comments: accumulator.comments?.concat([
+//             {
+//               where: whereService(where),
+//               date: new Date(comment['created']),
+//               body: comment['body'],
+//               code: comment['id'],
+//               parentCode: '',
+//               authorLogin: comment['user'],
+//               files: [
+//                 ...comment['attachments']?.map((file: Record<string, any>) => ({
+//                   code: file['code'],
+//                   name: file['name'],
+//                   mime: file['mime'],
+//                   body: file['body'],
+//                 })),
+//               ],
+//             },
+//           ]),
+//         };
+//       },
+//       { users: [], comments: [] },
+//     )
+//   : undefined;
 
 /**
  * Задача в представлении OSTicket:
