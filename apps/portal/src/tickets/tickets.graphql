@@ -59,7 +59,6 @@ type TkTask {
   where: String!
   id: String
   code: String!
-  type: String
   subject: String!
   body: String
   smallBody: String

@@ -443,7 +443,6 @@ const TICKETS_TASK_FRAGMENT = gql`
     id
     code
     subject
-    body
     status
     createdDate
     endDate
@@ -462,12 +461,21 @@ const TICKETS_TASK_FRAGMENT = gql`
       description
       avatar
     }
-    files {
-      code
-      name
-      ext
-      body
-    }
+  }
+`;
+
+const TICKETS_TASK_FILES = gql`
+  fragment TicketsFiles on TkFile {
+    id
+    name
+    ext
+    body
+  }
+`;
+
+const TICKETS_TASK_COMMENTS = gql`
+  fragment TicketsComments on TkComments {
+    where
   }
 `;
 
@@ -497,10 +505,14 @@ export const TICKETS_TASKS = gql`
   query TicketsTasks($status: String) {
     TicketsTasks(task: { status: $status }) {
       users {
-        ...TicketsUserProps
+        where
+        id
+        name
+        login
       }
       tasks {
         ...TicketsTaskProps
+        smallBody
       }
       errors
     }
@@ -517,6 +529,13 @@ export const TICKETS_TASK_DESCRIPTION = gql`
       }
       task {
         ...TicketsTaskProps
+        body
+        files {
+          ...TicketsFiles
+        }
+        comments {
+          ...TicketsComments
+        }
       }
     }
   }
@@ -544,6 +563,7 @@ export const TICKETS_TASK_EDIT = gql`
     TicketsTaskEdit(task: $task, attachments: $attachments) {
       users {
         ...TicketsUserProps
+        body
       }
       tasks {
         ...TicketsTaskProps
