@@ -131,15 +131,16 @@ export const routeSOAP = (route: TicketsRouteSOAP, where: TkWhere): TkRoute | un
         name: route['Наименование'],
         description: route['Описание'],
         avatar: route['Аватар'],
-        services: route['СписокУслуг']?.['Услуга']
-          ? route['СписокУслуг']['Услуга'].reduce((accumulator, element) => {
-              const service = serviceSOAP(element, where);
-              if (service) {
-                return [...accumulator, service];
-              }
-              return accumulator;
-            }, [])
-          : undefined,
+        services:
+          route['СписокУслуг']?.['Услуга'] && Array.isArray(route['СписокУслуг']['Услуга'])
+            ? route['СписокУслуг']['Услуга'].reduce((accumulator: TkService[], element) => {
+                const service = serviceSOAP(element, where);
+                if (service) {
+                  return [...accumulator, service];
+                }
+                return accumulator;
+              }, [] as TkService[])
+            : undefined,
       }
     : undefined;
 
@@ -150,15 +151,21 @@ export const commentSOAP = (comment: TicketsCommentSOAP, where: TkWhere): TkComm
   comment && Object.keys(comment).length > 0
     ? {
         where: whereService(where),
-        date: new Date(comment['Дата']),
+        date: comment['Дата'],
         authorLogin: comment['Автор'],
         body: comment['Текст'],
         code: comment['Код'],
         parentCode: comment['КодРодителя'],
         files:
-          comment['Файлы'] &&
-          Object.keys(comment['Файлы']).length > 0 &&
-          comment['Файлы']['Файл']?.map((file: TicketsFileSOAP) => fileSOAP(file, where)),
+          comment['Файлы']?.['Файл'] && Array.isArray(comment['Файлы']['Файл'])
+            ? comment['Файлы']['Файл'].reduce((accumulator: TkFile[], element) => {
+                const file = fileSOAP(element, where);
+                if (file) {
+                  return [...accumulator, file];
+                }
+                return accumulator;
+              }, [] as TkFile[])
+            : undefined,
       }
     : undefined;
 
@@ -203,24 +210,24 @@ export const taskSOAP = (task: TicketsTaskSOAP, where: TkWhere): TkTask | undefi
         availableAction: task['ДоступноеДействие'],
         availableStages: task['ДоступныеЭтапы'],
         files:
-          task['Файлы'] && Object.keys(task['Файлы']).length > 0
-            ? task['Файлы']['Файл'].reduce((accumulator, element) => {
+          task['Файлы']?.['Файл'] && Array.isArray(task['Файлы']['Файл'])
+            ? task['Файлы']['Файл'].reduce((accumulator: TkFile[], element) => {
                 const file = fileSOAP(element, where);
                 if (file) {
                   return [...accumulator, file];
                 }
                 return accumulator;
-              }, [])
+              }, [] as TkFile[])
             : undefined,
         comments:
-          task['Комментарии'] && Object.keys(task['Комментарии']).length > 0
-            ? task['Комментарии']['Комментарий'].reduce((accumulator, element) => {
+          task['Комментарии']?.['Комментарий'] && Array.isArray(task['Комментарии']['Комментарий'])
+            ? task['Комментарии']['Комментарий'].reduce((accumulator: TkComment[], element) => {
                 const comment = commentSOAP(element, where);
                 if (comment) {
                   return [...accumulator, comment];
                 }
                 return accumulator;
-              }, [])
+              }, [] as TkComment[])
             : undefined,
       }
     : undefined;

@@ -207,14 +207,13 @@ export interface TicketsFilesSOAP {
 }
 
 export interface TicketsCommentSOAP {
-  where: TkWhere;
-  date: Date;
+  Дата: Date;
   // Ref
-  authorLogin: string;
-  body: string;
-  code: string;
-  parentCode: string;
-  files: TicketsFilesSOAP;
+  Автор: string;
+  Текст: string;
+  Код: string;
+  КодРодителя: string;
+  Файлы: TicketsFilesSOAP;
 }
 
 export interface TicketsCommentsSOAP {
