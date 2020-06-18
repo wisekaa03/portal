@@ -38,7 +38,7 @@ type WithRouter = {
   query?: { [key: string]: string };
 };
 
-export type I18nPage<P = {}> = NextComponentType<
+export type I18nPage<P = Record<string, unknown>> = NextComponentType<
   NextPageContext,
   { namespacesRequired: string[] },
   WithTranslation & P & { namespacesRequired: string[] } & WithRouter

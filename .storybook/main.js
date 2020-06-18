@@ -10,16 +10,16 @@ module.exports = {
     '@storybook/addon-knobs/register',
     '@storybook/addon-actions/register',
     '@storybook/addon-links/register',
-    'storybook-addon-i18n/register',
-    'storybook-addon-material-ui/register',
+    // 'storybook-addon-i18n/register',
+    // 'storybook-addon-material-ui/register',
     '@storybook/addons',
     {
       name: '@storybook/preset-typescript',
-      options: {
-        tsLoaderOptions: {
-          configFile: '../apps/portal/tsconfig.app.json',
-        }
-      }
+      // options: {
+      //   tsLoaderOptions: {
+      //     configFile: '../apps/portal/tsconfig.json',
+      //   }
+      // }
     }
   ],
   webpackFinal: async (config) => {
@@ -35,11 +35,12 @@ module.exports = {
       ...(config.resolve || []),
       alias: {
         ...config.resolve.alias,
-        ...resolveTsconfigPaths({ tsconfigPaths: '../apps/portal/tsconfig.app.json' }),
+        ...resolveTsconfigPaths({ tsconfigPaths: '../tsconfig.json' }),
       },
     };
 
     console.log(config);
+    // config.plugins.forEach((plugin) => plugin instanceof Webpack.NormalModuleReplacementPlugin && console.log(plugin.newResource));
 
     return config;
   },
