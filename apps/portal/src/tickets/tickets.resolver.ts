@@ -14,7 +14,8 @@ import {
   TkTaskNewInput,
   TkTaskEditInput,
   TkTaskDescriptionInput,
-  TkTask,
+  TkFile,
+  TkFileInput,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
@@ -141,6 +142,52 @@ export class TicketsResolver {
     }
 
     return this.ticketsService.TicketsTaskDescription(user, password, task).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
+  }
+
+  /**
+   * Get file of task
+   *
+   * @async
+   * @returns {TkFile}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query('TicketsTaskFile')
+  @UseGuards(GqlAuthGuard)
+  async TicketsTaskFile(
+    @Args('id') id: TkFileInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<TkFile> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.ticketsService.TicketsTaskFile(user, password, id).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
+  }
+
+  /**
+   * Get file of comment
+   *
+   * @async
+   * @returns {TkFile}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query('TicketsCommentFile')
+  @UseGuards(GqlAuthGuard)
+  async TicketsCommentFile(
+    @Args('id') id: TkFileInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<TkFile> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.ticketsService.TicketsCommentFile(user, password, id).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

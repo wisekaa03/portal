@@ -17,6 +17,8 @@ import {
   TkTaskEditInput,
   TkTaskDescriptionInput,
   RecordsOST,
+  TkFileInput,
+  TkFile,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
@@ -660,6 +662,228 @@ export class TicketsService {
                     }
                   }
                   throw new Error(`Not found the OSTicket data in "${task.where}"`);
+                }
+                throw new Error(response.statusText);
+              });
+          }
+        } catch (error) {
+          this.logger.error(error);
+
+          throw error;
+        }
+      }
+
+      throw new Error('Not implemented');
+    }
+
+    throw new Error('Can not use a default route');
+  };
+
+  /**
+   * Get file of task
+   *
+   * @async
+   * @method TicketsTaskFile
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {TkFileInput} id The task file
+   * @returns {TkFile}
+   */
+  TicketsTaskFile = async (user: User, password: string, id: TkFileInput): Promise<TkFile> => {
+    /* 1C SOAP */
+    if (id.where === TkWhere.SOAP1C && id.ref) {
+      const authentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      } as SoapAuthentication;
+
+      const client = await this.soapService.connect(authentication).catch((error) => {
+        throw error;
+      });
+
+      return client
+        .GetTaskFileAsync({
+          Ref: id.ref,
+        })
+        .then((result: any) => {
+          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
+          const returnValue = result[0]?.['return'];
+
+          if (returnValue && Object.keys(returnValue).length > 0) {
+            return {
+              where: id['where'],
+              id: id['ref'],
+              body: returnValue['ФайлХранилище'],
+            };
+          }
+
+          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
+          return {
+            error: 'Not connected to SOAP',
+          };
+        })
+        .catch((error: SoapFault) => {
+          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
+          this.logger.error(error);
+
+          throw new SoapError(error);
+        });
+    }
+
+    /* OSTicket service */
+    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia) {
+      if (this.configService.get<string>('OSTICKET_URL')) {
+        try {
+          const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(id.where));
+          if (whereKey) {
+            const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+            const myUserOST = {
+              company: user.profile.company,
+              email: user.profile.email,
+              fio,
+              function: user.profile.title,
+              manager: '',
+              phone: user.profile.telephone,
+              phone_ext: user.profile.workPhone,
+              subdivision: user.profile.department,
+              Аватар: user.profile.thumbnailPhoto,
+            } as TkUserOST;
+
+            return this.httpService
+              .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
+                login: user.username,
+                user: JSON.stringify(myUserOST),
+                msg: JSON.stringify({ login: fio, file: id.ref }),
+              })
+              .toPromise()
+              .then((response) => {
+                if (response.status === 200) {
+                  if (typeof response.data === 'object') {
+                    if (typeof response.data.error === 'string') {
+                      throw new TypeError(response.data.error);
+                    } else {
+                      return {
+                        where: id['where'],
+                        id: id['ref'],
+                        body: (response.data['file'] as unknown) as string,
+                      };
+                    }
+                  }
+                  throw new Error(`Not found the OSTicket data in "${id.where}"`);
+                }
+                throw new Error(response.statusText);
+              });
+          }
+        } catch (error) {
+          this.logger.error(error);
+
+          throw error;
+        }
+      }
+
+      throw new Error('Not implemented');
+    }
+
+    throw new Error('Can not use a default route');
+  };
+
+  /**
+   * Get file of comment
+   *
+   * @async
+   * @method TicketsCommentFile
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {TkFileInput} id The task file
+   * @returns {TkFile}
+   */
+  TicketsCommentFile = async (user: User, password: string, id: TkFileInput): Promise<TkFile> => {
+    /* 1C SOAP */
+    if (id.where === TkWhere.SOAP1C && id.ref) {
+      const authentication = {
+        username: user?.username,
+        password,
+        domain: this.configService.get<string>('SOAP_DOMAIN'),
+      } as SoapAuthentication;
+
+      const client = await this.soapService.connect(authentication).catch((error) => {
+        throw error;
+      });
+
+      return client
+        .GetCommentFileAsync({
+          Ref: id.ref,
+        })
+        .then((result: any) => {
+          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
+          const returnValue = result[0]?.['return'];
+
+          if (returnValue && Object.keys(returnValue).length > 0) {
+            return {
+              where: id['where'],
+              id: id['ref'],
+              body: returnValue['ФайлХранилище'],
+            };
+          }
+
+          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
+          return {
+            error: 'Not connected to SOAP',
+          };
+        })
+        .catch((error: SoapFault) => {
+          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
+          this.logger.error(error);
+
+          throw new SoapError(error);
+        });
+    }
+
+    /* OSTicket service */
+    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia) {
+      if (this.configService.get<string>('OSTICKET_URL')) {
+        try {
+          const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(id.where));
+          if (whereKey) {
+            const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
+            const myUserOST = {
+              company: user.profile.company,
+              email: user.profile.email,
+              fio,
+              function: user.profile.title,
+              manager: '',
+              phone: user.profile.telephone,
+              phone_ext: user.profile.workPhone,
+              subdivision: user.profile.department,
+              Аватар: user.profile.thumbnailPhoto,
+            } as TkUserOST;
+
+            return this.httpService
+              .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
+                login: user.username,
+                user: JSON.stringify(myUserOST),
+                msg: JSON.stringify({ login: fio, file: id.ref }),
+              })
+              .toPromise()
+              .then((response) => {
+                if (response.status === 200) {
+                  if (typeof response.data === 'object') {
+                    if (typeof response.data.error === 'string') {
+                      throw new TypeError(response.data.error);
+                    } else {
+                      return {
+                        where: id['where'],
+                        id: id['ref'],
+                        body: (response.data['file'] as unknown) as string,
+                      };
+                    }
+                  }
+                  throw new Error(`Not found the OSTicket data in "${id.where}"`);
                 }
                 throw new Error(response.statusText);
               });

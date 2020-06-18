@@ -33,8 +33,8 @@ export interface TkRoutes {
 
 export interface TkFile {
   where: TkWhere;
-  code: string;
-  name: string;
+  id?: string;
+  name?: string;
   ext?: string;
   mime?: string;
   body?: string;
@@ -108,6 +108,11 @@ export interface TkTaskEditInput {
 export interface TkTaskDescriptionInput {
   where: TkWhere;
   code: string;
+}
+
+export interface TkFileInput {
+  where: TkWhere;
+  ref: string;
 }
 
 export interface TkTaskNewInput {

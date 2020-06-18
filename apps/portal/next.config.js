@@ -69,7 +69,7 @@ function withCustomWebpack(config = {}) {
     // }
 
     // config.externals = [...(config.externals || []), nodeExternals()];
-    console.log(isServer ? 'Server' : 'Client', config);
+    // console.log(isServer ? 'Server' : 'Client', config);
 
     return webpack(config, { isServer, buildId, dev, ...rest });
   };

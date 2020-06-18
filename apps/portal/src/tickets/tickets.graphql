@@ -32,11 +32,11 @@ type TkUser {
 
 type TkFile {
   where: String!
-  code: String!
+  id: String!
   name: String
   ext: String
-  body: String
   mime: String
+  body: String
 }
 
 type TkAuthorComments {
@@ -133,10 +133,17 @@ type TkTasks {
   errors: [String]
 }
 
+input TkFileInput {
+  where: String!
+  ref: String!
+}
+
 type Query {
   TicketsRoutes: TkRoutes
-  TicketsTasks(task: TkTasksInput): TkTasks
+  TicketsTasks(task: TkTasksInput!): TkTasks
   TicketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask
+  TicketsTaskFile(id: TkFileInput!): TkFile
+  TicketsCommentFile(id: TkFileInput!): TkFile
 }
 
 type Mutation {

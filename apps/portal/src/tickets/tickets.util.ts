@@ -81,14 +81,14 @@ export const userSOAP = (user: Record<string, any>, where: TkWhere): TkUser | un
 
 export const filesSOAP = (files: Record<string, any>, where: TkWhere): TkFile[] | undefined =>
   files && Object.keys(files).length > 0
-    ? files
-        // .filter((file: Record<string, any>) => file['Код'])
-        .map((file: Record<string, any>) => ({
-          where: whereService(where),
-          code: file['Код'],
-          name: file['Наименование'],
-          ext: file['РасширениеФайла'],
-        }))
+    ? files.map((file: Record<string, any>) => ({
+        where: whereService(where),
+        id: file['Ref'],
+        name: file['Наименование'],
+        ext: file['РасширениеФайла'],
+        mime: file['MIME'],
+        body: file['ФайлХранилище'],
+      }))
     : undefined;
 
 /**
@@ -221,9 +221,10 @@ export const filesOST = (files: Record<string, any>, where: TkWhere): TkFile[] =
       .filter((file) => file['Код'])
       .map((file) => ({
         where: whereService(where),
-        code: file['Код'],
+        id: file['Код'],
         name: file['Наименование'],
         ext: file['РасширениеФайла'],
+        body: file['Файл'],
       }));
   }
 
