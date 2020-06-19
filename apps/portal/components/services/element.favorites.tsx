@@ -79,6 +79,8 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'normal',
       gridRowStart: 1,
       gridRowEnd: 4,
+      placeItems: 'center',
+      display: 'grid',
     },
     subtitle: {
       letterSpacing: 0.25,
