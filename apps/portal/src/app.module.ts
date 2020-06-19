@@ -43,8 +43,6 @@ import { UserEntity } from '@back/user/user.entity';
 import { TicketsModule } from '@back/tickets/tickets.module';
 import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
-import { FilesFolderEntity } from '@back/files/files.folder.entity';
-import { FilesEntity } from '@back/files/files.entity';
 
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
@@ -66,14 +64,14 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
   logger: new TypeOrmLogger(logger),
   synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
   dropSchema: configService.get<boolean>('DATABASE_DROP_SCHEMA'),
-  logging: __DEV__
+  logging: configService.get<boolean>('DEVELOPMENT')
     ? true
     : configService.get('DATABASE_LOGGING') === 'false'
     ? false
     : configService.get('DATABASE_LOGGING') === 'true'
     ? true
     : JSON.parse(configService.get('DATABASE_LOGGING')),
-  entities: [GroupEntity, ProfileEntity, UserEntity, NewsEntity, FilesFolderEntity, FilesEntity],
+  entities: [GroupEntity, ProfileEntity, UserEntity, NewsEntity],
   migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
   cache: {
     type: 'redis', // "ioredis/cluster"
@@ -156,22 +154,25 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
 
     //#region GraphQL
     Upload,
-    GraphQLModule.forRoot({
-      debug: __DEV__,
-      playground: __DEV__
-        ? {
-            settings: {
-              // Когда в playground режиме, нажмите settings и добавьте строку:
-              'request.credentials': 'same-origin',
-            },
-          }
-        : false,
-      typePaths: ['./**/*.graphql'],
-      installSubscriptionHandlers: true,
-      uploads: {
-        maxFileSize: 100000000, // 100MB
-      },
-      context: ({ req, res }) => ({ req, res }),
+    GraphQLModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        debug: configService.get<boolean>('DEVELOPMENT'),
+        playground: configService.get<boolean>('DEVELOPMENT')
+          ? {
+              settings: {
+                // Когда в playground режиме, нажмите settings и добавьте строку:
+                'request.credentials': 'same-origin',
+              },
+            }
+          : false,
+        typePaths: ['./**/*.graphql'],
+        installSubscriptionHandlers: true,
+        uploads: {
+          maxFileSize: 100000000, // 100MB
+        },
+        context: ({ req, res }) => ({ req, res }),
+      }),
     }),
     //#endregion
 

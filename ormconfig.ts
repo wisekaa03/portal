@@ -7,11 +7,9 @@ import { GroupEntity } from '@back/group/group.entity';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { UserEntity } from '@back/user/user.entity';
 import { NewsEntity } from '@back/news/news.entity';
-import { FilesFolderEntity } from '@back/files/files.folder.entity';
-import { FilesEntity } from '@back/files/files.entity';
 //#endregion
 
-const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity, FilesFolderEntity, FilesEntity];
+const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity];
 // const entities = ['apps/portal/src/**/*.entity.ts'];
 // const entities = ['./.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];

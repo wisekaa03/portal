@@ -24,6 +24,7 @@ PORT: 4000
 PORT_SSL: 4443
 DOMAIN: "example.com"
 LOGLEVEL: "debug"
+DEVELOPMENT: "false"
 
 # DB
 DATABASE_URI: "postgres://postgres:1234567890@postgresql.default.svc.cluster.local:5432/portaldb"
@@ -68,6 +69,8 @@ SOAP_URL: ""
 SOAP_DOMAIN: "EXAMPLE"
 
 OSTICKET_URL: "{}"
+
+NEXTCLOUD_URL: "https://cloud.example.com"
 
 NEWS_URL: "https://news"
 NEWS_API_URL: "https://news/api"

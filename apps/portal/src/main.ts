@@ -121,7 +121,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   scriptSrc.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
-  if (__DEV__) {
+  if (config.get<boolean>('DEVELOPMENT')) {
     scriptSrc.push("'unsafe-eval'");
     scriptSrc.push('https://cdn.jsdelivr.net');
     styleSrc.push('https://fonts.googleapis.com');
@@ -190,13 +190,13 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   //#region Next
   const appNextjs = Next({
-    dev: __DEV__,
+    dev: config.get<boolean>('DEVELOPMENT'),
     dir: __DEV__ ? 'apps/portal' : '',
     quiet: false,
   });
   await appNextjs.prepare();
   const renderer = app.get(RenderModule);
-  renderer.register(app, appNextjs, { dev: __DEV__, viewsDir: '' });
+  renderer.register(app, appNextjs, { dev: config.get<boolean>('DEVELOPMENT'), viewsDir: '' });
   const service = app.get(RenderService);
   service.setErrorHandler(
     async (

@@ -43,14 +43,15 @@ export class ConfigService {
    * Ensures all needed variables are set, and returns the validated JavaScript object
    * including the applied default values.
    */
-  private validateInput(envConfig: EnvConfig<any>): EnvConfig<any> {
-    const envVarsSchema: Joi.ObjectSchema = Joi.object({
+  private validateInput(environmentConfig: EnvConfig<any>): EnvConfig<any> {
+    const environmentVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any().empty('').optional(),
 
       PORT: Joi.number().integer().default(80).required(),
       PORT_SSL: Joi.number().integer().empty('').default(0).optional(),
       DOMAIN: Joi.string().empty('').default('example.com').required(),
       LOGLEVEL: Joi.string().empty('').default('debug').required(),
+      DEVELOPMENT: Joi.boolean().empty('').default(true).required(),
 
       DATABASE_URI: Joi.string().required(),
       DATABASE_URI_RD: Joi.string().required(),
@@ -90,6 +91,8 @@ export class ConfigService {
 
       OSTICKET_URL: Joi.any(),
 
+      NEXTCLOUD_URL: Joi.string().required(),
+
       NEWS_URL: Joi.string().empty('').optional(),
       NEWS_API_URL: Joi.string().empty('').optional(),
 
@@ -99,11 +102,11 @@ export class ConfigService {
       MEETING_URL: Joi.string().empty('').optional(),
     });
 
-    const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);
+    const { error, value: validatedEnvironmentConfig } = environmentVarsSchema.validate(environmentConfig);
     if (error) {
       throw new Error(`Config validation error: ${error.message}`);
     }
-    return validatedEnvConfig;
+    return validatedEnvironmentConfig;
   }
 
   get<T>(key: string): T {

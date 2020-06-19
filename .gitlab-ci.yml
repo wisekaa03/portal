@@ -107,6 +107,7 @@ helm_development:
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
+        --set DEVELOPMENT="true" \
         --set LOGLEVEL="${LOGLEVEL}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
@@ -138,6 +139,7 @@ helm_development:
         --set SOAP_URL="${SOAP_URL}" \
         --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
+        --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \
@@ -161,6 +163,7 @@ helm_development:
         --set service.type="ClusterIP" \
         --set replicaCount="1" \
         --set PORT="${PORT_MICROSERVICE}" \
+        --set DEVELOPMENT="true" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
@@ -188,6 +191,7 @@ helm_production:
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
         --set LOGLEVEL="${LOGLEVEL}" \
+        --set DEVELOPMENT="false" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
@@ -218,6 +222,7 @@ helm_production:
         --set SOAP_URL="${SOAP_URL}" \
         --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
+        --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \
@@ -240,6 +245,7 @@ helm_production:
         --debug --values helm/portal-sync/values.yaml \
         --set service.type="ClusterIP" \
         --set PORT="${PORT_MICROSERVICE}" \
+        --set DEVELOPMENT="false" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \

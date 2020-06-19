@@ -1,20 +1,14 @@
-type File {
-  id: ID!
-  createdUser: User!
-  updatedUser: User!
-  createdAt: Date!
-  updatedAt: Date!
-  title: String!
-  folder: String!
-  filename: String!
-  mimetype: String!
+type FileDetails {
+  creationDate: Date
+  lastModified: Date
+  isDirectory: Boolean
+  isFile: Boolean
+  type: String
+  size: Int
+  href: String
+  name: String
 }
 
 type Query {
-  file(id: ID): [File!]!
-}
-
-type Mutation {
-  editFile(attachment: Upload!, folder: String!, id: ID): File
-  deleteFile(id: ID!): Boolean
+  files(path: String): [FileDetails]
 }

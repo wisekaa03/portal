@@ -75,6 +75,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: LOGLEVEL
+            - name: DEVELOPMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: DEVELOPMENT
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:
@@ -229,6 +234,11 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: OSTICKET_URL
+            - name: NEXTCLOUD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: NEXTCLOUD_URL
             - name: NEWS_URL
               valueFrom:
                 configMapKeyRef:

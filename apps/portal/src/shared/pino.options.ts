@@ -1,6 +1,5 @@
 /** @format */
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import pino from 'pino';
 import { Params } from 'nestjs-pino';
 

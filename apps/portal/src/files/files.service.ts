@@ -2,44 +2,61 @@
 
 //#region Imports NPM
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { Repository, IsNull } from 'typeorm';
+import { NextcloudClient } from 'nextcloud-link';
+import { FileDetails } from 'nextcloud-link/compiled/source/types';
 //#endregion
 //#region Imports Local
 import { Files, FilesFolder, FilesFolderResponse, User } from '@lib/types';
 import { ConfigService } from '@app/config';
-import { FilesEntity } from './files.entity';
-import { FilesFolderEntity } from './files.folder.entity';
 //#endregion
 
 @Injectable()
 export class FilesService {
-  dbCacheTtl = 10000;
+  nextCloud: NextcloudClient;
 
   constructor(
     @InjectPinoLogger(FilesService.name) private readonly logger: PinoLogger,
-    private readonly configService: ConfigService,
-    // private readonly userService: UserService,
-    @InjectRepository(FilesEntity)
-    private readonly filesRepository: Repository<FilesEntity>,
-    @InjectRepository(FilesFolderEntity)
-    private readonly filesFolderRepository: Repository<FilesFolderEntity>,
+    private readonly configService: ConfigService, // private readonly userService: UserService,
   ) {
-    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
+    this.nextCloud = new NextcloudClient({
+      url: configService.get<string>('NEXTCLOUD_URL'),
+    });
   }
+
+  /**
+   * Returns nextCloud instance
+   * @param {User} user
+   * @param {string} password
+   */
+  nextCloudAs = (user: User, password: string): NextcloudClient => {
+    const nextCloud = this.nextCloud.as(user.username, password);
+
+    const nextCloudUUID = user.loginIdentificator.replace(
+      /^(..)(..)(..)(..)-(..)(..)-(..)(..)-(..)(..)-(..)(..)(..)(..)(..)(..)$/,
+      '$1$2$3$4-$5$6-$7$8-$10$9-$16$15$14$13$12$11',
+    );
+
+    nextCloud.webdavConnection.options.url = nextCloud.webdavConnection.options.url.replace(
+      /(remote\.php\/dav\/.+\/)(.+)(\/)?$/,
+      `$1${nextCloudUUID}$3`,
+    );
+
+    return nextCloud;
+  };
 
   /**
    * Get file(s)
    *
-   * @param {string} id of files (optional)
-   * @return {FilesEntity[]}
+   * @param {string} path of files
+   * @return {string[]}
    */
-  file = async (id?: string): Promise<FilesEntity[]> => {
-    this.logger.info(`Files entity: id={${id}}`);
+  files = async (path: string, user: User, password: string): Promise<FileDetails[]> => {
+    this.logger.info(`Files entity: path={${path}}`);
 
-    // TODO: сделать чтобы выводилось постранично
-    return this.filesRepository.find(id ? { id } : undefined);
+    const nextCloud = this.nextCloudAs(user, password);
+
+    return nextCloud.getFolderFileDetails(path);
   };
 
   /**
@@ -48,23 +65,10 @@ export class FilesService {
    * @param {Files}
    * @return {FilesEntity}
    */
-  editFile = async ({ title, folder, filename, mimetype, updatedUser, id }: Files): Promise<FilesEntity> => {
+  editFile = async ({ title, folder, filename, mimetype, updatedUser, id }: Files): Promise<string> => {
     this.logger.info(`Edit: ${JSON.stringify({ title, folder, filename, mimetype, updatedUser, id })}`);
 
-    const folderEntity = await this.filesFolderRepository.findOne(folder as string);
-
-    const data = {
-      title,
-      folder: folderEntity,
-      filename,
-      mimetype,
-      updatedUser,
-      id,
-    };
-
-    return this.filesRepository.save(this.filesRepository.create(data)).catch((error) => {
-      throw error;
-    });
+    throw new Error('Not implemented');
   };
 
   /**
@@ -76,9 +80,7 @@ export class FilesService {
   deleteFile = async (id: string): Promise<boolean> => {
     this.logger.info(`Edit: id={${id}}`);
 
-    const deleteResult = await this.filesRepository.delete({ id });
-
-    return !!(deleteResult.affected && deleteResult.affected > 0);
+    throw new Error('Not implemented');
   };
 
   /**
@@ -88,23 +90,10 @@ export class FilesService {
    * @param {string} id of folder (optional)
    * @return {Promise<FilesFolderResponse[]>}
    */
-  folder = async (user: User, id?: string): Promise<FilesFolderResponse[]> => {
+  folder = async (user: User, id?: string): Promise<string[]> => {
     this.logger.info(`Folder: id={${id}}`);
 
-    const where: Record<any, any> = [];
-    if (id) {
-      where.push({ id, user });
-      where.push({ id, user: IsNull() });
-    } else {
-      where.push({ user });
-      where.push({ user: IsNull() });
-    }
-
-    const result = await this.filesFolderRepository
-      .find({ where, cache: { id: 'folder', milliseconds: this.dbCacheTtl } })
-      .then((folders: FilesFolderEntity[]) => folders.map((folder) => folder.toResponseObject()));
-
-    return result;
+    throw new Error('Not implemented');
   };
 
   /**
@@ -113,34 +102,12 @@ export class FilesService {
    * @param {FilesFolder}
    * @return {Promise<FilesFolderResponse>}
    */
-  editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<FilesFolderResponse> => {
+  editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<string> => {
     this.logger.info(
       `Edit: ${JSON.stringify({ pathname, id, user: user?.username, updatedUser: updatedUser?.username })}`,
     );
 
-    // TODO: сделать чтобы одинаковые имена не появлялись на одном уровне вложенности
-    // const folderPathname = await this.mediaFolderRepository.findOne({ pathname });
-
-    let data = id ? await this.filesFolderRepository.findOne({ id }) : ({ createdUser: updatedUser } as FilesFolder);
-
-    data = {
-      ...data,
-      pathname,
-      user,
-      updatedUser,
-      id,
-    };
-
-    return this.filesFolderRepository
-      .save(this.filesFolderRepository.create(data))
-      .then(async (folder) => {
-        await this.filesFolderRepository.manager.connection!.queryResultCache!.remove(['folder']);
-
-        return folder.toResponseObject();
-      })
-      .catch((error: Error) => {
-        throw error;
-      });
+    throw new Error('Not implemented');
   };
 
   /**
@@ -152,8 +119,6 @@ export class FilesService {
   deleteFolder = async (id: string): Promise<string | undefined> => {
     this.logger.info(`Edit folder: id={${id}}`);
 
-    const deleteResult = await this.filesFolderRepository.delete({ id });
-
-    return !!deleteResult.affected ? id : undefined;
+    throw new Error('Not implemented');
   };
 }

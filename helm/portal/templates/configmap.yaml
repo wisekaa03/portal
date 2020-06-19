@@ -7,6 +7,7 @@ metadata:
 data:
   DOMAIN: {{ .Values.DOMAIN | default "example.com" | quote }}
   LOGLEVEL: {{ .Values.LOGLEVEL | default "debug" | quote }}
+  DEVELOPMENT: {{ .Values.DEVELOPMENT | default "false" | quote }}
 
   DATABASE_URI: {{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
   DATABASE_URI_RD: {{ .Values.DATABASE_URI_RD | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
@@ -48,6 +49,7 @@ data:
   SOAP_DOMAIN: {{ .Values.SOAP_DOMAIN | default "EXAMPLE" | quote }}
 
   OSTICKET_URL: {{ .Values.OSTICKET_URL | default "{\"url\": \"https://osticket1c\"}" | quote }}
+  NEXTCLOUD_URL: {{ .Values.NEXTCLOUD_URL | default "https://example.cloud.com" | quote }}
 
   NEWS_URL: {{ .Values.NEWS_URL | default "https://news" | quote }}
   NEWS_API_URL: {{ .Values.NEWS_API_URL | default "https://news/api" | quote }}
