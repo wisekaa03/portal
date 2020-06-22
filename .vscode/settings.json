@@ -102,6 +102,7 @@
         "theming",
         "tmedia",
         "tsconfig",
+        "tslib",
         "typedefs",
         "typeorm",
         "typeormlogger",
