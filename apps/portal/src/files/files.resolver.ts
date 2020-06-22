@@ -26,10 +26,10 @@ export class FilesResolver {
   ) {}
 
   /**
-   * GraphQL query: list files in a directory
+   * GraphQL query: list files in a folder
    *
    * @param {string} path
-   * @returns {string[]}
+   * @returns {FileDetails[]}
    */
   @Query('files')
   @UseGuards(GqlAuthGuard)

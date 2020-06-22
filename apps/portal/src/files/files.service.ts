@@ -30,26 +30,28 @@ export class FilesService {
    * @param {string} password
    */
   nextCloudAs = (user: User, password: string): NextcloudClient => {
-    const nextCloud = this.nextCloud.as(user.username, password);
+    // const nextCloud = this.nextCloud.as(user.username, password);
 
-    const nextCloudUUID = user.loginIdentificator.replace(
-      /^(..)(..)(..)(..)-(..)(..)-(..)(..)-(..)(..)-(..)(..)(..)(..)(..)(..)$/,
-      '$1$2$3$4-$5$6-$7$8-$10$9-$16$15$14$13$12$11',
-    );
+    // const nextCloudUUID = user.loginIdentificator.replace(
+    //   /^(..)(..)(..)(..)-(..)(..)-(..)(..)-(..)(..)-(..)(..)(..)(..)(..)(..)$/,
+    //   '$1$2$3$4-$5$6-$7$8-$10$9-$16$15$14$13$12$11',
+    // );
 
-    nextCloud.webdavConnection.options.url = nextCloud.webdavConnection.options.url.replace(
-      /(remote\.php\/dav\/.+\/)(.+)(\/)?$/,
-      `$1${nextCloudUUID}$3`,
-    );
+    // nextCloud.webdavConnection.options.url = nextCloud.webdavConnection.options.url.replace(
+    //   /(remote\.php\/dav\/.+\/)(.+)(\/)?$/,
+    //   `$1${nextCloudUUID}$3`,
+    // );
+
+    const nextCloud = this.nextCloud.as('admin', 'c09a344338a4a5e6cd9063e25509c2d2c7e6102f3e057a8462ef2195c94ab822');
 
     return nextCloud;
   };
 
   /**
-   * Get file(s)
+   * Get files in a folder
    *
    * @param {string} path of files
-   * @return {string[]}
+   * @return {FileDetails[]}
    */
   files = async (path: string, user: User, password: string): Promise<FileDetails[]> => {
     this.logger.info(`Files entity: path={${path}}`);
