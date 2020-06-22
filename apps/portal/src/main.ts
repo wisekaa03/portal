@@ -190,13 +190,13 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   //#region Next
   const appNextjs = Next({
-    dev: config.get<boolean>('DEVELOPMENT'),
+    dev: __DEV__,
     dir: __DEV__ ? 'apps/portal' : '',
-    quiet: false,
+    quiet: !config.get<boolean>('DEVELOPMENT'),
   });
   await appNextjs.prepare();
   const renderer = app.get(RenderModule);
-  renderer.register(app, appNextjs, { dev: config.get<boolean>('DEVELOPMENT'), viewsDir: '' });
+  renderer.register(app, appNextjs, { dev: __DEV__, viewsDir: '' });
   const service = app.get(RenderService);
   service.setErrorHandler(
     async (
