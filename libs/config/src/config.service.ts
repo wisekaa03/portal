@@ -92,6 +92,8 @@ export class ConfigService {
       OSTICKET_URL: Joi.any(),
 
       NEXTCLOUD_URL: Joi.string().required(),
+      NEXTCLOUD_REDIS: Joi.string().required(),
+      NEXTCLOUD_TTL: Joi.number().required(),
 
       NEWS_URL: Joi.string().empty('').optional(),
       NEWS_API_URL: Joi.string().empty('').optional(),

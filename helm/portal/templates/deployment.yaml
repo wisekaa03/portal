@@ -254,6 +254,16 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: NEXTCLOUD_URL
+            - name: NEXTCLOUD_REDIS
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: NEXTCLOUD_REDIS
+            - name: NEXTCLOUD_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: portal-configmap
+                  key: NEXTCLOUD_TTL
             - name: NEWS_URL
               valueFrom:
                 configMapKeyRef:

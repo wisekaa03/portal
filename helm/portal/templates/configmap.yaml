@@ -50,6 +50,8 @@ data:
 
   OSTICKET_URL: {{ .Values.OSTICKET_URL | default "{\"url\": \"https://osticket1c\"}" | quote }}
   NEXTCLOUD_URL: {{ .Values.NEXTCLOUD_URL | default "https://example.cloud.com" | quote }}
+  NEXTCLOUD_REDIS: {{ .Values.NEXTCLOUD_REDIS | default "redis://localhost:6379/4" | quote }}
+  NEXTCLOUD_TTL: {{ .Values.NEXTCLOUD_TTL | default "60" | quote }}
 
   NEWS_URL: {{ .Values.NEWS_URL | default "https://news" | quote }}
   NEWS_API_URL: {{ .Values.NEWS_API_URL | default "https://news/api" | quote }}

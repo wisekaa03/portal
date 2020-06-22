@@ -31,15 +31,15 @@ export class FilesResolver {
    * @param {string} path
    * @returns {FileDetails[]}
    */
-  @Query('files')
+  @Query('folderFiles')
   @UseGuards(GqlAuthGuard)
-  async files(
+  async folderFiles(
     @Args('path') path: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<FileDetails[]> {
     if (path && user && password) {
-      return this.filesService.files(path, user, password);
+      return this.filesService.folderFiles(path, user, password);
     }
 
     throw new Error('Not authorized');

@@ -12,14 +12,7 @@ import bcrypt from 'bcrypt';
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import dayjs from 'dayjs';
-import {
-  LDAP_OPTIONS,
-  LdapModuleOptions,
-  LDAPCache,
-  LDAP_SYNC,
-  LdapResponseUser,
-  ldapADattributes,
-} from './ldap.interface';
+import { LDAP_OPTIONS, LdapModuleOptions, LDAPCache, LdapResponseUser, ldapADattributes } from './ldap.interface';
 import { Change } from './ldap/change';
 //#endregion
 

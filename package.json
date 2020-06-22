@@ -195,7 +195,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
     "@babel/plugin-proposal-optional-chaining": "^7.10.3",
     "@babel/runtime-corejs3": "^7.10.3",
-    "@nestjs/cli": "^7.4.0",
+    "@nestjs/cli": "^7.4.1",
     "@nestjs/schematics": "^7.0.1",
     "@nestjs/testing": "^7.2.0",
     "@storybook/addon-actions": "^5.3.19",

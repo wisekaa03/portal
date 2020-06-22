@@ -10,5 +10,5 @@ type FileDetails {
 }
 
 type Query {
-  files(path: String): [FileDetails]
+  folderFiles(path: String): [FileDetails]
 }
