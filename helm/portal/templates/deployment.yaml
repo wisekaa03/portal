@@ -70,9 +70,6 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-          volumeMounts:
-            - name: portal-configmap
-              mountPath: /portal/configmap
           env:
             - name: PORT
               value: {{ .Values.PORT | default "4000" | quote }}
@@ -289,13 +286,15 @@ spec:
                 configMapKeyRef:
                   name: portal-configmap
                   key: MEETING_URL
+          volumeMounts:
+            - name: config
+              mountPath: /portal/config.yaml
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: portal-configmap
+        - name: config
           configMap:
             name: portal-configmap
-            defaultMode: 420
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
