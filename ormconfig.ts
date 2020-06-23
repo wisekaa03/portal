@@ -14,7 +14,7 @@ const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity];
 // const entities = ['./.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 
-const configService = new ConfigService('.env');
+const configService = new ConfigService('.local/.env');
 
 module.exports = {
   name: 'default',

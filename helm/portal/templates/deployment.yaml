@@ -79,7 +79,7 @@ spec:
             {{- end }}
           volumeMounts:
             - name: configmap
-              mountPath: /portal
+              mountPath: /portal/.local
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

@@ -235,5 +235,5 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 }
 
-const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../..', '.env'));
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env'));
 bootstrap(configService);

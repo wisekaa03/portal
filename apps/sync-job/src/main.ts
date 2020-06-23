@@ -1,5 +1,6 @@
+#!/usr/bin/env node
 /** @format */
-/* eslint spaced-comment:0 */
+/* eslint prettier/prettier:0, spaced-comment:0 */
 /// <reference types="../../../typings/global" />
 
 //#region Imports NPM
@@ -13,7 +14,7 @@ import { pinoOptions } from '@back/shared/pino.options';
 import { LDAP_SYNC } from '@lib/constants';
 //#endregion
 
-const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.env'));
+const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
 const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'))), {});
 
 async function bootstrap(config: ConfigService): Promise<boolean> {

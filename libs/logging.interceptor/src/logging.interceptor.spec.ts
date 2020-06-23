@@ -15,7 +15,7 @@ jest.mock('@app/config/config.service', () => ({
   })),
 }));
 
-const interceptor = new LoggingInterceptor(new PinoLogger({}), new ConfigService(resolve('.env')));
+const interceptor = new LoggingInterceptor(new PinoLogger({}), new ConfigService(resolve('.local/.env')));
 
 describe('LoggingInterceptor', () => {
   it('should be defined', () => {

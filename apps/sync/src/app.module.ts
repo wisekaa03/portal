@@ -25,12 +25,12 @@ import { AppController } from './app.controller';
 import { SyncService } from './app.service';
 //#endregion
 
-const env = resolve(__dirname, __DEV__ ? (__TEST__ ? '../../..' : '../../..') : '../../..', '.env');
+const environment = resolve(__dirname, '../../..', '.local/.env');
 
 @Module({
   imports: [
     //#region Config & Log module
-    ConfigModule.register(env),
+    ConfigModule.register(environment),
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),

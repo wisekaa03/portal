@@ -4,7 +4,7 @@
 //#region Imports NPM
 const { resolve } = require('path');
 
-require('dotenv').config({ path: resolve(__dirname, '../../.env') });
+require('dotenv').config({ path: resolve(__dirname, '../../.local/.env') });
 // const NextWorkboxWebpackPlugin = require('next-workbox-webpack-plugin');
 
 const withBundleAnalyzer = require('@next/bundle-analyzer');

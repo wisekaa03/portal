@@ -32,7 +32,7 @@ spec:
               {{- toYaml .Values.resources | nindent 14 }}
             volumeMounts:
               - name: configmap
-                mountPath: /portal
+                mountPath: /portal/.local
           restartPolicy: Never
         volumes:
           - name: configmap

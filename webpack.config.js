@@ -28,7 +28,7 @@ module.exports = (options) => {
         __TEST__: JSON.stringify(NODE_ENV === 'test'),
         __SERVER__: JSON.stringify(true),
       }),
-      new DotenvWebpackPlugin({ path: resolve(__dirname, '.env') }),
+      new DotenvWebpackPlugin({ path: resolve(__dirname, '.local/.env') }),
     ],
     stats: { ...config.stats },
   };
