@@ -1,6 +1,5 @@
-#!/usr/bin/env node
 /** @format */
-/* eslint prettier/prettier:0, spaced-comment:0 */
+/* eslint spaced-comment:0 */
 /// <reference types="../../../typings/global" />
 
 //#region Imports NPM
@@ -31,6 +30,7 @@ bootstrap(configService)
   .then((result) => {
     logger.log(`Microservice returns: ${result}`, 'Sync LDAP Job');
 
+    // eslint-disable-next-line unicorn/no-process-exit
     return process.exit(result ? 0 : 1);
   })
   .catch((error) => {
