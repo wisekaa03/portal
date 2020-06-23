@@ -1779,15 +1779,6 @@
     "@graphql-tools/utils" "6.0.10"
     tslib "~2.0.0"
 
-"@graphql-tools/merge@6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-6.0.3.tgz#e8c21f0258bbc98a56d39a2c285cab29c3379b7d"
-  integrity sha512-Tdt6r6n/LvmBnYruRRykBOzOZTcAzp5q5d753tsMg57RC8AmShmGXDUpDPPwX6qIxPkra5r9f0pPH18h0mPpYQ==
-  dependencies:
-    "@graphql-tools/schema" "6.0.3"
-    "@graphql-tools/utils" "6.0.3"
-    tslib "~2.0.0"
-
 "@graphql-tools/mock@6.0.10":
   version "6.0.10"
   resolved "https://registry.yarnpkg.com/@graphql-tools/mock/-/mock-6.0.10.tgz#f1ccea09ec7244d93147a69e58cc44d808fafcd4"
@@ -1829,14 +1820,6 @@
     "@graphql-tools/utils" "6.0.10"
     tslib "~2.0.0"
 
-"@graphql-tools/schema@6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-6.0.3.tgz#e242ecbf1fbfe152dfb598d75fef055eb4dab217"
-  integrity sha512-HThJuZvlHbrH6++Zb60LMx/4ZPwJ+VqfRDg2lvgFvfiU7EtEbnidU0S+x9rg8inx30LzMg1Oc+pdLoyIZCAYaw==
-  dependencies:
-    "@graphql-tools/utils" "6.0.3"
-    tslib "~2.0.0"
-
 "@graphql-tools/stitch@6.0.10":
   version "6.0.10"
   resolved "https://registry.yarnpkg.com/@graphql-tools/stitch/-/stitch-6.0.10.tgz#d688eb768565dcc016262f9f1288fb373e8d271e"
@@ -1870,13 +1853,6 @@
   integrity sha512-1s3vBnYUIDLBGEaV1VF3lv1Xq54lT8Oz7tNNypv7K7cv3auKX7idRtjP8RM6hKpGod46JNZgu3NNOshMUEyEyA==
   dependencies:
     aggregate-error "3.0.1"
-    camel-case "4.1.1"
-
-"@graphql-tools/utils@6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.0.3.tgz#54a2ff019707d84227771a7b1c11536ee32fc563"
-  integrity sha512-uS01PqtjOeEoG309orxYlnb8TIehsI27N4Z8NxmadTzkkLW98FfbUm62CjSHvc1IqgiQZSkqDuKqS4vy8lbUFQ==
-  dependencies:
     camel-case "4.1.1"
 
 "@graphql-tools/wrap@6.0.10":
@@ -2425,15 +2401,15 @@
     tslib "2.0.0"
     uuid "8.1.0"
 
-"@nestjs/graphql@^7.4.1":
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-7.4.1.tgz#406a7b4be00117ab3c484f3f203b7d0a57f63794"
-  integrity sha512-ClZoMyf3HZYh2tAy374H/Jcj9EA2osPuafyMoFj6lJyQid9kxHJ1ERtl8E3Mk2UP/9V2mgBXqgfew5WJSsBcKw==
+"@nestjs/graphql@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-7.4.2.tgz#f1c3fc5338197d67546f0c8e292ec429ebfc81f8"
+  integrity sha512-Uq7zf6ktIM5v+xZZNAf9OyNbLHrNVddyd8rp4tWiRs+vjnZKMG967ET6GuPnYmyH4l+QNQATLhi6CSiPJ9TObQ==
   dependencies:
-    "@graphql-tools/merge" "6.0.3"
+    "@graphql-tools/merge" "6.0.10"
     "@nestjs/mapped-types" "0.0.5"
     chokidar "3.4.0"
-    fast-glob "3.2.2"
+    fast-glob "3.2.4"
     iterall "1.2.2"
     lodash "4.17.15"
     normalize-path "3.0.0"
@@ -9484,10 +9460,10 @@ fast-diff@^1.1.2:
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
   integrity sha512-xJuoT5+L99XlZ8twedaRf6Ax2TgQVxvgZOYoPKqZufmJib0tL2tegPBOZb1pVNgIhlqDlA0eO0c3wBvQcmzx4w==
 
-fast-glob@3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.2.tgz#ade1a9d91148965d4bf7c51f72e1ca662d32e63d"
-  integrity sha512-UDV82o4uQyljznxwMxyVRJgZZt3O5wENYojjzbaGEGZgeOxkLFf+V4cnUD+krzb2F72E18RhamkMZ7AdeggF7A==
+fast-glob@3.2.4, fast-glob@^3.0.3, fast-glob@^3.1.1, fast-glob@^3.2.2:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.4.tgz#d20aefbf99579383e7f3cc66529158c9b98554d3"
+  integrity sha512-kr/Oo6PX51265qeuCYsyGypiO5uJFgBS0jksyG7FUeCyQzNwYnzrNIMR1NXfkZXsMYXYLRAHgISHBz8gQcxKHQ==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
     "@nodelib/fs.walk" "^1.2.3"
@@ -9507,18 +9483,6 @@ fast-glob@^2.0.2, fast-glob@^2.2.2:
     is-glob "^4.0.0"
     merge2 "^1.2.3"
     micromatch "^3.1.10"
-
-fast-glob@^3.0.3, fast-glob@^3.1.1, fast-glob@^3.2.2:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.4.tgz#d20aefbf99579383e7f3cc66529158c9b98554d3"
-  integrity sha512-kr/Oo6PX51265qeuCYsyGypiO5uJFgBS0jksyG7FUeCyQzNwYnzrNIMR1NXfkZXsMYXYLRAHgISHBz8gQcxKHQ==
-  dependencies:
-    "@nodelib/fs.stat" "^2.0.2"
-    "@nodelib/fs.walk" "^1.2.3"
-    glob-parent "^5.1.0"
-    merge2 "^1.3.0"
-    micromatch "^4.0.2"
-    picomatch "^2.2.1"
 
 fast-json-stable-stringify@2.1.0, fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0:
   version "2.1.0"
