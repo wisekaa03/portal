@@ -103,8 +103,8 @@ helm_development:
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set replicaCount="1" \
-        --set PORT="${PORT}" \
-        --set PORT_SSL="${PORT_SSL}" \
+        --set PORT="${PORT:=4000}" \
+        --set PORT_SSL="${PORT_SSL:=4443}" \
         --set DOMAIN="${DOMAIN}" \
         --set DEVELOPMENT="true" \
         --set LOGLEVEL="${LOGLEVEL}" \
@@ -188,8 +188,8 @@ helm_production:
     # Portal
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
-        --set PORT="${PORT}" \
-        --set PORT_SSL="${PORT_SSL}" \
+        --set PORT="${PORT:=4000}" \
+        --set PORT_SSL="${PORT_SSL:=4443}" \
         --set DOMAIN="${DOMAIN}" \
         --set LOGLEVEL="${LOGLEVEL}" \
         --set DEVELOPMENT="false" \
