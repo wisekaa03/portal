@@ -40,23 +40,23 @@ data:
   LDAP_SEARCH_BASE_ALL_USERS: {{ .Values.LDAP_SEARCH_BASE_ALL_USERS | default "DC=example,DC=local" | quote }}
   LDAP_SEARCH_FILTER_ALL_USERS: {{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | default "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))" | quote }}
   # LDAP Redis
-  LDAP_REDIS_URI: {{ .Values.LDAP_REDIS_URI | default "redis://localhost:6379/3" | quote }}
+  LDAP_REDIS_URI: {{ .Values.LDAP_REDIS_URI | quote }}
   LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
 
   MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "redis://localhost:6379" | quote }}
 
-  SOAP_URL: {{ .Values.SOAP_URL | default "https://soap1c" | quote }}
-  SOAP_DOMAIN: {{ .Values.SOAP_DOMAIN | default "EXAMPLE" | quote }}
+  SOAP_URL: {{ .Values.SOAP_URL | quote }}
+  SOAP_DOMAIN: {{ .Values.SOAP_DOMAIN | quote }}
 
-  OSTICKET_URL: {{ .Values.OSTICKET_URL | default "{\"url\": \"https://osticket1c\"}" | quote }}
-  NEXTCLOUD_URL: {{ .Values.NEXTCLOUD_URL | default "https://example.cloud.com" | quote }}
-  NEXTCLOUD_REDIS: {{ .Values.NEXTCLOUD_REDIS | default "redis://localhost:6379/4" | quote }}
+  OSTICKET_URL: {{ .Values.OSTICKET_URL | quote }}
+  NEXTCLOUD_URL: {{ .Values.NEXTCLOUD_URL | quote }}
+  NEXTCLOUD_REDIS: {{ .Values.NEXTCLOUD_REDIS quote }}
   NEXTCLOUD_TTL: {{ .Values.NEXTCLOUD_TTL | default "60" | quote }}
 
-  NEWS_URL: {{ .Values.NEWS_URL | default "https://news" | quote }}
-  NEWS_API_URL: {{ .Values.NEWS_API_URL | default "https://news/api" | quote }}
+  NEWS_URL: {{ .Values.NEWS_URL | quote }}
+  NEWS_API_URL: {{ .Values.NEWS_API_URL | quote }}
 
-  MAIL_URL: {{ .Values.MAIL_URL | default "/roundcube/" | quote }}
-  MAIL_LOGIN_URL: {{ .Values.MAIL_LOGIN_URL | default "https://roundcube.production/login/index.php" | quote }}
+  MAIL_URL: {{ .Values.MAIL_URL | quote }}
+  MAIL_LOGIN_URL: {{ .Values.MAIL_LOGIN_URL | quote }}
 
-  MEETING_URL: {{ .Values.MEETING_URL | default "https://meeting" | quote }}
+  MEETING_URL: {{ .Values.MEETING_URL | quote }}

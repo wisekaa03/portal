@@ -40,9 +40,6 @@ spec:
               containerPort: {{ .Values.PORT_SSL | default 4443 }}
               protocol: TCP
             {{- end }}
-          volumeMounts:
-            - name: portal-files
-              mountPath: /files
           livenessProbe:
             httpGet:
               path: /health
@@ -73,6 +70,9 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          volumeMounts:
+            - name: portal-configmap
+              mountPath: /portal/configmap
           env:
             - name: PORT
               value: {{ .Values.PORT | default "4000" | quote }}
@@ -292,13 +292,10 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: portal-files
-        {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
+        - name: portal-configmap
+          configMap:
+            name: portal-configmap
+            defaultMode: 420
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

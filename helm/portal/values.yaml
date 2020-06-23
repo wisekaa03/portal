@@ -71,7 +71,7 @@ SOAP_DOMAIN: "EXAMPLE"
 OSTICKET_URL: "{}"
 
 NEXTCLOUD_URL: "https://cloud.example.com"
-NEXTCLOUD_REDIS: "redis://localhost:6379/4"
+NEXTCLOUD_REDIS: ""
 NEXTCLOUD_TTL: "60"
 
 NEWS_URL: "https://news"

@@ -45,7 +45,7 @@ export class ConfigService {
    */
   private validateInput(environmentConfig: EnvConfig<any>): EnvConfig<any> {
     const environmentVarsSchema: Joi.ObjectSchema = Joi.object({
-      NODE_ENV: Joi.any().empty('').optional(),
+      NODE_ENV: Joi.any().empty('').default('development').optional(),
 
       PORT: Joi.number().integer().default(80).required(),
       PORT_SSL: Joi.number().integer().empty('').default(0).optional(),
@@ -55,25 +55,25 @@ export class ConfigService {
 
       DATABASE_URI: Joi.string().required(),
       DATABASE_URI_RD: Joi.string().required(),
-      DATABASE_SCHEMA: Joi.string().required(),
-      DATABASE_SYNCHRONIZE: Joi.boolean().required(),
-      DATABASE_DROP_SCHEMA: Joi.boolean().required(),
-      DATABASE_LOGGING: Joi.string().empty('').optional(),
-      DATABASE_MIGRATIONS_RUN: Joi.boolean().empty('').optional(),
-      DATABASE_REDIS_URI: Joi.string().required(),
-      DATABASE_REDIS_TTL: Joi.number().empty('').optional(),
+      DATABASE_SCHEMA: Joi.string().empty('').default('public').optional(),
+      DATABASE_SYNCHRONIZE: Joi.boolean().empty('').default(false).optional(),
+      DATABASE_DROP_SCHEMA: Joi.boolean().empty('').default(false).optional(),
+      DATABASE_LOGGING: Joi.string().empty('').default(true).optional(),
+      DATABASE_MIGRATIONS_RUN: Joi.boolean().empty('').default(false).optional(),
+      DATABASE_REDIS_URI: Joi.string().empty('').optional(),
+      DATABASE_REDIS_TTL: Joi.number().empty('').default(60).optional(),
 
       HTTP_REDIS_URI: Joi.string().empty('').optional(),
-      HTTP_REDIS_TTL: Joi.number().empty('').optional(),
-      HTTP_REDIS_MAX_OBJECTS: Joi.number().empty('').optional(),
+      HTTP_REDIS_TTL: Joi.number().empty('').default(60).optional(),
+      HTTP_REDIS_MAX_OBJECTS: Joi.number().empty('').default(1000).optional(),
 
       SESSION_NAME: Joi.string().empty('').default('portal').optional(),
       SESSION_SECRET: Joi.string().empty('').optional(),
-      SESSION_REDIS_URI: Joi.string().empty('').optional(),
-      SESSION_COOKIE_TTL: Joi.number().required(),
+      SESSION_REDIS_URI: Joi.string().required(),
+      SESSION_COOKIE_TTL: Joi.number().empty('').default(3600).optional(),
 
-      LDAP_REDIS_URI: Joi.string().required(),
-      LDAP_REDIS_TTL: Joi.number().empty('').optional(),
+      LDAP_REDIS_URI: Joi.string().empty('').optional(),
+      LDAP_REDIS_TTL: Joi.number().empty('').default(3600).optional(),
 
       LDAP_URL: Joi.string().required(),
       LDAP_BIND_DN: Joi.string().required(),
@@ -86,14 +86,14 @@ export class ConfigService {
 
       MICROSERVICE_URL: Joi.string().required(),
 
-      SOAP_URL: Joi.string().uri().optional(),
-      SOAP_DOMAIN: Joi.string().optional(),
+      SOAP_URL: Joi.string().uri().empty('').optional(),
+      SOAP_DOMAIN: Joi.string().empty('').optional(),
 
-      OSTICKET_URL: Joi.any(),
+      OSTICKET_URL: Joi.any().empty('').optional(),
 
-      NEXTCLOUD_URL: Joi.string().required(),
-      NEXTCLOUD_REDIS: Joi.string().required(),
-      NEXTCLOUD_TTL: Joi.number().required(),
+      NEXTCLOUD_URL: Joi.string().empty('').optional(),
+      NEXTCLOUD_REDIS: Joi.string().empty('').optional(),
+      NEXTCLOUD_TTL: Joi.number().empty('').optional(),
 
       NEWS_URL: Joi.string().empty('').optional(),
       NEWS_API_URL: Joi.string().empty('').optional(),

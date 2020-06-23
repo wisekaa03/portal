@@ -29,14 +29,16 @@ export class FilesService {
     private readonly configService: ConfigService, // private readonly userService: UserService,
   ) {
     this.ttl = configService.get<number>('NC_REDIS_TTL') || 900;
-    this.cacheStore = redisStore.create({
-      prefix: 'NC',
-      url: configService.get<string>('NC_REDIS_URI') || '',
-    });
-    this.cache = cacheManager.caching({
-      store: this.cacheStore,
-      ttl: this.ttl,
-    });
+    if (configService.get<string>('NC_REDIS_URI')) {
+      this.cacheStore = redisStore.create({
+        prefix: 'NC',
+        url: configService.get<string>('NC_REDIS_URI'),
+      });
+      this.cache = cacheManager.caching({
+        store: this.cacheStore,
+        ttl: this.ttl,
+      });
+    }
 
     this.nextCloud = new NextcloudClient({
       url: configService.get<string>('NEXTCLOUD_URL'),
@@ -91,17 +93,21 @@ export class FilesService {
    */
   folderFiles = async (path: string, user: User, password: string): Promise<FileDetails[]> => {
     this.logger.info(`Files entity: path={${path}}`);
+
     const cachedID = `${user.loginIdentificator}-ff`;
+    if (this.cache) {
+      const cached: FileDetails[] = await this.cache.get<FileDetails[]>(cachedID);
+      if (cached) {
+        this.cacheThis(user, password, cachedID, { folderFiles: path });
 
-    const cached: FileDetails[] = await this.cache.get<FileDetails[]>(cachedID);
-    if (cached) {
-      this.cacheThis(user, password, cachedID, { folderFiles: path });
-
-      return cached;
+        return cached;
+      }
     }
 
     const folder = await this.nextCloudAs(user, password).getFolderFileDetails(path);
-    this.cache.set<FileDetails[]>(cachedID, folder, this.ttl);
+    if (this.cache) {
+      this.cache.set<FileDetails[]>(cachedID, folder, this.ttl);
+    }
 
     return folder;
   };
