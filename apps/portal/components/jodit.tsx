@@ -83,11 +83,10 @@ const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorCompone
   { value, onBlur, disabled },
   ref,
 ) => (
-  // TODO: не поддерживает ref WTF???
   <JoditReact
     // ref={ref as LegacyRef<JoditReact>}
     value={value}
-    config={{ ...config, readonly: !!disabled }}
+    config={{ ...config, readonly: !!disabled } as any}
     // preferred to use only this option to update the content for performance reasons
     onBlur={onBlur}
     onChange={() => {}}
