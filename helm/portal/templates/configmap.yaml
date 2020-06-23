@@ -6,58 +6,58 @@ metadata:
 {{ include "portal.labels" . | indent 4 }}
 data:
   env: |
-    DOMAIN: {{ .Values.DOMAIN | default "example.com" | quote }}
-    LOGLEVEL: {{ .Values.LOGLEVEL | default "debug" | quote }}
-    DEVELOPMENT: {{ .Values.DEVELOPMENT | default "false" | quote }}
+    DOMAIN={{ .Values.DOMAIN | default "example.com" | quote }}
+    LOGLEVEL={{ .Values.LOGLEVEL | default "debug" | quote }}
+    DEVELOPMENT={{ .Values.DEVELOPMENT | default "false" | quote }}
 
-    DATABASE_URI: {{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
-    DATABASE_URI_RD: {{ .Values.DATABASE_URI_RD | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
-    DATABASE_SCHEMA: {{ .Values.DATABASE_SCHEMA | default "public" | quote }}
-    DATABASE_SYNCHRONIZE: {{ .Values.DATABASE_SYNCHRONIZE | default "true" | quote }}
-    DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}
-    DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
-    DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING | default "true" | quote }}
-    DATABASE_REDIS_URI: {{ .Values.DATABASE_REDIS_URI | default "redis://localhost:6379/0" | quote }}
-    DATABASE_REDIS_TTL: {{ .Values.DATABASE_REDIS_TTL | default "300" | quote }}
+    DATABASE_URI={{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
+    DATABASE_URI_RD={{ .Values.DATABASE_URI_RD | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
+    DATABASE_SCHEMA={{ .Values.DATABASE_SCHEMA | default "public" | quote }}
+    DATABASE_SYNCHRONIZE={{ .Values.DATABASE_SYNCHRONIZE | default "true" | quote }}
+    DATABASE_DROP_SCHEMA={{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}
+    DATABASE_MIGRATIONS_RUN={{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
+    DATABASE_LOGGING={{ .Values.DATABASE_LOGGING | default "true" | quote }}
+    DATABASE_REDIS_URI={{ .Values.DATABASE_REDIS_URI | default "redis://localhost:6379/0" | quote }}
+    DATABASE_REDIS_TTL={{ .Values.DATABASE_REDIS_TTL | default "300" | quote }}
 
     # HTTP Redis
-    HTTP_REDIS_URI: {{ .Values.HTTP_REDIS_URI | default "redis://localhost:6379/1" | quote }}
-    HTTP_REDIS_TTL: {{ .Values.HTTP_REDIS_TTL | default "300" | quote }}
-    HTTP_REDIS_MAX_OBJECTS: {{ .Values.HTTP_REDIS_MAX_OBJECTS | default "10000" | quote }}
+    HTTP_REDIS_URI={{ .Values.HTTP_REDIS_URI | default "redis://localhost:6379/1" | quote }}
+    HTTP_REDIS_TTL={{ .Values.HTTP_REDIS_TTL | default "300" | quote }}
+    HTTP_REDIS_MAX_OBJECTS={{ .Values.HTTP_REDIS_MAX_OBJECTS | default "10000" | quote }}
 
     # Session Redis
-    SESSION_NAME: {{ .Values.SESSION_NAME | default "portal" | quote }}
-    SESSION_REDIS_URI: {{ .Values.SESSION_REDIS_URI | default "redis://localhost:6379/2" | quote }}
-    SESSION_COOKIE_TTL: {{ .Values.SESSION_COOKIE_TTL | default "300" | quote }}
-    SESSION_SECRET: {{ .Values.SESSION_SECRET | default "supersecret" | quote }}
+    SESSION_NAME={{ .Values.SESSION_NAME | default "portal" | quote }}
+    SESSION_REDIS_URI={{ .Values.SESSION_REDIS_URI | default "redis://localhost:6379/2" | quote }}
+    SESSION_COOKIE_TTL={{ .Values.SESSION_COOKIE_TTL | default "300" | quote }}
+    SESSION_SECRET={{ .Values.SESSION_SECRET | default "supersecret" | quote }}
 
     # LDAP
-    LDAP_URL: {{ .Values.LDAP_URL | default "ldap://activedirectory:389" | quote }}
-    LDAP_BIND_DN: {{ .Values.LDAP_BIND_DN | default "CN=user,DC=example,DC=local" | quote }}
-    LDAP_BIND_PW: {{ .Values.LDAP_BIND_PW | default "supersecret" | quote }}
-    LDAP_SEARCH_BASE: {{ .Values.LDAP_SEARCH_BASE | default "DC=example,DC=local" | quote }}
-    LDAP_SEARCH_FILTER: {{ .Values.LDAP_SEARCH_FILTER | default "(sAMAccountName={{username}})" | quote }}
-    LDAP_SEARCH_GROUP: {{ .Values.LDAP_SEARCH_GROUP | default "(&(objectClass=group)(member={{dn}}))" | quote }}
-    LDAP_SEARCH_BASE_ALL_USERS: {{ .Values.LDAP_SEARCH_BASE_ALL_USERS | default "DC=example,DC=local" | quote }}
-    LDAP_SEARCH_FILTER_ALL_USERS: {{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | default "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))" | quote }}
+    LDAP_URL={{ .Values.LDAP_URL | default "ldap://activedirectory:389" | quote }}
+    LDAP_BIND_DN={{ .Values.LDAP_BIND_DN | default "CN=user,DC=example,DC=local" | quote }}
+    LDAP_BIND_PW={{ .Values.LDAP_BIND_PW | default "supersecret" | quote }}
+    LDAP_SEARCH_BASE={{ .Values.LDAP_SEARCH_BASE | default "DC=example,DC=local" | quote }}
+    LDAP_SEARCH_FILTER={{ .Values.LDAP_SEARCH_FILTER | default "(sAMAccountName={{username}})" | quote }}
+    LDAP_SEARCH_GROUP={{ .Values.LDAP_SEARCH_GROUP | default "(&(objectClass=group)(member={{dn}}))" | quote }}
+    LDAP_SEARCH_BASE_ALL_USERS={{ .Values.LDAP_SEARCH_BASE_ALL_USERS | default "DC=example,DC=local" | quote }}
+    LDAP_SEARCH_FILTER_ALL_USERS={{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | default "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))" | quote }}
     # LDAP Redis
-    LDAP_REDIS_URI: {{ .Values.LDAP_REDIS_URI | quote }}
-    LDAP_REDIS_TTL: {{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
+    LDAP_REDIS_URI={{ .Values.LDAP_REDIS_URI | quote }}
+    LDAP_REDIS_TTL={{ .Values.LDAP_REDIS_TTL | default "300" | quote }}
 
-    MICROSERVICE_URL: {{ .Values.MICROSERVICE_URL | default "redis://localhost:6379" | quote }}
+    MICROSERVICE_URL={{ .Values.MICROSERVICE_URL | default "redis://localhost:6379" | quote }}
 
-    SOAP_URL: {{ .Values.SOAP_URL | quote }}
-    SOAP_DOMAIN: {{ .Values.SOAP_DOMAIN | quote }}
+    SOAP_URL={{ .Values.SOAP_URL | quote }}
+    SOAP_DOMAIN={{ .Values.SOAP_DOMAIN | quote }}
+    OSTICKET_URL={{ .Values.OSTICKET_URL | quote }}
 
-    OSTICKET_URL: {{ .Values.OSTICKET_URL | quote }}
-    NEXTCLOUD_URL: {{ .Values.NEXTCLOUD_URL | quote }}
-    NEXTCLOUD_REDIS: {{ .Values.NEXTCLOUD_REDIS | quote }}
-    NEXTCLOUD_TTL: {{ .Values.NEXTCLOUD_TTL | default "60" | quote }}
+    NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}
+    NEXTCLOUD_REDIS={{ .Values.NEXTCLOUD_REDIS | quote }}
+    NEXTCLOUD_TTL={{ .Values.NEXTCLOUD_TTL | default "60" | quote }}
 
-    NEWS_URL: {{ .Values.NEWS_URL | quote }}
-    NEWS_API_URL: {{ .Values.NEWS_API_URL | quote }}
+    NEWS_URL={{ .Values.NEWS_URL | quote }}
+    NEWS_API_URL={{ .Values.NEWS_API_URL | quote }}
 
-    MAIL_URL: {{ .Values.MAIL_URL | quote }}
-    MAIL_LOGIN_URL: {{ .Values.MAIL_LOGIN_URL | quote }}
+    MAIL_URL={{ .Values.MAIL_URL | quote }}
+    MAIL_LOGIN_URL={{ .Values.MAIL_LOGIN_URL | quote }}
 
-    MEETING_URL: {{ .Values.MEETING_URL | quote }}
+    MEETING_URL={{ .Values.MEETING_URL | quote }}

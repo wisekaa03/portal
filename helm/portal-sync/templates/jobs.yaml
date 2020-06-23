@@ -28,11 +28,11 @@ spec:
               env:
                 - name: PORT
                   value: {{ .Values.PORT | default "4222" | quote }}
-              resources:
-                {{- toYaml .Values.resources | nindent 14 }}
               volumeMounts:
                 - name: configmap
                   mountPath: /portal/.local
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
           restartPolicy: Never
           volumes:
             - name: configmap
