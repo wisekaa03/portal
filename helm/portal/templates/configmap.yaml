@@ -54,8 +54,8 @@ data:
     OSTICKET_URL={{ .Values.OSTICKET_URL | quote }}
 
     NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}
-    NEXTCLOUD_REDIS={{ .Values.NEXTCLOUD_REDIS | quote }}
-    NEXTCLOUD_TTL={{ .Values.NEXTCLOUD_TTL }}
+    NEXTCLOUD_REDIS_URI={{ .Values.NEXTCLOUD_REDIS_URI | quote }}
+    NEXTCLOUD_REDIS_TTL={{ .Values.NEXTCLOUD_REDIS_TTL }}
 
     NEWS_URL={{ .Values.NEWS_URL | quote }}
     NEWS_API_URL={{ .Values.NEWS_API_URL | quote }}

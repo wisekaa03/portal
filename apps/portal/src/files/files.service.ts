@@ -29,11 +29,11 @@ export class FilesService {
     @InjectPinoLogger(FilesService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService, // private readonly userService: UserService,
   ) {
-    this.ttl = configService.get<number>('NC_REDIS_TTL') || 900;
-    if (configService.get<string>('NC_REDIS_URI')) {
+    this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
+    if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
       this.cacheStore = redisStore.create({
         prefix: 'NC',
-        url: configService.get<string>('NC_REDIS_URI'),
+        url: configService.get<string>('NEXTCLOUD_REDIS_URI'),
       });
       this.cache = cacheManager.caching({
         store: this.cacheStore,

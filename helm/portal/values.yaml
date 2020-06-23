@@ -71,8 +71,8 @@ SOAP_URL: ""
 OSTICKET_URL: "{}"
 
 NEXTCLOUD_URL: "https://cloud.example.com"
-NEXTCLOUD_REDIS: ""
-NEXTCLOUD_TTL: "60"
+NEXTCLOUD_REDIS_URI: ""
+NEXTCLOUD_REDIS_TTL: "60"
 
 NEWS_URL: "https://news"
 NEWS_API_URL: "https://news/api"
