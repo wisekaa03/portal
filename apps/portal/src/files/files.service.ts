@@ -138,20 +138,12 @@ export class FilesService {
    * Get file
    *
    * @param {string} targetPath Target path of file
-   * @param {Promise<FileUpload>} file File object
    * @return {FileDetails[]}
    * @throws NotFoundError
    */
-  getFile = async (
-    targetPath: string,
-    promiseFile: Promise<FileUpload>,
-    user: User,
-    password: string,
-  ): Promise<void> => {
+  getFile = async (targetPath: string, user: User, password: string): Promise<void> => {
     this.logger.info(`Files entity: path={${targetPath}}`);
 
-    const { createReadStream } = await promiseFile;
-
-    return this.nextCloudAs(user, password).uploadFromStream(targetPath, createReadStream());
+    this.nextCloudAs(user, password).getReadStream(targetPath);
   };
 }
