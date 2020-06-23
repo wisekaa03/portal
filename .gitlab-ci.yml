@@ -102,7 +102,6 @@ helm_development:
     # Portal
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
-        --set service.type="ClusterIP" \
         --set replicaCount="1" \
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
@@ -147,6 +146,7 @@ helm_development:
         --set MAIL_URL="${MAIL_URL}" \
         --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
         --set MEETING_URL="${MEETING_URL}" \
+        --set service.type="ClusterIP" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
@@ -162,10 +162,10 @@ helm_development:
       helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
-        --set service.type="ClusterIP" \
         --set replicaCount="1" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set DEVELOPMENT="true" \
+        --set service.type="ClusterIP" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
@@ -188,7 +188,6 @@ helm_production:
     # Portal
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
-        --set service.type="ClusterIP" \
         --set PORT="${PORT}" \
         --set PORT_SSL="${PORT_SSL}" \
         --set DOMAIN="${DOMAIN}" \
@@ -232,6 +231,7 @@ helm_production:
         --set MAIL_URL="${MAIL_URL}" \
         --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
         --set MEETING_URL="${MEETING_URL}" \
+        --set service.type="ClusterIP" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
@@ -247,9 +247,9 @@ helm_production:
       helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal-sync/values.yaml \
-        --set service.type="ClusterIP" \
         --set PORT="${PORT_MICROSERVICE}" \
         --set DEVELOPMENT="false" \
+        --set service.type="ClusterIP" \
         --set imageCredentials.registry="${CI_REGISTRY}" \
         --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
