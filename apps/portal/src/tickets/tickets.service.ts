@@ -613,7 +613,7 @@ export class TicketsService {
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkTaskEditInput} task The task which will be editing
-   * @param {FileUpload} attachments Attachments object
+   * @param {Promise<FileUpload>} attachments Attachments object
    * @returns {TkTasks} Task for editing
    */
   TicketsTaskEdit = async (

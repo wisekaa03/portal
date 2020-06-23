@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { NextcloudClient } from 'nextcloud-link';
 import { FileDetails } from 'nextcloud-link/compiled/source/types';
+import { FileUpload } from 'graphql-upload';
 import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
@@ -113,65 +114,44 @@ export class FilesService {
   };
 
   /**
-   * Edit file
+   * Put file
    *
-   * @param {Files}
-   * @return {FilesEntity}
+   * @param {string} targetPath Target path of file
+   * @param {Promise<FileUpload>} file File object
+   * @return {FileDetails[]}
+   * @throws NotFoundError
    */
-  editFile = async ({ title, folder, filename, mimetype, updatedUser, id }: Files): Promise<string> => {
-    this.logger.info(`Edit: ${JSON.stringify({ title, folder, filename, mimetype, updatedUser, id })}`);
+  putFile = async (
+    targetPath: string,
+    promiseFile: Promise<FileUpload>,
+    user: User,
+    password: string,
+  ): Promise<void> => {
+    this.logger.info(`Files entity: path={${targetPath}}`);
 
-    throw new Error('Not implemented');
+    const { createReadStream } = await promiseFile;
+
+    return this.nextCloudAs(user, password).uploadFromStream(targetPath, createReadStream());
   };
 
   /**
-   * Delete files
+   * Get file
    *
-   * @param {string} - id of files
-   * @return {boolean} - true/false of delete files
+   * @param {string} targetPath Target path of file
+   * @param {Promise<FileUpload>} file File object
+   * @return {FileDetails[]}
+   * @throws NotFoundError
    */
-  deleteFile = async (id: string): Promise<boolean> => {
-    this.logger.info(`Edit: id={${id}}`);
+  getFile = async (
+    targetPath: string,
+    promiseFile: Promise<FileUpload>,
+    user: User,
+    password: string,
+  ): Promise<void> => {
+    this.logger.info(`Files entity: path={${targetPath}}`);
 
-    throw new Error('Not implemented');
-  };
+    const { createReadStream } = await promiseFile;
 
-  /**
-   * Get folder
-   *
-   * @param {UserResponse} user shared or user defined
-   * @param {string} id of folder (optional)
-   * @return {Promise<FilesFolderResponse[]>}
-   */
-  folder = async (user: User, id?: string): Promise<string[]> => {
-    this.logger.info(`Folder: id={${id}}`);
-
-    throw new Error('Not implemented');
-  };
-
-  /**
-   * Edit folder
-   *
-   * @param {FilesFolder}
-   * @return {Promise<FilesFolderResponse>}
-   */
-  editFolder = async ({ id, user, pathname, updatedUser }: FilesFolder): Promise<string> => {
-    this.logger.info(
-      `Edit: ${JSON.stringify({ pathname, id, user: user?.username, updatedUser: updatedUser?.username })}`,
-    );
-
-    throw new Error('Not implemented');
-  };
-
-  /**
-   * Delete folder
-   *
-   * @param {string} id of folder
-   * @return {Promise<string | undefined>} id of deleted folder
-   */
-  deleteFolder = async (id: string): Promise<string | undefined> => {
-    this.logger.info(`Edit folder: id={${id}}`);
-
-    throw new Error('Not implemented');
+    return this.nextCloudAs(user, password).uploadFromStream(targetPath, createReadStream());
   };
 }
