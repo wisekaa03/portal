@@ -51,7 +51,7 @@ data:
 
     SOAP_URL={{ .Values.SOAP_URL | quote }}
     SOAP_DOMAIN={{ .Values.SOAP_DOMAIN | quote }}
-    OSTICKET_URL={{ .Values.OSTICKET_URL | quote }}
+    OSTICKET_URL={{ .Values.OSTICKET_URL }}
 
     NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}
     NEXTCLOUD_REDIS_URI={{ .Values.NEXTCLOUD_REDIS_URI | quote }}
