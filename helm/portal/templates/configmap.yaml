@@ -6,9 +6,12 @@ metadata:
 {{ include "portal.labels" . | indent 4 }}
 data:
   env: |
+    PORT={{ .Values.PORT | default 4000 }}
+    PORT_SSL={{ .Values.PORT_SSL | default 4443 }}
+
     DOMAIN={{ .Values.DOMAIN | default "example.com" | quote }}
     LOGLEVEL={{ .Values.LOGLEVEL | default "debug" | quote }}
-    DEVELOPMENT={{ .Values.DEVELOPMENT | default "false" | quote }}
+    DEVELOPMENT={{ .Values.DEVELOPMENT | default false}}
 
     DATABASE_URI={{ .Values.DATABASE_URI | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
     DATABASE_URI_RD={{ .Values.DATABASE_URI_RD | default "postgres://postgres:1234567890@localhost:5432/postgres" | quote }}
