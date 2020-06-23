@@ -5,7 +5,7 @@ metadata:
   labels:
 {{ include "portal.labels" . | indent 4 }}
 data:
-  .env: |
+  env: |
     DOMAIN: {{ .Values.DOMAIN | default "example.com" | quote }}
     LOGLEVEL: {{ .Values.LOGLEVEL | default "debug" | quote }}
     DEVELOPMENT: {{ .Values.DEVELOPMENT | default "false" | quote }}

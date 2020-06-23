@@ -17,27 +17,27 @@ spec:
           - name: {{ .Values.imageCredentials.name }}
           {{- end }}
           containers:
-          - name: {{ .Chart.Name }}
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            imagePullPolicy: {{ .Values.image.pullPolicy }}
-            args: ["start:syncJob"]
-            ports:
-              - name: microsvc
-                containerPort: {{ .Values.PORT | default 4222 }}
-                protocol: TCP
-            env:
-              - name: PORT
-                value: {{ .Values.PORT | default "4222" | quote }}
-            resources:
-              {{- toYaml .Values.resources | nindent 14 }}
-            volumeMounts:
-              - name: configmap
-                mountPath: /portal/.local
+            - name: {{ .Chart.Name }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              args: ["start:syncJob"]
+              ports:
+                - name: microsvc
+                  containerPort: {{ .Values.PORT | default 4222 }}
+                  protocol: TCP
+              env:
+                - name: PORT
+                  value: {{ .Values.PORT | default "4222" | quote }}
+              resources:
+                {{- toYaml .Values.resources | nindent 14 }}
+              volumeMounts:
+                - name: configmap
+                  mountPath: /portal/.local
           restartPolicy: Never
-        volumes:
-          - name: configmap
-            configMap:
-              name: portal-configmap
-              items:
-                - key: .env
-                  path: .env
+          volumes:
+            - name: configmap
+              configMap:
+                name: portal-configmap
+                items:
+                  - key: env
+                    path: .env

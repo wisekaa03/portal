@@ -87,7 +87,7 @@ spec:
           configMap:
             name: portal-configmap
             items:
-              - key: .env
+              - key: env
                 path: .env
       {{- with .Values.nodeSelector }}
       nodeSelector:
