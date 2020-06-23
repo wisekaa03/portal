@@ -287,14 +287,17 @@ spec:
                   name: portal-configmap
                   key: MEETING_URL
           volumeMounts:
-            - name: config
-              mountPath: /portal/config.yaml
+            - name: configmap
+              mountPath: /portal/config
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: config
+        - name: configmap
           configMap:
             name: portal-configmap
+            items:
+              - key: config
+                path: config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

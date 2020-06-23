@@ -5,7 +5,7 @@ metadata:
   labels:
 {{ include "portal.labels" . | indent 4 }}
 data:
-  config.yaml: |
+  config: |
     DOMAIN: {{ .Values.DOMAIN | default "example.com" | quote }}
     LOGLEVEL: {{ .Values.LOGLEVEL | default "debug" | quote }}
     DEVELOPMENT: {{ .Values.DEVELOPMENT | default "false" | quote }}
@@ -17,7 +17,7 @@ data:
     DATABASE_DROP_SCHEMA: {{ .Values.DATABASE_DROP_SCHEMA | default "true" | quote }}
     DATABASE_MIGRATIONS_RUN: {{ .Values.DATABASE_MIGRATIONS_RUN | default "true" | quote }}
     DATABASE_LOGGING: {{ .Values.DATABASE_LOGGING | default "true" | quote }}
-    DA  TABASE_REDIS_URI: {{ .Values.DATABASE_REDIS_URI | default "redis://localhost:6379/0" | quote }}
+    DATABASE_REDIS_URI: {{ .Values.DATABASE_REDIS_URI | default "redis://localhost:6379/0" | quote }}
     DATABASE_REDIS_TTL: {{ .Values.DATABASE_REDIS_TTL | default "300" | quote }}
 
     # HTTP Redis
