@@ -109,6 +109,7 @@ export const MaterialUI_fck = (fontSize?: number, ssrMatchMedia?: (query: string
         ],
         'html': {
           fontSize,
+          overflow: 'hidden',
         },
       },
     },
