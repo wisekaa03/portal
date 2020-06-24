@@ -208,8 +208,13 @@ async function bootstrap(config: ConfigService): Promise<void> {
       response: express.Response,
       _pathname: string,
       _query: ParsedUrlQuery,
-    ): Promise<any> => {
-      const status = error.getStatus();
+    ): Promise<void> => {
+      let status: number;
+      if (error instanceof HttpException) {
+        status = error.getStatus();
+      } else {
+        status = 200;
+      }
       if (status === 403 || status === 401) {
         response.status(302);
         response.location(`/auth/login?redirect=${encodeURI(request.url)}`);
