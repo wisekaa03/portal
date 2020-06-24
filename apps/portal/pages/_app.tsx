@@ -60,7 +60,6 @@ class App extends NextApp<AppContextMy> {
   componentDidMount(): void {
     // Remove the server-sie injected CSS
     document.querySelector('#jss-server-side')?.remove();
-
     // Service worker
     // if ('serviceWorker' in navigator) {
     //   navigator.serviceWorker

@@ -77,7 +77,7 @@ class MainDocument extends Document<DocumentInitialPropsMy> {
       language: ctx.language || lngFromReq(req) || nextI18next.i18n.language || nextI18next.config.defaultLanguage,
       nonce,
       // Styles fragment is rendered after the app and page rendering finish.
-      styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
+      styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement({ nonce })],
     };
   }
 }

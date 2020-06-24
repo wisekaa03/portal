@@ -14,42 +14,42 @@ const JoditReact = dynamic(() => import('jodit-react'), { ssr: false });
 const styles = {
   '@global': {
     // Fix jodit_tooltip style
-    '.jodit_tooltip': {
+    '.jodit-tooltip': {
       position: 'fixed!important',
     },
-    '.jodit_toolbar': {
+    '.jodit-toolbar': {
       border: 'none!important',
       borderBottom: '1px solid #929fb7!important',
       backgroundColor: '#F5FDFF!important',
     },
-    '.jodit_icon': {
+    '.jodit-icon': {
       fill: '#6AA7C8!important',
     },
-    '.jodit_with_dropdownlist-trigger': {
+    '.jodit-with-dropdownlist-trigger': {
       color: '#6AA7C8!important',
       fill: '#6AA7C8!important',
     },
 
-    '.jodit_toolbar_btn>a': { color: '#6AA7C8!important' },
-    '.jodit_toolbar .jodit_icon': {
+    '.jodit-toolbar-btn>a': { color: '#6AA7C8!important' },
+    '.jodit-toolbar .jodit_icon': {
       color: '#fff',
     },
-    '.jodit_statusbar': {
+    '.jodit-statusbar': {
       border: 'none!important',
       borderTop: '1px solid #929fb7!important',
       backgroundColor: '#F5FDFF!important',
     },
-    '.jodit_placeholder': {
+    '.jodit-placeholder': {
       color: '#31312F!important',
     },
-    '.jodit_container:not(.jodit_inline) .jodit_workplace': {
+    '.jodit-container:not(.jodit_inline) .jodit_workplace': {
       border: 'none!important',
     },
-    '.jodit_container': {
-      'border': '2px solid #929fb7',
-      'borderRadius': '4px',
+    '.jodit-container': {
+      'border': '2px solid #929fb7!important',
+      'borderRadius': '4px!important',
       '&:hover': {
-        borderColor: '#5e7196',
+        borderColor: '#5e7196!important',
       },
     },
   },

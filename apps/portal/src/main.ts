@@ -12,7 +12,7 @@ import express from 'express';
 import { RenderService, RenderModule } from 'nest-next';
 import { ParsedUrlQuery } from 'querystring';
 import Next from 'next';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';
@@ -85,7 +85,10 @@ async function bootstrap(config: ConfigService): Promise<void> {
   // TODO: Как сделать nonce ?
   // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
 
-  const scriptSrc = ["'self'", "'unsafe-inline'" /* , nonce */];
+  const scriptSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = [
+    "'self'",
+    "'unsafe-inline'" /* , nonce */,
+  ];
   const styleSrc = ["'unsafe-inline'", "'self'"];
   const imgSrc = ["'self'", 'data:', 'blob:'];
   const fontSrc = ["'self'", 'data:'];
@@ -135,6 +138,16 @@ async function bootstrap(config: ConfigService): Promise<void> {
     frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
   }
 
+  //#region Next.JS locals
+  app.use('*', (_request: express.Request, response: express.Response, next: express.NextFunction) => {
+    response.locals.nonce = crypto.randomBytes(4).toString('hex');
+    response.locals.nestLogger = logger;
+    next();
+  });
+  //#endregion
+
+  scriptSrc.push((_request, response) => `'nonce-${response.locals.nonce}'`);
+
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
@@ -176,16 +189,6 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   //#region Locale I18n
   app.use(nextI18NextMiddleware(nextI18next));
-  //#endregion
-
-  //#region Next.JS locals
-  app.use('*', (_request: Request, response: express.Response, next: () => void) => {
-    response.locals.nonce = Buffer.from(uuidv4()).toString('base64');
-    response.locals.nestLogger = logger;
-    next();
-    // res.set('X-Server-ID', res);
-    // res.removeHeader('X-Powered-By');
-  });
   //#endregion
 
   //#region Next

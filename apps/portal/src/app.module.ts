@@ -171,6 +171,22 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
         uploads: {
           maxFileSize: 100000000, // 100MB
         },
+        plugins: [
+          {
+            requestDidStart(requestCtx: any) {
+              // eslint-disable-next-line no-debugger
+              debugger;
+              return {
+                willSendResponse(ctx: any) {
+                  ctx.response.http.headers.set('Content-Type', 'application/force-download');
+                  ctx.response.http.headers.set('Content-Disposition', 'attachment; filename=result.json');
+                  ctx.response.http.headers.set('Content-Transfer-Encoding', 'binary');
+                  ctx.response.http.headers.set('Accept-Ranges', 'bytes');
+                },
+              };
+            },
+          },
+        ],
         context: ({ req, res }) => ({ req, res }),
       }),
     }),
