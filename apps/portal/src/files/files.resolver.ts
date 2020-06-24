@@ -44,4 +44,66 @@ export class FilesResolver {
 
     throw new Error('Not authorized');
   }
+
+  /**
+   * Put file
+   *
+   * @param {string} path
+   * @param {Promise<FileUpload>} file
+   * @returns {void}
+   */
+  @Mutation('putFile')
+  @UseGuards(GqlAuthGuard)
+  async putFile(
+    @Args('path') path: string,
+    @Args('file') file: Promise<FileUpload>,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<void> {
+    if (path && user && password) {
+      return this.filesService.putFile(path, file, user, password);
+    }
+
+    throw new Error('Not authorized');
+  }
+
+  /**
+   * Get file
+   *
+   * @param {string} path
+   * @returns {void}
+   */
+  @Mutation('getFile')
+  @UseGuards(GqlAuthGuard)
+  async getFile(
+    @Args('path') path: string,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<void> {
+    if (path && user && password) {
+      return this.filesService.getFile(path, user, password);
+    }
+
+    throw new Error('Not authorized');
+  }
+
+  /**
+   * Get file
+   *
+   * @param {string} path
+   * @returns {FileDetails[]}
+   */
+  @Mutation('getFileURL')
+  @UseGuards(GqlAuthGuard)
+  async getFileURL(
+    @Args('path') path: string,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<void> {
+    if (path && user && password) {
+      return this.filesService.getFile(path, user, password);
+    }
+
+    throw new Error('Not authorized');
+  }
 }
