@@ -77,25 +77,6 @@ export class FilesService {
   };
 
   /**
-   * This is for a cache to slow NextCloud instance
-   *
-   * @param {User} user
-   * @param {string} password
-   * @param {string} cachedID user.username + <the function>
-   * @param {CachedObject} object
-   * @return {void}
-   */
-  cacheThis = async (user: User, password: string, cachedID: string, object: CachedObject): Promise<void> => {
-    if (object.folderFiles) {
-      this.cache.set(
-        cachedID,
-        await this.nextCloudAs(user, password).getFolderFileDetails(object.folderFiles),
-        this.ttl,
-      );
-    }
-  };
-
-  /**
    * Get files in a folder
    *
    * @param {string} path of files
@@ -107,8 +88,8 @@ export class FilesService {
     const cachedID = `${user.loginIdentificator}-${path}-ff`;
     if (this.cache && cache) {
       const cached: FileDetails[] = await this.cache.get<FileDetails[]>(cachedID);
-      if (cached) {
-        this.cacheThis(user, password, cachedID, { folderFiles: path });
+      if (cached && cached !== null) {
+        this.cache.set(cachedID, await this.nextCloudAs(user, password).getFolderFileDetails(path), this.ttl);
 
         return cached;
       }
@@ -149,8 +130,27 @@ export class FilesService {
    * @return {FilesFile}
    * @throws {Error}
    */
-  getFile = async (path: string, user: User, password: string, options?: FilesOptions): Promise<FilesFile> => {
+  getFile = async (
+    path: string,
+    user: User,
+    password: string,
+    options?: FilesOptions,
+    cache = true,
+  ): Promise<FilesFile> => {
     this.logger.info(`Get files: path={${path}}`);
+
+    const cachedID = `${user.loginIdentificator}-${path}-gf`;
+    if (cache && this.cache) {
+      const cached: FilesFile = await this.cache.get<FilesFile>(cachedID);
+      if (cached && cached !== null && cached.temporaryFile) {
+        try {
+          fs.accessSync(cached.temporaryFile, fs.constants.R_OK);
+          return { path: cached.path };
+        } catch (error) {
+          this.logger.error(`Files: no read access: ${path}`, error);
+        }
+      }
+    }
 
     const temporaryFile = tmpNameSync({ tmpdir: this.staticFolder });
     const file = temporaryFile.slice(temporaryFile.lastIndexOf('/'));
@@ -177,6 +177,10 @@ export class FilesService {
           resolve(callback);
         }),
       );
+    }
+
+    if (this.cache) {
+      this.cache.set<FilesFile>(cachedID, { path: `${this.staticFolderURL}${file}`, temporaryFile }, this.ttl);
     }
 
     return { path: `${this.staticFolderURL}${file}` };
