@@ -161,16 +161,21 @@ export class FilesService {
         if (stream) {
           return stream.pipe(fs.createWriteStream(temporaryFile));
         }
-        return;
+
+        throw new Error(`Files: not found: ${path}`);
       })
-      .catch((error) => {
+      .catch((error: string | Error) => {
+        if (error instanceof Error) {
+          throw error;
+        }
+
         throw new Error(error);
       });
 
     if (options?.sync) {
       const wait_ = await wait;
       if (!wait_) {
-        throw new Error(`No such file: ${path}`);
+        throw new Error(`Files: not found: ${path}`);
       }
       await new Promise((resolve) =>
         wait_.on('finish', (callback: () => void) => {
