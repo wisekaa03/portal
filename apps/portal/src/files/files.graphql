@@ -9,12 +9,19 @@ type FileDetails {
   name: String
 }
 
+type FilesFile {
+  path: String
+}
+
+input FilesOptions {
+  sync: Boolean
+}
+
 type Query {
   folderFiles(path: String!): [FileDetails]
 }
 
 type Mutation {
-  putFile(path: String!, file: Upload!): Boolean
-  getFile(path: String!): Boolean
-  getFileURL(path: String!): Boolean
+  putFile(path: String!, file: Upload!): Boolean!
+  getFile(path: String!, options: FilesOptions): FilesFile!
 }

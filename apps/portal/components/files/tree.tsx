@@ -5,7 +5,7 @@ import React, { FC, useContext } from 'react';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { FilesTreeComponentProps, FilesFolderTreeVirtual, FilesFolder } from '@lib/types';
+import { FilesTreeComponentProps, FilesFolderTreeVirtual } from '@lib/types';
 import { ProfileContext } from '@lib/context';
 import { FILES_SHARED_NAME } from '@lib/constants';
 import { TreeView, TreeItem } from '@front/components/tree-view';
@@ -17,11 +17,10 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
 
   const USER_FOLDER_ID = user?.username;
 
-  const defaultFolders: FilesFolder[] = [{ pathname: `/${FILES_SHARED_NAME}` }, { pathname: `/${USER_FOLDER_ID}` }];
+  const defaultFolders: string[] = [`/${FILES_SHARED_NAME}`, `/${USER_FOLDER_ID}`];
 
   const items = [...defaultFolders, ...data]
-    .reduce((accumulator: FilesFolderTreeVirtual[], current: FilesFolder) => {
-      const { id, pathname } = current;
+    .reduce((accumulator: FilesFolderTreeVirtual[], pathname: string) => {
       const tree = pathname.split('/').filter((i) => !!i);
 
       if (tree.length === 0) {
@@ -33,10 +32,10 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
 
         if (array.length === 1 || array.length - 1 === idx) {
           if (!element) {
-            return [...childs, { id, name: array[idx], pathname, childs: [] }];
+            return [...childs, { id: pathname, name: array[idx], pathname, childs: [] }];
           }
 
-          element.id = id;
+          element.id = pathname;
           element.name = array[idx];
           element.pathname = pathname;
 
@@ -49,7 +48,7 @@ const FilesTreeComponent: FC<FilesTreeComponentProps> = ({ data = [], item, setI
           return childs;
         }
 
-        return [...childs, { id, name: array[idx], pathname, childs: recursive([], array, idx + 1) }];
+        return [...childs, { id: pathname, name: array[idx], pathname, childs: recursive([], array, idx + 1) }];
       };
 
       return recursive(accumulator, tree);

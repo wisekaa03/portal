@@ -1,8 +1,12 @@
 /** @format */
 
 //#region Imports NPM
+import fs from 'fs';
+import { resolve } from 'path';
+import { tmpNameSync } from 'tmp';
 import { Injectable } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
 import { FileDetails } from 'nextcloud-link/compiled/source/types';
 import { FileUpload } from 'graphql-upload';
@@ -10,7 +14,7 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import { Files, FilesFolder, FilesFolderResponse, User } from '@lib/types';
+import { User, FilesFile, FilesOptions } from '@lib/types';
 import { ConfigService } from '@app/config';
 //#endregion
 
@@ -24,11 +28,16 @@ export class FilesService {
   private ttl: number;
   private cacheStore: cacheManager.Store;
   private cache: cacheManager.Cache;
+  private staticFolder: string;
+  private staticFolderURL: string;
 
   constructor(
     @InjectPinoLogger(FilesService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService, // private readonly userService: UserService,
   ) {
+    this.staticFolder = resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/tmp');
+    this.staticFolderURL = 'tmp';
+
     this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
     if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
       this.cacheStore = redisStore.create({
@@ -92,11 +101,11 @@ export class FilesService {
    * @param {string} path of files
    * @return {FileDetails[]}
    */
-  folderFiles = async (path: string, user: User, password: string): Promise<FileDetails[]> => {
+  folderFiles = async (path: string, user: User, password: string, cache = true): Promise<FileDetails[]> => {
     this.logger.info(`Files entity: path={${path}}`);
 
-    const cachedID = `${user.loginIdentificator}-ff`;
-    if (this.cache) {
+    const cachedID = `${user.loginIdentificator}-${path}-ff`;
+    if (this.cache && cache) {
       const cached: FileDetails[] = await this.cache.get<FileDetails[]>(cachedID);
       if (cached) {
         this.cacheThis(user, password, cachedID, { folderFiles: path });
@@ -126,19 +135,50 @@ export class FilesService {
 
     const { createReadStream } = await promiseFile;
 
-    return this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
+    await this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
+
+    const folder = path.slice(0, path.lastIndexOf('/'));
+    await this.folderFiles(folder, user, password, false);
   };
 
   /**
    * Get file
    *
    * @param {string} path Path of file
-   * @return {void}
-   * @throws NotFoundError
+   * @param {FileOptions} options.sync
+   * @return {FilesFile}
+   * @throws {Error}
    */
-  getFile = async (path: string, user: User, password: string): Promise<void> => {
+  getFile = async (path: string, user: User, password: string, options?: FilesOptions): Promise<FilesFile> => {
     this.logger.info(`Get files: path={${path}}`);
 
-    this.nextCloudAs(user, password).getReadStream(path);
+    const temporaryFile = tmpNameSync({ tmpdir: this.staticFolder });
+    const file = temporaryFile.slice(temporaryFile.lastIndexOf('/'));
+
+    const wait = this.nextCloudAs(user, password)
+      .getReadStream(path)
+      .then((stream: Webdav.Stream) => {
+        if (stream) {
+          return stream.pipe(fs.createWriteStream(temporaryFile));
+        }
+        return;
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+
+    if (options?.sync) {
+      const wait_ = await wait;
+      if (!wait_) {
+        throw new Error(`No such file: ${path}`);
+      }
+      await new Promise((resolve) =>
+        wait_.on('finish', (callback: () => void) => {
+          resolve(callback);
+        }),
+      );
+    }
+
+    return { path: `${this.staticFolderURL}${file}` };
   };
 }

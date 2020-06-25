@@ -9,7 +9,7 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { FileDetails } from 'nextcloud-link/compiled/source/types';
 //#endregion
 //#region Imports Local
-import { User, FilesFolderResponse } from '@lib/types';
+import { User, FilesFile, FilesOptions } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser } from '@back/user/user.decorator';
@@ -38,11 +38,11 @@ export class FilesResolver {
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<FileDetails[]> {
-    if (path && user && password) {
-      return this.filesService.folderFiles(path, user, password);
+    if (!user || !password) {
+      throw new UnauthorizedException();
     }
 
-    throw new Error('Not authorized');
+    return this.filesService.folderFiles(path, user, password);
   }
 
   /**
@@ -60,11 +60,11 @@ export class FilesResolver {
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<void> {
-    if (path && user && password) {
-      return this.filesService.putFile(path, file, user, password);
+    if (!user || !password) {
+      throw new UnauthorizedException();
     }
 
-    throw new Error('Not authorized');
+    return this.filesService.putFile(path, file, user, password);
   }
 
   /**
@@ -77,33 +77,14 @@ export class FilesResolver {
   @UseGuards(GqlAuthGuard)
   async getFile(
     @Args('path') path: string,
+    @Args('options') options?: FilesOptions,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<void> {
-    if (path && user && password) {
-      return this.filesService.getFile(path, user, password);
+  ): Promise<FilesFile> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
     }
 
-    throw new Error('Not authorized');
-  }
-
-  /**
-   * Get file
-   *
-   * @param {string} path
-   * @returns {FileDetails[]}
-   */
-  @Mutation('getFileURL')
-  @UseGuards(GqlAuthGuard)
-  async getFileURL(
-    @Args('path') path: string,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
-  ): Promise<void> {
-    if (path && user && password) {
-      return this.filesService.getFile(path, user, password);
-    }
-
-    throw new Error('Not authorized');
+    return this.filesService.getFile(path, user, password, options);
   }
 }

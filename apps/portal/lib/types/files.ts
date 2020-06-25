@@ -1,13 +1,13 @@
 /** @format */
 
-import { FilesFolder } from './files.folder.dto';
 import { DropzoneFile } from './dropzone';
 
 export interface FilesComponentProps {
   fileLoading: boolean;
   folderLoading: boolean;
   fileData?: FilesQueryProps[];
-  folderData?: FilesFolder[];
+  // TODO
+  folderData?: string[];
   folderName: string;
   setFolderName: React.Dispatch<React.SetStateAction<string>>;
   fileRefetch: () => void;
@@ -30,7 +30,8 @@ export interface FilesComponentProps {
 }
 
 export interface FilesTreeComponentProps {
-  data?: FilesFolder[];
+  // TODO
+  data?: string[];
   item: string;
   handleEdit: (_: string, __: number, ___?: string) => void;
   setItem: React.Dispatch<React.SetStateAction<string>>;
