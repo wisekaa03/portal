@@ -83,8 +83,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#region Improve security
   // app.use(helmet.ieNoOpen());
 
-  const scriptSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = ["'self'", "'unsafe-inline'"];
-  const styleSrc = ["'unsafe-inline'", "'self'"];
+  const scriptSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = ["'self'"];
+  const styleSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = ["'unsafe-inline'", "'self'"];
   const imgSrc = ["'self'", 'data:', 'blob:'];
   const fontSrc = ["'self'", 'data:'];
   const frameSrc = ["'self'"];
@@ -120,6 +120,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (DEV) {
+    scriptSrc.push("'unsafe-inline'");
     scriptSrc.push("'unsafe-eval'");
     scriptSrc.push('https://cdn.jsdelivr.net');
     styleSrc.push('https://fonts.googleapis.com');

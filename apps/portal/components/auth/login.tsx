@@ -121,78 +121,84 @@ export const LoginComponent: FC<LoginComponentProps> = ({
       <Box>
         <img src={Logo} alt="logo" className={classes.logo} />
       </Box>
-      <Box display="flex" textAlign="center" justifyContent="center" alignItems="center" height="70vh">
-        <Card className={classes.rootCard}>
-          <CardContent className={classes.rootContent}>
-            <Card className={classes.card}>
-              <CardContent onKeyDown={handleKeyDown}>
-                <Typography className={classes.title} variant="h4">
-                  {t('common:authorization')}
-                </Typography>
-                <Tooltip title={t('login:tooltip') || ''} placement="top" leaveDelay={3000}>
+      <form action="" method="POST">
+        <Box display="flex" textAlign="center" justifyContent="center" alignItems="center" height="70vh">
+          <Card className={classes.rootCard}>
+            <CardContent className={classes.rootContent}>
+              <Card className={classes.card}>
+                <CardContent onKeyDown={handleKeyDown}>
+                  <Typography className={classes.title} variant="h4">
+                    {t('common:authorization')}
+                  </Typography>
+                  <Tooltip title={t('login:tooltip') || ''} placement="top" leaveDelay={3000}>
+                    <FormControl className={classes.formControl} fullWidth variant="outlined">
+                      <TextField
+                        inputRef={usernameRef}
+                        name="username"
+                        type="text"
+                        autoFocus
+                        value={values.username}
+                        onChange={handleValues('username')}
+                        disabled={loading}
+                        label={t('login:username')}
+                        variant="outlined"
+                        className={classes.textField}
+                        autoComplete="username"
+                        // required
+                      />
+                    </FormControl>
+                  </Tooltip>
                   <FormControl className={classes.formControl} fullWidth variant="outlined">
                     <TextField
-                      inputRef={usernameRef}
-                      name="username"
-                      type="text"
-                      autoFocus
-                      value={values.username}
-                      onChange={handleValues('username')}
+                      inputRef={passwordRef}
+                      name="password"
+                      type="password"
+                      value={values.password}
+                      onChange={handleValues('password')}
                       disabled={loading}
-                      label={t('login:username')}
+                      label={t('login:password')}
                       variant="outlined"
                       className={classes.textField}
+                      autoComplete="current-password"
+                      // required
                     />
                   </FormControl>
-                </Tooltip>
-                <FormControl className={classes.formControl} fullWidth variant="outlined">
-                  <TextField
-                    inputRef={passwordRef}
-                    name="password"
-                    type="password"
-                    value={values.password}
-                    onChange={handleValues('password')}
-                    disabled={loading}
-                    label={t('login:password')}
-                    variant="outlined"
-                    className={classes.textField}
+                  <FormControlLabel
+                    className={classes.checkBox}
+                    control={
+                      <Checkbox
+                        checked={values.save}
+                        onChange={handleValues('save')}
+                        value="save"
+                        color="primary"
+                        disabled={loading}
+                      />
+                    }
+                    label={t('login:remember')}
                   />
+                </CardContent>
+              </Card>
+            </CardContent>
+            <CardActions>
+              <Loading size={47} activate={loading}>
+                <FormControl className={classes.submitBackground}>
+                  <Button
+                    className={classes.submit}
+                    type="submit"
+                    variant="outlined"
+                    // color="undefined"
+                    size="large"
+                    disabled={loading}
+                    onClick={handleSubmit}
+                  >
+                    {t('login:signIn')}
+                  </Button>
                 </FormControl>
-                <FormControlLabel
-                  className={classes.checkBox}
-                  control={
-                    <Checkbox
-                      checked={values.save}
-                      onChange={handleValues('save')}
-                      value="save"
-                      color="primary"
-                      disabled={loading}
-                    />
-                  }
-                  label={t('login:remember')}
-                />
-              </CardContent>
-            </Card>
-          </CardContent>
-          <CardActions>
-            <Loading size={47} activate={loading}>
-              <FormControl className={classes.submitBackground}>
-                <Button
-                  className={classes.submit}
-                  type="submit"
-                  variant="outlined"
-                  // color="undefined"
-                  size="large"
-                  disabled={loading}
-                  onClick={handleSubmit}
-                >
-                  {t('login:signIn')}
-                </Button>
-              </FormControl>
-            </Loading>
-          </CardActions>
-        </Card>
-      </Box>
+              </Loading>
+            </CardActions>
+          </Card>
+        </Box>
+      </form>
     </Box>
   );
 };
