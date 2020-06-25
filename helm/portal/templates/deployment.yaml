@@ -80,9 +80,18 @@ spec:
           volumeMounts:
             - name: configmap
               mountPath: /portal/.local
+            - name: portal-tmp
+              mountPath: /portal/public/tmp
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
+        - name: portal-tmp
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
         - name: configmap
           configMap:
             name: portal-configmap
