@@ -32,6 +32,7 @@ import { pinoOptions } from './shared/pino.options';
 
 async function bootstrap(config: ConfigService): Promise<void> {
   let httpsServer: boolean | ServerOptions = false;
+  const DEV = configService.get<boolean>('DEVELOPMENT');
 
   //#region NestJS options
   const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
@@ -118,7 +119,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   scriptSrc.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
-  if (config.get<boolean>('DEVELOPMENT')) {
+  if (DEV) {
     scriptSrc.push("'unsafe-eval'");
     scriptSrc.push('https://cdn.jsdelivr.net');
     styleSrc.push('https://fonts.googleapis.com');
@@ -134,7 +135,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   //#region Next.JS locals
   app.use('*', (_request: express.Request, response: express.Response, next: express.NextFunction) => {
-    if (!__DEV__) {
+    if (!DEV) {
       response.locals.nonce = crypto.randomBytes(4).toString('hex');
     }
     response.locals.nestLogger = logger;
@@ -142,7 +143,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   });
   //#endregion
 
-  if (!__DEV__) {
+  if (!DEV) {
     scriptSrc.push((_request, response) => `'nonce-${response.locals.nonce}'`);
   }
 
@@ -150,8 +151,6 @@ async function bootstrap(config: ConfigService): Promise<void> {
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc,
-        // TODO: production != development, will consider this
-        // baseUri: ["'none'"],
         objectSrc: ["'none'"],
         imgSrc,
         fontSrc,
@@ -193,7 +192,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   const appNextjs = Next({
     dev: __DEV__,
     dir: __DEV__ ? 'apps/portal' : '',
-    quiet: !config.get<boolean>('DEVELOPMENT'),
+    quiet: !DEV,
   });
   await appNextjs.prepare();
   const renderer = app.get(RenderModule);
