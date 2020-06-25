@@ -44,15 +44,15 @@ class MainDocument extends Document<DocumentInitialPropsMy> {
         <Head>
           <meta charSet="utf-8" />
           <meta name="Description" content="Корпоративный портал" />
-          {/* TODO: временно запрещаем индексацию */}
+          {/* TODO: disable robots */}
           <meta name="robots" content="noindex" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
-          <meta property="csp-nonce" content={nonce} />
+          {nonce && <meta property="csp-nonce" content={nonce} />}
           <meta name="theme-color" content={MaterialUI_primary_main} />
         </Head>
         <body>
           <Main />
-          <NextScript nonce={nonce} />
+          {nonce ? <NextScript nonce={nonce} /> : <NextScript />}
         </body>
       </Html>
     );
@@ -70,7 +70,7 @@ class MainDocument extends Document<DocumentInitialPropsMy> {
     // Run the parent `getInitialProps` using `ctx` that now includes our custom `renderPage`
     const initialProps = await Document.getInitialProps(ctx);
 
-    const nonce = (res as Response)?.locals?.nonce;
+    const nonce = (res as Response)?.locals?.nonce || undefined;
 
     return {
       ...initialProps,

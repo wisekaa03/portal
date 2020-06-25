@@ -82,13 +82,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#region Improve security
   // app.use(helmet.ieNoOpen());
 
-  // TODO: Как сделать nonce ?
-  // const nonce = (req: Request, res: Response): string => `'nonce-${res.locals.nonce}'`;
-
-  const scriptSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = [
-    "'self'",
-    "'unsafe-inline'" /* , nonce */,
-  ];
+  const scriptSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = ["'self'", "'unsafe-inline'"];
   const styleSrc = ["'unsafe-inline'", "'self'"];
   const imgSrc = ["'self'", 'data:', 'blob:'];
   const fontSrc = ["'self'", 'data:'];
@@ -140,13 +134,17 @@ async function bootstrap(config: ConfigService): Promise<void> {
 
   //#region Next.JS locals
   app.use('*', (_request: express.Request, response: express.Response, next: express.NextFunction) => {
-    response.locals.nonce = crypto.randomBytes(4).toString('hex');
+    if (!__DEV__) {
+      response.locals.nonce = crypto.randomBytes(4).toString('hex');
+    }
     response.locals.nestLogger = logger;
     next();
   });
   //#endregion
 
-  scriptSrc.push((_request, response) => `'nonce-${response.locals.nonce}'`);
+  if (!__DEV__) {
+    scriptSrc.push((_request, response) => `'nonce-${response.locals.nonce}'`);
+  }
 
   app.use(
     helmet.contentSecurityPolicy({
