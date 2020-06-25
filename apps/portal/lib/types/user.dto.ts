@@ -10,6 +10,12 @@ import { Group } from './group.dto';
 import { TkService, TkRoute, TkWhere } from './tickets';
 //#endregion
 
+export interface LDAPUserProfile {
+  id?: string;
+  loginIdentificator?: string;
+  name?: string;
+}
+
 export interface BaseUser {
   id?: string;
 

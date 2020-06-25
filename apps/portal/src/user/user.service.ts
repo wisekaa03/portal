@@ -12,7 +12,7 @@ import bcrypt from 'bcrypt';
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
-import { LoginService, Profile, User, UserSettings } from '@lib/types';
+import { LoginService, Profile, User, UserSettings, LDAPUserProfile } from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
@@ -49,6 +49,28 @@ export class UserService {
     const user = await this.byUsername(username);
 
     return bcrypt.compare(password, user.password) ? user : undefined;
+  };
+
+  /**
+   * All users in LDAP Synchronization
+   */
+  allUsersLdap = async (): Promise<LDAPUserProfile[]> => {
+    return (
+      this.userRepository
+        // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
+        .find({
+          select: ['loginIdentificator', 'profile'],
+          relations: ['profile'],
+          loadEagerRelations: false,
+          cache: false,
+        })
+        .then((users) =>
+          users.map((user) => ({
+            loginIdentificator: user.loginIdentificator,
+            disabled: user.profile.disabled,
+          })),
+        )
+    );
   };
 
   /**

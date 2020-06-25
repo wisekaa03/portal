@@ -1,8 +1,23 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.server.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": [
+      "ES5",
+      "ES6",
+      "ES7",
+      "ES2015",
+      "ES2016",
+      "ES2017",
+      "ES2018",
+      "ES2019",
+      "ES2020",
+      "ESNext"
+    ],
     "declaration": false,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "outDir": "../../dist/apps/sync"
   },
   "include": ["src/**/*", "../../typings/global.d.ts"],

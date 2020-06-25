@@ -3,14 +3,15 @@
 //#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Brackets, SelectQueryBuilder, FindConditions } from 'typeorm';
+import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import Ldap from 'ldapjs';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { Profile, Gender, LoginService } from '@lib/types';
+import { Profile, Gender, LoginService, LDAPUserProfile } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
@@ -51,6 +52,29 @@ export class ProfileService {
   ) {
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
+
+  /**
+   * All profiles in LDAP Synchronization
+   */
+  allProfilesLdap = async (): Promise<LDAPUserProfile[]> => {
+    return (
+      this.profileRepository
+        // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
+        .find({
+          where: { loginService: LoginService.LDAP, disabled: false },
+          select: ['id', 'loginIdentificator', 'username'],
+          loadEagerRelations: false,
+          cache: false,
+        })
+        .then((profile) =>
+          profile.map((profile) => ({
+            id: profile.id,
+            loginIdentificator: profile.loginIdentificator,
+            name: profile.username,
+          })),
+        )
+    );
+  };
 
   /**
    * Get profiles
@@ -418,6 +442,14 @@ export class ProfileService {
 
       throw error;
     });
+
+  /**
+   * Update
+   */
+  update = async (
+    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<ProfileEntity>,
+    partialEntity: QueryDeepPartialEntity<ProfileEntity>,
+  ): Promise<UpdateResult> => this.profileRepository.update(criteria, partialEntity);
 
   /**
    * Profile field selection
