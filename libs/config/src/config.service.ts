@@ -79,10 +79,13 @@ export class ConfigService {
       LDAP_BIND_DN: Joi.string().required(),
       LDAP_BIND_PW: Joi.string().required(),
       LDAP_SEARCH_BASE: Joi.string().required(),
-      LDAP_SEARCH_FILTER: Joi.string().required(),
-      LDAP_SEARCH_GROUP: Joi.string().required(),
-      LDAP_SEARCH_BASE_ALL_USERS: Joi.string().required(),
-      LDAP_SEARCH_FILTER_ALL_USERS: Joi.string().required(),
+      LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
+        .empty('')
+        .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
+        .required(),
+      LDAP_SEARCH_FILTER_ALL_GROUPS: Joi.string().empty('').default('objectClass=group').required(),
+      LDAP_SEARCH_GROUP: Joi.string().empty('').default('(&(objectClass=group)(member={{dn}}))').required(),
+      LDAP_SEARCH_USER: Joi.string().empty('').default('(sAMAccountName={{username}})').required(),
 
       MICROSERVICE_URL: Joi.string().required(),
 

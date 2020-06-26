@@ -39,7 +39,7 @@ import { LocalStrategy } from './strategies/local.strategy';
           bindDN: configService.get<string>('LDAP_BIND_DN'),
           bindCredentials: configService.get<string>('LDAP_BIND_PW'),
           searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-          searchFilter: configService.get<string>('LDAP_SEARCH_FILTER'),
+          searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
           searchScope: 'sub' as Scope,
           groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
           groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
@@ -47,13 +47,14 @@ import { LocalStrategy } from './strategies/local.strategy';
           groupDnProperty: 'dn',
           groupSearchAttributes: ldapADattributes,
           searchAttributes: ldapADattributes,
-          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE_ALL_USERS'),
+          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
           searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
+          searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
           searchScopeAllUsers: 'sub' as Scope,
           searchAttributesAllUsers: ldapADattributes,
           reconnect: true,
           cache: true,
-        } as LdapModuleOptions;
+        };
       },
     }),
     //#endregion

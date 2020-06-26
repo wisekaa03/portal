@@ -55,10 +55,10 @@ LDAP_URL: "ldap://activedirectory:389"
 LDAP_BIND_DN: "CN=user,DC=example,DC=local"
 LDAP_BIND_PW: ""
 LDAP_SEARCH_BASE: "DC=example,DC=local"
-LDAP_SEARCH_FILTER: "(sAMAccountName={{username}})"
-LDAP_SEARCH_GROUP: "(&(objectClass=group)(member={{dn}}))"
-LDAP_SEARCH_BASE_ALL_USERS: "DC=example,DC=local"
 LDAP_SEARCH_FILTER_ALL_USERS: "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
+LDAP_SEARCH_FILTER_ALL_GROUPS: "objectClass=group"
+LDAP_SEARCH_GROUP: "(&(objectClass=group)(member={{dn}}))"
+LDAP_SEARCH_USER: "(sAMAccountName={{username}})"
 # LDAP Redis
 LDAP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 LDAP_REDIS_TTL: 300

@@ -32,6 +32,12 @@ export class GroupEntity {
 
   @Column({
     type: 'varchar',
+    nullable: true,
+  })
+  description: string;
+
+  @Column({
+    type: 'varchar',
     length: 10,
     nullable: false,
     default: LoginService.LOCAL,

@@ -12,7 +12,7 @@ import bcrypt from 'bcrypt';
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
-import { LoginService, Profile, User, UserSettings, LDAPUserProfile } from '@lib/types';
+import { LoginService, Profile, User, UserSettings, Contact, AllUsersInfo } from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
@@ -52,22 +52,25 @@ export class UserService {
   };
 
   /**
-   * All users in LDAP Synchronization
+   * All users in Synchronization
    */
-  allUsersLdap = async (): Promise<LDAPUserProfile[]> => {
+  allUsers = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> => {
     return (
       this.userRepository
         // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
         .find({
+          where: { loginService, disabled },
           select: ['loginIdentificator', 'profile'],
-          relations: ['profile'],
           loadEagerRelations: false,
           cache: false,
         })
         .then((users) =>
           users.map((user) => ({
+            contact: Contact.USER,
+            id: user.id,
             loginIdentificator: user.loginIdentificator,
-            disabled: user.profile.disabled,
+            name: user.username,
+            disabled: user.disabled,
           })),
         )
     );
@@ -179,7 +182,8 @@ export class UserService {
    */
   async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logger.error('Unable to save data in `profile`', error);
+      const message = error.toString();
+      this.logger.error(`Unable to save data in "profile": ${message}`, message);
 
       throw error;
     });
@@ -194,12 +198,15 @@ export class UserService {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups: GroupEntity[] | undefined = await this.groupService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logger.error('Unable to save data in `group`', error);
+    const groups: GroupEntity[] | undefined =
+      ldapUser.groups &&
+      (await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
+        const message = error.toString();
+        this.logger.error(`Unable to save data in "group": ${message}`, message);
 
-      // eslint-disable-next-line unicorn/no-useless-undefined
-      return undefined;
-    });
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        return undefined;
+      }));
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
@@ -255,7 +262,8 @@ export class UserService {
    */
   bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logger.error('Unable to save data(s) in `user`', error);
+      const message = error.toString();
+      this.logger.error(`Unable to save data(s) in "user": ${message}`, message);
 
       throw error;
     });
@@ -270,7 +278,8 @@ export class UserService {
    */
   save = async (user: UserEntity): Promise<UserEntity> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logger.error('Unable to save data in `user`', error);
+      const message = error.toString();
+      this.logger.error(`Unable to save data in "user": ${message}`, message);
 
       throw error;
     });

@@ -39,10 +39,10 @@ data:
     LDAP_BIND_DN={{ .Values.LDAP_BIND_DN | quote }}
     LDAP_BIND_PW={{ .Values.LDAP_BIND_PW | quote }}
     LDAP_SEARCH_BASE={{ .Values.LDAP_SEARCH_BASE | quote }}
-    LDAP_SEARCH_FILTER={{ .Values.LDAP_SEARCH_FILTER | quote }}
-    LDAP_SEARCH_GROUP={{ .Values.LDAP_SEARCH_GROUP | quote }}
-    LDAP_SEARCH_BASE_ALL_USERS={{ .Values.LDAP_SEARCH_BASE_ALL_USERS | quote }}
     LDAP_SEARCH_FILTER_ALL_USERS={{ .Values.LDAP_SEARCH_FILTER_ALL_USERS | quote }}
+    LDAP_SEARCH_FILTER_ALL_GROUPS={{ .Values.LDAP_SEARCH_FILTER_ALL_GROUPS | quote }}
+    LDAP_SEARCH_USER={{ .Values.LDAP_SEARCH_USER | quote }}
+    LDAP_SEARCH_GROUP={{ .Values.LDAP_SEARCH_GROUP | quote }}
     # LDAP Redis
     LDAP_REDIS_URI={{ .Values.LDAP_REDIS_URI | quote }}
     LDAP_REDIS_TTL={{ .Values.LDAP_REDIS_TTL }}

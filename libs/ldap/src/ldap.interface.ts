@@ -16,7 +16,7 @@ export interface LDAPCache {
   password: string;
 }
 
-export interface LdapResponseGroup extends SearchEntryObject {
+export interface LdapResponseGroup {
   /**
    * Common name
    */
@@ -58,11 +58,16 @@ export interface LdapResponseGroup extends SearchEntryObject {
   whenCreated: string;
 }
 
-export interface LdapResponseUser extends SearchEntryObject {
+export interface LdapResponseUser {
+  /**
+   * DN
+   */
+  'dn': string;
+
   /**
    * Ldap response groups
    */
-  'groups': any | LdapResponseGroup[];
+  'groups': LdapResponseGroup[];
 
   /**
    * Country
@@ -113,11 +118,6 @@ export interface LdapResponseUser extends SearchEntryObject {
    * Distinguished name
    */
   'distinguishedName': string;
-
-  /**
-   * DN
-   */
-  'dn': string;
 
   /**
    * Employee ID
@@ -277,7 +277,7 @@ interface GroupSearchFilterFunction {
    *
    * @param user The user retrieved and authenticated from LDAP
    */
-  (user: any): string;
+  (user: SearchEntryObject): string;
 }
 
 export interface LdapModuleOptions extends ClientOptions {
@@ -325,11 +325,6 @@ export interface LdapModuleOptions extends ClientOptions {
   searchAttributes?: string[];
 
   /**
-   * The base DN from which to search for synchronization.
-   * E.g. ou=users,dc=example,dc=org
-   */
-  searchBaseAllUsers: string;
-  /**
    * LDAP search filter with synchronization.
    */
   searchFilterAllUsers: string;
@@ -355,6 +350,7 @@ export interface LdapModuleOptions extends ClientOptions {
    * should return a valid search filter for the group search.
    */
   groupSearchFilter?: string | GroupSearchFilterFunction;
+  searchFilterAllGroups?: string;
   /**
    * Scope of the search. Default: sub
    */

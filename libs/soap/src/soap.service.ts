@@ -69,7 +69,8 @@ export class SoapService {
         return client as SoapClient;
       })
       .catch((error: ISoapFaultError | Error) => {
-        this.logger.error(`SOAP connect error: ${error.toString()}`, [{ error }]);
+        const message = error.toString();
+        this.logger.error(`SOAP connect error: ${message}`, [{ error }]);
 
         throw new SoapError(error);
       });

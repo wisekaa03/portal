@@ -10,7 +10,14 @@ import { Group } from './group.dto';
 import { TkService, TkRoute, TkWhere } from './tickets';
 //#endregion
 
-export interface LDAPUserProfile {
+export enum Contact {
+  PROFILE,
+  USER,
+  GROUP,
+}
+
+export interface AllUsersInfo {
+  contact?: Contact;
   id?: string;
   loginIdentificator?: string;
   name?: string;

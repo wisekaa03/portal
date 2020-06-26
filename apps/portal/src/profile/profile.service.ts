@@ -11,7 +11,7 @@ import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { Profile, Gender, LoginService, LDAPUserProfile } from '@lib/types';
+import { Profile, Gender, LoginService, Contact, AllUsersInfo } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
@@ -54,23 +54,25 @@ export class ProfileService {
   }
 
   /**
-   * All profiles in LDAP Synchronization
+   * All profiles in Synchronization
    */
-  allProfilesLdap = async (): Promise<LDAPUserProfile[]> => {
+  allProfiles = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> => {
     return (
       this.profileRepository
         // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
         .find({
-          where: { loginService: LoginService.LDAP, disabled: false },
+          where: { loginService, disabled },
           select: ['id', 'loginIdentificator', 'username'],
           loadEagerRelations: false,
           cache: false,
         })
         .then((profile) =>
           profile.map((profile) => ({
+            contact: Contact.PROFILE,
             id: profile.id,
             loginIdentificator: profile.loginIdentificator,
             name: profile.username,
+            disable: profile.disabled,
           })),
         )
     );
@@ -329,7 +331,7 @@ export class ProfileService {
     const manager =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
 
-    let comment: any;
+    let comment: Record<string, string>;
     try {
       comment = JSON.parse(ldapUser.comment);
     } catch {
@@ -337,8 +339,8 @@ export class ProfileService {
     }
     const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender } = comment;
 
-    let { birthday } = comment;
-    birthday = !birthday || birthday === '' ? undefined : new Date(Date.parse(birthday));
+    const { birthday } = comment;
+    const birthdayDate = !birthday || birthday === '' ? undefined : new Date(Date.parse(birthday));
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
@@ -368,7 +370,7 @@ export class ProfileService {
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName,
-      birthday,
+      birthday: birthdayDate,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,
       postalCode: ldapUser.postalCode,
@@ -424,7 +426,8 @@ export class ProfileService {
    */
   bulkSave = async (profiles: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
-      this.logger.error('Unable to save data(s) in `profile`', error);
+      const message = error.toString();
+      this.logger.error(`Unable to save data in "profile": ${message}`, message);
 
       throw error;
     });
@@ -438,7 +441,8 @@ export class ProfileService {
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
-      this.logger.error('Unable to save data in `profile`', error);
+      const message = error.toString();
+      this.logger.error(`Unable to save data in "profile": ${message}`, message);
 
       throw error;
     });

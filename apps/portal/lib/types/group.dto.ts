@@ -12,6 +12,8 @@ export interface Group {
 
   name: string;
 
+  description: string;
+
   dn: string;
 
   loginService: LoginService;

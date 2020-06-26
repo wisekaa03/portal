@@ -5,8 +5,9 @@ import { Injectable } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { LDAPUserProfile } from '@lib/types';
+import { Contact, AllUsersInfo } from '@lib/types';
 import { LdapService } from '@app/ldap';
+import { GroupService } from '@back/group/group.service';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
 //#endregion
@@ -16,13 +17,55 @@ export class SyncService {
   constructor(
     @InjectPinoLogger(SyncService.name) private readonly logger: PinoLogger,
     private readonly ldapService: LdapService,
+    private readonly groupService: GroupService,
     private readonly userService: UserService,
     private readonly profileService: ProfileService,
   ) {}
 
-  syncUser = async (): Promise<LDAPUserProfile[]> => {
-    let errorCatch;
+  syncGroup = async (): Promise<void> => {
+    try {
+      const ldapGroups = await this.ldapService.synchronizationGroups();
 
+      const ldapGroupsDB = await this.groupService.allGroups();
+      const groupPromises = ldapGroupsDB.map(async (element) => {
+        if (element.id && element.loginIdentificator) {
+          const ldapValue = ldapGroups.find((value) => value.objectGUID === element.loginIdentificator);
+
+          if (!ldapValue) {
+            const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
+            this.logger.info(`LDAP: Deleting group: [id=${element.id}] ${element.name}: ${affected}`);
+          }
+        }
+      });
+      await Promise.allSettled(groupPromises);
+
+      if (ldapGroups) {
+        const promises = ldapGroups.map(async (ldapGroup) => {
+          try {
+            const group = await this.groupService.fromLdap(ldapGroup);
+
+            return {
+              contact: Contact.GROUP,
+              id: group.id,
+              loginIdentificator: group.loginIdentificator,
+              name: group.name,
+            };
+          } catch (error) {
+            const message = error.toString();
+            this.logger.error(`LDAP: synchronization group "${ldapGroup.name}": ${message}`, message);
+
+            throw new Error(`LDAP: synchronization group "${ldapGroup.name}": ${message}`);
+          }
+        });
+
+        await Promise.allSettled(promises);
+      }
+    } catch (error) {
+      throw new Error(error.toString());
+    }
+  };
+
+  syncUser = async (): Promise<AllUsersInfo[]> => {
     try {
       const ldapUsers = await this.ldapService.synchronization();
 
@@ -33,28 +76,34 @@ export class SyncService {
               const user = await this.userService.fromLdap(ldapUser);
 
               return {
+                contact: Contact.USER,
                 id: user.id,
                 loginIdentificator: user.loginIdentificator,
                 name: user.username,
+                disabled: user.disabled,
               };
             } catch (error) {
-              this.logger.error(`LDAP: synchronization user="${ldapUser.sAMAccountName}"`, error.toString());
+              const message = error.toString();
+              this.logger.error(`LDAP: synchronization user "${ldapUser.sAMAccountName}": ${message}`, message);
 
-              throw new Error(`LDAP: synchronization user="${ldapUser.sAMAccountName}": ${error.toString()}`);
+              throw new Error(`LDAP: synchronization user "${ldapUser.sAMAccountName}": ${message}`);
             }
           } else {
             try {
               const profile = await this.profileService.fromLdap(ldapUser);
 
               return {
+                contact: Contact.PROFILE,
                 id: profile.id,
                 loginIdentificator: profile.loginIdentificator,
                 name: profile.username,
+                disabled: profile.disabled,
               };
             } catch (error) {
-              this.logger.error(`LDAP: synchronization contact="${ldapUser.name}"`, error.toString());
+              const message = error.toString();
+              this.logger.error(`LDAP: synchronization profile "${ldapUser.name}": ${message}`, message);
 
-              throw new Error(`LDAP: synchronization contact="${ldapUser.name}": ${error.toString()}`);
+              throw new Error(`LDAP: synchronization profile "${ldapUser.name}": ${message}`);
             }
           }
         });
@@ -63,33 +112,31 @@ export class SyncService {
           values.reduce(
             (accumulator, promise) =>
               promise.status === 'fulfilled' && promise.value ? [...accumulator, promise.value] : accumulator,
-            [] as LDAPUserProfile[],
+            [] as AllUsersInfo[],
           ),
         );
       }
-    } catch (error) {
-      errorCatch = error;
-    }
 
-    throw new Error(errorCatch);
+      throw new Error('No users found');
+    } catch (error) {
+      throw new Error(error.toString());
+    }
   };
 
   synchronization = async (): Promise<boolean> => {
-    this.logger.info('LDAP: Starting synchronization');
+    this.logger.info('LDAP: Synchronization groups');
+    await this.syncGroup();
 
+    this.logger.info('LDAP: Synchronization profiles');
     const profilesLdap = await this.syncUser();
 
-    const profilesDB = await this.profileService.allProfilesLdap();
-
-    // const usersDB = await this.userService.allUsersLdap();
-    // const intersectDB = profilesDB.reduce((accumulator, value) => {
-    //   const element = usersDB.find((element) => element.loginIdentificator === value.loginIdentificator);
-    //   return element ? [...accumulator, element] : [...accumulator, value];
-    // }, [] as LDAPUserProfile[]);
-
-    const promises = profilesDB.map(async (element) => {
+    this.logger.info('LDAP: Blocking profiles');
+    const fromDB = [...(await this.userService.allUsers()), ...(await this.profileService.allProfiles())];
+    const profilesPromises = fromDB.map(async (element) => {
       if (element.id && element.loginIdentificator) {
-        const value = profilesLdap.find((value) => value.loginIdentificator === element.loginIdentificator);
+        const value = profilesLdap.find(
+          (value) => value.contact === element.contact && value.loginIdentificator === element.loginIdentificator,
+        );
 
         if (!value) {
           this.logger.info(`LDAP: Blocking profile: [id=${element.id}] ${element.name}`);
@@ -97,8 +144,7 @@ export class SyncService {
         }
       }
     });
-
-    await Promise.allSettled(promises);
+    await Promise.allSettled(profilesPromises);
 
     this.logger.info('LDAP: success end of synchronization');
     return true;

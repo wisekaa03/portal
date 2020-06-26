@@ -37,8 +37,8 @@ export class AuthService {
    * @returns {Promise<User>} Validated user
    * @throws {UnauthorizedException}
    */
-  public validate = async (req: Request): Promise<User> =>
-    req?.session?.passport?.user || GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, i18n: this.i18n });
+  public validate = async (request: Request): Promise<User> =>
+    request?.session?.passport?.user || GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, i18n: this.i18n });
 
   /**
    * Login a user
@@ -57,7 +57,8 @@ export class AuthService {
     const ldapUser = await this.ldapService.authenticate(username, password);
 
     return this.userService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logger.error('Error: not found user', error);
+      const message = error.toString();
+      this.logger.error(`Error: not found user: ${message}`, message);
 
       throw error;
     });
@@ -88,7 +89,8 @@ export class AuthService {
 
         databaseStoreReset = true;
       } catch (error) {
-        this.logger.error('Unable to reset database cache:', error);
+        const message = error.toString();
+        this.logger.error(`Unable to reset database cache: ${message}`, message);
       }
 
       redisDatabase.quit();
@@ -106,7 +108,8 @@ export class AuthService {
 
         ldapCacheReset = true;
       } catch (error) {
-        this.logger.error('Unable to reset LDAP cache:', error);
+        const message = error.toString();
+        this.logger.error(`Unable to reset LDAP cache: ${message}`, message);
       }
 
       redisLdap.quit();
@@ -124,7 +127,8 @@ export class AuthService {
 
         httpStoreReset = true;
       } catch (error) {
-        this.logger.error('Unable to reset LDAP cache:', error);
+        const message = error.toString();
+        this.logger.error(`Unable to reset LDAP cache: ${message}`, message);
       }
 
       redisHttp.quit();
@@ -140,14 +144,16 @@ export class AuthService {
 
         this.logger.info('Reset session cache');
       } catch (error) {
-        this.logger.error('Unable to reset session cache:', error);
+        const message = error.toString();
+        this.logger.error(`Unable to reset session cache: ${message}`, message);
       }
 
       redisSession.quit();
 
       sessionStoreReset = true;
     } catch (error) {
-      this.logger.error('Error in cache reset, session store', error);
+      const message = error.toString();
+      this.logger.error(`Error in cache reset, session store: ${message}`, message);
     }
 
     if (databaseStoreReset && sessionStoreReset && ldapCacheReset && httpStoreReset) {
@@ -166,7 +172,7 @@ export class AuthService {
    * @param {string} password User Password
    * @returns {AxiosResponse<MainSession>}
    */
-  loginEmail = async (email: string, password: string, req: Request, res: Response): Promise<LoginEmail> =>
+  loginEmail = async (email: string, password: string, request: Request, response: Response): Promise<LoginEmail> =>
     this.httpService
       .post<EmailSession>(this.configService.get<string>('MAIL_LOGIN_URL'), {
         email,
@@ -174,18 +180,18 @@ export class AuthService {
       })
       .toPromise()
       .then(
-        (response) => {
-          const { sessid, sessauth } = response.data;
+        (axiosResponse) => {
+          const { sessid, sessauth } = axiosResponse.data;
           if (sessid && sessauth && sessauth !== '-del-') {
             const options = {
               domain: `.${this.configService.get<string>('DOMAIN')}`,
               maxAge: this.configService.get<number>('SESSION_COOKIE_TTL'),
             };
 
-            res.cookie('roundcube_sessid', sessid, options);
-            res.cookie('roundcube_sessauth', sessauth, options);
+            response.cookie('roundcube_sessid', sessid, options);
+            response.cookie('roundcube_sessauth', sessauth, options);
 
-            req!.session!.mailSession = {
+            request!.session!.mailSession = {
               sessid,
               sessauth,
             };
@@ -195,8 +201,8 @@ export class AuthService {
 
           throw new Error('Mail login and password did not match');
         },
-        (reason: Error) => {
-          throw reason;
+        (error: Error) => {
+          throw error;
         },
       );
 }

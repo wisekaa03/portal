@@ -12,7 +12,14 @@ import bcrypt from 'bcrypt';
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import dayjs from 'dayjs';
-import { LDAP_OPTIONS, LdapModuleOptions, LDAPCache, LdapResponseUser, ldapADattributes } from './ldap.interface';
+import {
+  LDAP_OPTIONS,
+  LdapModuleOptions,
+  LDAPCache,
+  LdapResponseUser,
+  ldapADattributes,
+  LdapResponseGroup,
+} from './ldap.interface';
 import { Change } from './ldap/change';
 //#endregion
 
@@ -137,10 +144,15 @@ export class LdapService extends EventEmitter {
       if (typeof options.groupSearchFilter === 'string') {
         const { groupSearchFilter } = options;
         // eslint-disable-next-line no-param-reassign
-        options.groupSearchFilter = (user: any): string => {
+        options.groupSearchFilter = (user: Ldap.SearchEntryObject): string => {
           return groupSearchFilter
-            .replace(/{{dn}}/g, options.groupDnProperty && user[options.groupDnProperty])
-            .replace(/{{username}}/g, user.uid);
+            .replace(
+              /{{dn}}/g,
+              (options.groupDnProperty && (user[options.groupDnProperty] as string))
+                ?.replace(/\(/, '\\(')
+                ?.replace(/\)/, '\\)') || 'undefined',
+            )
+            .replace(/{{username}}/g, user.sAMAccountName as string);
         };
       }
 
@@ -228,10 +240,11 @@ export class LdapService extends EventEmitter {
     return new Promise<boolean>((resolve, reject) =>
       this.adminClient.bind(this.bindDN, this.bindCredentials, (error) => {
         if (error) {
-          this.logger.error('bind error:', error);
+          const message = error.toString();
+          this.logger.error(`bind error: ${message}`, message);
           this.adminBound = false;
 
-          return reject(new Error(error.message));
+          return reject(message);
         }
 
         this.logger.info('bind ok');
@@ -269,22 +282,16 @@ export class LdapService extends EventEmitter {
   private async search(searchBase: string, options: Ldap.SearchOptions): Promise<undefined | Ldap.SearchEntryObject[]> {
     return this.adminBind().then(
       () =>
-        new Promise<undefined | Ldap.SearchEntryObject[]>((resolve, reject) =>
-          this.adminClient.search(
+        new Promise<undefined | Ldap.SearchEntryObject[]>((resolve, reject) => {
+          return this.adminClient.search(
             searchBase,
             options,
             (searchError: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
-              if (searchError) {
-                this.logger.error('LDAP Error:', searchError);
-
-                return reject(new Error(searchError.message));
+              if (searchError !== null) {
+                return reject(searchError.message);
               }
               if (typeof searchResult !== 'object') {
-                this.logger.error('The search returns null results:', searchResult);
-
-                return reject(
-                  new Error(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`),
-                );
+                return reject(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`);
               }
 
               const items: Ldap.SearchEntryObject[] = [];
@@ -322,11 +329,13 @@ export class LdapService extends EventEmitter {
                 }
               });
 
-              searchResult.on('error', (error: Ldap.Error) => reject(new Error(error.message)));
+              searchResult.on('error', (error: Ldap.Error) => {
+                reject(error.message);
+              });
 
               searchResult.on('end', (result: Ldap.LDAPResult) => {
                 if (result.status !== 0) {
-                  return reject(new Error(`non-zero status from LDAP search: ${result.status}`));
+                  return reject(`non-zero status from LDAP search: ${result.status}`);
                 }
 
                 return resolve(items);
@@ -335,8 +344,8 @@ export class LdapService extends EventEmitter {
               // eslint-disable-next-line unicorn/no-useless-undefined
               return undefined;
             },
-          ),
-        ),
+          );
+        }),
     );
   }
 
@@ -378,7 +387,7 @@ export class LdapService extends EventEmitter {
       if (cached && cached.user && cached.user.sAMAccountName) {
         this.logger.debug(`From cache: ${cached.user.sAMAccountName}`);
 
-        return cached.user as Ldap.SearchEntryObject;
+        return (cached.user as unknown) as Ldap.SearchEntryObject;
       }
     }
 
@@ -414,7 +423,8 @@ export class LdapService extends EventEmitter {
           }),
       )
       .catch((error: Error) => {
-        this.logger.error(`user search error: ${error.name}`, error);
+        const message = error.toString();
+        this.logger.error(`user search error: ${message}`, message);
 
         throw error;
       });
@@ -451,10 +461,13 @@ export class LdapService extends EventEmitter {
       .then((result) => {
         // eslint-disable-next-line no-param-reassign
         (user.groups as unknown) = result;
+
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error(`group search error: ${error.name}`, error);
+        const message = error.toString();
+        this.logger.error(`group search error: ${message}`, message);
+
         throw error;
       });
   }
@@ -478,7 +491,7 @@ export class LdapService extends EventEmitter {
 
     return this.findUser(userByUsername)
       .then((search) => {
-        const user = search as LdapResponseUser;
+        const user = (search as unknown) as LdapResponseUser;
 
         if (user && this.userCache) {
           this.logger.debug(`To cache: ${user.dn}`);
@@ -491,7 +504,8 @@ export class LdapService extends EventEmitter {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error('Search by Username error:', error);
+        const message = error.toString();
+        this.logger.error(`Search by Username error: ${message}`, message);
 
         // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined;
@@ -538,7 +552,7 @@ export class LdapService extends EventEmitter {
                 // eslint-disable-next-line unicorn/no-useless-undefined
                 return resolve(undefined);
               case 1:
-                return resolve(result[0] as LdapResponseUser);
+                return resolve((result[0] as unknown) as LdapResponseUser);
               default:
                 return reject(new Error(`unexpected number of matches (${result.length}) for "${userByDN}" user DN`));
             }
@@ -581,22 +595,61 @@ export class LdapService extends EventEmitter {
       options.attributes = this.options.searchAttributesAllUsers;
     }
 
-    return this.search(this.options.searchBaseAllUsers, options)
-      .then((sync) => {
+    return this.search(this.options.searchBase, options)
+      .then(async (sync) => {
         if (sync) {
-          sync.forEach((u) => {
-            this.getGroups(u);
+          const groupsPromises = sync.map(async (u) => {
+            await this.getGroups(u);
           });
 
-          return sync as LdapResponseUser[];
+          await Promise.allSettled(groupsPromises);
+
+          return (sync as unknown) as LdapResponseUser[];
         }
 
         this.logger.error('Synchronize unknown error.');
         throw new Error('Synchronize unknown error.');
       })
       .catch((error: Error) => {
-        this.logger.error('Synchronize error:', error);
-        throw new Error(`Synchronize error: ${JSON.stringify(error)}`);
+        const message = error.toString();
+        this.logger.error(`Synchronize error: ${message}`, message);
+
+        throw error;
+      });
+  }
+
+  /**
+   * Synchronize users
+   *
+   * @returns {undefined | LdapResponseGroup[]} Group in LDAP
+   * @throws {Error}
+   */
+  public async synchronizationGroups(): Promise<LdapResponseGroup[]> {
+    const options = {
+      filter: this.options.searchFilterAllGroups,
+      scope: this.options.groupSearchScope,
+      attributes: ldapADattributes,
+      timeLimit: this.options.timeLimit,
+      sizeLimit: this.options.sizeLimit,
+    };
+    if (this.options.groupSearchAttributes) {
+      options.attributes = this.options.groupSearchAttributes;
+    }
+
+    return this.search(this.options.searchBase, options)
+      .then((sync) => {
+        if (sync) {
+          return (sync as unknown) as LdapResponseGroup[];
+        }
+
+        this.logger.error('synchronizationGroups: unknown error.');
+        throw new Error('synchronizationGroups: unknown error.');
+      })
+      .catch((error: Error) => {
+        const message = error.toString();
+        this.logger.error(`synchronizationGroups error: ${message}`, message);
+
+        throw new Error(`synchronizationGroups error: ${message}`);
       });
   }
 
@@ -626,7 +679,8 @@ export class LdapService extends EventEmitter {
               });
 
               if (error) {
-                this.logger.error('bind error:', error);
+                const message = error.toString();
+                this.logger.error(`bind error: ${message}`, message);
 
                 return reject(error);
               }
@@ -636,7 +690,7 @@ export class LdapService extends EventEmitter {
                 data,
                 async (searchError: Ldap.Error | null): Promise<void> => {
                   if (searchError) {
-                    this.logger.error(`Modify error "${dn}"`, searchError);
+                    this.logger.error(`Modify error "${dn}": ${searchError}`, searchError);
 
                     reject(searchError);
                   }
@@ -670,10 +724,10 @@ export class LdapService extends EventEmitter {
                 });
 
                 if (searchError) {
-                  this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`, searchError);
+                  this.logger.error(`Modify error "${dn}": ${JSON.stringify(data)}`);
+                  this.logger.error(`Modify error "${dn}": ${searchError}`);
 
                   reject(searchError);
-
                   return;
                 }
 
@@ -753,7 +807,7 @@ export class LdapService extends EventEmitter {
 
           // 3. If requested, fetch user groups
           try {
-            const userWithGroups = (await this.getGroups(foundUser)) as LdapResponseUser;
+            const userWithGroups = ((await this.getGroups(foundUser)) as unknown) as LdapResponseUser;
 
             if (this.userCache) {
               this.logger.debug(`To cache: ${userWithGroups.sAMAccountName}`);
@@ -770,9 +824,10 @@ export class LdapService extends EventEmitter {
 
             return resolve(userWithGroups as LdapResponseUser);
           } catch (error) {
-            this.logger.error('Authenticate:', error);
+            const message = error.toString();
+            this.logger.error(`Authenticate error: ${message}`, message);
 
-            return reject(new Error(`Authenticate: ${JSON.stringify(error)}`));
+            return reject(`Authenticate error: ${JSON.stringify(error)}`);
           }
         },
       );

@@ -60,21 +60,22 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
           bindDN: configService.get<string>('LDAP_BIND_DN'),
           bindCredentials: configService.get<string>('LDAP_BIND_PW'),
           searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-          searchFilter: configService.get<string>('LDAP_SEARCH_FILTER'),
+          searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
           searchScope: 'sub' as Scope,
           groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-          groupSearchScope: 'sub' as Scope,
           groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
+          groupSearchScope: 'sub' as Scope,
           groupDnProperty: 'dn',
           groupSearchAttributes: ldapADattributes,
           searchAttributes: ldapADattributes,
-          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE_ALL_USERS'),
+          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
           searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
+          searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
           searchScopeAllUsers: 'sub' as Scope,
           searchAttributesAllUsers: ldapADattributes,
           reconnect: true,
           cache: true,
-        } as LdapModuleOptions;
+        };
       },
     }),
     //#endregion
@@ -122,11 +123,9 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     TypeOrmModule.forFeature([ProfileEntity, GroupEntity, UserEntity]),
     //#endregion
 
-    UserModule,
-
-    ProfileModule,
-
     GroupModule,
+    UserModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [SyncService, LoggingInterceptorProvider],

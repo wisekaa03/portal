@@ -25,10 +25,10 @@ export class HttpErrorFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let status: number;
-    let message: string | object;
+    let message: string | Record<string, string>;
     if (exception instanceof HttpException) {
       status = exception.getStatus();
-      message = exception.getResponse();
+      message = exception.getResponse() as Record<string, string>;
       if (typeof message === 'object') {
         message = (message as any).error;
       }

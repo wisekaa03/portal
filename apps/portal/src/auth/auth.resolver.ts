@@ -53,8 +53,8 @@ export class AuthResolver {
   async login(
     @Args('username') username: string,
     @Args('password') password: string,
-    @Context('req') req: Request,
-    @Context('res') res: Response,
+    @Context('req') request: Request,
+    @Context('res') response: Response,
   ): Promise<Login> {
     const email: LoginEmail = { login: false };
 
@@ -64,15 +64,16 @@ export class AuthResolver {
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       });
 
-    req.logIn(user, async (error: Error) => {
+    request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error('Error when logging in:', error);
+        const message = error.toString();
+        this.logger.error(`Error when logging in: ${message}`, message);
 
         throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
       }
     });
 
-    req!.session!.password = password;
+    request!.session!.password = password;
 
     return { user, email };
   }
@@ -87,19 +88,21 @@ export class AuthResolver {
    */
   @Query()
   async loginEmail(
-    @Context('req') req: Request,
-    @Context('res') res: Response,
+    @Context('req') request: Request,
+    @Context('res') response: Response,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
-    return this.authService.loginEmail(user?.profile.email || '', password || '', req, res).catch((error: Error) => {
-      this.logger.error('Unable to login in mail', error);
+    return this.authService
+      .loginEmail(user?.profile.email || '', password || '', request, response)
+      .catch((error: Error) => {
+        this.logger.error('Unable to login in mail', error);
 
-      return {
-        login: false,
-        error: error.toString(),
-      };
-    });
+        return {
+          login: false,
+          error: error.toString(),
+        };
+      });
   }
 
   /**
@@ -111,11 +114,11 @@ export class AuthResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async logout(@Context('req') req: Request): Promise<boolean> {
+  async logout(@Context('req') request: Request): Promise<boolean> {
     this.logger.debug('User logout');
 
-    if (req.session) {
-      req.logOut();
+    if (request.session) {
+      request.logOut();
 
       return true;
     }

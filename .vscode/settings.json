@@ -39,6 +39,7 @@
         "gqlerror",
         "greekext",
         "helvetica",
+        "hmmss",
         "initialdelay",
         "inlines",
         "instorage",
@@ -119,6 +120,8 @@
         "with",
         "woff",
         "yyyy",
+        "yyyymmddh",
+        "yyyymmddh hmmss",
         "дефолтных",
         "ощепков",
         "юзера"

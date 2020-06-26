@@ -52,16 +52,19 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     if (__SERVER__) {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message /* , path, locations, extensions */ }): void => {
-          logger.error(message, message.toString(), 'GraphQL error');
+          const m = message.toString();
+          logger.error(m, m);
         });
       }
       if (networkError) {
-        logger.error(networkError, networkError.toString(), 'Network error');
+        const m = networkError.toString();
+        logger.error(m, m);
       }
     } else {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
-          logger.error(message, message.toString(), 'GraphQL error');
+          const m = message.toString();
+          logger.error(m, m);
 
           if (extensions?.code === GQLErrorCode.UNAUTHENTICATED) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
@@ -69,7 +72,8 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         });
       }
       if (networkError) {
-        logger.error(networkError, networkError.toString(), 'Network error');
+        const m = networkError.toString();
+        logger.error(m, m);
       }
     }
   });

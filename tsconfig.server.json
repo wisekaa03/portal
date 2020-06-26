@@ -15,6 +15,8 @@
       "ES2020",
       "ESNext"
     ],
+    "esModuleInterop": true,
+    "noImplicitAny": false,
     "removeComments": true,
     "sourceMap": true,
     "noEmit": false,

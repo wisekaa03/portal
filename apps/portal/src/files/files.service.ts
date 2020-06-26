@@ -147,7 +147,8 @@ export class FilesService {
           fs.accessSync(cached.temporaryFile, fs.constants.R_OK);
           return { path: cached.path };
         } catch (error) {
-          this.logger.error(`Files: no read access: ${path}`, error);
+          const message = error.toString();
+          this.logger.error(`Files: no read access at "${path}": ${message}`, message);
         }
       }
     }

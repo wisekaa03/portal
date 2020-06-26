@@ -8,11 +8,13 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { LoggerModule } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
+import { LdapService } from '@app/ldap/ldap.service';
 import { ConfigService } from '@app/config/config.service';
 import { GroupService } from './group.service';
 //#endregion
 
 jest.mock('@app/config/config.service');
+jest.mock('@app/ldap/ldap.service');
 
 // const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -51,7 +53,7 @@ describe(GroupService.name, () => {
         }),
         TypeOrmModule.forFeature([GroupEntity]),
       ],
-      providers: [GroupService, ConfigService],
+      providers: [GroupService, LdapService, ConfigService],
     }).compile();
 
     service = module.get<GroupService>(GroupService);
