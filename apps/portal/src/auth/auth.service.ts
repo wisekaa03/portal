@@ -35,7 +35,7 @@ export class AuthService {
    * @throws {UnauthorizedException}
    */
   public validate = async (request: Request): Promise<User> => {
-    if (request?.session?.passport?.user) {
+    if (request.session?.passport?.user) {
       return request.session.passport.user;
     }
 

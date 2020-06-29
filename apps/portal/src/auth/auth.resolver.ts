@@ -70,7 +70,7 @@ export class AuthResolver {
       }
     });
 
-    if (request?.session?.password) {
+    if (typeof request.session !== 'undefined') {
       request.session.password = password;
     }
 
