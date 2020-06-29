@@ -1,14 +1,25 @@
 enum Folder {
-  DIRECTORY
+  FOLDER
   FILE
 }
 
-type FileDetails {
+type FilesFolder {
+  id: String
+  fileId: String
   creationDate: Date
   lastModified: Date
   type: Folder
   size: Int
   name: String
+  mime: String
+  permissions: String
+  etag: String
+  favorite: Int
+  hasPreview: Boolean
+  commentsUnread: Int
+  commentsCount: Int
+  ownerId: String
+  ownerDisplayName: String
 }
 
 type FilesFile {
@@ -20,7 +31,7 @@ input FilesOptions {
 }
 
 type Query {
-  folderFiles(path: String!): [FileDetails]
+  folderFiles(path: String!): [FilesFolder]
 }
 
 type Mutation {

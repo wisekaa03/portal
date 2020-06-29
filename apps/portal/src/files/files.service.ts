@@ -56,6 +56,7 @@ export class FilesService {
 
   /**
    * Returns nextCloud instance
+   *
    * @param {User} user
    * @param {string} password
    */
@@ -75,19 +76,105 @@ export class FilesService {
     return nextCloud;
   };
 
-  /**
-   * This is for a cache to slow NextCloud instance
-   *
-   * @async
-   * @param {User} user
-   * @param {string} password
-   * @param {string} cachedID user.username + <name of function>
-   * @param {string} path
-   * @return {void}
-   */
-  folderFilesCache = async (user: User, password: string, cachedID: string, path: string): Promise<void> => {
-    this.cache.set(cachedID, await this.nextCloudAs(user, password).getFolderFileDetails(path), this.ttl);
-  };
+  getFolderFile = async (path: string, user: User, password: string): Promise<FilesFolder[]> =>
+    this.nextCloudAs(user, password)
+      .getFolderFileDetails(path, [
+        {
+          namespace: 'DAV:',
+          namespaceShort: 'd',
+          element: 'getetag',
+        },
+        {
+          namespace: 'DAV:',
+          namespaceShort: 'd',
+          element: 'getcontenttype',
+        },
+        // {
+        //   namespace: 'DAV:',
+        //   namespaceShort: 'd',
+        //   element: 'resourcetype',
+        // },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'id',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'fileid',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'permissions',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'favorite',
+        },
+        {
+          namespace: 'http://nextcloud.org/ns',
+          namespaceShort: 'nc',
+          element: 'has-preview',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'comments-unread',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'comments-count',
+        },
+        // {
+        //   namespace: 'http://owncloud.org/ns',
+        //   namespaceShort: 'oc',
+        //   element: 'comments-href',
+        // },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'owner-id',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'owner-display-name',
+        },
+        // {
+        //   namespace: 'http://owncloud.org/ns',
+        //   namespaceShort: 'oc',
+        //   element: 'share-types',
+        // },
+      ])
+      .then((folders) =>
+        folders.map(
+          (f) =>
+            ({
+              id: f.extraProperties?.id,
+              fileId: f.extraProperties?.fileid,
+              creationDate: f.creationDate,
+              lastModified: f.lastModified,
+              size: f.size,
+              name: f.name,
+              type: f.type === 'directory' ? Folder.FOLDER : Folder.FILE,
+              mime: f.extraProperties?.getcontenttype,
+              etag: (f.extraProperties?.getetag as string).replace(/"/g, ''),
+              permissions: f.extraProperties?.permissions,
+              favorite: f.extraProperties?.favorite as number,
+              hasPreview: f.extraProperties?.['has-preview'] === 'true',
+              commentsUnread: f.extraProperties?.['comments-unread'] as number,
+              commentsCount: f.extraProperties?.['comments-count'] as number,
+              ownerId: f.extraProperties?.['owner-id'],
+              ownerDisplayName: f.extraProperties?.['owner-display-name'],
+              // resourceType: f.extraProperties?.resourcetype,
+              // shareTypes: f.extraProperties?.['share-types'],
+            } as FilesFolder),
+        ),
+      );
 
   /**
    * Get files in a folder
@@ -99,27 +186,19 @@ export class FilesService {
   folderFiles = async (path: string, user: User, password: string, cache = true): Promise<FilesFolder[]> => {
     this.logger.info(`Files entity: path={${path}}`);
 
-    const cachedID = `${user.loginIdentificator}-${path}-ff`;
+    const cachedID = `${user.loginIdentificator}-f-${path}`;
     if (this.cache && cache) {
       const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
-        this.folderFilesCache(user, password, cachedID, path);
+        (async (): Promise<void> => {
+          this.cache.set(cachedID, await this.getFolderFile(path, user, password), this.ttl);
+        })();
 
         return cached;
       }
     }
 
-    const folder = await this.nextCloudAs(user, password)
-      .getFolderFileDetails(path, {})
-      .then((folders) =>
-        folders.map(
-          (folder) =>
-            ({
-              ...folder,
-              type: folder.type === 'directory' ? Folder.DIRECTORY : Folder.FILES,
-            } as FilesFolder),
-        ),
-      );
+    const folder = await this.getFolderFile(path, user, password);
     if (this.cache) {
       this.cache.set<FilesFolder[]>(cachedID, folder, this.ttl);
     }
@@ -140,11 +219,10 @@ export class FilesService {
     this.logger.info(`Put files: path={${path}}`);
 
     const { createReadStream } = await promiseFile;
-
-    await this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
+    this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
 
     const folder = path.slice(0, path.lastIndexOf('/'));
-    await this.folderFiles(folder, user, password, false);
+    this.folderFiles(folder, user, password, false);
   };
 
   /**
@@ -165,7 +243,7 @@ export class FilesService {
   ): Promise<FilesFile> => {
     this.logger.info(`Get files: path={${path}}`);
 
-    const cachedID = `${user.loginIdentificator}-${path}-gf`;
+    const cachedID = `${user.loginIdentificator}-g-${path}`;
     if (cache && this.cache) {
       const cached: FilesFile = await this.cache.get<FilesFile>(cachedID);
       if (cached && cached !== null && cached.temporaryFile) {

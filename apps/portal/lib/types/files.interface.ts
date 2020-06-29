@@ -12,10 +12,23 @@ export interface FilesOptions {
 }
 
 export enum Folder {
-  FILES,
-  DIRECTORY,
+  FOLDER = 'FOLDER',
+  FILE = 'FILE',
 }
 
 export interface FilesFolder extends Omit<FileDetails, 'isDirectory' | 'isFile' | 'href' | 'type'> {
+  id: string;
+  fileId: string;
   type: Folder;
+  mime: string;
+  etag: string;
+  permissions: string;
+  favorite: number;
+  hasPreview: boolean;
+  commentsUnread: number;
+  commentsCount: number;
+  ownerId: string;
+  ownerDisplayName: string;
+  // resourceType?: string;
+  // shareTypes?: string;
 }
