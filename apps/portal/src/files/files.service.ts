@@ -77,6 +77,20 @@ export class FilesService {
   };
 
   /**
+   * This is for a cache to slow NextCloud instance
+   *
+   * @async
+   * @param {User} user
+   * @param {string} password
+   * @param {string} cachedID user.username + <name of function>
+   * @param {string} path
+   * @return {void}
+   */
+  folderFilesCache = async (user: User, password: string, cachedID: string, path: string): Promise<void> => {
+    this.cache.set(cachedID, await this.nextCloudAs(user, password).getFolderFileDetails(path), this.ttl);
+  };
+
+  /**
    * Get files in a folder
    *
    * @param {string} path of files
@@ -89,7 +103,7 @@ export class FilesService {
     if (this.cache && cache) {
       const cached: FileDetails[] = await this.cache.get<FileDetails[]>(cachedID);
       if (cached && cached !== null) {
-        this.cache.set(cachedID, await this.nextCloudAs(user, password).getFolderFileDetails(path), this.ttl);
+        this.folderFilesCache(user, password, cachedID, path);
 
         return cached;
       }
