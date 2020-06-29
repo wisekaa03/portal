@@ -2,17 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2018",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES5",
-      "ES6",
-      "ES7",
-      "ES2015",
-      "ES2016",
-      "ES2017",
-      "ES2018",
-    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
