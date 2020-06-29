@@ -8,13 +8,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
-import { FileDetails } from 'nextcloud-link/compiled/source/types';
 import { FileUpload } from 'graphql-upload';
 import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import { User, FilesFile, FilesOptions } from '@lib/types';
+import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
 import { ConfigService } from '@app/config';
 //#endregion
 
@@ -93,15 +92,16 @@ export class FilesService {
   /**
    * Get files in a folder
    *
+   * @async
    * @param {string} path of files
-   * @return {FileDetails[]}
+   * @return {FilesFolder[]}
    */
-  folderFiles = async (path: string, user: User, password: string, cache = true): Promise<FileDetails[]> => {
+  folderFiles = async (path: string, user: User, password: string, cache = true): Promise<FilesFolder[]> => {
     this.logger.info(`Files entity: path={${path}}`);
 
     const cachedID = `${user.loginIdentificator}-${path}-ff`;
     if (this.cache && cache) {
-      const cached: FileDetails[] = await this.cache.get<FileDetails[]>(cachedID);
+      const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
         this.folderFilesCache(user, password, cachedID, path);
 
@@ -109,9 +109,19 @@ export class FilesService {
       }
     }
 
-    const folder = await this.nextCloudAs(user, password).getFolderFileDetails(path);
+    const folder = await this.nextCloudAs(user, password)
+      .getFolderFileDetails(path, {})
+      .then((folders) =>
+        folders.map(
+          (folder) =>
+            ({
+              ...folder,
+              type: folder.type === 'directory' ? Folder.DIRECTORY : Folder.FILES,
+            } as FilesFolder),
+        ),
+      );
     if (this.cache) {
-      this.cache.set<FileDetails[]>(cachedID, folder, this.ttl);
+      this.cache.set<FilesFolder[]>(cachedID, folder, this.ttl);
     }
 
     return folder;
@@ -120,6 +130,7 @@ export class FilesService {
   /**
    * Put file
    *
+   * @async
    * @param {string} targetPath Target path of file
    * @param {Promise<FileUpload>} file File object
    * @return {void}
@@ -139,6 +150,7 @@ export class FilesService {
   /**
    * Get file
    *
+   * @async
    * @param {string} path Path of file
    * @param {FileOptions} options.sync
    * @return {FilesFile}

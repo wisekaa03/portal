@@ -9,7 +9,7 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { FileDetails } from 'nextcloud-link/compiled/source/types';
 //#endregion
 //#region Imports Local
-import { User, FilesFile, FilesOptions } from '@lib/types';
+import { User, FilesFile, FilesOptions, FilesFolder } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser } from '@back/user/user.decorator';
@@ -29,7 +29,7 @@ export class FilesResolver {
    * GraphQL query: list files in a folder
    *
    * @param {string} path
-   * @returns {FileDetails[]}
+   * @returns {FilesFolder[]}
    */
   @Query('folderFiles')
   @UseGuards(GqlAuthGuard)
@@ -37,7 +37,7 @@ export class FilesResolver {
     @Args('path') path: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<FileDetails[]> {
+  ): Promise<FilesFolder[]> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

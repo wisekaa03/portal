@@ -1,11 +1,13 @@
+enum Folder {
+  DIRECTORY
+  FILE
+}
+
 type FileDetails {
   creationDate: Date
   lastModified: Date
-  isDirectory: Boolean
-  isFile: Boolean
-  type: String
+  type: Folder
   size: Int
-  href: String
   name: String
 }
 
