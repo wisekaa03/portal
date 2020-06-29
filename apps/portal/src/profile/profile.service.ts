@@ -1,7 +1,14 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  PayloadTooLargeException,
+  BadRequestException,
+  ForbiddenException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -16,7 +23,6 @@ import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
 import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
-import { GQLErrorCode } from '@back/shared/gqlerror';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
 //#endregion
@@ -517,7 +523,8 @@ export class ProfileService {
    * @param {Profile} profile Profile params
    * @param {Promise<FileUpload>} thumbnailPhoto Avatar
    * @returns {Promise<ProfileEntity>} The corrected ProfileEntity
-   * @throws {Error} Exception
+   * @throws {Error|BadRequestException|NotAcceptableException}
+   * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
    */
   async changeProfile(
     request: Request,
@@ -674,7 +681,7 @@ export class ProfileService {
     }
 
     if (ldapUpdated.length === 0) {
-      throw new Error(GQLErrorCode.NO_FIELDS_ARE_FILLED_WITH_PROFILE);
+      throw new UnprocessableEntityException();
     }
     await this.ldapService
       .modify(
@@ -686,11 +693,11 @@ export class ProfileService {
       )
       .catch((error: Ldap.Error) => {
         if (error.name === 'InsufficientAccessRightsError') {
-          throw new Error(GQLErrorCode.INSUFF_RIGHTS_AD);
+          throw new ForbiddenException();
         } else if (error.name === 'ConstraintViolationError') {
-          throw new Error(GQLErrorCode.CONSTRAINT_VIOLATION_ERROR);
+          throw new PayloadTooLargeException();
         }
-        throw new Error(GQLErrorCode.SERVER_PARAMS);
+        throw new BadRequestException();
       });
 
     const thumbnail = modification.thumbnailPhoto

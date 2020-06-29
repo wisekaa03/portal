@@ -6,7 +6,6 @@
 import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
 import { LoggerModule, Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
@@ -34,20 +33,6 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),
-    }),
-    //#endregion
-
-    //#region Locale I18n
-    I18nModule.forRootAsync({
-      inject: [ConfigService],
-      parser: I18nJsonParser,
-      useFactory: async (configService: ConfigService) => ({
-        parserOptions: {
-          path: configService.i18nPath,
-        },
-        fallbackLanguage: configService.fallbackLanguage,
-        resolvers: [],
-      }),
     }),
     //#endregion
 

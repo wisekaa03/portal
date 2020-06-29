@@ -11,10 +11,10 @@ export class SessionGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context.switchToHttp().getRequest<Express.Request>();
 
-    if (!!request?.session?.passport?.user) {
+    if (request?.session?.passport?.user) {
       return true;
     }
 
-    throw new UnauthorizedException('Session guard');
+    throw new UnauthorizedException();
   }
 }

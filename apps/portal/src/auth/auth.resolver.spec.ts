@@ -2,7 +2,6 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nService } from 'nestjs-i18n';
 import { LoggerModule } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
@@ -21,12 +20,7 @@ describe(AuthResolver.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule.forRoot()],
-      providers: [
-        AuthResolver,
-        ConfigService,
-        { provide: AuthService, useValue: serviceMock },
-        { provide: I18nService, useValue: serviceMock },
-      ],
+      providers: [AuthResolver, ConfigService, { provide: AuthService, useValue: serviceMock }],
     }).compile();
 
     resolver = module.get<AuthResolver>(AuthResolver);

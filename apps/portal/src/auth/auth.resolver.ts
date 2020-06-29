@@ -2,10 +2,9 @@
 
 //#region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
-import { I18nService } from 'nestjs-i18n';
 //#endregion
 //#region Imports Local
 import { Login, LoginEmail } from '@lib/types/auth';
@@ -13,7 +12,6 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
-import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 import { AuthService } from './auth.service';
 //#endregion
 
@@ -23,7 +21,6 @@ export class AuthResolver {
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
     @InjectPinoLogger(AuthResolver.name) private readonly logger: PinoLogger,
-    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -54,14 +51,14 @@ export class AuthResolver {
     @Args('username') username: string,
     @Args('password') password: string,
     @Context('req') request: Request,
-    @Context('res') response: Response,
+    // @Context('res') response: Response,
   ): Promise<Login> {
     const email: LoginEmail = { login: false };
 
     const user = await this.authService
       .login({ username: username.toLowerCase(), password })
       .catch(async (error: Error) => {
-        throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
+        throw new UnauthorizedException(error);
       });
 
     request.logIn(user, async (error: Error) => {
@@ -69,11 +66,13 @@ export class AuthResolver {
         const message = error.toString();
         this.logger.error(`Error when logging in: ${message}`, message);
 
-        throw await GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, error, i18n: this.i18n });
+        throw new UnauthorizedException(error);
       }
     });
 
-    request!.session!.password = password;
+    if (request?.session?.password) {
+      request.session.password = password;
+    }
 
     return { user, email };
   }

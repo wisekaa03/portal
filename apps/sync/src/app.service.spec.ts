@@ -3,7 +3,6 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { I18nService } from 'nestjs-i18n';
 import { LoggerModule } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
@@ -29,7 +28,6 @@ describe(SyncService.name, () => {
       providers: [
         ConfigService,
         SyncService,
-        { provide: I18nService, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },

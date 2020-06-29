@@ -22,7 +22,6 @@ import { Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { User, UserContext } from '@lib/types';
-import { GQLErrorCode } from '@back/shared/gqlerror';
 // import { nextI18next } from './i18n-client';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
@@ -66,7 +65,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
           const m = message.toString();
           logger.error(m, m);
 
-          if (extensions?.code === GQLErrorCode.UNAUTHENTICATED) {
+          if (extensions?.code === 401) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
           }
         });
@@ -193,22 +192,7 @@ export const withApolloClient = (
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
           // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          let message = true;
-          if (error instanceof ApolloError) {
-            // eslint-disable-next-line no-confusing-arrow
-            message = error.graphQLErrors.some(({ extensions }): boolean =>
-              extensions
-                ? extensions.code === GQLErrorCode.UNAUTHENTICATED ||
-                  extensions.code === GQLErrorCode.UNAUTHENTICATED_LOGIN ||
-                  extensions.code === GQLErrorCode.UNAUTHORIZED
-                : false,
-            );
-          } else if (error?.status === 401) {
-            message = false;
-          }
-          if (message) {
-            logger.error('withApolloClient getDataFromTree', error.toString(), 'getDataFromTree');
-          }
+          logger.error('withApolloClient getDataFromTree', error.toString(), 'getDataFromTree');
         }
 
         // getDataFromTree does not call componentWillUnmount

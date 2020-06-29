@@ -7,14 +7,6 @@ import { resolve } from 'path';
 // import { APP_FILTER } from '@nestjs/core';
 // import Next from 'next';
 import { Module, CacheModule } from '@nestjs/common';
-import {
-  I18nModule,
-  QueryResolver,
-  HeaderResolver,
-  I18nJsonParser,
-  CookieResolver,
-  AcceptLanguageResolver,
-} from 'nestjs-i18n';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
@@ -130,25 +122,6 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
           // retry_strategy: (options) => {}
         };
       },
-    }),
-    //#endregion
-
-    //#region Locale I18n
-    I18nModule.forRootAsync({
-      inject: [ConfigService],
-      parser: I18nJsonParser,
-      useFactory: async (configService: ConfigService) => ({
-        parserOptions: {
-          path: configService.i18nPath,
-        },
-        fallbackLanguage: configService.fallbackLanguage,
-        resolvers: [
-          { use: QueryResolver, options: ['lang', 'locale', 'l'] },
-          new HeaderResolver(),
-          AcceptLanguageResolver,
-          new CookieResolver(['lang', 'locale', 'l']),
-        ],
-      }),
     }),
     //#endregion
 

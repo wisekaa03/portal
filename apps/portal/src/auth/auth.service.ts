@@ -1,10 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, HttpService } from '@nestjs/common';
+import { Injectable, HttpService, UnauthorizedException } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
-import { I18nService } from 'nestjs-i18n';
 import Redis from 'redis';
 //#endregion
 //#region Imports Local
@@ -14,7 +13,6 @@ import { ConfigService } from '@app/config';
 import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
-import { GQLError, GQLErrorCode } from '@back/shared/gqlerror';
 //#endregion
 
 @Injectable()
@@ -25,7 +23,6 @@ export class AuthService {
     @InjectPinoLogger(AuthService.name) private readonly logger: PinoLogger,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -37,8 +34,13 @@ export class AuthService {
    * @returns {Promise<User>} Validated user
    * @throws {UnauthorizedException}
    */
-  public validate = async (request: Request): Promise<User> =>
-    request?.session?.passport?.user || GQLError({ code: GQLErrorCode.UNAUTHENTICATED_LOGIN, i18n: this.i18n });
+  public validate = async (request: Request): Promise<User> => {
+    if (request?.session?.passport?.user) {
+      return request.session.passport.user;
+    }
+
+    throw new UnauthorizedException();
+  };
 
   /**
    * Login a user
@@ -191,10 +193,12 @@ export class AuthService {
             response.cookie('roundcube_sessid', sessid, options);
             response.cookie('roundcube_sessauth', sessauth, options);
 
-            request!.session!.mailSession = {
-              sessid,
-              sessauth,
-            };
+            if (request.session) {
+              request.session.mailSession = {
+                sessid,
+                sessauth,
+              };
+            }
 
             return { login: true };
           }

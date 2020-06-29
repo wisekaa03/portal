@@ -115,6 +115,7 @@
         "typedefs",
         "typeorm",
         "typeormlogger",
+        "unprocessable",
         "urandom",
         "url",
         "uuidv",
