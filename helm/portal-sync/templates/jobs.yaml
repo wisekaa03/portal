@@ -26,7 +26,7 @@ spec:
                   containerPort: {{ .Values.PORT | default 4222 }}
                   protocol: TCP
                 {{- if .Values.PORT_DEBUG }}
-                - name: http_debug
+                - name: http-debug
                   containerPort: {{ .Values.PORT_DEBUG }}
                   protocol: TCP
                 {{- end }}
