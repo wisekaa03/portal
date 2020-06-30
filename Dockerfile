@@ -5,8 +5,9 @@ WORKDIR /portal/
 LABEL maintainer="webmaster@i-npz.ru"
 LABEL vendor="INPZ"
 
-ARG PORT=4000
-ARG PORT_SSL=4443
+ENV PORT=4000
+ENV PORT_SSL=4443
+ENV PORT_DEBUG=9229
 
 # PREPARE DEVELOPMENT
 #RUN apt-get update && apt-get install -y \
@@ -28,7 +29,7 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 COPY . ./
 
 # EXPOSE
-EXPOSE ${PORT} ${PORT_SSL}
+EXPOSE ${PORT} ${PORT_SSL} ${PORT_DEBUG}
 
 # YARN START
 ENTRYPOINT [ "./entrypoint.sh" ]

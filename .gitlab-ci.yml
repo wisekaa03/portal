@@ -105,6 +105,7 @@ helm_development:
         --set replicaCount="1" \
         --set PORT="${PORT:=4000}" \
         --set PORT_SSL="${PORT_SSL:=4443}" \
+        --set PORT_DEBUG="${PORT_DEBUG:=9229}" \
         --set DOMAIN="${DOMAIN}" \
         --set DEVELOPMENT="true" \
         --set LOGLEVEL="${LOGLEVEL}" \
