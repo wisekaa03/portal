@@ -61,6 +61,8 @@ export class ProfileService {
 
   /**
    * All profiles in Synchronization
+   *
+   * @async
    */
   allProfiles = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> => {
     return (
@@ -156,6 +158,7 @@ export class ProfileService {
   /**
    * Profile by username
    *
+   * @async
    * @param {string} username Username
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
@@ -178,6 +181,7 @@ export class ProfileService {
   /**
    * Profile by LoginIdentificator
    *
+   * @async
    * @param {string} id LoginIdentificator (LDAP: ObjectGUID)
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
@@ -200,6 +204,7 @@ export class ProfileService {
   /**
    * searchSuggestions
    *
+   * @async
    * @param {string} search Search string
    * @return {Promise<string[]>} The search suggestions
    * @throws {Error} Exception
@@ -305,6 +310,7 @@ export class ProfileService {
   /**
    * Create or update by user DN
    *
+   * @async
    * @param {string} userByDN User by DN
    * @param {number} [count = 1] Count for manager
    * @returns {Promise<ProfileEntity | undefined>} Profile entity
@@ -326,6 +332,7 @@ export class ProfileService {
   /**
    * Create or Update user profiles
    *
+   * @async
    * @param {LdapResponseUser} ldapUser The LDAP user
    * @param {ProfileEntity} profile Profile from Database
    * @param {boolean} [save = true] Save the profile
@@ -346,7 +353,7 @@ export class ProfileService {
     const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender } = comment;
 
     const { birthday } = comment;
-    const birthdayDate = !birthday || birthday === '' ? undefined : new Date(Date.parse(birthday));
+    const birthdayDate = !birthday || birthday === '' ? undefined : new Date(birthday);
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
@@ -421,11 +428,12 @@ export class ProfileService {
    * @param {Profile} profile Profile
    * @returns {Promise<ProfileEntity>} Profile entity
    */
-  create = async (profile: Profile): Promise<ProfileEntity> => this.profileRepository.create(profile);
+  create = (profile: Profile): ProfileEntity => this.profileRepository.create(profile);
 
   /**
    * Bulk Save
    *
+   * @async
    * @param {ProfileEntity[]} profiles The profile before save
    * @returns {Promise<ProfileEntity[]>} The profile after save
    * @throws {Error} Exception
@@ -441,6 +449,7 @@ export class ProfileService {
   /**
    * Save
    *
+   * @async
    * @param {ProfileEntity} profile The profile before save
    * @returns {Promise<ProfileEntity>} The profile after save
    * @throws {Error} Exception
@@ -455,6 +464,8 @@ export class ProfileService {
 
   /**
    * Update
+   *
+   * @async
    */
   update = async (
     criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<ProfileEntity>,
@@ -464,6 +475,7 @@ export class ProfileService {
   /**
    * Profile field selection
    *
+   * @async
    * @param {string} field Field: 'company' | 'management' | 'department' | 'division' | 'country' |
    *                              'region' | 'town' | 'street' | 'postalCode'
    * @returns {Promise<string[]>} Field selection
@@ -519,6 +531,8 @@ export class ProfileService {
 
   /**
    * changeProfile
+   *
+   * @async
    * @param {Request} req Express Request
    * @param {Profile} profile Profile params
    * @param {Promise<FileUpload>} thumbnailPhoto Avatar
