@@ -77,13 +77,6 @@ export class ProfileEntity {
   })
   middleName: string;
 
-  fullName: string;
-
-  @AfterLoad()
-  setComputed(): void {
-    this.fullName = `${this.lastName || ''} ${this.firstName || ''} ${this.middleName || ''}`;
-  }
-
   @Column({
     type: 'varchar',
     nullable: true,
@@ -178,7 +171,7 @@ export class ProfileEntity {
   @RelationId((profile: ProfileEntity) => profile.manager)
   managerId?: string;
 
-  @ManyToOne((_type: any) => ProfileEntity, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => ProfileEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinTable()
   manager?: ProfileEntity | undefined;
 
@@ -286,5 +279,10 @@ export class ProfileEntity {
     }
   }
 
-  toResponseObject = (): ProfileEntity => ({ ...this });
+  fullName?: string;
+
+  toResponseObject = (): ProfileEntity => ({
+    ...this,
+    fullName: `${this.lastName || ''} ${this.firstName || ''} ${this.middleName || ''}`,
+  });
 }

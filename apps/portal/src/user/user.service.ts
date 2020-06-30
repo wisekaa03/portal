@@ -210,7 +210,7 @@ export class UserService {
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator(ldapUser.objectGUID, false, false, false).catch(() => {
+      user = await this.byLoginIdentificator(ldapUser.objectGUID).catch(() => {
         this.logger.trace(`New user ${ldapUser.sAMAccountName}`);
 
         // eslint-disable-next-line unicorn/no-useless-undefined
@@ -277,12 +277,22 @@ export class UserService {
    * @throws {Error} Exception
    */
   save = async (user: UserEntity): Promise<UserEntity> =>
-    this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data in "user": ${message}`, message);
+    this.userRepository
+      .save<UserEntity>(user)
+      .then((user) => {
+        if (user?.profile) {
+          user.profile.fullName = `${user.profile.lastName || ''} ${user.profile.firstName || ''} ${
+            user.profile.middleName || ''
+          }`;
+        }
+        return user;
+      })
+      .catch((error: Error) => {
+        const message = error.toString();
+        this.logger.error(`Unable to save data in "user": ${message}`, message);
 
-      throw error;
-    });
+        throw error;
+      });
 
   /**
    * Save the settings

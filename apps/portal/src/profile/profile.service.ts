@@ -287,7 +287,9 @@ export class ProfileService {
         .map((l) => l.trim());
       let showing = '';
 
-      if (lower.some((l) => current.fullName.toLowerCase().includes(l))) {
+      const fullName = `${current.lastName || ''} ${current.firstName || ''} ${current.middleName || ''}`.toLowerCase();
+
+      if (lower.some((l) => fullName.includes(l))) {
         showing = current.fullName || '';
       } else if (lower.some((l) => current.management && current.management.toLowerCase().includes(l))) {
         showing = current.management || '';
@@ -417,6 +419,7 @@ export class ProfileService {
       thumbnailPhoto40: (thumbnailPhoto40 as unknown) as string,
       createdAt: new Date(ldapUser.whenCreated),
       updatedAt: new Date(ldapUser.whenChanged),
+      fullName: `${ldapUser.sn || ''} ${ldapUser.givenName || ''} ${middleName || ''}`,
     };
 
     return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);
@@ -455,12 +458,20 @@ export class ProfileService {
    * @throws {Error} Exception
    */
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
-    this.profileRepository.save<ProfileEntity>(profile).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data in "profile": ${message}`, message);
+    this.profileRepository
+      .save<ProfileEntity>(profile)
+      .then((profile) => {
+        if (profile) {
+          profile.fullName = `${profile.lastName || ''} ${profile.firstName || ''} ${profile.middleName || ''}`;
+        }
+        return profile;
+      })
+      .catch((error: Error) => {
+        const message = error.toString();
+        this.logger.error(`Unable to save data in "profile": ${message}`, message);
 
-      throw error;
-    });
+        throw error;
+      });
 
   /**
    * Update
@@ -576,7 +587,7 @@ export class ProfileService {
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const value = this.clean((profile as any)[key]);
+        const value = this.clean(profile[key]);
 
         switch (key) {
           case 'firstName':

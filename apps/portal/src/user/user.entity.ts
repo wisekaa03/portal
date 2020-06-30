@@ -60,8 +60,7 @@ export class UserEntity {
   @RelationId((user: UserEntity) => user.groups)
   groupIds: string[];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToMany((type) => GroupEntity, { onDelete: 'CASCADE', nullable: true })
+  @ManyToMany(() => GroupEntity, { onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
@@ -90,8 +89,7 @@ export class UserEntity {
   @RelationId((user: UserEntity) => user.profile)
   profileId: string;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @OneToOne((type: any) => ProfileEntity, { onDelete: 'CASCADE' })
+  @OneToOne(() => ProfileEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   profile: ProfileEntity;
 }
