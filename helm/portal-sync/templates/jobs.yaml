@@ -25,9 +25,18 @@ spec:
                 - name: microsvc
                   containerPort: {{ .Values.PORT | default 4222 }}
                   protocol: TCP
+                {{- if .Values.PORT_DEBUG }}
+                - name: http_debug
+                  containerPort: {{ .Values.PORT_DEBUG }}
+                  protocol: TCP
+                {{- end }}
               env:
                 - name: PORT
-                  value: {{ .Values.PORT | default "4222" | quote }}
+                  value: {{ .Values.PORT | quote }}
+                {{- if .Values.PORT_DEBUG }}
+                - name: http_debug
+                  value: {{ .Values.PORT_DEBUG | quote }}
+                {{- end }}
               volumeMounts:
                 - name: configmap
                   mountPath: /portal/.local

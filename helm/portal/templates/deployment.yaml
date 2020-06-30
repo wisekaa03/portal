@@ -33,11 +33,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.PORT | default 4000 }}
+              containerPort: {{ .Values.PORT }}
               protocol: TCP
+            {{- if .Values.PORT_DEBUG }}
+            - name: http_debug
+              containerPort: {{ .Values.PORT_DEBUG }}
+              protocol: TCP
+            {{- end }}
             {{- if .Values.tls.enabled }}
             - name: https
-              containerPort: {{ .Values.PORT_SSL | default 4443 }}
+              containerPort: {{ .Values.PORT_SSL }}
               protocol: TCP
             {{- end }}
           livenessProbe:
@@ -72,10 +77,14 @@ spec:
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: PORT
-              value: {{ .Values.PORT | default "4000" | quote }}
+              value: {{ .Values.PORT | quote }}
+            {{- if .Values.PORT_DEBUG }}
+            - name: http_debug
+              value: {{ .Values.PORT_DEBUG | quote }}
+            {{- end }}
             {{- if .Values.tls.enabled }}
             - name: PORT_SSL
-              value: {{ .Values.PORT_SSL | default "4443" | quote }}
+              value: {{ .Values.PORT_SSL | quote }}
             {{- end }}
           volumeMounts:
             - name: configmap
