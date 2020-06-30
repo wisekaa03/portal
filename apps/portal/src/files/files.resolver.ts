@@ -1,21 +1,25 @@
 /** @format */
 
 //#region Imports NPM
-import { Resolver, Query, Mutation, Context, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, registerEnumType } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 // import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-import { FileDetails } from 'nextcloud-link/compiled/source/types';
 //#endregion
 //#region Imports Local
-import { User, FilesFile, FilesOptions, FilesFolder } from '@lib/types';
+import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser } from '@back/user/user.decorator';
 import { FilesService } from './files.service';
 import { PasswordFrontend } from '../user/user.decorator';
 //#endregion
+
+registerEnumType(Folder, {
+  name: 'Folder & files',
+  description: 'All possible: Folder and Files',
+});
 
 @Resolver('Files')
 export class FilesResolver {

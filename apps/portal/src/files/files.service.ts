@@ -164,13 +164,9 @@ export class FilesService {
               id: f.extraProperties?.id,
               fileId: f.extraProperties?.fileid,
               creationDate:
-                f.creationDate && typeof f.creationDate === 'string'
-                  ? new Date(f.creationDate)
-                  : f.creationDate?.toISOString(),
+                f.creationDate && typeof f.creationDate === 'string' ? new Date(f.creationDate) : f.creationDate,
               lastModified:
-                f.lastModified && typeof f.lastModified === 'string'
-                  ? new Date(f.lastModified)
-                  : f.lastModified?.toISOString(),
+                f.lastModified && typeof f.lastModified === 'string' ? new Date(f.lastModified) : f.lastModified,
               size: f.size,
               name: f.name,
               type: f.type === 'directory' ? Folder.FOLDER : Folder.FILE,
