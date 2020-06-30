@@ -56,6 +56,15 @@ export class FilesService {
   }
 
   /**
+   * Fcking nextCloud in AD translate this UUID in other way
+   */
+  translateToNextCloud = (loginIdentificator: string): string =>
+    loginIdentificator.replace(
+      /^(..)(..)(..)(..)-(..)(..)-(..)(..)-(..)(..)-(..)(..)(..)(..)(..)(..)$/,
+      '$1$2$3$4-$5$6-$7$8-$10$9-$16$15$14$13$12$11',
+    );
+
+  /**
    * Returns nextCloud instance
    *
    * @param {User} user
@@ -64,10 +73,7 @@ export class FilesService {
   nextCloudAs = (user: User, password: string): NextcloudClient => {
     const nextCloud = this.nextCloud.as(user.username, password);
 
-    const nextCloudUUID = user.loginIdentificator.replace(
-      /^(..)(..)(..)(..)-(..)(..)-(..)(..)-(..)(..)-(..)(..)(..)(..)(..)(..)$/,
-      '$1$2$3$4-$5$6-$7$8-$10$9-$16$15$14$13$12$11',
-    );
+    const nextCloudUUID = this.translateToNextCloud(user.loginIdentificator);
 
     nextCloud.webdavConnection.options.url = nextCloud.webdavConnection.options.url.replace(
       /(remote\.php\/dav\/.+\/)(.+)(\/)?$/,
@@ -190,7 +196,7 @@ export class FilesService {
    * @param {string} path of files
    * @return {FilesFolder[]}
    */
-  folderFiles = async (path: string, user: User, password: string, cache = true): Promise<FilesFolder[]> => {
+  folderFiles = async (user: User, password: string, path = '/', cache = true): Promise<FilesFolder[]> => {
     this.logger.info(`Files entity: path={${path}}`);
 
     const cachedID = `${user.loginIdentificator}-f-${path}`;
@@ -229,7 +235,7 @@ export class FilesService {
     this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
 
     const folder = path.slice(0, path.lastIndexOf('/'));
-    this.folderFiles(folder, user, password, false);
+    this.folderFiles(user, password, folder, false);
   };
 
   /**

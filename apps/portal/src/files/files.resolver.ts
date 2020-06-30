@@ -34,7 +34,7 @@ export class FilesResolver {
   @Query('folderFiles')
   @UseGuards(GqlAuthGuard)
   async folderFiles(
-    @Args('path') path: string,
+    @Args('path') path?: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<FilesFolder[]> {
@@ -42,7 +42,7 @@ export class FilesResolver {
       throw new UnauthorizedException();
     }
 
-    return this.filesService.folderFiles(path, user, password);
+    return this.filesService.folderFiles(user, password, path);
   }
 
   /**

@@ -31,7 +31,7 @@ input FilesOptions {
 }
 
 type Query {
-  folderFiles(path: String!): [FilesFolder]
+  folderFiles(path: String): [FilesFolder]
 }
 
 type Mutation {
