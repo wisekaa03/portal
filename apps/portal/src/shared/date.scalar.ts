@@ -1,29 +1,28 @@
 /** @format */
 
 //#region Imports NPM
-import { Scalar } from '@nestjs/graphql';
+import { Scalar, CustomScalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
-import dayjs from 'dayjs';
 //#endregion
 
 @Scalar('Date')
-export class DateScalar {
+export class DateScalar implements CustomScalar<number, Date> {
   description = 'Date scalar type';
 
-  parseValue(value: any): Date {
+  parseValue(value: number): Date {
     return new Date(value);
   }
 
-  serialize(value: Date | string): Date | string {
+  serialize(value?: Date | string): number | null {
     if (typeof value === 'string') {
-      return new Date(value);
+      return new Date(value).getTime();
     }
-    return dayjs(value).format('YYYY-MM-DD HH:mm:ss');
+    return value ? value.getTime() : null;
   }
 
-  parseLiteral(ast: any): any {
-    if (ast.kind === Kind.STRING) {
-      return ast.value;
+  parseLiteral(ast: any): Date | null {
+    if (ast.kind === Kind.STRING || ast.kind === Kind.INT) {
+      return new Date(ast.value);
     }
     return null;
   }
