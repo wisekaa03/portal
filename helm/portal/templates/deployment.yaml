@@ -79,7 +79,7 @@ spec:
             - name: PORT
               value: {{ .Values.PORT | quote }}
             {{- if .Values.PORT_DEBUG }}
-            - name: http_debug
+            - name: PORT_DEBUG
               value: {{ .Values.PORT_DEBUG | quote }}
             {{- end }}
             {{- if .Values.tls.enabled }}
