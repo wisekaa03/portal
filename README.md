@@ -62,16 +62,19 @@
 Portal uses [PostgreSQL](https://www.postgresql.org).
 
 #### For Windows Users
+
 1. Install PostgreSQL 10 to your system.
 2. Add the bin directory of your postgresql installation to your PATH system environment variable. Warning! It must be system env, not user env!
 3. Make sure you have the latest npm installed.
 4. Start a new elevated shell (cmd.exe or powershell). E.g. "run as administrator". If you did not restart your system after step 2, then make sure that you can run the "pg_config" program from that shell.
 run the commands below, in this order, in the same terminal. do not close and reopen the terminal between two commands!
+
 ```bash
 npm install --global --production windows-build-tools
 npm install -g node-gyp
 npm install -g pg-native
 ```
+
 Please note that installing node-gyp requires admin rights, so you must install it globally as admin, even if you only need it for one project. (I might be wrong, but this was my experience.)
 
 #### For Mac Users
