@@ -47,6 +47,7 @@ export class FilesService {
         store: this.cacheStore,
         ttl: this.ttl,
       });
+      logger.info(`NextCloud cache: ${configService.get<string>('NEXTCLOUD_REDIS_URI')}`);
     }
 
     this.nextCloud = new NextcloudClient({
