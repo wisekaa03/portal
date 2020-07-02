@@ -159,7 +159,6 @@ const plugins = [
       },
     },
   ],
-  [withFonts, { enableSvg: false }],
   [
     withBundleAnalyzer,
     {
@@ -167,6 +166,7 @@ const plugins = [
     },
   ],
   [withCustomWebpack],
+  [withFonts, { enableSvg: false }],
 ];
 
 const nextConfig = {
