@@ -461,8 +461,18 @@ export class ProfileService {
     this.profileRepository
       .save<ProfileEntity>(profile)
       .then((profile) => {
-        if (profile) {
-          profile.fullName = `${profile.lastName || ''} ${profile.firstName || ''} ${profile.middleName || ''}`;
+        if (profile && !profile.fullName) {
+          const f: Array<string> = [];
+          if (profile.lastName) {
+            f.push(profile.lastName);
+          }
+          if (profile.firstName) {
+            f.push(profile.firstName);
+          }
+          if (profile.middleName) {
+            f.push(profile.middleName);
+          }
+          profile.fullName = f.join(' ');
         }
         return profile;
       })

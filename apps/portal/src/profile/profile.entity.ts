@@ -280,6 +280,20 @@ export class ProfileEntity {
   }
 
   fullName?: string;
+  @AfterLoad()
+  setComputed(): void {
+    const f: Array<string> = [];
+    if (this.lastName) {
+      f.push(this.lastName);
+    }
+    if (this.firstName) {
+      f.push(this.firstName);
+    }
+    if (this.middleName) {
+      f.push(this.middleName);
+    }
+    this.fullName = f.join(' ');
+  }
 
   toResponseObject = (): ProfileEntity => ({
     ...this,
