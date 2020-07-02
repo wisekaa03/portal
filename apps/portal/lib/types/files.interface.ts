@@ -12,8 +12,8 @@ export interface FilesOptions {
 }
 
 export enum Folder {
-  FOLDER = 'FOLDER',
-  FILE = 'FILE',
+  FILE = 1,
+  FOLDER = 2,
 }
 
 export interface FilesFolder extends Omit<FileDetails, 'isDirectory' | 'isFile' | 'href' | 'type'> {

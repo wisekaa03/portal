@@ -10,7 +10,7 @@ import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { FOLDER_FILES, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, DELETE_FOLDER } from '@lib/queries';
+import { FILES_FOLDER_LIST } from '@lib/queries';
 import { Data, FilesQueryProps, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import FilesComponent from '@front/components/files';
@@ -27,7 +27,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [
     getFolder,
     { data: folderData, loading: folderLoading, error: folderError, refetch: folderRefetch },
-  ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>>(FOLDER_FILES);
+  ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>>(FILES_FOLDER_LIST);
 
   useEffect(() => {
     getFolder({

@@ -1,40 +1,38 @@
 /** @format */
 
 import { DropzoneFile } from './dropzone';
+import { FilesFolder } from './files.interface';
 
 export interface FilesComponentProps {
-  fileLoading: boolean;
   folderLoading: boolean;
-  fileData?: FilesQueryProps[];
-  // TODO
-  folderData?: string[];
-  folderName: string;
-  setFolderName: React.Dispatch<React.SetStateAction<string>>;
-  fileRefetch: () => void;
-  showDropzone: boolean;
-  handleOpenDropzone: () => void;
-  handleCloseDropzone: () => void;
-  handleEditFolder: (_: string, __: number, ___?: string) => void;
-  openFolderDialog: number;
-  folderDialogName: string;
-  handleFolderDialogName: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleAcceptFolderDialog: (_: number) => void;
-  handleCloseFolderDialog: () => void;
-  attachments: DropzoneFile[];
-  setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
-  handleUploadFile: () => void;
-  search: string;
-  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDownload: () => void;
-  handleDelete: () => void;
+  folderData?: FilesFolder[];
+  setPath: React.Dispatch<React.SetStateAction<string>>;
+  // folderName: string;
+  // setFolderName: React.Dispatch<React.SetStateAction<string>>;
+  // fileRefetch: () => void;
+  // showDropzone: boolean;
+  // handleOpenDropzone: () => void;
+  // handleCloseDropzone: () => void;
+  // handleEditFolder: (_: string, __: number, ___?: string) => void;
+  // openFolderDialog: number;
+  // folderDialogName: string;
+  // handleFolderDialogName: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  // handleAcceptFolderDialog: (_: number) => void;
+  // handleCloseFolderDialog: () => void;
+  // attachments: DropzoneFile[];
+  // setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
+  // handleUploadFile: () => void;
+  // search: string;
+  // handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  // handleDownload: () => void;
+  // handleDelete: () => void;
 }
 
 export interface FilesTreeComponentProps {
-  // TODO
-  data?: string[];
-  item: string;
-  handleEdit: (_: string, __: number, ___?: string) => void;
-  setItem: React.Dispatch<React.SetStateAction<string>>;
+  data?: FilesFolder[];
+  // item: string;
+  // handleEdit: (_: string, __: number, ___?: string) => void;
+  // setItem: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface FilesQueryProps {

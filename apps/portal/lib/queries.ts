@@ -314,29 +314,30 @@ export const NEWS_DELETE = gql`
  * MEDIA
  */
 
-export const FILE = gql`
-  query File($id: ID) {
-    file(id: $id) {
+export const FILES_FOLDER_LIST = gql`
+  query FolderFiles($path: String) {
+    folderFiles(path: $path) {
       id
-      createdUser {
-        id
-        username
-      }
-      updatedUser {
-        id
-        username
-      }
-      updatedAt
-      createdAt
-      folder
-      title
-      filename
-      mimetype
+      fileId
+      creationDate
+      lastModified
+      type
+      size
+      name
+      mime
+      permissions
+      etag
+      favorite
+      hasPreview
+      commentsUnread
+      commentsCount
+      ownerId
+      ownerDisplayName
     }
   }
 `;
 
-export const EDIT_FILE = gql`
+export const FILES_FILE_EDIT = gql`
   mutation EditFile($attachment: Upload!, $folder: String!, $id: ID) {
     editFile(attachment: $attachment, folder: $folder, id: $id) {
       id
@@ -358,36 +359,7 @@ export const EDIT_FILE = gql`
   }
 `;
 
-export const DELETE_FILE = gql`
-  mutation DeleteFile($id: ID) {
-    deleteFile(id: $id)
-  }
-`;
-
-export const FOLDER = gql`
-  query Folder($id: ID) {
-    folder(id: $id) {
-      id
-      createdUser {
-        id
-        username
-      }
-      updatedUser {
-        id
-        username
-      }
-      updatedAt
-      createdAt
-      pathname
-      user {
-        id
-        username
-      }
-    }
-  }
-`;
-
-export const EDIT_FOLDER = gql`
+export const FILES_EDIT_FOLDER = gql`
   mutation EditFolder($id: ID, $shared: Boolean!, $pathname: String!) {
     editFolder(id: $id, shared: $shared, pathname: $pathname) {
       id
@@ -410,7 +382,13 @@ export const EDIT_FOLDER = gql`
   }
 `;
 
-export const DELETE_FOLDER = gql`
+export const FILES_DELETE_FILE = gql`
+  mutation DeleteFile($id: ID) {
+    deleteFile(id: $id)
+  }
+`;
+
+export const FILES_DELETE_FOLDER = gql`
   mutation DeleteFolder($id: ID!) {
     deleteFolder(id: $id)
   }

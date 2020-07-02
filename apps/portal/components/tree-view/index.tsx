@@ -88,18 +88,18 @@ export const TreeItem = ({
   active,
   parent,
   nodeId,
-  handleEdit,
+  // handleEdit,
   depth = 0,
   ...rest
 }: TreeItemProps): React.ReactElement => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
-  const handleEditItem = (type: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    event.stopPropagation();
+  // const handleEditItem = (type: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+  //   event.stopPropagation();
 
-    handleEdit(nodeId, type, id);
-  };
+  //   handleEdit(nodeId, type, id);
+  // };
 
   return (
     <MuiTreeItem
@@ -113,20 +113,20 @@ export const TreeItem = ({
           {active && (
             <Box mr={1}>
               <Tooltip title={t('files:addFolder') || ''} enterDelay={1000}>
-                <IconButton className={classes.action} size="small" onClick={handleEditItem(1)}>
+                <IconButton className={classes.action} size="small" /* onClick={handleEditItem(1)} */>
                   <AddIcon />
                 </IconButton>
               </Tooltip>
               {!!id && (
                 <>
                   <Tooltip title={t('files:editFolder') || ''} enterDelay={1000}>
-                    <IconButton className={classes.action} size="small" onClick={handleEditItem(2)}>
+                    <IconButton className={classes.action} size="small" /* onClick={handleEditItem(2)} */>
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
                   {!parent && (
                     <Tooltip title={t('files:deleteFolder') || ''} enterDelay={1000}>
-                      <IconButton className={classes.action} size="small" onClick={handleEditItem(3)}>
+                      <IconButton className={classes.action} size="small" /* onClick={handleEditItem(3)} */>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>

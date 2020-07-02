@@ -112,13 +112,15 @@ export const MOCK_PROFILE: UserContext = {
   },
 };
 
-// ////////// PHONEBOOK ///////////
+/**
+ * PHONEBOOK
+ */
 export const PHONEBOOK_HIDDEN_COLS = ['disabled', 'notShowing'];
 export const PHONEBOOK_ROW_HEIGHT = 72;
 
-// ////////////////////////////////
-
-// ////////// PROFILE ///////////
+/**
+ * PROFILE
+ */
 export const PROFILE_AUTOCOMPLETE_FIELDS = [
   'company',
   'management',
@@ -131,9 +133,3 @@ export const PROFILE_AUTOCOMPLETE_FIELDS = [
   'postalCode',
   'manager',
 ];
-
-// ////////////////////////////////
-
-// ////////// PROFILE ///////////
-export const FILES_SHARED_NAME = 'shared';
-// ////////////////////////////////

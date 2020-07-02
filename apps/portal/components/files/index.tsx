@@ -53,36 +53,34 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FilesComponent: FC<FilesComponentProps> = ({
-  fileLoading,
   folderLoading,
-  fileData,
   folderData,
-  folderName,
-  setFolderName,
-  fileRefetch,
-  showDropzone,
-  handleOpenDropzone,
-  handleCloseDropzone,
-  handleEditFolder,
-  openFolderDialog,
-  handleAcceptFolderDialog,
-  handleCloseFolderDialog,
-  folderDialogName,
-  handleFolderDialogName,
-  attachments,
-  setAttachments,
-  handleUploadFile,
-  search,
-  handleSearch,
-  handleDownload,
-  handleDelete,
+  setPath,
+  // setFolderName,
+  // fileRefetch,
+  // showDropzone,
+  // handleOpenDropzone,
+  // handleCloseDropzone,
+  // handleEditFolder,
+  // openFolderDialog,
+  // handleAcceptFolderDialog,
+  // handleCloseFolderDialog,
+  // folderDialogName,
+  // handleFolderDialogName,
+  // attachments,
+  // setAttachments,
+  // handleUploadFile,
+  // search,
+  // handleSearch,
+  // handleDownload,
+  // handleDelete,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
   return (
     <Box display="flex" flexDirection="column">
-      <Loading activate={fileLoading} noMargin type="linear" variant="indeterminate">
+      <Loading activate={folderLoading} noMargin type="linear" variant="indeterminate">
         <>
           {/* <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
             <Box display="flex" mb={1}>
@@ -94,23 +92,18 @@ const FilesComponent: FC<FilesComponentProps> = ({
           <Box display="flex" className={classes.dropBox} flexDirection="column">
             <Loading activate={folderLoading} full color="secondary">
               <>
-                <FilesTreeComponent
-                  data={folderData}
-                  item={folderName}
-                  setItem={setFolderName}
-                  handleEdit={handleEditFolder}
-                />
-                <FilesDialogComponent
+                {/*<FilesTreeComponent data={folderData} />*/}
+                {/*<FilesDialogComponent
                   open={openFolderDialog}
                   handleClose={handleCloseFolderDialog}
                   input={folderDialogName}
                   handleInput={handleFolderDialogName}
                   handleAccept={handleAcceptFolderDialog}
-                />
+                />*/}
               </>
             </Loading>
           </Box>
-          {showDropzone && (
+          {/* showDropzone && (
             <Box display="flex" className={classes.dropBox} flexDirection="column">
               <Box className={classes.dropBoxActions}>
                 <Button disabled={attachments.length === 0}>{t('common:accept')}</Button>
@@ -135,7 +128,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
             handleSearch={handleSearch}
             handleDownload={handleDownload}
             handleDelete={handleDelete}
-          />
+            />*/}
         </>
       </Loading>
     </Box>

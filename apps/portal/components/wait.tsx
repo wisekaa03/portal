@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 //#endregion
 //#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-import { VerticalCenter } from '@front/components/verticalcenter';
+import { VerticalCenter } from '@front/components/vertical-center';
 //#endregion
 
 //#region Imports Local
