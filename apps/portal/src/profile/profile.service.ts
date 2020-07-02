@@ -414,12 +414,11 @@ export class ProfileService {
       accessCard: ldapUser['msDS-cloudExtensionAttribute13'],
       // eslint-disable-next-line no-bitwise
       disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),
-      notShowing: !!(Number.parseInt(ldapUser.flags, 10) === 1),
+      notShowing: Number.parseInt(ldapUser.flags, 10) === 1,
       thumbnailPhoto: (thumbnailPhoto as unknown) as string,
       thumbnailPhoto40: (thumbnailPhoto40 as unknown) as string,
       createdAt: new Date(ldapUser.whenCreated),
       updatedAt: new Date(ldapUser.whenChanged),
-      fullName: `${ldapUser.sn || ''} ${ldapUser.givenName || ''} ${middleName || ''}`,
     };
 
     return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);
@@ -444,7 +443,7 @@ export class ProfileService {
   bulkSave = async (profiles: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
       const message = error.toString();
-      this.logger.error(`Unable to save data in "profile": ${message}`, message);
+      this.logger.error(`Unable to save data in "profile": ${message}`, [{ error }]);
 
       throw error;
     });
@@ -460,7 +459,7 @@ export class ProfileService {
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository
       .save<ProfileEntity>(profile)
-      .then<ProfileEntity, ProfileEntity>((profile) => {
+      .then((profile) => {
         if (profile && !profile.fullName) {
           const f: Array<string> = [];
           if (profile.lastName) {
@@ -478,7 +477,7 @@ export class ProfileService {
       })
       .catch((error: Error) => {
         const message = error.toString();
-        this.logger.error(`Unable to save data in "profile": ${message}`, message);
+        this.logger.error(`Unable to save data in "profile": ${message}`, [{ error }]);
 
         throw error;
       });
