@@ -133,6 +133,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         debug: configService.get<boolean>('DEVELOPMENT'),
+        connectToDevTools: configService.get<boolean>('DEVELOPMENT'),
         playground: configService.get<boolean>('DEVELOPMENT')
           ? {
               settings: {
