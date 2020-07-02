@@ -16,7 +16,7 @@ export interface EnvConfig<T> {
 }
 
 export class ConfigService {
-  private readonly envConfig: EnvConfig<any>;
+  private readonly envConfig: EnvConfig<string | number | boolean>;
 
   constructor(@Inject('CONFIG_OPTIONS') private readonly filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
@@ -43,7 +43,7 @@ export class ConfigService {
    * Ensures all needed variables are set, and returns the validated JavaScript object
    * including the applied default values.
    */
-  private validateInput(environmentConfig: EnvConfig<any>): EnvConfig<any> {
+  private validateInput(environmentConfig: dotenv.DotenvParseOutput): EnvConfig<string | number | boolean> {
     const environmentVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any().empty('').default('development').optional(),
 
@@ -115,6 +115,6 @@ export class ConfigService {
   }
 
   get<T>(key: string): T {
-    return this.envConfig[key] as T;
+    return (this.envConfig[key] as unknown) as T;
   }
 }
