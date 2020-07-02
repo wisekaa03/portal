@@ -1,54 +1,49 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useEffect, useState } from 'react';
 // import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
 //#endregion
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { FILE, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, FOLDER, DELETE_FOLDER } from '@lib/queries';
-import { FILES_SHARED_NAME } from '@lib/constants';
-import { Data, FilesQueryProps, FolderDialogState, DropzoneFile } from '@lib/types';
+import { FOLDER_FILES, EDIT_FILE, DELETE_FILE, EDIT_FOLDER, DELETE_FOLDER } from '@lib/queries';
+import { Data, FilesQueryProps, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import FilesComponent from '@front/components/files';
 //#endregion
 
-const SHARED = `/${FILES_SHARED_NAME}`;
-
 const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  const [folderName, setFolderName] = useState<string>(SHARED);
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
   const [showDropzone, setShowDropzone] = useState<boolean>(false);
   const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);
   const [folderDialog, setFolderDialog] = useState<FolderDialogState>({ pathname: '', name: '' });
   const [search, setSearch] = useState<string>('');
+  const [path, setPath] = useState<string>('/');
 
-  const {
-    data: fileData,
-    loading: fileLoading,
-    error: fileError,
-    refetch: fileRefetch,
-  }: QueryResult<Data<'file', FilesQueryProps[]>> = useQuery(FILE, {
-    fetchPolicy: 'no-cache',
-  });
+  const [
+    getFolder,
+    { data: folderData, loading: folderLoading, error: folderError, refetch: folderRefetch },
+  ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>>(FOLDER_FILES);
 
-  const { data: folderData, loading: folderLoading, error: folderError }: QueryResult<Data<'folder', any>> = useQuery(
-    FOLDER,
-  );
-
-  const [editFolder] = useMutation(EDIT_FOLDER, {
+  useEffect(() => {
+    getFolder({
+      variables: {
+        value: { path },
+      },
+    });
+  }, [path]);
+  /*   const [editFolder] = useMutation(EDIT_FOLDER, {
     update(cache, { data: { editFolder: result } }) {
-      const query = cache.readQuery<any>({ query: FOLDER });
+      const query = cache.readQuery<any>({ query: FOLDER_FILES });
       const data = query?.folder.filter((f) => f.id !== result.id);
 
       if (data) {
         cache.writeQuery({
-          query: FOLDER,
+          query: FOLDER_FILES,
           data: { folder: [...data, result] },
         });
       }
@@ -145,6 +140,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleDelete = (): void => {
     // /
   };
+ */
 
   // const [current, setCurrent] = useState<FileQueryProps | undefined>();
   // const profile = useContext(ProfileContext);
@@ -175,13 +171,10 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // };
 
   useEffect(() => {
-    if (fileError) {
-      snackbarUtils.error(fileError);
-    }
     if (folderError) {
       snackbarUtils.error(folderError);
     }
-  }, [fileError, folderError]);
+  }, [folderError]);
 
   return (
     <>
@@ -190,29 +183,27 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <MaterialUI {...rest}>
         <FilesComponent
-          fileLoading={fileLoading}
           folderLoading={folderLoading}
-          fileData={fileData?.file}
-          folderData={folderData?.folder}
-          folderName={folderName}
-          setFolderName={setFolderName}
-          fileRefetch={fileRefetch}
-          showDropzone={showDropzone}
-          handleOpenDropzone={handleOpenDropzone}
-          handleCloseDropzone={handleCloseDropzone}
-          handleEditFolder={handleEditFolder}
-          handleAcceptFolderDialog={handleAcceptFolderDialog}
-          handleCloseFolderDialog={handleCloseFolderDialog}
-          openFolderDialog={openFolderDialog}
-          folderDialogName={folderDialog.name}
-          handleFolderDialogName={handleFolderDialogName}
-          attachments={attachments}
-          setAttachments={setAttachments}
-          handleUploadFile={handleUploadFile}
-          search={search}
-          handleSearch={handleSearch}
-          handleDownload={handleDownload}
-          handleDelete={handleDelete}
+          folderData={folderData?.folderFiles}
+          setPath={setPath}
+          // setFolderName={setFolderName}
+          // fileRefetch={fileRefetch}
+          // showDropzone={showDropzone}
+          // handleOpenDropzone={handleOpenDropzone}
+          // handleCloseDropzone={handleCloseDropzone}
+          // handleEditFolder={handleEditFolder}
+          // handleAcceptFolderDialog={handleAcceptFolderDialog}
+          // handleCloseFolderDialog={handleCloseFolderDialog}
+          // openFolderDialog={openFolderDialog}
+          // folderDialogName={folderDialog.name}
+          // handleFolderDialogName={handleFolderDialogName}
+          // attachments={attachments}
+          // setAttachments={setAttachments}
+          // handleUploadFile={handleUploadFile}
+          // search={search}
+          // handleSearch={handleSearch}
+          // handleDownload={handleDownload}
+          // handleDelete={handleDelete}
         />
       </MaterialUI>
     </>
