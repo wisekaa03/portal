@@ -281,9 +281,17 @@ export class UserService {
       .save<UserEntity>(user)
       .then((user) => {
         if (user?.profile) {
-          user.profile.fullName = `${user.profile.lastName || ''} ${user.profile.firstName || ''} ${
-            user.profile.middleName || ''
-          }`;
+          const f: Array<string> = [];
+          if (user.profile.lastName) {
+            f.push(user.profile.lastName);
+          }
+          if (user.profile.firstName) {
+            f.push(user.profile.firstName);
+          }
+          if (user.profile.middleName) {
+            f.push(user.profile.middleName);
+          }
+          user.profile.fullName = f.join(' ');
         }
         return user;
       })
