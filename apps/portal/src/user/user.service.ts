@@ -210,8 +210,8 @@ export class UserService {
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator(ldapUser.objectGUID).catch(() => {
-        this.logger.trace(`New user ${ldapUser.sAMAccountName}`);
+      user = await this.byLoginIdentificator(ldapUser.objectGUID).catch((error) => {
+        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, [{ error }]);
 
         // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined;

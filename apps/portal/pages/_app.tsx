@@ -7,6 +7,7 @@ import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { QueryResult } from 'react-apollo';
+import { Request } from 'express';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,7 +22,7 @@ import { AppContextMy, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
-import { AUTH_PAGE } from '@lib/constants';
+import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { changeFontSize } from '@lib/font-size';
 //#endregion
 
@@ -36,7 +37,13 @@ const CurrentComponent: React.FC<{
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
 
-  if (__SERVER__ || pathname.startsWith(AUTH_PAGE)) {
+  if (__SERVER__) {
+    if (context.user && pathname.startsWith(AUTH_PAGE) && ctx?.res && ctx?.req) {
+      ctx.res.statusCode = 303;
+      ctx.res.setHeader('Location', ((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE);
+
+      return null;
+    }
     return <ProfileContext.Provider value={context}>{children}</ProfileContext.Provider>;
   }
 
