@@ -35,7 +35,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const favorites = me?.user?.settings?.task?.favorites || [];
 
-  const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
+  const [userSettings /* , { error: errorSettings } */] = useMutation<UserSettings, { value: UserSettings }>(
+    USER_SETTINGS,
+  );
 
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
     Data<'TicketsRoutes', TkRoutes>,
