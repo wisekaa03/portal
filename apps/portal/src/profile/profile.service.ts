@@ -460,7 +460,7 @@ export class ProfileService {
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository
       .save<ProfileEntity>(profile)
-      .then((profile) => {
+      .then<ProfileEntity, ProfileEntity>((profile) => {
         if (profile && !profile.fullName) {
           const f: Array<string> = [];
           if (profile.lastName) {

@@ -280,7 +280,7 @@ export class UserService {
     this.userRepository
       .save<UserEntity>(user)
       .then((user) => {
-        if (user?.profile) {
+        if (user.profile && Object.keys(user.profile).length > 1) {
           const f: Array<string> = [];
           if (user.profile.lastName) {
             f.push(user.profile.lastName);
