@@ -27,6 +27,7 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { AppContextMy, AppInitialPropsMy } from './types';
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
+import { CURRENT_USER } from './queries';
 //#endregion
 
 interface CreateClientProps {
@@ -173,6 +174,52 @@ export const withApolloClient = (
         };
         const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
 
+        if (user) {
+          try {
+            const data = {
+              me: {
+                ...user,
+                groups: user.groups?.map((group) => ({
+                  ...group,
+                  __typename: 'Group',
+                })),
+                profile: {
+                  ...user.profile,
+                  __typename: 'Profile',
+                },
+                settings: {
+                  ...user.settings,
+                  phonebook: {
+                    ...user.settings.phonebook,
+                    __typename: 'UserSettingsPhonebook',
+                  },
+                  task: {
+                    ...user.settings.task,
+                    favorites: [
+                      ...(user.settings.task?.favorites?.map((favorite) => ({
+                        ...favorite,
+                        __typename: 'UserSettingsTaskFavorite',
+                      })) || []),
+                    ],
+                    __typename: 'UserSettingsTask',
+                  },
+                  __typename: 'UserSettings',
+                },
+                __typename: 'User',
+              },
+            };
+
+            apolloClient.cache.writeQuery({
+              query: CURRENT_USER,
+              data,
+            });
+          } catch (error) {
+            logger.error(`withApolloClient "writeQuery": ${error.toString()}`, error.toString(), 'withApolloClient', [
+              { error },
+            ]);
+          }
+        }
+
         try {
           const { getDataFromTree } = await import('@apollo/react-ssr');
 
@@ -192,7 +239,12 @@ export const withApolloClient = (
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
           // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          logger.error('withApolloClient getDataFromTree', error.toString(), 'getDataFromTree');
+          logger.error(
+            `withApolloClient "getDataFromTree": ${error.toString()}`,
+            error.toString(),
+            'withApolloClient',
+            [{ error }],
+          );
         }
 
         // getDataFromTree does not call componentWillUnmount

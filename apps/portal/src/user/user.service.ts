@@ -198,15 +198,13 @@ export class UserService {
       throw new Error('sAMAccountName is missing');
     }
 
-    const groups: GroupEntity[] | undefined =
-      ldapUser.groups &&
-      (await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`Unable to save data in "group": ${message}`, message);
+    const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
+      const message = error.toString();
+      this.logger.error(`Unable to save data in "group": ${message}`, message);
 
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        return undefined;
-      }));
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      return undefined;
+    });
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign

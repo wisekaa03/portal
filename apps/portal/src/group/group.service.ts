@@ -64,7 +64,7 @@ export class GroupService {
     this.groupRepository
       .findOne({
         where: { loginIdentificator },
-        cache: cache ? { id: 'group_loginIdentificator', milliseconds: this.dbCacheTtl } : false,
+        cache: cache ? { id: `group_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
       })
       .catch((error: Error) => {
         throw error;
@@ -78,12 +78,10 @@ export class GroupService {
    * @returns {GroupEntity[]} The group entity
    * @throws {Error} Exception
    */
-  async fromLdapUser(ldap: LdapResponseUser): Promise<GroupEntity[] | undefined> {
-    const groups: Promise<GroupEntity>[] = [];
-
-    ldap.groups.forEach(async (ldapGroup: LdapResponseGroup) => {
-      groups.push(
-        this.byIdentificator(ldapGroup.objectGUID).then((updated) => {
+  async fromLdapUser(ldap: LdapResponseUser): Promise<GroupEntity[]> {
+    const groupsPromises = ldap.groups.map(
+      async (ldapGroup: LdapResponseGroup) =>
+        await this.byIdentificator(ldapGroup.objectGUID).then((updated) => {
           const group: Group = {
             ...updated,
             loginService: LoginService.LDAP,
@@ -95,10 +93,18 @@ export class GroupService {
 
           return this.groupRepository.save(this.groupRepository.create(group));
         }),
-      );
-    });
+    );
 
-    return Promise.all(groups);
+    return Promise.allSettled(groupsPromises).then((values) =>
+      values.reduce((accumulator: GroupEntity[], current: PromiseSettledResult<GroupEntity>) => {
+        if (current.status === 'fulfilled') {
+          return accumulator.concat(current.value);
+        }
+        this.logger.error(`Groups error: ${current.reason}`, [{ error: current.reason }]);
+
+        return accumulator;
+      }, [] as GroupEntity[]),
+    );
   }
 
   /**
@@ -110,21 +116,17 @@ export class GroupService {
    * @throws {Error} Exception
    */
   async fromLdap(ldap: LdapResponseGroup): Promise<GroupEntity> {
-    try {
-      const loginIdentificator = await this.byIdentificator(ldap.objectGUID);
-      const group: Group = {
-        ...loginIdentificator,
-        loginService: LoginService.LDAP,
-        loginIdentificator: ldap.objectGUID,
-        name: ldap.sAMAccountName,
-        description: ldap.description,
-        dn: ldap.dn,
-      };
+    const loginIdentificator = await this.byIdentificator(ldap.objectGUID);
+    const group: Group = {
+      ...loginIdentificator,
+      loginService: LoginService.LDAP,
+      loginIdentificator: ldap.objectGUID,
+      name: ldap.sAMAccountName,
+      description: ldap.description,
+      dn: ldap.dn,
+    };
 
-      return this.groupRepository.save(this.groupRepository.create(group));
-    } catch (error) {
-      throw new Error(error.toString());
-    }
+    return this.groupRepository.save(this.groupRepository.create(group));
   }
 
   /**
