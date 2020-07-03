@@ -2,6 +2,7 @@ type Group {
   id: ID!
   name: String!
   dn: String
+  description: String
   createdAt: Date
   updatedAt: Date
 }

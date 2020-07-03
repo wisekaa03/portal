@@ -194,11 +194,13 @@ export class ProfileService {
     const where: FindConditions<ProfileEntity> = { loginIdentificator };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
-    return this.profileRepository.findOne({
+    const profile = await this.profileRepository.findOne({
       where,
       relations,
       cache: cache ? { id: `profile_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
     });
+
+    return profile;
   };
 
   /**
@@ -378,7 +380,7 @@ export class ProfileService {
 
     if (!profile) {
       // eslint-disable-next-line no-param-reassign
-      profile = await this.byLoginIdentificator(ldapUser.objectGUID);
+      profile = await this.byLoginIdentificator(ldapUser.objectGUID, true, false);
     }
 
     const data: Profile = {
@@ -482,8 +484,7 @@ export class ProfileService {
         return profile;
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`Unable to save data in "profile": ${message}`, [{ error }]);
+        this.logger.error(`Unable to save data in "profile": ${error.toString()}`, error);
 
         throw error;
       });
@@ -758,8 +759,6 @@ export class ProfileService {
       // TODO:  разобраться
       await this.profileRepository.manager.connection?.queryResultCache?.remove([
         'profile',
-        'profile_id',
-        'profile_LI',
         'profile_searchSuggestions',
         'profile_fieldSelection',
       ]);

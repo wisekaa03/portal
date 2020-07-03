@@ -63,7 +63,7 @@ export class GroupService {
   byIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
     this.groupRepository.findOne({
       where: { loginIdentificator },
-      cache: cache ? { id: `group_ID_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? this.dbCacheTtl : false,
     });
 
   /**

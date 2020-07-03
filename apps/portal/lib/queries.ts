@@ -104,6 +104,10 @@ export const CURRENT_USER = gql`
       groups {
         id
         name
+        dn
+        description
+        createdAt
+        updatedAt
       }
     }
   }
@@ -159,6 +163,10 @@ export const LOGIN = gql`
         groups {
           id
           name
+          dn
+          description
+          createdAt
+          updatedAt
         }
       }
       email {

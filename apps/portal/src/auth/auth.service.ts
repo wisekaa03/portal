@@ -58,12 +58,23 @@ export class AuthService {
 
     const ldapUser = await this.ldapService.authenticate(username, password);
 
-    return this.userService.fromLdap(ldapUser).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Error: not found user: ${message}`, message);
+    return this.userService
+      .fromLdap(ldapUser)
+      .then((user) => {
+        if (user.disabled) {
+          this.logger.error(`User is Disabled: ${user.username}`);
 
-      throw error;
-    });
+          throw new Error(`User is disabled`);
+        }
+
+        return user;
+      })
+      .catch((error: Error) => {
+        const message = error.toString();
+        this.logger.error(`Error: not found user: ${message}`, message);
+
+        throw error;
+      });
   }
 
   /**

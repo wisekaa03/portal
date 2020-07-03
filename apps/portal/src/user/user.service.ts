@@ -182,8 +182,7 @@ export class UserService {
    */
   async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data in "profile": ${message}`, message);
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, [{ error }]);
 
       throw error;
     });
@@ -199,8 +198,7 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data in "group": ${message}`, message);
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, error);
 
       // eslint-disable-next-line unicorn/no-useless-undefined
       return undefined;
@@ -208,8 +206,8 @@ export class UserService {
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator(ldapUser.objectGUID).catch((error) => {
-        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, [{ error }]);
+      user = await this.byLoginIdentificator(ldapUser.objectGUID, false, true, false).catch((error) => {
+        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, error);
 
         // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined;
