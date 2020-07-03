@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { useState, useEffect } from 'react';
+import { I18n } from 'next-i18next';
 import Head from 'next/head';
 import { QueryResult } from 'react-apollo';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
@@ -99,7 +100,7 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
             task
               ? t('profile:ticket.header', {
                   ticket: task.task?.code,
-                  date: task.task?.createdDate ? format(task.task?.createdDate, i18n) : null,
+                  date: task.task?.createdDate ? format(task.task?.createdDate, i18n as I18n) : null,
                 })
               : ''
           }`}

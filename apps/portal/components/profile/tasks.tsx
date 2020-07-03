@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { FC, useRef } from 'react';
+import { I18n } from 'next-i18next';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import { Box, InputBase, Card, CardActionArea, CardContent, Typography, Divider } from '@material-ui/core';
@@ -147,7 +148,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
                   {status}
                 </span>
               </span>
-              <span>{t('profile:tasks.date', { value: format(createdDate || '', i18n) })}</span>
+              <span>{t('profile:tasks.date', { value: format(createdDate || '', i18n as I18n) })}</span>
               <span>{t('profile:tasks.id', { value: id })}</span>
             </Box>
           </CardContent>

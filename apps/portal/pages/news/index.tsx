@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { useState /* , useContext */ } from 'react';
+import { I18n } from 'next-i18next';
 import Head from 'next/head';
 import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
@@ -193,7 +194,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                       </IconButton>
                     }
                     title={current.title}
-                    subheader={format(current.updatedAt, i18n)}
+                    subheader={format(current.updatedAt, i18n as I18n)}
                   />
                   <CardContent>
                     <div
@@ -228,7 +229,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                       </CardActionArea>
                       <CardActions className={classes.action}>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          {format(news.updatedAt, i18n)}
+                          {format(news.updatedAt, i18n as I18n)}
                         </Typography>
                         <IsAdmin>
                           <>

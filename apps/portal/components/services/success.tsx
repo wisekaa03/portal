@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { useRef } from 'react';
+import { I18n } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
 import { Box, Typography, Card, CardContent, CardActions } from '@material-ui/core';
@@ -51,7 +52,7 @@ const ServicesSuccessCard = withStyles((theme) => ({
       <Typography variant="subtitle1">{t('services:complete.organization', { value: organization })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
       <Typography variant="subtitle1">
-        {t('services:complete.date', { value: format(createdDate || '', i18n) })}
+        {t('services:complete.date', { value: format(createdDate || '', i18n as I18n) })}
       </Typography>
     </CardContent>
   );

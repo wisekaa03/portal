@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
+import { I18n } from 'next-i18next';
 import { fade, Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -259,7 +260,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   <Typography className={classes.cardHeaderTitle} variant="h6">
                     {t('profile:task.header', {
                       task: task.code,
-                      date: format(task.createdDate || '', i18n),
+                      date: format(task.createdDate || '', i18n as I18n),
                     })}
                   </Typography>
                 }
