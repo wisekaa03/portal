@@ -6,6 +6,11 @@ const { jsWithTs: tsjPreset } = require('ts-jest/presets');
 // which contains the path mapping (ie the `compilerOptions.paths` option):
 const { compilerOptions } = require('./tsconfig');
 
+const localPathMapper = pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' });
+if (localPathMapper['^@public/(.*)$']) {
+  delete localPathMapper['^@public/(.*)$'];
+}
+
 module.exports = {
   testTimeout: 180000,
   verbose: true,
@@ -22,13 +27,16 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   moduleNameMapper: {
-    ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
-    '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|css|scss|sass|less)$':
+    ...localPathMapper,
+    // eslint-disable-next-line max-len
+    '\\@public\\/(.*?)(\\?.*)?$': '<rootDir>/public/$1',
+    // eslint-disable-next-line max-len
+    '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|css|scss|sass|less)(\\?.*)?$':
       '<rootDir>/apps/portal/__mocks__/fileMock.js',
   },
   transform: {
     ...tsjPreset.transform,
-    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)(\\?.*)?$': 'jest-transform-stub',
     '^.+\\.svg$': 'jest-svg-transformer',
   },
   transformIgnorePatterns: ['node_modules/(?!(simple-git/src))/'],

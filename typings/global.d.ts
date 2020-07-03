@@ -39,6 +39,12 @@ declare module '*.png' {
   export = content;
 }
 
+declare module '*.png?inline' {
+  const content: any;
+  const className: any;
+  export = content;
+}
+
 declare module '*.webp' {
   const content: any;
   const className: any;
