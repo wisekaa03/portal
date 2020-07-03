@@ -15,10 +15,11 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import { Profile } from '@lib/types';
+import { Profile, User } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
+import { CurrentUser } from '@back/user/user.decorator';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
 //#endregion
@@ -46,7 +47,12 @@ export class ProfileResolver {
     @Args('search') search: string,
     @Args('disabled') disabled: boolean,
     @Args('notShowing') notShowing: boolean,
+    @CurrentUser() user?: User,
   ): Promise<Connection<ProfileEntity>> {
+    if (notShowing && !user?.isAdmin) {
+      notShowing = false;
+    }
+
     return paginate(
       { first, after, orderBy },
       {
