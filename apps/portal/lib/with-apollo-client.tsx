@@ -198,6 +198,10 @@ export const withApolloClient = (
                     favorites: [
                       ...(user.settings.task?.favorites?.map((favorite) => ({
                         ...favorite,
+                        service: {
+                          ...favorite.service,
+                          __typename: 'UserSettingsTaskFavoriteService',
+                        },
                         __typename: 'UserSettingsTaskFavorite',
                       })) || []),
                     ],
