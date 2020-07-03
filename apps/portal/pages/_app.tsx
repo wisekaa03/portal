@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { QueryResult } from 'react-apollo';
 import { Request } from 'express';
-import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
+import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';

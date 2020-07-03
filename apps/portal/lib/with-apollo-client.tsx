@@ -27,7 +27,6 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { AppContextMy, AppInitialPropsMy } from './types';
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
-import { CURRENT_USER } from './queries';
 //#endregion
 
 interface CreateClientProps {
@@ -251,9 +250,6 @@ export const withApolloClient = (
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind();
-
-        // TODO: Не получается сделать чтобы отображалось одинаково на серваке и на клиенте. Посмотреть.
-        // context.user = undefined;
 
         return {
           ...appProps,
