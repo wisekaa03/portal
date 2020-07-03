@@ -373,7 +373,7 @@ export class ProfileService {
 
     if (!profile) {
       // eslint-disable-next-line no-param-reassign
-      profile = await this.byLoginIdentificator(ldapUser.objectGUID, false, false);
+      profile = await this.byLoginIdentificator(ldapUser.objectGUID);
     }
 
     const data: Profile = {
@@ -411,6 +411,7 @@ export class ProfileService {
       departmentEng,
       divisionEng,
       positionEng,
+      // Access Card is msDS-cloudExtensionAttribute13
       accessCard: ldapUser['msDS-cloudExtensionAttribute13'],
       // eslint-disable-next-line no-bitwise
       disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),

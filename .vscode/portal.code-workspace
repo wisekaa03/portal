@@ -176,6 +176,7 @@
       "source.fixAll.eslint": true
     },
     "npm.packageManager": "yarn",
-    "debug.node.autoAttach": "on"
+    "debug.node.autoAttach": "on",
+    "cSpell.language": "en,ru,en-GB,en-US"
   }
 }
