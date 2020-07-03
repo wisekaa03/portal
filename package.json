@@ -130,7 +130,7 @@
     "graphql-tools": "^6.0.12",
     "graphql-upload": "^11.0.0",
     "helmet": "^3.23.3",
-    "i18next": "^19.5.3",
+    "i18next": "^19.5.4",
     "i18next-browser-languagedetector": "^5.0.0",
     "is-mobile": "^2.2.2",
     "jodit": "^3.4.11",
