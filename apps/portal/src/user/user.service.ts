@@ -5,7 +5,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-import { Repository, FindConditions } from 'typeorm';
+import { Repository, FindConditions, UpdateResult } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import bcrypt from 'bcrypt';
 //#endregion
 //#region Imports Local
@@ -297,6 +298,16 @@ export class UserService {
 
         throw error;
       });
+
+  /**
+   * Update
+   *
+   * @async
+   */
+  update = async (
+    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<UserEntity>,
+    partialEntity: QueryDeepPartialEntity<UserEntity>,
+  ): Promise<UpdateResult> => this.userRepository.update(criteria, partialEntity);
 
   /**
    * Save the settings
