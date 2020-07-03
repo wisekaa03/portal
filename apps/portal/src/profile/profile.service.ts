@@ -151,7 +151,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: `profile_id_${id}`, milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `profile_ID_${id}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -174,7 +174,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: `profile_username_${username}`, milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: `profile_NAME_${username}`, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -231,6 +231,7 @@ export class ProfileService {
               .orWhere(`profile.department iLike ${cleared}`)
               .orWhere(`profile.division iLike ${cleared}`)
               .orWhere(`profile.title iLike ${cleared}`)
+              .orWhere(`profile.town iLike ${cleared}`)
               .orWhere(`profile.telephone iLike ${cleared}`)
               .orWhere(`profile.workPhone iLike ${cleared}`)
               .orWhere(`profile.mobile iLike ${cleared}`);
@@ -248,6 +249,7 @@ export class ProfileService {
         'profile.username',
         'profile.department',
         'profile.title',
+        'profile.town',
         'profile.company',
         'profile.management',
         'profile.department',
@@ -263,6 +265,7 @@ export class ProfileService {
         'profile.username',
         'profile.department',
         'profile.title',
+        'profile.town',
         'profile.company',
         'profile.management',
         'profile.department',
@@ -301,6 +304,8 @@ export class ProfileService {
         showing = current.company || '';
       } else if (lower.some((l) => current.title && current.title.toLowerCase().includes(l))) {
         showing = current.title || '';
+      } else if (lower.some((l) => current.town && current.town.toLowerCase().includes(l))) {
+        showing = current.town || '';
       }
 
       if (accumulator.includes(showing) || showing === '') return accumulator;

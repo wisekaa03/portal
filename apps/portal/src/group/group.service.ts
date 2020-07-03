@@ -61,14 +61,10 @@ export class GroupService {
    * @return {Promise<GroupEntity | undefined>} Group
    */
   byIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
-    this.groupRepository
-      .findOne({
-        where: { loginIdentificator },
-        cache: cache ? { id: `group_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
-      })
-      .catch((error: Error) => {
-        throw error;
-      });
+    this.groupRepository.findOne({
+      where: { loginIdentificator },
+      cache: cache ? { id: `group_ID_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
+    });
 
   /**
    * Create or Update user groups
@@ -161,8 +157,7 @@ export class GroupService {
    */
   save = async (group: GroupEntity): Promise<GroupEntity> =>
     this.groupRepository.save(group).catch((error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data in "group": ${message}`, message);
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, [{ error }]);
 
       throw error;
     });
