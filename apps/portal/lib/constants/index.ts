@@ -66,52 +66,6 @@ export const TASK_STATUSES = ['Все', 'Регистрация', 'В работ
 
 export const ADMIN_GROUP = 'web master';
 
-// TEST
-export const MOCK_PROFILE: UserContext = {
-  user: {
-    isAdmin: true,
-    loginService: LoginService.LDAP,
-    loginIdentificator: '',
-    username: '',
-    disabled: false,
-    settings: {},
-    profile: {
-      username: '',
-      loginService: LoginService.LDAP,
-      loginIdentificator: '',
-      dn: '',
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      email: '',
-      birthday: new Date(),
-      gender: Gender.UNKNOWN,
-      country: '',
-      postalCode: '',
-      region: '',
-      town: '',
-      street: '',
-      room: '',
-      company: '',
-      management: '',
-      department: '',
-      division: '',
-      title: '',
-      telephone: '',
-      workPhone: '',
-      mobile: '',
-      fax: '',
-      companyEng: '',
-      nameEng: '',
-      departmentEng: '',
-      divisionEng: '',
-      positionEng: '',
-      disabled: false,
-      notShowing: false,
-    },
-  },
-};
-
 /**
  * PHONEBOOK
  */

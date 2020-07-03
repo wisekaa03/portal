@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { QueryResult } from 'react-apollo';
 import { Request } from 'express';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -37,25 +37,17 @@ const CurrentComponent: React.FC<{
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
 
-  if (__SERVER__) {
-    if (context.user && pathname.startsWith(AUTH_PAGE) && ctx?.res && ctx?.req) {
-      ctx.res.statusCode = 303;
-      ctx.res.setHeader('Location', ((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE);
-
-      return null;
-    }
-    return <ProfileContext.Provider value={context}>{children}</ProfileContext.Provider>;
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
-    onCompleted: (data) => {
-      if (data?.me?.settings?.fontSize) {
-        changeFontSize(data.me.settings.fontSize);
-      }
-    },
+    onCompleted: (data) => !__SERVER__ && data?.me?.settings?.fontSize && changeFontSize(data.me.settings.fontSize),
     fetchPolicy: 'cache-first',
   });
+
+  if (__SERVER__ && data?.me && pathname.startsWith(AUTH_PAGE) && ctx?.res && ctx?.req) {
+    ctx.res.statusCode = 303;
+    ctx.res.setHeader('Location', ((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE);
+
+    return null;
+  }
 
   return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
 };

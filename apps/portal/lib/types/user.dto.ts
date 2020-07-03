@@ -93,6 +93,22 @@ export interface UserSettings {
   phonebook?: UserSettingsPhonebook | null;
   task?: UserSettingsTask | null;
 }
+
+export const DefinedUserSettings = [
+  'lng',
+  'fontSize',
+  'drawer',
+  'phonebook',
+  'task',
+  'status',
+  'favorites',
+  'name',
+  'priority',
+  'route',
+  'service',
+  'where',
+  'columns',
+];
 //#endregion
 
 //#region User context

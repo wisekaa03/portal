@@ -80,7 +80,8 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
   let clientParameters = {};
   let httpLink: ApolloLink;
-  let cache: InMemoryCache;
+
+  const cache = new InMemoryCache().restore(initialState || {});
 
   if (__SERVER__) {
     // eslint-disable-next-line global-require
@@ -90,8 +91,6 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       uri: `http://localhost:${process.env.PORT}/graphql`,
       credentials: 'same-origin',
     });
-
-    cache = new InMemoryCache();
   } else {
     httpLink = createUploadLink({
       uri: `/graphql`,
@@ -102,8 +101,6 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       resolvers: stateResolvers,
     };
 
-    // TODO: Протестить без него, так как он дает ошибку
-    cache = new InMemoryCache().restore(initialState || {});
     // TODO: улучшенный контроль за кешем (продумать)
     // cache = new InStorageCache({
     // storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
@@ -167,7 +164,6 @@ export const withApolloClient = (
         const language = user?.settings?.lng || lngFromReq(ctx?.req) || 'en';
         const isMobile = checkMobile({ ua: ctx.req?.headers['user-agent'] }) ?? false;
         const context: UserContext = {
-          user,
           fontSize: user?.settings?.fontSize || FONT_SIZE_NORMAL,
           isMobile,
           language,
@@ -176,11 +172,13 @@ export const withApolloClient = (
 
         if (user) {
           try {
+            delete (user as any)?.['settings']?.['ticket'];
             const data = {
               me: {
                 ...user,
                 groups: user.groups?.map((group) => ({
                   ...group,
+                  description: group.description || '',
                   __typename: 'Group',
                 })),
                 profile: {
@@ -213,8 +211,7 @@ export const withApolloClient = (
               },
             };
 
-            apolloClient.cache.writeQuery({
-              query: CURRENT_USER,
+            apolloClient.cache.writeData({
               data,
             });
           } catch (error) {
@@ -256,7 +253,7 @@ export const withApolloClient = (
         Head.rewind();
 
         // TODO: Не получается сделать чтобы отображалось одинаково на серваке и на клиенте. Посмотреть.
-        context.user = undefined;
+        // context.user = undefined;
 
         return {
           ...appProps,
@@ -275,7 +272,12 @@ export const withApolloClient = (
 
     public constructor(props: AppContextMy) {
       super(props);
-      this.apolloClient = initApollo({ initialState: props.apollo });
+
+      if (__SERVER__ && props.apolloClient) {
+        this.apolloClient = props.apolloClient;
+      } else {
+        this.apolloClient = initApollo({ initialState: props.apollo });
+      }
     }
 
     public render(): React.ReactElement {

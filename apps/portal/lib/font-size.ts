@@ -1,5 +1,7 @@
 /** @format */
 
 export const changeFontSize = (fontSize: number): void => {
-  document.documentElement.style.fontSize = `${fontSize}px`;
+  if (!__SERVER__) {
+    document.documentElement.style.fontSize = `${fontSize}px`;
+  }
 };

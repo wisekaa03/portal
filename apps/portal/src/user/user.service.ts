@@ -13,7 +13,7 @@ import bcrypt from 'bcrypt';
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
-import { LoginService, Profile, User, UserSettings, Contact, AllUsersInfo } from '@lib/types';
+import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo } from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
@@ -316,10 +316,13 @@ export class UserService {
    * @param {string} value settings object
    * @returns {boolean}
    */
-  settings(user: User, value: UserSettings): UserSettings {
+  settings = (user: User, value: UserSettings): UserSettings => {
     let settings = { ...user.settings };
 
     (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
+      if (!DefinedUserSettings.some((defined) => key.includes(defined))) {
+        return;
+      }
       if (typeof value[key] === 'object') {
         settings = {
           ...settings,
@@ -334,5 +337,5 @@ export class UserService {
     });
 
     return settings;
-  }
+  };
 }
