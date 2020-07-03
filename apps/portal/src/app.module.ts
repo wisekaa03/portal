@@ -94,7 +94,8 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
     //#region Logging module
     LoggerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),
+      useFactory: async (config: ConfigService) =>
+        pinoOptions(config.get<string>('LOGLEVEL'), config.get<boolean>('DEVELOPMENT')),
     }),
     //#endregion
 

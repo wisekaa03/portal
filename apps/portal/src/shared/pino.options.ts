@@ -3,11 +3,11 @@
 import pino from 'pino';
 import { Params } from 'nestjs-pino';
 
-export const pinoOptions = (level = 'debug'): Params => ({
+export const pinoOptions = (level = 'debug', development = false): Params => ({
   pinoHttp: {
-    prettyPrint: __DEV__,
+    prettyPrint: development,
     level,
-    autoLogging: !__DEV__,
+    autoLogging: !development,
     timestamp: pino.stdTimeFunctions.isoTime,
     // serializers: {
     //   req: (req: any) => {

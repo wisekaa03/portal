@@ -32,7 +32,8 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     ConfigModule.register(environment),
     LoggerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (config: ConfigService) => pinoOptions(config.get<string>('LOGLEVEL')),
+      useFactory: async (config: ConfigService) =>
+        pinoOptions(config.get<string>('LOGLEVEL'), config.get<boolean>('DEVELOPMENT')),
     }),
     //#endregion
 

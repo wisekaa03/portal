@@ -35,7 +35,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   const DEV = configService.get<boolean>('DEVELOPMENT');
 
   //#region NestJS options
-  const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'))), {});
+  const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'), DEV)), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,

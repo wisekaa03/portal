@@ -14,7 +14,10 @@ import { LDAP_SYNC } from '@lib/constants';
 //#endregion
 
 const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
-const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'))), {});
+const logger = new Logger(
+  new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), configService.get<boolean>('DEVELOPMENT'))),
+  {},
+);
 
 async function bootstrap(config: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
