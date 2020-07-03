@@ -48,7 +48,7 @@ const BaseIcon = ({ size, mask, color, src, base64 }: IconProps): React.ReactEle
   if (typeof src === 'object' && src !== null) {
     return src;
   }
-  if (typeof src === 'string' && src !== null) {
+  if (typeof src === 'string' && src !== null && src) {
     // <svg = base64: PHN2Z
     // <?xml = base64: PD94bW
     const baseType = src.match(/^(phn2z|pd94bw|<svg|<?xml)/i) ? 'data:image/svg+xml;base64,' : 'data:image/png;base64,';

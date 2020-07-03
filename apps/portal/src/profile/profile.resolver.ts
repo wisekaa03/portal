@@ -15,7 +15,7 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import { Profile, User } from '@lib/types';
+import { Profile, SearchSuggestions, User } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
@@ -98,7 +98,7 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async searchSuggestions(@Args('search') search: string): Promise<string[]> {
+  async searchSuggestions(@Args('search') search: string): Promise<SearchSuggestions[]> {
     return this.profileService.searchSuggestions(search);
   }
 

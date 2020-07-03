@@ -11,7 +11,7 @@ import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 //#endregion
 //#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-import { Data, ProfileQueryProps, ColumnNames, UserSettings, Profile } from '@lib/types';
+import { Data, ProfileQueryProps, ColumnNames, UserSettings, Profile, SearchSuggestions } from '@lib/types';
 import useDebounce from '@lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '@lib/queries';
 import { MaterialUI } from '@front/layout';
@@ -62,7 +62,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   );
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
-  const [suggestionsFiltered, setSuggestionsFiltered] = useState<string[]>([]);
+  const [suggestionsFiltered, setSuggestionsFiltered] = useState<SearchSuggestions[]>([]);
   const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
     direction: OrderDirection.ASC,
     field: 'lastName',
@@ -80,7 +80,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [
     getSearchSuggestions,
     { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError },
-  ] = useLazyQuery<Data<'searchSuggestions', string[]>, { search: string }>(SEARCH_SUGGESTIONS, { ssr: false });
+  ] = useLazyQuery<Data<'searchSuggestions', SearchSuggestions[]>, { search: string }>(SEARCH_SUGGESTIONS, {
+    ssr: false,
+  });
 
   const { loading, data, error, fetchMore, refetch } = useQuery<
     Data<'profiles', Connection<Profile>>,
@@ -123,7 +125,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       const result = suggestionsData?.searchSuggestions;
 
       if (result?.length && _search.length >= 3) {
-        setSuggestionsFiltered(result.length === 1 && result[0] === _search ? [] : result);
+        setSuggestionsFiltered(result.length === 1 && result[0]?.['name'] === _search ? [] : result);
       } else {
         setSuggestionsFiltered([]);
       }

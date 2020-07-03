@@ -9,7 +9,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#region Imports Local
 import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
-import { Profile } from './profile.dto';
+import { Profile, SearchSuggestions } from './profile.dto';
 import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
 import { QueryLazyOptions } from '@apollo/react-hooks';
 //#endregion
@@ -63,7 +63,7 @@ export interface ProfileQueryProps {
 export interface PhonebookSearchProps {
   searchRef: React.MutableRefObject<HTMLInputElement | undefined>;
   search: string;
-  suggestions: string[];
+  suggestions: SearchSuggestions[];
   refetch: (variables?: ProfileQueryProps) => Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;
   handleSearch: React.ChangeEventHandler<HTMLInputElement>;
   handleSugClose: (_: React.MouseEvent<EventTarget>) => void;

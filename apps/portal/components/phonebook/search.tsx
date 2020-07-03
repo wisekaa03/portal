@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { FC, useState } from 'react';
+import { Typography } from '@material-ui/core';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -20,6 +21,7 @@ import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon
 import { PhonebookSearchProps } from '@lib/types';
 import RefreshButton from '@front/components/ui/refresh-button';
 import { useTranslation } from '@lib/i18n-client';
+import BaseIcon from '@front/components/ui/icon';
 //#endregion
 
 const panelHeight = 48;
@@ -60,6 +62,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         opacity: 1,
       },
+    },
+    margin: {
+      margin: '0 0 0 10px',
     },
   }),
 );
@@ -141,8 +146,11 @@ const PhonebookSearch: FC<PhonebookSearchProps> = ({
               <ClickAwayListener onClickAway={handleSugClose}>
                 <MenuList onKeyDown={handleSugKeyDown}>
                   {suggestions.map((item) => (
-                    <MenuItem key={item} onClick={handleSugClick}>
-                      {item}
+                    <MenuItem key={item.name} onClick={handleSugClick}>
+                      <BaseIcon base64 src={item.avatar} size={21} />
+                      <Typography className={classes.margin} component="span">
+                        {item.name}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </MenuList>

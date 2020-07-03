@@ -169,10 +169,15 @@ enum FieldSelection {
   manager
 }
 
+type SearchSuggestions {
+  name: String
+  avatar: String
+}
+
 type Query {
   profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean): ProfileConnection!
   profile(id: ID): Profile
-  searchSuggestions(search: String): [String]
+  searchSuggestions(search: String): [SearchSuggestions]
   profileFieldSelection(field: FieldSelection!, department: String): [String]
 
 }

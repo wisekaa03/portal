@@ -18,7 +18,7 @@ import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { Profile, Gender, LoginService, Contact, AllUsersInfo } from '@lib/types';
+import { Profile, SearchSuggestions, Gender, LoginService, Contact, AllUsersInfo } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
@@ -211,7 +211,7 @@ export class ProfileService {
    * @return {Promise<string[]>} The search suggestions
    * @throws {Error} Exception
    */
-  searchSuggestions = async (search: string): Promise<string[]> => {
+  searchSuggestions = async (search: string): Promise<SearchSuggestions[]> => {
     const query = this.profileRepository
       .createQueryBuilder('profile')
       .where('profile.notShowing = :notShowing')
@@ -259,6 +259,7 @@ export class ProfileService {
         'profile.telephone',
         'profile.workPhone',
         'profile.mobile',
+        'profile.thumbnailPhoto40',
       ])
       .distinctOn([
         'profile.lastName',
@@ -283,7 +284,7 @@ export class ProfileService {
       .cache(true)
       .getMany();
 
-    return result.reduce((accumulator: string[], current: ProfileEntity) => {
+    return result.reduce((accumulator: SearchSuggestions[], current: ProfileEntity) => {
       // if (accumulator.length >= 10) return accumulator;
 
       const lower = search
@@ -291,11 +292,13 @@ export class ProfileService {
         .split('+')
         .map((l) => l.trim());
       let showing = '';
+      let avatar = '';
 
       const fullName = `${current.lastName || ''} ${current.firstName || ''} ${current.middleName || ''}`.toLowerCase();
 
       if (lower.some((l) => fullName.includes(l))) {
         showing = current.fullName || '';
+        avatar = current.thumbnailPhoto40 as string;
       } else if (lower.some((l) => current.management && current.management.toLowerCase().includes(l))) {
         showing = current.management || '';
       } else if (lower.some((l) => current.department && current.department.toLowerCase().includes(l))) {
@@ -310,10 +313,12 @@ export class ProfileService {
         showing = current.town || '';
       }
 
-      if (accumulator.includes(showing) || showing === '') return accumulator;
+      if (showing === '' || accumulator.find((item) => item.name === showing)) {
+        return accumulator;
+      }
 
-      return [...accumulator, showing];
-    }, []);
+      return [...accumulator, { name: showing, avatar }];
+    }, [] as SearchSuggestions[]);
   };
 
   /**

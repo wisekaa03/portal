@@ -268,7 +268,10 @@ export const USER_SETTINGS = gql`
 
 export const SEARCH_SUGGESTIONS = gql`
   query SearchSuggestions($search: String) {
-    searchSuggestions(search: $search)
+    searchSuggestions(search: $search) {
+      name
+      avatar
+    }
   }
 `;
 

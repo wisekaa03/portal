@@ -94,4 +94,9 @@ export interface Profile {
 
   updatedAt?: Date;
 }
+
+export interface SearchSuggestions {
+  name: string;
+  avatar?: string;
+}
 //#endregion
