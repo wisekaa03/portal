@@ -122,6 +122,7 @@ export class ProfileService {
               .orWhere(`profile.title iLike ${cleared}`)
               .orWhere(`profile.telephone iLike ${cleared}`)
               .orWhere(`profile.workPhone iLike ${cleared}`)
+              .orWhere(`profile.town iLike ${cleared}`)
               .orWhere(`profile.mobile iLike ${cleared}`);
           }),
         );
