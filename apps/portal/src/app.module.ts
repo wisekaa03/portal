@@ -109,13 +109,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
       imports: [LoggerModule],
       inject: [ConfigService, Logger],
       useFactory: async (configService: ConfigService, logger: Logger) => {
-        logger.debug(
-          `install cache: ` +
-            `url="${configService.get('HTTP_REDIS_URI')}", ` +
-            `ttl=${configService.get('HTTP_REDIS_TTL')}s, ` +
-            `max objects=${configService.get('HTTP_REDIS_MAX_OBJECTS')} `,
-          'CacheModule',
-        );
+        logger.debug('Redis connection: success', 'CacheModule');
 
         return {
           store: redisCacheStore,
@@ -164,14 +158,7 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
       imports: [LoggerModule],
       inject: [ConfigService, Logger],
       useFactory: async (configService: ConfigService, logger: Logger) => {
-        logger.debug(
-          `Replication: ` +
-            `master url="${configService.get<string>('DATABASE_URI')}, ` +
-            `slave url="${configService.get<string>('DATABASE_URI_RD')}. ` +
-            `Cache url="${configService.get<string>('DATABASE_REDIS_URI')}", ` +
-            `ttl=${configService.get<number>('DATABASE_REDIS_TTL')}ms.`,
-          'Database',
-        );
+        logger.debug('Database connection: success', 'Database');
 
         return typeOrmPostgres(configService, logger);
       },

@@ -99,7 +99,7 @@ export class LdapService extends EventEmitter {
         // max: configService.get<number>('LDAP_REDIS_MAX'),
       });
 
-      this.logger.debug(`install cache: url="${configService.get('LDAP_REDIS_URI')}", ttl=${this.ttl}ms`);
+      this.logger.debug('Redis connection: success');
     }
 
     this.clientOpts = {

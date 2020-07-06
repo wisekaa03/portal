@@ -37,12 +37,7 @@ export default (configService: ConfigService, logger: Logger, store: Session.Sto
       },
     });
 
-    logger.debug(
-      `OK: name=${configService.get<string>('SESSION_NAME')}, ` +
-        `cookie ttl=${configService.get<number>('SESSION_COOKIE_TTL')}ms, ` +
-        `secret="${configService.get<string>('SESSION_SECRET') ? '{MASKED}' : ''}" `,
-      'Session',
-    );
+    logger.debug('Redis connection: success', 'Session');
 
     return sess;
   } catch (error) {
