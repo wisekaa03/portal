@@ -298,6 +298,7 @@ export class UserService {
             f.push(user.profile.middleName);
           }
           user.profile.fullName = f.join(' ');
+          user.profile.contact = user.profile.username ? Contact.USER : Contact.PROFILE;
         }
         return user;
       })

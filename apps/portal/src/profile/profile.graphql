@@ -7,6 +7,7 @@ type Profile {
 
   username: String
 
+  contact: Contact
   fullName: String
 
   firstName: String
@@ -59,6 +60,7 @@ type Profile {
 }
 
 enum ProfileOrderField {
+  contact
   firstName
   lastName
   middleName

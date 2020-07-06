@@ -93,21 +93,4 @@ export class UserEntity {
   @OneToOne(() => ProfileEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   profile: ProfileEntity;
-
-  // @AfterLoad()
-  // setComputed(): void {
-  //   if (this.profile && !this.profile.fullName) {
-  //     const f: Array<string> = [];
-  //     if (this.profile.lastName) {
-  //       f.push(this.profile.lastName);
-  //     }
-  //     if (this.profile.firstName) {
-  //       f.push(this.profile.firstName);
-  //     }
-  //     if (this.profile.middleName) {
-  //       f.push(this.profile.middleName);
-  //     }
-  //     this.profile.fullName = f.join(' ');
-  //   }
-  // }
 }

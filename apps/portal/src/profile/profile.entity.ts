@@ -18,6 +18,7 @@ import {
 //#region Imports Local
 import { Gender } from '@lib/types/gender';
 import { LoginService } from '@lib/types/login-service';
+import { Contact } from '../../lib/types/user.dto';
 //#endregion
 
 @Entity('profile')
@@ -279,6 +280,7 @@ export class ProfileEntity {
     }
   }
 
+  contact?: Contact;
   fullName?: string;
   @AfterLoad()
   setComputed(): void {
@@ -293,10 +295,12 @@ export class ProfileEntity {
       f.push(this.middleName);
     }
     this.fullName = f.join(' ');
+    this.contact = this.username ? Contact.USER : Contact.PROFILE;
   }
 
   toResponseObject = (): ProfileEntity => ({
     ...this,
     fullName: `${this.lastName || ''} ${this.firstName || ''} ${this.middleName || ''}`,
+    contact: this.username ? Contact.USER : Contact.PROFILE,
   });
 }

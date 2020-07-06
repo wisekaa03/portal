@@ -43,9 +43,15 @@
     "street": "Street",
     "postalCode": "Postal code",
     "disabled": "Dismissed",
-    "notShowing": "Hidden user",
+    "notShowing": "Hidden profile",
     "gender": "Gender",
     "accessCard": "Access card"
+  },
+  "contact": {
+    "new": "Создавать",
+    "title": "Тип",
+    "user": "Пользователь",
+    "profile": "Профиль"
   },
   "profile": {
     "hide": "Hide profile",

@@ -22,6 +22,7 @@ export const defaultUserSettings: UserSettings = {
 const PROFILE_FRAGMENT = gql`
   fragment ProfileProps on Profile {
     id
+    contact
     username
     firstName
     lastName

@@ -14,7 +14,7 @@ import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { Folder } from '@lib/types';
+import { Folder, Contact } from '@lib/types';
 
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
@@ -147,6 +147,10 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
           Folder: {
             FOLDER: Folder.FOLDER,
             FILE: Folder.FILE,
+          },
+          Contact: {
+            PROFILE: Contact.PROFILE,
+            USER: Contact.USER,
           },
         },
       }),

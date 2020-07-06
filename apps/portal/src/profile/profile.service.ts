@@ -295,6 +295,7 @@ export class ProfileService {
       let showing = '';
       let avatar = '';
 
+      // const contact = current.username ? Contact.USER : Contact.PROFILE;
       const fullName = `${current.lastName || ''} ${current.firstName || ''} ${current.middleName || ''}`.toLowerCase();
 
       if (lower.some((l) => fullName.includes(l))) {

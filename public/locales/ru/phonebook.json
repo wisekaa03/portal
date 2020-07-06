@@ -43,9 +43,15 @@
     "street": "Улица",
     "postalCode": "Индекс",
     "disabled": "Уволен",
-    "notShowing": "Скрытый пользователь",
+    "notShowing": "Скрытый профиль",
     "gender": "Пол",
     "accessCard": "Карта доступа"
+  },
+  "contact": {
+    "new": "Создавать",
+    "title": "Тип",
+    "user": "Пользователь",
+    "profile": "Профиль"
   },
   "profile": {
     "hide": "Скрыть профиль",

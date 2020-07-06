@@ -13,6 +13,8 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -23,13 +25,14 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { Gender, Profile, ProfileEditComponentProps } from '@lib/types';
+import { Gender, Profile, ProfileEditComponentProps, Contact } from '@lib/types';
 import IsAdmin from '@front/components/isAdmin';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import Button from '@front/components/ui/button';
 import { DropzoneWrapper } from '@front/components/dropzone';
 import ProfileTextFieldComponent from './text-field';
+import { FormControl, InputLabel } from '@material-ui/core';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -54,9 +57,16 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     thirdBlock: {
-      display: 'grid',
+      marginTop: '2px',
       width: '100%',
       borderRadius: theme.shape.borderRadius,
+    },
+    topRightBlock: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'nowrap',
+      alignItems: 'stretch',
     },
     fullNameBlock: {
       [theme.breakpoints.down('xs')]: {
@@ -65,21 +75,6 @@ const useStyles = makeStyles((theme: Theme) =>
         '& > div:first-child': {
           marginBottom: theme.spacing(),
         },
-      },
-    },
-    nameEngBlock: {
-      'display': 'flex',
-      'flex': 1,
-      'justifyContent': 'flex-end',
-      'flexDirection': 'column',
-      'padding': theme.spacing(),
-      'backgroundColor': fade(theme.palette.secondary.main, 0.05),
-      'color': theme.palette.secondary.main,
-      '& > div:not(:last-child)': {
-        marginBottom: theme.spacing(),
-      },
-      '& > label': {
-        margin: 0,
       },
     },
     avatar: {
@@ -108,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) =>
     genderBlock: {
       'flexDirection': 'row',
       '& > label': {
-        margin: 0,
+        margin: '7px 7px 6px 7px',
       },
     },
     hr: {
@@ -253,7 +248,21 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   </Box>
                   <div className={classes.thirdBlock}>
                     <div className={classes.nameBlock}>
-                      <div className={classes.genderBlock}>
+                      <div className={classes.topRightBlock}>
+                        <FormControl disabled={true} variant="outlined">
+                          <InputLabel id="profile-contact">{t('phonebook:contact.title')}</InputLabel>
+                          <Select
+                            labelId="profile-contact"
+                            autoWidth
+                            onChange={handleChange('contact')}
+                            color="secondary"
+                            value={profile.contact}
+                            label={t('phonebook:contact.title')}
+                          >
+                            <MenuItem value="USER">{t('phonebook:contact.user')}</MenuItem>
+                            <MenuItem value="PROFILE">{t('phonebook:contact.profile')}</MenuItem>
+                          </Select>
+                        </FormControl>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -267,34 +276,30 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           label={t('phonebook:fields.notShowing')}
                         />
                       </div>
-                      <div className={classes.genderBlock}>
-                        <RadioGroup
-                          className={classes.genderBlock}
-                          onChange={handleChange('gender')}
-                          aria-label="gender"
+                      <RadioGroup
+                        className={classes.genderBlock}
+                        onChange={handleChange('gender')}
+                        aria-label="gender"
+                        name="gender"
+                        value={profile.gender}
+                      >
+                        <FormControlLabel
+                          disabled={loadingChanged}
+                          value={Gender.MAN}
+                          control={<Radio color="secondary" />}
+                          label={t('common:gender.MAN')}
                           name="gender"
-                          value={profile.gender}
-                        >
-                          <FormControlLabel
-                            disabled={loadingChanged}
-                            value={Gender.MAN}
-                            control={<Radio color="secondary" />}
-                            label={t('common:gender.MAN')}
-                            name="gender"
-                            labelPlacement="end"
-                          />
-                          <FormControlLabel
-                            disabled={loadingChanged}
-                            value={Gender.WOMAN}
-                            control={<Radio color="secondary" />}
-                            label={t('common:gender.WOMAN')}
-                            name="gender"
-                            labelPlacement="end"
-                          />
-                        </RadioGroup>
-                      </div>
-                    </div>
-                    <div className={classes.nameEngBlock}>
+                          labelPlacement="end"
+                        />
+                        <FormControlLabel
+                          disabled={loadingChanged}
+                          value={Gender.WOMAN}
+                          control={<Radio color="secondary" />}
+                          label={t('common:gender.WOMAN')}
+                          name="gender"
+                          labelPlacement="end"
+                        />
+                      </RadioGroup>
                       <ProfileTextFieldComponent
                         disabled={loadingChanged}
                         handleChange={handleChange}

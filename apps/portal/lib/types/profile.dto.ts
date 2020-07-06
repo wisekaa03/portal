@@ -5,11 +5,13 @@
 //#region Imports Local
 import { Gender } from './gender';
 import { LoginService } from './login-service';
+import { Contact } from './user.dto';
 //#endregion
 
 //#region Profile
 export interface Profile {
   id?: string;
+  contact?: Contact;
 
   loginService: LoginService;
   loginIdentificator: string;
