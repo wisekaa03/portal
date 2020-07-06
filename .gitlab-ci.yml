@@ -133,6 +133,7 @@ helm_development:
         --set LDAP_SEARCH_FILTER_ALL_GROUPS="${LDAP_SEARCH_FILTER_ALL_GROUPS}" \
         --set LDAP_SEARCH_USER="${LDAP_SEARCH_USER}" \
         --set LDAP_SEARCH_GROUP="${LDAP_SEARCH_GROUP}" \
+        --set LDAP_NEW_BASE="${LDAP_NEW_BASE}" \
         --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
         --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
@@ -218,6 +219,7 @@ helm_production:
         --set LDAP_SEARCH_FILTER_ALL_GROUPS="${LDAP_SEARCH_FILTER_ALL_GROUPS}" \
         --set LDAP_SEARCH_USER="${LDAP_SEARCH_USER}" \
         --set LDAP_SEARCH_GROUP="${LDAP_SEARCH_GROUP}" \
+        --set LDAP_NEW_BASE="${LDAP_NEW_BASE}" \
         --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
         --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \

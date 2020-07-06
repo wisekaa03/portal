@@ -86,6 +86,7 @@ export class ConfigService {
       LDAP_SEARCH_FILTER_ALL_GROUPS: Joi.string().empty('').default('objectClass=group').required(),
       LDAP_SEARCH_GROUP: Joi.string().empty('').default('(&(objectClass=group)(member={{dn}}))').required(),
       LDAP_SEARCH_USER: Joi.string().empty('').default('(sAMAccountName={{username}})').required(),
+      LDAP_NEW_BASE: Joi.string().empty('').required(),
 
       MICROSERVICE_URL: Joi.string().required(),
 
