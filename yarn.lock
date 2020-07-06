@@ -10650,10 +10650,10 @@ graphql@^14.5.3:
   dependencies:
     iterall "^1.2.2"
 
-graphql@^15.2.0:
-  version "15.2.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.2.0.tgz#d9c655a523a3196d4b23657ec6ec5963b3bd4970"
-  integrity sha512-tsceRyHfgzZo+ee0YK3o8f0CR0cXAXxRlxoORWFo/CoM1bVy3UXGWeyzBcf+Y6oqPvO27BDmOEVATcunOO/MrQ==
+graphql@^15.3.0:
+  version "15.3.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.3.0.tgz#3ad2b0caab0d110e3be4a5a9b2aa281e362b5278"
+  integrity sha512-GTCJtzJmkFLWRfFJuoo9RWWa/FfamUHgiFosxi/X1Ani4AVWbeyBenZTNX6dM+7WSbbFfTo/25eh0LLkwHMw2w==
 
 growly@^1.3.0:
   version "1.3.0"
@@ -12713,17 +12713,17 @@ jmespath@^0.15.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
-jodit-react@^1.0.49:
-  version "1.0.49"
-  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.0.49.tgz#68a563162b80e0db985726e35a16056b2b04d219"
-  integrity sha512-XYsBlX9AFFF4qW9oQ5f2VlkAu2AZVoHx7E7IHGgywFbPacPHjwlbmCNDP/UTyTzTyOsrLbn9V8zEo+ite3HOfA==
+jodit-react@^1.0.50:
+  version "1.0.50"
+  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.0.50.tgz#29f2ebbb05dac5e52e47562d8cba9671ed34a7d4"
+  integrity sha512-zL49kRdKqlBjhOX5cxMIyCQNk/KJZVKde/zvxWM/lZp3fobezuUZWS1A2xy2Jnvzr41ob1KJSMAuR63csXDIGQ==
   dependencies:
-    jodit "^3.4.8"
+    jodit "^3.4.12"
 
-jodit@^3.4.11, jodit@^3.4.8:
-  version "3.4.11"
-  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.11.tgz#1cf837022217b8e1f6dbdabf7cd4fc21263fbdbe"
-  integrity sha512-boHVxtNBojPynzA1lkBM61XTRzyVcyEjhjfzx8z6YgBJiEx8rsZ6jaSWYrSVgd4XhY9KjMA40AuxqjZzpM/59A==
+jodit@^3.4.12:
+  version "3.4.12"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.12.tgz#3020c2dac32e8b58208dd3485f803e39e071d9a3"
+  integrity sha512-dJ3T2qVuvybqkBiTNmxVace8EArrge0xyuaSqJeFStYmdLlrtJS0boITMcJsMAp0b9dXyj+eYPjMUmzX58EX1g==
 
 joycon@^2.2.5:
   version "2.2.5"
