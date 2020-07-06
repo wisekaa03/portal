@@ -2,10 +2,10 @@
 
 //#region Imports NPM
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { User, UserSettings } from '@lib/types/user.dto';
+import { User, UserSettings, UserProfileLDAP } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from './user.service';
 import { CurrentUser } from './user.decorator';
@@ -29,6 +29,25 @@ export class UserResolver {
   }
 
   /**
+   * LDAP: new user
+   *
+   * @async
+   * @param {UserProfileLDAP} ldap The user profile
+   * @returns {User}
+   */
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async ldapNewUser(@Args('ldap') ldap: UserProfileLDAP, @CurrentUser() user?: User): Promise<User> {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return this.userService.ldapNewUser(ldap).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
+  }
+
+  /**
    * User settings
    *
    * @async
@@ -37,7 +56,11 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async userSettings(@CurrentUser() user: User, @Args('value') value: UserSettings | any): Promise<User> {
+  async userSettings(@Args('value') value: UserSettings, @CurrentUser() user?: User): Promise<User> {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
     // eslint-disable-next-line no-param-reassign
     user.settings = this.userService.settings(user, value);
 

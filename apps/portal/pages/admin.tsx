@@ -10,7 +10,7 @@ import Head from 'next/head';
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { SYNC, CACHE, USER_SETTINGS, defaultUserSettings } from '@lib/queries';
+import { LDAP_NEW_USER, SYNC, CACHE, USER_SETTINGS, defaultUserSettings } from '@lib/queries';
 import { UserSettings } from '@lib/types/user.dto';
 import snackbarUtils from '@lib/snackbar-utils';
 //#endregion
@@ -46,6 +46,12 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
   // const [syncLoading, setSyncLoading] = useState<boolean>(false);
   // const [cacheLoading, setCacheLoading] = useState<boolean>(false);
+
+  const [newUser, { loading: newUserLoading, error: errorsNewUser }] = useMutation(LDAP_NEW_USER, {
+    // onCompleted() {
+    //   setSyncLoading(false);
+    // },
+  });
 
   const [sync, { loading: syncLoading, error: errorsSynch }] = useMutation(SYNC, {
     // onCompleted() {

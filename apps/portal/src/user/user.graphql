@@ -68,7 +68,61 @@ input UserSettingsInput {
   task: UserSettingsTaskInput
 }
 
+enum Contact {
+  PROFILE
+  USER
+}
+
+input UserProfile {
+  contact: Contact!
+
+  username: String!
+
+  fullName: String
+
+  firstName: String
+  lastName: String
+  middleName: String
+  birthday: String
+  gender: Int
+
+  company: String
+  title: String
+
+  management: String
+  department: String
+  division: String
+
+  telephone: String
+  workPhone: String
+  fax: String
+  mobile: String
+  email: String
+
+  employeeID: String
+
+  companyEng: String
+  nameEng: String
+  managementEng: String
+  departmentEng: String
+  divisionEng: String
+  positionEng: String
+
+  accessCard: String
+
+  country: String
+  postalCode: String
+  region: String
+  town: String
+  street: String
+  room: String
+
+  thumbnailPhoto: String
+  thumbnailPhoto40: String
+}
+
 type Mutation {
   syncLdap: Boolean
+  ldapNewUser(ldap: UserProfile!): User
   userSettings(value: UserSettingsInput): User
 }

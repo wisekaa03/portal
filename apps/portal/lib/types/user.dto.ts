@@ -119,3 +119,9 @@ export interface UserContext {
   isMobile?: boolean;
 }
 //#endregion
+
+export interface UserProfileLDAP
+  extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt'>,
+    Omit<BaseUser, 'loginService' | 'loginIdentificator' | 'settings' | 'isAdmin' | 'updatedAt' | 'createdAt'> {
+  contact: Contact;
+}

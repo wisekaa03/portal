@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, ServiceUnavailableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
@@ -13,7 +13,16 @@ import bcrypt from 'bcrypt';
 import { ConfigService } from '@app/config';
 import { LdapResponseUser } from '@app/ldap';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
-import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo } from '@lib/types';
+import {
+  LoginService,
+  Profile,
+  User,
+  UserSettings,
+  DefinedUserSettings,
+  Contact,
+  AllUsersInfo,
+  UserProfileLDAP,
+} from '@lib/types';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
@@ -337,5 +346,12 @@ export class UserService {
     });
 
     return settings;
+  };
+
+  /**
+   *
+   */
+  ldapNewUser = async (value: UserProfileLDAP): Promise<User> => {
+    throw new ServiceUnavailableException();
   };
 }
