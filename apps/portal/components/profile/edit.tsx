@@ -169,12 +169,14 @@ const others: (keyof Profile)[] = [
 
 const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
-  newProfile = true,
+  newProfile = false,
+  loadingCheckUsername,
   loadingProfile,
   loadingChanged,
   hasUpdate,
   profile,
   onDrop,
+  handleCheckUsername,
   handleChange,
   handleBirthday,
   handleSave,
@@ -264,9 +266,22 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             <MenuItem value="PROFILE">{t('phonebook:contact.profile')}</MenuItem>
                           </Select>
                         </FormControl>
-                        {profile.contact === Contact.USER && (
+                        {newProfile && profile.contact === Contact.USER && (
+                          <>
+                            <ProfileTextFieldComponent
+                              disabled={loadingCheckUsername || false}
+                              handleChange={handleChange}
+                              field="username"
+                              value={profile.username}
+                              InputProps={newProfile ? InputProps : { readOnly: true }}
+                              fullWidth={false}
+                            />
+                            <Button onClick={handleCheckUsername}>{t('common:check')}</Button>
+                          </>
+                        )}
+                        {!newProfile && profile.contact === Contact.USER && (
                           <ProfileTextFieldComponent
-                            disabled={!newProfile}
+                            disabled
                             handleChange={handleChange}
                             field="username"
                             value={profile.username}
@@ -274,18 +289,20 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             fullWidth={false}
                           />
                         )}
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              disabled={loadingChanged}
-                              checked={profile.notShowing}
-                              onChange={handleChange('notShowing')}
-                              color="secondary"
-                              value="notShowing"
-                            />
-                          }
-                          label={t('phonebook:fields.notShowing')}
-                        />
+                        {typeof (profile as Profile).notShowing === 'boolean' && (
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                disabled={loadingChanged}
+                                checked={(profile as Profile).notShowing}
+                                onChange={handleChange('notShowing')}
+                                color="secondary"
+                                value="notShowing"
+                              />
+                            }
+                            label={t('phonebook:fields.notShowing')}
+                          />
+                        )}
                       </div>
                       <RadioGroup
                         className={classes.genderBlock}

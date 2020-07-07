@@ -34,23 +34,40 @@ export class UserResolver {
    *
    * @async
    * @param {ProfileInput} ldap The user profile
-   * @param {FileUpload} thumbnailPhoto Avatar
+   * @param {FileUpload} photo Avatar
    * @returns {Profile}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async ldapNewUser(
     @Args('ldap') ldap: ProfileInput,
-    @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
+    @Args('photo') photo?: Promise<FileUpload>,
     @CurrentUser() user?: User,
   ): Promise<Profile> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapNewUser(ldap, thumbnailPhoto).catch((error: Error) => {
+    return this.userService.ldapNewUser(ldap, photo).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
+  }
+
+  /**
+   * LDAP: check ldap user
+   *
+   * @async
+   * @param {string} value The username to check
+   * @returns {boolean}
+   */
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async ldapCheckUsername(@Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return this.userService.ldapCheckUsername(value);
   }
 
   /**

@@ -2,10 +2,11 @@
 
 //#region Imports NPM
 import React, { useEffect } from 'react';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
@@ -44,14 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const classes = useStyles({});
+  const router = useRouter();
   // const [syncLoading, setSyncLoading] = useState<boolean>(false);
   // const [cacheLoading, setCacheLoading] = useState<boolean>(false);
-
-  const [newUser, { loading: newUserLoading, error: errorsNewUser }] = useMutation(LDAP_NEW_USER, {
-    // onCompleted() {
-    //   setSyncLoading(false);
-    // },
-  });
 
   const [sync, { loading: syncLoading, error: errorsSynch }] = useMutation(SYNC, {
     // onCompleted() {
@@ -73,6 +69,11 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     //   setCacheLoading(false);
     // },
   });
+
+  const handleAdd = (): void => {
+    // setSyncLoading(true);
+    router.push('/profile/edit/new');
+  };
 
   const handleSync = (): void => {
     // setSyncLoading(true);
@@ -114,6 +115,18 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <MaterialUI {...rest}>
         <div className={classes.root}>
+          <Card className={classes.card}>
+            <CardActions disableSpacing>
+              <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleAdd}>
+                {t('admin:add:new')}
+              </Button>
+            </CardActions>
+            <CardContent>
+              <Typography color="textSecondary" component="p">
+                {t('admin:add:description')}
+              </Typography>
+            </CardContent>
+          </Card>
           <Card className={classes.card}>
             <CardActions disableSpacing>
               <Button fullWidth disabled={syncLoading} color="secondary" onClick={handleSync}>

@@ -1,5 +1,6 @@
 {
   "refresh": "Refresh",
+  "check": "Check",
   "title": "Portal: Home",
   "accept": "Accept",
   "error": "Error: {{message}}",

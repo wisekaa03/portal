@@ -32,6 +32,7 @@ import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
 import { defaultUserSettings } from '@lib/queries';
 import { UserEntity } from './user.entity';
+import Ldap from 'ldapjs';
 //#endregion
 
 @Injectable()
@@ -354,10 +355,25 @@ export class UserService {
     return settings;
   };
 
+  ldapCheckUsername = async (value: string): Promise<boolean> =>
+    this.ldapService
+      .searchByUsername(value)
+      .then(() => {
+        return false;
+      })
+      .catch(() => {
+        return true;
+      });
+
   /**
    * This is a LDAP new user and contact
    */
   ldapNewUser = async (value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
+    Object.keys(value).forEach((key) => {
+      if (!value[key]) {
+        delete value[key];
+      }
+    });
     const entry: LDAPAddEntry = this.profileService.modification(value);
     entry.name = entry.cn;
 
@@ -368,6 +384,7 @@ export class UserService {
       }
     } else {
       entry['objectClass'] = ['user'];
+      entry['userPrincipalName'] = `${entry['sAMAccountName']}@${this.configService.get<string>('LDAP_DOMAIN')}`;
       if (!entry['sAMAccountName']) {
         throw new Error('Username is not found and this is a User');
       }

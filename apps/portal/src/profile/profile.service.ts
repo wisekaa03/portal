@@ -585,10 +585,14 @@ export class ProfileService {
             const f: Array<string> = [];
             if (created?.lastName) {
               f.push(created.lastName);
+            } else if (profile?.lastName) {
+              f.push(profile.lastName);
             }
             f.push(value as string);
             if (created?.middleName) {
-              f.push(created?.middleName);
+              f.push(created.middleName);
+            } else if (profile?.middleName) {
+              f.push(profile.middleName);
             }
             modification.displayName = f.join(' ');
             modification.cn = f.join(' ');
@@ -602,9 +606,13 @@ export class ProfileService {
             f.push(value as string);
             if (created?.firstName) {
               f.push(created.firstName);
+            } else if (profile?.firstName) {
+              f.push(profile.firstName);
             }
             if (created?.middleName) {
-              f.push(created?.middleName);
+              f.push(created.middleName);
+            } else if (profile?.middleName) {
+              f.push(profile.middleName);
             }
             modification.displayName = f.join(' ');
             modification.cn = f.join(' ');
@@ -617,12 +625,17 @@ export class ProfileService {
             const f: Array<string> = [];
             if (created?.lastName) {
               f.push(created.lastName);
+            } else if (profile?.lastName) {
+              f.push(profile.lastName);
             }
             if (created?.firstName) {
               f.push(created.firstName);
+            } else if (profile?.firstName) {
+              f.push(profile.firstName);
             }
             f.push(value as string);
             modification.displayName = f.join(' ');
+            modification.cn = f.join(' ');
 
             break;
           }
@@ -736,6 +749,8 @@ export class ProfileService {
     profile: Profile,
     thumbnailPhoto?: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
+    let thumbnailPhotoProcessed: Buffer | undefined;
+
     if (!request.session?.passport?.user?.profile?.id) {
       throw new Error('Not authorized');
     }
@@ -747,67 +762,85 @@ export class ProfileService {
       throw new Error('Profile repository: "created" is null');
     }
 
-    let ldapUser = await this.ldapService.searchByDN(created.dn);
-    if (!ldapUser) {
-      ldapUser = await this.ldapService.searchByDN(created.dn, false);
-      if (!ldapUser) {
-        ldapUser = await this.ldapService.searchByUsername(created.username, false);
-        if (!ldapUser) {
-          throw new Error('Ldap is not connected.');
-        } else {
-          created.dn = ldapUser.dn;
+    if (thumbnailPhoto) {
+      await constructUploads([thumbnailPhoto], ({ file }) => {
+        thumbnailPhotoProcessed = file;
+      });
+    }
+
+    if (created.loginService === LoginService.LDAP) {
+      let ldapUser: LdapResponseUser | undefined;
+      try {
+        ldapUser = await this.ldapService.searchByDN(created.dn);
+      } catch (error) {
+        if (!(error instanceof Ldap.NoSuchObjectError)) {
+          throw error;
         }
+      }
+      if (!ldapUser) {
+        try {
+          ldapUser = await this.ldapService.searchByDN(created.dn, false);
+        } catch (error) {
+          if (!(error instanceof Ldap.NoSuchObjectError)) {
+            throw error;
+          }
+        }
+      }
+      if (!ldapUser) {
+        if (created.username) {
+          ldapUser = await this.ldapService.searchByUsername(created.username, false);
+        }
+      }
+
+      if (ldapUser) {
+        const modification = this.modification(profile, created, ldapUser);
+
+        const ldapUpdated = Object.keys(modification).map(
+          (key) =>
+            new Change({
+              operation: 'replace',
+              modification: new Attribute({ type: key, vals: modification[key] }),
+            }),
+        );
+        if (thumbnailPhotoProcessed) {
+          ldapUpdated.push(
+            new Change({
+              operation: 'replace',
+              modification: new Attribute({ type: 'thumbnailPhoto', vals: thumbnailPhotoProcessed }),
+            }),
+          );
+        }
+
+        if (ldapUpdated.length === 0) {
+          throw new UnprocessableEntityException();
+        }
+        await this.ldapService
+          .modify(
+            ldapUser.dn,
+            ldapUpdated,
+            created.username,
+            // TODO: .modify with password parameter
+            // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
+          )
+          .catch((error: Ldap.Error) => {
+            if (error.name === 'InsufficientAccessRightsError') {
+              throw new ForbiddenException();
+            } else if (error.name === 'ConstraintViolationError') {
+              throw new PayloadTooLargeException();
+            }
+            throw new BadRequestException();
+          });
+      } else {
+        profile['disabled'] = true;
+        profile['notShowing'] = true;
       }
     }
 
-    const modification = this.modification(profile, created, ldapUser);
-
-    const ldapUpdated = Object.keys(modification).map(
-      (key) =>
-        new Change({
-          operation: 'replace',
-          modification: new Attribute({ type: key, vals: modification[key] }),
-        }),
-    );
-
-    if (thumbnailPhoto) {
-      await constructUploads([thumbnailPhoto], ({ file }) => {
-        modification.thumbnailPhoto = file;
-
-        return ldapUpdated.push(
-          new Change({
-            operation: 'replace',
-            modification: new Attribute({ type: 'thumbnailPhoto', vals: file }),
-          }),
-        );
-      });
-    }
-
-    if (ldapUpdated.length === 0) {
-      throw new UnprocessableEntityException();
-    }
-    await this.ldapService
-      .modify(
-        ldapUser.dn,
-        ldapUpdated,
-        created.username,
-        // TODO: .modify with password parameter
-        // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
-      )
-      .catch((error: Ldap.Error) => {
-        if (error.name === 'InsufficientAccessRightsError') {
-          throw new ForbiddenException();
-        } else if (error.name === 'ConstraintViolationError') {
-          throw new PayloadTooLargeException();
-        }
-        throw new BadRequestException();
-      });
-
-    const thumbnail = modification.thumbnailPhoto
+    const thumbnail = thumbnailPhotoProcessed
       ? {
-          thumbnailPhoto: modification.thumbnailPhoto.toString('base64'),
+          thumbnailPhoto: thumbnailPhotoProcessed.toString('base64'),
           thumbnailPhoto40: await this.imageService
-            .imageResize(modification.thumbnailPhoto)
+            .imageResize(thumbnailPhotoProcessed)
             .then((value: Buffer | undefined) => value?.toString('base64')),
         }
       : {};

@@ -3,6 +3,7 @@
 //#region Imports NPM
 import { ApolloQueryResult, ApolloError } from 'apollo-client';
 import { QueryLazyOptions } from '@apollo/react-hooks';
+import { ExecutionResult, MutationFunctionOptions } from 'react-apollo';
 import { WithTranslation } from 'next-i18next';
 import { Order, Connection } from 'typeorm-graphql-pagination';
 import { OutlinedInputProps } from '@material-ui/core';
@@ -198,12 +199,14 @@ export interface ProfileTaskInfoCardProps {
 
 export interface ProfileEditComponentProps {
   isAdmin: boolean;
-  newProfile: boolean;
+  newProfile?: boolean;
+  loadingCheckUsername?: boolean;
   loadingProfile: boolean;
   loadingChanged: boolean;
   hasUpdate: boolean;
   profile?: Profile | ProfileInput;
   onDrop: (_: any) => Promise<void>;
+  handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleChange: (
     _: keyof Profile | keyof ProfileInput,
     ___?: string,

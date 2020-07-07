@@ -78,7 +78,7 @@ input ProfileInput {
 
   username: String
 
-  firstName: String!
+  firstName: String
   lastName: String
   middleName: String
   birthday: String
@@ -118,6 +118,7 @@ input ProfileInput {
 
 type Mutation {
   syncLdap: Boolean
-  ldapNewUser(ldap: ProfileInput!): Profile
+  ldapNewUser(ldap: ProfileInput!, photo: Upload): Profile
+  ldapCheckUsername(value: String!): Boolean
   userSettings(value: UserSettingsInput): User
 }

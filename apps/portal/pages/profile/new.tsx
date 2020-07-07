@@ -2,13 +2,14 @@
 
 //#region Imports NPM
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import Head from 'next/head';
 import { useMutation } from '@apollo/react-hooks';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { PROFILE, LDAP_NEW_USER, CURRENT_USER } from '@lib/queries';
+import { LDAP_NEW_USER, LDAP_CHECK_USERNAME } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import { format } from '@lib/dayjs';
@@ -25,11 +26,10 @@ const newParameters: ProfileInput = {
   lastName: '',
   middleName: '',
   email: '',
-  disabled: true,
-  notShowing: false,
 };
 
 const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+  const router = useRouter();
   const [current, setCurrent] = useState<ProfileInput>(newParameters);
   const [updated, setUpdated] = useState<ProfileInput>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
@@ -39,7 +39,17 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<
     Data<'ldapNewUser', Profile>
-  >(LDAP_NEW_USER);
+  >(LDAP_NEW_USER, {
+    onCompleted: (data) => {
+      if (data.ldapNewUser.id) {
+        router.push(`/profile/edit/${data.ldapNewUser.id}`);
+      }
+    },
+  });
+
+  const [checkUsername, { loading: loadingCheckUsername, error: errorCheckUsername }] = useMutation<
+    Data<'ldpCheckUsername', boolean>
+  >(LDAP_CHECK_USERNAME);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -50,6 +60,23 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     },
     [current],
   );
+
+  const handleCheckUsername = async (): Promise<void> => {
+    if (updated.username) {
+      const data = await checkUsername({
+        variables: {
+          value: updated.username,
+        },
+      });
+      const { ldapCheckUsername } = data.data ?? { ldapCheckUsername: false };
+
+      if (ldapCheckUsername === false) {
+        snackbarUtils.error(t('profile:checkUsername:busy', { current: updated.username }));
+      } else if (ldapCheckUsername === true) {
+        snackbarUtils.show(t('profile:checkUsername:free', { current: updated.username }), 'success');
+      }
+    }
+  };
 
   const handleChange = (name: keyof ProfileInput, value_?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const element: EventTarget & HTMLInputElement = event.target;
@@ -73,8 +100,8 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleSave = (): void => {
     ldapNewUser({
       variables: {
-        profile: updated,
-        thumbnailPhoto,
+        ldap: updated,
+        photo: thumbnailPhoto,
       },
     });
   };
@@ -83,16 +110,23 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     if (errorLdapNewUser) {
       snackbarUtils.error(errorLdapNewUser);
     }
-  }, [errorLdapNewUser]);
+    if (errorCheckUsername) {
+      snackbarUtils.error(errorCheckUsername);
+    }
+  }, [errorCheckUsername, errorLdapNewUser]);
 
   const hasUpdate = useMemo<boolean>(() => {
     if (loadingLdapNewUser) {
       return true;
     }
-    if (updated && Object.keys(updated).length === 1 && updated.id) {
-      return false;
+    if (
+      updated && Object.keys(updated).length > 1 && updated.contact === Contact.PROFILE
+        ? updated.firstName || updated.lastName || updated.middleName
+        : (updated.firstName || updated.lastName || updated.middleName) && updated.username
+    ) {
+      return !!updated || !!thumbnailPhoto;
     }
-    return !!updated || !!thumbnailPhoto;
+    return false;
   }, [loadingLdapNewUser, thumbnailPhoto, updated]);
 
   return (
@@ -104,11 +138,13 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <ProfileEditComponent
           isAdmin={isAdmin}
           newProfile={true}
+          loadingCheckUsername={loadingCheckUsername}
           loadingProfile={false}
           loadingChanged={loadingLdapNewUser}
           profile={current}
           hasUpdate={hasUpdate}
           onDrop={onDrop}
+          handleCheckUsername={handleCheckUsername}
           handleChange={handleChange}
           handleBirthday={handleBirthday}
           handleSave={handleSave}

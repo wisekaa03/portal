@@ -1,5 +1,10 @@
 {
   "title": "Portal: administration panel",
+  "add": {
+    "new": "Add new users",
+    "description": "Add new users and contacts in Active Directory",
+    "wait": "... Redirecting ..."
+  },
   "sync": {
     "sync": "Synchronization",
     "description": "Synchronization with Active Directory",

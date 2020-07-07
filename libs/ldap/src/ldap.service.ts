@@ -290,7 +290,7 @@ export class LdapService extends EventEmitter {
             options,
             (searchError: Ldap.Error | null, searchResult: Ldap.SearchCallbackResponse) => {
               if (searchError !== null) {
-                return reject(searchError.message);
+                return reject(searchError);
               }
               if (typeof searchResult !== 'object') {
                 return reject(`The LDAP server has empty search: ${searchBase}, options=${JSON.stringify(options)}`);
@@ -332,7 +332,7 @@ export class LdapService extends EventEmitter {
               });
 
               searchResult.on('error', (error: Ldap.Error) => {
-                reject(error.message);
+                reject(error);
               });
 
               searchResult.on('end', (result: Ldap.LDAPResult) => {
@@ -410,13 +410,13 @@ export class LdapService extends EventEmitter {
         (result) =>
           new Promise<undefined | Ldap.SearchEntryObject>((resolve, reject) => {
             if (!result) {
-              return reject(new Error('No result from search.'));
+              return reject(new Ldap.NoSuchObjectError());
             }
 
             switch (result.length) {
               case 0:
                 // eslint-disable-next-line unicorn/no-useless-undefined
-                return resolve(undefined);
+                return reject(new Ldap.NoSuchObjectError());
               case 1:
                 return resolve(result[0]);
               default:
@@ -425,8 +425,7 @@ export class LdapService extends EventEmitter {
           }),
       )
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`user search error: ${message}`, message);
+        this.logger.error(`user search error: ${error.toString()}`, [{ error }]);
 
         throw error;
       });
@@ -467,8 +466,7 @@ export class LdapService extends EventEmitter {
         return user;
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`group search error: ${message}`, message);
+        this.logger.error(`group search error: ${error.toString()}`, [{ error }]);
 
         throw error;
       });
@@ -478,9 +476,9 @@ export class LdapService extends EventEmitter {
    * Search user by Username
    *
    * @param {string} userByUsername user name
-   * @returns {Promise<undefined | LdapResponseUser>} User in LDAP
+   * @returns {Promise<LdapResponseUser>} User in LDAP
    */
-  public async searchByUsername(userByUsername: string, cache = true): Promise<undefined | LdapResponseUser> {
+  public async searchByUsername(userByUsername: string, cache = true): Promise<LdapResponseUser> {
     if (cache && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(userByUsername);
@@ -499,18 +497,18 @@ export class LdapService extends EventEmitter {
           this.logger.debug(`To cache: ${user.dn}`);
           this.userCache.set<LDAPCache>(user.dn, { user, password: '' }, this.ttl);
 
-          this.logger.debug(`To cache: ${user.sAMAccountName}`);
-          this.userCache.set<LDAPCache>(user.sAMAccountName, { user, password: '' }, this.ttl);
+          if (user.sAMAccountName) {
+            this.logger.debug(`To cache: ${user.sAMAccountName}`);
+            this.userCache.set<LDAPCache>(user.sAMAccountName, { user, password: '' }, this.ttl);
+          }
         }
 
         return user;
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`Search by Username error: ${message}`, message);
+        this.logger.error(`Search by Username error: ${error.toString()}`, [{ error }]);
 
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        return undefined;
+        throw error;
       });
   }
 
@@ -518,9 +516,9 @@ export class LdapService extends EventEmitter {
    * Search user by DN
    *
    * @param {string} userByDN user distinguished name
-   * @returns {Promise<undefined | LdapResponseUser>} User in LDAP
+   * @returns {Promise<LdapResponseUser>} User in LDAP
    */
-  public async searchByDN(userByDN: string, cache = true): Promise<undefined | LdapResponseUser> {
+  public async searchByDN(userByDN: string, cache = true): Promise<LdapResponseUser> {
     if (cache && this.userCache) {
       // Check cache. 'cached' is `{password: <hashed-password>, user: <user>}`.
       const cached: LDAPCache = await this.userCache.get<LDAPCache>(userByDN);
@@ -544,15 +542,14 @@ export class LdapService extends EventEmitter {
     return this.search(userByDN, options)
       .then(
         (result) =>
-          new Promise<undefined | LdapResponseUser>((resolve, reject) => {
+          new Promise<LdapResponseUser>((resolve, reject) => {
             if (!result) {
-              throw new Error('No result from search.');
+              return reject(new Error('No result from search'));
             }
 
             switch (result.length) {
               case 0:
-                // eslint-disable-next-line unicorn/no-useless-undefined
-                return resolve(undefined);
+                return reject(new Ldap.NoSuchObjectError());
               case 1:
                 return resolve((result[0] as unknown) as LdapResponseUser);
               default:
@@ -565,24 +562,29 @@ export class LdapService extends EventEmitter {
           this.logger.debug(`To cache: ${userByDN}`);
           this.userCache.set<LDAPCache>(userByDN, { user, password: '' }, this.ttl);
 
-          this.logger.debug(`To cache: ${user.sAMAccountName}`);
-          this.userCache.set<LDAPCache>(user.sAMAccountName, { user, password: '' }, this.ttl);
+          if (user.sAMAccountName) {
+            this.logger.debug(`To cache: ${user.sAMAccountName}`);
+            this.userCache.set<LDAPCache>(user.sAMAccountName, { user, password: '' }, this.ttl);
+          }
         }
 
         return user;
       })
-      .catch((error: Error) => {
-        this.logger.error('Search by DN error:', error);
+      .catch((error: Error | Ldap.NoSuchObjectError) => {
+        if (error instanceof Ldap.NoSuchObjectError) {
+          this.logger.error(`Not found error: ${error}`, [{ error }]);
+        } else {
+          this.logger.error(`Search by DN error: ${error}`, [{ error }]);
+        }
 
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        return undefined;
+        throw error;
       });
   }
 
   /**
    * Synchronize users
    *
-   * @returns {undefined | LdapResponseUser[]} User in LDAP
+   * @returns {LdapResponseUser[]} User in LDAP
    * @throws {Error}
    */
   public async synchronization(): Promise<LdapResponseUser[]> {
@@ -600,9 +602,7 @@ export class LdapService extends EventEmitter {
     return this.search(this.options.searchBase, options)
       .then(async (sync) => {
         if (sync) {
-          const groupsPromises = sync.map(async (u) => {
-            await this.getGroups(u);
-          });
+          const groupsPromises = sync.map(async (u) => await this.getGroups(u));
 
           await Promise.allSettled(groupsPromises);
 
@@ -613,8 +613,7 @@ export class LdapService extends EventEmitter {
         throw new Error('Synchronize unknown error.');
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`Synchronize error: ${message}`, message);
+        this.logger.error(`Synchronize error: ${error.toString()}`, [{ error }]);
 
         throw error;
       });
@@ -623,7 +622,7 @@ export class LdapService extends EventEmitter {
   /**
    * Synchronize users
    *
-   * @returns {undefined | LdapResponseGroup[]} Group in LDAP
+   * @returns {LdapResponseGroup[]} Group in LDAP
    * @throws {Error}
    */
   public async synchronizationGroups(): Promise<LdapResponseGroup[]> {
@@ -648,10 +647,9 @@ export class LdapService extends EventEmitter {
         throw new Error('synchronizationGroups: unknown error.');
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`synchronizationGroups error: ${message}`, message);
+        this.logger.error(`synchronizationGroups error: ${error.toString()}`, [{ error }]);
 
-        throw new Error(`synchronizationGroups error: ${message}`);
+        throw error;
       });
   }
 
@@ -804,9 +802,9 @@ export class LdapService extends EventEmitter {
         password,
         async (bindError): Promise<unknown | LdapResponseUser> => {
           if (bindError) {
-            this.logger.error('bind error:', bindError);
+            this.logger.error(`bind error: ${bindError.toString()}`, [{ error: bindError }]);
 
-            return reject(new Error(bindError.message));
+            return reject(bindError);
           }
 
           // 3. If requested, fetch user groups
@@ -828,10 +826,9 @@ export class LdapService extends EventEmitter {
 
             return resolve(userWithGroups as LdapResponseUser);
           } catch (error) {
-            const message = error.toString();
-            this.logger.error(`Authenticate error: ${message}`, message);
+            this.logger.error(`Authenticate error: ${error.toString()}`, [{ error }]);
 
-            return reject(`Authenticate error: ${JSON.stringify(error)}`);
+            return reject(error);
           }
         },
       );
@@ -846,10 +843,10 @@ export class LdapService extends EventEmitter {
    * @returns {LdapResponseUser} User | Profile in LDAP
    * @throws {Error}
    */
-  public async add(entry: LDAPAddEntry): Promise<LdapResponseUser | undefined> {
+  public async add(entry: LDAPAddEntry): Promise<LdapResponseUser> {
     return this.adminBind().then(
       () =>
-        new Promise<LdapResponseUser | undefined>((resolve, reject) => {
+        new Promise<LdapResponseUser>((resolve, reject) => {
           if (!this.options.newObject) {
             throw new Error('ADD operation not available');
           }

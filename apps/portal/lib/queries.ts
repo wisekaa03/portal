@@ -236,12 +236,18 @@ export const CHANGE_PROFILE = gql`
 `;
 
 export const LDAP_NEW_USER = gql`
-  mutation LdapNewUser($value: ProfileInput, $thumbnailPhoto: Upload) {
-    ldapNewUser(value: $value, thumbnailPhoto: $thumbnailPhoto) {
+  mutation LdapNewUser($ldap: ProfileInput!, $photo: Upload) {
+    ldapNewUser(ldap: $ldap, photo: $photo) {
       ...ProfileProps
     }
   }
   ${PROFILE_FRAGMENT}
+`;
+
+export const LDAP_CHECK_USERNAME = gql`
+  mutation LdapCheckUsername($value: String!) {
+    ldapCheckUsername(value: $value)
+  }
 `;
 
 export const USER_SETTINGS = gql`

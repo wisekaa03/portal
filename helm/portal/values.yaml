@@ -61,6 +61,7 @@ LDAP_SEARCH_FILTER_ALL_GROUPS: "objectClass=group"
 LDAP_SEARCH_GROUP: "(&(objectClass=group)(member={{dn}}))"
 LDAP_SEARCH_USER: "(sAMAccountName={{username}})"
 LDAP_NEW_BASE: "OU=User,DC=example,DC=local"
+LDAP_DOMAIN: "example.com"
 # LDAP Redis
 LDAP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 LDAP_REDIS_TTL: 300

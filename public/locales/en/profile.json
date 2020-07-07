@@ -3,6 +3,10 @@
   "new": {
     "title": "Portal: add new user or contact"
   },
+  "checkUsername": {
+    "busy": "Username {{current}} is busy",
+    "free": "Username {{current}} is free"
+  },
   "edit": {
     "title": "Portal: edit user \"{{current}}\"",
     "notFound": "Not found",
