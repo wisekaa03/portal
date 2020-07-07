@@ -21,6 +21,8 @@ import ProfileEditComponent from '@front/components/profile/edit';
 
 const newParameters: ProfileInput = {
   contact: Contact.PROFILE,
+  notShowing: true,
+  disabled: false,
   username: '',
   firstName: '',
   lastName: '',
@@ -86,7 +88,7 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       const result = name === 'gender' ? +value : value;
 
       setCurrent({ ...current, [name]: result });
-      setUpdated({ ...updated, [name]: result });
+      setUpdated({ ...updated, [name]: result, disabled: updated.contact !== Contact.PROFILE });
     }
   };
 

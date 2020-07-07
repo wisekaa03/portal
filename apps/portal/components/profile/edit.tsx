@@ -289,12 +289,38 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             fullWidth={false}
                           />
                         )}
-                        {typeof (profile as Profile).notShowing === 'boolean' && (
+                      </div>
+                      <div className={classes.topRightBlock}>
+                        <RadioGroup
+                          className={classes.genderBlock}
+                          onChange={handleChange('gender')}
+                          aria-label="gender"
+                          name="gender"
+                          value={profile.gender}
+                        >
+                          <FormControlLabel
+                            disabled={loadingChanged}
+                            value={Gender.MAN}
+                            control={<Radio color="secondary" />}
+                            label={t('common:gender.MAN')}
+                            name="gender"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            disabled={loadingChanged}
+                            value={Gender.WOMAN}
+                            control={<Radio color="secondary" />}
+                            label={t('common:gender.WOMAN')}
+                            name="gender"
+                            labelPlacement="end"
+                          />
+                        </RadioGroup>
+                        {typeof profile.notShowing === 'boolean' && (
                           <FormControlLabel
                             control={
                               <Checkbox
                                 disabled={loadingChanged}
-                                checked={(profile as Profile).notShowing}
+                                checked={profile.notShowing}
                                 onChange={handleChange('notShowing')}
                                 color="secondary"
                                 value="notShowing"
@@ -303,31 +329,21 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             label={t('phonebook:fields.notShowing')}
                           />
                         )}
+                        {typeof profile.disabled === 'boolean' && (
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                disabled={true}
+                                checked={profile.disabled}
+                                onChange={handleChange('disabled')}
+                                color="secondary"
+                                value="disabled"
+                              />
+                            }
+                            label={t('phonebook:fields.disabled')}
+                          />
+                        )}
                       </div>
-                      <RadioGroup
-                        className={classes.genderBlock}
-                        onChange={handleChange('gender')}
-                        aria-label="gender"
-                        name="gender"
-                        value={profile.gender}
-                      >
-                        <FormControlLabel
-                          disabled={loadingChanged}
-                          value={Gender.MAN}
-                          control={<Radio color="secondary" />}
-                          label={t('common:gender.MAN')}
-                          name="gender"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          disabled={loadingChanged}
-                          value={Gender.WOMAN}
-                          control={<Radio color="secondary" />}
-                          label={t('common:gender.WOMAN')}
-                          name="gender"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
                       <ProfileTextFieldComponent
                         disabled={loadingChanged}
                         handleChange={handleChange}

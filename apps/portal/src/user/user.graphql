@@ -114,6 +114,9 @@ input ProfileInput {
   town: String
   street: String
   room: String
+
+  notShowing: Boolean
+  disabled: Boolean
 }
 
 type Mutation {

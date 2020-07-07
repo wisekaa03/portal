@@ -103,10 +103,7 @@ export interface SearchSuggestions {
 }
 
 export interface ProfileInput
-  extends Omit<
-    Profile,
-    'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt' | 'disabled' | 'notShowing'
-  > {
+  extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt'> {
   contact: Contact;
 }
 //#endregion
