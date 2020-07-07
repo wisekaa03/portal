@@ -2,8 +2,10 @@
 
 //#region Imports NPM
 import { ApolloQueryResult, ApolloError } from 'apollo-client';
+import { QueryLazyOptions } from '@apollo/react-hooks';
 import { WithTranslation } from 'next-i18next';
 import { Order, Connection } from 'typeorm-graphql-pagination';
+import { OutlinedInputProps } from '@material-ui/core';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
@@ -11,7 +13,6 @@ import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile, SearchSuggestions } from './profile.dto';
 import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
-import { QueryLazyOptions } from '@apollo/react-hooks';
 //#endregion
 
 export type ColumnNames =
@@ -92,7 +93,7 @@ export interface PhonebookHelpProps extends WithTranslation {
 }
 
 export interface HeaderPropsRef {
-  style: any;
+  style: React.CSSProperties;
 }
 
 export interface HeaderProps {
@@ -212,6 +213,6 @@ export interface TextFieldComponentProps {
   handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<Record<any, any>>) => void;
   field: keyof Profile;
   value?: any;
-  InputProps: any;
+  InputProps: Partial<OutlinedInputProps>;
   fullWidth?: boolean;
 }
