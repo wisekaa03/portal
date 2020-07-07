@@ -263,6 +263,16 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             <MenuItem value="PROFILE">{t('phonebook:contact.profile')}</MenuItem>
                           </Select>
                         </FormControl>
+                        {profile.username && (
+                          <ProfileTextFieldComponent
+                            disabled={true}
+                            handleChange={handleChange}
+                            field="username"
+                            value={profile.username}
+                            InputProps={{ readOnly: true }}
+                            fullWidth={false}
+                          />
+                        )}
                         <FormControlLabel
                           control={
                             <Checkbox

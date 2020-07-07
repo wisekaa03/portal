@@ -213,4 +213,5 @@ export interface TextFieldComponentProps {
   field: keyof Profile;
   value?: any;
   InputProps: any;
+  fullWidth?: boolean;
 }

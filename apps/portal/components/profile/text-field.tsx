@@ -20,6 +20,7 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
   field,
   value,
   InputProps,
+  fullWidth = true,
 }) => {
   const { t } = useTranslation();
   const autocomplete = PROFILE_AUTOCOMPLETE_FIELDS.includes(field);
@@ -55,7 +56,7 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
   }, [error]);
 
   const props: OutlinedTextFieldProps = {
-    fullWidth: true,
+    fullWidth,
     disabled,
     color: 'secondary',
     label: t(`phonebook:fields.${field}`),
