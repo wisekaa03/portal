@@ -3,7 +3,6 @@
 //#region Imports NPM
 import {
   Injectable,
-  NotAcceptableException,
   PayloadTooLargeException,
   BadRequestException,
   ForbiddenException,
@@ -18,11 +17,11 @@ import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { Profile, SearchSuggestions, Gender, LoginService, Contact, AllUsersInfo } from '@lib/types';
+import { Profile, SearchSuggestions, Gender, LoginService, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
-import { LdapService, LdapResponseUser, Change, Attribute } from '@app/ldap';
+import { LdapService, LdapResponseUser, Change, Attribute, LDAPAddEntry } from '@app/ldap';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
 //#endregion
@@ -564,70 +563,75 @@ export class ProfileService {
   };
 
   /**
-   * changeProfile
-   *
-   * @async
-   * @param {Request} req Express Request
-   * @param {Profile} profile Profile params
-   * @param {Promise<FileUpload>} thumbnailPhoto Avatar
-   * @returns {Promise<ProfileEntity>} The corrected ProfileEntity
-   * @throws {Error|BadRequestException|NotAcceptableException}
-   * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
+   * Modification
    */
-  async changeProfile(
-    request: Request,
-    profile: Profile,
-    thumbnailPhoto?: Promise<FileUpload>,
-  ): Promise<ProfileEntity> {
-    // В резолвере проверка на юзера уже есть
-    if (!request.session?.passport?.user?.profile?.id) {
-      throw new Error('Not authorized');
-    }
-
-    const updated = { id: request.session.passport.user.profile.id, ...profile };
-
-    const created = await this.profileRepository.findOne(updated.id);
-    if (!created) {
-      throw new Error('Profile repository: "created" is null');
-    }
-
-    let ldapUser = await this.ldapService.searchByDN(created.dn);
-    if (!ldapUser) {
-      ldapUser = await this.ldapService.searchByDN(created.dn, false);
-      if (!ldapUser) {
-        ldapUser = await this.ldapService.searchByUsername(created.username, false);
-        if (!ldapUser) {
-          throw new Error('Ldap is not connected.');
-        } else {
-          created.dn = ldapUser.dn;
-        }
-      }
-    }
-
-    const modification: Record<string, any> = {
+  modification = (profile: Profile | ProfileInput, created?: Profile, ldapUser?: LdapResponseUser): LDAPAddEntry => {
+    const modification: LDAPAddEntry = {
+      cn: '',
       comment: {},
     };
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const value = this.clean(profile[key]);
+        const value = this.clean(profile[key]) as string;
 
         switch (key) {
-          case 'firstName':
+          case 'username':
+            modification.sAMAccountName = value;
+            break;
+          case 'firstName': {
             modification.givenName = value;
-            modification.displayName = [created.lastName, value, created.middleName].join(' ');
+
+            const f: Array<string> = [];
+            if (created?.lastName) {
+              f.push(created.lastName);
+            }
+            f.push(value as string);
+            if (created?.middleName) {
+              f.push(created?.middleName);
+            }
+            modification.displayName = f.join(' ');
+            modification.cn = f.join(' ');
+
             break;
-          case 'lastName':
+          }
+          case 'lastName': {
             modification.sn = value;
-            modification.displayName = [value, created.firstName, created.middleName].join(' ');
+
+            const f: Array<string> = [];
+            f.push(value as string);
+            if (created?.firstName) {
+              f.push(created.firstName);
+            }
+            if (created?.middleName) {
+              f.push(created?.middleName);
+            }
+            modification.displayName = f.join(' ');
+            modification.cn = f.join(' ');
+
             break;
-          case 'middleName':
+          }
+          case 'middleName': {
             modification[key] = value;
-            modification.displayName = [created.lastName, created.firstName, value].join(' ');
+
+            const f: Array<string> = [];
+            if (created?.lastName) {
+              f.push(created.lastName);
+            }
+            if (created?.firstName) {
+              f.push(created.firstName);
+            }
+            f.push(value as string);
+            modification.displayName = f.join(' ');
+
             break;
+          }
           case 'gender':
-            if ([Gender.MAN, Gender.WOMAN].includes(value as number)) {
-              modification.comment = { ...modification.comment, [key]: value === Gender.MAN ? 'M' : 'W' };
+            if ([Gender.MAN, Gender.WOMAN].includes(Number.parseInt(value, 10))) {
+              modification.comment = {
+                ...(modification.comment as Record<string, string>),
+                [key]: ((value as unknown) as Gender) === Gender.MAN ? 'M' : 'W',
+              };
             }
             break;
           case 'birthday':
@@ -637,7 +641,7 @@ export class ProfileService {
           case 'departmentEng':
           case 'divisionEng':
           case 'positionEng':
-            modification.comment = { ...modification.comment, [key]: value };
+            modification.comment = { ...(modification.comment as Record<string, string>), [key]: value };
             break;
           case 'country':
             modification.co = value;
@@ -694,18 +698,69 @@ export class ProfileService {
       });
     }
 
+    if (modification.displayName) {
+      modification.cn = modification.displayName;
+    }
+
     if (Object.keys(modification.comment).length === 0) {
       delete modification.comment;
     } else {
       let oldComment = {};
 
-      try {
-        oldComment = JSON.parse(ldapUser.comment);
-        // eslint-disable-next-line no-empty
-      } catch {}
+      if (ldapUser) {
+        try {
+          oldComment = JSON.parse(ldapUser.comment);
+          // eslint-disable-next-line no-empty
+        } catch {}
+      }
 
-      modification.comment = JSON.stringify({ ...oldComment, ...modification.comment });
+      modification.comment = JSON.stringify({ ...oldComment, ...(modification.comment as Record<string, string>) });
     }
+
+    return modification;
+  };
+
+  /**
+   * changeProfile
+   *
+   * @async
+   * @param {Request} req Express Request
+   * @param {Profile} profile Profile params
+   * @param {Promise<FileUpload>} thumbnailPhoto Avatar
+   * @returns {Promise<ProfileEntity>} The corrected ProfileEntity
+   * @throws {Error|BadRequestException|NotAcceptableException}
+   * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
+   */
+  async changeProfile(
+    request: Request,
+    profile: Profile,
+    thumbnailPhoto?: Promise<FileUpload>,
+  ): Promise<ProfileEntity> {
+    if (!request.session?.passport?.user?.profile?.id) {
+      throw new Error('Not authorized');
+    }
+
+    const updated = { id: request.session.passport.user.profile.id, ...profile };
+
+    const created = await this.profileRepository.findOne(updated.id);
+    if (!created) {
+      throw new Error('Profile repository: "created" is null');
+    }
+
+    let ldapUser = await this.ldapService.searchByDN(created.dn);
+    if (!ldapUser) {
+      ldapUser = await this.ldapService.searchByDN(created.dn, false);
+      if (!ldapUser) {
+        ldapUser = await this.ldapService.searchByUsername(created.username, false);
+        if (!ldapUser) {
+          throw new Error('Ldap is not connected.');
+        } else {
+          created.dn = ldapUser.dn;
+        }
+      }
+    }
+
+    const modification = this.modification(profile, created, ldapUser);
 
     const ldapUpdated = Object.keys(modification).map(
       (key) =>

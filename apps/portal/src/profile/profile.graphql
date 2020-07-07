@@ -1,5 +1,5 @@
 type Profile {
-  id: ID
+  id: ID!
 
   loginService: String
   loginIdentificator: String

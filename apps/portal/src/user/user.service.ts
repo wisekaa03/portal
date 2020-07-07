@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import { Injectable, Inject, ServiceUnavailableException } from '@nestjs/common';
+import { FileUpload } from 'graphql-upload';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
@@ -21,8 +22,11 @@ import {
   DefinedUserSettings,
   Contact,
   AllUsersInfo,
-  UserProfileLDAP,
+  ProfileInput,
 } from '@lib/types';
+import { constructUploads } from '@back/shared/upload';
+import { LdapService, LDAPAddEntry } from '@app/ldap';
+import { ProfileEntity } from '@back/profile/profile.entity';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
@@ -42,6 +46,7 @@ export class UserService {
     private readonly groupService: GroupService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly ldapService: LdapService,
   ) {
     this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
   }
@@ -322,11 +327,11 @@ export class UserService {
   /**
    * Save the settings
    *
-   * @param {req} Request
-   * @param {string} value settings object
-   * @returns {boolean}
+   * @param {UserSettings} value
+   * @param {User} user
+   * @returns {UserSettings}
    */
-  settings = (user: User, value: UserSettings): UserSettings => {
+  settings = (value: UserSettings, user: User): UserSettings => {
     let settings = { ...user.settings };
 
     (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
@@ -350,9 +355,49 @@ export class UserService {
   };
 
   /**
-   *
+   * This is a LDAP new user and contact
    */
-  ldapNewUser = async (value: UserProfileLDAP): Promise<User> => {
-    throw new ServiceUnavailableException();
+  ldapNewUser = async (value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
+    const entry: LDAPAddEntry = this.profileService.modification(value);
+    entry.name = entry.cn;
+
+    if (value.contact === Contact.PROFILE) {
+      entry['objectClass'] = ['contact'];
+      if (entry['sAMAccountName']) {
+        throw new Error('Username is found and this is a Profile');
+      }
+    } else {
+      entry['objectClass'] = ['user'];
+      if (!entry['sAMAccountName']) {
+        throw new Error('Username is not found and this is a User');
+      }
+    }
+
+    if (thumbnailPhoto) {
+      await constructUploads([thumbnailPhoto], ({ file }) => {
+        entry.thumbnailPhoto = file;
+      });
+    }
+
+    return this.ldapService
+      .add(entry)
+      .then<UserEntity | ProfileEntity>((ldapUser) => {
+        if (!ldapUser) {
+          throw new Error('Cannot contact with AD');
+        }
+
+        if (value.contact === Contact.PROFILE) {
+          return this.profileService.fromLdap(ldapUser);
+        }
+
+        return this.fromLdap(ldapUser);
+      })
+      .then<Profile>((userProfile) => {
+        if (userProfile instanceof ProfileEntity) {
+          return userProfile;
+        }
+
+        return userProfile.profile;
+      });
   };
 }

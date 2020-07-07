@@ -73,14 +73,12 @@ enum Contact {
   USER
 }
 
-input UserProfile {
+input ProfileInput {
   contact: Contact!
 
-  username: String!
+  username: String
 
-  fullName: String
-
-  firstName: String
+  firstName: String!
   lastName: String
   middleName: String
   birthday: String
@@ -116,13 +114,10 @@ input UserProfile {
   town: String
   street: String
   room: String
-
-  thumbnailPhoto: String
-  thumbnailPhoto40: String
 }
 
 type Mutation {
   syncLdap: Boolean
-  ldapNewUser(ldap: UserProfile!): User
+  ldapNewUser(ldap: ProfileInput!): Profile
   userSettings(value: UserSettingsInput): User
 }

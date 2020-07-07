@@ -18,7 +18,8 @@ import {
 //#region Imports Local
 import { Gender } from '@lib/types/gender';
 import { LoginService } from '@lib/types/login-service';
-import { Contact } from '../../lib/types/user.dto';
+import { Contact } from '@lib/types/user.dto';
+import { Profile } from '@lib/types/profile.dto';
 //#endregion
 
 @Entity('profile')
@@ -298,7 +299,7 @@ export class ProfileEntity {
     this.contact = this.username ? Contact.USER : Contact.PROFILE;
   }
 
-  toResponseObject = (): ProfileEntity => ({
+  toResponseObject = (): Profile => ({
     ...this,
     fullName: `${this.lastName || ''} ${this.firstName || ''} ${this.middleName || ''}`,
     contact: this.username ? Contact.USER : Contact.PROFILE,

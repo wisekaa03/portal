@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
+import { Query, Mutation, Resolver, Args, Context, ResolveProperty } from '@nestjs/graphql';
 import {
   UseGuards,
   NotAcceptableException,

@@ -16,6 +16,21 @@ export interface LDAPCache {
   password: string;
 }
 
+export interface LDAPAddEntry {
+  /**
+   * Common name
+   */
+  cn: string;
+  displayName?: string;
+  name?: string;
+
+  comment: Record<string, string> | string;
+
+  thumbnailPhoto?: Buffer;
+
+  [p: string]: undefined | string | string[] | Record<string, string> | Buffer;
+}
+
 export interface LdapResponseGroup {
   /**
    * Common name
@@ -381,6 +396,11 @@ export interface LdapModuleOptions extends ClientOptions {
    * 5 minutes.
    */
   cache?: boolean;
+
+  /**
+   * If it is filled, it will be available to add
+   */
+  newObject?: string;
 }
 
 export interface LdapOptionsFactory {

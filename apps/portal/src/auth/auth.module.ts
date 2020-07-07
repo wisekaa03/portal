@@ -54,6 +54,7 @@ import { LocalStrategy } from './strategies/local.strategy';
           searchAttributesAllUsers: ldapADattributes,
           reconnect: true,
           cache: true,
+          newObject: configService.get<string>('LDAP_NEW_BASE'),
         };
       },
     }),

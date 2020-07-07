@@ -1,6 +1,4 @@
 /** @format */
-/* eslint-disable import/no-extraneous-dependencies */
-
 // Copyright 2020 Stanislav V Vyaliy.  All rights reserved.
 
 import { Attribute } from './attribute';
@@ -23,8 +21,8 @@ export class Change {
     }
   }
 
-  set operation(val: 'add' | 'delete' | 'replace') {
-    switch (val) {
+  set operation(value: 'add' | 'delete' | 'replace') {
+    switch (value) {
       case 'add':
         this._operation = 0x00;
         break;
@@ -35,7 +33,7 @@ export class Change {
         this._operation = 0x02;
         break;
       default:
-        throw new Error(`Invalid operation type: 0x${Number(val).toString(16)}`);
+        throw new Error(`Invalid operation type: 0x${Number(value).toString(16)}`);
     }
   }
 
@@ -43,22 +41,22 @@ export class Change {
     return this._modification;
   }
 
-  set modification(val: Attribute | Record<any, any>) {
-    if (val instanceof Attribute || Attribute.isAttribute(val)) {
-      this._modification = val;
+  set modification(value: Attribute | Record<any, any>) {
+    if (value instanceof Attribute || Attribute.isAttribute(value)) {
+      this._modification = value;
       return;
     }
 
     // Does it have an attribute-like structure
-    if (Object.keys(val).length === 2 && typeof val.type === 'string' && Array.isArray(val.vals)) {
+    if (Object.keys(value).length === 2 && typeof value.type === 'string' && Array.isArray(value.vals)) {
       this._modification = new Attribute({
-        type: val.type,
-        vals: val.vals,
+        type: value.type,
+        vals: value.vals,
       });
       return;
     }
 
-    const keys = Object.keys(val);
+    const keys = Object.keys(value);
     if (keys.length > 1) {
       throw new Error('Only one attribute per Change allowed');
     } else if (keys.length === 0) {
@@ -66,15 +64,15 @@ export class Change {
     }
 
     const k = keys[0];
-    const _attr = new Attribute({ type: k });
-    if (Array.isArray(val[k])) {
-      val[k].forEach((v: any): void => {
-        _attr.addValue(v);
+    const _attribute = new Attribute({ type: k });
+    if (Array.isArray(value[k])) {
+      value[k].forEach((v: any): void => {
+        _attribute.addValue(v);
       });
     } else {
-      _attr.addValue(val[k]);
+      _attribute.addValue(value[k]);
     }
-    this._modification = _attr;
+    this._modification = _attribute;
   }
 
   constructor(options: Record<any, any> = { operation: 'add' }) {
@@ -118,12 +116,12 @@ export class Change {
    */
   apply = (
     change: Record<any, any> = { operation: 'add', modification: { type: '' } },
-    obj: Record<any, any>,
+    object: Record<any, any>,
     scalar: any,
   ): any => {
     const { type } = change.modification;
     const { vals } = change.modification;
-    let data = obj[type];
+    let data = object[type];
     if (data !== undefined) {
       if (!Array.isArray(data)) {
         data = [data];
@@ -135,8 +133,8 @@ export class Change {
       case 'replace':
         if (vals.length === 0) {
           // replace empty is a delete
-          delete obj[type];
-          return obj;
+          delete object[type];
+          return object;
         }
         data = vals;
 
@@ -144,19 +142,19 @@ export class Change {
       case 'add': {
         // add only new unique entries
         const newValues = vals.filter((entry: any) => {
-          return data.indexOf(entry) === -1;
+          return !data.includes(entry);
         });
         data = data.concat(newValues);
         break;
       }
       case 'delete':
         data = data.filter((entry: any) => {
-          return vals.indexOf(entry) === -1;
+          return !vals.includes(entry);
         });
         if (data.length === 0) {
           // Erase the attribute if empty
-          delete obj[type];
-          return obj;
+          delete object[type];
+          return object;
         }
         break;
       default:
@@ -165,11 +163,11 @@ export class Change {
     if (scalar && data.length === 1) {
       // store single-value outputs as scalars, if requested
       // eslint-disable-next-line prefer-destructuring
-      obj[type] = data[0];
+      object[type] = data[0];
     } else {
-      obj[type] = data;
+      object[type] = data;
     }
-    return obj;
+    return object;
   };
 
   parse = (ber: any): boolean => {
@@ -203,5 +201,3 @@ export class Change {
     modification: this._modification ? this._modification.json : {},
   });
 }
-
-/* eslint-enable import/no-extraneous-dependencies */

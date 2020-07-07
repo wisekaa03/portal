@@ -17,7 +17,7 @@ import {
 //#endregion
 //#region Imports Local
 import { LoginService } from '@lib/types/login-service';
-import { UserSettings } from '@lib/types/user.dto';
+import { User, UserSettings } from '@lib/types/user.dto';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupEntity } from '@back/group/group.entity';
 //#endregion
@@ -93,4 +93,8 @@ export class UserEntity {
   @OneToOne(() => ProfileEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   profile: ProfileEntity;
+
+  toResponseObject = (): User => ({
+    ...this,
+  });
 }

@@ -19,6 +19,7 @@ import {
   LdapResponseUser,
   ldapADattributes,
   LdapResponseGroup,
+  LDAPAddEntry,
 } from './ldap.interface';
 import { Change } from './ldap/change';
 //#endregion
@@ -200,7 +201,7 @@ export class LdapService extends EventEmitter {
    * Mark user client unbound so reconnect works as expected and re-emit the error
    *
    * @private
-   * @param {Ldap.Error} - The error to be logged and emitted
+   * @param {Ldap.Error} error The error to be logged and emitted
    * @returns {void}
    */
   private handleErrorUser(error: Ldap.Error): void {
@@ -214,7 +215,7 @@ export class LdapService extends EventEmitter {
    * Connect error handler
    *
    * @private
-   * @param {Ldap.Error} - The error to be logged and emitted
+   * @param {Ldap.Error} error The error to be logged and emitted
    * @returns {void}
    */
   private handleConnectError(error: Ldap.Error): void {
@@ -224,6 +225,7 @@ export class LdapService extends EventEmitter {
   /**
    * Bind adminClient to the admin user on connect
    *
+   * @async
    * @private
    * @returns {boolean | Error}
    */
@@ -271,11 +273,11 @@ export class LdapService extends EventEmitter {
    * user and group information.
    *
    * @private
-   * @param {string} searchBase - LDAP search base
-   * @param {Object} options - LDAP search options
-   * @param {string} options.filter - LDAP search filter
-   * @param {string} options.scope - LDAP search scope
-   * @param {(string[]|undefined)} options.attributes - Attributes to fetch
+   * @param {string} searchBase LDAP search base
+   * @param {Object} options LDAP search options
+   * @param {string} options.filter LDAP search filter
+   * @param {string} options.scope LDAP search scope
+   * @param {(string[]|undefined)} options.attributes Attributes to fetch
    * @returns {undefined | Ldap.SearchEntryObject[]}
    * @throws {Error}
    */
@@ -355,7 +357,7 @@ export class LdapService extends EventEmitter {
    * {@link https://tools.ietf.org/search/rfc4515#section-3}
    *
    * @private
-   * @param {string} input - String to sanitize
+   * @param {string} input String to sanitize
    * @returns {string} Sanitized string
    */
   private sanitizeInput(input: string): string {
@@ -372,8 +374,8 @@ export class LdapService extends EventEmitter {
    * Find the user record for the given username.
    *
    * @private
-   * @param {string} username - Username to search for
-   * @returns {undefined} - If user is not found but no error happened, result is undefined.
+   * @param {string} username Username to search for
+   * @returns {undefined} If user is not found but no error happened, result is undefined.
    * @throws {Error}
    */
   private async findUser(username: string, cache = true): Promise<undefined | Ldap.SearchEntryObject> {
@@ -657,6 +659,7 @@ export class LdapService extends EventEmitter {
    * Modify using the admin client.
    *
    * @private
+   * @async
    * @param {string} dn LDAP Distiguished Name
    * @param {Change[]} data LDAP modify data
    * @param {string} username The optional parameter
@@ -754,9 +757,10 @@ export class LdapService extends EventEmitter {
   /**
    * Authenticate given credentials against LDAP server
    *
-   * @param {string} username - The username to authenticate
-   * @param {string} password - The password to verify
-   * @returns {LdapResponseUser} - User in LDAP
+   * @async
+   * @param {string} username The username to authenticate
+   * @param {string} password The password to verify
+   * @returns {LdapResponseUser} User in LDAP
    * @throws {Error}
    */
   public async authenticate(username: string, password: string): Promise<LdapResponseUser> {
@@ -832,6 +836,34 @@ export class LdapService extends EventEmitter {
         },
       );
     });
+  }
+
+  /**
+   * This is add a LDAP object
+   *
+   * @async
+   * @param {Record<string, string>} value
+   * @returns {LdapResponseUser} User | Profile in LDAP
+   * @throws {Error}
+   */
+  public async add(entry: LDAPAddEntry): Promise<LdapResponseUser | undefined> {
+    return this.adminBind().then(
+      () =>
+        new Promise<LdapResponseUser | undefined>((resolve, reject) => {
+          if (!this.options.newObject) {
+            throw new Error('ADD operation not available');
+          }
+
+          const dn = `CN=${this.sanitizeInput(entry.cn as string)},${this.sanitizeInput(this.options.newObject)}`;
+          this.adminClient.add(dn, entry, (error: Error) => {
+            if (error) {
+              return reject(error);
+            }
+
+            return resolve(this.searchByDN(dn));
+          });
+        }),
+    );
   }
 
   /**

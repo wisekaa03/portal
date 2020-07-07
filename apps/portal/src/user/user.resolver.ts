@@ -1,11 +1,12 @@
 /** @format */
 
 //#region Imports NPM
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, ResolveField } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
+import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import { User, UserSettings, UserProfileLDAP } from '@lib/types/user.dto';
+import { Profile, User, UserSettings, ProfileInput } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from './user.service';
 import { CurrentUser } from './user.decorator';
@@ -32,17 +33,22 @@ export class UserResolver {
    * LDAP: new user
    *
    * @async
-   * @param {UserProfileLDAP} ldap The user profile
-   * @returns {User}
+   * @param {ProfileInput} ldap The user profile
+   * @param {FileUpload} thumbnailPhoto Avatar
+   * @returns {Profile}
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async ldapNewUser(@Args('ldap') ldap: UserProfileLDAP, @CurrentUser() user?: User): Promise<User> {
+  async ldapNewUser(
+    @Args('ldap') ldap: ProfileInput,
+    @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
+    @CurrentUser() user?: User,
+  ): Promise<Profile> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapNewUser(ldap).catch((error: Error) => {
+    return this.userService.ldapNewUser(ldap, thumbnailPhoto).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -52,7 +58,7 @@ export class UserResolver {
    *
    * @async
    * @param {UserSettings} value User settings
-   * @returns {UserSettings} Accomplished settings
+   * @returns {User} User
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
@@ -62,7 +68,7 @@ export class UserResolver {
     }
 
     // eslint-disable-next-line no-param-reassign
-    user.settings = this.userService.settings(user, value);
+    user.settings = this.userService.settings(value, user);
 
     return this.userService.save(this.userService.create(user));
   }

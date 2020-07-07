@@ -101,4 +101,9 @@ export interface SearchSuggestions {
   name: string;
   avatar?: string;
 }
+
+export interface ProfileInput
+  extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt'> {
+  contact: Contact;
+}
 //#endregion
