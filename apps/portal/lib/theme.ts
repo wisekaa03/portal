@@ -181,7 +181,7 @@ export const MaterialUI_fck = (fontSize?: number, ssrMatchMedia?: (query: string
     },
     MuiInputLabel: {
       root: {
-        color: '#31312F !important',
+        color: `${fade('#31312F', 0.5)}!important`,
       },
     },
     MuiCard: {
