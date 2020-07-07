@@ -4,6 +4,7 @@
 import { Injectable, HttpService, UnauthorizedException } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
+import Ldap from 'ldapjs';
 import Redis from 'redis';
 //#endregion
 //#region Imports Local
@@ -56,7 +57,13 @@ export class AuthService {
   async login({ username, password }: { username: string; password: string }): Promise<UserEntity> {
     this.logger.debug(`User login: username = "${username}"`);
 
-    const ldapUser = await this.ldapService.authenticate(username, password);
+    const ldapUser = await this.ldapService.authenticate(username, password).catch((error) => {
+      if (error instanceof Ldap.InvalidCredentialsError) {
+        throw new UnauthorizedException();
+      }
+
+      throw error;
+    });
 
     return this.userService
       .fromLdap(ldapUser)
@@ -70,8 +77,7 @@ export class AuthService {
         return user;
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`Error: not found user: ${message}`, message);
+        this.logger.error(`Error: not found user: ${error.toString()}`, [{ error }]);
 
         throw error;
       });
