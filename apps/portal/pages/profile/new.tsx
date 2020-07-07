@@ -3,65 +3,43 @@
 //#region Imports NPM
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Head from 'next/head';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
+import { PROFILE, LDAP_NEW_USER, CURRENT_USER } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import { format } from '@lib/dayjs';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Data, Profile } from '@lib/types';
+import { Data, Profile, ProfileInput, Contact } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
 
-const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
-  const [current, setCurrent] = useState<Profile | undefined>();
-  const [updated, setUpdated] = useState<Profile | undefined>();
+const newParameters: ProfileInput = {
+  contact: Contact.PROFILE,
+  username: '',
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  email: '',
+  disabled: true,
+  notShowing: false,
+};
+
+const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+  const [current, setCurrent] = useState<ProfileInput>(newParameters);
+  const [updated, setUpdated] = useState<ProfileInput>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
   const { user } = useContext(ProfileContext);
-  const id = query?.id || user?.profile?.id;
   const { isAdmin } = user || { isAdmin: false };
 
-  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery<Data<'profile', Profile>>(
-    PROFILE,
-    {
-      variables: { id },
-    },
-  );
-
-  const changeProfileRefetchQueries =
-    id === user?.profile?.id
-      ? {
-          refetchQueries: [
-            {
-              query: PROFILE,
-              variables: { id },
-            },
-            {
-              query: CURRENT_USER,
-            },
-          ],
-          awaitRefetchQueries: true,
-        }
-      : {
-          refetchQueries: [
-            {
-              query: PROFILE,
-              variables: { id },
-            },
-          ],
-          awaitRefetchQueries: true,
-        };
-
-  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation<Data<'changeProfile', Profile>>(
-    CHANGE_PROFILE,
-    changeProfileRefetchQueries,
-  );
+  const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<
+    Data<'ldapNewUser', Profile>
+  >(LDAP_NEW_USER);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -73,11 +51,11 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     [current],
   );
 
-  const handleChange = (name: keyof Profile, value_?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: keyof ProfileInput, value_?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const element: EventTarget & HTMLInputElement = event.target;
     const value: string | boolean | number = value_ || (element.type === 'checkbox' ? element.checked : element.value);
 
-    if (isAdmin && current && updated) {
+    if (isAdmin && current) {
       const result = name === 'gender' ? +value : value;
 
       setCurrent({ ...current, [name]: result });
@@ -93,7 +71,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   };
 
   const handleSave = (): void => {
-    changeProfile({
+    ldapNewUser({
       variables: {
         profile: updated,
         thumbnailPhoto,
@@ -102,45 +80,32 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
   };
 
   useEffect(() => {
-    if (isAdmin && id) {
-      if (dataProfile) {
-        setCurrent(dataProfile.profile);
-        setUpdated({ id } as Profile);
-      }
-    } else if (user) {
-      setCurrent(user.profile);
+    if (errorLdapNewUser) {
+      snackbarUtils.error(errorLdapNewUser);
     }
-  }, [dataProfile, isAdmin, id, user]);
-
-  useEffect(() => {
-    if (errorProfile) {
-      snackbarUtils.error(errorProfile);
-    }
-    if (errorChanged) {
-      snackbarUtils.error(errorChanged);
-    }
-  }, [errorProfile, errorChanged]);
+  }, [errorLdapNewUser]);
 
   const hasUpdate = useMemo<boolean>(() => {
-    if (loadingChanged) {
+    if (loadingLdapNewUser) {
       return true;
     }
     if (updated && Object.keys(updated).length === 1 && updated.id) {
       return false;
     }
     return !!updated || !!thumbnailPhoto;
-  }, [loadingChanged, thumbnailPhoto, updated]);
+  }, [loadingLdapNewUser, thumbnailPhoto, updated]);
 
   return (
     <>
       <Head>
-        <title>{t('profile:edit.title', { current: current?.fullName })}</title>
+        <title>{t('profile:new.title')}</title>
       </Head>
       <MaterialUI {...rest}>
         <ProfileEditComponent
           isAdmin={isAdmin}
-          loadingProfile={loadingProfile}
-          loadingChanged={loadingChanged}
+          newProfile={true}
+          loadingProfile={false}
+          loadingChanged={loadingLdapNewUser}
           profile={current}
           hasUpdate={hasUpdate}
           onDrop={onDrop}

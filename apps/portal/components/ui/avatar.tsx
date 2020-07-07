@@ -5,14 +5,14 @@ import React from 'react';
 import AvatarMui from '@material-ui/core/Avatar';
 //#endregion
 //#region Imports Local
-import { Profile } from '@lib/types';
+import { Profile, ProfileInput } from '@lib/types';
 import Alien from '@public/images/svg/avatar/alien-blue.svg';
 import Man from '@public/images/svg/avatar/man-blue.svg';
 import Woman from '@public/images/svg/avatar/woman-blue.svg';
 //#endregion
 
 export interface AvatarProps {
-  profile?: Profile;
+  profile?: Profile | ProfileInput;
   alt: string;
   base64?: string;
   fullSize?: boolean;

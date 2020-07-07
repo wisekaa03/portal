@@ -11,9 +11,9 @@ import { TkService, TkRoute, TkWhere } from './tickets';
 //#endregion
 
 export enum Contact {
-  PROFILE,
-  USER,
-  GROUP,
+  PROFILE = 'PROFILE',
+  USER = 'USER',
+  GROUP = 'GROUP',
 }
 
 export interface AllUsersInfo {

@@ -6,6 +6,7 @@ import { RenderableResponse } from 'nest-next';
 //#endregion
 //#region Imports Local
 import { SessionGuard } from '@back/guards/session.guard';
+import { SessionAdminGuard } from '@back/guards/session-admin.guard';
 //#endregion
 
 @Controller('profile')
@@ -22,8 +23,14 @@ export class ProfileController {
     response.render('profile/edit');
   }
 
+  @Get('edit/new')
+  @UseGuards(SessionAdminGuard)
+  public async editNew(@Res() response: RenderableResponse): Promise<void> {
+    response.render('profile/new');
+  }
+
   @Get('edit/:id')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionAdminGuard)
   public async editProfile(@Res() response: RenderableResponse, @Param('id') id: string): Promise<void> {
     response.render('profile/edit', { id });
   }

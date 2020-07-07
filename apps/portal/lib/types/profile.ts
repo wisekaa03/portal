@@ -11,7 +11,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#region Imports Local
 import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
-import { Profile, SearchSuggestions } from './profile.dto';
+import { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
 //#endregion
 
@@ -198,12 +198,16 @@ export interface ProfileTaskInfoCardProps {
 
 export interface ProfileEditComponentProps {
   isAdmin: boolean;
+  newProfile: boolean;
   loadingProfile: boolean;
   loadingChanged: boolean;
   hasUpdate: boolean;
-  profile?: Profile;
+  profile?: Profile | ProfileInput;
   onDrop: (_: any) => Promise<void>;
-  handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (
+    _: keyof Profile | keyof ProfileInput,
+    ___?: string,
+  ) => (__: React.ChangeEvent<HTMLInputElement>) => void;
   handleBirthday: (date: MaterialUiPickersDate, value?: string | null | undefined) => void;
   handleSave: () => void;
 }

@@ -169,6 +169,7 @@ const others: (keyof Profile)[] = [
 
 const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   isAdmin,
+  newProfile = true,
   loadingProfile,
   loadingChanged,
   hasUpdate,
@@ -195,7 +196,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           <IsAdmin>
             <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
               <Button disabled={!hasUpdate} onClick={handleSave}>
-                {t('common:accept')}
+                {newProfile ? t('common:save') : t('common:accept')}
               </Button>
             </Box>
           </IsAdmin>
@@ -249,7 +250,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   <div className={classes.thirdBlock}>
                     <div className={classes.nameBlock}>
                       <div className={classes.topRightBlock}>
-                        <FormControl disabled={true} variant="outlined">
+                        <FormControl disabled={!newProfile} variant="outlined">
                           <InputLabel id="profile-contact">{t('phonebook:contact.title')}</InputLabel>
                           <Select
                             labelId="profile-contact"
@@ -263,13 +264,13 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             <MenuItem value="PROFILE">{t('phonebook:contact.profile')}</MenuItem>
                           </Select>
                         </FormControl>
-                        {profile.username && (
+                        {profile.contact === Contact.USER && (
                           <ProfileTextFieldComponent
-                            disabled={true}
+                            disabled={!newProfile}
                             handleChange={handleChange}
                             field="username"
                             value={profile.username}
-                            InputProps={{ readOnly: true }}
+                            InputProps={newProfile ? InputProps : { readOnly: true }}
                             fullWidth={false}
                           />
                         )}

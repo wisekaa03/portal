@@ -16,7 +16,7 @@ export interface Profile {
   loginService: LoginService;
   loginIdentificator: string;
 
-  username: string;
+  username?: string;
 
   dn: string;
 

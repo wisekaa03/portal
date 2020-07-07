@@ -236,11 +236,12 @@ export const CHANGE_PROFILE = gql`
 `;
 
 export const LDAP_NEW_USER = gql`
-  mutation LdapNewUser($value: UserProfile) {
-    ldapNewUser(value: $value) {
-      id
+  mutation LdapNewUser($value: ProfileInput, $thumbnailPhoto: Upload) {
+    ldapNewUser(value: $value, thumbnailPhoto: $thumbnailPhoto) {
+      ...ProfileProps
     }
   }
+  ${PROFILE_FRAGMENT}
 `;
 
 export const USER_SETTINGS = gql`

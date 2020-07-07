@@ -1,5 +1,8 @@
 {
   "title": "Portal: Profile",
+  "new": {
+    "title": "Portal: add new user or contact"
+  },
   "edit": {
     "title": "Portal: edit user \"{{current}}\"",
     "notFound": "Not found",
