@@ -357,7 +357,7 @@ export class UserService {
 
   ldapCheckUsername = async (value: string): Promise<boolean> =>
     this.ldapService
-      .searchByUsername(value)
+      .searchByUsername(value, false)
       .then(() => {
         return false;
       })
