@@ -68,14 +68,14 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const bodyRef = useRef<Component<Record<string, any>, Record<string, any>, any>>(null);
 
   const handleService = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
       const service = task.route?.services?.find((srv) => srv?.code === event.target.value) || undefined;
       setTask({ ...task, service });
     },
     [task],
   );
 
-  const handleResetTicket = useCallback((): void => {
+  const handleResetTicket = useCallback(async (): Promise<void> => {
     setTask({});
     setBody('');
     setFiles([]);
@@ -85,7 +85,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   }, [router, pathname, setTask, setBody, setFiles, setCurrentTab, setSubmitted]);
 
   const handleCurrentTab = useCallback(
-    (tab) => {
+    async (tab) => {
       if (tab === 0) {
         handleResetTicket();
       }
@@ -95,7 +95,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   );
 
   const handleFavorites = useCallback(
-    (data) => {
+    async (data) => {
       userSettings({
         variables: {
           value: { task: { favorites: data } },

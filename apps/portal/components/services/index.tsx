@@ -141,9 +141,9 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     ? `calc(100vh - ${appBarHeight}px - ${headerReference.current.clientHeight}px)`
     : '100%';
 
-  const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
+  const handleChangeTab = useCallback(async (_, tab): Promise<void> => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
-    ({ favorite: { where, code, svcCode }, action }: ServicesFavoriteProps) => {
+    async ({ favorite: { where, code, svcCode }, action }: ServicesFavoriteProps) => {
       let result: UserSettingsTaskFavorite[] = [];
 
       switch (action) {
@@ -197,7 +197,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
     [favorites, handleFavorites],
   );
   const handleAddFavorite = useCallback(
-    () =>
+    async () =>
       task.route &&
       task.service &&
       updateFavorites({

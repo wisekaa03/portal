@@ -228,7 +228,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const handleSettingsReset = (): void => {
     userSettings({
       variables: {
-        value: { phonebook: { columns: null } },
+        value: { phonebook: { columns: [] } },
       },
     });
     setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
