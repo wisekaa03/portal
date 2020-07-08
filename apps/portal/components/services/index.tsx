@@ -123,6 +123,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   files,
   setFiles,
   submitted,
+  loadingSettings,
   loadingRoutes,
   loadingCreated,
   refetchRoutes,
@@ -147,51 +148,23 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
       switch (action) {
         case 'delete':
-          // result = favorites
-          //   ? favorites
-          //       .filter((favorite) => favorite !== favCurrent)
-          //       .map((favorite, index) => ({
-          //         where: favorite.where,
-          //         code: favorite.code,
-          //         service: { where: favorite.service?.where || TkWhere.Default,
-          //  code: favorite.service?.code || '0' },
-          //         priority: index,
-          //       }))
-          //   : [];
+          result = favorites.reduce((accumulator, current) => {
+            if (current.route.where === where && current.route.code === code && current.service.code === svcCode) {
+              return accumulator;
+            }
+            return [
+              ...accumulator,
+              {
+                where: current.route.where,
+                code: current.route.code,
+                svcCode: current.service.code,
+              },
+            ];
+          }, [] as UserSettingsTaskFavorite[]);
           break;
 
         case 'up':
         case 'down':
-          // result = favorites
-          //   ? favorites.reduce(
-          //       (
-          //         accumulator: UserSettingsTaskFavorite[],
-          //         {
-          //           code: currentCode,
-          //           where: currentWhere,
-          //           service: currentService,
-          //           priority: currentPriority,
-          //         }: UserSettingsTaskFavorite,
-          //       ) => {
-          //         const newCurrent = {
-          //           code: currentCode,
-          //           where: currentWhere,
-          //           service: currentService,
-          //           priority: currentPriority || 0,
-          //         };
-          //         const sym = action === 'up' ? 1 : -1;
-
-          //         if (currentCode === code && currentWhere === where) {
-          //           newCurrent.priority -= sym;
-          //         } else if (currentPriority === priority - sym) {
-          //           newCurrent.priority += sym;
-          //         }
-
-          //         return [...accumulator, newCurrent];
-          //       },
-          //       [],
-          //     )
-          //   : [];
           break;
 
         case 'add':
@@ -296,6 +269,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                         favorite={current}
                         base64
                         withLink
+                        loadingSettings={loadingSettings}
                         setFavorite={updateFavorites}
                         isUp={index > 0}
                         isDown={index < favorites.length - 1}

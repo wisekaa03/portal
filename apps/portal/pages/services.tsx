@@ -44,9 +44,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
 
   const favorites = me?.user?.settings?.task?.favorites || [];
 
-  const [userSettings /* , { error: errorSettings } */] = useMutation<UserSettings, { value: UserSettings }>(
-    USER_SETTINGS,
-  );
+  const [userSettings, { loading: loadingSettings, error: errorSettings }] = useMutation<
+    UserSettings,
+    { value: UserSettings }
+  >(USER_SETTINGS);
 
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
     Data<'TicketsRoutes', TkRoutes>,
@@ -189,7 +190,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     if (errorRoutes) {
       snackbarUtils.error(errorRoutes);
     }
-  }, [errorCreated, errorRoutes]);
+    if (errorSettings) {
+      snackbarUtils.error(errorSettings);
+    }
+  }, [errorCreated, errorRoutes, errorSettings]);
 
   const allFavorites = useMemo<UserSettingsTaskFavoriteFull[]>(() => {
     if (Array.isArray(favorites) && favorites.length > 0) {
@@ -242,6 +246,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
           submitted={submitted}
           loadingRoutes={loadingRoutes}
           loadingCreated={loadingCreated}
+          loadingSettings={loadingSettings}
           handleCurrentTab={handleCurrentTab}
           handleService={handleService}
           handleSubmit={handleSubmit}

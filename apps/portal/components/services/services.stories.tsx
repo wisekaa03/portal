@@ -13,6 +13,7 @@ import {
   TkWhere,
   TkRoute,
   UserSettingsTaskFavorite,
+  UserSettingsTaskFavoriteFull,
 } from '@lib/types';
 import ServicesIcon from '@public/images/svg/drawer/services.svg';
 import { story, withTranslation } from './index.stories';
@@ -54,9 +55,24 @@ const mockRoutes: TkRoute[] = [
 ];
 
 const mockFavorites: UserSettingsTaskFavorite[] = [
-  { code: '1', where: TkWhere.SOAP1C, service: { code: '0000001' }, priority: 1 },
-  { code: '3', where: TkWhere.SOAP1C, service: { code: '0000002' }, priority: 0 },
-  { code: '2', where: TkWhere.SOAP1C, service: { code: '0000003' }, priority: 2 },
+  { code: '1', where: TkWhere.SOAP1C, svcCode: '0000001' },
+  { code: '2', where: TkWhere.SOAP1C, svcCode: '0000002' },
+  { code: '3', where: TkWhere.SOAP1C, svcCode: '0000003' },
+];
+
+const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
+  {
+    route: { code: '1', where: TkWhere.SOAP1C, name: 'Route Name 00001' },
+    service: { where: TkWhere.SOAP1C, code: '0000001', name: 'Service Name 00001' },
+  },
+  {
+    route: { code: '2', where: TkWhere.SOAP1C, name: 'Route Name 00002' },
+    service: { where: TkWhere.SOAP1C, code: '0000002', name: 'Service Name 00002' },
+  },
+  {
+    route: { code: '3', where: TkWhere.SOAP1C, name: 'Route Name 00003' },
+    service: { where: TkWhere.SOAP1C, code: '0000003', name: 'Service Name 00003' },
+  },
 ];
 
 const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };
@@ -73,7 +89,7 @@ story.add('Default View', () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [created, setCreated] = useState<ServicesCreatedProps>({});
   const [routes, setRoutes] = useState<TkRoute[]>(mockRoutes);
-  const [favorites, setFavorites] = useState<UserSettingsTaskFavorite[]>(mockFavorites);
+  const [favorites, setFavorites] = useState<UserSettingsTaskFavoriteFull[]>(mockFavoritesFull);
   const [subject, setSubject] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [files, setFiles] = useState<DropzoneFile[]>([]);
@@ -138,6 +154,7 @@ story.add('Default View', () => {
       files={files}
       setFiles={setFiles}
       submitted={submitted}
+      loadingSettings={boolean('Loading Settings', false)}
       loadingRoutes={boolean('Loading Routes', false)}
       loadingCreated={boolean('Loading Created', false)}
       refetchRoutes={() => action('Refetch Routes')() as any}
@@ -145,7 +162,7 @@ story.add('Default View', () => {
       handleService={handleService}
       handleSubmit={handleSubmit}
       handleResetTicket={handleResetTicket}
-      handleFavorites={setFavorites}
+      handleFavorites={(): void => {}}
     />
   );
 });

@@ -25,6 +25,7 @@ export interface ServicesWrapperProps {
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   submitted: boolean;
+  loadingSettings: boolean;
   loadingRoutes: boolean;
   loadingCreated: boolean;
   refetchRoutes: () => Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>>;
@@ -49,6 +50,7 @@ export interface ServicesElementProps {
 }
 
 export interface ServicesElementFavProps {
+  loadingSettings: boolean;
   favorite: UserSettingsTaskFavoriteFull;
   withLink?: boolean;
   active?: boolean;

@@ -110,6 +110,7 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   url,
   withLink,
   setFavorite,
+  loadingSettings,
   isUp,
   isDown,
 }) => {
@@ -117,27 +118,27 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   const { t } = useTranslation();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
-  const handleOpenMore = useCallback((event: React.MouseEvent<HTMLElement>): void => {
+  const handleOpenMore = useCallback(async (event: React.MouseEvent<HTMLElement>): void => {
     event.preventDefault();
     setAnchor(event.currentTarget);
   }, []);
 
-  const handleCloseMore = useCallback((): void => {
+  const handleCloseMore = useCallback(async (): void => {
     setAnchor(null);
   }, []);
 
   const handleFavorite = useCallback(
-    (action) => (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
+    async (action) => (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
       event.stopPropagation();
       if (typeof setFavorite === 'function' && favorite.route && favorite.service) {
-        // setFavorite({
-        //   route: {
-        //     code: route.code,
-        //     where: route.where,
-        //     service: { code: route.service.code, where: route.service.where },
-        //   },
-        //   action,
-        // });
+        setFavorite({
+          favorite: {
+            code: favorite.route.code,
+            where: favorite.route.where,
+            svcCode: favorite.service.code,
+          },
+          action,
+        });
       }
       handleCloseMore();
     },
@@ -196,7 +197,7 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
                     <ClickAwayListener onClickAway={handleCloseMore}>
                       <MenuList>
                         {isUp && (
-                          <MenuItem onClick={handleFavorite('up')}>
+                          <MenuItem disabled={loadingSettings} onClick={handleFavorite('up')}>
                             <ListItemIcon>
                               <KeyboardArrowUpIcon fontSize="small" />
                             </ListItemIcon>
@@ -204,14 +205,14 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
                           </MenuItem>
                         )}
                         {isDown && (
-                          <MenuItem onClick={handleFavorite('down')}>
+                          <MenuItem disabled={loadingSettings} onClick={handleFavorite('down')}>
                             <ListItemIcon>
                               <KeyboardArrowDownIcon fontSize="small" />
                             </ListItemIcon>
                             <Typography variant="inherit">{t('services:favorite.down')}</Typography>
                           </MenuItem>
                         )}
-                        <MenuItem onClick={handleFavorite('delete')}>
+                        <MenuItem disabled={loadingSettings} onClick={handleFavorite('delete')}>
                           <ListItemIcon>
                             <DeleteIcon fontSize="small" />
                           </ListItemIcon>
