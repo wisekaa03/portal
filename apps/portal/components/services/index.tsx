@@ -11,19 +11,17 @@ import clsx from 'clsx';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
-import { ServicesWrapperProps, ServicesFavoriteProps } from '@lib/types';
+import { ServicesWrapperProps, ServicesFavoriteProps, UserSettingsTaskFavorite } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
-import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
-import { TkWhere } from '@lib/types/tickets';
+import BaseIcon from '@front/components/ui/icon';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
 import ServicesElementFavorites from './element.favorites';
 import ServicesError from './error';
-import BaseIcon from '@front/components/ui/icon';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -161,11 +159,33 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               },
             ];
           }, [] as UserSettingsTaskFavorite[]);
+
           break;
 
         case 'up':
-        case 'down':
+        case 'down': {
+          const currentIndex = favorites.findIndex(
+            (element) =>
+              element.route.where === where && element.route.code === code && element.service.code === svcCode,
+          );
+          const newIndex = action === 'up' ? currentIndex - 1 : currentIndex + 1;
+
+          const fav = [...favorites];
+          fav.splice(newIndex, 0, ...fav.splice(currentIndex, 1));
+          result = fav.reduce(
+            (accumulator, element) => [
+              ...accumulator,
+              {
+                where: element.route.where,
+                code: element.route.code,
+                svcCode: element.service.code,
+              },
+            ],
+            [],
+          );
+
           break;
+        }
 
         case 'add':
         default:

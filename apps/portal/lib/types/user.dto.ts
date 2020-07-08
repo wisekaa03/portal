@@ -65,7 +65,7 @@ export interface UserSettingsPhonebook {
 }
 
 export interface UserSettingsTaskFavorite {
-  where: string;
+  where: TkWhere;
   code: string;
   svcCode: string;
 }
