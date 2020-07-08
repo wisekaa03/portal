@@ -118,17 +118,17 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   const { t } = useTranslation();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
-  const handleOpenMore = useCallback(async (event: React.MouseEvent<HTMLElement>): void => {
+  const handleOpenMore = useCallback(async (event: React.MouseEvent<HTMLElement>): Promise<void> => {
     event.preventDefault();
     setAnchor(event.currentTarget);
   }, []);
 
-  const handleCloseMore = useCallback(async (): void => {
+  const handleCloseMore = useCallback(async (): Promise<void> => {
     setAnchor(null);
   }, []);
 
   const handleFavorite = useCallback(
-    async (action) => (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
+    (action) => async (event: React.MouseEvent<HTMLLIElement, MouseEvent>): Promise<void> => {
       event.stopPropagation();
       if (typeof setFavorite === 'function' && favorite.route && favorite.service) {
         setFavorite({
