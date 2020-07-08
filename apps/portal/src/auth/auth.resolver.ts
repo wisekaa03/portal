@@ -7,8 +7,7 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
 //#endregion
 //#region Imports Local
-import { Login, LoginEmail } from '@lib/types/auth';
-import { User } from '@lib/types/user.dto';
+import { Login, LoginEmail, User, UserSettingsTaskFavorite } from '@lib/types';
 import { ConfigService } from '@app/config';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -32,8 +31,35 @@ export class AuthResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async me(@CurrentUser() user: User): Promise<User> {
-    return user;
+  async me(@CurrentUser() user?: User): Promise<User> {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const userApproved = {
+      ...user,
+      settings: {
+        ...user.settings,
+        task: {
+          status: user.settings?.task?.status || '',
+          favorites: user.settings?.task?.favorites?.reduce((accumulator, favorite) => {
+            if (favorite.where && favorite.code && favorite.svcCode) {
+              return [
+                ...accumulator,
+                {
+                  where: favorite.where,
+                  code: favorite.code,
+                  svcCode: favorite.svcCode,
+                },
+              ];
+            }
+            return accumulator;
+          }, [] as UserSettingsTaskFavorite[]),
+        },
+      },
+    };
+
+    return userApproved;
   }
 
   /**

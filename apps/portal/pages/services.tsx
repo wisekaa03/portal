@@ -9,14 +9,23 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { MINIMAL_SUBJECT_LENGTH, MINIMAL_BODY_LENGTH } from '@lib/constants';
-import { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps, TkRoutes, UserSettings } from '@lib/types';
+import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
+import {
+  Data,
+  DropzoneFile,
+  ServicesTaskProps,
+  ServicesCreatedProps,
+  TkRoutes,
+  UserSettings,
+  UserSettingsTaskFavoriteFull,
+  UserSettingsTaskFavorite,
+  TkRoute,
+  TkTaskNew,
+} from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import ServicesComponent from '@front/components/services';
 import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
-import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
-import { TkRoute, TkTaskNew } from '@lib/types/tickets';
-import { UserSettingsTaskFavorite } from '@lib/types/user.dto';
 //#endregion
 
 const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
@@ -182,25 +191,25 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     }
   }, [errorCreated, errorRoutes]);
 
-  const allFavorites = useMemo<UserSettingsTaskFavorite[]>(() => {
+  const allFavorites = useMemo<UserSettingsTaskFavoriteFull[]>(() => {
     if (Array.isArray(favorites) && favorites.length > 0) {
-      return favorites.reduce((accumulator, fav) => {
-        const route = routes.reduce((accumulator_, route) => {
-          if (route.where === fav.where && route.code === fav.code) {
-            const service = route.services?.find((service) => fav.service?.code === service.code);
-            if (service) {
-              return { ...accumulator_, route: { ...route, priority: fav.priority || 0 }, service: { ...service } };
-            }
+      return favorites.reduce((accumulator, favorite) => {
+        const route = routes?.find((route) => route?.where === favorite?.where && route?.code === favorite?.code);
+        if (route) {
+          const service = route?.services?.find((service) => service?.code === favorite?.svcCode);
+          if (service) {
+            return [
+              ...accumulator,
+              {
+                route,
+                service,
+              },
+            ];
           }
-          return accumulator_;
-        }, {} as UserSettingsTaskFavorite);
-
-        if (Object.keys(route).length > 0) {
-          return [...accumulator, route];
         }
 
         return accumulator;
-      }, [] as UserSettingsTaskFavorite[]);
+      }, [] as UserSettingsTaskFavoriteFull[]);
     }
 
     return [];

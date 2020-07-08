@@ -27,6 +27,7 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { AppContextMy, AppInitialPropsMy } from './types';
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
+import { UserSettingsTaskFavorite } from './types/user.dto';
 //#endregion
 
 interface CreateClientProps {
@@ -191,17 +192,21 @@ export const withApolloClient = (
                     __typename: 'UserSettingsPhonebook',
                   },
                   task: {
-                    ...user.settings.task,
-                    favorites: [
-                      ...(user.settings.task?.favorites?.map((favorite) => ({
-                        ...favorite,
-                        service: {
-                          ...favorite.service,
-                          __typename: 'UserSettingsTaskFavoriteService',
-                        },
-                        __typename: 'UserSettingsTaskFavorite',
-                      })) || []),
-                    ],
+                    status: user.settings?.task?.status || '',
+                    favorites: user.settings?.task?.favorites?.reduce((accumulator, favorite) => {
+                      if (favorite.where && favorite.code && favorite.svcCode) {
+                        return [
+                          ...accumulator,
+                          {
+                            where: favorite.where,
+                            code: favorite.code,
+                            svcCode: favorite.svcCode,
+                            __typename: 'UserSettingsTaskFavorite',
+                          },
+                        ];
+                      }
+                      return accumulator;
+                    }, [] as UserSettingsTaskFavorite[]),
                     __typename: 'UserSettingsTask',
                   },
                   __typename: 'UserSettings',

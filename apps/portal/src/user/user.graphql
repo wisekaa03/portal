@@ -10,38 +10,24 @@ type User {
   profile: Profile!
 }
 
-type UserSettingsTaskFavoriteService {
-  where: String
-  code: String
-}
-
 type UserSettingsTaskFavorite {
-  where: String
-  code: String
-  priority: Int
-  service: UserSettingsTaskFavoriteService
+  where: String!
+  code: String!
+  svcCode: String!
 }
-
 type UserSettingsTask {
   status: String
-  favorites: [UserSettingsTaskFavorite]
-}
-
-input UserSettingsTaskFavoriteServiceInput {
-  where: String
-  code: String
+  favorites: [UserSettingsTaskFavorite!]
 }
 
 input UserSettingsTaskFavoriteInput {
-  where: String
-  code: String
-  service: UserSettingsTaskFavoriteServiceInput
-  priority: Int
+  where: String!
+  code: String!
+  svcCode: String!
 }
-
 input UserSettingsTaskInput {
   status: String
-  favorites: [UserSettingsTaskFavoriteInput]
+  favorites: [UserSettingsTaskFavoriteInput!]
 }
 
 type UserSettingsPhonebook {

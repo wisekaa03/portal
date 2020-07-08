@@ -61,37 +61,30 @@ export interface UserToSave extends BaseUser {
 
 //#region User settings
 export interface UserSettingsPhonebook {
-  columns?: ColumnNames[] | null;
+  columns?: ColumnNames[];
 }
 
-export interface UserSettingsTaskFavoriteService extends Omit<TkService, 'where' | 'name'> {
-  where?: TkWhere;
-  name?: string;
+export interface UserSettingsTaskFavorite {
+  where: string;
+  code: string;
+  svcCode: string;
 }
-
-export interface UserSettingsTaskFavoriteRoute extends Omit<TkRoute, 'where' | 'name'> {
-  where?: TkWhere;
-  name?: string;
-}
-
-export interface UserSettingsTaskFavorite extends Omit<TkRoute, 'name' | 'services'> {
-  name?: string;
-  priority?: number;
-  route?: UserSettingsTaskFavoriteRoute;
-  service?: UserSettingsTaskFavoriteService;
+export interface UserSettingsTaskFavoriteFull {
+  route: TkRoute;
+  service: TkService;
 }
 
 interface UserSettingsTask {
-  status?: string | null;
+  status?: string;
   favorites?: UserSettingsTaskFavorite[];
 }
 
 export interface UserSettings {
-  lng?: 'ru' | 'en' | null;
-  fontSize?: number | null;
-  drawer?: boolean | null;
-  phonebook?: UserSettingsPhonebook | null;
-  task?: UserSettingsTask | null;
+  lng?: 'ru' | 'en';
+  fontSize?: number;
+  drawer?: boolean;
+  phonebook?: UserSettingsPhonebook;
+  task?: UserSettingsTask;
 }
 
 export const DefinedUserSettings = [

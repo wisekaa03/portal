@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       letterSpacing: 0.15,
       // color: '#31312F',
     },
-    oneFavorities: {
+    oneFavorites: {
       whiteSpace: 'normal',
       gridRowStart: 1,
       gridRowEnd: 4,
@@ -104,12 +104,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const pathname = '/services';
 
 const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
+  favorite,
   base64,
   active,
-  route,
   url,
   withLink,
-  favorite,
   setFavorite,
   isUp,
   isDown,
@@ -130,19 +129,19 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   const handleFavorite = useCallback(
     (action) => (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
       event.stopPropagation();
-      if (typeof setFavorite === 'function' && route.service) {
-        setFavorite({
-          route: {
-            code: route.code,
-            where: route.where,
-            service: { code: route.service.code, where: route.service.where },
-          },
-          action,
-        });
+      if (typeof setFavorite === 'function' && favorite.route && favorite.service) {
+        // setFavorite({
+        //   route: {
+        //     code: route.code,
+        //     where: route.where,
+        //     service: { code: route.service.code, where: route.service.where },
+        //   },
+        //   action,
+        // });
       }
       handleCloseMore();
     },
-    [route, handleCloseMore, setFavorite],
+    [favorite, handleCloseMore, setFavorite],
   );
 
   useEffect(() => {
@@ -157,10 +156,10 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
           href={
             url || {
               pathname,
-              query: { where: route.route?.where, route: route.route?.code, service: route.service?.code },
+              query: { where: favorite.route.where, route: favorite.route.code, service: favorite.service.code },
             }
           }
-          as={url || `${pathname}/${route.route?.where}/${route.route?.code}/${route.service?.code}`}
+          as={url || `${pathname}/${favorite.route.where}/${favorite.route.code}/${favorite.service.code}`}
           passHref
         >
           {url ? <a target="_blank">{children}</a> : children}
@@ -174,18 +173,18 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
         })}
       >
         <Box>
-          <BaseIcon base64={base64} src={route.service?.avatar} size={48} />
+          <BaseIcon base64={base64} src={favorite.service?.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
           <Typography
             variant="subtitle1"
-            className={clsx(classes.name, { [classes.oneFavorities]: !route.service?.description })}
+            className={clsx(classes.name, { [classes.oneFavorites]: !favorite.service?.description })}
           >
-            {route.service?.name}
+            {favorite.service?.name}
           </Typography>
-          {route.service?.description && (
+          {favorite.service?.description && (
             <Typography variant="subtitle1" className={classes.subtitle}>
-              {route.service.description}
+              {favorite.service.description}
             </Typography>
           )}
           <Box className={classes.more}>

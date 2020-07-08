@@ -142,79 +142,80 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
 
   const handleChangeTab = useCallback((_, tab): void => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
-    ({ route: currentRoute, action }: ServicesFavoriteProps) => {
-      const { where, code, service } = currentRoute;
-
-      if (!service) {
-        return;
-      }
-
+    ({ favorite: { where, code, svcCode }, action }: ServicesFavoriteProps) => {
       let result: UserSettingsTaskFavorite[] = [];
-      const favCurrent =
-        Array.isArray(favorites) && favorites.length > 0
-          ? favorites.find(
-              (favorite) =>
-                favorite.service?.where === service.where &&
-                favorite.service?.code === service.code &&
-                favorite.code === code,
-            )
-          : undefined;
-      const priority = favCurrent?.priority || favorites?.length || 0;
 
       switch (action) {
         case 'delete':
-          result = favorites
-            ? favorites
-                .filter((favorite) => favorite !== favCurrent)
-                .sort((a, b) => (a.priority || 0) - (b.priority || 0))
-                .map((favorite, index) => ({
-                  where: favorite.where,
-                  code: favorite.code,
-                  service: { where: favorite.service?.where || TkWhere.Default, code: favorite.service?.code || '0' },
-                  priority: index,
-                }))
-            : [];
+          // result = favorites
+          //   ? favorites
+          //       .filter((favorite) => favorite !== favCurrent)
+          //       .map((favorite, index) => ({
+          //         where: favorite.where,
+          //         code: favorite.code,
+          //         service: { where: favorite.service?.where || TkWhere.Default,
+          //  code: favorite.service?.code || '0' },
+          //         priority: index,
+          //       }))
+          //   : [];
           break;
 
         case 'up':
         case 'down':
-          result = favorites
-            ? favorites.reduce(
-                (
-                  accumulator: UserSettingsTaskFavorite[],
-                  {
-                    code: currentCode,
-                    where: currentWhere,
-                    service: currentService,
-                    priority: currentPriority,
-                  }: UserSettingsTaskFavorite,
-                ) => {
-                  const newCurrent = {
-                    code: currentCode,
-                    where: currentWhere,
-                    service: currentService,
-                    priority: currentPriority || 0,
-                  };
-                  const sym = action === 'up' ? 1 : -1;
+          // result = favorites
+          //   ? favorites.reduce(
+          //       (
+          //         accumulator: UserSettingsTaskFavorite[],
+          //         {
+          //           code: currentCode,
+          //           where: currentWhere,
+          //           service: currentService,
+          //           priority: currentPriority,
+          //         }: UserSettingsTaskFavorite,
+          //       ) => {
+          //         const newCurrent = {
+          //           code: currentCode,
+          //           where: currentWhere,
+          //           service: currentService,
+          //           priority: currentPriority || 0,
+          //         };
+          //         const sym = action === 'up' ? 1 : -1;
 
-                  if (currentCode === code && currentWhere === where) {
-                    newCurrent.priority -= sym;
-                  } else if (currentPriority === priority - sym) {
-                    newCurrent.priority += sym;
-                  }
+          //         if (currentCode === code && currentWhere === where) {
+          //           newCurrent.priority -= sym;
+          //         } else if (currentPriority === priority - sym) {
+          //           newCurrent.priority += sym;
+          //         }
 
-                  return [...accumulator, newCurrent];
-                },
-                [],
-              )
-            : [];
+          //         return [...accumulator, newCurrent];
+          //       },
+          //       [],
+          //     )
+          //   : [];
           break;
 
         case 'add':
         default:
           result = [
-            ...(favorites || []),
-            { code, where, service: { where: service.where || TkWhere.Default, code: service.code || '0' }, priority },
+            ...favorites.reduce((accumulator, favorite) => {
+              if (favorite.route.where && favorite.route.code && favorite.service.code) {
+                return [
+                  ...accumulator,
+                  {
+                    where: favorite.route.where,
+                    code: favorite.route.code,
+                    svcCode: favorite.service.code,
+                  },
+                ];
+              }
+
+              return accumulator;
+            }, [] as UserSettingsTaskFavorite[]),
+            {
+              where,
+              code,
+              svcCode,
+            },
           ];
       }
 
@@ -227,10 +228,10 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
       task.route &&
       task.service &&
       updateFavorites({
-        route: {
-          code: task.route?.code,
+        favorite: {
           where: task.route?.where,
-          service: { where: task.service?.where, code: task.service?.code },
+          code: task.route?.code,
+          svcCode: task.service?.code,
         },
         action: 'add',
       }),
@@ -289,16 +290,15 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     {t('services:headers.favorites')}
                   </Box>
                   <Box className={classes.blockContainer}>
-                    {favorites.map((current) => (
+                    {favorites.map((current, index) => (
                       <ServicesElementFavorites
                         key={`fav-${current.service?.where}-${current.service?.code}`}
+                        favorite={current}
                         base64
-                        favorite
                         withLink
                         setFavorite={updateFavorites}
-                        route={current}
-                        isUp={(current.priority || 0) > 0}
-                        isDown={(current.priority || 0) < favorites.length - 1}
+                        isUp={index > 0}
+                        isDown={index < favorites.length - 1}
                       />
                     ))}
                   </Box>

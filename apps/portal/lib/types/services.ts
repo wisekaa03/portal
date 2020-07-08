@@ -4,7 +4,7 @@ import { ApolloError, ApolloQueryResult } from 'apollo-client';
 import { Component } from 'react';
 import { DropzoneFile } from './dropzone';
 import { TkRoute, TkService, TkRoutes } from './tickets';
-import { UserSettingsTaskFavorite } from './user.dto';
+import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteFull } from './user.dto';
 import { Data } from './common';
 
 export interface ServicesWrapperProps {
@@ -17,7 +17,7 @@ export interface ServicesWrapperProps {
   created: ServicesCreatedProps;
   errorCreated?: ApolloError;
   routes?: (TkRoute | null)[];
-  favorites: UserSettingsTaskFavorite[] | null;
+  favorites: UserSettingsTaskFavoriteFull[];
   subject: string;
   setSubject: React.Dispatch<React.SetStateAction<string>>;
   body: string;
@@ -36,7 +36,7 @@ export interface ServicesWrapperProps {
 }
 
 export type ServicesFavoriteProps = {
-  route: UserSettingsTaskFavorite;
+  favorite: UserSettingsTaskFavorite;
   action: 'up' | 'down' | 'add' | 'delete';
 };
 
@@ -49,12 +49,11 @@ export interface ServicesElementProps {
 }
 
 export interface ServicesElementFavProps {
-  route: UserSettingsTaskFavorite;
+  favorite: UserSettingsTaskFavoriteFull;
   withLink?: boolean;
   active?: boolean;
   base64?: boolean;
   url?: string;
-  favorite?: boolean;
   setFavorite?: (_: ServicesFavoriteProps) => void;
   isUp?: boolean;
   isDown?: boolean;

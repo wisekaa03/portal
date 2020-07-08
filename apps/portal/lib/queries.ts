@@ -86,11 +86,7 @@ export const CURRENT_USER = gql`
           favorites {
             where
             code
-            priority
-            service {
-              where
-              code
-            }
+            svcCode
           }
         }
         phonebook {
@@ -145,11 +141,7 @@ export const LOGIN = gql`
             favorites {
               where
               code
-              priority
-              service {
-                where
-                code
-              }
+              svcCode
             }
           }
           phonebook {
@@ -266,11 +258,7 @@ export const USER_SETTINGS = gql`
           favorites {
             where
             code
-            priority
-            service {
-              where
-              code
-            }
+            svcCode
           }
         }
       }
