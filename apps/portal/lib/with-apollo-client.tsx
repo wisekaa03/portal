@@ -28,7 +28,6 @@ import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { AppContextMy, AppInitialPropsMy } from './types';
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
-import { UserSettingsTaskFavorite } from './types/user.dto';
 //#endregion
 
 interface CreateClientProps {
@@ -89,7 +88,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       credentials: 'same-origin',
     });
   } else {
-    if (__DEV__ && 0) {
+    if (__DEV__) {
       const httpLink = createUploadLink({
         uri: '/graphql',
         credentials: 'same-origin',

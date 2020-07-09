@@ -169,12 +169,12 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Enable json response
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+  // app.use(bodyParser.urlencoded({ extended: true }));
+  // app.use(bodyParser.json());
   //#endregion
 
   //#region Enable cookie
-  app.use(cookieParser());
+  // app.use(cookieParser());
   //#endregion
 
   //#region Session and passport initialization
