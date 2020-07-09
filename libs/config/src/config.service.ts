@@ -7,9 +7,8 @@ import Joi from '@hapi/joi';
 import { Inject } from '@nestjs/common';
 //#endregion
 //#region Imports Local
+import { CONFIG_OPTIONS } from './config.constants';
 //#endregion
-
-export const CONFIG_OPTIONS = 'CONFIG_OPTIONS';
 
 export interface EnvConfig<T> {
   [key: string]: T;
@@ -18,7 +17,7 @@ export interface EnvConfig<T> {
 export class ConfigService {
   private readonly envConfig: EnvConfig<string | number | boolean>;
 
-  constructor(@Inject('CONFIG_OPTIONS') private readonly filePath: string) {
+  constructor(@Inject(CONFIG_OPTIONS) private readonly filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
     this.envConfig = this.validateInput(config);
   }
@@ -27,7 +26,7 @@ export class ConfigService {
    * JWT options
    */
   public static jwtConstants = {
-    secret: 'whatThaFuck',
+    secret: '1w2e3r4t5y5878uyu567',
   };
 
   /**

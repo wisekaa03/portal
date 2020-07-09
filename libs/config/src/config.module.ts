@@ -4,7 +4,8 @@
 import { Module, DynamicModule, Global } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { CONFIG_OPTIONS, ConfigService } from './config.service';
+import { CONFIG_OPTIONS } from './config.constants';
+import { ConfigService } from './config.service';
 //#endregion
 
 @Global()
