@@ -1,6 +1,5 @@
 {
     "cSpell.ignoreWords": [
-        "a",
         "addressbook",
         "allowlist",
         "alltask",
@@ -135,5 +134,6 @@
         "юзера"
     ],
     "prettier.packageManager": "yarn",
-    "code-runner.enableAppInsights": false
+    "code-runner.enableAppInsights": false,
+    "cSpell.allowCompoundWords": true
 }

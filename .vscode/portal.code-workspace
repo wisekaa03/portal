@@ -177,6 +177,26 @@
     },
     "npm.packageManager": "yarn",
     "debug.node.autoAttach": "on",
-    "cSpell.language": "en,ru,en-GB,en-US"
+    "cSpell.language": "en,ru,en-GB,en-US",
+    "cSpell.allowCompoundWords": true,
+    "cSpell.enableFiletypes": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "json",
+      "yaml",
+      "yml",
+      "markdown",
+      "jsonc"
+    ],
+    "cSpell.ignorePaths": [
+      "**/package-lock.json",
+      "**/node_modules/**",
+      "**/vscode-extension/**",
+      "**/.git/objects/**",
+      ".vscode",
+      "**/yarn.lock"
+    ]
   }
 }
