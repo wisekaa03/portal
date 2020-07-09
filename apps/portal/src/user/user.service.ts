@@ -32,7 +32,6 @@ import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
 import { defaultUserSettings } from '@lib/queries';
 import { UserEntity } from './user.entity';
-import Ldap from 'ldapjs';
 //#endregion
 
 @Injectable()

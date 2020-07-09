@@ -3,35 +3,24 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { LoggerModule } from 'nestjs-pino';
+import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
+import { getLoggerToken } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { LdapService } from '@app/ldap/ldap.service';
-import { ConfigService } from '@app/config/config.service';
+import { ConfigService } from '@app/config';
 import { GroupService } from './group.service';
+import { GroupEntity } from './group.entity';
 //#endregion
 
 jest.mock('@app/config/config.service');
-jest.mock('@app/ldap/ldap.service');
 
-// const serviceMock = jest.fn(() => ({}));
-// const repositoryMock = jest.fn(() => ({
-//   metadata: {
-//     columns: [],
-//     relations: [],
-//   },
-// }));
-
-@Entity()
-class GroupEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
+const serviceMock = jest.fn(() => ({}));
+const repositoryMock = jest.fn(() => ({
+  metadata: {
+    columns: [],
+    relations: [],
+  },
+}));
 
 describe(GroupService.name, () => {
   let service: GroupService;
@@ -39,7 +28,6 @@ describe(GroupService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
@@ -51,9 +39,14 @@ describe(GroupService.name, () => {
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([GroupEntity]),
+        // TypeOrmModule.forFeature([GroupEntity]),
       ],
-      providers: [GroupService, LdapService, ConfigService],
+      providers: [
+        { provide: getLoggerToken(GroupService.name), useValue: serviceMock },
+        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
+        GroupService,
+        ConfigService,
+      ],
     }).compile();
 
     service = module.get<GroupService>(GroupService);

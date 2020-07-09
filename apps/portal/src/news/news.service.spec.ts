@@ -3,15 +3,20 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
+import { getLoggerToken } from 'nestjs-pino';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { LoggerModule } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config/config.service';
+import { ConfigService } from '@app/config';
 import { NewsService } from './news.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/user.entity';
+import { UserEntityMock } from '../user/user.entity.mock';
+import { GroupEntity } from '../group/group.entity';
+import { ProfileEntity } from '../profile/profile.entity';
+import { NewsEntity } from './news.entity';
+import { NewsEntityMock } from './news.entity.mock';
 //#endregion
 
 jest.mock('@app/config/config.service');
@@ -24,41 +29,34 @@ const repositoryMock = jest.fn(() => ({
   },
 }));
 
-@Entity()
-class NewsEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
 describe(NewsService.name, () => {
   let service: NewsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [NewsEntity],
+              entities: [NewsEntityMock, GroupEntity, UserEntityMock, ProfileEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([NewsEntity]),
       ],
       providers: [
+        { provide: getLoggerToken(NewsService.name), useValue: serviceMock },
         ConfigService,
         NewsService,
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
-        { provide: getRepositoryToken(NewsEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(UserEntity), useValue: UserEntityMock },
+        { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(NewsEntity), useValue: NewsEntityMock },
       ],
     }).compile();
 

@@ -4,8 +4,7 @@
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { LoggerModule } from 'nestjs-pino';
+import { getLoggerToken } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config/config.service';
@@ -13,6 +12,10 @@ import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
 import { GroupService } from '@back/group/group.service';
 import { ProfileService } from './profile.service';
+import { GroupEntity } from '../group/group.entity';
+import { UserEntity } from '../user/user.entity';
+import { UserEntityMock } from '../user/user.entity.mock';
+import { ProfileEntity } from './profile.entity';
 //#endregion
 
 jest.mock('@app/config/config.service');
@@ -25,43 +28,34 @@ const repositoryMock = jest.fn(() => ({
   },
 }));
 
-@Entity()
-class ProfileEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
 describe('ProfileService', () => {
   let service: ProfileService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [ProfileEntity],
+              entities: [GroupEntity, UserEntityMock, ProfileEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([ProfileEntity]),
+        // TypeOrmModule.forFeature([GroupEntity]),
       ],
       providers: [
+        { provide: getLoggerToken(ProfileService.name), useValue: serviceMock },
         ConfigService,
         ProfileService,
         { provide: LdapService, useValue: serviceMock },
         { provide: GroupService, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
-        // { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
-        // { provide: getRepositoryToken(UserEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(UserEntity), useValue: UserEntityMock },
         { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
       ],
     }).compile();

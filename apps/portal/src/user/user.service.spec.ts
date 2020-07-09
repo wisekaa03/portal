@@ -2,19 +2,23 @@
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
 //#region Imports NPM
-import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { LoggerModule } from 'nestjs-pino';
+import { getLoggerToken } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config/config.service';
 import { LdapService } from '@app/ldap';
+import { ConfigService } from '@app/config';
 import { LDAP_SYNC_SERVICE } from '@lib/constants';
 import { ProfileService } from '@back/profile/profile.service';
+import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupService } from '@back/group/group.service';
+import { GroupEntity } from '@back/group/group.entity';
 import { UserService } from './user.service';
+import { UserEntity } from './user.entity';
+import { UserEntityMock } from './user.entity.mock';
 //#endregion
 
 jest.mock('@app/config/config.service');
@@ -27,44 +31,36 @@ const repositoryMock = jest.fn(() => ({
   },
 }));
 
-@Entity()
-class UserEntity {
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-}
-
-describe('UserService', () => {
+describe(UserService.name, () => {
   let service: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
           useFactory: async () =>
             ({
               type: 'sqlite',
               database: ':memory:',
               dropSchema: true,
-              entities: [UserEntity],
+              entities: [GroupEntity, UserEntityMock, ProfileEntity],
               synchronize: true,
               logging: false,
             } as TypeOrmModuleOptions),
         }),
-        TypeOrmModule.forFeature([UserEntity]),
       ],
       providers: [
+        { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
+        { provide: getLoggerToken(UserService.name), useValue: serviceMock },
         ConfigService,
         UserService,
-        { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
         { provide: ClientProxy, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
         { provide: GroupService, useValue: serviceMock },
-        { provide: getRepositoryToken(UserEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(UserEntity), useValue: UserEntityMock },
+        { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
       ],
     }).compile();
 

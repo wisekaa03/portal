@@ -39,7 +39,7 @@ module.exports = {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)(\\?.*)?$': 'jest-transform-stub',
     '^.+\\.svg$': 'jest-svg-transformer',
   },
-  transformIgnorePatterns: ['node_modules/(?!(simple-git/src))/'],
+  // transformIgnorePatterns: ['node_modules/(?!(simple-git/src))/'],
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/(*.)+(spec|test).[jt]s?(x)'],
   testPathIgnorePatterns: [
     '<rootDir>/.git/',

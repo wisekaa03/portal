@@ -17,7 +17,7 @@ describe('UsersResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [{ provide: UserService, useValue: serviceMock }, UserResolver],
+      providers: [UserResolver, { provide: UserService, useValue: serviceMock }],
     }).compile();
 
     resolver = module.get<UserResolver>(UserResolver);

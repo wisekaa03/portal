@@ -6,6 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 //#region Imports Local
 import { ProfileResolver } from './profile.resolver';
 import { ProfileService } from './profile.service';
+import { GqlAuthGuard } from '../guards/gqlauth.guard';
+import { IsAdminGuard } from '../guards/gqlauth-admin.guard';
 //#endregion
 
 const serviceMock = jest.fn(() => ({}));
@@ -18,8 +20,10 @@ describe('ProfileResolver', () => {
       imports: [],
       providers: [ProfileResolver, { provide: ProfileService, useValue: serviceMock }],
     })
-      // .overrideGuard(GqlAuthGuard)
-      // .useValue(GqlAuthGuardMock)
+      .overrideGuard(GqlAuthGuard)
+      .useValue(serviceMock)
+      .overrideGuard(IsAdminGuard)
+      .useValue(serviceMock)
       .compile();
 
     resolver = module.get<ProfileResolver>(ProfileResolver);

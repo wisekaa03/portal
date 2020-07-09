@@ -45,7 +45,7 @@ export class NewsEntity {
   content: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  @ManyToOne((type: any) => UserEntity)
+  @ManyToOne(() => UserEntity)
   @JoinColumn()
   user: UserEntity;
 }
