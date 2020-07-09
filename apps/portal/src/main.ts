@@ -89,6 +89,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   const fontSrc = ["'self'", 'data:'];
   const frameSrc = ["'self'"];
   const defaultSrc = ["'self'"];
+  const connectSrc = ["'self'"];
 
   const mailUrl = config.get<string>('MAIL_URL');
   if (mailUrl.match(/^http/i)) {
@@ -132,6 +133,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
     frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
     frameSrc.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
     frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
+    connectSrc.push('wss://localhost:4443/graphql');
+    connectSrc.push('ws://localhost:4000/graphql');
   }
 
   //#region Next.JS locals
@@ -158,6 +161,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
         scriptSrc,
         frameSrc,
         styleSrc,
+        connectSrc,
         upgradeInsecureRequests: true,
       },
     }),

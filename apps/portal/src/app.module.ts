@@ -12,6 +12,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger } from 'nestjs-pino';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import { Folder, Contact } from '@lib/types';
@@ -40,12 +42,13 @@ import { FilesModule } from '@back/files/files.module';
 
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
+import { PingPongResolvers } from './ping.resolver';
 //#endregion
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
 
 //#region TypeOrm config options
-const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
+export const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
   name: 'default',
   keepConnectionAlive: true,
   type: 'postgres',
@@ -139,6 +142,16 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
           : false,
         typePaths: ['./**/*.graphql'],
         installSubscriptionHandlers: true,
+        // subscriptions: {
+        // onConnect: (_connectionParameters: any, _websocket: WebSocket, _context: ConnectionContext) => {
+        //   // eslint-disable-next-line no-debugger
+        //   debugger;
+        // },
+        // onDisconnect: (_websocket: WebSocket, _context: ConnectionContext) => {
+        //   // eslint-disable-next-line no-debugger
+        //   debugger;
+        // },
+        // },
         uploads: {
           maxFileSize: 100000000, // 100MB
         },
@@ -230,6 +243,23 @@ const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmM
     //   useClass: GraphQLInterceptor,
     // },
     //#endregion
+
+    PingPongResolvers,
+    {
+      provide: 'PUB_SUB',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const host = configService.get<string>('HTTP_REDIS_URI')?.replace(/^redis:\/\/(.*?):(\d+)\/(\d+)$/, '$1');
+        const redisOptions = {
+          host,
+        };
+
+        return new RedisPubSub({
+          publisher: new Redis(redisOptions),
+          subscriber: new Redis(redisOptions),
+        });
+      },
+    },
   ],
 })
 export class AppModule {}

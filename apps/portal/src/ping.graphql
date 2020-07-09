@@ -1,0 +1,15 @@
+type Mutation {
+  ping: Ping
+}
+
+type Subscription {
+  pong: Pong
+}
+
+type Ping {
+  id: ID
+}
+
+type Pong {
+  pingId: ID
+}
