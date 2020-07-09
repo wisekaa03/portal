@@ -8,7 +8,7 @@ module.exports = (original) => {
   return {
     watch: true,
     target: 'node',
-    externals: [nodeExternals({ whitelist: ['webpack/hot/poll?100'] })],
+    externals: [nodeExternals({ allowlist: ['webpack/hot/poll?100'] })],
     devServer: {
       inline: true,
       hot: true,
