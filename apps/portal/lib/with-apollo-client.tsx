@@ -7,15 +7,15 @@ import { AppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
 import { ApolloClient, ApolloError } from 'apollo-client';
-import { concat, ApolloLink } from 'apollo-link';
+import { concat, split, ApolloLink } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
-import { createHttpLink } from 'apollo-link-http';
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { Request, Response } from 'express';
-// import { InStorageCache } from 'apollo-cache-instorage';
-// import { PersistentStorage, PersistedData } from 'apollo-cache-persist/types';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 import { Logger } from 'nestjs-pino';
@@ -23,6 +23,7 @@ import { Logger } from 'nestjs-pino';
 //#region Imports Local
 import { User, UserContext } from '@lib/types';
 // import { nextI18next } from './i18n-client';
+import { CURRENT_USER } from './queries';
 import stateResolvers from './state-link';
 import getRedirect from './get-redirect';
 import { AppContextMy, AppInitialPropsMy } from './types';
@@ -52,19 +53,16 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     if (__SERVER__) {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message /* , path, locations, extensions */ }): void => {
-          const m = message.toString();
-          logger.error(m, m);
+          logger.error(message, message, 'GraphQL ErrorLink', { error: message });
         });
       }
       if (networkError) {
-        const m = networkError.toString();
-        logger.error(m, m);
+        logger.error(networkError, networkError.toString(), 'GraphQL NetworkError', { error: networkError });
       }
     } else {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
-          const m = message.toString();
-          logger.error(m, m);
+          logger.error('GraphQL ErrorLink', message);
 
           if (extensions?.code === 401) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
@@ -72,14 +70,13 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         });
       }
       if (networkError) {
-        const m = networkError.toString();
-        logger.error(m, m);
+        logger.error('GraphQL NetworkError', networkError.toString());
       }
     }
   });
 
   let clientParameters = {};
-  let httpLink: ApolloLink;
+  let link: ApolloLink;
 
   const cache = new InMemoryCache().restore(initialState || {});
 
@@ -87,43 +84,47 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     // eslint-disable-next-line global-require
     global.fetch = require('node-fetch');
 
-    httpLink = createHttpLink({
+    link = new HttpLink({
       uri: `http://localhost:${process.env.PORT}/graphql`,
       credentials: 'same-origin',
     });
   } else {
-    httpLink = createUploadLink({
-      uri: `/graphql`,
-      credentials: 'same-origin',
-    });
+    if (__DEV__ && 0) {
+      const httpLink = createUploadLink({
+        uri: '/graphql',
+        credentials: 'same-origin',
+      });
+      const wsLink = new WebSocketLink({
+        uri: 'ws://localhost:4000/graphql',
+        options: {
+          reconnect: true,
+        },
+      });
+
+      link = split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+        },
+        wsLink,
+        httpLink,
+      );
+    } else {
+      link = createUploadLink({
+        uri: '/graphql',
+        credentials: 'same-origin',
+      });
+    }
 
     clientParameters = {
       resolvers: stateResolvers,
     };
-
-    // TODO: улучшенный контроль за кешем (продумать)
-    // cache = new InStorageCache({
-    // storage: window.sessionStorage as PersistentStorage<PersistedData<NormalizedCacheObject>>,
-    // shouldPersist: (operation: string, dataId: string, value?: object): boolean => {
-    //   // debugger;
-    //   return true;
-    // },
-    // denormalize: (value: any): any => {
-    //   // debugger;
-
-    //   try {
-    //     return JSON.parse(value);
-    //   } catch {
-    //     return value;
-    //   }
-    // },
-    // }).restore(initialState) as InMemoryCache;
   }
 
   return new ApolloClient({
     connectToDevTools: !__SERVER__,
     ssrMode: __SERVER__,
-    link: concat(authLink.concat(errorLink), httpLink),
+    link: concat(authLink.concat(errorLink), link),
     cache,
     ...clientParameters,
   });
@@ -172,51 +173,8 @@ export const withApolloClient = (
 
         if (user) {
           try {
-            delete (user as any)?.['settings']?.['ticket'];
-            const data = {
-              me: {
-                ...user,
-                groups: user.groups?.map((group) => ({
-                  ...group,
-                  description: group.description || '',
-                  __typename: 'Group',
-                })),
-                profile: {
-                  ...user.profile,
-                  __typename: 'Profile',
-                },
-                settings: {
-                  ...user.settings,
-                  phonebook: {
-                    ...user.settings.phonebook,
-                    __typename: 'UserSettingsPhonebook',
-                  },
-                  task: {
-                    status: user.settings?.task?.status || '',
-                    favorites: user.settings?.task?.favorites?.reduce((accumulator, favorite) => {
-                      if (favorite.where && favorite.code && favorite.svcCode) {
-                        return [
-                          ...accumulator,
-                          {
-                            where: favorite.where,
-                            code: favorite.code,
-                            svcCode: favorite.svcCode,
-                            __typename: 'UserSettingsTaskFavorite',
-                          },
-                        ];
-                      }
-                      return accumulator;
-                    }, [] as UserSettingsTaskFavorite[]),
-                    __typename: 'UserSettingsTask',
-                  },
-                  __typename: 'UserSettings',
-                },
-                __typename: 'User',
-              },
-            };
-
-            apolloClient.cache.writeData({
-              data,
+            await apolloClient.query({
+              query: CURRENT_USER,
             });
           } catch (error) {
             logger.error(`withApolloClient "writeQuery": ${error.toString()}`, error.toString(), 'withApolloClient', [
@@ -244,12 +202,17 @@ export const withApolloClient = (
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:
           // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-          logger.error(
-            `withApolloClient "getDataFromTree": ${error.toString()}`,
-            error.toString(),
-            'withApolloClient',
-            [{ error }],
-          );
+          if (
+            error instanceof ApolloError &&
+            !error.graphQLErrors.some((error_) => error_.extensions?.exception?.status === 401)
+          ) {
+            logger.error(
+              `withApolloClient "getDataFromTree": ${error.toString()}`,
+              error.toString(),
+              'withApolloClient',
+              { error },
+            );
+          }
         }
 
         // getDataFromTree does not call componentWillUnmount

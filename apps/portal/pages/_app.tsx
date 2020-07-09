@@ -39,7 +39,7 @@ const CurrentComponent: React.FC<{
 
   const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
     onCompleted: (data) => !__SERVER__ && data?.me?.settings?.fontSize && changeFontSize(data.me.settings.fontSize),
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-only',
   });
 
   if (__SERVER__ && data?.me && pathname.startsWith(AUTH_PAGE) && ctx?.res && ctx?.req) {
