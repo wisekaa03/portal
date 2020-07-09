@@ -96,17 +96,18 @@ export class TicketsService {
                 };
               }
 
-              this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
-              return {
-                errors: ['Not connected to SOAP'],
-              };
+              throw new Error('Not connected to SOAP');
             })
-            .catch((error: SoapFault) => {
-              this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
-              this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
+            .catch((error: Error | SoapFault) => {
+              if (error instanceof Error) {
+                this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
+                this.logger.error(error);
+
+                return { errors: [`SOAP: ${new SoapError(error).toString()}`] };
+              }
               this.logger.error(error);
 
-              return { errors: [`SOAP: ${new SoapError(error).toString()}`] };
+              return { errors: [`SOAP: ${error.toString()}`] };
             }),
         );
       }
