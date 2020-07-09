@@ -2,7 +2,8 @@
 
 //#region Imports NPM
 import { Scalar, CustomScalar } from '@nestjs/graphql';
-import { Kind } from 'graphql';
+import { Kind, ValueNode } from 'graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
 //#endregion
 
 @Scalar('Date')
@@ -20,7 +21,7 @@ export class DateScalar implements CustomScalar<number, Date> {
     return value ? value.getTime() : null;
   }
 
-  parseLiteral(ast: any): Date | null {
+  parseLiteral(ast: ValueNode, _variables: Maybe<{ [key: string]: any }>): Date | null {
     if (ast.kind === Kind.STRING || ast.kind === Kind.INT) {
       return new Date(ast.value);
     }
