@@ -20,11 +20,11 @@ export interface LDAPAddEntry {
   /**
    * Common name
    */
-  cn: string;
+  cn?: string;
   displayName?: string;
   name?: string;
 
-  comment: Record<string, string> | string;
+  comment?: Record<string, string> | string;
 
   thumbnailPhoto?: Buffer;
 
