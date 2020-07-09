@@ -19,7 +19,6 @@ export class GroupService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly ldapService: LdapService,
     @InjectPinoLogger(GroupService.name) private readonly logger: PinoLogger,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
