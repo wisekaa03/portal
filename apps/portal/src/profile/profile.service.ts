@@ -566,10 +566,7 @@ export class ProfileService {
    * Modification
    */
   modification = (profile: Profile | ProfileInput, created?: Profile, ldapUser?: LdapResponseUser): LDAPAddEntry => {
-    const modification: LDAPAddEntry = {
-      cn: '',
-      comment: {},
-    };
+    const modification: LDAPAddEntry = {};
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
@@ -583,19 +580,18 @@ export class ProfileService {
             modification.givenName = value;
 
             const f: Array<string> = [];
-            if (created?.lastName) {
-              f.push(created.lastName);
-            } else if (profile?.lastName) {
+            if (profile?.lastName) {
               f.push(profile.lastName);
+            } else if (created?.lastName) {
+              f.push(created.lastName);
             }
             f.push(value as string);
-            if (created?.middleName) {
-              f.push(created.middleName);
-            } else if (profile?.middleName) {
+            if (profile?.middleName) {
               f.push(profile.middleName);
+            } else if (created?.middleName) {
+              f.push(created.middleName);
             }
             modification.displayName = f.join(' ');
-            modification.cn = f.join(' ');
 
             break;
           }
@@ -604,18 +600,17 @@ export class ProfileService {
 
             const f: Array<string> = [];
             f.push(value as string);
-            if (created?.firstName) {
-              f.push(created.firstName);
-            } else if (profile?.firstName) {
+            if (profile?.firstName) {
               f.push(profile.firstName);
+            } else if (created?.firstName) {
+              f.push(created.firstName);
             }
-            if (created?.middleName) {
-              f.push(created.middleName);
-            } else if (profile?.middleName) {
+            if (profile?.middleName) {
               f.push(profile.middleName);
+            } else if (created?.middleName) {
+              f.push(created.middleName);
             }
             modification.displayName = f.join(' ');
-            modification.cn = f.join(' ');
 
             break;
           }
@@ -623,19 +618,18 @@ export class ProfileService {
             modification[key] = value;
 
             const f: Array<string> = [];
-            if (created?.lastName) {
-              f.push(created.lastName);
-            } else if (profile?.lastName) {
+            if (profile?.lastName) {
               f.push(profile.lastName);
+            } else if (created?.lastName) {
+              f.push(created.lastName);
             }
-            if (created?.firstName) {
-              f.push(created.firstName);
-            } else if (profile?.firstName) {
+            if (profile?.firstName) {
               f.push(profile.firstName);
+            } else if (created?.firstName) {
+              f.push(created.firstName);
             }
             f.push(value as string);
             modification.displayName = f.join(' ');
-            modification.cn = f.join(' ');
 
             break;
           }
@@ -711,11 +705,11 @@ export class ProfileService {
       });
     }
 
-    if (modification.displayName) {
+    if (modification.displayName && !ldapUser) {
       modification.cn = modification.displayName;
     }
 
-    if (Object.keys(modification.comment).length === 0) {
+    if (modification.comment && Object.keys(modification.comment).length === 0) {
       delete modification.comment;
     } else {
       let oldComment = {};
