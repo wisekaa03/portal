@@ -140,6 +140,8 @@ The `.env` file is like this:
 PORT=4000
 PORT_SSL=4443
 DOMAIN="example.com"
+LOGLEVEL="debug"
+DEVELOPMENT="true"
 
 # DB
 DATABASE_URI="postgres://postgres:1234567890@postgresql.database:5432/postgres"
@@ -170,10 +172,12 @@ LDAP_URL="ldap://pdc.example.local:389"
 LDAP_BIND_DN="CN=Administrator,DC=example,DC=local"
 LDAP_BIND_PW="PaSsWoRd123"
 LDAP_SEARCH_BASE="DC=example,DC=local"
-LDAP_SEARCH_FILTER="(sAMAccountName={{username}})"
-LDAP_SEARCH_GROUP="(&(objectClass=group)(member={{dn}}))"
-LDAP_SEARCH_BASE_ALL_USERS="DC=example,DC=local"
 LDAP_SEARCH_FILTER_ALL_USERS="(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
+LDAP_SEARCH_FILTER_ALL_GROUPS="objectClass=group"
+LDAP_SEARCH_USER="(sAMAccountName={{username}})"
+LDAP_SEARCH_GROUP="(&(objectClass=group)(member={{dn}}))"
+LDAP_NEW_BASE="OU=User,DC=example,DC=local"
+LDAP_DOMAIN="example.com"
 
 # LDAP Redis
 LDAP_REDIS_URI="redis://localhost:6379/3"
@@ -189,6 +193,11 @@ SOAP_DOMAIN="EXAMPLE"
 
 # OSTICKET
 OSTICKET_URL={"auditors": "https://auditors-ticket.example.com/au/portal/ajax.php", "media": "https://media-ticket.example.com/mp/portal/ajax.php"}
+
+# NEXTCLOUD
+NEXTCLOUD_URL="https://cloud.example.com"
+NEXTCLOUD_REDIS_URI="redis://localhost:6379/4"
+NEXTCLOUD_REDIS_TTL="60"
 
 # NEWS
 NEWS_URL="https://news/wp/wp-json/wp/v2/posts"
