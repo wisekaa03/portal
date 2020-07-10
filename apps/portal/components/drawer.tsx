@@ -9,22 +9,23 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 //#endregion
 //#region Imports Local
+import { Icon } from '@front/components/ui/icon';
+import CalendarIcon from '@images/svg/drawer/calendar.svg?inline';
+import ServicesIcon from '@images/svg/drawer/services.svg?inline';
+import FaqIcon from '@images/svg/drawer/faq.svg?inline';
+import ProfileIcon from '@images/svg/drawer/profile.svg?inline';
+import MailIcon from '@images/svg/drawer/mail.svg?inline';
+import MediaIcon from '@images/svg/drawer/media.svg?inline';
+import MeetingIcon from '@images/svg/drawer/meeting.svg?inline';
+import VCSIcon from '@images/svg/drawer/vcs.svg?inline';
+import NewsIcon from '@images/svg/drawer/news.svg?inline';
+import PhonebookIcon from '@images/svg/drawer/phonebook.svg?inline';
+import SettingsIcon from '@images/svg/drawer/settings.svg?inline';
+import AdminIcon from '@images/svg/drawer/admin.svg?inline';
+
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { ADMIN_PAGES } from '@lib/constants';
-import Icon from '@front/components/ui/icon';
-import CalendarIcon from '@public/images/svg/drawer/calendar.svg';
-import ServicesIcon from '@public/images/svg/drawer/services.svg';
-import FaqIcon from '@public/images/svg/drawer/faq.svg';
-import ProfileIcon from '@public/images/svg/drawer/profile.svg';
-import MailIcon from '@public/images/svg/drawer/mail.svg';
-import MediaIcon from '@public/images/svg/drawer/media.svg';
-import MeetingIcon from '@public/images/svg/drawer/meeting.svg';
-import VCSIcon from '@public/images/svg/drawer/vcs.svg';
-import NewsIcon from '@public/images/svg/drawer/news.svg';
-import PhonebookIcon from '@public/images/svg/drawer/phonebook.svg';
-import SettingsIcon from '@public/images/svg/drawer/settings.svg';
-import AdminIcon from '@public/images/svg/drawer/admin.svg';
 //#endregion
 
 const drawerWidth = 256;
@@ -89,7 +90,7 @@ interface DrawerProps {
 
 interface UrlProps {
   icon: any;
-  text: any;
+  text: string;
   link: string;
   admin: boolean;
 }

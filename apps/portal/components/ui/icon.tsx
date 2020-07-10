@@ -2,12 +2,11 @@
 
 //#region Imports NPM
 import React from 'react';
-import { Palette } from '@material-ui/core/styles/createPalette';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Icon from '@material-ui/core/Icon';
+import BaseIcon from '@material-ui/core/Icon';
 //#endregion
 //#region Imports Local
-import NoImage from '@public/images/svg/noimage.svg';
+import NoImage from '@images/svg/noimage.svg?inline';
 //#endregion
 
 const iconWidth = 24;
@@ -37,11 +36,11 @@ const useStyles = makeStyles<Theme, IconProps, string>((theme: Theme) =>
   }),
 );
 
-const BaseIcon = ({ size, mask, color, src, base64 }: IconProps): React.ReactElement => {
+export const Icon = ({ size, mask, color, src, base64 }: IconProps): React.ReactElement => {
   const classes = useStyles({ size, mask, color });
 
   if (mask) {
-    return <Icon className={classes.mask} />;
+    return <BaseIcon className={classes.mask} />;
   }
 
   /* Material Icons */
@@ -62,5 +61,3 @@ const BaseIcon = ({ size, mask, color, src, base64 }: IconProps): React.ReactEle
   return <img className={classes.root} alt="icon" src={NoImage} />;
   /* </Icon> */
 };
-
-export default BaseIcon;

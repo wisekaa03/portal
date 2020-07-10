@@ -17,7 +17,7 @@ import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
-import BaseIcon from '@front/components/ui/icon';
+import { Icon } from '@front/components/ui/icon';
 import ServicesSuccess from './success';
 import ServicesElement from './element';
 import ServicesElementFavorites from './element.favorites';
@@ -362,7 +362,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                           (srv) =>
                             srv && (
                               <MenuItem key={srv.code} value={srv.code}>
-                                <BaseIcon base64 src={srv.avatar} size={21} />
+                                <Icon base64 src={srv.avatar} size={21} />
                                 <Typography className={classes.margin} component="span">
                                   {srv.name}
                                 </Typography>

@@ -29,7 +29,7 @@ import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
 import { ProfileTaskInfoCardProps, ProfileTaskComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
-import BaseIcon from '@front/components/ui/icon';
+import { Icon } from '@front/components/ui/icon';
 import Dropzone from '@front/components/dropzone';
 import Button from '@front/components/ui/button';
 import Iframe from '@front/components/iframe';
@@ -284,7 +284,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                     />
                     <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
                       <Box textAlign="center">
-                        <BaseIcon base64 src={task.service?.avatar} size={48} />
+                        <Icon base64 src={task.service?.avatar} size={48} />
                       </Box>
                       <span>{task.service?.name}</span>
                     </CardContent>
@@ -301,7 +301,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                     />
                     <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
                       <Box textAlign="center">
-                        <BaseIcon src={getTicketStatusIcon(task.status)} size={48} />
+                        <Icon src={getTicketStatusIcon(task.status)} size={48} />
                       </Box>
                       <span>{task.status}</span>
                     </CardContent>

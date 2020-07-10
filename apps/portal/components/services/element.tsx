@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import { useTranslation } from '@lib/i18n-client';
 import { ServicesElementProps } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
-import BaseIcon from '@front/components/ui/icon';
+import { Icon } from '@front/components/ui/icon';
 import { TkService, TkRoute } from '@lib/types/tickets';
 //#endregion
 
@@ -147,7 +147,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
         })}
       >
         <Box>
-          <BaseIcon base64={base64} src={route.avatar} size={48} />
+          <Icon base64={base64} src={route.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
           <Typography variant="subtitle1" className={classes.name}>

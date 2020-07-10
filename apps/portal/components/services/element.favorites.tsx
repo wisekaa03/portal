@@ -24,7 +24,7 @@ import clsx from 'clsx';
 //#region Imports Local
 import { ServicesElementFavProps } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
-import BaseIcon from '@front/components/ui/icon';
+import { Icon } from '@front/components/ui/icon';
 import { useTranslation } from '@lib/i18n-client';
 //#endregion
 
@@ -174,7 +174,7 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
         })}
       >
         <Box>
-          <BaseIcon base64={base64} src={favorite.service?.avatar} size={48} />
+          <Icon base64={base64} src={favorite.service?.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
           <Typography

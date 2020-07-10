@@ -15,7 +15,7 @@ import { useTranslation } from '@lib/i18n-client';
 import { TASK_STATUSES } from '@lib/constants';
 import BoxWithRef from '@lib/box-ref';
 import { ProfileTicketsComponentProps, ProfileTicketsCardProps } from '@lib/types';
-import BaseIcon from '@front/components/ui/icon';
+import { Icon } from '@front/components/ui/icon';
 import Select from '@front/components/ui/select';
 import Loading from '@front/components/loading';
 import RefreshButton from '@front/components/ui/refresh-button';
@@ -126,7 +126,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
-                <BaseIcon base64 src={service?.avatar} size={36} />
+                <Icon base64 src={service?.avatar} size={36} />
               </div>
               <div style={{ overflow: 'hidden' }}>
                 <Typography variant="subtitle2">{subject}</Typography>

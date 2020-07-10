@@ -21,7 +21,7 @@ import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon
 import { PhonebookSearchProps } from '@lib/types';
 import RefreshButton from '@front/components/ui/refresh-button';
 import { useTranslation } from '@lib/i18n-client';
-import BaseIcon from '@front/components/ui/icon';
+import { Icon } from '@front/components/ui/icon';
 //#endregion
 
 const panelHeight = 48;
@@ -147,7 +147,7 @@ const PhonebookSearch: FC<PhonebookSearchProps> = ({
                 <MenuList onKeyDown={handleSugKeyDown}>
                   {suggestions.map((item) => (
                     <MenuItem key={item.name} onClick={handleSugClick}>
-                      <BaseIcon base64 src={item.avatar} size={21} />
+                      <Icon base64 src={item.avatar} size={21} />
                       <Typography className={classes.margin} component="span">
                         {item.name}
                       </Typography>

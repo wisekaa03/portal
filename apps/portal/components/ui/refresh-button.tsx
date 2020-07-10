@@ -9,9 +9,9 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
-import BaseIcon from './icon';
+import ServicesSyncIcon from '@images/svg/icons/wait_services.svg?inline';
+import { Icon } from './icon';
 import { useTranslation } from '@lib/i18n-client';
-import ServicesSyncIcon from '@public/images/svg/icons/wait_services.svg';
 //#endregion
 
 export enum RefreshWhere {
@@ -69,7 +69,7 @@ const RefreshButton = ({
 
   switch (where) {
     case RefreshWhere.Service:
-      icon = <BaseIcon src={ServicesSyncIcon} />;
+      icon = <Icon src={ServicesSyncIcon} />;
       break;
     default:
       icon = <SyncIcon />;
