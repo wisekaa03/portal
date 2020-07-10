@@ -225,8 +225,8 @@ export class LdapService extends EventEmitter {
   /**
    * Bind adminClient to the admin user on connect
    *
-   * @async
    * @private
+   * @async
    * @returns {boolean | Error}
    */
   private async onConnectAdmin(): Promise<boolean> {
@@ -264,6 +264,7 @@ export class LdapService extends EventEmitter {
    * Ensure that `this.adminClient` is bound.
    *
    * @private
+   * @async
    * @returns {boolean | Error}
    */
   private adminBind = async (): Promise<boolean> => (this.adminBound ? true : this.onConnectAdmin());
@@ -273,6 +274,7 @@ export class LdapService extends EventEmitter {
    * user and group information.
    *
    * @private
+   * @async
    * @param {string} searchBase LDAP search base
    * @param {Object} options LDAP search options
    * @param {string} options.filter LDAP search filter
@@ -374,6 +376,7 @@ export class LdapService extends EventEmitter {
    * Find the user record for the given username.
    *
    * @private
+   * @async
    * @param {string} username Username to search for
    * @returns {undefined} If user is not found but no error happened, result is undefined.
    * @throws {Error}
@@ -475,6 +478,7 @@ export class LdapService extends EventEmitter {
   /**
    * Search user by Username
    *
+   * @async
    * @param {string} userByUsername user name
    * @returns {Promise<LdapResponseUser>} User in LDAP
    */
@@ -515,6 +519,7 @@ export class LdapService extends EventEmitter {
   /**
    * Search user by DN
    *
+   * @async
    * @param {string} userByDN user distinguished name
    * @returns {Promise<LdapResponseUser>} User in LDAP
    */
@@ -584,6 +589,7 @@ export class LdapService extends EventEmitter {
   /**
    * Synchronize users
    *
+   * @async
    * @returns {LdapResponseUser[]} User in LDAP
    * @throws {Error}
    */
@@ -602,9 +608,7 @@ export class LdapService extends EventEmitter {
     return this.search(this.options.searchBase, options)
       .then(async (sync) => {
         if (sync) {
-          const groupsPromises = sync.map(async (u) => await this.getGroups(u));
-
-          await Promise.allSettled(groupsPromises);
+          await Promise.allSettled(sync.map(async (u) => await this.getGroups(u)));
 
           return (sync as unknown) as LdapResponseUser[];
         }
@@ -612,8 +616,8 @@ export class LdapService extends EventEmitter {
         this.logger.error('Synchronize unknown error.');
         throw new Error('Synchronize unknown error.');
       })
-      .catch((error: Error) => {
-        this.logger.error(`Synchronize error: ${error.toString()}`, [{ error }]);
+      .catch((error: Error | Ldap.Error) => {
+        this.logger.error(`Synchronize error: ${error.toString()}`, error);
 
         throw error;
       });
@@ -622,6 +626,7 @@ export class LdapService extends EventEmitter {
   /**
    * Synchronize users
    *
+   * @async
    * @returns {LdapResponseGroup[]} Group in LDAP
    * @throws {Error}
    */
@@ -656,7 +661,7 @@ export class LdapService extends EventEmitter {
   /**
    * Modify using the admin client.
    *
-   * @private
+   * @public
    * @async
    * @param {string} dn LDAP Distiguished Name
    * @param {Change[]} data LDAP modify data
@@ -866,6 +871,7 @@ export class LdapService extends EventEmitter {
   /**
    * Unbind connections
    *
+   * @async
    * @returns {Promise<boolean>}
    */
   public async close(): Promise<boolean> {
