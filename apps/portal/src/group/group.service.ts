@@ -5,11 +5,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult } from 'typeorm';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { LdapResponseGroup, LdapResponseUser } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { LoginService, Group, Contact, AllUsersInfo } from '@lib/types';
 import { ConfigService } from '@app/config';
-import { LdapService, LdapResponseGroup, LdapResponseUser } from '@app/ldap';
 import { GroupEntity } from './group.entity';
 //#endregion
 

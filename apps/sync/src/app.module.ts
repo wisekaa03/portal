@@ -7,10 +7,10 @@ import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { LoggerModule, Logger } from 'nestjs-pino';
+import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
-import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from '@app/ldap';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { UserModule } from '@back/user/user.module';
 import { UserEntity } from '@back/user/user.entity';
@@ -40,29 +40,28 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     //#region LDAP Module
     LdapModule.registerAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        return {
-          url: configService.get<string>('LDAP_URL'),
-          bindDN: configService.get<string>('LDAP_BIND_DN'),
-          bindCredentials: configService.get<string>('LDAP_BIND_PW'),
-          searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-          searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
-          searchScope: 'sub' as Scope,
-          groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-          groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
-          groupSearchScope: 'sub' as Scope,
-          groupDnProperty: 'dn',
-          groupSearchAttributes: ldapADattributes,
-          searchAttributes: ldapADattributes,
-          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
-          searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
-          searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
-          searchScopeAllUsers: 'sub' as Scope,
-          searchAttributesAllUsers: ldapADattributes,
-          reconnect: true,
-          cache: true,
-        };
-      },
+      useFactory: async (configService: ConfigService) => ({
+        url: configService.get<string>('LDAP_URL'),
+        bindDN: configService.get<string>('LDAP_BIND_DN'),
+        bindCredentials: configService.get<string>('LDAP_BIND_PW'),
+        searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
+        searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
+        searchScope: 'sub' as Scope,
+        groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
+        groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
+        groupSearchScope: 'sub' as Scope,
+        groupDnProperty: 'dn',
+        groupSearchAttributes: ldapADattributes,
+        searchAttributes: ldapADattributes,
+        searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
+        searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
+        searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
+        searchScopeAllUsers: 'sub' as Scope,
+        searchAttributesAllUsers: ldapADattributes,
+        reconnect: true,
+        cacheUrl: configService.get<string>('LDAP_REDIS_URI'),
+        cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
+      }),
     }),
     //#endregion
 

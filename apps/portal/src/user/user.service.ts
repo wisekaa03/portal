@@ -8,11 +8,11 @@ import { ClientProxy } from '@nestjs/microservices';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { LdapResponseUser, LdapService, LDAPAddEntry } from 'nestjs-ldap';
 import bcrypt from 'bcrypt';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { LdapResponseUser } from '@app/ldap';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
 import {
   LoginService,
@@ -25,7 +25,6 @@ import {
   ProfileInput,
 } from '@lib/types';
 import { constructUploads } from '@back/shared/upload';
-import { LdapService, LDAPAddEntry } from '@app/ldap';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';

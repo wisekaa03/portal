@@ -15,13 +15,13 @@ import Ldap from 'ldapjs';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { LdapService, LdapResponseUser, Change, Attribute, LDAPAddEntry } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { Profile, SearchSuggestions, Gender, LoginService, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
-import { LdapService, LdapResponseUser, Change, Attribute, LDAPAddEntry } from '@app/ldap';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
 //#endregion

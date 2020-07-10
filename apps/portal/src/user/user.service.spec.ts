@@ -7,9 +7,9 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
 import { getLoggerToken } from 'nestjs-pino';
+import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import { LdapService } from '@app/ldap';
 import { ConfigService } from '@app/config';
 import { LDAP_SYNC_SERVICE } from '@lib/constants';
 import { ProfileService } from '@back/profile/profile.service';

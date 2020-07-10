@@ -3,10 +3,10 @@
 //#region Imports NPM
 import { Injectable } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { Contact, AllUsersInfo } from '@lib/types';
-import { LdapService } from '@app/ldap';
 import { GroupService } from '@back/group/group.service';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';

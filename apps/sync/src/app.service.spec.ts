@@ -4,10 +4,10 @@
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from 'nestjs-pino';
+import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image/image.service';
 import { GroupService } from '@back/group/group.service';
 import { UserService } from '@back/user/user.service';

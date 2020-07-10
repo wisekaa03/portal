@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.server.json",
-  "compilerOptions": {
-    "declaration": true,
-    "outDir": "../../dist/libs/ldap"
-  },
-  "include": ["src/**/*", "../../typings/global.d.ts"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
-}

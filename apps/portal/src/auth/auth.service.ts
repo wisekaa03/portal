@@ -4,6 +4,7 @@
 import { Injectable, HttpService, UnauthorizedException } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
+import { LdapService } from 'nestjs-ldap';
 import Ldap from 'ldapjs';
 import Redis from 'redis';
 //#endregion
@@ -11,7 +12,6 @@ import Redis from 'redis';
 import { LoginEmail, EmailSession } from '@lib/types/auth';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
-import { LdapService } from '@app/ldap';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
 //#endregion

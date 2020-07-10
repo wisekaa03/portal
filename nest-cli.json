@@ -56,15 +56,6 @@
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
     },
-    "ldap": {
-      "type": "library",
-      "root": "libs/ldap",
-      "entryFile": "index",
-      "sourceRoot": "libs/ldap/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/ldap/tsconfig.lib.json"
-      }
-    },
     "image": {
       "type": "library",
       "root": "libs/image",

@@ -104,18 +104,6 @@
       "@app/config/*": [
         "libs/config/src/*"
       ],
-      "@app/ldap": [
-        "libs/ldap/src"
-      ],
-      "@app/ldap/*": [
-        "libs/ldap/src/*"
-      ],
-      "@app/logger": [
-        "libs/logger/src"
-      ],
-      "@app/logger/*": [
-        "libs/logger/src/*"
-      ],
       "@app/image": [
         "libs/image/src"
       ],

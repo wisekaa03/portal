@@ -5,10 +5,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 import { getLoggerToken } from 'nestjs-pino';
+import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config/config.service';
-import { LdapService } from '@app/ldap';
 import { ImageService } from '@app/image';
 import { GroupService } from '@back/group/group.service';
 import { ProfileService } from './profile.service';
