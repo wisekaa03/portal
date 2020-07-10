@@ -133,8 +133,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
     frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
     frameSrc.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
     frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
-    connectSrc.push('wss://localhost:4443/graphql');
-    connectSrc.push('ws://localhost:4000/graphql');
+    connectSrc.push(`wss://localhost:${config.get<number>('PORT_SSL')}/graphql`);
+    connectSrc.push(`ws://localhost:${config.get<number>('PORT')}/graphql`);
   }
 
   //#region Next.JS locals
