@@ -84,17 +84,17 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     global.fetch = require('node-fetch');
 
     link = new HttpLink({
-      uri: `http://localhost:${process.env?.PORT || 4000}/graphql`,
+      uri: `process.env.GRAPHQL_URL`,
       credentials: 'same-origin',
     });
   } else {
-    if (process.env?.WEBSOCKET_URL) {
+    if (process.env?.GRAPHQL_URL) {
       const httpLink = createUploadLink({
-        uri: '/graphql',
+        uri: process.env.GRAPHQL_URL,
         credentials: 'same-origin',
       });
       const wsLink = new WebSocketLink({
-        uri: process.env.WEBSOCKET_URL,
+        uri: process.env.GRAPHQL_URL,
         options: {
           reconnect: true,
         },
@@ -110,7 +110,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       );
     } else {
       link = createUploadLink({
-        uri: '/graphql',
+        uri: process.env.GRAPHQL_API,
         credentials: 'same-origin',
       });
     }
