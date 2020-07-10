@@ -92,6 +92,12 @@
       "@app/sync/*": [
         "apps/sync/src/*"
       ],
+      "@app/sync-job": [
+        "apps/sync-job/src"
+      ],
+      "@app/sync-job/*": [
+        "apps/sync-job/src/*"
+      ],
       "@app/soap": [
         "libs/soap/src"
       ],

@@ -180,8 +180,10 @@ const nextConfig = {
   compress: false,
   // crossOrigin: 'anonymous',
   poweredByHeader: false,
+  // Kubernetes: when this is a build time, the environment variables are defined
   env: {
     PORT: process.env.PORT,
+    WEBSOCKET_URL: process.env.WEBSOCKET_URL,
     DOMAIN: process.env.DOMAIN,
     MAIL_URL: process.env.MAIL_URL,
     SESSION_NAME: process.env.SESSION_NAME,

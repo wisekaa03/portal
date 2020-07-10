@@ -47,8 +47,8 @@ export class ConfigService {
       NODE_ENV: Joi.any().empty('').default('development').optional(),
 
       PORT: Joi.number().integer().default(80).required(),
-      PORT_SSL: Joi.number().integer().empty('').default(0).optional(),
       DOMAIN: Joi.string().empty('').default('example.com').required(),
+      WEBSOCKET_URL: Joi.string().empty('').default('https://example.com/graphql').required(),
       LOGLEVEL: Joi.string().empty('').default('debug').required(),
       DEVELOPMENT: Joi.boolean().empty('').default(true).required(),
 

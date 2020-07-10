@@ -16,8 +16,8 @@ import crypto from 'crypto';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
+// import cookieParser from 'cookie-parser';
+// import bodyParser from 'body-parser';
 import { Logger, PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
 //#endregion
@@ -31,7 +31,6 @@ import { pinoOptions } from './shared/pino.options';
 //#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
-  let httpsServer: boolean | ServerOptions = false;
   const DEV = configService.get<boolean>('DEVELOPMENT');
 
   //#region NestJS options
@@ -45,27 +44,29 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Create NestJS app
-  if (
-    !!config.get<number>('PORT_SSL') &&
-    fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory()
-  ) {
+  try {
+    fs.lstatSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure')).isDirectory();
+
     const secureDirectory = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
-      httpsServer = {
+      nestjsOptions['httpsOptions'] = {
         requestCert: false,
         rejectUnauthorized: false,
         key: fs.readFileSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure/private.key')),
         cert: fs.readFileSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure/private.crt')),
       };
     } else {
-      logger.error(
-        'There are not enough files "private.crt" and "private.key" in "secure" directory."',
-        undefined,
-        'Bootstrap',
-      );
+      throw new Error('No files');
     }
+    // eslint-disable-next-line no-empty
+  } catch (error) {
+    logger.error(
+      'There are no files "private.crt", "private.key" in "secure" directory."',
+      error.toString(),
+      'Bootstrap',
+    );
   }
   const server = express();
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
@@ -129,11 +130,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push(`https://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT_SSL')}`);
     frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
-    frameSrc.push(`https://localhost:${config.get<number>('PORT_SSL')}`);
     frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
-    connectSrc.push(`wss://localhost:${config.get<number>('PORT_SSL')}/graphql`);
     connectSrc.push(`ws://localhost:${config.get<number>('PORT')}/graphql`);
   }
 
@@ -226,15 +224,11 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Start server
-  await app.init();
-
-  http.createServer(server).listen(config.get<number>('PORT'));
-  logger.log(`HTTP running on port ${config.get('PORT')}`, 'Bootstrap');
-
-  if (httpsServer) {
-    https.createServer(httpsServer, server).listen(config.get<number>('PORT_SSL'));
-    logger.log(`HTTPS running on port ${config.get('PORT_SSL')}`, 'Bootstrap');
-  }
+  await app.listen(config.get<number>('PORT'));
+  logger.log(
+    `HTTP${nestjsOptions['httpsOptions'] ? 'S' : ''} running on port ${config.get<number>('PORT')}`,
+    'Bootstrap',
+  );
   //#endregion
 
   //#region Webpack-HMR

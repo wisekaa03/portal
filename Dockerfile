@@ -6,7 +6,6 @@ LABEL maintainer="webmaster@i-npz.ru"
 LABEL vendor="INPZ"
 
 ENV PORT=4000
-ENV PORT_SSL=4443
 ENV PORT_DEBUG=9229
 
 # PREPARE DEVELOPMENT
@@ -29,7 +28,7 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 COPY . ./
 
 # EXPOSE
-EXPOSE ${PORT} ${PORT_SSL} ${PORT_DEBUG}
+EXPOSE ${PORT} ${PORT_DEBUG}
 
 # YARN START
 ENTRYPOINT [ "./entrypoint.sh" ]

@@ -7,8 +7,9 @@ import { resolve } from 'path';
 // import { APP_FILTER } from '@nestjs/core';
 // import Next from 'next';
 import { Module, CacheModule } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLModule, GqlModuleOptions } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger } from 'nestjs-pino';
@@ -43,6 +44,7 @@ import { FilesModule } from '@back/files/files.module';
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
 import { PingPongResolvers } from './ping.resolver';
+import { ConnectionContext } from 'subscriptions-transport-ws';
 //#endregion
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
@@ -129,8 +131,11 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     Upload,
     GraphQLModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
+        // TODO: cache, persistedQueries
         debug: configService.get<boolean>('DEVELOPMENT'),
+        tracing: configService.get<boolean>('DEVELOPMENT'),
+        introspection: configService.get<boolean>('DEVELOPMENT'),
         connectToDevTools: configService.get<boolean>('DEVELOPMENT'),
         playground: configService.get<boolean>('DEVELOPMENT')
           ? {
@@ -141,31 +146,24 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
             }
           : false,
         typePaths: ['./**/*.graphql'],
+        cors: {
+          // origin: 'https://localhost:4000',
+          credentials: true,
+        },
         installSubscriptionHandlers: true,
         // subscriptions: {
-        // onConnect: (_connectionParameters: any, _websocket: WebSocket, _context: ConnectionContext) => {
-        //   // eslint-disable-next-line no-debugger
-        //   debugger;
-        // },
-        // onDisconnect: (_websocket: WebSocket, _context: ConnectionContext) => {
-        //   // eslint-disable-next-line no-debugger
-        //   debugger;
-        // },
+        //   keepAlive: 5000,
+        //   onConnect: async (
+        //     _connectionParameters: Record<string, any>,
+        //     _websocket: WebSocket,
+        //     _context: ConnectionContext,
+        //   ): Promise<any> => {},
+        //   onDisconnect: async (_websocket: WebSocket, _context: ConnectionContext): Promise<any> => {},
         // },
         uploads: {
           maxFileSize: 100000000, // 100MB
         },
-        context: ({ req, res }) => ({ req, res }),
-        resolvers: {
-          Folder: {
-            FOLDER: Folder.FOLDER,
-            FILE: Folder.FILE,
-          },
-          Contact: {
-            PROFILE: Contact.PROFILE,
-            USER: Contact.USER,
-          },
-        },
+        context: async ({ req, res, payload, connection }) => ({ req, res, payload, connection }),
       }),
     }),
     //#endregion

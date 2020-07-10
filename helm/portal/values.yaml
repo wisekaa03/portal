@@ -21,7 +21,7 @@ fullnameOverride: "portal"
 
 # App
 PORT: 4000
-PORT_SSL: 4443
+WEBSOCKET_URL: "https://example.com/graphql"
 PORT_DEBUG: 9229
 DOMAIN: "example.com"
 LOGLEVEL: "debug"
@@ -96,7 +96,6 @@ service:
   type: ClusterIP
 
   # nodePort: 30300
-  # nodePort_ssl: 30301
 
   # externalIPs:
   # - 10.10.205.40

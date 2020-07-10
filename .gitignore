@@ -1,3 +1,5 @@
+secure/*
+
 /.git
 ormconfig.js
 public/tmp

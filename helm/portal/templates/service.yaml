@@ -14,13 +14,6 @@ spec:
       {{- end }}
       protocol: TCP
       name: http
-    - port: {{ .Values.PORT_SSL | default 4443 }}
-      targetPort: {{ .Values.PORT_SSL | default 4443 }}
-      {{- if .Values.service.nodePort_ssl }}
-      nodePort: {{ .Values.service.nodePort_ssl }}
-      {{- end }}
-      protocol: TCP
-      name: https
   {{- with .Values.service.externalIPs }}
   externalIPs:
     {{- toYaml . | nindent 8 }}

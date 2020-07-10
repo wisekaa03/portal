@@ -104,7 +104,7 @@ helm_development:
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set replicaCount="1" \
         --set PORT="${PORT:=4000}" \
-        --set PORT_SSL="${PORT_SSL:=4443}" \
+        --set WEBSOCKET_URL="${WEBSOCKET_URL}" \
         --set PORT_DEBUG="${PORT_DEBUG:=9229}" \
         --set DOMAIN="${DOMAIN}" \
         --set DEVELOPMENT="true" \
@@ -192,7 +192,7 @@ helm_production:
     - |
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set PORT="${PORT:=4000}" \
-        --set PORT_SSL="${PORT_SSL:=4443}" \
+        --set WEBSOCKET_URL="${WEBSOCKET_URL}" \
         --set DOMAIN="${DOMAIN}" \
         --set LOGLEVEL="${LOGLEVEL}" \
         --set DEVELOPMENT="false" \
