@@ -33,6 +33,12 @@ declare module '*.svg' {
   export = content;
 }
 
+declare module '*.svg?inline' {
+  const content: any;
+  const className: any;
+  export = content;
+}
+
 declare module '*.png' {
   const content: any;
   const className: any;

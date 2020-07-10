@@ -11,7 +11,7 @@ import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 //#endregion
 //#region Imports Local
-import LogoMin from '@public/images/png/logo_min.png?inline';
+import LogoMin from '@images/png/logo_min.png?inline';
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';

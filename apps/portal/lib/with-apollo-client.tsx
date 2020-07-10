@@ -88,7 +88,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       credentials: 'same-origin',
     });
   } else {
-    if (__DEV__) {
+    if (__DEV__ && 0) {
       const httpLink = createUploadLink({
         uri: '/graphql',
         credentials: 'same-origin',

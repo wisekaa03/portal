@@ -14,15 +14,15 @@ import {
   FormControlLabel,
   TextField,
   Tooltip,
+  CardActions,
 } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { LoginComponentProps } from '@lib/types';
 import Loading from '@front/components/loading';
-import Background from '@public/images/svg/background.svg';
-import Logo from '@public/images/svg/logo.svg';
-import { CardActions } from '@material-ui/core';
+import Logo from '@images/svg/logo.svg?inline';
+import Background from '@images/svg/background.svg?inline';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>

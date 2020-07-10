@@ -44,6 +44,12 @@
       "@public/*": [
         "public/*"
       ],
+      "@images": [
+        "public/images"
+      ],
+      "@images/*": [
+        "public/images/*"
+      ],
       "@front/layout": [
         "apps/portal/layout"
       ],
@@ -73,12 +79,6 @@
       ],
       "@front/pages/*": [
         "apps/portal/pages/*"
-      ],
-      "@app/images": [
-        "public/images"
-      ],
-      "@app/images/*": [
-        "public/images/*"
       ],
       "@app/portal": [
         "apps/portal/src"
