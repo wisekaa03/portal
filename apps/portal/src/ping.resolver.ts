@@ -1,8 +1,13 @@
 /** @format */
 
+//#region Imports NPM
 import { Resolver, Mutation, Subscription } from '@nestjs/graphql';
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
+//#endregion
+//#region Imports Local
+import { GqlAuthGuard } from './guards/gqlauth.guard';
+//#endregion
 
 const PONG_EVENT_NAME = 'pong';
 
@@ -18,6 +23,7 @@ export class PingPongResolvers {
   }
 
   @Subscription(PONG_EVENT_NAME)
+  @UseGuards(GqlAuthGuard)
   pong(): any {
     return this.pubSub.asyncIterator(PONG_EVENT_NAME);
   }

@@ -14,7 +14,7 @@ import crypto from 'crypto';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 // import bodyParser from 'body-parser';
 import { Logger, PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
@@ -28,11 +28,11 @@ import { AppModule } from '@back/app.module';
 import { pinoOptions } from './shared/pino.options';
 //#endregion
 
-async function bootstrap(config: ConfigService): Promise<void> {
+async function bootstrap(configService: ConfigService): Promise<void> {
   const DEV = configService.get<boolean>('DEVELOPMENT');
 
   //#region NestJS options
-  const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'), DEV)), {});
+  const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), DEV)), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
@@ -94,7 +94,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
   const defaultSrc = ["'self'"];
   const connectSrc = ["'self'"];
 
-  const mailUrl = config.get<string>('MAIL_URL');
+  const mailUrl = configService.get<string>('MAIL_URL');
   if (mailUrl.match(/^http/i)) {
     imgSrc.push(mailUrl);
     fontSrc.push(mailUrl);
@@ -102,7 +102,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
     defaultSrc.push(mailUrl);
   }
 
-  const newsUrl = config.get<string>('NEWS_URL');
+  const newsUrl = configService.get<string>('NEWS_URL');
   if (newsUrl.match(/^http/i)) {
     imgSrc.push(newsUrl);
     fontSrc.push(newsUrl);
@@ -110,12 +110,12 @@ async function bootstrap(config: ConfigService): Promise<void> {
     defaultSrc.push(newsUrl);
   }
 
-  const newsApiUrl = config.get<string>('NEWS_API_URL');
+  const newsApiUrl = configService.get<string>('NEWS_API_URL');
   if (newsApiUrl.match(/^http/i)) {
     imgSrc.push(newsApiUrl);
   }
 
-  const meetingUrl = config.get<string>('MEETING_URL');
+  const meetingUrl = configService.get<string>('MEETING_URL');
   if (meetingUrl.match(/^http/i)) {
     frameSrc.push(meetingUrl);
   }
@@ -132,9 +132,11 @@ async function bootstrap(config: ConfigService): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push(`http://localhost.portal.${config.get<string>('DOMAIN')}:${config.get<number>('PORT')}`);
-    frameSrc.push(`http://localhost:${config.get<number>('PORT')}`);
-    connectSrc.push(`ws://localhost:${config.get<number>('PORT')}/graphql`);
+    frameSrc.push(
+      `http://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT')}`,
+    );
+    frameSrc.push(`http://localhost:${configService.get<number>('PORT')}`);
+    connectSrc.push(`ws://localhost:${configService.get<number>('PORT')}/graphql`);
   }
 
   //#region Next.JS locals
@@ -175,12 +177,12 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Enable cookie
-  // app.use(cookieParser());
+  app.use(cookieParser());
   //#endregion
 
   //#region Session and passport initialization
-  const store = sessionRedis(config, logger);
-  app.use(session(config, logger, store));
+  const store = sessionRedis(configService, logger);
+  app.use(session(configService, logger, store));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -227,9 +229,9 @@ async function bootstrap(config: ConfigService): Promise<void> {
   //#endregion
 
   //#region Start server
-  await app.listen(config.get<number>('PORT'));
+  await app.listen(configService.get<number>('PORT'));
   logger.log(
-    `HTTP${nestjsOptions['httpsOptions'] ? 'S' : ''} running on port ${config.get<number>('PORT')}`,
+    `HTTP${nestjsOptions['httpsOptions'] ? 'S' : ''} running on port ${configService.get<number>('PORT')}`,
     'Bootstrap',
   );
   //#endregion

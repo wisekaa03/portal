@@ -6,14 +6,14 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { User } from '@lib/types/user.dto';
 //#endregion
 
-export const CurrentUser = createParamDecorator<any, any, User>(
-  (_data: unknown, context: ExecutionContext) => GqlExecutionContext.create(context).getContext().req.user || undefined,
+export const CurrentUser = createParamDecorator<any, any, User | undefined>(
+  (_data: unknown, context: ExecutionContext) => GqlExecutionContext.create(context).getContext().req?.user,
 );
 
 /**
  * TODO: !!! This is a security RISK !!!
  */
-export const PasswordFrontend = createParamDecorator<any, any, string>(
+export const PasswordFrontend = createParamDecorator<any, any, string | undefined>(
   (_data: unknown, context: ExecutionContext) =>
-    GqlExecutionContext.create(context).getContext().req?.session?.password || undefined,
+    GqlExecutionContext.create(context).getContext().req?.session?.password,
 );

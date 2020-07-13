@@ -4,25 +4,25 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
+import express from 'express';
 // import { APP_FILTER } from '@nestjs/core';
 // import Next from 'next';
-import { Module, CacheModule } from '@nestjs/common';
-import { GraphQLModule, GqlModuleOptions } from '@nestjs/graphql';
+import { ConnectionContext } from 'subscriptions-transport-ws';
+import { Module, CacheModule, UnauthorizedException } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
-import { LoggerModule, Logger } from 'nestjs-pino';
+import { LoggerModule, Logger, PinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
-import { Folder, Contact } from '@lib/types';
-
+import { User } from '@lib/types';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { CacheInterceptorProvider } from '@app/cache.interceptor';
-// import { HttpErrorFilter } from './filters/http-error.filter';
 
 import { DateScalar } from '@back/shared/date.scalar';
 import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
@@ -43,8 +43,11 @@ import { FilesModule } from '@back/files/files.module';
 
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
+
+import sessionRedis from '@back/shared/session-redis';
+import session from '@back/shared/session';
+
 import { PingPongResolvers } from './ping.resolver';
-import { ConnectionContext } from 'subscriptions-transport-ws';
 //#endregion
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
@@ -130,41 +133,78 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region GraphQL
     Upload,
     GraphQLModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        // TODO: cache, persistedQueries
-        debug: configService.get<boolean>('DEVELOPMENT'),
-        tracing: configService.get<boolean>('DEVELOPMENT'),
-        introspection: configService.get<boolean>('DEVELOPMENT'),
-        connectToDevTools: configService.get<boolean>('DEVELOPMENT'),
-        playground: configService.get<boolean>('DEVELOPMENT')
-          ? {
-              settings: {
-                // Когда в playground режиме, нажмите settings и добавьте строку:
-                'request.credentials': 'same-origin',
-              },
+      inject: [ConfigService, Logger],
+      useFactory: (configService: ConfigService) => {
+        const DEV = configService.get<boolean>('DEVELOPMENT');
+
+        const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), DEV)), {});
+        const store = sessionRedis(configService, logger);
+        const auth = session(configService, logger, store);
+
+        return {
+          // TODO: cache, persistedQueries
+          debug: DEV,
+          tracing: DEV,
+          introspection: DEV,
+          connectToDevTools: DEV,
+          playground: DEV
+            ? {
+                settings: {
+                  // Когда в playground режиме, нажмите settings и добавьте строку:
+                  'request.credentials': 'same-origin',
+                },
+              }
+            : false,
+          typePaths: ['./**/*.graphql'],
+          cors: {
+            // origin: 'https://localhost:4000',
+            credentials: true,
+          },
+          installSubscriptionHandlers: true,
+          subscriptions: {
+            keepAlive: 600000,
+            onConnect: async (
+              connectionParameters: Record<string, any>,
+              websocket: WebSocket,
+              context: ConnectionContext,
+            ): Promise<any> => {
+              const promise = new Promise<User | undefined>((resolve) => {
+                const request = (websocket as any)?.upgradeReq as express.Request;
+                const response = ({} as any) as express.Response;
+
+                auth(request, response, () =>
+                  resolve((websocket as any)?.upgradeReq?.session?.passport?.user || undefined),
+                );
+              });
+
+              const user = await promise;
+
+              // TODO:
+              if (user) {
+                return { user, req: context.request, socket: websocket };
+              }
+
+              throw new UnauthorizedException();
+            },
+            // onDisconnect: async (_websocket: WebSocket, _context: ConnectionContext): Promise<any> => {
+            //   // eslint-disable-next-line no-debugger
+            //   debugger;
+            // },
+          },
+          uploads: {
+            maxFileSize: 100000000, // 100MB
+          },
+          context: async ({ req, res, connection }) => {
+            // subscriptions
+            if (connection) {
+              return connection.context;
             }
-          : false,
-        typePaths: ['./**/*.graphql'],
-        cors: {
-          // origin: 'https://localhost:4000',
-          credentials: true,
-        },
-        installSubscriptionHandlers: true,
-        // subscriptions: {
-        //   keepAlive: 5000,
-        //   onConnect: async (
-        //     _connectionParameters: Record<string, any>,
-        //     _websocket: WebSocket,
-        //     _context: ConnectionContext,
-        //   ): Promise<any> => {},
-        //   onDisconnect: async (_websocket: WebSocket, _context: ConnectionContext): Promise<any> => {},
-        // },
-        uploads: {
-          maxFileSize: 100000000, // 100MB
-        },
-        context: async ({ req, res, payload, connection }) => ({ req, res, payload, connection }),
-      }),
+
+            // queries and mutations
+            return { user: req?.session?.passport?.user, req, res };
+          },
+        };
+      },
     }),
     //#endregion
 

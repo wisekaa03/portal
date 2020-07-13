@@ -63,7 +63,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        username = (gqlCtx?.req?.session?.passport?.user as User)?.username;
+        username = (gqlCtx.req?.session?.passport?.user as User)?.username || '';
 
         const values = info.variableValues;
         if (values['password']) {
