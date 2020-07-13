@@ -229,8 +229,8 @@ export class UserService {
     }
     const data: User = {
       ...user,
-      createdAt: new Date(ldapUser.whenCreated),
-      updatedAt: new Date(ldapUser.whenChanged),
+      createdAt: ldapUser.whenCreated,
+      updatedAt: ldapUser.whenChanged,
       username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
       loginService: LoginService.LDAP,

@@ -431,8 +431,8 @@ export class ProfileService {
       notShowing: Number.parseInt(ldapUser.flags, 10) === 1,
       thumbnailPhoto: (thumbnailPhoto as unknown) as string,
       thumbnailPhoto40: (thumbnailPhoto40 as unknown) as string,
-      createdAt: new Date(ldapUser.whenCreated),
-      updatedAt: new Date(ldapUser.whenChanged),
+      createdAt: ldapUser.whenCreated,
+      updatedAt: ldapUser.whenChanged,
     };
 
     return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);
