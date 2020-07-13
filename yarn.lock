@@ -9574,7 +9574,7 @@ file-loader@^6.0.0:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
 
-"file-saver@github:eligrey/FileSaver.js#1.3.8":
+file-saver@eligrey/FileSaver.js#1.3.8:
   version "1.3.8"
   resolved "https://codeload.github.com/eligrey/FileSaver.js/tar.gz/e865e37af9f9947ddcced76b549e27dc45c1cb2e"
 
@@ -14403,10 +14403,10 @@ nest-next@^9.2.0:
   dependencies:
     rxjs "^6.4"
 
-nestjs-ldap@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-0.0.10.tgz#fe152ea7333864f6e685c447366b29ed79e3c771"
-  integrity sha512-5Fg0mgb7T+0lKZ+AF1TwWBCP8rFFJ5evjkxDhZwohQ1kJKDqUbP+Rg376q9N/5ghesZm7cMWsCPSCwELw0xi/w==
+nestjs-ldap@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-0.0.11.tgz#f8ef167d49f1dff2c5ac884ecfaeec4a234662fe"
+  integrity sha512-BOuVzankbg6VUJdz3KdA5Wzbn6XBOnzE4hNync3ZSqTuicT23zCkdAtx+MLG9LrF3OeedGdKyTx46P0R8XeShw==
   dependencies:
     bcrypt latest
     cache-manager "^3"
