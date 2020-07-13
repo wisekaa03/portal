@@ -135,5 +135,6 @@
     ],
     "prettier.packageManager": "yarn",
     "code-runner.enableAppInsights": false,
-    "cSpell.allowCompoundWords": true
+    "cSpell.allowCompoundWords": true,
+    "stylelint.packageManager": "yarn"
 }

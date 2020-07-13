@@ -23,7 +23,7 @@
     "build:syncJob": "yarn build:nest sync-job",
     "build:nest": "NODE_ENV=production nest build",
     "build:next": "cd apps/portal && NODE_ENV=production next build",
-    "copy": "cp -r apps/portal/.next .next && cp -r secure .next && rm -rf .next/cache",
+    "copy": "cp -r apps/portal/.next .next && mkdir -p secure && cp -r secure .next && rm -rf .next/cache",
     "start": "NODE_ENV=production node --max_old_space_size=4096 .next/nest/main.js",
     "start:sync": "NODE_ENV=production node --max_old_space_size=4096 dist/apps/sync/main.js",
     "start:syncJob": "NODE_ENV=production node --max_old_space_size=4096 dist/apps/sync-job/main.js",
