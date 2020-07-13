@@ -138,7 +138,6 @@ The `.env` file is like this:
 ```bash
 # App
 PORT=4000
-WEBSOCKET_URL="https://example.com/graphql"
 DOMAIN="example.com"
 LOGLEVEL="debug"
 DEVELOPMENT="true"

@@ -7,7 +7,6 @@ metadata:
 data:
   env: |
     PORT={{ .Values.PORT }}
-    WEBSOCKET_URL={{ .Values.WEBSOCKET_URL }}
 
     DOMAIN={{ .Values.DOMAIN | quote }}
     LOGLEVEL={{ .Values.LOGLEVEL | quote }}
