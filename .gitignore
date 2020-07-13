@@ -1,4 +1,4 @@
-secure/
+secure/*
 
 /.git
 ormconfig.js

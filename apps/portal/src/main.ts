@@ -1,8 +1,6 @@
 /** @format */
 
 //#region Imports NPM
-import http from 'http';
-import https, { ServerOptions } from 'https';
 import fs from 'fs';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
@@ -50,6 +48,10 @@ async function bootstrap(config: ConfigService): Promise<void> {
     const secureDirectory = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');
+
+      if (__DEV__ || DEV) {
+        process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+      }
 
       nestjsOptions['httpsOptions'] = {
         requestCert: false,
@@ -140,6 +142,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
     if (!DEV) {
       response.locals.nonce = crypto.randomBytes(4).toString('hex');
     }
+    response.locals.secure = !!nestjsOptions['httpsOptions'];
     response.locals.nestLogger = logger;
     next();
   });

@@ -35,6 +35,7 @@ export interface AppInitialPropsMy<TCache = NormalizedCacheObject> extends AppIn
   language?: string;
   context?: UserContext;
   apollo?: NormalizedCacheObject;
+  secure?: boolean;
 }
 
 export interface AppContextMy<TCache = NormalizedCacheObject> extends AppContext {
@@ -42,6 +43,7 @@ export interface AppContextMy<TCache = NormalizedCacheObject> extends AppContext
   context: UserContext;
   apollo: NormalizedCacheObject;
   apolloClient: ApolloClient<NormalizedCacheObject>;
+  secure?: boolean;
 }
 
 export interface DocumentContextMy extends DocumentContext {

@@ -33,12 +33,13 @@ import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
 interface CreateClientProps {
   initialState?: NormalizedCacheObject;
   cookie?: string;
+  secure?: boolean;
 }
 
 let logger: Console | Logger = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
-const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
+const createClient = ({ initialState, cookie, secure }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
   const authLink = setContext((_, { headers }) => {
     return {
       headers: {
@@ -82,38 +83,35 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
   if (__SERVER__) {
     // eslint-disable-next-line global-require
     global.fetch = require('node-fetch');
+    const https = require('https');
 
     link = new HttpLink({
-      uri: `process.env.GRAPHQL_URL`,
+      uri: `${secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
       credentials: 'same-origin',
+      fetchOptions: {
+        agent: new https.Agent({ rejectUnauthorized: false }),
+      },
     });
   } else {
-    if (process.env?.GRAPHQL_URL) {
-      const httpLink = createUploadLink({
-        uri: process.env.GRAPHQL_URL,
-        credentials: 'same-origin',
-      });
-      const wsLink = new WebSocketLink({
-        uri: process.env.GRAPHQL_URL,
-        options: {
-          reconnect: true,
-        },
-      });
+    const httpLink = createUploadLink({
+      uri: '/graphql',
+      credentials: 'same-origin',
+    });
+    const wsLink = new WebSocketLink({
+      uri: `${document.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${document.location.host}/graphql`,
+      options: {
+        reconnect: true,
+      },
+    });
 
-      link = split(
-        ({ query }) => {
-          const definition = getMainDefinition(query);
-          return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-        },
-        wsLink,
-        httpLink,
-      );
-    } else {
-      link = createUploadLink({
-        uri: process.env.GRAPHQL_API,
-        credentials: 'same-origin',
-      });
-    }
+    link = split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+      },
+      wsLink,
+      httpLink,
+    );
 
     clientParameters = {
       resolvers: stateResolvers,
@@ -160,6 +158,7 @@ export const withApolloClient = (
           return appProps;
         }
 
+        const secure = (ctx?.res as Response)?.locals?.secure as boolean;
         const user: User | undefined = (ctx.req as Request)?.session?.passport?.user as User;
         const language = user?.settings?.lng || lngFromReq(ctx?.req) || 'en';
         const isMobile = checkMobile({ ua: ctx.req?.headers['user-agent'] }) ?? false;
@@ -168,7 +167,10 @@ export const withApolloClient = (
           isMobile,
           language,
         };
-        const apolloClient = initApollo({ cookie: ctx?.req?.headers?.cookie });
+        const apolloClient = initApollo({
+          cookie: ctx?.req?.headers?.cookie,
+          secure,
+        });
 
         if (user) {
           try {
@@ -222,6 +224,7 @@ export const withApolloClient = (
           ...appProps,
           context,
           apollo: apolloClient.cache.extract(),
+          secure,
         };
       }
 
@@ -239,7 +242,10 @@ export const withApolloClient = (
       if (__SERVER__ && props.apolloClient) {
         this.apolloClient = props.apolloClient;
       } else {
-        this.apolloClient = initApollo({ initialState: props.apollo });
+        this.apolloClient = initApollo({
+          initialState: props.apollo,
+          secure: this.props?.secure,
+        });
       }
     }
 
