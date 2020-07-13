@@ -63,7 +63,6 @@ export interface ProfileQueryProps {
 }
 
 export interface PhonebookSearchProps {
-  searchRef: React.MutableRefObject<HTMLInputElement | undefined>;
   search: string;
   suggestions: SearchSuggestions[];
   refetch: (variables?: ProfileQueryProps) => Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;

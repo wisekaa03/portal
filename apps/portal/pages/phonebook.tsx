@@ -71,7 +71,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [_search, setSearch] = useState<string>('');
   const search = useDebounce(_search, 300);
 
-  const searchRef = useRef<HTMLInputElement>();
+  const searchRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
 
   const isAdmin = Boolean(me?.user?.isAdmin);
 
@@ -236,7 +236,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   };
 
   const handleSugClose = (event: React.MouseEvent<EventTarget>): void => {
-    if (searchRef.current && searchRef.current.contains(event.target as HTMLElement)) {
+    if (searchRef.current?.contains(event.target as HTMLElement)) {
       return;
     }
 
@@ -258,7 +258,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       <MaterialUI {...rest}>
         <Box display="flex" flexDirection="column">
           <PhonebookSearch
-            searchRef={searchRef}
+            ref={searchRef}
             search={_search}
             suggestions={suggestionsFiltered}
             refetch={refetch}

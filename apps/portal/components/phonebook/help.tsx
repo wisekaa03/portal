@@ -165,11 +165,11 @@ const PhonebookHelp = React.forwardRef(({ onClose, t }: PhonebookHelpProps, ref?
   const maxSteps = helpData.length;
 
   const handleNext = (): void => {
-    setStep((prevStep) => prevStep + 1);
+    setStep((previousStep) => previousStep + 1);
   };
 
   const handleBack = (): void => {
-    setStep((prevStep) => prevStep - 1);
+    setStep((previousStep) => previousStep - 1);
   };
 
   const handleStepChange = (s: number): void => {
@@ -185,14 +185,14 @@ const PhonebookHelp = React.forwardRef(({ onClose, t }: PhonebookHelpProps, ref?
         <Typography variant="h6">{t('phonebook:help.title')}</Typography>
       </Paper>
       <SwipeableViews index={step} onChangeIndex={handleStepChange} enableMouseEvents>
-        {helpData.map((cur, idx) => (
-          <Box key={cur.id}>
+        {helpData.map((current, idx) => (
+          <Box key={current.id}>
             {Math.abs(step - idx) <= 2 ? (
               <Paper square elevation={0} className={classes.content}>
                 <Box className={classes.imageBox}>
-                  <img src={cur.image} alt="help" />
+                  <img src={current.image} alt="help" />
                 </Box>
-                <Box>{cur.text}</Box>
+                <Box>{current.text}</Box>
               </Paper>
             ) : null}
           </Box>

@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
@@ -69,109 +69,113 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const PhonebookSearch: FC<PhonebookSearchProps> = ({
-  searchRef,
-  search,
-  suggestions,
-  refetch,
-  handleSearch,
-  handleSugClose,
-  handleSugKeyDown,
-  handleSugClick,
-  handleHelpOpen,
-  handleSettingsOpen,
-}) => {
-  const classes = useStyles({});
-  const { t } = useTranslation();
-  const [openTooltip, setOpenTooltip] = useState<boolean>(false);
+const PhonebookSearch = forwardRef(
+  (
+    {
+      search,
+      suggestions,
+      refetch,
+      handleSearch,
+      handleSugClose,
+      handleSugKeyDown,
+      handleSugClick,
+      handleHelpOpen,
+      handleSettingsOpen,
+    }: PhonebookSearchProps,
+    ref: React.MutableRefObject<HTMLInputElement>,
+  ) => {
+    const classes = useStyles({});
+    const { t } = useTranslation();
+    const [openTooltip, setOpenTooltip] = useState<boolean>(false);
 
-  const handleCloseTooltip = (): void => {
-    setOpenTooltip(false);
-  };
+    const handleCloseTooltip = (): void => {
+      setOpenTooltip(false);
+    };
 
-  const handleOpenTooltip = (): void => {
-    setOpenTooltip(true);
-  };
+    const handleOpenTooltip = (): void => {
+      setOpenTooltip(true);
+    };
 
-  const handleCurrentSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setOpenTooltip(!event.target.value);
-    handleSearch(event);
-  };
+    const handleCurrentSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
+      setOpenTooltip(!event.target.value);
+      handleSearch(event);
+    };
 
-  const showedSuggestions = suggestions.length > 0;
+    const showedSuggestions = suggestions.length > 0;
 
-  return (
-    <Box display="flex" alignItems="center" className={classes.panel}>
-      <Box flexGrow={1} position="relative" ml={0} mr={2} className={classes.search}>
-        <Box
-          position="absolute"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          className={classes.searchIcon}
-        >
-          <SearchIcon color="secondary" />
+    return (
+      <Box display="flex" alignItems="center" className={classes.panel}>
+        <Box flexGrow={1} position="relative" ml={0} mr={2} className={classes.search}>
+          <Box
+            position="absolute"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            className={classes.searchIcon}
+          >
+            <SearchIcon color="secondary" />
+          </Box>
+          <Tooltip
+            open={openTooltip}
+            onOpen={handleOpenTooltip}
+            onClose={handleCloseTooltip}
+            title={t('phonebook:help.search') || ''}
+            interactive
+            placement="top-start"
+          >
+            <InputBase
+              ref={ref}
+              placeholder={t('common:search')}
+              value={search}
+              onChange={handleCurrentSearch}
+              fullWidth
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Tooltip>
+          <Popper
+            id="search-suggestions"
+            placement="bottom-start"
+            className={classes.suggestionsPopper}
+            open={showedSuggestions}
+            anchorEl={() => ref?.current}
+            disablePortal
+          >
+            <Paper>
+              {showedSuggestions && (
+                <ClickAwayListener onClickAway={handleSugClose}>
+                  <MenuList onKeyDown={handleSugKeyDown}>
+                    {suggestions.map((item) => (
+                      <MenuItem key={item.name} onClick={handleSugClick}>
+                        <Icon base64 src={item.avatar} size={21} />
+                        <Typography className={classes.margin} component="span">
+                          {item.name}
+                        </Typography>
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
+              )}
+            </Paper>
+          </Popper>
         </Box>
-        <Tooltip
-          open={openTooltip}
-          onOpen={handleOpenTooltip}
-          onClose={handleCloseTooltip}
-          title={t('phonebook:help.search') || ''}
-          interactive
-          placement="top-start"
-        >
-          <InputBase
-            ref={searchRef}
-            placeholder={t('common:search')}
-            value={search}
-            onChange={handleCurrentSearch}
-            fullWidth
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-          />
+        <Tooltip title={t('common:help') || ''}>
+          <IconButton className={classes.icon} onClick={handleHelpOpen}>
+            <HelpIcon />
+          </IconButton>
         </Tooltip>
-        <Popper
-          id="search-suggestions"
-          placement="bottom-start"
-          className={classes.suggestionsPopper}
-          open={showedSuggestions}
-          anchorEl={searchRef.current}
-          disablePortal
-        >
-          <Paper>
-            {showedSuggestions && (
-              <ClickAwayListener onClickAway={handleSugClose}>
-                <MenuList onKeyDown={handleSugKeyDown}>
-                  {suggestions.map((item) => (
-                    <MenuItem key={item.name} onClick={handleSugClick}>
-                      <Icon base64 src={item.avatar} size={21} />
-                      <Typography className={classes.margin} component="span">
-                        {item.name}
-                      </Typography>
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            )}
-          </Paper>
-        </Popper>
+        <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
+        <Tooltip title={t('common:settings') || ''}>
+          <IconButton className={classes.icon} onClick={handleSettingsOpen}>
+            <SettingsIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
-      <Tooltip title={t('common:help') || ''}>
-        <IconButton className={classes.icon} onClick={handleHelpOpen}>
-          <HelpIcon />
-        </IconButton>
-      </Tooltip>
-      <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
-      <Tooltip title={t('common:settings') || ''}>
-        <IconButton className={classes.icon} onClick={handleSettingsOpen}>
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
-    </Box>
-  );
-};
+    );
+  },
+);
 
 export default PhonebookSearch;
