@@ -53,11 +53,15 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FilesComponent: FC<FilesComponentProps> = ({
+  setPath,
   folderLoading,
   folderData,
-  setPath,
+  folderRefetch,
+  search,
+  handleSearch,
+  handleDownload,
+  handleDelete,
   // setFolderName,
-  // fileRefetch,
   // showDropzone,
   // handleOpenDropzone,
   // handleCloseDropzone,
@@ -70,10 +74,6 @@ const FilesComponent: FC<FilesComponentProps> = ({
   // attachments,
   // setAttachments,
   // handleUploadFile,
-  // search,
-  // handleSearch,
-  // handleDownload,
-  // handleDelete,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
@@ -89,20 +89,6 @@ const FilesComponent: FC<FilesComponentProps> = ({
               </Box>
             </Box>
           </Box> */}
-          <Box display="flex" className={classes.dropBox} flexDirection="column">
-            <Loading activate={folderLoading} full color="secondary">
-              <>
-                {/*<FilesTreeComponent data={folderData} />*/}
-                {/*<FilesDialogComponent
-                  open={openFolderDialog}
-                  handleClose={handleCloseFolderDialog}
-                  input={folderDialogName}
-                  handleInput={handleFolderDialogName}
-                  handleAccept={handleAcceptFolderDialog}
-                />*/}
-              </>
-            </Loading>
-          </Box>
           {/* showDropzone && (
             <Box display="flex" className={classes.dropBox} flexDirection="column">
               <Box className={classes.dropBoxActions}>
@@ -129,6 +115,26 @@ const FilesComponent: FC<FilesComponentProps> = ({
             handleDownload={handleDownload}
             handleDelete={handleDelete}
             />*/}
+          {/*<Box display="flex" className={classes.dropBox} flexDirection="column">*/}
+          {/*<FilesTreeComponent data={folderData} />*/}
+          {/*<FilesDialogComponent
+                  open={openFolderDialog}
+                  handleClose={handleCloseFolderDialog}
+                  input={folderDialogName}
+                  handleInput={handleFolderDialogName}
+                  handleAccept={handleAcceptFolderDialog}
+                />*/}
+          {/*</Box>*/}
+          {folderData && (
+            <FilesTableComponent
+              data={folderData}
+              refetchData={folderRefetch}
+              search={search}
+              handleSearch={handleSearch}
+              handleDownload={handleDownload}
+              handleDelete={handleDelete}
+            />
+          )}
         </>
       </Loading>
     </Box>

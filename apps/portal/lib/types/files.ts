@@ -7,9 +7,13 @@ export interface FilesComponentProps {
   folderLoading: boolean;
   folderData?: FilesFolder[];
   setPath: React.Dispatch<React.SetStateAction<string>>;
+  folderRefetch: () => void;
+  search: string;
+  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDownload: () => void;
+  handleDelete: (filesFolder: FilesFolder) => () => void;
   // folderName: string;
   // setFolderName: React.Dispatch<React.SetStateAction<string>>;
-  // fileRefetch: () => void;
   // showDropzone: boolean;
   // handleOpenDropzone: () => void;
   // handleCloseDropzone: () => void;
@@ -22,10 +26,6 @@ export interface FilesComponentProps {
   // attachments: DropzoneFile[];
   // setAttachments: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   // handleUploadFile: () => void;
-  // search: string;
-  // handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  // handleDownload: () => void;
-  // handleDelete: () => void;
 }
 
 export interface FilesTreeComponentProps {
@@ -67,15 +67,27 @@ export type FolderDialogState = {
 };
 
 export type FilesTableComponentProps = {
-  data?: FilesQueryProps[];
+  data: FilesFolder[];
   refetchData: () => void;
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: () => void;
-  handleDelete: () => void;
+  handleDelete: (filesFolder: FilesFolder) => () => void;
 };
 
 export type FilesTableHeaderProps = {
   label: string;
+  hidden: boolean;
   width?: number;
+  colspan?: number;
 };
+
+export const FilesFolderListHeaderLabels: FilesTableHeaderProps[] = [
+  { label: 'id', colspan: 1, hidden: true },
+  { label: 'type', colspan: 1, hidden: true },
+  { label: 'name', colspan: 2, hidden: false },
+  { label: 'mime', width: 100, colspan: 1, hidden: false },
+  // { label: 'creationDate', width: 200, colspan: 1, hidden: false },
+  { label: 'lastModified', width: 200, colspan: 1, hidden: false },
+  { label: 'size', width: 150, colspan: 1, hidden: false },
+];

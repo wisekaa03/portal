@@ -10,7 +10,7 @@ import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { FILES_FOLDER_LIST } from '@lib/queries';
+import { FILES_FOLDER_LIST, FILES_DELETE_FILE, FILES_DELETE_FOLDER } from '@lib/queries';
 import { Data, FilesQueryProps, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import FilesComponent from '@front/components/files';
@@ -26,7 +26,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const [
     getFolder,
-    { data: folderData, loading: folderLoading, error: folderError, refetch: folderRefetch },
+    { data: dataFolderList, loading: loadingFolderList, error: errorFolderList, refetch: refetchFolderList },
   ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>>(FILES_FOLDER_LIST);
 
   useEffect(() => {
@@ -36,6 +36,39 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       },
     });
   }, [path]);
+
+  const [deleteFile, { error: errorDeleteFile }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FILE, {
+    update(cache, fetch) {
+      if (fetch?.data) {
+        const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
+        // const data = query?.folder.filter((f) => f.id !== result);
+
+        // if (data) {
+        //   cache.writeQuery({
+        //     query: FILES_FOLDER_LIST,
+        //     data: { folder: data },
+        //   });
+        // }
+      }
+    },
+  });
+
+  const [deleteFolder, { error: errorDeleteFolder }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FOLDER, {
+    update(cache, fetch) {
+      if (fetch?.data) {
+        const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
+        // const data = query?.folder.filter((f) => f.id !== result);
+
+        // if (data) {
+        //   cache.writeQuery({
+        //     query: FILES_FOLDER_LIST,
+        //     data: { folder: data },
+        //   });
+        // }
+      }
+    },
+  });
+
   /*   const [editFolder] = useMutation(EDIT_FOLDER, {
     update(cache, { data: { editFolder: result } }) {
       const query = cache.readQuery<any>({ query: FOLDER_FILES });
@@ -45,19 +78,6 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         cache.writeQuery({
           query: FOLDER_FILES,
           data: { folder: [...data, result] },
-        });
-      }
-    },
-  });
-  const [deleteFolder] = useMutation(DELETE_FOLDER, {
-    update(cache, { data: { deleteFolder: result } }) {
-      const query = cache.readQuery<any>({ query: FOLDER });
-      const data = query?.folder.filter((f) => f.id !== result);
-
-      if (data) {
-        cache.writeQuery({
-          query: FOLDER,
-          data: { folder: data },
         });
       }
     },
@@ -128,18 +148,6 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const handleCloseFolderDialog = (): void => {
     setOpenFolderDialog(0);
   };
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearch(event.currentTarget.value);
-  };
-
-  const handleDownload = (): void => {
-    // /
-  };
-
-  const handleDelete = (): void => {
-    // /
-  };
  */
 
   // const [current, setCurrent] = useState<FileQueryProps | undefined>();
@@ -160,21 +168,39 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   //   awaitRefetchQueries: true,
   // });
 
-  // const handleDelete = (media: FileQueryProps) => (): void => {
-  //   if (media && media.id) {
-  //     deleteMedia({ variables: { id: media.id } });
-  //   }
-  // };
-
   // const handleCloseCurrent = (): void => {
   //   setCurrent(null);
   // };
 
   useEffect(() => {
-    if (folderError) {
-      snackbarUtils.error(folderError);
+    if (errorFolderList) {
+      snackbarUtils.error(errorFolderList);
     }
-  }, [folderError]);
+    if (errorDeleteFile) {
+      snackbarUtils.error(errorDeleteFile);
+    }
+    if (errorDeleteFolder) {
+      snackbarUtils.error(errorDeleteFolder);
+    }
+  }, [errorFolderList, errorDeleteFile, errorDeleteFolder]);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearch(event.currentTarget.value);
+  };
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const handleDownload = (): void => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+  };
+
+  const handleDelete = (filesFolder: FilesFolder) => (): void => {
+    if (filesFolder.type === 'FOLDER') {
+      deleteFolder({ variables: { id: filesFolder.id } });
+    } else {
+      deleteFile({ variables: { id: filesFolder.id } });
+    }
+  };
 
   return (
     <>
@@ -183,11 +209,15 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <MaterialUI {...rest}>
         <FilesComponent
-          folderLoading={folderLoading}
-          folderData={folderData?.folderFiles}
           setPath={setPath}
+          folderLoading={loadingFolderList}
+          folderData={dataFolderList?.folderFiles}
+          folderRefetch={refetchFolderList}
+          search={search}
+          handleSearch={handleSearch}
+          handleDownload={handleDownload}
+          handleDelete={handleDelete}
           // setFolderName={setFolderName}
-          // fileRefetch={fileRefetch}
           // showDropzone={showDropzone}
           // handleOpenDropzone={handleOpenDropzone}
           // handleCloseDropzone={handleCloseDropzone}
@@ -199,11 +229,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           // handleFolderDialogName={handleFolderDialogName}
           // attachments={attachments}
           // setAttachments={setAttachments}
-          // handleUploadFile={handleUploadFile}
           // search={search}
-          // handleSearch={handleSearch}
-          // handleDownload={handleDownload}
-          // handleDelete={handleDelete}
         />
       </MaterialUI>
     </>

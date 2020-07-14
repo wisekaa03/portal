@@ -1,5 +1,7 @@
 {
   "title": "Portal: Upload files",
+  "folder": "Folder",
+  "file": "File",
   "add": "Create file",
   "edit": "Edit file",
   "delete": "Delete file",
@@ -13,9 +15,12 @@
   "confirmDelete": "Confirm delete folder {{input}}?",
   "notFound": "Files not found",
   "table": {
-    "name": "Name",
-    "date": "Date",
+    "id": "ID",
     "type": "Type",
-    "size": "Size"
+    "name": "Name",
+    "size": "Size",
+    "mime": "Mime",
+    "creationDate": "Creation date",
+    "lastModified": "Last modified"
   }
 }

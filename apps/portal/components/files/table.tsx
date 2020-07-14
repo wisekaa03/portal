@@ -26,11 +26,19 @@ import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import DescriptionIcon from '@material-ui/icons/DescriptionRounded';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import FolderIcon from '@material-ui/icons/Folder';
+import FileIcon from '@material-ui/icons/InsertDriveFile';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-import { FilesTableComponentProps, FilesTableHeaderProps } from '@lib/types';
+import {
+  FilesTableComponentProps,
+  FilesTableHeaderProps,
+  Folder,
+  FilesFolder,
+  FilesFolderListHeaderLabels,
+} from '@lib/types';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
 import RefreshButton from '@front/components/ui/refresh-button';
@@ -40,10 +48,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      padding: theme.spacing(),
+      padding: `0 ${theme.spacing()} ${theme.spacing()} ${theme.spacing()}`,
     },
     control: {
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     icon: {
       color: theme.palette.secondary.main,
@@ -73,46 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const HeaderLabels: FilesTableHeaderProps[] = [
-  { label: 'name' },
-  { label: 'date', width: 200 },
-  { label: 'type', width: 100 },
-  { label: 'size', width: 150 },
-];
-
-const fakeData: { id: string; name: string; date: Date; type: string; size: number }[] = [
-  { id: '0', name: 'Очень длинное название файла 1', date: new Date(), type: 'jpg', size: 140 },
-  { id: '1', name: 'Очень длинное название файла 2', date: new Date(), type: 'doc', size: 140 },
-  { id: '2', name: 'Очень длинное название файла 3', date: new Date(), type: 'png', size: 1140 },
-  { id: '3', name: 'Очень длинное название файла 4', date: new Date(), type: 'jpg', size: 140 },
-  { id: '4', name: 'Очень длинное название файла 5', date: new Date(), type: 'jpg', size: 140 },
-  { id: '5', name: 'Очень длинное название файла 6', date: new Date(), type: 'doc', size: 140 },
-  { id: '6', name: 'Очень длинное название файла 7', date: new Date(), type: 'jpg', size: 2140 },
-  { id: '7', name: 'Очень длинное название файла 8', date: new Date(), type: 'png', size: 140 },
-  { id: '8', name: 'Очень длинное название файла 9', date: new Date(), type: 'jpg', size: 140 },
-  { id: '9', name: 'Очень длинное название файла 10', date: new Date(), type: 'jpg', size: 3140 },
-  { id: '10', name: 'Очень длинное название файла 11', date: new Date(), type: 'jpg', size: 140 },
-  { id: '11', name: 'Очень длинное название файла 12', date: new Date(), type: 'jpg', size: 140 },
-  { id: '12', name: 'Очень длинное название файла 13', date: new Date(), type: 'png', size: 4140 },
-  { id: '13', name: 'Очень длинное название файла 14', date: new Date(), type: 'doc', size: 140 },
-  { id: '14', name: 'Очень длинное название файла 15', date: new Date(), type: 'jpg', size: 140 },
-  { id: '15', name: 'Очень длинное название файла 16', date: new Date(), type: 'png', size: 5140 },
-  { id: '16', name: 'Очень длинное название файла 17', date: new Date(), type: 'jpg', size: 140 },
-  { id: '17', name: 'Очень длинное название файла 18', date: new Date(), type: 'jpg', size: 140 },
-  { id: '18', name: 'Очень длинное название файла 19', date: new Date(), type: 'png', size: 6140 },
-  { id: '19', name: 'Очень длинное название файла 20', date: new Date(), type: 'jpg', size: 140 },
-  { id: '20', name: 'Очень длинное название файла 21', date: new Date(), type: 'jpg', size: 140 },
-  { id: '21', name: 'Очень длинное название файла 22', date: new Date(), type: 'png', size: 140 },
-  { id: '22', name: 'Очень длинное название файла 23', date: new Date(), type: 'jpg', size: 140 },
-  { id: '23', name: 'Очень длинное название файла 24', date: new Date(), type: 'jpg', size: 140 },
-  { id: '24', name: 'Очень длинное название файла 25', date: new Date(), type: 'jpg', size: 140 },
-  { id: '25', name: 'Очень длинное название файла 26', date: new Date(), type: 'doc', size: 140 },
-  { id: '26', name: 'Очень длинное название файла 27', date: new Date(), type: 'jpg', size: 140 },
-  { id: '27', name: 'Очень длинное название файла 28', date: new Date(), type: 'jpg', size: 140 },
-  { id: '28', name: 'Очень длинное название файла 29', date: new Date(), type: 'jpg', size: 140 },
-  { id: '29', name: 'Очень длинное название файла 30', date: new Date(), type: 'jpg', size: 140 },
-  { id: '30', name: 'Очень длинное название файла 31', date: new Date(), type: 'jpg', size: 140 },
-];
+const FilesListType: FC<{ type: Folder }> = ({ type }) => (type === 'FOLDER' ? <FolderIcon /> : <FileIcon />);
 
 const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,
@@ -137,7 +107,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
     setOpen(true);
   };
 
-  const filtered = fakeData.filter(({ name, size }) => name.includes(search) || size.toString().includes(search));
+  const filtered = data.filter(({ name, size }) => name.includes(search) || size.toString().includes(search));
 
   return (
     <div className={classes.root}>
@@ -159,20 +129,34 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                   <Table stickyHeader>
                     <TableHead>
                       <TableRow>
-                        {HeaderLabels.map((col) => (
-                          <TableCell key={col.label} {...(col.width ? { style: { width: col.width } } : {})}>
-                            {t(`files:table.${col.label}`)}
-                          </TableCell>
-                        ))}
+                        {FilesFolderListHeaderLabels.map((col) =>
+                          col.hidden ? null : (
+                            <TableCell
+                              colSpan={col.colspan}
+                              key={col.label}
+                              {...(col.width ? { style: { width: col.width } } : {})}
+                            >
+                              {t(`files:table.${col.label}`)}
+                            </TableCell>
+                          ),
+                        )}
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {filtered.map((current) => (
+                      {filtered.map((current: FilesFolder) => (
                         <TableRow key={current.id} hover tabIndex={-1} onClick={() => handleRow(current)}>
+                          <TableCell width={10}>
+                            <FilesListType type={current.type} />
+                          </TableCell>
                           <TableCell>{current.name}</TableCell>
-                          <TableCell>{format(current.date, 'DD.MM.YYYY')}</TableCell>
-                          <TableCell>{current.type}</TableCell>
-                          <TableCell>{current.size}kb</TableCell>
+                          <TableCell>{current.type === 'FOLDER' ? t('files:folder') : current.mime}</TableCell>
+                          {/*<TableCell>
+                            {current.creationDate ? format(current.creationDate, 'DD.MM.YYYY HH:MM') : ''}
+                          </TableCell>*/}
+                          <TableCell>
+                            {current.lastModified ? format(current.lastModified, 'DD.MM.YYYY HH:MM') : ''}
+                          </TableCell>
+                          <TableCell>{current.type === 'FOLDER' ? '' : `${current.size}`}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -219,11 +203,11 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                   <GetAppIcon className={classes.icon} />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t('files:delete') || ''}>
+              {/*<Tooltip title={t('files:delete') || ''}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon className={classes.icon} />
                 </IconButton>
-              </Tooltip>
+                      </Tooltip>*/}
             </DialogActions>
           </Dialog>
         </>
