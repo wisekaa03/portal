@@ -83,13 +83,15 @@ const createClient = ({ initialState, cookie, secure }: CreateClientProps): Apol
   if (__SERVER__) {
     // eslint-disable-next-line global-require
     global.fetch = require('node-fetch');
-    const https = require('https');
 
-    const fetchOptions = secure
-      ? {
-          agent: new https.Agent({ rejectUnauthorized: false }),
-        }
-      : undefined;
+    let fetchOptions: Record<string, any> | undefined;
+    if (secure) {
+      const https = require('https');
+
+      fetchOptions = {
+        agent: new https.Agent({ rejectUnauthorized: false }),
+      };
+    }
 
     link = new HttpLink({
       uri: `${secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
