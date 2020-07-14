@@ -9,8 +9,18 @@ import { Logger } from 'nestjs-pino';
 import { ConfigService } from '@app/config';
 //#endregion
 
-export default (configService: ConfigService, logger: Logger, store: Session.Store): Express.RequestHandler => {
+export default (
+  configService: ConfigService,
+  logger: Logger,
+  store: Session.Store,
+  secure: boolean,
+): Express.RequestHandler => {
   try {
+    const DEV = configService.get<boolean>('DEVELOPMENT');
+    const domain = DEV ? undefined : `.${configService.get<string>('DOMAIN')}`;
+    // const httpOnly = !DEV;
+    const httpOnly = true;
+
     const sess = Session({
       secret: configService.get<string>('SESSION_SECRET'),
       store,
@@ -28,10 +38,10 @@ export default (configService: ConfigService, logger: Logger, store: Session.Sto
       // genid: () => genuuid(),
       cookie: {
         path: '/',
-        domain: `.${configService.get<string>('DOMAIN')}`,
-        // secure: process.env.PROTOCOL === 'https',
+        domain,
+        secure,
         // expires: false,
-        httpOnly: false,
+        httpOnly,
         // в миллисекундах, 1000 * 60 - минута
         maxAge: configService.get<number>('SESSION_COOKIE_TTL'),
       },

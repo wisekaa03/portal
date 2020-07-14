@@ -182,7 +182,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   //#region Session and passport initialization
   const store = sessionRedis(configService, logger);
-  app.use(session(configService, logger, store));
+  app.use(session(configService, logger, store, !!nestjsOptions['httpsOptions']));
 
   app.use(passport.initialize());
   app.use(passport.session());

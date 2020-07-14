@@ -139,7 +139,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
         const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), DEV)), {});
         const store = sessionRedis(configService, logger);
-        const auth = session(configService, logger, store);
+        const auth = session(configService, logger, store, true);
 
         return {
           // TODO: cache, persistedQueries
@@ -162,7 +162,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           },
           installSubscriptionHandlers: true,
           subscriptions: {
-            keepAlive: 600000,
+            keepAlive: 10000,
             onConnect: async (
               connectionParameters: Record<string, any>,
               websocket: WebSocket,
