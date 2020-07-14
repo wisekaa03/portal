@@ -352,48 +352,17 @@ export const FILES_FOLDER_LIST = gql`
   }
 `;
 
-export const FILES_FILE_EDIT = gql`
-  mutation EditFile($attachment: Upload!, $folder: String!, $id: ID) {
-    editFile(attachment: $attachment, folder: $folder, id: $id) {
-      id
-      createdUser {
-        id
-        username
-      }
-      updatedUser {
-        id
-        username
-      }
-      updatedAt
-      createdAt
-      folder
-      title
-      filename
-      mimetype
+export const FILES_GET_FILE = gql`
+  mutation GetFile($path: String!) {
+    getFile(path: $path) {
+      path
     }
   }
 `;
 
-export const FILES_EDIT_FOLDER = gql`
-  mutation EditFolder($id: ID, $shared: Boolean!, $pathname: String!) {
-    editFolder(id: $id, shared: $shared, pathname: $pathname) {
-      id
-      createdUser {
-        id
-        username
-      }
-      updatedUser {
-        id
-        username
-      }
-      updatedAt
-      createdAt
-      pathname
-      user {
-        id
-        username
-      }
-    }
+export const FILES_PUT_FILE = gql`
+  mutation PutFile($path: String!, $file: Upload!) {
+    putFile(path: $path)
   }
 `;
 

@@ -10,7 +10,7 @@ export interface FilesComponentProps {
   folderRefetch: () => void;
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDownload: () => void;
+  handleDownload: (filesFolder: FilesFolder) => () => void;
   handleDelete: (filesFolder: FilesFolder) => () => void;
   // folderName: string;
   // setFolderName: React.Dispatch<React.SetStateAction<string>>;
@@ -71,7 +71,7 @@ export type FilesTableComponentProps = {
   refetchData: () => void;
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDownload: () => void;
+  handleDownload: (filesFolder: FilesFolder) => () => void;
   handleDelete: (filesFolder: FilesFolder) => () => void;
 };
 

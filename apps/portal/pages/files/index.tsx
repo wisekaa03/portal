@@ -4,14 +4,13 @@
 import React, { useEffect, useState } from 'react';
 // import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { QueryResult } from 'react-apollo';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery } from '@apollo/react-hooks';
 //#endregion
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { FILES_FOLDER_LIST, FILES_DELETE_FILE, FILES_DELETE_FOLDER } from '@lib/queries';
-import { Data, FilesQueryProps, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
+import { FILES_FOLDER_LIST, FILES_GET_FILE, FILES_DELETE_FILE, FILES_DELETE_FOLDER } from '@lib/queries';
+import { Data, FilesQueryProps, FilesFile, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import FilesComponent from '@front/components/files';
 //#endregion
@@ -36,6 +35,8 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       },
     });
   }, [path]);
+
+  const [getFile, { error: errorGetFile }] = useMutation<Data<'getFile', FilesFile>, { path: string }>(FILES_GET_FILE);
 
   const [deleteFile, { error: errorDeleteFile }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FILE, {
     update(cache, fetch) {
@@ -69,37 +70,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     },
   });
 
-  /*   const [editFolder] = useMutation(EDIT_FOLDER, {
-    update(cache, { data: { editFolder: result } }) {
-      const query = cache.readQuery<any>({ query: FOLDER_FILES });
-      const data = query?.folder.filter((f) => f.id !== result.id);
-
-      if (data) {
-        cache.writeQuery({
-          query: FOLDER_FILES,
-          data: { folder: [...data, result] },
-        });
-      }
-    },
-  });
-
-  const handleEditFolder = (pathname: string, type: number, id?: string): void => {
-    if (type > 1 && id) {
-      const folders = pathname.split('/').filter((f) => !!f);
-      const oldName = folders[folders.length - 1];
-      folders.pop();
-      const newPathname = `/${folders.join('/')}`;
-
-      setFolderDialog({ id, pathname: newPathname, oldName, name: oldName });
-    } else {
-      setFolderDialog({ pathname, name: '' });
-    }
-
-    setOpenFolderDialog(type);
-  };
-
-  const [uploadFile] = useMutation(EDIT_FILE);
-
+  /*
   const handleUploadFile = (): void => {
     attachments.forEach((file: DropzoneFile) => {
       uploadFile({
@@ -150,28 +121,6 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
  */
 
-  // const [current, setCurrent] = useState<FileQueryProps | undefined>();
-  // const profile = useContext(ProfileContext);
-  // const router = useRouter();
-  // const mediaId = router && router.query && router.query.id;
-
-  // const handleCurrent = (media: FileQueryProps) => (): void => {
-  //   setCurrent(media);
-  // };
-
-  // const [deleteMedia] = useMutation(DELETE_FILE, {
-  //   refetchQueries: [
-  //     {
-  //       query: FILE,
-  //     },
-  //   ],
-  //   awaitRefetchQueries: true,
-  // });
-
-  // const handleCloseCurrent = (): void => {
-  //   setCurrent(null);
-  // };
-
   useEffect(() => {
     if (errorFolderList) {
       snackbarUtils.error(errorFolderList);
@@ -189,7 +138,9 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   };
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  const handleDownload = (): void => {
+  const handleDownload = (filesFolder: FilesFolder) => async (): Promise<void> => {
+    const download = await getFile({ variables: { path: `${path}${filesFolder.name}` } });
+
     // eslint-disable-next-line no-debugger
     debugger;
   };

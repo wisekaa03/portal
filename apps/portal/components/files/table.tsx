@@ -20,14 +20,14 @@ import {
   ListItem,
   ListItemText,
   List,
+  SvgIconProps,
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
-import DescriptionIcon from '@material-ui/icons/DescriptionRounded';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import FolderIcon from '@material-ui/icons/Folder';
-import FileIcon from '@material-ui/icons/InsertDriveFile';
+import FileIcon from '@material-ui/icons/DescriptionRounded';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) =>
       top: theme.spacing(2),
       right: theme.spacing(2),
     },
+    paddingRight: {
+      paddingRight: '10px',
+    },
     paper: {
       minWidth: 500,
     },
@@ -82,7 +85,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const FilesListType: FC<{ type: Folder }> = ({ type }) => (type === 'FOLDER' ? <FolderIcon /> : <FileIcon />);
+interface FilesListType extends SvgIconProps {
+  type: Folder;
+}
+
+const FilesListType: FC<FilesListType> = ({ type, ...rest }) =>
+  type === 'FOLDER' ? <FolderIcon {...rest} /> : <FileIcon {...rest} />;
 
 const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,
@@ -96,13 +104,14 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   const { t } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
-  const [detail, setDetail] = useState<any>({});
+  const [detail, setDetail] = useState<FilesFolder | null>(null);
 
-  const handleClose = (): void => {
+  const handleClose = async (): Promise<void> => {
     setOpen(false);
+    setDetail(null);
   };
 
-  const handleRow = (element: any): void => {
+  const handleRow = (element: FilesFolder): void => {
     setDetail(element);
     setOpen(true);
   };
@@ -165,51 +174,59 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
               </Paper>
             )}
           </AutoSizer>
-          <Dialog open={open} onClose={handleClose} classes={{ paper: classes.paper }}>
-            <DialogContent>
-              <Box display="grid" gridGap={16}>
-                <Box display="flex" justifyContent="center">
-                  <DescriptionIcon className={classes.fileIcon} fontSize="large" />
-                  <Typography variant="subtitle1">{detail.name}</Typography>
-                  <Tooltip title={t('files:edit') || ''}>
-                    <IconButton className={classes.editIcon} size="small">
-                      <EditIcon className={classes.icon} />
+          {detail && (
+            <Dialog open={open} onClose={handleClose} classes={{ paper: classes.paper }}>
+              <DialogContent>
+                <Box display="grid" gridGap={16}>
+                  <Box display="flex" justifyContent="center">
+                    <FilesListType type={detail.type} className={classes.fileIcon} fontSize="large" />
+                    <Typography variant="subtitle1">{detail.name}</Typography>
+                    {/*<Tooltip title={t('files:edit') || ''}>
+                      <IconButton className={classes.editIcon} size="small">
+                        <EditIcon className={classes.icon} />
+                      </IconButton>
+                    </Tooltip>*/}
+                  </Box>
+                  <Box>
+                    <Paper>
+                      <List className={classes.list}>
+                        <ListItem divider>
+                          <ListItemText className={classes.paddingRight} primary={t('files:table.lastModified')} />
+                          <ListItemText primary={format(detail.lastModified, 'DD.MM.YYYY HH:MM')} />
+                        </ListItem>
+                        {detail.mime && (
+                          <ListItem divider>
+                            <ListItemText className={classes.paddingRight} primary={t('files:table.mime')} />
+                            <ListItemText primary={detail.mime} />
+                          </ListItem>
+                        )}
+                        {detail.type === 'FILE' && (
+                          <ListItem>
+                            <ListItemText className={classes.paddingRight} primary={t('files:table.size')} />
+                            <ListItemText primary={detail.size} />
+                          </ListItem>
+                        )}
+                      </List>
+                    </Paper>
+                  </Box>
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                {detail.type === 'FILE' && (
+                  <Tooltip title={t('files:download') || ''}>
+                    <IconButton onClick={handleDownload(detail)}>
+                      <GetAppIcon className={classes.icon} />
                     </IconButton>
                   </Tooltip>
-                </Box>
-                <Box>
-                  <Paper>
-                    <List className={classes.list}>
-                      <ListItem divider>
-                        <ListItemText primary={t('files:table.date')} />
-                        <ListItemText primary={format(detail.date, 'DD.MM.YYYY')} />
-                      </ListItem>
-                      <ListItem divider>
-                        <ListItemText primary={t('files:table.type')} />
-                        <ListItemText primary={detail.type} />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary={t('files:table.size')} />
-                        <ListItemText primary={`${detail.size} kb`} />
-                      </ListItem>
-                    </List>
-                  </Paper>
-                </Box>
-              </Box>
-            </DialogContent>
-            <DialogActions>
-              <Tooltip title={t('files:download') || ''}>
-                <IconButton onClick={handleDownload}>
-                  <GetAppIcon className={classes.icon} />
-                </IconButton>
-              </Tooltip>
-              {/*<Tooltip title={t('files:delete') || ''}>
-                <IconButton onClick={handleDelete}>
-                  <DeleteIcon className={classes.icon} />
-                </IconButton>
-                      </Tooltip>*/}
-            </DialogActions>
-          </Dialog>
+                )}
+                <Tooltip title={t('files:delete') || ''}>
+                  <IconButton onClick={handleDelete(detail)}>
+                    <DeleteIcon className={classes.icon} />
+                  </IconButton>
+                </Tooltip>
+              </DialogActions>
+            </Dialog>
+          )}
         </>
       )}
     </div>

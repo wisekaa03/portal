@@ -16,10 +16,10 @@
   "notFound": "Files not found",
   "table": {
     "id": "ID",
-    "type": "Type",
+    "type": "Folder / File",
     "name": "Name",
     "size": "Size",
-    "mime": "Mime",
+    "mime": "Type",
     "creationDate": "Creation date",
     "lastModified": "Last modified"
   }

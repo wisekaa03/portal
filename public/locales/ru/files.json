@@ -16,10 +16,10 @@
   "notFound": "Нет файлов",
   "table": {
     "id": "ID",
-    "type": "Тип",
+    "type": "Папка / файл",
     "name": "Имя",
     "size": "Размер",
-    "mime": "Mime-тип",
+    "mime": "Тип",
     "creationDate": "Дата создания",
     "lastModified": "Дата изменения"
   }
