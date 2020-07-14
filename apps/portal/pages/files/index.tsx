@@ -148,7 +148,9 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     const link = document.createElement('a');
     link.href = downloadURL;
     link.setAttribute('download', filesFolder.name);
+    document.body.append(link);
     link.click();
+    link.remove();
   };
 
   const handleDelete = (filesFolder: FilesFolder) => (): void => {
