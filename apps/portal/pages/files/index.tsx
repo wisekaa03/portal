@@ -131,7 +131,10 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     if (errorDeleteFolder) {
       snackbarUtils.error(errorDeleteFolder);
     }
-  }, [errorFolderList, errorDeleteFile, errorDeleteFolder]);
+    if (errorGetFile) {
+      snackbarUtils.error(errorGetFile);
+    }
+  }, [errorFolderList, errorDeleteFile, errorDeleteFolder, errorGetFile]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.currentTarget.value);
@@ -140,9 +143,12 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleDownload = (filesFolder: FilesFolder) => async (): Promise<void> => {
     const download = await getFile({ variables: { path: `${path}${filesFolder.name}` } });
+    const downloadURL = `${document.location.origin}/${download.data?.getFile.path}`;
 
-    // eslint-disable-next-line no-debugger
-    debugger;
+    const link = document.createElement('a');
+    link.href = downloadURL;
+    link.setAttribute('download', filesFolder.name);
+    link.click();
   };
 
   const handleDelete = (filesFolder: FilesFolder) => (): void => {
