@@ -152,6 +152,9 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
                 settings: {
                   // Когда в playground режиме, нажмите settings и добавьте строку:
                   'request.credentials': 'same-origin',
+                  'schema.polling.endpointFilter': '*localhost*',
+                  'schema.polling.enable': true,
+                  'schema.polling.interval': 5000,
                 },
               }
             : false,
