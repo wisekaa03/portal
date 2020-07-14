@@ -44,7 +44,7 @@ const createClient = ({ initialState, cookie, secure }: CreateClientProps): Apol
     return {
       headers: {
         ...headers,
-        Cookie: cookie,
+        cookie,
       },
     };
   });
@@ -85,12 +85,16 @@ const createClient = ({ initialState, cookie, secure }: CreateClientProps): Apol
     global.fetch = require('node-fetch');
     const https = require('https');
 
+    const fetchOptions = secure
+      ? {
+          agent: new https.Agent({ rejectUnauthorized: false }),
+        }
+      : undefined;
+
     link = new HttpLink({
       uri: `${secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
       credentials: 'same-origin',
-      fetchOptions: {
-        agent: new https.Agent({ rejectUnauthorized: false }),
-      },
+      fetchOptions,
     });
   } else {
     const httpLink = createUploadLink({
