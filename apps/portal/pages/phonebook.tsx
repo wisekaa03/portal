@@ -3,11 +3,12 @@
 //#region Imports NPM
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useTheme } from '@material-ui/core/styles';
+import { ApolloQueryResult } from 'apollo-client';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Box, useMediaQuery } from '@material-ui/core';
-import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 //#endregion
 //#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
@@ -132,7 +133,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     }
   }, [suggestionsLoading, suggestionsData, _search]);
 
-  const fetchFunction = (): any =>
+  const fetchFunction = async (): Promise<undefined | ApolloQueryResult<Data<'profile', Connection<Profile>>>> =>
     fetchMore<
       Data<'profile', Connection<Profile>>,
       ProfileQueryProps,
@@ -169,7 +170,12 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
         return previous;
       },
-    }).catch((error) => snackbarUtils.error(error));
+    }).catch((error) => {
+      snackbarUtils.error(error);
+
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      return undefined;
+    });
 
   const handleColumns = (values: ColumnNames[]): void => {
     userSettings({
@@ -269,15 +275,17 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
             handleHelpOpen={handleHelpOpen}
             handleSettingsOpen={handleSettingsOpen}
           />
-          <PhonebookTable
-            hasLoadMore={!loading}
-            loadMoreItems={fetchFunction}
-            columns={columns}
-            orderBy={orderBy}
-            handleSort={handleSort}
-            largeWidth={largeWidth}
-            data={data?.profiles}
-          />
+          {data && (
+            <PhonebookTable
+              hasLoadMore={!loading}
+              loadMoreItems={fetchFunction}
+              columns={columns}
+              orderBy={orderBy}
+              handleSort={handleSort}
+              largeWidth={largeWidth}
+              data={data.profiles}
+            />
+          )}
           <Loading activate={loading} noMargin type="linear" variant="indeterminate" />
         </Box>
       </MaterialUI>

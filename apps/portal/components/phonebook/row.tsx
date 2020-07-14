@@ -13,7 +13,6 @@ import clsx from 'clsx';
 import { PHONEBOOK_HIDDEN_COLS, PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import Avatar from '@front/components/ui/avatar';
 import { allColumns } from './settings';
-
 //#endregion
 
 const useStyles = makeStyles(() =>

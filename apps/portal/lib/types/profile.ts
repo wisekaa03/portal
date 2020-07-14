@@ -105,13 +105,12 @@ export interface HeaderProps {
 
 export interface TableProps {
   hasLoadMore: boolean;
-  loadMoreItems: () => any;
+  loadMoreItems: () => Promise<undefined | ApolloQueryResult<Data<'profile', Connection<Profile>>>>;
   columns: ColumnNames[];
   orderBy: Order<ColumnNames>;
   handleSort: (_: ColumnNames) => () => void;
   largeWidth: boolean;
-  // TODO: вписать нормальный тип
-  data: any;
+  data: Connection<Profile>;
 }
 
 export interface PhonebookProfileControlProps {

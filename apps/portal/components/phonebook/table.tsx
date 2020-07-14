@@ -1,8 +1,10 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React, { FC, Key } from 'react';
+import { ApolloQueryResult } from 'apollo-client';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { Connection, Edge } from 'typeorm-graphql-pagination';
 import { Box, Table, TableBody } from '@material-ui/core';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -11,7 +13,7 @@ import InfiniteLoader from 'react-window-infinite-loader';
 //#region Imports Local
 import { PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import { PhonebookHeaderContext } from '@lib/context';
-import { TableProps } from '@lib/types';
+import { TableProps, Profile, Data } from '@lib/types';
 import PhonebookHeader from './header';
 import PhonebookRow from './row';
 //#endregion
@@ -28,9 +30,15 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const itemKey = (index: number, data: any): string => data.items[index].node.id;
+export interface ListItemProfile {
+  items: Edge<Profile>;
+  columns: Array<string>;
+  largeWidth: boolean;
+}
 
-const isItemLoaded = (data: any) => (index: number): boolean =>
+const itemKey = (index: number, data: ListItemProfile): Key => data.items[index].node.id;
+
+const isItemLoaded = (data: Connection<Profile>) => (index: number): boolean =>
   data && (!data.pageInfo.hasNextPage || index < data.edges.length);
 
 const PhonebookTable: FC<TableProps> = ({
@@ -44,9 +52,13 @@ const PhonebookTable: FC<TableProps> = ({
 }) => {
   const classes = useStyles({});
 
-  const itemCount: number = data ? (data.pageInfo.hasNextPage ? data.edges.length + 1 : data.edges.length) : 0;
+  const itemCount: number = data.pageInfo.hasNextPage ? data.edges.length + 1 : data.edges.length;
 
-  const loadMoreItemsFunction = (_: number, __: number): Promise<any> | null => hasLoadMore && loadMoreItems();
+  const loadMoreItemsFunction = async (
+    _: number,
+    __: number,
+  ): Promise<ApolloQueryResult<Data<'profile', Connection<Profile>>> | undefined> =>
+    hasLoadMore ? loadMoreItems() : undefined;
 
   return (
     <Box id="phonebook-wrap" display="flex" flexGrow={1}>
@@ -68,12 +80,12 @@ const PhonebookTable: FC<TableProps> = ({
                       onItemsRendered={onItemsRendered}
                       width="100%"
                       height={height}
-                      itemCount={data ? data.edges.length : 0}
+                      itemCount={data.edges.length}
                       itemSize={PHONEBOOK_ROW_HEIGHT}
                       itemKey={itemKey}
                       innerElementType={PhonebookHeader}
                       itemData={{
-                        items: data ? data.edges : [],
+                        items: data.edges,
                         columns,
                         largeWidth,
                       }}
