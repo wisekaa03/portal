@@ -80,6 +80,7 @@ export type FilesTableHeaderProps = {
   hidden: boolean;
   width?: number;
   colspan?: number;
+  align?: string;
 };
 
 export const FilesFolderListHeaderLabels: FilesTableHeaderProps[] = [
@@ -89,5 +90,5 @@ export const FilesFolderListHeaderLabels: FilesTableHeaderProps[] = [
   { label: 'mime', width: 100, colspan: 1, hidden: false },
   // { label: 'creationDate', width: 200, colspan: 1, hidden: false },
   { label: 'lastModified', width: 200, colspan: 1, hidden: false },
-  { label: 'size', width: 150, colspan: 1, hidden: false },
+  { label: 'size', width: 150, colspan: 1, hidden: false, align: 'right' },
 ];

@@ -28,6 +28,7 @@ import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import FolderIcon from '@material-ui/icons/Folder';
 import FileIcon from '@material-ui/icons/DescriptionRounded';
+import filesize from 'filesize';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -71,6 +72,10 @@ const useStyles = makeStyles((theme: Theme) =>
     paddingRight: {
       paddingRight: '10px',
     },
+    alignRight: {
+      textAlign: 'right',
+      paddingRight: '10px',
+    },
     paper: {
       minWidth: 500,
     },
@@ -101,7 +106,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   handleDelete,
 }) => {
   const classes = useStyles({});
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
   const [detail, setDetail] = useState<FilesFolder | null>(null);
@@ -143,6 +148,9 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                             <TableCell
                               colSpan={col.colspan}
                               key={col.label}
+                              align={
+                                (col.align ? col.align : 'left') as 'left' | 'right' | 'inherit' | 'center' | 'justify'
+                              }
                               {...(col.width ? { style: { width: col.width } } : {})}
                             >
                               {t(`files:table.${col.label}`)}
@@ -165,7 +173,9 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                           <TableCell>
                             {current.lastModified ? format(current.lastModified, 'DD.MM.YYYY HH:MM') : ''}
                           </TableCell>
-                          <TableCell>{current.type === 'FOLDER' ? '' : `${current.size}`}</TableCell>
+                          <TableCell className={classes.alignRight}>
+                            {current.type === 'FOLDER' ? '' : filesize(current.size, { locale: i18n.language })}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -203,7 +213,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                         {detail.type === 'FILE' && (
                           <ListItem>
                             <ListItemText className={classes.paddingRight} primary={t('files:table.size')} />
-                            <ListItemText primary={detail.size} />
+                            <ListItemText primary={filesize(detail.size, { locale: i18n.language })} />
                           </ListItem>
                         )}
                       </List>
