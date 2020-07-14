@@ -36,7 +36,10 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     });
   }, [path]);
 
-  const [getFile, { error: errorGetFile }] = useMutation<Data<'getFile', FilesFile>, { path: string }>(FILES_GET_FILE);
+  const [getFile, { error: errorGetFile }] = useMutation<
+    Data<'getFile', FilesFile>,
+    { path: string; options?: { sync?: boolean } }
+  >(FILES_GET_FILE);
 
   const [deleteFile, { error: errorDeleteFile }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FILE, {
     update(cache, fetch) {
@@ -142,7 +145,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleDownload = (filesFolder: FilesFolder) => async (): Promise<void> => {
-    const download = await getFile({ variables: { path: `${path}${filesFolder.name}` } });
+    const download = await getFile({ variables: { path: `${path}${filesFolder.name}`, options: { sync: true } } });
     const downloadURL = `${document.location.origin}/${download.data?.getFile.path}`;
 
     const link = document.createElement('a');
