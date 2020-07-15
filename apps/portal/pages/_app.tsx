@@ -43,8 +43,10 @@ const CurrentComponent: React.FC<{
   });
 
   if (__SERVER__ && data?.me && pathname.startsWith(AUTH_PAGE) && ctx?.res && ctx?.req) {
+    const location = decodeURI((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE;
+
     ctx.res.statusCode = 303;
-    ctx.res.setHeader('Location', ((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE);
+    ctx.res.setHeader('Location', location);
 
     return null;
   }

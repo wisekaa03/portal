@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 import Joi from '@hapi/joi';
 import { Inject } from '@nestjs/common';
+import { GraphQLSchema } from 'graphql/type/schema';
 //#endregion
 //#region Imports Local
 import { CONFIG_OPTIONS } from './config.constants';
@@ -16,6 +17,7 @@ export interface EnvConfig<T> {
 
 export class ConfigService {
   private readonly envConfig: EnvConfig<string | number | boolean>;
+  private graphQLSchema!: GraphQLSchema;
 
   constructor(@Inject(CONFIG_OPTIONS) private readonly filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
@@ -112,6 +114,14 @@ export class ConfigService {
       throw new Error(`Config validation error: ${error.message}`);
     }
     return validatedEnvironmentConfig;
+  }
+
+  public set schema(schema: GraphQLSchema) {
+    this.graphQLSchema = schema;
+  }
+
+  public get schema(): GraphQLSchema {
+    return this.graphQLSchema;
   }
 
   get<T>(key: string): T {

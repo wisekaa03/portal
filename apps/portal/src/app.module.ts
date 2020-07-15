@@ -10,6 +10,7 @@ import express from 'express';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import { Module, CacheModule, UnauthorizedException } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
@@ -205,6 +206,10 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
             // queries and mutations
             return { user: req?.session?.passport?.user, req, res };
+          },
+          transformSchema: (schema: GraphQLSchema) => {
+            configService.schema = schema;
+            return schema;
           },
         };
       },

@@ -7,13 +7,14 @@ import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 //#endregion
 //#region Imports Local
-import { nextI18next, includeDefaultNamespaces, I18nPage } from '../../lib/i18n-client';
-import { LOGOUT } from '../../lib/queries';
-import LogoutComponent from '../../components/auth/logout';
-import { removeStorage } from '../../lib/session-storage';
-import { SESSION, AUTH_PAGE, FIRST_PAGE } from '../../lib/constants';
-import snackbarUtils from '../../lib/snackbar-utils';
-import Cookie from '../../lib/cookie';
+import { nextI18next, includeDefaultNamespaces, I18nPage } from '@lib/i18n-client';
+import { LOGOUT } from '@lib/queries';
+import { removeStorage } from '@lib/session-storage';
+import { SESSION, AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
+import snackbarUtils from '@lib/snackbar-utils';
+import Cookie from '@lib/cookie';
+import getRedirect from '@lib/get-redirect';
+import LogoutComponent from '@front/components/auth/logout';
 //#endregion
 
 const Logout: I18nPage = ({ t }): React.ReactElement => {
@@ -30,7 +31,7 @@ const Logout: I18nPage = ({ t }): React.ReactElement => {
         .then(() => {
           client.resetStore();
           const { pathname = FIRST_PAGE } = router;
-          return router.push({ pathname: AUTH_PAGE, query: { redirect: pathname } });
+          return router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } });
         })
         .catch((error) => {
           throw error;

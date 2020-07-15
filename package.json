@@ -104,6 +104,7 @@
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
+    "apollo-link-schema": "^1.2.5",
     "apollo-link-ws": "^1.0.20",
     "apollo-server-core": "^2.15.1",
     "apollo-server-express": "^2.15.1",

@@ -11,6 +11,7 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#region Imports Local
 import { AppGraphQLExecutionContext } from '@app/logging.interceptor';
 import { AUTH_PAGE } from '@lib/constants';
+import getRedirect from '@lib/get-redirect';
 //#endregion
 
 @Catch()
@@ -47,9 +48,9 @@ export class HttpErrorFilter implements ExceptionFilter {
         message,
       };
 
-      if (status === 403) {
+      if (status >= 401 && status <= 403) {
         response.status(302);
-        response.redirect(AUTH_PAGE);
+        response.redirect(`${AUTH_PAGE}?redirect=${getRedirect(request.url)}`);
         return;
       }
       if (status === HttpStatus.INTERNAL_SERVER_ERROR) {

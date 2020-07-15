@@ -22,17 +22,17 @@ import 'reflect-metadata';
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { nextI18next } from '@lib/i18n-client';
+import getRedirect from '@lib/get-redirect';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
 import { pinoOptions } from './shared/pino.options';
 //#endregion
 
-async function bootstrap(configService: ConfigService): Promise<void> {
-  const DEV = configService.get<boolean>('DEVELOPMENT');
-
+async function bootstrap(): Promise<void> {
   //#region NestJS options
-  const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), DEV)), {});
+  let secure = false;
+  let logger = new Logger(new PinoLogger(pinoOptions('debug', true)), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
@@ -49,10 +49,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
-      if (__DEV__ || DEV) {
+      if (__DEV__) {
         process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
       }
 
+      secure = true;
       nestjsOptions['httpsOptions'] = {
         requestCert: false,
         rejectUnauthorized: false,
@@ -76,6 +77,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     new ExpressAdapter(server),
     nestjsOptions,
   );
+
+  logger = app.get(Logger);
+  const configService = app.get(ConfigService);
+  const DEV = configService.get<boolean>('DEVELOPMENT');
+
   app.useLogger(logger);
   //#endregion
 
@@ -144,8 +150,9 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     if (!DEV) {
       response.locals.nonce = crypto.randomBytes(4).toString('hex');
     }
-    response.locals.secure = !!nestjsOptions['httpsOptions'];
-    response.locals.nestLogger = logger;
+    response.locals.secure = secure;
+    response.locals.logger = logger;
+    response.locals.config = configService;
     next();
   });
   //#endregion
@@ -182,7 +189,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   //#region Session and passport initialization
   const store = sessionRedis(configService, logger);
-  app.use(session(configService, logger, store, !!nestjsOptions['httpsOptions']));
+  app.use(session(configService, logger, store, secure));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -217,12 +224,10 @@ async function bootstrap(configService: ConfigService): Promise<void> {
       let status: number;
       if (error instanceof HttpException) {
         status = error.getStatus();
-      } else {
-        status = 200;
-      }
-      if (status === 403 || status === 401) {
-        response.status(302);
-        response.location(`/auth/login?redirect=${encodeURI(request.url)}`);
+        if (status >= 401 && status <= 403) {
+          response.status(302);
+          response.location(`/auth/login?redirect=${getRedirect(request.url)}`);
+        }
       }
     },
   );
@@ -230,10 +235,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   //#region Start server
   await app.listen(configService.get<number>('PORT'));
-  logger.log(
-    `HTTP${nestjsOptions['httpsOptions'] ? 'S' : ''} running on port ${configService.get<number>('PORT')}`,
-    'Bootstrap',
-  );
+  logger.log(`HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`, 'Bootstrap');
   //#endregion
 
   //#region Webpack-HMR
@@ -244,5 +246,4 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   //#endregion
 }
 
-const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env'));
-bootstrap(configService);
+bootstrap();

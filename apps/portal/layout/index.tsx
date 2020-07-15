@@ -9,10 +9,12 @@ import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
 import { ProfileContext } from '@lib/context';
+import { UserSettings } from '@lib/types/user.dto';
 import { LOGOUT, USER_SETTINGS } from '@lib/queries';
 import { removeStorage } from '@lib/session-storage';
 import { appBarHeight, SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '@lib/constants';
 import Cookie from '@lib/cookie';
+import getRedirect from '@lib/get-redirect';
 import AppBarComponent from '@front/components/app-bar';
 import DrawerComponent from '@front/components/drawer';
 //#endregion
@@ -52,9 +54,9 @@ export const MaterialUI: FC = ({ children }) => {
   );
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
 
-  const [userSettings] = useMutation(USER_SETTINGS);
+  const [userSettings] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
-  const [logout] = useMutation(LOGOUT, {
+  const [logout] = useMutation<boolean, undefined>(LOGOUT, {
     onCompleted: () => {
       removeStorage(SESSION);
       removeStorage('user');
@@ -65,7 +67,7 @@ export const MaterialUI: FC = ({ children }) => {
         .then(() => {
           client.resetStore();
           const { pathname = FIRST_PAGE } = router;
-          return router.push({ pathname: AUTH_PAGE, query: { redirect: pathname } });
+          return router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(pathname) } });
         })
         .catch((error) => {
           throw error;

@@ -11,7 +11,7 @@ import { Card, CardContent, Button, CardActions, Typography } from '@material-ui
 //#region Imports Local
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { LDAP_NEW_USER, SYNC, CACHE, USER_SETTINGS, defaultUserSettings } from '@lib/queries';
+import { SYNC, CACHE, USER_SETTINGS, defaultUserSettings } from '@lib/queries';
 import { UserSettings } from '@lib/types/user.dto';
 import snackbarUtils from '@lib/snackbar-utils';
 //#endregion

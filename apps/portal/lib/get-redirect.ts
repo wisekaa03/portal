@@ -2,10 +2,10 @@
 
 import { FIRST_PAGE, ALLOW_REDIRECT_PAGES } from './constants';
 
-export default (pathname: any): string => {
+export default (pathname: string): string => {
   if (pathname && typeof pathname === 'string' && ALLOW_REDIRECT_PAGES.some((p) => pathname.startsWith(p))) {
-    return pathname;
+    return encodeURI(pathname);
   }
 
-  return FIRST_PAGE;
+  return encodeURI(FIRST_PAGE);
 };

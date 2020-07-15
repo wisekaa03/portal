@@ -4,6 +4,7 @@
 // import React from 'react';
 import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext, DocumentInitialProps } from 'next/document';
+import { GraphQLSchema } from 'graphql/type/schema';
 import { ApolloClient } from 'apollo-client';
 import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
 //#endregion
@@ -36,6 +37,7 @@ export interface AppInitialPropsMy<TCache = NormalizedCacheObject> extends AppIn
   context?: UserContext;
   apollo?: NormalizedCacheObject;
   secure?: boolean;
+  schema?: GraphQLSchema;
 }
 
 export interface AppContextMy<TCache = NormalizedCacheObject> extends AppContext {
@@ -44,6 +46,7 @@ export interface AppContextMy<TCache = NormalizedCacheObject> extends AppContext
   apollo: NormalizedCacheObject;
   apolloClient: ApolloClient<NormalizedCacheObject>;
   secure?: boolean;
+  schema?: GraphQLSchema;
 }
 
 export interface DocumentContextMy extends DocumentContext {
