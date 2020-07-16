@@ -267,17 +267,6 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     ByteArrayScalar,
     //#endregion
 
-    //#region Errors
-    // TODO: Next.JS is forwarding through RenderService -> setErrorHandler
-    // {
-    //   provide: APP_FILTER,
-    //   inject: [LogService],
-    //   useFactory: (logService: LogService) => {
-    //     return new HttpErrorFilter(logService);
-    //   },
-    // },
-    //#endregion
-
     LoggingInterceptorProvider,
 
     CacheInterceptorProvider,

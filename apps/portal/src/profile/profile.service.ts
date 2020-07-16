@@ -7,6 +7,7 @@ import {
   BadRequestException,
   ForbiddenException,
   UnprocessableEntityException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
@@ -746,7 +747,7 @@ export class ProfileService {
     let thumbnailPhotoProcessed: Buffer | undefined;
 
     if (!request.session?.passport?.user?.profile?.id) {
-      throw new Error('Not authorized');
+      throw new UnauthorizedException();
     }
 
     const updated = { id: request.session.passport.user.profile.id, ...profile };

@@ -15,6 +15,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { SchemaLink } from 'apollo-link-schema';
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { makeExecutableSchema } from 'graphql-tools';
 import { Request, Response } from 'express';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
@@ -85,26 +86,27 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
   const cache = new InMemoryCache().restore(initialState || {});
 
   if (__SERVER__) {
-    if (0 && configService?.schema) {
-      link = new SchemaLink({ schema: configService.schema });
+    if (configService?.schema) {
+      link = new SchemaLink({ schema: configService?.schema });
     } else {
-      // eslint-disable-next-line global-require
-      global.fetch = require('node-fetch');
+      link = new ApolloLink();
+      //   // eslint-disable-next-line global-require
+      //   global.fetch = require('node-fetch');
 
-      let fetchOptions: Record<string, any> | undefined;
-      if (configService?.secure) {
-        const https = require('https');
+      //   let fetchOptions: Record<string, any> | undefined;
+      //   if (configService?.secure) {
+      //     const https = require('https');
 
-        fetchOptions = {
-          agent: new https.Agent({ rejectUnauthorized: false }),
-        };
-      }
+      //     fetchOptions = {
+      //       agent: new https.Agent({ rejectUnauthorized: false }),
+      //     };
+      //   }
 
-      link = new HttpLink({
-        uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
-        credentials: 'same-origin',
-        fetchOptions,
-      });
+      //   link = new HttpLink({
+      //     uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
+      //     credentials: 'same-origin',
+      //     fetchOptions,
+      //   });
     }
   } else {
     const httpLink = createUploadLink({
@@ -185,7 +187,7 @@ export const withApolloClient = (
           });
           user = data?.me;
         } catch (error) {
-          logger.error(`withApolloClient "query": ${error.toString()}`, error.toString(), 'withApolloClient', error);
+          logger.error(`query "CURRENT_USER": ${error.toString()}`, error.toString(), 'withApolloClient', error);
         }
         const language = user?.settings?.lng || lngFromReq(request) || 'en';
         const isMobile = checkMobile({ ua: request.headers['user-agent'] }) ?? false;
@@ -220,12 +222,7 @@ export const withApolloClient = (
                 graphQLError.extensions?.exception?.status >= 401 && graphQLError.extensions?.exception?.status <= 403,
             )
           ) {
-            logger.error(
-              `withApolloClient "getDataFromTree": ${error.toString()}`,
-              error.toString(),
-              'withApolloClient',
-              { error },
-            );
+            logger.error(`getDataFromTree: ${error.toString()}`, error.toString(), 'withApolloClient', { error });
           }
         }
 

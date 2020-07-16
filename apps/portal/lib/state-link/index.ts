@@ -39,6 +39,45 @@ export const resolvers = {
                     __typename: 'Profile',
                   }
                 : null,
+              companyEng: user.profile?.companyEng || null,
+              managementEng: user.profile?.managementEng || null,
+              departmentEng: user.profile?.departmentEng || null,
+              divisionEng: user.profile?.divisionEng || null,
+              positionEng: user.profile?.positionEng || null,
+
+              telephone: user.profile?.telephone || null,
+              workPhone: user.profile?.workPhone || null,
+              fax: user.profile?.fax || null,
+              mobile: user.profile?.mobile || null,
+              email: user.profile?.email || null,
+
+              country: user.profile?.country || null,
+              postalCode: user.profile?.postalCode || null,
+              region: user.profile?.region || null,
+              street: user.profile?.street || null,
+              town: user.profile?.town || null,
+              room: user.profile?.room || null,
+
+              accessCard: user.profile?.accessCard || null,
+              dn: user.profile.dn || null,
+              username: user.profile.username || null,
+              fullName: user.profile.fullName || null,
+
+              firstName: user.profile.firstName || null,
+              lastName: user.profile.lastName || null,
+              middleName: user.profile.middleName || null,
+              birthday: user.profile.birthday || null,
+              gender: user.profile.gender || null,
+
+              company: user.profile?.company || null,
+              title: user.profile?.title || null,
+
+              management: user.profile?.management || null,
+              department: user.profile?.department || null,
+              division: user.profile?.division || null,
+
+              employeeID: user.profile?.employeeID || null,
+
               __typename: 'Profile',
             },
             settings: {
