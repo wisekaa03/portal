@@ -71,7 +71,7 @@ const PROFILE_FRAGMENT = gql`
 
 export const CURRENT_USER = gql`
   query Me {
-    me {
+    me @client {
       id
       username
       updatedAt

@@ -23,46 +23,6 @@ export class AuthResolver {
   ) {}
 
   /**
-   * This a self user.
-   *
-   * @async
-   * @method me
-   * @returns {User} User in database
-   */
-  @Query()
-  @UseGuards(GqlAuthGuard)
-  async me(@CurrentUser() user?: User): Promise<User> {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    const userApproved = {
-      ...user,
-      settings: {
-        ...user.settings,
-        task: {
-          status: user.settings?.task?.status || '',
-          favorites: user.settings?.task?.favorites?.reduce((accumulator, favorite) => {
-            if (favorite.where && favorite.code && favorite.svcCode) {
-              return [
-                ...accumulator,
-                {
-                  where: favorite.where,
-                  code: favorite.code,
-                  svcCode: favorite.svcCode,
-                },
-              ];
-            }
-            return accumulator;
-          }, [] as UserSettingsTaskFavorite[]),
-        },
-      },
-    };
-
-    return userApproved;
-  }
-
-  /**
    * Login user with password provided. True if login successful. Throws error if login is incorrect.
    *
    * @async

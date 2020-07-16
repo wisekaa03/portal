@@ -9,7 +9,6 @@ type Login {
 }
 
 type Query {
-  me: User!
   login(username: String!, password: String!): Login!
   loginEmail: LoginEmail!
 }

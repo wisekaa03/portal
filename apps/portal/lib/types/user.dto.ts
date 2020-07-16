@@ -46,6 +46,8 @@ export interface BaseUser {
   createdAt?: Date;
 
   updatedAt?: Date;
+
+  __typename?: 'User';
 }
 
 //#region User
@@ -62,12 +64,14 @@ export interface UserToSave extends BaseUser {
 //#region User settings
 export interface UserSettingsPhonebook {
   columns?: ColumnNames[];
+  __typename?: 'UserSettingsPhonebook';
 }
 
 export interface UserSettingsTaskFavorite {
   where: TkWhere;
   code: string;
   svcCode: string;
+  __typename?: 'UserSettingsTaskFavorite';
 }
 export interface UserSettingsTaskFavoriteFull {
   route: TkRoute;
@@ -77,6 +81,7 @@ export interface UserSettingsTaskFavoriteFull {
 interface UserSettingsTask {
   status?: string;
   favorites?: UserSettingsTaskFavorite[];
+  __typename?: 'UserSettingsTask';
 }
 
 export interface UserSettings {
@@ -85,6 +90,7 @@ export interface UserSettings {
   drawer?: boolean;
   phonebook?: UserSettingsPhonebook;
   task?: UserSettingsTask;
+  __typename?: 'UserSettings';
 }
 
 export const DefinedUserSettings = [

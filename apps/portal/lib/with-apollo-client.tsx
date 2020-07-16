@@ -22,26 +22,25 @@ import { Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { User, UserContext } from '@lib/types';
+import { Data, User, UserContext } from '@lib/types';
 // import { nextI18next } from './i18n-client';
-import { CURRENT_USER } from './queries';
-import stateResolvers from './state-link';
+import { resolvers } from './state-link';
 import getRedirect from './get-redirect';
 import { AppContextMy, AppInitialPropsMy } from './types';
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
+import { CURRENT_USER } from './queries';
 //#endregion
 
 interface CreateClientProps {
   initialState?: NormalizedCacheObject;
   cookie?: string;
-  secure?: boolean;
 }
 
 let configService: ConfigService | undefined;
 let logger: Console | Logger = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
-const createClient = ({ initialState, secure, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
+const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
   const errorMiddleware = onError(({ graphQLErrors, networkError /* , response, operation */ }) => {
     if (__SERVER__) {
       if (graphQLErrors) {
@@ -81,22 +80,19 @@ const createClient = ({ initialState, secure, cookie }: CreateClientProps): Apol
     return forward(operation);
   });
 
-  let clientParameters = {};
   let link: ApolloLink;
 
   const cache = new InMemoryCache().restore(initialState || {});
 
   if (__SERVER__) {
-    const schema = configService?.schema;
-
-    if (0 && schema) {
-      link = new SchemaLink({ schema });
+    if (0 && configService?.schema) {
+      link = new SchemaLink({ schema: configService.schema });
     } else {
       // eslint-disable-next-line global-require
       global.fetch = require('node-fetch');
 
       let fetchOptions: Record<string, any> | undefined;
-      if (secure) {
+      if (configService?.secure) {
         const https = require('https');
 
         fetchOptions = {
@@ -105,7 +101,7 @@ const createClient = ({ initialState, secure, cookie }: CreateClientProps): Apol
       }
 
       link = new HttpLink({
-        uri: `${secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
+        uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
         credentials: 'same-origin',
         fetchOptions,
       });
@@ -130,10 +126,6 @@ const createClient = ({ initialState, secure, cookie }: CreateClientProps): Apol
       wsLink,
       httpLink,
     );
-
-    clientParameters = {
-      resolvers: stateResolvers,
-    };
   }
 
   return new ApolloClient({
@@ -141,7 +133,7 @@ const createClient = ({ initialState, secure, cookie }: CreateClientProps): Apol
     ssrMode: __SERVER__,
     link: from([errorMiddleware, authMiddleware, link]),
     cache,
-    ...clientParameters,
+    resolvers,
   });
 };
 
@@ -179,10 +171,22 @@ export const withApolloClient = (
         }
 
         configService = response.locals?.config as ConfigService;
-        logger = response.locals?.logger as Logger;
-        const secure = response.locals?.secure as boolean;
+        logger = configService.logger;
 
-        const user: User | undefined = request.session?.passport?.user as User;
+        const apolloClient = initApollo({
+          cookie: request.headers?.cookie,
+        });
+
+        let user: User | undefined;
+        try {
+          const { data } = await apolloClient.query<Data<'me', User>, undefined>({
+            query: CURRENT_USER,
+            context: { user: request.session?.passport?.user },
+          });
+          user = data?.me;
+        } catch (error) {
+          logger.error(`withApolloClient "query": ${error.toString()}`, error.toString(), 'withApolloClient', error);
+        }
         const language = user?.settings?.lng || lngFromReq(request) || 'en';
         const isMobile = checkMobile({ ua: request.headers['user-agent'] }) ?? false;
         const context: UserContext = {
@@ -190,22 +194,6 @@ export const withApolloClient = (
           isMobile,
           language,
         };
-        const apolloClient = initApollo({
-          cookie: request.headers?.cookie,
-          secure,
-        });
-
-        if (user) {
-          try {
-            await apolloClient.query({
-              query: CURRENT_USER,
-            });
-          } catch (error) {
-            logger.error(`withApolloClient "writeQuery": ${error.toString()}`, error.toString(), 'withApolloClient', [
-              { error },
-            ]);
-          }
-        }
 
         try {
           const { getDataFromTree } = await import('@apollo/react-ssr');
@@ -249,7 +237,6 @@ export const withApolloClient = (
           ...appProps,
           context,
           apollo: apolloClient.cache.extract(),
-          secure,
         };
       }
 
@@ -269,14 +256,13 @@ export const withApolloClient = (
       } else {
         this.apolloClient = initApollo({
           initialState: props.apollo,
-          secure: props.secure,
         });
       }
     }
 
     public render(): React.ReactElement {
-      if (__SERVER__ && (this.props.ctx?.res as Response)?.locals.logger) {
-        logger = (this.props.ctx?.res as Response)?.locals.logger;
+      if (__SERVER__ && configService?.logger) {
+        logger = configService?.logger;
       }
 
       return <MainApp {...this.props} apolloClient={this.apolloClient} />;

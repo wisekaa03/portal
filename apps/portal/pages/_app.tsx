@@ -24,6 +24,7 @@ import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { changeFontSize } from '@lib/font-size';
+import getRedirect from '@lib/get-redirect';
 //#endregion
 
 /**
@@ -37,18 +38,29 @@ const CurrentComponent: React.FC<{
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
 
-  const { data }: QueryResult<Data<'me', User>> = useQuery(CURRENT_USER, {
+  const { data, loading } = useQuery<Data<'me', User>>(CURRENT_USER, {
     onCompleted: (data) => !__SERVER__ && data?.me?.settings?.fontSize && changeFontSize(data.me.settings.fontSize),
     fetchPolicy: 'cache-only',
   });
 
-  if (__SERVER__ && data?.me && pathname.startsWith(AUTH_PAGE) && ctx?.res && ctx?.req) {
-    const location = decodeURI((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE;
+  if (__SERVER__ && ctx?.res && ctx?.req) {
+    if (data?.me) {
+      if (pathname.startsWith(AUTH_PAGE)) {
+        const location = decodeURI((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE;
 
-    ctx.res.statusCode = 303;
-    ctx.res.setHeader('Location', location);
+        ctx.res.statusCode = 303;
+        ctx.res.setHeader('Location', location);
 
-    return null;
+        return null;
+      }
+    } else if (!loading && ctx.req?.url) {
+      const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
+
+      ctx.res.statusCode = 303;
+      ctx.res.setHeader('Location', location);
+
+      return null;
+    }
   }
 
   return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;

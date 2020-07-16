@@ -80,6 +80,8 @@ async function bootstrap(): Promise<void> {
 
   logger = app.get(Logger);
   const configService = app.get(ConfigService);
+  configService.logger = logger;
+  configService.secure = secure;
   const DEV = configService.get<boolean>('DEVELOPMENT');
 
   app.useLogger(logger);
@@ -150,8 +152,6 @@ async function bootstrap(): Promise<void> {
     if (!DEV) {
       response.locals.nonce = crypto.randomBytes(4).toString('hex');
     }
-    response.locals.secure = secure;
-    response.locals.logger = logger;
     response.locals.config = configService;
     next();
   });

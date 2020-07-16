@@ -6,6 +6,7 @@ import { readFileSync } from 'fs';
 import Joi from '@hapi/joi';
 import { Inject } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql/type/schema';
+import { Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { CONFIG_OPTIONS } from './config.constants';
@@ -18,6 +19,8 @@ export interface EnvConfig<T> {
 export class ConfigService {
   private readonly envConfig: EnvConfig<string | number | boolean>;
   private graphQLSchema!: GraphQLSchema;
+  private httpSecure = false;
+  private httpLogger: Logger | Console = console;
 
   constructor(@Inject(CONFIG_OPTIONS) private readonly filePath: string) {
     const config = dotenv.parse(readFileSync(filePath));
@@ -116,12 +119,25 @@ export class ConfigService {
     return validatedEnvironmentConfig;
   }
 
+  public set secure(secure: boolean) {
+    this.httpSecure = secure;
+  }
+  public get secure(): boolean {
+    return this.httpSecure;
+  }
+
   public set schema(schema: GraphQLSchema) {
     this.graphQLSchema = schema;
   }
-
   public get schema(): GraphQLSchema {
     return this.graphQLSchema;
+  }
+
+  public set logger(logger: Logger | Console) {
+    this.httpLogger = logger;
+  }
+  public get logger(): Logger | Console {
+    return this.httpLogger;
   }
 
   get<T>(key: string): T {

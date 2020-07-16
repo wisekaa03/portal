@@ -95,6 +95,8 @@ export interface Profile {
   createdAt?: Date;
 
   updatedAt?: Date;
+
+  __typename?: 'Profile';
 }
 
 export interface SearchSuggestions {
