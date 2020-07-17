@@ -13,6 +13,9 @@ import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
 import { SnackbarProvider } from 'notistack';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 //#endregion
 //#region Imports Local
 import { MaterialUI_fck } from '@lib/theme';
@@ -114,12 +117,12 @@ class App extends NextApp<AppContextMy> {
                   horizontal: 'center',
                 }}
               >
-                <>
+                <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
                   <SnackbarUtilsConfigurator />
                   <CurrentComponent context={context} router={router} ctx={ctx}>
                     <Component {...pageProps} />
                   </CurrentComponent>
-                </>
+                </DndProvider>
               </SnackbarProvider>
             </ApolloProvider>
           </ThemeProvider>

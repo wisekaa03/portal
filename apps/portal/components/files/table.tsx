@@ -1,6 +1,8 @@
 /** @format */
 //#region Imports NPM
 import React, { FC, useState } from 'react';
+import clsx from 'clsx';
+import filesize from 'filesize';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,
@@ -20,15 +22,11 @@ import {
   ListItem,
   ListItemText,
   List,
-  SvgIconProps,
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import FolderIcon from '@material-ui/icons/Folder';
-import FileIcon from '@material-ui/icons/DescriptionRounded';
-import filesize from 'filesize';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -43,7 +41,8 @@ import {
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
 import RefreshButton from '@front/components/ui/refresh-button';
-import clsx from 'clsx';
+import { FilesListType } from './files-list-type';
+import { FileTableRow } from './table-row';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,10 +74,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paddingRight: {
       paddingRight: '10px',
     },
-    alignRight: {
-      textAlign: 'right',
-      paddingRight: '10px',
-    },
     paper: {
       minWidth: 500,
     },
@@ -92,13 +87,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-interface FilesListType extends SvgIconProps {
-  type: Folder;
-}
-
-const FilesListType: FC<FilesListType> = ({ type, ...rest }) =>
-  type === 'FOLDER' ? <FolderIcon {...rest} /> : <FileIcon {...rest} />;
 
 const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,
@@ -169,22 +157,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                     </TableHead>
                     <TableBody>
                       {filtered.map((current: FilesFolder) => (
-                        <TableRow key={current.id} hover tabIndex={-1} onClick={() => handleRow(current)}>
-                          <TableCell width={10}>
-                            <FilesListType type={current.type} className={classes.fileIcon} />
-                          </TableCell>
-                          <TableCell>{current.name}</TableCell>
-                          <TableCell>{current.type === 'FOLDER' ? t('files:folder') : current.mime}</TableCell>
-                          {/*<TableCell>
-                            {current.creationDate ? format(current.creationDate, 'DD.MM.YYYY HH:MM') : ''}
-                          </TableCell>*/}
-                          <TableCell>
-                            {current.lastModified ? format(current.lastModified, 'DD.MM.YYYY HH:MM') : ''}
-                          </TableCell>
-                          <TableCell className={classes.alignRight}>
-                            {current.type === 'FOLDER' ? '' : filesize(current.size, { locale: i18n.language })}
-                          </TableCell>
-                        </TableRow>
+                        <FileTableRow key={current.id} current={current} handleRow={handleRow} />
                       ))}
                     </TableBody>
                   </Table>

@@ -84,6 +84,11 @@ export type FilesTableHeaderProps = {
   align?: string;
 };
 
+export type FilesTableRow = {
+  current: FilesFolder;
+  handleRow: (current: FilesFolder) => void;
+};
+
 export const FilesFolderListHeaderLabels: FilesTableHeaderProps[] = [
   { label: 'id', colspan: 1, hidden: true },
   { label: 'type', colspan: 1, hidden: true },
