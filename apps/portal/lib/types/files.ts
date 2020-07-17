@@ -85,11 +85,12 @@ export type FilesTableHeaderProps = {
 };
 
 export type FilesTableRow = {
+  header: FilesTableHeaderProps[];
   current: FilesFolder;
   handleRow: (current: FilesFolder) => void;
 };
 
-export const FilesFolderListHeaderLabels: FilesTableHeaderProps[] = [
+export const FilesFolderListHeader: FilesTableHeaderProps[] = [
   { label: 'id', colspan: 1, hidden: true },
   { label: 'type', colspan: 1, hidden: true },
   { label: 'name', colspan: 2, hidden: false },

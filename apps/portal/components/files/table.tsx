@@ -36,13 +36,14 @@ import {
   FilesTableHeaderProps,
   Folder,
   FilesFolder,
-  FilesFolderListHeaderLabels,
+  FilesFolderListHeader,
 } from '@lib/types';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
 import RefreshButton from '@front/components/ui/refresh-button';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
+import { FileTableHeader } from './table-header';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -138,26 +139,16 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                 <TableContainer style={{ height: height - 35 - theme.spacing(2) }}>
                   <Table stickyHeader>
                     <TableHead>
-                      <TableRow>
-                        {FilesFolderListHeaderLabels.map((col) =>
-                          col.hidden ? null : (
-                            <TableCell
-                              colSpan={col.colspan}
-                              key={col.label}
-                              align={
-                                (col.align ? col.align : 'left') as 'left' | 'right' | 'inherit' | 'center' | 'justify'
-                              }
-                              {...(col.width ? { style: { width: col.width } } : {})}
-                            >
-                              {t(`files:table.${col.label}`)}
-                            </TableCell>
-                          ),
-                        )}
-                      </TableRow>
+                      <FileTableHeader header={FilesFolderListHeader} />
                     </TableHead>
                     <TableBody>
                       {filtered.map((current: FilesFolder) => (
-                        <FileTableRow key={current.id} current={current} handleRow={handleRow} />
+                        <FileTableRow
+                          key={current.id}
+                          header={FilesFolderListHeader}
+                          current={current}
+                          handleRow={handleRow}
+                        />
                       ))}
                     </TableBody>
                   </Table>

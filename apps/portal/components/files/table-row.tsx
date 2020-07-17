@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const FileTableRow: FC<FilesTableRow> = ({ current, handleRow }) => {
+export const FileTableRow: FC<FilesTableRow> = ({ header, current, handleRow }) => {
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
 
