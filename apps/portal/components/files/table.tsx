@@ -43,6 +43,7 @@ import {
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
 import RefreshButton from '@front/components/ui/refresh-button';
+import clsx from 'clsx';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,6 +61,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fileIcon: {
       color: theme.palette.secondary.main,
+    },
+    absolute: {
       position: 'absolute',
       top: theme.spacing(2),
       left: theme.spacing(2),
@@ -163,7 +166,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                       {filtered.map((current: FilesFolder) => (
                         <TableRow key={current.id} hover tabIndex={-1} onClick={() => handleRow(current)}>
                           <TableCell width={10}>
-                            <FilesListType type={current.type} />
+                            <FilesListType type={current.type} className={classes.fileIcon} />
                           </TableCell>
                           <TableCell>{current.name}</TableCell>
                           <TableCell>{current.type === 'FOLDER' ? t('files:folder') : current.mime}</TableCell>
@@ -189,7 +192,11 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
               <DialogContent>
                 <Box display="grid" gridGap={16}>
                   <Box display="flex" justifyContent="center">
-                    <FilesListType type={detail.type} className={classes.fileIcon} fontSize="large" />
+                    <FilesListType
+                      type={detail.type}
+                      className={clsx(classes.fileIcon, classes.absolute)}
+                      fontSize="large"
+                    />
                     <Typography variant="subtitle1">{detail.name}</Typography>
                     {/*<Tooltip title={t('files:edit') || ''}>
                       <IconButton className={classes.editIcon} size="small">
