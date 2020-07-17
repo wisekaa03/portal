@@ -20,7 +20,7 @@ import ProfileEditComponent from '@front/components/profile/edit';
 
 const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
-  const [updated, setUpdated] = useState<Profile | undefined>();
+  const [updated, setUpdated] = useState<Partial<Profile> | undefined>();
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
   const { user } = useContext(ProfileContext);
@@ -126,7 +126,7 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
       return true;
     }
     if (updated && Object.keys(updated).length === 1 && updated.id) {
-      return false;
+      return !!thumbnailPhoto;
     }
     return !!updated || !!thumbnailPhoto;
   }, [loadingChanged, thumbnailPhoto, updated]);
