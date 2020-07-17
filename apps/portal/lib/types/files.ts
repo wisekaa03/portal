@@ -6,9 +6,9 @@ import { FilesFolder } from './files.interface';
 export interface FilesComponentProps {
   folderLoading: boolean;
   folderData?: FilesFolder[];
-  setPath: React.Dispatch<React.SetStateAction<string>>;
   folderRefetch: () => void;
   search: string;
+  handleFolder: (filesFolder: FilesFolder) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolder) => () => void;
   handleDelete: (filesFolder: FilesFolder) => () => void;
@@ -70,6 +70,7 @@ export type FilesTableComponentProps = {
   data: FilesFolder[];
   refetchData: () => void;
   search: string;
+  handleFolder: (filesFolder: FilesFolder) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolder) => () => void;
   handleDelete: (filesFolder: FilesFolder) => () => void;

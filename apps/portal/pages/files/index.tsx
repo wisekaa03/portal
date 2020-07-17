@@ -139,6 +139,10 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   }, [errorFolderList, errorDeleteFile, errorDeleteFolder, errorGetFile]);
 
+  const handleFolder = (filesFolder: FilesFolder): void => {
+    setPath(`${path}${filesFolder.name}/`);
+  };
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.currentTarget.value);
   };
@@ -171,11 +175,11 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       </Head>
       <MaterialUI {...rest}>
         <FilesComponent
-          setPath={setPath}
           folderLoading={loadingFolderList}
           folderData={dataFolderList?.folderFiles}
           folderRefetch={refetchFolderList}
           search={search}
+          handleFolder={handleFolder}
           handleSearch={handleSearch}
           handleDownload={handleDownload}
           handleDelete={handleDelete}

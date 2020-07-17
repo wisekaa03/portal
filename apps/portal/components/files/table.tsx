@@ -104,6 +104,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,
   refetchData,
   search,
+  handleFolder,
   handleSearch,
   handleDownload,
   handleDelete,
@@ -120,8 +121,12 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   };
 
   const handleRow = (element: FilesFolder): void => {
-    setDetail(element);
-    setOpen(true);
+    if (element.type === Folder.FILE) {
+      setDetail(element);
+      setOpen(true);
+    } else {
+      handleFolder(element);
+    }
   };
 
   const filtered = data.filter(({ name, size }) => name.includes(search) || size.toString().includes(search));

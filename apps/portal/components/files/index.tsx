@@ -53,11 +53,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FilesComponent: FC<FilesComponentProps> = ({
-  setPath,
   folderLoading,
   folderData,
   folderRefetch,
   search,
+  handleFolder,
   handleSearch,
   handleDownload,
   handleDelete,
@@ -130,6 +130,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
               data={folderData}
               refetchData={folderRefetch}
               search={search}
+              handleFolder={handleFolder}
               handleSearch={handleSearch}
               handleDownload={handleDownload}
               handleDelete={handleDelete}
