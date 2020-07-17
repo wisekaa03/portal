@@ -5,13 +5,13 @@ import React, { FC } from 'react';
 import filesize from 'filesize';
 import { TableRow, TableCell } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { useDrag, DragObjectWithType, DragSourceMonitor, DragSourceHookSpec } from 'react-dnd';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
 import { FilesTableRow, FilesFolder } from '@lib/types';
 import { FilesListType } from './files-list-type';
-import { useDrag } from 'react-dnd';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,12 +30,12 @@ export const FileTableRow: FC<FilesTableRow> = ({ header, current, handleRow }) 
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
 
-  const [{ isDragging }, drag] = useDrag({
+  const [, dragRef] = useDrag({
     item: { type: current.type },
   });
 
   return (
-    <TableRow ref={drag} hover tabIndex={-1} onClick={() => handleRow(current)}>
+    <TableRow ref={dragRef} hover tabIndex={-1} onClick={() => handleRow(current)}>
       <TableCell width={10}>
         <FilesListType type={current.type} className={classes.fileIcon} />
       </TableCell>

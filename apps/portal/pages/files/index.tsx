@@ -168,6 +168,12 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   };
 
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const handleDrop = async (acceptedFiles: File[]): Promise<void> => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+  };
+
   return (
     <>
       <Head>
@@ -179,6 +185,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           folderData={dataFolderList?.folderFiles}
           folderRefetch={refetchFolderList}
           search={search}
+          handleDrop={handleDrop}
           handleFolder={handleFolder}
           handleSearch={handleSearch}
           handleDownload={handleDownload}

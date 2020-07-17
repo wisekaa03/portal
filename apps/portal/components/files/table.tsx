@@ -11,8 +11,7 @@ import {
   Table,
   TableHead,
   TableBody,
-  TableRow,
-  TableCell,
+  TableFooter,
   Typography,
   Dialog,
   DialogContent,
@@ -37,13 +36,16 @@ import {
   Folder,
   FilesFolder,
   FilesFolderListHeader,
+  DropzoneFile,
 } from '@lib/types';
+import Dropzone from '@front/components/dropzone';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
 import RefreshButton from '@front/components/ui/refresh-button';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
 import { FileTableHeader } from './table-header';
+import { TableRow, TableCell } from '@material-ui/core';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -86,6 +88,11 @@ const useStyles = makeStyles((theme: Theme) =>
         minHeight: theme.spacing(5),
       },
     },
+    dropzone: {
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+    },
   }),
 );
 
@@ -93,6 +100,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,
   refetchData,
   search,
+  handleDrop,
   handleFolder,
   handleSearch,
   handleDownload,
@@ -103,6 +111,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
   const [detail, setDetail] = useState<FilesFolder | null>(null);
+  const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const handleClose = async (): Promise<void> => {
     setOpen(false);
@@ -135,8 +144,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
           <AutoSizer disableWidth>
             {({ height }) => (
               <Paper elevation={0}>
-                {/* TODO: как я понял не учтены внутренние отступы, а так же высота control бара */}
-                <TableContainer style={{ height: height - 35 - theme.spacing(2) }}>
+                <TableContainer style={{ height: height - 90 - 35 - theme.spacing(2) }}>
                   <Table stickyHeader>
                     <TableHead>
                       <FileTableHeader header={FilesFolderListHeader} />
@@ -153,6 +161,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                     </TableBody>
                   </Table>
                 </TableContainer>
+                <Dropzone className={classes.dropzone} setFiles={setFiles} files={files} mode="compact" border="top" />
               </Paper>
             )}
           </AutoSizer>

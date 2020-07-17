@@ -2,13 +2,13 @@
 
 //#region Imports NPM
 import React, { FC, useState, useEffect } from 'react';
+import clsx from 'clsx';
+import { v4 as uuidv4 } from 'uuid';
 import { Badge, Typography, Fab, Tooltip } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BaseDropzone, { DropzoneState, useDropzone, FileRejection } from 'react-dropzone';
 import { deepOrange } from '@material-ui/core/colors';
-import clsx from 'clsx';
-import { v4 as uuidv4 } from 'uuid';
+import BaseDropzone, { DropzoneState, useDropzone, FileRejection } from 'react-dropzone';
 //#endregion
 //#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
@@ -18,21 +18,21 @@ import snackbarUtils from '@lib/snackbar-utils';
 
 const thumbHeight = 100;
 
+interface DropzoneStyle {
+  color: 'primary' | 'secondary';
+  border: 'full' | 'top' | 'left' | 'right' | 'bottom';
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
       flexDirection: 'column',
     },
-    dropzone: (props: Record<string, 'primary' | 'secondary'>) => ({
+    dropzone: (props: DropzoneStyle) => ({
       'alignItems': 'center',
       'backgroundColor': '#F5FDFF',
-      // 'backgroundColor': '#fafafa',
-      'borderColor': fade(theme.palette[props.color].main, 0.5),
       'borderRadius': theme.shape.borderRadius,
-      'borderStyle': 'dashed',
-      'borderWidth': '2px',
-      // 'color': fade(theme.palette[props.color].main, 0.5),
       'color': '#31312F',
       'display': 'flex',
       'flex': '1',
@@ -46,6 +46,30 @@ const useStyles = makeStyles((theme: Theme) =>
         borderColor: fade(theme.palette[props.color].main, 0.9),
         color: fade(theme.palette[props.color].main, 0.9),
       },
+
+      'borderTopColor':
+        props.border === 'full' || props.border === 'top' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
+      'borderTopStyle': props.border === 'full' || props.border === 'top' ? 'dashed' : 'none',
+      'borderTopWidth': props.border === 'full' || props.border === 'top' ? '2px' : 0,
+
+      'borderLeftColor':
+        props.border === 'full' || props.border === 'left' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
+      'borderLeftStyle': props.border === 'full' || props.border === 'left' ? 'dashed' : 'none',
+      'borderLeftWidth': props.border === 'full' || props.border === 'left' ? '2px' : 0,
+
+      'borderRightColor':
+        props.border === 'full' || props.border === 'right'
+          ? fade(theme.palette[props.color].main, 0.5)
+          : 'transparent',
+      'borderRightStyle': props.border === 'full' || props.border === 'right' ? 'dashed' : 'none',
+      'borderRightWidth': props.border === 'full' || props.border === 'right' ? '2px' : 0,
+
+      'borderBottomColor':
+        props.border === 'full' || props.border === 'bottom'
+          ? fade(theme.palette[props.color].main, 0.5)
+          : 'transparent',
+      'borderBottomStyle': props.border === 'full' || props.border === 'bottom' ? 'dashed' : 'none',
+      'borderBottomWidth': props.border === 'full' || props.border === 'bottom' ? '2px' : 0,
     }),
     marginBottom: {
       marginBottom: theme.spacing(3),
@@ -55,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 'auto',
       height: '100%',
     },
-    thumb: (props: Record<string, 'primary' | 'secondary'>) => ({
+    thumb: (props: DropzoneStyle) => ({
       'display': 'inline-flex',
       'borderRadius': 2,
       'border': `1px solid ${fade(theme.palette[props.color].main, 0.5)}`,
@@ -125,7 +149,7 @@ export const DropzoneWrapper: FC<{ onDrop: (acceptedFiles: File[]) => Promise<vo
 
 const NO_PREVIEW = 'no_preview';
 
-const Dropzone = ({
+const Dropzone: FC<DropzoneProps> = ({
   files,
   setFiles,
   filesLimit = 50,
@@ -146,8 +170,12 @@ const Dropzone = ({
   ],
   maxFileSize = 100000000,
   color = 'primary',
-}: DropzoneProps): React.ReactElement => {
-  const classes = useStyles({ color });
+  mode = 'full',
+  className,
+  children,
+  border = 'full',
+}): React.ReactElement => {
+  const classes = useStyles({ color, border });
   const { t } = useTranslation();
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -195,10 +223,23 @@ const Dropzone = ({
     errors.forEach((error) => snackbarUtils.error(error));
   }, [errors]);
 
+  if (mode === 'drop') {
+    return (
+      <BaseDropzone onDrop={onDrop} onDropRejected={handleDropRejected} maxSize={maxFileSize} accept={acceptedFiles}>
+        {({ getRootProps, getInputProps }: DropzoneState) => (
+          <div {...getRootProps({ className })}>
+            <input {...getInputProps()} />
+            {children}
+          </div>
+        )}
+      </BaseDropzone>
+    );
+  }
+
   return (
     <BaseDropzone onDrop={onDrop} onDropRejected={handleDropRejected} maxSize={maxFileSize} accept={acceptedFiles}>
       {({ getRootProps, getInputProps }: DropzoneState) => (
-        <section className={classes.container}>
+        <section className={clsx(className, classes.container)}>
           <div
             {...getRootProps({
               className: clsx(classes.dropzone, {
@@ -209,36 +250,38 @@ const Dropzone = ({
             <input {...getInputProps()} />
             <p>{t('dropzone:attach')}</p>
           </div>
-          <aside className={classes.thumbsContainer}>
-            {files.map((element: DropzoneFile) => (
-              <Badge
-                key={element.id}
-                className={classes.badge}
-                badgeContent={
-                  <Fab size="small" className={classes.removeBtn} onClick={handleDelete(element.id)}>
-                    <DeleteIcon />
-                  </Fab>
-                }
-              >
-                <>
-                  <div className={classes.thumb}>
-                    <div className={classes.thumbInner}>
-                      {element.preview === NO_PREVIEW ? (
-                        <Typography className={classes.nopreview} variant="h6">
-                          {t('dropzone:nopreview')}
-                        </Typography>
-                      ) : (
-                        <img src={element.preview} className={classes.img} alt={t('dropzone:nopreview')} />
-                      )}
+          {mode === 'full' && (
+            <aside className={classes.thumbsContainer}>
+              {files.map((element: DropzoneFile) => (
+                <Badge
+                  key={element.id}
+                  className={classes.badge}
+                  badgeContent={
+                    <Fab size="small" className={classes.removeBtn} onClick={handleDelete(element.id)}>
+                      <DeleteIcon />
+                    </Fab>
+                  }
+                >
+                  <>
+                    <div className={classes.thumb}>
+                      <div className={classes.thumbInner}>
+                        {element.preview === NO_PREVIEW ? (
+                          <Typography className={classes.nopreview} variant="h6">
+                            {t('dropzone:nopreview')}
+                          </Typography>
+                        ) : (
+                          <img src={element.preview} className={classes.img} alt={t('dropzone:nopreview')} />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <Tooltip title={element.file.name}>
-                    <span className={classes.name}>{element.file.name}</span>
-                  </Tooltip>
-                </>
-              </Badge>
-            ))}
-          </aside>
+                    <Tooltip title={element.file.name}>
+                      <span className={classes.name}>{element.file.name}</span>
+                    </Tooltip>
+                  </>
+                </Badge>
+              ))}
+            </aside>
+          )}
         </section>
       )}
     </BaseDropzone>

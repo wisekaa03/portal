@@ -8,6 +8,7 @@ export interface FilesComponentProps {
   folderData?: FilesFolder[];
   folderRefetch: () => void;
   search: string;
+  handleDrop: (acceptedFiles: File[]) => Promise<void>;
   handleFolder: (filesFolder: FilesFolder) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolder) => () => void;
@@ -70,6 +71,7 @@ export type FilesTableComponentProps = {
   data: FilesFolder[];
   refetchData: () => void;
   search: string;
+  handleDrop: (acceptedFiles: File[]) => Promise<void>;
   handleFolder: (filesFolder: FilesFolder) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolder) => () => void;

@@ -57,6 +57,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
   folderData,
   folderRefetch,
   search,
+  handleDrop,
   handleFolder,
   handleSearch,
   handleDownload,
@@ -130,6 +131,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
               data={folderData}
               refetchData={folderRefetch}
               search={search}
+              handleDrop={handleDrop}
               handleFolder={handleFolder}
               handleSearch={handleSearch}
               handleDownload={handleDownload}
