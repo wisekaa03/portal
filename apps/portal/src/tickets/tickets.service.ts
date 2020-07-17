@@ -77,6 +77,8 @@ export class TicketsService {
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
+      // TODO: cache
+
       const client = await this.soapService.connect(authentication).catch((error: Error) => {
         promises.push(Promise.resolve({ errors: [error.toString()] }));
       });
@@ -205,6 +207,8 @@ export class TicketsService {
         password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       };
+
+      // TODO: cache
 
       const client = await this.soapService.connect(authentication).catch((error) => {
         promises.push(Promise.resolve({ errors: [JSON.stringify(error)] }));
@@ -505,6 +509,8 @@ export class TicketsService {
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
 
+      // TODO: cache
+
       const client = await this.soapService.connect(authentication).catch((error) => {
         throw error;
       });
@@ -631,6 +637,8 @@ export class TicketsService {
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       };
 
+      // TODO: cache
+
       const client = await this.soapService.connect(authentication).catch((error) => {
         throw error;
       });
@@ -702,6 +710,8 @@ export class TicketsService {
         password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
+
+      // TODO: cache
 
       const client = await this.soapService.connect(authentication).catch((error) => {
         throw error;
@@ -811,6 +821,8 @@ export class TicketsService {
         password,
         domain: this.configService.get<string>('SOAP_DOMAIN'),
       } as SoapAuthentication;
+
+      // TODO: cache
 
       const client = await this.soapService.connect(authentication).catch((error) => {
         throw error;
