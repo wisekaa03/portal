@@ -203,36 +203,6 @@ async function bootstrap(): Promise<void> {
   app.use(nextI18NextMiddleware(nextI18next));
   //#endregion
 
-  //#region Next
-  const appNextjs = Next({
-    dev: __DEV__,
-    dir: __DEV__ ? 'apps/portal' : '',
-    quiet: !DEV,
-  });
-  await appNextjs.prepare();
-  const renderer = app.get(RenderModule);
-  renderer.register(app, appNextjs, { dev: __DEV__, viewsDir: '' });
-  // const service = app.get(RenderService);
-  // service.setErrorHandler(
-  //   async (
-  //     error: HttpException,
-  //     request: express.Request,
-  //     response: express.Response,
-  //     _pathname: string,
-  //     _query: ParsedUrlQuery,
-  //   ): Promise<void> => {
-  //     let status: number;
-  //     if (error instanceof HttpException) {
-  //       status = error.getStatus();
-  //       if (status >= 401 && status <= 403) {
-  //         response.status(302);
-  //         response.location(`/auth/login?redirect=${getRedirect(request.url)}`);
-  //       }
-  //     }
-  //   },
-  // );
-  //#endregion
-
   //#region Start server
   await app.listen(configService.get<number>('PORT'));
   logger.log(`HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`, 'Bootstrap');

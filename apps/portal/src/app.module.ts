@@ -6,7 +6,7 @@
 import { resolve } from 'path';
 import express from 'express';
 // import { APP_FILTER } from '@nestjs/core';
-// import Next from 'next';
+import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import { Module, CacheModule, UnauthorizedException } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -103,14 +103,16 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region Logging module
     LoggerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (config: ConfigService) =>
-        pinoOptions(config.get<string>('LOGLEVEL'), config.get<boolean>('DEVELOPMENT')),
+      useFactory: async (configService: ConfigService) =>
+        pinoOptions(configService.get<string>('LOGLEVEL'), configService.get<boolean>('DEVELOPMENT')),
     }),
     //#endregion
 
     //#region Next RenderModule
-    // TODO: появляется NOT FOUND перед загрузкой страницы
-    RenderModule, // .forRootAsync(Next({ dev: __DEV__, dir: __DEV__ ? 'apps/portal' : '', quiet: false })),
+    RenderModule.forRootAsync(Next({ dev: __DEV__, dir: __DEV__ ? 'apps/portal' : '', quiet: false }), {
+      // passthrough404: true,
+      viewsDir: null,
+    }),
     //#endregion
 
     //#region Cache Manager - Redis
