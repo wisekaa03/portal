@@ -200,7 +200,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           uploads: {
             maxFileSize: 100000000, // 100MB
           },
-          context: async ({ req, res, connection }) => {
+          context: ({ req, res, connection }) => {
             // subscriptions
             if (connection) {
               return connection.context;
