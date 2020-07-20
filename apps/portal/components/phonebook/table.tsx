@@ -2,13 +2,13 @@
 
 //#region Imports NPM
 import React, { FC, Key } from 'react';
-import { ApolloQueryResult } from 'apollo-client';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Connection, Edge } from 'typeorm-graphql-pagination';
-import { Box, Table, TableBody } from '@material-ui/core';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
+import { ApolloQueryResult } from '@apollo/client';
+import { Connection, Edge } from 'typeorm-graphql-pagination';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { Box, Table, TableBody } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { PHONEBOOK_ROW_HEIGHT } from '@lib/constants';

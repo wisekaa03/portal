@@ -2,21 +2,25 @@
 
 //#region Imports NPM
 import React from 'react';
+import { Request, Response } from 'express';
 import { NextComponentType } from 'next';
 import { AppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
-import { ApolloClient, ApolloError } from 'apollo-client';
-import { from, split, ApolloLink } from 'apollo-link';
-import { getMainDefinition } from 'apollo-utilities';
-import { onError } from 'apollo-link-error';
-import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { SchemaLink } from 'apollo-link-schema';
-import { createUploadLink } from 'apollo-upload-client';
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { makeExecutableSchema } from 'graphql-tools';
-import { Request, Response } from 'express';
+import {
+  ApolloClient,
+  ApolloError,
+  from,
+  split,
+  ApolloLink,
+  InMemoryCache,
+  NormalizedCacheObject,
+  HttpLink,
+} from '@apollo/client';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { onError } from '@apollo/client/link/error';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { SchemaLink } from '@apollo/client/link/schema';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 import { Logger } from 'nestjs-pino';
@@ -109,7 +113,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       //   });
     }
   } else {
-    const httpLink = createUploadLink({
+    const httpLink = new HttpLink({
       uri: '/graphql',
       credentials: 'same-origin',
     });
@@ -198,7 +202,7 @@ export const withApolloClient = (
         };
 
         try {
-          const { getDataFromTree } = await import('@apollo/react-ssr');
+          const { getDataFromTree } = await import('@apollo/client/react/ssr');
 
           await getDataFromTree(
             <AppTree

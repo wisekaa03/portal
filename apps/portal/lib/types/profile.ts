@@ -1,10 +1,8 @@
 /** @format */
 
 //#region Imports NPM
-import { ApolloQueryResult, ApolloError } from 'apollo-client';
-import { QueryLazyOptions } from '@apollo/react-hooks';
-import { ExecutionResult, MutationFunctionOptions } from 'react-apollo';
 import { WithTranslation } from 'next-i18next';
+import { ApolloQueryResult, ApolloError, QueryLazyOptions } from '@apollo/client';
 import { Order, Connection } from 'typeorm-graphql-pagination';
 import { OutlinedInputProps } from '@material-ui/core';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';

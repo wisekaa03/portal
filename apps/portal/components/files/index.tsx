@@ -129,7 +129,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
           {folderData && (
             <FilesTableComponent
               data={folderData}
-              refetchData={folderRefetch}
+              folderRefetch={folderRefetch}
               search={search}
               handleDrop={handleDrop}
               handleFolder={handleFolder}

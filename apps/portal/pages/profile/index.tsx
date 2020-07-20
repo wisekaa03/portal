@@ -3,8 +3,7 @@
 //#region Imports NPM
 import React, { useContext, useState, useMemo, useEffect } from 'react';
 import Head from 'next/head';
-import { QueryResult } from 'react-apollo';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation, QueryResult } from '@apollo/client';
 import Box from '@material-ui/core/Box';
 //#endregion
 //#region Imports Local

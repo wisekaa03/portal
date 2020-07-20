@@ -2,13 +2,12 @@
 
 //#region Imports NPM
 import React from 'react';
+import { Request } from 'express';
 import { NextPageContext } from 'next';
 import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
-import { QueryResult } from 'react-apollo';
-import { Request } from 'express';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { ApolloProvider, useQuery, QueryResult } from '@apollo/client';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';

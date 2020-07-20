@@ -1,9 +1,8 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
-import Head from 'next/head';
 import React from 'react';
+import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Grid } from '@material-ui/core';
 //#endregion

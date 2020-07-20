@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useSnackbar, VariantType, WithSnackbarProps } from 'notistack';
-import { ApolloError } from 'apollo-client';
 import { GraphQLError } from 'graphql';
+import { ApolloError } from '@apollo/client';
 // TODO: хз почему не работает
 // import { UseTranslationResponse } from 'react-i18next';
 import { useTranslation } from './i18n-client';

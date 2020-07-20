@@ -4,8 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { I18n } from 'next-i18next';
 import Head from 'next/head';
-import { QueryResult } from 'react-apollo';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { format } from '@lib/dayjs';

@@ -1,6 +1,6 @@
 /** @format */
 
-import { MutationFunction } from 'react-apollo';
+import { MutationFunction } from '@apollo/client';
 import { User } from './user.dto';
 
 export interface LoginPageProps {

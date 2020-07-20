@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,
-  refetchData,
+  folderRefetch,
   search,
   handleDrop,
   handleFolder,
@@ -134,7 +134,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
     <div className={classes.root}>
       <Box display="flex" alignItems="center" p={1} className={classes.control}>
         <Search value={search} handleChange={handleSearch} />
-        <RefreshButton noAbsolute dense onClick={() => refetchData()} />
+        <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
       </Box>
       {filtered.length === 0 ? (
         <Box display="flex" justifyContent="center" mt={2} color="gray">

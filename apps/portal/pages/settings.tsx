@@ -3,19 +3,19 @@
 //#region Imports NPM
 import React from 'react';
 import Head from 'next/head';
+import { TFunction } from 'next-i18next';
+import { useMutation } from '@apollo/client';
+import { Button, Paper, Typography, CardActions, Card, Box } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
-import { Button, Paper, Typography, CardActions, Card, Box } from '@material-ui/core';
-import { useMutation } from '@apollo/react-hooks';
-import { TFunction } from 'next-i18next';
 //#endregion
 //#region Imports Local
 import { FONT_SIZE_SMALL, FONT_SIZE_NORMAL, FONT_SIZE_BIG } from '@lib/constants';
-import { MaterialUI } from '@front/layout';
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { USER_SETTINGS } from '@lib/queries';
 import { changeFontSize } from '@lib/font-size';
+import { MaterialUI } from '@front/layout';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>

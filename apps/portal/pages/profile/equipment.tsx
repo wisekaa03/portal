@@ -1,9 +1,10 @@
 /** @format */
-/* eslint import/no-default-export: 0 */
 
 //#region Imports NPM
 import React, { useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Head from 'next/head';
+import Link from 'next/link';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -16,14 +17,12 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { v4 as uuidv4 } from 'uuid';
 //#endregion
 //#region Imports Local
-import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
+import { MaterialUI } from '@front/layout';
 import Loading from '@front/components/loading';
 //#endregion
 

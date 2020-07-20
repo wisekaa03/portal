@@ -4,11 +4,11 @@
 import React, { FC, useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
+import BaseDropzone, { DropzoneState, useDropzone, FileRejection } from 'react-dropzone';
 import { Badge, Typography, Fab, Tooltip } from '@material-ui/core';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { deepOrange } from '@material-ui/core/colors';
-import BaseDropzone, { DropzoneState, useDropzone, FileRejection } from 'react-dropzone';
 //#endregion
 //#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
@@ -180,7 +180,7 @@ const Dropzone: FC<DropzoneProps> = ({
   const [errors, setErrors] = useState<string[]>([]);
 
   if (!maxFileSize) {
-    maxFileSize = process.env.MAX_FILE_SIZE || 250000000;
+    maxFileSize = Number.parseInt(process.env.MAX_FILE_SIZE || '250000000', 10);
   }
 
   const updateError = (value?: string): void => setErrors(value ? [...errors, value] : []);
@@ -217,7 +217,7 @@ const Dropzone: FC<DropzoneProps> = ({
         updateError(t('dropzone:acceptedFiles'));
       }
 
-      if (rejectedFile.file.size > maxFileSize) {
+      if (maxFileSize && rejectedFile.file.size > maxFileSize) {
         updateError(t('dropzone:maxFileSize'));
       }
     });

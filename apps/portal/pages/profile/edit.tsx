@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Head from 'next/head';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/client';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local

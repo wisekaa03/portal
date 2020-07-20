@@ -4,14 +4,14 @@
 import React, { useEffect, useState } from 'react';
 // import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery } from '@apollo/client';
 //#endregion
 //#region Imports Local
-import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { FILES_FOLDER_LIST, FILES_GET_FILE, FILES_DELETE_FILE, FILES_DELETE_FOLDER } from '@lib/queries';
 import { Data, FilesQueryProps, FilesFile, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
+import { MaterialUI } from '@front/layout';
 import FilesComponent from '@front/components/files';
 //#endregion
 
@@ -139,6 +139,12 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   }, [errorFolderList, errorDeleteFile, errorDeleteFolder, errorGetFile]);
 
+  const folderRefetch = (): void => {
+    if (refetchFolderList) {
+      refetchFolderList({ variables: { path } });
+    }
+  };
+
   const handleFolder = (filesFolder: FilesFolder): void => {
     setPath(`${path}${filesFolder.name}/`);
   };
@@ -183,7 +189,7 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
         <FilesComponent
           folderLoading={loadingFolderList}
           folderData={dataFolderList?.folderFiles}
-          folderRefetch={refetchFolderList}
+          folderRefetch={folderRefetch}
           search={search}
           handleDrop={handleDrop}
           handleFolder={handleFolder}

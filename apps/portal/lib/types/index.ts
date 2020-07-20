@@ -4,9 +4,8 @@
 // import React from 'react';
 import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext, DocumentInitialProps } from 'next/document';
-import { GraphQLSchema } from 'graphql/type/schema';
-import { ApolloClient } from 'apollo-client';
-import { NormalizedCacheObject /* , IdGetterObj */ } from 'apollo-cache-inmemory';
+// import { GraphQLSchema } from 'graphql/type/schema';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { UserContext } from './user.dto';

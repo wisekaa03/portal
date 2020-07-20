@@ -2,10 +2,10 @@
 
 //#region Imports NPM
 import React, { FC, useState, useEffect } from 'react';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useTranslation } from 'react-i18next';
+import { useLazyQuery } from '@apollo/client';
 import { TextField, OutlinedTextFieldProps, CircularProgress } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useTranslation } from 'react-i18next';
 //#endregion
 //#region Imports Local
 import { TextFieldComponentProps } from '@lib/types';

@@ -2,10 +2,10 @@
 
 //#region Imports NPM
 import React from 'react';
+import { Response } from 'express';
 import Document, { Html, Head, Main, NextScript, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
-import { Response } from 'express';
 //#endregion
 //#region Imports Local
 import { DocumentContextMy, DocumentInitialPropsMy } from '@lib/types';

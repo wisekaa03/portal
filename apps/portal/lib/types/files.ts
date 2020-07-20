@@ -1,7 +1,9 @@
 /** @format */
 
 import React from 'react';
+import { ApolloQueryResult } from '@apollo/client';
 import { FilesFolder } from './files.interface';
+import { Data } from './common';
 
 export interface FilesComponentProps {
   folderLoading: boolean;
@@ -69,7 +71,7 @@ export type FolderDialogState = {
 
 export type FilesTableComponentProps = {
   data: FilesFolder[];
-  refetchData: () => void;
+  folderRefetch: () => void;
   search: string;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
   handleFolder: (filesFolder: FilesFolder) => void;

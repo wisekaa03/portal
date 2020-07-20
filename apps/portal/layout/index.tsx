@@ -2,8 +2,8 @@
 
 //#region Imports NPM
 import React, { FC, useState, useEffect, useContext } from 'react';
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 //#endregion

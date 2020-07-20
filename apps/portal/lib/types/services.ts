@@ -1,7 +1,7 @@
 /** @format */
 
-import { ApolloError, ApolloQueryResult } from 'apollo-client';
 import { Component } from 'react';
+import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { DropzoneFile } from './dropzone';
 import { TkRoute, TkService, TkRoutes } from './tickets';
 import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteFull } from './user.dto';

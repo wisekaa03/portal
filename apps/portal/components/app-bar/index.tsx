@@ -2,21 +2,21 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
+import clsx from 'clsx';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
-import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 //#endregion
 //#region Imports Local
-import LogoMin from '@images/png/logo_min.png?inline';
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';
 import { AppBarComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
+import LogoMin from '@images/png/logo_min.png?inline';
 //#endregion
 
 const avatarHeight = 48;

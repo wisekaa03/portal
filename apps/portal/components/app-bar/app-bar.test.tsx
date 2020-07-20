@@ -2,8 +2,8 @@
 
 //#region Imports NPM
 import React from 'react';
-import { MockedProvider } from '@apollo/react-testing';
 import { shallow as Shallow } from 'enzyme';
+import { MockedProvider } from '@apollo/client/testing';
 import { createShallow } from '@material-ui/core/test-utils';
 import { Toolbar, Popover, IconButton } from '@material-ui/core';
 //#endregion
@@ -58,22 +58,22 @@ describe('AppBar component', () => {
 
   it('render component', () => {
     const wrapper = shallow(Component);
-    expect(wrapper.find(AppBar)).toBeDefined();
+    expect(wrapper.find(() => AppBar)).toBeDefined();
   });
 
   it('find drawer icon', () => {
     const wrapper = shallow(Component);
-    expect(wrapper.find(IconButton)).toBeDefined();
+    expect(wrapper.find(() => IconButton)).toBeDefined();
   });
 
   it('find Toolbar', () => {
     const wrapper = shallow(Component);
-    expect(wrapper.find(Toolbar)).toBeDefined();
+    expect(wrapper.find(() => Toolbar)).toBeDefined();
   });
 
   it('find popover', () => {
     const wrapper = shallow(Component);
-    expect(wrapper.find(Popover)).toBeDefined();
+    expect(wrapper.find(() => Popover)).toBeDefined();
   });
 
   // it('simulate open', () => {

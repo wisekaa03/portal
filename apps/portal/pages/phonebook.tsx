@@ -2,13 +2,12 @@
 
 //#region Imports NPM
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import { ApolloQueryResult } from 'apollo-client';
-import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
-import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useQuery, useLazyQuery, useMutation, ApolloQueryResult } from '@apollo/client';
+import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 import { Box, useMediaQuery } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';

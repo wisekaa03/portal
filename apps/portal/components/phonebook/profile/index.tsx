@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/client';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
@@ -21,11 +21,11 @@ import {
   PhonebookProfileNameProps,
   PhonebookProfileFieldProps,
 } from '@lib/types';
-import Avatar from '@front/components/ui/avatar';
 import { PROFILE } from '@lib/queries';
+import snackbarUtils from '@lib/snackbar-utils';
+import Avatar from '@front/components/ui/avatar';
 import IsAdmin from '@front/components/isAdmin';
 import { ComposeLink } from '@front/components/compose-link';
-import snackbarUtils from '@lib/snackbar-utils';
 import CopyButton from '@front/components/ui/copy-button';
 import PhonebookProfileControl from './control';
 //#endregion

@@ -2,12 +2,11 @@
 
 //#region Imports NPM
 import React, { useState /* , useContext */ } from 'react';
-import { I18n } from 'next-i18next';
-import Head from 'next/head';
 import clsx from 'clsx';
+import Head from 'next/head';
+import { I18n } from 'next-i18next';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { QueryResult } from 'react-apollo';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation, QueryResult } from '@apollo/client';
 import {
   Card,
   CardActionArea,

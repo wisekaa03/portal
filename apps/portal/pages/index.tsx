@@ -2,9 +2,9 @@
 
 //#region Imports NPM
 import React from 'react';
-// import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+// import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
 import { FIRST_PAGE } from '@lib/constants';

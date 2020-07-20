@@ -3,8 +3,8 @@
 //#region Imports NPM
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
+import { useApolloClient, useMutation } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { nextI18next, includeDefaultNamespaces, I18nPage } from '@lib/i18n-client';
