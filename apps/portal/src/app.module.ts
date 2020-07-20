@@ -143,6 +143,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), DEV)), {});
         const store = sessionRedis(configService, logger);
         const auth = session(configService, logger, store, true);
+        const maxFileSize = configService.get<number>('MAX_FILE_SIZE');
 
         return {
           // TODO: cache, persistedQueries
@@ -198,7 +199,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
             // },
           },
           uploads: {
-            maxFileSize: 100000000, // 100MB
+            maxFileSize,
           },
           context: ({ req, res, connection }) => {
             // subscriptions

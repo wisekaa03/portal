@@ -75,6 +75,7 @@ OSTICKET_URL: "{}"
 NEXTCLOUD_URL: "https://cloud.example.com"
 NEXTCLOUD_REDIS_URI: ""
 NEXTCLOUD_REDIS_TTL: "60"
+MAX_FILE_SIZE: "250000000"
 
 NEWS_URL: "https://news"
 NEWS_API_URL: "https://news/api"

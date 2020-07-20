@@ -16,8 +16,8 @@ export interface DropzoneProps
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   filesLimit?: number;
   acceptedFiles?: string[];
-  maxFileSize?: number;
   color?: 'primary' | 'secondary';
   mode?: 'full' | 'compact' | 'drop';
   border?: 'full' | 'right' | 'left' | 'top' | 'bottom';
+  maxFileSize?: number;
 }

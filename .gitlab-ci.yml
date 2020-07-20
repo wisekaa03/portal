@@ -143,6 +143,7 @@ helm_development:
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
         --set NEXTCLOUD_REDIS_TTL="${NEXTCLOUD_REDIS_TTL}" \
+        --set MAX_FILE_SIZE="${MAX_FILE_SIZE}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \
@@ -229,6 +230,7 @@ helm_production:
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
         --set NEXTCLOUD_REDIS_TTL="${NEXTCLOUD_REDIS_TTL}" \
+        --set MAX_FILE_SIZE="${MAX_FILE_SIZE}" \
         --set NEWS_URL="${NEWS_URL}" \
         --set NEWS_API_URL="${NEWS_API_URL}" \
         --set MAIL_URL="${MAIL_URL}" \

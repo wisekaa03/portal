@@ -168,16 +168,20 @@ const Dropzone: FC<DropzoneProps> = ({
     'video/*',
     'audio/*',
   ],
-  maxFileSize = 100000000,
   color = 'primary',
   mode = 'full',
   className,
   children,
   border = 'full',
+  maxFileSize,
 }): React.ReactElement => {
   const classes = useStyles({ color, border });
   const { t } = useTranslation();
   const [errors, setErrors] = useState<string[]>([]);
+
+  if (!maxFileSize) {
+    maxFileSize = process.env.MAX_FILE_SIZE || 250000000;
+  }
 
   const updateError = (value?: string): void => setErrors(value ? [...errors, value] : []);
 

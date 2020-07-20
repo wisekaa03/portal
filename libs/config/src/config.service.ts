@@ -101,7 +101,8 @@ export class ConfigService {
 
       NEXTCLOUD_URL: Joi.string().empty('').optional(),
       NEXTCLOUD_REDIS_URI: Joi.string().empty('').optional(),
-      NEXTCLOUD_REDIS_TTL: Joi.number().empty('').optional(),
+      NEXTCLOUD_REDIS_TTL: Joi.number().empty('').default(60).optional(),
+      MAX_FILE_SIZE: Joi.number().empty('').default(250000000).optional(),
 
       NEWS_URL: Joi.string().empty('').optional(),
       NEWS_API_URL: Joi.string().empty('').optional(),

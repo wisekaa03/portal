@@ -186,6 +186,7 @@ const nextConfig = {
     DOMAIN: process.env.DOMAIN,
     MAIL_URL: process.env.MAIL_URL,
     SESSION_NAME: process.env.SESSION_NAME,
+    MAX_FILE_SIZE: process.env.MAX_FILE_SIZE,
   },
 };
 

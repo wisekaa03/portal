@@ -57,6 +57,7 @@ data:
     NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}
     NEXTCLOUD_REDIS_URI={{ .Values.NEXTCLOUD_REDIS_URI | quote }}
     NEXTCLOUD_REDIS_TTL={{ .Values.NEXTCLOUD_REDIS_TTL }}
+    MAX_FILE_SIZE={{ .Values.MAX_FILE_SIZE }}
 
     NEWS_URL={{ .Values.NEWS_URL | quote }}
     NEWS_API_URL={{ .Values.NEWS_API_URL | quote }}
