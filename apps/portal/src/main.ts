@@ -7,9 +7,6 @@ import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions, HttpException } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
-import { RenderService, RenderModule } from 'nest-next';
-import { ParsedUrlQuery } from 'querystring';
-import Next from 'next';
 import crypto from 'crypto';
 import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
@@ -22,7 +19,6 @@ import 'reflect-metadata';
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { nextI18next } from '@lib/i18n-client';
-import getRedirect from '@lib/get-redirect';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
@@ -50,11 +46,11 @@ async function bootstrap(): Promise<void> {
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
       if (__DEV__) {
-        process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
       }
 
       secure = true;
-      nestjsOptions['httpsOptions'] = {
+      nestjsOptions.httpsOptions = {
         requestCert: false,
         rejectUnauthorized: false,
         key: fs.readFileSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure/private.key')),

@@ -269,7 +269,7 @@ export class FilesService {
     const temporaryFile = tmpNameSync({ tmpdir: this.staticFolder });
     const file = temporaryFile.slice(temporaryFile.lastIndexOf('/'));
 
-    const wait = this.nextCloudAs(user, password)
+    const ncPromise = this.nextCloudAs(user, password)
       .getReadStream(path)
       .then((stream: Webdav.Stream) => {
         if (stream) {
@@ -287,12 +287,12 @@ export class FilesService {
       });
 
     if (options?.sync) {
-      const wait_ = await wait;
-      if (!wait_) {
+      const nc = await ncPromise;
+      if (!nc) {
         throw new Error(`Files: not found: ${path}`);
       }
       await new Promise((resolve) =>
-        wait_.on('finish', (callback: () => void) => {
+        nc.on('finish', (callback: () => void) => {
           resolve(callback);
         }),
       );
