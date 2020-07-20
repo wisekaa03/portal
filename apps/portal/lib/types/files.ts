@@ -1,6 +1,6 @@
 /** @format */
 
-import { DropzoneFile } from './dropzone';
+import React from 'react';
 import { FilesFolder } from './files.interface';
 
 export interface FilesComponentProps {
@@ -89,7 +89,7 @@ export type FilesTableHeaderProps = {
 export type FilesTableRow = {
   header: FilesTableHeaderProps[];
   current: FilesFolder;
-  handleRow: (current: FilesFolder) => void;
+  handleRow: (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, current: FilesFolder) => void;
 };
 
 export const FilesFolderListHeader: FilesTableHeaderProps[] = [

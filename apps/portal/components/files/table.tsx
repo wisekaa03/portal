@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fileIcon: {
       color: theme.palette.secondary.main,
+      verticalAlign: 'middle',
     },
     absolute: {
       position: 'absolute',
@@ -118,7 +119,7 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
     setDetail(null);
   };
 
-  const handleRow = (element: FilesFolder): void => {
+  const handleRow = (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, element: FilesFolder): void => {
     if (element.type === Folder.FILE) {
       setDetail(element);
       setOpen(true);
