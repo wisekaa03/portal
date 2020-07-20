@@ -32,17 +32,31 @@
       "editor.formatOnSave": false
     },
     "[javascript]": {
-      "editor.formatOnSave": false
+      "editor.formatOnSave": false,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+      }
     },
     "[javascriptreact]": {
-      "editor.formatOnSave": false
+      "editor.formatOnSave": false,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+      }
     },
     "[typescript]": {
-      "editor.formatOnSave": false
+      "editor.formatOnSave": false,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+      }
     },
     "[typescriptreact]": {
-      "editor.formatOnSave": false
+      "editor.formatOnSave": false,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+      }
     },
+    "prettier.packageManager": "yarn",
+    "code-runner.enableAppInsights": false,
     "typescript.tsdk": "node_modules/typescript/lib",
     "less.lint.duplicateProperties": "warning",
     "less.lint.float": "warning",
@@ -50,17 +64,6 @@
     "eslint.lintTask.enable": true,
     "eslint.alwaysShowStatus": true,
     "eslint.packageManager": "yarn",
-    // "eslint.workingDirectories": [
-    //   {"directory": "./__tests__", "changeProcessCWD": true},
-    //   {"directory": "./__mocks__", "changeProcessCWD": true},
-    //   {"directory": "./components", "changeProcessCWD": true}
-    //   {"directory": "./layouts", "changeProcessCWD": true}
-    //   {"directory": "./lib", "changeProcessCWD": true}
-    //   {"directory": "./pages", "changeProcessCWD": true}
-    //   {"directory": "./server", "changeProcessCWD": true}
-    //   {"directory": "./typings", "changeProcessCWD": true}
-    // ],
-    // "eslint.run": "onType",
     "eslint.trace.server": "verbose",
     "eslint.validate": [
       "css",
