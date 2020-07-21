@@ -95,22 +95,22 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     } else {
       link = new ApolloLink();
       //   // eslint-disable-next-line global-require
-      //   global.fetch = require('node-fetch');
+      // global.fetch = require('node-fetch');
 
-      //   let fetchOptions: Record<string, any> | undefined;
-      //   if (configService?.secure) {
-      //     const https = require('https');
+      // let fetchOptions: Record<string, any> | undefined;
+      // if (configService?.secure) {
+      //   const https = require('https');
 
-      //     fetchOptions = {
-      //       agent: new https.Agent({ rejectUnauthorized: false }),
-      //     };
-      //   }
+      //   fetchOptions = {
+      //     agent: new https.Agent({ rejectUnauthorized: false }),
+      //   };
+      // }
 
-      //   link = new HttpLink({
-      //     uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
-      //     credentials: 'same-origin',
-      //     fetchOptions,
-      //   });
+      // link = new HttpLink({
+      //   uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
+      //   credentials: 'same-origin',
+      //   fetchOptions,
+      // });
     }
   } else {
     const httpLink = new HttpLink({
