@@ -98,7 +98,7 @@ const LogoutComponent: FC<LogoutPageProps> = ({ loading, logout }): React.ReactE
       </div>
       <div className={classes.logoutContainer}>
         <form
-          onSubmit={async (event: any): Promise<void> => {
+          onSubmit={async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
             event.preventDefault();
             logout();
           }}
