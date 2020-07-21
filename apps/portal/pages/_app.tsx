@@ -17,7 +17,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 //#endregion
 //#region Imports Local
-import { MaterialUI_fck } from '@lib/theme';
+import { MaterialUI } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
 import { AppContextMy, Data, User, UserContext } from '@lib/types';
@@ -30,9 +30,9 @@ import getRedirect from '@lib/get-redirect';
 //#endregion
 
 /**
- * Current login: ME
+ * Current profile provider
  */
-const CurrentComponent: React.FC<{
+const ProfileProvider: React.FC<{
   context: UserContext;
   ctx: NextPageContext;
   router: NextRouter;
@@ -41,27 +41,36 @@ const CurrentComponent: React.FC<{
   const pathname = ctx?.asPath || router?.asPath;
 
   const { data, loading } = useQuery<Data<'me', User>>(CURRENT_USER, {
-    onCompleted: (data) => !__SERVER__ && data?.me?.settings?.fontSize && changeFontSize(data.me.settings.fontSize),
+    onCompleted: (data) => {
+      if (!__SERVER__) {
+        if (data?.me?.settings?.fontSize) {
+          changeFontSize(data.me.settings.fontSize);
+        }
+      }
+    },
+    ssr: true,
     fetchPolicy: 'cache-only',
   });
 
-  if (__SERVER__ && ctx?.res && ctx?.req) {
-    if (data?.me) {
-      if (pathname.startsWith(AUTH_PAGE)) {
-        const location = decodeURI((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE;
+  if (__SERVER__) {
+    if (ctx?.res && ctx?.req) {
+      if (data?.me) {
+        if (pathname.startsWith(AUTH_PAGE)) {
+          const location = decodeURI((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE;
+
+          ctx.res.statusCode = 303;
+          ctx.res.setHeader('Location', location);
+
+          return null;
+        }
+      } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
+        const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
 
         ctx.res.statusCode = 303;
         ctx.res.setHeader('Location', location);
 
         return null;
       }
-    } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
-      const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
-
-      ctx.res.statusCode = 303;
-      ctx.res.setHeader('Location', location);
-
-      return null;
     }
   }
 
@@ -75,6 +84,7 @@ class App extends NextApp<AppContextMy> {
   componentDidMount(): void {
     // Remove the server-sie injected CSS
     document.querySelector('#jss-server-side')?.remove();
+
     // Service worker
     // if ('serviceWorker' in navigator) {
     //   navigator.serviceWorker
@@ -97,36 +107,34 @@ class App extends NextApp<AppContextMy> {
       }),
     });
 
-    const themeUser = MaterialUI_fck(context?.fontSize, ssrMatchMedia);
+    const themeUser = MaterialUI(context?.fontSize, ssrMatchMedia);
 
     return (
-      <>
-        <StylesProvider disableGeneration={disableGeneration}>
-          <ThemeProvider theme={themeUser}>
-            <CssBaseline />
-            <ApolloProvider client={apolloClient}>
-              <Head>
-                <title>Корпоративный портал</title>
-              </Head>
-              <SnackbarProvider
-                maxSnack={3}
-                dense={context.isMobile}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-              >
-                <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
-                  <SnackbarUtilsConfigurator />
-                  <CurrentComponent context={context} router={router} ctx={ctx}>
-                    <Component {...pageProps} />
-                  </CurrentComponent>
-                </DndProvider>
-              </SnackbarProvider>
-            </ApolloProvider>
-          </ThemeProvider>
-        </StylesProvider>
-      </>
+      <StylesProvider disableGeneration={disableGeneration}>
+        <ThemeProvider theme={themeUser}>
+          <CssBaseline />
+          <ApolloProvider client={apolloClient}>
+            <Head>
+              <title>Корпоративный портал</title>
+            </Head>
+            <SnackbarProvider
+              maxSnack={3}
+              dense={context.isMobile}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
+                <SnackbarUtilsConfigurator />
+                <ProfileProvider context={context} router={router} ctx={ctx}>
+                  <Component {...pageProps} />
+                </ProfileProvider>
+              </DndProvider>
+            </SnackbarProvider>
+          </ApolloProvider>
+        </ThemeProvider>
+      </StylesProvider>
     );
   }
 }

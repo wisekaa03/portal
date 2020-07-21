@@ -23,7 +23,7 @@ import {
 
 export const MaterialUI_primary_main = '#2c4373';
 
-export const MaterialUI_fck = (fontSize?: number, ssrMatchMedia?: (query: string) => { matches: boolean }): Theme => {
+export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) => { matches: boolean }): Theme => {
   const theme = createMuiTheme({
     typography: {
       fontFamily: ['Roboto', 'Arial'].join(','),

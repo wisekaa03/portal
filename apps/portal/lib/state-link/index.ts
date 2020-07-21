@@ -14,7 +14,7 @@ export const resolvers = {
     ): User | null => {
       if (__SERVER__) {
         if (user) {
-          delete user.password;
+          // delete user.password;
 
           const data = {
             ...user,

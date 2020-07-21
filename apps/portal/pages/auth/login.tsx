@@ -44,7 +44,6 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
               me: user,
             },
           });
-          setStorage('user', JSON.stringify(user));
 
           const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
           Router.push(redirect as string);
