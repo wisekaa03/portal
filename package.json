@@ -70,6 +70,7 @@
   },
   "os": [],
   "resolutions": {
+    "**/**/graphql-upload": "^11.0.0",
     "**/**/fs-capacitor": "^6.2.0",
     "**/**/file-loader": "^6.0.0",
     "**/**/url-loader": "^4.1.0"
@@ -99,7 +100,7 @@
     "@types/passport": "^1.0.4",
     "apollo-server-core": "^2.16.0",
     "apollo-server-express": "^2.16.0",
-    "apollo-upload-client": "^14.0.1",
+    "apollo-upload-client": "^14.1.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cache-manager": "^3.3.0",
@@ -120,7 +121,6 @@
     "graphql-redis-subscriptions": "^2.2.1",
     "graphql-subscriptions": "^1.1.0",
     "graphql-tag": "^2.10.4",
-    "graphql-tag-pluck": "^0.8.7",
     "helmet": "^3.23.3",
     "i18next": "^19.6.2",
     "i18next-browser-languagedetector": "^5.0.0",
