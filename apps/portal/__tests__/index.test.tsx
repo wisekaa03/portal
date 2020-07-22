@@ -24,6 +24,6 @@ describe('Next.JS Front App', () => {
 
   it('app page: Logout button', () => {
     const wrapper = shallow(<App {...props} />);
-    expect(wrapper.find(Button)).toBeDefined();
+    expect(wrapper.find(() => Button)).toBeDefined();
   });
 });

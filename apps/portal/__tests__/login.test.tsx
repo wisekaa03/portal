@@ -30,12 +30,12 @@ describe('Login page', () => {
 
   it('have login button', () => {
     const wrapper = shallow(<Login {...props} />);
-    expect(wrapper.find(Button)).toBeDefined();
+    expect(wrapper.find(() => Button)).toBeDefined();
   });
 
   it('have textField', () => {
     const wrapper = shallow(<Login {...props} />);
-    expect(wrapper.find(TextField)).toBeDefined();
+    expect(wrapper.find(() => TextField)).toBeDefined();
   });
 
   // TODO: чота непонятное тута, разобраться
