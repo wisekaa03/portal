@@ -142,6 +142,7 @@ export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root
     | 'region'
     | 'town'
     | 'street'
+    | 'room'
     | 'postalCode';
 }
 

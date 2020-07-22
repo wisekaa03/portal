@@ -348,7 +348,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
                     <ProfileField title={t(`phonebook:fields.region`)} profile={profile} field="region" />
                     <ProfileField title={t(`phonebook:fields.town`)} profile={profile} field="town" />
                     <ProfileField title={t(`phonebook:fields.street`)} profile={profile} field="street" />
-                    <ProfileField last title={t(`phonebook:fields.postalCode`)} profile={profile} field="postalCode" />
+                    <ProfileField last title={t(`phonebook:fields.room`)} profile={profile} field="room" />
                   </List>
                 </Paper>
               </Box>
