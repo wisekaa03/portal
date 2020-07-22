@@ -148,14 +148,25 @@ const PhonebookSearch = forwardRef(
               {showedSuggestions && (
                 <ClickAwayListener onClickAway={handleSugClose}>
                   <MenuList onKeyDown={handleSugKeyDown}>
-                    {suggestions.map((item) => (
-                      <MenuItem key={item.name} onClick={handleSugClick}>
-                        <Icon base64 src={item.avatar} size={21} />
-                        <Typography className={classes.margin} component="span">
-                          {item.name}
-                        </Typography>
-                      </MenuItem>
-                    ))}
+                    {suggestions.map((item, index) => {
+                      if (index === 10) {
+                        return (
+                          <Typography className={classes.margin} align="center">
+                            {item.name}
+                          </Typography>
+                        );
+                      } else if (index > 10) {
+                        return null;
+                      }
+                      return (
+                        <MenuItem key={item.name} onClick={handleSugClick}>
+                          <Icon base64 src={item.avatar} size={21} />
+                          <Typography className={classes.margin} component="span">
+                            {item.name}
+                          </Typography>
+                        </MenuItem>
+                      );
+                    })}
                   </MenuList>
                 </ClickAwayListener>
               )}

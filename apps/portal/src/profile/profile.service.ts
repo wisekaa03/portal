@@ -243,7 +243,7 @@ export class ProfileService {
       }
     });
 
-    const result = await query
+    const intResult = await query
       .orderBy('profile.lastName', 'ASC')
       .select([
         'profile.lastName',
@@ -285,44 +285,42 @@ export class ProfileService {
       .cache(true)
       .getMany();
 
-    return result
-      .reduce((accumulator: SearchSuggestions[], current: ProfileEntity) => {
-        const lower = search
-          .toLowerCase()
-          .split('+')
-          .map((l) => l.trim());
-        let showing = '';
-        let avatar = '';
+    const result = intResult.reduce((accumulator: SearchSuggestions[], current: ProfileEntity) => {
+      const lower = search
+        .toLowerCase()
+        .split('+')
+        .map((l) => l.trim());
+      let showing = '';
+      let avatar = '';
 
-        // const contact = current.username ? Contact.USER : Contact.PROFILE;
-        const fullName = `${current.lastName || ''} ${current.firstName || ''} ${
-          current.middleName || ''
-        }`.toLowerCase();
+      // const contact = current.username ? Contact.USER : Contact.PROFILE;
+      const fullName = `${current.lastName || ''} ${current.firstName || ''} ${current.middleName || ''}`.toLowerCase();
 
-        if (lower.some((l) => fullName.includes(l))) {
-          showing = current.fullName || '';
-          avatar = current.thumbnailPhoto40 as string;
-        } else if (lower.some((l) => current.management && current.management.toLowerCase().includes(l))) {
-          showing = current.management || '';
-        } else if (lower.some((l) => current.department && current.department.toLowerCase().includes(l))) {
-          showing = current.department || '';
-        } else if (lower.some((l) => current.division && current.division.toLowerCase().includes(l))) {
-          showing = current.division || '';
-        } else if (lower.some((l) => current.company && current.company.toLowerCase().includes(l))) {
-          showing = current.company || '';
-        } else if (lower.some((l) => current.title && current.title.toLowerCase().includes(l))) {
-          showing = current.title || '';
-        } else if (lower.some((l) => current.town && current.town.toLowerCase().includes(l))) {
-          showing = current.town || '';
-        }
+      if (lower.some((l) => fullName.includes(l))) {
+        showing = current.fullName || '';
+        avatar = current.thumbnailPhoto40 as string;
+      } else if (lower.some((l) => current.management && current.management.toLowerCase().includes(l))) {
+        showing = current.management || '';
+      } else if (lower.some((l) => current.department && current.department.toLowerCase().includes(l))) {
+        showing = current.department || '';
+      } else if (lower.some((l) => current.division && current.division.toLowerCase().includes(l))) {
+        showing = current.division || '';
+      } else if (lower.some((l) => current.company && current.company.toLowerCase().includes(l))) {
+        showing = current.company || '';
+      } else if (lower.some((l) => current.title && current.title.toLowerCase().includes(l))) {
+        showing = current.title || '';
+      } else if (lower.some((l) => current.town && current.town.toLowerCase().includes(l))) {
+        showing = current.town || '';
+      }
 
-        if (showing === '' || accumulator.find((item) => item.name === showing)) {
-          return accumulator;
-        }
+      if (showing === '' || accumulator.find((item) => item.name === showing)) {
+        return accumulator;
+      }
 
-        return [...accumulator, { name: showing, avatar }];
-      }, [] as SearchSuggestions[])
-      .slice(0, 10);
+      return [...accumulator, { name: showing, avatar }];
+    }, [] as SearchSuggestions[]);
+
+    return result.length > 10 ? [...result.slice(0, 10), { name: '...' }] : result;
   };
 
   /**
