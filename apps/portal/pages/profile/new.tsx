@@ -23,6 +23,8 @@ const newParameters: ProfileInput = {
   contact: Contact.PROFILE,
   notShowing: true,
   disabled: false,
+  gender: 0,
+  birthday: null,
   username: '',
   firstName: '',
   lastName: '',

@@ -394,6 +394,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       <KeyboardDatePicker
                         fullWidth
                         disabled={loadingChanged}
+                        disableFuture
                         inputVariant="outlined"
                         color="secondary"
                         format="yyyy-MM-dd"

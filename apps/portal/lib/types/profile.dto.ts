@@ -105,7 +105,8 @@ export interface SearchSuggestions {
 }
 
 export interface ProfileInput
-  extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt'> {
+  extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt' | 'birthday'> {
   contact: Contact;
+  birthday?: Date | null;
 }
 //#endregion
