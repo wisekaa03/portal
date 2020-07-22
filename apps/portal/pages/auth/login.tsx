@@ -14,7 +14,6 @@ import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-clien
 import Cookie from '@lib/cookie';
 import { CURRENT_USER, LOGIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
-import { setStorage } from '@lib/session-storage';
 import { LoginComponent } from '@front/components/auth/login';
 //#endregion
 
@@ -30,25 +29,11 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     password: '',
   });
 
-  const [login, { loading, error }] = useLazyQuery<Data<'login', Login>, { username: string; password: string }>(
+  const [login, { data, loading, error }] = useLazyQuery<Data<'login', Login>, { username: string; password: string }>(
     LOGIN,
     {
       ssr: false,
       fetchPolicy: 'no-cache',
-      onCompleted: (data) => {
-        if (data.login) {
-          const { user } = data.login;
-          client.writeQuery({
-            query: CURRENT_USER,
-            data: {
-              me: user,
-            },
-          });
-
-          const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
-          Router.push(redirect as string);
-        }
-      },
     },
   );
 
@@ -59,7 +44,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
     const { username, password } = values;
 
     event.preventDefault();
@@ -82,6 +67,21 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
       handleSubmit((event as unknown) as React.MouseEvent<HTMLButtonElement, MouseEvent>);
     }
   };
+
+  useEffect(() => {
+    const user = data?.login?.user;
+    if (user) {
+      client.writeQuery({
+        query: CURRENT_USER,
+        data: {
+          me: user,
+        },
+      });
+
+      const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
+      Router.push(redirect as string);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (values.save) {

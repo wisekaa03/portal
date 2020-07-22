@@ -124,7 +124,7 @@ class App extends NextApp<AppContextMy> {
           <CssBaseline />
           <ApolloProvider client={apolloClient}>
             <Head>
-              <title>Корпоративный портал</title>
+              <title>Corporate portal</title>
             </Head>
             <SnackbarProvider
               maxSnack={3}
