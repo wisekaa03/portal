@@ -15,12 +15,12 @@ import {
   ApolloLink,
   InMemoryCache,
   NormalizedCacheObject,
-  HttpLink,
 } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { SchemaLink } from '@apollo/client/link/schema';
+import { createUploadLink } from 'apollo-upload-client';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
 import { Logger } from 'nestjs-pino';
@@ -113,7 +113,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       // });
     }
   } else {
-    const httpLink = new HttpLink({
+    const httpLink = createUploadLink({
       uri: '/graphql',
       credentials: 'same-origin',
     });
@@ -130,7 +130,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       wsLink,
-      httpLink,
+      (httpLink as unknown) as ApolloLink,
     );
   }
 
