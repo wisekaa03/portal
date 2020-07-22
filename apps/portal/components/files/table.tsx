@@ -30,14 +30,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-import {
-  FilesTableComponentProps,
-  FilesTableHeaderProps,
-  Folder,
-  FilesFolder,
-  FilesFolderListHeader,
-  DropzoneFile,
-} from '@lib/types';
+import { FilesTableComponentProps, FilesTableHeaderProps, Folder, FilesFolder, DropzoneFile } from '@lib/types';
 import Dropzone from '@front/components/dropzone';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
@@ -96,6 +89,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
+
+export const FilesFolderListHeader: FilesTableHeaderProps[] = [
+  { label: 'id', colspan: 1, hidden: true },
+  { label: 'type', colspan: 1, hidden: true },
+  { label: 'name', colspan: 2, hidden: false },
+  { label: 'mime', width: 100, colspan: 1, hidden: false },
+  // { label: 'creationDate', width: 200, colspan: 1, hidden: false },
+  { label: 'lastModified', width: 200, colspan: 1, hidden: false },
+  { label: 'size', width: 150, colspan: 1, hidden: false, align: 'right' },
+];
 
 const FilesTableComponent: FC<FilesTableComponentProps> = ({
   data,

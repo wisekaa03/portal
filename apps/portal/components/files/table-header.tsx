@@ -2,12 +2,13 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
-import { TableRow, TableCell } from '@material-ui/core';
+import { TableRow, TableCell, TableSortLabel } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
+import { FilesHeaderContext } from '@lib/context';
 import { FilesTableHeaderProps } from '@lib/types/files';
 //#endregion
 
@@ -27,22 +28,39 @@ export const FileTableHeader: FC<{ header: FilesTableHeaderProps[] }> = ({ heade
   const { t } = useTranslation();
 
   return (
-    <TableRow>
-      <TableCell className={classes.checkbox}>
-        <Checkbox inputProps={{ 'aria-label': 'primary checkbox' }} />
-      </TableCell>
-      {header.map((current) =>
-        current.hidden ? null : (
-          <TableCell
-            colSpan={current.colspan}
-            key={current.label}
-            align={(current.align ? current.align : 'left') as 'left' | 'right' | 'inherit' | 'center' | 'justify'}
-            {...(current.width ? { style: { width: current.width } } : {})}
-          >
-            {t(`files:table.${current.label}`)}
+    <FilesHeaderContext.Consumer>
+      {(context) => (
+        <TableRow>
+          <TableCell className={classes.checkbox}>
+            <Checkbox inputProps={{ 'aria-label': 'primary checkbox' }} />
           </TableCell>
-        ),
+          {header.map((current) =>
+            current.hidden ? null : (
+              <TableCell
+                colSpan={current.colspan}
+                align={(current.align ? current.align : 'left') as 'left' | 'right' | 'inherit' | 'center' | 'justify'}
+                key={current.label}
+                {...(current.width ? { style: { width: current.width } } : {})}
+                // component="div"
+                // scope="col"
+                // className={classes.cell}
+                // style={cellStyle}
+                // sortDirection={
+                //   orderBy.field !== name ? false : (orderBy.direction.toLowerCase() as 'asc' | 'desc')
+                // }
+              >
+                <TableSortLabel
+                  active={current.label === name}
+                  // direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
+                  // onClick={handleSort(current.label)}
+                >
+                  {t(`files:table.${current.label}`)}
+                </TableSortLabel>
+              </TableCell>
+            ),
+          )}
+        </TableRow>
       )}
-    </TableRow>
+    </FilesHeaderContext.Consumer>
   );
 };

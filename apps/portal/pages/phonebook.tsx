@@ -11,7 +11,7 @@ import { useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-import { Data, ProfileQueryProps, ColumnNames, UserSettings, Profile, SearchSuggestions } from '@lib/types';
+import { Data, ProfileQueryProps, PhonebookColumnNames, UserSettings, Profile, SearchSuggestions } from '@lib/types';
 import useDebounce from '@lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '@lib/queries';
 import { MaterialUI } from '@front/layout';
@@ -26,12 +26,12 @@ import Modal from '@front/components/ui/modal';
 import Loading from '@front/components/loading';
 //#endregion
 
-const columnsXS: ColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
-const columnsSM: ColumnNames[] = [...columnsXS, 'title'];
-const columnsMD: ColumnNames[] = [...columnsSM, 'company', 'department'];
-const columnsLG: ColumnNames[] = [...columnsMD, 'mobile', 'email'];
+const columnsXS: PhonebookColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
+const columnsSM: PhonebookColumnNames[] = [...columnsXS, 'title'];
+const columnsMD: PhonebookColumnNames[] = [...columnsSM, 'company', 'department'];
+const columnsLG: PhonebookColumnNames[] = [...columnsMD, 'mobile', 'email'];
 
-const getGraphQLColumns = (columns: ColumnNames[]): string => {
+const getGraphQLColumns = (columns: PhonebookColumnNames[]): string => {
   let result = columns.filter((col) => col !== 'disabled' && col !== 'notShowing').join(' ');
 
   if (columns.includes('lastName')) {
@@ -57,13 +57,13 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const defaultColumns = me?.user?.settings?.phonebook?.columns || null;
 
-  const [columns, setColumns] = useState<ColumnNames[]>(
+  const [columns, setColumns] = useState<PhonebookColumnNames[]>(
     defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
   );
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<SearchSuggestions[]>([]);
-  const [orderBy, setOrderBy] = useState<Order<ColumnNames>>({
+  const [orderBy, setOrderBy] = useState<Order<PhonebookColumnNames>>({
     direction: OrderDirection.ASC,
     field: 'lastName',
   });
@@ -176,7 +176,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       return undefined;
     });
 
-  const handleColumns = (values: ColumnNames[]): void => {
+  const handleColumns = (values: PhonebookColumnNames[]): void => {
     userSettings({
       variables: {
         value: { phonebook: { columns: values } },
@@ -185,7 +185,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     setColumns(values);
   };
 
-  const handleSort = (column: ColumnNames) => (): void => {
+  const handleSort = (column: PhonebookColumnNames) => (): void => {
     const isAsc = orderBy.field === column && orderBy.direction === OrderDirection.ASC;
     setOrderBy({
       direction: isAsc ? OrderDirection.DESC : OrderDirection.ASC,

@@ -4,6 +4,7 @@ import React from 'react';
 import { ApolloQueryResult } from '@apollo/client';
 import { FilesFolder } from './files.interface';
 import { Data } from './common';
+import { Order } from 'typeorm-graphql-pagination';
 
 export interface FilesComponentProps {
   folderLoading: boolean;
@@ -80,26 +81,23 @@ export type FilesTableComponentProps = {
   handleDelete: (filesFolder: FilesFolder) => () => void;
 };
 
-export type FilesTableHeaderProps = {
-  label: string;
-  hidden: boolean;
-  width?: number;
-  colspan?: number;
-  align?: string;
-};
-
 export type FilesTableRow = {
   header: FilesTableHeaderProps[];
   current: FilesFolder;
   handleRow: (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, current: FilesFolder) => void;
 };
 
-export const FilesFolderListHeader: FilesTableHeaderProps[] = [
-  { label: 'id', colspan: 1, hidden: true },
-  { label: 'type', colspan: 1, hidden: true },
-  { label: 'name', colspan: 2, hidden: false },
-  { label: 'mime', width: 100, colspan: 1, hidden: false },
-  // { label: 'creationDate', width: 200, colspan: 1, hidden: false },
-  { label: 'lastModified', width: 200, colspan: 1, hidden: false },
-  { label: 'size', width: 150, colspan: 1, hidden: false, align: 'right' },
-];
+export type FilesColumnNames = 'id' | 'type' | 'name' | 'mime' | 'lastModified' | 'size';
+
+export type FilesTableHeaderProps = {
+  label: FilesColumnNames;
+  hidden: boolean;
+  width?: number;
+  colspan?: number;
+  align?: string;
+};
+
+export interface FilesHeaderContextProps {
+  columns: FilesColumnNames[];
+  orderBy: Order<FilesColumnNames>;
+}

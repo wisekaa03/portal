@@ -3,7 +3,7 @@
 //#region Imports NPM
 //#endregion
 //#region Imports Local
-import { ColumnNames } from './profile';
+import { PhonebookColumnNames } from './profile';
 import { LoginService } from './login-service';
 import { Profile } from './profile.dto';
 import { Group } from './group.dto';
@@ -63,7 +63,7 @@ export interface UserToSave extends BaseUser {
 
 //#region User settings
 export interface UserSettingsPhonebook {
-  columns?: ColumnNames[];
+  columns?: PhonebookColumnNames[];
   __typename?: 'UserSettingsPhonebook';
 }
 

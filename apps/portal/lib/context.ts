@@ -4,7 +4,7 @@
 import { createContext } from 'react';
 //#endregion
 //#region Imports Local
-import { HeaderProps, UserContext } from '@lib/types';
+import { FilesHeaderContextProps, PhonebookHeaderContextProps, UserContext } from '@lib/types';
 //#endregion
 
 /**
@@ -15,4 +15,6 @@ import { HeaderProps, UserContext } from '@lib/types';
  */
 export const ProfileContext = createContext<UserContext>({ user: undefined });
 
-export const PhonebookHeaderContext = createContext<HeaderProps | undefined>(undefined);
+export const PhonebookHeaderContext = createContext<PhonebookHeaderContextProps | undefined>(undefined);
+
+export const FilesHeaderContext = createContext<FilesHeaderContextProps | undefined>(undefined);

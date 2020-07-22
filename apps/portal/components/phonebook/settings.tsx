@@ -17,9 +17,9 @@ import {
 //#endregion
 //#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
-import { Column, ColumnNames, SettingsProps } from '@lib/types';
+import { PhonebookColumn, PhonebookColumnNames, SettingsProps } from '@lib/types';
 import Button from '@front/components/ui/button';
-import HeaderBg from '@public/images/jpeg/header_bg.jpg';
+// import HeaderBg from '@public/images/jpeg/header_bg.jpg';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const allColumns: Column[] = [
+export const allColumns: PhonebookColumn[] = [
   {
     name: 'thumbnailPhoto40',
     admin: false,
@@ -270,9 +270,9 @@ const PhonebookSettings = React.forwardRef(
   ({ columns, changeColumn, handleClose, handleReset, isAdmin }: SettingsProps, ref?: React.Ref<React.Component>) => {
     const classes = useStyles({});
     const { t } = useTranslation();
-    const [current, setCurrent] = useState<ColumnNames[]>(columns);
+    const [current, setCurrent] = useState<PhonebookColumnNames[]>(columns);
 
-    const handleCheckbox = (name: ColumnNames) => (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleCheckbox = (name: PhonebookColumnNames) => (event: React.ChangeEvent<HTMLInputElement>): void => {
       setCurrent(event.target.checked ? [name, ...current] : current.filter((element) => element !== name));
     };
 
@@ -292,16 +292,18 @@ const PhonebookSettings = React.forwardRef(
             {[...new Array(blocks).keys()].map((i) => (
               <FormControl key={i} className={classes.group}>
                 <FormGroup>
-                  {renderColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }: Column) => (
-                    <FormControlLabel
-                      key={name}
-                      className={classes.item}
-                      label={t(`phonebook:fields.${name}`)}
-                      control={
-                        <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
-                      }
-                    />
-                  ))}
+                  {renderColumns
+                    .slice(i * countInBlocks, i * countInBlocks + countInBlocks)
+                    .map(({ name }: PhonebookColumn) => (
+                      <FormControlLabel
+                        key={name}
+                        className={classes.item}
+                        label={t(`phonebook:fields.${name}`)}
+                        control={
+                          <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
+                        }
+                      />
+                    ))}
                 </FormGroup>
               </FormControl>
             ))}

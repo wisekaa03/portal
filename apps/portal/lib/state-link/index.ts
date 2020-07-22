@@ -1,7 +1,7 @@
 /** @format */
 
 import { UnauthorizedException } from '@nestjs/common/exceptions/unauthorized.exception';
-import { User, UserSettingsTaskFavorite, ColumnNames } from '@lib/types';
+import { User, UserSettingsTaskFavorite, PhonebookColumnNames } from '@lib/types';
 import { FONT_SIZE_NORMAL } from '../constants';
 import { Group } from '../types/group.dto';
 

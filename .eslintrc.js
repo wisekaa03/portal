@@ -105,6 +105,7 @@ module.exports = {
         varsIgnorePattern: '^(_|[A-Z]+)',
       },
     ],
+    'unicorn/no-useless-undefined': 0,
     'unicorn/prevent-abbreviations': [
       'error',
       {

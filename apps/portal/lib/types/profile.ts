@@ -14,7 +14,7 @@ import { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
 //#endregion
 
-export type ColumnNames =
+export type PhonebookColumnNames =
   | 'lastName'
   | 'nameEng'
   | 'username'
@@ -44,8 +44,8 @@ export type ColumnNames =
   | 'disabled'
   | 'notShowing';
 
-export interface Column {
-  name: ColumnNames;
+export interface PhonebookColumn {
+  name: PhonebookColumnNames;
   admin: boolean;
   defaultStyle: StyleProperties;
   largeStyle: StyleProperties;
@@ -54,7 +54,7 @@ export interface Column {
 export interface ProfileQueryProps {
   first: number;
   after: string;
-  orderBy: Order<ColumnNames>;
+  orderBy: Order<PhonebookColumnNames>;
   search: string;
   disabled: boolean;
   notShowing: boolean;
@@ -79,10 +79,10 @@ export interface ProfileProps extends WithTranslation {
 }
 
 export interface SettingsProps extends WithTranslation {
-  columns: ColumnNames[];
+  columns: PhonebookColumnNames[];
   handleClose: () => void;
   handleReset: () => void;
-  changeColumn(columns: ColumnNames[]): void;
+  changeColumn(columns: PhonebookColumnNames[]): void;
   isAdmin: boolean;
 }
 
@@ -94,19 +94,19 @@ export interface HeaderPropsRef {
   style: React.CSSProperties;
 }
 
-export interface HeaderProps {
-  columns: ColumnNames[];
-  orderBy: Order<ColumnNames>;
-  handleSort: (column: ColumnNames) => () => void;
+export interface PhonebookHeaderContextProps {
+  columns: PhonebookColumnNames[];
+  orderBy: Order<PhonebookColumnNames>;
+  handleSort: (column: PhonebookColumnNames) => () => void;
   largeWidth: boolean;
 }
 
 export interface TableProps {
   hasLoadMore: boolean;
   loadMoreItems: () => Promise<undefined | ApolloQueryResult<Data<'profile', Connection<Profile>>>>;
-  columns: ColumnNames[];
-  orderBy: Order<ColumnNames>;
-  handleSort: (_: ColumnNames) => () => void;
+  columns: PhonebookColumnNames[];
+  orderBy: Order<PhonebookColumnNames>;
+  handleSort: (_: PhonebookColumnNames) => () => void;
   largeWidth: boolean;
   data: Connection<Profile>;
 }
