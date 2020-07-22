@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Request } from 'express';
 import { NextPageContext } from 'next';
 import NextApp from 'next/app';
@@ -41,14 +41,17 @@ const ProfileProvider: React.FC<{
   const pathname = ctx?.asPath || router?.asPath;
 
   const { data, loading } = useQuery<Data<'me', User>>(CURRENT_USER, {
-    onCompleted: (data) => {
-      if (!__SERVER__) {
-        if (data?.me?.settings?.fontSize) {
-          changeFontSize(data.me.settings.fontSize);
-        }
-      }
-    },
-    ssr: true,
+    // TODO: https://github.com/apollographql/react-apollo/issues/2522
+    // TODO: https://github.com/apollographql/react-apollo/issues/3353
+    // TODO: https://github.com/apollographql/react-apollo/pull/3419
+    // onCompleted(data) {
+    //   if (!__SERVER__) {
+    //     if (data?.me?.settings?.fontSize) {
+    //       changeFontSize(data.me.settings.fontSize);
+    //     }
+    //   }
+    // },
+    // variables: {},
     fetchPolicy: 'cache-only',
   });
 
@@ -72,6 +75,12 @@ const ProfileProvider: React.FC<{
         return null;
       }
     }
+  } else {
+    useEffect(() => {
+      if (data?.me?.settings?.fontSize) {
+        changeFontSize(data.me.settings.fontSize);
+      }
+    }, [data]);
   }
 
   return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
