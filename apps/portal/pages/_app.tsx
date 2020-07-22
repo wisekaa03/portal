@@ -137,7 +137,7 @@ class App extends NextApp<AppContextMy> {
               <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
                 <SnackbarUtilsConfigurator />
                 <ProfileProvider context={context} router={router} ctx={ctx}>
-                  <Component {...pageProps} />
+                  <Component {...pageProps} context={context} ctx={ctx} />
                 </ProfileProvider>
               </DndProvider>
             </SnackbarProvider>

@@ -1,7 +1,9 @@
 /** @format */
 
 //#region Imports NPM
+import { Request } from 'express';
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import { NextPageContext } from 'next';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/client';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
@@ -18,12 +20,12 @@ import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
 
-const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Partial<Profile> | undefined>();
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
-  const { user } = useContext(ProfileContext);
+  const { user } = (ctx?.req as Request)?.session?.passport || useContext(ProfileContext);
   const id = query?.id || user?.profile?.id;
   const { isAdmin } = user || { isAdmin: false };
 
@@ -31,6 +33,9 @@ const ProfileEditPage: I18nPage = ({ t, query, ...rest }): React.ReactElement =>
     PROFILE,
     {
       variables: { id },
+      // TODO: check if this is available
+      ssr: false,
+      context: { user },
     },
   );
 
