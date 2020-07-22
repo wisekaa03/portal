@@ -7,7 +7,7 @@ import { MeetingsController } from './meetings.controller';
 //#region Imports Local
 //#endregion
 
-describe('Meetings Controller', () => {
+describe(MeetingsController.name, () => {
   let controller: MeetingsController;
 
   beforeEach(async () => {

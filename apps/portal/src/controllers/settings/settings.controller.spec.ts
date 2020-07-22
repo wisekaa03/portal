@@ -7,7 +7,7 @@ import { SettingsController } from './settings.controller';
 //#region Imports Local
 //#endregion
 
-describe('Settings Controller', () => {
+describe(SettingsController.name, () => {
   let controller: SettingsController;
 
   beforeEach(async () => {

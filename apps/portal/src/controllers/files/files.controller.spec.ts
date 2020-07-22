@@ -7,7 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FilesController } from './files.controller';
 //#endregion
 
-describe('Files Controller', () => {
+describe(FilesController.name, () => {
   let controller: FilesController;
 
   beforeEach(async () => {

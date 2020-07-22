@@ -8,7 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { HomeController } from './home.controller';
 //#endregion
 
-describe('HomeController', () => {
+describe(HomeController.name, () => {
   let controller: HomeController;
 
   beforeEach(async () => {

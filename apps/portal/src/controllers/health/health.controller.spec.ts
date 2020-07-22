@@ -12,7 +12,7 @@ import { HealthController } from './health.controller';
 jest.mock('@app/config/config.service');
 const serviceMock = jest.fn(() => ({}));
 
-describe('Health Controller', () => {
+describe(HealthController.name, () => {
   let controller: HealthController;
 
   beforeEach(async () => {

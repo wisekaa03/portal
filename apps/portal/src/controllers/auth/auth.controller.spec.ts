@@ -11,7 +11,7 @@ import { AuthController } from './auth.controller';
 
 const serviceMock = jest.fn(() => ({}));
 
-describe('Auth Controller', () => {
+describe(AuthController.name, () => {
   let controller: AuthController;
 
   beforeEach(async () => {

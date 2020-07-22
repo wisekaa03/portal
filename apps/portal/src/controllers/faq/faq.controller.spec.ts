@@ -7,7 +7,7 @@ import { FaqController } from './faq.controller';
 //#region Imports Local
 //#endregion
 
-describe('Faq Controller', () => {
+describe(FaqController.name, () => {
   let controller: FaqController;
 
   beforeEach(async () => {

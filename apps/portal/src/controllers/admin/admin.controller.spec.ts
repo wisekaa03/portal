@@ -7,7 +7,7 @@ import { AdminController } from './admin.controller';
 //#region Imports Local
 //#endregion
 
-describe('Admin Controller', () => {
+describe(AdminController.name, () => {
   let controller: AdminController;
 
   beforeEach(async () => {

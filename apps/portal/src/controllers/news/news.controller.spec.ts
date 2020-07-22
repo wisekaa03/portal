@@ -8,7 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { NewsController } from './news.controller';
 //#endregion
 
-describe('NewsController', () => {
+describe(NewsController.name, () => {
   let controller: NewsController;
 
   beforeEach(async () => {

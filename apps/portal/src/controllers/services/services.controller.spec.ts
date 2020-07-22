@@ -7,7 +7,7 @@ import { ServicesController } from './services.controller';
 //#region Imports Local
 //#endregion
 
-describe('Services Controller', () => {
+describe(ServicesController.name, () => {
   let controller: ServicesController;
 
   beforeEach(async () => {

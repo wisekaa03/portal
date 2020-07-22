@@ -7,7 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PhonebookController } from './phonebook.controller';
 //#endregion
 
-describe('PhonebookController', () => {
+describe(PhonebookController.name, () => {
   let controller: PhonebookController;
 
   beforeEach(async () => {

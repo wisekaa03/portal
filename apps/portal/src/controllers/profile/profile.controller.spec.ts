@@ -7,7 +7,7 @@ import { ProfileController } from './profile.controller';
 //#region Imports Local
 //#endregion
 
-describe('Profile Controller', () => {
+describe(ProfileController.name, () => {
   let controller: ProfileController;
 
   beforeEach(async () => {
