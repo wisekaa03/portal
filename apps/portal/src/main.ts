@@ -4,7 +4,7 @@
 import fs from 'fs';
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
-import { NestApplicationOptions, HttpException } from '@nestjs/common';
+import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 import crypto from 'crypto';
