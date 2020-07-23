@@ -83,7 +83,7 @@ export class FilesService {
     return nextCloud;
   };
 
-  folder = async (path: string, user: User, password: string): Promise<FilesFolder[]> =>
+  folder = async (path: string, lastPath: string, user: User, password: string): Promise<FilesFolder[]> =>
     this.nextCloudAs(user, password)
       .getFolderFileDetails(path, [
         {
@@ -189,7 +189,7 @@ export class FilesService {
                 // shareTypes: f.extraProperties?.['share-types'],
               } as FilesFolder),
           )
-          .filter((value) => value.name !== value.ownerId),
+          .filter((value) => value.name !== lastPath),
       );
 
   /**
@@ -202,19 +202,21 @@ export class FilesService {
   folderFiles = async (user: User, password: string, path = '/', cache = true): Promise<FilesFolder[]> => {
     this.logger.info(`Files entity: path={${path}}`);
 
+    const lastPath = path === '/' ? this.translateToNextCloud(user.loginIdentificator) : path.split('/').pop() || '';
+
     const cachedID = `${user.loginIdentificator}-f-${path}`;
     if (this.cache && cache) {
       const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          this.cache.set(cachedID, await this.folder(path, user, password), this.ttl);
+          this.cache.set(cachedID, await this.folder(path, lastPath, user, password), this.ttl);
         })();
 
         return cached;
       }
     }
 
-    const folder = await this.folder(path, user, password);
+    const folder = await this.folder(path, lastPath, user, password);
 
     if (this.cache) {
       this.cache.set<FilesFolder[]>(cachedID, folder, this.ttl);
