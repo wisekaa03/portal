@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { FilesComponentProps } from '@lib/types';
+import { FilesComponentProps, FilesColumn } from '@lib/types';
 import Button from '@front/components/ui/button';
 import IsAdmin from '@front/components/isAdmin';
 import Loading from '@front/components/loading';
@@ -52,11 +52,23 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+export const filesColumns: FilesColumn[] = [
+  { label: 'id', colspan: 1, hidden: true },
+  { label: 'type', colspan: 1, hidden: true },
+  { label: 'name', colspan: 2, hidden: false },
+  { label: 'mime', width: 100, colspan: 1, hidden: false },
+  // { label: 'creationDate', width: 200, colspan: 1, hidden: false },
+  { label: 'lastModified', width: 200, colspan: 1, hidden: false },
+  { label: 'size', width: 150, colspan: 1, hidden: false, align: 'right' },
+];
+
 const FilesComponent: FC<FilesComponentProps> = ({
+  path,
   folderLoading,
   folderData,
   folderRefetch,
   search,
+  handleCheckbox,
   handleDrop,
   handleFolder,
   handleSearch,
@@ -128,9 +140,12 @@ const FilesComponent: FC<FilesComponentProps> = ({
           {/*</Box>*/}
           {folderData && (
             <FilesTableComponent
+              path={path}
               data={folderData}
               folderRefetch={folderRefetch}
               search={search}
+              filesColumns={filesColumns}
+              handleCheckbox={handleCheckbox}
               handleDrop={handleDrop}
               handleFolder={handleFolder}
               handleSearch={handleSearch}

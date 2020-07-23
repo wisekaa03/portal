@@ -16,9 +16,9 @@ export class FilesController {
     res.render('files');
   }
 
-  @Get(':id')
+  @Get('*')
   @UseGuards(SessionGuard)
-  public async edit(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
-    res.render('files', { id });
+  public async edit(@Res() res: RenderableResponse, @Param() param: string): Promise<void> {
+    res.render('files', { path: param?.[0] });
   }
 }

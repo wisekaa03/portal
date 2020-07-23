@@ -3,6 +3,8 @@
 import React, { FC, useState } from 'react';
 import clsx from 'clsx';
 import filesize from 'filesize';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { useRouter } from 'next/router';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,
@@ -21,16 +23,18 @@ import {
   ListItem,
   ListItemText,
   List,
+  Breadcrumbs,
 } from '@material-ui/core';
+import MaterialLink from '@material-ui/core/Link';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import HomeIcon from '@material-ui/icons/Home';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-import { FilesTableComponentProps, FilesTableHeaderProps, Folder, FilesFolder, DropzoneFile } from '@lib/types';
+import { FilesTableProps, Folder, FilesFolder, DropzoneFile } from '@lib/types';
 import Dropzone from '@front/components/dropzone';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
@@ -38,7 +42,7 @@ import RefreshButton from '@front/components/ui/refresh-button';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
 import { FileTableHeader } from './table-header';
-import { TableRow, TableCell } from '@material-ui/core';
+import Link from 'next/link';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -90,20 +94,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const FilesFolderListHeader: FilesTableHeaderProps[] = [
-  { label: 'id', colspan: 1, hidden: true },
-  { label: 'type', colspan: 1, hidden: true },
-  { label: 'name', colspan: 2, hidden: false },
-  { label: 'mime', width: 100, colspan: 1, hidden: false },
-  // { label: 'creationDate', width: 200, colspan: 1, hidden: false },
-  { label: 'lastModified', width: 200, colspan: 1, hidden: false },
-  { label: 'size', width: 150, colspan: 1, hidden: false, align: 'right' },
-];
-
-const FilesTableComponent: FC<FilesTableComponentProps> = ({
+const FilesTableComponent: FC<FilesTableProps> = ({
+  path,
   data,
   folderRefetch,
   search,
+  filesColumns,
+  handleCheckbox,
   handleDrop,
   handleFolder,
   handleSearch,
@@ -116,13 +113,14 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
   const [open, setOpen] = useState<boolean>(false);
   const [detail, setDetail] = useState<FilesFolder | null>(null);
   const [files, setFiles] = useState<DropzoneFile[]>([]);
+  const router = useRouter();
 
   const handleClose = async (): Promise<void> => {
     setOpen(false);
     setDetail(null);
   };
 
-  const handleRow = (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, element: FilesFolder): void => {
+  const handleRow = (event: React.MouseEvent<HTMLTableCellElement, MouseEvent>, element: FilesFolder): void => {
     if (element.type === Folder.FILE) {
       setDetail(element);
       setOpen(true);
@@ -139,6 +137,29 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
         <Search value={search} handleChange={handleSearch} />
         <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
       </Box>
+      <Box display="flex" p={1}>
+        <Breadcrumbs aria-label="breadcrumbs">
+          {path.map((element, index) => {
+            const current = path.reduce(
+              (accumulator, value, currentIndex) =>
+                currentIndex > index || !value ? accumulator : `${accumulator}${value}/`,
+              '/',
+            );
+            return (
+              <Link
+                key={element || 'home'}
+                href={{ pathname: router.route, query: { path: path.join('/') } }}
+                as={`${router.route}${current}`}
+                passHref
+              >
+                <MaterialLink onClick={() => handleFolder(path.slice(0, index + 1).join('/'))}>
+                  {element ? element : <HomeIcon />}
+                </MaterialLink>
+              </Link>
+            );
+          })}
+        </Breadcrumbs>
+      </Box>
       {filtered.length === 0 ? (
         <Box display="flex" justifyContent="center" mt={2} color="gray">
           <Typography variant="h5">{t('files:notFound')}</Typography>
@@ -151,14 +172,15 @@ const FilesTableComponent: FC<FilesTableComponentProps> = ({
                 <TableContainer style={{ height: height - 90 - 35 - theme.spacing(2) }}>
                   <Table stickyHeader>
                     <TableHead>
-                      <FileTableHeader header={FilesFolderListHeader} />
+                      <FileTableHeader handleCheckbox={handleCheckbox} header={filesColumns} />
                     </TableHead>
                     <TableBody>
                       {filtered.map((current: FilesFolder) => (
                         <FileTableRow
                           key={current.id}
-                          header={FilesFolderListHeader}
+                          header={filesColumns}
                           current={current}
+                          handleCheckbox={handleCheckbox}
                           handleRow={handleRow}
                         />
                       ))}

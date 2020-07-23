@@ -9,7 +9,6 @@ module.exports = {
     'react-hooks',
     'standard',
     'graphql',
-    'json',
     'jest',
     'promise',
     'unicorn',
@@ -38,7 +37,7 @@ module.exports = {
     },
     'import/resolver': {
       node: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
       },
     },
     'import/ignore': ['.coffee$', '.(scss|less|css)$', '.(svg|png|jpe?g|webp|gif)(\\?.*)?$'],
@@ -106,27 +105,7 @@ module.exports = {
       },
     ],
     'unicorn/no-useless-undefined': 0,
-    'unicorn/prevent-abbreviations': [
-      'error',
-      {
-        replacements: {
-          ref: false,
-          e2e: false,
-          props: {
-            properties: false,
-          },
-          ctx: {
-            context: false,
-          },
-          ext: {
-            extension: false,
-          },
-          src: {
-            source: false,
-          },
-        },
-      },
-    ],
+    'unicorn/prevent-abbreviations': 0,
     '@typescript-eslint/no-var-requires': 0,
   },
 };

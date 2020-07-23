@@ -14,6 +14,7 @@
   "deleteFolder": "Удалить каталог",
   "confirmDelete": "Подтвердить удаление каталога {{input}}?",
   "notFound": "Нет файлов",
+  "home": "Корень",
   "table": {
     "id": "ID",
     "type": "Папка / файл",

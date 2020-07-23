@@ -83,7 +83,7 @@ export class FilesService {
     return nextCloud;
   };
 
-  getFolderFile = async (path: string, user: User, password: string): Promise<FilesFolder[]> =>
+  folder = async (path: string, user: User, password: string): Promise<FilesFolder[]> =>
     this.nextCloudAs(user, password)
       .getFolderFileDetails(path, [
         {
@@ -151,6 +151,11 @@ export class FilesService {
           namespaceShort: 'oc',
           element: 'owner-display-name',
         },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'size',
+        },
         // {
         //   namespace: 'http://owncloud.org/ns',
         //   namespaceShort: 'oc',
@@ -158,31 +163,33 @@ export class FilesService {
         // },
       ])
       .then((folders) =>
-        folders.map(
-          (f) =>
-            ({
-              id: f.extraProperties?.id,
-              fileId: f.extraProperties?.fileid,
-              creationDate:
-                f.creationDate && typeof f.creationDate === 'string' ? new Date(f.creationDate) : f.creationDate,
-              lastModified:
-                f.lastModified && typeof f.lastModified === 'string' ? new Date(f.lastModified) : f.lastModified,
-              size: f.size,
-              name: f.name,
-              type: f.type === 'directory' ? Folder.FOLDER : Folder.FILE,
-              mime: f.extraProperties?.getcontenttype,
-              etag: (f.extraProperties?.getetag as string).replace(/"/g, ''),
-              permissions: f.extraProperties?.permissions,
-              favorite: f.extraProperties?.favorite as number,
-              hasPreview: f.extraProperties?.['has-preview'] === 'true',
-              commentsUnread: f.extraProperties?.['comments-unread'] as number,
-              commentsCount: f.extraProperties?.['comments-count'] as number,
-              ownerId: f.extraProperties?.['owner-id'],
-              ownerDisplayName: f.extraProperties?.['owner-display-name'],
-              // resourceType: f.extraProperties?.resourcetype,
-              // shareTypes: f.extraProperties?.['share-types'],
-            } as FilesFolder),
-        ),
+        folders
+          .map(
+            (f) =>
+              ({
+                id: f.extraProperties?.id,
+                fileId: f.extraProperties?.fileid,
+                creationDate:
+                  f.creationDate && typeof f.creationDate === 'string' ? new Date(f.creationDate) : f.creationDate,
+                lastModified:
+                  f.lastModified && typeof f.lastModified === 'string' ? new Date(f.lastModified) : f.lastModified,
+                size: f.extraProperties?.['size'] || f.size,
+                name: f.name,
+                type: f.type === 'directory' ? Folder.FOLDER : Folder.FILE,
+                mime: f.extraProperties?.getcontenttype,
+                etag: (f.extraProperties?.getetag as string).replace(/"/g, ''),
+                permissions: f.extraProperties?.permissions,
+                favorite: f.extraProperties?.favorite as number,
+                hasPreview: f.extraProperties?.['has-preview'] === 'true',
+                commentsUnread: f.extraProperties?.['comments-unread'] as number,
+                commentsCount: f.extraProperties?.['comments-count'] as number,
+                ownerId: f.extraProperties?.['owner-id'],
+                ownerDisplayName: f.extraProperties?.['owner-display-name'],
+                // resourceType: f.extraProperties?.resourcetype,
+                // shareTypes: f.extraProperties?.['share-types'],
+              } as FilesFolder),
+          )
+          .filter((value) => value.name !== value.ownerId),
       );
 
   /**
@@ -200,14 +207,15 @@ export class FilesService {
       const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          this.cache.set(cachedID, await this.getFolderFile(path, user, password), this.ttl);
+          this.cache.set(cachedID, await this.folder(path, user, password), this.ttl);
         })();
 
         return cached;
       }
     }
 
-    const folder = await this.getFolderFile(path, user, password);
+    const folder = await this.folder(path, user, password);
+
     if (this.cache) {
       this.cache.set<FilesFolder[]>(cachedID, folder, this.ttl);
     }

@@ -9,32 +9,34 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { FILES_FOLDER_LIST, FILES_GET_FILE, FILES_DELETE_FILE, FILES_DELETE_FOLDER } from '@lib/queries';
-import { Data, FilesQueryProps, FilesFile, FolderDialogState, DropzoneFile, FilesFolder } from '@lib/types';
+import { Data, FilesFile, FolderDialogState, DropzoneFile, FilesFolder, FilesPath } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import FilesComponent from '@front/components/files';
+import { useRouter } from 'next/router';
 //#endregion
 
-const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const thePathArray = (path: string): FilesPath[] =>
+  path
+    ?.split('/')
+    .reduce((accumulator, element) => (element ? [...accumulator, element] : accumulator), [''] as FilesPath[]) || [''];
+
+const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
   const [showDropzone, setShowDropzone] = useState<boolean>(false);
   const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);
   const [folderDialog, setFolderDialog] = useState<FolderDialogState>({ pathname: '', name: '' });
   const [search, setSearch] = useState<string>('');
-  const [path, setPath] = useState<string>('/');
+  const [path, setPath] = useState<FilesPath[]>(query?.path ? thePathArray(query.path) : ['']);
+  const router = useRouter();
 
   const [
     getFolder,
     { data: dataFolderList, loading: loadingFolderList, error: errorFolderList, refetch: refetchFolderList },
-  ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>>(FILES_FOLDER_LIST);
-
-  useEffect(() => {
-    getFolder({
-      variables: {
-        value: { path },
-      },
-    });
-  }, [path]);
+  ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>, { path: string }>(FILES_FOLDER_LIST, {
+    // TODO: subscriptions
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [getFile, { error: errorGetFile }] = useMutation<
     Data<'getFile', FilesFile>,
@@ -45,14 +47,6 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     update(cache, fetch) {
       if (fetch?.data) {
         const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
-        // const data = query?.folder.filter((f) => f.id !== result);
-
-        // if (data) {
-        //   cache.writeQuery({
-        //     query: FILES_FOLDER_LIST,
-        //     data: { folder: data },
-        //   });
-        // }
       }
     },
   });
@@ -61,71 +55,26 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     update(cache, fetch) {
       if (fetch?.data) {
         const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
-        // const data = query?.folder.filter((f) => f.id !== result);
-
-        // if (data) {
-        //   cache.writeQuery({
-        //     query: FILES_FOLDER_LIST,
-        //     data: { folder: data },
-        //   });
-        // }
       }
     },
   });
 
-  /*
-  const handleUploadFile = (): void => {
-    attachments.forEach((file: DropzoneFile) => {
-      uploadFile({
-        variables: {
-          // ...updated,
-          attachment: file.file,
-          folder: folderName,
-        },
-      });
+  useEffect(() => {
+    // const pathString = path.reduce((accumulator, element) => `${accumulator}${element}/`, '');
+    const pathString = path.join('/');
+    router.push(router.route, `${router.route}${pathString}`);
+    getFolder({
+      variables: {
+        path: pathString,
+      },
     });
-  };
-
-  const handleOpenDropzone = (): void => {
-    setShowDropzone(true);
-  };
-
-  const handleCloseDropzone = (): void => {
-    setShowDropzone(false);
-    setAttachments([]);
-  };
-
-  const handleFolderDialogName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setFolderDialog({ ...folderDialog, name: event.currentTarget.value });
-  };
-
-  const handleAcceptFolderDialog = (type: number): void => {
-    if (type > 2) {
-      deleteFolder({
-        variables: { id: folderDialog.id },
-      });
-    } else {
-      const pathname = `${folderDialog.pathname}/${folderDialog.name}`;
-
-      editFolder({
-        variables: {
-          id: folderDialog.id,
-          pathname,
-          shared: pathname.startsWith(SHARED),
-        },
-      });
-    }
-
-    setOpenFolderDialog(0);
-  };
-
-  const handleCloseFolderDialog = (): void => {
-    setOpenFolderDialog(0);
-  };
- */
+  }, [path]);
 
   useEffect(() => {
     if (errorFolderList) {
+      path.pop();
+      setPath(path || ['']);
+
       snackbarUtils.error(errorFolderList);
     }
     if (errorDeleteFile) {
@@ -141,19 +90,36 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const folderRefetch = (): void => {
     if (refetchFolderList) {
-      refetchFolderList({ variables: { path } });
+      refetchFolderList({
+        path: path.join('/'),
+      });
     }
   };
 
-  const handleFolder = (filesFolder: FilesFolder): void => {
-    setPath(`${path}${filesFolder.name}/`);
+  const handleFolder = (filesFolder: FilesFolder | string): void => {
+    if (typeof filesFolder === 'string') {
+      setPath(thePathArray(filesFolder));
+    } else {
+      setPath([...path, filesFolder.name]);
+    }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.currentTarget.value);
   };
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const handleCheckbox = (filesFolder?: FilesFolder) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean,
+  ): void => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+
+    if (filesFolder) {
+      handleFolder(filesFolder);
+    }
+  };
+
   const handleDownload = (filesFolder: FilesFolder) => async (): Promise<void> => {
     const download = await getFile({ variables: { path: `${path}${filesFolder.name}`, options: { sync: true } } });
     const downloadURL = `${document.location.origin}/${download.data?.getFile.path}`;
@@ -191,6 +157,8 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           folderData={dataFolderList?.folderFiles}
           folderRefetch={folderRefetch}
           search={search}
+          path={path}
+          handleCheckbox={handleCheckbox}
           handleDrop={handleDrop}
           handleFolder={handleFolder}
           handleSearch={handleSearch}
@@ -215,7 +183,8 @@ const FilesPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   );
 };
 
-FilesPage.getInitialProps = () => ({
+FilesPage.getInitialProps = ({ query }) => ({
+  query,
   namespacesRequired: includeDefaultNamespaces(['files']),
 });
 

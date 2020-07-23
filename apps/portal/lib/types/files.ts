@@ -11,6 +11,8 @@ export interface FilesComponentProps {
   folderData?: FilesFolder[];
   folderRefetch: () => void;
   search: string;
+  path: FilesPath[];
+  handleCheckbox: (current?: FilesFolder) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
   handleFolder: (filesFolder: FilesFolder) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -70,31 +72,42 @@ export type FolderDialogState = {
   name: string;
 };
 
-export type FilesTableComponentProps = {
+export type FilesTableProps = {
   data: FilesFolder[];
   folderRefetch: () => void;
   search: string;
+  filesColumns: FilesColumn[];
+  path: FilesPath[];
+  handleCheckbox: (current?: FilesFolder) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
-  handleFolder: (filesFolder: FilesFolder) => void;
+  handleFolder: (filesFolder: FilesFolder | string) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolder) => () => void;
   handleDelete: (filesFolder: FilesFolder) => () => void;
 };
 
-export type FilesTableRow = {
-  header: FilesTableHeaderProps[];
-  current: FilesFolder;
-  handleRow: (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, current: FilesFolder) => void;
-};
+export type FilesPath = string;
 
 export type FilesColumnNames = 'id' | 'type' | 'name' | 'mime' | 'lastModified' | 'size';
 
-export type FilesTableHeaderProps = {
+export type FilesColumn = {
   label: FilesColumnNames;
   hidden: boolean;
   width?: number;
   colspan?: number;
   align?: string;
+};
+
+export type FilesTableHeaderProps = {
+  header: FilesColumn[];
+  handleCheckbox: (current?: FilesFolder) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+};
+
+export type FilesTableRowProps = {
+  header: FilesColumn[];
+  current: FilesFolder;
+  handleCheckbox: (current?: FilesFolder) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  handleRow: (event: React.MouseEvent<HTMLTableCellElement, MouseEvent>, current: FilesFolder) => void;
 };
 
 export interface FilesHeaderContextProps {

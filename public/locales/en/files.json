@@ -14,6 +14,7 @@
   "deleteFolder": "Delete Folder",
   "confirmDelete": "Confirm delete folder {{input}}?",
   "notFound": "Files not found",
+  "home": "Home",
   "table": {
     "id": "ID",
     "type": "Folder / File",

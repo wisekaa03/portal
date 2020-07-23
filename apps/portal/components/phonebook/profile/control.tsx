@@ -52,7 +52,7 @@ const PhonebookProfileControl: FC<PhonebookProfileControlProps> = ({
             <MenuList>
               <Wire>
                 {() => (
-                  <Link href={{ pathname: `/profile/edit`, query: { id } }} as={`/profile/edit/${id}`} passHref>
+                  <Link href={{ pathname: '/profile/edit', query: { id } }} as={`/profile/edit/${id}`} passHref>
                     <MenuItem>{t('phonebook:profile.edit')}</MenuItem>
                   </Link>
                 )}

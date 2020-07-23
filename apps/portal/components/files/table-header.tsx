@@ -18,12 +18,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '44px',
       maxWidth: '44px',
       minWidth: '44px',
+      paddingLeft: 0,
       paddingRight: 0,
     },
   }),
 );
 
-export const FileTableHeader: FC<{ header: FilesTableHeaderProps[] }> = ({ header }) => {
+export const FileTableHeader: FC<FilesTableHeaderProps> = ({ header, handleCheckbox }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
@@ -32,7 +33,7 @@ export const FileTableHeader: FC<{ header: FilesTableHeaderProps[] }> = ({ heade
       {(context) => (
         <TableRow>
           <TableCell className={classes.checkbox}>
-            <Checkbox inputProps={{ 'aria-label': 'primary checkbox' }} />
+            <Checkbox onChange={handleCheckbox()} inputProps={{ 'aria-label': 'primary checkbox' }} />
           </TableCell>
           {header.map((current) =>
             current.hidden ? null : (
