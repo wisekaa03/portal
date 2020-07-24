@@ -35,6 +35,7 @@ build_development:
   script:
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
+    - ./entrypoint.sh build
     - ./entrypoint.sh test -u || true
     - time yarn build
     - time yarn build:sync
@@ -60,6 +61,7 @@ build_production:
   script:
     - yarn install --production=false
     - cd apps/portal && npx next telemetry status && npx next telemetry disable && cd ../..
+    - ./entrypoint.sh build
     - ./entrypoint.sh test -u || true
     - time yarn build
     - time yarn build:sync
