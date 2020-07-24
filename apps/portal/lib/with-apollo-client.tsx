@@ -7,15 +7,8 @@ import { NextComponentType } from 'next';
 import { AppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
-import {
-  ApolloClient,
-  ApolloError,
-  from,
-  split,
-  ApolloLink,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from '@apollo/client';
+import { ApolloClient, ApolloError, from, split, ApolloLink, InMemoryCache } from '@apollo/client';
+import { NormalizedCacheObject } from '@apollo/client/cache';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
