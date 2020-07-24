@@ -36,6 +36,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>, { path: string }>(FILES_FOLDER_LIST, {
     // TODO: subscriptions
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   });
 
   const [getFile, { error: errorGetFile }] = useMutation<
