@@ -41,7 +41,8 @@ export default (
         domain,
         secure,
         // expires: false,
-        httpOnly,
+        // TODO:
+        // httpOnly,
         // в миллисекундах, 1000 * 60 - минута
         maxAge: configService.get<number>('SESSION_COOKIE_TTL'),
       },
