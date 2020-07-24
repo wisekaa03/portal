@@ -5,6 +5,8 @@ import clsx from 'clsx';
 import filesize from 'filesize';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { Button, Fab } from '@material-ui/core';
 import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,
@@ -30,6 +32,7 @@ import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import HomeIcon from '@material-ui/icons/Home';
+import AddIcon from '@material-ui/icons/Add';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -42,7 +45,6 @@ import RefreshButton from '@front/components/ui/refresh-button';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
 import { FileTableHeader } from './table-header';
-import Link from 'next/link';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -91,6 +93,23 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 0,
       width: '100%',
     },
+    breadcrumbs: {
+      fontSize: '2em',
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    },
+    breadcrumbsItem: {
+      'display': 'flex',
+      'border': 0,
+      'textDecoration': 'none',
+      '&:hover': {
+        textDecoration: 'none',
+        // background: fade(theme.palette.primary.main, 0.3),
+      },
+    },
+    breadcrumbsLast: {
+      width: '35px',
+      height: '35px',
+    },
   }),
 );
 
@@ -137,7 +156,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
         <Search value={search} handleChange={handleSearch} />
         <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
       </Box>
-      <Box display="flex" p={1}>
+      <Box display="flex" className={classes.breadcrumbs} p={1}>
         <Breadcrumbs aria-label="breadcrumbs">
           {path.map((element, index) => {
             const current = path.reduce(
@@ -152,12 +171,26 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                 as={`${router.route}${current}`}
                 passHref
               >
-                <MaterialLink onClick={() => handleFolder(path.slice(0, index + 1).join('/'))}>
-                  {element ? element : <HomeIcon />}
+                <MaterialLink
+                  className={classes.breadcrumbsItem}
+                  onClick={() => handleFolder(`${path.slice(0, index + 1).join('/')}/`)}
+                >
+                  {element ? element : <HomeIcon fontSize="large" />}
                 </MaterialLink>
               </Link>
             );
           })}
+          <Box className={classes.breadcrumbsItem}>
+            <Fab
+              size="small"
+              className={classes.breadcrumbsLast}
+              color="primary"
+              aria-label="add"
+              key="files-additional"
+            >
+              <AddIcon />
+            </Fab>
+          </Box>
         </Breadcrumbs>
       </Box>
       {filtered.length === 0 ? (

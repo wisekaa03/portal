@@ -61,7 +61,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   useEffect(() => {
     // const pathString = path.reduce((accumulator, element) => `${accumulator}${element}/`, '');
-    const pathString = path.join('/');
+    const pathString = `${path.join('/')}/`;
     router.push(router.route, `${router.route}${pathString}`);
     getFolder({
       variables: {

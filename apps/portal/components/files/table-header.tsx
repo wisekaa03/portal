@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: 0,
       paddingRight: 0,
     },
+    cell: {
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
+      background: 'rgba(106, 167, 200, 0.05)',
+    },
   }),
 );
 
@@ -44,7 +48,7 @@ export const FileTableHeader: FC<FilesTableHeaderProps> = ({ header, handleCheck
                 {...(current.width ? { style: { width: current.width } } : {})}
                 // component="div"
                 // scope="col"
-                // className={classes.cell}
+                className={classes.cell}
                 // style={cellStyle}
                 // sortDirection={
                 //   orderBy.field !== name ? false : (orderBy.direction.toLowerCase() as 'asc' | 'desc')
