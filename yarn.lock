@@ -118,6 +118,24 @@
     tslib "^1.10.0"
     zen-observable "^0.8.14"
 
+"@apollo/client@^3.1.0-pre.1":
+  version "3.1.0-pre.1"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.1.0-pre.1.tgz#a91119e9eff552839e7829318777bf0ddfee2519"
+  integrity sha512-Ahy2r8twlnBi1Nk6K+0eWj01REWTFsqUWpRB0CwbdG5YiYUc7fKTpv44uIc05ZvPr5G/3SJ4o/mQtseZEBl6/Q==
+  dependencies:
+    "@types/zen-observable" "^0.8.0"
+    "@wry/context" "^0.5.2"
+    "@wry/equality" "^0.2.0"
+    fast-json-stable-stringify "^2.0.0"
+    graphql-tag "^2.10.4"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.12.1"
+    prop-types "^15.7.2"
+    symbol-observable "^1.2.0"
+    ts-invariant "^0.4.4"
+    tslib "^1.10.0"
+    zen-observable "^0.8.14"
+
 "@apollo/federation@^0.17.0":
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/@apollo/federation/-/federation-0.17.0.tgz#549c3f8c8d5a33db28a4c628d8a9fb5430758c62"
@@ -4101,6 +4119,13 @@
   dependencies:
     tslib "^1.9.3"
 
+"@wry/equality@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.2.0.tgz#a312d1b6a682d0909904c2bcd355b02303104fb7"
+  integrity sha512-Y4d+WH6hs+KZJUC8YKLYGarjGekBrhslDbf/R20oV+AakHPINSitHfDRQz3EGcEWc1luXYNUvMhawWtZVWNGvQ==
+  dependencies:
+    tslib "^1.9.3"
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
@@ -4972,6 +4997,11 @@ attr-accept@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.1.0.tgz#a231a854385d36ff7a99647bb77b33c8a5175aee"
   integrity sha512-sLzVM3zCCmmDtDNhI0i96k6PUztkotSOXqE4kDGQt/6iDi5M+H0srjeF+QC6jN581l4X/Zq3Zu/tgcErEssavg==
+
+autobind-decorator@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
+  integrity sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
 
 autoprefixer@^9.7.2, autoprefixer@^9.8.0, autoprefixer@^9.8.5:
   version "9.8.5"
@@ -12266,17 +12296,19 @@ jmespath@^0.15.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
-jodit-react@^1.0.51:
-  version "1.0.51"
-  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.0.51.tgz#1f0b48bdb99879f84173c917409d057b94b3537f"
-  integrity sha512-3njMCCk2adDfWeLRaI1WUzyO0WHjy9Apbj+72PCXV13FH6fesbZcNBTVx5KdGONAVvZBk5fTMIFo76AU4mHSLQ==
+jodit-react@^1.0.53:
+  version "1.0.53"
+  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.0.53.tgz#d549879974eb53dace2588b3568ef7f9b5780cab"
+  integrity sha512-Jaj1ULn9x/2fNj0T4Ph2IB9jVIojDIUSjPt+5D0bgHf+ApHwLAEdW+wCbejXfC6I0nVw8ZBHr9Zc3Kogc7BvMA==
   dependencies:
-    jodit "^3.4.14"
+    jodit "^3.4.15"
 
-jodit@^3.4.14:
-  version "3.4.14"
-  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.14.tgz#c811ecc807d689f39b28ba1bbf80d9d7a69e0d17"
-  integrity sha512-Mxf3MPr9P+FO8zyRcC4FUJMeGjPMSBenuM5KkB7ZBB1A+2TXDhzq6ACJ6sTXU6u4xWw358zKoBuaARNfdwbcVw==
+jodit@^3.4.15:
+  version "3.4.15"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.15.tgz#0d1d1247a317bee7dfe75ff11595d18f0b474c4f"
+  integrity sha512-Rx0+pUimP9BmnSW2qNHh/FQFfpSVobTVhc1IxlIix5/tFvo5Zscp+vr5OoBOM2Gvx2I2Ixt4E5vQBlVDgke1BA==
+  dependencies:
+    autobind-decorator "^2.4.0"
 
 joycon@^2.2.5:
   version "2.2.5"
@@ -15004,9 +15036,9 @@ parse-json@^4.0.0:
     json-parse-better-errors "^1.0.1"
 
 parse-json@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-5.0.0.tgz#73e5114c986d143efa3712d4ea24db9a4266f60f"
-  integrity sha512-OOY5b7PAEFV0E2Fir1KOkxchnZNCdowAJgQ5NuxjpBKTRP3pQhwkrkxqQjeoKJ+fO7bCpmIZaogI4eZGDMEGOw==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-5.0.1.tgz#7cfe35c1ccd641bce3981467e6c2ece61b3b3878"
+  integrity sha512-ztoZ4/DYeXQq4E21v169sC8qWINGpcosGv9XhTDvg9/hWvx/zrFkc9BiWxR58OJLHGk28j5BL0SDLeV2WmFZlQ==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     error-ex "^1.3.1"

@@ -5,7 +5,8 @@
 import { AppContext, AppInitialProps } from 'next/app';
 import { DocumentContext, DocumentInitialProps } from 'next/document';
 // import { GraphQLSchema } from 'graphql/type/schema';
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
+import { NormalizedCacheObject } from '@apollo/client/cache';
 //#endregion
 //#region Imports Local
 import { UserContext } from './user.dto';
