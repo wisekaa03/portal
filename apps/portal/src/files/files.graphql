@@ -38,3 +38,7 @@ type Mutation {
   putFile(path: String!, file: Upload!): Boolean!
   getFile(path: String!, options: FilesOptions): FilesFile!
 }
+
+type Subscription {
+  folderFilesSubscription(path: String): [FilesFolder]
+}

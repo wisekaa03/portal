@@ -1,9 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { Resolver, Query, Mutation, Args, registerEnumType } from '@nestjs/graphql';
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
-// import { Request } from 'express';
+import { Resolver, Subscription, Query, Mutation, Args, registerEnumType } from '@nestjs/graphql';
+import { Inject, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
@@ -27,6 +27,7 @@ export class FilesResolver {
     @InjectPinoLogger(FilesResolver.name) private readonly logger: PinoLogger,
     private readonly filesService: FilesService,
     private readonly userService: UserService,
+    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
   ) {}
 
   /**
@@ -90,5 +91,16 @@ export class FilesResolver {
     }
 
     return this.filesService.getFile(path, user, password, options);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('folderFilesSubscription', {
+    filter: (payload, variables) => {
+      // TODO: сделать чтобы по пользакам отбиралось
+      return payload.path === variables.path;
+    },
+  })
+  folderFilesSubscription(): AsyncIterator<unknown, FilesFolder[], undefined> {
+    return this.pubSub.asyncIterator('folderFilesSubscription');
   }
 }

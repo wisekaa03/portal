@@ -20,6 +20,9 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
+import sessionRedis from '@back/shared/session-redis';
+import session from '@back/shared/session';
+
 import { User } from '@lib/types';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
@@ -45,10 +48,7 @@ import { FilesModule } from '@back/files/files.module';
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { pinoOptions } from '@back/shared/pino.options';
 
-import sessionRedis from '@back/shared/session-redis';
-import session from '@back/shared/session';
-
-import { PingPongResolvers } from './ping.resolver';
+import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 //#endregion
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
@@ -262,6 +262,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region Controllers module
     ControllersModule,
     //#endregion
+
+    SubscriptionsModule,
   ],
 
   providers: [
@@ -281,23 +283,6 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //   useClass: GraphQLInterceptor,
     // },
     //#endregion
-
-    PingPongResolvers,
-    {
-      provide: 'PUB_SUB',
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const host = configService.get<string>('HTTP_REDIS_URI')?.replace(/^redis:\/\/(.*?):(\d+)\/(\d+)$/, '$1');
-        const redisOptions = {
-          host,
-        };
-
-        return new RedisPubSub({
-          publisher: new Redis(redisOptions),
-          subscriber: new Redis(redisOptions),
-        });
-      },
-    },
   ],
 })
 export class AppModule {}

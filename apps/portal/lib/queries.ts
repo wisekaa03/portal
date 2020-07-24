@@ -329,6 +329,29 @@ export const NEWS_DELETE = gql`
  * MEDIA
  */
 
+export const FOLDER_FILES_SUBSCRIPTION = gql`
+  subscription FolderFilesSubscription($path: String) {
+    folderFilesSubscription(path: $path) {
+      id
+      fileId
+      creationDate
+      lastModified
+      type
+      size
+      name
+      mime
+      permissions
+      etag
+      favorite
+      hasPreview
+      commentsUnread
+      commentsCount
+      ownerId
+      ownerDisplayName
+    }
+  }
+`;
+
 export const FILES_FOLDER_LIST = gql`
   query FolderFiles($path: String) {
     folderFiles(path: $path) {

@@ -8,7 +8,13 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { FILES_FOLDER_LIST, FILES_GET_FILE, FILES_DELETE_FILE, FILES_DELETE_FOLDER } from '@lib/queries';
+import {
+  FILES_FOLDER_LIST,
+  FOLDER_FILES_SUBSCRIPTION,
+  FILES_GET_FILE,
+  FILES_DELETE_FILE,
+  FILES_DELETE_FOLDER,
+} from '@lib/queries';
 import { Data, FilesFile, FolderDialogState, DropzoneFile, FilesFolder, FilesPath } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
@@ -32,7 +38,13 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const [
     getFolder,
-    { data: dataFolderList, loading: loadingFolderList, error: errorFolderList, refetch: refetchFolderList },
+    {
+      data: dataFolderList,
+      loading: loadingFolderList,
+      error: errorFolderList,
+      refetch: refetchFolderList,
+      subscribeToMore: folderListSubscribe,
+    },
   ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>, { path: string }>(FILES_FOLDER_LIST, {
     // TODO: subscriptions
     fetchPolicy: 'cache-and-network',
@@ -64,11 +76,19 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     // const pathString = path.reduce((accumulator, element) => `${accumulator}${element}/`, '');
     const pathString = `${path.join('/')}/`;
     router.push(router.route, `${router.route}${pathString}`);
-    getFolder({
-      variables: {
-        path: pathString,
-      },
-    });
+    if (getFolder) {
+      getFolder({
+        variables: {
+          path: pathString,
+        },
+      });
+    }
+    if (folderListSubscribe) {
+      folderListSubscribe({
+        document: FOLDER_FILES_SUBSCRIPTION,
+        variables: { path: pathString },
+      });
+    }
   }, [path]);
 
   useEffect(() => {

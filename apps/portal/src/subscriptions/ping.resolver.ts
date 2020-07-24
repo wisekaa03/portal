@@ -6,7 +6,7 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 //#endregion
 //#region Imports Local
-import { GqlAuthGuard } from './guards/gqlauth.guard';
+import { GqlAuthGuard } from '../guards/gqlauth.guard';
 //#endregion
 
 const PONG_EVENT_NAME = 'pong';

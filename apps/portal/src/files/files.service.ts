@@ -4,7 +4,8 @@
 import fs from 'fs';
 import { resolve } from 'path';
 import { tmpNameSync } from 'tmp';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
@@ -33,6 +34,7 @@ export class FilesService {
   constructor(
     @InjectPinoLogger(FilesService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService, // private readonly userService: UserService,
+    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
   ) {
     this.staticFolder = resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/tmp');
     this.staticFolderURL = 'tmp';
@@ -213,20 +215,27 @@ export class FilesService {
       const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          this.cache.set(cachedID, await this.folder(path, lastPath, user, password), this.ttl);
+          const folderFilesSubscription = await this.folder(path, lastPath, user, password);
+          this.pubSub.publish('folderFilesSubscription', {
+            user: user.loginIdentificator,
+            path,
+            folderFilesSubscription,
+          });
+          this.cache.set(cachedID, folderFilesSubscription, this.ttl);
         })();
 
         return cached;
       }
     }
 
-    const folder = await this.folder(path, lastPath, user, password);
+    const folderFilesSubscription = await this.folder(path, lastPath, user, password);
+    this.pubSub.publish('folderFilesSubscription', { user: user.loginIdentificator, path, folderFilesSubscription });
 
     if (this.cache) {
-      this.cache.set<FilesFolder[]>(cachedID, folder, this.ttl);
+      this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, this.ttl);
     }
 
-    return folder;
+    return folderFilesSubscription;
   };
 
   /**
