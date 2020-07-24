@@ -16,10 +16,11 @@ export default (
   secure: boolean,
 ): Express.RequestHandler => {
   try {
-    const DEV = configService.get<boolean>('DEVELOPMENT');
+    // const DEV = configService.get<boolean>('DEVELOPMENT');
+    const DEV = true;
     const domain = DEV ? undefined : `.${configService.get<string>('DOMAIN')}`;
     // const httpOnly = !DEV;
-    const httpOnly = true;
+    const httpOnly = false;
 
     const sess = Session({
       secret: configService.get<string>('SESSION_SECRET'),
@@ -41,8 +42,7 @@ export default (
         domain,
         secure,
         // expires: false,
-        // TODO:
-        // httpOnly,
+        httpOnly,
         // в миллисекундах, 1000 * 60 - минута
         maxAge: configService.get<number>('SESSION_COOKIE_TTL'),
       },
