@@ -202,7 +202,11 @@ export class FilesService {
   folderFiles = async (user: User, password: string, path = '/', cache = true): Promise<FilesFolder[]> => {
     this.logger.info(`Files entity: path={${path}}`);
 
-    const lastPath = path === '/' ? this.translateToNextCloud(user.loginIdentificator) : path.split('/').pop() || '';
+    const lastPath =
+      path === '/' || path === ''
+        ? this.translateToNextCloud(user.loginIdentificator).slice(4)
+        : (path.slice(-1) === '/' ? path.slice(0, -1).split('/').pop() : path.split('/').pop()) ||
+          this.translateToNextCloud(user.loginIdentificator).slice(4);
 
     const cachedID = `${user.loginIdentificator}-f-${path}`;
     if (this.cache && cache) {
