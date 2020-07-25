@@ -3,7 +3,7 @@
 //#region Imports NPM
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import { Inject } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql/type/schema';
 import { Logger } from 'nestjs-pino';
