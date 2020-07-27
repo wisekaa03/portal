@@ -66,13 +66,13 @@ const ProfileProvider: React.FC<{
 
           return null;
         }
-      } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
-        const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
+        // } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
+        //   const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
 
-        ctx.res.statusCode = 303;
-        ctx.res.setHeader('Location', location);
+        //   ctx.res.statusCode = 303;
+        //   ctx.res.setHeader('Location', location);
 
-        return null;
+        //   return null;
       }
     }
   } else {
