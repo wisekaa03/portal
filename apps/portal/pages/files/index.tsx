@@ -87,10 +87,10 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   useEffect(() => {
     if (!loadingFolderList && folderListSubscribe) {
       const pathString = `${path.join('/')}/`;
-      folderListSubscribe({
-        document: FOLDER_FILES_SUBSCRIPTION,
-        variables: { path: pathString },
-      });
+      // folderListSubscribe({
+      //   document: FOLDER_FILES_SUBSCRIPTION,
+      //   variables: { path: pathString },
+      // });
     }
   }, [loadingFolderList, folderListSubscribe, path]);
 
