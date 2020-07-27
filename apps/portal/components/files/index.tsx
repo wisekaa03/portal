@@ -94,66 +94,21 @@ const FilesComponent: FC<FilesComponentProps> = ({
   return (
     <Box display="flex" flexDirection="column">
       <Loading activate={folderLoading} noMargin type="linear" variant="indeterminate">
-        <>
-          {/* <Box display="flex" flexDirection="column" pt={2} px={2} pb={1} overflow="auto">
-            <Box display="flex" mb={1}>
-              <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-                <Button onClick={handleUploadFile}>{t(`media:${current ? 'edit' : 'add'}`)}</Button>
-              </Box>
-            </Box>
-          </Box> */}
-          {/* showDropzone && (
-            <Box display="flex" className={classes.dropBox} flexDirection="column">
-              <Box className={classes.dropBoxActions}>
-                <Button disabled={attachments.length === 0}>{t('common:accept')}</Button>
-                <Button actionType="cancel" onClick={handleCloseDropzone}>
-                  {t('common:cancel')}
-                </Button>
-              </Box>
-              <Dropzone files={attachments} setFiles={setAttachments} color="secondary" />
-            </Box>
-          )}
-          <IsAdmin>
-            {!showDropzone && (
-              <Fab color="secondary" className={classes.fab} aria-label="add" onClick={handleOpenDropzone}>
-                <AddIcon />
-              </Fab>
-            )}
-          </IsAdmin>
+        {folderData && (
           <FilesTableComponent
-            data={fileData}
-            refetchData={fileRefetch}
+            path={path}
+            data={folderData}
+            folderRefetch={folderRefetch}
             search={search}
+            filesColumns={filesColumns}
+            handleCheckbox={handleCheckbox}
+            handleDrop={handleDrop}
+            handleFolder={handleFolder}
             handleSearch={handleSearch}
             handleDownload={handleDownload}
             handleDelete={handleDelete}
-            />*/}
-          {/*<Box display="flex" className={classes.dropBox} flexDirection="column">*/}
-          {/*<FilesTreeComponent data={folderData} />*/}
-          {/*<FilesDialogComponent
-                  open={openFolderDialog}
-                  handleClose={handleCloseFolderDialog}
-                  input={folderDialogName}
-                  handleInput={handleFolderDialogName}
-                  handleAccept={handleAcceptFolderDialog}
-                />*/}
-          {/*</Box>*/}
-          {folderData && (
-            <FilesTableComponent
-              path={path}
-              data={folderData}
-              folderRefetch={folderRefetch}
-              search={search}
-              filesColumns={filesColumns}
-              handleCheckbox={handleCheckbox}
-              handleDrop={handleDrop}
-              handleFolder={handleFolder}
-              handleSearch={handleSearch}
-              handleDownload={handleDownload}
-              handleDelete={handleDelete}
-            />
-          )}
-        </>
+          />
+        )}
       </Loading>
     </Box>
   );

@@ -73,16 +73,6 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   });
 
   useEffect(() => {
-    if (folderListSubscribe) {
-      const pathString = `${path.join('/')}/`;
-      folderListSubscribe({
-        document: FOLDER_FILES_SUBSCRIPTION,
-        variables: { path: pathString },
-      });
-    }
-  }, [folderListSubscribe, path]);
-
-  useEffect(() => {
     if (getFolder) {
       const pathString = `${path.join('/')}/`;
       router.push(router.route, `${router.route}${pathString}`);
@@ -93,6 +83,16 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       });
     }
   }, [getFolder, path]);
+
+  useEffect(() => {
+    if (!loadingFolderList && folderListSubscribe) {
+      const pathString = `${path.join('/')}/`;
+      folderListSubscribe({
+        document: FOLDER_FILES_SUBSCRIPTION,
+        variables: { path: pathString },
+      });
+    }
+  }, [loadingFolderList, folderListSubscribe, path]);
 
   useEffect(() => {
     if (errorFolderList) {
