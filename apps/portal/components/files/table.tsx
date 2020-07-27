@@ -204,7 +204,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
           <AutoSizer disableWidth>
             {({ height }) => (
               <Paper elevation={0}>
-                <TableContainer style={{ height: height - 90 - 35 - theme.spacing(2) }}>
+                <TableContainer style={{ height: height - 79 - theme.spacing(2) }}>
                   <Table stickyHeader>
                     <TableHead>
                       <FileTableHeader handleCheckbox={handleCheckbox} header={filesColumns} />
@@ -222,7 +222,8 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <Dropzone className={classes.dropzone} setFiles={setFiles} files={files} mode="compact" border="top" />
+                {/* <Dropzone className={classes.dropzone} setFiles={setFiles}
+                    files={files} mode="compact" border="top" /> */}
               </Paper>
             )}
           </AutoSizer>
