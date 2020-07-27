@@ -61,7 +61,7 @@ async function bootstrap(): Promise<void> {
     }
     // eslint-disable-next-line no-empty
   } catch (error) {
-    logger.error(
+    logger.warn(
       'There are no files "private.crt", "private.key" in "secure" directory."',
       error.toString(),
       'Bootstrap',
