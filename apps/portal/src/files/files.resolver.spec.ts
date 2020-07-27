@@ -25,6 +25,10 @@ describe(FilesResolver.name, () => {
       providers: [
         ConfigService,
         FilesResolver,
+        {
+          provide: 'PUB_SUB',
+          useValue: serviceMock,
+        },
         { provide: FilesService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
       ],

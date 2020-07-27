@@ -27,6 +27,10 @@ describe('FilesService', () => {
       providers: [
         ConfigService,
         FilesService,
+        {
+          provide: 'PUB_SUB',
+          useValue: serviceMock,
+        },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
       ],
