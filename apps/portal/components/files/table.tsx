@@ -7,7 +7,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Button, Fab } from '@material-ui/core';
-import { fade, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
+import { fade, darken, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,
   Paper,
@@ -101,9 +101,10 @@ const useStyles = makeStyles((theme: Theme) =>
       'display': 'flex',
       'border': 0,
       'textDecoration': 'none',
+      'color': '#6AA7C8',
       '&:hover': {
         textDecoration: 'none',
-        // background: fade(theme.palette.primary.main, 0.3),
+        color: darken('#6AA7C8', 0.2),
       },
     },
     breadcrumbsLast: {

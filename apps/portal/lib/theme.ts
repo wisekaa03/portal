@@ -1,6 +1,6 @@
 /** @format */
 
-import { fade, createMuiTheme, Theme } from '@material-ui/core/styles';
+import { fade, darken, createMuiTheme, Theme } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import {
   RobotoLightCyr,
@@ -182,6 +182,14 @@ export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) =>
     MuiInputLabel: {
       root: {
         color: `${fade('#31312F', 0.5)}!important`,
+      },
+    },
+    MuiFab: {
+      primary: {
+        'backgroundColor': '#6AA7C8',
+        '&:hover': {
+          backgroundColor: darken('#6AA7C8', 0.2),
+        },
       },
     },
     MuiCard: {
