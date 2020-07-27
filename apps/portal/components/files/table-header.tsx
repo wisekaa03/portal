@@ -36,7 +36,7 @@ export const FileTableHeader: FC<FilesTableHeaderProps> = ({ header, handleCheck
       {(context) => (
         <TableRow>
           <TableCell className={classes.checkbox}>
-            <Checkbox onChange={handleCheckbox()} inputProps={{ 'aria-label': 'primary checkbox' }} />
+            <Checkbox onChange={handleCheckbox} inputProps={{ 'aria-label': 'primary checkbox' }} />
           </TableCell>
           {header.map((current) =>
             current.hidden ? null : (

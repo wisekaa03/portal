@@ -32,3 +32,7 @@ export interface FilesFolder extends Omit<FileDetails, 'isDirectory' | 'isFile' 
   // resourceType?: string;
   // shareTypes?: string;
 }
+
+export interface FilesFolderChk extends FilesFolder {
+  checked: boolean;
+}

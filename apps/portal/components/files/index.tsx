@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const filesColumns: FilesColumn[] = [
+  { label: 'checked', colspan: 1, hidden: true },
   { label: 'id', colspan: 1, hidden: true },
   { label: 'type', colspan: 1, hidden: true },
   { label: 'name', colspan: 2, hidden: false },

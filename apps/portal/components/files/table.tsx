@@ -37,7 +37,7 @@ import AddIcon from '@material-ui/icons/Add';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-import { FilesTableProps, Folder, FilesFolder, DropzoneFile } from '@lib/types';
+import { FilesTableProps, Folder, FilesFolder, FilesFolderChk, DropzoneFile } from '@lib/types';
 import Dropzone from '@front/components/dropzone';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
@@ -132,7 +132,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
-  const [detail, setDetail] = useState<FilesFolder | null>(null);
+  const [detail, setDetail] = useState<FilesFolderChk | null>(null);
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const router = useRouter();
 
@@ -141,7 +141,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
     setDetail(null);
   };
 
-  const handleRow = (event: React.MouseEvent<HTMLTableCellElement, MouseEvent>, element: FilesFolder): void => {
+  const handleRow = (event: React.MouseEvent<HTMLTableCellElement, MouseEvent>, element: FilesFolderChk): void => {
     if (element.type === Folder.FILE) {
       setDetail(element);
       setOpen(true);
@@ -207,14 +207,15 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                 <TableContainer style={{ height: height - 79 - theme.spacing(2) }}>
                   <Table stickyHeader>
                     <TableHead>
-                      <FileTableHeader handleCheckbox={handleCheckbox} header={filesColumns} />
+                      <FileTableHeader handleCheckbox={handleCheckbox(filtered)} header={filesColumns} />
                     </TableHead>
                     <TableBody>
-                      {filtered.map((current: FilesFolder) => (
+                      {filtered.map((current: FilesFolderChk, index) => (
                         <FileTableRow
                           key={current.id}
                           header={filesColumns}
                           current={current}
+                          index={index}
                           handleCheckbox={handleCheckbox}
                           handleRow={handleRow}
                         />
@@ -233,7 +234,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                 <Box display="grid" gridGap={16}>
                   <Box display="flex" justifyContent="center">
                     <FilesListType
-                      type={detail.type}
+                      current={detail}
                       className={clsx(classes.fileIcon, classes.absolute)}
                       fontSize="large"
                     />

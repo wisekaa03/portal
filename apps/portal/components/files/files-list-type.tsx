@@ -7,12 +7,12 @@ import FolderIcon from '@material-ui/icons/Folder';
 import FileIcon from '@material-ui/icons/DescriptionRounded';
 //#endregion
 //#region Imports Local
-import { Folder } from '@lib/types/files.interface';
+import { FilesFolder } from '@lib/types/files.interface';
 //#endregion
 
 interface FilesListType extends SvgIconProps {
-  type: Folder;
+  current: FilesFolder;
 }
 
-export const FilesListType: FC<FilesListType> = ({ type, ...rest }) =>
-  type === 'FOLDER' ? <FolderIcon {...rest} /> : <FileIcon {...rest} />;
+export const FilesListType: FC<FilesListType> = ({ current, ...rest }) =>
+  current.type === 'FOLDER' ? <FolderIcon {...rest} /> : <FileIcon {...rest} />;

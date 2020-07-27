@@ -1,8 +1,8 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useEffect, useState } from 'react';
-// import { useRouter } from 'next/router';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useMutation, useLazyQuery } from '@apollo/client';
 //#endregion
@@ -15,11 +15,10 @@ import {
   FILES_DELETE_FILE,
   FILES_DELETE_FOLDER,
 } from '@lib/queries';
-import { Data, FilesFile, FolderDialogState, DropzoneFile, FilesFolder, FilesPath } from '@lib/types';
+import { Data, FilesFile, FolderDialogState, DropzoneFile, FilesFolder, FilesPath, FilesFolderChk } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import FilesComponent from '@front/components/files';
-import { useRouter } from 'next/router';
 //#endregion
 
 const thePathArray = (path: string): FilesPath[] =>
@@ -28,11 +27,12 @@ const thePathArray = (path: string): FilesPath[] =>
     .reduce((accumulator, element) => (element ? [...accumulator, element] : accumulator), [''] as FilesPath[]) || [''];
 
 const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
-  const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
-  const [showDropzone, setShowDropzone] = useState<boolean>(false);
-  const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);
-  const [folderDialog, setFolderDialog] = useState<FolderDialogState>({ pathname: '', name: '' });
+  // const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
+  // const [showDropzone, setShowDropzone] = useState<boolean>(false);
+  // const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);
+  // const [folderDialog, setFolderDialog] = useState<FolderDialogState>({ pathname: '', name: '' });
   const [search, setSearch] = useState<string>('');
+  const [filesFolder, setFilesFolder] = useState<FilesFolderChk[]>([]);
   const [path, setPath] = useState<FilesPath[]>(query?.path ? thePathArray(query.path) : ['']);
   const router = useRouter();
 
@@ -132,15 +132,16 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     setSearch(event.currentTarget.value);
   };
 
-  const handleCheckbox = (filesFolder?: FilesFolder) => (
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const handleCheckbox = (ff: number | FilesFolderChk[]) => (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean,
   ): void => {
-    // eslint-disable-next-line no-debugger
-    debugger;
-
-    if (filesFolder) {
-      handleFolder(filesFolder);
+    if (Array.isArray(ff)) {
+      setFilesFolder(filesFolder.map((element) => ({ ...element, checked })));
+    } else {
+      filesFolder[ff].checked = checked;
+      setFilesFolder(filesFolder);
     }
   };
 
@@ -170,6 +171,16 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     debugger;
   };
 
+  useEffect(() => {
+    const state =
+      dataFolderList && Array.isArray(dataFolderList.folderFiles)
+        ? dataFolderList.folderFiles.map((element) => ({ ...element, checked: false }))
+        : [];
+    if (state) {
+      setFilesFolder(state);
+    }
+  }, [dataFolderList, setFilesFolder]);
+
   return (
     <>
       <Head>
@@ -178,7 +189,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       <MaterialUI {...rest}>
         <FilesComponent
           folderLoading={loadingFolderList}
-          folderData={dataFolderList?.folderFiles}
+          folderData={filesFolder}
           folderRefetch={folderRefetch}
           search={search}
           path={path}

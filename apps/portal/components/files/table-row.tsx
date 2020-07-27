@@ -11,7 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-import { FilesTableRowProps, FilesFolder } from '@lib/types';
+import { FilesTableRowProps } from '@lib/types';
 import { FilesListType } from './files-list-type';
 //#endregion
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const FileTableRow: FC<FilesTableRowProps> = ({ header, current, handleCheckbox, handleRow }) => {
+export const FileTableRow: FC<FilesTableRowProps> = ({ header, current, index, handleCheckbox, handleRow }) => {
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
 
@@ -46,10 +46,14 @@ export const FileTableRow: FC<FilesTableRowProps> = ({ header, current, handleCh
   return (
     <TableRow ref={dragRef} hover tabIndex={-1}>
       <TableCell className={classes.checkbox}>
-        <Checkbox onChange={handleCheckbox(current)} inputProps={{ 'aria-label': 'primary checkbox' }} />
+        <Checkbox
+          checked={current.checked}
+          onChange={handleCheckbox(index)}
+          inputProps={{ 'aria-label': 'primary checkbox' }}
+        />
       </TableCell>
       <TableCell width={10} onClick={(event) => handleRow(event, current)}>
-        <FilesListType type={current.type} className={classes.fileIcon} />
+        <FilesListType current={current} className={classes.fileIcon} />
       </TableCell>
       <TableCell onClick={(event) => handleRow(event, current)}>{current.name}</TableCell>
       <TableCell onClick={(event) => handleRow(event, current)}>
