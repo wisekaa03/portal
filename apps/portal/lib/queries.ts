@@ -2,8 +2,7 @@
 /* eslint max-len:0 */
 
 //#region Imports NPM
-import gql from 'graphql-tag';
-import { DocumentNode } from 'graphql';
+import { gql, DocumentNode } from '@apollo/client';
 //#endregion
 //#region  Imports Local
 import { TASK_STATUSES } from './constants';

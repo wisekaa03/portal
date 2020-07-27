@@ -21,7 +21,7 @@ export class DateScalar implements CustomScalar<number, Date> {
     return value ? value.getTime() : null;
   }
 
-  parseLiteral(ast: ValueNode, _variables: Maybe<{ [key: string]: any }>): Date | null {
+  parseLiteral(ast: ValueNode, _variables: Maybe<{ [key: string]: string | number }>): Date | null {
     if (ast.kind === Kind.STRING || ast.kind === Kind.INT) {
       return new Date(ast.value);
     }

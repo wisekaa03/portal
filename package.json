@@ -120,7 +120,6 @@
     "graphql": "^15.3.0",
     "graphql-redis-subscriptions": "^2.2.1",
     "graphql-subscriptions": "^1.1.0",
-    "graphql-tag": "^2.10.4",
     "helmet": "^3.23.3",
     "i18next": "^19.6.3",
     "i18next-browser-languagedetector": "^5.0.0",

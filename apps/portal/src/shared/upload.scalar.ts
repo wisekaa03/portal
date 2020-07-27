@@ -10,18 +10,18 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 //#endregion
 
 @Scalar('Upload')
-export class Upload implements CustomScalar<any, any> {
+export class Upload implements CustomScalar<unknown, unknown> {
   description = 'Upload custom scalar type';
 
-  parseValue(value: any): any {
+  parseValue(value: unknown): unknown {
     return GraphQLUpload.parseValue(value);
   }
 
-  serialize(value: any): any {
+  serialize(value: unknown): unknown {
     return GraphQLUpload.serialize(value);
   }
 
-  parseLiteral(ast: ValueNode, variables: Maybe<{ [key: string]: any }>): any {
+  parseLiteral(ast: ValueNode, variables: Maybe<{ [key: string]: unknown }>): unknown {
     return GraphQLUpload.parseLiteral(ast, variables);
   }
 }
