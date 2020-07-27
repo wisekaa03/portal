@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     breadcrumbs: {
-      fontSize: '2em',
+      fontSize: '1.2em',
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     breadcrumbsItem: {
@@ -108,8 +108,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     breadcrumbsLast: {
-      width: '35px',
-      height: '35px',
+      width: '26px',
+      height: '26px',
+      minHeight: '26px',
     },
   }),
 );
@@ -176,7 +177,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                   className={classes.breadcrumbsItem}
                   onClick={() => handleFolder(`${path.slice(0, index + 1).join('/')}/`)}
                 >
-                  {element ? element : <HomeIcon fontSize="large" />}
+                  {element ? element : <HomeIcon fontSize="small" />}
                 </MaterialLink>
               </Link>
             );
