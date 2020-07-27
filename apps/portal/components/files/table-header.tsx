@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cell: {
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      background: 'rgba(106, 167, 200, 0.05)',
     },
   }),
 );

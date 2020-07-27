@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       zIndex: theme.zIndex.drawer + 1,
-      backgroundColor: '#F5FDFF',
+      // backgroundColor: '#F5FDFF',
       backgroundSize: 'cover',
     },
     toolbar: {

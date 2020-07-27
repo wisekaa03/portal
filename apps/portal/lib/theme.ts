@@ -253,12 +253,20 @@ export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) =>
       root: {
         padding: theme.spacing(),
       },
+      stickyHeader: {
+        backgroundColor: '#F5FDFF',
+      },
     },
     MuiListItem: {
       root: {
         '&$selected, &$selected:hover': {
           backgroundColor: 'rgba(146, 159, 183, 0.3)',
         },
+      },
+    },
+    MuiAppBar: {
+      colorPrimary: {
+        backgroundColor: '#F5FDFF',
       },
     },
   };
