@@ -11,7 +11,7 @@ export interface ServicesWrapperProps {
   contentRef: React.Ref<any>;
   serviceRef: React.Ref<HTMLSelectElement>;
   subjectRef: React.Ref<HTMLInputElement>;
-  bodyRef: React.Ref<Component<Record<string, any>, Record<string, any>, any>>;
+  bodyRef: React.Ref<HTMLTextAreaElement>;
   currentTab: number;
   task: ServicesTaskProps;
   created: ServicesCreatedProps;

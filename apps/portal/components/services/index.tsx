@@ -1,12 +1,13 @@
 /** @format */
 
 //#region Imports NPM
+import clsx from 'clsx';
 import React, { FC, useRef, useCallback, useMemo } from 'react';
+import dynamic from 'next/dynamic';
+import SwipeableViews from 'react-swipeable-views';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField, Typography } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
-import SwipeableViews from 'react-swipeable-views';
-import clsx from 'clsx';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -15,7 +16,6 @@ import { ServicesWrapperProps, ServicesFavoriteProps, UserSettingsTaskFavorite }
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
-import JoditEditor from '@front/components/jodit';
 import Dropzone from '@front/components/dropzone';
 import { Icon } from '@front/components/ui/icon';
 import ServicesSuccess from './success';
@@ -23,6 +23,8 @@ import ServicesElement from './element';
 import ServicesElementFavorites from './element.favorites';
 import ServicesError from './error';
 //#endregion
+
+const JoditEditor = dynamic(() => import('@front/components/jodit'), { ssr: false });
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -384,7 +386,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     />
                   </FormControl>
                   <FormControl className={clsx(classes.formControl, classes.jodit)} variant="outlined">
-                    <JoditEditor ref={bodyRef} value={body} onBlur={setBody} disabled={!enableBody} />
+                    <JoditEditor ref={bodyRef} id="services" value={body} onBlur={setBody} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     <Dropzone files={files} setFiles={setFiles} />

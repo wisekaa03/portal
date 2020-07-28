@@ -65,7 +65,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
   const subjectRef = useRef<HTMLInputElement>(null);
-  const bodyRef = useRef<Component<Record<string, any>, Record<string, any>, any>>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   const handleService = useCallback(
     async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {

@@ -27,6 +27,9 @@ import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { changeFontSize } from '@lib/font-size';
 import getRedirect from '@lib/get-redirect';
+
+// Jodit
+import 'jodit/build/jodit.min.css';
 //#endregion
 
 /**

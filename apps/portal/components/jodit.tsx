@@ -1,11 +1,19 @@
 /** @format */
 
 //#region Imports NPM
-import React, { forwardRef, LegacyRef, Component, RefForwardingComponent } from 'react';
-import dynamic from 'next/dynamic';
+import React, {
+  useRef,
+  forwardRef,
+  Component,
+  RefForwardingComponent,
+  useMemo,
+  useEffect,
+  useLayoutEffect,
+} from 'react';
+// import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
-import { ButtonsOption, IDictionary } from 'jodit';
-import { Config } from 'jodit/src/config';
+import { Jodit, ButtonsOption, IDictionary } from 'jodit';
+import { Jodit as JoditClass } from 'jodit/src/jodit';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -56,7 +64,7 @@ const styles = {
 };
 
 // all options from https://xdsoft.net/jodit/doc/
-const config = {
+const configDefault = {
   // beautifyHTML: false,
   // useAceEditor: false,
   // sourceEditor: 'area',
@@ -98,44 +106,74 @@ const config = {
 
 interface JoditEditorComponentProps {
   value: string;
+  id?: string;
+  name?: string;
   onBlur?: React.Dispatch<React.SetStateAction<string>>;
   onChange?: React.Dispatch<React.SetStateAction<string>>;
   disabled?: boolean;
+  tabIndex?: number;
 }
 
-const JoditReact = __SERVER__ ? ({} as React.ComponentClass) : dynamic(() => import('jodit-react'), { ssr: false });
-
-const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorComponentProps> = (
-  { value, onBlur, disabled },
+const JoditEditorComponent: RefForwardingComponent<HTMLTextAreaElement, JoditEditorComponentProps> = (
+  { value, onBlur, onChange, id, name, disabled = false, tabIndex = -1 },
   ref,
 ) => {
   const {
     i18n: { language },
   } = useTranslation();
 
-  if (__SERVER__) {
-    return <></>;
-  } else {
-    return (
-      <JoditReact
-        // ref={ref as LegacyRef<JoditReact>}
-        value={value}
-        config={
-          {
-            ...config,
-            readonly: !!disabled,
-            language,
-            // i18n: {
-            //   ru: {},
-            // },
-          } as Config
-        }
-        // preferred to use only this option to update the content for performance reasons
-        onBlur={onBlur}
-        onChange={() => {}}
-      />
-    );
-  }
+  const textArea = useRef<HTMLTextAreaElement | null>(null);
+  const config = useMemo(
+    () => ({
+      ...configDefault,
+      readonly: !!disabled,
+      language,
+    }),
+    [disabled, language],
+  );
+
+  useLayoutEffect(() => {
+    if (ref) {
+      if (typeof ref === 'function') {
+        ref(textArea.current);
+      } else {
+        ref.current = textArea.current;
+      }
+    }
+  }, [textArea]);
+
+  useEffect(() => {
+    const element = textArea.current;
+    if (element) {
+      if (id) {
+        element.id = id;
+      }
+      if (name) {
+        element.name = name;
+      }
+      const jodit = Jodit.make(element, config);
+
+      jodit.value = value;
+      jodit.events.on('blur', () => onBlur && textArea.current?.value && onBlur(textArea.current.value));
+      jodit.events.on('change', () => onChange && textArea.current?.value && onChange(textArea.current.value));
+      jodit.workplace.tabIndex = tabIndex;
+
+      textArea.current = (jodit as unknown) as HTMLTextAreaElement;
+
+      return () => {
+        ((textArea.current as unknown) as JoditClass).destruct();
+        textArea.current = element;
+      };
+    }
+  }, [config]);
+
+  useEffect(() => {
+    if (textArea?.current && textArea.current.value !== value) {
+      textArea.current.value = value;
+    }
+  }, [textArea, value]);
+
+  return <textarea ref={textArea}></textarea>;
 };
 
 export default withStyles(styles)(forwardRef(JoditEditorComponent));
