@@ -9,6 +9,8 @@ require('dotenv').config({ path: resolve(__dirname, '../../.local/.env') });
 
 const withBundleAnalyzer = require('@next/bundle-analyzer');
 
+const { nextI18NextRewrites } = require('next-i18next/rewrites');
+
 const optimizedImages = require('next-optimized-images');
 
 const withFonts = require('next-fonts');
@@ -169,6 +171,8 @@ const plugins = [
   [withFonts, { enableSvg: false }],
 ];
 
+const localeSubpaths = {};
+
 const nextConfig = {
   devIndicators: {
     autoPrerender: false,
@@ -187,6 +191,10 @@ const nextConfig = {
     MAIL_URL: process.env.MAIL_URL,
     SESSION_NAME: process.env.SESSION_NAME,
     MAX_FILE_SIZE: process.env.MAX_FILE_SIZE,
+  },
+  rewrites: async () => nextI18NextRewrites(localeSubpaths),
+  publicRuntimeConfig: {
+    localeSubpaths,
   },
 };
 

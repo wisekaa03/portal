@@ -8,7 +8,6 @@ import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 import crypto from 'crypto';
-import nextI18NextMiddleware from 'next-i18next/middleware';
 import passport from 'passport';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -18,7 +17,6 @@ import 'reflect-metadata';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { nextI18next } from '@lib/i18n-client';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
@@ -193,10 +191,6 @@ async function bootstrap(): Promise<void> {
 
   //#region Static files
   app.useStaticAssets(resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/'));
-  //#endregion
-
-  //#region Locale I18n
-  app.use(nextI18NextMiddleware(nextI18next));
   //#endregion
 
   //#region Start server

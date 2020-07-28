@@ -4,12 +4,12 @@
 import React, { forwardRef, LegacyRef, Component, RefForwardingComponent } from 'react';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
-// import JoditReact from 'jodit-react';
+import { ButtonsOption, IDictionary } from 'jodit';
+import { Config } from 'jodit/src/config';
 //#endregion
 //#region Imports Local
+import { useTranslation } from '@lib/i18n-client';
 //#endregion
-
-const JoditReact = dynamic(() => import('jodit-react'), { ssr: false });
 
 const styles = {
   '@global': {
@@ -55,21 +55,45 @@ const styles = {
   },
 };
 
-// Должен быть снаружи компонента
 // all options from https://xdsoft.net/jodit/doc/
 const config = {
-  beautifyHTML: false,
-  useAceEditor: false,
-  sourceEditor: 'area',
-  placeholder: 'Подробное описание',
+  // beautifyHTML: false,
+  // useAceEditor: false,
+  // sourceEditor: 'area',
+  // placeholder: 'Подробное описание',
   // TODO: ,image,file
   style: {
     font: '16px "Roboto", "Arial", "Helvetica"',
     backgroundColor: '#F5FDFF',
-  },
-  buttons:
-    'eraser,|,align,outdent,indent,|,ul,ol,|,font,fontsize,brush,paragraph,|,table,link,|,' +
-    'undo,redo,cut,copy,|,hr,symbol,print,source',
+  } as IDictionary<string>,
+  buttons: [
+    'eraser',
+    '|',
+    'align',
+    'outdent',
+    'indent',
+    '|',
+    'ul',
+    'ol',
+    '|',
+    'font',
+    'fontsize',
+    'brush',
+    'paragraph',
+    '|',
+    'table',
+    'link',
+    '|',
+    'undo',
+    'redo',
+    'cut',
+    'copy',
+    '|',
+    'hr',
+    'symbol',
+    'print',
+    'source',
+  ] as ButtonsOption,
 };
 
 interface JoditEditorComponentProps {
@@ -79,18 +103,39 @@ interface JoditEditorComponentProps {
   disabled?: boolean;
 }
 
+const JoditReact = __SERVER__ ? ({} as React.ComponentClass) : dynamic(() => import('jodit-react'), { ssr: false });
+
 const JoditEditorComponent: RefForwardingComponent<Component, JoditEditorComponentProps> = (
   { value, onBlur, disabled },
   ref,
-) => (
-  <JoditReact
-    // ref={ref as LegacyRef<JoditReact>}
-    value={value}
-    config={{ ...config, readonly: !!disabled } as any}
-    // preferred to use only this option to update the content for performance reasons
-    onBlur={onBlur}
-    onChange={() => {}}
-  />
-);
+) => {
+  const {
+    i18n: { language },
+  } = useTranslation();
+
+  if (__SERVER__) {
+    return <></>;
+  } else {
+    return (
+      <JoditReact
+        // ref={ref as LegacyRef<JoditReact>}
+        value={value}
+        config={
+          {
+            ...config,
+            readonly: !!disabled,
+            language,
+            // i18n: {
+            //   ru: {},
+            // },
+          } as Config
+        }
+        // preferred to use only this option to update the content for performance reasons
+        onBlur={onBlur}
+        onChange={() => {}}
+      />
+    );
+  }
+};
 
 export default withStyles(styles)(forwardRef(JoditEditorComponent));

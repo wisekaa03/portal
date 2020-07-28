@@ -17,6 +17,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 //#endregion
 //#region Imports Local
+import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { MaterialUI } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
@@ -24,7 +25,6 @@ import { AppContextMy, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
-import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { changeFontSize } from '@lib/font-size';
 import getRedirect from '@lib/get-redirect';
 //#endregion
@@ -66,13 +66,13 @@ const ProfileProvider: React.FC<{
 
           return null;
         }
-        // } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
-        //   const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
+      } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
+        const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
 
-        //   ctx.res.statusCode = 303;
-        //   ctx.res.setHeader('Location', location);
+        ctx.res.statusCode = 303;
+        ctx.res.setHeader('Location', location);
 
-        //   return null;
+        return null;
       }
     }
   } else {
@@ -119,31 +119,36 @@ class App extends NextApp<AppContextMy> {
     const themeUser = MaterialUI(context?.fontSize, ssrMatchMedia);
 
     return (
-      <StylesProvider disableGeneration={disableGeneration}>
-        <ThemeProvider theme={themeUser}>
-          <CssBaseline />
-          <ApolloProvider client={apolloClient}>
-            <Head>
-              <title>Corporate portal</title>
-            </Head>
-            <SnackbarProvider
-              maxSnack={3}
-              dense={context.isMobile}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-            >
-              <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
-                <SnackbarUtilsConfigurator />
-                <ProfileProvider context={context} router={router} ctx={ctx}>
-                  <Component {...pageProps} context={context} ctx={ctx} />
-                </ProfileProvider>
-              </DndProvider>
-            </SnackbarProvider>
-          </ApolloProvider>
-        </ThemeProvider>
-      </StylesProvider>
+      <>
+        <Head>
+          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+        </Head>
+        <StylesProvider disableGeneration={disableGeneration}>
+          <ThemeProvider theme={themeUser}>
+            <CssBaseline />
+            <ApolloProvider client={apolloClient}>
+              <Head>
+                <title>Corporate portal</title>
+              </Head>
+              <SnackbarProvider
+                maxSnack={3}
+                dense={context.isMobile}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
+                  <SnackbarUtilsConfigurator />
+                  <ProfileProvider context={context} router={router} ctx={ctx}>
+                    <Component {...pageProps} context={context} ctx={ctx} />
+                  </ProfileProvider>
+                </DndProvider>
+              </SnackbarProvider>
+            </ApolloProvider>
+          </ThemeProvider>
+        </StylesProvider>
+      </>
     );
   }
 }

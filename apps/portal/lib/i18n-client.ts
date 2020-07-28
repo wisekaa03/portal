@@ -1,12 +1,21 @@
 /** @format */
 
 //#region Imports NPM
+import path from 'path';
 import NextI18Next, { WithTranslation } from 'next-i18next';
 import { useTranslation as originalUseTranslation } from 'react-i18next';
 import { NextComponentType, NextPageContext } from 'next';
+import getConfig from 'next/config';
 //#endregion
 //#region Imports Local
 //#endregion
+
+const configs = getConfig() as Record<string, Record<string, Record<string, string>>>;
+const { localeSubpaths } = (typeof configs === 'object' && configs.publicRuntimeConfig
+  ? typeof configs.publicRuntimeConfig === 'object' && configs.publicRuntimeConfig.localeSubpaths
+    ? configs.publicRuntimeConfig
+    : undefined
+  : undefined) ?? { localeSubpaths: undefined };
 
 const detectionOrder: string[] = [];
 
@@ -18,14 +27,10 @@ export const nextI18next = new NextI18Next({
   detection: { order: detectionOrder },
   fallbackLng: 'ru',
   ignoreRoutes: ['/_next/', '/public/'],
-  localePath:
-    typeof window === 'undefined'
-      ? process.env.NODE_ENV !== 'production'
-        ? 'public/locales'
-        : 'public/locales'
-      : process.env.NODE_ENV !== 'production'
-      ? 'locales'
-      : 'locales',
+  localeSubpaths,
+  localePath: path.resolve(
+    __SERVER__ ? (__DEV__ ? 'public/locales' : 'public/locales') : __DEV__ ? 'locales' : 'locales',
+  ),
   otherLanguages: ['en'],
 });
 

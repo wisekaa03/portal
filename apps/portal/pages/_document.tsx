@@ -46,7 +46,6 @@ class MainDocument extends Document<DocumentInitialPropsMy> {
           <meta name="Description" content="Корпоративный портал" />
           {/* TODO: disable robots */}
           <meta name="robots" content="noindex" />
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           {nonce && <meta property="csp-nonce" content={nonce} />}
           <meta name="theme-color" content={MaterialUI_primary_main} />
         </Head>
