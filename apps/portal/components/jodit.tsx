@@ -48,7 +48,7 @@ const styles = {
       backgroundColor: '#F5FDFF!important',
     },
     '.jodit-placeholder': {
-      color: '#31312F!important',
+      color: 'rgba(49, 49, 47, 0.5)!important',
     },
     '.jodit-container:not(.jodit_inline) .jodit_workplace': {
       border: 'none!important',
@@ -142,7 +142,7 @@ const JoditEditorComponent: RefForwardingComponent<HTMLTextAreaElement, JoditEdi
     }
   }, [textArea]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = textArea.current;
     if (element) {
       if (id) {
