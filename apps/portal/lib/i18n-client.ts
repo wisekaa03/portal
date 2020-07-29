@@ -15,7 +15,7 @@ const { localeSubpaths } = (typeof configs === 'object' && configs.publicRuntime
   ? typeof configs.publicRuntimeConfig === 'object' && configs.publicRuntimeConfig.localeSubpaths
     ? configs.publicRuntimeConfig
     : undefined
-  : undefined) ?? { localeSubpaths: undefined };
+  : undefined) ?? { localeSubpaths: {} };
 
 const detectionOrder: string[] = [];
 
@@ -26,11 +26,9 @@ export const nextI18next = new NextI18Next({
   defaultNS: 'common',
   detection: { order: detectionOrder },
   fallbackLng: 'ru',
-  ignoreRoutes: ['/_next/', '/public/'],
+  ignoreRoutes: ['/_next/', '/static/', '/public/', '/api/'],
   localeSubpaths,
-  localePath: path.resolve(
-    __SERVER__ ? (__DEV__ ? 'public/locales' : 'public/locales') : __DEV__ ? 'locales' : 'locales',
-  ),
+  localePath: path.resolve('./public/locales'),
   otherLanguages: ['en'],
 });
 

@@ -20,7 +20,7 @@ import { ConfigService } from '@app/config';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
-import { pinoOptions } from './shared/pino.options';
+import { pinoOptions } from '@back/shared/pino.options';
 //#endregion
 
 async function bootstrap(): Promise<void> {
