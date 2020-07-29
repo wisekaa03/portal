@@ -198,7 +198,12 @@ export class FilesService {
                 ownerId: f.extraProperties?.['owner-id'],
                 ownerDisplayName: f.extraProperties?.['owner-display-name'],
                 mount: f.extraProperties?.['mount-type'],
-                resourceType: f.extraProperties?.resourcetype,
+                resourceType:
+                  f.extraProperties?.['resourcetype'] &&
+                  Array.isArray(f.extraProperties['resourcetype']) &&
+                  f.extraProperties['resourcetype'].length > 0
+                    ? f.extraProperties.resourcetype.map((element) => element['collection'])
+                    : [],
                 shareTypes:
                   f.extraProperties?.['share-types'] &&
                   Array.isArray(f.extraProperties['share-types']) &&
