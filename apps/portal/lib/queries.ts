@@ -359,6 +359,7 @@ export const FILES_FOLDER_LIST = gql`
       creationDate
       lastModified
       type
+      mount
       size
       name
       mime
@@ -370,6 +371,9 @@ export const FILES_FOLDER_LIST = gql`
       commentsCount
       ownerId
       ownerDisplayName
+      resourceType
+      shareTypes
+      sharePermissions
     }
   }
 `;

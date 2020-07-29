@@ -98,11 +98,11 @@ export class FilesService {
           namespaceShort: 'd',
           element: 'getcontenttype',
         },
-        // {
-        //   namespace: 'DAV:',
-        //   namespaceShort: 'd',
-        //   element: 'resourcetype',
-        // },
+        {
+          namespace: 'DAV:',
+          namespaceShort: 'd',
+          element: 'resourcetype',
+        },
         {
           namespace: 'http://owncloud.org/ns',
           namespaceShort: 'oc',
@@ -158,11 +158,21 @@ export class FilesService {
           namespaceShort: 'oc',
           element: 'size',
         },
-        // {
-        //   namespace: 'http://owncloud.org/ns',
-        //   namespaceShort: 'oc',
-        //   element: 'share-types',
-        // },
+        {
+          namespace: 'http://nextcloud.org/ns',
+          namespaceShort: 'nc',
+          element: 'mount-type',
+        },
+        {
+          namespace: 'http://owncloud.org/ns',
+          namespaceShort: 'oc',
+          element: 'share-types',
+        },
+        {
+          namespace: 'http://open-collaboration-services.org/ns',
+          namespaceShort: 'ocs',
+          element: 'share-permissions',
+        },
       ])
       .then((folders) =>
         folders
@@ -187,8 +197,15 @@ export class FilesService {
                 commentsCount: f.extraProperties?.['comments-count'] as number,
                 ownerId: f.extraProperties?.['owner-id'],
                 ownerDisplayName: f.extraProperties?.['owner-display-name'],
-                // resourceType: f.extraProperties?.resourcetype,
-                // shareTypes: f.extraProperties?.['share-types'],
+                mount: f.extraProperties?.['mount-type'],
+                resourceType: f.extraProperties?.resourcetype,
+                shareTypes:
+                  f.extraProperties?.['share-types'] &&
+                  Array.isArray(f.extraProperties['share-types']) &&
+                  f.extraProperties['share-types'].length > 0
+                    ? f.extraProperties['share-types'].map((element) => element['share-type'])
+                    : [],
+                sharePermissions: f.extraProperties?.['share-permissions'],
               } as FilesFolder),
           )
           .filter((value) => value.name !== lastPath),

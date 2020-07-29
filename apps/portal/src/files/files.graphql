@@ -9,6 +9,7 @@ type FilesFolder {
   creationDate: Date
   lastModified: Date
   type: Folder
+  mount: String
   size: Int
   name: String
   mime: String
@@ -20,6 +21,9 @@ type FilesFolder {
   commentsCount: Int
   ownerId: String
   ownerDisplayName: String
+  resourceType: [String]
+  shareTypes: [String]
+  sharePermissions: String
 }
 
 type FilesFile {

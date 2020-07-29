@@ -29,8 +29,10 @@ export interface FilesFolder extends Omit<FileDetails, 'isDirectory' | 'isFile' 
   commentsCount: number;
   ownerId: string;
   ownerDisplayName: string;
-  // resourceType?: string;
-  // shareTypes?: string;
+  mount: string;
+  resourceType?: string[];
+  shareTypes?: string[];
+  sharePermissions?: string;
 }
 
 export interface FilesFolderChk extends FilesFolder {
