@@ -5455,7 +5455,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bcrypt@^5.0.0, bcrypt@latest:
+bcrypt@^5, bcrypt@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/bcrypt/-/bcrypt-5.0.0.tgz#051407c7cd5ffbfb773d541ca3760ea0754e37e2"
   integrity sha512-jB0yCBl4W/kVHM2whjfyqnxTmOHkCX4kHEa5nYKSoGeYe8YrjTYTc87/6bwt1g8cmV0QrbhKriETg9jWtcREhg==
@@ -6150,9 +6150,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000989, caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001097:
-  version "1.0.30001107"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001107.tgz#809360df7a5b3458f627aa46b0f6ed6d5239da9a"
-  integrity sha512-86rCH+G8onCmdN4VZzJet5uPELII59cUzDphko3thQFgAQG1RNa+sVLDoALIhRYmflo5iSIzWY3vu1XTWtNMQQ==
+  version "1.0.30001109"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001109.tgz#a9f3f26a0c3753b063d7acbb48dfb9c0e46f2b19"
+  integrity sha512-4JIXRodHzdS3HdK8nSgIqXYLExOvG+D2/EenSvcub2Kp3QEADjo2v2oUn5g0n0D+UNwG9BtwKOyGcSq2qvQXvQ==
 
 canvg@1.5.3:
   version "1.5.3"
@@ -6376,10 +6376,10 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-class-transformer@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.3.tgz#598c92ca71dcca73f91ccb875d74a3847ccfa32d"
-  integrity sha512-qsP+0xoavpOlJHuYsQJsN58HXSl8Jvveo+T37rEvCEeRfMWoytAyR0Ua/YsFgpM6AZYZ/og2PJwArwzJl1aXtQ==
+class-transformer@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.3.1.tgz#ee681a5439ff2230fc57f5056412d3befa70d597"
+  integrity sha512-cKFwohpJbuMovS8xVLmn8N2AUbAuc8pVo4zEfsUVo8qgECOogns1WVk/FkOZoxhOPTyTYFckuoH+13FO+MQ8GA==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -13929,18 +13929,18 @@ nest-next@^9.2.0:
   dependencies:
     rxjs "^6.4"
 
-nestjs-ldap@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-0.0.15.tgz#a61638e57f081c741426e12dc771f4c0a6316b02"
-  integrity sha512-jLDOe3mkyhmPyOeLKqtoF87yHm5ROylNgf8FGYFvfVYfmvVamr0ftkD7BIYTMWScQnKf5nmHiVAYVo45fRwMag==
+nestjs-ldap@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-0.1.0.tgz#1c2929ec98efbdf1756bf6616566931c6c4b26ea"
+  integrity sha512-1f8JT1eDtghJSjRvSfrNwzk3dJDaQfU3FfoElU2rqKDcphhBhOQe27li6ZhnseD/yY9A5uU1ngHDDUl0t7OyNw==
   dependencies:
-    bcrypt latest
+    bcrypt "^5"
     cache-manager "^3"
     cache-manager-redis-store "^2"
     ldapjs "^2"
-    nestjs-pino latest
+    nestjs-pino "^1"
 
-nestjs-pino@^1.2.0, nestjs-pino@latest:
+nestjs-pino@^1, nestjs-pino@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/nestjs-pino/-/nestjs-pino-1.2.0.tgz#f397715cd080e839ce5e71883e9430ef0f16e132"
   integrity sha512-uhsJzGyBTDsnQPP0gZ2imQXxvygEreY/veXK+QqdfbsWPGMzJCK0T7IwK/JFlhfWlRmVtU+cwRBmV9Ysgn+kCg==
