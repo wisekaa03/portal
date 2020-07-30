@@ -68,6 +68,56 @@ const PROFILE_FRAGMENT = gql`
   }
 `;
 
+export const SUBSCRIBE_ME = gql`
+  subscription Me {
+    me {
+      id
+      username
+      updatedAt
+      createdAt
+      isAdmin
+      settings {
+        lng
+        fontSize
+        drawer
+        task {
+          status
+          favorites {
+            where
+            code
+            svcCode
+          }
+        }
+        phonebook {
+          columns
+        }
+      }
+      groups {
+        id
+        name
+        dn
+        description
+        createdAt
+        updatedAt
+      }
+      profile {
+        ...ProfileProps
+        thumbnailPhoto40
+        thumbnailPhoto
+      }
+    }
+  }
+  ${PROFILE_FRAGMENT}
+`;
+
+export const PING = gql`
+  query Ping {
+    ping {
+      ping
+    }
+  }
+`;
+
 export const CURRENT_USER = gql`
   query Me {
     me @client {
@@ -92,11 +142,6 @@ export const CURRENT_USER = gql`
           columns
         }
       }
-      profile {
-        ...ProfileProps
-        thumbnailPhoto40
-        thumbnailPhoto
-      }
       groups {
         id
         name
@@ -104,6 +149,11 @@ export const CURRENT_USER = gql`
         description
         createdAt
         updatedAt
+      }
+      profile {
+        ...ProfileProps
+        thumbnailPhoto40
+        thumbnailPhoto
       }
     }
   }

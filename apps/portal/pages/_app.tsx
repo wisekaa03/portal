@@ -19,7 +19,7 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 //#region Imports Local
 import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { MaterialUI } from '@lib/theme';
-import { CURRENT_USER } from '@lib/queries';
+import { CURRENT_USER, PING, SUBSCRIBE_ME } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
 import { AppContextMy, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
@@ -28,7 +28,6 @@ import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { changeFontSize } from '@lib/font-size';
 import getRedirect from '@lib/get-redirect';
 
-// Jodit
 import 'jodit/build/jodit.min.css';
 //#endregion
 
@@ -43,19 +42,8 @@ const ProfileProvider: React.FC<{
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
 
-  const { data, loading } = useQuery<Data<'me', User>>(CURRENT_USER, {
-    // TODO: https://github.com/apollographql/react-apollo/issues/2522
-    // TODO: https://github.com/apollographql/react-apollo/issues/3353
-    // TODO: https://github.com/apollographql/react-apollo/pull/3419
-    // onCompleted(data) {
-    //   if (!__SERVER__) {
-    //     if (data?.me?.settings?.fontSize) {
-    //       changeFontSize(data.me.settings.fontSize);
-    //     }
-    //   }
-    // },
-    // variables: {},
-    fetchPolicy: 'cache-only',
+  const { data, loading, subscribeToMore, client } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
+    fetchPolicy: 'cache-first',
   });
 
   if (__SERVER__) {
@@ -80,8 +68,33 @@ const ProfileProvider: React.FC<{
     }
   } else {
     useEffect(() => {
-      if (data?.me?.settings?.fontSize) {
-        changeFontSize(data.me.settings.fontSize);
+      if (data?.me) {
+        if (data.me.settings?.fontSize) {
+          changeFontSize(data.me.settings.fontSize);
+        }
+
+        subscribeToMore({
+          document: SUBSCRIBE_ME,
+          // TODO: insert here login/logout logic
+          // updateQuery: (previousQueryResult, options, variables) => {
+          //   // eslint-disable-next-line no-debugger
+          //   debugger;
+
+          //   return undefined;
+          // },
+          // onError: (error) => {
+          //   // eslint-disable-next-line no-debugger
+          //   debugger;
+          // },
+        });
+
+        client
+          .watchQuery<Data<'ping', { ping: string }>, undefined>({
+            query: PING,
+            fetchPolicy: 'no-cache',
+            pollInterval: 10000,
+          })
+          .subscribe(() => {});
       }
     }, [data]);
   }

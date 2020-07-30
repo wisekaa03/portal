@@ -30,7 +30,7 @@ export interface Profile {
 
   email: string;
 
-  birthday?: Date;
+  birthday?: string;
 
   gender?: Gender;
 

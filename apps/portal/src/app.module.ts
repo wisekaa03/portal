@@ -169,7 +169,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           },
           installSubscriptionHandlers: true,
           subscriptions: {
-            keepAlive: 10000,
+            keepAlive: 0,
             onConnect: async (
               connectionParameters: Record<string, any>,
               websocket: WebSocket,
@@ -186,7 +186,6 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
               const user = await promise;
 
-              // TODO:
               if (user) {
                 return { user, req: context.request, socket: websocket };
               }

@@ -14,8 +14,6 @@ export const resolvers = {
     ): User | null => {
       if (__SERVER__) {
         if (user) {
-          // delete user.password;
-
           const data = {
             ...user,
             groups: Array.isArray(user.groups)

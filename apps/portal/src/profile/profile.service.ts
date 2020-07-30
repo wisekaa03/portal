@@ -369,7 +369,7 @@ export class ProfileService {
     const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender } = comment;
 
     const { birthday } = comment;
-    const birthdayDate = !birthday || birthday === '' ? undefined : new Date(birthday);
+    const birthdayDate = !birthday || birthday === '' ? undefined : birthday;
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 

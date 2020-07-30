@@ -100,7 +100,7 @@ export class FilesResolver {
       return payload.path === variables.path;
     },
   })
-  folderFilesSubscription(): AsyncIterator<unknown, FilesFolder[], undefined> {
-    return this.pubSub.asyncIterator('folderFilesSubscription');
+  folderFilesSubscription(): AsyncIterator<FilesFolder[]> {
+    return this.pubSub.asyncIterator<FilesFolder[]>('folderFilesSubscription');
   }
 }

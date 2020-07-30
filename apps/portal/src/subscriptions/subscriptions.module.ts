@@ -8,7 +8,6 @@ import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
-import { PingPongResolvers } from './ping.resolver';
 //#endregion
 
 @Module({
@@ -19,7 +18,6 @@ import { PingPongResolvers } from './ping.resolver';
   ],
 
   providers: [
-    PingPongResolvers,
     {
       provide: 'PUB_SUB',
       inject: [ConfigService],

@@ -92,8 +92,8 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ..
 
   const handleBirthday = (date: MaterialUiPickersDate, value?: string | null | undefined): void => {
     if (current && updated) {
-      setCurrent({ ...current, birthday: value ? new Date(value) : undefined });
-      setUpdated({ ...updated, birthday: value ? new Date(format(value, 'YYYY-MM-DD')) : undefined });
+      setCurrent({ ...current, birthday: value ? value : undefined });
+      setUpdated({ ...updated, birthday: value ? format(value, 'YYYY-MM-DD') : undefined });
     }
   };
 

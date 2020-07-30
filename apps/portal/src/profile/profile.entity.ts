@@ -86,10 +86,11 @@ export class ProfileEntity {
   email: string;
 
   @Column({
-    type: 'date',
+    type: 'varchar',
     nullable: true,
+    length: 10,
   })
-  birthday: Date;
+  birthday: string;
 
   @Column({
     type: 'int',

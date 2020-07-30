@@ -9,6 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@app/config';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
 import { UserModule } from '@back/user/user.module';
+import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { CookieSerializer } from './cookie.serializer';
@@ -66,6 +67,8 @@ import { LocalStrategy } from './strategies/local.strategy';
     //#region HTTP service
     HttpModule,
     //#endregion
+
+    SubscriptionsModule,
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer /* , JwtStrategy */],
   exports: [PassportModule, AuthService],
