@@ -367,8 +367,8 @@ export class UserService {
    * This is a LDAP new user and contact
    */
   ldapNewUser = async (value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
-    Object.keys(value).forEach((key) => {
-      if (!value[key]) {
+    Object.keys(value).forEach((key: string) => {
+      if (value[key] === null || value[key] === void 0) {
         delete value[key];
       }
     });

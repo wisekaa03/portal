@@ -47,8 +47,8 @@ export const resizeImage = (file: Blob): Promise<string | ArrayBuffer> =>
         const ctx = element.getContext('2d');
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
-          ctx.canvas.toBlob((blob: Blob) => {
-            resolve(toBase64(blob));
+          ctx.canvas.toBlob((blob: Blob | null) => {
+            blob && resolve(toBase64(blob));
           });
         }
       });

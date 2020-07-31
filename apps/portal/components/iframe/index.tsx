@@ -97,6 +97,7 @@ const Iframe: ComponentType<IframeInterface> = ({
   }
 
   if (frameBorder && frameBorder >= 0) {
+    // eslint-disable-next-line no-prototype-builtins
     props.style.border = !props.style.hasOwnProperty('border') ? frameBorder : 'none';
   }
 

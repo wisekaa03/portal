@@ -3,18 +3,12 @@
 //#region Imports NPM
 import React, { FC } from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Box, Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Box } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { FilesComponentProps, FilesColumn } from '@lib/types';
-import Button from '@front/components/ui/button';
-import IsAdmin from '@front/components/isAdmin';
 import Loading from '@front/components/loading';
-import Dropzone from '@front/components/dropzone';
-import FilesTreeComponent from './tree';
-import FilesDialogComponent from './dialog';
 import FilesTableComponent from './table';
 //#endregion
 
