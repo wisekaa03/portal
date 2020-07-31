@@ -369,7 +369,6 @@ export class ProfileService {
     const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender } = comment;
 
     const { birthday } = comment;
-    const birthdayDate = !birthday || birthday === '' ? undefined : birthday;
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
@@ -399,7 +398,7 @@ export class ProfileService {
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName,
-      birthday: birthdayDate,
+      birthday: !birthday ? undefined : birthday.slice(0, 9),
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,
       postalCode: ldapUser.postalCode,
@@ -643,6 +642,8 @@ export class ProfileService {
             }
             break;
           case 'birthday':
+            modification.comment = { ...(modification.comment as Record<string, string>), birthday: value.slice(0, 9) };
+            break;
           case 'companyEng':
           case 'nameEng':
           case 'managementEng':
