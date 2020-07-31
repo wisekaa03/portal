@@ -1,12 +1,13 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useMutation, useLazyQuery } from '@apollo/client';
 //#endregion
 //#region Imports Local
+import type { Data, FilesFile, FilesFolder, FilesPath, FilesFolderChk } from '@lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import {
   FILES_FOLDER_LIST,
@@ -14,12 +15,16 @@ import {
   FILES_GET_FILE,
   FILES_DELETE_FILE,
   FILES_DELETE_FOLDER,
+  FILES_PUT_FILE,
 } from '@lib/queries';
-import { Data, FilesFile, FolderDialogState, DropzoneFile, FilesFolder, FilesPath, FilesFolderChk } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import FilesComponent from '@front/components/files';
 //#endregion
+
+const handleUrl = () => {
+  window.open('https://cloud.kube.i-npz.ru', '_blank');
+};
 
 const thePathArray = (path: string): FilesPath[] =>
   path
@@ -55,6 +60,10 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     Data<'getFile', FilesFile>,
     { path: string; options?: { sync?: boolean } }
   >(FILES_GET_FILE);
+
+  const [putFile, { error: errorPutFile }] = useMutation<Data<'putFile', boolean>, { path: string; file: File }>(
+    FILES_PUT_FILE,
+  );
 
   const [deleteFile, { error: errorDeleteFile }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FILE, {
     update(cache, fetch) {
@@ -157,6 +166,36 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     link.remove();
   };
 
+  const handleUpload = (): void => {
+    try {
+      const putFileHandler = (event: Event) => {
+        const srcElement = (event?.srcElement as HTMLInputElement)?.files;
+        if (srcElement?.length) {
+          for (let i = 0; i < srcElement.length; i++) {
+            const file = srcElement.item(i);
+            if (file) {
+              putFile({ variables: { path: `${path.join('/')}/${file.name}`, file } });
+            } else {
+              console.log(`File: ${file} is not read`);
+            }
+          }
+        }
+      };
+
+      const input = document.createElement('input');
+      input.style.visibility = 'hidden';
+      input.type = 'file';
+      input.multiple = true;
+      input.id = 'upload';
+      input.addEventListener('change', putFileHandler, false);
+      input.click();
+      document.body.append(input);
+      input.remove();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleDelete = (filesFolder?: FilesFolder) => (): void => {
     if (filesFolder) {
       if (filesFolder.type === 'FOLDER') {
@@ -166,9 +205,6 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       }
     }
   };
-
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  const handleUpload = (): void => {};
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleDrop = async (acceptedFiles: File[]): Promise<void> => {
@@ -205,6 +241,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           handleDownload={handleDownload}
           handleUpload={handleUpload}
           handleDelete={handleDelete}
+          handleUrl={handleUrl}
         />
       </MaterialUI>
     </>

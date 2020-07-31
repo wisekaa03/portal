@@ -438,7 +438,7 @@ export const FILES_GET_FILE = gql`
 
 export const FILES_PUT_FILE = gql`
   mutation PutFile($path: String!, $file: Upload!) {
-    putFile(path: $path)
+    putFile(path: $path, file: $file)
   }
 `;
 

@@ -269,14 +269,16 @@ export class FilesService {
    * @return {void}
    * @throws NotFoundError
    */
-  putFile = async (path: string, promiseFile: Promise<FileUpload>, user: User, password: string): Promise<void> => {
+  putFile = async (path: string, promiseFile: Promise<FileUpload>, user: User, password: string): Promise<boolean> => {
     this.logger.info(`Put files: path={${path}}`);
 
     const { createReadStream } = await promiseFile;
     this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
 
     const folder = path.slice(0, path.lastIndexOf('/'));
-    this.folderFiles(user, password, folder, false);
+    await this.folderFiles(user, password, folder, false);
+
+    return true;
   };
 
   /**

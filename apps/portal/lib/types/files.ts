@@ -17,6 +17,7 @@ export interface FilesComponentProps {
   handleFolder: (filesFolder: FilesFolderChk) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
+  handleUrl: () => void;
   handleUpload: () => void;
   handleDelete: (filesFolder?: FilesFolderChk) => () => void;
 }
@@ -68,6 +69,7 @@ export type FilesTableProps = {
   handleFolder: (filesFolder: FilesFolderChk | string) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
+  handleUrl: () => void;
   handleUpload: () => void;
   handleDelete: (filesFolder?: FilesFolderChk) => () => void;
 };
@@ -75,11 +77,13 @@ export type FilesTableProps = {
 export interface FilesBreadcrumbsProps {
   path: FilesPath[];
   handleFolder: (filesFolder: FilesFolderChk | string) => void;
+  handleUrl: () => void;
   handleUpload: () => void;
   handleDelete: (filesFolder?: FilesFolderChk) => () => void;
 }
 
 export interface FilesBreadcrumbsLastProps {
+  handleUrl: () => void;
   handleUpload: () => void;
   handleDelete: (filesFolder?: FilesFolderChk) => () => void;
 }

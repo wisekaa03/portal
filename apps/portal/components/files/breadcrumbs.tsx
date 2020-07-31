@@ -32,7 +32,13 @@ const StyledBreadcrumb = withStyles((theme: Theme) => ({
   },
 }))(Chip) as typeof Chip;
 
-export const FilesBreadcrumbs: FC<FilesBreadcrumbsProps> = ({ path, handleFolder, handleUpload, handleDelete }) => {
+export const FilesBreadcrumbs: FC<FilesBreadcrumbsProps> = ({
+  path,
+  handleFolder,
+  handleUpload,
+  handleDelete,
+  handleUrl,
+}) => {
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -58,7 +64,7 @@ export const FilesBreadcrumbs: FC<FilesBreadcrumbsProps> = ({ path, handleFolder
           />
         );
       })}
-      <FilesBreadcrumbsLast handleUpload={handleUpload} handleDelete={handleDelete} />
+      <FilesBreadcrumbsLast handleUpload={handleUpload} handleDelete={handleDelete} handleUrl={handleUrl} />
     </Breadcrumbs>
   );
 };

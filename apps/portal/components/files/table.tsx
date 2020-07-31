@@ -109,6 +109,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
   handleDownload,
   handleDelete,
   handleUpload,
+  handleUrl,
 }) => {
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
@@ -138,6 +139,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
         <FilesBreadcrumbs
           path={path}
           handleFolder={handleFolder}
+          handleUrl={handleUrl}
           handleUpload={handleUpload}
           handleDelete={handleDelete}
         />

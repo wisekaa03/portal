@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import BackupIcon from '@material-ui/icons/Backup';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CloudIcon from '@material-ui/icons/Cloud';
 //#endregion
 //#region Imports Local
 import type { FilesBreadcrumbsLastProps } from '@lib/types';
@@ -44,7 +45,7 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export const FilesBreadcrumbsLast: FC<FilesBreadcrumbsLastProps> = ({ handleUpload, handleDelete }) => {
+export const FilesBreadcrumbsLast: FC<FilesBreadcrumbsLastProps> = ({ handleUpload, handleDelete, handleUrl }) => {
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -81,6 +82,12 @@ export const FilesBreadcrumbsLast: FC<FilesBreadcrumbsLastProps> = ({ handleUplo
             <DeleteIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary={t('files:delete')} />
+        </StyledMenuItem>
+        <StyledMenuItem onClick={handleUrl}>
+          <ListItemIcon>
+            <CloudIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary={t('files:url')} />
         </StyledMenuItem>
       </StyledMenu>
     </>

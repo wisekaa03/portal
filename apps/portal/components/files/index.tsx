@@ -46,6 +46,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
   handleDownload,
   handleUpload,
   handleDelete,
+  handleUrl,
 }) => {
   const classes = useStyles({});
 
@@ -69,6 +70,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
             handleDownload={handleDownload}
             handleUpload={handleUpload}
             handleDelete={handleDelete}
+            handleUrl={handleUrl}
           />
         )}
       </Loading>

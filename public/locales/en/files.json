@@ -12,6 +12,7 @@
   "confirmDelete": "Confirm delete folder {{input}}?",
   "notFound": "Files not found",
   "home": "Home",
+  "url": "Open file storage",
   "table": {
     "id": "ID",
     "type": "Folder / File",

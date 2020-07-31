@@ -92,7 +92,7 @@ const ProfileProvider: React.FC<{
           .watchQuery<Data<'ping', { ping: string }>, undefined>({
             query: PING,
             fetchPolicy: 'no-cache',
-            pollInterval: 10000,
+            pollInterval: 50000,
           })
           .subscribe(() => {});
       }

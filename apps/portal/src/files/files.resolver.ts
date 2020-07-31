@@ -64,7 +64,7 @@ export class FilesResolver {
     @Args('file') file: Promise<FileUpload>,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<void> {
+  ): Promise<boolean> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
