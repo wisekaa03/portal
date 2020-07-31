@@ -4,9 +4,6 @@ import React, { FC, useState } from 'react';
 import clsx from 'clsx';
 import filesize from 'filesize';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { Button, Fab } from '@material-ui/core';
 import { fade, darken, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,
@@ -15,7 +12,6 @@ import {
   Table,
   TableHead,
   TableBody,
-  TableFooter,
   Typography,
   Dialog,
   DialogContent,
@@ -25,26 +21,18 @@ import {
   ListItem,
   ListItemText,
   List,
-  Breadcrumbs,
 } from '@material-ui/core';
-import MaterialLink from '@material-ui/core/Link';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
-import EditIcon from '@material-ui/icons/EditRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
-import HomeIcon from '@material-ui/icons/Home';
-import AddIcon from '@material-ui/icons/Add';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { format } from '@lib/dayjs';
-import { FilesTableProps, Folder, FilesFolder, FilesFolderChk, DropzoneFile } from '@lib/types';
-import Dropzone from '@front/components/dropzone';
-import Loading from '@front/components/loading';
-import Search from '@front/components/ui/search';
-import RefreshButton from '@front/components/ui/refresh-button';
+import { FilesTableProps, Folder, FilesFolderChk } from '@lib/types';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
 import { FileTableHeader } from './table-header';
+import { FilesBreadcrumbs } from './breadcrumbs';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,10 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       padding: `0 ${theme.spacing()} ${theme.spacing()} ${theme.spacing()}`,
-    },
-    control: {
-      backgroundColor: fade(theme.palette.secondary.main, 0.05),
-      borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     icon: {
       color: theme.palette.secondary.main,
@@ -118,23 +102,19 @@ const useStyles = makeStyles((theme: Theme) =>
 const FilesTableComponent: FC<FilesTableProps> = ({
   path,
   data,
-  folderRefetch,
   search,
   filesColumns,
   handleCheckbox,
-  handleDrop,
   handleFolder,
-  handleSearch,
   handleDownload,
   handleDelete,
+  handleUpload,
 }) => {
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
   const [detail, setDetail] = useState<FilesFolderChk | null>(null);
-  const [files, setFiles] = useState<DropzoneFile[]>([]);
-  const router = useRouter();
 
   const handleClose = async (): Promise<void> => {
     setOpen(false);
@@ -154,46 +134,13 @@ const FilesTableComponent: FC<FilesTableProps> = ({
 
   return (
     <div className={classes.root}>
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
-        <Search value={search} handleChange={handleSearch} />
-        <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
-      </Box>
       <Box display="flex" className={classes.breadcrumbs} p={1}>
-        <Breadcrumbs aria-label="breadcrumbs">
-          {path.map((element, index) => {
-            const current = path.reduce(
-              (accumulator, value, currentIndex) =>
-                currentIndex > index || !value ? accumulator : `${accumulator}${value}/`,
-              '/',
-            );
-            return (
-              <Link
-                key={element || 'home'}
-                href={{ pathname: router.route, query: { path: path.join('/') } }}
-                as={`${router.route}${current}`}
-                passHref
-              >
-                <MaterialLink
-                  className={classes.breadcrumbsItem}
-                  onClick={() => handleFolder(`${path.slice(0, index + 1).join('/')}/`)}
-                >
-                  {element ? element : <HomeIcon fontSize="small" />}
-                </MaterialLink>
-              </Link>
-            );
-          })}
-          <Box className={classes.breadcrumbsItem}>
-            <Fab
-              size="small"
-              className={classes.breadcrumbsLast}
-              color="primary"
-              aria-label="add"
-              key="files-additional"
-            >
-              <AddIcon />
-            </Fab>
-          </Box>
-        </Breadcrumbs>
+        <FilesBreadcrumbs
+          path={path}
+          handleFolder={handleFolder}
+          handleUpload={handleUpload}
+          handleDelete={handleDelete}
+        />
       </Box>
       {filtered.length === 0 ? (
         <Box display="flex" justifyContent="center" mt={2} color="gray">

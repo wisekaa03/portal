@@ -2,46 +2,22 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 //#endregion
 //#region Imports Local
-import { useTranslation } from '@lib/i18n-client';
-import { FilesComponentProps, FilesColumn } from '@lib/types';
+import type { FilesComponentProps, FilesColumn } from '@lib/types';
 import Loading from '@front/components/loading';
+import Search from '@front/components/ui/search';
+import RefreshButton from '@front/components/ui/refresh-button';
 import FilesTableComponent from './table';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    dropBox: {
-      padding: theme.spacing(1, 2),
-    },
-    dropBoxActions: {
-      'marginBottom': theme.spacing(),
-      '& > button:first-child': {
-        marginRight: theme.spacing(),
-      },
-    },
-    firstBlock: {
-      display: 'grid',
-      gap: `${theme.spacing(2)}px`,
-      width: '100%',
-      [theme.breakpoints.up('lg')]: {
-        gridTemplateColumns: '1fr 1fr',
-      },
-    },
-    sharedOrUser: {
-      flexDirection: 'row',
-    },
-    treeView: {
-      textAlign: 'left',
-    },
-    fab: {
-      zIndex: 1,
-      position: 'absolute',
-      bottom: theme.spacing(2),
-      right: 18 + theme.spacing(2),
+    control: {
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
   }),
 );
@@ -68,32 +44,22 @@ const FilesComponent: FC<FilesComponentProps> = ({
   handleFolder,
   handleSearch,
   handleDownload,
+  handleUpload,
   handleDelete,
-  // setFolderName,
-  // showDropzone,
-  // handleOpenDropzone,
-  // handleCloseDropzone,
-  // handleEditFolder,
-  // openFolderDialog,
-  // handleAcceptFolderDialog,
-  // handleCloseFolderDialog,
-  // folderDialogName,
-  // handleFolderDialogName,
-  // attachments,
-  // setAttachments,
-  // handleUploadFile,
 }) => {
   const classes = useStyles({});
-  const { t } = useTranslation();
 
   return (
     <Box display="flex" flexDirection="column">
+      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+        <Search value={search} handleChange={handleSearch} />
+        <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
+      </Box>
       <Loading activate={folderLoading} noMargin type="linear" variant="indeterminate">
         {folderData && (
           <FilesTableComponent
             path={path}
             data={folderData}
-            folderRefetch={folderRefetch}
             search={search}
             filesColumns={filesColumns}
             handleCheckbox={handleCheckbox}
@@ -101,6 +67,7 @@ const FilesComponent: FC<FilesComponentProps> = ({
             handleFolder={handleFolder}
             handleSearch={handleSearch}
             handleDownload={handleDownload}
+            handleUpload={handleUpload}
             handleDelete={handleDelete}
           />
         )}

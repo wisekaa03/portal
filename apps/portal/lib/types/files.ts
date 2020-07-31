@@ -1,9 +1,7 @@
 /** @format */
 
 import React from 'react';
-import { ApolloQueryResult } from '@apollo/client';
 import { FilesFolder, FilesFolderChk } from './files.interface';
-import { Data } from './common';
 import { Order } from 'typeorm-graphql-pagination';
 
 export interface FilesComponentProps {
@@ -19,7 +17,8 @@ export interface FilesComponentProps {
   handleFolder: (filesFolder: FilesFolderChk) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
-  handleDelete: (filesFolder: FilesFolderChk) => () => void;
+  handleUpload: () => void;
+  handleDelete: (filesFolder?: FilesFolderChk) => () => void;
 }
 
 export interface FilesTreeComponentProps {
@@ -59,7 +58,6 @@ export type FolderDialogState = {
 
 export type FilesTableProps = {
   data: FilesFolderChk[];
-  folderRefetch: () => void;
   search: string;
   filesColumns: FilesColumn[];
   path: FilesPath[];
@@ -70,8 +68,21 @@ export type FilesTableProps = {
   handleFolder: (filesFolder: FilesFolderChk | string) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
-  handleDelete: (filesFolder: FilesFolderChk) => () => void;
+  handleUpload: () => void;
+  handleDelete: (filesFolder?: FilesFolderChk) => () => void;
 };
+
+export interface FilesBreadcrumbsProps {
+  path: FilesPath[];
+  handleFolder: (filesFolder: FilesFolderChk | string) => void;
+  handleUpload: () => void;
+  handleDelete: (filesFolder?: FilesFolderChk) => () => void;
+}
+
+export interface FilesBreadcrumbsLastProps {
+  handleUpload: () => void;
+  handleDelete: (filesFolder?: FilesFolderChk) => () => void;
+}
 
 export type FilesPath = string;
 

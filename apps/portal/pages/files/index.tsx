@@ -157,13 +157,18 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     link.remove();
   };
 
-  const handleDelete = (filesFolder: FilesFolder) => (): void => {
-    if (filesFolder.type === 'FOLDER') {
-      deleteFolder({ variables: { id: filesFolder.id } });
-    } else {
-      deleteFile({ variables: { id: filesFolder.id } });
+  const handleDelete = (filesFolder?: FilesFolder) => (): void => {
+    if (filesFolder) {
+      if (filesFolder.type === 'FOLDER') {
+        deleteFolder({ variables: { id: filesFolder.id } });
+      } else {
+        deleteFile({ variables: { id: filesFolder.id } });
+      }
     }
   };
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const handleUpload = (): void => {};
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleDrop = async (acceptedFiles: File[]): Promise<void> => {
@@ -198,20 +203,8 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
           handleFolder={handleFolder}
           handleSearch={handleSearch}
           handleDownload={handleDownload}
+          handleUpload={handleUpload}
           handleDelete={handleDelete}
-          // setFolderName={setFolderName}
-          // showDropzone={showDropzone}
-          // handleOpenDropzone={handleOpenDropzone}
-          // handleCloseDropzone={handleCloseDropzone}
-          // handleEditFolder={handleEditFolder}
-          // handleAcceptFolderDialog={handleAcceptFolderDialog}
-          // handleCloseFolderDialog={handleCloseFolderDialog}
-          // openFolderDialog={openFolderDialog}
-          // folderDialogName={folderDialog.name}
-          // handleFolderDialogName={handleFolderDialogName}
-          // attachments={attachments}
-          // setAttachments={setAttachments}
-          // search={search}
         />
       </MaterialUI>
     </>
