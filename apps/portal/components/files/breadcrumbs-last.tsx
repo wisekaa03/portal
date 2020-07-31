@@ -77,7 +77,7 @@ export const FilesBreadcrumbsLast: FC<FilesBreadcrumbsLastProps> = ({ handleUplo
           </ListItemIcon>
           <ListItemText primary={t('files:upload')} />
         </StyledMenuItem>
-        <StyledMenuItem onClick={() => handleDelete()}>
+        <StyledMenuItem disabled onClick={() => handleDelete()}>
           <ListItemIcon>
             <DeleteIcon fontSize="small" />
           </ListItemIcon>
