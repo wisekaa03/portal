@@ -26,8 +26,11 @@ module.exports = {
 
     config.plugins = [
       ...(config.plugins || []),
-      new Webpack.IgnorePlugin({
-        resourceRegExp: /next-i18next/
+      new Webpack.DefinePlugin({
+        __DEV__: JSON.stringify(true),
+        __PRODUCTION__: JSON.stringify(false),
+        __TEST__: JSON.stringify(process.env.NODE_ENV === 'test'),
+        __SERVER__: JSON.stringify(false),
       }),
     ];
 
