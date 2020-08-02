@@ -122,7 +122,7 @@
     "graphql-redis-subscriptions": "^2.2.1",
     "graphql-subscriptions": "^1.1.0",
     "graphql-upload": "^11.0.0",
-    "helmet": "^3.23.3",
+    "helmet": "^4.0.0",
     "i18next": "^19.6.3",
     "i18next-browser-languagedetector": "^5.0.0",
     "is-mobile": "^2.2.2",
