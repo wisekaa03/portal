@@ -3,6 +3,8 @@
 //#region Imports NPM
 import fs from 'fs';
 import { resolve } from 'path';
+import { NextApiResponse } from 'next';
+import { IncomingMessage, ServerResponse } from 'http';
 import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
@@ -88,8 +90,8 @@ async function bootstrap(): Promise<void> {
   //#region Improve security
   // app.use(helmet.ieNoOpen());
 
-  const scriptSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = ["'self'"];
-  const styleSrc: (string | helmet.IHelmetContentSecurityPolicyDirectiveFunction)[] = ["'unsafe-inline'", "'self'"];
+  const scriptSrc: string[] = ["'self'"];
+  const styleSrc: string[] = ["'unsafe-inline'", "'self'"];
   const imgSrc = ["'self'", 'data:', 'blob:'];
   const fontSrc = ["'self'", 'data:'];
   const frameSrc = ["'self'"];
@@ -151,25 +153,21 @@ async function bootstrap(): Promise<void> {
   });
   //#endregion
 
-  if (!DEV) {
-    scriptSrc.push((_request, response) => `'nonce-${response.locals.nonce}'`);
-  }
-
-  app.use(
+  app.use((_req: IncomingMessage, res: ServerResponse, next: () => void) => {
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc,
         objectSrc: ["'none'"],
         imgSrc,
         fontSrc,
-        scriptSrc,
+        scriptSrc: !DEV ? scriptSrc.concat(`'nonce-${(res as any).locals.nonce}'`) : scriptSrc,
         frameSrc,
         styleSrc,
         connectSrc,
-        upgradeInsecureRequests: true,
+        upgradeInsecureRequests: 'true',
       },
-    }),
-  );
+    })(_req, res, next);
+  });
   //#endregion
 
   //#region Enable json response
