@@ -73,28 +73,28 @@ const ProfileProvider: React.FC<{
           changeFontSize(data.me.settings.fontSize);
         }
 
-        subscribeToMore({
-          document: SUBSCRIBE_ME,
-          // TODO: insert here login/logout logic
-          // updateQuery: (previousQueryResult, options, variables) => {
-          //   // eslint-disable-next-line no-debugger
-          //   debugger;
+        // TODO:
+        // subscribeToMore({
+        //   document: SUBSCRIBE_ME,
+        //   // updateQuery: (previousQueryResult, options, variables) => {
+        //   //   // eslint-disable-next-line no-debugger
+        //   //   debugger;
 
-          //   return undefined;
-          // },
-          // onError: (error) => {
-          //   // eslint-disable-next-line no-debugger
-          //   debugger;
-          // },
-        });
+        //   //   return undefined;
+        //   // },
+        //   // onError: (error) => {
+        //   //   // eslint-disable-next-line no-debugger
+        //   //   debugger;
+        //   // },
+        // });
 
-        client
-          .watchQuery<Data<'ping', { ping: string }>, undefined>({
-            query: PING,
-            fetchPolicy: 'no-cache',
-            pollInterval: 50000,
-          })
-          .subscribe(() => {});
+        // client
+        //   .watchQuery<Data<'ping', { ping: string }>, undefined>({
+        //     query: PING,
+        //     fetchPolicy: 'no-cache',
+        //     pollInterval: 50000,
+        //   })
+        //   .subscribe(() => {});
       }
     }, [data]);
   }

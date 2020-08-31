@@ -164,7 +164,8 @@ async function bootstrap(): Promise<void> {
         frameSrc,
         styleSrc,
         connectSrc,
-        upgradeInsecureRequests: 'true',
+        // TODO: helmet bug ?
+        // upgradeInsecureRequests: 'true',
       },
     })(_req, res, next);
   });
