@@ -15,7 +15,12 @@ import {
   Paper,
   Tooltip,
 } from '@material-ui/core';
-import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon } from '@material-ui/icons';
+import {
+  Search as SearchIcon,
+  Settings as SettingsIcon,
+  HelpOutline as HelpIcon,
+  Clear as ClearIcon,
+} from '@material-ui/icons';
 //#endregion
 //#region Imports Local
 import { PhonebookSearchProps } from '@lib/types';
@@ -49,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
+      minHeight: '32px',
     },
     suggestionsPopper: {
       zIndex: theme.zIndex.appBar,
@@ -94,6 +100,10 @@ const PhonebookSearch = forwardRef(
 
     const handleOpenTooltip = (): void => {
       setOpenTooltip(true);
+    };
+
+    const handleClearSearch = (): void => {
+      handleSearch({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
     };
 
     const handleCurrentSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -173,6 +183,9 @@ const PhonebookSearch = forwardRef(
             </Paper>
           </Popper>
         </Box>
+        <IconButton type="button" className={classes.icon} onClick={handleClearSearch} aria-label="clear">
+          <ClearIcon />
+        </IconButton>
         <Tooltip title={t('common:help') || ''}>
           <IconButton className={classes.icon} onClick={handleHelpOpen}>
             <HelpIcon />

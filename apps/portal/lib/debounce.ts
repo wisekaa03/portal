@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-export default (_value: any, _delay: number): any => {
+const Debounce = (_value: any, _delay: number): any => {
   const [value, setValue] = useState<any>(_value);
 
   useEffect(() => {
@@ -17,3 +17,5 @@ export default (_value: any, _delay: number): any => {
 
   return value;
 };
+
+export default Debounce;
