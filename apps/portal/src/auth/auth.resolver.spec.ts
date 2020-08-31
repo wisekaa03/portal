@@ -22,6 +22,10 @@ describe(AuthResolver.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule.forRoot()],
       providers: [
+        {
+          provide: 'PUB_SUB',
+          useValue: serviceMock,
+        },
         AuthResolver,
         ConfigService,
         { provide: UserService, useValue: serviceMock },

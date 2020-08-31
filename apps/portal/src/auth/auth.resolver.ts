@@ -47,7 +47,7 @@ export class AuthResolver {
     }
 
     if (user.id) {
-      let me = await this.userService.byId(user.id);
+      let me = (await this.userService.byId(user.id)) as any;
       delete me.groupIds;
       delete me.profileId;
       me = JSON.parse(JSON.stringify(me));
