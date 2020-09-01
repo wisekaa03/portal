@@ -104,8 +104,7 @@ export interface SearchSuggestions {
   avatar?: string;
 }
 
-export interface ProfileInput
-  extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt' | 'birthday'> {
+export interface ProfileInput extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt' | 'birthday'> {
   contact: Contact;
   birthday?: Date | null;
 }

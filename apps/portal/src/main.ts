@@ -11,7 +11,7 @@ import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express
 import express from 'express';
 import crypto from 'crypto';
 import passport from 'passport';
-import helmet from 'helmet';
+import { contentSecurityPolicy } from 'helmet';
 import cookieParser from 'cookie-parser';
 // import bodyParser from 'body-parser';
 import { Logger, PinoLogger } from 'nestjs-pino';
@@ -61,18 +61,10 @@ async function bootstrap(): Promise<void> {
     }
     // eslint-disable-next-line no-empty
   } catch (error) {
-    logger.warn(
-      'There are no files "private.crt", "private.key" in "secure" directory."',
-      error.toString(),
-      'Bootstrap',
-    );
+    logger.warn('There are no files "private.crt", "private.key" in "secure" directory."', error.toString(), 'Bootstrap');
   }
   const server = express();
-  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-    new ExpressAdapter(server),
-    nestjsOptions,
-  );
+  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(server), nestjsOptions);
 
   logger = app.get(Logger);
   const configService = app.get(ConfigService);
@@ -136,9 +128,7 @@ async function bootstrap(): Promise<void> {
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
     fontSrc.push('https://fonts.gstatic.com');
-    frameSrc.push(
-      `http://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT')}`,
-    );
+    frameSrc.push(`http://localhost.portal.${configService.get<string>('DOMAIN')}:${configService.get<number>('PORT')}`);
     frameSrc.push(`http://localhost:${configService.get<number>('PORT')}`);
     connectSrc.push(`ws://localhost:${configService.get<number>('PORT')}/graphql`);
   }
@@ -154,7 +144,7 @@ async function bootstrap(): Promise<void> {
   //#endregion
 
   app.use((_req: IncomingMessage, res: ServerResponse, next: () => void) => {
-    helmet.contentSecurityPolicy({
+    contentSecurityPolicy({
       directives: {
         defaultSrc,
         objectSrc: ["'none'"],

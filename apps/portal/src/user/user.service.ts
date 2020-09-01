@@ -9,21 +9,12 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { LdapResponseUser, LdapService, LDAPAddEntry } from 'nestjs-ldap';
-import bcrypt from 'bcrypt';
+import { compare } from 'bcrypt';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
-import {
-  LoginService,
-  Profile,
-  User,
-  UserSettings,
-  DefinedUserSettings,
-  Contact,
-  AllUsersInfo,
-  ProfileInput,
-} from '@lib/types';
+import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { ProfileService } from '@back/profile/profile.service';
@@ -62,33 +53,29 @@ export class UserService {
   comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
     const user = await this.byUsername(username);
 
-    return bcrypt.compare(password, user.password) ? user : undefined;
+    return compare(password, user.password) ? user : undefined;
   };
 
   /**
    * All users in Synchronization
    */
-  allUsers = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> => {
-    return (
-      this.userRepository
-        // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-        .find({
-          where: { loginService, disabled },
-          select: ['loginIdentificator', 'profile'],
-          loadEagerRelations: false,
-          cache: false,
-        })
-        .then((users) =>
-          users.map((user) => ({
-            contact: Contact.USER,
-            id: user.id,
-            loginIdentificator: user.loginIdentificator,
-            name: user.username,
-            disabled: user.disabled,
-          })),
-        )
-    );
-  };
+  allUsers = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> =>
+    this.userRepository
+      .find({
+        where: { loginService, disabled },
+        select: ['loginIdentificator', 'profile'],
+        loadEagerRelations: false,
+        cache: false,
+      })
+      .then((users) =>
+        users.map((user) => ({
+          contact: Contact.USER,
+          id: user.id,
+          loginIdentificator: user.loginIdentificator,
+          name: user.username,
+          disabled: user.disabled,
+        })),
+      );
 
   /**
    * Reads by ID
@@ -101,12 +88,7 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity} The user
    */
-  byId = async (
-    id: string,
-    isDisabled = true,
-    isRelations: boolean | 'profile' | 'groups' = true,
-    cache = true,
-  ): Promise<UserEntity> => {
+  byId = async (id: string, isDisabled = true, isRelations: boolean | 'profile' | 'groups' = true, cache = true): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { id };
 
     if (isDisabled) {
@@ -132,12 +114,7 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity} The user
    */
-  byUsername = async (
-    username: string,
-    isDisabled = true,
-    isRelations: boolean | 'profile' | 'groups' = true,
-    cache = true,
-  ): Promise<UserEntity> => {
+  byUsername = async (username: string, isDisabled = true, isRelations: boolean | 'profile' | 'groups' = true, cache = true): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { username };
 
     if (isDisabled) {
@@ -214,7 +191,6 @@ export class UserService {
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
       this.logger.error(`Unable to save data in "group": ${error.toString()}`, error);
 
-      // eslint-disable-next-line unicorn/no-useless-undefined
       return undefined;
     });
 
@@ -223,7 +199,6 @@ export class UserService {
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, true, false).catch((error) => {
         this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, error);
 
-        // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined;
       });
     }
@@ -286,9 +261,9 @@ export class UserService {
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error} Exception
    */
-  save = async (user: UserEntity): Promise<UserEntity> =>
+  save = async (userPromise: UserEntity): Promise<UserEntity> =>
     this.userRepository
-      .save<UserEntity>(user)
+      .save<UserEntity>(userPromise)
       .then((user) => {
         if (typeof user.profile === 'object' && Object.keys(user.profile).length > 1 && !user.profile.fullName) {
           const f: Array<string> = [];
@@ -356,19 +331,15 @@ export class UserService {
   ldapCheckUsername = async (value: string): Promise<boolean> =>
     this.ldapService
       .searchByUsername(value, false)
-      .then(() => {
-        return false;
-      })
-      .catch(() => {
-        return true;
-      });
+      .then(() => false)
+      .catch(() => true);
 
   /**
    * This is a LDAP new user and contact
    */
   ldapNewUser = async (value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
     Object.keys(value).forEach((key: string) => {
-      if (value[key] === null || value[key] === void 0) {
+      if (value[key] === null) {
         delete value[key];
       }
     });
@@ -376,14 +347,14 @@ export class UserService {
     entry.name = entry.cn;
 
     if (value.contact === Contact.PROFILE) {
-      entry['objectClass'] = ['contact'];
-      if (entry['sAMAccountName']) {
+      entry.objectClass = ['contact'];
+      if (entry.sAMAccountName) {
         throw new Error('Username is found and this is a Profile');
       }
     } else {
-      entry['objectClass'] = ['user'];
-      entry['userPrincipalName'] = `${entry['sAMAccountName']}@${this.configService.get<string>('LDAP_DOMAIN')}`;
-      if (!entry['sAMAccountName']) {
+      entry.objectClass = ['user'];
+      entry.userPrincipalName = `${entry.sAMAccountName}@${this.configService.get<string>('LDAP_DOMAIN')}`;
+      if (!entry.sAMAccountName) {
         throw new Error('Username is not found and this is a User');
       }
     }

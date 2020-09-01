@@ -16,8 +16,6 @@ import WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger, PinoLogger } from 'nestjs-pino';
-import { RedisPubSub } from 'graphql-redis-subscriptions';
-import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import sessionRedis from '@back/shared/session-redis';
@@ -103,8 +101,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region Logging module
     LoggerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) =>
-        pinoOptions(configService.get<string>('LOGLEVEL'), configService.get<boolean>('DEVELOPMENT')),
+      useFactory: async (configService: ConfigService) => pinoOptions(configService.get<string>('LOGLEVEL'), configService.get<boolean>('DEVELOPMENT')),
     }),
     //#endregion
 
@@ -170,18 +167,12 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           installSubscriptionHandlers: true,
           subscriptions: {
             keepAlive: 0,
-            onConnect: async (
-              connectionParameters: Record<string, any>,
-              websocket: WebSocket,
-              context: ConnectionContext,
-            ): Promise<any> => {
-              const promise = new Promise<User | undefined>((resolve) => {
+            onConnect: async (connectionParameters: Record<string, any>, websocket: WebSocket, context: ConnectionContext): Promise<any> => {
+              const promise = new Promise<User | undefined>((resolveOnConnect) => {
                 const request = (websocket as any)?.upgradeReq as express.Request;
                 const response = ({} as any) as express.Response;
 
-                auth(request, response, () =>
-                  resolve((websocket as any)?.upgradeReq?.session?.passport?.user || undefined),
-                );
+                auth(request, response, () => resolveOnConnect((websocket as any)?.upgradeReq?.session?.passport?.user || undefined));
               });
 
               const user = await promise;
@@ -210,6 +201,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
             return { user: req?.session?.passport?.user, req, res };
           },
           transformSchema: (schema: GraphQLSchema) => {
+            // eslint-disable-next-line no-param-reassign
             configService.schema = schema;
             return schema;
           },

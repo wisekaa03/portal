@@ -1,7 +1,8 @@
 /** @format */
 
 //#region Imports NPM
-import dotenv from 'dotenv';
+import type { DotenvParseOutput } from 'dotenv';
+import { parse } from 'dotenv';
 import { readFileSync } from 'fs';
 import Joi from 'joi';
 import { Inject } from '@nestjs/common';
@@ -20,10 +21,10 @@ export class ConfigService {
   private readonly envConfig: EnvConfig<string | number | boolean>;
   private graphQLSchema!: GraphQLSchema;
   private httpSecure = false;
-  private httpLogger: Logger | Console = console;
+  private httpLogger: Logger | any = console;
 
   constructor(@Inject(CONFIG_OPTIONS) private readonly filePath: string) {
-    const config = dotenv.parse(readFileSync(filePath));
+    const config = parse(readFileSync(filePath));
     this.envConfig = this.validateInput(config);
   }
 
@@ -47,7 +48,7 @@ export class ConfigService {
    * Ensures all needed variables are set, and returns the validated JavaScript object
    * including the applied default values.
    */
-  private validateInput(environmentConfig: dotenv.DotenvParseOutput): EnvConfig<string | number | boolean> {
+  private validateInput(environmentConfig: DotenvParseOutput): EnvConfig<string | number | boolean> {
     const environmentVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.any().empty('').default('development').optional(),
 
@@ -134,10 +135,10 @@ export class ConfigService {
     return this.graphQLSchema;
   }
 
-  public set logger(logger: Logger | Console) {
+  public set logger(logger: Logger | any) {
     this.httpLogger = logger;
   }
-  public get logger(): Logger | Console {
+  public get logger(): Logger | any {
     return this.httpLogger;
   }
 
