@@ -20,11 +20,11 @@ import { Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { Data, User, UserContext } from '@lib/types';
+import { Data, User, UserContext, AppContextMy, AppInitialPropsMy } from '@lib/types';
 // import { nextI18next } from './i18n-client';
 import { resolvers } from './state-link';
 import getRedirect from './get-redirect';
-import { AppContextMy, AppInitialPropsMy } from './types';
+
 import { AUTH_PAGE, FONT_SIZE_NORMAL } from './constants';
 import { CURRENT_USER } from './queries';
 //#endregion
@@ -35,7 +35,7 @@ interface CreateClientProps {
 }
 
 let configService: ConfigService | undefined;
-let logger: Console | Logger = console;
+let logger: Logger | any = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
 const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
@@ -215,8 +215,7 @@ export const withApolloClient = (
           if (
             error instanceof ApolloError &&
             !error.graphQLErrors.some(
-              (graphQLError) =>
-                graphQLError.extensions?.exception?.status >= 401 && graphQLError.extensions?.exception?.status <= 403,
+              (graphQLError) => graphQLError.extensions?.exception?.status >= 401 && graphQLError.extensions?.exception?.status <= 403,
             )
           ) {
             logger.error(`getDataFromTree: ${error.toString()}`, error.toString(), 'withApolloClient', { error });

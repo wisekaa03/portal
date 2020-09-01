@@ -77,6 +77,7 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/indent': 0,
+    'operator-linebreak': 0,
     'function-paren-newline': 0,
     'no-param-reassign': 0,
     'comma-dangle': 0,
@@ -89,7 +90,7 @@ module.exports = {
     'indent': 0,
     'no-nested-ternary': 0,
     'spaced-comment': ['error', 'always', { markers: ['#region', '#endregion'] }],
-    'max-len': ['error', { code: 160, ignoreUrls: true }],
+    'max-len': ['error', { code: 140, ignoreUrls: true }],
     'import/no-extraneous-dependencies': 0,
     'no-unused-vars': [
       'warn',
@@ -112,7 +113,7 @@ module.exports = {
       'error',
       {
         parser: 'typescript',
-        printWidth: 160,
+        printWidth: 140,
         singleQuote: true,
         useTabs: false,
         tabWidth: 2,
@@ -128,9 +129,6 @@ module.exports = {
         proseWrap: 'never',
       },
     ],
-    // 'react/prop-types': 'off',
-    // 'unicorn/no-null': 'off',
-    // 'unicorn/no-reduce': 'off',
     // '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': [
@@ -140,8 +138,10 @@ module.exports = {
         varsIgnorePattern: '^(_|[A-Z]+)',
       },
     ],
-    // 'unicorn/no-useless-undefined': 0,
-    // 'unicorn/prevent-abbreviations': 0,
+    'react/prop-types': 0,
+    'react/static-property-placement': 0,
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx', '.ts'] }],
+    'react/jsx-props-no-spreading': 0,
     // '@typescript-eslint/no-var-requires': 0,
   },
 };

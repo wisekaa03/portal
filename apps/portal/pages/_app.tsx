@@ -50,7 +50,7 @@ const ProfileProvider: React.FC<{
     if (ctx?.res && ctx?.req) {
       if (data?.me) {
         if (pathname.startsWith(AUTH_PAGE)) {
-          const location = decodeURI((ctx.req as Request).query['redirect'] as string) || FIRST_PAGE;
+          const location = decodeURI((ctx.req as Request).query.redirect as string) || FIRST_PAGE;
 
           ctx.res.statusCode = 303;
           ctx.res.setHeader('Location', location);
@@ -67,6 +67,7 @@ const ProfileProvider: React.FC<{
       }
     }
   } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       if (data?.me) {
         if (data.me.settings?.fontSize) {
