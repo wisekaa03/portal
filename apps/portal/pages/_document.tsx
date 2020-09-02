@@ -9,7 +9,7 @@ import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 //#endregion
 //#region Imports Local
 import { DocumentContextMy, DocumentInitialPropsMy } from '@lib/types';
-import { MaterialUI_primary_main } from '@lib/theme';
+import { MaterialUIPrimaryMain } from '@lib/theme';
 import { nextI18next } from '@lib/i18n-client';
 //#endregion
 
@@ -47,7 +47,7 @@ class MainDocument extends Document<DocumentInitialPropsMy> {
           {/* TODO: disable robots */}
           <meta name="robots" content="noindex" />
           {nonce && <meta property="csp-nonce" content={nonce} />}
-          <meta name="theme-color" content={MaterialUI_primary_main} />
+          <meta name="theme-color" content={MaterialUIPrimaryMain} />
         </Head>
         <body>
           <Main />

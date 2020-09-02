@@ -77,30 +77,30 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
 
-  const [
-    getSearchSuggestions,
-    { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError },
-  ] = useLazyQuery<Data<'searchSuggestions', SearchSuggestions[]>, { search: string }>(SEARCH_SUGGESTIONS, {
+  const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError }] = useLazyQuery<
+    Data<'searchSuggestions', SearchSuggestions[]>,
+    { search: string }
+  >(SEARCH_SUGGESTIONS, {
     ssr: false,
   });
 
-  const { loading, data, error, fetchMore, refetch } = useQuery<
-    Data<'profiles', Connection<Profile>>,
-    ProfileQueryProps
-  >(PROFILES(getGraphQLColumns(columns)), {
-    ssr: false,
-    variables: {
-      orderBy,
-      first: 100,
-      after: '',
-      search: search.length > 3 ? search : '',
-      disabled: columns.includes('disabled'),
-      // TODO: for admins only
-      notShowing: isAdmin && columns.includes('notShowing'),
+  const { loading, data, error, fetchMore, refetch } = useQuery<Data<'profiles', Connection<Profile>>, ProfileQueryProps>(
+    PROFILES(getGraphQLColumns(columns)),
+    {
+      ssr: false,
+      variables: {
+        orderBy,
+        first: 100,
+        after: '',
+        search: search.length > 3 ? search : '',
+        disabled: columns.includes('disabled'),
+        // TODO: for admins only
+        notShowing: isAdmin && columns.includes('notShowing'),
+      },
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
     },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-  });
+  );
 
   useEffect(() => {
     if (error) {
@@ -125,7 +125,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       const result = suggestionsData?.searchSuggestions;
 
       if (result?.length && _search.length >= 3) {
-        setSuggestionsFiltered(result.length === 1 && result[0]?.['name'] === _search ? [] : result);
+        setSuggestionsFiltered(result.length === 1 && result[0]?.name === _search ? [] : result);
       } else {
         setSuggestionsFiltered([]);
       }
@@ -169,10 +169,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
         return previous;
       },
-    }).catch((error) => {
-      snackbarUtils.error(error);
+    }).catch((e) => {
+      snackbarUtils.error(e);
 
-      // eslint-disable-next-line unicorn/no-useless-undefined
       return undefined;
     });
 
@@ -207,8 +206,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => actionSearch(event.target.value);
 
-  const handleSugClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void =>
-    actionSearch(event.currentTarget.textContent || '');
+  const handleSugClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => actionSearch(event.currentTarget.textContent || '');
 
   const handleProfileClose = (): void => {
     router.push({ pathname: '/phonebook' });

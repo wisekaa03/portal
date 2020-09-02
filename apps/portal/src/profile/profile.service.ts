@@ -43,10 +43,9 @@ export class ProfileService {
     // second: '2-digit',
   };
 
-  clean = (value: string | number | boolean): string | number | boolean => {
+  clean = (value: string | number | boolean): string | number | boolean =>
     // TODO: продумать варианты очистки и безопасности
-    return typeof value === 'string' ? value.trim() : value;
-  };
+    typeof value === 'string' ? value.trim() : value;
 
   constructor(
     @InjectRepository(ProfileEntity)
@@ -64,27 +63,23 @@ export class ProfileService {
    *
    * @async
    */
-  allProfiles = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> => {
-    return (
-      this.profileRepository
-        // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-        .find({
-          where: { loginService, disabled },
-          select: ['id', 'loginIdentificator', 'username'],
-          loadEagerRelations: false,
-          cache: false,
-        })
-        .then((profile) =>
-          profile.map((profile) => ({
-            contact: Contact.PROFILE,
-            id: profile.id,
-            loginIdentificator: profile.loginIdentificator,
-            name: profile.username,
-            disable: profile.disabled,
-          })),
-        )
-    );
-  };
+  allProfiles = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> =>
+    this.profileRepository
+      .find({
+        where: { loginService, disabled },
+        select: ['id', 'loginIdentificator', 'username'],
+        loadEagerRelations: false,
+        cache: false,
+      })
+      .then((profile) =>
+        profile.map((p) => ({
+          contact: Contact.PROFILE,
+          id: p.id,
+          loginIdentificator: p.loginIdentificator,
+          name: p.username,
+          disable: p.disabled,
+        })),
+      );
 
   /**
    * Get profiles
@@ -141,11 +136,7 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byId = async (
-    id: string,
-    isRelations: boolean | 'manager' = true,
-    cache = true,
-  ): Promise<ProfileEntity | undefined> => {
+  byId = async (id: string, isRelations: boolean | 'manager' = true, cache = true): Promise<ProfileEntity | undefined> => {
     const where: FindConditions<ProfileEntity> = { id };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
@@ -164,11 +155,7 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byUsername = async (
-    username: string,
-    isRelations: boolean | 'manager' = true,
-    cache = true,
-  ): Promise<ProfileEntity | undefined> => {
+  byUsername = async (username: string, isRelations: boolean | 'manager' = true, cache = true): Promise<ProfileEntity | undefined> => {
     const where: FindConditions<ProfileEntity> = { username };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
@@ -342,7 +329,7 @@ export class ProfileService {
       this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`);
     }
 
-    return;
+    return undefined;
   }
 
   /**
@@ -357,8 +344,7 @@ export class ProfileService {
    * @throws {Error} Exception
    */
   async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, save = true, count = 1): Promise<ProfileEntity> {
-    const manager =
-      ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
+    const manager = ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
 
     let comment: Record<string, string>;
     try {
@@ -373,9 +359,7 @@ export class ProfileService {
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
     const thumbnailPhoto = thumbnailPhotoBuffer
-      ? this.imageService
-          .imageResize(thumbnailPhotoBuffer, 250, 250)
-          .then((img) => (img ? img.toString('base64') : undefined))
+      ? this.imageService.imageResize(thumbnailPhotoBuffer, 250, 250).then((img) => (img ? img.toString('base64') : undefined))
       : undefined;
     const thumbnailPhoto40 = thumbnailPhotoBuffer
       ? this.imageService.imageResize(thumbnailPhotoBuffer).then((img) => (img ? img.toString('base64') : undefined))
@@ -473,21 +457,21 @@ export class ProfileService {
   save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
     this.profileRepository
       .save<ProfileEntity>(profile)
-      .then((profile) => {
-        if (profile && !profile.fullName) {
+      .then((p) => {
+        if (p && !p.fullName) {
           const f: Array<string> = [];
-          if (profile.lastName) {
-            f.push(profile.lastName);
+          if (p.lastName) {
+            f.push(p.lastName);
           }
-          if (profile.firstName) {
-            f.push(profile.firstName);
+          if (p.firstName) {
+            f.push(p.firstName);
           }
-          if (profile.middleName) {
-            f.push(profile.middleName);
+          if (p.middleName) {
+            f.push(p.middleName);
           }
-          profile.fullName = f.join(' ');
+          p.fullName = f.join(' ');
         }
-        return profile;
+        return p;
       })
       .catch((error: Error) => {
         this.logger.error(`Unable to save data in "profile": ${error.toString()}`, error);
@@ -514,10 +498,7 @@ export class ProfileService {
    * @returns {Promise<string[]>} Field selection
    * @throws {Error} Exception
    */
-  fieldSelection = async (
-    field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number],
-    department?: string,
-  ): Promise<string[]> => {
+  fieldSelection = async (field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number], department?: string): Promise<string[]> => {
     const query = this.profileRepository.createQueryBuilder('profile');
     const ifManager = field === 'manager' && department;
 
@@ -740,11 +721,7 @@ export class ProfileService {
    * @throws {Error|BadRequestException|NotAcceptableException}
    * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
    */
-  async changeProfile(
-    request: Request,
-    profile: Profile,
-    thumbnailPhoto?: Promise<FileUpload>,
-  ): Promise<ProfileEntity> {
+  async changeProfile(request: Request, profile: Profile, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
     let thumbnailPhotoProcessed: Buffer | undefined;
 
     if (!request.session?.passport?.user?.profile?.id) {
@@ -827,8 +804,8 @@ export class ProfileService {
             throw new BadRequestException();
           });
       } else {
-        profile['disabled'] = true;
-        profile['notShowing'] = true;
+        profile.disabled = true;
+        profile.notShowing = true;
       }
     }
 

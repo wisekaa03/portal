@@ -3,11 +3,11 @@
 //#region Imports NPM
 //#endregion
 //#region Imports Local
-import { PhonebookColumnNames } from './profile';
-import { LoginService } from './login-service';
-import { Profile } from './profile.dto';
-import { Group } from './group.dto';
-import { TkService, TkRoute, TkWhere } from './tickets';
+import type { Profile } from './profile.dto';
+import type { Group } from './group.dto';
+import type { PhonebookColumnNames } from './profile';
+import type { LoginService } from './login-service';
+import type { TkService, TkRoute, TkWhere } from './tickets';
 //#endregion
 
 export enum Contact {
@@ -21,44 +21,6 @@ export interface AllUsersInfo {
   id?: string;
   loginIdentificator?: string;
   name?: string;
-}
-
-export interface BaseUser {
-  id?: string;
-
-  loginService: LoginService;
-  loginIdentificator: string;
-
-  username: string;
-
-  password?: string;
-
-  disabled: boolean;
-
-  groups?: Group[];
-
-  groupIds?: string[];
-
-  isAdmin: boolean;
-
-  settings: UserSettings;
-
-  createdAt?: Date;
-
-  updatedAt?: Date;
-
-  __typename?: 'User';
-}
-
-//#region User
-export interface User extends BaseUser {
-  profile: Profile;
-  profileId?: string;
-}
-//#endregion
-
-export interface UserToSave extends BaseUser {
-  profile: Profile | string;
 }
 
 //#region User settings
@@ -109,6 +71,44 @@ export const DefinedUserSettings = [
   'columns',
 ];
 //#endregion
+
+export interface BaseUser {
+  id?: string;
+
+  loginService: LoginService;
+  loginIdentificator: string;
+
+  username: string;
+
+  password?: string;
+
+  disabled: boolean;
+
+  groups?: Group[];
+
+  groupIds?: string[];
+
+  isAdmin: boolean;
+
+  settings: UserSettings;
+
+  createdAt?: Date;
+
+  updatedAt?: Date;
+
+  __typename?: 'User';
+}
+
+//#region User
+export interface User extends BaseUser {
+  profile: Profile;
+  profileId?: string;
+}
+//#endregion
+
+export interface UserToSave extends BaseUser {
+  profile: Profile | string;
+}
 
 //#region User context
 export interface UserContext {

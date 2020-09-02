@@ -48,22 +48,19 @@ const ProfileProvider: React.FC<{
 
   if (__SERVER__) {
     if (ctx?.res && ctx?.req) {
+      // TODO:
       if (data?.me) {
-        if (pathname.startsWith(AUTH_PAGE)) {
-          const location = decodeURI((ctx.req as Request).query.redirect as string) || FIRST_PAGE;
-
-          ctx.res.statusCode = 303;
-          ctx.res.setHeader('Location', location);
-
-          return null;
-        }
+        // if (pathname.startsWith(AUTH_PAGE)) {
+        //   const location = decodeURI((ctx.req as Request).query.redirect as string) || FIRST_PAGE;
+        //   ctx.res.statusCode = 303;
+        //   ctx.res.setHeader('Location', location);
+        //   return null;
+        // }
       } else if (!loading && ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
-        const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
-
-        ctx.res.statusCode = 303;
-        ctx.res.setHeader('Location', location);
-
-        return null;
+        // const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
+        // ctx.res.statusCode = 303;
+        // ctx.res.setHeader('Location', location);
+        // return null;
       }
     }
   } else {

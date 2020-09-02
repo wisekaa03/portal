@@ -5,7 +5,6 @@ import React, { useEffect, useState, useMemo, useCallback, useContext } from 're
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
@@ -37,13 +36,11 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<ProfileInput>(newParameters);
   const [updated, setUpdated] = useState<ProfileInput>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
-
   const { user } = useContext(ProfileContext);
+  const locale = 'ru';
   const { isAdmin } = user || { isAdmin: false };
 
-  const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<
-    Data<'ldapNewUser', Profile>
-  >(LDAP_NEW_USER, {
+  const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<Data<'ldapNewUser', Profile>>(LDAP_NEW_USER, {
     onCompleted: (data) => {
       if (data.ldapNewUser.id) {
         router.push(`/profile/edit/${data.ldapNewUser.id}`);
@@ -51,9 +48,9 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     },
   });
 
-  const [checkUsername, { loading: loadingCheckUsername, error: errorCheckUsername }] = useMutation<
-    Data<'ldpCheckUsername', boolean>
-  >(LDAP_CHECK_USERNAME);
+  const [checkUsername, { loading: loadingCheckUsername, error: errorCheckUsername }] = useMutation<Data<'ldpCheckUsername', boolean>>(
+    LDAP_CHECK_USERNAME,
+  );
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -94,10 +91,10 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleBirthday = (date: MaterialUiPickersDate, value?: string | null | undefined): void => {
+  const handleBirthday = (date: Date): void => {
     if (current && updated) {
-      setCurrent({ ...current, birthday: value ? new Date(value) : undefined });
-      setUpdated({ ...updated, birthday: value ? new Date(format(value, 'YYYY-MM-DD')) : undefined });
+      setCurrent({ ...current, birthday: new Date(format(date, 'YYYY-MM-DD')) });
+      setUpdated({ ...updated, birthday: new Date(format(date, 'YYYY-MM-DD')) });
     }
   };
 
@@ -141,7 +138,7 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
       <MaterialUI {...rest}>
         <ProfileEditComponent
           isAdmin={isAdmin}
-          newProfile={true}
+          newProfile
           loadingCheckUsername={loadingCheckUsername}
           loadingProfile={false}
           loadingChanged={loadingLdapNewUser}
@@ -152,6 +149,7 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
           handleChange={handleChange}
           handleBirthday={handleBirthday}
           handleSave={handleSave}
+          locale={locale}
         />
       </MaterialUI>
     </>

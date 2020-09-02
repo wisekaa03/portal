@@ -29,26 +29,22 @@ export class GroupService {
   /**
    * All groups in Synchronization
    */
-  allGroups = async (loginService = LoginService.LDAP): Promise<AllUsersInfo[]> => {
-    return (
-      this.groupRepository
-        // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-        .find({
-          where: { loginService },
-          select: ['id', 'loginIdentificator', 'name'],
-          loadEagerRelations: false,
-          cache: false,
-        })
-        .then((groups) =>
-          groups.map((group) => ({
-            contact: Contact.GROUP,
-            id: group.id,
-            loginIdentificator: group.loginIdentificator,
-            name: group.name,
-          })),
-        )
-    );
-  };
+  allGroups = async (loginService = LoginService.LDAP): Promise<AllUsersInfo[]> =>
+    this.groupRepository
+      .find({
+        where: { loginService },
+        select: ['id', 'loginIdentificator', 'name'],
+        loadEagerRelations: false,
+        cache: false,
+      })
+      .then((groups) =>
+        groups.map((group) => ({
+          contact: Contact.GROUP,
+          id: group.id,
+          loginIdentificator: group.loginIdentificator,
+          name: group.name,
+        })),
+      );
 
   /**
    * Group by Identificator
@@ -76,6 +72,7 @@ export class GroupService {
   async fromLdapUser(ldap: LdapResponseUser): Promise<GroupEntity[]> {
     const groupsPromises = ldap.groups.map(
       async (ldapGroup: LdapResponseGroup) =>
+        // eslint-disable-next-line no-return-await
         await this.byIdentificator(ldapGroup.objectGUID).then((updated) => {
           const group: Group = {
             ...updated,

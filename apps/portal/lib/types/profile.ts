@@ -1,17 +1,18 @@
 /** @format */
 
 //#region Imports NPM
+import React from 'react';
 import { WithTranslation } from 'next-i18next';
 import { ApolloQueryResult, ApolloError, QueryLazyOptions } from '@apollo/client';
 import { Order, Connection } from 'typeorm-graphql-pagination';
 import { OutlinedInputProps } from '@material-ui/core';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
 import { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
+import { User } from './user.dto';
 //#endregion
 
 export type PhonebookColumnNames =
@@ -202,13 +203,11 @@ export interface ProfileEditComponentProps {
   loadingChanged: boolean;
   hasUpdate: boolean;
   profile?: Profile | ProfileInput;
+  locale?: User['settings']['lng'];
   onDrop: (_: any) => Promise<void>;
   handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  handleChange: (
-    _: keyof Profile | keyof ProfileInput,
-    ___?: string,
-  ) => (__: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBirthday: (date: MaterialUiPickersDate, value?: string | null | undefined) => void;
+  handleChange: (_: keyof Profile | keyof ProfileInput, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBirthday: (date: Date) => void;
   handleSave: () => void;
 }
 

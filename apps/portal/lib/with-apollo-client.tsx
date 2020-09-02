@@ -165,7 +165,7 @@ export const withApolloClient = (
       if (__SERVER__) {
         const request = ctx.req as Request;
         const response = ctx.res as Response;
-        if (response.finished) {
+        if (response.writableEnded) {
           return appProps;
         }
 

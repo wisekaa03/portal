@@ -110,8 +110,7 @@ export class SyncService {
 
         return Promise.allSettled(promises).then((values) =>
           values.reduce(
-            (accumulator, promise) =>
-              promise.status === 'fulfilled' && promise.value ? [...accumulator, promise.value] : accumulator,
+            (accumulator, promise) => (promise.status === 'fulfilled' && promise.value ? [...accumulator, promise.value] : accumulator),
             [] as AllUsersInfo[],
           ),
         );
@@ -134,17 +133,13 @@ export class SyncService {
     const fromDB = [...(await this.userService.allUsers()), ...(await this.profileService.allProfiles())];
     const profilesPromises = fromDB.map(async (element) => {
       if (element.id && element.loginIdentificator) {
-        const value = profilesLdap.find((value) => value.loginIdentificator === element.loginIdentificator);
+        const value = profilesLdap.find((v) => v.loginIdentificator === element.loginIdentificator);
 
         if (element.contact === Contact.USER) {
-          this.logger.info(
-            `LDAP: ${!value ? 'Blocking user' : 'Granting user access'}: [id=${element.id}] ${element.name}`,
-          );
+          this.logger.info(`LDAP: ${!value ? 'Blocking user' : 'Granting user access'}: [id=${element.id}] ${element.name}`);
           await this.userService.update(element.id, { disabled: !value });
         } else if (element.contact === Contact.PROFILE) {
-          this.logger.info(
-            `LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [id=${element.id}] ${element.name}`,
-          );
+          this.logger.info(`LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [id=${element.id}] ${element.name}`);
           await this.profileService.update(element.id, { disabled: !value });
         }
       }

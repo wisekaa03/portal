@@ -15,13 +15,17 @@ import {
   Typography,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
+  TextField,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { ru as ruLocale, enUS as enLocale } from 'date-fns/locale';
+import { DatePicker, LocalizationProvider } from '@material-ui/pickers';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -32,7 +36,7 @@ import Loading from '@front/components/loading';
 import Button from '@front/components/ui/button';
 import { DropzoneWrapper } from '@front/components/dropzone';
 import ProfileTextFieldComponent from './text-field';
-import { FormControl, InputLabel } from '@material-ui/core';
+
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -180,12 +184,13 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   handleChange,
   handleBirthday,
   handleSave,
+  locale,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   const router = useRouter();
-
   const InputProps = isAdmin ? { endAdornment } : { readOnly: true };
+  const dateLocale = locale === 'en' ? enLocale : ruLocale;
 
   return (
     <Box display="flex" flexDirection="column">
@@ -333,7 +338,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           <FormControlLabel
                             control={
                               <Checkbox
-                                disabled={true}
+                                disabled
                                 checked={profile.disabled}
                                 onChange={handleChange('disabled')}
                                 color="secondary"
@@ -390,22 +395,16 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                     />
                   </div>
                   <div>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <KeyboardDatePicker
-                        fullWidth
+                    <LocalizationProvider dateAdapter={DateFnsUtils as any} locale={dateLocale}>
+                      <DatePicker
+                        renderInput={(props) => <TextField fullWidth variant="outlined" color="secondary" {...props} />}
                         disabled={loadingChanged}
                         disableFuture
-                        inputVariant="outlined"
-                        color="secondary"
-                        format="yyyy-MM-dd"
                         label={t('phonebook:fields.birthday')}
                         value={profile.birthday}
                         onChange={handleBirthday}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change birthday',
-                        }}
                       />
-                    </MuiPickersUtilsProvider>
+                    </LocalizationProvider>
                   </div>
                   {others.map((field) => (
                     <div key={field}>

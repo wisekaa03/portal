@@ -6,11 +6,11 @@ import React, { useEffect, useState, useMemo, useCallback, useContext } from 're
 import { NextPageContext } from 'next';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/client';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
+import { UserContext } from '@lib/types/user.dto';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import { format } from '@lib/dayjs';
@@ -25,19 +25,19 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ..
   const [updated, setUpdated] = useState<Partial<Profile> | undefined>();
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
-  const { user } = (ctx?.req as Request)?.session?.passport || useContext(ProfileContext);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { user } = ((ctx?.req as Request)?.session?.passport as UserContext) || useContext(ProfileContext);
   const id = query?.id || user?.profile?.id;
+  // TODO:
+  const locale = 'ru';
   const { isAdmin } = user || { isAdmin: false };
 
-  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery<Data<'profile', Profile>>(
-    PROFILE,
-    {
-      variables: { id },
-      // TODO: check if this is available
-      ssr: false,
-      context: { user },
-    },
-  );
+  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery<Data<'profile', Profile>>(PROFILE, {
+    variables: { id },
+    // TODO: check if this is available
+    ssr: false,
+    context: { user },
+  });
 
   const changeProfileRefetchQueries =
     id === user?.profile?.id
@@ -90,10 +90,10 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ..
     }
   };
 
-  const handleBirthday = (date: MaterialUiPickersDate, value?: string | null | undefined): void => {
+  const handleBirthday = (date: Date): void => {
     if (current && updated) {
-      setCurrent({ ...current, birthday: value ? value : undefined });
-      setUpdated({ ...updated, birthday: value ? format(value, 'YYYY-MM-DD') : undefined });
+      setCurrent({ ...current, birthday: format(date, 'YYYY-MM-DD') || undefined });
+      setUpdated({ ...updated, birthday: date ? format(date, 'YYYY-MM-DD') : undefined });
     }
   };
 
@@ -152,6 +152,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ..
           handleChange={handleChange}
           handleBirthday={handleBirthday}
           handleSave={handleSave}
+          locale={locale}
         />
       </MaterialUI>
     </>

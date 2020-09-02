@@ -21,7 +21,7 @@ import {
   RobotoItalicLatin,
 } from './fonts';
 
-export const MaterialUI_primary_main = '#2c4373';
+export const MaterialUIPrimaryMain = '#2c4373';
 
 export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) => { matches: boolean }): Theme => {
   const theme = createMuiTheme({
@@ -32,7 +32,7 @@ export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) =>
     },
     palette: {
       primary: {
-        main: MaterialUI_primary_main,
+        main: MaterialUIPrimaryMain,
       },
       secondary: {
         main: '#6AA7C8',

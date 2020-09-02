@@ -10,12 +10,13 @@ import { useTranslation } from './i18n-client';
 
 interface SnackbarUtilsProps {
   setUseSnackbarRef: (showSnackbar: WithSnackbarProps) => void;
-  setUseTranslationRef: (useTranslation: any) => void;
+  setUseTranslationRef: (_: any) => void;
 }
 
-const InnerSnackbarUtilsConfigurator: React.FC<SnackbarUtilsProps> = (props: SnackbarUtilsProps) => {
-  props.setUseSnackbarRef(useSnackbar());
-  props.setUseTranslationRef(useTranslation());
+const InnerSnackbarUtilsConfigurator: React.FC<SnackbarUtilsProps> = ({ setUseSnackbarRef, setUseTranslationRef }: SnackbarUtilsProps) => {
+  setUseSnackbarRef(useSnackbar());
+  setUseTranslationRef(useTranslation());
+
   return null;
 };
 
@@ -30,11 +31,9 @@ const setUseTranslationRef = (useTranslationRefProperty: any): void => {
   useTranslationRef = useTranslationRefProperty;
 };
 
-export const SnackbarUtilsConfigurator = (): React.ReactElement => {
-  return (
-    <InnerSnackbarUtilsConfigurator setUseSnackbarRef={setUseSnackbarRef} setUseTranslationRef={setUseTranslationRef} />
-  );
-};
+export const SnackbarUtilsConfigurator = (): React.ReactElement => (
+  <InnerSnackbarUtilsConfigurator setUseSnackbarRef={setUseSnackbarRef} setUseTranslationRef={setUseTranslationRef} />
+);
 
 export default {
   error(errors: ApolloError | readonly GraphQLError[] | string): void {
@@ -66,6 +65,5 @@ export default {
     }
   },
 
-  show: (message: string, variant: VariantType = 'error'): string | number =>
-    useSnackbarRef.enqueueSnackbar(message, { variant }),
+  show: (message: string, variant: VariantType = 'error'): string | number => useSnackbarRef.enqueueSnackbar(message, { variant }),
 };

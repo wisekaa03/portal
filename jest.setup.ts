@@ -1,5 +1,5 @@
 /** @format */
-/* eslint spaced-comment:0 */
+/* eslint spaced-comment:0, no-underscore-dangle:0 */
 /// <reference types="./typings/global" />
 
 import * as enzyme from 'enzyme';

@@ -50,7 +50,7 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
       },
     },
-    'import/ignore': ['.coffee$', '.(scss|less|css)$', '.(svg|png|jpe?g|webp|gif)(\\?.*)?$'],
+    'import/ignore': ['\\.coffee$', '\\.(scss|less|css)$', '\\.(svg|png|jpe?g|webp|gif)(\\?.*)?$'],
   },
   globals: {
     window: true,
@@ -76,6 +76,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    'no-confusing-arrow': 0,
     '@typescript-eslint/indent': 0,
     'operator-linebreak': 0,
     'function-paren-newline': 0,
@@ -129,7 +130,9 @@ module.exports = {
         proseWrap: 'never',
       },
     ],
-    // '@typescript-eslint/no-empty-function': 'warn',
+    'no-empty-function': 0,
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -138,6 +141,8 @@ module.exports = {
         varsIgnorePattern: '^(_|[A-Z]+)',
       },
     ],
+    'no-useless-constructor': 0,
+    'react/jsx-wrap-multilines': 0,
     'react/prop-types': 0,
     'react/static-property-placement': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx', '.ts'] }],

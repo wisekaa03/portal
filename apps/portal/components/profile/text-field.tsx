@@ -14,14 +14,7 @@ import { PROFILE_FIELD_SELECTION } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 //#endregion
 
-const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({
-  disabled,
-  handleChange,
-  field,
-  value,
-  InputProps,
-  fullWidth = true,
-}) => {
+const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, handleChange, field, value, InputProps, fullWidth = true }) => {
   const { t } = useTranslation();
   const autocomplete = PROFILE_AUTOCOMPLETE_FIELDS.includes(field);
 

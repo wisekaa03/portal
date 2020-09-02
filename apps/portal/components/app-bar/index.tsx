@@ -16,7 +16,7 @@ import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';
 import { AppBarComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
-import LogoMin from '@images/png/logo_min.png?inline';
+import LogoMin from '@images/png/logo_min.png'; // TODO: ?inline';
 //#endregion
 
 const avatarHeight = 48;
@@ -102,13 +102,7 @@ const AppBarComponent: FC<AppBarComponentProps> = ({
             <>
               {user && (
                 <>
-                  <IconButton
-                    edge="start"
-                    onClick={handleDrawerOpen}
-                    className={classes.menuButton}
-                    color="inherit"
-                    aria-label="menu"
-                  >
+                  <IconButton edge="start" onClick={handleDrawerOpen} className={classes.menuButton} color="inherit" aria-label="menu">
                     <MenuIcon />
                   </IconButton>
                   <div className={classes.logo}>
@@ -158,12 +152,7 @@ const AppBarComponent: FC<AppBarComponentProps> = ({
                           </>
                         )}
                       </Box>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.buttonLogout}
-                        onClick={handleLogout}
-                      >
+                      <Button variant="contained" color="secondary" className={classes.buttonLogout} onClick={handleLogout}>
                         {t('common:signOut')}
                       </Button>
                     </Box>

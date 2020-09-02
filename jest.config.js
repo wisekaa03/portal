@@ -1,4 +1,5 @@
 /** @format */
+/* eslint @typescript-eslint/no-var-requires:0 */
 
 const { pathsToModuleNameMapper } = require('ts-jest/utils');
 const { jsWithTs: tsjPreset } = require('ts-jest/presets');
@@ -24,7 +25,7 @@ module.exports = {
   globals: {
     'ts-jest': {
       tsConfig: 'tsconfig.jest.json',
-      // 	Disable type-checking
+      // Disable type-checking
       isolatedModules: true,
     },
   },
