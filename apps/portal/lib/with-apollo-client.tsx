@@ -176,6 +176,10 @@ export const withApolloClient = (
           cookie: request.headers?.cookie,
         });
 
+        console.error('-------------------------------------------------------');
+        console.error('with-apollo-client Request.session.passport.user.username: [', request.session?.passport?.user?.username, ']');
+        console.error('-------------------------------------------------------');
+
         let user: User | undefined;
         try {
           const { data } = await apolloClient.query<Data<'me', User>, undefined>({

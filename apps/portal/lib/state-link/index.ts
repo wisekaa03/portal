@@ -7,12 +7,11 @@ import { Group } from '../types/group.dto';
 
 export const resolvers = {
   Query: {
-    me: (
-      _root: Record<string, unknown>,
-      _arguments: Record<string, unknown>,
-      { user }: { user?: User },
-    ): User | null => {
+    me: (_root: Record<string, unknown>, _arguments: Record<string, unknown>, { user }: { user?: User }): User | null => {
       if (__SERVER__) {
+        console.error('-------------------------------------------------------');
+        console.error('StateLink ME.username: [', user?.username, ']');
+        console.error('-------------------------------------------------------');
         if (user) {
           const data = {
             ...user,
@@ -20,10 +19,7 @@ export const resolvers = {
               ? [
                   ...user.groups?.reduce((accumulator, element) => {
                     if (element.id && element.dn && element.loginService && element.name) {
-                      return [
-                        ...accumulator,
-                        { ...element, description: element.description || '', __typename: 'Group' },
-                      ];
+                      return [...accumulator, { ...element, description: element.description || '', __typename: 'Group' }];
                     }
                     return accumulator;
                   }, [] as Group[]),
