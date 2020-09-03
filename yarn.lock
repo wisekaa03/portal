@@ -10313,10 +10313,10 @@ graphql-extensions@^0.12.4:
     apollo-server-env "^2.4.5"
     apollo-server-types "^0.5.1"
 
-graphql-redis-subscriptions@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-2.3.0.tgz#b2d61cd6c4c73947094f112dd354d9b7e73091cd"
-  integrity sha512-WWJ6kS2BP6LhjDsrZDX5050hOxB+kYExCUdpoLJ1Uul55JVhs1LOFlzMgg620wqVMWFWjvEsnwLbk8OPuByRWg==
+graphql-redis-subscriptions@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-2.3.1.tgz#53d67d157f9c8c48ef0c5c1902f42fe2d0b93e27"
+  integrity sha512-ztS3ZXBSoPJ8Q0/o7PG2iLO6QWq2tlJrukiBJCjgMccRv1I3lt3HmLjiH2CbDjPhpoINttZNoytQbxE0OE/UpA==
   dependencies:
     iterall "^1.3.0"
   optionalDependencies:
