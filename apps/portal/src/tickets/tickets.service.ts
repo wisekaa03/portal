@@ -104,9 +104,10 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (this.configService.get<string>('OSTICKET_URL')) {
+    const osticketUrl = this.configService.get<string>('OSTICKET_URL');
+    if (osticketUrl) {
       try {
-        const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
+        const OSTicketURL: Record<string, string> = JSON.parse(osticketUrl);
 
         Object.keys(OSTicketURL).forEach((where) => {
           const whereKey = whereService(where);
@@ -114,6 +115,7 @@ export class TicketsService {
           switch (whereKey) {
             case TkWhere.OSTaudit:
             case TkWhere.OSTmedia:
+            case TkWhere.OSThr:
               break;
             case TkWhere.SOAP1C:
             case TkWhere.Default:
@@ -261,6 +263,7 @@ export class TicketsService {
           switch (whereKey) {
             case TkWhere.OSTaudit:
             case TkWhere.OSTmedia:
+            case TkWhere.OSThr:
               break;
             case TkWhere.SOAP1C:
             case TkWhere.Default:

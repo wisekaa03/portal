@@ -44,6 +44,9 @@ export const whereService = (where: string | TkWhere): TkWhere => {
     case TkWhere.OSTmedia:
     case 'media':
       return TkWhere.OSTmedia;
+    case TkWhere.OSThr:
+    case 'kadry':
+      return TkWhere.OSThr;
     default:
       return TkWhere.Default;
   }
