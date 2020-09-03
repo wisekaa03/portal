@@ -49,6 +49,11 @@ const ProfileProvider: React.FC<{
   if (__SERVER__) {
     if (ctx?.res && ctx?.req) {
       // TODO:
+      console.error('-------------------------------------------------------');
+      console.error('URL', ctx.req?.url);
+      console.error('Loading', loading);
+      console.error('AUTH_PAGE', AUTH_PAGE);
+      console.error('-------------------------------------------------------');
       if (data?.me) {
         // if (pathname.startsWith(AUTH_PAGE)) {
         //   const location = decodeURI((ctx.req as Request).query.redirect as string) || FIRST_PAGE;
