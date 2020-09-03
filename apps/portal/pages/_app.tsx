@@ -50,9 +50,8 @@ const ProfileProvider: React.FC<{
     if (ctx?.res && ctx?.req) {
       // TODO:
       console.error('-------------------------------------------------------');
-      console.error('URL', ctx.req?.url);
-      console.error('Loading', loading);
-      console.error('AUTH_PAGE', AUTH_PAGE);
+      console.error('Loading', loading, 'ME', data?.me?.username);
+      console.error('URL', ctx.req?.url, 'AUTH_PAGE', AUTH_PAGE);
       console.error('-------------------------------------------------------');
       if (data?.me) {
         // if (pathname.startsWith(AUTH_PAGE)) {
