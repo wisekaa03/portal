@@ -402,7 +402,7 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia || task.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
@@ -523,7 +523,7 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia || task.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
@@ -656,7 +656,7 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia) {
+    if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia || task.where === TkWhere.OSThr) {
       throw new Error('Not implemented');
     }
 
@@ -717,7 +717,7 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia) {
+    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia || id.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
@@ -828,7 +828,7 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia) {
+    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia || id.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
