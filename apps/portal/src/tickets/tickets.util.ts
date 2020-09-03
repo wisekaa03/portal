@@ -2,9 +2,8 @@
 /* eslint no-confusing-arrow:0 */
 
 import clearHtml from '@lib/clear-html';
-import {
+import type {
   TkTaskNew,
-  TkWhere,
   TkRoute,
   TkService,
   TkTask,
@@ -18,6 +17,7 @@ import {
   TicketsServiceSOAP,
   TicketsUserSOAP,
 } from '@lib/types';
+import { TkWhere } from '@lib/types';
 
 export const SMALL_BODY_STRING = 250;
 
@@ -71,7 +71,7 @@ export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefi
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
-        id: user['Ref'],
+        id: user.Ref,
         name: user['ФИО'],
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],
@@ -88,10 +88,10 @@ export const fileSOAP = (file: TicketsFileSOAP, where: TkWhere): TkFile | undefi
   file && Object.keys(file).length > 0 && file['Наименование']
     ? {
         where: whereService(where),
-        id: file['Ref'],
+        id: file.Ref,
         name: file['Наименование'],
         ext: file['РасширениеФайла'],
-        mime: file['MIME'],
+        mime: file.MIME,
         body: file['ФайлХранилище'],
       }
     : undefined;
@@ -187,14 +187,13 @@ export const taskSOAP = (task: TicketsTaskSOAP, where: TkWhere): TkTask | undefi
   task && Object.keys(task).length > 0
     ? {
         where: whereService(where),
-        id: task['Ref'],
+        id: task.Ref,
         code: task['Код'],
         subject: task['Наименование'],
         body: task['Описание'] && clearHtml(task['Описание']),
         smallBody: task['Описание'] && clearHtml(task['Описание'], SMALL_BODY_STRING),
         status: task['Статус'],
-        createdDate:
-          !task['Дата'] || task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? undefined : task['Дата'],
+        createdDate: !task['Дата'] || task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? undefined : task['Дата'],
         timeoutDate:
           !task['СрокИсполнения'] || task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z'
             ? undefined
@@ -272,10 +271,10 @@ export const serviceOST = (service: Record<string, any>, where: TkWhere): TkServ
   service && Object.keys(service).length > 0
     ? {
         where: whereService(where),
-        code: service['code'],
-        name: service['name'],
-        description: service['description'],
-        avatar: service['avatar'],
+        code: service.code,
+        name: service.name,
+        description: service.description,
+        avatar: service.avatar,
       }
     : undefined;
 
@@ -291,11 +290,11 @@ export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute |
   route && Object.keys(route).length > 0
     ? {
         where: whereService(where),
-        code: route['code'],
-        name: route['name'],
-        description: route['description'],
-        avatar: route['avatar'],
-        services: route['services']?.map((service: Record<string, any>) => serviceOST(service, where)),
+        code: route.code,
+        name: route.name,
+        description: route.description,
+        avatar: route.avatar,
+        services: route.services?.map((service: Record<string, any>) => serviceOST(service, where)),
       }
     : undefined;
 
@@ -358,16 +357,16 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | und
   task && Object.keys(task).length > 0
     ? {
         where: whereService(where),
-        code: task['number'],
-        subject: task['subject'],
+        code: task.number,
+        subject: task.subject,
         smallBody:
-          typeof task['description'] === 'string'
-            ? task['description']?.substring(0, SMALL_BODY_STRING)
-            : task['description']?.[0]?.body?.substring(0, SMALL_BODY_STRING),
-        body: typeof task['description'] === 'string' ? task['description'] : task['description']?.[0]?.body,
-        status: task['status_name'],
-        createdDate: new Date(task['created']),
-        timeoutDate: new Date(task['dateOfCompletion']),
+          typeof task.description === 'string'
+            ? task.description?.substring(0, SMALL_BODY_STRING)
+            : task.description?.[0]?.body?.substring(0, SMALL_BODY_STRING),
+        body: typeof task.description === 'string' ? task.description : task.description?.[0]?.body,
+        status: task.status_name,
+        createdDate: new Date(task.created),
+        timeoutDate: new Date(task.dateOfCompletion),
         endDate: undefined,
         initiatorUser: '',
         // {
@@ -391,12 +390,12 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | und
         service: {
           where: whereService(where),
           code: '',
-          name: task['topic'],
+          name: task.topic,
         },
         availableAction: undefined,
         availableStages: undefined,
         files: undefined,
-        comments: commentsOST(task['description'], where, task['number']),
+        comments: commentsOST(task.description, where, task.number),
       }
     : undefined;
 
@@ -415,13 +414,13 @@ export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | u
     ? {
         where: whereService(where),
         // id: task['ticket'],
-        code: task['number'],
-        subject: task['name'],
-        route: task['route'] || '000000001',
-        service: task['service'],
-        organization: task['company'],
-        status: task['status'] || 'New',
-        createdDate: new Date(task['creationDateTime']),
+        code: task.number,
+        subject: task.name,
+        route: task.route || '000000001',
+        service: task.service,
+        organization: task.company,
+        status: task.status || 'New',
+        createdDate: new Date(task.creationDateTime),
       }
     : undefined;
 
@@ -432,7 +431,7 @@ export const userOST = (user: Record<string, any>, where: TkWhere): TkUser | und
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
-        id: user['Ref'],
+        id: user.Ref,
         name: user['ФИО'],
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],

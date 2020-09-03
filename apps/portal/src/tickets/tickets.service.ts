@@ -22,26 +22,16 @@ import {
   TicketsRouteSOAP,
   TicketsUserSOAP,
   TicketsTaskSOAP,
-  TicketsSOAP_GetRoutes,
-  TicketsSOAP_GetTasks,
-  TicketsSOAP_GetTaskDescription,
+  TicketsSOAPGetRoutes,
+  TicketsSOAPGetTasks,
+  TicketsSOAPGetTaskDescription,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
-import {
-  taskSOAP,
-  AttachesSOAP,
-  userOST,
-  taskOST,
-  routesOST,
-  newOST,
-  routeSOAP,
-  whereService,
-  userSOAP,
-} from './tickets.util';
+import { taskSOAP, AttachesSOAP, userOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
 //#endregion
 
 /**
@@ -87,14 +77,12 @@ export class TicketsService {
         promises.push(
           client
             .GetRoutesAsync({ Log: user.username })
-            .then((result: DataResultSOAP<TicketsSOAP_GetRoutes>) => {
+            .then((result: DataResultSOAP<TicketsSOAPGetRoutes>) => {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
-              if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+              if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
                 return {
-                  routes: result[0]['return']?.['Сервис']?.map((route: TicketsRouteSOAP) =>
-                    routeSOAP(route, TkWhere.SOAP1C),
-                  ),
+                  routes: result[0].return?.['Сервис']?.map((route: TicketsRouteSOAP) => routeSOAP(route, TkWhere.SOAP1C)),
                 };
               }
 
@@ -160,18 +148,12 @@ export class TicketsService {
     }
 
     return Promise.allSettled(promises)
-      .then((values) =>
-        values.map((promise) =>
-          promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] },
-        ),
-      )
-      .then((routes: TkRoutes[]) => {
-        return routes.reduce(
+      .then((values) => values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] })))
+      .then((routes: TkRoutes[]) =>
+        routes.reduce(
           (accumulator: TkRoutes, current: TkRoutes) => {
             if (Array.isArray(current.routes) && current.routes.length > 0) {
-              accumulator.routes = accumulator.routes
-                ?.concat(current.routes)
-                .sort((a, b) => a.name.localeCompare(b.name));
+              accumulator.routes = accumulator.routes?.concat(current.routes).sort((a, b) => a.name.localeCompare(b.name));
             }
             if (Array.isArray(current.errors) && current.errors.length > 0) {
               accumulator.errors = accumulator.errors?.concat(current.errors);
@@ -179,8 +161,8 @@ export class TicketsService {
             return accumulator;
           },
           { routes: [], errors: [] },
-        );
-      })
+        ),
+      )
       .catch((error) => {
         throw new Error(error);
       });
@@ -229,17 +211,13 @@ export class TicketsService {
                 Context: {},
               },
             })
-            .then((result: DataResultSOAP<TicketsSOAP_GetTasks>) => {
+            .then((result: DataResultSOAP<TicketsSOAPGetTasks>) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
-              if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+              if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
                 return {
-                  users: result[0]['return']?.['Пользователи']?.['Пользователь']?.map((usr: TicketsUserSOAP) =>
-                    userSOAP(usr, TkWhere.SOAP1C),
-                  ),
-                  tasks: result[0]['return']?.['Задания']?.['Задание']?.map((task: TicketsTaskSOAP) =>
-                    taskSOAP(task, TkWhere.SOAP1C),
-                  ),
+                  users: result[0].return?.['Пользователи']?.['Пользователь']?.map((usr: TicketsUserSOAP) => userSOAP(usr, TkWhere.SOAP1C)),
+                  tasks: result[0].return?.['Задания']?.['Задание']?.map((task: TicketsTaskSOAP) => taskSOAP(task, TkWhere.SOAP1C)),
                 };
               }
 
@@ -265,7 +243,7 @@ export class TicketsService {
         const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
 
         const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
-        const userOST = {
+        const userOSTasks = {
           company: user.profile.company,
           email: user.profile.email,
           fio,
@@ -293,7 +271,7 @@ export class TicketsService {
           const osTicket = this.httpService
             .post<RecordsOST>(`${OSTicketURL[where]}?req=tasks`, {
               login: user.username,
-              user: JSON.stringify(userOST),
+              user: JSON.stringify(userOSTasks),
               msg: JSON.stringify({ login: fio, departament: '', opened: true }),
             })
             .toPromise()
@@ -324,8 +302,8 @@ export class TicketsService {
           promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] },
         ),
       )
-      .then((routes: TkTasks[]) => {
-        return routes.reduce(
+      .then((routes: TkTasks[]) =>
+        routes.reduce(
           (accumulator: TkTasks, current: TkTasks) => {
             if (Array.isArray(current.tasks) && current.tasks.length > 0) {
               accumulator.tasks = accumulator.tasks?.concat(current.tasks);
@@ -339,8 +317,8 @@ export class TicketsService {
             return accumulator;
           },
           { tasks: [], users: [], errors: [] } as TkTasks,
-        );
-      })
+        ),
+      )
       .catch((error: TypeError) => {
         throw error;
       });
@@ -357,12 +335,7 @@ export class TicketsService {
    * @param {Promise<FileUpload>[]} attachments Attachments
    * @returns {TkTaskNew} New task creation
    */
-  TicketsTaskNew = async (
-    user: User,
-    password: string,
-    task: TkTaskNewInput,
-    attachments?: Promise<FileUpload>[],
-  ): Promise<TkTaskNew> => {
+  TicketsTaskNew = async (user: User, password: string, task: TkTaskNewInput, attachments?: Promise<FileUpload>[]): Promise<TkTaskNew> => {
     const Attaches: AttachesSOAP = { Вложение: [] };
 
     if (attachments) {
@@ -397,19 +370,19 @@ export class TicketsService {
           Executor: task.executorUser ? task.executorUser : '',
           Attaches,
         })
-        .then((result?: Record<string, never>) => {
+        .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
-          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+          if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
               where: TkWhere.SOAP1C,
-              code: result[0]['return']['Код'],
-              subject: result[0]['return']['Наименование'],
-              route: result[0]['return']['ИмяСервиса'],
-              service: result[0]['return']['ИмяУслуги'],
-              organization: result[0]['return']['Организация'],
-              status: result[0]['return']['ТекущийСтатус'],
-              createdDate: new Date(result[0]['return']['ВремяСоздания']),
+              code: result[0].return['Код'],
+              subject: result[0].return['Наименование'],
+              route: result[0].return['ИмяСервиса'],
+              service: result[0].return['ИмяУслуги'],
+              organization: result[0].return['Организация'],
+              status: result[0].return['ТекущийСтатус'],
+              createdDate: new Date(result[0].return['ВремяСоздания']),
             } as TkTaskNew;
           }
 
@@ -433,7 +406,7 @@ export class TicketsService {
           const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(task.where));
           if (whereKey) {
             const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
-            const userOST = {
+            const userOSTasks = {
               company: user.profile.company,
               email: user.profile.email,
               fio,
@@ -447,7 +420,7 @@ export class TicketsService {
 
             return this.httpService
               .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=new`, {
-                user: JSON.stringify(userOST),
+                user: JSON.stringify(userOSTasks),
                 msg: JSON.stringify({
                   title: task.subject,
                   descr: task.body,
@@ -519,16 +492,11 @@ export class TicketsService {
         .GetTaskDescriptionAsync({
           TaskId: task.code,
         })
-        .then((result?: DataResultSOAP<TicketsSOAP_GetTaskDescription>) => {
+        .then((result?: DataResultSOAP<TicketsSOAPGetTaskDescription>) => {
           this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
-          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
-            const usersResult = result[0]['return']['Пользователи']?.['Пользователь']?.map((user: TicketsUserSOAP) =>
-              userSOAP(user, task.where),
-            );
-            const taskResult = taskSOAP(
-              (result[0]['return']?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0],
-              task.where,
-            );
+          if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
+            const usersResult = result[0].return['Пользователи']?.['Пользователь']?.map((u: TicketsUserSOAP) => userSOAP(u, task.where));
+            const taskResult = taskSOAP((result[0].return?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0], task.where);
             if (usersResult && taskResult) {
               return {
                 users: usersResult,
@@ -663,11 +631,11 @@ export class TicketsService {
           AutorComment: user.username,
           Attaches,
         })
-        .then((result: Record<string, never>) => {
+        .then((result: Record<string, any>) => {
           this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
 
-          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
-            return taskSOAP(result[0]['return'] as TicketsTaskSOAP, TkWhere.SOAP1C);
+          if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
+            return taskSOAP(result[0].return as TicketsTaskSOAP, TkWhere.SOAP1C);
           }
 
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
@@ -721,13 +689,13 @@ export class TicketsService {
         .GetTaskFileAsync({
           Ref: id.ref,
         })
-        .then((result?: Record<string, never>) => {
+        .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
-          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+          if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
-              where: id['where'],
-              id: id['ref'],
-              body: result[0]['return']['ФайлХранилище'],
+              where: id.where,
+              id: id.ref,
+              body: result[0].return['ФайлХранилище'],
             };
           }
 
@@ -779,9 +747,9 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       return {
-                        where: id['where'],
-                        id: id['ref'],
-                        body: (response.data['file'] as unknown) as string,
+                        where: id.where,
+                        id: id.ref,
+                        body: (response.data.file as unknown) as string,
                       };
                     }
                   }
@@ -832,13 +800,13 @@ export class TicketsService {
         .GetCommentFileAsync({
           Ref: id.ref,
         })
-        .then((result?: Record<string, never>) => {
+        .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
-          if (result?.[0]?.['return'] && Object.keys(result[0]['return']).length > 0) {
+          if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
-              where: id['where'],
-              id: id['ref'],
-              body: result[0]['return']['ФайлХранилище'],
+              where: id.where,
+              id: id.ref,
+              body: result[0].return['ФайлХранилище'],
             };
           }
 
@@ -890,9 +858,9 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       return {
-                        where: id['where'],
-                        id: id['ref'],
-                        body: (response.data['file'] as unknown) as string,
+                        where: id.where,
+                        id: id.ref,
+                        body: (response.data.file as unknown) as string,
                       };
                     }
                   }

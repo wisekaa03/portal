@@ -5,13 +5,13 @@ import React, { useEffect, useState, useMemo, useCallback, useContext } from 're
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
+import { format as dateFnsFormat } from 'date-fns';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { LDAP_NEW_USER, LDAP_CHECK_USERNAME } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
-import { format } from '@lib/dayjs';
 import snackbarUtils from '@lib/snackbar-utils';
 import { Data, Profile, ProfileInput, Contact } from '@lib/types';
 import { MaterialUI } from '@front/layout';
@@ -23,7 +23,7 @@ const newParameters: ProfileInput = {
   notShowing: true,
   disabled: false,
   gender: 0,
-  birthday: null,
+  birthday: undefined,
   username: '',
   firstName: '',
   lastName: '',
@@ -31,13 +31,13 @@ const newParameters: ProfileInput = {
   email: '',
 };
 
-const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const router = useRouter();
   const [current, setCurrent] = useState<ProfileInput>(newParameters);
   const [updated, setUpdated] = useState<ProfileInput>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
   const { user } = useContext(ProfileContext);
-  const locale = 'ru';
+  const locale = i18n.language as 'ru' | 'en' | undefined;
   const { isAdmin } = user || { isAdmin: false };
 
   const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<Data<'ldapNewUser', Profile>>(LDAP_NEW_USER, {
@@ -93,8 +93,8 @@ const ProfileEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
 
   const handleBirthday = (date: Date): void => {
     if (current && updated) {
-      setCurrent({ ...current, birthday: new Date(format(date, 'YYYY-MM-DD')) });
-      setUpdated({ ...updated, birthday: new Date(format(date, 'YYYY-MM-DD')) });
+      setCurrent({ ...current, birthday: dateFnsFormat(date, 'yyyy-MM-dd') });
+      setUpdated({ ...updated, birthday: dateFnsFormat(date, 'yyyy-MM-dd') });
     }
   };
 

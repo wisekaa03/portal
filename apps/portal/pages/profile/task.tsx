@@ -2,12 +2,11 @@
 
 //#region Imports NPM
 import React, { useState, useEffect } from 'react';
-import { I18n } from 'next-i18next';
 import Head from 'next/head';
 import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
-import { format } from '@lib/dayjs';
+import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT_FILE } from '@lib/queries';
 import { Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
@@ -20,37 +19,34 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error }: QueryResult<Data<'TicketsTaskDescription', TkEditTask>> = useQuery(
-    TICKETS_TASK_DESCRIPTION,
-    {
-      ssr: false,
-      variables: {
-        where: query?.where || TkWhere.Default,
-        code: query?.code || '0',
-      },
-      fetchPolicy: 'cache-and-network',
+  const { loading, data, error }: QueryResult<Data<'TicketsTaskDescription', TkEditTask>> = useQuery(TICKETS_TASK_DESCRIPTION, {
+    ssr: false,
+    variables: {
+      where: query?.where || TkWhere.Default,
+      code: query?.code || '0',
     },
-  );
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [getTaskFile, { loading: taskFileLoading, data: taskFileData, error: taskFileError }] = useLazyQuery<
     Data<'TicketsTaskFile', TkFile>,
     TkFileInput
   >(TICKETS_TASK_FILE, { ssr: false });
 
-  const [
-    getCommentFile,
-    { loading: commentFileLoading, data: commentFileData, error: commentFileError },
-  ] = useLazyQuery<Data<'TicketsCommentFile', TkFile>, TkFileInput>(TICKETS_COMMENT_FILE, { ssr: false });
+  const [getCommentFile, { loading: commentFileLoading, data: commentFileData, error: commentFileError }] = useLazyQuery<
+    Data<'TicketsCommentFile', TkFile>,
+    TkFileInput
+  >(TICKETS_COMMENT_FILE, { ssr: false });
 
   const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
-    update(cache, { data: { TicketsTaskEdit } }) {
+    update(cache, { data: { TicketsTaskEdit: TicketsTaskEditUpdate } }) {
       cache.writeQuery({
         query: TICKETS_TASK_DESCRIPTION,
         variables: {
           where: query?.where || TkWhere.Default,
           code: query?.code || '0',
         },
-        data: { TicketsTaskDescription: TicketsTaskEdit },
+        data: { TicketsTaskDescription: TicketsTaskEditUpdate },
       });
     },
   });
@@ -99,7 +95,7 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
             task
               ? t('profile:ticket.header', {
                   ticket: task.task?.code,
-                  date: task.task?.createdDate ? format(task.task?.createdDate, i18n as I18n) : null,
+                  date: dateFormat(task.task?.createdDate, i18n),
                 })
               : ''
           }`}

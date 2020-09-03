@@ -1,5 +1,5 @@
 /** @format */
-import { FileUpload } from 'graphql-upload';
+import type { FileUpload } from 'graphql-upload';
 
 export enum TkWhere {
   SOAP1C = 'SOAP1C',
@@ -71,12 +71,6 @@ export interface TkTask {
   comments?: TkComment[];
 }
 
-export interface TkTasks {
-  users?: TkUser[];
-  tasks?: TkTask[];
-  errors?: string[];
-}
-
 export interface TkUser {
   where: TkWhere;
   id?: string;
@@ -90,6 +84,12 @@ export interface TkUser {
   division?: string;
   manager?: string;
   title?: string;
+}
+
+export interface TkTasks {
+  users?: TkUser[];
+  tasks?: TkTask[];
+  errors?: string[];
 }
 
 export interface TkTaskEditInput {
@@ -138,6 +138,7 @@ export interface TkUserOST {
   function: string;
   manager: string;
   phone: string;
+  // eslint-disable-next-line camelcase
   phone_ext: string;
   subdivision: string;
   Аватар: string;
@@ -190,7 +191,7 @@ export interface TicketsRouteSOAP {
   СписокУслуг?: TicketsServicesSOAP;
 }
 
-export interface TicketsSOAP_GetRoutes {
+export interface TicketsSOAPGetRoutes {
   Сервис?: TicketsRouteSOAP[];
 }
 
@@ -243,12 +244,12 @@ export interface TicketsTasksSOAP {
   Задание?: TicketsTaskSOAP[];
 }
 
-export interface TicketsSOAP_GetTasks {
+export interface TicketsSOAPGetTasks {
   Пользователи?: TicketsUsersSOAP;
   Задания?: TicketsTasksSOAP;
 }
 
-export interface TicketsSOAP_GetTaskDescription {
+export interface TicketsSOAPGetTaskDescription {
   Пользователи?: TicketsUsersSOAP;
   Задания?: TicketsTasksSOAP;
 }

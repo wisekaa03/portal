@@ -142,6 +142,7 @@ module.exports = {
       },
     ],
     'no-useless-constructor': 0,
+    'react/jsx-one-expression-per-line': 0,
     'react/jsx-wrap-multilines': 0,
     'react/prop-types': 0,
     'react/static-property-placement': 0,

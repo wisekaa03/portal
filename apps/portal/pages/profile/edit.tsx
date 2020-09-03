@@ -6,6 +6,7 @@ import React, { useEffect, useState, useMemo, useCallback, useContext } from 're
 import { NextPageContext } from 'next';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/client';
+import { format as dateFnsFormat } from 'date-fns';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
@@ -13,14 +14,13 @@ import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
 import { UserContext } from '@lib/types/user.dto';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
-import { format } from '@lib/dayjs';
 import snackbarUtils from '@lib/snackbar-utils';
 import { Data, Profile } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
 
-const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, ctx, ...rest }): React.ReactElement => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Partial<Profile> | undefined>();
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
@@ -28,8 +28,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ..
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { user } = ((ctx?.req as Request)?.session?.passport as UserContext) || useContext(ProfileContext);
   const id = query?.id || user?.profile?.id;
-  // TODO:
-  const locale = 'ru';
+  const locale = i18n.language as 'ru' | 'en' | undefined;
   const { isAdmin } = user || { isAdmin: false };
 
   const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery<Data<'profile', Profile>>(PROFILE, {
@@ -92,8 +91,8 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, query, ctx, ..
 
   const handleBirthday = (date: Date): void => {
     if (current && updated) {
-      setCurrent({ ...current, birthday: format(date, 'YYYY-MM-DD') || undefined });
-      setUpdated({ ...updated, birthday: date ? format(date, 'YYYY-MM-DD') : undefined });
+      setCurrent({ ...current, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : undefined });
+      setUpdated({ ...updated, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : undefined });
     }
   };
 

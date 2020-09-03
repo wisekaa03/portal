@@ -9,8 +9,8 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 //#endregion
 //#region Imports Local
+import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
-import { format } from '@lib/dayjs';
 import { FilesTableRowProps } from '@lib/types';
 import { FilesListType } from './files-list-type';
 //#endregion
@@ -46,25 +46,17 @@ export const FileTableRow: FC<FilesTableRowProps> = ({ header, current, index, h
   return (
     <TableRow ref={dragRef} hover tabIndex={-1}>
       <TableCell className={classes.checkbox}>
-        <Checkbox
-          checked={current.checked}
-          onChange={handleCheckbox(index)}
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
+        <Checkbox checked={current.checked} onChange={handleCheckbox(index)} inputProps={{ 'aria-label': 'primary checkbox' }} />
       </TableCell>
       <TableCell width={10} onClick={(event) => handleRow(event, current)}>
         <FilesListType current={current} className={classes.fileIcon} />
       </TableCell>
       <TableCell onClick={(event) => handleRow(event, current)}>{current.name}</TableCell>
-      <TableCell onClick={(event) => handleRow(event, current)}>
-        {current.type === 'FOLDER' ? t('files:folder') : current.mime}
-      </TableCell>
-      {/*<TableCell>
+      <TableCell onClick={(event) => handleRow(event, current)}>{current.type === 'FOLDER' ? t('files:folder') : current.mime}</TableCell>
+      {/* <TableCell>
         {current.creationDate ? format(current.creationDate, 'DD.MM.YYYY HH:MM') : ''}
       </TableCell>*/}
-      <TableCell onClick={(event) => handleRow(event, current)}>
-        {current.lastModified ? format(current.lastModified, 'DD.MM.YYYY HH:MM') : ''}
-      </TableCell>
+      <TableCell onClick={(event) => handleRow(event, current)}>{dateFormat(current.lastModified, i18n)}</TableCell>
       <TableCell onClick={(event) => handleRow(event, current)} className={classes.alignRight}>
         {filesize(current.size, { locale: i18n.language })}
       </TableCell>

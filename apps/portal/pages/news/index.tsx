@@ -7,17 +7,7 @@ import Head from 'next/head';
 import { I18n } from 'next-i18next';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery, useMutation, QueryResult } from '@apollo/client';
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardHeader,
-  Typography,
-  CardContent,
-  CardActions,
-  Fab,
-  IconButton,
-} from '@material-ui/core';
+import { Card, CardActionArea, CardMedia, CardHeader, Typography, CardContent, CardActions, Fab, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -25,10 +15,10 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import CloseIcon from '@material-ui/icons/Close';
 //#endregion
 //#region Imports Local
+import dateFormat from '@lib/date-format';
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { NEWS, NEWS_EDIT, NEWS_DELETE } from '@lib/queries';
-import { format } from '@lib/dayjs';
 import { LARGE_RESOLUTION } from '@lib/constants';
 import { Data } from '@lib/types';
 import Loading from '@front/components/loading';
@@ -158,7 +148,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     ],
   });
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const handleEdit = (news?: NewsProps) => (): void => {};
 
   const handleDelete = (news: NewsProps) => (): void => {
@@ -193,7 +183,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                       </IconButton>
                     }
                     title={current.title}
-                    subheader={format(current.updatedAt, i18n as I18n)}
+                    subheader={dateFormat(new Date(current.updatedAt), i18n)}
                   />
                   <CardContent>
                     <div
@@ -215,11 +205,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                   return (
                     <Card id={anchor} key={news.id} className={classes.card}>
                       <CardActionArea onClick={handleCurrent(news)}>
-                        <CardMedia
-                          component="img"
-                          height={current ? 150 : 200}
-                          image={images ? images[0] : undefined}
-                        />
+                        <CardMedia component="img" height={current ? 150 : 200} image={images ? images[0] : undefined} />
                         <CardContent>
                           <Typography variant="body2" color="textSecondary" component="p">
                             {news.title}
@@ -228,7 +214,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
                       </CardActionArea>
                       <CardActions className={classes.action}>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          {format(news.updatedAt, i18n as I18n)}
+                          {dateFormat(new Date(news.updatedAt), i18n)}
                         </Typography>
                         <IsAdmin>
                           <>

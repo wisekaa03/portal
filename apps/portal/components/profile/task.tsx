@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import React, { FC } from 'react';
-import { I18n } from 'next-i18next';
+import clsx from 'clsx';
 import { fade, Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -20,10 +20,9 @@ import {
 } from '@material-ui/core';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import clsx from 'clsx';
 //#endregion
 //#region Imports Local
-import { format } from '@lib/dayjs';
+import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
 import { ProfileTaskInfoCardProps, ProfileTaskComponentProps } from '@lib/types';
@@ -260,7 +259,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   <Typography className={classes.cardHeaderTitle} variant="h6">
                     {t('profile:task.header', {
                       task: task.code,
-                      date: format(task.createdDate || '', i18n as I18n),
+                      date: dateFormat(task.createdDate, i18n),
                     })}
                   </Typography>
                 }

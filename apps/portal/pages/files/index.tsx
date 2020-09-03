@@ -27,9 +27,7 @@ const handleUrl = () => {
 };
 
 const thePathArray = (path: string): FilesPath[] =>
-  path
-    ?.split('/')
-    .reduce((accumulator, element) => (element ? [...accumulator, element] : accumulator), [''] as FilesPath[]) || [''];
+  path?.split('/').reduce((accumulator, element) => (element ? [...accumulator, element] : accumulator), [''] as FilesPath[]) || [''];
 
 const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   // const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
@@ -56,19 +54,16 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [getFile, { error: errorGetFile }] = useMutation<
-    Data<'getFile', FilesFile>,
-    { path: string; options?: { sync?: boolean } }
-  >(FILES_GET_FILE);
-
-  const [putFile, { error: errorPutFile }] = useMutation<Data<'putFile', boolean>, { path: string; file: File }>(
-    FILES_PUT_FILE,
+  const [getFile, { error: errorGetFile }] = useMutation<Data<'getFile', FilesFile>, { path: string; options?: { sync?: boolean } }>(
+    FILES_GET_FILE,
   );
+
+  const [putFile, { error: errorPutFile }] = useMutation<Data<'putFile', boolean>, { path: string; file: File }>(FILES_PUT_FILE);
 
   const [deleteFile, { error: errorDeleteFile }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FILE, {
     update(cache, fetch) {
       if (fetch?.data) {
-        const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
+        // const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
       }
     },
   });
@@ -76,7 +71,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
   const [deleteFolder, { error: errorDeleteFolder }] = useMutation<Data<'deleteFile', boolean>>(FILES_DELETE_FOLDER, {
     update(cache, fetch) {
       if (fetch?.data) {
-        const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
+        // const query = cache.readQuery<Data<'folderFiles', FilesFolder[]>>({ query: FILES_FOLDER_LIST });
       }
     },
   });
@@ -91,7 +86,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
         },
       });
     }
-  }, [getFolder, path]);
+  }, [getFolder, path, router]);
 
   useEffect(() => {
     if (!loadingFolderList && folderListSubscribe) {
@@ -119,7 +114,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     if (errorGetFile) {
       snackbarUtils.error(errorGetFile);
     }
-  }, [errorFolderList, errorDeleteFile, errorDeleteFolder, errorGetFile]);
+  }, [errorFolderList, errorDeleteFile, errorDeleteFolder, errorGetFile, path]);
 
   const folderRefetch = (): void => {
     if (refetchFolderList) {
@@ -129,11 +124,11 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleFolder = (filesFolder: FilesFolder | string): void => {
-    if (typeof filesFolder === 'string') {
-      setPath(thePathArray(filesFolder));
+  const handleFolder = (folder: FilesFolder | string): void => {
+    if (typeof folder === 'string') {
+      setPath(thePathArray(folder));
     } else {
-      setPath([...path, filesFolder.name]);
+      setPath([...path, folder.name]);
     }
   };
 
@@ -141,11 +136,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     setSearch(event.currentTarget.value);
   };
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  const handleCheckbox = (ff: number | FilesFolderChk[]) => (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean,
-  ): void => {
+  const handleCheckbox = (ff: number | FilesFolderChk[]) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
     if (Array.isArray(ff)) {
       setFilesFolder(filesFolder.map((element) => ({ ...element, checked })));
     } else {
@@ -154,13 +145,13 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleDownload = (filesFolder: FilesFolder) => async (): Promise<void> => {
-    const download = await getFile({ variables: { path: `${path}${filesFolder.name}`, options: { sync: true } } });
+  const handleDownload = (folder: FilesFolder) => async (): Promise<void> => {
+    const download = await getFile({ variables: { path: `${path}${folder.name}`, options: { sync: true } } });
     const downloadURL = `${document.location.origin}/${download.data?.getFile.path}`;
 
     const link = document.createElement('a');
     link.href = downloadURL;
-    link.setAttribute('download', filesFolder.name);
+    link.setAttribute('download', folder.name);
     document.body.append(link);
     link.click();
     link.remove();
@@ -171,7 +162,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       const putFileHandler = (event: Event) => {
         const srcElement = (event?.srcElement as HTMLInputElement)?.files;
         if (srcElement?.length) {
-          for (let i = 0; i < srcElement.length; i++) {
+          for (let i = 0; i < srcElement.length; i += 1) {
             const file = srcElement.item(i);
             if (file) {
               putFile({ variables: { path: `${path.join('/')}/${file.name}`, file } });
@@ -196,17 +187,16 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     }
   };
 
-  const handleDelete = (filesFolder?: FilesFolder) => (): void => {
-    if (filesFolder) {
-      if (filesFolder.type === 'FOLDER') {
-        deleteFolder({ variables: { id: filesFolder.id } });
+  const handleDelete = (folder?: FilesFolder) => (): void => {
+    if (folder) {
+      if (folder.type === 'FOLDER') {
+        deleteFolder({ variables: { id: folder.id } });
       } else {
-        deleteFile({ variables: { id: filesFolder.id } });
+        deleteFile({ variables: { id: folder.id } });
       }
     }
   };
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleDrop = async (acceptedFiles: File[]): Promise<void> => {
     // eslint-disable-next-line no-debugger
     debugger;

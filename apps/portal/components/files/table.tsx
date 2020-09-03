@@ -4,7 +4,7 @@ import React, { FC, useState } from 'react';
 import clsx from 'clsx';
 import filesize from 'filesize';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { fade, darken, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
+import { darken, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,
   Paper,
@@ -26,8 +26,8 @@ import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 //#endregion
 //#region Imports Local
+import { dateFormat } from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
-import { format } from '@lib/dayjs';
 import { FilesTableProps, Folder, FilesFolderChk } from '@lib/types';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
@@ -182,13 +182,9 @@ const FilesTableComponent: FC<FilesTableProps> = ({
               <DialogContent>
                 <Box display="grid" gridGap={16}>
                   <Box display="flex" justifyContent="center">
-                    <FilesListType
-                      current={detail}
-                      className={clsx(classes.fileIcon, classes.absolute)}
-                      fontSize="large"
-                    />
+                    <FilesListType current={detail} className={clsx(classes.fileIcon, classes.absolute)} fontSize="large" />
                     <Typography variant="subtitle1">{detail.name}</Typography>
-                    {/*<Tooltip title={t('files:edit') || ''}>
+                    {/* <Tooltip title={t('files:edit') || ''}>
                       <IconButton className={classes.editIcon} size="small">
                         <EditIcon className={classes.icon} />
                       </IconButton>
@@ -199,7 +195,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                       <List className={classes.list}>
                         <ListItem divider>
                           <ListItemText className={classes.paddingRight} primary={t('files:table.lastModified')} />
-                          <ListItemText primary={format(detail.lastModified, 'DD.MM.YYYY HH:MM')} />
+                          <ListItemText primary={dateFormat(detail.lastModified, i18n)} />
                         </ListItem>
                         {detail.mime && (
                           <ListItem divider>

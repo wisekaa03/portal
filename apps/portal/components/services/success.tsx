@@ -10,10 +10,10 @@ import SendIcon from '@material-ui/icons/SendOutlined';
 import ReactToPrint from 'react-to-print';
 //#endregion
 //#region Imports Local
+import dateFormat from '@lib/date-format';
 import { ServicesSuccessProps, ServicesSuccessCardProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import { useTranslation } from '@lib/i18n-client';
-import { format } from '@lib/dayjs';
 //#endregion
 
 const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
@@ -51,9 +51,7 @@ const ServicesSuccessCard = withStyles((theme) => ({
       <Typography variant="subtitle1">{t('services:complete.service', { value: service })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.organization', { value: organization })}</Typography>
       <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
-      <Typography variant="subtitle1">
-        {t('services:complete.date', { value: format(createdDate || '', i18n as I18n) })}
-      </Typography>
+      <Typography variant="subtitle1">{t('services:complete.date', { value: dateFormat(createdDate, i18n) })}</Typography>
     </CardContent>
   );
 });
@@ -90,11 +88,7 @@ const ServicesSuccess = withStyles((theme) => ({
             </Button>
           )}
         </ReactToPdf>
-        <ReactToPrint
-          trigger={() => <Button actionType="print">{t('common:print')}</Button>}
-          content={() => cardRef.current}
-          copyStyles
-        />
+        <ReactToPrint trigger={() => <Button actionType="print">{t('common:print')}</Button>} content={() => cardRef.current} copyStyles />
         <Button onClick={onClose} actionType="close">
           {t('common:close')}
         </Button>
