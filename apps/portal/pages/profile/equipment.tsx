@@ -6,17 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Head from 'next/head';
 import Link from 'next/link';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Box,
-  IconButton,
-  Paper,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import { Box, IconButton, Paper, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 //#endregion
 //#region Imports Local

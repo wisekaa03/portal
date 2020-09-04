@@ -4,7 +4,7 @@
 import React, { FC } from 'react';
 import { TFunction } from 'next-i18next';
 import { useMutation } from '@apollo/client';
-import { Button, Paper, Typography, CardActions, Card, Box } from '@material-ui/core';
+import { Button, Typography, CardActions, Card, Box } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 //#endregion

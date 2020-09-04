@@ -12,10 +12,11 @@ import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS
 import { Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
-import ProfileTaskComponent from '@front/components/profile/task';
+import TasksComponent from '@front/components/tasks/tasks';
+import TaskComponent from '@front/components/tasks/task';
 //#endregion
 
-const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
+const TasksPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
@@ -91,9 +92,9 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
     <>
       <Head>
         <title>
-          {`${t('profile:title')}: ${
+          {`${t('tasks:title')}: ${
             task
-              ? t('profile:ticket.header', {
+              ? t('tasks:task.header', {
                   ticket: task.task?.code,
                   date: dateFormat(task.task?.createdDate, i18n),
                 })
@@ -103,7 +104,7 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
       </Head>
       <MaterialUI {...rest}>
         {task?.task && (
-          <ProfileTaskComponent
+          <TaskComponent
             loading={loading}
             loadingEdit={loadingEdit}
             task={task.task}
@@ -128,13 +129,13 @@ const ProfileTaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElem
   );
 };
 
-ProfileTaskPage.getInitialProps = ({ query }) => {
+TasksPage.getInitialProps = ({ query }) => {
   const { code, where } = query;
 
   return {
     query: { code, where },
-    namespacesRequired: includeDefaultNamespaces(['profile', 'phonebook']),
+    namespacesRequired: includeDefaultNamespaces(['tasks']),
   };
 };
 
-export default nextI18next.withTranslation('profile')(ProfileTaskPage);
+export default nextI18next.withTranslation('tasks')(TasksPage);

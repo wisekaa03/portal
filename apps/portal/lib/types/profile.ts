@@ -3,15 +3,13 @@
 //#region Imports NPM
 import React from 'react';
 import { WithTranslation } from 'next-i18next';
-import { ApolloQueryResult, ApolloError, QueryLazyOptions } from '@apollo/client';
+import { ApolloQueryResult } from '@apollo/client';
 import { Order, Connection } from 'typeorm-graphql-pagination';
 import { OutlinedInputProps } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { StyleProps as StyleProperties, Data } from './common';
-import { DropzoneFile } from './dropzone';
 import { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
-import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
 import { User } from './user.dto';
 //#endregion
 
@@ -151,48 +149,6 @@ export interface HelpDataProps {
   id: number;
   image: any;
   text: React.ReactNode;
-}
-
-export interface ProfileTicketsComponentProps {
-  loading: boolean;
-  tasks: (TkTask | null)[];
-  status: string;
-  search: string;
-  refetchTasks: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>>;
-  handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
-  handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export interface ProfileTicketsCardProps {
-  classes: Record<'root' | 'content' | 'label' | 'registered' | 'worked', string>;
-  task: TkTask;
-}
-
-export interface ProfileTaskComponentProps {
-  loading: boolean;
-  loadingEdit: boolean;
-  task: TkTask;
-  comment: string;
-  files: DropzoneFile[];
-  setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
-  taskFile: (options?: QueryLazyOptions<TkFileInput> | undefined) => void;
-  taskFileLoading: boolean;
-  taskFileData?: Data<'TicketsTaskFile', TkFile>;
-  taskFileError?: ApolloError;
-  commentFile: (options?: QueryLazyOptions<TkFileInput> | undefined) => void;
-  commentFileLoading: boolean;
-  commentFileData?: Data<'TicketsCommentFile', TkFile>;
-  commentFileError?: ApolloError;
-  handleComment: (_: React.ChangeEvent<HTMLInputElement>) => void;
-  handleAccept: () => void;
-  handleClose: () => void;
-}
-
-export interface ProfileTaskInfoCardProps {
-  classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
-  header: string;
-  // TODO: !!! STRING THERE !!!
-  profile?: TkUser | string;
 }
 
 export interface ProfileEditComponentProps {

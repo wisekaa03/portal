@@ -2,20 +2,20 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { MyTicketsController } from './myTickets.controller';
+import { DeprecatedController } from './deprecated.controller';
 //#endregion
 //#region Imports Local
 //#endregion
 
-describe(MyTicketsController.name, () => {
-  let controller: MyTicketsController;
+describe(DeprecatedController.name, () => {
+  let controller: DeprecatedController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [MyTicketsController],
+      controllers: [DeprecatedController],
     }).compile();
 
-    controller = module.get<MyTicketsController>(MyTicketsController);
+    controller = module.get<DeprecatedController>(DeprecatedController);
   });
 
   it('should be defined', () => {

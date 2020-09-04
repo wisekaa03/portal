@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 //#region Imports Local
 import { Icon } from '@front/components/ui/icon';
 import CalendarIcon from '@images/svg/drawer/calendar.svg'; // ?inline';
-import MyTicketsIcon from '@images/svg/drawer/myTickets.svg'; // ?inline';
+import TasksIcon from '@images/svg/drawer/tasks.svg'; // ?inline';
 import TicketsIcon from '@images/svg/drawer/tickets.svg'; // ?inline';
 import FaqIcon from '@images/svg/drawer/faq.svg'; // ?inline';
 import ProfileIcon from '@images/svg/drawer/profile.svg'; // ?inline';
@@ -104,9 +104,9 @@ const urls: UrlProps[] = [
     admin: false,
   },
   {
-    icon: MyTicketsIcon,
-    text: 'common:myTickets',
-    link: '/my-tickets',
+    icon: TasksIcon,
+    text: 'common:tasks',
+    link: '/tasks',
     admin: false,
   },
   {

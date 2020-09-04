@@ -25,7 +25,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
-import { ProfileTaskInfoCardProps, ProfileTaskComponentProps } from '@lib/types';
+import type { TaskInfoCardProps, TaskComponentProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import { Icon } from '@front/components/ui/icon';
@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ProfileTicketInfoCard = withStyles((theme) => ({
+const TaskInfoCard = withStyles((theme) => ({
   root: {
     borderRadius: theme.shape.borderRadius,
     background: fade(theme.palette.secondary.main, 0.15),
@@ -159,7 +159,7 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
       gridTemplateColumns: '1fr 2fr',
     },
   },
-}))(({ classes, header, profile }: ProfileTaskInfoCardProps) => {
+}))(({ classes, header, profile }: TaskInfoCardProps) => {
   const { t } = useTranslation();
 
   if (typeof profile === 'string') {
@@ -219,7 +219,7 @@ const ProfileTicketInfoCard = withStyles((theme) => ({
   );
 });
 
-const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
+const TaskComponent: FC<TaskComponentProps> = ({
   loading,
   loadingEdit,
   task,
@@ -237,7 +237,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
     <Box display="flex" flexDirection="column">
       <Box display="flex" flexGrow={1} flexDirection="column" px={4} py={2} overflow="auto">
         <Box display="flex">
-          <Link href={{ pathname: '/profile' }} as="/profile" passHref>
+          <Link href={{ pathname: '/tasks' }} as="/tasks" passHref>
             <IconButton>
               <ArrowBackIcon />
             </IconButton>
@@ -246,7 +246,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
         {!task ? (
           <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
             <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-              {t('profile:task.notFound')}
+              {t('tasks:task.notFound')}
             </Typography>
           </Loading>
         ) : (
@@ -257,7 +257,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
                   <Typography className={classes.cardHeaderTitle} variant="h6">
-                    {t('profile:task.header', {
+                    {t('tasks:task.header', {
                       task: task.code,
                       date: dateFormat(task.createdDate, i18n),
                     })}
@@ -266,8 +266,8 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
               />
               <CardContent>{task.subject}</CardContent>
             </Card>
-            <ProfileTicketInfoCard header={t('profile:tasks.headers.author')} profile={task.initiatorUser} />
-            <ProfileTicketInfoCard header={t('profile:tasks.headers.executor')} profile={task.executorUser} />
+            <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
+            <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />
             <Card className={clsx(classes.fullRow, classes.rounded, classes.background)}>
               <CardContent className={classes.cardContent}>
                 <Box className={classes.statusBox}>
@@ -277,7 +277,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                       disableTypography
                       title={
                         <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                          {t('profile:tasks.headers.service')}
+                          {t('tasks:headers.service')}
                         </Typography>
                       }
                     />
@@ -294,7 +294,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                       disableTypography
                       title={
                         <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                          {t('profile:tasks.headers.status')}
+                          {t('tasks:headers.status')}
                         </Typography>
                       }
                     />
@@ -314,7 +314,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
                   <Typography className={classes.cardHeaderTitle} variant="h6">
-                    {t('profile:tasks.headers.description')}
+                    {t('tasks:headers.description')}
                   </Typography>
                 }
               />
@@ -327,7 +327,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                   className={clsx(classes.cardHeader, classes.background)}
                   title={
                     <Typography className={classes.cardHeaderTitle} variant="h6">
-                      {t('profile:tasks.headers.files')}
+                      {t('tasks:headers.files')}
                     </Typography>
                   }
                 />
@@ -348,7 +348,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
                   <Typography className={classes.cardHeaderTitle} variant="h6">
-                    {t('profile:tasks.headers.comments')}
+                    {t('tasks:headers.comments')}
                   </Typography>
                 }
               />
@@ -374,7 +374,7 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
                     rows={5}
                     type="text"
                     color="secondary"
-                    label={t('profile:tasks.comment.add')}
+                    label={t('tasks:comment.add')}
                     variant="outlined"
                   />
                 </FormControl>
@@ -398,4 +398,4 @@ const ProfileTaskComponent: FC<ProfileTaskComponentProps> = ({
   );
 };
 
-export default ProfileTaskComponent;
+export default TaskComponent;

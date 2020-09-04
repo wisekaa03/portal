@@ -23,6 +23,7 @@ export * from './group.dto';
 export * from './iframe';
 export * from './login-service';
 export * from './news.dto';
+export * from './tasks';
 export * from './tickets';
 export * from './profile.dto';
 export * from './profile';

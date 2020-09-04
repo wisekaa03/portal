@@ -13,7 +13,7 @@ import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
 import { TASK_STATUSES } from '@lib/constants';
 import BoxWithRef from '@lib/box-ref';
-import { ProfileTicketsComponentProps, ProfileTicketsCardProps } from '@lib/types';
+import type { TasksComponentProps, TasksCardProps } from '@lib/types';
 import { Icon } from '@front/components/ui/icon';
 import Select from '@front/components/ui/select';
 import Loading from '@front/components/loading';
@@ -67,10 +67,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ProfileTicketsCard = withStyles((theme) => ({
+const TasksCard = withStyles((theme) => ({
   root: {
     'height': 'fit-content',
     'display': 'flex',
+    'flexDirection': 'column',
+    'justifyContent': 'flex-start',
+    'alignItems': 'stretch',
     'flex': 1,
     'minWidth': 344,
     'maxWidth': 344,
@@ -86,6 +89,9 @@ const ProfileTicketsCard = withStyles((theme) => ({
     'height': '100%',
     'padding': theme.spacing(2),
     'display': 'grid',
+    'flexDirection': 'column',
+    'justifyContent': 'flex-start',
+    'alignItems': 'stretch',
     'gridTemplateRows': '1fr min-content min-content',
     '& > hr': {
       marginTop: theme.spacing(),
@@ -95,10 +101,10 @@ const ProfileTicketsCard = withStyles((theme) => ({
   label: {
     'display': 'grid',
     'gridTemplateColumns': '1fr 4fr',
-    'gridTemplateRows': '40px 1fr',
+    'gridTemplateRows': '50px 1fr',
     'gap': `${theme.spacing()}px`,
     'maxHeight': '180px',
-    'minHeight': '180px',
+    'minHeight': '50px',
     'overflow': 'hidden',
     '& h6': {
       maxWidth: 254,
@@ -114,14 +120,14 @@ const ProfileTicketsCard = withStyles((theme) => ({
   worked: {
     color: '#3aad0b',
   },
-}))(({ classes, task }: ProfileTicketsCardProps) => {
+}))(({ classes, task }: TasksCardProps) => {
   const { t, i18n } = useTranslation();
   const { where, code: id, service, subject, body, smallBody, status, createdDate } = task;
 
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <Link href={{ pathname: '/profile/task', query: { where, code: id } }} as={`/profile/task/${where}/${id}`}>
+        <Link href={{ pathname: '/tasks', query: { where, code: id } }} as={`/tasks/${where}/${id}`}>
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
@@ -137,7 +143,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
             <Divider />
             <Box display="flex" flexDirection="column" color="gray">
               <span>
-                {t('profile:tasks.status')}:{' '}
+                {t('tasks:status')}:{' '}
                 <span
                   className={clsx({
                     [classes.registered]: status !== 'В работе',
@@ -147,8 +153,8 @@ const ProfileTicketsCard = withStyles((theme) => ({
                   {status}
                 </span>
               </span>
-              <span>{t('profile:tasks.date', { value: dateFormat(createdDate, i18n) })}</span>
-              <span>{t('profile:tasks.id', { value: id })}</span>
+              <span>{t('tasks:date', { value: dateFormat(createdDate, i18n) })}</span>
+              <span>{t('tasks:id', { value: id })}</span>
             </Box>
           </CardContent>
         </Link>
@@ -157,15 +163,7 @@ const ProfileTicketsCard = withStyles((theme) => ({
   );
 });
 
-const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
-  loading,
-  tasks,
-  status,
-  search,
-  refetchTasks,
-  handleSearch,
-  handleStatus,
-}) => {
+const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, search, refetchTasks, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   const ticketBox = useRef(null);
@@ -174,7 +172,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={1} px={2}>
-      <Box display="flex" mb={1}>
+      {/* <Box display="flex" mb={1}>
         <div className={classes.search}>
           <div className={classes.searchIcon}>
             <SearchIcon />
@@ -182,7 +180,7 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
           <InputBase
             onChange={handleSearch}
             value={search}
-            placeholder={t('profile:searchPlaceholder')}
+            placeholder={t('tasks:searchPlaceholder')}
             classes={{
               input: classes.inputInput,
               root: classes.inputRoot,
@@ -192,16 +190,16 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
         </div>
         <Box display="flex" justifyContent="center" alignItems="center" flexGrow={1} px={1}>
           <Typography color="secondary" variant="h4">
-            {t('profile:tasks.title')}
+            {t('tasks:title')}
           </Typography>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
           <RefreshButton noAbsolute onClick={() => refetchTasks()} />
         </Box>
         <Box display="flex" justifyContent="flex-end">
-          <Select label={t('profile:tasks.status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
+          <Select label={t('tasks:status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
         </Box>
-      </Box>
+          </Box> */}
       <BoxWithRef
         ref={ticketBox}
         overflow="auto"
@@ -214,10 +212,10 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           {tasks.length > 0 ? (
-            tasks.map((task) => task && <ProfileTicketsCard key={task.code} task={task} />)
+            tasks.map((task) => task && <TasksCard key={task.code} task={task} />)
           ) : (
             <Typography className={classes.notFounds} variant="h4">
-              {t('profile:ticket.notFounds')}
+              {t('tasks:notFounds')}
             </Typography>
           )}
         </Loading>
@@ -226,4 +224,4 @@ const ProfileTicketsComponent: FC<ProfileTicketsComponentProps> = ({
   );
 };
 
-export default ProfileTicketsComponent;
+export default TasksComponent;

@@ -1,0 +1,26 @@
+{
+  "task": {
+    "header": "Task № {{task}} at {{date}}",
+    "notFound": "Task not found",
+    "notFounds": "Tasks not found"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "status": "Status",
+    "inWork": "В работе",
+    "date": "Дата регистрации: {{value}}",
+    "id": "id: {{value}}",
+    "comment": {
+      "add": "Оставить комментарий"
+    },
+    "headers": {
+      "author": "Author",
+      "executor": "Executor",
+      "service": "Service",
+      "status": "Статус выполнения",
+      "description": "Description",
+      "files": "Files",
+      "comments": "Comments"
+    }
+  }
+}

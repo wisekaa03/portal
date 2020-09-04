@@ -8,17 +8,17 @@ import { RenderableResponse } from 'nest-next';
 import { SessionGuard } from '@back/guards/session.guard';
 //#endregion
 
-@Controller('my-tickets')
-export class MyTicketsController {
+@Controller('tasks')
+export class TasksController {
   @Get()
   @UseGuards(SessionGuard)
-  public async myTickets(@Res() res: RenderableResponse): Promise<void> {
-    res.render('myTickets');
+  public async tasks(@Res() res: RenderableResponse): Promise<void> {
+    res.render('tasks');
   }
 
   @Get(':where/:code')
   @UseGuards(SessionGuard)
-  public async myTicket(@Res() response: RenderableResponse, @Param('where') where: string, @Param('code') code: string): Promise<void> {
-    response.render('myTickets', { where, code });
+  public async task(@Res() response: RenderableResponse, @Param('where') where: string, @Param('code') code: string): Promise<void> {
+    response.render('task', { where, code });
   }
 }
