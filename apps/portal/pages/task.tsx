@@ -12,11 +12,10 @@ import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS
 import { Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
-import TasksComponent from '@front/components/tasks/tasks';
 import TaskComponent from '@front/components/tasks/task';
 //#endregion
 
-const TasksPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
+const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
@@ -129,13 +128,13 @@ const TasksPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement =>
   );
 };
 
-TasksPage.getInitialProps = ({ query }) => {
+TaskPage.getInitialProps = ({ query }) => {
   const { code, where } = query;
 
   return {
     query: { code, where },
-    namespacesRequired: includeDefaultNamespaces(['tasks']),
+    namespacesRequired: includeDefaultNamespaces(['tasks', 'phonebook']),
   };
 };
 
-export default nextI18next.withTranslation('tasks')(TasksPage);
+export default nextI18next.withTranslation('tasks')(TaskPage);

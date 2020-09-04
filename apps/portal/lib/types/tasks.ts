@@ -3,7 +3,7 @@
 import React from 'react';
 import { WithTranslation } from 'next-i18next';
 import { ApolloQueryResult, ApolloError, QueryLazyOptions } from '@apollo/client';
-import { TkUser, TkTask, TkTasks, TkFileInput, TkFile } from './tickets';
+import { TkUser, TkTask, TkTasks, TkFileInput, TkFile, TkWhere } from './tickets';
 import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
 

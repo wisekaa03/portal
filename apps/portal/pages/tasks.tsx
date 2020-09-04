@@ -15,9 +15,9 @@ import { MaterialUI } from '@front/layout';
 import TasksComponent from '@front/components/tasks/tasks';
 //#endregion
 
-const TasksPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
-  const profile = useContext(ProfileContext);
-  const taskStatus = profile?.user?.settings?.task?.status;
+const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+  // const profile = useContext(ProfileContext);
+  // const taskStatus = profile?.user?.settings?.task?.status;
 
   const status = '';
   const search = '';
@@ -30,7 +30,7 @@ const TasksPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement =>
   }: QueryResult<Data<'TicketsTasks', TkTasks>> = useQuery(TICKETS_TASKS, {
     ssr: false,
     variables: { task: { status, search } },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
   });
 

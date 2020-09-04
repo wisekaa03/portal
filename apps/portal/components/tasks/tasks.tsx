@@ -5,19 +5,20 @@ import React, { FC, useRef } from 'react';
 import Link from 'next/link';
 import { Theme, fade, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import { Box, InputBase, Card, CardActionArea, CardContent, Typography, Divider } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+// import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
 import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
-import { TASK_STATUSES } from '@lib/constants';
+// import { TASK_STATUSES } from '@lib/constants';
 import BoxWithRef from '@lib/box-ref';
 import type { TasksComponentProps, TasksCardProps } from '@lib/types';
 import { Icon } from '@front/components/ui/icon';
-import Select from '@front/components/ui/select';
+// import Select from '@front/components/ui/select';
 import Loading from '@front/components/loading';
-import RefreshButton from '@front/components/ui/refresh-button';
+// import RefreshButton from '@front/components/ui/refresh-button';
+// import TaskPage from '@front/pages/task';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,7 +76,7 @@ const TasksCard = withStyles((theme) => ({
     'justifyContent': 'flex-start',
     'alignItems': 'stretch',
     'flex': 1,
-    'minWidth': 344,
+    // 'minWidth': 344,
     'maxWidth': 344,
     'borderRadius': theme.shape.borderRadius,
     'background': fade(theme.palette.secondary.main, 0.15),
@@ -127,7 +128,7 @@ const TasksCard = withStyles((theme) => ({
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <Link href={{ pathname: '/tasks', query: { where, code: id } }} as={`/tasks/${where}/${id}`}>
+        <Link href={{ pathname: '/task', query: { where, code: id } }} as={`/task/${where}/${id}`}>
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
@@ -208,7 +209,8 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, searc
         flexGrow={1}
         flexWrap="wrap"
         my={2}
-        justifyContent="center"
+        alignItems="stretch"
+        justifyContent="flex-start"
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           {tasks.length > 0 ? (

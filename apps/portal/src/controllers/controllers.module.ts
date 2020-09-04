@@ -11,6 +11,7 @@ import { AuthController } from './auth/auth.controller';
 import { CalendarController } from './calendar/calendar.controller';
 import { FaqController } from './faq/faq.controller';
 import { HomeController } from './home/home.controller';
+import { TaskController } from './task/task.controller';
 import { TasksController } from './tasks/tasks.controller';
 import { TicketsController } from './tickets/tickets.controller';
 import { MailController } from './mail/mail.controller';
@@ -35,6 +36,7 @@ import { HealthController } from './health/health.controller';
     CalendarController,
     FaqController,
     HomeController,
+    TaskController,
     TasksController,
     TicketsController,
     MailController,
