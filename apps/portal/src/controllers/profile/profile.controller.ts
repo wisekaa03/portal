@@ -35,16 +35,6 @@ export class ProfileController {
     response.render('profile/edit', { id });
   }
 
-  @Get('task/:where/:code')
-  @UseGuards(SessionGuard)
-  public async ticket(
-    @Res() response: RenderableResponse,
-    @Param('where') where: string,
-    @Param('code') code: string,
-  ): Promise<void> {
-    response.render('profile/task', { where, code });
-  }
-
   @Get('equipment')
   @UseGuards(SessionGuard)
   public async equipment(@Res() response: RenderableResponse): Promise<void> {

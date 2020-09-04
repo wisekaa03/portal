@@ -8,28 +8,24 @@ import { RenderableResponse } from 'nest-next';
 import { SessionGuard } from '@back/guards/session.guard';
 //#endregion
 
-@Controller('services')
-export class ServicesController {
+@Controller('tickets')
+export class TicketsController {
   @Get()
   @UseGuards(SessionGuard)
   public async services(@Res() res: RenderableResponse): Promise<void> {
-    res.render('services');
+    res.render('tickets');
   }
 
   @Get(':where')
   @UseGuards(SessionGuard)
   public async where(@Res() res: RenderableResponse, @Param('where') where: string): Promise<void> {
-    res.render('services', { where });
+    res.render('tickets', { where });
   }
 
   @Get(':where/:route')
   @UseGuards(SessionGuard)
-  public async route(
-    @Res() res: RenderableResponse,
-    @Param('where') where: string,
-    @Param('route') route: string,
-  ): Promise<void> {
-    res.render('services', { where, route });
+  public async route(@Res() res: RenderableResponse, @Param('where') where: string, @Param('route') route: string): Promise<void> {
+    res.render('tickets', { where, route });
   }
 
   @Get(':where/:route/:service')
@@ -40,6 +36,6 @@ export class ServicesController {
     @Param('route') route: string,
     @Param('service') service: string,
   ): Promise<void> {
-    res.render('services', { where, route, service });
+    res.render('tickets', { where, route, service });
   }
 }

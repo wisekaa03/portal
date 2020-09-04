@@ -24,11 +24,11 @@ import {
   TkTaskNew,
 } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
-import ServicesComponent from '@front/components/services';
+import TicketsComponent from '@front/components/tickets';
 import { MaterialUI } from '@front/layout';
 //#endregion
 
-const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
+const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
   const router = useRouter();
 
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -41,13 +41,11 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const [files, setFiles] = useState<DropzoneFile[]>([]);
 
   const me = useContext(ProfileContext);
+  const favorites = useMemo(() => me?.user?.settings?.task?.favorites || [], [me]);
 
-  const favorites = me?.user?.settings?.task?.favorites || [];
-
-  const [userSettings, { loading: loadingSettings, error: errorSettings }] = useMutation<
-    UserSettings,
-    { value: UserSettings }
-  >(USER_SETTINGS);
+  const [userSettings, { loading: loadingSettings, error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(
+    USER_SETTINGS,
+  );
 
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
     Data<'TicketsRoutes', TkRoutes>,
@@ -58,9 +56,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     notifyOnNetworkStatusChange: true,
   });
 
-  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<
-    Data<'TicketsTaskNew', TkTaskNew>
-  >(TICKETS_TASK_NEW);
+  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'TicketsTaskNew', TkTaskNew>>(
+    TICKETS_TASK_NEW,
+  );
 
   const contentRef = useRef(null);
   const serviceRef = useRef<HTMLSelectElement>(null);
@@ -81,7 +79,7 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     setFiles([]);
     setCurrentTab(0);
     setSubmitted(false);
-    router.push(pathname || '/services', pathname);
+    router.push(pathname || '/tickets', pathname);
   }, [router, pathname, setTask, setBody, setFiles, setCurrentTab, setSubmitted]);
 
   const handleCurrentTab = useCallback(
@@ -109,15 +107,15 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
     const { route, service } = task;
 
     if (subject.length < MINIMAL_SUBJECT_LENGTH) {
-      snackbarUtils.show(t('services:errors.smallSubject'));
-      subjectRef.current && subjectRef.current.focus();
+      snackbarUtils.show(t('tickets:errors.smallSubject'));
+      if (subjectRef.current) subjectRef.current.focus();
 
       return;
     }
 
     const cleanedBody = body.trim();
     if (cleanedBody.length < MINIMAL_BODY_LENGTH) {
-      snackbarUtils.show(t('services:errors.smallBody'));
+      snackbarUtils.show(t('tickets:errors.smallBody'));
       // bodyRef.current.focus();
 
       return;
@@ -149,9 +147,8 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
         const route = routes.find((element) => element.where === where && element.code === routeCode);
         if (route && Object.keys(route).length > 0) {
           const service =
-            (serviceCode
-              ? route.services?.find((s) => s.code === serviceCode)
-              : route.services?.find((s) => s.name === 'Прочее')) || undefined;
+            (serviceCode ? route.services?.find((s) => s.code === serviceCode) : route.services?.find((s) => s.name === 'Прочее')) ||
+            undefined;
           setTask({ route, service });
           setCurrentTab(1);
           return;
@@ -170,11 +167,11 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
         setRoutes(dataRoutes.TicketsRoutes.routes);
       }
     }
-  }, [dataRoutes?.TicketsRoutes, errorRoutes, loadingRoutes]);
+  }, [dataRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
     setCreated((!loadingCreated && !errorCreated && dataCreated?.TicketsTaskNew) || {});
-  }, [dataCreated?.TicketsTaskNew, errorCreated, loadingCreated]);
+  }, [dataCreated, errorCreated, loadingCreated]);
 
   // useEffect(() => {
   //   if (contentRef.current) {
@@ -198,9 +195,9 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   const allFavorites = useMemo<UserSettingsTaskFavoriteFull[]>(() => {
     if (Array.isArray(favorites) && favorites.length > 0) {
       return favorites.reduce((accumulator, favorite) => {
-        const route = routes?.find((route) => route?.where === favorite?.where && route?.code === favorite?.code);
+        const route = routes?.find((r) => r?.where === favorite?.where && r?.code === favorite?.code);
         if (route) {
-          const service = route?.services?.find((service) => service?.code === favorite?.svcCode);
+          const service = route?.services?.find((s) => s?.code === favorite?.svcCode);
           if (service) {
             return [
               ...accumulator,
@@ -222,10 +219,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   return (
     <>
       <Head>
-        <title>{task.route ? t('services:title.route', { route: task.route.name }) : t('services:title.title')}</title>
+        <title>{task.route ? t('tickets:title.route', { route: task.route.name }) : t('tickets:title.title')}</title>
       </Head>
       <MaterialUI {...rest}>
-        <ServicesComponent
+        <TicketsComponent
           contentRef={contentRef}
           serviceRef={serviceRef}
           bodyRef={bodyRef}
@@ -258,10 +255,10 @@ const ServicesPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactEle
   );
 };
 
-ServicesPage.getInitialProps = ({ pathname, query }) => ({
+TicketsPage.getInitialProps = ({ pathname, query }) => ({
   pathname,
   query,
-  namespacesRequired: includeDefaultNamespaces(['services']),
+  namespacesRequired: includeDefaultNamespaces(['tickets']),
 });
 
-export default nextI18next.withTranslation('services')(ServicesPage);
+export default nextI18next.withTranslation('tickets')(TicketsPage);

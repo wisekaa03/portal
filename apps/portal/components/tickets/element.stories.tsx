@@ -9,7 +9,7 @@ import Service2 from '@public/images/svg/example/app_2.svg';
 import { story, withTranslation } from './index.stories';
 import Element from './element';
 
-const Story = withTranslation('services', Element);
+const Story = withTranslation('tickets', Element);
 
 story.add('Element', () => (
   <>

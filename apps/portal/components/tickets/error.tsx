@@ -54,10 +54,10 @@ const ServicesError: FC<ServicesErrorProps> = ({ error, onClose }) => {
     <Card className={classes.root}>
       <CardContent className={classes.content}>
         <Typography variant="h5" className={classes.title}>
-          {t('services:error.title')}
+          {t('tickets:error.title')}
         </Typography>
-        <Typography variant="subtitle1">{t('services:error.body1', { name })}</Typography>
-        <Typography variant="subtitle1">{t('services:error.body2')}</Typography>
+        <Typography variant="subtitle1">{t('tickets:error.body1', { name })}</Typography>
+        <Typography variant="subtitle1">{t('tickets:error.body2')}</Typography>
       </CardContent>
       <CardActions className={classes.actions}>
         <Button onClick={onClose} actionType="close">

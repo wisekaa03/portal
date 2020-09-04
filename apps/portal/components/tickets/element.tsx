@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
         // color: '#013e83',
       },
     },
-    a: {
+    href: {
       'textDecoration': 'none',
       'color': '#31312F',
       // 'color': '#0173c1',
@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const pathname = '/services';
+const pathname = '/tickets';
 
 const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url, withLink }) => {
   const classes = useStyles({});
@@ -119,9 +119,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
       Array.isArray(route.services) && route.services.length > 0
         ? route.services.reduce(
             (accumulator, srv) =>
-              !srv ||
-              (!active && srv?.name === 'Прочее') ||
-              accumulator.reduce((a, v) => `${a}${v.name}`, '').length > 150
+              !srv || (!active && srv?.name === 'Прочее') || accumulator.reduce((a, v) => `${a}${v.name}`, '').length > 150
                 ? accumulator
                 : [...accumulator, srv],
             [] as TkService[],
@@ -165,7 +163,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
               as={`${pathname}/${route.where}/${route.code}/${current.code}`}
               passHref
             >
-              <a className={clsx(classes.a, classes.comma)}>{current.name}</a>
+              <a className={clsx(classes.href, classes.comma)}>{current.name}</a>
             </Link>
           ))}
           {Array.isArray(route.services) && route.services.length !== allServices.length && (
@@ -178,7 +176,7 @@ const ServicesElement: FC<ServicesElementProps> = ({ base64, active, route, url,
               as={`${pathname}/${route.where}/${route.code}`}
               passHref
             >
-              <a className={classes.a}>{t('common:more')}</a>
+              <a className={classes.href}>{t('common:more')}</a>
             </Link>
           )}
         </Box>

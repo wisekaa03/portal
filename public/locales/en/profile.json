@@ -1,5 +1,12 @@
 {
   "title": "Portal: Profile",
+  "changeLanguage": "Change language to Russian",
+  "fontSize": {
+    "title": "Change font size",
+    "small": "Small",
+    "medium": "Medium",
+    "big": "Big"
+  },
   "new": {
     "title": "Portal: add new user or contact"
   },

@@ -2,20 +2,20 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { SettingsController } from './settings.controller';
+import { TicketsController } from './tickets.controller';
 //#endregion
 //#region Imports Local
 //#endregion
 
-describe(SettingsController.name, () => {
-  let controller: SettingsController;
+describe(TicketsController.name, () => {
+  let controller: TicketsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [SettingsController],
+      controllers: [TicketsController],
     }).compile();
 
-    controller = module.get<SettingsController>(SettingsController);
+    controller = module.get<TicketsController>(TicketsController);
   });
 
   it('should be defined', () => {

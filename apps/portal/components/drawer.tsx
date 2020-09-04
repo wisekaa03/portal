@@ -10,18 +10,18 @@ import { useRouter } from 'next/router';
 //#endregion
 //#region Imports Local
 import { Icon } from '@front/components/ui/icon';
-import CalendarIcon from '@images/svg/drawer/calendar.svg?inline';
-import ServicesIcon from '@images/svg/drawer/services.svg?inline';
-import FaqIcon from '@images/svg/drawer/faq.svg?inline';
-import ProfileIcon from '@images/svg/drawer/profile.svg?inline';
-import MailIcon from '@images/svg/drawer/mail.svg?inline';
-import MediaIcon from '@images/svg/drawer/media.svg?inline';
-import MeetingIcon from '@images/svg/drawer/meeting.svg?inline';
-import VCSIcon from '@images/svg/drawer/vcs.svg?inline';
-import NewsIcon from '@images/svg/drawer/news.svg?inline';
-import PhonebookIcon from '@images/svg/drawer/phonebook.svg?inline';
-import SettingsIcon from '@images/svg/drawer/settings.svg?inline';
-import AdminIcon from '@images/svg/drawer/admin.svg?inline';
+import CalendarIcon from '@images/svg/drawer/calendar.svg'; // ?inline';
+import MyTicketsIcon from '@images/svg/drawer/myTickets.svg'; // ?inline';
+import TicketsIcon from '@images/svg/drawer/tickets.svg'; // ?inline';
+import FaqIcon from '@images/svg/drawer/faq.svg'; // ?inline';
+import ProfileIcon from '@images/svg/drawer/profile.svg'; // ?inline';
+import MailIcon from '@images/svg/drawer/mail.svg'; // ?inline';
+import MediaIcon from '@images/svg/drawer/media.svg'; // ?inline';
+import MeetingIcon from '@images/svg/drawer/meeting.svg'; // ?inline';
+import VCSIcon from '@images/svg/drawer/vcs.svg'; // ?inline';
+import NewsIcon from '@images/svg/drawer/news.svg'; // ?inline';
+import PhonebookIcon from '@images/svg/drawer/phonebook.svg'; // ?inline';
+import AdminIcon from '@images/svg/drawer/admin.svg'; // ?inline';
 
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
@@ -103,11 +103,16 @@ const urls: UrlProps[] = [
     link: '/phonebook',
     admin: false,
   },
-  { icon: ProfileIcon, text: 'common:profile', link: '/profile', admin: false },
   {
-    icon: ServicesIcon,
-    text: 'common:services',
-    link: '/services',
+    icon: MyTicketsIcon,
+    text: 'common:myTickets',
+    link: '/my-tickets',
+    admin: false,
+  },
+  {
+    icon: TicketsIcon,
+    text: 'common:tickets',
+    link: '/tickets',
     admin: false,
   },
   {
@@ -126,7 +131,7 @@ const urls: UrlProps[] = [
     link: '/files',
     admin: false,
   },
-  { icon: SettingsIcon, text: 'common:settings', link: '/settings', admin: false },
+  { icon: ProfileIcon, text: 'common:profile', link: '/profile', admin: false },
   { icon: AdminIcon, text: 'common:adminPanel', link: '/admin', admin: true },
 ];
 

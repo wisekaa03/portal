@@ -4,18 +4,18 @@ import React, { FC, useState, useRef, useCallback, useEffect } from 'react';
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 
-import {
+import type {
   ServicesTaskProps,
   ServicesCreatedProps,
   DropzoneFile,
-  ServicesWrapperProps,
+  TicketsWrapperProps,
   TkRoutes,
-  TkWhere,
   TkRoute,
   UserSettingsTaskFavorite,
   UserSettingsTaskFavoriteFull,
 } from '@lib/types';
-import ServicesIcon from '@public/images/svg/drawer/services.svg';
+import { TkWhere } from '@lib/types/tickets';
+import TicketsIcon from '@public/images/svg/drawer/tickets.svg';
 import { story, withTranslation } from './index.stories';
 import Services from '.';
 
@@ -24,7 +24,7 @@ const mockRoutes: TkRoute[] = [
     where: TkWhere.Default,
     code: '1',
     name: 'Сервис 1',
-    avatar: ServicesIcon,
+    avatar: TicketsIcon,
     services: [
       {
         where: TkWhere.Default,
@@ -42,14 +42,14 @@ const mockRoutes: TkRoute[] = [
     where: TkWhere.Default,
     code: '2',
     name: 'Сервис 2',
-    avatar: ServicesIcon,
+    avatar: TicketsIcon,
     services: [],
   },
   {
     where: TkWhere.Default,
     code: '3',
     name: 'Сервис 3',
-    avatar: ServicesIcon,
+    avatar: TicketsIcon,
     services: [],
   },
 ];
@@ -77,7 +77,7 @@ const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
 
 const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };
 
-const Story: FC<ServicesWrapperProps> = withTranslation('services', Services);
+const Story: FC<TicketsWrapperProps> = withTranslation('tickets', Services);
 
 story.add('Default View', () => {
   const mockData: TkRoutes = {
@@ -162,6 +162,7 @@ story.add('Default View', () => {
       handleService={handleService}
       handleSubmit={handleSubmit}
       handleResetTicket={handleResetTicket}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       handleFavorites={(): void => {}}
     />
   );

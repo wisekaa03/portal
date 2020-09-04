@@ -12,7 +12,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
-import { ServicesWrapperProps, ServicesFavoriteProps, UserSettingsTaskFavorite } from '@lib/types';
+import type { TicketsWrapperProps, ServicesFavoriteProps, UserSettingsTaskFavorite } from '@lib/types';
 import Button from '@front/components/ui/button';
 import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ServicesComponent: FC<ServicesWrapperProps> = ({
+const TicketsComponent: FC<TicketsWrapperProps> = ({
   contentRef,
   serviceRef,
   subjectRef,
@@ -137,9 +137,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   const { t } = useTranslation();
   const headerReference = useRef<HTMLDivElement>(null);
 
-  const contentHeight = headerReference.current
-    ? `calc(100vh - ${appBarHeight}px - ${headerReference.current.clientHeight}px)`
-    : '100%';
+  const contentHeight = headerReference.current ? `calc(100vh - ${appBarHeight}px - ${headerReference.current.clientHeight}px)` : '100%';
 
   const handleChangeTab = useCallback(async (_, tab): Promise<void> => handleCurrentTab(tab), [handleCurrentTab]);
   const updateFavorites = useCallback(
@@ -167,8 +165,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
         case 'up':
         case 'down': {
           const currentIndex = favorites.findIndex(
-            (element) =>
-              element.route.where === where && element.route.code === code && element.service.code === svcCode,
+            (element) => element.route.where === where && element.route.code === code && element.service.code === svcCode,
           );
           const newIndex = action === 'up' ? currentIndex - 1 : currentIndex + 1;
 
@@ -240,27 +237,22 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
         Array.isArray(favorites) &&
         !!favorites.find(
           ({ route, service }) =>
-            route?.code === task.route?.code &&
-            route?.where === task.route?.where &&
-            service?.code === task.service?.code,
+            route?.code === task.route?.code && route?.where === task.route?.where && service?.code === task.service?.code,
         )) ??
       true,
     [task.route, task.service, favorites],
   );
 
-  const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [
-    task.route?.code,
-    task.service?.code,
-  ]);
+  const enableBody = useMemo<boolean>(() => Boolean(task.route?.code && task.service?.code), [task.route, task.service]);
   // const notValid = !enableBody; // || body.trim().length < MINIMAL_BODY_LENGTH;
-  const service = useMemo<string>(() => task.service?.code || '', [task.service?.code]);
+  const service = useMemo<string>(() => task.service?.code || '', [task.service]);
 
   return (
     <Box style={{ overflow: 'hidden' }} display="flex" flexDirection="column" position="relative">
       <Paper ref={headerReference} square className={classes.header}>
         <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
-          <Tab label={t('services:tabs.tab1')} />
-          <Tab disabled={!task.route} label={t('services:tabs.tab2')} />
+          <Tab label={t('tickets:tabs.tab1')} />
+          <Tab disabled={!task.route} label={t('tickets:tabs.tab2')} />
         </Tabs>
       </Paper>
       <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
@@ -282,7 +274,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                     <Box className={classes.titleIcon}>
                       <StarBorderIcon />
                     </Box>
-                    {t('services:headers.favorites')}
+                    {t('tickets:headers.favorites')}
                   </Box>
                   <Box className={classes.blockContainer}>
                     {favorites.map((current, index) => (
@@ -300,15 +292,12 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                   </Box>
                 </>
               )}
-              <Box className={classes.blockTitle}>{t('services:headers.list')}</Box>
+              <Box className={classes.blockTitle}>{t('tickets:headers.list')}</Box>
               <Box className={classes.blockContainer}>
                 {Array.isArray(routes) &&
                   routes.length > 0 &&
                   routes.map(
-                    (current) =>
-                      current && (
-                        <ServicesElement key={`${current.where}-${current.code}`} base64 withLink route={current} />
-                      ),
+                    (current) => current && <ServicesElement key={`${current.where}-${current.code}`} base64 withLink route={current} />,
                   )}
               </Box>
             </Box>
@@ -321,14 +310,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
               p={3}
             >
               {submitted ? (
-                <Loading
-                  activate={loadingCreated || !created}
-                  full
-                  type="circular"
-                  color="secondary"
-                  disableShrink
-                  size={48}
-                >
+                <Loading activate={loadingCreated || !created} full type="circular" color="secondary" disableShrink size={48}>
                   {errorCreated ? (
                     <ServicesError error={errorCreated} onClose={handleResetTicket} />
                   ) : (
@@ -358,7 +340,7 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                         select: classes.select,
                       }}
                     >
-                      {/* <MenuItem value="0">{t('services:form.service')}</MenuItem>*/}
+                      {/* <MenuItem value="0">{t('tickets:form.service')}</MenuItem>*/}
                       {task.route &&
                         task.route.services?.map(
                           (srv) =>
@@ -382,11 +364,11 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
                         setSubject(event.target.value);
                       }}
                       variant="outlined"
-                      label={t('services:form.subject')}
+                      label={t('tickets:form.subject')}
                     />
                   </FormControl>
                   <FormControl className={clsx(classes.formControl, classes.jodit)} variant="outlined">
-                    <JoditEditor ref={bodyRef} id="services" value={body} onBlur={setBody} disabled={!enableBody} />
+                    <JoditEditor ref={bodyRef} id="tickets" value={body} onBlur={setBody} disabled={!enableBody} />
                   </FormControl>
                   <FormControl className={classes.formControl} variant="outlined">
                     <Dropzone files={files} setFiles={setFiles} />
@@ -409,4 +391,4 @@ const ServicesComponent: FC<ServicesWrapperProps> = ({
   );
 };
 
-export default ServicesComponent;
+export default TicketsComponent;

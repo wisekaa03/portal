@@ -43,15 +43,15 @@ const ServicesSuccessCard = withStyles((theme) => ({
   return (
     <CardContent ref={cardRef} className={classes.root}>
       <Typography variant="h5" className={classes.title}>
-        {t('services:success')}
+        {t('tickets:success')}
       </Typography>
-      <Typography variant="subtitle1">{t('services:complete.name', { value: subject })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.code', { value: code })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.route', { value: route })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.service', { value: service })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.organization', { value: organization })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.status', { value: status })}</Typography>
-      <Typography variant="subtitle1">{t('services:complete.date', { value: dateFormat(createdDate, i18n) })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.name', { value: subject })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.code', { value: code })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.route', { value: route })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.service', { value: service })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.organization', { value: organization })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.status', { value: status })}</Typography>
+      <Typography variant="subtitle1">{t('tickets:complete.date', { value: dateFormat(createdDate, i18n) })}</Typography>
     </CardContent>
   );
 });

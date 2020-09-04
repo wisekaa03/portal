@@ -6,7 +6,7 @@ import { text, date } from '@storybook/addon-knobs';
 import { story, withTranslation } from './index.stories';
 import Success from './success';
 
-const Story = withTranslation('services', Success);
+const Story = withTranslation('tickets', Success);
 
 story.add('Success', () => (
   <Story

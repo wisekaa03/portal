@@ -1,13 +1,28 @@
 /** @format */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { DropzoneFile } from './dropzone';
 import { TkRoute, TkService, TkRoutes } from './tickets';
 import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteFull } from './user.dto';
 import { Data } from './common';
 
-export interface ServicesWrapperProps {
+export interface ServicesTaskProps {
+  route?: TkRoute;
+  service?: TkService;
+}
+
+export interface ServicesCreatedProps {
+  code?: string;
+  subject?: string;
+  organization?: string;
+  status?: string;
+  createdDate?: Date;
+  route?: string;
+  service?: string;
+}
+
+export interface TicketsWrapperProps {
   contentRef: React.Ref<any>;
   serviceRef: React.Ref<HTMLSelectElement>;
   subjectRef: React.Ref<HTMLInputElement>;
@@ -76,19 +91,4 @@ export interface ServicesSuccessCardProps {
   cardRef: React.Ref<any>;
   classes: Record<'root' | 'title', string>;
   data: ServicesCreatedProps;
-}
-
-export interface ServicesCreatedProps {
-  code?: string;
-  subject?: string;
-  organization?: string;
-  status?: string;
-  createdDate?: Date;
-  route?: string;
-  service?: string;
-}
-
-export interface ServicesTaskProps {
-  route?: TkRoute;
-  service?: TkService;
 }

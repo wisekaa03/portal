@@ -4,17 +4,7 @@
 import React, { FC, useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Box,
-  Typography,
-  IconButton,
-  Popper,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
-  Paper,
-  ListItemIcon,
-} from '@material-ui/core';
+import { Box, Typography, IconButton, Popper, ClickAwayListener, MenuList, MenuItem, Paper, ListItemIcon } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVertRounded';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUpOutlined';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownOutlined';
@@ -63,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
       gap: `${theme.spacing(0.5)}px`,
       // borderBottom: '1px solid rgba(46, 45, 43, 0.7)',
       gridTemplateRows: `repeat(3, ${theme.spacing(3)}px)`,
-      gridTemplateColumns: `1fr 24px`,
+      gridTemplateColumns: '1fr 24px',
       minWidth: 200,
       width: 400,
       // maxWidth: 400,
@@ -101,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const pathname = '/services';
+const pathname = '/tickets';
 
 const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
   favorite,
@@ -177,10 +167,7 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
           <Icon base64={base64} src={favorite.service?.avatar} size={48} />
         </Box>
         <Box className={classes.info}>
-          <Typography
-            variant="subtitle1"
-            className={clsx(classes.name, { [classes.oneFavorites]: !favorite.service?.description })}
-          >
+          <Typography variant="subtitle1" className={clsx(classes.name, { [classes.oneFavorites]: !favorite.service?.description })}>
             {favorite.service?.name}
           </Typography>
           {favorite.service?.description && (
@@ -201,7 +188,7 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
                             <ListItemIcon>
                               <KeyboardArrowUpIcon fontSize="small" />
                             </ListItemIcon>
-                            <Typography variant="inherit">{t('services:favorite.up')}</Typography>
+                            <Typography variant="inherit">{t('tickets:favorite.up')}</Typography>
                           </MenuItem>
                         )}
                         {isDown && (
@@ -209,14 +196,14 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
                             <ListItemIcon>
                               <KeyboardArrowDownIcon fontSize="small" />
                             </ListItemIcon>
-                            <Typography variant="inherit">{t('services:favorite.down')}</Typography>
+                            <Typography variant="inherit">{t('tickets:favorite.down')}</Typography>
                           </MenuItem>
                         )}
                         <MenuItem disabled={loadingSettings} onClick={handleFavorite('delete')}>
                           <ListItemIcon>
                             <DeleteIcon fontSize="small" />
                           </ListItemIcon>
-                          <Typography variant="inherit">{t('services:favorite.delete')}</Typography>
+                          <Typography variant="inherit">{t('tickets:favorite.delete')}</Typography>
                         </MenuItem>
                       </MenuList>
                     </ClickAwayListener>

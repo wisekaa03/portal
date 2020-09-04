@@ -64,7 +64,11 @@ async function bootstrap(): Promise<void> {
     logger.warn('There are no files "private.crt", "private.key" in "secure" directory."', error.toString(), 'Bootstrap');
   }
   const server = express();
-  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(server), nestjsOptions);
+  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(server),
+    nestjsOptions,
+  );
 
   logger = app.get(Logger);
   const configService = app.get(ConfigService);

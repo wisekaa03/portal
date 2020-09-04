@@ -101,7 +101,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region Logging module
     LoggerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => pinoOptions(configService.get<string>('LOGLEVEL'), configService.get<boolean>('DEVELOPMENT')),
+      useFactory: async (configService: ConfigService) =>
+        pinoOptions(configService.get<string>('LOGLEVEL'), configService.get<boolean>('DEVELOPMENT')),
     }),
     //#endregion
 
@@ -167,7 +168,11 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           installSubscriptionHandlers: true,
           subscriptions: {
             keepAlive: 0,
-            onConnect: async (connectionParameters: Record<string, any>, websocket: WebSocket, context: ConnectionContext): Promise<any> => {
+            onConnect: async (
+              connectionParameters: Record<string, any>,
+              websocket: WebSocket,
+              context: ConnectionContext,
+            ): Promise<any> => {
               const promise = new Promise<User | undefined>((resolveOnConnect) => {
                 const request = (websocket as any)?.upgradeReq as express.Request;
                 const response = ({} as any) as express.Response;
