@@ -55,6 +55,10 @@ export class LoggingInterceptor implements NestInterceptor {
         if (request) {
           username = (request.session?.passport?.user as User)?.username || '';
 
+          if (request.url === '/health') {
+            return next.handle();
+          }
+
           return next.handle().pipe(tap(() => this.logger.info({ username }, context.getClass().name)));
         }
 
@@ -66,8 +70,8 @@ export class LoggingInterceptor implements NestInterceptor {
         username = (gqlCtx.req?.session?.passport?.user as User)?.username || '';
 
         const values = info.variableValues;
-        if (values['password']) {
-          values['password'] = '* MASKED *';
+        if (values.password) {
+          values.password = '* MASKED *';
         }
 
         return next.handle().pipe(

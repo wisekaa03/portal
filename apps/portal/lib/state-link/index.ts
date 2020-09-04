@@ -9,9 +9,9 @@ export const resolvers = {
   Query: {
     me: (_root: Record<string, unknown>, _arguments: Record<string, unknown>, { user }: { user?: User }): User | null => {
       if (__SERVER__) {
-        console.error('-------------------------------------------------------');
-        console.error('StateLink ME.username: [', user?.username, ']');
-        console.error('-------------------------------------------------------');
+        console.error('-----------------------------------------------------------------------------------');
+        console.error('StateLink ME.username: Boolean(user): [', Boolean(user), '], [', user?.username, ']');
+        console.error('-----------------------------------------------------------------------------------');
         if (user) {
           const data = {
             ...user,
