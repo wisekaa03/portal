@@ -44,6 +44,7 @@ const ProfileProvider: React.FC<{
 
   const { data, loading, subscribeToMore, client } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
     fetchPolicy: 'cache-first',
+    context: { user: (ctx?.req as any)?.session?.passport?.user },
   });
 
   if (__SERVER__) {
