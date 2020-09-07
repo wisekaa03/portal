@@ -19,6 +19,7 @@ export interface TkService {
 }
 
 export interface TkRoute {
+  id?: string;
   where: TkWhere;
   code: string;
   name: string;

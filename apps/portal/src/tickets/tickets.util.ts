@@ -292,6 +292,7 @@ export const serviceOST = (service: Record<string, any>, where: TkWhere): TkServ
 export const routesOST = (route: Record<string, any>, where: TkWhere): TkRoute | undefined =>
   route && Object.keys(route).length > 0
     ? {
+        id: `${whereService(where)}.${route.code}`,
         where: whereService(where),
         code: route.code,
         name: route.name,
@@ -435,7 +436,7 @@ export const userOST = (user: Record<string, any>, where: TkWhere): TkUser | und
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
-        id: user.Ref,
+        id: user.Ref || `${whereService(where)}.${user['ФИО']}`,
         name: user['ФИО'],
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],

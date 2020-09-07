@@ -108,10 +108,10 @@ const TasksCard = withStyles((theme) => ({
   label: {
     'display': 'grid',
     'gridTemplateColumns': '1fr 4fr',
-    'gridTemplateRows': '50px 1fr',
+    'gridTemplateRows': '35px 1fr',
     'gap': `${theme.spacing()}px`,
     'maxHeight': '180px',
-    'minHeight': '50px',
+    'minHeight': '35px',
     'overflow': 'hidden',
     '& h6': {
       maxWidth: 254,
@@ -141,10 +141,10 @@ const TasksCard = withStyles((theme) => ({
                 <Icon base64 src={service?.avatar} size={36} />
               </div>
               <div style={{ overflow: 'hidden' }}>
-                <Typography variant="subtitle2">{subject}</Typography>
+                <Typography variant="subtitle1">{service?.name}</Typography>
               </div>
               <div>
-                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: body || '' }} />
+                <Typography variant="subtitle2">{subject}</Typography>
               </div>
             </div>
             <Divider />
