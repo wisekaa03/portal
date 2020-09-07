@@ -119,7 +119,7 @@ type TkRoutes {
 
 type TkEditTask {
   users: [TkUser]
-  task: TkTask
+  task: TkTask!
   errors: [String]
 }
 

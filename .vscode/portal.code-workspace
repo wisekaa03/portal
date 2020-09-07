@@ -17,7 +17,7 @@
     "jest.restartJestOnSnapshotUpdate": true,
     "javascript.format.enable": false,
     "typescript.format.enable": false,
-    "files.autoSave": "onWindowChange",
+    "files.autoSave": "off",
     "editor.formatOnSave": true,
     "[html]": {
       "editor.formatOnSave": false

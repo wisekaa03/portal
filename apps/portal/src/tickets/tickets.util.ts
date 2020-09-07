@@ -435,6 +435,63 @@ export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | u
       }
     : undefined;
 
+export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUser[] | undefined, TkTask] => {
+  const description = {
+    id: `${whereService(where)}.${task.number}`,
+    where: whereService(where),
+    code: task.number,
+    subject: task.subject,
+    smallBody: task.description?.[0]?.body?.substring(0, SMALL_BODY_STRING),
+    body: task.description?.[0]?.body,
+    status: task.status_name,
+    createdDate: new Date(task.created),
+    timeoutDate: new Date(task.dateOfCompletion),
+    // endDate: undefined,
+    initiatorUser: task.owner_user_id ? `${whereService(where)}.${task.owner_user_id}` : undefined,
+    executorUser: task.assignee_user_id ? `${whereService(where)}.${task.assignee_user_id}` : undefined,
+    route: {
+      where: whereService(where),
+      avatar: task.route?.avatar,
+      code: task.route?.code,
+      name: task.route?.name,
+    },
+    service: {
+      where: whereService(where),
+      avatar: task.topic_avatar,
+      code: task.topic_id,
+      name: task.topic,
+    },
+    // availableAction: undefined,
+    // availableStages: undefined,
+    // files: undefined,
+  };
+
+  const users = [
+    {
+      where: whereService(where),
+      id: `${whereService(where)}.${task.owner_user_id}`,
+      name: task.owner_user_name,
+      avatar: task.owner_avatar,
+      email: task.owner_email,
+      telephone: task.owner_phone,
+      company: task.owner_company,
+    },
+  ];
+  if (task.assignee_user_name) {
+    users.push({
+      where: whereService(where),
+      id: `${whereService(where)}.${task.assignee_user_id}`,
+      name: task.assignee_user_name,
+      avatar: task.assignee_avatar,
+      email: task.assignee_email,
+      telephone: task.assignee_phone,
+      company: task.assignee_company,
+    });
+  }
+
+  return [users, description];
+};
+
 /**
  * Новый user в представлении OSTicket:
  */

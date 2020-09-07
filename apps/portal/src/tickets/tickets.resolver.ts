@@ -155,11 +155,7 @@ export class TicketsResolver {
    */
   @Query('TicketsTaskFile')
   @UseGuards(GqlAuthGuard)
-  async TicketsTaskFile(
-    @Args('id') id: TkFileInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
-  ): Promise<TkFile> {
+  async TicketsTaskFile(@Args('id') id: TkFileInput, @CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<TkFile> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

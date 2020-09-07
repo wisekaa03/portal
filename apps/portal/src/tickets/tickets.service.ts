@@ -31,7 +31,7 @@ import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
-import { taskSOAP, AttachesSOAP, userOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
+import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
 //#endregion
 
 /**
@@ -573,13 +573,12 @@ export class TicketsService {
                     if (typeof response.data.error === 'string') {
                       throw new TypeError(response.data.error);
                     } else {
-                      const userTask = userOST(response.data?.description, task.where);
-                      const taskTask = taskOST(response.data?.description, task.where);
-                      if (userTask && taskTask) {
+                      const [users, tasks] = descriptionOST(response.data?.description, task.where);
+                      if (users && tasks) {
                         return {
-                          users: [userTask],
-                          tasks: [taskTask],
-                        };
+                          users,
+                          tasks,
+                        } as TkEditTask;
                       }
                     }
                   }
