@@ -76,7 +76,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TasksCard = withStyles((theme) => ({
   root: {
-    'height': 'fit-content',
+    'height': '165px',
+    'maxHeight': '165px',
+    'minHeight': '165px',
     'display': 'flex',
     'flexDirection': 'column',
     'justifyContent': 'flex-start',
@@ -96,30 +98,33 @@ const TasksCard = withStyles((theme) => ({
     'height': '100%',
     'padding': theme.spacing(2),
     'display': 'grid',
-    'flexDirection': 'column',
+    'flexDirection': 'row',
     'justifyContent': 'flex-start',
     'alignItems': 'stretch',
-    'gridTemplateRows': '1fr min-content min-content',
+    'gridTemplateRows': '55px max-content min-content min-content',
+    'gridTemplateColumns': '100%',
     '& > hr': {
       marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
     },
   },
   label: {
-    'display': 'grid',
-    'gridTemplateColumns': '1fr 4fr',
-    'gridTemplateRows': '50px 1fr',
-    'gap': `${theme.spacing()}px`,
-    'maxHeight': '180px',
-    'minHeight': '50px',
-    'overflow': 'hidden',
-    '& h6': {
-      maxWidth: 254,
-    },
-    '& > div:last-child': {
-      gridColumnStart: 1,
-      gridColumnEnd: 3,
-    },
+    padding: '8px 6px 8px 0',
+    // 'display': 'grid',
+    // 'gridTemplateColumns': '1fr 4fr',
+    // 'gridTemplateRows': '50px 1fr',
+    // 'gap': `${theme.spacing()}px`,
+    // 'maxHeight': '180px',
+    // 'minHeight': '50px',
+    // 'overflow': 'hidden',
+    // '& h6': {
+    //   // maxWidth: 254,
+    //   maxWidth: 390,
+    // },
+    // '& > div:last-child': {
+    //   gridColumnStart: 1,
+    //   gridColumnEnd: 3,
+    // },
   },
   registered: {
     color: '#b99d15',
@@ -136,17 +141,17 @@ const TasksCard = withStyles((theme) => ({
       <CardActionArea>
         <Link href={{ pathname: '/task', query: { where, code: id } }} as={`/task/${where}/${id}`}>
           <CardContent className={classes.content}>
-            <div className={classes.label}>
-              <div>
+            <Box display="grid" gridTemplateColumns="45px auto">
+              <div className={classes.label}>
                 <Icon base64 src={service?.avatar || route?.avatar} size={36} />
               </div>
-              <div style={{ overflow: 'hidden' }}>
-                <Typography variant="subtitle2">{route?.name}</Typography>
+              <div>
+                <Typography variant="subtitle1">{route?.name}</Typography>
                 <Typography variant="subtitle2">{service?.name}</Typography>
               </div>
-              <div>
-                <Typography variant="subtitle2">{subject}</Typography>
-              </div>
+            </Box>
+            <div>
+              <Typography variant="body1">{subject}</Typography>
             </div>
             <Divider />
             <Box display="flex" flexDirection="column" color="gray">
