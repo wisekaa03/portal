@@ -82,8 +82,8 @@ const TasksCard = withStyles((theme) => ({
     'justifyContent': 'flex-start',
     'alignItems': 'stretch',
     'flex': 1,
-    // 'minWidth': 344,
-    'maxWidth': 344,
+    'minWidth': 392,
+    'maxWidth': 392,
     'borderRadius': theme.shape.borderRadius,
     'background': fade(theme.palette.secondary.main, 0.15),
     'marginRight': theme.spacing(2),
@@ -108,10 +108,10 @@ const TasksCard = withStyles((theme) => ({
   label: {
     'display': 'grid',
     'gridTemplateColumns': '1fr 4fr',
-    'gridTemplateRows': '35px 1fr',
+    'gridTemplateRows': '50px 1fr',
     'gap': `${theme.spacing()}px`,
     'maxHeight': '180px',
-    'minHeight': '35px',
+    'minHeight': '50px',
     'overflow': 'hidden',
     '& h6': {
       maxWidth: 254,
@@ -129,7 +129,7 @@ const TasksCard = withStyles((theme) => ({
   },
 }))(({ classes, task }: TasksCardProps) => {
   const { t, i18n } = useTranslation();
-  const { where, code: id, service, subject, body, smallBody, status, createdDate } = task;
+  const { where, code: id, route, service, subject, body, smallBody, status, createdDate } = task;
 
   return (
     <Card className={classes.root}>
@@ -138,10 +138,11 @@ const TasksCard = withStyles((theme) => ({
           <CardContent className={classes.content}>
             <div className={classes.label}>
               <div>
-                <Icon base64 src={service?.avatar} size={36} />
+                <Icon base64 src={service?.avatar || route?.avatar} size={36} />
               </div>
               <div style={{ overflow: 'hidden' }}>
-                <Typography variant="subtitle1">{service?.name}</Typography>
+                <Typography variant="subtitle2">{route?.name}</Typography>
+                <Typography variant="subtitle2">{service?.name}</Typography>
               </div>
               <div>
                 <Typography variant="subtitle2">{subject}</Typography>
@@ -194,6 +195,7 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, searc
           my={2}
           alignItems="stretch"
           justifyContent="flex-start"
+          alignContent="flex-start"
         >
           <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
             {tasks.length > 0 ? (

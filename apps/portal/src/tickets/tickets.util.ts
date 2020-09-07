@@ -391,10 +391,16 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | und
         //   department: task['assignee_dept'],
         //   telephone: task['assignee_phone'],
         // },
-        route: undefined,
+        route: {
+          where: whereService(where),
+          avatar: task.route?.avatar,
+          code: task.route?.code,
+          name: task.route?.name,
+        },
         service: {
           where: whereService(where),
-          code: '',
+          avatar: task.topic_avatar,
+          code: task.topic_id,
           name: task.topic,
         },
         availableAction: undefined,
