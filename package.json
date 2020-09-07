@@ -167,7 +167,7 @@
     "react-window-infinite-loader": "^1.0.5",
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.6.2",
+    "rxjs": "^6.6.3",
     "sharp": "^0.26.0",
     "soap": "^0.33.0",
     "subscriptions-transport-ws": "^0.9.18",
