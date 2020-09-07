@@ -573,12 +573,12 @@ export class TicketsService {
                     if (typeof response.data.error === 'string') {
                       throw new TypeError(response.data.error);
                     } else {
-                      const [users, tasks] = descriptionOST(response.data?.description, task.where);
-                      if (users && tasks) {
+                      const [users, taskDescription] = descriptionOST(response.data?.description, task.where);
+                      if (users && task) {
                         return {
                           users,
-                          tasks,
-                        } as TkEditTask;
+                          task: taskDescription,
+                        };
                       }
                     }
                   }

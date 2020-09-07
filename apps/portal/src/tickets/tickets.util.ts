@@ -436,7 +436,7 @@ export const newOST = (task: Record<string, any>, where: TkWhere): TkTaskNew | u
     : undefined;
 
 export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUser[] | undefined, TkTask] => {
-  const description = {
+  const taskDescription = {
     id: `${whereService(where)}.${task.number}`,
     where: whereService(where),
     code: task.number,
@@ -489,7 +489,7 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
     });
   }
 
-  return [users, description];
+  return [users, taskDescription];
 };
 
 /**
