@@ -74,8 +74,8 @@ export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefi
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
-        id: user.Ref,
-        name: user['ФИО'],
+        id: user.Ref || `${whereService(where)}.${user['ФИО']}`,
+        name: user['ФИО'] || '-',
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],
         telephone: user['ОсновнойТелефон'],
@@ -190,7 +190,7 @@ export const taskSOAP = (task: TicketsTaskSOAP, where: TkWhere): TkTask | undefi
   task && Object.keys(task).length > 0
     ? {
         where: whereService(where),
-        id: task.Ref,
+        id: task.Ref || `${whereService(where)}.${task['Код']}`,
         code: task['Код'],
         subject: task['Наименование'],
         body: task['Описание'] && clearHtml(task['Описание']),
@@ -359,6 +359,7 @@ export const commentsOST = (comments: Record<string, any>, where: TkWhere, task:
 export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | undefined =>
   task && Object.keys(task).length > 0
     ? {
+        id: `${whereService(where)}.${task.number}`,
         where: whereService(where),
         code: task.number,
         subject: task.subject,

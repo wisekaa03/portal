@@ -12,7 +12,7 @@ export interface TasksComponentProps {
   tasks: (TkTask | null)[];
   status: string;
   search: string;
-  refetchTasks: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>>;
+  tasksRefetch: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>>;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }

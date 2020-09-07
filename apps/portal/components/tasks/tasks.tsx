@@ -16,6 +16,8 @@ import BoxWithRef from '@lib/box-ref';
 import type { TasksComponentProps, TasksCardProps } from '@lib/types';
 import { Icon } from '@front/components/ui/icon';
 // import Select from '@front/components/ui/select';
+import Search from '@front/components/ui/search';
+import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 // import RefreshButton from '@front/components/ui/refresh-button';
 // import TaskPage from '@front/pages/task';
@@ -64,6 +66,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     notFounds: {
       color: '#949494',
+    },
+    control: {
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
   }),
 );
@@ -164,7 +170,7 @@ const TasksCard = withStyles((theme) => ({
   );
 });
 
-const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, search, refetchTasks, handleSearch, handleStatus }) => {
+const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, search, tasksRefetch, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   const ticketBox = useRef(null);
@@ -172,56 +178,34 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, searc
   const maxHeight = ticketBox.current ? `calc(100vh - ${(ticketBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
-    <Box display="flex" flexDirection="column" flexGrow={1} px={2}>
-      {/* <Box display="flex" mb={1}>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <InputBase
-            onChange={handleSearch}
-            value={search}
-            placeholder={t('tasks:searchPlaceholder')}
-            classes={{
-              input: classes.inputInput,
-              root: classes.inputRoot,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-          />
-        </div>
-        <Box display="flex" justifyContent="center" alignItems="center" flexGrow={1} px={1}>
-          <Typography color="secondary" variant="h4">
-            {t('tasks:title')}
-          </Typography>
-        </Box>
-        <Box display="flex" justifyContent="flex-end" alignItems="center" mr={1} position="relative">
-          <RefreshButton noAbsolute onClick={() => refetchTasks()} />
-        </Box>
-        <Box display="flex" justifyContent="flex-end">
-          <Select label={t('tasks:status')} items={TASK_STATUSES} value={status} onChange={handleStatus} />
-        </Box>
-          </Box> */}
-      <BoxWithRef
-        ref={ticketBox}
-        overflow="auto"
-        style={{ maxHeight }}
-        display="flex"
-        flexGrow={1}
-        flexWrap="wrap"
-        my={2}
-        alignItems="stretch"
-        justifyContent="flex-start"
-      >
-        <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-          {tasks.length > 0 ? (
-            tasks.map((task) => task && <TasksCard key={task.code} task={task} />)
-          ) : (
-            <Typography className={classes.notFounds} variant="h4">
-              {t('tasks:notFounds')}
-            </Typography>
-          )}
-        </Loading>
-      </BoxWithRef>
+    <Box display="flex" flexDirection="column">
+      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+        <Search value={search} handleChange={handleSearch} />
+        <RefreshButton noAbsolute dense onClick={() => tasksRefetch && tasksRefetch()} />
+      </Box>
+      <Box display="flex" flexDirection="column" flexGrow={1} px={2}>
+        <BoxWithRef
+          ref={ticketBox}
+          overflow="auto"
+          style={{ maxHeight }}
+          display="flex"
+          flexGrow={1}
+          flexWrap="wrap"
+          my={2}
+          alignItems="stretch"
+          justifyContent="flex-start"
+        >
+          <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
+            {tasks.length > 0 ? (
+              tasks.map((task) => task && <TasksCard key={task.code} task={task} />)
+            ) : (
+              <Typography className={classes.notFounds} variant="h4">
+                {t('tasks:notFounds')}
+              </Typography>
+            )}
+          </Loading>
+        </BoxWithRef>
+      </Box>
     </Box>
   );
 };

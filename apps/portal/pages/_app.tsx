@@ -47,13 +47,24 @@ const ProfileProvider: React.FC<{
     context: { user: (ctx?.req as any)?.session?.passport?.user },
   });
 
+  console.error('-----------------------------------------------------------------------------------');
+  console.error(
+    '__SERVER__: [',
+    __SERVER__,
+    '], Loading: [',
+    loading,
+    '] ME: Boolean(data?.me): [',
+    Boolean(data?.me),
+    '], [',
+    data?.me?.username,
+    ']',
+  );
+  console.error('URL: [', ctx?.req?.url, '] AUTH_PAGE: [', AUTH_PAGE, ']');
+  console.error('-----------------------------------------------------------------------------------');
+
   if (__SERVER__) {
     if (ctx?.res && ctx?.req) {
       // TODO:
-      console.error('-----------------------------------------------------------------------------------');
-      console.error('Loading: [', loading, '] ME: Boolean(data?.me): [', Boolean(data?.me), '], [', data?.me?.username, ']');
-      console.error('URL: [', ctx.req?.url, '] AUTH_PAGE: [', AUTH_PAGE, ']');
-      console.error('-----------------------------------------------------------------------------------');
       if (data?.me) {
         if (pathname.startsWith(AUTH_PAGE)) {
           const location = decodeURI((ctx.req as Request).query.redirect as string) || FIRST_PAGE;

@@ -26,11 +26,11 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     loading: loadingTasks,
     data: dataTasks,
     error: errorTasks,
-    refetch: refetchTasks,
+    refetch: tasksRefetch,
   }: QueryResult<Data<'TicketsTasks', TkTasks>> = useQuery(TICKETS_TASKS, {
     ssr: false,
     variables: { task: { status, search } },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
@@ -63,7 +63,7 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
           tasks={tasks}
           status={status}
           search={search}
-          refetchTasks={refetchTasks}
+          tasksRefetch={tasksRefetch}
           handleSearch={(event) => {
             event?.preventDefault();
           }}
