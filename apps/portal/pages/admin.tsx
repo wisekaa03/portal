@@ -61,14 +61,14 @@ const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
     // },
   });
 
-  const [clearSettings, { loading: clearSettingsLoading, error: clearSettingsError }] = useMutation<
-    UserSettings,
-    { value: UserSettings }
-  >(USER_SETTINGS, {
-    // onCompleted() {
-    //   setCacheLoading(false);
-    // },
-  });
+  const [clearSettings, { loading: clearSettingsLoading, error: clearSettingsError }] = useMutation<UserSettings, { value: UserSettings }>(
+    USER_SETTINGS,
+    {
+      // onCompleted() {
+      //   setCacheLoading(false);
+      // },
+    },
+  );
 
   const handleAdd = (): void => {
     // setSyncLoading(true);

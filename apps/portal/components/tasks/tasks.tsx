@@ -207,7 +207,7 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, searc
               tasks.map((task) => task && <TasksCard key={task.code} task={task} />)
             ) : (
               <Typography className={classes.notFounds} variant="h4">
-                {t('tasks:notFounds')}
+                {t('tasks:task.notFounds')}
               </Typography>
             )}
           </Loading>

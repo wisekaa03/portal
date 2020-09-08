@@ -8,6 +8,7 @@ import { Typography, Paper, Grid } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { I18nPage, Trans, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
+import { MaterialUI } from '@front/layout';
 //#endregion
 
 const useStyles = makeStyles((theme) => ({
@@ -57,35 +58,37 @@ const description = (statusCode?: number): string => {
   }
 };
 
-const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t }) => {
+const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t, ...rest }) => {
   const classes = useStyles({});
   const href = `mailto:webmaster@${process.env.DOMAIN}`;
 
   return (
-    <div className={classes.root}>
+    <>
       <Head>
         <title>{t(title(statusCode))}</title>
       </Head>
-      <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
-        <Grid item>
-          <Paper className={classes.paper}>
-            <Typography variant="h3" component="h3">
-              {t(description(statusCode))}
-            </Typography>
+      <MaterialUI {...rest}>
+        <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
+          <Grid item>
+            <Paper className={classes.paper}>
+              <Typography variant="h3" component="h3">
+                {t(description(statusCode))}
+              </Typography>
 
-            <Typography variant="h1" component="h1" className={classes.statusCode}>
-              {statusCode}
-            </Typography>
+              <Typography variant="h1" component="h1" className={classes.statusCode}>
+                {statusCode}
+              </Typography>
 
-            <Typography component="p">
-              <Trans i18nKey="error:explanation">
-                <a href={href}>email</a>
-              </Trans>
-            </Typography>
-          </Paper>
+              <Typography component="p">
+                <Trans i18nKey="error:explanation">
+                  <a href={href}>email</a>
+                </Trans>
+              </Typography>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </MaterialUI>
+    </>
   );
 };
 
