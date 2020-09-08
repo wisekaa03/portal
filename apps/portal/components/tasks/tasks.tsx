@@ -141,7 +141,7 @@ const TasksCard = withStyles((theme) => ({
       <CardActionArea>
         <Link href={{ pathname: '/task', query: { where, code: id } }} as={`/task/${where}/${id}`}>
           <CardContent className={classes.content}>
-            <Box display="grid" gridTemplateColumns="45px auto">
+            <Box display="grid" gridTemplateColumns="45px auto" style={{ height: '50px', overflow: 'hidden' }}>
               <div className={classes.label}>
                 <Icon base64 src={service?.avatar || route?.avatar} size={36} />
               </div>
@@ -150,7 +150,7 @@ const TasksCard = withStyles((theme) => ({
                 <Typography variant="subtitle2">{service?.name}</Typography>
               </div>
             </Box>
-            <div>
+            <div style={{ height: '20px' }}>
               <Typography variant="body1">{subject}</Typography>
             </div>
             <Divider />
