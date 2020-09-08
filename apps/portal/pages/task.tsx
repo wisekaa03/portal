@@ -21,14 +21,18 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error }: QueryResult<Data<'TicketsTaskDescription', TkEditTask>> = useQuery(TICKETS_TASK_DESCRIPTION, {
-    ssr: false,
-    variables: {
-      where: query?.where || TkWhere.Default,
-      code: query?.code || '0',
+  const { loading, data, error, refetch: taskRefetch }: QueryResult<Data<'TicketsTaskDescription', TkEditTask>> = useQuery(
+    TICKETS_TASK_DESCRIPTION,
+    {
+      ssr: false,
+      variables: {
+        where: query?.where || TkWhere.Default,
+        code: query?.code || '0',
+      },
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
     },
-    fetchPolicy: 'cache-and-network',
-  });
+  );
 
   const [getTaskFile, { loading: taskFileLoading, data: taskFileData, error: taskFileError }] = useLazyQuery<
     Data<'TicketsTaskFile', TkFile>,
@@ -112,6 +116,7 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
         <TaskComponent
           loading={loading}
           loadingEdit={loadingEdit}
+          taskRefetch={taskRefetch}
           task={task?.task}
           comment={comment}
           files={files}

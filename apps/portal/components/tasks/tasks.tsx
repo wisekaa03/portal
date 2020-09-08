@@ -135,7 +135,7 @@ const TasksCard = withStyles((theme) => ({
                 <Typography variant="subtitle2">{service?.name}</Typography>
               </div>
             </Box>
-            <div style={{ height: '20px' }}>
+            <div style={{ height: '20px', overflow: 'hidden' }}>
               <Typography variant="body1">{subject}</Typography>
             </div>
             <Divider />

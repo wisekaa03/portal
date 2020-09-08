@@ -524,6 +524,7 @@ const TICKETS_TASK_COMMENTS = gql`
       id
       name
       ext
+      body
     }
   }
 `;

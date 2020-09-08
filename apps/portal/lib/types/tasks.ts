@@ -1,9 +1,8 @@
 /** @format */
 
 import React from 'react';
-import { WithTranslation } from 'next-i18next';
 import { ApolloQueryResult, ApolloError, QueryLazyOptions } from '@apollo/client';
-import { TkUser, TkTask, TkTasks, TkFileInput, TkFile, TkWhere } from './tickets';
+import type { TkUser, TkTask, TkEditTask, TkTasks, TkFileInput, TkFile, TkWhere } from './tickets';
 import { StyleProps as StyleProperties, Data } from './common';
 import { DropzoneFile } from './dropzone';
 
@@ -25,6 +24,7 @@ export interface TasksCardProps {
 export interface TaskComponentProps {
   loading: boolean;
   loadingEdit: boolean;
+  taskRefetch: () => Promise<ApolloQueryResult<Data<'TicketsTaskDescription', TkEditTask>>>;
   task?: TkTask;
   comment: string;
   files: DropzoneFile[];

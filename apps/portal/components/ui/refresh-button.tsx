@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React from 'react';
+import React, { FC } from 'react';
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import SyncIcon from '@material-ui/icons/Sync';
@@ -9,9 +9,9 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
-import ServicesSyncIcon from '@images/svg/icons/wait_services.svg?inline';
-import { Icon } from './icon';
+import ServicesSyncIcon from '@images/svg/icons/wait_services.svg'; // ?inline
 import { useTranslation } from '@lib/i18n-client';
+import { Icon } from './icon';
 //#endregion
 
 export enum RefreshWhere {
@@ -56,13 +56,7 @@ interface RefreshButtonProps extends IconButtonProps {
   onClick: () => void;
 }
 
-const RefreshButton = ({
-  onClick,
-  noAbsolute,
-  disableBackground,
-  where,
-  dense,
-}: RefreshButtonProps): React.ReactElement => {
+const RefreshButton: FC<RefreshButtonProps> = ({ onClick, noAbsolute, disableBackground, where, dense }): React.ReactElement => {
   const classes = useStyles({});
   const { t } = useTranslation();
   let icon: React.ReactElement;

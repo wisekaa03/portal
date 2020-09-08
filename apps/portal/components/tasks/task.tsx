@@ -42,11 +42,13 @@ import TaskIconNew from '@public/images/svg/task/task_new.svg';
 import TaskIconPause from '@public/images/svg/task/task_pause.svg';
 import TaskIconWorked from '@public/images/svg/task/task_worked.svg';
 import TaskIconComplete from '@public/images/svg/task/task_complete.svg';
+import RefreshButton from '@front/components/ui/refresh-button';
 //#endregion
 
 const getTicketStatusIcon = (status: string): any => {
   switch (status) {
     case 'Регистрация':
+    case 'Новый':
       return TaskIconNew;
     case 'В работе':
     case 'Открыто':
@@ -64,9 +66,26 @@ const getTicketStatusIcon = (status: string): any => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {},
+    control: {
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    },
+    controlLeft: {
+      'padding': 4,
+      'color': theme.palette.secondary.main,
+      'opacity': 0.6,
+      'transition': `all 200ms ${theme.transitions.easing.easeOut} 0ms`,
+      '&:hover': {
+        opacity: 1,
+        color: '#fff',
+        backgroundColor: theme.palette.secondary.main,
+      },
+      'marginLeft': theme.spacing(),
+    },
     content: {
       display: 'grid',
-      margin: '0 auto',
+      alignSelf: 'center',
+      margin: '16px auto',
       gap: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
       width: '100%',
       gridTemplateColumns: '1fr',
@@ -251,7 +270,7 @@ const FilesArea = withStyles((theme) => ({
     return (
       <CardActions disableSpacing className={classes.files}>
         {task?.files?.map((file) => (
-          <IconButton className={classes.file} size="small" onClick={handleDownload(task, file)}>
+          <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
             <Box display="grid" gridTemplateColumns="20px auto">
               <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
               {file.ext ? (
@@ -276,6 +295,7 @@ const FilesArea = withStyles((theme) => ({
 const TaskComponent: FC<TaskComponentProps> = ({
   loading,
   loadingEdit,
+  taskRefetch,
   task,
   comment,
   files,
@@ -290,119 +310,111 @@ const TaskComponent: FC<TaskComponentProps> = ({
 
   return (
     <Box display="flex" flexDirection="column">
-      <Box display="flex" flexGrow={1} flexDirection="column" px={4} py={2} overflow="auto">
-        <Box display="flex">
-          <Link href={{ pathname: '/tasks' }} as="/tasks" passHref>
-            <IconButton>
-              <ArrowBackIcon />
-            </IconButton>
-          </Link>
-        </Box>
-        {!task ? (
-          <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-            <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-              {t('tasks:task.notFound')}
-            </Typography>
-          </Loading>
-        ) : (
-          <Box className={classes.content}>
-            <Card className={classes.fullRow}>
-              <CardHeader
-                disableTypography
-                className={clsx(classes.cardHeader, classes.background)}
-                title={
-                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                    {t('tasks:task.header', {
-                      task: task.code,
-                      date: dateFormat(task.createdDate, i18n),
-                    })}
-                  </Typography>
-                }
-              />
-              <CardContent>{task.subject}</CardContent>
-            </Card>
-            <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
-            <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />
-            <Card>
-              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                <Icon base64 src={task.service?.avatar || task.route?.avatar} size={48} />
-                <span style={{ placeSelf: 'center stretch' }}>
-                  <Typography variant="subtitle1">{task.route?.name}</Typography>
-                  <Typography variant="subtitle2">{task.service?.name}</Typography>
-                </span>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                <Icon src={getTicketStatusIcon(task.status)} size={48} />
-                <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
-              </CardContent>
-            </Card>
-            <Card className={classes.fullRow}>
-              <CardHeader
-                disableTypography
-                className={clsx(classes.cardHeader, classes.background)}
-                title={
-                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                    {t('tasks:headers.description')}
-                  </Typography>
-                }
-              />
-              <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} />
-              <FilesArea task={task} handleDownload={handleDownload} />
-            </Card>
-            {/* <Card className={classes.fullRow}>
-              <CardHeader
-                disableTypography
-                className={clsx(classes.cardHeader, classes.background)}
-                title={
-                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                    {t('tasks:headers.comments')}
-                  </Typography>
-                }
-              />
-              <CardContent>
-                <Iframe srcDoc={task.body} />
-              </CardContent>
-              </Card>*/}
-            {task.status !== 'Завершен' && (
-              <Loading
-                activate={loadingEdit}
-                full
-                wrapperClasses={classes.fullRow}
-                type="circular"
-                color="secondary"
-                disableShrink
-                size={48}
-              >
-                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                  <TextField
-                    value={comment}
-                    onChange={handleComment}
-                    multiline
-                    rows={5}
-                    type="text"
-                    color="secondary"
-                    label={t('tasks:comment.add')}
-                    variant="outlined"
-                  />
-                </FormControl>
-                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                  <Dropzone files={files} setFiles={setFiles} color="secondary" />
-                </FormControl>
-                <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
-                  <Button actionType="cancel" onClick={handleClose}>
-                    {t('common:cancel')}
-                  </Button>
-                  <Button disabled onClick={handleAccept}>
-                    {t('common:send')}
-                  </Button>
-                </FormControl>
-              </Loading>
-            )}
-          </Box>
-        )}
+      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+        <Link href={{ pathname: '/tasks' }} as="/tasks" passHref>
+          <IconButton className={classes.controlLeft}>
+            <ArrowBackIcon />
+          </IconButton>
+        </Link>
+        <div style={{ width: '100%' }} />
+        <RefreshButton noAbsolute dense onClick={() => taskRefetch && taskRefetch()} />
       </Box>
+      {!task ? (
+        <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
+          <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
+            {t('tasks:task.notFound')}
+          </Typography>
+        </Loading>
+      ) : (
+        <Box className={classes.content}>
+          <Card className={classes.fullRow}>
+            <CardHeader
+              disableTypography
+              className={clsx(classes.cardHeader, classes.background)}
+              title={
+                <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                  {t('tasks:task.header', {
+                    task: task.code,
+                    date: dateFormat(task.createdDate, i18n),
+                  })}
+                </Typography>
+              }
+            />
+            <CardContent>{task.subject}</CardContent>
+          </Card>
+          <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
+          <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />
+          <Card>
+            <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+              <Icon base64 src={task.service?.avatar || task.route?.avatar} size={48} />
+              <span style={{ placeSelf: 'center stretch' }}>
+                <Typography variant="subtitle1">{task.route?.name}</Typography>
+                <Typography variant="subtitle2">{task.service?.name}</Typography>
+              </span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+              <Icon src={getTicketStatusIcon(task.status)} size={48} />
+              <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
+            </CardContent>
+          </Card>
+          <Card className={classes.fullRow}>
+            <CardHeader
+              disableTypography
+              className={clsx(classes.cardHeader, classes.background)}
+              title={
+                <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                  {t('tasks:headers.description')}
+                </Typography>
+              }
+            />
+            <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} />
+            <FilesArea task={task} handleDownload={handleDownload} />
+          </Card>
+          {/* <Card className={classes.fullRow}>
+            <CardHeader
+              disableTypography
+              className={clsx(classes.cardHeader, classes.background)}
+              title={
+                <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                  {t('tasks:headers.comments')}
+                </Typography>
+              }
+            />
+            <CardContent>
+              <Iframe srcDoc={task.body} />
+            </CardContent>
+            </Card>*/}
+          {task.status !== 'Завершен' && (
+            <Loading activate={loadingEdit} full wrapperClasses={classes.fullRow} type="circular" color="secondary" disableShrink size={48}>
+              <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                <TextField
+                  value={comment}
+                  onChange={handleComment}
+                  multiline
+                  rows={5}
+                  type="text"
+                  color="secondary"
+                  label={t('tasks:comment.add')}
+                  variant="outlined"
+                />
+              </FormControl>
+              <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                <Dropzone files={files} setFiles={setFiles} color="secondary" />
+              </FormControl>
+              <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
+                <Button actionType="cancel" onClick={handleClose}>
+                  {t('common:cancel')}
+                </Button>
+                <Button disabled onClick={handleAccept}>
+                  {t('common:send')}
+                </Button>
+              </FormControl>
+            </Loading>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -574,7 +574,7 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       const [users, taskDescription] = descriptionOST(response.data?.description, task.where);
-                      if (users && task) {
+                      if (users && taskDescription) {
                         return {
                           users,
                           task: taskDescription,
