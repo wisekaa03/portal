@@ -102,27 +102,25 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
         </title>
       </Head>
       <MaterialUI {...rest}>
-        {task?.task && (
-          <TaskComponent
-            loading={loading}
-            loadingEdit={loadingEdit}
-            task={task.task}
-            comment={comment}
-            files={files}
-            setFiles={setFiles}
-            taskFile={getTaskFile}
-            taskFileLoading={taskFileLoading}
-            taskFileData={taskFileData}
-            taskFileError={taskFileError}
-            commentFile={getCommentFile}
-            commentFileLoading={commentFileLoading}
-            commentFileData={commentFileData}
-            commentFileError={commentFileError}
-            handleComment={handleComment}
-            handleAccept={handleAccept}
-            handleClose={handleClose}
-          />
-        )}
+        <TaskComponent
+          loading={loading}
+          loadingEdit={loadingEdit}
+          task={task?.task}
+          comment={comment}
+          files={files}
+          setFiles={setFiles}
+          taskFile={getTaskFile}
+          taskFileLoading={taskFileLoading}
+          taskFileData={taskFileData}
+          taskFileError={taskFileError}
+          commentFile={getCommentFile}
+          commentFileLoading={commentFileLoading}
+          commentFileData={commentFileData}
+          commentFileError={commentFileError}
+          handleComment={handleComment}
+          handleAccept={handleAccept}
+          handleClose={handleClose}
+        />
       </MaterialUI>
     </>
   );

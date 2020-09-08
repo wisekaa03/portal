@@ -25,7 +25,7 @@ export interface TasksCardProps {
 export interface TaskComponentProps {
   loading: boolean;
   loadingEdit: boolean;
-  task: TkTask;
+  task?: TkTask;
   comment: string;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;

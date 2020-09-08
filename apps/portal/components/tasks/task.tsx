@@ -79,7 +79,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.shape.borderRadius,
     },
     cardHeader: {
-      boxShadow: theme.shadows[3],
+      padding: theme.spacing(),
+      // boxShadow: theme.shadows[3],
     },
     lightHeader: {
       padding: theme.spacing(),
@@ -162,8 +163,8 @@ const TaskInfoCard = withStyles((theme) => ({
 }))(({ classes, header, profile }: TaskInfoCardProps) => {
   const { t } = useTranslation();
 
-  if (typeof profile === 'string') {
-    return <></>;
+  if (typeof profile === 'string' || profile === null) {
+    return null;
   }
 
   return (
@@ -256,7 +257,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
                 disableTypography
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
-                  <Typography className={classes.cardHeaderTitle} variant="h6">
+                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
                     {t('tasks:task.header', {
                       task: task.code,
                       date: dateFormat(task.createdDate, i18n),
@@ -313,7 +314,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
                 disableTypography
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
-                  <Typography className={classes.cardHeaderTitle} variant="h6">
+                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
                     {t('tasks:headers.description')}
                   </Typography>
                 }
@@ -326,7 +327,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
                   disableTypography
                   className={clsx(classes.cardHeader, classes.background)}
                   title={
-                    <Typography className={classes.cardHeaderTitle} variant="h6">
+                    <Typography className={classes.cardHeaderTitle} variant="subtitle1">
                       {t('tasks:headers.files')}
                     </Typography>
                   }
@@ -334,7 +335,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
                 <CardContent>
                   <Box display="flex" flexDirection="column">
                     {task?.files?.map((file) => (
-                      <Typography variant="subtitle1" key={file.id}>
+                      <Typography variant="subtitle2" key={file.id}>
                         {`${file.name}.${file.ext}`}
                       </Typography>
                     ))}
@@ -347,7 +348,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
                 disableTypography
                 className={clsx(classes.cardHeader, classes.background)}
                 title={
-                  <Typography className={classes.cardHeaderTitle} variant="h6">
+                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
                     {t('tasks:headers.comments')}
                   </Typography>
                 }

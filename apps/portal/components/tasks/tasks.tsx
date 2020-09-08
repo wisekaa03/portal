@@ -204,7 +204,7 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, searc
         >
           <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
             {tasks.length > 0 ? (
-              tasks.map((task) => task && <TasksCard key={task.code} task={task} />)
+              tasks.map((task) => task && <TasksCard key={`${task.where}.${task.code}`} task={task} />)
             ) : (
               <Typography className={classes.notFounds} variant="h4">
                 {t('tasks:task.notFounds')}
