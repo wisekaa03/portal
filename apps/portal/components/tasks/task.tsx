@@ -44,6 +44,9 @@ const getTicketStatusIcon = (status: string): any => {
     case 'Регистрация':
       return TaskIconNew;
     case 'В работе':
+    case 'Открыто':
+    case 'Открытая':
+    case 'Open':
       return TaskIconWorked;
     case 'Выполнено':
     case 'Завершено':
