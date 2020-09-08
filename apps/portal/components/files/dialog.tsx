@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { FC } from 'react';
@@ -19,13 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const FilesDialogComponent: FC<FilesDialogComponentProps> = ({
-  open,
-  input,
-  handleAccept,
-  handleInput,
-  handleClose,
-}) => {
+const FilesDialogComponent: FC<FilesDialogComponentProps> = ({ open, input, handleAccept, handleInput, handleClose }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
@@ -38,15 +33,7 @@ const FilesDialogComponent: FC<FilesDialogComponentProps> = ({
         {open > 2 ? (
           <DialogContentText>{t('files:confirmDelete', { input })}</DialogContentText>
         ) : (
-          <TextField
-            color="secondary"
-            variant="outlined"
-            autoFocus
-            margin="dense"
-            fullWidth
-            onChange={handleInput}
-            value={input}
-          />
+          <TextField color="secondary" variant="outlined" autoFocus margin="dense" fullWidth onChange={handleInput} value={input} />
         )}
       </DialogContent>
       <DialogActions>

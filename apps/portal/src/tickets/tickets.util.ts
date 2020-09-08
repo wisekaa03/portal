@@ -463,13 +463,22 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
     },
     // availableAction: undefined,
     // availableStages: undefined,
-    // files: undefined,
+    files:
+      typeof task.description?.[0]?.attachments === 'object'
+        ? task.description?.[0]?.attachments.map((att: Record<string, string>) => ({
+            where: whereService(where),
+            id: att.code,
+            mime: att.mime,
+            body: att.body,
+            name: att.name,
+          }))
+        : undefined,
   };
 
   const users = [
     {
       where: whereService(where),
-      id: `${whereService(where)}.${task.owner_user_id}`,
+      id: `${whereService(where)}.user.${task.owner_user_id}`,
       name: task.owner_user_name,
       avatar: task.owner_avatar,
       email: task.owner_email,
@@ -480,7 +489,7 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
   if (task.assignee_user_name) {
     users.push({
       where: whereService(where),
-      id: `${whereService(where)}.${task.assignee_user_id}`,
+      id: `${whereService(where)}.user.${task.assignee_user_id}`,
       name: task.assignee_user_name,
       avatar: task.assignee_avatar,
       email: task.assignee_email,
@@ -499,7 +508,7 @@ export const userOST = (user: Record<string, any>, where: TkWhere): TkUser | und
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
-        id: user.Ref || `${whereService(where)}.${user['ФИО']}`,
+        id: user.Ref || `${whereService(where)}.user.${user['ФИО']}`,
         name: user['ФИО'],
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],

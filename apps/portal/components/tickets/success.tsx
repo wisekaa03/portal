@@ -1,12 +1,11 @@
 /** @format */
+/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { useRef } from 'react';
-import { I18n } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
-import { Box, Typography, Card, CardContent, CardActions } from '@material-ui/core';
-import SendIcon from '@material-ui/icons/SendOutlined';
+import { Typography, Card, CardContent, CardActions } from '@material-ui/core';
 import ReactToPrint from 'react-to-print';
 //#endregion
 //#region Imports Local

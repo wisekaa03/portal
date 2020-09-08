@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { FC } from 'react';
@@ -17,15 +18,19 @@ import {
   Paper,
   TextField,
   FormControl,
+  CardMedia,
+  CardActions,
 } from '@material-ui/core';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import GetAppIcon from '@material-ui/icons/GetAppRounded';
 //#endregion
 //#region Imports Local
 import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
-import type { TaskInfoCardProps, TaskComponentProps } from '@lib/types';
+import type { TaskInfoCardProps, TaskComponentProps, TkTask } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import { Icon } from '@front/components/ui/icon';
@@ -102,6 +107,11 @@ const useStyles = makeStyles((theme: Theme) =>
     notFound: {
       color: '#949494',
     },
+    body: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      fontSize: '1.3em',
+    },
     label: {
       padding: '8px 6px 8px 0',
     },
@@ -117,6 +127,7 @@ const useStyles = makeStyles((theme: Theme) =>
     statusContent: {
       display: 'grid',
       gridTemplateColumns: '60px 1fr',
+      background: fade(theme.palette.secondary.main, 0.15),
       // 'gap': `${theme.spacing(4)}px`,
       // '&:last-child': {
       //   paddingBottom: theme.spacing(),
@@ -222,6 +233,46 @@ const TaskInfoCard = withStyles((theme) => ({
   );
 });
 
+const FilesArea = withStyles((theme) => ({
+  files: {
+    borderTop: '1px dotted #ccc',
+    backgroundColor: '#F7FBFA',
+  },
+  file: {
+    padding: 0,
+    width: '100%',
+    textAlign: 'left',
+    borderRadius: '0',
+    justifyContent: 'flex-start',
+    color: '#3C6AA3',
+  },
+}))(({ classes, task, handleDownload }: { task: TkTask; handleDownload; classes: Record<string, string> }) => {
+  if (Array.isArray(task?.files) && task.files.length > 0) {
+    return (
+      <CardActions disableSpacing className={classes.files}>
+        {task?.files?.map((file) => (
+          <IconButton className={classes.file} size="small" onClick={handleDownload(task)}>
+            <Box display="grid" gridTemplateColumns="20px auto">
+              <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
+              {file.ext ? (
+                <Typography variant="body1" key={file.id}>
+                  {`${file.name}.${file.ext}`}
+                </Typography>
+              ) : (
+                <Typography variant="body1" key={file.id}>
+                  {file.name}
+                </Typography>
+              )}
+            </Box>
+          </IconButton>
+        ))}
+      </CardActions>
+    );
+  }
+
+  return null;
+});
+
 const TaskComponent: FC<TaskComponentProps> = ({
   loading,
   loadingEdit,
@@ -235,6 +286,8 @@ const TaskComponent: FC<TaskComponentProps> = ({
 }) => {
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
+
+  const handleDownload = () => undefined;
 
   return (
     <Box display="flex" flexDirection="column">
@@ -296,31 +349,10 @@ const TaskComponent: FC<TaskComponentProps> = ({
                   </Typography>
                 }
               />
-              <CardContent dangerouslySetInnerHTML={{ __html: task?.body ?? '' }} />
+              <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} />
+              <FilesArea task={task} handleDownload={handleDownload} />
             </Card>
-            {Array.isArray(task?.files) && task.files.length > 0 && (
-              <Card className={classes.fullRow}>
-                <CardHeader
-                  disableTypography
-                  className={clsx(classes.cardHeader, classes.background)}
-                  title={
-                    <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                      {t('tasks:headers.files')}
-                    </Typography>
-                  }
-                />
-                <CardContent>
-                  <Box display="flex" flexDirection="column">
-                    {task?.files?.map((file) => (
-                      <Typography variant="subtitle2" key={file.id}>
-                        {`${file.name}.${file.ext}`}
-                      </Typography>
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            )}
-            <Card className={classes.fullRow}>
+            {/* <Card className={classes.fullRow}>
               <CardHeader
                 disableTypography
                 className={clsx(classes.cardHeader, classes.background)}
@@ -333,7 +365,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
               <CardContent>
                 <Iframe srcDoc={task.body} />
               </CardContent>
-            </Card>
+              </Card>*/}
             {task.status !== 'Завершен' && (
               <Loading
                 activate={loadingEdit}

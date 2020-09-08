@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { FC } from 'react';
@@ -60,14 +61,7 @@ export const FilesBreadcrumbsLast: FC<FilesBreadcrumbsLastProps> = ({ handleUplo
 
   return (
     <>
-      <Fab
-        size="small"
-        color="primary"
-        aria-label="add"
-        key="files-additional"
-        style={{ color: '#fff' }}
-        onClick={handleClick}
-      >
+      <Fab size="small" color="primary" aria-label="add" key="files-additional" style={{ color: '#fff' }} onClick={handleClick}>
         <AddIcon />
       </Fab>
       <StyledMenu id="customized-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>

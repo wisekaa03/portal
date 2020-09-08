@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { FC } from 'react';
@@ -32,13 +33,7 @@ const StyledBreadcrumb = withStyles((theme: Theme) => ({
   },
 }))(Chip) as typeof Chip;
 
-export const FilesBreadcrumbs: FC<FilesBreadcrumbsProps> = ({
-  path,
-  handleFolder,
-  handleUpload,
-  handleDelete,
-  handleUrl,
-}) => {
+export const FilesBreadcrumbs: FC<FilesBreadcrumbsProps> = ({ path, handleFolder, handleUpload, handleDelete, handleUrl }) => {
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -46,8 +41,7 @@ export const FilesBreadcrumbs: FC<FilesBreadcrumbsProps> = ({
     <Breadcrumbs aria-label="breadcrumbs">
       {path.map((element, index) => {
         const current = path.reduce(
-          (accumulator, value, currentIndex) =>
-            currentIndex > index || !value ? accumulator : `${accumulator}${value}/`,
+          (accumulator, value, currentIndex) => (currentIndex > index || !value ? accumulator : `${accumulator}${value}/`),
           '/',
         );
         return (
