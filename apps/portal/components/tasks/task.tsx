@@ -251,7 +251,7 @@ const FilesArea = withStyles((theme) => ({
     return (
       <CardActions disableSpacing className={classes.files}>
         {task?.files?.map((file) => (
-          <IconButton className={classes.file} size="small" onClick={handleDownload(task)}>
+          <IconButton className={classes.file} size="small" onClick={handleDownload(task, file)}>
             <Box display="grid" gridTemplateColumns="20px auto">
               <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
               {file.ext ? (
@@ -280,14 +280,13 @@ const TaskComponent: FC<TaskComponentProps> = ({
   comment,
   files,
   setFiles,
+  handleDownload,
   handleComment,
   handleAccept,
   handleClose,
 }) => {
   const classes = useStyles({});
   const { t, i18n } = useTranslation();
-
-  const handleDownload = () => undefined;
 
   return (
     <Box display="flex" flexDirection="column">

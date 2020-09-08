@@ -37,6 +37,7 @@ export interface TaskComponentProps {
   commentFileLoading: boolean;
   commentFileData?: Data<'TicketsCommentFile', TkFile>;
   commentFileError?: ApolloError;
+  handleDownload: (task: TkTask, file: TkFile) => void;
   handleComment: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleAccept: () => void;
   handleClose: () => void;

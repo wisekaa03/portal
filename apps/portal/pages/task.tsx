@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { useState, useEffect } from 'react';
@@ -9,7 +10,8 @@ import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client
 import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT_FILE } from '@lib/queries';
-import { Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
+import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
+import { TkWhere } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import TaskComponent from '@front/components/tasks/task';
@@ -50,6 +52,11 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
       });
     },
   });
+
+  const handleDownload = (task: TkTask, file: TkFile): void => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+  };
 
   const handleComment = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setComment(event.target.value);
@@ -117,6 +124,7 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
           commentFileLoading={commentFileLoading}
           commentFileData={commentFileData}
           commentFileError={commentFileError}
+          handleDownload={handleDownload}
           handleComment={handleComment}
           handleAccept={handleAccept}
           handleClose={handleClose}
