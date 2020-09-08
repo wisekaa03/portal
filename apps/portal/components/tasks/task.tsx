@@ -80,10 +80,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cardHeader: {
       padding: theme.spacing(),
-      // boxShadow: theme.shadows[3],
-    },
-    lightHeader: {
-      padding: theme.spacing(),
     },
     cardContent: {
       'padding': theme.spacing(0, 2),
@@ -103,6 +99,9 @@ const useStyles = makeStyles((theme: Theme) =>
     notFound: {
       color: '#949494',
     },
+    label: {
+      padding: '8px 6px 8px 0',
+    },
     statusBox: {
       display: 'grid',
       gridTemplateColumns: '1fr',
@@ -113,12 +112,12 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     statusContent: {
-      'display': 'grid',
-      'gridTemplateColumns': '1fr 3fr',
-      'gap': `${theme.spacing(4)}px`,
-      '&:last-child': {
-        paddingBottom: theme.spacing(),
-      },
+      display: 'grid',
+      gridTemplateColumns: '60px 1fr',
+      // 'gap': `${theme.spacing(4)}px`,
+      // '&:last-child': {
+      //   paddingBottom: theme.spacing(),
+      // },
     },
     formControl: {},
     formAction: {
@@ -269,44 +268,19 @@ const TaskComponent: FC<TaskComponentProps> = ({
             </Card>
             <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
             <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />
-            <Card className={clsx(classes.fullRow, classes.rounded, classes.background)}>
-              <CardContent className={classes.cardContent}>
-                <Box className={classes.statusBox}>
-                  <Card>
-                    <CardHeader
-                      className={classes.lightHeader}
-                      disableTypography
-                      title={
-                        <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                          {t('tasks:headers.service')}
-                        </Typography>
-                      }
-                    />
-                    <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                      <Box textAlign="center">
-                        <Icon base64 src={task.service?.avatar} size={48} />
-                      </Box>
-                      <span>{task.service?.name}</span>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader
-                      className={classes.lightHeader}
-                      disableTypography
-                      title={
-                        <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                          {t('tasks:headers.status')}
-                        </Typography>
-                      }
-                    />
-                    <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                      <Box textAlign="center">
-                        <Icon src={getTicketStatusIcon(task.status)} size={48} />
-                      </Box>
-                      <span>{task.status}</span>
-                    </CardContent>
-                  </Card>
-                </Box>
+            <Card>
+              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                <Icon base64 src={task.service?.avatar || task.route?.avatar} size={48} />
+                <span style={{ placeSelf: 'center stretch' }}>
+                  <Typography variant="subtitle1">{task.route?.name}</Typography>
+                  <Typography variant="subtitle2">{task.service?.name}</Typography>
+                </span>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                <Icon src={getTicketStatusIcon(task.status)} size={48} />
+                <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
               </CardContent>
             </Card>
             <Card className={classes.fullRow}>

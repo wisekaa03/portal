@@ -110,21 +110,6 @@ const TasksCard = withStyles((theme) => ({
   },
   label: {
     padding: '8px 6px 8px 0',
-    // 'display': 'grid',
-    // 'gridTemplateColumns': '1fr 4fr',
-    // 'gridTemplateRows': '50px 1fr',
-    // 'gap': `${theme.spacing()}px`,
-    // 'maxHeight': '180px',
-    // 'minHeight': '50px',
-    // 'overflow': 'hidden',
-    // '& h6': {
-    //   // maxWidth: 254,
-    //   maxWidth: 390,
-    // },
-    // '& > div:last-child': {
-    //   gridColumnStart: 1,
-    //   gridColumnEnd: 3,
-    // },
   },
   registered: {
     color: '#b99d15',
