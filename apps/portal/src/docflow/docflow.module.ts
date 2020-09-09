@@ -34,4 +34,4 @@ import { DocFlowService } from './docflow.service';
 
   providers: [DocFlowService, DocFlowResolver],
 })
-export class ReportsModule {}
+export class DocFlowModule {}

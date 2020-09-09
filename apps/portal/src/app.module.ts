@@ -40,6 +40,8 @@ import { GroupEntity } from '@back/group/group.entity';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { UserEntity } from '@back/user/user.entity';
 import { TicketsModule } from '@back/tickets/tickets.module';
+import { ReportsModule } from '@back/reports/reports.module';
+import { DocFlowModule } from '@back/docflow/docflow.module';
 import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
 
@@ -253,6 +255,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     //#region Tickets module
     TicketsModule,
+    ReportsModule,
+    DocFlowModule,
     //#endregion
 
     //#region Controllers module
