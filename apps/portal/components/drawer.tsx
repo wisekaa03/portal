@@ -116,6 +116,12 @@ const urls: UrlProps[] = [
     admin: false,
   },
   {
+    icon: TicketsIcon,
+    text: 'common:reports',
+    link: '/reports',
+    admin: false,
+  },
+  {
     icon: VCSIcon,
     text: 'common:vcs',
     link: `https://vcs.${process.env.DOMAIN}`,

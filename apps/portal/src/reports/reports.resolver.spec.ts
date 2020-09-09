@@ -2,8 +2,8 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@app/config';
-import { TicketsResolver } from './tickets.resolver';
-import { TicketsService } from './tickets.service';
+import { ReportsResolver } from './reports.resolver';
+import { ReportsService } from './reports.service';
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -13,16 +13,16 @@ const serviceMock = jest.fn(() => ({}));
 //   },
 // }));
 
-describe(TicketsResolver.name, () => {
-  let resolver: TicketsResolver;
+describe(ReportsResolver.name, () => {
+  let resolver: ReportsResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [{ provide: TicketsService, useValue: serviceMock }, { provide: ConfigService, useValue: serviceMock }, TicketsResolver],
+      providers: [{ provide: ReportsService, useValue: serviceMock }, { provide: ConfigService, useValue: serviceMock }, ReportsResolver],
     }).compile();
 
-    resolver = module.get<TicketsResolver>(TicketsResolver);
+    resolver = module.get<ReportsResolver>(ReportsResolver);
   });
 
   it('should be defined', () => {

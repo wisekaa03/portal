@@ -1,0 +1,7 @@
+type ReportsInput {
+  date: Date
+}
+
+type Mutation {
+  Reports(reports: ReportsInput)
+}

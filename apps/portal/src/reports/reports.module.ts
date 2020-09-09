@@ -6,8 +6,8 @@ import { Module, HttpModule } from '@nestjs/common';
 //#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
 import { SoapModule } from '@app/soap';
-import { TicketsResolver } from './tickets.resolver';
-import { TicketsService } from './tickets.service';
+import { ReportsResolver } from './reports.resolver';
+import { ReportsService } from './reports.service';
 //#endregion
 
 @Module({
@@ -32,6 +32,6 @@ import { TicketsService } from './tickets.service';
     HttpModule,
   ],
 
-  providers: [TicketsService, TicketsResolver],
+  providers: [ReportsService, ReportsResolver],
 })
-export class TicketsModule {}
+export class ReportsModule {}

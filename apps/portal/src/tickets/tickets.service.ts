@@ -6,11 +6,10 @@ import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
-import {
+import type {
   TkRoutes,
   TkTasks,
   TkEditTask,
-  TkWhere,
   TkUserOST,
   TkTaskNewInput,
   TkTaskNew,
@@ -26,6 +25,7 @@ import {
   TicketsSOAPGetTasks,
   TicketsSOAPGetTaskDescription,
 } from '@lib/types/tickets';
+import { TkWhere } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';

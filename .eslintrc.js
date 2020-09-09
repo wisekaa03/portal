@@ -76,6 +76,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    'jest/valid-title': 0,
     'no-confusing-arrow': 0,
     '@typescript-eslint/indent': 0,
     'operator-linebreak': 0,
