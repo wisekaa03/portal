@@ -15,6 +15,7 @@ import { TaskController } from './task/task.controller';
 import { TasksController } from './tasks/tasks.controller';
 import { TicketsController } from './tickets/tickets.controller';
 import { ReportsController } from './reports/reports.controller';
+import { DocFlowController } from './docflow/docflow.controller';
 import { MailController } from './mail/mail.controller';
 import { MeetingsController } from './meetings/meetings.controller';
 import { NewsController } from './news/news.controller';
@@ -41,6 +42,7 @@ import { HealthController } from './health/health.controller';
     TasksController,
     TicketsController,
     ReportsController,
+    DocFlowController,
     MailController,
     MeetingsController,
     NewsController,
