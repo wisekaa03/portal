@@ -1,7 +1,7 @@
-type ReportsInput {
+input ReportsInput {
   date: Date
 }
 
 type Mutation {
-  Reports(reports: ReportsInput)
+  Reports(reports: ReportsInput): Boolean
 }
