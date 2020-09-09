@@ -147,6 +147,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       gridTemplateColumns: '60px 1fr',
       background: fade(theme.palette.secondary.main, 0.15),
+      borderRadius: theme.shape.borderRadius,
       // 'gap': `${theme.spacing(4)}px`,
       // '&:last-child': {
       //   paddingBottom: theme.spacing(),

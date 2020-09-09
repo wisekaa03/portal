@@ -508,6 +508,7 @@ const TICKETS_TASK_FILES = gql`
     id
     name
     ext
+    body
   }
 `;
 

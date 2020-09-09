@@ -58,8 +58,19 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
   });
 
   const handleDownload = (task: TkTask, file: TkFile): void => {
-    // eslint-disable-next-line no-debugger
-    debugger;
+    if (file.body) {
+      const blob = new Blob([Buffer.from(file.body, 'base64')], { type: 'application/octet-stream' });
+      const download = window.URL.createObjectURL(blob);
+      const tempLink = document.createElement('a');
+      tempLink.href = download;
+      tempLink.setAttribute('download', file.name || '');
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      setTimeout(() => {
+        document.body.removeChild(tempLink);
+        window.URL.revokeObjectURL(download);
+      }, 100);
+    }
   };
 
   const handleComment = (event: React.ChangeEvent<HTMLInputElement>): void => {
