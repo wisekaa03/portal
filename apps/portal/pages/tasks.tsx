@@ -30,7 +30,7 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   }: QueryResult<Data<'TicketsTasks', TkTasks>> = useQuery(TICKETS_TASKS, {
     ssr: false,
     variables: { task: { status, search } },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
 

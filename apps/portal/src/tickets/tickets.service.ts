@@ -690,9 +690,9 @@ export class TicketsService {
    * @param {TkFileInput} id The task file
    * @returns {TkFile}
    */
-  TicketsTaskFile = async (user: User, password: string, id: TkFileInput): Promise<TkFile> => {
+  TicketsTaskFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
-    if (id.where === TkWhere.SOAP1C && id.ref) {
+    if (file.where === TkWhere.SOAP1C && file.id) {
       const authentication = {
         username: user?.username,
         password,
@@ -707,15 +707,15 @@ export class TicketsService {
 
       return client
         .GetTaskFileAsync({
-          Ref: id.ref,
+          Ref: file.id,
         })
         .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
-              where: id.where,
-              id: id.ref,
+              ...file,
               body: result[0].return['ФайлХранилище'],
+              name: `${result[0].return['Наименование']}.${result[0].return['РасширениеФайла']}`,
             };
           }
 
@@ -734,11 +734,11 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia || id.where === TkWhere.OSThr) {
+    if (file.where === TkWhere.OSTaudit || file.where === TkWhere.OSTmedia || file.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
-          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(id.where));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(file.where));
           if (whereKey) {
             const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
             const myUserOST = {
@@ -757,7 +757,7 @@ export class TicketsService {
               .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
                 login: user.username,
                 user: JSON.stringify(myUserOST),
-                msg: JSON.stringify({ login: fio, file: id.ref }),
+                msg: JSON.stringify({ login: fio, file: file.id }),
               })
               .toPromise()
               .then((response) => {
@@ -767,13 +767,12 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       return {
-                        where: id.where,
-                        id: id.ref,
+                        ...file,
                         body: (response.data.file as unknown) as string,
                       };
                     }
                   }
-                  throw new Error(`Not found the OSTicket data in "${id.where}"`);
+                  throw new Error(`Not found the OSTicket data in "${file.where}"`);
                 }
                 throw new Error(response.statusText);
               });
@@ -801,9 +800,9 @@ export class TicketsService {
    * @param {TkFileInput} id The task file
    * @returns {TkFile}
    */
-  TicketsCommentFile = async (user: User, password: string, id: TkFileInput): Promise<TkFile> => {
+  TicketsCommentFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
-    if (id.where === TkWhere.SOAP1C && id.ref) {
+    if (file.where === TkWhere.SOAP1C && file.id) {
       const authentication = {
         username: user?.username,
         password,
@@ -818,14 +817,13 @@ export class TicketsService {
 
       return client
         .GetCommentFileAsync({
-          Ref: id.ref,
+          Ref: file.id,
         })
         .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
-              where: id.where,
-              id: id.ref,
+              ...file,
               body: result[0].return['ФайлХранилище'],
             };
           }
@@ -845,11 +843,11 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (id.where === TkWhere.OSTaudit || id.where === TkWhere.OSTmedia || id.where === TkWhere.OSThr) {
+    if (file.where === TkWhere.OSTaudit || file.where === TkWhere.OSTmedia || file.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
-          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(id.where));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(file.where));
           if (whereKey) {
             const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
             const myUserOST = {
@@ -868,7 +866,7 @@ export class TicketsService {
               .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
                 login: user.username,
                 user: JSON.stringify(myUserOST),
-                msg: JSON.stringify({ login: fio, file: id.ref }),
+                msg: JSON.stringify({ login: fio, file: file.id }),
               })
               .toPromise()
               .then((response) => {
@@ -878,13 +876,12 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       return {
-                        where: id.where,
-                        id: id.ref,
+                        ...file,
                         body: (response.data.file as unknown) as string,
                       };
                     }
                   }
-                  throw new Error(`Not found the OSTicket data in "${id.where}"`);
+                  throw new Error(`Not found the OSTicket data in "${file.where}"`);
                 }
                 throw new Error(response.statusText);
               });

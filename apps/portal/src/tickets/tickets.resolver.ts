@@ -155,12 +155,16 @@ export class TicketsResolver {
    */
   @Query('TicketsTaskFile')
   @UseGuards(GqlAuthGuard)
-  async TicketsTaskFile(@Args('id') id: TkFileInput, @CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<TkFile> {
+  async TicketsTaskFile(
+    @Args('file') file: TkFileInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<TkFile> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskFile(user, password, id).catch((error: Error) => {
+    return this.ticketsService.TicketsTaskFile(user, password, file).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -175,7 +179,7 @@ export class TicketsResolver {
   @Query('TicketsCommentFile')
   @UseGuards(GqlAuthGuard)
   async TicketsCommentFile(
-    @Args('id') id: TkFileInput,
+    @Args('file') file: TkFileInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkFile> {
@@ -183,7 +187,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsCommentFile(user, password, id).catch((error: Error) => {
+    return this.ticketsService.TicketsCommentFile(user, password, file).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

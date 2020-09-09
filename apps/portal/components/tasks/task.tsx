@@ -24,6 +24,7 @@ import {
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import HourglassFullIcon from '@material-ui/icons/HourglassFull';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
 //#endregion
 //#region Imports Local
@@ -267,23 +268,18 @@ const FilesArea = withStyles((theme) => ({
     justifyContent: 'flex-start',
     color: '#3C6AA3',
   },
-}))(({ classes, task, handleDownload }: { task: TkTask; handleDownload; classes: Record<string, string> }) => {
+}))(({ classes, task, loading, handleDownload }: { task: TkTask; loading: boolean; handleDownload; classes: Record<string, string> }) => {
   if (Array.isArray(task?.files) && task.files.length > 0) {
     return (
       <CardActions disableSpacing className={classes.files}>
         {task?.files?.map((file) => (
           <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
-            <Box display="grid" gridTemplateColumns="20px auto">
+            <Box display="grid" gridTemplateColumns="20px auto auto">
               <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
-              {file.ext ? (
-                <Typography variant="body1" key={file.id}>
-                  {`${file.name}.${file.ext}`}
-                </Typography>
-              ) : (
-                <Typography variant="body1" key={file.id}>
-                  {file.name}
-                </Typography>
-              )}
+              {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
+              <Typography variant="body1" key={file.id}>
+                {file.name}
+              </Typography>
             </Box>
           </IconButton>
         ))}
@@ -296,7 +292,8 @@ const FilesArea = withStyles((theme) => ({
 
 const TaskComponent: FC<TaskComponentProps> = ({
   loading,
-  loadingEdit,
+  loadingTaskFile,
+  loadingCommentFile,
   taskRefetch,
   task,
   comment,
@@ -321,7 +318,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
         <div style={{ width: '100%' }} />
         <RefreshButton noAbsolute dense onClick={() => taskRefetch && taskRefetch()} />
       </Box>
-      {!task ? (
+      {!task || loading ? (
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
             {t('tasks:task.notFound')}
@@ -372,7 +369,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
               }
             />
             <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} />
-            <FilesArea task={task} handleDownload={handleDownload} />
+            <FilesArea task={task} loading={loadingTaskFile} handleDownload={handleDownload} />
           </Card>
           {/* <Card className={classes.fullRow}>
             <CardHeader
@@ -389,7 +386,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
             </CardContent>
             </Card>*/}
           {task.status !== 'Завершен' && (
-            <Loading activate={loadingEdit} full wrapperClasses={classes.fullRow} type="circular" color="secondary" disableShrink size={48}>
+            <Loading activate={loading} full wrapperClasses={classes.fullRow} type="circular" color="secondary" disableShrink size={48}>
               <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
                 <TextField
                   value={comment}

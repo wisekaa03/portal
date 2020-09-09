@@ -36,7 +36,6 @@ type TkFile {
   id: String!
   where: String!
   name: String
-  ext: String
   mime: String
   body: String
 }
@@ -131,15 +130,15 @@ type TkTasks {
 
 input TkFileInput {
   where: String!
-  ref: String!
+  id: String!
 }
 
 type Query {
   TicketsRoutes: TkRoutes
   TicketsTasks(task: TkTasksInput!): TkTasks
   TicketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask
-  TicketsTaskFile(id: TkFileInput!): TkFile
-  TicketsCommentFile(id: TkFileInput!): TkFile
+  TicketsTaskFile(file: TkFileInput!): TkFile!
+  TicketsCommentFile(file: TkFileInput!): TkFile!
 }
 
 type Mutation {

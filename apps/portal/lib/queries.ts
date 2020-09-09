@@ -507,7 +507,7 @@ const TICKETS_TASK_FILES = gql`
     where
     id
     name
-    ext
+    mime
     body
   }
 `;
@@ -524,7 +524,7 @@ const TICKETS_TASK_COMMENTS = gql`
       where
       id
       name
-      ext
+      mime
       body
     }
   }
@@ -617,7 +617,6 @@ export const TICKETS_TASK_EDIT = gql`
     TicketsTaskEdit(task: $task, attachments: $attachments) {
       users {
         ...TicketsUserProps
-        body
       }
       task {
         ...TicketsTaskProps
@@ -640,21 +639,19 @@ export const TICKETS_TASK_EDIT = gql`
 `;
 
 export const TICKETS_TASK_FILE = gql`
-  mutation TicketsTaskFile($id: TkFileInput!) {
-    TicketsTaskFile(id: $id) {
+  query TicketsTaskFile($file: TkFileInput!) {
+    TicketsTaskFile(file: $file) {
       ...TicketsFiles
-      body
     }
   }
   ${TICKETS_TASK_FILES}
 `;
 
 export const TICKETS_COMMENT_FILE = gql`
-  mutation TicketsCommentFile($id: TkFileInput!) {
-    TicketsCommentFile(id: $id) {
+  query TicketsCommentFile($file: TkFileInput!) {
+    TicketsCommentFile(file: $file) {
       ...TicketsFiles
-      body
     }
   }
-  ${TICKETS_TASK_FILES}
+  ${TICKETS_TASK_COMMENTS}
 `;

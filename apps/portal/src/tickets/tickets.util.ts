@@ -92,8 +92,7 @@ export const fileSOAP = (file: TicketsFileSOAP, where: TkWhere): TkFile | undefi
     ? {
         where: whereService(where),
         id: file.Ref,
-        name: file['Наименование'],
-        ext: file['РасширениеФайла'],
+        name: `${file['Наименование']}.${file['РасширениеФайла']}`,
         mime: file.MIME,
         body: file['ФайлХранилище'],
       }

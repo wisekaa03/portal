@@ -37,7 +37,6 @@ export interface TkFile {
   where: TkWhere;
   id: string;
   name?: string;
-  ext?: string;
   mime?: string;
   body?: string;
 }
@@ -108,7 +107,7 @@ export interface TkTaskDescriptionInput {
 
 export interface TkFileInput {
   where: TkWhere;
-  ref: string;
+  id: string;
 }
 
 export interface TkTaskNewInput {

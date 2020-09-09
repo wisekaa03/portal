@@ -23,20 +23,13 @@ export interface TasksCardProps {
 
 export interface TaskComponentProps {
   loading: boolean;
-  loadingEdit: boolean;
+  loadingTaskFile: boolean;
+  loadingCommentFile: boolean;
   taskRefetch: () => Promise<ApolloQueryResult<Data<'TicketsTaskDescription', TkEditTask>>>;
   task?: TkTask;
   comment: string;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
-  taskFile: (options?: QueryLazyOptions<TkFileInput> | undefined) => void;
-  taskFileLoading: boolean;
-  taskFileData?: Data<'TicketsTaskFile', TkFile>;
-  taskFileError?: ApolloError;
-  commentFile: (options?: QueryLazyOptions<TkFileInput> | undefined) => void;
-  commentFileLoading: boolean;
-  commentFileData?: Data<'TicketsCommentFile', TkFile>;
-  commentFileError?: ApolloError;
   handleDownload: (task: TkTask, file: TkFile) => void;
   handleComment: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleAccept: () => void;

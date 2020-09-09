@@ -34,14 +34,14 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     },
   );
 
-  const [getTaskFile, { loading: taskFileLoading, data: taskFileData, error: taskFileError }] = useLazyQuery<
+  const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useLazyQuery<
     Data<'TicketsTaskFile', TkFile>,
-    TkFileInput
+    { file: TkFileInput }
   >(TICKETS_TASK_FILE, { ssr: false });
 
-  const [getCommentFile, { loading: commentFileLoading, data: commentFileData, error: commentFileError }] = useLazyQuery<
+  const [getCommentFile, { loading: loadingCommentFile, data: dataCommentFile, error: errorCommentFile }] = useLazyQuery<
     Data<'TicketsCommentFile', TkFile>,
-    TkFileInput
+    { file: TkFileInput }
   >(TICKETS_COMMENT_FILE, { ssr: false });
 
   const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
@@ -57,19 +57,25 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     },
   });
 
-  const handleDownload = (task: TkTask, file: TkFile): void => {
+  const download = async (body: string, name: string): Promise<void> => {
+    const blob = new Blob([Buffer.from(body, 'base64')], { type: 'application/octet-stream' });
+    const temp = window.URL.createObjectURL(blob);
+    const tempLink = document.createElement('a');
+    tempLink.href = temp;
+    tempLink.setAttribute('download', name || '');
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    setTimeout(() => {
+      document.body.removeChild(tempLink);
+      window.URL.revokeObjectURL(temp);
+    }, 100);
+  };
+
+  const handleDownload = async (task: TkTask, file: TkFile): Promise<void> => {
     if (file.body) {
-      const blob = new Blob([Buffer.from(file.body, 'base64')], { type: 'application/octet-stream' });
-      const download = window.URL.createObjectURL(blob);
-      const tempLink = document.createElement('a');
-      tempLink.href = download;
-      tempLink.setAttribute('download', file.name || '');
-      document.body.appendChild(tempLink);
-      tempLink.click();
-      setTimeout(() => {
-        document.body.removeChild(tempLink);
-        window.URL.revokeObjectURL(download);
-      }, 100);
+      download(file.body, file.name || '');
+    } else if (task.where === TkWhere.SOAP1C && file.id) {
+      getTaskFile({ variables: { file: { where: TkWhere.SOAP1C, id: file.id } } });
     }
   };
 
@@ -99,13 +105,25 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
   };
 
   useEffect(() => {
+    if (dataTaskFile) {
+      download(dataTaskFile?.TicketsTaskFile.body || '', dataTaskFile?.TicketsTaskFile.name || '');
+    }
+  }, [dataTaskFile]);
+
+  useEffect(() => {
     if (errorEdit) {
       snackbarUtils.error(errorEdit);
     }
     if (error) {
       snackbarUtils.error(error);
     }
-  }, [errorEdit, error]);
+    if (errorTaskFile) {
+      snackbarUtils.error(errorTaskFile);
+    }
+    if (errorCommentFile) {
+      snackbarUtils.error(errorCommentFile);
+    }
+  }, [errorEdit, error, errorTaskFile, errorCommentFile]);
 
   const task = data?.TicketsTaskDescription;
 
@@ -126,20 +144,13 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
       <MaterialUI {...rest}>
         <TaskComponent
           loading={loading}
-          loadingEdit={loadingEdit}
+          loadingTaskFile={loadingTaskFile}
+          loadingCommentFile={loadingCommentFile}
           taskRefetch={taskRefetch}
           task={task?.task}
           comment={comment}
           files={files}
           setFiles={setFiles}
-          taskFile={getTaskFile}
-          taskFileLoading={taskFileLoading}
-          taskFileData={taskFileData}
-          taskFileError={taskFileError}
-          commentFile={getCommentFile}
-          commentFileLoading={commentFileLoading}
-          commentFileData={commentFileData}
-          commentFileError={commentFileError}
           handleDownload={handleDownload}
           handleComment={handleComment}
           handleAccept={handleAccept}
