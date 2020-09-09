@@ -97,6 +97,7 @@ export class ConfigService {
 
       TICKETS_URL: Joi.string().uri().empty('').optional(),
       REPORTS_URL: Joi.string().uri().empty('').optional(),
+      DOCFLOW_URL: Joi.string().uri().empty('').optional(),
 
       OSTICKET_URL: Joi.any().empty('').optional(),
 

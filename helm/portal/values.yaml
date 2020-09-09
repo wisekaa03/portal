@@ -69,6 +69,7 @@ MICROSERVICE_URL: "redis://redis.default.svc.cluster.local:6379"
 
 TICKETS_URL: ""
 REPORTS_URL: ""
+DOCFLOW_URL: ""
 
 OSTICKET_URL: "{}"
 

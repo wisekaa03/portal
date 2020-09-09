@@ -141,6 +141,7 @@ helm_development:
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
         --set TICKETS_URL="${TICKETS_URL}" \
         --set REPORTS_URL="${REPORTS_URL}" \
+        --set DOCFLOW_URL="${DOCFLOW_URL}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
@@ -228,6 +229,7 @@ helm_production:
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
         --set TICKETS_URL="${TICKETS_URL}" \
         --set REPORTS_URL="${REPORTS_URL}" \
+        --set DOCFLOW_URL="${DOCFLOW_URL}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \

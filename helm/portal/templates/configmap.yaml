@@ -52,6 +52,7 @@ data:
 
     TICKETS_URL={{ .Values.TICKETS_URL | quote }}
     REPORTS_URL={{ .Values.REPORTS_URL | quote }}
+    DOCFLOW_URL={{ .Values.DOCFLOW_URL | quote }}
     OSTICKET_URL={{ .Values.OSTICKET_URL }}
 
     NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}
