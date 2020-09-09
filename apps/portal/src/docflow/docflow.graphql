@@ -1,0 +1,7 @@
+input DocFlowInput {
+  date: Date
+}
+
+type Mutation {
+  Docflow(docflow: DocFlowInput): Boolean
+}
