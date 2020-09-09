@@ -95,8 +95,8 @@ export class ConfigService {
 
       MICROSERVICE_URL: Joi.string().required(),
 
-      SOAP_URL: Joi.string().uri().empty('').optional(),
-      SOAP_DOMAIN: Joi.string().empty('').optional(),
+      TICKETS_URL: Joi.string().uri().empty('').optional(),
+      REPORTS_URL: Joi.string().uri().empty('').optional(),
 
       OSTICKET_URL: Joi.any().empty('').optional(),
 

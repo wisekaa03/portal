@@ -16,14 +16,14 @@ import { TicketsService } from './tickets.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        url: configService.get<string>('SOAP_URL'),
+        url: configService.get<string>('TICKETS_URL'),
         options: {
           wsdl_headers: {
             connection: 'keep-alive',
           },
           wsdl_options: {
             ntlm: true,
-            domain: configService.get<string>('SOAP_DOMAIN'),
+            domain: configService.get<string>('LDAP_DOMAIN'),
           },
         },
       }),

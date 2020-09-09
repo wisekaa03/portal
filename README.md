@@ -187,8 +187,8 @@ LDAP_REDIS_TTL="300"
 MICROSERVICE_URL="redis://localhost:6379"
 
 # SOAP
-SOAP_URL="https://server1c"
-SOAP_DOMAIN="EXAMPLE"
+TICKETS_URL="https://server1c"
+REPORTS_URL="https://server1c"
 
 # OSTICKET
 OSTICKET_URL={"auditors": "https://auditors-ticket.example.com/au/portal/ajax.php", "media": "https://media-ticket.example.com/mp/portal/ajax.php"}

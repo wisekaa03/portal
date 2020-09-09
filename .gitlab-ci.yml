@@ -139,8 +139,8 @@ helm_development:
         --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
         --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
-        --set SOAP_URL="${SOAP_URL}" \
-        --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
+        --set TICKETS_URL="${TICKETS_URL}" \
+        --set REPORTS_URL="${REPORTS_URL}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
@@ -226,8 +226,8 @@ helm_production:
         --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
         --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
         --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
-        --set SOAP_URL="${SOAP_URL}" \
-        --set SOAP_DOMAIN="${SOAP_DOMAIN}" \
+        --set TICKETS_URL="${TICKETS_URL}" \
+        --set REPORTS_URL="${REPORTS_URL}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \

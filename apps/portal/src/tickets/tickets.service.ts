@@ -60,11 +60,11 @@ export class TicketsService {
     const promises: Promise<TkRoutes>[] = [];
 
     /* 1C SOAP */
-    if (this.configService.get<string>('SOAP_URL')) {
+    if (this.configService.get<string>('TICKETS_URL')) {
       const authentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       } as SoapAuthentication;
 
       // TODO: cache
@@ -185,11 +185,11 @@ export class TicketsService {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
-    if (this.configService.get<string>('SOAP_URL')) {
+    if (this.configService.get<string>('TICKETS_URL')) {
       const authentication: SoapAuthentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       };
 
       // TODO: cache
@@ -374,7 +374,7 @@ export class TicketsService {
       const authentication: SoapAuthentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       };
 
       const client = await this.soapService.connect(authentication).catch((error) => {
@@ -500,7 +500,7 @@ export class TicketsService {
       const authentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       } as SoapAuthentication;
 
       // TODO: cache
@@ -622,7 +622,7 @@ export class TicketsService {
       const authentication: SoapAuthentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       };
 
       // TODO: cache
@@ -696,7 +696,7 @@ export class TicketsService {
       const authentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       } as SoapAuthentication;
 
       // TODO: cache
@@ -807,7 +807,7 @@ export class TicketsService {
       const authentication = {
         username: user?.username,
         password,
-        domain: this.configService.get<string>('SOAP_DOMAIN'),
+        domain: this.configService.get<string>('LDAP_DOMAIN'),
       } as SoapAuthentication;
 
       // TODO: cache

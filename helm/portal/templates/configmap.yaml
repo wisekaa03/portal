@@ -50,8 +50,8 @@ data:
 
     MICROSERVICE_URL={{ .Values.MICROSERVICE_URL | quote }}
 
-    SOAP_URL={{ .Values.SOAP_URL | quote }}
-    SOAP_DOMAIN={{ .Values.SOAP_DOMAIN | quote }}
+    TICKETS_URL={{ .Values.TICKETS_URL | quote }}
+    REPORTS_URL={{ .Values.REPORTS_URL | quote }}
     OSTICKET_URL={{ .Values.OSTICKET_URL }}
 
     NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}
