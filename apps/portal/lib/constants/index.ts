@@ -48,13 +48,16 @@ export const ALLOW_REDIRECT_PAGES = [
   '/mail',
   '/phonebook',
   '/profile',
-  '/services',
+  '/task',
+  '/tasks',
+  '/docflow',
+  '/reports',
+  '/tickets',
   '/calendar',
   '/faq',
   '/meetings',
   '/files',
   '/news',
-  '/settings',
   '/admin',
 ];
 export const LARGE_RESOLUTION = 1440;
