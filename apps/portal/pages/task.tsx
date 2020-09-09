@@ -29,7 +29,7 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
         where: query?.where || TkWhere.Default,
         code: query?.code || '0',
       },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'cache-first',
       notifyOnNetworkStatusChange: true,
     },
   );
