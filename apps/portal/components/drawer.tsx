@@ -13,6 +13,7 @@ import { Icon } from '@front/components/ui/icon';
 import CalendarIcon from '@images/svg/drawer/calendar.svg'; // ?inline';
 import TasksIcon from '@images/svg/drawer/tasks.svg'; // ?inline';
 import TicketsIcon from '@images/svg/drawer/tickets.svg'; // ?inline';
+import ReportsIcon from '@images/svg/drawer/reports.svg'; // ?inline';
 import FaqIcon from '@images/svg/drawer/faq.svg'; // ?inline';
 import ProfileIcon from '@images/svg/drawer/profile.svg'; // ?inline';
 import MailIcon from '@images/svg/drawer/mail.svg'; // ?inline';
@@ -116,7 +117,7 @@ const urls: UrlProps[] = [
     admin: false,
   },
   {
-    icon: TicketsIcon,
+    icon: ReportsIcon,
     text: 'common:reports',
     link: '/reports',
     admin: false,
