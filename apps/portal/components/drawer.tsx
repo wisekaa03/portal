@@ -13,6 +13,7 @@ import { Icon } from '@front/components/ui/icon';
 import CalendarIcon from '@images/svg/drawer/calendar.svg'; // ?inline';
 import TasksIcon from '@images/svg/drawer/tasks.svg'; // ?inline';
 import TicketsIcon from '@images/svg/drawer/tickets.svg'; // ?inline';
+import DocFlowIcon from '@images/svg/drawer/docflow.svg'; // ?inline';
 import ReportsIcon from '@images/svg/drawer/reports.svg'; // ?inline';
 import FaqIcon from '@images/svg/drawer/faq.svg'; // ?inline';
 import ProfileIcon from '@images/svg/drawer/profile.svg'; // ?inline';
@@ -114,6 +115,12 @@ const urls: UrlProps[] = [
     icon: TicketsIcon,
     text: 'common:tickets',
     link: '/tickets',
+    admin: false,
+  },
+  {
+    icon: DocFlowIcon,
+    text: 'common:docflow',
+    link: '/docflow',
     admin: false,
   },
   {
