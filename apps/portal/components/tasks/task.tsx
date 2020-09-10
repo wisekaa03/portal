@@ -259,6 +259,7 @@ const FilesArea = withStyles((theme) => ({
   files: {
     borderTop: '1px dotted #ccc',
     backgroundColor: '#F7FBFA',
+    flexWrap: 'wrap',
   },
   file: {
     padding: 0,
