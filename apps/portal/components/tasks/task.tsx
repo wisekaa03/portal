@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
     control: {
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      paddingBottom: '11px',
+      marginTop: theme.spacing() / 4,
     },
     controlLeft: {
       'padding': 4,
