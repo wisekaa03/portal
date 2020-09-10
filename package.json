@@ -174,7 +174,7 @@
     "tmp": "^0.2.1",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typeorm": "^0.2.25",
+    "typeorm": "^0.2.26",
     "typeorm-graphql-pagination": "^1.0.0",
     "url-loader": "^4.1.0",
     "uuid": "^8.3.0",
