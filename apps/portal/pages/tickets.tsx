@@ -10,7 +10,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { MINIMAL_SUBJECT_LENGTH, MINIMAL_BODY_LENGTH } from '@lib/constants';
-import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW } from '@lib/queries';
+import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW, TICKETS_TASKS } from '@lib/queries';
 import {
   Data,
   DropzoneFile,
@@ -26,6 +26,7 @@ import {
 import snackbarUtils from '@lib/snackbar-utils';
 import TicketsComponent from '@front/components/tickets';
 import { MaterialUI } from '@front/layout';
+
 //#endregion
 
 const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
@@ -58,6 +59,14 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
 
   const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'TicketsTaskNew', TkTaskNew>>(
     TICKETS_TASK_NEW,
+    {
+      refetchQueries: [
+        {
+          query: TICKETS_TASKS,
+        },
+      ],
+      awaitRefetchQueries: true,
+    },
   );
 
   const contentRef = useRef(null);
