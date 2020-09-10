@@ -174,30 +174,29 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, searc
         <Search value={search} handleChange={handleSearch} />
         <RefreshButton noAbsolute dense onClick={() => tasksRefetch && tasksRefetch()} />
       </Box>
-      <Box display="flex" flexDirection="column" flexGrow={1} px={2}>
-        <BoxWithRef
-          ref={ticketBox}
-          overflow="auto"
-          style={{ maxHeight }}
-          display="flex"
-          flexGrow={1}
-          flexWrap="wrap"
-          my={2}
-          alignItems="stretch"
-          justifyContent="flex-start"
-          alignContent="flex-start"
-        >
-          <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-            {tasks.length > 0 ? (
-              tasks.map((task) => task && <TasksCard key={`${task.where}.${task.code}`} task={task} />)
-            ) : (
-              <Typography className={classes.notFounds} variant="h4">
-                {t('tasks:task.notFounds')}
-              </Typography>
-            )}
-          </Loading>
-        </BoxWithRef>
-      </Box>
+      <BoxWithRef
+        ref={ticketBox}
+        overflow="auto"
+        style={{ maxHeight }}
+        display="flex"
+        flexGrow={1}
+        flexWrap="wrap"
+        my={2}
+        paddingLeft="16px"
+        alignItems="stretch"
+        justifyContent="flex-start"
+        alignContent="flex-start"
+      >
+        <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
+          {tasks.length > 0 ? (
+            tasks.map((task) => task && <TasksCard key={`${task.where}.${task.code}`} task={task} />)
+          ) : (
+            <Typography className={classes.notFounds} variant="h4">
+              {t('tasks:task.notFounds')}
+            </Typography>
+          )}
+        </Loading>
+      </BoxWithRef>
     </Box>
   );
 };
