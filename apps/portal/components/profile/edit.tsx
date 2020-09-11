@@ -195,7 +195,6 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   loadingCheckUsername,
   loadingProfile,
   loadingChanged,
-  editRefetchProfile,
   hasUpdate,
   profile,
   onDrop,
@@ -226,7 +225,6 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
             </Button>
           </Box>
         </IsAdmin>
-        {editRefetchProfile && <RefreshButton noAbsolute dense onClick={() => editRefetchProfile()} />}
       </Box>
       <Box display="flex" flexDirection="column" p={2} overflow="auto">
         <Loading

@@ -31,43 +31,25 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
   const locale = i18n.language as 'ru' | 'en' | undefined;
   const { isAdmin } = user || { isAdmin: false };
 
-  const { loading: loadingProfile, error: errorProfile, data: dataProfile, refetch: editRefetchProfile } = useQuery<
-    Data<'profile', Profile>
-  >(PROFILE, {
-    variables: { id },
-    // TODO: check if this is available
-    ssr: false,
-    context: { user },
-  });
-
-  const changeProfileRefetchQueries =
-    id === user?.profile?.id
-      ? {
-          refetchQueries: [
-            {
-              query: PROFILE,
-              variables: { id },
-            },
-            {
-              query: CURRENT_USER,
-            },
-          ],
-          awaitRefetchQueries: true,
-        }
-      : {
-          refetchQueries: [
-            {
-              query: PROFILE,
-              variables: { id },
-            },
-          ],
-          awaitRefetchQueries: true,
-        };
-
-  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation<Data<'changeProfile', Profile>>(
-    CHANGE_PROFILE,
-    changeProfileRefetchQueries,
+  const { loading: loadingProfile, error: errorProfile, data: dataProfile, refetch: refetchProfile } = useQuery<Data<'profile', Profile>>(
+    PROFILE,
+    {
+      variables: { id },
+      // TODO: check if this is available
+      ssr: false,
+      context: { user },
+    },
   );
+
+  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation<Data<'changeProfile', Profile>>(CHANGE_PROFILE, {
+    refetchQueries: [
+      {
+        query: PROFILE,
+        variables: { id },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -142,12 +124,11 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
       <Head>
         <title>{t('profile:edit.title', { current: current?.fullName })}</title>
       </Head>
-      <MaterialUI {...rest}>
+      <MaterialUI refetchComponent={refetchProfile} {...rest}>
         <ProfileEditComponent
           isAdmin={isAdmin}
           loadingProfile={loadingProfile}
           loadingChanged={loadingChanged}
-          editRefetchProfile={editRefetchProfile}
           profile={current}
           hasUpdate={hasUpdate}
           onDrop={onDrop}
