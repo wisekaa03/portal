@@ -88,7 +88,7 @@ export class ProfileEntity {
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 11,
+    length: 10,
   })
   birthday: string;
 

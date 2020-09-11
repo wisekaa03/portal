@@ -623,7 +623,7 @@ export class ProfileService {
             }
             break;
           case 'birthday':
-            modification.comment = { ...(modification.comment as Record<string, string>), birthday: value.slice(0, 9) };
+            modification.comment = { ...(modification.comment as Record<string, string>), birthday: value.slice(0, 10) };
             break;
           case 'companyEng':
           case 'nameEng':
