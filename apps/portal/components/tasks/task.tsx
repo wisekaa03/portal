@@ -95,10 +95,12 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '80%',
       },
       [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(),
         gridTemplateColumns: '1fr 1fr',
       },
     },
     fullRow: {
+      overflow: 'visible',
       [theme.breakpoints.up('md')]: {
         gridColumnStart: 1,
         gridColumnEnd: 3,
@@ -326,53 +328,54 @@ const TaskComponent: FC<TaskComponentProps> = ({
           </Typography>
         </Loading>
       ) : (
-        <Box className={classes.content}>
-          <Card className={classes.fullRow}>
-            <CardHeader
-              disableTypography
-              className={clsx(classes.cardHeader, classes.background)}
-              title={
-                <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                  {t('tasks:task.header', {
-                    task: task.code,
-                    date: dateFormat(task.createdDate, i18n),
-                  })}
-                </Typography>
-              }
-            />
-            <CardContent>{task.subject}</CardContent>
-          </Card>
-          <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
-          <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />
-          <Card>
-            <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-              <Icon base64 src={task.service?.avatar || task.route?.avatar} size={48} />
-              <span style={{ placeSelf: 'center stretch' }}>
-                <Typography variant="subtitle1">{task.route?.name}</Typography>
-                <Typography variant="subtitle2">{task.service?.name}</Typography>
-              </span>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-              <Icon src={getTicketStatusIcon(task.status)} size={48} />
-              <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
-            </CardContent>
-          </Card>
-          <Card className={classes.fullRow}>
-            <CardHeader
-              disableTypography
-              className={clsx(classes.cardHeader, classes.background)}
-              title={
-                <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                  {t('tasks:headers.description')}
-                </Typography>
-              }
-            />
-            <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} />
-            <FilesArea task={task} loading={loadingTaskFile} handleDownload={handleDownload} />
-          </Card>
-          {/* <Card className={classes.fullRow}>
+        <Box style={{ overflow: 'auto' }}>
+          <Box className={classes.content}>
+            <Card className={classes.fullRow}>
+              <CardHeader
+                disableTypography
+                className={clsx(classes.cardHeader, classes.background)}
+                title={
+                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                    {t('tasks:task.header', {
+                      task: task.code,
+                      date: dateFormat(task.createdDate, i18n),
+                    })}
+                  </Typography>
+                }
+              />
+              <CardContent>{task.subject}</CardContent>
+            </Card>
+            <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
+            <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />
+            <Card style={{ overflow: 'visible' }}>
+              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                <Icon base64 src={task.service?.avatar || task.route?.avatar} size={48} />
+                <span style={{ placeSelf: 'center stretch' }}>
+                  <Typography variant="subtitle1">{task.route?.name}</Typography>
+                  <Typography variant="subtitle2">{task.service?.name}</Typography>
+                </span>
+              </CardContent>
+            </Card>
+            <Card style={{ overflow: 'visible' }}>
+              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                <Icon src={getTicketStatusIcon(task.status)} size={48} />
+                <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
+              </CardContent>
+            </Card>
+            <Card className={classes.fullRow}>
+              <CardHeader
+                disableTypography
+                className={clsx(classes.cardHeader, classes.background)}
+                title={
+                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                    {t('tasks:headers.description')}
+                  </Typography>
+                }
+              />
+              <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} />
+              <FilesArea task={task} loading={loadingTaskFile} handleDownload={handleDownload} />
+            </Card>
+            {/* <Card className={classes.fullRow}>
             <CardHeader
               disableTypography
               className={clsx(classes.cardHeader, classes.background)}
@@ -386,33 +389,34 @@ const TaskComponent: FC<TaskComponentProps> = ({
               <Iframe srcDoc={task.body} />
             </CardContent>
             </Card>*/}
-          {task.status !== 'Завершен' && (
-            <Loading activate={loading} full wrapperClasses={classes.fullRow} type="circular" color="secondary" disableShrink size={48}>
-              <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                <TextField
-                  value={comment}
-                  onChange={handleComment}
-                  multiline
-                  rows={5}
-                  type="text"
-                  color="secondary"
-                  label={t('tasks:comment.add')}
-                  variant="outlined"
-                />
-              </FormControl>
-              <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
-                <Dropzone files={files} setFiles={setFiles} color="secondary" />
-              </FormControl>
-              <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
-                <Button actionType="cancel" onClick={handleClose}>
-                  {t('common:cancel')}
-                </Button>
-                <Button disabled onClick={handleAccept}>
-                  {t('common:send')}
-                </Button>
-              </FormControl>
-            </Loading>
-          )}
+            {task.status !== 'Завершен' && (
+              <Loading activate={loading} full wrapperClasses={classes.fullRow} type="circular" color="secondary" disableShrink size={48}>
+                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                  <TextField
+                    value={comment}
+                    onChange={handleComment}
+                    multiline
+                    rows={5}
+                    type="text"
+                    color="secondary"
+                    label={t('tasks:comment.add')}
+                    variant="outlined"
+                  />
+                </FormControl>
+                <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
+                  <Dropzone files={files} setFiles={setFiles} color="secondary" />
+                </FormControl>
+                <FormControl className={clsx(classes.fullRow, classes.formControl, classes.formAction)}>
+                  <Button actionType="cancel" onClick={handleClose}>
+                    {t('common:cancel')}
+                  </Button>
+                  <Button disabled onClick={handleAccept}>
+                    {t('common:send')}
+                  </Button>
+                </FormControl>
+              </Loading>
+            )}
+          </Box>
         </Box>
       )}
     </Box>
