@@ -31,7 +31,9 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
   const locale = i18n.language as 'ru' | 'en' | undefined;
   const { isAdmin } = user || { isAdmin: false };
 
-  const { loading: loadingProfile, error: errorProfile, data: dataProfile } = useQuery<Data<'profile', Profile>>(PROFILE, {
+  const { loading: loadingProfile, error: errorProfile, data: dataProfile, refetch: editRefetchProfile } = useQuery<
+    Data<'profile', Profile>
+  >(PROFILE, {
     variables: { id },
     // TODO: check if this is available
     ssr: false,
@@ -145,6 +147,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
           isAdmin={isAdmin}
           loadingProfile={loadingProfile}
           loadingChanged={loadingChanged}
+          editRefetchProfile={editRefetchProfile}
           profile={current}
           hasUpdate={hasUpdate}
           onDrop={onDrop}

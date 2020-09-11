@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       borderRadius: theme.shape.borderRadius,
-      padding: theme.spacing(1.5, 3),
+      // padding: theme.spacing(1.5, 3),
     },
     accept: {
       'color': '#31312F',
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const BaseButton = ({ actionType = 'accept', children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
   const classes = useStyles({});
-  let icon: JSX.Element;
+  let icon: React.ReactElement;
 
   switch (actionType) {
     case 'cancel':

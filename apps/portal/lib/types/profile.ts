@@ -157,6 +157,7 @@ export interface ProfileEditComponentProps {
   loadingCheckUsername?: boolean;
   loadingProfile: boolean;
   loadingChanged: boolean;
+  editRefetchProfile?: (variables?: Partial<Record<string, any>> | undefined) => Promise<ApolloQueryResult<Data<'profile', Profile>>>;
   hasUpdate: boolean;
   profile?: Profile | ProfileInput;
   locale?: User['settings']['lng'];

@@ -35,12 +35,30 @@ import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import Button from '@front/components/ui/button';
 import { DropzoneWrapper } from '@front/components/dropzone';
+import RefreshButton from '@front/components/ui/refresh-button';
 import ProfileTextFieldComponent from './text-field';
 
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    control: {
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
+      marginTop: theme.spacing() / 4,
+    },
+    controlLeft: {
+      'padding': 4,
+      'color': theme.palette.secondary.main,
+      'opacity': 0.6,
+      'transition': `all 200ms ${theme.transitions.easing.easeOut} 0ms`,
+      '&:hover': {
+        opacity: 1,
+        color: '#fff',
+        backgroundColor: theme.palette.secondary.main,
+      },
+      'marginLeft': theme.spacing(),
+    },
     firstBlock: {
       display: 'grid',
       gap: `${theme.spacing(2)}px`,
@@ -177,6 +195,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   loadingCheckUsername,
   loadingProfile,
   loadingChanged,
+  editRefetchProfile,
   hasUpdate,
   profile,
   onDrop,
@@ -195,19 +214,21 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   return (
     <Box display="flex" flexDirection="column">
       <Loading activate={!profile} noMargin type="linear" variant="indeterminate" />
+      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+        <IconButton className={classes.controlLeft} onClick={() => router.back()}>
+          <ArrowBackIcon />
+        </IconButton>
+        <div style={{ width: '100%' }} />
+        <IsAdmin>
+          <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
+            <Button style={{ marginRight: '10px' }} size="small" disabled={!hasUpdate} onClick={handleSave}>
+              {newProfile ? t('common:save') : t('common:accept')}
+            </Button>
+          </Box>
+        </IsAdmin>
+        {editRefetchProfile && <RefreshButton noAbsolute dense onClick={() => editRefetchProfile()} />}
+      </Box>
       <Box display="flex" flexDirection="column" p={2} overflow="auto">
-        <Box display="flex" mb={1}>
-          <IconButton onClick={() => router.back()}>
-            <ArrowBackIcon />
-          </IconButton>
-          <IsAdmin>
-            <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
-              <Button disabled={!hasUpdate} onClick={handleSave}>
-                {newProfile ? t('common:save') : t('common:accept')}
-              </Button>
-            </Box>
-          </IsAdmin>
-        </Box>
         <Loading
           activate={loadingProfile}
           wrapperClasses={classes.loadingBackground}
