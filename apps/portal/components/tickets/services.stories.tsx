@@ -17,7 +17,7 @@ import type {
 import { TkWhere } from '@lib/types/tickets';
 import TicketsIcon from '@public/images/svg/drawer/tickets.svg';
 import { story, withTranslation } from './index.stories';
-import Services from '.';
+import Tickets from '.';
 
 const mockRoutes: TkRoute[] = [
   {
@@ -77,7 +77,7 @@ const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
 
 const defaultTicketState: ServicesTaskProps = { route: mockRoutes[0] };
 
-const Story: FC<TicketsWrapperProps> = withTranslation('tickets', Services);
+const Story: FC<TicketsWrapperProps> = withTranslation('tickets', Tickets);
 
 story.add('Default View', () => {
   const mockData: TkRoutes = {
@@ -157,7 +157,6 @@ story.add('Default View', () => {
       loadingSettings={boolean('Loading Settings', false)}
       loadingRoutes={boolean('Loading Routes', false)}
       loadingCreated={boolean('Loading Created', false)}
-      refetchRoutes={() => action('Refetch Routes')() as any}
       handleCurrentTab={setCurrentTab}
       handleService={handleService}
       handleSubmit={handleSubmit}

@@ -13,14 +13,14 @@ module.exports = {
     // 'storybook-addon-i18n/register',
     // 'storybook-addon-material-ui/register',
     '@storybook/addons',
-    {
-      name: '@storybook/preset-typescript',
-      // options: {
-      //   tsLoaderOptions: {
-      //     configFile: '../apps/portal/tsconfig.json',
-      //   }
-      // }
-    }
+    // {
+    //   name: '@storybook/preset-typescript',
+    //   // options: {
+    //   //   tsLoaderOptions: {
+    //   //     configFile: '../apps/portal/tsconfig.json',
+    //   //   }
+    //   // }
+    // }
   ],
   webpackFinal: async (config) => {
 
