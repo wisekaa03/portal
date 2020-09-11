@@ -6,10 +6,9 @@ import Head from 'next/head';
 import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
-import { ProfileContext } from '@lib/context';
+import type { TkTask, TkTasks, TkTasksInput, Data } from '@lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASKS } from '@lib/queries';
-import { TkTask, TkTasks, Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import TasksComponent from '@front/components/tasks/tasks';
@@ -20,16 +19,16 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   // const taskStatus = profile?.user?.settings?.task?.status;
 
   const status = '';
-  const search = '';
+  const find = '';
 
   const {
     loading: loadingTasks,
     data: dataTasks,
     error: errorTasks,
     refetch: tasksRefetch,
-  }: QueryResult<Data<'TicketsTasks', TkTasks>> = useQuery(TICKETS_TASKS, {
+  }: QueryResult<Data<'TicketsTasks', TkTasks>, { tasks: TkTasksInput }> = useQuery(TICKETS_TASKS, {
     ssr: false,
-    variables: { task: { status, search } },
+    variables: { tasks: { status, find } },
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
@@ -62,7 +61,7 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
           loading={loadingTasks}
           tasks={tasks}
           status={status}
-          search={search}
+          find={find}
           tasksRefetch={tasksRefetch}
           handleSearch={(event) => {
             event?.preventDefault();

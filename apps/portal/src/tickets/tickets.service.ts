@@ -15,6 +15,7 @@ import type {
   TkTaskNew,
   TkTaskEditInput,
   TkTaskDescriptionInput,
+  TkTasksInput,
   RecordsOST,
   TkFileInput,
   TkFile,
@@ -181,7 +182,7 @@ export class TicketsService {
    * @param {string} Find The find string
    * @returns {TkTasks[]}
    */
-  TicketsTasks = async (user: User, password: string, Status: string, Find: string): Promise<TkTasks> => {
+  TicketsTasks = async (user: User, password: string, tasks: TkTasksInput): Promise<TkTasks> => {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
@@ -208,7 +209,7 @@ export class TicketsService {
                 },
                 Departments: {},
                 Statuses: {
-                  Status,
+                  Status: tasks.status,
                 },
                 Context: {},
               },
@@ -322,24 +323,26 @@ export class TicketsService {
           { tasks: [], users: [], errors: [] } as TkTasks,
         ),
       )
-      .then((routes: TkTasks) => {
-        const tasks =
-          routes.tasks?.sort((route, prevRoute) => {
-            if (!route.createdDate || !prevRoute.createdDate) {
-              return 0;
-            }
-            if (route.createdDate < prevRoute.createdDate) {
-              return 1;
-            }
-            if (route.createdDate > prevRoute.createdDate) {
-              return -1;
-            }
-            return 0;
-          }) || [];
-        const users = routes.users || [];
-        const errors = routes.errors || [];
-        return { tasks, users, errors } as TkTasks;
-      })
+      .then(
+        (routes: TkTasks) =>
+          ({
+            tasks:
+              routes.tasks?.sort((route, prevRoute) => {
+                if (!route.createdDate || !prevRoute.createdDate) {
+                  return 0;
+                }
+                if (route.createdDate < prevRoute.createdDate) {
+                  return 1;
+                }
+                if (route.createdDate > prevRoute.createdDate) {
+                  return -1;
+                }
+                return 0;
+              }) || [],
+            users: routes.users || [],
+            errors: routes.errors || [],
+          } as TkTasks),
+      )
       .catch((error: TypeError) => {
         throw error;
       });

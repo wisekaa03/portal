@@ -33,6 +33,14 @@ export interface TkRoutes {
   errors?: string[];
 }
 
+export interface TkTasksInput {
+  status?: string;
+  find?: string;
+  where?: string;
+  serviceId?: string;
+  routeId?: string;
+}
+
 export interface TkFile {
   where: TkWhere;
   id: string;

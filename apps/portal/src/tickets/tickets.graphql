@@ -109,6 +109,9 @@ input TkTaskDescriptionInput {
 input TkTasksInput {
   status: String
   find: String
+  where: String
+  serviceId: String
+  routeId: String
 }
 
 type TkRoutes {
@@ -135,7 +138,7 @@ input TkFileInput {
 
 type Query {
   TicketsRoutes: TkRoutes
-  TicketsTasks(task: TkTasksInput!): TkTasks
+  TicketsTasks(tasks: TkTasksInput!): TkTasks
   TicketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask
   TicketsTaskFile(file: TkFileInput!): TkFile!
   TicketsCommentFile(file: TkFileInput!): TkFile!

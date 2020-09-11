@@ -6,9 +6,10 @@ import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import {
+import type {
   TkRoutes,
   TkTasks,
+  TkTasksInput,
   TkEditTask,
   TkTaskNew,
   TkTaskNewInput,
@@ -58,8 +59,7 @@ export class TicketsResolver {
   @Query('TicketsTasks')
   @UseGuards(GqlAuthGuard)
   async TicketsTasks(
-    @Args('status') status: string,
-    @Args('find') find: string,
+    @Args('tasks') tasks: TkTasksInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkTasks> {
@@ -67,7 +67,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTasks(user, password, status, find).catch((error: Error) => {
+    return this.ticketsService.TicketsTasks(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

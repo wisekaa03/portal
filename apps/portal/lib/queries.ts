@@ -553,8 +553,8 @@ export const TICKETS_ROUTES = gql`
 `;
 
 export const TICKETS_TASKS = gql`
-  query TicketsTasks($status: String) {
-    TicketsTasks(task: { status: $status }) {
+  query TicketsTasks($tasks: TkTasksInput!) {
+    TicketsTasks(tasks: $tasks) {
       users {
         where
         id
