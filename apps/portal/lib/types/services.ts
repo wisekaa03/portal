@@ -1,11 +1,10 @@
 /** @format */
 
-import React, { Component } from 'react';
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
-import { DropzoneFile } from './dropzone';
-import { TkRoute, TkService, TkRoutes } from './tickets';
-import { UserSettingsTaskFavorite, UserSettingsTaskFavoriteFull } from './user.dto';
-import { Data } from './common';
+import type React from 'react';
+import type { ApolloError } from '@apollo/client';
+import type { DropzoneFile } from './dropzone';
+import type { TkRoute, TkService } from './tickets';
+import type { UserSettingsTaskFavorite, UserSettingsTaskFavoriteFull } from './user.dto';
 
 export interface ServicesTaskProps {
   route?: TkRoute;
@@ -43,7 +42,6 @@ export interface TicketsWrapperProps {
   loadingSettings: boolean;
   loadingRoutes: boolean;
   loadingCreated: boolean;
-  refetchRoutes: () => Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>>;
   handleCurrentTab: (_: number) => void;
   handleService: (_: React.ChangeEvent<HTMLSelectElement>) => void;
   handleSubmit: () => void;

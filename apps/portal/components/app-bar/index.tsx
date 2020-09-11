@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { FC } from 'react';
 import clsx from 'clsx';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { darken, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Popover, Box, Button, IconButton, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -15,6 +15,7 @@ import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';
 import { AppBarComponentProps } from '@lib/types';
+import RefreshButton from '@front/components/ui/refresh-button';
 import Avatar from '@front/components/ui/avatar';
 import LogoMin from '@images/png/logo_min.png'; // TODO: ?inline';
 //#endregion
@@ -27,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
       zIndex: theme.zIndex.drawer + 1,
       // backgroundColor: '#F5FDFF',
       backgroundSize: 'cover',
+    },
+    refresh: {
+      paddingRight: theme.spacing(),
+      marginRight: theme.spacing(),
+      borderRight: `1px dotted ${darken('#F5FDFF', 0.2)}`,
     },
     toolbar: {
       padding: theme.spacing(0, 2),
@@ -86,6 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const AppBarComponent: FC<AppBarComponentProps> = ({
   open,
   anchorEl,
+  refetchComponent,
   handleDrawerOpen,
   handlePopoverOpen,
   handlePopoverClose,
@@ -108,6 +115,11 @@ const AppBarComponent: FC<AppBarComponentProps> = ({
                   <div className={classes.logo}>
                     <img src={LogoMin} alt="logo" />
                   </div>
+                  {refetchComponent && (
+                    <Box className={classes.refresh} id="refresh-component">
+                      <RefreshButton noAbsolute dense onClick={() => refetchComponent()} />
+                    </Box>
+                  )}
                   <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>
                     <Avatar className={clsx(classes.avatar, classes.pointer)} profile={user.profile} alt="photo" />
                   </Box>

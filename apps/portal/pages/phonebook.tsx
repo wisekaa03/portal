@@ -258,13 +258,12 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('phonebook:title')}</title>
       </Head>
-      <MaterialUI {...rest}>
+      <MaterialUI refetchComponent={refetch} {...rest}>
         <Box display="flex" flexDirection="column">
           <PhonebookSearch
             ref={searchRef}
             search={_search}
             suggestions={suggestionsFiltered}
-            refetch={refetch}
             handleSearch={handleSearch}
             handleSugClose={handleSugClose}
             handleSugKeyDown={handleSugKeyDown}

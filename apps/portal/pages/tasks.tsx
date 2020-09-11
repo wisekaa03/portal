@@ -1,9 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client';
+import { useQuery, QueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import type { TkTask, TkTasks, TkTasksInput, Data } from '@lib/types';
@@ -56,13 +56,12 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('tasks:title')}</title>
       </Head>
-      <MaterialUI {...rest}>
+      <MaterialUI refetchComponent={tasksRefetch} {...rest}>
         <TasksComponent
           loading={loadingTasks}
           tasks={tasks}
           status={status}
           find={find}
-          tasksRefetch={tasksRefetch}
           handleSearch={(event) => {
             event?.preventDefault();
           }}

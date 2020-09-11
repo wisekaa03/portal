@@ -1,16 +1,16 @@
 /** @format */
 
 //#region Imports NPM
-import React from 'react';
-import { WithTranslation } from 'next-i18next';
-import { ApolloQueryResult } from '@apollo/client';
-import { Order, Connection } from 'typeorm-graphql-pagination';
-import { OutlinedInputProps } from '@material-ui/core';
+import type React from 'react';
+import type { WithTranslation } from 'next-i18next';
+import type { ApolloQueryResult } from '@apollo/client';
+import type { Order, Connection } from 'typeorm-graphql-pagination';
+import type { OutlinedInputProps } from '@material-ui/core';
 //#endregion
 //#region Imports Local
-import { StyleProps as StyleProperties, Data } from './common';
-import { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
-import { User } from './user.dto';
+import type { StyleProps as StyleProperties, Data } from './common';
+import type { User } from './user.dto';
+import type { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 //#endregion
 
 export type PhonebookColumnNames =
@@ -62,7 +62,6 @@ export interface ProfileQueryProps {
 export interface PhonebookSearchProps {
   search: string;
   suggestions: SearchSuggestions[];
-  refetch: (variables?: ProfileQueryProps) => Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;
   handleSearch: React.ChangeEventHandler<HTMLInputElement>;
   handleSugClose: (_: React.MouseEvent<EventTarget>) => void;
   handleSugKeyDown: (_: React.KeyboardEvent) => void;

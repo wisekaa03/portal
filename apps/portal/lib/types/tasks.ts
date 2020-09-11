@@ -1,17 +1,14 @@
 /** @format */
 
-import React from 'react';
-import { ApolloQueryResult, ApolloError, QueryLazyOptions } from '@apollo/client';
-import type { TkUser, TkTask, TkEditTask, TkTasks, TkFileInput, TkFile, TkWhere } from './tickets';
-import { StyleProps as StyleProperties, Data } from './common';
-import { DropzoneFile } from './dropzone';
+import type React from 'react';
+import type { TkUser, TkTask, TkFile } from './tickets';
+import type { DropzoneFile } from './dropzone';
 
 export interface TasksComponentProps {
   loading: boolean;
   tasks: (TkTask | null)[];
   status: string;
   find: string;
-  tasksRefetch: () => Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>>;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -25,7 +22,6 @@ export interface TaskComponentProps {
   loading: boolean;
   loadingTaskFile: boolean;
   loadingCommentFile: boolean;
-  taskRefetch: () => Promise<ApolloQueryResult<Data<'TicketsTaskDescription', TkEditTask>>>;
   task?: TkTask;
   comment: string;
   files: DropzoneFile[];

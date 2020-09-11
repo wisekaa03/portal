@@ -141,12 +141,11 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
           }`}
         </title>
       </Head>
-      <MaterialUI {...rest}>
+      <MaterialUI refetchComponent={taskRefetch} {...rest}>
         <TaskComponent
           loading={loading}
           loadingTaskFile={loadingTaskFile}
           loadingCommentFile={loadingCommentFile}
-          taskRefetch={taskRefetch}
           task={task?.task}
           comment={comment}
           files={files}

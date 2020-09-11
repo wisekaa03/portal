@@ -9,7 +9,8 @@ import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
 import { ProfileContext } from '@lib/context';
-import { UserSettings } from '@lib/types/user.dto';
+import type { UserSettings } from '@lib/types/user.dto';
+import type { MaterialUIProps } from '@lib/types/material';
 import { LOGOUT, USER_SETTINGS } from '@lib/queries';
 import { removeStorage } from '@lib/session-storage';
 import { appBarHeight, SESSION, FIRST_PAGE, AUTH_PAGE, AUTO_COLLAPSE_ROUTES } from '@lib/constants';
@@ -34,7 +35,7 @@ const useStyles = makeStyles((/* theme: Theme */) =>
     },
   }));
 
-export const MaterialUI: FC = ({ children }) => {
+export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent }) => {
   const classes = useStyles({});
 
   const profile = useContext(ProfileContext);
@@ -115,6 +116,7 @@ export const MaterialUI: FC = ({ children }) => {
       <AppBarComponent
         open={Boolean(anchorElement)}
         anchorEl={anchorElement}
+        refetchComponent={refetchComponent}
         handleDrawerOpen={handleDrawerOpen}
         handlePopoverOpen={handlePopoverOpen}
         handlePopoverClose={handlePopoverClose}

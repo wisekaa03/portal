@@ -161,7 +161,7 @@ const TasksCard = withStyles((theme) => ({
   );
 });
 
-const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, find, tasksRefetch, handleSearch, handleStatus }) => {
+const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   const ticketBox = useRef(null);
@@ -172,7 +172,6 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, find,
     <Box display="flex" flexDirection="column">
       <Box display="flex" alignItems="center" p={1} className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
-        <RefreshButton noAbsolute dense onClick={() => tasksRefetch && tasksRefetch()} />
       </Box>
       <BoxWithRef
         ref={ticketBox}

@@ -126,7 +126,6 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
   loadingSettings,
   loadingRoutes,
   loadingCreated,
-  refetchRoutes,
   handleCurrentTab,
   handleService,
   handleSubmit,
@@ -256,136 +255,126 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
         </Tabs>
       </Paper>
       <Loading activate={loadingRoutes} full type="circular" color="secondary" disableShrink size={48}>
-        <>
-          {!submitted && <RefreshButton onClick={refetchRoutes} />}
-          <SwipeableViews
-            ref={contentRef}
-            // animateHeight={!!task.route}
-            disabled={!task.route}
-            index={currentTab}
-            className={classes.body}
-            containerStyle={{ flexGrow: 1 }}
-            onSwitching={handleCurrentTab}
-          >
-            <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
-              {Array.isArray(favorites) && favorites.length > 0 && (
-                <>
-                  <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
-                    <Box className={classes.titleIcon}>
-                      <StarBorderIcon />
-                    </Box>
-                    {t('tickets:headers.favorites')}
+        <SwipeableViews
+          ref={contentRef}
+          // animateHeight={!!task.route}
+          disabled={!task.route}
+          index={currentTab}
+          className={classes.body}
+          containerStyle={{ flexGrow: 1 }}
+          onSwitching={handleCurrentTab}
+        >
+          <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
+            {Array.isArray(favorites) && favorites.length > 0 && (
+              <>
+                <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
+                  <Box className={classes.titleIcon}>
+                    <StarBorderIcon />
                   </Box>
-                  <Box className={classes.blockContainer}>
-                    {favorites.map((current, index) => (
-                      <ServicesElementFavorites
-                        key={`fav-${current.service?.where}-${current.service?.code}`}
-                        favorite={current}
-                        base64
-                        withLink
-                        loadingSettings={loadingSettings}
-                        setFavorite={updateFavorites}
-                        isUp={index > 0}
-                        isDown={index < favorites.length - 1}
-                      />
-                    ))}
-                  </Box>
-                </>
-              )}
-              <Box className={classes.blockTitle}>{t('tickets:headers.list')}</Box>
-              <Box className={classes.blockContainer}>
-                {Array.isArray(routes) &&
-                  routes.length > 0 &&
-                  routes.map(
-                    (current) => current && <ServicesElement key={`${current.where}-${current.code}`} base64 withLink route={current} />,
-                  )}
-              </Box>
-            </Box>
-            <Box
-              style={{ minHeight: contentHeight }}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              p={3}
-            >
-              {submitted ? (
-                <Loading activate={loadingCreated || !created} full type="circular" color="secondary" disableShrink size={48}>
-                  {errorCreated ? (
-                    <ServicesError error={errorCreated} onClose={handleResetTicket} />
-                  ) : (
-                    <ServicesSuccess data={created} onClose={handleResetTicket} />
-                  )}
-                </Loading>
-              ) : (
-                <>
-                  {task.route && (
-                    <Box display="grid" gridTemplateColumns="1fr 300px" gridGap="8px" className={classes.formControl}>
-                      <ServicesElement key={`t-${task.route}`} base64 route={task.route} active />
-                      <Box display="flex" justifyContent="flex-end" alignItems="center">
-                        {!isFavorite && (
-                          <Button actionType="favorite" onClick={handleAddFavorite}>
-                            {t('common:favorite')}
-                          </Button>
-                        )}
-                      </Box>
-                    </Box>
-                  )}
-                  <FormControl className={classes.formControl} variant="outlined">
-                    <Select
-                      value={service}
-                      inputRef={serviceRef}
-                      onChange={handleService}
-                      classes={{
-                        select: classes.select,
-                      }}
-                    >
-                      {/* <MenuItem value="0">{t('tickets:form.service')}</MenuItem>*/}
-                      {task.route &&
-                        task.route.services?.map(
-                          (srv) =>
-                            srv && (
-                              <MenuItem key={srv.code} value={srv.code}>
-                                <Icon base64 src={srv.avatar} size={21} />
-                                <Typography className={classes.margin} component="span">
-                                  {srv.name}
-                                </Typography>
-                              </MenuItem>
-                            ),
-                        )}
-                    </Select>
-                  </FormControl>
-                  <FormControl className={classes.formControl} variant="outlined">
-                    <TextField
-                      ref={subjectRef}
-                      disabled={!enableBody}
-                      value={subject}
-                      onChange={(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                        setSubject(event.target.value);
-                      }}
-                      variant="outlined"
-                      label={t('tickets:form.subject')}
+                  {t('tickets:headers.favorites')}
+                </Box>
+                <Box className={classes.blockContainer}>
+                  {favorites.map((current, index) => (
+                    <ServicesElementFavorites
+                      key={`fav-${current.service?.where}-${current.service?.code}`}
+                      favorite={current}
+                      base64
+                      withLink
+                      loadingSettings={loadingSettings}
+                      setFavorite={updateFavorites}
+                      isUp={index > 0}
+                      isDown={index < favorites.length - 1}
                     />
-                  </FormControl>
-                  <FormControl className={clsx(classes.formControl, classes.jodit)} variant="outlined">
-                    <JoditEditor ref={bodyRef} id="tickets" value={body} onBlur={setBody} disabled={!enableBody} />
-                  </FormControl>
-                  <FormControl className={classes.formControl} variant="outlined">
-                    <Dropzone files={files} setFiles={setFiles} />
-                  </FormControl>
-                  <FormControl className={clsx(classes.formControl, classes.formAction)}>
-                    <Button actionType="cancel" onClick={handleResetTicket}>
-                      {t('common:cancel')}
-                    </Button>
-                    <Button onClick={handleSubmit} disabled={!enableBody}>
-                      {t('common:send')}
-                    </Button>
-                  </FormControl>
-                </>
-              )}
+                  ))}
+                </Box>
+              </>
+            )}
+            <Box className={classes.blockTitle}>{t('tickets:headers.list')}</Box>
+            <Box className={classes.blockContainer}>
+              {Array.isArray(routes) &&
+                routes.length > 0 &&
+                routes.map(
+                  (current) => current && <ServicesElement key={`${current.where}-${current.code}`} base64 withLink route={current} />,
+                )}
             </Box>
-          </SwipeableViews>
-        </>
+          </Box>
+          <Box style={{ minHeight: contentHeight }} display="flex" flexDirection="column" alignItems="center" justifyContent="center" p={3}>
+            {submitted ? (
+              <Loading activate={loadingCreated || !created} full type="circular" color="secondary" disableShrink size={48}>
+                {errorCreated ? (
+                  <ServicesError error={errorCreated} onClose={handleResetTicket} />
+                ) : (
+                  <ServicesSuccess data={created} onClose={handleResetTicket} />
+                )}
+              </Loading>
+            ) : (
+              <>
+                {task.route && (
+                  <Box display="grid" gridTemplateColumns="1fr 300px" gridGap="8px" className={classes.formControl}>
+                    <ServicesElement key={`t-${task.route}`} base64 route={task.route} active />
+                    <Box display="flex" justifyContent="flex-end" alignItems="center">
+                      {!isFavorite && (
+                        <Button actionType="favorite" onClick={handleAddFavorite}>
+                          {t('common:favorite')}
+                        </Button>
+                      )}
+                    </Box>
+                  </Box>
+                )}
+                <FormControl className={classes.formControl} variant="outlined">
+                  <Select
+                    value={service}
+                    inputRef={serviceRef}
+                    onChange={handleService}
+                    classes={{
+                      select: classes.select,
+                    }}
+                  >
+                    {/* <MenuItem value="0">{t('tickets:form.service')}</MenuItem>*/}
+                    {task.route &&
+                      task.route.services?.map(
+                        (srv) =>
+                          srv && (
+                            <MenuItem key={srv.code} value={srv.code}>
+                              <Icon base64 src={srv.avatar} size={21} />
+                              <Typography className={classes.margin} component="span">
+                                {srv.name}
+                              </Typography>
+                            </MenuItem>
+                          ),
+                      )}
+                  </Select>
+                </FormControl>
+                <FormControl className={classes.formControl} variant="outlined">
+                  <TextField
+                    ref={subjectRef}
+                    disabled={!enableBody}
+                    value={subject}
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                      setSubject(event.target.value);
+                    }}
+                    variant="outlined"
+                    label={t('tickets:form.subject')}
+                  />
+                </FormControl>
+                <FormControl className={clsx(classes.formControl, classes.jodit)} variant="outlined">
+                  <JoditEditor ref={bodyRef} id="tickets" value={body} onBlur={setBody} disabled={!enableBody} />
+                </FormControl>
+                <FormControl className={classes.formControl} variant="outlined">
+                  <Dropzone files={files} setFiles={setFiles} />
+                </FormControl>
+                <FormControl className={clsx(classes.formControl, classes.formAction)}>
+                  <Button actionType="cancel" onClick={handleResetTicket}>
+                    {t('common:cancel')}
+                  </Button>
+                  <Button onClick={handleSubmit} disabled={!enableBody}>
+                    {t('common:send')}
+                  </Button>
+                </FormControl>
+              </>
+            )}
+          </Box>
+        </SwipeableViews>
       </Loading>
     </Box>
   );

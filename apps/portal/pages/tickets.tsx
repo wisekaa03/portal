@@ -230,14 +230,13 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
       <Head>
         <title>{task.route ? t('tickets:title.route', { route: task.route.name }) : t('tickets:title.title')}</title>
       </Head>
-      <MaterialUI {...rest}>
+      <MaterialUI refetchComponent={refetchRoutes} {...rest}>
         <TicketsComponent
           contentRef={contentRef}
           serviceRef={serviceRef}
           bodyRef={bodyRef}
           subjectRef={subjectRef}
           currentTab={currentTab}
-          refetchRoutes={refetchRoutes}
           task={task}
           created={created}
           errorCreated={errorCreated}

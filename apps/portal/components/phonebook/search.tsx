@@ -2,25 +2,10 @@
 
 //#region Imports NPM
 import React, { forwardRef, useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Box, InputBase, IconButton, Popper, ClickAwayListener, MenuList, MenuItem, Paper, Tooltip } from '@material-ui/core';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  Box,
-  InputBase,
-  IconButton,
-  Popper,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
-  Paper,
-  Tooltip,
-} from '@material-ui/core';
-import {
-  Search as SearchIcon,
-  Settings as SettingsIcon,
-  HelpOutline as HelpIcon,
-  Clear as ClearIcon,
-} from '@material-ui/icons';
+
+import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon, Clear as ClearIcon } from '@material-ui/icons';
 //#endregion
 //#region Imports Local
 import { PhonebookSearchProps } from '@lib/types';
@@ -80,7 +65,6 @@ const PhonebookSearch = forwardRef(
     {
       search,
       suggestions,
-      refetch,
       handleSearch,
       handleSugClose,
       handleSugKeyDown,
@@ -116,13 +100,7 @@ const PhonebookSearch = forwardRef(
     return (
       <Box display="flex" alignItems="center" className={classes.panel}>
         <Box flexGrow={1} position="relative" ml={0} mr={2} className={classes.search}>
-          <Box
-            position="absolute"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            className={classes.searchIcon}
-          >
+          <Box position="absolute" display="flex" alignItems="center" justifyContent="center" className={classes.searchIcon}>
             <SearchIcon color="secondary" />
           </Box>
           <Tooltip
@@ -165,7 +143,8 @@ const PhonebookSearch = forwardRef(
                             {item.name}
                           </Typography>
                         );
-                      } else if (index > 10) {
+                      }
+                      if (index > 10) {
                         return null;
                       }
                       return (
@@ -191,7 +170,6 @@ const PhonebookSearch = forwardRef(
             <HelpIcon />
           </IconButton>
         </Tooltip>
-        <RefreshButton noAbsolute disableBackground onClick={() => refetch()} />
         <Tooltip title={t('common:settings') || ''}>
           <IconButton className={classes.icon} onClick={handleSettingsOpen}>
             <SettingsIcon />

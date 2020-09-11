@@ -297,7 +297,6 @@ const TaskComponent: FC<TaskComponentProps> = ({
   loading,
   loadingTaskFile,
   loadingCommentFile,
-  taskRefetch,
   task,
   comment,
   files,
@@ -319,7 +318,6 @@ const TaskComponent: FC<TaskComponentProps> = ({
           </IconButton>
         </Link>
         <div style={{ width: '100%' }} />
-        <RefreshButton noAbsolute dense onClick={() => taskRefetch && taskRefetch()} />
       </Box>
       {!task || loading ? (
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
