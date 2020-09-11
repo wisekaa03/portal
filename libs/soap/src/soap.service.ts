@@ -1,4 +1,5 @@
 /** @format */
+/* eslint max-classes-per-file:0 */
 
 //#region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
