@@ -74,7 +74,7 @@ export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefi
   user && Object.keys(user).length > 0
     ? {
         where: whereService(where),
-        id: user.Ref || `${whereService(where)}.${user['ФИО']}`,
+        id: user.Ref || `${whereService(where)}.user.${user['ФИО']}`,
         name: user['ФИО'] || '-',
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],

@@ -59,14 +59,14 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
 
   const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'TicketsTaskNew', TkTaskNew>>(
     TICKETS_TASK_NEW,
-    {
-      refetchQueries: [
-        {
-          query: TICKETS_TASKS,
-        },
-      ],
-      awaitRefetchQueries: true,
-    },
+    // {
+    //   refetchQueries: [
+    //     {
+    //       query: TICKETS_TASKS,
+    //     },
+    //   ],
+    //   awaitRefetchQueries: true,
+    // },
   );
 
   const contentRef = useRef(null);

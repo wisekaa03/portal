@@ -182,7 +182,7 @@ export class TicketsService {
    * @param {string} Find The find string
    * @returns {TkTasks[]}
    */
-  TicketsTasks = async (user: User, password: string, tasks: TkTasksInput): Promise<TkTasks> => {
+  TicketsTasks = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
@@ -209,7 +209,7 @@ export class TicketsService {
                 },
                 Departments: {},
                 Statuses: {
-                  Status: tasks.status,
+                  Status: tasks?.status ?? '',
                 },
                 Context: {},
               },

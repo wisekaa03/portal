@@ -3,7 +3,6 @@
 //#region Imports NPM
 import fs from 'fs';
 import { resolve } from 'path';
-import { NextApiResponse } from 'next';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions } from '@nestjs/common';

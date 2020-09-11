@@ -27,10 +27,10 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     error: errorTasks,
     refetch: tasksRefetch,
   }: QueryResult<Data<'TicketsTasks', TkTasks>, { tasks: TkTasksInput }> = useQuery(TICKETS_TASKS, {
-    ssr: false,
+    ssr: true,
     variables: { tasks: { status, find } },
-    fetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
+    // notifyOnNetworkStatusChange: true,
   });
 
   const tasks = useMemo<TkTask[]>(() => {

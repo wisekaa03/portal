@@ -59,7 +59,7 @@ export class TicketsResolver {
   @Query('TicketsTasks')
   @UseGuards(GqlAuthGuard)
   async TicketsTasks(
-    @Args('tasks') tasks: TkTasksInput,
+    @Args('tasks') tasks?: TkTasksInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkTasks> {
