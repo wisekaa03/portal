@@ -32,9 +32,6 @@ async function bootstrap(config: ConfigService): Promise<boolean> {
 bootstrap(configService)
   .then((result) => {
     logger.log(`Microservice returns: ${result}`, 'Sync LDAP Job');
-
-    // eslint-disable-next-line unicorn/no-process-exit
-    return process.exit(result ? 0 : 1);
   })
   .catch((error) => {
     throw new Error(`Synch job: Result: ${JSON.stringify(error)}`);
