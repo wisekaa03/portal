@@ -38,6 +38,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
       // TODO: check if this is available
       ssr: false,
       context: { user },
+      notifyOnNetworkStatusChange: true,
     },
   );
 

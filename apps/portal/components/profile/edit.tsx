@@ -154,12 +154,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       color: '#949494',
     },
-    loadingBackground: {
-      transition: theme.transitions.create('background', {
-        easing: theme.transitions.easing.easeInOut,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      background: '#0000001a',
+    loading: {
       zIndex: 1,
     },
   }),
@@ -212,7 +207,6 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
 
   return (
     <Box display="flex" flexDirection="column">
-      <Loading activate={!profile} noMargin type="linear" variant="indeterminate" />
       <Box display="flex" alignItems="center" p={1} className={classes.control}>
         <IconButton className={classes.controlLeft} onClick={() => router.back()}>
           <ArrowBackIcon />
@@ -228,23 +222,22 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
       </Box>
       <Box display="flex" flexDirection="column" p={2} overflow="auto">
         <Loading
+          wrapperClasses={classes.loading}
           activate={loadingProfile}
-          wrapperClasses={classes.loadingBackground}
-          absolute
           full
-          noMargin
+          absolute
           type="circular"
-          size={48}
           color="secondary"
-          variant="indeterminate"
+          disableShrink
+          size={48}
         >
           <Box display="flex" position="relative" flexDirection="column">
             {profile ? (
               <>
                 <Loading
+                  wrapperClasses={classes.loading}
                   activate={loadingChanged}
                   full
-                  wrapperClasses={classes.loadingBackground}
                   absolute
                   color="secondary"
                   size={48}
