@@ -387,7 +387,7 @@ const TaskComponent: FC<TaskComponentProps> = ({
               <Iframe srcDoc={task.body} />
             </CardContent>
             </Card>*/}
-            {task.status !== 'Завершен' && (
+            {/* task.status !== 'Завершен' && (
               <Loading activate={loading} full wrapperClasses={classes.fullRow} type="circular" color="secondary" disableShrink size={48}>
                 <FormControl className={clsx(classes.fullRow, classes.formControl)} variant="outlined">
                   <TextField
@@ -411,9 +411,8 @@ const TaskComponent: FC<TaskComponentProps> = ({
                   <Button disabled onClick={handleAccept}>
                     {t('common:send')}
                   </Button>
-                </FormControl>
-              </Loading>
-            )}
+            </FormControl>
+            </Loading>*/}
           </Box>
         </Box>
       )}
