@@ -28,6 +28,7 @@ export interface SoapOptionsFactory {
 }
 
 export interface SoapModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+  name: string;
   useExisting?: Type<SoapOptionsFactory>;
   useClass?: Type<SoapOptionsFactory>;
   useFactory?: (...args: any[]) => Promise<SoapOptions> | SoapOptions;

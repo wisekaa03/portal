@@ -13,6 +13,7 @@ import { ReportsService } from './reports.service';
 @Module({
   imports: [
     SoapModule.registerAsync({
+      name: 'REPORT',
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({

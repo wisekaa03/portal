@@ -29,7 +29,7 @@ import type {
 import { TkWhere } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault, SoapError, SoapAuthentication } from '@app/soap';
+import { SoapService, SoapFault, soapError, SoapAuthentication } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
 import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
@@ -94,11 +94,11 @@ export class TicketsService {
                 this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
                 this.logger.error(error);
 
-                return { errors: [`SOAP: ${new SoapError(error).toString()}`] };
+                return { errors: [`SOAP: ${soapError(error)}`] };
               }
               this.logger.error(error);
 
-              return { errors: [`SOAP: ${error.toString()}`] };
+              return { errors: [`SOAP: ${soapError(error)}`] };
             }),
         );
       }
@@ -234,7 +234,7 @@ export class TicketsService {
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { errors: [`SOAP: ${new SoapError(error).toString()}`] };
+              return { errors: [`SOAP: ${soapError(error)}`] };
             }),
         );
       }
@@ -418,7 +418,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new SoapError(error);
+          throw new Error(soapError(error));
         });
     }
 
@@ -539,7 +539,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new SoapError(error);
+          throw new Error(soapError(error));
         });
     }
 
@@ -642,7 +642,7 @@ export class TicketsService {
         ).catch((error: SoapFault) => {
           this.logger.error(error);
 
-          throw new SoapError(error);
+          throw new Error(soapError(error));
         });
       }
 
@@ -671,7 +671,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new SoapError(error);
+          throw new Error(soapError(error));
         });
     }
 
@@ -732,7 +732,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new SoapError(error);
+          throw new Error(soapError(error));
         });
     }
 
@@ -841,7 +841,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new SoapError(error);
+          throw new Error(soapError(error));
         });
     }
 

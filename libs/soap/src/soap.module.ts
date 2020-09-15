@@ -33,6 +33,7 @@ export class SoapModule {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
+
     return [
       this.createAsyncOptionsProvider(options),
       {
@@ -50,6 +51,7 @@ export class SoapModule {
         inject: options.inject || [],
       };
     }
+
     return {
       provide: SOAP_OPTIONS,
       useFactory: async (optionsFactory: SoapOptionsFactory) => optionsFactory.createSoapOptions(),

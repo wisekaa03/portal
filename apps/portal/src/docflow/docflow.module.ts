@@ -13,6 +13,7 @@ import { DocFlowService } from './docflow.service';
 @Module({
   imports: [
     SoapModule.registerAsync({
+      name: 'DOCFLOW',
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({

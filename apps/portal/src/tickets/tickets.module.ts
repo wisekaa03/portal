@@ -13,6 +13,7 @@ import { TicketsService } from './tickets.service';
 @Module({
   imports: [
     SoapModule.registerAsync({
+      name: 'TICKETS',
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({

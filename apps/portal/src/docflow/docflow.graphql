@@ -1,7 +1,39 @@
-input DocFlowInput {
-  date: Date
+type DocFlowUser {
+  id: String!
+  name: String!
 }
 
-type Mutation {
-  Docflow(docflow: DocFlowInput): Boolean
+type DocFlowState {
+  id: String!
+  name: String!
+}
+
+type DocFlowFiles {
+  id: String!
+  name: String!
+}
+
+type DocFlowTask {
+  id: String!
+  name: String!
+  importance: String
+  executor: DocFlowUser
+  executed: Boolean
+  executionMark: String
+  beginDate: Date
+  dueDate: Date
+  endDate: Date
+  files: [DocFlowFiles]
+  description: String
+  parentTask: DocFlowTask
+  processStep: String
+  executionComment: String
+  author: DocFlowUser!
+  accepted: Boolean
+  acceptDate: Date
+  state: DocFlowState!
+}
+
+type Query {
+  DocFlowGetTasks: [DocFlowTask!]
 }
