@@ -125,8 +125,10 @@ async function bootstrap(): Promise<void> {
   if (DEV) {
     scriptSrc.push("'unsafe-inline'");
     scriptSrc.push("'unsafe-eval'");
+    scriptSrc.push('http://cdn.jsdelivr.net');
     scriptSrc.push('https://cdn.jsdelivr.net');
     styleSrc.push('https://fonts.googleapis.com');
+    styleSrc.push('http://cdn.jsdelivr.net');
     styleSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('https://cdn.jsdelivr.net');
     imgSrc.push('http://cdn.jsdelivr.net');
