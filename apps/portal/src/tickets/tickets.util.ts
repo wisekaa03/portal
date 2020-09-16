@@ -17,7 +17,8 @@ import type {
   TicketsServiceSOAP,
   TicketsUserSOAP,
 } from '@lib/types';
-import { TkWhere } from '@lib/types';
+import { TkWhere } from '@lib/types/tickets';
+import { SOAP_DATE_NULL } from '@lib/types/common';
 
 export const SMALL_BODY_STRING = 250;
 
@@ -195,15 +196,10 @@ export const taskSOAP = (task: TicketsTaskSOAP, where: TkWhere): TkTask | undefi
         body: task['Описание'] && clearHtml(task['Описание']),
         smallBody: task['Описание'] && clearHtml(task['Описание'], SMALL_BODY_STRING),
         status: task['Статус'],
-        createdDate: !task['Дата'] || task['Дата']?.toISOString() === '0000-12-31T21:29:43.000Z' ? undefined : task['Дата'],
+        createdDate: !task['Дата'] || task['Дата']?.toISOString() === SOAP_DATE_NULL ? undefined : task['Дата'],
         timeoutDate:
-          !task['СрокИсполнения'] || task['СрокИсполнения']?.toISOString() === '0000-12-31T21:29:43.000Z'
-            ? undefined
-            : task['СрокИсполнения'],
-        endDate:
-          !task['ДатаЗавершения'] || task['ДатаЗавершения']?.toISOString() === '0000-12-31T21:29:43.000Z'
-            ? undefined
-            : task['ДатаЗавершения'],
+          !task['СрокИсполнения'] || task['СрокИсполнения']?.toISOString() === SOAP_DATE_NULL ? undefined : task['СрокИсполнения'],
+        endDate: !task['ДатаЗавершения'] || task['ДатаЗавершения']?.toISOString() === SOAP_DATE_NULL ? undefined : task['ДатаЗавершения'],
         executorUser: task['ТекущийИсполнитель'],
         initiatorUser: task['Инициатор'],
         route: routeSOAP(task['Сервис'], where),

@@ -7,7 +7,7 @@ export interface DocFlowUser {
 
 export interface DocFlowState {
   id: string;
-  // name: string;
+  name: string;
 }
 
 export interface DocFlowFile {
@@ -43,7 +43,7 @@ export interface DocFlowTask {
   author: DocFlowUser;
   accepted?: boolean;
   acceptDate?: Date;
-  state: DocFlowState;
+  state?: DocFlowState;
   parentTask?: DocFlowParentTask;
   files?: DocFlowFile[];
 }

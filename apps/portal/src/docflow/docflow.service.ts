@@ -148,7 +148,7 @@ export class DocFlowService {
           })
           .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
-            this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+            // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
             if (message[0]?.return) {
               const result = message[0]?.return?.items?.map((task) => docFlowTask(task));

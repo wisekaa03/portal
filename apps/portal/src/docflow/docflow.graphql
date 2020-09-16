@@ -1,27 +1,34 @@
 type DocFlowUser {
   id: String!
-  name: String!
+  name: String
 }
 
 type DocFlowState {
   id: String!
-  name: String!
+  name: String
 }
 
 type DocFlowFiles {
   id: String!
-  name: String!
+  name: String
+  presentation: String
+  allowDeletion: Boolean
 }
 
 type DocFlowParentTask {
-  id: String
+  id: String!
+  name: String
+}
+
+type DocFlowImportance {
+  id: String!
   name: String
 }
 
 type DocFlowTask {
   id: String!
   name: String!
-  importance: String
+  importance: DocFlowImportance
   executor: DocFlowUser
   executed: Boolean
   executionMark: String
@@ -36,7 +43,7 @@ type DocFlowTask {
   author: DocFlowUser!
   accepted: Boolean
   acceptDate: Date
-  state: DocFlowState!
+  state: DocFlowState
 }
 
 type Query {

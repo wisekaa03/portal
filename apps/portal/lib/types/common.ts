@@ -1,5 +1,7 @@
 /** @format */
 
+export const SOAP_DATE_NULL = '0000-12-31T21:29:43.000Z';
+
 export interface StyleProps {
   width?: number;
   minWidth?: number;
