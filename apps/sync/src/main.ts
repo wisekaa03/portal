@@ -13,10 +13,7 @@ import { AppModule } from './app.module';
 //#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
-  const logger = new Logger(
-    new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'), config.get<boolean>('DEVELOPMENT'))),
-    {},
-  );
+  const logger = new Logger(new PinoLogger(pinoOptions(config.get<string>('LOGLEVEL'), config.get<boolean>('DEVELOPMENT'))), {});
 
   const server = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     logger,
