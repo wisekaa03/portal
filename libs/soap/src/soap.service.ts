@@ -56,6 +56,7 @@ export class SoapService {
             workstation: connect.workstation,
             ntlm: true,
           },
+          ...connect.soapOptions,
         },
       };
     } else {
@@ -67,6 +68,7 @@ export class SoapService {
             password: connect.password,
             basic: true,
           },
+          ...connect.soapOptions,
         },
       };
     }

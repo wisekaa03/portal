@@ -13,6 +13,11 @@ type DocFlowFiles {
   name: String!
 }
 
+type DocFlowParentTask {
+  id: String
+  name: String
+}
+
 type DocFlowTask {
   id: String!
   name: String!
@@ -25,7 +30,7 @@ type DocFlowTask {
   endDate: Date
   files: [DocFlowFiles]
   description: String
-  parentTask: DocFlowTask
+  parentTask: DocFlowParentTask
   processStep: String
   executionComment: String
   author: DocFlowUser!

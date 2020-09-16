@@ -29,9 +29,10 @@ import {
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, soapError } from '@app/soap';
-import type { DocFlowTask } from '@lib/types/docflow';
+import type { DocFlowTask, DocFlowTaskSOAP, DocFlowTasksSOAP } from '@lib/types/docflow';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
+import { docFlowTask } from './docflow.utils';
 //#endregion
 
 const MockDocFlowGetTask = [
@@ -79,6 +80,9 @@ export class DocFlowService {
           password,
           domain: this.configService.get<string>('LDAP_DOMAIN'),
           ntlm: true,
+          soapOptions: {
+            namespaceArrayElements: false,
+          },
         })
         .catch((error: Error) => {
           throw error;
@@ -87,15 +91,70 @@ export class DocFlowService {
       if (client) {
         return client
           .executeAsync({
-            $xml: 'xsi:type="dm:DMGetObjectListRequest"',
-            request: {
-              dataBaseID: null,
-              type: 'DMBusinessProcessTask',
+            'tns:request': {
+              'attributes': {
+                'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                'xsi:type': 'tns:DMGetObjectListRequest',
+              },
+              'tns:dataBaseID': '',
+              'tns:type': 'DMBusinessProcessTask',
+              'tns:query': [
+                {
+                  'tns:conditions': {
+                    'tns:property': 'byUser',
+                    'tns:value': {
+                      attributes: {
+                        'xsi:type': 'xs:boolean',
+                      },
+                      $value: true,
+                    },
+                  },
+                },
+                {
+                  'tns:conditions': {
+                    'tns:property': 'typed',
+                    'tns:value': {
+                      attributes: {
+                        'xsi:type': 'xs:boolean',
+                      },
+                      $value: true,
+                    },
+                  },
+                },
+                {
+                  'tns:conditions': {
+                    'tns:property': 'withDelayed',
+                    'tns:value': {
+                      attributes: {
+                        'xsi:type': 'xs:boolean',
+                      },
+                      $value: false,
+                    },
+                  },
+                },
+                {
+                  'tns:conditions': {
+                    'tns:property': 'withExecuted',
+                    'tns:value': {
+                      attributes: {
+                        'xsi:type': 'xs:boolean',
+                      },
+                      $value: false,
+                    },
+                  },
+                },
+              ],
             },
           })
-          .then((result: DataResultSOAP<any>) => {
+          .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+
+            if (message[0]?.return) {
+              const result = message[0]?.return?.items?.map((task) => docFlowTask(task));
+
+              return result;
+            }
 
             throw new Error('Not connected to SOAP');
           })

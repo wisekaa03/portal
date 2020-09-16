@@ -13,6 +13,7 @@ export interface SoapConnect {
   domain?: string;
   workstation?: string;
   ntlm?: boolean;
+  soapOptions?: IOptions;
 }
 
 export interface SoapOptions {
