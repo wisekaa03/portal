@@ -25,6 +25,7 @@ import { User } from '@lib/types';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { CacheInterceptorProvider } from '@app/cache.interceptor';
+import { SoapModule } from '@app/soap';
 
 import { DateScalar } from '@back/shared/date.scalar';
 import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
@@ -228,6 +229,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
       },
     }),
     //#endregion
+
+    SoapModule,
 
     //#region Profile
     ProfileModule,

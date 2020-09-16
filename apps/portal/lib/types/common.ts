@@ -10,10 +10,10 @@ export interface Data<K, T> {
   [K: string]: T;
 }
 
-interface DataResult_return<K> {
+interface DataResultReturn<K> {
   return?: K;
 }
 
 export interface DataResultSOAP<K> {
-  0?: DataResult_return<K>;
+  0?: DataResultReturn<K>;
 }

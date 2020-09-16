@@ -29,7 +29,7 @@ import type {
 import { TkWhere } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault, soapError, SoapAuthentication } from '@app/soap';
+import { SoapService, SoapFault, soapError, SoapConnect } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
 import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
@@ -61,18 +61,21 @@ export class TicketsService {
     const promises: Promise<TkRoutes>[] = [];
 
     /* 1C SOAP */
-    if (this.configService.get<string>('TICKETS_URL')) {
-      const authentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      } as SoapAuthentication;
-
+    const soapUrl = this.configService.get<string>('TICKETS_URL');
+    if (soapUrl) {
       // TODO: cache
 
-      const client = await this.soapService.connect(authentication).catch((error: Error) => {
-        promises.push(Promise.resolve({ errors: [error.toString()] }));
-      });
+      const client = await this.soapService
+        .connect({
+          url: soapUrl,
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error: Error) => {
+          promises.push(Promise.resolve({ errors: [error.toString()] }));
+        });
 
       if (client) {
         promises.push(
@@ -186,18 +189,21 @@ export class TicketsService {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
-    if (this.configService.get<string>('TICKETS_URL')) {
-      const authentication: SoapAuthentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      };
-
+    const soapUrl = this.configService.get<string>('TICKETS_URL');
+    if (soapUrl) {
       // TODO: cache
 
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        promises.push(Promise.resolve({ errors: [JSON.stringify(error)] }));
-      });
+      const client = await this.soapService
+        .connect({
+          url: soapUrl,
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error) => {
+          promises.push(Promise.resolve({ errors: [JSON.stringify(error)] }));
+        });
 
       if (client) {
         promises.push(
@@ -374,15 +380,17 @@ export class TicketsService {
 
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
-      const authentication: SoapAuthentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      };
-
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        throw error;
-      });
+      const client = await this.soapService
+        .connect({
+          url: this.configService.get<string>('TICKETS_URL'),
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error) => {
+          throw error;
+        });
 
       return client
         .NewTaskAsync({
@@ -500,17 +508,19 @@ export class TicketsService {
   TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C && task.code) {
-      const authentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      } as SoapAuthentication;
-
       // TODO: cache
 
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        throw error;
-      });
+      const client = await this.soapService
+        .connect({
+          url: this.configService.get<string>('TICKETS_URL'),
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error) => {
+          throw error;
+        });
 
       return client
         .GetTaskDescriptionAsync({
@@ -622,17 +632,19 @@ export class TicketsService {
   ): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
-      const authentication: SoapAuthentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      };
-
       // TODO: cache
 
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        throw error;
-      });
+      const client = await this.soapService
+        .connect({
+          url: this.configService.get<string>('TICKETS_URL'),
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error) => {
+          throw error;
+        });
 
       const Attaches: AttachesSOAP = { Вложение: [] };
 
@@ -696,17 +708,19 @@ export class TicketsService {
   TicketsTaskFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.id) {
-      const authentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      } as SoapAuthentication;
-
       // TODO: cache
 
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        throw error;
-      });
+      const client = await this.soapService
+        .connect({
+          url: this.configService.get<string>('TICKETS_URL'),
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error) => {
+          throw error;
+        });
 
       return client
         .GetTaskFileAsync({
@@ -806,17 +820,19 @@ export class TicketsService {
   TicketsCommentFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.id) {
-      const authentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      } as SoapAuthentication;
-
       // TODO: cache
 
-      const client = await this.soapService.connect(authentication).catch((error) => {
-        throw error;
-      });
+      const client = await this.soapService
+        .connect({
+          url: this.configService.get<string>('TICKETS_URL'),
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error) => {
+          throw error;
+        });
 
       return client
         .GetCommentFileAsync({

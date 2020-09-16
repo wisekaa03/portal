@@ -28,7 +28,7 @@ import {
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault, soapError, SoapAuthentication } from '@app/soap';
+import { SoapService, SoapFault, soapError } from '@app/soap';
 import type { DocFlowTask } from '@lib/types/docflow';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
@@ -70,21 +70,24 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   DocFlowGetTasks = async (user: User, password: string): Promise<DocFlowTask[]> => {
-    if (this.configService.get<string>('DOCFLOW_URL')) {
-      const authentication = {
-        username: user?.username,
-        password,
-        domain: this.configService.get<string>('LDAP_DOMAIN'),
-      } as SoapAuthentication;
-
-      const client = await this.soapService.connect(authentication).catch((error: Error) => {
-        throw error;
-      });
+    const soapUrl = this.configService.get<string>('DOCFLOW_URL');
+    if (soapUrl) {
+      const client = await this.soapService
+        .connect({
+          url: soapUrl,
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+        })
+        .catch((error: Error) => {
+          throw error;
+        });
 
       if (client) {
         return client
-          .execute({
-            $value: 'xsi:type="dm:DMGetObjectListRequest"',
+          .executeAsync({
+            $xml: 'xsi:type="dm:DMGetObjectListRequest"',
             request: {
               dataBaseID: null,
               type: 'DMBusinessProcessTask',

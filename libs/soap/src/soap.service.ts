@@ -2,13 +2,13 @@
 /* eslint max-classes-per-file:0 */
 
 //#region Imports NPM
-import { Injectable, Inject, Scope } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { SoapOptions, SOAP_OPTIONS, SoapAuthentication } from './soap.interface';
+import type { SoapOptions, SoapConnect } from './soap.interface';
 //#endregion
 
 export type SoapClient = Client;
@@ -22,7 +22,7 @@ export function soapError(error: ISoapFaultError | Error): string {
     : (error.Fault as ISoapFault12).Reason.Text;
 }
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class SoapService {
   /**
    * Create an LDAP class.
@@ -30,41 +30,51 @@ export class SoapService {
    * @param {Object} options - Config options
    * @constructor
    */
-  constructor(
-    @Inject(SOAP_OPTIONS) public readonly options: SoapOptions,
-    @InjectPinoLogger(SoapService.name) private readonly logger: PinoLogger,
-    private readonly configService: ConfigService,
-  ) {
-    // eslint-disable-next-line no-debugger
-    debugger;
-  }
+  constructor(@InjectPinoLogger(SoapService.name) private readonly logger: PinoLogger, private readonly configService: ConfigService) {}
 
   /**
    * Connect the SOAP service
    *
-   * @param {SoapAuthentication} authentication SOAP authentication
+   * @param {SoapConnect} connect: url, username, password, ntlm
    * @returns {SoapClient} Client with the needed SOAP functions
    * @throws {Error}
    */
-  async connect(authentication?: SoapAuthentication): Promise<SoapClient> {
-    if (authentication && authentication.username && authentication.password) {
-      this.options.options = {
-        ...this.options.options,
+  async connect(connect: SoapConnect): Promise<SoapClient> {
+    let options: SoapOptions;
 
-        wsdl_headers: {
-          connection: 'keep-alive',
+    if (connect.ntlm) {
+      options = {
+        url: connect.url,
+        options: {
+          wsdl_headers: {
+            connection: 'keep-alive',
+          },
+          wsdl_options: {
+            username: connect.username,
+            password: connect.password,
+            domain: connect.domain,
+            workstation: connect.workstation,
+            ntlm: true,
+          },
         },
-        wsdl_options: {
-          ntlm: true,
-          ...authentication,
+      };
+    } else {
+      options = {
+        url: connect.url,
+        options: {
+          wsdl_options: {
+            username: connect.username,
+            password: connect.password,
+            basic: true,
+          },
         },
       };
     }
 
-    return createClientAsync(this.options.url, this.options.options, this.options.endpoint)
+    return createClientAsync(options.url, options.options, options.endpoint)
       .then((client: Client) => {
-        if (this.options.options?.wsdl_options?.ntlm) {
-          client.setSecurity(new NTLMSecurity(this.options.options.wsdl_options));
+        if (connect.ntlm) {
+          client.setSecurity(new NTLMSecurity(connect));
         }
         return client as SoapClient;
       })
