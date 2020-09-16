@@ -4,7 +4,7 @@
 import { Module, HttpModule } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
 import { SoapModule } from '@app/soap';
 import { ReportsResolver } from './reports.resolver';
 import { ReportsService } from './reports.service';
@@ -14,7 +14,6 @@ import { ReportsService } from './reports.service';
   imports: [
     SoapModule.registerAsync({
       name: 'REPORT',
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         url: configService.get<string>('REPORTS_URL'),

@@ -4,7 +4,7 @@
 import { Module, HttpModule } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
 import { SoapModule } from '@app/soap';
 import { DocFlowResolver } from './docflow.resolver';
 import { DocFlowService } from './docflow.service';
@@ -14,7 +14,6 @@ import { DocFlowService } from './docflow.service';
   imports: [
     SoapModule.registerAsync({
       name: 'DOCFLOW',
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         url: configService.get<string>('DOCFLOW_URL'),
@@ -29,7 +28,6 @@ import { DocFlowService } from './docflow.service';
         },
       }),
     }),
-
     HttpModule,
   ],
 

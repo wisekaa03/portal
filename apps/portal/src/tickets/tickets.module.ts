@@ -4,7 +4,7 @@
 import { Module, HttpModule } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
 import { SoapModule } from '@app/soap';
 import { TicketsResolver } from './tickets.resolver';
 import { TicketsService } from './tickets.service';
@@ -14,7 +14,6 @@ import { TicketsService } from './tickets.service';
   imports: [
     SoapModule.registerAsync({
       name: 'TICKETS',
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         url: configService.get<string>('TICKETS_URL'),
@@ -29,7 +28,6 @@ import { TicketsService } from './tickets.service';
         },
       }),
     }),
-
     HttpModule,
   ],
 
