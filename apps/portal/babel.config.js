@@ -234,56 +234,6 @@ module.exports = function (api) {
     // config.env.production.plugins.push('minify-builtins');
     // TODO: разобраться почему navbar не работает при включенном
     // config.env.production.plugins.push('minify-simplify');
-  } else if (process.env.NODE_ENV === 'development') {
-    // For variable assignments, this removes rvals that evaluate to undefined (vars in functions only).
-    // For functions, this removes return arguments that evaluate to undefined.
-    config.env.development.plugins.push('transform-remove-undefined');
-    // This plugin inlines consecutive property assignments, array pushes, etc.
-    config.env.development.plugins.push('transform-inline-consecutive-adds');
-    // Ensure that reserved words are quoted in property accesses
-    config.env.development.plugins.push('transform-member-expression-literals');
-    // This plugin allows Babel to transform boolean literals into !0 for true and !1 for false.
-    config.env.development.plugins.push('transform-minify-booleans');
-    // Inlines bindings when possible. Tries to evaluate expressions and prunes unreachable as a result.
-    config.env.development.plugins.push(['minify-dead-code-elimination', { keepFnName: true, keepFnArgs: false, keepClassName: false }]);
-    // Configurable "search and replace" plugin. Replaces matching nodes in the tree with
-    // a given replacement node. For example you can replace process.NODE_ENV with "production"
-    config.env.development.plugins.push([
-      'minify-replace',
-      {
-        replacements: [
-          {
-            identifierName: '__DEV__',
-            replacement: {
-              type: 'numericLiteral',
-              value: 0,
-            },
-          },
-          {
-            identifierName: 'process.env.NODE_ENV',
-            replacement: {
-              type: 'stringLiteral',
-              value: 'production',
-            },
-          },
-        ],
-      },
-    ]);
-    // In: Infinity; Out: 1/0;
-    config.env.development.plugins.push('minify-infinity');
-    // In: [1000, -2000]; Out: [1e3, -2e4]
-    config.env.development.plugins.push('minify-numeric-literals');
-    // In: Boolean(x); Out: !!x;
-    config.env.development.plugins.push('minify-type-constructors');
-    // Ensure that reserved words are quoted in object property keys
-    config.env.development.plugins.push('transform-property-literals');
-    // // In: typeof foo === 'object'; Out: typeof foo == 'object';
-    config.env.development.plugins.push('transform-simplify-comparison-operators');
-    // // This plugin transforms undefined into void 0 which returns undefined regardless of if it's been reassigned.
-    config.env.development.plugins.push('transform-undefined-to-void');
-
-    // In: if (bar !== null); Out: if (null !== bar);
-    config.env.development.plugins.push('minify-flip-comparisons');
   }
   //#endregion
 

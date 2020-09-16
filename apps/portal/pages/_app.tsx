@@ -28,7 +28,8 @@ import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { changeFontSize } from '@lib/font-size';
 import getRedirect from '@lib/get-redirect';
 
-import 'jodit/build/jodit.min.css';
+// TODO:
+// import 'jodit/build/jodit.min.css';
 //#endregion
 
 /**

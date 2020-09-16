@@ -1,5 +1,5 @@
 /** @format */
-/*eslint no-param-reassign:0,@typescript-eslint/explicit-function-return-type:0,@typescript-eslint/no-var-requires:0*/
+/* eslint no-param-reassign:0, @typescript-eslint/explicit-function-return-type:0, @typescript-eslint/no-var-requires:0 */
 
 //#region Imports NPM
 const { resolve } = require('path');
@@ -22,10 +22,10 @@ const Webpack = require('webpack');
 const resolveTsconfigPaths = require('../../tsconfig-paths-to-webpack-alias');
 //#endregion
 
-function withCustomWebpack(config = {}) {
-  const { webpack } = config;
+function withCustomWebpack(c = {}) {
+  const { webpack } = c;
 
-  config.webpack = (config, { isServer, buildId, dev /* , defaultLoaders */, ...rest }) => {
+  c.webpack = (config, { isServer, buildId, dev /* , defaultLoaders */, ...rest }) => {
     config.resolve = {
       ...(config.resolve || []),
       alias: {
@@ -76,7 +76,7 @@ function withCustomWebpack(config = {}) {
     return webpack(config, { isServer, buildId, dev, ...rest });
   };
 
-  return config;
+  return c;
 }
 
 const plugins = [
