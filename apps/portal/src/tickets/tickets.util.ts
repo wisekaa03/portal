@@ -129,6 +129,7 @@ export const serviceSOAP = (service: TicketsServiceSOAP, where: TkWhere): TkServ
 export const routeSOAP = (route: TicketsRouteSOAP, where: TkWhere): TkRoute | undefined =>
   route && Object.keys(route).length > 0
     ? {
+        id: `${whereService(where)}.${route['Код']}`,
         where: whereService(where),
         code: route['Код'],
         name: route['Наименование'],

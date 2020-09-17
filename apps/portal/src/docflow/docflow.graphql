@@ -46,6 +46,10 @@ type DocFlowTask {
   state: DocFlowState
 }
 
+input DocFlowTasksInput {
+  cache: Boolean
+}
+
 type Query {
-  DocFlowGetTasks: [DocFlowTask!]
+  DocFlowGetTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
 }

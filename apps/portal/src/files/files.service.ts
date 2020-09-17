@@ -25,6 +25,7 @@ interface CachedObject {
 @Injectable()
 export class FilesService {
   nextCloud: NextcloudClient;
+
   private ttl: number;
   private cacheStore: cacheManager.Store;
   private cache: cacheManager.Cache;

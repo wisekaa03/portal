@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { useState, useContext, useMemo, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, QueryResult } from '@apollo/client';
+import { useQuery, QueryResult, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
@@ -23,13 +23,16 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     loading: loadingDocFlowTasks,
     data: dataDocFlowTasks,
     error: errorDocFlowTasks,
-    refetch: tasksDocFlowTasks,
+    refetch: refetchDocFlowTasksInt,
   }: QueryResult<Data<'DocFlowGetTasks', DocFlowTask[]>> = useQuery(DOCFLOW_GET_TASKS, {
     ssr: false,
     fetchPolicy: 'cache-and-network',
     // notifyOnNetworkStatusChange: true,
   });
 
+  const refetchDocFlowTasks = (
+    variables?: Partial<Record<string, any>> | undefined,
+  ): Promise<ApolloQueryResult<Data<'DocFlowGetTasks', DocFlowTask[]>>> => refetchDocFlowTasksInt({ ...variables, cache: false });
   const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.DocFlowGetTasks ?? [], [dataDocFlowTasks]);
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('docflow:title')}</title>
       </Head>
-      <MaterialUI refetchComponent={tasksDocFlowTasks} {...rest}>
+      <MaterialUI refetchComponent={refetchDocFlowTasks} {...rest}>
         <DocFlowTasksComponent
           loading={loadingDocFlowTasks}
           tasks={tasks}

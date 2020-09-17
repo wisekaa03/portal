@@ -8,6 +8,7 @@ import { FileUpload } from 'graphql-upload';
 //#region Imports Local
 import type {
   TkRoutes,
+  TkRoutesInput,
   TkTasks,
   TkTasksInput,
   TkEditTask,
@@ -38,12 +39,16 @@ export class TicketsResolver {
    */
   @Query('TicketsRoutes')
   @UseGuards(GqlAuthGuard)
-  async TicketsRoutes(@CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<TkRoutes> {
+  async TicketsRoutes(
+    @Args('routes') routes?: TkRoutesInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<TkRoutes> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsRoutes(user, password).catch((error: Error) => {
+    return this.ticketsService.TicketsRoutesCache(user, password, routes).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -67,7 +72,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTasks(user, password, tasks).catch((error: Error) => {
+    return this.ticketsService.TicketsTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

@@ -142,6 +142,12 @@ helm_development:
         --set TICKETS_URL="${TICKETS_URL}" \
         --set REPORTS_URL="${REPORTS_URL}" \
         --set DOCFLOW_URL="${DOCFLOW_URL}" \
+        --set TICKETS_REDIS_URI="${TICKETS_REDIS_URI}" \
+        --set TICKETS_REDIS_TTL="${TICKETS_REDIS_TTL}" \
+        --set REPORTS_REDIS_URI="${REPORTS_REDIS_URI}" \
+        --set REPORTS_REDIS_TTL="${REPORTS_REDIS_TTL}" \
+        --set DOCFLOW_REDIS_URI="${DOCFLOW_REDIS_URI}" \
+        --set DOCFLOW_REDIS_TTL="${DOCFLOW_REDIS_TTL}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
@@ -230,6 +236,12 @@ helm_production:
         --set TICKETS_URL="${TICKETS_URL}" \
         --set REPORTS_URL="${REPORTS_URL}" \
         --set DOCFLOW_URL="${DOCFLOW_URL}" \
+        --set TICKETS_REDIS_URI="${TICKETS_REDIS_URI}" \
+        --set TICKETS_REDIS_TTL="${TICKETS_REDIS_TTL}" \
+        --set REPORTS_REDIS_URI="${REPORTS_REDIS_URI}" \
+        --set REPORTS_REDIS_TTL="${REPORTS_REDIS_TTL}" \
+        --set DOCFLOW_REDIS_URI="${DOCFLOW_REDIS_URI}" \
+        --set DOCFLOW_REDIS_TTL="${DOCFLOW_REDIS_TTL}" \
         --set OSTICKET_URL="${OSTICKET_URL}" \
         --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
         --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \

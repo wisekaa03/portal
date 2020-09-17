@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback, useContext, Component } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { ProfileContext } from '@lib/context';
@@ -48,14 +48,22 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
     USER_SETTINGS,
   );
 
-  const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutes } = useQuery<
+  const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutesInt } = useQuery<
     Data<'TicketsRoutes', TkRoutes>,
-    void
+    { cache?: boolean }
   >(TICKETS_ROUTES, {
     ssr: false,
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
+
+  const refetchRoutes = async (
+    variables?:
+      | Partial<{
+          cache?: boolean | undefined;
+        }>
+      | undefined,
+  ): Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>> => refetchRoutesInt({ ...variables, cache: false });
 
   const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'TicketsTaskNew', TkTaskNew>>(
     TICKETS_TASK_NEW,

@@ -53,6 +53,12 @@ data:
     TICKETS_URL={{ .Values.TICKETS_URL | quote }}
     REPORTS_URL={{ .Values.REPORTS_URL | quote }}
     DOCFLOW_URL={{ .Values.DOCFLOW_URL | quote }}
+    TICKETS_REDIS_URI={{ .Values.TICKETS_REDIS_URI | quote }}
+    TICKETS_REDIS_TTL={{ .Values.TICKETS_REDIS_TTL | quote }}
+    REPORTS_REDIS_URI={{ .Values.REPORTS_REDIS_URI | quote }}
+    REPORTS_REDIS_TTL={{ .Values.REPORTS_REDIS_TTL | quote }}
+    DOCFLOW_REDIS_URI={{ .Values.DOCFLOW_REDIS_URI | quote }}
+    DOCFLOW_REDIS_TTL={{ .Values.DOCFLOW_REDIS_TTL | quote }}
     OSTICKET_URL={{ .Values.OSTICKET_URL }}
 
     NEXTCLOUD_URL={{ .Values.NEXTCLOUD_URL | quote }}

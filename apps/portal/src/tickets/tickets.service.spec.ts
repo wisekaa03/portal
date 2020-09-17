@@ -23,7 +23,15 @@ describe(TicketsService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule.forRoot(), HttpModule],
-      providers: [ConfigService, TicketsService, { provide: SoapService, useValue: serviceMock }],
+      providers: [
+        ConfigService,
+        TicketsService,
+        {
+          provide: 'PUB_SUB',
+          useValue: serviceMock,
+        },
+        { provide: SoapService, useValue: serviceMock },
+      ],
     }).compile();
 
     service = module.get<TicketsService>(TicketsService);

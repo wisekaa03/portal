@@ -1,9 +1,12 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, HttpService } from '@nestjs/common';
+import { Inject, Injectable, HttpService } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import * as cacheManager from 'cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
 import type {
@@ -26,13 +29,14 @@ import type {
   TicketsSOAPGetTasks,
   TicketsSOAPGetTaskDescription,
 } from '@lib/types/tickets';
-import { TkWhere } from '@lib/types/tickets';
+import { TkWhere, TkRoutesInput } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, soapError, SoapConnect } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
 import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
+
 //#endregion
 
 /**
@@ -41,12 +45,30 @@ import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, rou
  */
 @Injectable()
 export class TicketsService {
+  private ttl: number;
+  private cacheStore: cacheManager.Store;
+  private cache: cacheManager.Cache;
+
   constructor(
     @InjectPinoLogger(TicketsService.name) private readonly logger: PinoLogger,
+    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
     private readonly httpService: HttpService,
-  ) {}
+  ) {
+    this.ttl = configService.get<number>('TICKETS_REDIS_TTL') || 900;
+    if (configService.get<string>('TICKETS_REDIS_URI')) {
+      this.cacheStore = redisStore.create({
+        prefix: 'TICKETS',
+        url: configService.get<string>('TICKETS_REDIS_URI'),
+      });
+      this.cache = cacheManager.caching({
+        store: this.cacheStore,
+        ttl: this.ttl,
+      });
+      logger.info('Redis connection: success');
+    }
+  }
 
   /**
    * Tickets: get array of routes and services
@@ -57,14 +79,12 @@ export class TicketsService {
    * @param {string} password The Password
    * @returns {TkRoutes[]} Services
    */
-  TicketsRoutes = async (user: User, password: string): Promise<TkRoutes> => {
+  TicketsRoutes = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
     const promises: Promise<TkRoutes>[] = [];
 
     /* 1C SOAP */
     const soapUrl = this.configService.get<string>('TICKETS_URL');
     if (soapUrl) {
-      // TODO: cache
-
       const client = await this.soapService
         .connect({
           url: soapUrl,
@@ -175,6 +195,43 @@ export class TicketsService {
   };
 
   /**
+   * Tickets (cache): get array of routes and services
+   *
+   * @async
+   * @method TicketsRoutesCache
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @returns {TkRoutes[]} Services
+   */
+  TicketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
+    const cachedID = `${user.loginIdentificator}-tickets-routes`;
+    if (this.cache && (!input || input.cache !== false)) {
+      const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
+      if (cached && cached !== null) {
+        (async (): Promise<void> => {
+          const ticketsRoutes = await this.TicketsRoutes(user, password, input);
+          this.pubSub.publish('TicketsRoutes', {
+            user: user.loginIdentificator,
+            ticketsRoutes,
+          });
+          this.cache.set(cachedID, ticketsRoutes, this.ttl);
+        })();
+
+        return cached;
+      }
+    }
+
+    const ticketsRoutes = await this.TicketsRoutes(user, password, input);
+    this.pubSub.publish('TicketsRoutes', { user: user.loginIdentificator, ticketsRoutes });
+
+    if (this.cache) {
+      this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
+    }
+
+    return ticketsRoutes;
+  };
+
+  /**
    * Tasks list
    *
    * @async
@@ -191,8 +248,6 @@ export class TicketsService {
     /* 1C SOAP */
     const soapUrl = this.configService.get<string>('TICKETS_URL');
     if (soapUrl) {
-      // TODO: cache
-
       const client = await this.soapService
         .connect({
           url: soapUrl,
@@ -352,6 +407,45 @@ export class TicketsService {
       .catch((error: TypeError) => {
         throw error;
       });
+  };
+
+  /**
+   * Tasks list (cache)
+   *
+   * @async
+   * @method TicketsTasksCache
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {string} Status The status
+   * @param {string} Find The find string
+   * @returns {TkTasks[]}
+   */
+  TicketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
+    const cachedID = `${user.loginIdentificator}-tickets-tasks`;
+    if (this.cache && (!tasks || tasks.cache !== false)) {
+      const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
+      if (cached && cached !== null) {
+        (async (): Promise<void> => {
+          const ticketsTasks = await this.TicketsTasks(user, password, tasks);
+          this.pubSub.publish('TicketsTasks', {
+            user: user.loginIdentificator,
+            ticketsTasks,
+          });
+          this.cache.set(cachedID, ticketsTasks, this.ttl);
+        })();
+
+        return cached;
+      }
+    }
+
+    const ticketsTasks = await this.TicketsTasks(user, password, tasks);
+    this.pubSub.publish('TicketsTasks', { user: user.loginIdentificator, ticketsTasks });
+
+    if (this.cache) {
+      this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
+    }
+
+    return ticketsTasks;
   };
 
   /**

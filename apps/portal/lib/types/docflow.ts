@@ -79,6 +79,10 @@ export interface DocFlowTask {
   files?: DocFlowFile[];
 }
 
+export interface DocFlowTasksInput {
+  cache?: boolean;
+}
+
 export interface DocFlowFileSOAP {
   allowDeletion: boolean;
   name: string;

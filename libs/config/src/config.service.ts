@@ -96,8 +96,16 @@ export class ConfigService {
       MICROSERVICE_URL: Joi.string().required(),
 
       TICKETS_URL: Joi.string().uri().empty('').optional(),
+      TICKETS_REDIS_TTL: Joi.number().empty('').default(60).optional(),
+      TICKETS_REDIS_URI: Joi.string().empty('').optional(),
+
       REPORTS_URL: Joi.string().uri().empty('').optional(),
+      REPORTS_REDIS_TTL: Joi.number().empty('').default(60).optional(),
+      REPORTS_REDIS_URI: Joi.string().empty('').optional(),
+
       DOCFLOW_URL: Joi.string().uri().empty('').optional(),
+      DOCFLOW_REDIS_TTL: Joi.number().empty('').default(60).optional(),
+      DOCFLOW_REDIS_URI: Joi.string().empty('').optional(),
 
       OSTICKET_URL: Joi.any().empty('').optional(),
 

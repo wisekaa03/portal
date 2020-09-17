@@ -33,12 +33,17 @@ export interface TkRoutes {
   errors?: string[];
 }
 
+export interface TkRoutesInput {
+  cache?: boolean;
+}
+
 export interface TkTasksInput {
   status?: string;
   find?: string;
   where?: string;
   serviceId?: string;
   routeId?: string;
+  cache?: boolean;
 }
 
 export interface TkFile {
@@ -111,6 +116,7 @@ export interface TkTaskEditInput {
 export interface TkTaskDescriptionInput {
   where: TkWhere;
   code: string;
+  cache?: boolean;
 }
 
 export interface TkFileInput {
