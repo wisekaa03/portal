@@ -181,11 +181,9 @@ export class FilesService {
               ({
                 id: f.extraProperties?.id,
                 fileId: f.extraProperties?.fileid,
-                creationDate:
-                  f.creationDate && typeof f.creationDate === 'string' ? new Date(f.creationDate) : f.creationDate,
-                lastModified:
-                  f.lastModified && typeof f.lastModified === 'string' ? new Date(f.lastModified) : f.lastModified,
-                size: f.extraProperties?.['size'] || f.size,
+                creationDate: f.creationDate && typeof f.creationDate === 'string' ? new Date(f.creationDate) : f.creationDate,
+                lastModified: f.lastModified && typeof f.lastModified === 'string' ? new Date(f.lastModified) : f.lastModified,
+                size: f.extraProperties?.size || f.size,
                 name: f.name,
                 type: f.type === 'directory' ? Folder.FOLDER : Folder.FILE,
                 mime: f.extraProperties?.getcontenttype,
@@ -199,10 +197,10 @@ export class FilesService {
                 ownerDisplayName: f.extraProperties?.['owner-display-name'],
                 mount: f.extraProperties?.['mount-type'],
                 resourceType:
-                  f.extraProperties?.['resourcetype'] &&
-                  Array.isArray(f.extraProperties['resourcetype']) &&
-                  f.extraProperties['resourcetype'].length > 0
-                    ? f.extraProperties.resourcetype.map((element) => element['collection'])
+                  f.extraProperties?.resourcetype &&
+                  Array.isArray(f.extraProperties.resourcetype) &&
+                  f.extraProperties.resourcetype.length > 0
+                    ? f.extraProperties.resourcetype.map((element) => element.collection)
                     : [],
                 shareTypes:
                   f.extraProperties?.['share-types'] &&
@@ -290,13 +288,7 @@ export class FilesService {
    * @return {FilesFile}
    * @throws {Error}
    */
-  getFile = async (
-    path: string,
-    user: User,
-    password: string,
-    options?: FilesOptions,
-    cache = true,
-  ): Promise<FilesFile> => {
+  getFile = async (path: string, user: User, password: string, options?: FilesOptions, cache = true): Promise<FilesFile> => {
     this.logger.info(`Get files: path={${path}}`);
 
     const cachedID = `${user.loginIdentificator}-g-${path}`;
@@ -338,9 +330,9 @@ export class FilesService {
       if (!nc) {
         throw new Error(`Files: not found: ${path}`);
       }
-      await new Promise((resolve) =>
+      await new Promise((res) =>
         nc.on('finish', (callback: () => void) => {
-          resolve(callback);
+          res(callback);
         }),
       );
     }
