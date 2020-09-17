@@ -1,15 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, {
-  useRef,
-  forwardRef,
-  Component,
-  RefForwardingComponent,
-  useMemo,
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React, { useRef, forwardRef, Component, RefForwardingComponent, useMemo, useEffect, useLayoutEffect } from 'react';
 // import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
 import { Jodit, ButtonsOption, IDictionary } from 'jodit';
@@ -140,7 +132,7 @@ const JoditEditorComponent: RefForwardingComponent<HTMLTextAreaElement, JoditEdi
         ref.current = textArea.current;
       }
     }
-  }, [textArea]);
+  }, [textArea, ref]);
 
   useLayoutEffect(() => {
     const element = textArea.current;
@@ -165,7 +157,9 @@ const JoditEditorComponent: RefForwardingComponent<HTMLTextAreaElement, JoditEdi
         textArea.current = element;
       };
     }
-  }, [config]);
+
+    return undefined;
+  }, [config, id, name, onBlur, onChange, tabIndex, value]);
 
   useEffect(() => {
     if (textArea?.current && textArea.current.value !== value) {
@@ -173,7 +167,7 @@ const JoditEditorComponent: RefForwardingComponent<HTMLTextAreaElement, JoditEdi
     }
   }, [textArea, value]);
 
-  return <textarea ref={textArea}></textarea>;
+  return <textarea ref={textArea} />;
 };
 
 export default withStyles(styles)(forwardRef(JoditEditorComponent));

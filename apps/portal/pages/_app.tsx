@@ -15,6 +15,9 @@ import { SnackbarProvider } from 'notistack';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
+
+// TODO:
+// import 'jodit/build/jodit.es2018.min.css';
 //#endregion
 //#region Imports Local
 import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
@@ -27,9 +30,6 @@ import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
 import { changeFontSize } from '@lib/font-size';
 import getRedirect from '@lib/get-redirect';
-
-// TODO:
-// import 'jodit/build/jodit.min.css';
 //#endregion
 
 /**
