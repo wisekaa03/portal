@@ -655,3 +655,50 @@ export const TICKETS_COMMENT_FILE = gql`
   }
   ${TICKETS_TASK_COMMENTS}
 `;
+
+/**
+ * DocFlow
+ */
+
+export const DOCFLOW_GET_TASKS = gql`
+  query DocFlowGetTasks {
+    DocFlowGetTasks {
+      id
+      name
+      importance {
+        id
+        name
+      }
+      executor {
+        id
+        name
+      }
+      executed
+      executionMark
+      beginDate
+      dueDate
+      endDate
+      files {
+        id
+        name
+      }
+      description
+      parentTask {
+        id
+        name
+      }
+      processStep
+      executionComment
+      author {
+        id
+        name
+      }
+      accepted
+      acceptDate
+      state {
+        id
+        name
+      }
+    }
+  }
+`;

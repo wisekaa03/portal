@@ -13,6 +13,6 @@ export class TaskController {
   @Get(':where/:code')
   @UseGuards(SessionGuard)
   public async task(@Res() response: RenderableResponse, @Param('where') where: string, @Param('code') code: string): Promise<void> {
-    response.render('task', { where, code });
+    response.render('tickets/task', { where, code });
   }
 }

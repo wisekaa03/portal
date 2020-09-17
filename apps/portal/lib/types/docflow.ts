@@ -1,5 +1,16 @@
 /** @format */
 
+import type React from 'react';
+
+export interface DocFlowTasksComponentProps {
+  loading: boolean;
+  tasks: DocFlowTask[];
+  status: string;
+  find: string;
+  handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
+  handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 export interface DocFlowUser {
   id: string;
   name: string;

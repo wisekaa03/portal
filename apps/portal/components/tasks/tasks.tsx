@@ -17,10 +17,7 @@ import type { TasksComponentProps, TasksCardProps } from '@lib/types';
 import { Icon } from '@front/components/ui/icon';
 // import Select from '@front/components/ui/select';
 import Search from '@front/components/ui/search';
-import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
-// import RefreshButton from '@front/components/ui/refresh-button';
-// import TaskPage from '@front/pages/task';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
