@@ -3,15 +3,75 @@
 //#region Imports NPM
 import React, { FC, useRef } from 'react';
 import { Theme, fade, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
-import { Box, InputBase, Card, CardActionArea, CardContent, Typography, Divider } from '@material-ui/core';
+import {
+  Box,
+  InputBase,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+  Divider,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
+  TableCell,
+  TablePagination,
+} from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import type { DocFlowTasksComponentProps } from '@lib/types/docflow';
+import type { DocFlowTasksComponentProps, DocFlowTasksTableProps, DocFlowTasksColumn } from '@lib/types/docflow';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
 //#endregion
+
+const DocFlowTasksTable = withStyles((theme) => ({
+  container: {
+    maxHeight: '100vh',
+  },
+}))(({ classes, columns, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, tasks }: DocFlowTasksTableProps) => (
+  <>
+    <TableContainer className={classes.container}>
+      <Table stickyHeader aria-label="sticky table">
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                {column.label}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
+            <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
+              {columns.map((column) => {
+                const value = task[column.id];
+                return (
+                  <TableCell key={column.id} align={column.align}>
+                    {column.format && typeof value === 'number' ? column.format(value) : value}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <TablePagination
+      rowsPerPageOptions={[10, 25, 100]}
+      component="div"
+      count={tasks.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onChangePage={handleChangePage}
+      onChangeRowsPerPage={handleChangeRowsPerPage}
+    />
+  </>
+));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,12 +85,37 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const columns: DocFlowTasksColumn[] = [
+  {
+    id: 'name',
+    label: 'Name',
+    minWidth: 170,
+  },
+  {
+    id: 'beginDate',
+    label: 'Date',
+    minWidth: 100,
+  },
+];
+
 const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
-  const ticketBox = useRef(null);
+  const tasksBox = useRef(null);
 
-  const maxHeight = ticketBox.current ? `calc(100vh - ${(ticketBox.current as any)?.offsetTop}px)` : '100%';
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const maxHeight = tasksBox.current ? `calc(100vh - ${(tasksBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
     <Box display="flex" flexDirection="column">
@@ -38,7 +123,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
         <Search value={find} handleChange={handleSearch} />
       </Box>
       <BoxWithRef
-        ref={ticketBox}
+        ref={tasksBox}
         overflow="auto"
         style={{ maxHeight }}
         display="flex"
@@ -47,13 +132,22 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
         my={2}
         marginTop="0"
         marginBottom="0"
-        padding="16px 0 0 16px"
+        padding="0"
         alignItems="stretch"
         justifyContent="flex-start"
         alignContent="flex-start"
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-          {tasks.length > 0 ? null : ( // tasks.map((task) => task && <TasksCard key={`${task.where}.${task.code}`} task={task} />)
+          {tasks.length > 0 ? (
+            <DocFlowTasksTable
+              page={page}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              columns={columns}
+              tasks={tasks}
+            />
+          ) : (
             <Typography className={classes.notFounds} variant="h4">
               {t('docflow:task.notFounds')}
             </Typography>

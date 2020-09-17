@@ -35,19 +35,6 @@ import { DataResultSOAP } from '@lib/types/common';
 import { docFlowTask } from './docflow.utils';
 //#endregion
 
-const MockDocFlowGetTask = [
-  {
-    task: 'Test 0001',
-    author: 'What?',
-    date: new Date(),
-  },
-  {
-    task: 'Test 0002',
-    author: 'What?',
-    date: new Date(),
-  },
-];
-
 /**
  * Tickets class
  * @class
@@ -58,7 +45,6 @@ export class DocFlowService {
     @InjectPinoLogger(DocFlowService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
-    private readonly httpService: HttpService,
   ) {}
 
   /**

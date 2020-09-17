@@ -2,6 +2,24 @@
 
 import type React from 'react';
 
+export interface DocFlowTasksColumn {
+  id: string;
+  label: string;
+  minWidth?: number;
+  align?: 'right';
+  format?: (value: number) => string;
+}
+
+export interface DocFlowTasksTableProps {
+  classes: Record<string, string>;
+  columns: DocFlowTasksColumn[];
+  tasks: DocFlowTask[];
+  page: number;
+  rowsPerPage: number;
+  handleChangePage: (event: unknown, newPage: number) => void;
+  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 export interface DocFlowTasksComponentProps {
   loading: boolean;
   tasks: DocFlowTask[];
