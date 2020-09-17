@@ -36,9 +36,7 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    // TODO: cache
-
-    return this.docflowService.DocFlowGetTasks(user, password).catch((error: Error) => {
+    return this.docflowService.DocFlowGetTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

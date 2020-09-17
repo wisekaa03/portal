@@ -1,9 +1,12 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, HttpService } from '@nestjs/common';
+import { Inject, Injectable, HttpService } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import * as cacheManager from 'cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
 import {
@@ -29,7 +32,7 @@ import {
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, soapError } from '@app/soap';
-import type { DocFlowTask, DocFlowTaskSOAP, DocFlowTasksSOAP } from '@lib/types/docflow';
+import type { DocFlowTask, DocFlowTaskSOAP, DocFlowTasksSOAP, DocFlowTasksInput } from '@lib/types/docflow';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
 import { docFlowTask } from './docflow.utils';
@@ -41,11 +44,29 @@ import { docFlowTask } from './docflow.utils';
  */
 @Injectable()
 export class DocFlowService {
+  private ttl: number;
+  private cacheStore: cacheManager.Store;
+  private cache: cacheManager.Cache;
+
   constructor(
     @InjectPinoLogger(DocFlowService.name) private readonly logger: PinoLogger,
+    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
-  ) {}
+  ) {
+    this.ttl = configService.get<number>('DOCFLOW_REDIS_TTL') || 900;
+    if (configService.get<string>('DOCFLOW_REDIS_URI')) {
+      this.cacheStore = redisStore.create({
+        prefix: 'DOCFLOW',
+        url: configService.get<string>('DOCFLOW_REDIS_URI'),
+      });
+      this.cache = cacheManager.caching({
+        store: this.cacheStore,
+        ttl: this.ttl,
+      });
+      logger.info('Redis connection: success');
+    }
+  }
 
   /**
    * DocFlow tasks list
@@ -56,7 +77,7 @@ export class DocFlowService {
    * @param {string} password The Password
    * @returns {DocFlowTask[]}
    */
-  DocFlowGetTasks = async (user: User, password: string): Promise<DocFlowTask[]> => {
+  DocFlowGetTasks = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -160,5 +181,43 @@ export class DocFlowService {
     }
 
     throw new Error('Not allowed');
+  };
+
+  /**
+   * DocFlow tasks list (cache)
+   *
+   * @async
+   * @method DocFlowGetTasksCache
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {task}
+   * @returns {DocFlowTask[]}
+   */
+  DocFlowGetTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
+    const cachedID = `${user.loginIdentificator}-tickets-tasks`;
+    if (this.cache && (!tasks || tasks.cache !== false)) {
+      const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
+      if (cached && cached !== null) {
+        (async (): Promise<void> => {
+          const ticketsTasks = await this.DocFlowGetTasks(user, password, tasks);
+          this.pubSub.publish('TicketsTasks', {
+            user: user.loginIdentificator,
+            ticketsTasks,
+          });
+          this.cache.set(cachedID, ticketsTasks, this.ttl);
+        })();
+
+        return cached;
+      }
+    }
+
+    const ticketsTasks = await this.DocFlowGetTasks(user, password, tasks);
+    this.pubSub.publish('DocFlowGetTasks', { user: user.loginIdentificator, ticketsTasks });
+
+    if (this.cache) {
+      this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
+    }
+
+    return ticketsTasks;
   };
 }
