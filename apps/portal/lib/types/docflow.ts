@@ -1,16 +1,18 @@
 /** @format */
 
 import type React from 'react';
+import { TFunction } from 'next-i18next';
 
 export interface DocFlowTasksColumn {
   id: string;
   label: string;
   minWidth?: number;
   align?: 'right';
-  format?: (value: number) => string;
+  format?: (value?: number | Date) => string;
 }
 
 export interface DocFlowTasksTableProps {
+  t: TFunction;
   classes: Record<string, string>;
   columns: DocFlowTasksColumn[];
   tasks: DocFlowTask[];

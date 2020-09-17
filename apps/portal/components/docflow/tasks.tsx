@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { FC, useRef } from 'react';
+import { TFunction, I18n } from 'next-i18next';
 import { Theme, fade, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -23,6 +24,7 @@ import {
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import type { DocFlowTasksComponentProps, DocFlowTasksTableProps, DocFlowTasksColumn } from '@lib/types/docflow';
+import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
@@ -32,7 +34,10 @@ const DocFlowTasksTable = withStyles((theme) => ({
   container: {
     maxHeight: '100vh',
   },
-}))(({ classes, columns, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, tasks }: DocFlowTasksTableProps) => (
+  footer: {
+    width: '100%',
+  },
+}))(({ t, classes, columns, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, tasks }: DocFlowTasksTableProps) => (
   <>
     <TableContainer className={classes.container}>
       <Table stickyHeader aria-label="sticky table">
@@ -49,10 +54,10 @@ const DocFlowTasksTable = withStyles((theme) => ({
           {tasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
             <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
               {columns.map((column) => {
-                const value = task[column.id];
+                const value = column.id.split('.').reduce((acc, elem) => acc[elem], task);
                 return (
                   <TableCell key={column.id} align={column.align}>
-                    {column.format && typeof value === 'number' ? column.format(value) : value}
+                    {column.format ? column.format(value) : value}
                   </TableCell>
                 );
               })}
@@ -62,13 +67,18 @@ const DocFlowTasksTable = withStyles((theme) => ({
       </Table>
     </TableContainer>
     <TablePagination
-      rowsPerPageOptions={[10, 25, 100]}
+      className={classes.footer}
+      rowsPerPageOptions={[10, 25, 50, 100]}
       component="div"
       count={tasks.length}
       rowsPerPage={rowsPerPage}
       page={page}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
+      labelRowsPerPage={t('docflow:tasks.rowsPerPage')}
+      labelDisplayedRows={({ from, to, count }) =>
+        `${from}-${to} ${t('docflow:tasks.to')} ${count !== -1 ? count : `${t('docflow:tasks.more')} ${to}`}`
+      }
     />
   </>
 ));
@@ -85,22 +95,28 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const columns: DocFlowTasksColumn[] = [
+const columns = (t: TFunction, i18n: I18n): DocFlowTasksColumn[] => [
   {
     id: 'name',
-    label: 'Name',
+    label: t('docflow:tasks.column.name'),
     minWidth: 170,
   },
   {
     id: 'beginDate',
-    label: 'Date',
+    label: t('docflow:tasks.column.beginDate'),
+    minWidth: 20,
+    format: (value) => dateFormat(value, i18n),
+  },
+  {
+    id: 'author.name',
+    label: t('docflow:tasks.column.author'),
     minWidth: 100,
   },
 ];
 
 const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const tasksBox = useRef(null);
 
   const [page, setPage] = React.useState(0);
@@ -140,11 +156,12 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           {tasks.length > 0 ? (
             <DocFlowTasksTable
+              t={t}
               page={page}
               rowsPerPage={rowsPerPage}
               handleChangePage={handleChangePage}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
-              columns={columns}
+              columns={columns(t, i18n)}
               tasks={tasks}
             />
           ) : (

@@ -1,3 +1,13 @@
 {
-  "title": "Document flow"
+  "title": "Document flow",
+  "tasks": {
+    "rowsPerPage": "Rows per page:",
+    "to": "of",
+    "more": "more than",
+    "column": {
+      "name": "Name",
+      "beginDate": "Begin date",
+      "author": "Author"
+    }
+  }
 }
