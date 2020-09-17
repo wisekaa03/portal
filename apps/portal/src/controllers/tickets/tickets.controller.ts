@@ -13,19 +13,19 @@ export class TicketsController {
   @Get()
   @UseGuards(SessionGuard)
   public async services(@Res() res: RenderableResponse): Promise<void> {
-    res.render('tickets/tickets');
+    res.render('tickets');
   }
 
   @Get(':where')
   @UseGuards(SessionGuard)
   public async where(@Res() res: RenderableResponse, @Param('where') where: string): Promise<void> {
-    res.render('tickets/tickets', { where });
+    res.render('tickets', { where });
   }
 
   @Get(':where/:route')
   @UseGuards(SessionGuard)
   public async route(@Res() res: RenderableResponse, @Param('where') where: string, @Param('route') route: string): Promise<void> {
-    res.render('tickets/tickets', { where, route });
+    res.render('tickets', { where, route });
   }
 
   @Get(':where/:route/:service')

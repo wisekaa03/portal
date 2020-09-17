@@ -13,6 +13,6 @@ export class TasksController {
   @Get()
   @UseGuards(SessionGuard)
   public async tasks(@Res() res: RenderableResponse): Promise<void> {
-    res.render('tickets/tasks');
+    res.render('tasks');
   }
 }
