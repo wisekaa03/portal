@@ -39,35 +39,26 @@ const useStyles = makeStyles((theme: Theme) =>
       'flexDirection': 'column',
       'outline': 'none',
       'padding': '20px',
-      'transition':
-        `border-color 200ms ${theme.transitions.easing.easeOut} 0ms,` +
-        `color 200ms ${theme.transitions.easing.easeOut} 0ms`,
+      'transition': `border-color 200ms ${theme.transitions.easing.easeOut} 0ms, color 200ms ${theme.transitions.easing.easeOut} 0ms`,
       '&:hover': {
         borderColor: fade(theme.palette[props.color].main, 0.9),
         color: fade(theme.palette[props.color].main, 0.9),
       },
 
-      'borderTopColor':
-        props.border === 'full' || props.border === 'top' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
+      'borderTopColor': props.border === 'full' || props.border === 'top' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
       'borderTopStyle': props.border === 'full' || props.border === 'top' ? 'dashed' : 'none',
       'borderTopWidth': props.border === 'full' || props.border === 'top' ? '2px' : 0,
 
-      'borderLeftColor':
-        props.border === 'full' || props.border === 'left' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
+      'borderLeftColor': props.border === 'full' || props.border === 'left' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
       'borderLeftStyle': props.border === 'full' || props.border === 'left' ? 'dashed' : 'none',
       'borderLeftWidth': props.border === 'full' || props.border === 'left' ? '2px' : 0,
 
-      'borderRightColor':
-        props.border === 'full' || props.border === 'right'
-          ? fade(theme.palette[props.color].main, 0.5)
-          : 'transparent',
+      'borderRightColor': props.border === 'full' || props.border === 'right' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
       'borderRightStyle': props.border === 'full' || props.border === 'right' ? 'dashed' : 'none',
       'borderRightWidth': props.border === 'full' || props.border === 'right' ? '2px' : 0,
 
       'borderBottomColor':
-        props.border === 'full' || props.border === 'bottom'
-          ? fade(theme.palette[props.color].main, 0.5)
-          : 'transparent',
+        props.border === 'full' || props.border === 'bottom' ? fade(theme.palette[props.color].main, 0.5) : 'transparent',
       'borderBottomStyle': props.border === 'full' || props.border === 'bottom' ? 'dashed' : 'none',
       'borderBottomWidth': props.border === 'full' || props.border === 'bottom' ? '2px' : 0,
     }),
@@ -110,9 +101,7 @@ const useStyles = makeStyles((theme: Theme) =>
     removeBtn: {
       'background': deepOrange[200],
       'opacity': 0,
-      'transition':
-        `background 200ms ${theme.transitions.easing.easeOut} 0ms,` +
-        `opacity 200ms ${theme.transitions.easing.easeOut} 0ms`,
+      'transition': `background 200ms ${theme.transitions.easing.easeOut} 0ms, opacity 200ms ${theme.transitions.easing.easeOut} 0ms`,
       '&:hover': {
         background: deepOrange[300],
       },
@@ -153,21 +142,7 @@ const Dropzone: FC<DropzoneProps> = ({
   files,
   setFiles,
   filesLimit = 50,
-  acceptedFiles = [
-    '.xlsx',
-    '.docx',
-    '.pptx',
-    '.rar',
-    '.zip',
-    '.pdf',
-    '.xls',
-    '.doc',
-    '.ppt',
-    'text/*',
-    'image/*',
-    'video/*',
-    'audio/*',
-  ],
+  acceptedFiles = ['.xlsx', '.docx', '.pptx', '.rar', '.zip', '.pdf', '.xls', '.doc', '.ppt', 'text/*', 'image/*', 'video/*', 'audio/*'],
   color = 'primary',
   mode = 'full',
   className,

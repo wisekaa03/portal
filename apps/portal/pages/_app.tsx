@@ -16,8 +16,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 
-// TODO:
-// import 'jodit/build/jodit.es2018.min.css';
+import 'jodit/build/jodit.es2018.min.css';
 //#endregion
 //#region Imports Local
 import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';

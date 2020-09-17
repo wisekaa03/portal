@@ -3,18 +3,12 @@
 
 //#region Imports NPM
 const { resolve } = require('path');
-
 require('dotenv').config({ path: resolve(__dirname, '../../.local/.env') });
 // const NextWorkboxWebpackPlugin = require('next-workbox-webpack-plugin');
-
 const withBundleAnalyzer = require('@next/bundle-analyzer');
-
 const { nextI18NextRewrites } = require('next-i18next/rewrites');
-
 const optimizedImages = require('next-optimized-images');
-
 const withFonts = require('next-fonts');
-
 const withPlugins = require('next-compose-plugins');
 const Webpack = require('webpack');
 //#endregion
@@ -70,8 +64,24 @@ function withCustomWebpack(c = {}) {
     //   );
     // }
 
+    // config.loader = [];
+    // config.loader.push({
+    //   test: /\.css$/i,
+    //   use: ['style-loader', 'css-loader'],
+    // });
+
     // config.externals = [...(config.externals || []), nodeExternals()];
     // console.log(isServer ? 'Server' : 'Client', config);
+    // console.log(
+    //   isServer ? 'Server' : 'Client',
+    //   config.module.rules.forEach((rule) => {
+    //     if (rule.oneOf) {
+    //       console.log('oneOf rule:', rule.oneOf);
+    //     } else {
+    //       console.log(rule);
+    //     }
+    //   }),
+    // );
 
     return webpack(config, { isServer, buildId, dev, ...rest });
   };

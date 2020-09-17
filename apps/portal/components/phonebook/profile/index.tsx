@@ -13,14 +13,7 @@ import { red } from '@material-ui/core/colors';
 //#endregion
 //#region Imports Local
 import { nextI18next } from '@lib/i18n-client';
-import {
-  Data,
-  Profile,
-  ProfileProps,
-  PhonebookProfileModule,
-  PhonebookProfileNameProps,
-  PhonebookProfileFieldProps,
-} from '@lib/types';
+import { Data, Profile, ProfileProps, PhonebookProfileModule, PhonebookProfileNameProps, PhonebookProfileFieldProps } from '@lib/types';
 import { PROFILE } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import Avatar from '@front/components/ui/avatar';
@@ -165,199 +158,166 @@ const ProfileField = withStyles((theme) => ({
   );
 });
 
-const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(
-  ({ t, profileId, handleClose, handleSearch }, ref) => {
-    const classes = useStyles({});
+const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, profileId, handleClose, handleSearch }, ref) => {
+  const classes = useStyles({});
 
-    const [profile, setProfile] = useState<Profile | undefined>();
-    const [controlElement, setControlElement] = useState<HTMLElement | null>(null);
+  const [profile, setProfile] = useState<Profile | undefined>();
+  const [controlElement, setControlElement] = useState<HTMLElement | null>(null);
 
-    const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(PROFILE, {
-      ssr: false,
+  const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(PROFILE, {
+    ssr: false,
+  });
+
+  useEffect(() => {
+    getProfile({
+      variables: { id: profileId },
     });
+  }, [getProfile, profileId]);
 
-    useEffect(() => {
+  useEffect(() => {
+    if (!loading && !error && data) {
+      setProfile(data.profile);
+    }
+  }, [setProfile, data, loading, error]);
+
+  const handleProfile = (prof: Profile) => (): void => {
+    if (!prof.disabled && !prof.notShowing && prof.id) {
       getProfile({
-        variables: { id: profileId },
+        variables: {
+          id: prof.id,
+        },
       });
-    }, [getProfile, profileId]);
+    }
+  };
 
-    useEffect(() => {
-      if (!loading && !error && data) {
-        setProfile(data.profile);
-      }
-    }, [setProfile, data, loading, error]);
+  const handleSearchClose = (text?: string) => (): void => {
+    if (!text) return;
 
-    const handleProfile = (prof: Profile) => (): void => {
-      if (!prof.disabled && !prof.notShowing && prof.id) {
-        getProfile({
-          variables: {
-            id: prof.id,
-          },
-        });
-      }
-    };
+    handleSearch(text);
+    handleClose();
+  };
 
-    const handleSearchClose = (text?: string) => (): void => {
-      if (!text) return;
+  const handleControl = (event: React.MouseEvent<HTMLElement>): void => {
+    setControlElement(event.currentTarget);
+  };
 
-      handleSearch(text);
-      handleClose();
-    };
+  const handleCloseControl = (): void => {
+    setControlElement(null);
+  };
 
-    const handleControl = (event: React.MouseEvent<HTMLElement>): void => {
-      setControlElement(event.currentTarget);
-    };
+  useEffect(() => {
+    if (error) {
+      snackbarUtils.error(error);
+    }
+  }, [error]);
 
-    const handleCloseControl = (): void => {
-      setControlElement(null);
-    };
-
-    useEffect(() => {
-      if (error) {
-        snackbarUtils.error(error);
-      }
-    }, [error]);
-
-    return (
-      <Card ref={ref} className={classes.root}>
-        <CardContent className={clsx(classes.wrap, classes.noPadding)}>
-          <Box className={clsx(classes.grid, classes.main)}>
-            <Box
-              className={clsx(classes.grid, classes.gridFull, {
-                [classes.fullRow]: error,
-              })}
-            >
-              <Box justifyContent="space-between" display="flex">
-                <Link href={{ pathname: '/phonebook' }} as="/phonebook">
-                  <IconButton size="small">
-                    <ArrowBackRounded />
-                  </IconButton>
-                </Link>
-                <IsAdmin>
-                  <PhonebookProfileControl
-                    controlEl={controlElement}
-                    profileId={profile?.id}
-                    handleControl={handleControl}
-                    handleCloseControl={handleCloseControl}
-                  />
-                </IsAdmin>
-              </Box>
-              <>
-                <ProfileAvatar profile={profile} />
-                <Box display="flex" flexDirection="column" alignItems="center">
-                  <ProfileName profile={profile} type="lastName" />
-                  <ProfileName profile={profile} type="firstName" />
-                  <ProfileName profile={profile} type="middleName" />
-                </Box>
-                {profile?.disabled && (
-                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.disabled}>
-                    <span>{t(`phonebook:fields.disabled`)}</span>
-                  </Box>
-                )}
-                {profile?.notShowing && (
-                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.notShowing}>
-                    <span>{t(`phonebook:fields.notShowing`)}</span>
-                  </Box>
-                )}
-                {profile?.nameEng && (
-                  <Box display="flex" alignItems="center" justifyContent="center">
-                    <span>{profile.nameEng}</span>
-                  </Box>
-                )}
-                {profile?.mobile && (
-                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
-                    <PhoneAndroidRounded />
-                    <span>{profile.mobile}</span>
-                  </Box>
-                )}
-                {profile?.telephone && (
-                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
-                    <CallEndRounded />
-                    <span>{profile.telephone}</span>
-                  </Box>
-                )}
-                {profile?.workPhone && (
-                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
-                    <PhoneRounded />
-                    <span>{profile.workPhone}</span>
-                  </Box>
-                )}
-                {profile?.username && (
-                  <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
-                    <PersonRounded className={classes.username} />
-                    <span>{profile.username}</span>
-                  </Box>
-                )}
-                {profile?.email && (
-                  <Box display="flex" alignItems="center" justifyContent="center">
-                    <ComposeLink className={classes.email} to={profile.email}>
-                      {profile.email}
-                    </ComposeLink>
-                    <CopyButton style={{ marginLeft: '8px' }} text={profile.email} />
-                  </Box>
-                )}
-              </>
+  return (
+    <Card ref={ref} className={classes.root}>
+      <CardContent className={clsx(classes.wrap, classes.noPadding)}>
+        <Box className={clsx(classes.grid, classes.main)}>
+          <Box
+            className={clsx(classes.grid, classes.gridFull, {
+              [classes.fullRow]: error,
+            })}
+          >
+            <Box justifyContent="space-between" display="flex">
+              <Link href={{ pathname: '/phonebook' }} as="/phonebook">
+                <IconButton size="small">
+                  <ArrowBackRounded />
+                </IconButton>
+              </Link>
+              <IsAdmin>
+                <PhonebookProfileControl
+                  controlEl={controlElement}
+                  profileId={profile?.id}
+                  handleControl={handleControl}
+                  handleCloseControl={handleCloseControl}
+                />
+              </IsAdmin>
             </Box>
-            {!error && profile && (
-              <Box className={clsx(classes.grid, classes.gridFull)}>
-                <Paper>
-                  <List className={classes.list}>
-                    <ProfileField
-                      title={t(`phonebook:fields.company`)}
-                      profile={profile}
-                      field="company"
-                      onClick={handleSearchClose}
-                    />
-                    <ProfileField
-                      title={t(`phonebook:fields.management`)}
-                      profile={profile}
-                      field="management"
-                      onClick={handleSearchClose}
-                    />
-                    <ProfileField
-                      title={t(`phonebook:fields.department`)}
-                      profile={profile}
-                      field="department"
-                      onClick={handleSearchClose}
-                    />
-                    <ProfileField
-                      title={t(`phonebook:fields.division`)}
-                      profile={profile}
-                      field="division"
-                      onClick={handleSearchClose}
-                    />
-                    <ProfileField
-                      title={t(`phonebook:fields.title`)}
-                      profile={profile}
-                      field="title"
-                      onClick={handleSearchClose}
-                    />
-                    <ProfileField
-                      last
-                      title={t(`phonebook:fields.manager`)}
-                      profile={profile}
-                      field="manager"
-                      onClick={handleProfile}
-                    />
-                  </List>
-                </Paper>
-                <Paper>
-                  <List className={classes.list}>
-                    <ProfileField title={t(`phonebook:fields.country`)} profile={profile} field="country" />
-                    <ProfileField title={t(`phonebook:fields.region`)} profile={profile} field="region" />
-                    <ProfileField title={t(`phonebook:fields.town`)} profile={profile} field="town" />
-                    <ProfileField title={t(`phonebook:fields.street`)} profile={profile} field="street" />
-                    <ProfileField last title={t(`phonebook:fields.room`)} profile={profile} field="room" />
-                  </List>
-                </Paper>
+            <>
+              <ProfileAvatar profile={profile} />
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <ProfileName profile={profile} type="lastName" />
+                <ProfileName profile={profile} type="firstName" />
+                <ProfileName profile={profile} type="middleName" />
               </Box>
-            )}
+              {profile?.disabled && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.disabled}>
+                  <span>{t('phonebook:fields.disabled')}</span>
+                </Box>
+              )}
+              {profile?.notShowing && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.notShowing}>
+                  <span>{t('phonebook:fields.notShowing')}</span>
+                </Box>
+              )}
+              {profile?.nameEng && (
+                <Box display="flex" alignItems="center" justifyContent="center">
+                  <span>{profile.nameEng}</span>
+                </Box>
+              )}
+              {profile?.mobile && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
+                  <PhoneAndroidRounded />
+                  <span>{profile.mobile}</span>
+                </Box>
+              )}
+              {profile?.telephone && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
+                  <CallEndRounded />
+                  <span>{profile.telephone}</span>
+                </Box>
+              )}
+              {profile?.workPhone && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
+                  <PhoneRounded />
+                  <span>{profile.workPhone}</span>
+                </Box>
+              )}
+              {profile?.username && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
+                  <PersonRounded className={classes.username} />
+                  <span>{profile.username}</span>
+                </Box>
+              )}
+              {profile?.email && (
+                <Box display="flex" alignItems="center" justifyContent="center">
+                  <ComposeLink className={classes.email} to={profile.email}>
+                    {profile.email}
+                  </ComposeLink>
+                  <CopyButton style={{ marginLeft: '8px' }} text={profile.email} />
+                </Box>
+              )}
+            </>
           </Box>
-        </CardContent>
-      </Card>
-    );
-  },
-);
+          {!error && profile && (
+            <Box className={clsx(classes.grid, classes.gridFull)}>
+              <Paper>
+                <List className={classes.list}>
+                  <ProfileField title={t('phonebook:fields.company')} profile={profile} field="company" onClick={handleSearchClose} />
+                  <ProfileField title={t('phonebook:fields.management')} profile={profile} field="management" onClick={handleSearchClose} />
+                  <ProfileField title={t('phonebook:fields.department')} profile={profile} field="department" onClick={handleSearchClose} />
+                  <ProfileField title={t('phonebook:fields.division')} profile={profile} field="division" onClick={handleSearchClose} />
+                  <ProfileField title={t('phonebook:fields.title')} profile={profile} field="title" onClick={handleSearchClose} />
+                  <ProfileField last title={t('phonebook:fields.manager')} profile={profile} field="manager" onClick={handleProfile} />
+                </List>
+              </Paper>
+              <Paper>
+                <List className={classes.list}>
+                  <ProfileField title={t('phonebook:fields.country')} profile={profile} field="country" />
+                  <ProfileField title={t('phonebook:fields.region')} profile={profile} field="region" />
+                  <ProfileField title={t('phonebook:fields.town')} profile={profile} field="town" />
+                  <ProfileField title={t('phonebook:fields.street')} profile={profile} field="street" />
+                  <ProfileField last title={t('phonebook:fields.room')} profile={profile} field="room" />
+                </List>
+              </Paper>
+            </Box>
+          )}
+        </Box>
+      </CardContent>
+    </Card>
+  );
+});
 
 export default nextI18next.withTranslation('phonebook')(PhonebookProfile);

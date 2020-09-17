@@ -25,12 +25,7 @@ const useStyles = makeStyles(() =>
 
 const Wire = ({ children, ...props }): any => Children.only(children(props));
 
-const PhonebookProfileControl: FC<PhonebookProfileControlProps> = ({
-  controlEl,
-  profileId: id,
-  handleControl,
-  handleCloseControl,
-}) => {
+const PhonebookProfileControl: FC<PhonebookProfileControlProps> = ({ controlEl, profileId: id, handleControl, handleCloseControl }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
@@ -39,14 +34,7 @@ const PhonebookProfileControl: FC<PhonebookProfileControlProps> = ({
   return (
     <IconButton className={classes.root} onClick={handleControl}>
       <MoreVertIcon />
-      <Popper
-        id="profile-setting"
-        placement="bottom-end"
-        className={classes.popper}
-        open={openControl}
-        anchorEl={controlEl}
-        transition
-      >
+      <Popper id="profile-setting" placement="bottom-end" className={classes.popper} open={openControl} anchorEl={controlEl} transition>
         <Paper>
           <ClickAwayListener onClickAway={handleCloseControl}>
             <MenuList>

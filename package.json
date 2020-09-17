@@ -47,11 +47,6 @@
     "not ie_mob 11",
     "not op_mini all"
   ],
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -76,14 +71,15 @@
     "**/**/url-loader": "^4",
     "**/**/css-loader": "^4",
     "**/**/jspdf": "^2",
-    "**/**/postcss": "^8",
+    "**/**/postcss": "^7",
     "**/**/autoprefixer": "^10",
     "**/**/browserslist": "^4",
     "**/**/terser": "^5",
     "**/**/terser-webpack-plugin": "^4",
     "**/**/cacache": "^15",
     "**/**/jest-worker": "^26",
-    "**/**/rimraf": "^3"
+    "**/**/rimraf": "^3",
+    "**/**/find-up": "^4"
   },
   "dependencies": {
     "@apollo/client": "^3.2.0",
@@ -157,7 +153,9 @@
     "pg": "^8.3.3",
     "pg-native": "^3.0.0",
     "pino-pretty": "^4.2.1",
-    "postcss": "^8.0.5",
+    "postcss": "^7.0.34",
+    "postcss-flexbugs-fixes": "^4.2.1",
+    "postcss-preset-env": "^6.7.0",
     "query-string": "^6.13.2",
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.2",
@@ -286,6 +284,7 @@
     "storybook-addon-next-router": "^2.0.0",
     "stylelint": "^13.7.1",
     "stylelint-config-prettier": "^8.0.2",
+    "stylelint-prettier": "^1.1.2",
     "supertest": "^4.0.2",
     "terser-webpack-plugin": "^4.2.1",
     "ts-jest": "^26.3.0",

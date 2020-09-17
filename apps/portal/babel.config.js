@@ -25,7 +25,7 @@ module.exports = function (api) {
 
   const constantsPlugins = [
     // 'babel-plugin-react-require',
-    ['@babel/plugin-proposal-optional-chaining', { loose: false }],
+    // ['@babel/plugin-proposal-optional-chaining', { loose: false }],
     ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: false }],
     // '@babel/proposal-class-properties',
     // '@babel/plugin-syntax-dynamic-import',

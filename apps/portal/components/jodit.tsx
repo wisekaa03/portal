@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useRef, forwardRef, Component, RefForwardingComponent, useMemo, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useLayoutEffect } from 'react';
 // import dynamic from 'next/dynamic';
 import { withStyles } from '@material-ui/core/styles';
 import { Jodit, ButtonsOption, IDictionary } from 'jodit';
@@ -106,68 +106,67 @@ interface JoditEditorComponentProps {
   tabIndex?: number;
 }
 
-const JoditEditorComponent: RefForwardingComponent<HTMLTextAreaElement, JoditEditorComponentProps> = (
-  { value, onBlur, onChange, id, name, disabled = false, tabIndex = -1 },
-  ref,
-) => {
-  const {
-    i18n: { language },
-  } = useTranslation();
+const JoditEditorComponent = React.forwardRef<HTMLTextAreaElement, JoditEditorComponentProps>(
+  ({ value, onBlur, onChange, id, name, disabled = false, tabIndex = -1 }, ref) => {
+    const {
+      i18n: { language },
+    } = useTranslation();
 
-  const textArea = useRef<HTMLTextAreaElement | null>(null);
-  const config = useMemo(
-    () => ({
-      ...configDefault,
-      readonly: !!disabled,
-      language,
-    }),
-    [disabled, language],
-  );
+    const textArea = useRef<HTMLTextAreaElement | null>(null);
+    const config = useMemo(
+      () => ({
+        ...configDefault,
+        readonly: !!disabled,
+        language,
+      }),
+      [disabled, language],
+    );
 
-  useLayoutEffect(() => {
-    if (ref) {
-      if (typeof ref === 'function') {
-        ref(textArea.current);
-      } else {
-        ref.current = textArea.current;
+    useLayoutEffect(() => {
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref(textArea.current);
+        } else {
+          ref.current = textArea.current;
+        }
       }
-    }
-  }, [textArea, ref]);
+    }, [textArea, ref]);
 
-  useLayoutEffect(() => {
-    const element = textArea.current;
-    if (element) {
-      if (id) {
-        element.id = id;
+    useLayoutEffect(() => {
+      const element = textArea.current;
+      if (element) {
+        if (id) {
+          element.id = id;
+        }
+        if (name) {
+          element.name = name;
+        }
+        const jodit = Jodit.make(element, config);
+
+        jodit.value = value;
+        jodit.events.on('blur', () => onBlur && textArea.current?.value && onBlur(textArea.current.value));
+        jodit.events.on('change', () => onChange && textArea.current?.value && onChange(textArea.current.value));
+        jodit.workplace.tabIndex = tabIndex;
+
+        textArea.current = (jodit as unknown) as HTMLTextAreaElement;
+
+        return () => {
+          ((textArea.current as unknown) as JoditClass).destruct();
+          textArea.current = element;
+        };
       }
-      if (name) {
-        element.name = name;
+
+      return undefined;
+    }, [config, id, name, onBlur, onChange, tabIndex, value]);
+
+    useEffect(() => {
+      if (textArea?.current && textArea.current.value !== value) {
+        textArea.current.value = value;
       }
-      const jodit = Jodit.make(element, config);
+    }, [textArea, value]);
 
-      jodit.value = value;
-      jodit.events.on('blur', () => onBlur && textArea.current?.value && onBlur(textArea.current.value));
-      jodit.events.on('change', () => onChange && textArea.current?.value && onChange(textArea.current.value));
-      jodit.workplace.tabIndex = tabIndex;
+    return <textarea ref={textArea} />;
+  },
+);
 
-      textArea.current = (jodit as unknown) as HTMLTextAreaElement;
-
-      return () => {
-        ((textArea.current as unknown) as JoditClass).destruct();
-        textArea.current = element;
-      };
-    }
-
-    return undefined;
-  }, [config, id, name, onBlur, onChange, tabIndex, value]);
-
-  useEffect(() => {
-    if (textArea?.current && textArea.current.value !== value) {
-      textArea.current.value = value;
-    }
-  }, [textArea, value]);
-
-  return <textarea ref={textArea} />;
-};
-
-export default withStyles(styles)(forwardRef(JoditEditorComponent));
+export default withStyles(styles)(JoditEditorComponent);
