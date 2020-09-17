@@ -218,7 +218,7 @@
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/express-session": "^1.17.0",
     "@types/helmet": "^0.0.48",
-    "@types/jest": "^26.0.13",
+    "@types/jest": "^26.0.14",
     "@types/lodash": "^4.14.161",
     "@types/object-assign": "^4.0.30",
     "@types/passport-local": "^1.0.33",
