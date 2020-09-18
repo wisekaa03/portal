@@ -23,7 +23,12 @@ describe(DocFlowService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [LoggerModule.forRoot(), HttpModule],
-      providers: [ConfigService, DocFlowService, { provide: SoapService, useValue: serviceMock }],
+      providers: [
+        ConfigService,
+        DocFlowService,
+        { provide: 'PUB_SUB', useValue: serviceMock },
+        { provide: SoapService, useValue: serviceMock },
+      ],
     }).compile();
 
     service = module.get<DocFlowService>(DocFlowService);
