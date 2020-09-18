@@ -352,9 +352,7 @@ export class ProfileService {
     } catch {
       comment = {};
     }
-    const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender } = comment;
-
-    const { birthday } = comment;
+    const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender, birthday } = comment;
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
@@ -382,7 +380,7 @@ export class ProfileService {
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName,
-      birthday: !birthday ? undefined : birthday.slice(0, 9),
+      birthday: !birthday ? undefined : birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,
       postalCode: ldapUser.postalCode,
