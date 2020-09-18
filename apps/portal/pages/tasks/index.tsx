@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, QueryResult } from '@apollo/client';
+import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import type { TkTask, TkTasks, TkTasksInput, Data } from '@lib/types';
@@ -21,17 +21,21 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const status = '';
   const find = '';
 
-  const {
-    loading: loadingTasks,
-    data: dataTasks,
-    error: errorTasks,
-    refetch: tasksRefetch,
-  }: QueryResult<Data<'TicketsTasks', TkTasks>, { tasks: TkTasksInput }> = useQuery(TICKETS_TASKS, {
+  const { loading: loadingTasks, data: dataTasks, error: errorTasks, refetch: tasksRefetchInt } = useQuery<
+    Data<'TicketsTasks', TkTasks>,
+    { tasks: TkTasksInput }
+  >(TICKETS_TASKS, {
     ssr: true,
     variables: { tasks: { status, find } },
     fetchPolicy: 'cache-and-network',
     // notifyOnNetworkStatusChange: true,
   });
+
+  const tasksRefetch = (
+    variables?: Partial<{
+      tasks: TkTasksInput;
+    }>,
+  ): Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>> => tasksRefetchInt({ tasks: { ...variables?.tasks, cache: false } });
 
   const tasks = useMemo<TkTask[]>(() => {
     if (dataTasks?.TicketsTasks) {

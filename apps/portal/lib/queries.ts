@@ -531,8 +531,8 @@ const TICKETS_TASK_COMMENTS = gql`
 `;
 
 export const TICKETS_ROUTES = gql`
-  query TicketsRoutes($cache: Boolean) {
-    TicketsRoutes(routes: { cache: $cache }) {
+  query TicketsRoutes($routes: TkRoutesInput) {
+    TicketsRoutes(routes: $routes) {
       routes {
         where
         code
@@ -587,8 +587,8 @@ export const TICKETS_TASK_NEW = gql`
 `;
 
 export const TICKETS_TASK_DESCRIPTION = gql`
-  query TicketsTaskDescription($where: String, $code: String, $cache: Boolean) {
-    TicketsTaskDescription(task: { where: $where, code: $code, cache: $cache }) {
+  query TicketsTaskDescription($task: TkTaskDescriptionInput!) {
+    TicketsTaskDescription(task: $task) {
       users {
         ...TicketsUserProps
       }
@@ -661,8 +661,8 @@ export const TICKETS_COMMENT_FILE = gql`
  */
 
 export const DOCFLOW_GET_TASKS = gql`
-  query DocFlowGetTasks($cache: Boolean) {
-    DocFlowGetTasks(tasks: { cache: $cache }) {
+  query DocFlowGetTasks($tasks: DocFlowTasksInput) {
+    DocFlowGetTasks(tasks: $tasks) {
       id
       name
       importance {

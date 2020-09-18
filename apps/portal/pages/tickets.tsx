@@ -26,6 +26,7 @@ import {
 import snackbarUtils from '@lib/snackbar-utils';
 import TicketsComponent from '@front/components/tickets';
 import { MaterialUI } from '@front/layout';
+import { TkRoutesInput } from '../lib/types/tickets';
 
 //#endregion
 
@@ -50,7 +51,7 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
 
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutesInt } = useQuery<
     Data<'TicketsRoutes', TkRoutes>,
-    { cache?: boolean }
+    { routes: TkRoutesInput }
   >(TICKETS_ROUTES, {
     ssr: false,
     fetchPolicy: 'cache-first',
@@ -58,12 +59,10 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
   });
 
   const refetchRoutes = async (
-    variables?:
-      | Partial<{
-          cache?: boolean | undefined;
-        }>
-      | undefined,
-  ): Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>> => refetchRoutesInt({ ...variables, cache: false });
+    variables?: Partial<{
+      routes: TkRoutesInput;
+    }>,
+  ): Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>> => refetchRoutesInt({ routes: { ...variables?.routes, cache: false } });
 
   const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'TicketsTaskNew', TkTaskNew>>(
     TICKETS_TASK_NEW,
