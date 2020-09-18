@@ -77,7 +77,7 @@ export class TicketsService {
    * @method ticketsRoutes
    * @param {User} user User object
    * @param {string} password The Password
-   * @returns {TkRoutes[]} Services
+   * @returns {TkRoutes} Services
    */
   ticketsRoutes = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
     const promises: Promise<TkRoutes>[] = [];
@@ -201,7 +201,7 @@ export class TicketsService {
    * @method ticketsRoutesCache
    * @param {User} user User object
    * @param {string} password The Password
-   * @returns {TkRoutes[]} Services
+   * @returns {TkRoutes} Services
    */
   ticketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
     const cachedID = `${user.loginIdentificator}-tickets-routes`;
