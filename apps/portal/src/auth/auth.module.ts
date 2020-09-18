@@ -70,7 +70,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 
     SubscriptionsModule,
   ],
-  providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer /* , JwtStrategy */],
+  providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer] /* , JwtStrategy */,
   exports: [PassportModule, AuthService],
 })
 export class AuthModule {}

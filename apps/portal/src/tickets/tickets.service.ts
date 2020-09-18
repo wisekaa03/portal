@@ -105,8 +105,10 @@ export class TicketsService {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
+                const routes = result[0].return?.['Сервис']?.map((route: TicketsRouteSOAP) => routeSOAP(route, TkWhere.SOAP1C));
+
                 return {
-                  routes: result[0].return?.['Сервис']?.map((route: TicketsRouteSOAP) => routeSOAP(route, TkWhere.SOAP1C)),
+                  routes,
                 };
               }
 

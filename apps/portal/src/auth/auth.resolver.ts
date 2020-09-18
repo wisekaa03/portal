@@ -58,10 +58,10 @@ export class AuthResolver {
             this.logger.error(`Error when pinging: ${message}`, message);
           }
         });
-        this.pubSub.publish('me', { ['me']: me });
+        this.pubSub.publish('me', { me });
       }
     } else {
-      this.pubSub.publish('me', { ['me']: null });
+      this.pubSub.publish('me', { me: null });
     }
 
     return { ping: Date.now() };
@@ -92,11 +92,9 @@ export class AuthResolver {
   ): Promise<Login> {
     const email: LoginEmail = { login: false };
 
-    const user = await this.authService
-      .login({ username: username.toLowerCase(), password })
-      .catch(async (error: Error) => {
-        throw new UnauthorizedException(error);
-      });
+    const user = await this.authService.login({ username: username.toLowerCase(), password }).catch(async (error: Error) => {
+      throw new UnauthorizedException(error);
+    });
 
     request.logIn(user, async (error: Error) => {
       if (error) {
@@ -129,16 +127,14 @@ export class AuthResolver {
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
-    return this.authService
-      .loginEmail(user?.profile.email || '', password || '', request, response)
-      .catch((error: Error) => {
-        this.logger.error('Unable to login in mail', error);
+    return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
+      this.logger.error('Unable to login in mail', error);
 
-        return {
-          login: false,
-          error: error.toString(),
-        };
-      });
+      return {
+        login: false,
+        error: error.toString(),
+      };
+    });
   }
 
   /**

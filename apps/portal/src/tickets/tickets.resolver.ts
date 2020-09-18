@@ -29,11 +29,7 @@ import { TicketsService } from './tickets.service';
 
 @Resolver('TicketsResolver')
 export class TicketsResolver {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly ticketsService: TicketsService,
-    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
-  ) {}
+  constructor(private readonly ticketsService: TicketsService, @Inject('PUB_SUB') private readonly pubSub: RedisPubSub) {}
 
   /**
    * Tickets: get array of routes and services
