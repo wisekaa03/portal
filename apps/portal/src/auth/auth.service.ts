@@ -14,6 +14,7 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
+import { PortalError } from '@back/shared/errors';
 //#endregion
 
 @Injectable()
@@ -62,7 +63,8 @@ export class AuthService {
         throw new UnauthorizedException();
       }
 
-      throw error;
+      this.logger.error(`LDAP login: ${error}`);
+      throw new UnauthorizedException();
     });
 
     return this.userService
@@ -71,7 +73,7 @@ export class AuthService {
         if (user.disabled) {
           this.logger.error(`User is Disabled: ${user.username}`);
 
-          throw new Error(`User is disabled`);
+          throw new Error(PortalError.USER_DISABLED);
         }
 
         return user;
@@ -220,7 +222,7 @@ export class AuthService {
             return { login: true };
           }
 
-          throw new Error('Mail login and password did not match');
+          throw new Error(PortalError.MAIL_NOT_AUTHORIZED);
         },
         (error: Error) => {
           throw error;

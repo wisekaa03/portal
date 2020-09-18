@@ -34,6 +34,7 @@ import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, soapError } from '@app/soap';
 import type { DocFlowTask, DocFlowTaskSOAP, DocFlowTasksSOAP, DocFlowTasksInput } from '@lib/types/docflow';
 import { constructUploads } from '@back/shared/upload';
+import { PortalError } from '@back/shared/errors';
 import { DataResultSOAP } from '@lib/types/common';
 import { docFlowTask } from './docflow.utils';
 //#endregion
@@ -92,7 +93,9 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          throw error;
+          this.logger.error(error);
+
+          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -163,19 +166,14 @@ export class DocFlowService {
               return result;
             }
 
-            throw new Error('Not connected to SOAP');
+            throw new Error(PortalError.SOAP_EMPTY_RESULT);
           })
-          .catch((error: Error | SoapFault) => {
-            this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
-            if (error instanceof Error) {
-              this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
-              this.logger.error(error);
-
-              throw error;
-            }
+          .catch((error: Error) => {
+            this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
+            this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(`${DocFlowService.name}: ${soapError(error)}`);
+            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
