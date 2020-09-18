@@ -32,7 +32,7 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
         code: query?.code || '0',
       },
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 

@@ -54,7 +54,7 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
     { routes: TkRoutesInput }
   >(TICKETS_ROUTES, {
     ssr: false,
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
