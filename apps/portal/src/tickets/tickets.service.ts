@@ -39,11 +39,11 @@ import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, rou
 //#endregion
 
 const TicketsErrors = {
+  DEFAULT_ROUTE: 'Cannot use default route',
+  NOT_IMPLEMENTED: 'Not implemented',
   SOAP_NOT_AUTHORIZED: 'SOAP service error: not authorized',
   SOAP_EMPTY_RESULT: 'SOAP service: null result',
-  DEFAULT_ROUTE: 'Cannot use default route',
   OST_EMPTY_RESULT: 'OSTicket service: null result',
-  NOT_IMPLEMENTED: 'Not implemented',
 };
 
 /**
