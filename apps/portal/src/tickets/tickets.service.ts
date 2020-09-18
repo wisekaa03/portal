@@ -36,8 +36,15 @@ import { SoapService, SoapFault, soapError, SoapConnect } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
 import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
-
 //#endregion
+
+const TicketsErrors = {
+  SOAP_NOT_AUTHORIZED: 'SOAP service error: not authorized',
+  SOAP_EMPTY_RESULT: 'SOAP service: null result',
+  DEFAULT_ROUTE: 'Cannot use default route',
+  OST_EMPTY_RESULT: 'OSTicket service: null result',
+  NOT_IMPLEMENTED: 'Not implemented',
+};
 
 /**
  * Tickets class
@@ -94,7 +101,9 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error: Error) => {
-          promises.push(Promise.resolve({ errors: [error.toString()] }));
+          this.logger.error(error);
+
+          promises.push(Promise.resolve({ errors: [TicketsErrors.SOAP_NOT_AUTHORIZED] }));
         });
 
       if (client) {
@@ -112,18 +121,14 @@ export class TicketsService {
                 };
               }
 
-              throw new Error('Not connected to SOAP');
+              throw new Error(TicketsErrors.SOAP_EMPTY_RESULT);
             })
-            .catch((error: Error | SoapFault) => {
+            .catch((error: Error) => {
               if (error instanceof Error) {
                 this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
-                this.logger.error(error);
-
-                return { errors: [`SOAP: ${soapError(error)}`] };
               }
               this.logger.error(error);
-
-              return { errors: [`SOAP: ${soapError(error)}`] };
+              return { errors: [TicketsErrors.SOAP_NOT_AUTHORIZED] };
             }),
         );
       }
@@ -146,7 +151,7 @@ export class TicketsService {
             case TkWhere.SOAP1C:
             case TkWhere.Default:
             default:
-              throw new Error('Can not use a default route');
+              throw new Error(TicketsErrors.DEFAULT_ROUTE);
           }
 
           const osTicket = this.httpService
@@ -162,10 +167,10 @@ export class TicketsService {
                   }
                 }
 
-                return { errors: [`Not found the OSTicket data in "${where}"`] };
+                return { errors: [TicketsErrors.OST_EMPTY_RESULT] };
               }
 
-              return { errors: [response.statusText] };
+              return { errors: [TicketsErrors.OST_EMPTY_RESULT] };
             });
 
           promises.push(osTicket);
@@ -259,7 +264,9 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          promises.push(Promise.resolve({ errors: [JSON.stringify(error)] }));
+          this.logger.error(error);
+
+          promises.push(Promise.resolve({ errors: [TicketsErrors.SOAP_NOT_AUTHORIZED] }));
         });
 
       if (client) {
@@ -289,7 +296,7 @@ export class TicketsService {
 
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               return {
-                errors: ['Not connected to SOAP'],
+                errors: [TicketsErrors.SOAP_EMPTY_RESULT],
               };
             })
             .catch((error: SoapFault) => {
@@ -297,7 +304,7 @@ export class TicketsService {
               this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
               this.logger.error(error);
 
-              return { errors: [`SOAP: ${soapError(error)}`] };
+              return { errors: [TicketsErrors.SOAP_NOT_AUTHORIZED] };
             }),
         );
       }
@@ -332,7 +339,7 @@ export class TicketsService {
             case TkWhere.SOAP1C:
             case TkWhere.Default:
             default:
-              throw new Error('Can not use a default route');
+              throw new Error(TicketsErrors.DEFAULT_ROUTE);
           }
 
           const osTicket = this.httpService
@@ -351,10 +358,10 @@ export class TicketsService {
                   } as TkTasks;
                 }
 
-                return { errors: [`Not found the OSTicket data in ${where}`] };
+                return { errors: [TicketsErrors.OST_EMPTY_RESULT] };
               }
 
-              return { errors: [response.statusText] };
+              return { errors: [TicketsErrors.OST_EMPTY_RESULT] };
             });
           promises.push(osTicket);
         });
@@ -485,7 +492,9 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          throw error;
+          this.logger.error(error);
+
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -515,14 +524,14 @@ export class TicketsService {
           }
 
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
-          throw new Error('Not connected to SOAP');
+          throw new Error(TicketsErrors.SOAP_EMPTY_RESULT);
         })
-        .catch((error: SoapFault) => {
+        .catch((error: Error) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(soapError(error));
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -572,10 +581,10 @@ export class TicketsService {
                     }
                   }
 
-                  throw new Error(`Not found the OSTicket data in "${whereKey}"`);
+                  throw new Error(TicketsErrors.OST_EMPTY_RESULT);
                 }
 
-                throw new Error(response.statusText);
+                throw new Error(TicketsErrors.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -585,10 +594,10 @@ export class TicketsService {
         }
       }
 
-      throw new Error('Not implemented');
+      throw new Error(TicketsErrors.NOT_IMPLEMENTED);
     }
 
-    throw new Error('Can not use a default route');
+    throw new Error(TicketsErrors.DEFAULT_ROUTE);
   };
 
   /**
@@ -615,7 +624,9 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          throw error;
+          this.logger.error(error);
+
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -637,7 +648,7 @@ export class TicketsService {
 
           this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
           return {
-            error: 'Not connected to SOAP',
+            error: TicketsErrors.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
@@ -645,7 +656,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(soapError(error));
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -691,9 +702,13 @@ export class TicketsService {
                       }
                     }
                   }
-                  throw new Error(`Not found the OSTicket data in "${task.where}"`);
+
+                  this.logger.error(`ticketsTaskDescription: ${TicketsErrors.OST_EMPTY_RESULT}`);
+                  throw new Error(TicketsErrors.OST_EMPTY_RESULT);
                 }
-                throw new Error(response.statusText);
+
+                this.logger.error(`ticketsTaskDescription: ${TicketsErrors.OST_EMPTY_RESULT}`);
+                throw new Error(TicketsErrors.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -771,7 +786,7 @@ export class TicketsService {
 
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
           return {
-            error: 'Not connected to SOAP',
+            error: TicketsErrors.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
@@ -779,16 +794,16 @@ export class TicketsService {
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(soapError(error));
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
     }
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia || task.where === TkWhere.OSThr) {
-      throw new Error('Not implemented');
+      throw new Error(TicketsErrors.NOT_IMPLEMENTED);
     }
 
-    throw new Error('Can not use a default route');
+    throw new Error(TicketsErrors.DEFAULT_ROUTE);
   };
 
   /**
@@ -815,7 +830,9 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          throw error;
+          this.logger.error(error);
+
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -834,7 +851,7 @@ export class TicketsService {
 
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           return {
-            error: 'Not connected to SOAP',
+            error: TicketsErrors.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
@@ -842,7 +859,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(soapError(error));
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -885,9 +902,11 @@ export class TicketsService {
                       };
                     }
                   }
-                  throw new Error(`Not found the OSTicket data in "${file.where}"`);
+
+                  throw new Error(TicketsErrors.OST_EMPTY_RESULT);
                 }
-                throw new Error(response.statusText);
+
+                throw new Error(TicketsErrors.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -897,10 +916,10 @@ export class TicketsService {
         }
       }
 
-      throw new Error('Not implemented');
+      throw new Error(TicketsErrors.NOT_IMPLEMENTED);
     }
 
-    throw new Error('Can not use a default route');
+    throw new Error(TicketsErrors.DEFAULT_ROUTE);
   };
 
   /**
@@ -927,7 +946,9 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          throw error;
+          this.logger.error(error);
+
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -945,7 +966,7 @@ export class TicketsService {
 
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           return {
-            error: 'Not connected to SOAP',
+            error: TicketsErrors.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
@@ -953,7 +974,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(soapError(error));
+          throw new Error(TicketsErrors.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -996,9 +1017,11 @@ export class TicketsService {
                       };
                     }
                   }
-                  throw new Error(`Not found the OSTicket data in "${file.where}"`);
+
+                  throw new Error(TicketsErrors.OST_EMPTY_RESULT);
                 }
-                throw new Error(response.statusText);
+
+                throw new Error(TicketsErrors.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -1008,9 +1031,9 @@ export class TicketsService {
         }
       }
 
-      throw new Error('Not implemented');
+      throw new Error(TicketsErrors.NOT_IMPLEMENTED);
     }
 
-    throw new Error('Can not use a default route');
+    throw new Error(TicketsErrors.DEFAULT_ROUTE);
   };
 }
