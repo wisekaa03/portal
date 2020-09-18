@@ -143,14 +143,14 @@ input TkFileInput {
 }
 
 type Query {
-  TicketsRoutes(routes: TkRoutesInput): TkRoutes
-  TicketsTasks(tasks: TkTasksInput): TkTasks!
-  TicketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask!
-  TicketsTaskFile(file: TkFileInput!): TkFile!
-  TicketsCommentFile(file: TkFileInput!): TkFile!
+  ticketsRoutes(routes: TkRoutesInput): TkRoutes
+  ticketsTasks(tasks: TkTasksInput): TkTasks!
+  ticketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask!
 }
 
 type Mutation {
-  TicketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew!
-  TicketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkEditTask!
+  ticketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew!
+  ticketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkEditTask!
+  ticketsCommentFile(file: TkFileInput!): TkFile!
+  ticketsTaskFile(file: TkFileInput!): TkFile!
 }

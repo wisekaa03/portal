@@ -74,12 +74,12 @@ export class TicketsService {
    * Tickets: get array of routes and services
    *
    * @async
-   * @method TicketsRoutes
+   * @method ticketsRoutes
    * @param {User} user User object
    * @param {string} password The Password
    * @returns {TkRoutes[]} Services
    */
-  TicketsRoutes = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
+  ticketsRoutes = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
     const promises: Promise<TkRoutes>[] = [];
 
     /* 1C SOAP */
@@ -198,18 +198,18 @@ export class TicketsService {
    * Tickets (cache): get array of routes and services
    *
    * @async
-   * @method TicketsRoutesCache
+   * @method ticketsRoutesCache
    * @param {User} user User object
    * @param {string} password The Password
    * @returns {TkRoutes[]} Services
    */
-  TicketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
+  ticketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
     const cachedID = `${user.loginIdentificator}-tickets-routes`;
     if (this.cache && (!input || input.cache !== false)) {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsRoutes = await this.TicketsRoutes(user, password, input);
+          const ticketsRoutes = await this.ticketsRoutes(user, password, input);
           this.pubSub.publish('TicketsRoutes', {
             user: user.loginIdentificator,
             ticketsRoutes,
@@ -221,7 +221,7 @@ export class TicketsService {
       }
     }
 
-    const ticketsRoutes = await this.TicketsRoutes(user, password, input);
+    const ticketsRoutes = await this.ticketsRoutes(user, password, input);
     this.pubSub.publish('TicketsRoutes', { user: user.loginIdentificator, ticketsRoutes });
 
     if (this.cache) {
@@ -235,14 +235,14 @@ export class TicketsService {
    * Tasks list
    *
    * @async
-   * @method TicketsTasks
+   * @method ticketsTasks
    * @param {User} user User object
    * @param {string} password The Password
    * @param {string} Status The status
    * @param {string} Find The find string
    * @returns {TkTasks[]}
    */
-  TicketsTasks = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
+  ticketsTasks = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
     const promises: Promise<TkTasks>[] = [];
 
     /* 1C SOAP */
@@ -413,20 +413,20 @@ export class TicketsService {
    * Tasks list (cache)
    *
    * @async
-   * @method TicketsTasksCache
+   * @method ticketsTasksCache
    * @param {User} user User object
    * @param {string} password The Password
    * @param {string} Status The status
    * @param {string} Find The find string
    * @returns {TkTasks[]}
    */
-  TicketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
+  ticketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
     const cachedID = `${user.loginIdentificator}-tickets-tasks`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTasks = await this.TicketsTasks(user, password, tasks);
+          const ticketsTasks = await this.ticketsTasks(user, password, tasks);
           this.pubSub.publish('TicketsTasks', {
             user: user.loginIdentificator,
             ticketsTasks,
@@ -438,7 +438,7 @@ export class TicketsService {
       }
     }
 
-    const ticketsTasks = await this.TicketsTasks(user, password, tasks);
+    const ticketsTasks = await this.ticketsTasks(user, password, tasks);
     this.pubSub.publish('TicketsTasks', { user: user.loginIdentificator, ticketsTasks });
 
     if (this.cache) {
@@ -452,14 +452,14 @@ export class TicketsService {
    * New task
    *
    * @async
-   * @method TicketsTaskNew
+   * @method ticketsTaskNew
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkTaskNewInput} task Ticket object
    * @param {Promise<FileUpload>[]} attachments Attachments
    * @returns {TkTaskNew} New task creation
    */
-  TicketsTaskNew = async (user: User, password: string, task: TkTaskNewInput, attachments?: Promise<FileUpload>[]): Promise<TkTaskNew> => {
+  ticketsTaskNew = async (user: User, password: string, task: TkTaskNewInput, attachments?: Promise<FileUpload>[]): Promise<TkTaskNew> => {
     const Attaches: AttachesSOAP = { Вложение: [] };
 
     if (attachments) {
@@ -593,13 +593,13 @@ export class TicketsService {
    * Task description
    *
    * @async
-   * @method TicketsTaskDescription
+   * @method ticketsTaskDescription
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkTaskDescriptionInput} task Task description
    * @returns {TkTasks}
    */
-  TicketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
+  ticketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C && task.code) {
       // TODO: cache
@@ -711,14 +711,14 @@ export class TicketsService {
    * Edit task
    *
    * @async
-   * @method TicketsTaskEdit
+   * @method ticketsTaskEdit
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkTaskEditInput} task The task which will be editing
    * @param {Promise<FileUpload>} attachments Attachments object
    * @returns {TkTasks} Task for editing
    */
-  TicketsTaskEdit = async (
+  ticketsTaskEdit = async (
     user: User,
     password: string,
     task: TkTaskEditInput,
@@ -793,13 +793,13 @@ export class TicketsService {
    * Get file of task
    *
    * @async
-   * @method TicketsTaskFile
+   * @method ticketsTaskFile
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkFileInput} id The task file
    * @returns {TkFile}
    */
-  TicketsTaskFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
+  ticketsTaskFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.id) {
       // TODO: cache
@@ -905,13 +905,13 @@ export class TicketsService {
    * Get file of comment
    *
    * @async
-   * @method TicketsCommentFile
+   * @method ticketsCommentFile
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkFileInput} id The task file
    * @returns {TkFile}
    */
-  TicketsCommentFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
+  ticketsCommentFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.id) {
       // TODO: cache

@@ -25,9 +25,9 @@ export class DocFlowResolver {
    * @returns {DocFlowTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('DocFlowGetTasks')
+  @Query('docFlowGetTasks')
   @UseGuards(GqlAuthGuard)
-  async DocFlowGetTasks(
+  async docFlowGetTasks(
     @Args('tasks') tasks?: DocFlowTasksInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -36,7 +36,7 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.DocFlowGetTasksCache(user, password, tasks).catch((error: Error) => {
+    return this.docflowService.docFlowGetTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

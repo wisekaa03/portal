@@ -532,7 +532,7 @@ const TICKETS_TASK_COMMENTS = gql`
 
 export const TICKETS_ROUTES = gql`
   query TicketsRoutes($routes: TkRoutesInput) {
-    TicketsRoutes(routes: $routes) {
+    ticketsRoutes(routes: $routes) {
       routes {
         where
         code
@@ -554,7 +554,7 @@ export const TICKETS_ROUTES = gql`
 
 export const TICKETS_TASKS = gql`
   query TicketsTasks($tasks: TkTasksInput) {
-    TicketsTasks(tasks: $tasks) {
+    ticketsTasks(tasks: $tasks) {
       users {
         where
         id
@@ -573,7 +573,7 @@ export const TICKETS_TASKS = gql`
 
 export const TICKETS_TASK_NEW = gql`
   mutation TicketsTaskNew($task: TkTaskNewInput!, $attachments: [Upload]) {
-    TicketsTaskNew(task: $task, attachments: $attachments) {
+    ticketsTaskNew(task: $task, attachments: $attachments) {
       where
       code
       subject
@@ -588,7 +588,7 @@ export const TICKETS_TASK_NEW = gql`
 
 export const TICKETS_TASK_DESCRIPTION = gql`
   query TicketsTaskDescription($task: TkTaskDescriptionInput!) {
-    TicketsTaskDescription(task: $task) {
+    ticketsTaskDescription(task: $task) {
       users {
         ...TicketsUserProps
       }
@@ -614,7 +614,7 @@ export const TICKETS_TASK_DESCRIPTION = gql`
 
 export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
-    TicketsTaskEdit(task: $task, attachments: $attachments) {
+    ticketsTaskEdit(task: $task, attachments: $attachments) {
       users {
         ...TicketsUserProps
       }
@@ -639,8 +639,8 @@ export const TICKETS_TASK_EDIT = gql`
 `;
 
 export const TICKETS_TASK_FILE = gql`
-  query TicketsTaskFile($file: TkFileInput!) {
-    TicketsTaskFile(file: $file) {
+  mutation TicketsTaskFile($file: TkFileInput!) {
+    ticketsTaskFile(file: $file) {
       ...TicketsFiles
     }
   }
@@ -648,8 +648,8 @@ export const TICKETS_TASK_FILE = gql`
 `;
 
 export const TICKETS_COMMENT_FILE = gql`
-  query TicketsCommentFile($file: TkFileInput!) {
-    TicketsCommentFile(file: $file) {
+  mutation TicketsCommentFile($file: TkFileInput!) {
+    ticketsCommentFile(file: $file) {
       ...TicketsFiles
     }
   }
@@ -662,7 +662,7 @@ export const TICKETS_COMMENT_FILE = gql`
 
 export const DOCFLOW_GET_TASKS = gql`
   query DocFlowGetTasks($tasks: DocFlowTasksInput) {
-    DocFlowGetTasks(tasks: $tasks) {
+    docFlowGetTasks(tasks: $tasks) {
       id
       name
       importance {

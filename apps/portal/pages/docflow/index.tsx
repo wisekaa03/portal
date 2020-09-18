@@ -20,7 +20,7 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const find = '';
 
   const { loading: loadingDocFlowTasks, data: dataDocFlowTasks, error: errorDocFlowTasks, refetch: refetchDocFlowTasksInt } = useQuery<
-    Data<'DocFlowGetTasks', DocFlowTask[]>,
+    Data<'docFlowGetTasks', DocFlowTask[]>,
     { tasks: DocFlowTasksInput }
   >(DOCFLOW_GET_TASKS, {
     ssr: false,
@@ -32,10 +32,10 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     variables?: Partial<{
       tasks: DocFlowTasksInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'DocFlowGetTasks', DocFlowTask[]>>> =>
+  ): Promise<ApolloQueryResult<Data<'docFlowGetTasks', DocFlowTask[]>>> =>
     refetchDocFlowTasksInt({ tasks: { ...variables?.tasks, cache: false } });
 
-  const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.DocFlowGetTasks ?? [], [dataDocFlowTasks]);
+  const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.docFlowGetTasks ?? [], [dataDocFlowTasks]);
 
   useEffect(() => {
     if (errorDocFlowTasks) {

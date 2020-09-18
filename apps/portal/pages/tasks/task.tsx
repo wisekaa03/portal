@@ -22,7 +22,7 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
   const [comment, setComment] = useState<string>('');
 
   const { loading, data, error, refetch: taskRefetch } = useQuery<
-    Data<'TicketsTaskDescription', TkEditTask>,
+    Data<'ticketsTaskDescription', TkEditTask>,
     { task: TkTaskDescriptionInput }
   >(TICKETS_TASK_DESCRIPTION, {
     ssr: false,
@@ -36,25 +36,25 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     notifyOnNetworkStatusChange: true,
   });
 
-  const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useLazyQuery<
+  const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useMutation<
     Data<'TicketsTaskFile', TkFile>,
     { file: TkFileInput }
-  >(TICKETS_TASK_FILE, { ssr: false });
+  >(TICKETS_TASK_FILE);
 
-  const [getCommentFile, { loading: loadingCommentFile, data: dataCommentFile, error: errorCommentFile }] = useLazyQuery<
+  const [getCommentFile, { loading: loadingCommentFile, data: dataCommentFile, error: errorCommentFile }] = useMutation<
     Data<'TicketsCommentFile', TkFile>,
     { file: TkFileInput }
-  >(TICKETS_COMMENT_FILE, { ssr: false });
+  >(TICKETS_COMMENT_FILE);
 
   const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
-    update(cache, { data: { TicketsTaskEdit: TicketsTaskEditUpdate } }) {
+    update(cache, { data: { ticketsTaskEdit: ticketsTaskEditUpdate } }) {
       cache.writeQuery({
         query: TICKETS_TASK_DESCRIPTION,
         variables: {
           where: query?.where || TkWhere.Default,
           code: query?.code || '0',
         },
-        data: { TicketsTaskDescription: TicketsTaskEditUpdate },
+        data: { ticketsTaskDescription: ticketsTaskEditUpdate },
       });
     },
   });
@@ -127,7 +127,7 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     }
   }, [errorEdit, error, errorTaskFile, errorCommentFile]);
 
-  const task = data?.TicketsTaskDescription;
+  const task = data?.ticketsTaskDescription;
 
   return (
     <>

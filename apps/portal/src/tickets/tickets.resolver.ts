@@ -37,9 +37,9 @@ export class TicketsResolver {
    * @returns {TkRoutes}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('TicketsRoutes')
+  @Query('ticketsRoutes')
   @UseGuards(GqlAuthGuard)
-  async TicketsRoutes(
+  async ticketsRoutes(
     @Args('routes') routes?: TkRoutesInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -48,7 +48,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsRoutesCache(user, password, routes).catch((error: Error) => {
+    return this.ticketsService.ticketsRoutesCache(user, password, routes).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -61,9 +61,9 @@ export class TicketsResolver {
    * @returns {TkTasks}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('TicketsTasks')
+  @Query('ticketsTasks')
   @UseGuards(GqlAuthGuard)
-  async TicketsTasks(
+  async ticketsTasks(
     @Args('tasks') tasks?: TkTasksInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -72,7 +72,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTasksCache(user, password, tasks).catch((error: Error) => {
+    return this.ticketsService.ticketsTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -87,9 +87,9 @@ export class TicketsResolver {
    * @returns {TkTaskNew}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('TicketsTaskNew')
+  @Mutation('ticketsTaskNew')
   @UseGuards(GqlAuthGuard)
-  async TicketsTaskNew(
+  async ticketsTaskNew(
     @Args('task') task: TkTaskNewInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
@@ -99,7 +99,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskNew(user, password, task, attachments).catch((error: Error) => {
+    return this.ticketsService.ticketsTaskNew(user, password, task, attachments).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -111,9 +111,9 @@ export class TicketsResolver {
    * @returns {TkTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('TicketsTaskEdit')
+  @Mutation('ticketsTaskEdit')
   @UseGuards(GqlAuthGuard)
-  async TicketsTaskEdit(
+  async ticketsTaskEdit(
     @Args('task') task: TkTaskEditInput,
     @Args('attachments') attachments: Promise<FileUpload>[],
     @CurrentUser() user?: User,
@@ -123,7 +123,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskEdit(user, password, task, attachments).catch((error: Error) => {
+    return this.ticketsService.ticketsTaskEdit(user, password, task, attachments).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -135,9 +135,9 @@ export class TicketsResolver {
    * @returns {TkTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('TicketsTaskDescription')
+  @Query('ticketsTaskDescription')
   @UseGuards(GqlAuthGuard)
-  async TicketsTaskDescription(
+  async ticketsTaskDescription(
     @Args('task') task: TkTaskDescriptionInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -146,7 +146,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskDescription(user, password, task).catch((error: Error) => {
+    return this.ticketsService.ticketsTaskDescription(user, password, task).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -158,9 +158,9 @@ export class TicketsResolver {
    * @returns {TkFile}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('TicketsTaskFile')
+  @Mutation('ticketsTaskFile')
   @UseGuards(GqlAuthGuard)
-  async TicketsTaskFile(
+  async ticketsTaskFile(
     @Args('file') file: TkFileInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -169,7 +169,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsTaskFile(user, password, file).catch((error: Error) => {
+    return this.ticketsService.ticketsTaskFile(user, password, file).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -181,9 +181,9 @@ export class TicketsResolver {
    * @returns {TkFile}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('TicketsCommentFile')
+  @Mutation('ticketsCommentFile')
   @UseGuards(GqlAuthGuard)
-  async TicketsCommentFile(
+  async ticketsCommentFile(
     @Args('file') file: TkFileInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -192,7 +192,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.TicketsCommentFile(user, password, file).catch((error: Error) => {
+    return this.ticketsService.ticketsCommentFile(user, password, file).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

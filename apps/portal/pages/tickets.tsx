@@ -50,7 +50,7 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
   );
 
   const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutesInt } = useQuery<
-    Data<'TicketsRoutes', TkRoutes>,
+    Data<'ticketsRoutes', TkRoutes>,
     { routes: TkRoutesInput }
   >(TICKETS_ROUTES, {
     ssr: false,
@@ -62,9 +62,9 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
     variables?: Partial<{
       routes: TkRoutesInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>> => refetchRoutesInt({ routes: { ...variables?.routes, cache: false } });
+  ): Promise<ApolloQueryResult<Data<'ticketsRoutes', TkRoutes>>> => refetchRoutesInt({ routes: { ...variables?.routes, cache: false } });
 
-  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'TicketsTaskNew', TkTaskNew>>(
+  const [createTask, { loading: loadingCreated, data: dataCreated, error: errorCreated }] = useMutation<Data<'ticketsTaskNew', TkTaskNew>>(
     TICKETS_TASK_NEW,
     // {
     //   refetchQueries: [
@@ -175,18 +175,18 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
   }, [routes, setTask, setCurrentTab, handleResetTicket, query]);
 
   useEffect(() => {
-    if (!loadingRoutes && !errorRoutes && dataRoutes?.TicketsRoutes) {
-      if (dataRoutes.TicketsRoutes.errors) {
-        dataRoutes.TicketsRoutes.errors?.forEach((error) => snackbarUtils.error(error));
+    if (!loadingRoutes && !errorRoutes && dataRoutes?.ticketsRoutes) {
+      if (dataRoutes.ticketsRoutes.errors) {
+        dataRoutes.ticketsRoutes.errors?.forEach((error) => snackbarUtils.error(error));
       }
-      if (dataRoutes.TicketsRoutes.routes) {
-        setRoutes(dataRoutes.TicketsRoutes.routes);
+      if (dataRoutes.ticketsRoutes.routes) {
+        setRoutes(dataRoutes.ticketsRoutes.routes);
       }
     }
   }, [dataRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
-    setCreated((!loadingCreated && !errorCreated && dataCreated?.TicketsTaskNew) || {});
+    setCreated((!loadingCreated && !errorCreated && dataCreated?.ticketsTaskNew) || {});
   }, [dataCreated, errorCreated, loadingCreated]);
 
   // useEffect(() => {

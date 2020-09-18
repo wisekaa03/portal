@@ -22,7 +22,7 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const find = '';
 
   const { loading: loadingTasks, data: dataTasks, error: errorTasks, refetch: tasksRefetchInt } = useQuery<
-    Data<'TicketsTasks', TkTasks>,
+    Data<'ticketsTasks', TkTasks>,
     { tasks: TkTasksInput }
   >(TICKETS_TASKS, {
     ssr: true,
@@ -35,15 +35,15 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     variables?: Partial<{
       tasks: TkTasksInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'TicketsTasks', TkTasks>>> => tasksRefetchInt({ tasks: { ...variables?.tasks, cache: false } });
+  ): Promise<ApolloQueryResult<Data<'ticketsTasks', TkTasks>>> => tasksRefetchInt({ tasks: { ...variables?.tasks, cache: false } });
 
   const tasks = useMemo<TkTask[]>(() => {
-    if (dataTasks?.TicketsTasks) {
-      if (dataTasks.TicketsTasks.errors) {
-        dataTasks.TicketsTasks.errors?.forEach((error) => snackbarUtils.error(error));
+    if (dataTasks?.ticketsTasks) {
+      if (dataTasks.ticketsTasks.errors) {
+        dataTasks.ticketsTasks.errors?.forEach((error) => snackbarUtils.error(error));
       }
-      if (dataTasks.TicketsTasks.tasks) {
-        return dataTasks.TicketsTasks.tasks;
+      if (dataTasks.ticketsTasks.tasks) {
+        return dataTasks.ticketsTasks.tasks;
       }
     }
     return [];

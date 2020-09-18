@@ -3,5 +3,5 @@ input ReportsInput {
 }
 
 type Mutation {
-  Reports(reports: ReportsInput): Boolean
+  reports(report: ReportsInput!): Boolean
 }

@@ -77,7 +77,7 @@ export class DocFlowService {
    * @param {string} password The Password
    * @returns {DocFlowTask[]}
    */
-  DocFlowGetTasks = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
+  docFlowGetTasks = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -193,13 +193,13 @@ export class DocFlowService {
    * @param {task}
    * @returns {DocFlowTask[]}
    */
-  DocFlowGetTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
+  docFlowGetTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
     const cachedID = `${user.loginIdentificator}-tickets-tasks`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTasks = await this.DocFlowGetTasks(user, password, tasks);
+          const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
           this.pubSub.publish('TicketsTasks', {
             user: user.loginIdentificator,
             ticketsTasks,
@@ -211,7 +211,7 @@ export class DocFlowService {
       }
     }
 
-    const ticketsTasks = await this.DocFlowGetTasks(user, password, tasks);
+    const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
     this.pubSub.publish('DocFlowGetTasks', { user: user.loginIdentificator, ticketsTasks });
 
     if (this.cache) {
