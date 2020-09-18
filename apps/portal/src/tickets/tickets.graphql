@@ -143,7 +143,7 @@ input TkFileInput {
 }
 
 type Query {
-  ticketsRoutes(routes: TkRoutesInput): TkRoutes
+  ticketsRoutes(routes: TkRoutesInput): TkRoutes!
   ticketsTasks(tasks: TkTasksInput): TkTasks!
   ticketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask!
 }
@@ -153,4 +153,10 @@ type Mutation {
   ticketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkEditTask!
   ticketsCommentFile(file: TkFileInput!): TkFile!
   ticketsTaskFile(file: TkFileInput!): TkFile!
+}
+
+type Subscription {
+  ticketsRoutes(routes: TkRoutesInput): TkRoutes!
+  ticketsTasks(tasks: TkTasksInput): TkTasks!
+  ticketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask!
 }

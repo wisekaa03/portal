@@ -53,3 +53,7 @@ input DocFlowTasksInput {
 type Query {
   docFlowGetTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
 }
+
+type Subscription {
+  docFlowGetTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
+}

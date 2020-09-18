@@ -210,7 +210,7 @@ export class TicketsService {
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-          this.pubSub.publish('TicketsRoutes', {
+          this.pubSub.publish('ticketsRoutes', {
             user: user.loginIdentificator,
             ticketsRoutes,
           });
@@ -222,7 +222,7 @@ export class TicketsService {
     }
 
     const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-    this.pubSub.publish('TicketsRoutes', { user: user.loginIdentificator, ticketsRoutes });
+    this.pubSub.publish('ticketsRoutes', { user: user.loginIdentificator, ticketsRoutes });
 
     if (this.cache) {
       this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
@@ -427,7 +427,7 @@ export class TicketsService {
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-          this.pubSub.publish('TicketsTasks', {
+          this.pubSub.publish('ticketsTasks', {
             user: user.loginIdentificator,
             ticketsTasks,
           });
@@ -439,7 +439,7 @@ export class TicketsService {
     }
 
     const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-    this.pubSub.publish('TicketsTasks', { user: user.loginIdentificator, ticketsTasks });
+    this.pubSub.publish('ticketsTasks', { user: user.loginIdentificator, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);

@@ -1,8 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
+import { UseGuards, Inject, UnauthorizedException, HttpException } from '@nestjs/common';
+import { Query, Resolver, Mutation, Subscription, Args } from '@nestjs/graphql';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
@@ -16,7 +17,11 @@ import { DocFlowService } from './docflow.service';
 
 @Resolver('DocFlowResolver')
 export class DocFlowResolver {
-  constructor(private readonly configService: ConfigService, private readonly docflowService: DocFlowService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly docflowService: DocFlowService,
+    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
+  ) {}
 
   /**
    * DocFlowTasks list
@@ -39,5 +44,14 @@ export class DocFlowResolver {
     return this.docflowService.docFlowGetTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('docFlowGetTasks', {
+    // TODO: сделать чтобы по пользакам отбиралось
+    // filter: (payload, variables) => true,
+  })
+  async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
+    return this.pubSub.asyncIterator<DocFlowTask[]>('ticketsRoutes');
   }
 }

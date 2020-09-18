@@ -11,9 +11,9 @@ import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
-import { CurrentUser } from '@back/user/user.decorator';
+import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { FilesService } from './files.service';
-import { PasswordFrontend } from '../user/user.decorator';
+
 //#endregion
 
 registerEnumType(Folder, {
@@ -95,10 +95,9 @@ export class FilesResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('folderFilesSubscription', {
-    filter: (payload, variables) => {
+    filter: (payload, variables) =>
       // TODO: сделать чтобы по пользакам отбиралось
-      return payload.path === variables.path;
-    },
+      payload.path === variables.path,
   })
   folderFilesSubscription(): AsyncIterator<FilesFolder[]> {
     return this.pubSub.asyncIterator<FilesFolder[]>('folderFilesSubscription');

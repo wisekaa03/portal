@@ -1,8 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Inject, UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
+import { Query, Resolver, Mutation, Subscription, Args } from '@nestjs/graphql';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
@@ -28,7 +29,11 @@ import { TicketsService } from './tickets.service';
 
 @Resolver('TicketsResolver')
 export class TicketsResolver {
-  constructor(private readonly configService: ConfigService, private readonly ticketsService: TicketsService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly ticketsService: TicketsService,
+    @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
+  ) {}
 
   /**
    * Tickets: get array of routes and services
@@ -53,6 +58,15 @@ export class TicketsResolver {
     });
   }
 
+  @UseGuards(GqlAuthGuard)
+  @Subscription('ticketsRoutes', {
+    // TODO: сделать чтобы по пользакам отбиралось
+    // filter: (payload, variables) => true,
+  })
+  async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
+    return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
+  }
+
   /**
    * Tasks list
    *
@@ -75,6 +89,15 @@ export class TicketsResolver {
     return this.ticketsService.ticketsTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('ticketsTasks', {
+    // TODO: сделать чтобы по пользакам отбиралось
+    // filter: (payload, variables) => true,
+  })
+  async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
+    return this.pubSub.asyncIterator<TkTasks>('ticketsTasks');
   }
 
   /**
@@ -149,6 +172,15 @@ export class TicketsResolver {
     return this.ticketsService.ticketsTaskDescription(user, password, task).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('ticketsTaskDescription', {
+    // TODO: сделать чтобы по пользакам отбиралось
+    // filter: (payload, variables) => true,
+  })
+  async ticketsTaskDescriptionSubscription(): Promise<AsyncIterator<TkEditTask>> {
+    return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');
   }
 
   /**

@@ -19,7 +19,15 @@ describe(DocFlowResolver.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [{ provide: DocFlowService, useValue: serviceMock }, { provide: ConfigService, useValue: serviceMock }, DocFlowResolver],
+      providers: [
+        { provide: DocFlowService, useValue: serviceMock },
+        { provide: ConfigService, useValue: serviceMock },
+        {
+          provide: 'PUB_SUB',
+          useValue: serviceMock,
+        },
+        DocFlowResolver,
+      ],
     }).compile();
 
     resolver = module.get<DocFlowResolver>(DocFlowResolver);

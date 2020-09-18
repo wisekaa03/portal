@@ -19,7 +19,15 @@ describe(TicketsResolver.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [{ provide: TicketsService, useValue: serviceMock }, { provide: ConfigService, useValue: serviceMock }, TicketsResolver],
+      providers: [
+        { provide: TicketsService, useValue: serviceMock },
+        { provide: ConfigService, useValue: serviceMock },
+        {
+          provide: 'PUB_SUB',
+          useValue: serviceMock,
+        },
+        TicketsResolver,
+      ],
     }).compile();
 
     resolver = module.get<TicketsResolver>(TicketsResolver);
