@@ -186,7 +186,7 @@ export class DocFlowService {
       }
     }
 
-    throw new Error('Not allowed');
+    throw new Error(PortalError.NOT_IMPLEMENTED);
   };
 
   /**
