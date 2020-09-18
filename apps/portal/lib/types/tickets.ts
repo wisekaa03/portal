@@ -10,6 +10,7 @@ export enum TkWhere {
 }
 
 export interface TkService {
+  id: string;
   where: TkWhere;
   code: string;
   name: string;
@@ -19,7 +20,7 @@ export interface TkService {
 }
 
 export interface TkRoute {
-  id?: string;
+  id: string;
   where: TkWhere;
   code: string;
   name: string;
@@ -47,16 +48,17 @@ export interface TkTasksInput {
 }
 
 export interface TkFile {
-  where: TkWhere;
   id: string;
+  where: TkWhere;
   name?: string;
   mime?: string;
   body?: string;
 }
 
 export interface TkComment {
+  id: string;
   where: TkWhere;
-  code?: string;
+  code: string;
   date?: Date;
   authorLogin?: string;
   body?: string;
@@ -65,8 +67,8 @@ export interface TkComment {
 }
 
 export interface TkTask {
+  id: string;
   where: TkWhere;
-  id?: string;
   code: string;
   subject: string;
   smallBody?: string;
@@ -86,8 +88,8 @@ export interface TkTask {
 }
 
 export interface TkUser {
+  id: string;
   where: TkWhere;
-  id?: string;
   name: string;
   login?: string;
   avatar?: string;

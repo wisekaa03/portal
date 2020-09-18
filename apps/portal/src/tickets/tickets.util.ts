@@ -74,8 +74,8 @@ export const whereService = (where: string | TkWhere): TkWhere => {
 export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefined =>
   user && Object.keys(user).length > 0
     ? {
+        id: `${whereService(where)}.${user.Ref || user['ФИО']}`,
         where: whereService(where),
-        id: user.Ref || `${whereService(where)}.user.${user['ФИО']}`,
         name: user['ФИО'] || '-',
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],
@@ -91,8 +91,8 @@ export const userSOAP = (user: TicketsUserSOAP, where: TkWhere): TkUser | undefi
 export const fileSOAP = (file: TicketsFileSOAP, where: TkWhere): TkFile | undefined =>
   file && Object.keys(file).length > 0 && file['Наименование']
     ? {
+        id: `${whereService(where)}.${file.Ref}`,
         where: whereService(where),
-        id: file.Ref,
         name: `${file['Наименование']}.${file['РасширениеФайла']}`,
         mime: file.MIME,
         body: file['ФайлХранилище'],
@@ -110,6 +110,7 @@ export const fileSOAP = (file: TicketsFileSOAP, where: TkWhere): TkFile | undefi
 export const serviceSOAP = (service: TicketsServiceSOAP, where: TkWhere): TkService | undefined =>
   service && Object.keys(service).length > 0
     ? {
+        id: `${whereService(where)}.${service['Код']}`,
         where: whereService(where),
         code: service['Код'],
         name: service['Наименование'],
@@ -154,11 +155,12 @@ export const routeSOAP = (route: TicketsRouteSOAP, where: TkWhere): TkRoute | un
 export const commentSOAP = (comment: TicketsCommentSOAP, where: TkWhere): TkComment | undefined =>
   comment && Object.keys(comment).length > 0
     ? {
+        id: `${whereService(where)}.${comment['Код']}`,
         where: whereService(where),
+        code: comment['Код'],
         date: comment['Дата'],
         authorLogin: comment['Автор'],
         body: comment['Текст'],
-        code: comment['Код'],
         parentCode: comment['КодРодителя'],
         files:
           comment['Файлы']?.['Файл'] && Array.isArray(comment['Файлы']['Файл'])
@@ -191,7 +193,7 @@ export const taskSOAP = (task: TicketsTaskSOAP, where: TkWhere): TkTask | undefi
   task && Object.keys(task).length > 0
     ? {
         where: whereService(where),
-        id: task.Ref || `${whereService(where)}.${task['Код']}`,
+        id: `${whereService(where)}.${task.Ref || task['Код']}`,
         code: task['Код'],
         subject: task['Наименование'],
         body: task['Описание'] && clearHtml(task['Описание']),
@@ -269,6 +271,7 @@ export const filesOST = (files: Record<string, any>, where: TkWhere): TkFile[] =
 export const serviceOST = (service: Record<string, any>, where: TkWhere): TkService | undefined =>
   service && Object.keys(service).length > 0
     ? {
+        id: `${whereService(where)}.${service.code}`,
         where: whereService(where),
         code: service.code,
         name: service.name,
@@ -369,18 +372,20 @@ export const taskOST = (task: Record<string, any>, where: TkWhere): TkTask | und
         createdDate: new Date(task.created),
         timeoutDate: new Date(task.dateOfCompletion),
         endDate: undefined,
-        initiatorUser: task.owner_user_id ? `${whereService(where)}.user.${task.owner_user_id}` : undefined,
-        executorUser: task.assignee_user_id ? `${whereService(where)}.user.${task.assignee_user_id}` : undefined,
+        initiatorUser: task.owner_user_id ? `${whereService(where)}.${task.owner_user_id}` : undefined,
+        executorUser: task.assignee_user_id ? `${whereService(where)}.${task.assignee_user_id}` : undefined,
         route: {
+          id: `${whereService(where)}.${task.route?.code}`,
           where: whereService(where),
-          avatar: task.route?.avatar,
           code: task.route?.code,
+          avatar: task.route?.avatar,
           name: task.route?.name,
         },
         service: {
+          id: `${whereService(where)}.${task.topic_id}`,
           where: whereService(where),
-          avatar: task.topic_avatar,
           code: task.topic_id,
+          avatar: task.topic_avatar,
           name: task.topic,
         },
         availableAction: undefined,
@@ -430,24 +435,26 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
     initiatorUser: task.owner_user_id ? `${whereService(where)}.user.${task.owner_user_id}` : undefined,
     executorUser: task.assignee_user_id ? `${whereService(where)}.user.${task.assignee_user_id}` : undefined,
     route: {
+      id: `${whereService(where)}.${task.route?.code}`,
       where: whereService(where),
-      avatar: task.route?.avatar,
       code: task.route?.code,
       name: task.route?.name,
+      avatar: task.route?.avatar,
     },
     service: {
+      id: `${whereService(where)}.${task.topic_id}`,
       where: whereService(where),
-      avatar: task.topic_avatar,
       code: task.topic_id,
       name: task.topic,
+      avatar: task.topic_avatar,
     },
     // availableAction: undefined,
     // availableStages: undefined,
     files:
       typeof task.description?.[0]?.attachments === 'object'
         ? task.description?.[0]?.attachments.map((att: Record<string, string>) => ({
-            where: whereService(where),
             id: att.code,
+            where: whereService(where),
             mime: att.mime,
             body: att.body,
             name: att.name,
@@ -457,8 +464,8 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
 
   const users = [
     {
+      id: `${whereService(where)}.${task.owner_user_id}`,
       where: whereService(where),
-      id: `${whereService(where)}.user.${task.owner_user_id}`,
       name: task.owner_user_name,
       avatar: task.owner_avatar,
       email: task.owner_email,
@@ -468,8 +475,8 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
   ];
   if (task.assignee_user_name) {
     users.push({
+      id: `${whereService(where)}.${task.assignee_user_id}`,
       where: whereService(where),
-      id: `${whereService(where)}.user.${task.assignee_user_id}`,
       name: task.assignee_user_name,
       avatar: task.assignee_avatar,
       email: task.assignee_email,

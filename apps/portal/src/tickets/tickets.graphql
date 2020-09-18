@@ -1,5 +1,5 @@
 type TkService {
-  id: String
+  id: String!
   where: String!
   code: String!
   name: String
@@ -8,7 +8,7 @@ type TkService {
 }
 
 type TkRoute {
-  id: String
+  id: String!
   where: String!
   code: String!
   name: String
@@ -18,7 +18,7 @@ type TkRoute {
 }
 
 type TkUser {
-  id: String
+  id: String!
   where: String!
   name: String!
   login: String
@@ -41,9 +41,9 @@ type TkFile {
 }
 
 type TkComment {
-  id: String
+  id: String!
   where: String!
-  code: String
+  code: String!
   authorLogin: String
   body: String
   date: Date
@@ -52,7 +52,7 @@ type TkComment {
 }
 
 type TkTask {
-  id: String
+  id: String!
   where: String!
   code: String!
   subject: String!
