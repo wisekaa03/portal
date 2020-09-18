@@ -8,7 +8,7 @@ import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
 import { User } from '@lib/types/user.dto';
-import type { DocFlowTask, DocFlowTasksInput } from '@lib/types/docflow';
+import type { DocFlowTask, DocFlowTasksInput, DocFlowTaskInput, DocFlowFile, DocFlowFileInput } from '@lib/types/docflow';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
@@ -52,6 +52,70 @@ export class DocFlowResolver {
     // filter: (payload, variables) => true,
   })
   async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
-    return this.pubSub.asyncIterator<DocFlowTask[]>('ticketsRoutes');
+    return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowTasks');
+  }
+
+  /**
+   * DocFlowTask
+   *
+   * @async
+   * @returns {DocFlowTask}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query('docFlowGetTask')
+  @UseGuards(GqlAuthGuard)
+  async docFlowGetTask(
+    @Args('task') task?: DocFlowTaskInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<DocFlowTask> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.docflowService.docFlowGetTaskCache(user, password, task).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('docFlowGetTask', {
+    // TODO: сделать чтобы по пользакам отбиралось
+    // filter: (payload, variables) => true,
+  })
+  async docFlowGetTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
+    return this.pubSub.asyncIterator<DocFlowTask>('docFlowTask');
+  }
+
+  /**
+   * DocFlowTask
+   *
+   * @async
+   * @returns {DocFlowFile}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query('docFlowGetFile')
+  @UseGuards(GqlAuthGuard)
+  async docFlowGetFile(
+    @Args('file') file?: DocFlowFileInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<DocFlowFile> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.docflowService.docFlowGetFileCache(user, password, file).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('docFlowGetFile', {
+    // TODO: сделать чтобы по пользакам отбиралось
+    // filter: (payload, variables) => true,
+  })
+  async docFlowGetFileSubscription(): Promise<AsyncIterator<DocFlowFile>> {
+    return this.pubSub.asyncIterator<DocFlowFile>('docFlowFile');
   }
 }

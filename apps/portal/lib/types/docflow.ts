@@ -83,6 +83,14 @@ export interface DocFlowTasksInput {
   cache?: boolean;
 }
 
+export interface DocFlowTaskInput {
+  cache?: boolean;
+}
+
+export interface DocFlowFileInput {
+  cache?: boolean;
+}
+
 export interface DocFlowFileSOAP {
   allowDeletion: boolean;
   name: string;

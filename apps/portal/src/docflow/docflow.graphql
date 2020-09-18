@@ -8,7 +8,7 @@ type DocFlowState {
   name: String
 }
 
-type DocFlowFiles {
+type DocFlowFile {
   id: String!
   name: String
   presentation: String
@@ -35,7 +35,7 @@ type DocFlowTask {
   beginDate: Date
   dueDate: Date
   endDate: Date
-  files: [DocFlowFiles]
+  files: [DocFlowFile]
   description: String
   parentTask: DocFlowParentTask
   processStep: String
@@ -50,10 +50,22 @@ input DocFlowTasksInput {
   cache: Boolean
 }
 
+input DocFlowTaskInput {
+  cache: Boolean
+}
+
+input DocFlowFileInput {
+  cache: Boolean
+}
+
 type Query {
   docFlowGetTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
+  docFlowGetTask(task: DocFlowTaskInput): DocFlowTask!
+  docFlowGetFile(file: DocFlowFileInput): DocFlowFile!
 }
 
 type Subscription {
   docFlowGetTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
+  docFlowGetTask(task: DocFlowTaskInput): DocFlowTask!
+  docFlowGetFile(file: DocFlowFileInput): DocFlowFile!
 }
