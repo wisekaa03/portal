@@ -21,17 +21,20 @@ import Tickets from '.';
 
 const mockRoutes: TkRoute[] = [
   {
+    id: `${TkWhere.Default}.1`,
     where: TkWhere.Default,
     code: '1',
     name: 'Сервис 1',
     avatar: TicketsIcon,
     services: [
       {
+        id: `${TkWhere.Default}.4`,
         where: TkWhere.Default,
         code: '4',
         name: 'Не работает',
       },
       {
+        id: `${TkWhere.Default}.5`,
         where: TkWhere.Default,
         code: '5',
         name: 'Заказать услугу',
@@ -39,6 +42,7 @@ const mockRoutes: TkRoute[] = [
     ],
   },
   {
+    id: `${TkWhere.Default}.2`,
     where: TkWhere.Default,
     code: '2',
     name: 'Сервис 2',
@@ -46,6 +50,7 @@ const mockRoutes: TkRoute[] = [
     services: [],
   },
   {
+    id: `${TkWhere.Default}.3`,
     where: TkWhere.Default,
     code: '3',
     name: 'Сервис 3',
@@ -62,16 +67,16 @@ const mockFavorites: UserSettingsTaskFavorite[] = [
 
 const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
   {
-    route: { code: '1', where: TkWhere.SOAP1C, name: 'Route Name 00001' },
-    service: { where: TkWhere.SOAP1C, code: '0000001', name: 'Service Name 00001' },
+    route: { id: `${TkWhere.SOAP1C}.1`, code: '1', where: TkWhere.SOAP1C, name: 'Route Name 00001' },
+    service: { id: `${TkWhere.SOAP1C}.000001`, where: TkWhere.SOAP1C, code: '0000001', name: 'Service Name 00001' },
   },
   {
-    route: { code: '2', where: TkWhere.SOAP1C, name: 'Route Name 00002' },
-    service: { where: TkWhere.SOAP1C, code: '0000002', name: 'Service Name 00002' },
+    route: { id: `${TkWhere.SOAP1C}.2`, code: '2', where: TkWhere.SOAP1C, name: 'Route Name 00002' },
+    service: { id: `${TkWhere.SOAP1C}.0000002`, where: TkWhere.SOAP1C, code: '0000002', name: 'Service Name 00002' },
   },
   {
-    route: { code: '3', where: TkWhere.SOAP1C, name: 'Route Name 00003' },
-    service: { where: TkWhere.SOAP1C, code: '0000003', name: 'Service Name 00003' },
+    route: { id: `${TkWhere.SOAP1C}.3`, code: '3', where: TkWhere.SOAP1C, name: 'Route Name 00003' },
+    service: { id: `${TkWhere.SOAP1C}.0000003`, where: TkWhere.SOAP1C, code: '0000003', name: 'Service Name 00003' },
   },
 ];
 
