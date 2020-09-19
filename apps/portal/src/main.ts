@@ -44,9 +44,10 @@ async function bootstrap(): Promise<void> {
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
       logger.log('Using HTTPS certificate', 'Bootstrap');
 
-      if (__DEV__) {
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-      }
+      // if (__DEV__) {
+      //   // eslint-disable-next-line dot-notation
+      //   process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+      // }
 
       secure = true;
       nestjsOptions.httpsOptions = {
@@ -58,7 +59,6 @@ async function bootstrap(): Promise<void> {
     } else {
       throw new Error('No files');
     }
-    // eslint-disable-next-line no-empty
   } catch (error) {
     logger.warn('There are no files "private.crt", "private.key" in "secure" directory."', error.toString(), 'Bootstrap');
   }
