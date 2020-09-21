@@ -1,16 +1,15 @@
 /** @format */
-/* eslint no-use-before-define:0 */
 
 //#region Imports NPM
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT_FILE } from '@lib/queries';
-import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskDescriptionInput } from '@lib/types';
+import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskDescriptionInput, TkTaskEditInput } from '@lib/types';
 import { TkWhere } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
@@ -26,7 +25,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error, refetch: taskRefetch } = useQuery<
+  const { loading, data, error, refetch: taskRefetchInt } = useQuery<
     Data<'ticketsTaskDescription', TkEditTask>,
     { task: TkTaskDescriptionInput }
   >(TICKETS_TASK_DESCRIPTION, {
@@ -51,16 +50,21 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     { file: TkFileInput }
   >(TICKETS_COMMENT_FILE);
 
-  const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation(TICKETS_TASK_EDIT, {
-    update(cache, { data: { ticketsTaskEdit: ticketsTaskEditUpdate } }) {
-      cache.writeQuery({
-        query: TICKETS_TASK_DESCRIPTION,
-        variables: {
-          where: where || TkWhere.Default,
-          code: code || '0',
-        },
-        data: { ticketsTaskDescription: ticketsTaskEditUpdate },
-      });
+  const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation<
+    Data<'ticketsTaskEdit', TkEditTask>,
+    { task: TkTaskEditInput }
+  >(TICKETS_TASK_EDIT, {
+    update(cache, { data: dataEdit }) {
+      if (dataEdit) {
+        cache.writeQuery({
+          query: TICKETS_TASK_DESCRIPTION,
+          variables: {
+            where: where || TkWhere.Default,
+            code: code || '0',
+          },
+          data: { ticketsTaskDescription: dataEdit?.ticketsTaskEdit },
+        });
+      }
     },
   });
 
@@ -78,6 +82,13 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     }, 100);
   };
 
+  const taskRefetch = (
+    variables?: Partial<{
+      task: TkTaskDescriptionInput;
+    }>,
+  ): Promise<ApolloQueryResult<Data<'ticketsTaskDescription', TkEditTask>>> =>
+    taskRefetchInt({ task: { where, code, ...variables?.task, cache: false } });
+
   const handleDownload = async (task: TkTask, file: TkFile): Promise<void> => {
     if (file.body) {
       download(file.body, file.name || '');
@@ -92,10 +103,12 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
 
   const handleAccept = (): void => {
     const variables = {
-      where: where || TkWhere.Default,
-      code: code || '0',
-      comment,
-      attachments: files.map((file: DropzoneFile) => file.file),
+      task: {
+        where: where || TkWhere.Default,
+        code: code || '0',
+        comment,
+        // attachments: files.map((file: DropzoneFile) => file.file),
+      },
     };
 
     TicketsTaskEdit({
