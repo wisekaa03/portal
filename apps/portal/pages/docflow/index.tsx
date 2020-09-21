@@ -7,7 +7,7 @@ import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { DOCFLOW_GET_TASKS } from '@lib/queries';
+import { DOCFLOW_GET_TASKS, DOCFLOW_SUB_TASKS } from '@lib/queries';
 import type { DocFlowTask, DocFlowTasksInput } from '@lib/types/docflow';
 import { Data } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
@@ -19,14 +19,31 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const status = '';
   const find = '';
 
-  const { loading: loadingDocFlowTasks, data: dataDocFlowTasks, error: errorDocFlowTasks, refetch: refetchDocFlowTasksInt } = useQuery<
-    Data<'docFlowGetTasks', DocFlowTask[]>,
-    { tasks: DocFlowTasksInput }
-  >(DOCFLOW_GET_TASKS, {
+  const {
+    loading: loadingDocFlowTasks,
+    data: dataDocFlowTasks,
+    error: errorDocFlowTasks,
+    refetch: refetchDocFlowTasksInt,
+    subscribeToMore: subscribeToMoreDocFlowTasks,
+  } = useQuery<Data<'docFlowGetTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_GET_TASKS, {
     ssr: false,
     fetchPolicy: 'cache-and-network',
     // notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    subscribeToMoreDocFlowTasks({
+      document: DOCFLOW_SUB_TASKS,
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
+
+        const updateData = data?.docFlowGetTasks || [];
+
+        return { docFlowGetTasks: updateData };
+      },
+    });
+  }, [subscribeToMoreDocFlowTasks]);
 
   const refetchDocFlowTasks = async (
     variables?: Partial<{

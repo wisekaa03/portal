@@ -9,6 +9,7 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
+import { TIMEOUT_REFETCH_SERVICES } from '@back/shared/constants';
 import type {
   TkRoutes,
   TkTasks,
@@ -215,6 +216,8 @@ export class TicketsService {
             ticketsRoutes,
           });
           this.cache.set(cachedID, ticketsRoutes, this.ttl);
+
+          setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -434,6 +437,8 @@ export class TicketsService {
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
+
+          setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -731,26 +736,28 @@ export class TicketsService {
       const cached: TkEditTask = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTasks = await this.ticketsTaskDescription(user, password, task);
+          const ticketsTask = await this.ticketsTaskDescription(user, password, task);
           this.pubSub.publish('ticketsTaskDescription', {
             userId: user.id,
-            ticketsTasks,
+            ticketsTask,
           });
-          this.cache.set(cachedID, ticketsTasks, this.ttl);
+          this.cache.set(cachedID, ticketsTask, this.ttl);
+
+          setTimeout(() => this.ticketsTaskDescriptionCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
       }
     }
 
-    const ticketsTasks = await this.ticketsTasks(user, password, task);
-    this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTasks });
+    const ticketsTask = await this.ticketsTaskDescription(user, password, task);
+    this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTask });
 
     if (this.cache) {
-      this.cache.set<TkEditTask>(cachedID, ticketsTasks, this.ttl);
+      this.cache.set<TkEditTask>(cachedID, ticketsTask, this.ttl);
     }
 
-    return ticketsTasks;
+    return ticketsTask;
   };
 
   /**

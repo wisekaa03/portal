@@ -48,10 +48,21 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetTasks', {
-    filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
+    filter: (payload, variables, socket) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload?.userId === socket?.user?.id;
+    },
+    resolve: (payload) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload?.ticketsTasks;
+    },
   })
   async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
-    return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowTasks');
+    return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowGetTasks');
   }
 
   /**
@@ -82,7 +93,9 @@ export class DocFlowResolver {
     filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
   })
   async docFlowGetTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
-    return this.pubSub.asyncIterator<DocFlowTask>('docFlowTask');
+    const docflow = await this.pubSub.asyncIterator<DocFlowTask>('docFlowGetTask');
+
+    return docflow;
   }
 
   /**

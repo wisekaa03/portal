@@ -571,6 +571,25 @@ export const TICKETS_TASKS = gql`
   ${TICKETS_TASK_FRAGMENT}
 `;
 
+export const TICKETS_TASKS_SUB = gql`
+  subscription TicketsTasks($tasks: TkTasksInput) {
+    ticketsTasks(tasks: $tasks) {
+      users {
+        where
+        id
+        name
+        login
+      }
+      tasks {
+        ...TicketsTaskProps
+        smallBody
+      }
+      errors
+    }
+  }
+  ${TICKETS_TASK_FRAGMENT}
+`;
+
 export const TICKETS_TASK_NEW = gql`
   mutation TicketsTaskNew($task: TkTaskNewInput!, $attachments: [Upload]) {
     ticketsTaskNew(task: $task, attachments: $attachments) {
@@ -662,6 +681,49 @@ export const TICKETS_COMMENT_FILE = gql`
 
 export const DOCFLOW_GET_TASKS = gql`
   query DocFlowGetTasks($tasks: DocFlowTasksInput) {
+    docFlowGetTasks(tasks: $tasks) {
+      id
+      name
+      importance {
+        id
+        name
+      }
+      executor {
+        id
+        name
+      }
+      executed
+      executionMark
+      beginDate
+      dueDate
+      endDate
+      files {
+        id
+        name
+      }
+      description
+      parentTask {
+        id
+        name
+      }
+      processStep
+      executionComment
+      author {
+        id
+        name
+      }
+      accepted
+      acceptDate
+      state {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const DOCFLOW_SUB_TASKS = gql`
+  subscription DocFlowGetTasks($tasks: DocFlowTasksInput) {
     docFlowGetTasks(tasks: $tasks) {
       id
       name

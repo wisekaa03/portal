@@ -11,7 +11,7 @@ import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { LDAP_SYNC_SERVICE } from '@lib/constants';
+import { LDAP_SYNC_SERVICE } from '@back/shared/constants';
 import { ProfileService } from '@back/profile/profile.service';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupService } from '@back/group/group.service';

@@ -13,7 +13,7 @@ import { compare } from 'bcrypt';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@lib/constants';
+import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@back/shared/constants';
 import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from '@back/profile/profile.entity';
@@ -114,7 +114,12 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity} The user
    */
-  byUsername = async (username: string, isDisabled = true, isRelations: boolean | 'profile' | 'groups' = true, cache = true): Promise<UserEntity> => {
+  byUsername = async (
+    username: string,
+    isDisabled = true,
+    isRelations: boolean | 'profile' | 'groups' = true,
+    cache = true,
+  ): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { username };
 
     if (isDisabled) {

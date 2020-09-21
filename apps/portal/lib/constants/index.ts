@@ -3,11 +3,9 @@
 //#region Imports NPM
 //#endregion
 //#region Imports Local
-import { LoginService, Gender, UserContext } from '@lib/types';
 //#endregion
 
 export * from './app-bar';
-export * from './ldap-sync';
 
 export const FONT_SIZE_SMALL = 11;
 export const FONT_SIZE_NORMAL = 16;
@@ -68,8 +66,6 @@ export const AUTO_COLLAPSE_ROUTES = [
 ];
 
 export const TASK_STATUSES = ['Все', 'Регистрация', 'В работе', 'Выполнено', 'Завершено'];
-
-export const ADMIN_GROUP = 'web master';
 
 /**
  * PHONEBOOK

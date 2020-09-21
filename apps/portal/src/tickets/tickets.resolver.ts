@@ -61,6 +61,12 @@ export class TicketsResolver {
 
       return payload?.userId === socket?.user?.id;
     },
+    resolve: (payload) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload?.ticketsRoutes;
+    },
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
     return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
@@ -97,6 +103,12 @@ export class TicketsResolver {
       debugger;
 
       return payload?.userId === socket?.user?.id;
+    },
+    resolve: (payload) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload?.ticketsTasks;
     },
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
@@ -184,6 +196,12 @@ export class TicketsResolver {
       debugger;
 
       return payload?.userId === socket?.user?.id;
+    },
+    resolve: (payload) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload?.ticketsTask;
     },
   })
   async ticketsTaskDescriptionSubscription(): Promise<AsyncIterator<TkEditTask>> {

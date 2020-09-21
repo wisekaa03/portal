@@ -9,7 +9,8 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import {
+import { TIMEOUT_REFETCH_SERVICES } from '@back/shared/constants';
+import type {
   TkRoutes,
   TkTasks,
   TkEditTask,
@@ -206,11 +207,13 @@ export class DocFlowService {
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-          this.pubSub.publish('docFlowTasks', {
+          this.pubSub.publish('docFlowGetTasks', {
             userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
+
+          setTimeout(() => this.docFlowGetTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -218,7 +221,7 @@ export class DocFlowService {
     }
 
     const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-    this.pubSub.publish('docFlowTasks', { userId: user.id, ticketsTasks });
+    this.pubSub.publish('docFlowGetTasks', { userId: user.id, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
@@ -361,6 +364,8 @@ export class DocFlowService {
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
+
+          setTimeout(() => this.docFlowGetTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -511,6 +516,8 @@ export class DocFlowService {
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
+
+          // setTimeout(() => this.docFlowGetTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;

@@ -9,7 +9,7 @@ import { useQuery, ApolloQueryResult } from '@apollo/client';
 import type { TkTask, TkTasks, TkTasksInput, Data } from '@lib/types';
 import { TkWhere } from '@lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { TICKETS_TASKS } from '@lib/queries';
+import { TICKETS_TASKS, TICKETS_TASKS_SUB } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import TasksComponent from '@front/components/tasks/tasks';
@@ -20,15 +20,32 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const status = '';
   const find = '';
 
-  const { loading: loadingTasks, data: dataTasks, error: errorTasks, refetch: tasksRefetchInt } = useQuery<
-    Data<'ticketsTasks', TkTasks>,
-    { tasks: TkTasksInput }
-  >(TICKETS_TASKS, {
+  const {
+    loading: loadingTasks,
+    data: dataTasks,
+    error: errorTasks,
+    refetch: tasksRefetchInt,
+    subscribeToMore: subscribeTicketsTasks,
+  } = useQuery<Data<'ticketsTasks', TkTasks>, { tasks: TkTasksInput }>(TICKETS_TASKS, {
     ssr: true,
     variables: { tasks: { status, find } },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     // notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    subscribeTicketsTasks({
+      document: TICKETS_TASKS_SUB,
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
+
+        const updateData = data?.ticketsTasks || [];
+
+        return { ticketsTasks: updateData };
+      },
+    });
+  }, [subscribeTicketsTasks]);
 
   const tasksRefetch = (
     variables?: Partial<{
