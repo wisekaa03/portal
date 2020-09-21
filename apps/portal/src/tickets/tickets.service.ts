@@ -606,8 +606,6 @@ export class TicketsService {
   ticketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C && task.code) {
-      // TODO: cache
-
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
@@ -774,8 +772,6 @@ export class TicketsService {
   ): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
-      // TODO: cache
-
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
@@ -850,8 +846,6 @@ export class TicketsService {
   ticketsTaskFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.id) {
-      // TODO: cache
-
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
@@ -966,8 +960,6 @@ export class TicketsService {
   ticketsCommentFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.id) {
-      // TODO: cache
-
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
