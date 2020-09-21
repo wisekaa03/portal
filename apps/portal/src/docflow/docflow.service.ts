@@ -218,7 +218,7 @@ export class DocFlowService {
     }
 
     const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-    this.pubSub.publish('docFlowTasks', { user: user.id, ticketsTasks });
+    this.pubSub.publish('docFlowTasks', { userId: user.id, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
@@ -368,7 +368,7 @@ export class DocFlowService {
     }
 
     const ticketsTask = await this.docFlowGetTask(user, password, task);
-    this.pubSub.publish('docFlowTask', { user: user.id, ticketsTask });
+    this.pubSub.publish('docFlowTask', { userId: user.id, ticketsTask });
 
     if (this.cache) {
       this.cache.set<DocFlowTask>(cachedID, ticketsTask, this.ttl);
@@ -518,7 +518,7 @@ export class DocFlowService {
     }
 
     const ticketsFile = await this.docFlowGetFile(user, password, file);
-    this.pubSub.publish('docFlowFile', { user: user.id, ticketsFile });
+    this.pubSub.publish('docFlowFile', { userId: user.id, ticketsFile });
 
     if (this.cache) {
       this.cache.set<DocFlowFile>(cachedID, ticketsFile, this.ttl);

@@ -55,7 +55,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsRoutes', {
-    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
+    filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
     return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
@@ -87,7 +87,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
+    filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
     return this.pubSub.asyncIterator<TkTasks>('ticketsTasks');
@@ -169,7 +169,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTaskDescription', {
-    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
+    filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
   })
   async ticketsTaskDescriptionSubscription(): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');

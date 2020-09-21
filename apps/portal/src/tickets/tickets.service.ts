@@ -222,7 +222,7 @@ export class TicketsService {
     }
 
     const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-    this.pubSub.publish('ticketsRoutes', { user: user.id, ticketsRoutes });
+    this.pubSub.publish('ticketsRoutes', { userId: user.id, ticketsRoutes });
 
     if (this.cache) {
       this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
@@ -441,7 +441,7 @@ export class TicketsService {
     }
 
     const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-    this.pubSub.publish('ticketsTasks', { user: user.id, ticketsTasks });
+    this.pubSub.publish('ticketsTasks', { userId: user.id, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
@@ -746,7 +746,7 @@ export class TicketsService {
     }
 
     const ticketsTasks = await this.ticketsTasks(user, password, task);
-    this.pubSub.publish('ticketsTaskDescription', { user: user.id, ticketsTasks });
+    this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<TkEditTask>(cachedID, ticketsTasks, this.ttl);
