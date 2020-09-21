@@ -4,7 +4,7 @@
 //#region Imports NPM
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import dateFormat from '@lib/date-format';
@@ -17,7 +17,12 @@ import { MaterialUI } from '@front/layout';
 import TaskComponent from '@front/components/tasks/task';
 //#endregion
 
-const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
+interface TaskPageProps {
+  where: TkWhere;
+  code: string;
+}
+
+const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): React.ReactElement => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
@@ -28,8 +33,8 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
     ssr: false,
     variables: {
       task: {
-        where: (query?.where || TkWhere.Default) as TkWhere,
-        code: query?.code || '0',
+        where: where || TkWhere.Default,
+        code: code || '0',
       },
     },
     fetchPolicy: 'cache-and-network',
@@ -51,8 +56,8 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
       cache.writeQuery({
         query: TICKETS_TASK_DESCRIPTION,
         variables: {
-          where: query?.where || TkWhere.Default,
-          code: query?.code || '0',
+          where: where || TkWhere.Default,
+          code: code || '0',
         },
         data: { ticketsTaskDescription: ticketsTaskEditUpdate },
       });
@@ -87,8 +92,8 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
 
   const handleAccept = (): void => {
     const variables = {
-      where: query?.where || TkWhere.Default,
-      code: query?.id || '0',
+      where: where || TkWhere.Default,
+      code: code || '0',
       comment,
       attachments: files.map((file: DropzoneFile) => file.file),
     };
@@ -163,10 +168,12 @@ const TaskPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => 
 };
 
 TaskPage.getInitialProps = ({ query }) => {
-  const { code, where } = query;
+  const code = query.code as string;
+  const where = query.where as TkWhere;
 
   return {
-    query: { code, where },
+    code,
+    where,
     namespacesRequired: includeDefaultNamespaces(['tasks', 'phonebook']),
   };
 };

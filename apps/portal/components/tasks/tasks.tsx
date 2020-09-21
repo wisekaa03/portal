@@ -116,12 +116,12 @@ const TasksCard = withStyles((theme) => ({
   },
 }))(({ classes, task }: TasksCardProps) => {
   const { t, i18n } = useTranslation();
-  const { where, code: id, route, service, subject, body, smallBody, status, createdDate } = task;
+  const { where, code, route, service, subject, body, smallBody, status, createdDate } = task;
 
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <Link href={{ pathname: '/task', query: { where, code: id } }} as={`/task/${where}/${id}`}>
+        <Link href={{ pathname: '/tasks', query: { where, code } }} as={`/tasks/${where}/${code}`} passHref>
           <CardContent className={classes.content}>
             <Box display="grid" gridTemplateColumns="45px auto" style={{ height: '50px', overflow: 'hidden' }}>
               <div className={classes.label}>
@@ -149,7 +149,7 @@ const TasksCard = withStyles((theme) => ({
                 </span>
               </span>
               <span>{t('tasks:date', { value: dateFormat(createdDate, i18n) })}</span>
-              <span>{t('tasks:id', { value: id })}</span>
+              <span>{t('tasks:id', { value: code })}</span>
             </Box>
           </CardContent>
         </Link>
@@ -187,7 +187,7 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, find,
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           {tasks.length > 0 ? (
-            tasks.map((task) => task && <TasksCard key={`${task.where}.${task.code}`} task={task} />)
+            tasks.map((task) => task && <TasksCard key={`${task.where}-${task.code}`} task={task} />)
           ) : (
             <Typography className={classes.notFounds} variant="h4">
               {t('tasks:task.notFounds')}

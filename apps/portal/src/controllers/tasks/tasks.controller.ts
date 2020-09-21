@@ -15,4 +15,10 @@ export class TasksController {
   public async tasks(@Res() res: RenderableResponse): Promise<void> {
     res.render('tasks');
   }
+
+  @Get(':where/:code')
+  @UseGuards(SessionGuard)
+  public async task(@Res() response: RenderableResponse, @Param('where') where: string, @Param('code') code: string): Promise<void> {
+    response.render('tasks', { where, code });
+  }
 }
