@@ -110,7 +110,12 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetFile', {
-    filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
+    filter: (payload, variables, socket) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload?.userId === socket?.user?.id;
+    },
   })
   async docFlowGetFileSubscription(): Promise<AsyncIterator<DocFlowFile>> {
     return this.pubSub.asyncIterator<DocFlowFile>('docFlowFile');

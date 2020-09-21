@@ -211,7 +211,7 @@ export class TicketsService {
         (async (): Promise<void> => {
           const ticketsRoutes = await this.ticketsRoutes(user, password, input);
           this.pubSub.publish('ticketsRoutes', {
-            user: user.id,
+            userId: user.id,
             ticketsRoutes,
           });
           this.cache.set(cachedID, ticketsRoutes, this.ttl);
@@ -430,7 +430,7 @@ export class TicketsService {
         (async (): Promise<void> => {
           const ticketsTasks = await this.ticketsTasks(user, password, tasks);
           this.pubSub.publish('ticketsTasks', {
-            user: user.id,
+            userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -735,7 +735,7 @@ export class TicketsService {
         (async (): Promise<void> => {
           const ticketsTasks = await this.ticketsTaskDescription(user, password, task);
           this.pubSub.publish('ticketsTaskDescription', {
-            user: user.id,
+            userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);

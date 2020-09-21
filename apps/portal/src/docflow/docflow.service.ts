@@ -207,7 +207,7 @@ export class DocFlowService {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
           this.pubSub.publish('docFlowTasks', {
-            user: user.id,
+            userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -357,7 +357,7 @@ export class DocFlowService {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetTask(user, password, task);
           this.pubSub.publish('docFlowTask', {
-            user: user.id,
+            userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -507,7 +507,7 @@ export class DocFlowService {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetFile(user, password, file);
           this.pubSub.publish('docFlowFile', {
-            user: user.id,
+            userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
