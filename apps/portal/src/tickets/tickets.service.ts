@@ -204,14 +204,14 @@ export class TicketsService {
    * @returns {TkRoutes} Services
    */
   ticketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
-    const cachedID = `${user.loginIdentificator}-tickets-routes`;
+    const cachedID = `${user.id}-tickets-routes`;
     if (this.cache && (!input || input.cache !== false)) {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsRoutes = await this.ticketsRoutes(user, password, input);
           this.pubSub.publish('ticketsRoutes', {
-            user: user.loginIdentificator,
+            user: user.id,
             ticketsRoutes,
           });
           this.cache.set(cachedID, ticketsRoutes, this.ttl);
@@ -222,7 +222,7 @@ export class TicketsService {
     }
 
     const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-    this.pubSub.publish('ticketsRoutes', { user: user.loginIdentificator, ticketsRoutes });
+    this.pubSub.publish('ticketsRoutes', { user: user.id, ticketsRoutes });
 
     if (this.cache) {
       this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
@@ -423,14 +423,14 @@ export class TicketsService {
    * @returns {TkTasks[]}
    */
   ticketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
-    const cachedID = `${user.loginIdentificator}-tickets-tasks`;
+    const cachedID = `${user.id}-tickets-tasks`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.ticketsTasks(user, password, tasks);
           this.pubSub.publish('ticketsTasks', {
-            user: user.loginIdentificator,
+            user: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -441,7 +441,7 @@ export class TicketsService {
     }
 
     const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-    this.pubSub.publish('ticketsTasks', { user: user.loginIdentificator, ticketsTasks });
+    this.pubSub.publish('ticketsTasks', { user: user.id, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
@@ -715,6 +715,44 @@ export class TicketsService {
     }
 
     throw new Error('Can not use a default route');
+  };
+
+  /**
+   * Task description (cache)
+   *
+   * @async
+   * @method ticketsTaskDescriptionCache
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {TkTaskDescriptionInput} task Task description
+   * @returns {TkTasks}
+   */
+  ticketsTaskDescriptionCache = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
+    const cachedID = `${user.id}-tickets-task`;
+    if (this.cache && (!task || task.cache !== false)) {
+      const cached: TkEditTask = await this.cache.get<TkTasks>(cachedID);
+      if (cached && cached !== null) {
+        (async (): Promise<void> => {
+          const ticketsTasks = await this.ticketsTaskDescription(user, password, task);
+          this.pubSub.publish('ticketsTaskDescription', {
+            user: user.id,
+            ticketsTasks,
+          });
+          this.cache.set(cachedID, ticketsTasks, this.ttl);
+        })();
+
+        return cached;
+      }
+    }
+
+    const ticketsTasks = await this.ticketsTasks(user, password, task);
+    this.pubSub.publish('ticketsTaskDescription', { user: user.id, ticketsTasks });
+
+    if (this.cache) {
+      this.cache.set<TkEditTask>(cachedID, ticketsTasks, this.ttl);
+    }
+
+    return ticketsTasks;
   };
 
   /**

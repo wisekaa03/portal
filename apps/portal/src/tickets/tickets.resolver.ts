@@ -21,7 +21,6 @@ import type {
   TkFileInput,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
-import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { TicketsService } from './tickets.service';
@@ -56,8 +55,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsRoutes', {
-    // TODO: сделать чтобы по пользакам отбиралось
-    // filter: (payload, variables) => true,
+    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
     return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
@@ -89,8 +87,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    // TODO: сделать чтобы по пользакам отбиралось
-    // filter: (payload, variables) => true,
+    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
     return this.pubSub.asyncIterator<TkTasks>('ticketsTasks');
@@ -165,15 +162,14 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTaskDescription(user, password, task).catch((error: Error) => {
+    return this.ticketsService.ticketsTaskDescriptionCache(user, password, task).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTaskDescription', {
-    // TODO: сделать чтобы по пользакам отбиралось
-    // filter: (payload, variables) => true,
+    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
   })
   async ticketsTaskDescriptionSubscription(): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');

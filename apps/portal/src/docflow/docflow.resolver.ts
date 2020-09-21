@@ -48,8 +48,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetTasks', {
-    // TODO: сделать чтобы по пользакам отбиралось
-    // filter: (payload, variables) => true,
+    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
   })
   async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
     return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowTasks');
@@ -80,8 +79,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetTask', {
-    // TODO: сделать чтобы по пользакам отбиралось
-    // filter: (payload, variables) => true,
+    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
   })
   async docFlowGetTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
     return this.pubSub.asyncIterator<DocFlowTask>('docFlowTask');
@@ -112,8 +110,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetFile', {
-    // TODO: сделать чтобы по пользакам отбиралось
-    // filter: (payload, variables) => true,
+    filter: (payload, variables, socket) => payload?.user === socket?.user?.id,
   })
   async docFlowGetFileSubscription(): Promise<AsyncIterator<DocFlowFile>> {
     return this.pubSub.asyncIterator<DocFlowFile>('docFlowFile');

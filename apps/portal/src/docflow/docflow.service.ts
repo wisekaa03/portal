@@ -200,14 +200,14 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   docFlowGetTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
-    const cachedID = `${user.loginIdentificator}-docflow-tasks`;
+    const cachedID = `${user.id}-docflow-tasks`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
           this.pubSub.publish('docFlowTasks', {
-            user: user.loginIdentificator,
+            user: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -218,7 +218,7 @@ export class DocFlowService {
     }
 
     const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-    this.pubSub.publish('docFlowTasks', { user: user.loginIdentificator, ticketsTasks });
+    this.pubSub.publish('docFlowTasks', { user: user.id, ticketsTasks });
 
     if (this.cache) {
       this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
@@ -350,14 +350,14 @@ export class DocFlowService {
    * @returns {DocFlowTask}
    */
   docFlowGetTaskCache = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
-    const cachedID = `${user.loginIdentificator}-docflow-task`;
+    const cachedID = `${user.id}-docflow-task`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetTask(user, password, task);
           this.pubSub.publish('docFlowTask', {
-            user: user.loginIdentificator,
+            user: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -368,7 +368,7 @@ export class DocFlowService {
     }
 
     const ticketsTask = await this.docFlowGetTask(user, password, task);
-    this.pubSub.publish('docFlowTask', { user: user.loginIdentificator, ticketsTask });
+    this.pubSub.publish('docFlowTask', { user: user.id, ticketsTask });
 
     if (this.cache) {
       this.cache.set<DocFlowTask>(cachedID, ticketsTask, this.ttl);
@@ -500,14 +500,14 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   docFlowGetFileCache = async (user: User, password: string, file?: DocFlowFileInput): Promise<DocFlowFile> => {
-    const cachedID = `${user.loginIdentificator}-docflow-file`;
+    const cachedID = `${user.id}-docflow-file`;
     if (this.cache && (!file || file.cache !== false)) {
       const cached: DocFlowFile = await this.cache.get<DocFlowFile>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowGetFile(user, password, file);
           this.pubSub.publish('docFlowFile', {
-            user: user.loginIdentificator,
+            user: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
@@ -518,7 +518,7 @@ export class DocFlowService {
     }
 
     const ticketsFile = await this.docFlowGetFile(user, password, file);
-    this.pubSub.publish('docFlowFile', { user: user.loginIdentificator, ticketsFile });
+    this.pubSub.publish('docFlowFile', { user: user.id, ticketsFile });
 
     if (this.cache) {
       this.cache.set<DocFlowFile>(cachedID, ticketsFile, this.ttl);
