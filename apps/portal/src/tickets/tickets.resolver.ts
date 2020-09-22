@@ -55,18 +55,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsRoutes', {
-    filter: (payload, variables, socket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.userId === socket?.user?.id;
-    },
-    resolve: (payload) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.ticketsRoutes;
-    },
+    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
+    resolve: (payload) => payload?.ticketsRoutes,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
     return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
@@ -98,18 +88,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload, variables, socket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.userId === socket?.user?.id;
-    },
-    resolve: (payload) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.ticketsTasks;
-    },
+    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
+    resolve: (payload) => payload?.ticketsTasks,
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
     return this.pubSub.asyncIterator<TkTasks>('ticketsTasks');
@@ -191,18 +171,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTaskDescription', {
-    filter: (payload, variables, socket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.userId === socket?.user?.id;
-    },
-    resolve: (payload) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.ticketsTask;
-    },
+    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
+    resolve: (payload) => payload?.ticketsTask,
   })
   async ticketsTaskDescriptionSubscription(): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');

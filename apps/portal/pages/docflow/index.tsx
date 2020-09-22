@@ -27,17 +27,15 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     subscribeToMore: subscribeToMoreDocFlowTasks,
   } = useQuery<Data<'docFlowGetTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_GET_TASKS, {
     ssr: false,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     // notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
+    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
     subscribeToMoreDocFlowTasks({
       document: DOCFLOW_SUB_TASKS,
       updateQuery: (prev, { subscriptionData: { data } }) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
-
         const updateData = data?.docFlowGetTasks || [];
 
         return { docFlowGetTasks: updateData };

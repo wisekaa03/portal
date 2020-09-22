@@ -15,6 +15,8 @@ import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
 import { DocFlowService } from './docflow.service';
 //#endregion
 
+// TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
+
 @Resolver('DocFlowResolver')
 export class DocFlowResolver {
   constructor(
@@ -48,18 +50,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetTasks', {
-    filter: (payload, variables, socket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.userId === socket?.user?.id;
-    },
-    resolve: (payload) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.ticketsTasks;
-    },
+    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
+    resolve: (payload) => payload?.ticketsTasks,
   })
   async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
     return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowGetTasks');
@@ -90,7 +82,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetTask', {
-    filter: (payload, variables, socket) => payload?.userId === socket?.user?.id,
+    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
   })
   async docFlowGetTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
     const docflow = await this.pubSub.asyncIterator<DocFlowTask>('docFlowGetTask');
@@ -123,12 +115,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetFile', {
-    filter: (payload, variables, socket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload?.userId === socket?.user?.id;
-    },
+    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
   })
   async docFlowGetFileSubscription(): Promise<AsyncIterator<DocFlowFile>> {
     return this.pubSub.asyncIterator<DocFlowFile>('docFlowFile');
