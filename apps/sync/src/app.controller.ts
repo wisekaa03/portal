@@ -5,7 +5,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 //#endregion
 //#region Imports Local
-import { LDAP_SYNC } from '@lib/constants';
+import { LDAP_SYNC } from '@back/shared/constants';
 import { SyncService } from './app.service';
 //#endregion
 

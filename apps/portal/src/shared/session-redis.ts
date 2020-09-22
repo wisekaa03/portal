@@ -18,7 +18,7 @@ export default (configService: ConfigService, logger: Logger): Session.Store => 
       }),
     });
 
-    logger.debug(`Redis connection...`, 'Session');
+    logger.debug('Redis connection...', 'Session');
 
     return sess;
   } catch (error) {

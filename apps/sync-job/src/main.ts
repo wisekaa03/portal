@@ -10,7 +10,7 @@ import { PinoLogger, Logger } from 'nestjs-pino';
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { pinoOptions } from '@back/shared/pino.options';
-import { LDAP_SYNC } from '@lib/constants';
+import { LDAP_SYNC } from '@back/shared/constants';
 //#endregion
 
 const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
