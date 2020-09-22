@@ -16,6 +16,7 @@ import WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger, PinoLogger } from 'nestjs-pino';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 //#endregion
 //#region Imports Local
 import sessionRedis from '@back/shared/session-redis';
@@ -99,6 +100,10 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
   imports: [
     //#region Config module
     ConfigModule.register(environment),
+    //#endregion
+
+    //#region Logging module
+    PrometheusModule.register({}),
     //#endregion
 
     //#region Logging module
