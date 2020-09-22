@@ -90,7 +90,7 @@ export class DocFlowResolver {
   }
 
   /**
-   * DocFlowTask
+   * DocFlow file
    *
    * @async
    * @returns {DocFlowFile}
@@ -99,7 +99,7 @@ export class DocFlowResolver {
   @Query('docFlowGetFile')
   @UseGuards(GqlAuthGuard)
   async docFlowGetFile(
-    @Args('file') file?: DocFlowFileInput,
+    @Args('file') file: DocFlowFileInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowFile> {

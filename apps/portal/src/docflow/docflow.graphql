@@ -1,11 +1,13 @@
 type DocFlowUser {
   id: String!
   name: String
+  presentation: String
 }
 
 type DocFlowState {
   id: String!
   name: String
+  presentation: String
 }
 
 type DocFlowFile {
@@ -18,16 +20,19 @@ type DocFlowFile {
 type DocFlowParentTask {
   id: String!
   name: String
+  presentation: String
 }
 
 type DocFlowImportance {
   id: String!
   name: String
+  presentation: String
 }
 
 type DocFlowTask {
   id: String!
-  name: String!
+  name: String
+  presentation: String
   importance: DocFlowImportance
   executor: DocFlowUser
   executed: Boolean
@@ -55,6 +60,7 @@ input DocFlowTaskInput {
 }
 
 input DocFlowFileInput {
+  documentID: String!
   cache: Boolean
 }
 
@@ -67,5 +73,6 @@ type Query {
 type Subscription {
   docFlowGetTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
   docFlowGetTask(task: DocFlowTaskInput): DocFlowTask!
-  docFlowGetFile(file: DocFlowFileInput): DocFlowFile!
+  docFlowGetFile(file: DocFlowFileInput!): DocFlowFile!
+  docFlowGetFileVersion(file: DocFlowFileInput!): DocFlowFile!
 }

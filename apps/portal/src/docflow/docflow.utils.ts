@@ -20,22 +20,28 @@ import { SOAP_DATE_NULL } from '@lib/types/common';
 
 export const docFlowUser = (user?: DocFlowUserSOAP): DocFlowUser => ({
   id: user?.objectID?.id || '[user:id]',
-  name: user?.objectID?.presentation || '[user:name]',
+  name: user?.name || '[user:name]',
+  presentation: user?.objectID?.presentation,
+  type: user?.objectID?.type || 'DMUser',
+  navigationRef: user?.objectID?.navigationRef,
 });
 
 export const docFlowState = (state?: DocFlowStateSOAP): DocFlowState => ({
   id: state?.objectID?.id || '[state:id]',
-  name: state?.objectID?.presentation || '[state:name]',
+  name: state?.name || '[state:name]',
+  presentation: state?.objectID?.presentation || '[state:presentation]',
 });
 
 export const docFlowImportance = (importance?: DocFlowImportanceSOAP): DocFlowImportance => ({
   id: importance?.objectID.id || '[importance:id]',
   name: importance?.name || '[importance:name]',
+  presentation: importance?.objectID?.presentation || '[state:presentation]',
 });
 
 export const docFlowParentTask = (parentTask?: DocFlowProcessAcquaintanceSOAP): DocFlowParentTask => ({
   id: parentTask?.objectID.id || '[parentTask:id]',
   name: parentTask?.name || '[parentTask:name]',
+  presentation: parentTask?.objectID?.presentation || '[state:presentation]',
 });
 
 export const docFlowFiles = (file?: DocFlowFileSOAP): DocFlowFile => ({
@@ -47,7 +53,8 @@ export const docFlowFiles = (file?: DocFlowFileSOAP): DocFlowFile => ({
 
 export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   id: task.object.objectID?.id || '[task:id]',
-  name: task.object.objectID?.presentation || '[task:name]',
+  name: task.object.name || '[task:name]',
+  presentation: task.object.objectID?.presentation,
   importance: task.object.importance ? docFlowImportance(task.object.importance) : undefined,
   executor: task.object.performer?.user ? docFlowUser(task.object.performer.user) : undefined,
   executed: task.object.executed ?? false,

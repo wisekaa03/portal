@@ -34,33 +34,40 @@ export interface DocFlowTasksComponentProps {
 export interface DocFlowUser {
   id: string;
   name: string;
+  presentation?: string;
+  type?: string;
+  navigationRef?: string;
 }
 
 export interface DocFlowState {
   id: string;
-  name: string;
+  name?: string;
+  presentation?: string;
 }
 
 export interface DocFlowFile {
   id: string;
-  name: string;
-  presentation: string;
+  name?: string;
+  presentation?: string;
   allowDeletion: boolean;
 }
 
 export interface DocFlowImportance {
   id: string;
-  name: string;
+  name?: string;
+  presentation?: string;
 }
 
 export interface DocFlowParentTask {
   id: string;
-  name: string;
+  name?: string;
+  presentation?: string;
 }
 
 export interface DocFlowTask {
   id: string;
-  name: string;
+  name?: string;
+  presentation?: string;
   importance?: DocFlowImportance;
   executor?: DocFlowUser;
   executed?: boolean;
@@ -79,6 +86,10 @@ export interface DocFlowTask {
   files?: DocFlowFile[];
 }
 
+export interface DocFlowUserInput {
+  cache?: boolean;
+}
+
 export interface DocFlowTasksInput {
   cache?: boolean;
 }
@@ -88,6 +99,7 @@ export interface DocFlowTaskInput {
 }
 
 export interface DocFlowFileInput {
+  documentID: string;
   cache?: boolean;
 }
 
@@ -128,6 +140,7 @@ export interface DocFlowImportanceSOAP {
   name?: string;
   objectID: {
     id?: string;
+    presentation?: string;
     type?: 'DMBusinessProcessTaskImportance';
   };
 }
@@ -166,6 +179,7 @@ export interface DocFlowTaskSOAP {
   canHaveChildren?: boolean;
   isFolder?: boolean;
   object: {
+    name?: string;
     acceptDate?: Date;
     accepted?: boolean;
     attributes?: {

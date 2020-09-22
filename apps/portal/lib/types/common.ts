@@ -12,7 +12,7 @@ export interface Data<K, T> {
   [K: string]: T;
 }
 
-interface DataResultReturn<K> {
+export interface DataResultReturn<K> {
   return?: K;
 }
 
