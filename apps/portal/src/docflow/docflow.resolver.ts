@@ -12,6 +12,7 @@ import type { DocFlowTask, DocFlowTasksInput, DocFlowTaskInput, DocFlowFile, Doc
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
+import type { DocFlowTasksPayload } from './docflow.utils';
 import { DocFlowService } from './docflow.service';
 //#endregion
 
@@ -50,8 +51,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowGetTasks', {
-    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
-    resolve: (payload) => payload?.ticketsTasks,
+    filter: (payload: DocFlowTasksPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: DocFlowTasksPayload) => payload.ticketsTasks,
   })
   async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
     return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowGetTasks');
@@ -85,9 +86,7 @@ export class DocFlowResolver {
     filter: (payload, variables, context) => payload?.userId === context?.user?.id,
   })
   async docFlowGetTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
-    const docflow = await this.pubSub.asyncIterator<DocFlowTask>('docFlowGetTask');
-
-    return docflow;
+    return this.pubSub.asyncIterator<DocFlowTask>('docFlowGetTask');
   }
 
   /**

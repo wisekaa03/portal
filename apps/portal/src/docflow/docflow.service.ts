@@ -9,7 +9,7 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import { TIMEOUT_REFETCH_SERVICES } from '@back/shared/constants';
+import { TIMEOUT_REFETCH_SERVICES, TIMEOUT } from '@back/shared/constants';
 import type {
   TkRoutes,
   TkTasks,
@@ -45,6 +45,7 @@ import type {
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
 import { DataResultSOAP } from '@lib/types/common';
+import type { DocFlowTasksPayload } from './docflow.utils';
 import { docFlowTask } from './docflow.utils';
 //#endregion
 
@@ -109,62 +110,65 @@ export class DocFlowService {
 
       if (client) {
         return client
-          .executeAsync({
-            'tns:request': {
-              'attributes': {
-                'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                'xsi:type': 'tns:DMGetObjectListRequest',
+          .executeAsync(
+            {
+              'tns:request': {
+                'attributes': {
+                  'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                  'xsi:type': 'tns:DMGetObjectListRequest',
+                },
+                'tns:dataBaseID': '',
+                'tns:type': 'DMBusinessProcessTask',
+                'tns:query': [
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'byUser',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: true,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'typed',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: true,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'withDelayed',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: false,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'withExecuted',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: false,
+                      },
+                    },
+                  },
+                ],
               },
-              'tns:dataBaseID': '',
-              'tns:type': 'DMBusinessProcessTask',
-              'tns:query': [
-                {
-                  'tns:conditions': {
-                    'tns:property': 'byUser',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: true,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'typed',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: true,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'withDelayed',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: false,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'withExecuted',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: false,
-                    },
-                  },
-                },
-              ],
             },
-          })
+            { timeout: TIMEOUT },
+          )
           .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
@@ -206,12 +210,16 @@ export class DocFlowService {
       const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-          this.pubSub.publish('docFlowGetTasks', {
-            userId: user.id,
-            ticketsTasks,
-          });
-          this.cache.set(cachedID, ticketsTasks, this.ttl);
+          try {
+            const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
+            this.pubSub.publish<DocFlowTasksPayload>('docFlowGetTasks', {
+              userId: user.id || '',
+              ticketsTasks,
+            });
+            this.cache.set(cachedID, ticketsTasks, this.ttl);
+          } catch (error) {
+            this.logger.error('docFlowGetTasksCache error:', error);
+          }
 
           setTimeout(() => this.docFlowGetTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
@@ -220,14 +228,20 @@ export class DocFlowService {
       }
     }
 
-    const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-    this.pubSub.publish('docFlowGetTasks', { userId: user.id, ticketsTasks });
+    try {
+      const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
+      this.pubSub.publish<DocFlowTasksPayload>('docFlowGetTasks', { userId: user.id || '', ticketsTasks });
 
-    if (this.cache) {
-      this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
+      if (this.cache) {
+        this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
+      }
+
+      return ticketsTasks;
+    } catch (error) {
+      this.logger.error('docFlowGetTasksCache error:', error);
+
+      throw new Error(error);
     }
-
-    return ticketsTasks;
   };
 
   /**
@@ -261,62 +275,65 @@ export class DocFlowService {
 
       if (client) {
         return client
-          .executeAsync({
-            'tns:request': {
-              'attributes': {
-                'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                'xsi:type': 'tns:DMGetObjectListRequest',
+          .executeAsync(
+            {
+              'tns:request': {
+                'attributes': {
+                  'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                  'xsi:type': 'tns:DMGetObjectListRequest',
+                },
+                'tns:dataBaseID': '',
+                'tns:type': 'DMBusinessProcessTask',
+                'tns:query': [
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'byUser',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: true,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'typed',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: true,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'withDelayed',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: false,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'withExecuted',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: false,
+                      },
+                    },
+                  },
+                ],
               },
-              'tns:dataBaseID': '',
-              'tns:type': 'DMBusinessProcessTask',
-              'tns:query': [
-                {
-                  'tns:conditions': {
-                    'tns:property': 'byUser',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: true,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'typed',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: true,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'withDelayed',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: false,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'withExecuted',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: false,
-                    },
-                  },
-                },
-              ],
             },
-          })
+            { timeout: TIMEOUT },
+          )
           .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
@@ -413,62 +430,65 @@ export class DocFlowService {
 
       if (client) {
         return client
-          .executeAsync({
-            'tns:request': {
-              'attributes': {
-                'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                'xsi:type': 'tns:DMGetObjectListRequest',
+          .executeAsync(
+            {
+              'tns:request': {
+                'attributes': {
+                  'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                  'xsi:type': 'tns:DMGetObjectListRequest',
+                },
+                'tns:dataBaseID': '',
+                'tns:type': 'DMBusinessProcessTask',
+                'tns:query': [
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'byUser',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: true,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'typed',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: true,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'withDelayed',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: false,
+                      },
+                    },
+                  },
+                  {
+                    'tns:conditions': {
+                      'tns:property': 'withExecuted',
+                      'tns:value': {
+                        attributes: {
+                          'xsi:type': 'xs:boolean',
+                        },
+                        $value: false,
+                      },
+                    },
+                  },
+                ],
               },
-              'tns:dataBaseID': '',
-              'tns:type': 'DMBusinessProcessTask',
-              'tns:query': [
-                {
-                  'tns:conditions': {
-                    'tns:property': 'byUser',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: true,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'typed',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: true,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'withDelayed',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: false,
-                    },
-                  },
-                },
-                {
-                  'tns:conditions': {
-                    'tns:property': 'withExecuted',
-                    'tns:value': {
-                      attributes: {
-                        'xsi:type': 'xs:boolean',
-                      },
-                      $value: false,
-                    },
-                  },
-                },
-              ],
             },
-          })
+            { timeout: TIMEOUT },
+          )
           .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);

@@ -14,6 +14,7 @@ import type {
   DocFlowFileSOAP,
   DocFlowFile,
 } from '@lib/types/docflow';
+import type { SubscriptionPayload } from '@back/shared';
 import { SOAP_DATE_NULL } from '@lib/types/common';
 /** @format */
 
@@ -64,3 +65,7 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   parentTask: docFlowParentTask(task.object.parentBusinessProcess),
   files: task.object.targets?.items?.map((file) => docFlowFiles(file)),
 });
+
+export interface DocFlowTasksPayload extends SubscriptionPayload {
+  ticketsTasks: DocFlowTask[];
+}

@@ -3,18 +3,17 @@
 //#region Imports NPM
 import { Module, HttpModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-// import { JwtModule } from '@nestjs/jwt';
+import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
+import { TIMEOUT } from '@back/shared/constants';
 import { UserModule } from '@back/user/user.module';
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { CookieSerializer } from './cookie.serializer';
 import { LocalStrategy } from './strategies/local.strategy';
-// import { JwtStrategy } from './strategies/jwt.strategy';
 //#endregion
 
 @Module({
@@ -65,7 +64,11 @@ import { LocalStrategy } from './strategies/local.strategy';
     //#endregion
 
     //#region HTTP service
-    HttpModule,
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: TIMEOUT,
+      }),
+    }),
     //#endregion
 
     SubscriptionsModule,

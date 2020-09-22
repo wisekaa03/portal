@@ -9,7 +9,7 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import { TIMEOUT_REFETCH_SERVICES } from '@back/shared/constants';
+import { TIMEOUT_REFETCH_SERVICES, TIMEOUT } from '@back/shared/constants';
 import type {
   TkRoutes,
   TkTasks,
@@ -103,7 +103,7 @@ export class TicketsService {
       if (client) {
         promises.push(
           client
-            .GetRoutesAsync({ Log: user.username })
+            .GetRoutesAsync({ Log: user.username }, { timeout: TIMEOUT })
             .then((result: DataResultSOAP<TicketsSOAPGetRoutes>) => {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
@@ -210,12 +210,16 @@ export class TicketsService {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-          this.pubSub.publish('ticketsRoutes', {
-            userId: user.id,
-            ticketsRoutes,
-          });
-          this.cache.set(cachedID, ticketsRoutes, this.ttl);
+          try {
+            const ticketsRoutes = await this.ticketsRoutes(user, password, input);
+            this.pubSub.publish('ticketsRoutes', {
+              userId: user.id,
+              ticketsRoutes,
+            });
+            this.cache.set(cachedID, ticketsRoutes, this.ttl);
+          } catch (error) {
+            this.logger.error('ticketsRoutesCache error:', error);
+          }
 
           setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
         })();
@@ -224,14 +228,20 @@ export class TicketsService {
       }
     }
 
-    const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-    this.pubSub.publish('ticketsRoutes', { userId: user.id, ticketsRoutes });
+    try {
+      const ticketsRoutes = await this.ticketsRoutes(user, password, input);
+      this.pubSub.publish('ticketsRoutes', { userId: user.id, ticketsRoutes });
 
-    if (this.cache) {
-      this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
+      if (this.cache) {
+        this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
+      }
+
+      return ticketsRoutes;
+    } catch (error) {
+      this.logger.error('ticketsRoutesCache error:', error);
+
+      throw new Error(error);
     }
-
-    return ticketsRoutes;
   };
 
   /**
@@ -268,18 +278,21 @@ export class TicketsService {
       if (client) {
         promises.push(
           client
-            .GetTasksAsync({
-              Filter: {
-                Users: {
-                  Log: user.username,
+            .GetTasksAsync(
+              {
+                Filter: {
+                  Users: {
+                    Log: user.username,
+                  },
+                  Departments: {},
+                  Statuses: {
+                    Status: tasks?.status ?? '',
+                  },
+                  Context: {},
                 },
-                Departments: {},
-                Statuses: {
-                  Status: tasks?.status ?? '',
-                },
-                Context: {},
               },
-            })
+              { timeout: TIMEOUT },
+            )
             .then((result: DataResultSOAP<TicketsSOAPGetTasks>) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
@@ -431,12 +444,16 @@ export class TicketsService {
       const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-          this.pubSub.publish('ticketsTasks', {
-            userId: user.id,
-            ticketsTasks,
-          });
-          this.cache.set(cachedID, ticketsTasks, this.ttl);
+          try {
+            const ticketsTasks = await this.ticketsTasks(user, password, tasks);
+            this.pubSub.publish('ticketsTasks', {
+              userId: user.id,
+              ticketsTasks,
+            });
+            this.cache.set(cachedID, ticketsTasks, this.ttl);
+          } catch (error) {
+            this.logger.error('ticketsTasksCache error:', error);
+          }
 
           setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
@@ -445,14 +462,20 @@ export class TicketsService {
       }
     }
 
-    const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-    this.pubSub.publish('ticketsTasks', { userId: user.id, ticketsTasks });
+    try {
+      const ticketsTasks = await this.ticketsTasks(user, password, tasks);
+      this.pubSub.publish('ticketsTasks', { userId: user.id, ticketsTasks });
 
-    if (this.cache) {
-      this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
+      if (this.cache) {
+        this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
+      }
+
+      return ticketsTasks;
+    } catch (error) {
+      this.logger.error('ticketsTasksCache error:', error);
+
+      throw new Error(error);
     }
-
-    return ticketsTasks;
   };
 
   /**
@@ -496,15 +519,18 @@ export class TicketsService {
         });
 
       return client
-        .NewTaskAsync({
-          Log: user.username,
-          Title: task.subject,
-          Description: task.body,
-          Route: task.route,
-          Service: task.service,
-          Executor: task.executorUser ? task.executorUser : '',
-          Attaches,
-        })
+        .NewTaskAsync(
+          {
+            Log: user.username,
+            Title: task.subject,
+            Description: task.body,
+            Route: task.route,
+            Service: task.service,
+            Executor: task.executorUser ? task.executorUser : '',
+            Attaches,
+          },
+          { timeout: TIMEOUT },
+        )
         .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
 
@@ -626,9 +652,12 @@ export class TicketsService {
         });
 
       return client
-        .GetTaskDescriptionAsync({
-          TaskId: task.code,
-        })
+        .GetTaskDescriptionAsync(
+          {
+            TaskId: task.code,
+          },
+          { timeout: TIMEOUT },
+        )
         .then((result?: DataResultSOAP<TicketsSOAPGetTaskDescription>) => {
           this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -736,12 +765,16 @@ export class TicketsService {
       const cached: TkEditTask = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTask = await this.ticketsTaskDescription(user, password, task);
-          this.pubSub.publish('ticketsTaskDescription', {
-            userId: user.id,
-            ticketsTask,
-          });
-          this.cache.set(cachedID, ticketsTask, this.ttl);
+          try {
+            const ticketsTask = await this.ticketsTaskDescription(user, password, task);
+            this.pubSub.publish('ticketsTaskDescription', {
+              userId: user.id,
+              ticketsTask,
+            });
+            this.cache.set(cachedID, ticketsTask, this.ttl);
+          } catch (error) {
+            this.logger.error('ticketsTaskDescriptionCache error:', error);
+          }
 
           setTimeout(() => this.ticketsTaskDescriptionCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
@@ -750,14 +783,20 @@ export class TicketsService {
       }
     }
 
-    const ticketsTask = await this.ticketsTaskDescription(user, password, task);
-    this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTask });
+    try {
+      const ticketsTask = await this.ticketsTaskDescription(user, password, task);
+      this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTask });
 
-    if (this.cache) {
-      this.cache.set<TkEditTask>(cachedID, ticketsTask, this.ttl);
+      if (this.cache) {
+        this.cache.set<TkEditTask>(cachedID, ticketsTask, this.ttl);
+      }
+
+      return ticketsTask;
+    } catch (error) {
+      this.logger.error('ticketsTaskDescriptionCache error:', error);
+
+      throw new Error(error);
     }
-
-    return ticketsTask;
   };
 
   /**
@@ -804,13 +843,16 @@ export class TicketsService {
       }
 
       return client
-        .EditTaskAsync({
-          TaskId: task.code,
-          Executor: '',
-          NewComment: task.comment,
-          AutorComment: user.username,
-          Attaches,
-        })
+        .EditTaskAsync(
+          {
+            TaskId: task.code,
+            Executor: '',
+            NewComment: task.comment,
+            AutorComment: user.username,
+            Attaches,
+          },
+          { timeout: TIMEOUT },
+        )
         .then((result: Record<string, any>) => {
           this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
 
@@ -868,9 +910,12 @@ export class TicketsService {
         });
 
       return client
-        .GetTaskFileAsync({
-          Ref: file.id,
-        })
+        .GetTaskFileAsync(
+          {
+            Ref: file.id,
+          },
+          { timeout: TIMEOUT },
+        )
         .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -982,9 +1027,12 @@ export class TicketsService {
         });
 
       return client
-        .GetCommentFileAsync({
-          Ref: file.id,
-        })
+        .GetCommentFileAsync(
+          {
+            Ref: file.id,
+          },
+          { timeout: TIMEOUT },
+        )
         .then((result?: Record<string, any>) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
