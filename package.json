@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.11.4",
+  "version": "4.11.5",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -65,6 +65,8 @@
   },
   "os": [],
   "resolutions": {
+    "**/**/apollo-graphql": "^0.6",
+    "**/**/apollo-server-core": "^2.18",
     "**/**/graphql-upload": "^11",
     "**/**/fs-capacitor": "^6",
     "**/**/file-loader": "^6",
@@ -105,10 +107,10 @@
     "@next/bundle-analyzer": "^9.5.3",
     "@types/bcrypt": "^3.0.0",
     "@types/joi": "^14.3.4",
-    "@types/node": "^14.11.1",
+    "@types/node": "^14.11.2",
     "@types/passport": "^1.0.4",
-    "apollo-server-core": "^2.17.0",
-    "apollo-server-express": "^2.17.0",
+    "apollo-server-core": "^2.18.0",
+    "apollo-server-express": "^2.18.0",
     "apollo-upload-client": "^14.1.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
