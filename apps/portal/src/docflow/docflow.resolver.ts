@@ -21,6 +21,7 @@ import type {
   DocFlowFile,
 } from '@lib/types/docflow';
 import type { SubscriptionPayload } from '@back/shared/types';
+import { PortalPubSub } from '@back/shared/constants';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
@@ -66,7 +67,7 @@ export class DocFlowResolver {
     resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async docFlowTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
-    return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowTasks');
+    return this.pubSub.asyncIterator<DocFlowTask[]>(PortalPubSub.DOCFLOW_TASKS);
   }
 
   /**
@@ -98,7 +99,7 @@ export class DocFlowResolver {
     resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async docFlowTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
-    return this.pubSub.asyncIterator<DocFlowTask>('docFlowTask');
+    return this.pubSub.asyncIterator<DocFlowTask>(PortalPubSub.DOCFLOW_TASK);
   }
 
   /**
@@ -130,7 +131,7 @@ export class DocFlowResolver {
     resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async docFlowTargetSubscription(): Promise<AsyncIterator<DocFlowTarget[]>> {
-    return this.pubSub.asyncIterator<DocFlowTarget[]>('docFlowTarget');
+    return this.pubSub.asyncIterator<DocFlowTarget[]>(PortalPubSub.DOCFLOW_TARGET);
   }
 
   /**

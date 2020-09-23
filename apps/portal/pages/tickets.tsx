@@ -10,7 +10,7 @@ import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { MINIMAL_SUBJECT_LENGTH, MINIMAL_BODY_LENGTH } from '@lib/constants';
-import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW, TICKETS_TASKS } from '@lib/queries';
+import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW, TICKETS_ROUTES_SUB } from '@lib/queries';
 import {
   Data,
   DropzoneFile,
@@ -49,14 +49,33 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
     USER_SETTINGS,
   );
 
-  const { loading: loadingRoutes, data: dataRoutes, error: errorRoutes, refetch: refetchRoutesInt } = useQuery<
-    Data<'ticketsRoutes', TkRoutes>,
-    { routes: TkRoutesInput }
-  >(TICKETS_ROUTES, {
+  const {
+    loading: loadingRoutes,
+    data: dataRoutes,
+    error: errorRoutes,
+    refetch: refetchRoutesInt,
+    subscribeToMore: subscribeTicketsRoutes,
+  } = useQuery<Data<'ticketsRoutes', TkRoutes>, { routes: TkRoutesInput }>(TICKETS_ROUTES, {
     ssr: false,
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
+    const unsubscribe = subscribeTicketsRoutes({
+      document: TICKETS_ROUTES_SUB,
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        const updateData = data?.ticketsRoutes || [];
+
+        return { ticketsRoutes: updateData };
+      },
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [subscribeTicketsRoutes]);
 
   const refetchRoutes = async (
     variables?: Partial<{

@@ -176,9 +176,11 @@ export const withApolloClient = (
           cookie: request.headers?.cookie,
         });
 
-        console.error('-----------------------------------------------------------------------------------');
-        console.error('with-apollo-client Request.session.passport.user.username: [', request.session?.passport?.user?.username, ']');
-        console.error('-----------------------------------------------------------------------------------');
+        if (false) {
+          console.error('-----------------------------------------------------------------------------------');
+          console.error('with-apollo-client Request.session.passport.user.username: [', request.session?.passport?.user?.username, ']');
+          console.error('-----------------------------------------------------------------------------------');
+        }
 
         let user: User | undefined;
         try {
@@ -248,9 +250,12 @@ export const withApolloClient = (
     public constructor(props: AppContextMy) {
       super(props);
 
-      console.error('-----------------------------------------------------------------------------------');
-      console.error('__SERVER__: [', __SERVER__, '], props.apolloClient: [', props.apolloClient, '], props.apollo: [', props.apollo, ']');
-      console.error('-----------------------------------------------------------------------------------');
+      if (false) {
+        console.error('-----------------------------------------------------------------------------------');
+        console.error('__SERVER__: [', __SERVER__, '], props.apolloClient: [', props.apolloClient, '], props.apollo: [', props.apollo, ']');
+        console.error('-----------------------------------------------------------------------------------');
+      }
+
       if (__SERVER__ && props.apolloClient) {
         this.apolloClient = props.apolloClient;
       } else {

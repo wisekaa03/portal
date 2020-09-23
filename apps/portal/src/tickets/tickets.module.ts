@@ -14,7 +14,7 @@ import { TicketsService } from './tickets.service';
   imports: [
     HttpModule.registerAsync({
       useFactory: () => ({
-        timeout: TIMEOUT,
+        // timeout: TIMEOUT,
       }),
     }),
     SubscriptionsModule,

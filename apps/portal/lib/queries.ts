@@ -505,8 +505,9 @@ const TICKETS_TASK_FRAGMENT = gql`
 
 const TICKETS_TASK_FILES = gql`
   fragment TicketsFiles on TkFile {
-    where
     id
+    where
+    code
     name
     mime
     body
@@ -515,6 +516,7 @@ const TICKETS_TASK_FILES = gql`
 
 const TICKETS_TASK_COMMENTS = gql`
   fragment TicketsComments on TkComment {
+    id
     where
     code
     authorLogin
@@ -522,8 +524,9 @@ const TICKETS_TASK_COMMENTS = gql`
     date
     parentCode
     files {
-      where
       id
+      where
+      code
       name
       mime
       body
@@ -535,12 +538,38 @@ export const TICKETS_ROUTES = gql`
   query TicketsRoutes($routes: TkRoutesInput) {
     ticketsRoutes(routes: $routes) {
       routes {
+        id
         where
         code
         name
         description
         avatar
         services {
+          id
+          where
+          code
+          name
+          description
+          avatar
+        }
+      }
+      errors
+    }
+  }
+`;
+
+export const TICKETS_ROUTES_SUB = gql`
+  subscription TicketsRoutes($routes: TkRoutesInput) {
+    ticketsRoutes(routes: $routes) {
+      routes {
+        id
+        where
+        code
+        name
+        description
+        avatar
+        services {
+          id
           where
           code
           name
@@ -557,8 +586,9 @@ export const TICKETS_TASKS = gql`
   query TicketsTasks($tasks: TkTasksInput) {
     ticketsTasks(tasks: $tasks) {
       users {
-        where
         id
+        where
+        code
         name
         login
       }
@@ -576,8 +606,9 @@ export const TICKETS_TASKS_SUB = gql`
   subscription TicketsTasks($tasks: TkTasksInput) {
     ticketsTasks(tasks: $tasks) {
       users {
-        where
         id
+        where
+        code
         name
         login
       }

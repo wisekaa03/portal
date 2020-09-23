@@ -35,6 +35,7 @@ type TkUser {
 type TkFile {
   id: ID!
   where: String!
+  code: String!
   name: String
   mime: String
   body: String
@@ -144,7 +145,7 @@ input TkCommentInput {
 
 input TkFileInput {
   where: String!
-  id: String!
+  code: String!
 }
 
 type Query {

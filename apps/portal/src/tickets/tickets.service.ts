@@ -759,14 +759,14 @@ export class TicketsService {
    * Task description (cache)
    *
    * @async
-   * @method ticketsTaskDescriptionCache
+   * @method ticketsTaskCache
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkTaskDescriptionInput} task Task description
    * @returns {TkTasks}
    */
   ticketsTaskCache = async (user: User, password: string, task: TkTaskInput): Promise<TkEditTask> => {
-    const cachedID = `${user.id}-tickets-task`;
+    const cachedID = `tickets:task:${task.where}:${task.code}`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: TkEditTask = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
@@ -779,7 +779,7 @@ export class TicketsService {
             });
             this.cache.set(cachedID, ticketsTask, this.ttl);
           } catch (error) {
-            this.logger.error('ticketsTaskDescriptionCache error:', error);
+            this.logger.error('ticketsTaskCache error:', error);
           }
 
           // TODO: продумать сервис для обновления данных по пользователям
@@ -792,7 +792,10 @@ export class TicketsService {
 
     try {
       const ticketsTask = await this.ticketsTask(user, password, task);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, { userId: user.id || '', object: ticketsTask });
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
+        userId: user.id || '',
+        object: ticketsTask,
+      });
 
       if (this.cache) {
         this.cache.set<TkEditTask>(cachedID, ticketsTask, this.ttl);
@@ -800,7 +803,7 @@ export class TicketsService {
 
       return ticketsTask;
     } catch (error) {
-      this.logger.error('ticketsTaskDescriptionCache error:', error);
+      this.logger.error('ticketsTaskCache error:', error);
 
       throw new Error(error);
     }
@@ -901,7 +904,7 @@ export class TicketsService {
    */
   ticketsTaskFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
     /* 1C SOAP */
-    if (file.where === TkWhere.SOAP1C && file.id) {
+    if (file.where === TkWhere.SOAP1C && file.code) {
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
@@ -919,7 +922,7 @@ export class TicketsService {
       return client
         .GetTaskFileAsync(
           {
-            Ref: file.id,
+            Ref: file.code,
           },
           { timeout: TIMEOUT },
         )
@@ -928,6 +931,7 @@ export class TicketsService {
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
               ...file,
+              id: `${whereService(file.where)}:${file.code}`,
               body: result[0].return['ФайлХранилище'],
               name: `${result[0].return['Наименование']}.${result[0].return['РасширениеФайла']}`,
             };
@@ -971,7 +975,7 @@ export class TicketsService {
               .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
                 login: user.username,
                 user: JSON.stringify(myUserOST),
-                msg: JSON.stringify({ login: fio, file: file.id }),
+                msg: JSON.stringify({ login: fio, file: file.code }),
               })
               .toPromise()
               .then((response) => {
@@ -982,6 +986,7 @@ export class TicketsService {
                     } else {
                       return {
                         ...file,
+                        id: `${whereService(file.where)}:${file.code}`,
                         body: (response.data.file as unknown) as string,
                       };
                     }
@@ -1018,7 +1023,7 @@ export class TicketsService {
    */
   ticketsComment = async (user: User, password: string, comment: TkCommentInput): Promise<TkFile> => {
     /* 1C SOAP */
-    if (comment.where === TkWhere.SOAP1C && comment.id) {
+    if (comment.where === TkWhere.SOAP1C && comment.code) {
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
@@ -1036,7 +1041,7 @@ export class TicketsService {
       return client
         .GetCommentFileAsync(
           {
-            Ref: comment.id,
+            Ref: comment.code,
           },
           { timeout: TIMEOUT },
         )
@@ -1087,7 +1092,7 @@ export class TicketsService {
               .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
                 login: user.username,
                 user: JSON.stringify(myUserOST),
-                msg: JSON.stringify({ login: fio, file: comment.id }),
+                msg: JSON.stringify({ login: fio, file: comment.code }),
               })
               .toPromise()
               .then((response) => {
@@ -1098,6 +1103,7 @@ export class TicketsService {
                     } else {
                       return {
                         ...comment,
+                        id: `${whereService(comment.where)}:${comment.code}`,
                         body: (response.data.file as unknown) as string,
                       };
                     }

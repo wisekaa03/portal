@@ -23,6 +23,5 @@ export class ReportsService {
     @InjectPinoLogger(ReportsService.name) private readonly logger: PinoLogger,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
-    private readonly httpService: HttpService,
   ) {}
 }

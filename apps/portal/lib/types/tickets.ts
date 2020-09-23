@@ -1,6 +1,6 @@
 /** @format */
 import type { FileUpload } from 'graphql-upload';
-import type { GraphQLMutationInput } from '@back/shared/types';
+import type { GraphQLMutationInput, GraphQLQueryInput } from '@back/shared/types';
 
 export enum TkWhere {
   SOAP1C = 'SOAP1C',
@@ -51,6 +51,7 @@ export interface TkTasksInput {
 export interface TkFile {
   id: string;
   where: TkWhere;
+  code: string;
   name?: string;
   mime?: string;
   body?: string;
@@ -91,6 +92,7 @@ export interface TkTask {
 export interface TkUser {
   id: string;
   where: TkWhere;
+  code: string;
   name: string;
   login?: string;
   avatar?: string;
@@ -109,14 +111,14 @@ export interface TkTasks {
   errors?: string[];
 }
 
-export interface TkTaskEditInput {
+export interface TkTaskEditInput extends GraphQLMutationInput {
   where: TkWhere;
   code: string;
   comment: string;
   attachments?: Promise<FileUpload>[];
 }
 
-export interface TkTaskInput {
+export interface TkTaskInput extends GraphQLQueryInput {
   where: TkWhere;
   code: string;
   cache?: boolean;
@@ -124,15 +126,15 @@ export interface TkTaskInput {
 
 export interface TkCommentInput extends GraphQLMutationInput {
   where: TkWhere;
-  id: string;
+  code: string;
 }
 
-export interface TkFileInput {
+export interface TkFileInput extends GraphQLMutationInput {
   where: TkWhere;
-  id: string;
+  code: string;
 }
 
-export interface TkTaskNewInput {
+export interface TkTaskNewInput extends GraphQLMutationInput {
   where: TkWhere;
   subject: string;
   body: string;

@@ -89,8 +89,8 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   const handleDownload = async (task: TkTask, file: TkFile): Promise<void> => {
     if (file.body) {
       download(file.body, file.name || '');
-    } else if (task.where === TkWhere.SOAP1C && file.id) {
-      getTaskFile({ variables: { file: { where: TkWhere.SOAP1C, id: file.id } } });
+    } else if (task.where === TkWhere.SOAP1C && file.code) {
+      getTaskFile({ variables: { file: { where: TkWhere.SOAP1C, code: file.code } } });
     }
   };
 

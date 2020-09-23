@@ -22,6 +22,7 @@ import type {
   TkCommentInput,
 } from '@lib/types/tickets';
 import type { SubscriptionPayload } from '@back/shared/types';
+import { PortalPubSub } from '@back/shared/constants';
 import { User } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
@@ -61,7 +62,7 @@ export class TicketsResolver {
     resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
-    return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
+    return this.pubSub.asyncIterator<TkRoutes>(PortalPubSub.TICKETS_ROUTES);
   }
 
   /**
@@ -90,11 +91,21 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
-    resolve: (payload: SubscriptionPayload) => payload.object,
+    filter: (payload: SubscriptionPayload, variables, context) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload.userId === context?.user?.id;
+    },
+    resolve: (payload: SubscriptionPayload) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload.object;
+    },
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
-    return this.pubSub.asyncIterator<TkTasks>('ticketsTasks');
+    return this.pubSub.asyncIterator<TkTasks>(PortalPubSub.TICKETS_TASKS);
   }
 
   /**
@@ -173,11 +184,22 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTask', {
-    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
-    resolve: (payload: SubscriptionPayload) => payload.object,
+    filter: (payload: SubscriptionPayload, variables: TkTaskInput, _context) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      const task = payload.object as TkEditTask;
+      return task.task?.where === variables.where && task.task?.code === variables.code;
+    },
+    resolve: (payload: SubscriptionPayload) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      return payload.object;
+    },
   })
   async ticketsTaskSubscription(): Promise<AsyncIterator<TkEditTask>> {
-    return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');
+    return this.pubSub.asyncIterator<TkEditTask>(PortalPubSub.TICKETS_TASK);
   }
 
   /**
