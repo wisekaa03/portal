@@ -51,6 +51,12 @@ type TkComment {
   files: [TkFile!]
 }
 
+type TkTasks {
+  users: [TkUser]
+  tasks: [TkTask]
+  errors: [String]
+}
+
 type TkTask {
   id: String!
   where: String!
@@ -83,28 +89,15 @@ type TkTaskNew {
   createdDate: Date!
 }
 
-input TkTaskNewInput {
-  where: String
-  subject: String
-  body: String
-  # Route Id
-  route: String
-  #  Service Id
-  service: String
-  # Login
-  executorUser: String
+type TkRoutes {
+  routes: [TkRoute]
+  errors: [String]
 }
 
-input TkTaskEditInput {
-  where: String
-  code: String
-  comment: String
-}
-
-input TkTaskDescriptionInput {
-  where: String!
-  code: String!
-  cache: Boolean
+type TkEditTask {
+  users: [TkUser]
+  task: TkTask
+  errors: [String]
 }
 
 input TkRoutesInput {
@@ -120,21 +113,33 @@ input TkTasksInput {
   cache: Boolean
 }
 
-type TkRoutes {
-  routes: [TkRoute]
-  errors: [String]
+input TkTaskInput {
+  where: String!
+  code: String!
+  cache: Boolean
 }
 
-type TkEditTask {
-  users: [TkUser]
-  task: TkTask
-  errors: [String]
+input TkTaskNewInput {
+  where: String
+  subject: String
+  body: String
+  # Route Id
+  route: String
+  #  Service Id
+  service: String
+  # Login
+  executorUser: String
 }
 
-type TkTasks {
-  users: [TkUser]
-  tasks: [TkTask]
-  errors: [String]
+input TkTaskEditInput {
+  where: String!
+  code: String!
+  comment: String
+}
+
+input TkCommentInput {
+  where: String!
+  id: String!
 }
 
 input TkFileInput {
@@ -145,18 +150,18 @@ input TkFileInput {
 type Query {
   ticketsRoutes(routes: TkRoutesInput): TkRoutes!
   ticketsTasks(tasks: TkTasksInput): TkTasks!
-  ticketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask!
+  ticketsTask(task: TkTaskInput!): TkEditTask!
 }
 
 type Mutation {
   ticketsTaskNew(task: TkTaskNewInput!, attachments: [Upload]): TkTaskNew!
   ticketsTaskEdit(task: TkTaskEditInput!, attachments: [Upload]): TkEditTask!
-  ticketsCommentFile(file: TkFileInput!): TkFile!
+  ticketsComment(comment: TkCommentInput!): TkComment!
   ticketsTaskFile(file: TkFileInput!): TkFile!
 }
 
 type Subscription {
   ticketsRoutes(routes: TkRoutesInput): TkRoutes!
   ticketsTasks(tasks: TkTasksInput): TkTasks!
-  ticketsTaskDescription(task: TkTaskDescriptionInput!): TkEditTask!
+  ticketsTask(task: TkTaskInput!): TkEditTask!
 }

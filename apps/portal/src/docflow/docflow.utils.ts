@@ -1,20 +1,23 @@
 /** @format */
 
 import type {
-  DocFlowTaskSOAP,
   DocFlowTask,
-  DocFlowUserSOAP,
   DocFlowUser,
-  DocFlowStateSOAP,
   DocFlowState,
   DocFlowImportance,
-  DocFlowImportanceSOAP,
-  DocFlowProcessAcquaintanceSOAP,
   DocFlowParentTask,
-  DocFlowFileSOAP,
+  DocFlowTarget,
   DocFlowFile,
 } from '@lib/types/docflow';
-import type { SubscriptionPayload } from '@back/shared';
+import type {
+  DocFlowTaskSOAP,
+  DocFlowUserSOAP,
+  DocFlowStateSOAP,
+  DocFlowImportanceSOAP,
+  DocFlowProcessAcquaintanceSOAP,
+  DocFlowTargetSOAP,
+  DocFlowFileVersionSOAP,
+} from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@lib/types/common';
 /** @format */
 
@@ -44,11 +47,18 @@ export const docFlowParentTask = (parentTask?: DocFlowProcessAcquaintanceSOAP): 
   presentation: parentTask?.objectID?.presentation || '[state:presentation]',
 });
 
-export const docFlowFiles = (file?: DocFlowFileSOAP): DocFlowFile => ({
-  id: file?.target.objectID.id || '[file:id]',
+export const docFlowFiles = (file?: DocFlowFileVersionSOAP): DocFlowFile => ({
+  id: file?.objectID.id || '[file:id]',
   name: file?.name || '[file:name]',
-  presentation: file?.target.objectID.presentation || '[file:presentation]',
-  allowDeletion: file?.allowDeletion ?? false,
+  presentation: file?.objectID.presentation || '[file:presentation]',
+  // allowDeletion: file?.allowDeletion ?? false,
+});
+
+export const docFlowTarget = (target: DocFlowTargetSOAP): DocFlowTarget => ({
+  id: target.objectID?.id || '[target:id]',
+  presentation: target.objectID.presentation,
+  type: target.objectID.type,
+  navigationRef: target.objectID.navigationRef,
 });
 
 export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
@@ -70,9 +80,6 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   acceptDate: task.object.acceptDate && task.object.acceptDate.toISOString() !== SOAP_DATE_NULL ? task.object.acceptDate : undefined,
   state: docFlowState(task.object.state),
   parentTask: docFlowParentTask(task.object.parentBusinessProcess),
-  files: task.object.targets?.items?.map((file) => docFlowFiles(file)),
+  // target: docFlowTarget(task.object.target),
+  // files: task.object.targets?.items?.map((file) => docFlowFiles(file)),
 });
-
-export interface DocFlowTasksPayload extends SubscriptionPayload {
-  ticketsTasks: DocFlowTask[];
-}

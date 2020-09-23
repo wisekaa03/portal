@@ -8,11 +8,22 @@ import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
 import { User } from '@lib/types/user.dto';
-import type { DocFlowTask, DocFlowTasksInput, DocFlowTaskInput, DocFlowFile, DocFlowFileInput } from '@lib/types/docflow';
+import type {
+  DocFlowTask,
+  DocFlowTasksInput,
+  DocFlowTaskInput,
+  DocFlowTargetInput,
+  DocFlowTarget,
+  DocFlowTargetCollection,
+  DocFlowFileList,
+  DocFlowFileListInput,
+  DocFlowFileVersionInput,
+  DocFlowFile,
+} from '@lib/types/docflow';
+import type { SubscriptionPayload } from '@back/shared/types';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
-import type { DocFlowTasksPayload } from './docflow.utils';
 import { DocFlowService } from './docflow.service';
 //#endregion
 
@@ -33,9 +44,9 @@ export class DocFlowResolver {
    * @returns {DocFlowTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('docFlowGetTasks')
+  @Query('docFlowTasks')
   @UseGuards(GqlAuthGuard)
-  async docFlowGetTasks(
+  async docFlowTasks(
     @Args('tasks') tasks?: DocFlowTasksInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -44,30 +55,30 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowGetTasksCache(user, password, tasks).catch((error: Error) => {
+    return this.docflowService.docFlowTasksCache(user, password, tasks).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('docFlowGetTasks', {
-    filter: (payload: DocFlowTasksPayload, variables, context) => payload.userId === context?.user?.id,
-    resolve: (payload: DocFlowTasksPayload) => payload.ticketsTasks,
+  @Subscription('docFlowTasks', {
+    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload) => payload.object,
   })
-  async docFlowGetTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
-    return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowGetTasks');
+  async docFlowTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
+    return this.pubSub.asyncIterator<DocFlowTask[]>('docFlowTasks');
   }
 
   /**
-   * DocFlowTask
+   * docflow Task
    *
    * @async
    * @returns {DocFlowTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('docFlowGetTask')
+  @Query('docFlowTask')
   @UseGuards(GqlAuthGuard)
-  async docFlowGetTask(
+  async docFlowTask(
     @Args('task') task?: DocFlowTaskInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -76,30 +87,86 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowGetTaskCache(user, password, task).catch((error: Error) => {
+    return this.docflowService.docFlowTaskCache(user, password, task).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('docFlowGetTask', {
-    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
+  @Subscription('docFlowTask', {
+    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload) => payload.object,
   })
-  async docFlowGetTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
-    return this.pubSub.asyncIterator<DocFlowTask>('docFlowGetTask');
+  async docFlowTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
+    return this.pubSub.asyncIterator<DocFlowTask>('docFlowTask');
+  }
+
+  /**
+   * docflow Target
+   *
+   * @async
+   * @returns {DocFlowTarget}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query('docFlowTarget')
+  @UseGuards(GqlAuthGuard)
+  async docFlowTarget(
+    @Args('target') target?: DocFlowTargetInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<DocFlowTarget[]> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.docflowService.docFlowTargetCache(user, password, target).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription('docFlowTarget', {
+    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload) => payload.object,
+  })
+  async docFlowTargetSubscription(): Promise<AsyncIterator<DocFlowTarget[]>> {
+    return this.pubSub.asyncIterator<DocFlowTarget[]>('docFlowTarget');
+  }
+
+  /**
+   * DocFlow file list
+   *
+   * @async
+   * @returns {DocFlowFileList}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query('docFlowFileList')
+  @UseGuards(GqlAuthGuard)
+  async docFlowFileList(
+    @Args('files') files: DocFlowFileListInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<DocFlowFileList[]> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.docflowService.docFlowFileList(user, password, files).catch((error: Error) => {
+      throw new HttpException(error.message, 500);
+    });
   }
 
   /**
    * DocFlow file
    *
    * @async
-   * @returns {DocFlowFile}
+   * @returns {DocFlowFileVersion}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('docFlowGetFile')
+  @Query('docFlowFileVersion')
   @UseGuards(GqlAuthGuard)
-  async docFlowGetFile(
-    @Args('file') file: DocFlowFileInput,
+  async docFlowFileVersion(
+    @Args('file') file: DocFlowFileVersionInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowFile> {
@@ -107,16 +174,8 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowGetFileCache(user, password, file).catch((error: Error) => {
+    return this.docflowService.docFlowFileVersion(user, password, file).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Subscription('docFlowGetFile', {
-    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
-  })
-  async docFlowGetFileSubscription(): Promise<AsyncIterator<DocFlowFile>> {
-    return this.pubSub.asyncIterator<DocFlowFile>('docFlowFile');
   }
 }

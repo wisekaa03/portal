@@ -16,9 +16,10 @@ import type {
   TkTaskNew,
   TkTaskNewInput,
   TkTaskEditInput,
-  TkTaskDescriptionInput,
+  TkTaskInput,
   TkFile,
   TkFileInput,
+  TkCommentInput,
 } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -153,10 +154,10 @@ export class TicketsResolver {
    * @returns {TkTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('ticketsTaskDescription')
+  @Query('ticketsTask')
   @UseGuards(GqlAuthGuard)
-  async ticketsTaskDescription(
-    @Args('task') task: TkTaskDescriptionInput,
+  async ticketsTask(
+    @Args('task') task: TkTaskInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkEditTask> {
@@ -164,17 +165,17 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTaskDescriptionCache(user, password, task).catch((error: Error) => {
+    return this.ticketsService.ticketsTaskCache(user, password, task).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('ticketsTaskDescription', {
+  @Subscription('ticketsTask', {
     filter: (payload, variables, context) => payload?.userId === context?.user?.id,
     resolve: (payload) => payload?.ticketsTask,
   })
-  async ticketsTaskDescriptionSubscription(): Promise<AsyncIterator<TkEditTask>> {
+  async ticketsTaskSubscription(): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');
   }
 
@@ -208,10 +209,10 @@ export class TicketsResolver {
    * @returns {TkFile}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('ticketsCommentFile')
+  @Mutation('ticketsComment')
   @UseGuards(GqlAuthGuard)
-  async ticketsCommentFile(
-    @Args('file') file: TkFileInput,
+  async ticketsComment(
+    @Args('comment') comment: TkCommentInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkFile> {
@@ -219,7 +220,7 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsCommentFile(user, password, file).catch((error: Error) => {
+    return this.ticketsService.ticketsComment(user, password, comment).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

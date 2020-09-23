@@ -14,22 +14,25 @@ import type {
   TkRoutes,
   TkTasks,
   TkEditTask,
-  TkUserOST,
   TkTaskNewInput,
   TkTaskNew,
   TkTaskEditInput,
-  TkTaskDescriptionInput,
+  TkTaskInput,
   TkTasksInput,
-  RecordsOST,
   TkFileInput,
   TkFile,
+  TkCommentInput,
+} from '@lib/types/tickets';
+import type {
+  TkUserOST,
+  RecordsOST,
   TicketsRouteSOAP,
   TicketsUserSOAP,
   TicketsTaskSOAP,
   TicketsSOAPGetRoutes,
   TicketsSOAPGetTasks,
   TicketsSOAPGetTaskDescription,
-} from '@lib/types/tickets';
+} from '@back/shared/types';
 import { TkWhere, TkRoutesInput } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
@@ -634,7 +637,7 @@ export class TicketsService {
    * @param {TkTaskDescriptionInput} task Task description
    * @returns {TkTasks}
    */
-  ticketsTaskDescription = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
+  ticketsTask = async (user: User, password: string, task: TkTaskInput): Promise<TkEditTask> => {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C && task.code) {
       const client = await this.soapService
@@ -759,14 +762,14 @@ export class TicketsService {
    * @param {TkTaskDescriptionInput} task Task description
    * @returns {TkTasks}
    */
-  ticketsTaskDescriptionCache = async (user: User, password: string, task: TkTaskDescriptionInput): Promise<TkEditTask> => {
+  ticketsTaskCache = async (user: User, password: string, task: TkTaskInput): Promise<TkEditTask> => {
     const cachedID = `${user.id}-tickets-task`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: TkEditTask = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
-            const ticketsTask = await this.ticketsTaskDescription(user, password, task);
+            const ticketsTask = await this.ticketsTask(user, password, task);
             this.pubSub.publish('ticketsTaskDescription', {
               userId: user.id,
               ticketsTask,
@@ -776,7 +779,7 @@ export class TicketsService {
             this.logger.error('ticketsTaskDescriptionCache error:', error);
           }
 
-          setTimeout(() => this.ticketsTaskDescriptionCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
+          setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -784,7 +787,7 @@ export class TicketsService {
     }
 
     try {
-      const ticketsTask = await this.ticketsTaskDescription(user, password, task);
+      const ticketsTask = await this.ticketsTask(user, password, task);
       this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTask });
 
       if (this.cache) {
@@ -1003,15 +1006,15 @@ export class TicketsService {
    * Get file of comment
    *
    * @async
-   * @method ticketsCommentFile
+   * @method ticketsComment
    * @param {User} user User object
    * @param {string} password The Password
    * @param {TkFileInput} id The task file
    * @returns {TkFile}
    */
-  ticketsCommentFile = async (user: User, password: string, file: TkFileInput): Promise<TkFile> => {
+  ticketsComment = async (user: User, password: string, comment: TkCommentInput): Promise<TkFile> => {
     /* 1C SOAP */
-    if (file.where === TkWhere.SOAP1C && file.id) {
+    if (comment.where === TkWhere.SOAP1C && comment.id) {
       const client = await this.soapService
         .connect({
           url: this.configService.get<string>('TICKETS_URL'),
@@ -1029,7 +1032,7 @@ export class TicketsService {
       return client
         .GetCommentFileAsync(
           {
-            Ref: file.id,
+            Ref: comment.id,
           },
           { timeout: TIMEOUT },
         )
@@ -1037,7 +1040,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
-              ...file,
+              ...comment,
               body: result[0].return['ФайлХранилище'],
             };
           }
@@ -1057,11 +1060,11 @@ export class TicketsService {
     }
 
     /* OSTicket service */
-    if (file.where === TkWhere.OSTaudit || file.where === TkWhere.OSTmedia || file.where === TkWhere.OSThr) {
+    if (comment.where === TkWhere.OSTaudit || comment.where === TkWhere.OSTmedia || comment.where === TkWhere.OSThr) {
       if (this.configService.get<string>('OSTICKET_URL')) {
         try {
           const OSTicketURL: Record<string, string> = JSON.parse(this.configService.get<string>('OSTICKET_URL'));
-          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(file.where));
+          const whereKey = Object.keys(OSTicketURL).find((where) => whereService(where) === whereService(comment.where));
           if (whereKey) {
             const fio = `${user.profile.lastName} ${user.profile.firstName} ${user.profile.middleName}`;
             const myUserOST = {
@@ -1080,7 +1083,7 @@ export class TicketsService {
               .post<RecordsOST>(`${OSTicketURL[whereKey]}?req=file`, {
                 login: user.username,
                 user: JSON.stringify(myUserOST),
-                msg: JSON.stringify({ login: fio, file: file.id }),
+                msg: JSON.stringify({ login: fio, file: comment.id }),
               })
               .toPromise()
               .then((response) => {
@@ -1090,7 +1093,7 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       return {
-                        ...file,
+                        ...comment,
                         body: (response.data.file as unknown) as string,
                       };
                     }

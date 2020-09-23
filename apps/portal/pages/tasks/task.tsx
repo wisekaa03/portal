@@ -9,7 +9,7 @@ import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT_FILE } from '@lib/queries';
-import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskDescriptionInput, TkTaskEditInput } from '@lib/types';
+import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskInput, TkTaskEditInput } from '@lib/types';
 import { TkWhere } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
@@ -25,20 +25,20 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error, refetch: taskRefetchInt } = useQuery<
-    Data<'ticketsTaskDescription', TkEditTask>,
-    { task: TkTaskDescriptionInput }
-  >(TICKETS_TASK_DESCRIPTION, {
-    ssr: false,
-    variables: {
-      task: {
-        where: where || TkWhere.Default,
-        code: code || '0',
+  const { loading, data, error, refetch: taskRefetchInt } = useQuery<Data<'ticketsTaskDescription', TkEditTask>, { task: TkTaskInput }>(
+    TICKETS_TASK_DESCRIPTION,
+    {
+      ssr: false,
+      variables: {
+        task: {
+          where: where || TkWhere.Default,
+          code: code || '0',
+        },
       },
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
     },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-  });
+  );
 
   const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useMutation<
     Data<'TicketsTaskFile', TkFile>,
@@ -84,7 +84,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
 
   const taskRefetch = (
     variables?: Partial<{
-      task: TkTaskDescriptionInput;
+      task: TkTaskInput;
     }>,
   ): Promise<ApolloQueryResult<Data<'ticketsTaskDescription', TkEditTask>>> =>
     taskRefetchInt({ task: { where, code, ...variables?.task, cache: false } });

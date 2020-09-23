@@ -679,9 +679,18 @@ export const TICKETS_COMMENT_FILE = gql`
  * DocFlow
  */
 
-export const DOCFLOW_GET_TASKS = gql`
-  query DocFlowGetTasks($tasks: DocFlowTasksInput) {
-    docFlowGetTasks(tasks: $tasks) {
+const DOCFLOW_FILE = gql`
+  fragment DocFlowFileProps on DocFlowFile {
+    files {
+      id
+      name
+    }
+  }
+`;
+
+export const DOCFLOW_TASKS = gql`
+  query DocFlowTasks($tasks: DocFlowTasksInput) {
+    docFlowTasks(tasks: $tasks) {
       id
       name
       importance {
@@ -697,10 +706,6 @@ export const DOCFLOW_GET_TASKS = gql`
       beginDate
       dueDate
       endDate
-      files {
-        id
-        name
-      }
       description
       parentTask {
         id
@@ -720,11 +725,12 @@ export const DOCFLOW_GET_TASKS = gql`
       }
     }
   }
+  ${DOCFLOW_FILE}
 `;
 
-export const DOCFLOW_SUB_TASKS = gql`
-  subscription DocFlowGetTasks($tasks: DocFlowTasksInput) {
-    docFlowGetTasks(tasks: $tasks) {
+export const DOCFLOW_TASKS_SUB = gql`
+  subscription DocFlowTasks($tasks: DocFlowTasksInput) {
+    docFlowTasks(tasks: $tasks) {
       id
       name
       importance {

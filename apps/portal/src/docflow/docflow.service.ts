@@ -10,45 +10,27 @@ import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT } from '@back/shared/constants';
-import type {
-  TkRoutes,
-  TkTasks,
-  TkEditTask,
-  TkWhere,
-  TkUserOST,
-  TkTaskNewInput,
-  TkTaskNew,
-  TkTaskEditInput,
-  TkTaskDescriptionInput,
-  RecordsOST,
-  TkFileInput,
-  TkFile,
-  TicketsRouteSOAP,
-  TicketsUserSOAP,
-  TicketsTaskSOAP,
-  TicketsSOAPGetRoutes,
-  TicketsSOAPGetTasks,
-  TicketsSOAPGetTaskDescription,
-} from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault, soapError } from '@app/soap';
+import { SoapService } from '@app/soap';
 import type {
-  DocFlowUser,
-  DocFlowUserSOAP,
-  DocFlowUserInput,
   DocFlowTask,
-  DocFlowTaskSOAP,
-  DocFlowTasksSOAP,
   DocFlowTasksInput,
   DocFlowTaskInput,
+  DocFlowTargetInput,
+  DocFlowTarget,
+  DocFlowTargetCollection,
+  DocFlowFileList,
+  DocFlowFileListInput,
+  DocFlowFileVersionInput,
   DocFlowFile,
-  DocFlowFileInput,
+  DocFlowUser,
+  DocFlowUserInput,
 } from '@lib/types/docflow';
+import type { SubscriptionPayload, DocFlowTasksSOAP, DocFlowUserSOAP } from '@back/shared/types';
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
 import type { DataResultReturn, DataResultSOAP } from '@lib/types/common';
-import type { DocFlowTasksPayload } from './docflow.utils';
 import { docFlowTask, docFlowUser } from './docflow.utils';
 //#endregion
 
@@ -86,12 +68,12 @@ export class DocFlowService {
    * DocFlow tasks list
    *
    * @async
-   * @method DocFlowGetTasks
+   * @method DocFlowTasks
    * @param {User} user User object
    * @param {string} password The Password
    * @returns {DocFlowTask[]}
    */
-  docFlowGetTasks = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
+  docFlowTasks = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -201,30 +183,30 @@ export class DocFlowService {
    * DocFlow tasks list (cache)
    *
    * @async
-   * @method DocFlowGetTasksCache
+   * @method DocFlowTasksCache
    * @param {User} user User object
    * @param {string} password The Password
    * @param {task}
    * @returns {DocFlowTask[]}
    */
-  docFlowGetTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
+  docFlowTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
     const cachedID = `${user.id}-docflow-tasks`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
-            const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-            this.pubSub.publish<DocFlowTasksPayload>('docFlowGetTasks', {
+            const ticketsTasks = await this.docFlowTasks(user, password, tasks);
+            this.pubSub.publish<SubscriptionPayload>('docFlowGetTasks', {
               userId: user.id || '',
-              ticketsTasks,
+              object: ticketsTasks,
             });
             this.cache.set(cachedID, ticketsTasks, this.ttl);
           } catch (error) {
             this.logger.error('docFlowGetTasksCache error:', error);
           }
 
-          setTimeout(() => this.docFlowGetTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
+          setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -232,8 +214,8 @@ export class DocFlowService {
     }
 
     try {
-      const ticketsTasks = await this.docFlowGetTasks(user, password, tasks);
-      this.pubSub.publish<DocFlowTasksPayload>('docFlowGetTasks', { userId: user.id || '', ticketsTasks });
+      const ticketsTasks = await this.docFlowTasks(user, password, tasks);
+      this.pubSub.publish<SubscriptionPayload>('docFlowGetTasks', { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
         this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
@@ -251,12 +233,12 @@ export class DocFlowService {
    * DocFlow get task
    *
    * @async
-   * @method DocFlowGetTask
+   * @method DocFlowTask
    * @param {User} user User object
    * @param {string} password The Password
    * @returns {DocFlowTask}
    */
-  docFlowGetTask = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
+  docFlowTask = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -366,33 +348,33 @@ export class DocFlowService {
    * DocFlow task get (cache)
    *
    * @async
-   * @method DocFlowGetTasksCache
+   * @method DocFlowTasksCache
    * @param {User} user User object
    * @param {string} password The Password
    * @param {task}
    * @returns {DocFlowTask}
    */
-  docFlowGetTaskCache = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
+  docFlowTaskCache = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
     const cachedID = `${user.id}-docflow-task`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTasks = await this.docFlowGetTask(user, password, task);
+          const ticketsTasks = await this.docFlowTask(user, password, task);
           this.pubSub.publish('docFlowTask', {
             userId: user.id,
             ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
 
-          setTimeout(() => this.docFlowGetTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
+          setTimeout(() => this.docFlowTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
       }
     }
 
-    const ticketsTask = await this.docFlowGetTask(user, password, task);
+    const ticketsTask = await this.docFlowTask(user, password, task);
     this.pubSub.publish('docFlowTask', { userId: user.id, ticketsTask });
 
     if (this.cache) {
@@ -411,7 +393,7 @@ export class DocFlowService {
    * @param {string} password The Password
    * @returns {DocFlowUser}
    */
-  docFlowGetCurrentUser = async (user: User, password: string, input?: DocFlowUserInput): Promise<DocFlowUser> => {
+  docFlowCurrentUser = async (user: User, password: string, input?: DocFlowUserInput): Promise<DocFlowUser> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -470,15 +452,132 @@ export class DocFlowService {
   };
 
   /**
-   * DocFlow get file
+   * DocFlow target
    *
    * @async
-   * @method DocFlowGetFile
+   * @method docFlowTarget
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @returns {DocFlowUser}
+   */
+  docFlowTarget = async (user: User, password: string, target?: DocFlowTargetInput): Promise<DocFlowTarget> => {
+    const soapUrl = this.configService.get<string>('DOCFLOW_URL');
+    if (soapUrl) {
+      const client = await this.soapService
+        .connect({
+          url: soapUrl,
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+          soapOptions: {
+            namespaceArrayElements: false,
+          },
+        })
+        .catch((error: Error) => {
+          this.logger.error(error);
+
+          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+        });
+
+      if (client) {
+        return client
+          .executeAsync(
+            {
+              'tns:request': {
+                attributes: {
+                  'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                  'xsi:type': 'tns:DMGetCurrentUserRequest',
+                },
+              },
+            },
+            { timeout: TIMEOUT },
+          )
+          .then((message: DataResultReturn<DocFlowUserSOAP>) => {
+            this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
+            // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+
+            if (message[0]?.return) {
+              const result = docFlowUser(message[0]?.return?.user as DocFlowUserSOAP);
+
+              return result;
+            }
+
+            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+          })
+          .catch((error: Error) => {
+            this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
+            this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
+            this.logger.error(error);
+
+            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          });
+      }
+    }
+
+    throw new Error(PortalError.NOT_IMPLEMENTED);
+  };
+
+  /**
+   * DocFlow target (cache)
+   *
+   * @async
+   * @method DocFlowTargetCache
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {task}
+   * @returns {DocFlowTask[]}
+   */
+  docFlowTargetCache = async (user: User, password: string, target?: DocFlowTargetInput): Promise<DocFlowTarget[]> => {
+    const cachedID = `${user.id}-docflow-target`;
+    if (this.cache && (!target || target.cache !== false)) {
+      const cached: DocFlowTarget[] = await this.cache.get<DocFlowTarget[]>(cachedID);
+      if (cached && cached !== null) {
+        (async (): Promise<void> => {
+          try {
+            const ticketsTarget = await this.docFlowTarget(user, password, target);
+            this.pubSub.publish<SubscriptionPayload>('docFlowTarget', {
+              userId: user.id || '',
+              object: ticketsTarget,
+            });
+            this.cache.set(cachedID, ticketsTarget, this.ttl);
+          } catch (error) {
+            this.logger.error('docFlowGetTasksCache error:', error);
+          }
+
+          setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
+        })();
+
+        return cached;
+      }
+    }
+
+    try {
+      const ticketsTarget = await this.docFlowTasks(user, password, target);
+      this.pubSub.publish<SubscriptionPayload>('docFlowTarget', { userId: user.id || '', object: ticketsTarget });
+
+      if (this.cache) {
+        this.cache.set<DocFlowTarget[]>(cachedID, ticketsTarget, this.ttl);
+      }
+
+      return ticketsTarget;
+    } catch (error) {
+      this.logger.error('docFlowTargetCache error:', error);
+
+      throw new Error(error);
+    }
+  };
+
+  /**
+   * DocFlow get file list
+   *
+   * @async
+   * @method docFlowFileList
    * @param {User} user User object
    * @param {string} password The Password
    * @returns {DocFlowFile}
    */
-  docFlowGetFile = async (user: User, password: string, file: DocFlowFileInput): Promise<DocFlowFile> => {
+  docFlowFileList = async (user: User, password: string, file: DocFlowFileListInput): Promise<DocFlowFileList[]> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -557,42 +656,89 @@ export class DocFlowService {
   };
 
   /**
-   * DocFlow task get (cache)
+   * DocFlow get file by version
    *
    * @async
-   * @method DocFlowGetFileCache
+   * @method docFlowFileVersion
    * @param {User} user User object
    * @param {string} password The Password
-   * @param {task}
-   * @returns {DocFlowTask[]}
+   * @returns {DocFlowFile}
    */
-  docFlowGetFileCache = async (user: User, password: string, file: DocFlowFileInput): Promise<DocFlowFile> => {
-    const cachedID = `${user.id}-docflow-file`;
-    if (this.cache && (!file || file.cache !== false)) {
-      const cached: DocFlowFile = await this.cache.get<DocFlowFile>(cachedID);
-      if (cached && cached !== null) {
-        (async (): Promise<void> => {
-          const ticketsTasks = await this.docFlowGetFile(user, password, file);
-          this.pubSub.publish('docFlowFile', {
-            userId: user.id,
-            ticketsTasks,
+  docFlowFileVersion = async (user: User, password: string, file: DocFlowFileVersionInput): Promise<DocFlowFile> => {
+    const soapUrl = this.configService.get<string>('DOCFLOW_URL');
+    if (soapUrl) {
+      const client = await this.soapService
+        .connect({
+          url: soapUrl,
+          username: user?.username,
+          password,
+          domain: this.configService.get<string>('LDAP_DOMAIN'),
+          ntlm: true,
+          soapOptions: {
+            namespaceArrayElements: false,
+          },
+        })
+        .catch((error: Error) => {
+          this.logger.error(error);
+
+          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+        });
+
+      if (client) {
+        return client
+          .executeAsync(
+            {
+              'tns:request': {
+                'attributes': {
+                  'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                  'xsi:type': 'tns:DMGetFileListByOwnerRequest',
+                },
+                'tns:dataBaseID': '',
+                'tns:owners': {
+                  'name': '',
+                  'tns:objectID': {
+                    id: '',
+                    type: 'DMInternalDocument',
+                  },
+                },
+                'columnSet': 'objectId',
+                // <m:columnSet>signed</m:columnSet>
+                // <m:columnSet>name</m:columnSet>
+                // <m:columnSet>size</m:columnSet>
+                // <m:columnSet>creationDate</m:columnSet>
+                // <m:columnSet>modificationDateUniversal</m:columnSet>
+                // <m:columnSet>author</m:columnSet>
+                // <m:columnSet>extension</m:columnSet>
+                // <m:columnSet>description</m:columnSet>
+                // <m:columnSet>encrypted</m:columnSet>
+                // <m:columnSet>editing</m:columnSet>
+                // <m:columnSet>editingUser</m:columnSet>
+              },
+            },
+            { timeout: TIMEOUT },
+          )
+          .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
+            this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
+            // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+
+            if (message[0]?.return) {
+              const result = message[0]?.return?.items?.map((t) => docFlowTask(t));
+
+              return result;
+            }
+
+            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+          })
+          .catch((error: Error) => {
+            this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
+            this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
+            this.logger.error(error);
+
+            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
           });
-          this.cache.set(cachedID, ticketsTasks, this.ttl);
-
-          // setTimeout(() => this.docFlowGetTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
-        })();
-
-        return cached;
       }
     }
 
-    const ticketsFile = await this.docFlowGetFile(user, password, file);
-    this.pubSub.publish('docFlowFile', { userId: user.id, ticketsFile });
-
-    if (this.cache) {
-      this.cache.set<DocFlowFile>(cachedID, ticketsFile, this.ttl);
-    }
-
-    return ticketsFile;
+    throw new Error(PortalError.NOT_IMPLEMENTED);
   };
 }

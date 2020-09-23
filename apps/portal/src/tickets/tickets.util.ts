@@ -2,21 +2,15 @@
 /* eslint no-confusing-arrow:0 */
 
 import clearHtml from '@lib/clear-html';
+import type { TkTaskNew, TkRoute, TkService, TkTask, TkUser, TkFile, TkComment } from '@lib/types';
 import type {
-  TkTaskNew,
-  TkRoute,
-  TkService,
-  TkTask,
-  TkUser,
-  TkFile,
-  TkComment,
   TicketsTaskSOAP,
   TicketsCommentSOAP,
   TicketsFileSOAP,
   TicketsRouteSOAP,
   TicketsServiceSOAP,
   TicketsUserSOAP,
-} from '@lib/types';
+} from '@back/shared/types';
 import { TkWhere } from '@lib/types/tickets';
 import { SOAP_DATE_NULL } from '@lib/types/common';
 

@@ -1,7 +1,8 @@
 /** @format */
 
 import type React from 'react';
-import { TFunction } from 'next-i18next';
+import type { TFunction } from 'next-i18next';
+import type { GraphQLQueryInput } from '@back/shared/types';
 
 export interface DocFlowTasksColumn {
   id: string;
@@ -45,11 +46,43 @@ export interface DocFlowState {
   presentation?: string;
 }
 
+export interface DocFlowTarget {
+  id: string;
+  name?: string;
+  presentation?: string;
+  type?: string;
+  navigationRef?: string;
+}
+
+export interface DocFlowRole {
+  name?: string;
+  id: string;
+  presentation?: string;
+  type?: string; // DMBusinessProcessTargetRole
+  navigationRef?: string;
+}
+
+export interface DocFlowTargetCollection {
+  role: DocFlowRole;
+  name?: string;
+  id: string;
+  presentation?: string;
+  type?: string;
+  navigationRef?: string;
+  allowDeletion?: boolean;
+}
+
+export interface DocFlowFileList {
+  id: string;
+  name?: string;
+  presentation?: string;
+  allowDeletion?: boolean;
+}
+
 export interface DocFlowFile {
   id: string;
   name?: string;
   presentation?: string;
-  allowDeletion: boolean;
 }
 
 export interface DocFlowImportance {
@@ -83,137 +116,21 @@ export interface DocFlowTask {
   acceptDate?: Date;
   state?: DocFlowState;
   parentTask?: DocFlowParentTask;
-  files?: DocFlowFile[];
+  target?: DocFlowTarget;
+  targets?: DocFlowTargetCollection[];
 }
 
-export interface DocFlowUserInput {
-  cache?: boolean;
+/* DocFlow input fields */
+
+export type DocFlowUserInput = GraphQLQueryInput;
+export type DocFlowTasksInput = GraphQLQueryInput;
+export type DocFlowTaskInput = GraphQLQueryInput;
+export type DocFlowFileListInput = GraphQLQueryInput;
+
+export interface DocFlowTargetInput extends GraphQLQueryInput {
+  objectID: string;
 }
 
-export interface DocFlowTasksInput {
-  cache?: boolean;
-}
-
-export interface DocFlowTaskInput {
-  cache?: boolean;
-}
-
-export interface DocFlowFileInput {
-  documentID: string;
-  cache?: boolean;
-}
-
-export interface DocFlowFileSOAP {
-  allowDeletion: boolean;
-  name: string;
-  role: {
-    name: string;
-    objectID: {
-      id: string;
-      navigationRef: string;
-      presentation: string;
-      type: 'DMBusinessProcessTargetRole';
-    };
-  };
-  target: {
-    name: string;
-    objectID: {
-      id: string;
-      navigationRef: string;
-      presentation: string;
-      type: 'DMInternalDocument';
-    };
-  };
-}
-
-export interface DocFlowUserSOAP {
-  name?: string;
-  objectID?: {
-    id?: string;
-    navigationRef?: string;
-    presentation?: string;
-    type?: 'DMUser';
-  };
-}
-
-export interface DocFlowImportanceSOAP {
-  name?: string;
-  objectID: {
-    id?: string;
-    presentation?: string;
-    type?: 'DMBusinessProcessTaskImportance';
-  };
-}
-
-export interface DocFlowProcessAcquaintanceSOAP {
-  name?: string;
-  objectID: {
-    id?: string;
-    navigationRef?: string;
-    presentation?: string;
-    type?: 'DMBusinessProcessAcquaintance';
-  };
-}
-
-export interface DocFlowStateSOAP {
-  name?: string;
-  objectID?: {
-    id?: string;
-    navigationRef?: string;
-    presentation?: string;
-    type?: 'DMBusinessProcessState';
-  };
-}
-
-export interface DocFlowInternalDocumentSOAP {
-  name?: string;
-  objectID?: {
-    id?: string;
-    navigationRef?: string;
-    presentation?: string;
-    type?: 'DMInternalDocument';
-  };
-}
-
-export interface DocFlowTaskSOAP {
-  canHaveChildren?: boolean;
-  isFolder?: boolean;
-  object: {
-    name?: string;
-    acceptDate?: Date;
-    accepted?: boolean;
-    attributes?: {
-      'xsi:type'?: 'm:DMBusinessProcessTask';
-    };
-    author?: DocFlowUserSOAP;
-    beginDate?: Date;
-    businessProcessStep?: string;
-    changeRight?: boolean;
-    description?: string;
-    dueDate?: Date;
-    endDate?: Date;
-    executed?: boolean;
-    executionComment?: string;
-    executionMark?: string;
-    importance?: DocFlowImportanceSOAP;
-    objectID?: {
-      id?: string;
-      navigationRef?: string;
-      presentation?: string;
-      type?: 'DMBusinessProcessTask';
-    };
-    parentBusinessProcess?: DocFlowProcessAcquaintanceSOAP;
-    performer?: {
-      user?: DocFlowUserSOAP;
-    };
-    state?: DocFlowStateSOAP;
-    target?: DocFlowInternalDocumentSOAP;
-    targets?: {
-      items?: DocFlowFileSOAP[];
-    };
-  };
-}
-
-export interface DocFlowTasksSOAP {
-  items: DocFlowTaskSOAP[];
+export interface DocFlowFileVersionInput extends GraphQLQueryInput {
+  file: string;
 }
