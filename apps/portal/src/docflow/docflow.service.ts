@@ -206,7 +206,8 @@ export class DocFlowService {
             this.logger.error('docFlowTasksCache error:', error);
           }
 
-          setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
+          // TODO: продумать сервис для обновления данных по пользователям
+          // setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -367,7 +368,8 @@ export class DocFlowService {
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
 
-          setTimeout(() => this.docFlowTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
+          // TODO: продумать сервис для обновления данных по пользователям
+          // setTimeout(() => this.docFlowTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -545,7 +547,8 @@ export class DocFlowService {
             this.logger.error('docFlowTasksCache error:', error);
           }
 
-          setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
+          // TODO: продумать сервис для обновления данных по пользователям
+          // setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;

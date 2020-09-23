@@ -225,7 +225,8 @@ export class TicketsService {
             this.logger.error('ticketsRoutesCache error:', error);
           }
 
-          setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
+          // TODO: продумать сервис для обновления данных по пользователям
+          // setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -459,7 +460,8 @@ export class TicketsService {
             this.logger.error('ticketsTasksCache error:', error);
           }
 
-          setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
+          // TODO: продумать сервис для обновления данных по пользователям
+          // setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -780,7 +782,8 @@ export class TicketsService {
             this.logger.error('ticketsTaskDescriptionCache error:', error);
           }
 
-          setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
+          // TODO: продумать сервис для обновления данных по пользователям
+          // setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
