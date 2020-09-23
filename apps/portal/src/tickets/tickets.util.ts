@@ -432,14 +432,14 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
     initiatorUser: task.owner_user_id ? `${whereService(where)}.user.${task.owner_user_id}` : undefined,
     executorUser: task.assignee_user_id ? `${whereService(where)}.user.${task.assignee_user_id}` : undefined,
     route: {
-      id: `${whereService(where)}.${task.route?.code}`,
+      id: `${whereService(where)}:${task.route?.code}`,
       where: whereService(where),
       code: task.route?.code,
       name: task.route?.name,
       avatar: task.route?.avatar,
     },
     service: {
-      id: `${whereService(where)}.${task.topic_id}`,
+      id: `${whereService(where)}:${task.topic_id}`,
       where: whereService(where),
       code: task.topic_id,
       name: task.topic,
@@ -450,8 +450,9 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
     files:
       typeof task.description?.[0]?.attachments === 'object'
         ? task.description?.[0]?.attachments.map((att: Record<string, string>) => ({
-            id: att.code,
+            id: `${whereService(where)}:${att.code}`,
             where: whereService(where),
+            code: att.code,
             mime: att.mime,
             body: att.body,
             name: att.name,
@@ -461,7 +462,7 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
 
   const users = [
     {
-      id: `${whereService(where)}:user.${task.owner_user_id}`,
+      id: task.owner_user_id ? `${whereService(where)}:user.${task.owner_user_id}` : `${whereService(where)}:user.unknown`,
       where: whereService(where),
       code: `user.${task.owner_user_id}`,
       name: task.owner_user_name,
@@ -473,7 +474,7 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
   ];
   if (task.assignee_user_name) {
     users.push({
-      id: `${whereService(where)}:user.${task.assignee_user_id}`,
+      id: task.assignee_user_id ? `${whereService(where)}:user.${task.assignee_user_id}` : `${whereService(where)}:user.unknown`,
       where: whereService(where),
       code: `user.${task.assignee_user_id}`,
       name: task.assignee_user_name,
@@ -493,9 +494,9 @@ export const descriptionOST = (task: Record<string, any>, where: TkWhere): [TkUs
 export const userOST = (user: Record<string, any>, where: TkWhere): TkUser | undefined =>
   user && Object.keys(user).length > 0
     ? {
-        id: user.Ref || `${whereService(where)}:user.${user['ФИО']}`,
+        id: user.Ref || user['ФИО'] ? `${whereService(where)}:user.${user['ФИО']}` : `${whereService(where)}:user.unknown`,
         where: whereService(where),
-        code: user.Ref || `user.${user['ФИО']}`,
+        code: user.Ref || `user.${user['ФИО']}` || 'user.unknown',
         name: user['ФИО'],
         avatar: user['Аватар'] || '',
         email: user['ОсновнойEmail'],

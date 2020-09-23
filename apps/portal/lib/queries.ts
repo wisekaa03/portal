@@ -461,8 +461,9 @@ export const FILES_DELETE_FOLDER = gql`
 
 const TICKETS_USER_FRAGMENT = gql`
   fragment TicketsUserProps on TkUser {
-    where
     id
+    where
+    code
     name
     login
     avatar
@@ -478,8 +479,8 @@ const TICKETS_USER_FRAGMENT = gql`
 
 const TICKETS_TASK_FRAGMENT = gql`
   fragment TicketsTaskProps on TkTask {
-    where
     id
+    where
     code
     subject
     status
@@ -489,12 +490,16 @@ const TICKETS_TASK_FRAGMENT = gql`
     executorUser
     initiatorUser
     route {
+      id
+      where
       code
       name
       description
       avatar
     }
     service {
+      id
+      where
       code
       name
       description

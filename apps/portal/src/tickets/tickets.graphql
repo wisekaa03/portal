@@ -20,6 +20,7 @@ type TkRoute {
 type TkUser {
   id: ID!
   where: String!
+  code: String!
   name: String!
   login: String
   avatar: String
