@@ -132,9 +132,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     }
   }, [suggestionsLoading, suggestionsData, _search]);
 
-  const fetchFunction = async (): Promise<undefined | ApolloQueryResult<Data<'profile', Connection<Profile>>>> =>
+  const fetchFunction = async (): Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<Profile>>>> =>
     fetchMore<
-      Data<'profile', Connection<Profile>>,
+      Data<'profiles', Connection<Profile>>,
       ProfileQueryProps,
       'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing'
     >({

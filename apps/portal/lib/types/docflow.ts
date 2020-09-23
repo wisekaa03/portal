@@ -63,12 +63,9 @@ export interface DocFlowRole {
 }
 
 export interface DocFlowTargetCollection {
+  name: string;
   role: DocFlowRole;
-  name?: string;
-  id: string;
-  presentation?: string;
-  type?: string;
-  navigationRef?: string;
+  target: DocFlowTarget;
   allowDeletion?: boolean;
 }
 

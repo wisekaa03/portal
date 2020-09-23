@@ -7,6 +7,7 @@ import type {
   DocFlowImportance,
   DocFlowParentTask,
   DocFlowTarget,
+  DocFlowTargetCollection,
   DocFlowFile,
 } from '@lib/types/docflow';
 import type {
@@ -16,9 +17,12 @@ import type {
   DocFlowImportanceSOAP,
   DocFlowProcessAcquaintanceSOAP,
   DocFlowTargetSOAP,
+  DocFlowTargetCollectionSOAP,
   DocFlowFileVersionSOAP,
 } from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@lib/types/common';
+import { DocFlowRole } from '../../lib/types/docflow';
+import { DocFlowRoleSOAP } from '../shared/types/docflowSOAP';
 /** @format */
 
 export const docFlowUser = (user?: DocFlowUserSOAP): DocFlowUser => ({
@@ -54,11 +58,26 @@ export const docFlowFiles = (file?: DocFlowFileVersionSOAP): DocFlowFile => ({
   // allowDeletion: file?.allowDeletion ?? false,
 });
 
+export const docFlowRole = (role: DocFlowRoleSOAP): DocFlowRole => ({
+  id: role.objectID?.id || '[target:id]',
+  name: role.name,
+  presentation: role.objectID.presentation,
+  type: role.objectID.type,
+  navigationRef: role.objectID.navigationRef,
+});
+
 export const docFlowTarget = (target: DocFlowTargetSOAP): DocFlowTarget => ({
   id: target.objectID?.id || '[target:id]',
   presentation: target.objectID.presentation,
   type: target.objectID.type,
   navigationRef: target.objectID.navigationRef,
+});
+
+export const docFlowTargetCollection = (targetCollection: DocFlowTargetCollectionSOAP): DocFlowTargetCollection => ({
+  name: targetCollection.name,
+  role: docFlowRole(targetCollection.role),
+  target: docFlowTarget(targetCollection.target),
+  allowDeletion: targetCollection?.allowDeletion ?? false,
 });
 
 export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
@@ -80,6 +99,7 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   acceptDate: task.object.acceptDate && task.object.acceptDate.toISOString() !== SOAP_DATE_NULL ? task.object.acceptDate : undefined,
   state: docFlowState(task.object.state),
   parentTask: docFlowParentTask(task.object.parentBusinessProcess),
-  // target: docFlowTarget(task.object.target),
+  target: task.object?.target && docFlowTarget(task.object.target),
+  targets: task.object?.targets?.items?.map((t) => docFlowTargetCollection(t)),
   // files: task.object.targets?.items?.map((file) => docFlowFiles(file)),
 });

@@ -99,9 +99,9 @@ export interface PhonebookHeaderContextProps {
   largeWidth: boolean;
 }
 
-export interface TableProps {
+export interface PhonebookTableProps {
   hasLoadMore: boolean;
-  loadMoreItems: () => Promise<undefined | ApolloQueryResult<Data<'profile', Connection<Profile>>>>;
+  loadMoreItems: () => Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;
   columns: PhonebookColumnNames[];
   orderBy: Order<PhonebookColumnNames>;
   handleSort: (_: PhonebookColumnNames) => () => void;

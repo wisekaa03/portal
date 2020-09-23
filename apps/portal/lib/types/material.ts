@@ -11,7 +11,7 @@ export type TResultImplProps = 'TicketsRoutes' | 'TicketsTasks' | 'profiles' | '
 
 export type RefreshComponentProps<TData = any, TResultImpl = TResultImplProps, TResult = any> = (
   variables?: TData,
-) => Promise<ApolloQueryResult<Data<TResultImpl, TResult>>> | undefined;
+) => Promise<ApolloQueryResult<Data<any, TResult>>> | undefined;
 
 export interface MaterialUIProps<TData = any, TResultImpl = TResultImplProps, TResult = any> {
   refetchComponent?: RefreshComponentProps<TData, TResultImpl, TResult>;

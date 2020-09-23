@@ -13,7 +13,7 @@ import { Box, Table, TableBody } from '@material-ui/core';
 //#region Imports Local
 import { PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import { PhonebookHeaderContext } from '@lib/context';
-import { TableProps, Profile, Data } from '@lib/types';
+import type { PhonebookTableProps, Profile, Data } from '@lib/types';
 import PhonebookHeader from './header';
 import PhonebookRow from './row';
 //#endregion
@@ -41,15 +41,7 @@ const itemKey = (index: number, data: ListItemProfile): Key => data.items[index]
 const isItemLoaded = (data: Connection<Profile>) => (index: number): boolean =>
   data && (!data.pageInfo.hasNextPage || index < data.edges.length);
 
-const PhonebookTable: FC<TableProps> = ({
-  hasLoadMore,
-  loadMoreItems,
-  columns,
-  orderBy,
-  handleSort,
-  largeWidth,
-  data,
-}) => {
+const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, columns, orderBy, handleSort, largeWidth, data }) => {
   const classes = useStyles({});
 
   const itemCount: number = data.pageInfo.hasNextPage ? data.edges.length + 1 : data.edges.length;
@@ -57,8 +49,7 @@ const PhonebookTable: FC<TableProps> = ({
   const loadMoreItemsFunction = async (
     _: number,
     __: number,
-  ): Promise<ApolloQueryResult<Data<'profile', Connection<Profile>>> | undefined> =>
-    hasLoadMore ? loadMoreItems() : undefined;
+  ): Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>> | undefined> => (hasLoadMore ? loadMoreItems() : undefined);
 
   return (
     <Box id="phonebook-wrap" display="flex" flexGrow={1}>
@@ -66,12 +57,7 @@ const PhonebookTable: FC<TableProps> = ({
         <TableBody component="div" className={classes.tbody}>
           <AutoSizer disableWidth>
             {({ height }) => (
-              <InfiniteLoader
-                isItemLoaded={isItemLoaded(data)}
-                itemCount={itemCount}
-                loadMoreItems={loadMoreItemsFunction}
-                threshold={50}
-              >
+              <InfiniteLoader isItemLoaded={isItemLoaded(data)} itemCount={itemCount} loadMoreItems={loadMoreItemsFunction} threshold={50}>
                 {({ onItemsRendered, ref }) => (
                   <PhonebookHeaderContext.Provider value={{ columns, orderBy, handleSort, largeWidth }}>
                     <List

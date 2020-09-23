@@ -296,7 +296,7 @@ const FilesArea = withStyles((theme) => ({
 const TaskComponent: FC<TaskComponentProps> = ({
   loading,
   loadingTaskFile,
-  loadingCommentFile,
+  loadingComment,
   task,
   comment,
   files,

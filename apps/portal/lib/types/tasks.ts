@@ -21,7 +21,7 @@ export interface TasksCardProps {
 export interface TaskComponentProps {
   loading: boolean;
   loadingTaskFile: boolean;
-  loadingCommentFile: boolean;
+  loadingComment: boolean;
   task?: TkTask;
   comment: string;
   files: DropzoneFile[];

@@ -2,11 +2,12 @@
 /* eslint max-len:0 */
 
 //#region Imports NPM
-import { gql, DocumentNode } from '@apollo/client';
+import { gql } from '@apollo/client';
+import type { DocumentNode } from '@apollo/client';
 //#endregion
 //#region  Imports Local
+import type { UserSettings } from './types/user.dto';
 import { TASK_STATUSES } from './constants';
-import { UserSettings } from './types/user.dto';
 //#endregion
 
 export const defaultUserSettings: UserSettings = {
@@ -606,7 +607,7 @@ export const TICKETS_TASK_NEW = gql`
 `;
 
 export const TICKETS_TASK = gql`
-  query TicketsTask($task: TkTaskDescriptionInput!) {
+  query TicketsTask($task: TkTaskInput!) {
     ticketsTask(task: $task) {
       users {
         ...TicketsUserProps
@@ -725,7 +726,6 @@ export const DOCFLOW_TASKS = gql`
       }
     }
   }
-  ${DOCFLOW_FILE}
 `;
 
 export const DOCFLOW_TASKS_SUB = gql`
@@ -746,10 +746,6 @@ export const DOCFLOW_TASKS_SUB = gql`
       beginDate
       dueDate
       endDate
-      files {
-        id
-        name
-      }
       description
       parentTask {
         id

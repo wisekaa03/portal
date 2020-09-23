@@ -25,7 +25,7 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     error: errorDocFlowTasks,
     refetch: refetchDocFlowTasksInt,
     subscribeToMore: subscribeToMoreDocFlowTasks,
-  } = useQuery<Data<'docFlowGetTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
+  } = useQuery<Data<'docFlowTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
     ssr: false,
     fetchPolicy: 'cache-first',
     // notifyOnNetworkStatusChange: true,
@@ -36,9 +36,9 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     subscribeToMoreDocFlowTasks({
       document: DOCFLOW_TASKS_SUB,
       updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.docFlowGetTasks || [];
+        const updateData = data?.docFlowTasks || [];
 
-        return { docFlowGetTasks: updateData };
+        return { docFlowTasks: updateData };
       },
     });
   }, [subscribeToMoreDocFlowTasks]);
@@ -47,10 +47,10 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     variables?: Partial<{
       tasks: DocFlowTasksInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'docFlowGetTasks', DocFlowTask[]>>> =>
+  ): Promise<ApolloQueryResult<Data<'docFlowTasks', DocFlowTask[]>>> =>
     refetchDocFlowTasksInt({ tasks: { ...variables?.tasks, cache: false } });
 
-  const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.docFlowGetTasks ?? [], [dataDocFlowTasks]);
+  const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.docFlowTasks ?? [], [dataDocFlowTasks]);
 
   useEffect(() => {
     if (errorDocFlowTasks) {

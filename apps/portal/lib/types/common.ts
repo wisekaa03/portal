@@ -8,9 +8,9 @@ export interface StyleProps {
   maxWidth?: number;
 }
 
-export interface Data<K, T> {
-  [K: string]: T;
-}
+export type Data<K extends string, V> = {
+  [P in K]: V;
+};
 
 export interface DataResultReturn<K> {
   return?: K;

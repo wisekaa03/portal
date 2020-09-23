@@ -197,13 +197,13 @@ export class DocFlowService {
         (async (): Promise<void> => {
           try {
             const ticketsTasks = await this.docFlowTasks(user, password, tasks);
-            this.pubSub.publish<SubscriptionPayload>('docFlowGetTasks', {
+            this.pubSub.publish<SubscriptionPayload>('docFlowTasks', {
               userId: user.id || '',
               object: ticketsTasks,
             });
             this.cache.set(cachedID, ticketsTasks, this.ttl);
           } catch (error) {
-            this.logger.error('docFlowGetTasksCache error:', error);
+            this.logger.error('docFlowTasksCache error:', error);
           }
 
           setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
@@ -215,7 +215,7 @@ export class DocFlowService {
 
     try {
       const ticketsTasks = await this.docFlowTasks(user, password, tasks);
-      this.pubSub.publish<SubscriptionPayload>('docFlowGetTasks', { userId: user.id || '', object: ticketsTasks });
+      this.pubSub.publish<SubscriptionPayload>('docFlowTasks', { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
         this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
@@ -223,7 +223,7 @@ export class DocFlowService {
 
       return ticketsTasks;
     } catch (error) {
-      this.logger.error('docFlowGetTasksCache error:', error);
+      this.logger.error('docFlowTasksCache error:', error);
 
       throw new Error(error);
     }
@@ -542,7 +542,7 @@ export class DocFlowService {
             });
             this.cache.set(cachedID, ticketsTarget, this.ttl);
           } catch (error) {
-            this.logger.error('docFlowGetTasksCache error:', error);
+            this.logger.error('docFlowTasksCache error:', error);
           }
 
           setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);

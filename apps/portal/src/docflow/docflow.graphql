@@ -1,47 +1,60 @@
 type DocFlowUser {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
 type DocFlowState {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
 type DocFlowTarget {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
+type DocFlowRole {
+  id: ID!
+  name: String
+  presentation: String
+}
+
+type DocFlowTargetCollection {
+  name: String
+  role: DocFlowRole
+  target: DocFlowTarget
+  allowDeletion: Boolean
+}
+
 type DocFlowFileList {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
 type DocFlowFile {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
 type DocFlowParentTask {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
 type DocFlowImportance {
-  id: String!
+  id: ID!
   name: String
   presentation: String
 }
 
 type DocFlowTask {
-  id: String!
+  id: ID!
   name: String
   presentation: String
   importance: DocFlowImportance
@@ -60,7 +73,7 @@ type DocFlowTask {
   acceptDate: Date
   state: DocFlowState
   target: DocFlowTarget
-  targets: [DocFlowTarget!]
+  targets: [DocFlowTargetCollection!]
 }
 
 input DocFlowTasksInput {

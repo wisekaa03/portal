@@ -13,27 +13,21 @@ export interface DocFlowTargetSOAP {
   };
 }
 
+export interface DocFlowRoleSOAP {
+  name: string;
+  objectID: {
+    id: string;
+    navigationRef?: string;
+    presentation?: string;
+    type?: string; // 'DMBusinessProcessTargetRole';
+  };
+}
+
 export interface DocFlowTargetCollectionSOAP {
   allowDeletion: boolean;
   name: string;
-  role: {
-    name: string;
-    objectID: {
-      id: string;
-      navigationRef?: string;
-      presentation?: string;
-      type?: string; // 'DMBusinessProcessTargetRole';
-    };
-  };
-  target: {
-    name: string;
-    objectID: {
-      id: string;
-      navigationRef?: string;
-      presentation?: string;
-      type?: string; // 'DMInternalDocument';
-    };
-  };
+  role: DocFlowRoleSOAP;
+  target: DocFlowTargetSOAP;
 }
 
 export interface DocFlowFileVersionSOAP {

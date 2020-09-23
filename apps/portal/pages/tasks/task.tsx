@@ -38,12 +38,12 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   });
 
   const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useMutation<
-    Data<'TicketsTaskFile', TkFile>,
+    Data<'ticketsTaskFile', TkFile>,
     { file: TkFileInput }
   >(TICKETS_TASK_FILE);
 
-  const [getCommentFile, { loading: loadingCommentFile, data: dataCommentFile, error: errorCommentFile }] = useMutation<
-    Data<'TicketsCommentFile', TkFile>,
+  const [getCommentFile, { loading: loadingComment, data: dataCommentFile, error: errorCommentFile }] = useMutation<
+    Data<'ticketsComment', TkFile>,
     { file: TkFileInput }
   >(TICKETS_COMMENT);
 
@@ -59,7 +59,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
             where: where || TkWhere.Default,
             code: code || '0',
           },
-          data: { ticketsTaskDescription: dataEdit?.ticketsTaskEdit },
+          data: { ticketsTask: dataEdit?.ticketsTaskEdit },
         });
       }
     },
@@ -83,7 +83,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     variables?: Partial<{
       task: TkTaskInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'ticketsTaskDescription', TkEditTask>>> =>
+  ): Promise<ApolloQueryResult<Data<'ticketsTask', TkEditTask>>> =>
     taskRefetchInt({ task: { where, code, ...variables?.task, cache: false } });
 
   const handleDownload = async (task: TkTask, file: TkFile): Promise<void> => {
@@ -123,7 +123,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
 
   useEffect(() => {
     if (dataTaskFile) {
-      download(dataTaskFile?.TicketsTaskFile.body || '', dataTaskFile?.TicketsTaskFile.name || '');
+      download(dataTaskFile?.ticketsTaskFile.body || '', dataTaskFile?.ticketsTaskFile.name || '');
     }
   }, [dataTaskFile]);
 
@@ -142,7 +142,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     }
   }, [errorEdit, error, errorTaskFile, errorCommentFile]);
 
-  const task = data?.ticketsTaskDescription;
+  const task = data?.ticketsTask;
 
   return (
     <>
@@ -162,7 +162,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
         <TaskComponent
           loading={loading}
           loadingTaskFile={loadingTaskFile}
-          loadingCommentFile={loadingCommentFile}
+          loadingComment={loadingComment}
           task={task?.task}
           comment={comment}
           files={files}

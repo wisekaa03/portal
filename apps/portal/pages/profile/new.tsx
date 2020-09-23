@@ -48,9 +48,10 @@ const ProfileEditPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => 
     },
   });
 
-  const [checkUsername, { loading: loadingCheckUsername, error: errorCheckUsername }] = useMutation<Data<'ldpCheckUsername', boolean>>(
-    LDAP_CHECK_USERNAME,
-  );
+  const [checkUsername, { loading: loadingCheckUsername, error: errorCheckUsername }] = useMutation<
+    Data<'ldapCheckUsername', boolean>,
+    { value: string }
+  >(LDAP_CHECK_USERNAME);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -64,17 +65,18 @@ const ProfileEditPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => 
 
   const handleCheckUsername = async (): Promise<void> => {
     if (updated.username) {
-      const data = await checkUsername({
+      const { username } = updated;
+      const resultCheckUsername = await checkUsername({
         variables: {
-          value: updated.username,
+          value: username,
         },
       });
-      const { ldapCheckUsername } = data.data ?? { ldapCheckUsername: false };
+      const { ldapCheckUsername } = resultCheckUsername.data ?? { ldapCheckUsername: false };
 
       if (ldapCheckUsername === false) {
-        snackbarUtils.error(t('profile:checkUsername:busy', { current: updated.username }));
+        snackbarUtils.error(t('profile:checkUsername:busy', { current: username }));
       } else if (ldapCheckUsername === true) {
-        snackbarUtils.show(t('profile:checkUsername:free', { current: updated.username }), 'success');
+        snackbarUtils.show(t('profile:checkUsername:free', { current: username }), 'success');
       }
     }
   };
