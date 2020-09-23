@@ -8,7 +8,7 @@ import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 //#region Imports Local
 import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { TICKETS_TASK_DESCRIPTION, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT_FILE } from '@lib/queries';
+import { TICKETS_TASK, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT } from '@lib/queries';
 import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskInput, TkTaskEditInput } from '@lib/types';
 import { TkWhere } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
@@ -25,20 +25,17 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error, refetch: taskRefetchInt } = useQuery<Data<'ticketsTaskDescription', TkEditTask>, { task: TkTaskInput }>(
-    TICKETS_TASK_DESCRIPTION,
-    {
-      ssr: false,
-      variables: {
-        task: {
-          where: where || TkWhere.Default,
-          code: code || '0',
-        },
+  const { loading, data, error, refetch: taskRefetchInt } = useQuery<Data<'ticketsTask', TkEditTask>, { task: TkTaskInput }>(TICKETS_TASK, {
+    ssr: false,
+    variables: {
+      task: {
+        where: where || TkWhere.Default,
+        code: code || '0',
       },
-      fetchPolicy: 'cache-and-network',
-      notifyOnNetworkStatusChange: true,
     },
-  );
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+  });
 
   const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useMutation<
     Data<'TicketsTaskFile', TkFile>,
@@ -48,7 +45,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   const [getCommentFile, { loading: loadingCommentFile, data: dataCommentFile, error: errorCommentFile }] = useMutation<
     Data<'TicketsCommentFile', TkFile>,
     { file: TkFileInput }
-  >(TICKETS_COMMENT_FILE);
+  >(TICKETS_COMMENT);
 
   const [TicketsTaskEdit, { loading: loadingEdit, error: errorEdit }] = useMutation<
     Data<'ticketsTaskEdit', TkEditTask>,
@@ -57,7 +54,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     update(cache, { data: dataEdit }) {
       if (dataEdit) {
         cache.writeQuery({
-          query: TICKETS_TASK_DESCRIPTION,
+          query: TICKETS_TASK,
           variables: {
             where: where || TkWhere.Default,
             code: code || '0',

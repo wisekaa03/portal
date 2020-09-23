@@ -605,9 +605,9 @@ export const TICKETS_TASK_NEW = gql`
   }
 `;
 
-export const TICKETS_TASK_DESCRIPTION = gql`
-  query TicketsTaskDescription($task: TkTaskDescriptionInput!) {
-    ticketsTaskDescription(task: $task) {
+export const TICKETS_TASK = gql`
+  query TicketsTask($task: TkTaskDescriptionInput!) {
+    ticketsTask(task: $task) {
       users {
         ...TicketsUserProps
       }
@@ -666,9 +666,9 @@ export const TICKETS_TASK_FILE = gql`
   ${TICKETS_TASK_FILES}
 `;
 
-export const TICKETS_COMMENT_FILE = gql`
-  mutation TicketsCommentFile($file: TkFileInput!) {
-    ticketsCommentFile(file: $file) {
+export const TICKETS_COMMENT = gql`
+  mutation TicketsComment($file: TkFileInput!) {
+    ticketsComment(file: $file) {
       ...TicketsFiles
     }
   }
