@@ -5921,7 +5921,7 @@ browserify@^16.3.0:
     vm-browserify "^1.0.0"
     xtend "^4.0.0"
 
-browserslist@4.10.0, browserslist@4.13.0, browserslist@^4, browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.14.2, browserslist@^4.6.4, browserslist@^4.8.5:
+browserslist@4.10.0, browserslist@4.13.0, browserslist@^4, browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.14.2, browserslist@^4.14.4, browserslist@^4.6.4, browserslist@^4.8.5:
   version "4.14.4"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.14.4.tgz#66a18131439f9e16c3da7f352518dfa12f60b0e3"
   integrity sha512-7FOuawafVdEwa5Jv4nzeik/PepAjVte6HmVGHsjt2bC237jeL9QlcTBDF3PnHEvcC6uHwLGYPwZHNZMB7wWAnw==

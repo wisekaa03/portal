@@ -9,7 +9,7 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import { TIMEOUT_REFETCH_SERVICES, TIMEOUT } from '@back/shared/constants';
+import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
 import type {
   TkRoutes,
   TkTasks,
@@ -24,19 +24,20 @@ import type {
   TkCommentInput,
 } from '@lib/types/tickets';
 import type {
+  SubscriptionPayload,
   TkUserOST,
   RecordsOST,
   TicketsRouteSOAP,
   TicketsUserSOAP,
   TicketsTaskSOAP,
-  TicketsSOAPGetRoutes,
-  TicketsSOAPGetTasks,
-  TicketsSOAPGetTaskDescription,
+  TicketsSOAPRoutes,
+  TicketsSOAPTasks,
+  TicketsSOAPTask,
 } from '@back/shared/types';
 import { TkWhere, TkRoutesInput } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault, soapError, SoapConnect } from '@app/soap';
+import { SoapService, SoapFault, soapError } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResultSOAP } from '@lib/types/common';
 import { PortalError } from '@back/shared/errors';
@@ -107,7 +108,7 @@ export class TicketsService {
         promises.push(
           client
             .GetRoutesAsync({ Log: user.username }, { timeout: TIMEOUT })
-            .then((result: DataResultSOAP<TicketsSOAPGetRoutes>) => {
+            .then((result: DataResultSOAP<TicketsSOAPRoutes>) => {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -215,9 +216,9 @@ export class TicketsService {
         (async (): Promise<void> => {
           try {
             const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-            this.pubSub.publish('ticketsRoutes', {
-              userId: user.id,
-              ticketsRoutes,
+            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, {
+              userId: user.id || '',
+              object: ticketsRoutes,
             });
             this.cache.set(cachedID, ticketsRoutes, this.ttl);
           } catch (error) {
@@ -233,7 +234,7 @@ export class TicketsService {
 
     try {
       const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-      this.pubSub.publish('ticketsRoutes', { userId: user.id, ticketsRoutes });
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, { userId: user.id || '', object: ticketsRoutes });
 
       if (this.cache) {
         this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
@@ -296,7 +297,7 @@ export class TicketsService {
               },
               { timeout: TIMEOUT },
             )
-            .then((result: DataResultSOAP<TicketsSOAPGetTasks>) => {
+            .then((result: DataResultSOAP<TicketsSOAPTasks>) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -449,9 +450,9 @@ export class TicketsService {
         (async (): Promise<void> => {
           try {
             const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-            this.pubSub.publish('ticketsTasks', {
-              userId: user.id,
-              ticketsTasks,
+            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, {
+              userId: user.id || '',
+              object: ticketsTasks,
             });
             this.cache.set(cachedID, ticketsTasks, this.ttl);
           } catch (error) {
@@ -467,7 +468,7 @@ export class TicketsService {
 
     try {
       const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-      this.pubSub.publish('ticketsTasks', { userId: user.id, ticketsTasks });
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
         this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
@@ -661,8 +662,8 @@ export class TicketsService {
           },
           { timeout: TIMEOUT },
         )
-        .then((result?: DataResultSOAP<TicketsSOAPGetTaskDescription>) => {
-          this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
+        .then((result?: DataResultSOAP<TicketsSOAPTask>) => {
+          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             const usersResult = result[0].return['Пользователи']?.['Пользователь']?.map((u: TicketsUserSOAP) => userSOAP(u, task.where));
             const taskResult = taskSOAP((result[0].return?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0], task.where);
@@ -674,14 +675,14 @@ export class TicketsService {
             }
           }
 
-          this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`);
           return {
             error: PortalError.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`TicketsTaskDescription: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTaskDescription: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
           throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
@@ -731,11 +732,11 @@ export class TicketsService {
                     }
                   }
 
-                  this.logger.error(`ticketsTaskDescription: ${PortalError.OST_EMPTY_RESULT}`);
+                  this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`);
                   throw new Error(PortalError.OST_EMPTY_RESULT);
                 }
 
-                this.logger.error(`ticketsTaskDescription: ${PortalError.OST_EMPTY_RESULT}`);
+                this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`);
                 throw new Error(PortalError.OST_EMPTY_RESULT);
               });
           }
@@ -770,9 +771,9 @@ export class TicketsService {
         (async (): Promise<void> => {
           try {
             const ticketsTask = await this.ticketsTask(user, password, task);
-            this.pubSub.publish('ticketsTaskDescription', {
-              userId: user.id,
-              ticketsTask,
+            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
+              userId: user.id || '',
+              object: ticketsTask,
             });
             this.cache.set(cachedID, ticketsTask, this.ttl);
           } catch (error) {
@@ -788,7 +789,7 @@ export class TicketsService {
 
     try {
       const ticketsTask = await this.ticketsTask(user, password, task);
-      this.pubSub.publish('ticketsTaskDescription', { userId: user.id, ticketsTask });
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, { userId: user.id || '', object: ticketsTask });
 
       if (this.cache) {
         this.cache.set<TkEditTask>(cachedID, ticketsTask, this.ttl);

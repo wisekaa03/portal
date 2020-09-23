@@ -36,7 +36,7 @@ export interface TicketsRouteSOAP {
   СписокУслуг?: TicketsServicesSOAP;
 }
 
-export interface TicketsSOAPGetRoutes {
+export interface TicketsSOAPRoutes {
   Сервис?: TicketsRouteSOAP[];
 }
 
@@ -89,12 +89,12 @@ export interface TicketsTasksSOAP {
   Задание?: TicketsTaskSOAP[];
 }
 
-export interface TicketsSOAPGetTasks {
+export interface TicketsSOAPTasks {
   Пользователи?: TicketsUsersSOAP;
   Задания?: TicketsTasksSOAP;
 }
 
-export interface TicketsSOAPGetTaskDescription {
+export interface TicketsSOAPTask {
   Пользователи?: TicketsUsersSOAP;
   Задания?: TicketsTasksSOAP;
 }

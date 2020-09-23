@@ -9,7 +9,7 @@ import * as cacheManager from 'cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
-import { TIMEOUT_REFETCH_SERVICES, TIMEOUT } from '@back/shared/constants';
+import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService } from '@app/soap';
@@ -197,7 +197,7 @@ export class DocFlowService {
         (async (): Promise<void> => {
           try {
             const ticketsTasks = await this.docFlowTasks(user, password, tasks);
-            this.pubSub.publish<SubscriptionPayload>('docFlowTasks', {
+            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASKS, {
               userId: user.id || '',
               object: ticketsTasks,
             });
@@ -215,7 +215,7 @@ export class DocFlowService {
 
     try {
       const ticketsTasks = await this.docFlowTasks(user, password, tasks);
-      this.pubSub.publish<SubscriptionPayload>('docFlowTasks', { userId: user.id || '', object: ticketsTasks });
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASKS, { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
         this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
@@ -361,9 +361,9 @@ export class DocFlowService {
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const ticketsTasks = await this.docFlowTask(user, password, task);
-          this.pubSub.publish('docFlowTask', {
-            userId: user.id,
-            ticketsTasks,
+          this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, {
+            userId: user.id || '',
+            object: ticketsTasks,
           });
           this.cache.set(cachedID, ticketsTasks, this.ttl);
 
@@ -375,7 +375,7 @@ export class DocFlowService {
     }
 
     const ticketsTask = await this.docFlowTask(user, password, task);
-    this.pubSub.publish('docFlowTask', { userId: user.id, ticketsTask });
+    this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, { userId: user.id || '', object: ticketsTask });
 
     if (this.cache) {
       this.cache.set<DocFlowTask>(cachedID, ticketsTask, this.ttl);
@@ -536,7 +536,7 @@ export class DocFlowService {
         (async (): Promise<void> => {
           try {
             const ticketsTarget = await this.docFlowTarget(user, password, target);
-            this.pubSub.publish<SubscriptionPayload>('docFlowTarget', {
+            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, {
               userId: user.id || '',
               object: ticketsTarget,
             });
@@ -554,7 +554,7 @@ export class DocFlowService {
 
     try {
       const ticketsTarget = await this.docFlowTasks(user, password, target);
-      this.pubSub.publish<SubscriptionPayload>('docFlowTarget', { userId: user.id || '', object: ticketsTarget });
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, { userId: user.id || '', object: ticketsTarget });
 
       if (this.cache) {
         this.cache.set<DocFlowTarget[]>(cachedID, ticketsTarget, this.ttl);

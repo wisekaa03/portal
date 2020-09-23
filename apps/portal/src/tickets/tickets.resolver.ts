@@ -21,6 +21,7 @@ import type {
   TkFileInput,
   TkCommentInput,
 } from '@lib/types/tickets';
+import type { SubscriptionPayload } from '@back/shared/types';
 import { User } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
@@ -56,8 +57,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsRoutes', {
-    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
-    resolve: (payload) => payload?.ticketsRoutes,
+    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
     return this.pubSub.asyncIterator<TkRoutes>('ticketsRoutes');
@@ -89,8 +90,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
-    resolve: (payload) => payload?.ticketsTasks,
+    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
     return this.pubSub.asyncIterator<TkTasks>('ticketsTasks');
@@ -172,8 +173,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTask', {
-    filter: (payload, variables, context) => payload?.userId === context?.user?.id,
-    resolve: (payload) => payload?.ticketsTask,
+    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload) => payload.object,
   })
   async ticketsTaskSubscription(): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>('ticketsTaskDescription');
