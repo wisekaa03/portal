@@ -104,6 +104,12 @@ export interface User extends BaseUser {
   profile: Profile;
   profileId?: string;
 }
+
+declare module 'express' {
+  export interface Request {
+    user: User;
+  }
+}
 //#endregion
 
 export interface UserToSave extends BaseUser {

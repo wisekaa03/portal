@@ -83,9 +83,9 @@ export class UserService {
    * @async
    * @method byId
    * @param {string} id User ID
-   * @param {boolean} [isDisabled = true] Is this user disabled
-   * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
-   * @param {boolean} [cache = true] whether to cache results
+   * @param {boolean} [isDisabled = true] Is this user disabled. default true.
+   * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'. default true.
+   * @param {boolean} [cache = true] whether to cache results. default true.
    * @returns {UserEntity} The user
    */
   byId = async (id: string, isDisabled = true, isRelations: boolean | 'profile' | 'groups' = true, cache = true): Promise<UserEntity> => {

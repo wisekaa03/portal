@@ -8,12 +8,8 @@ type Login {
   user: User
 }
 
-type Ping {
-  ping: ID
-}
-
 type Query {
-  ping: Ping
+  me: User
   login(username: String!, password: String!): Login!
   loginEmail: LoginEmail!
 }
@@ -21,8 +17,4 @@ type Query {
 type Mutation {
   logout: Boolean!
   cacheReset: Boolean!
-}
-
-type Subscription {
-  me: User
 }

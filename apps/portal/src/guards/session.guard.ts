@@ -13,7 +13,7 @@ export class SessionGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
-    if ((request?.session?.passport?.user as User)?.username) {
+    if (request.user?.username) {
       return true;
     }
 

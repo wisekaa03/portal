@@ -1,12 +1,11 @@
 /** @format */
 
 //#region Imports NPM
-import { Resolver, Query, Args, Mutation, Context, Subscription } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException, Inject } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
-import { isEqual } from 'lodash';
 //#endregion
 //#region Imports Local
 import { Login, LoginEmail, User, UserSettingsTaskFavorite } from '@lib/types';
@@ -39,38 +38,10 @@ export class AuthResolver {
    * @returns {User} Current User
    * @throws {GraphQLError}
    */
-  @Query()
+  @Query('me')
   @UseGuards(GqlAuthGuard)
-  async ping(@Context('req') request: Request, @CurrentUser() user?: User): Promise<Ping> {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    if (user.id) {
-      let me = (await this.userService.byId(user.id)) as any;
-      delete me.groupIds;
-      delete me.profileId;
-      me = JSON.parse(JSON.stringify(me));
-      if (!isEqual(me, user)) {
-        request.logIn(me, (error: Error) => {
-          if (error) {
-            const message = error.toString();
-            this.logger.error(`Error when pinging: ${message}`, message);
-          }
-        });
-        this.pubSub.publish('me', { me });
-      }
-    } else {
-      this.pubSub.publish('me', { me: null });
-    }
-
-    return { ping: Date.now() };
-  }
-
-  @Subscription('me')
-  @UseGuards(GqlAuthGuard)
-  async me(): Promise<AsyncIterator<User | null>> {
-    return this.pubSub.asyncIterator<User | null>('me');
+  async me(@Context('req') request: Request): Promise<User> {
+    return this.authService.validate(request);
   }
 
   /**

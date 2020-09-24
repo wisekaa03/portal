@@ -37,8 +37,10 @@ export class AuthService {
    * @throws {UnauthorizedException}
    */
   public validate = async (request: Request): Promise<User> => {
-    if (request.session?.passport?.user) {
-      return request.session.passport.user;
+    if (request.user?.id) {
+      const user = await this.userService.byId(request.user.id);
+
+      return user;
     }
 
     throw new UnauthorizedException();

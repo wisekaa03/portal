@@ -21,7 +21,7 @@ import 'jodit/build/jodit.es2018.min.css';
 //#region Imports Local
 import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { MaterialUI } from '@lib/theme';
-import { CURRENT_USER, PING, SUBSCRIBE_ME } from '@lib/queries';
+import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
 import { AppContextMy, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
@@ -42,27 +42,9 @@ const ProfileProvider: React.FC<{
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
 
-  const { data, loading, subscribeToMore, client } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
+  const { data, loading, error } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
     fetchPolicy: 'cache-first',
-    context: { user: (ctx?.req as any)?.session?.passport?.user },
   });
-
-  if (false) {
-    console.error('-----------------------------------------------------------------------------------');
-    console.error(
-      '__SERVER__: [',
-      __SERVER__,
-      '], Loading: [',
-      loading,
-      '] ME: Boolean(data?.me): [',
-      Boolean(data?.me),
-      '], [',
-      data?.me?.username,
-      ']',
-    );
-    console.error('URL: [', ctx?.req?.url, '] AUTH_PAGE: [', AUTH_PAGE, ']');
-    console.error('-----------------------------------------------------------------------------------');
-  }
 
   if (__SERVER__) {
     if (ctx?.res && ctx?.req) {
@@ -88,29 +70,6 @@ const ProfileProvider: React.FC<{
         if (data.me.settings?.fontSize) {
           changeFontSize(data.me.settings.fontSize);
         }
-
-        // TODO:
-        // subscribeToMore({
-        //   document: SUBSCRIBE_ME,
-        //   // updateQuery: (previousQueryResult, options, variables) => {
-        //   //   // eslint-disable-next-line no-debugger
-        //   //   debugger;
-
-        //   //   return undefined;
-        //   // },
-        //   // onError: (error) => {
-        //   //   // eslint-disable-next-line no-debugger
-        //   //   debugger;
-        //   // },
-        // });
-
-        // client
-        //   .watchQuery<Data<'ping', { ping: string }>, undefined>({
-        //     query: PING,
-        //     fetchPolicy: 'no-cache',
-        //     pollInterval: 50000,
-        //   })
-        //   .subscribe(() => {});
       }
     }, [data]);
   }

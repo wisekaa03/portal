@@ -7,12 +7,12 @@ import { NextComponentType } from 'next';
 import { AppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
-import { ApolloClient, ApolloError, from, split, ApolloLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloError, from, split, ApolloLink, InMemoryCache, HttpLink } from '@apollo/client';
 import { NormalizedCacheObject } from '@apollo/client/cache';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { SchemaLink } from '@apollo/client/link/schema';
+// import { SchemaLink } from '@apollo/client/link/schema';
 import { createUploadLink } from 'apollo-upload-client';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
@@ -43,7 +43,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     if (__SERVER__) {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message /* , path, locations, extensions */ }): void => {
-          logger.error(message, message, 'GraphQL ErrorLink', { error: message });
+          logger.error(message, message, 'GraphQL ErrorLink from server', { error: message });
         });
       }
       if (networkError) {
@@ -52,7 +52,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     } else {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
-          logger.error('GraphQL ErrorLink', message);
+          logger.error('GraphQL ErrorLink from client', message);
 
           if (extensions?.exception?.code >= 401 && extensions?.exception?.code <= 403) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
@@ -83,28 +83,30 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
   const cache = new InMemoryCache().restore(initialState || {});
 
   if (__SERVER__) {
-    if (configService?.schema) {
-      link = new SchemaLink({ schema: configService?.schema });
-    } else {
-      link = new ApolloLink();
-      //   // eslint-disable-next-line global-require
-      // global.fetch = require('node-fetch');
+    // if (configService?.schema) {
+    //   link = new SchemaLink({ schema: configService?.schema });
+    // } else {
+    link = new ApolloLink();
+    // eslint-disable-next-line global-require
+    global.fetch = require('node-fetch');
 
-      // let fetchOptions: Record<string, any> | undefined;
-      // if (configService?.secure) {
-      //   const https = require('https');
+    let fetchOptions: Record<string, any> | undefined;
+    if (configService?.secure) {
+      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
+      const https = require('https');
 
-      //   fetchOptions = {
-      //     agent: new https.Agent({ rejectUnauthorized: false }),
-      //   };
-      // }
-
-      // link = new HttpLink({
-      //   uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${process.env.PORT}/graphql`,
-      //   credentials: 'same-origin',
-      //   fetchOptions,
-      // });
+      fetchOptions = {
+        agent: new https.Agent({ rejectUnauthorized: false }),
+      };
     }
+
+    const PORT = configService?.get<number>('PORT') || 4000;
+    link = new HttpLink({
+      uri: `${configService?.secure ? 'https:' : 'http:'}//localhost:${PORT}/graphql`,
+      credentials: 'same-origin',
+      fetchOptions,
+    });
+    // }
   } else {
     const httpLink = createUploadLink({
       uri: '/graphql',
@@ -176,17 +178,10 @@ export const withApolloClient = (
           cookie: request.headers?.cookie,
         });
 
-        if (false) {
-          console.error('-----------------------------------------------------------------------------------');
-          console.error('with-apollo-client Request.session.passport.user.username: [', request.session?.passport?.user?.username, ']');
-          console.error('-----------------------------------------------------------------------------------');
-        }
-
         let user: User | undefined;
         try {
           const { data } = await apolloClient.query<Data<'me', User>, undefined>({
             query: CURRENT_USER,
-            context: { user: request.session?.passport?.user },
           });
           user = data?.me;
         } catch (error) {
@@ -249,12 +244,6 @@ export const withApolloClient = (
 
     public constructor(props: AppContextMy) {
       super(props);
-
-      if (false) {
-        console.error('-----------------------------------------------------------------------------------');
-        console.error('__SERVER__: [', __SERVER__, '], props.apolloClient: [', props.apolloClient, '], props.apollo: [', props.apollo, ']');
-        console.error('-----------------------------------------------------------------------------------');
-      }
 
       if (__SERVER__ && props.apolloClient) {
         this.apolloClient = props.apolloClient;

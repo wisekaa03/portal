@@ -4,12 +4,13 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
-import type express from 'express';
+import type Express from 'express';
 // import { APP_FILTER } from '@nestjs/core';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import { Module, CacheModule, UnauthorizedException } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import type { Context } from 'apollo-server-core';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
@@ -183,14 +184,12 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
               websocket: WebSocket,
               context: ConnectionContext,
             ): Promise<PortalWebsocket> => {
-              const promise = new Promise<User | undefined>((resolveOnConnect) => {
-                const request = (websocket as any)?.upgradeReq as express.Request;
-                const response = ({} as any) as express.Response;
+              const user = await new Promise<User | undefined>((resolveOnConnect) => {
+                const request = (websocket as any)?.upgradeReq as Express.Request;
+                const response = ({} as any) as Express.Response;
 
                 auth(request, response, () => resolveOnConnect((websocket as any)?.upgradeReq?.session?.passport?.user || undefined));
               });
-
-              const user = await promise;
 
               if (user) {
                 return { user, req: context.request, socket: websocket };
@@ -206,14 +205,18 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           uploads: {
             maxFileSize,
           },
-          context: ({ req, res, connection }) => {
+          context: async ({ req, res, connection }) => {
             // subscriptions
             if (connection) {
               return connection.context;
             }
 
+            const user = await new Promise<User | undefined>((resolveOnConnect) => {
+              auth(req, res, () => resolveOnConnect(req.user || undefined));
+            });
+
             // queries and mutations
-            return { user: req?.session?.passport?.user, req, res };
+            return { user, req, res };
           },
           transformSchema: (schema: GraphQLSchema) => {
             // eslint-disable-next-line no-param-reassign
