@@ -56,21 +56,23 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
     refetch: refetchRoutesInt,
     subscribeToMore: subscribeTicketsRoutes,
   } = useQuery<Data<'ticketsRoutes', TkRoutes>, { routes: TkRoutesInput }>(TICKETS_ROUTES, {
-    ssr: false,
-    fetchPolicy: 'cache-and-network',
+    ssr: true,
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
     // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    subscribeTicketsRoutes({
-      document: TICKETS_ROUTES_SUB,
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.ticketsRoutes || [];
+    if (typeof subscribeTicketsRoutes === 'function') {
+      subscribeTicketsRoutes({
+        document: TICKETS_ROUTES_SUB,
+        updateQuery: (prev, { subscriptionData: { data } }) => {
+          const updateData = data?.ticketsRoutes || [];
 
-        return { ticketsRoutes: updateData };
-      },
-    });
+          return { ticketsRoutes: updateData };
+        },
+      });
+    }
   }, [subscribeTicketsRoutes]);
 
   const refetchRoutes = async (

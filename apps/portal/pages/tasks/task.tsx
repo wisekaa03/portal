@@ -32,14 +32,14 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     refetch: taskRefetchInt,
     subscribeToMore: subscribeTicketsTask,
   } = useQuery<Data<'ticketsTask', TkEditTask>, { task: TkTaskInput }>(TICKETS_TASK, {
-    ssr: false,
+    ssr: true,
     variables: {
       task: {
         where: where || TkWhere.Default,
         code: code || '0',
       },
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
 

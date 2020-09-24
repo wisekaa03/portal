@@ -26,7 +26,7 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     refetch: refetchDocFlowTasksInt,
     subscribeToMore: subscribeToMoreDocFlowTasks,
   } = useQuery<Data<'docFlowTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
-    ssr: false,
+    ssr: true,
     fetchPolicy: 'cache-first',
     // notifyOnNetworkStatusChange: true,
   });
