@@ -4,25 +4,27 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
-import express from 'express';
+import type express from 'express';
 // import { APP_FILTER } from '@nestjs/core';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import { Module, CacheModule, UnauthorizedException } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { GraphQLSchema } from 'graphql/type/schema';
+import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import WebSocket from 'ws';
+import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { LoggerModule, Logger, PinoLogger } from 'nestjs-pino';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 //#endregion
 //#region Imports Local
+import type { User } from '@lib/types';
+import type { PortalWebsocket } from '@back/shared/types';
+
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 
-import { User } from '@lib/types';
 import { ConfigModule, ConfigService } from '@app/config';
 import { LoggingInterceptorProvider } from '@app/logging.interceptor';
 import { CacheInterceptorProvider } from '@app/cache.interceptor';
@@ -180,7 +182,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
               connectionParameters: Record<string, any>,
               websocket: WebSocket,
               context: ConnectionContext,
-            ): Promise<any> => {
+            ): Promise<PortalWebsocket> => {
               const promise = new Promise<User | undefined>((resolveOnConnect) => {
                 const request = (websocket as any)?.upgradeReq as express.Request;
                 const response = ({} as any) as express.Response;

@@ -21,7 +21,7 @@ import type {
   TkFileInput,
   TkCommentInput,
 } from '@lib/types/tickets';
-import type { SubscriptionPayload } from '@back/shared/types';
+import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';
 import { User } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -58,7 +58,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsRoutes', {
-    filter: (payload: SubscriptionPayload<TkRoutes>, variables: TkRoutesInput, context) => payload.userId === context?.user?.id,
+    filter: (payload: SubscriptionPayload<TkRoutes>, variables: { routes: TkRoutesInput }, context: PortalWebsocket) =>
+      payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkRoutes>) => payload.object,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
@@ -91,7 +92,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload: SubscriptionPayload<TkTasks>, variables: TkTasksInput, context) => {
+    filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: PortalWebsocket) => {
       // eslint-disable-next-line no-debugger
       debugger;
 
@@ -184,11 +185,11 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTask', {
-    filter: (payload: SubscriptionPayload<TkEditTask>, variables: TkTaskInput, _context) => {
+    filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: PortalWebsocket) => {
       // eslint-disable-next-line no-debugger
       debugger;
 
-      return payload.object.task?.where === variables.where && payload.object.task?.code === variables.code;
+      return payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code;
     },
     resolve: (payload: SubscriptionPayload<TkEditTask>) => {
       // eslint-disable-next-line no-debugger

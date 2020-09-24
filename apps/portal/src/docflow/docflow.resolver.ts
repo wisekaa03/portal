@@ -20,7 +20,7 @@ import type {
   DocFlowFileVersionInput,
   DocFlowFile,
 } from '@lib/types/docflow';
-import type { SubscriptionPayload } from '@back/shared/types';
+import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -63,7 +63,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTasks', {
-    filter: (payload: SubscriptionPayload<DocFlowTask[]>, variables: DocFlowTasksInput, context) => payload.userId === context?.user?.id,
+    filter: (payload: SubscriptionPayload<DocFlowTask[]>, variables: { tasks: DocFlowTasksInput }, context: PortalWebsocket) =>
+      payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<DocFlowTask[]>) => payload.object,
   })
   async docFlowTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
@@ -95,7 +96,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTask', {
-    filter: (payload: SubscriptionPayload<DocFlowTask>, variables: DocFlowTaskInput, context) => payload.userId === context?.user?.id,
+    filter: (payload: SubscriptionPayload<DocFlowTask>, variables: { task: DocFlowTaskInput }, context: PortalWebsocket) =>
+      payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<DocFlowTask>) => payload.object,
   })
   async docFlowTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
@@ -127,7 +129,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTarget', {
-    filter: (payload: SubscriptionPayload<DocFlowTarget[]>, variables: DocFlowTargetInput, context) => payload.userId === context?.user?.id,
+    filter: (payload: SubscriptionPayload<DocFlowTarget[]>, variables: { target: DocFlowTargetInput }, context: PortalWebsocket) =>
+      payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<DocFlowTarget[]>) => payload.object,
   })
   async docFlowTargetSubscription(): Promise<AsyncIterator<DocFlowTarget[]>> {

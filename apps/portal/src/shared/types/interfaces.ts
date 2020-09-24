@@ -1,5 +1,15 @@
 /** @format */
 
+import type { IncomingMessage } from 'http';
+import type WebSocket from 'ws';
+import type { User } from '@lib/types';
+
+export interface PortalWebsocket {
+  user: User;
+  req: IncomingMessage;
+  socket: WebSocket;
+}
+
 export interface GraphQLQueryInput {
   cache?: boolean;
 }
