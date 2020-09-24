@@ -8,7 +8,7 @@ export interface GraphQLMutationInput {
   cache?: boolean;
 }
 
-export interface SubscriptionPayload {
+export interface SubscriptionPayload<T = any> {
   userId: string;
-  object: any;
+  object: T;
 }

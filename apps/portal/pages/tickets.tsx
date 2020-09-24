@@ -63,7 +63,7 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
 
   useEffect(() => {
     // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    const unsubscribe = subscribeTicketsRoutes({
+    subscribeTicketsRoutes({
       document: TICKETS_ROUTES_SUB,
       updateQuery: (prev, { subscriptionData: { data } }) => {
         const updateData = data?.ticketsRoutes || [];
@@ -71,10 +71,6 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
         return { ticketsRoutes: updateData };
       },
     });
-
-    return () => {
-      unsubscribe();
-    };
   }, [subscribeTicketsRoutes]);
 
   const refetchRoutes = async (

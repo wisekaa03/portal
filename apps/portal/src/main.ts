@@ -85,7 +85,7 @@ async function bootstrap(): Promise<void> {
   //#region Improve security
   // app.use(helmet.ieNoOpen());
 
-  const scriptSrc: string[] = ["'self'"];
+  const scriptSrc: string[] = ["'self'", 'https://storage.googleapis.com', 'https://cdnjs.cloudflare.com'];
   const styleSrc: string[] = ["'unsafe-inline'", "'self'"];
   const imgSrc = ["'self'", 'data:', 'blob:'];
   const fontSrc = ["'self'", 'data:'];
@@ -118,8 +118,6 @@ async function bootstrap(): Promise<void> {
   if (meetingUrl.match(/^http/i)) {
     frameSrc.push(meetingUrl);
   }
-
-  scriptSrc.push('https://storage.googleapis.com');
 
   // In dev we allow 'unsafe-eval', so HMR doesn't trigger the CSP
   if (DEV) {

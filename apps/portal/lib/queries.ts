@@ -668,6 +668,32 @@ export const TICKETS_TASK = gql`
   ${TICKETS_TASK_COMMENTS}
 `;
 
+export const TICKETS_TASK_SUB = gql`
+  subscription TicketsTask($task: TkTaskInput!) {
+    ticketsTask(task: $task) {
+      users {
+        ...TicketsUserProps
+      }
+      task {
+        ...TicketsTaskProps
+        body
+        availableAction
+        availableStages
+        files {
+          ...TicketsFiles
+        }
+        comments {
+          ...TicketsComments
+        }
+      }
+    }
+  }
+  ${TICKETS_USER_FRAGMENT}
+  ${TICKETS_TASK_FRAGMENT}
+  ${TICKETS_TASK_FILES}
+  ${TICKETS_TASK_COMMENTS}
+`;
+
 export const TICKETS_TASK_EDIT = gql`
   mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
     ticketsTaskEdit(task: $task, attachments: $attachments) {

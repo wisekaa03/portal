@@ -63,8 +63,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTasks', {
-    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
-    resolve: (payload: SubscriptionPayload) => payload.object,
+    filter: (payload: SubscriptionPayload<DocFlowTask[]>, variables: DocFlowTasksInput, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload<DocFlowTask[]>) => payload.object,
   })
   async docFlowTasksSubscription(): Promise<AsyncIterator<DocFlowTask[]>> {
     return this.pubSub.asyncIterator<DocFlowTask[]>(PortalPubSub.DOCFLOW_TASKS);
@@ -95,8 +95,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTask', {
-    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
-    resolve: (payload: SubscriptionPayload) => payload.object,
+    filter: (payload: SubscriptionPayload<DocFlowTask>, variables: DocFlowTaskInput, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload<DocFlowTask>) => payload.object,
   })
   async docFlowTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
     return this.pubSub.asyncIterator<DocFlowTask>(PortalPubSub.DOCFLOW_TASK);
@@ -127,8 +127,8 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTarget', {
-    filter: (payload: SubscriptionPayload, variables, context) => payload.userId === context?.user?.id,
-    resolve: (payload: SubscriptionPayload) => payload.object,
+    filter: (payload: SubscriptionPayload<DocFlowTarget[]>, variables: DocFlowTargetInput, context) => payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload<DocFlowTarget[]>) => payload.object,
   })
   async docFlowTargetSubscription(): Promise<AsyncIterator<DocFlowTarget[]>> {
     return this.pubSub.asyncIterator<DocFlowTarget[]>(PortalPubSub.DOCFLOW_TARGET);

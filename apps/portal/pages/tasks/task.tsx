@@ -8,7 +8,7 @@ import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 //#region Imports Local
 import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { TICKETS_TASK, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT } from '@lib/queries';
+import { TICKETS_TASK, TICKETS_TASK_SUB, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT } from '@lib/queries';
 import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskInput, TkTaskEditInput } from '@lib/types';
 import { TkWhere } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
@@ -25,7 +25,13 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 
-  const { loading, data, error, refetch: taskRefetchInt } = useQuery<Data<'ticketsTask', TkEditTask>, { task: TkTaskInput }>(TICKETS_TASK, {
+  const {
+    loading: loadingTicketsTask,
+    data: dataTicketsTask,
+    error: errorTicketsTask,
+    refetch: taskRefetchInt,
+    subscribeToMore: subscribeTicketsTask,
+  } = useQuery<Data<'ticketsTask', TkEditTask>, { task: TkTaskInput }>(TICKETS_TASK, {
     ssr: false,
     variables: {
       task: {
@@ -36,6 +42,29 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
+    // const unsubscribe = subscribeTicketsTasks({
+    subscribeTicketsTask({
+      document: TICKETS_TASK_SUB,
+      variables: {
+        task: {
+          where,
+          code,
+        },
+      },
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        const updateData = data?.ticketsTask || [];
+
+        return { ticketsTask: updateData };
+      },
+    });
+
+    // return () => {
+    //   unsubscribe();
+    // };
+  }, [subscribeTicketsTask, where, code]);
 
   const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useMutation<
     Data<'ticketsTaskFile', TkFile>,
@@ -131,8 +160,8 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     if (errorEdit) {
       snackbarUtils.error(errorEdit);
     }
-    if (error) {
-      snackbarUtils.error(error);
+    if (errorTicketsTask) {
+      snackbarUtils.error(errorTicketsTask);
     }
     if (errorTaskFile) {
       snackbarUtils.error(errorTaskFile);
@@ -140,9 +169,9 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     if (errorCommentFile) {
       snackbarUtils.error(errorCommentFile);
     }
-  }, [errorEdit, error, errorTaskFile, errorCommentFile]);
+  }, [errorEdit, errorTicketsTask, errorTaskFile, errorCommentFile]);
 
-  const task = data?.ticketsTask;
+  const task = dataTicketsTask?.ticketsTask;
 
   return (
     <>
@@ -160,7 +189,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
       </Head>
       <MaterialUI refetchComponent={taskRefetch} {...rest}>
         <TaskComponent
-          loading={loading}
+          loading={loadingTicketsTask}
           loadingTaskFile={loadingTaskFile}
           loadingComment={loadingComment}
           task={task?.task}
