@@ -18,8 +18,6 @@ import { LoginComponent } from '@front/components/auth/login';
 //#endregion
 
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
-  const client = useApolloClient();
-
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -29,13 +27,10 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
     password: '',
   });
 
-  const [login, { data, loading, error }] = useLazyQuery<Data<'login', Login>, { username: string; password: string }>(
-    LOGIN,
-    {
-      ssr: false,
-      fetchPolicy: 'no-cache',
-    },
-  );
+  const [login, { data, loading, error, client }] = useLazyQuery<Data<'login', Login>, { username: string; password: string }>(LOGIN, {
+    ssr: false,
+    fetchPolicy: 'no-cache',
+  });
 
   const handleValues = (name: keyof LoginValuesProps) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const element: EventTarget & HTMLInputElement = event.target;
@@ -70,7 +65,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
 
   useEffect(() => {
     const user = data?.login?.user;
-    if (user) {
+    if (user && client) {
       client.writeQuery({
         query: CURRENT_USER,
         data: {
@@ -81,7 +76,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.Rea
       const { redirect = FIRST_PAGE } = queryString.parse(window.location.search);
       Router.push(redirect as string);
     }
-  }, [data]);
+  }, [data, client]);
 
   useEffect(() => {
     if (values.save) {
