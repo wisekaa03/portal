@@ -1,7 +1,15 @@
 /** @format */
 
 //#region Imports NPM
-import { Inject, Injectable, HttpService } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  UnauthorizedException,
+  UnprocessableEntityException,
+  NotImplementedException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
@@ -27,11 +35,11 @@ import type {
   DocFlowUser,
   DocFlowUserInput,
 } from '@lib/types/docflow';
-import type { SubscriptionPayload, DocFlowTasksSOAP, DocFlowUserSOAP } from '@back/shared/types';
+import type { SubscriptionPayload, DocFlowTasksSOAP, DocFlowUserSOAP, DocFlowTargetCollectionSOAP } from '@back/shared/types';
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
 import type { DataResultReturn, DataResultSOAP } from '@lib/types/common';
-import { docFlowTask, docFlowUser } from './docflow.utils';
+import { docFlowTask, docFlowUser, docFlowTargetCollection } from './docflow.utils';
 //#endregion
 
 /**
@@ -90,7 +98,7 @@ export class DocFlowService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -164,19 +172,19 @@ export class DocFlowService {
               return result;
             }
 
-            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
             this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
 
-    throw new Error(PortalError.NOT_IMPLEMENTED);
+    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
   };
 
   /**
@@ -226,7 +234,7 @@ export class DocFlowService {
     } catch (error) {
       this.logger.error('docFlowTasksCache error:', error);
 
-      throw new Error(error);
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -256,7 +264,7 @@ export class DocFlowService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -330,19 +338,19 @@ export class DocFlowService {
               return result;
             }
 
-            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
             this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
 
-    throw new Error(PortalError.NOT_IMPLEMENTED);
+    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
   };
 
   /**
@@ -376,14 +384,20 @@ export class DocFlowService {
       }
     }
 
-    const ticketsTask = await this.docFlowTask(user, password, task);
-    this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, { userId: user.id || '', object: ticketsTask });
+    try {
+      const ticketsTask = await this.docFlowTask(user, password, task);
+      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, { userId: user.id || '', object: ticketsTask });
 
-    if (this.cache) {
-      this.cache.set<DocFlowTask>(cachedID, ticketsTask, this.ttl);
+      if (this.cache) {
+        this.cache.set<DocFlowTask>(cachedID, ticketsTask, this.ttl);
+      }
+
+      return ticketsTask;
+    } catch (error) {
+      this.logger.error('docFlowTasksCache error:', error);
+
+      throw new InternalServerErrorException(error);
     }
-
-    return ticketsTask;
   };
 
   /**
@@ -412,7 +426,7 @@ export class DocFlowService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -438,19 +452,19 @@ export class DocFlowService {
               return result;
             }
 
-            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
             this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
 
-    throw new Error(PortalError.NOT_IMPLEMENTED);
+    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
   };
 
   /**
@@ -479,7 +493,7 @@ export class DocFlowService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -495,29 +509,29 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultReturn<DocFlowUserSOAP>) => {
+          .then((message: DataResultReturn<DocFlowTargetCollectionSOAP>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
             if (message[0]?.return) {
-              const result = docFlowUser(message[0]?.return?.user as DocFlowUserSOAP);
+              const result = docFlowTargetCollection(message[0]?.return?.items as DocFlowTargetCollectionSOAP);
 
               return result;
             }
 
-            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
             this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
 
-    throw new Error(PortalError.NOT_IMPLEMENTED);
+    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
   };
 
   /**
@@ -567,7 +581,7 @@ export class DocFlowService {
     } catch (error) {
       this.logger.error('docFlowTargetCache error:', error);
 
-      throw new Error(error);
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -597,7 +611,7 @@ export class DocFlowService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -643,19 +657,19 @@ export class DocFlowService {
               return result;
             }
 
-            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
             this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
 
-    throw new Error(PortalError.NOT_IMPLEMENTED);
+    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
   };
 
   /**
@@ -684,7 +698,7 @@ export class DocFlowService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -730,18 +744,18 @@ export class DocFlowService {
               return result;
             }
 
-            throw new Error(PortalError.SOAP_EMPTY_RESULT);
+            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
             this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
           });
       }
     }
 
-    throw new Error(PortalError.NOT_IMPLEMENTED);
+    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
   };
 }

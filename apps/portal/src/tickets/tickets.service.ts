@@ -1,7 +1,16 @@
 /** @format */
 
 //#region Imports NPM
-import { Inject, Injectable, HttpService } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  HttpService,
+  NotFoundException,
+  NotImplementedException,
+  InternalServerErrorException,
+  UnauthorizedException,
+  UnsupportedMediaTypeException,
+} from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
@@ -119,7 +128,7 @@ export class TicketsService {
                 };
               }
 
-              throw new Error(PortalError.SOAP_EMPTY_RESULT);
+              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             })
             .catch((error: Error) => {
               if (error instanceof Error) {
@@ -149,7 +158,7 @@ export class TicketsService {
             case TkWhere.SOAP1C:
             case TkWhere.Default:
             default:
-              throw new Error(PortalError.DEFAULT_ROUTE);
+              throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
           }
 
           const osTicket = this.httpService
@@ -195,7 +204,7 @@ export class TicketsService {
         ),
       )
       .catch((error) => {
-        throw new Error(error);
+        throw new InternalServerErrorException(error);
       });
   };
 
@@ -245,7 +254,7 @@ export class TicketsService {
     } catch (error) {
       this.logger.error('ticketsRoutesCache error:', error);
 
-      throw new Error(error);
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -353,7 +362,7 @@ export class TicketsService {
             case TkWhere.SOAP1C:
             case TkWhere.Default:
             default:
-              throw new Error(PortalError.DEFAULT_ROUTE);
+              throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
           }
 
           const osTicket = this.httpService
@@ -427,8 +436,8 @@ export class TicketsService {
             errors: routes.errors || [],
           } as TkTasks),
       )
-      .catch((error: TypeError) => {
-        throw error;
+      .catch((error) => {
+        throw new InternalServerErrorException(error);
       });
   };
 
@@ -480,7 +489,7 @@ export class TicketsService {
     } catch (error) {
       this.logger.error('ticketsTasksCache error:', error);
 
-      throw new Error(error);
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -521,7 +530,7 @@ export class TicketsService {
         .catch((error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -554,14 +563,14 @@ export class TicketsService {
           }
 
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
-          throw new Error(PortalError.SOAP_EMPTY_RESULT);
+          throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
         })
         .catch((error: Error) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -611,10 +620,10 @@ export class TicketsService {
                     }
                   }
 
-                  throw new Error(PortalError.OST_EMPTY_RESULT);
+                  throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
                 }
 
-                throw new Error(PortalError.OST_EMPTY_RESULT);
+                throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -624,10 +633,10 @@ export class TicketsService {
         }
       }
 
-      throw new Error(PortalError.NOT_IMPLEMENTED);
+      throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
     }
 
-    throw new Error(PortalError.DEFAULT_ROUTE);
+    throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
   };
 
   /**
@@ -654,7 +663,7 @@ export class TicketsService {
         .catch((error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -687,7 +696,7 @@ export class TicketsService {
           this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -735,11 +744,11 @@ export class TicketsService {
                   }
 
                   this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`);
-                  throw new Error(PortalError.OST_EMPTY_RESULT);
+                  throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
                 }
 
                 this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`);
-                throw new Error(PortalError.OST_EMPTY_RESULT);
+                throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -749,10 +758,10 @@ export class TicketsService {
         }
       }
 
-      throw new Error('Not implemented');
+      throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
     }
 
-    throw new Error('Can not use a default route');
+    throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
   };
 
   /**
@@ -805,7 +814,7 @@ export class TicketsService {
     } catch (error) {
       this.logger.error('ticketsTaskCache error:', error);
 
-      throw new Error(error);
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -845,10 +854,10 @@ export class TicketsService {
       if (attachments) {
         await constructUploads(attachments, ({ filename, file }) =>
           Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
-        ).catch((error: SoapFault) => {
+        ).catch((error) => {
           this.logger.error(error);
 
-          throw new Error(soapError(error));
+          throw new UnsupportedMediaTypeException(error);
         });
       }
 
@@ -880,16 +889,16 @@ export class TicketsService {
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
     }
 
     /* OSTicket service */
     if (task.where === TkWhere.OSTaudit || task.where === TkWhere.OSTmedia || task.where === TkWhere.OSThr) {
-      throw new Error(PortalError.NOT_IMPLEMENTED);
+      throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
     }
 
-    throw new Error(PortalError.DEFAULT_ROUTE);
+    throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
   };
 
   /**
@@ -916,7 +925,7 @@ export class TicketsService {
         .catch((error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -947,7 +956,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -992,10 +1001,10 @@ export class TicketsService {
                     }
                   }
 
-                  throw new Error(PortalError.OST_EMPTY_RESULT);
+                  throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
                 }
 
-                throw new Error(PortalError.OST_EMPTY_RESULT);
+                throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -1005,10 +1014,10 @@ export class TicketsService {
         }
       }
 
-      throw new Error(PortalError.NOT_IMPLEMENTED);
+      throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
     }
 
-    throw new Error(PortalError.DEFAULT_ROUTE);
+    throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
   };
 
   /**
@@ -1035,7 +1044,7 @@ export class TicketsService {
         .catch((error) => {
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -1064,7 +1073,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new Error(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
     }
 
@@ -1109,10 +1118,10 @@ export class TicketsService {
                     }
                   }
 
-                  throw new Error(PortalError.OST_EMPTY_RESULT);
+                  throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
                 }
 
-                throw new Error(PortalError.OST_EMPTY_RESULT);
+                throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
@@ -1122,9 +1131,9 @@ export class TicketsService {
         }
       }
 
-      throw new Error(PortalError.NOT_IMPLEMENTED);
+      throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
     }
 
-    throw new Error(PortalError.DEFAULT_ROUTE);
+    throw new NotImplementedException(PortalError.DEFAULT_ROUTE);
   };
 }
