@@ -20,26 +20,24 @@ import * as redisStore from 'cache-manager-redis-store';
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService } from '@app/soap';
+import { SoapService, SoapClient } from '@app/soap';
 import type {
   DocFlowTask,
   DocFlowTasksInput,
   DocFlowTaskInput,
   DocFlowTargetInput,
   DocFlowTarget,
-  DocFlowTargetCollection,
-  DocFlowFileList,
-  DocFlowFileListInput,
-  DocFlowFileVersionInput,
+  DocFlowFileInput,
   DocFlowFile,
+  DocFlowFiles,
   DocFlowUser,
   DocFlowUserInput,
 } from '@lib/types/docflow';
-import type { SubscriptionPayload, DocFlowTasksSOAP, DocFlowUserSOAP, DocFlowTargetCollectionSOAP } from '@back/shared/types';
+import type { SubscriptionPayload, DocFlowTaskSOAP, DocFlowUserSOAP, DocFlowTargetsSOAP, DocFlowFileSOAP } from '@back/shared/types';
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
-import type { DataResultReturn, DataResultSOAP } from '@lib/types/common';
-import { docFlowTask, docFlowUser, docFlowTargetCollection } from './docflow.utils';
+import type { DataReturn, DataResult, DataFiles, DataItems, DataUser } from '@lib/types/common';
+import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow.utils';
 //#endregion
 
 /**
@@ -72,6 +70,77 @@ export class DocFlowService {
     }
   }
 
+  docFlowFilesSOAP = async (soap: SoapClient, target: DocFlowTarget): Promise<DocFlowFiles> => {
+    const request = {
+      'tns:request': {
+        'attributes': {
+          'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+          'xsi:type': 'tns:DMGetFileListByOwnerRequest',
+        },
+        'tns:dataBaseID': '',
+        'tns:owners': {
+          'tns:name': '',
+          'tns:objectID': {
+            'tns:id': target.target.id,
+            'tns:type': 'DMInternalDocument',
+          },
+        },
+      },
+    };
+
+    return soap
+      .executeAsync(request, { timeout: TIMEOUT })
+      .then((message: DataResult<DataFiles<DocFlowFileSOAP[]>>) => {
+        this.logger.info(`${DocFlowService.name}: [Request] ${soap.lastRequest}`);
+        // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+
+        if (message[0]?.return) {
+          return {
+            object: message[0].return.files.map((file) => docFlowFile(file)),
+          };
+        }
+
+        return { error: PortalError.SOAP_EMPTY_RESULT };
+      })
+      .catch((error: Error) => {
+        this.logger.info(`docFlowGetTasks: [Request] ${soap.lastRequest}`);
+        this.logger.info(`docFlowGetTasks: [Response] ${soap.lastResponse}`);
+        this.logger.error(error);
+
+        return { error: __DEV__ ? error : PortalError.SOAP_EMPTY_RESULT };
+      });
+  };
+
+  // TODO: переписать это нафих
+  docFlowTasksSOAP = async (soap: SoapClient, tasksSOAP: DocFlowTaskSOAP[]): Promise<DocFlowTask[]> => {
+    const tasks: DocFlowTask[] = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP));
+
+    const tasksG = tasks.map((task) => ({
+      ...task,
+      targets: task.targets?.map((target) => ({
+        ...target,
+        files: this.docFlowFilesSOAP(soap, target),
+      })),
+    }));
+
+    // // eslint-disable-next-line no-restricted-syntax
+    // for (const taskSOAP of tasksSOAP) {
+    //   const task = docFlowTask(taskSOAP);
+
+    //   if (task.targets) {
+    //     // eslint-disable-next-line no-restricted-syntax
+    //     for (const target of task.targets) {
+    //       // eslint-disable-next-line no-await-in-loop
+    //       const files = await this.docFlowFilesSOAP(soap, target);
+    //     }
+    //   }
+
+    //   tasks.push(task);
+    // }
+
+    return tasksG as DocFlowTask[];
+  };
+
   /**
    * DocFlow tasks list
    *
@@ -102,7 +171,7 @@ export class DocFlowService {
         });
 
       if (client) {
-        return client
+        const tasksGraphql = client
           .executeAsync(
             {
               'tns:request': {
@@ -162,14 +231,12 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
+          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return) {
-              const result = message[0]?.return?.items?.map((task) => docFlowTask(task));
-
-              return result;
+            if (message[0] && Array.isArray(message[0].return?.items)) {
+              return this.docFlowTasksSOAP(client, message[0].return.items);
             }
 
             throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
@@ -179,8 +246,10 @@ export class DocFlowService {
             this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnprocessableEntityException();
           });
+
+        return tasksGraphql;
       }
     }
 
@@ -328,11 +397,11 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
+          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return) {
+            if (message[0] && Array.isArray(message[0].return?.items)) {
               const result = message[0]?.return?.items?.map((t) => docFlowTask(t));
 
               return result;
@@ -442,12 +511,12 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultReturn<DocFlowUserSOAP>) => {
+          .then((message: DataResult<DataUser<DocFlowUserSOAP>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return) {
-              const result = docFlowUser(message[0]?.return?.user as DocFlowUserSOAP);
+            if (message[0]?.return?.user) {
+              const result = docFlowUser(message[0].return.user);
 
               return result;
             }
@@ -509,12 +578,12 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultReturn<DocFlowTargetCollectionSOAP>) => {
+          .then((message: DataResult<DataItems<DocFlowTargetsSOAP>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return) {
-              const result = docFlowTargetCollection(message[0]?.return?.items as DocFlowTargetCollectionSOAP);
+            if (message[0]?.return?.items) {
+              const result = docFlowTargets(message[0].return.items);
 
               return result;
             }
@@ -544,10 +613,10 @@ export class DocFlowService {
    * @param {task}
    * @returns {DocFlowTask[]}
    */
-  docFlowTargetCache = async (user: User, password: string, target?: DocFlowTargetInput): Promise<DocFlowTarget[]> => {
+  docFlowTargetCache = async (user: User, password: string, target?: DocFlowTargetInput): Promise<DocFlowTarget> => {
     const cachedID = `${user.id}-docflow-target`;
     if (this.cache && (!target || target.cache !== false)) {
-      const cached: DocFlowTarget[] = await this.cache.get<DocFlowTarget[]>(cachedID);
+      const cached: DocFlowTarget = await this.cache.get<DocFlowTarget>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
@@ -570,11 +639,11 @@ export class DocFlowService {
     }
 
     try {
-      const ticketsTarget = await this.docFlowTasks(user, password, target);
+      const ticketsTarget = await this.docFlowTarget(user, password, target);
       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, { userId: user.id || '', object: ticketsTarget });
 
       if (this.cache) {
-        this.cache.set<DocFlowTarget[]>(cachedID, ticketsTarget, this.ttl);
+        this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, this.ttl);
       }
 
       return ticketsTarget;
@@ -594,7 +663,7 @@ export class DocFlowService {
    * @param {string} password The Password
    * @returns {DocFlowFile}
    */
-  docFlowFileList = async (user: User, password: string, file: DocFlowFileListInput): Promise<DocFlowFileList[]> => {
+  docFlowFileList = async (user: User, password: string, file: DocFlowFileInput): Promise<DocFlowFile[]> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -647,11 +716,11 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
+          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return) {
+            if (message[0] && Array.isArray(message[0].return?.items)) {
               const result = message[0]?.return?.items?.map((t) => docFlowTask(t));
 
               return result;
@@ -676,12 +745,12 @@ export class DocFlowService {
    * DocFlow get file by version
    *
    * @async
-   * @method docFlowFileVersion
+   * @method docFlowFile
    * @param {User} user User object
    * @param {string} password The Password
    * @returns {DocFlowFile}
    */
-  docFlowFileVersion = async (user: User, password: string, file: DocFlowFileVersionInput): Promise<DocFlowFile> => {
+  docFlowFile = async (user: User, password: string, file: DocFlowFileInput): Promise<DocFlowFile> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -734,12 +803,12 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResultSOAP<DocFlowTasksSOAP>) => {
+          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return) {
-              const result = message[0]?.return?.items?.map((t) => docFlowTask(t));
+            if (message[0] && Array.isArray(message[0].return?.items)) {
+              const result = message[0].return.items.map((t) => docFlowTask(t));
 
               return result;
             }

@@ -10,7 +10,6 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { DataResultSOAP } from '@lib/types/common';
 //#endregion
 
 /**

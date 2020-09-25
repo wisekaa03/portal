@@ -12,10 +12,22 @@ export type Data<K extends string, V> = {
   [P in K]: V;
 };
 
-export interface DataResultReturn<K> {
-  return?: K;
+export interface DataReturn<K> {
+  return: K;
 }
 
-export interface DataResultSOAP<K> {
-  0?: DataResultReturn<K>;
+export interface DataItems<K> {
+  items: K;
+}
+
+export interface DataUser<K> {
+  user: K;
+}
+
+export interface DataFiles<K> {
+  files: K;
+}
+
+export interface DataResult<K> {
+  0?: DataReturn<K>;
 }

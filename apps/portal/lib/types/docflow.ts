@@ -46,7 +46,7 @@ export interface DocFlowState {
   presentation?: string;
 }
 
-export interface DocFlowTarget {
+export interface DocFlowInternalDocument {
   id: string;
   name?: string;
   presentation?: string;
@@ -62,24 +62,17 @@ export interface DocFlowRole {
   navigationRef?: string;
 }
 
-export interface DocFlowTargetCollection {
+export interface DocFlowTarget {
   name: string;
   role: DocFlowRole;
-  target: DocFlowTarget;
+  target: DocFlowInternalDocument;
   allowDeletion?: boolean;
-}
-
-export interface DocFlowFileList {
-  id: string;
-  name?: string;
-  presentation?: string;
-  allowDeletion?: boolean;
+  files?: DocFlowFiles;
 }
 
 export interface DocFlowFile {
   id: string;
   name?: string;
-  presentation?: string;
 }
 
 export interface DocFlowImportance {
@@ -92,6 +85,11 @@ export interface DocFlowParentTask {
   id: string;
   name?: string;
   presentation?: string;
+}
+
+export interface DocFlowFiles {
+  object?: DocFlowFile[];
+  error?: string[];
 }
 
 export interface DocFlowTask {
@@ -113,8 +111,9 @@ export interface DocFlowTask {
   acceptDate?: Date;
   state?: DocFlowState;
   parentTask?: DocFlowParentTask;
-  target?: DocFlowTarget;
-  targets?: DocFlowTargetCollection[];
+  target?: DocFlowInternalDocument;
+  targets?: DocFlowTarget[];
+  files?: DocFlowFiles | Promise<DocFlowFiles>;
 }
 
 /* DocFlow input fields */
@@ -122,12 +121,11 @@ export interface DocFlowTask {
 export type DocFlowUserInput = GraphQLQueryInput;
 export type DocFlowTasksInput = GraphQLQueryInput;
 export type DocFlowTaskInput = GraphQLQueryInput;
-export type DocFlowFileListInput = GraphQLQueryInput;
 
 export interface DocFlowTargetInput extends GraphQLQueryInput {
   objectID: string;
 }
 
-export interface DocFlowFileVersionInput extends GraphQLQueryInput {
+export interface DocFlowFileInput extends GraphQLQueryInput {
   file: string;
 }

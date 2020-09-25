@@ -3,7 +3,7 @@
 import type React from 'react';
 import { TFunction } from 'next-i18next';
 
-export interface DocFlowTargetSOAP {
+export interface DocFlowInternalDocumentSOAP {
   name?: string;
   objectID: {
     id?: string;
@@ -23,11 +23,20 @@ export interface DocFlowRoleSOAP {
   };
 }
 
-export interface DocFlowTargetCollectionSOAP {
+export interface DocFlowTargetsSOAP {
   allowDeletion: boolean;
   name: string;
   role: DocFlowRoleSOAP;
-  target: DocFlowTargetSOAP;
+  target: DocFlowInternalDocumentSOAP;
+}
+
+export interface DocFlowFileSOAP {
+  name?: string;
+  objectID: {
+    id: string;
+    presentation?: string;
+    type?: string; // 'DMFile'
+  };
 }
 
 export interface DocFlowFileVersionSOAP {
@@ -97,16 +106,6 @@ export interface DocFlowStateSOAP {
   };
 }
 
-export interface DocFlowInternalDocumentSOAP {
-  name?: string;
-  objectID?: {
-    id?: string;
-    navigationRef?: string;
-    presentation?: string;
-    type?: string; // 'DMInternalDocument';
-  };
-}
-
 export interface DocFlowTaskSOAP {
   canHaveChildren?: boolean;
   isFolder?: boolean;
@@ -139,13 +138,9 @@ export interface DocFlowTaskSOAP {
       user?: DocFlowUserSOAP;
     };
     state?: DocFlowStateSOAP;
-    target?: DocFlowTargetSOAP;
+    target?: DocFlowInternalDocumentSOAP;
     targets?: {
-      items?: DocFlowTargetCollectionSOAP[];
+      items?: DocFlowTargetsSOAP[];
     };
   };
-}
-
-export interface DocFlowTasksSOAP {
-  items: DocFlowTaskSOAP[];
 }

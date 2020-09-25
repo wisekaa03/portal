@@ -48,7 +48,7 @@ import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault, soapError } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
-import { DataResultSOAP } from '@lib/types/common';
+import { DataResult } from '@lib/types/common';
 import { PortalError } from '@back/shared/errors';
 import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
 //#endregion
@@ -117,7 +117,7 @@ export class TicketsService {
         promises.push(
           client
             .GetRoutesAsync({ Log: user.username }, { timeout: TIMEOUT })
-            .then((result: DataResultSOAP<TicketsSOAPRoutes>) => {
+            .then((result: DataResult<TicketsSOAPRoutes>) => {
               this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -307,7 +307,7 @@ export class TicketsService {
               },
               { timeout: TIMEOUT },
             )
-            .then((result: DataResultSOAP<TicketsSOAPTasks>) => {
+            .then((result: DataResult<TicketsSOAPTasks>) => {
               this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -673,7 +673,7 @@ export class TicketsService {
           },
           { timeout: TIMEOUT },
         )
-        .then((result?: DataResultSOAP<TicketsSOAPTask>) => {
+        .then((result?: DataResult<TicketsSOAPTask>) => {
           this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`);
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             const usersResult = result[0].return['Пользователи']?.['Пользователь']?.map((u: TicketsUserSOAP) => userSOAP(u, task.where));

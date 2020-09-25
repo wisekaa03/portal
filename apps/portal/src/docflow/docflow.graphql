@@ -10,7 +10,7 @@ type DocFlowState {
   presentation: String
 }
 
-type DocFlowTarget {
+type DocFlowInternalDocument {
   id: ID!
   name: String
   presentation: String
@@ -22,23 +22,22 @@ type DocFlowRole {
   presentation: String
 }
 
-type DocFlowTargetCollection {
+type DocFlowTarget {
   name: String
   role: DocFlowRole
-  target: DocFlowTarget
+  target: DocFlowInternalDocument
   allowDeletion: Boolean
-}
-
-type DocFlowFileList {
-  id: ID!
-  name: String
-  presentation: String
+  files: DocFlowFiles
 }
 
 type DocFlowFile {
   id: ID!
   name: String
-  presentation: String
+}
+
+type DocFlowFiles {
+  object: [DocFlowFile]
+  error: [String]
 }
 
 type DocFlowParentTask {
@@ -72,8 +71,8 @@ type DocFlowTask {
   accepted: Boolean
   acceptDate: Date
   state: DocFlowState
-  target: DocFlowTarget
-  targets: [DocFlowTargetCollection!]
+  target: DocFlowInternalDocument
+  targets: [DocFlowTarget!]
 }
 
 input DocFlowTasksInput {
@@ -85,16 +84,11 @@ input DocFlowTaskInput {
 }
 
 input DocFlowTargetInput {
-  documentID: String!
+  objectID: String!
   cache: Boolean
 }
 
-input DocFlowFileListInput {
-  documentID: String!
-  cache: Boolean
-}
-
-input DocFlowFileVersionInput {
+input DocFlowFileInput {
   file: String!
   cache: Boolean
 }
@@ -103,8 +97,7 @@ type Query {
   docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
   docFlowTask(task: DocFlowTaskInput): DocFlowTask!
   docFlowTarget(target: DocFlowTargetInput!): [DocFlowTarget!]
-  docFlowFileList(files: DocFlowFileListInput): [DocFlowFileList!]
-  docFlowFileVersion(file: DocFlowFileVersionInput!): DocFlowFile!
+  docFlowFile(file: DocFlowFileInput!): DocFlowFile!
 }
 
 type Subscription {

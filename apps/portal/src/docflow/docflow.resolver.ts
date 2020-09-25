@@ -13,11 +13,8 @@ import type {
   DocFlowTasksInput,
   DocFlowTaskInput,
   DocFlowTargetInput,
+  DocFlowFileInput,
   DocFlowTarget,
-  DocFlowTargetCollection,
-  DocFlowFileList,
-  DocFlowFileListInput,
-  DocFlowFileVersionInput,
   DocFlowFile,
 } from '@lib/types/docflow';
 import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
@@ -117,7 +114,7 @@ export class DocFlowResolver {
     @Args('target') target?: DocFlowTargetInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<DocFlowTarget[]> {
+  ): Promise<DocFlowTarget> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
@@ -138,39 +135,16 @@ export class DocFlowResolver {
   }
 
   /**
-   * DocFlow file list
-   *
-   * @async
-   * @returns {DocFlowFileList}
-   * @throws {UnauthorizedException | HttpException}
-   */
-  @Query('docFlowFileList')
-  @UseGuards(GqlAuthGuard)
-  async docFlowFileList(
-    @Args('files') files: DocFlowFileListInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
-  ): Promise<DocFlowFileList[]> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
-    return this.docflowService.docFlowFileList(user, password, files).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
-  }
-
-  /**
    * DocFlow file
    *
    * @async
    * @returns {DocFlowFileVersion}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('docFlowFileVersion')
+  @Query('docFlowFile')
   @UseGuards(GqlAuthGuard)
-  async docFlowFileVersion(
-    @Args('file') file: DocFlowFileVersionInput,
+  async docFlowFile(
+    @Args('file') file: DocFlowFileInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowFile> {
@@ -178,7 +152,7 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowFileVersion(user, password, file).catch((error: Error) => {
+    return this.docflowService.docFlowFile(user, password, file).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
