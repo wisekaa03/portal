@@ -87,7 +87,8 @@
     "**/**/dotenv-webpack": "^3",
     "**/**/dotenv": "^8",
     "**/**/domhandler": "^3",
-    "**/**/domutils": "^2"
+    "**/**/domutils": "^2",
+    "**/**/chokidar": "^3"
   },
   "dependencies": {
     "@apollo/client": "^3.2.1",
@@ -267,7 +268,7 @@
     "enzyme-to-json": "^3.5.0",
     "eslint": "^7.9.0",
     "eslint-config-airbnb": "^18.2.0",
-    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-prettier": "^6.12.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-graphql": "^4.0.0",
     "eslint-plugin-import": "^2.22.0",
