@@ -109,7 +109,8 @@ helm_development:
         --set PORT_DEBUG="${PORT_DEBUG:=9229}" \
         --set DOMAIN="${DOMAIN}" \
         --set DEVELOPMENT="true" \
-        --set LOGLEVEL="${LOGLEVEL}" \
+        --set LOG_LEVEL="${LOG_LEVEL}" \
+        --set LOG_SERVER="${LOG_SERVER}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
@@ -202,8 +203,9 @@ helm_production:
       helm upgrade ${CI_PROJECT_NAME} helm/portal \
         --set PORT="${PORT:=4000}" \
         --set DOMAIN="${DOMAIN}" \
-        --set LOGLEVEL="${LOGLEVEL}" \
         --set DEVELOPMENT="false" \
+        --set LOG_LEVEL="${LOG_LEVEL}" \
+        --set LOG_SERVER="${LOG_SERVER}" \
         --set DATABASE_URI="${DATABASE_URI}" \
         --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
         --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \

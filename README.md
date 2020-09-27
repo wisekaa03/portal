@@ -139,8 +139,11 @@ The `.env` file is like this:
 # App
 PORT=4000
 DOMAIN="example.com"
-LOGLEVEL="debug"
 DEVELOPMENT="true"
+
+# Logging
+LOG_LEVEL="debug"
+LOG_SERVER="graylog"
 
 # DB
 DATABASE_URI="postgres://postgres:1234567890@postgresql.database:5432/postgres"

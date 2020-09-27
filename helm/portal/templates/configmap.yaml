@@ -9,8 +9,10 @@ data:
     PORT={{ .Values.PORT }}
 
     DOMAIN={{ .Values.DOMAIN | quote }}
-    LOGLEVEL={{ .Values.LOGLEVEL | quote }}
     DEVELOPMENT={{ .Values.DEVELOPMENT }}
+
+    LOG_LEVEL={{ .Values.LOG_LEVEL | quote }}
+    LOG_SERVER={{ .Values.LOG_SERVER | quote }}
 
     DATABASE_URI={{ .Values.DATABASE_URI | quote }}
     DATABASE_URI_RD={{ .Values.DATABASE_URI_RD | quote }}

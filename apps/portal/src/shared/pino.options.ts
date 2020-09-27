@@ -6,7 +6,7 @@ import { ConfigService } from '@app/config/config.service';
 
 export const pinoOptions = (configService?: ConfigService): Params => {
   const development = configService?.get<boolean>('DEVELOPMENT') || true;
-  const level = configService?.get<string>('LOGLEVEL') || 'debug';
+  const level = configService?.get<string>('LOG_LEVEL') || 'debug';
 
   return {
     pinoHttp: {

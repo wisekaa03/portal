@@ -23,8 +23,11 @@ fullnameOverride: "portal"
 PORT: 4000
 PORT_DEBUG: 9229
 DOMAIN: "example.com"
-LOGLEVEL: "debug"
 DEVELOPMENT: "false"
+
+# Logging
+LOG_LEVEL: "debug"
+LOG_SERVER: "graylog"
 
 # DB
 DATABASE_URI: "postgres://postgres:1234567890@postgresql.default.svc.cluster.local:5432/portaldb"
