@@ -138,9 +138,7 @@ async function bootstrap(): Promise<void> {
 
   //#region Next.JS locals
   app.use('*', (_request: express.Request, response: express.Response, next: express.NextFunction) => {
-    if (!DEV) {
-      response.locals.nonce = crypto.randomBytes(4).toString('hex');
-    }
+    response.locals.nonce = !DEV && crypto.randomBytes(4).toString('hex');
     response.locals.config = configService;
     next();
   });
