@@ -57,7 +57,7 @@ export class ConfigService {
       DEVELOPMENT: Joi.boolean().empty('').default(true).required(),
 
       LOG_LEVEL: Joi.string().empty('').default('debug').required(),
-      LOG_SERVER: Joi.string().empty('').default('').required(),
+      LOG_SERVER: Joi.string().empty('').default('').optional(),
 
       DATABASE_URI: Joi.string().required(),
       DATABASE_URI_RD: Joi.string().required(),
