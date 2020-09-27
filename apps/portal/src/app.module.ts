@@ -148,13 +148,12 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
       useFactory: (configService: ConfigService) => {
         const DEV = configService.get<boolean>('DEVELOPMENT');
 
-        const logger = new Logger(new PinoLogger(pinoOptions(configService.get<string>('LOGLEVEL'), DEV)), {});
+        const { logger } = configService;
         const store = sessionRedis(configService, logger);
         const auth = session(configService, logger, store, true);
         const maxFileSize = configService.get<number>('MAX_FILE_SIZE');
 
         return {
-          // TODO: cache, persistedQueries
           debug: DEV,
           tracing: DEV,
           introspection: DEV,

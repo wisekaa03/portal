@@ -27,7 +27,7 @@ import { pinoOptions } from '@back/shared/pino.options';
 async function bootstrap(): Promise<void> {
   //#region NestJS options
   let secure = false;
-  let logger = new Logger(new PinoLogger(pinoOptions('debug', true)), {});
+  let logger = new Logger(new PinoLogger(pinoOptions()), {});
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
