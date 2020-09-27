@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.14.3",
+  "version": "4.14.4",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -266,7 +266,7 @@
     "css-loader": "^4.3.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
-    "enzyme-to-json": "^3.5.0",
+    "enzyme-to-json": "^3.6.0",
     "eslint": "^7.10.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.12.0",
