@@ -12,7 +12,6 @@ import crypto from 'crypto';
 import passport from 'passport';
 import { contentSecurityPolicy } from 'helmet';
 import cookieParser from 'cookie-parser';
-// import bodyParser from 'body-parser';
 import { Logger, PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
 //#endregion
@@ -160,11 +159,6 @@ async function bootstrap(): Promise<void> {
       },
     })(_req, res, next);
   });
-  //#endregion
-
-  //#region Enable json response
-  // app.use(bodyParser.urlencoded({ extended: true }));
-  // app.use(bodyParser.json());
   //#endregion
 
   //#region Enable cookie
