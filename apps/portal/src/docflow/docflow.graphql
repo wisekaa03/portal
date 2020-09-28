@@ -30,9 +30,20 @@ type DocFlowTarget {
   files: DocFlowFiles
 }
 
+type DocFlowFileVersion {
+  id: ID!
+  name: String
+  presentation: String
+}
+
 type DocFlowFile {
   id: ID!
   name: String
+  activeVersion: DocFlowFileVersion
+  binaryData: String
+  extension: String
+  modificationDateUniversal: Date
+  size: Int
 }
 
 type DocFlowFiles {
@@ -84,12 +95,12 @@ input DocFlowTaskInput {
 }
 
 input DocFlowTargetInput {
-  objectID: String!
+  targetId: String!
   cache: Boolean
 }
 
 input DocFlowFileInput {
-  file: String!
+  id: String!
   cache: Boolean
 }
 

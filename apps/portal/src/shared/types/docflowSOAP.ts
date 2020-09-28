@@ -30,22 +30,29 @@ export interface DocFlowTargetsSOAP {
   target: DocFlowInternalDocumentSOAP;
 }
 
-export interface DocFlowFileSOAP {
-  name?: string;
-  objectID: {
-    id: string;
-    presentation?: string;
-    type?: string; // 'DMFile'
-  };
-}
-
 export interface DocFlowFileVersionSOAP {
   name?: string;
   objectID: {
     id: string;
     presentation?: string;
-    type?: string; // 'DMFileVersion'
     navigationRef?: string;
+    type?: string; // 'DMFileVersion'
+  };
+}
+
+export interface DocFlowFileSOAP {
+  name?: string;
+  activeVersion?: DocFlowFileVersionSOAP;
+  attributes?: string;
+  binaryData?: string;
+  extension?: string;
+  modificationDateUniversal?: Date;
+  size?: number;
+  objectID: {
+    id: string;
+    presentation?: string;
+    navigationRef?: string;
+    type?: string; // 'DMFile'
   };
 }
 

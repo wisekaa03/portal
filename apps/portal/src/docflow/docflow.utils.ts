@@ -11,6 +11,7 @@ import type {
   DocFlowFile,
   DocFlowFiles,
   DocFlowRole,
+  DocFlowFileVersion,
 } from '@lib/types/docflow';
 import type {
   DocFlowFileSOAP,
@@ -25,39 +26,54 @@ import type {
   DocFlowFileVersionSOAP,
 } from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@lib/types';
-import type { DocFlowService } from './docflow.service';
 /** @format */
 
-export const docFlowUser = (user?: DocFlowUserSOAP): DocFlowUser => ({
-  id: user?.objectID?.id || '[user:id]',
-  name: user?.name || '[user:name]',
-  presentation: user?.objectID?.presentation,
-  type: user?.objectID?.type || 'DMUser',
-  navigationRef: user?.objectID?.navigationRef,
+export const docFlowUser = (user: DocFlowUserSOAP): DocFlowUser => ({
+  id: user.objectID?.id || '[user:id]',
+  name: user.name || '[user:name]',
+  presentation: user.objectID?.presentation,
+  type: user.objectID?.type || 'DMUser',
+  navigationRef: user.objectID?.navigationRef,
 });
 
-export const docFlowState = (state?: DocFlowStateSOAP): DocFlowState => ({
-  id: state?.objectID?.id || '[state:id]',
-  name: state?.name || '[state:name]',
-  presentation: state?.objectID?.presentation || '[state:presentation]',
+export const docFlowState = (state: DocFlowStateSOAP): DocFlowState => ({
+  id: state.objectID?.id || '[state:id]',
+  name: state.name || '[state:name]',
+  presentation: state.objectID?.presentation || '[state:presentation]',
 });
 
-export const docFlowImportance = (importance?: DocFlowImportanceSOAP): DocFlowImportance => ({
-  id: importance?.objectID.id || '[importance:id]',
-  name: importance?.name || '[importance:name]',
+export const docFlowImportance = (importance: DocFlowImportanceSOAP): DocFlowImportance => ({
+  id: importance.objectID.id || '[importance:id]',
+  name: importance.name || '[importance:name]',
   // presentation: importance?.objectID?.presentation || '[state:presentation]',
 });
 
-export const docFlowParentTask = (parentTask?: DocFlowProcessAcquaintanceSOAP): DocFlowParentTask => ({
-  id: parentTask?.objectID.id || '[parentTask:id]',
-  name: parentTask?.name || '[parentTask:name]',
-  presentation: parentTask?.objectID?.presentation || '[state:presentation]',
+export const docFlowParentTask = (parentTask: DocFlowProcessAcquaintanceSOAP): DocFlowParentTask => ({
+  id: parentTask.objectID.id || '[parentTask:id]',
+  name: parentTask.name || '[parentTask:name]',
+  presentation: parentTask.objectID?.presentation || '[state:presentation]',
 });
 
-export const docFlowFile = (file?: DocFlowFileSOAP): DocFlowFile => ({
-  id: file?.objectID.id || '[file:id]',
-  name: file?.name || '[file:name]',
+export const docFlowFileVersion = (fileVersion: DocFlowFileVersionSOAP): DocFlowFileVersion => ({
+  id: fileVersion.objectID.id || '[fileVersion:id]',
+  name: fileVersion.name || '[fileVersion:name]',
+  presentation: fileVersion.objectID?.presentation || '[fileVersion:presentation]',
+  navigationRef: fileVersion.objectID?.navigationRef || '[fileVersion:navigationRef]',
+  type: fileVersion.objectID?.type || '[fileVersion:type]',
+});
+
+export const docFlowFile = (file: DocFlowFileSOAP): DocFlowFile => ({
+  id: file.objectID.id || '[file:id]',
+  name: file.name || '[file:name]',
   // presentation: file?.objectID.presentation,
+  activeVersion: file.activeVersion && docFlowFileVersion(file.activeVersion),
+  binaryData: file.binaryData,
+  extension: file.extension,
+  modificationDateUniversal:
+    file.modificationDateUniversal && file.modificationDateUniversal.toISOString() !== SOAP_DATE_NULL
+      ? file.modificationDateUniversal
+      : undefined,
+  size: file.size,
 });
 
 export const docFlowRole = (role: DocFlowRoleSOAP): DocFlowRole => ({
@@ -97,11 +113,11 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   endDate: task.object.endDate && task.object.endDate.toISOString() !== SOAP_DATE_NULL ? task.object.endDate : undefined,
   description: task.object.description,
   processStep: task.object.businessProcessStep,
-  author: docFlowUser(task.object.author),
+  author: task.object.author && docFlowUser(task.object.author),
   accepted: task.object.accepted ?? false,
   acceptDate: task.object.acceptDate && task.object.acceptDate.toISOString() !== SOAP_DATE_NULL ? task.object.acceptDate : undefined,
-  state: docFlowState(task.object.state),
-  parentTask: docFlowParentTask(task.object.parentBusinessProcess),
+  state: task.object.state && docFlowState(task.object.state),
+  parentTask: task.object.parentBusinessProcess && docFlowParentTask(task.object.parentBusinessProcess),
   target: task.object?.target && docFlowInternalDocument(task.object.target),
   targets: task.object?.targets?.items?.map((t) => docFlowTargets(t)),
 });

@@ -16,6 +16,7 @@ import type {
   DocFlowFileInput,
   DocFlowTarget,
   DocFlowFile,
+  DocFlowInternalFile,
 } from '@lib/types/docflow';
 import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';

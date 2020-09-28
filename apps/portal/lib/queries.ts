@@ -692,15 +692,6 @@ export const TICKETS_COMMENT = gql`
  * DocFlow
  */
 
-const DOCFLOW_FILE = gql`
-  fragment DocFlowFileProps on DocFlowFile {
-    files {
-      id
-      name
-    }
-  }
-`;
-
 export const DOCFLOW_TASKS = gql`
   query DocFlowTasks($tasks: DocFlowTasksInput) {
     docFlowTasks(tasks: $tasks) {
@@ -735,6 +726,27 @@ export const DOCFLOW_TASKS = gql`
       state {
         id
         name
+      }
+      target {
+        id
+        name
+        presentation
+      }
+      targets {
+        name
+        allowDeletion
+        target {
+          id
+          presentation
+          name
+        }
+        files {
+          object {
+            id
+            name
+          }
+          error
+        }
       }
     }
   }
@@ -775,6 +787,40 @@ export const DOCFLOW_TASKS_SUB = gql`
         id
         name
       }
+      target {
+        id
+        name
+        presentation
+      }
+      targets {
+        name
+        allowDeletion
+        target {
+          id
+          presentation
+          name
+        }
+        files {
+          object {
+            id
+            name
+          }
+          error
+        }
+      }
+    }
+  }
+`;
+
+export const DOCFLOW_FILE = gql`
+  query DocFlowFile($file: DocFlowFileInput!) {
+    docFlowFile(file: $file) {
+      id
+      name
+      modificationDateUniversal
+      size
+      extension
+      binaryData
     }
   }
 `;

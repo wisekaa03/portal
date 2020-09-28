@@ -32,11 +32,12 @@ import type {
   DocFlowFiles,
   DocFlowUser,
   DocFlowUserInput,
+  DocFlowInternalFile,
 } from '@lib/types/docflow';
 import type { SubscriptionPayload, DocFlowTaskSOAP, DocFlowUserSOAP, DocFlowTargetsSOAP, DocFlowFileSOAP } from '@back/shared/types';
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
-import type { DataReturn, DataResult, DataFiles, DataItems, DataUser } from '@lib/types/common';
+import type { DataResult, DataObjects, DataFiles, DataItems, DataUser } from '@lib/types/common';
 import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow.utils';
 //#endregion
 
@@ -658,94 +659,7 @@ export class DocFlowService {
   };
 
   /**
-   * DocFlow get file list
-   *
-   * @async
-   * @method docFlowFileList
-   * @param {User} user User object
-   * @param {string} password The Password
-   * @returns {DocFlowFile}
-   */
-  docFlowFileList = async (user: User, password: string, file: DocFlowFileInput): Promise<DocFlowFile[]> => {
-    const soapUrl = this.configService.get<string>('DOCFLOW_URL');
-    if (soapUrl) {
-      const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-          soapOptions: {
-            namespaceArrayElements: false,
-          },
-        })
-        .catch((error: Error) => {
-          this.logger.error(error);
-
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
-        });
-
-      if (client) {
-        return client
-          .executeAsync(
-            {
-              'tns:request': {
-                'attributes': {
-                  'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                  'xsi:type': 'tns:DMGetFileListByOwnerRequest',
-                },
-                'tns:dataBaseID': '',
-                'tns:owners': {
-                  'name': '',
-                  'tns:objectID': {
-                    id: '',
-                    type: 'DMInternalDocument',
-                  },
-                },
-                'columnSet': 'objectId',
-                // <m:columnSet>signed</m:columnSet>
-                // <m:columnSet>name</m:columnSet>
-                // <m:columnSet>size</m:columnSet>
-                // <m:columnSet>creationDate</m:columnSet>
-                // <m:columnSet>modificationDateUniversal</m:columnSet>
-                // <m:columnSet>author</m:columnSet>
-                // <m:columnSet>extension</m:columnSet>
-                // <m:columnSet>description</m:columnSet>
-                // <m:columnSet>encrypted</m:columnSet>
-                // <m:columnSet>editing</m:columnSet>
-                // <m:columnSet>editingUser</m:columnSet>
-              },
-            },
-            { timeout: TIMEOUT },
-          )
-          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
-            this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
-            // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
-
-            if (message[0] && Array.isArray(message[0].return?.items)) {
-              const result = message[0]?.return?.items?.map((t) => docFlowTask(t));
-
-              return result;
-            }
-
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
-          })
-          .catch((error: Error) => {
-            this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
-            this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
-            this.logger.error(error);
-
-            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
-          });
-      }
-    }
-
-    throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
-  };
-
-  /**
-   * DocFlow get file by version
+   * DocFlow get file
    *
    * @async
    * @method docFlowFile
@@ -778,52 +692,48 @@ export class DocFlowService {
           .executeAsync(
             {
               'tns:request': {
-                'attributes': {
+                attributes: {
                   'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                  'xsi:type': 'tns:DMGetFileListByOwnerRequest',
+                  'xsi:type': 'tns:DMRetrieveRequest',
                 },
-                'tns:dataBaseID': '',
-                'tns:owners': {
-                  'name': '',
-                  'tns:objectID': {
-                    id: '',
-                    type: 'DMInternalDocument',
-                  },
-                },
-                'columnSet': 'objectId',
-                // <m:columnSet>signed</m:columnSet>
-                // <m:columnSet>name</m:columnSet>
-                // <m:columnSet>size</m:columnSet>
-                // <m:columnSet>creationDate</m:columnSet>
-                // <m:columnSet>modificationDateUniversal</m:columnSet>
-                // <m:columnSet>author</m:columnSet>
-                // <m:columnSet>extension</m:columnSet>
-                // <m:columnSet>description</m:columnSet>
-                // <m:columnSet>encrypted</m:columnSet>
-                // <m:columnSet>editing</m:columnSet>
-                // <m:columnSet>editingUser</m:columnSet>
+                $xml:
+                  '<tns:dataBaseID></tns:dataBaseID>' +
+                  '<tns:objectIds>' +
+                  `<tns:id>${file.id}</tns:id>` +
+                  '<tns:type>DMFile</tns:type>' +
+                  '</tns:objectIds>' +
+                  '<tns:columnSet>objectId</tns:columnSet>' +
+                  '<tns:columnSet>name</tns:columnSet>' +
+                  '<tns:columnSet>binaryData</tns:columnSet>' +
+                  '<tns:columnSet>extension</tns:columnSet>' +
+                  '<tns:columnSet>size</tns:columnSet>' +
+                  '<tns:columnSet>modificationDateUniversal</tns:columnSet>',
               },
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
-            this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
+          .then((message: DataResult<DataObjects<DocFlowFileSOAP[]>>) => {
+            this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0] && Array.isArray(message[0].return?.items)) {
-              const result = message[0].return.items.map((t) => docFlowTask(t));
+            if (message[0] && Array.isArray(message[0].return?.objects)) {
+              const result = message[0].return.objects.map((f) => docFlowFile(f));
 
-              return result;
+              if (Array.isArray(result) && result.length > 1) {
+                this.logger.info('docFlowFile: result.length > 1 ? Something wrong...');
+              }
+
+              return result.pop();
             }
 
             throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
-            this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
-            this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
+            this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
+            this.logger.info(`docFlowFile: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
-            throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+            throw new UnprocessableEntityException();
           });
       }
     }

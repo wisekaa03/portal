@@ -19,6 +19,7 @@ export interface DocFlowTasksTableProps {
   tasks: DocFlowTask[];
   page: number;
   rowsPerPage: number;
+  handleRow: (event: unknown, task: DocFlowTask) => void;
   handleChangePage: (event: unknown, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -28,6 +29,7 @@ export interface DocFlowTasksComponentProps {
   tasks: DocFlowTask[];
   status: string;
   find: string;
+  handleRow: (event: unknown, task: DocFlowTask) => void;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -70,9 +72,27 @@ export interface DocFlowTarget {
   files?: DocFlowFiles;
 }
 
+export interface DocFlowInternalFile {
+  name: string;
+}
+
+export interface DocFlowFileVersion {
+  id?: string;
+  name?: string;
+  presentation?: string;
+  navigationRef?: string;
+  type?: string;
+}
+
 export interface DocFlowFile {
   id: string;
   name?: string;
+  activeVersion?: DocFlowFileVersion;
+  binaryData?: string;
+  extension?: string;
+  modificationDateUniversal?: Date;
+  size?: number;
+  type?: string;
 }
 
 export interface DocFlowImportance {
@@ -106,7 +126,7 @@ export interface DocFlowTask {
   endDate?: Date;
   description?: string;
   processStep?: string;
-  author: DocFlowUser;
+  author?: DocFlowUser;
   accepted?: boolean;
   acceptDate?: Date;
   state?: DocFlowState;
@@ -122,9 +142,9 @@ export type DocFlowTasksInput = GraphQLQueryInput;
 export type DocFlowTaskInput = GraphQLQueryInput;
 
 export interface DocFlowTargetInput extends GraphQLQueryInput {
-  objectID: string;
+  id: string;
 }
 
 export interface DocFlowFileInput extends GraphQLQueryInput {
-  file: string;
+  id: string;
 }

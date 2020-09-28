@@ -28,6 +28,10 @@ export interface DataFiles<K> {
   files: K;
 }
 
+export interface DataObjects<K> {
+  objects: K;
+}
+
 export interface DataResult<K> {
   0?: DataReturn<K>;
 }

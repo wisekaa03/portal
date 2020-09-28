@@ -15,4 +15,16 @@ export class DocFlowController {
   public async tasks(@Res() res: RenderableResponse): Promise<void> {
     res.render('docflow');
   }
+
+  @Get('task/:docFlowTask')
+  @UseGuards(SessionGuard)
+  public async task(@Res() res: RenderableResponse, @Param('docFlowTask') docFlowTask: string): Promise<void> {
+    res.render('docflow', { docFlowTask });
+  }
+
+  @Get('target/:docFlowTask')
+  @UseGuards(SessionGuard)
+  public async target(@Res() res: RenderableResponse, @Param('docFlowTarget') docFlowTarget: string): Promise<void> {
+    res.render('docflow', { docFlowTarget });
+  }
 }
