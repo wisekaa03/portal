@@ -42,9 +42,38 @@ export interface DocFlowTargetComponentProps {
   target?: DocFlowTarget;
 }
 
+export interface DocFlowLegalPrivatePerson {
+  id: string;
+  name?: string;
+  presentation?: string;
+  type?: string;
+  navigationRef?: string;
+}
+
+export interface DocFlowOrganization {
+  id: string;
+  name?: string;
+  presentation?: string;
+  navigationRef?: string;
+  type?: string;
+  fullName?: string;
+  inn?: string;
+  kpp?: string;
+  VATpayer?: boolean;
+  legalPrivatePerson?: DocFlowLegalPrivatePerson;
+}
+
 export interface DocFlowUser {
   id: string;
   name: string;
+  presentation?: string;
+  type?: string;
+  navigationRef?: string;
+}
+
+export interface DocFlowStatus {
+  id: string;
+  name?: string;
   presentation?: string;
   type?: string;
   navigationRef?: string;
@@ -54,6 +83,8 @@ export interface DocFlowState {
   id: string;
   name?: string;
   presentation?: string;
+  type?: string;
+  navigationRef?: string;
 }
 
 export interface DocFlowInternalDocument {
@@ -62,6 +93,13 @@ export interface DocFlowInternalDocument {
   presentation?: string;
   type?: string;
   navigationRef?: string;
+  organization?: DocFlowOrganization;
+  author?: DocFlowUser;
+  regDate?: Date;
+  responsible?: DocFlowUser;
+  regNumber?: string;
+  status?: DocFlowStatus;
+  files?: DocFlowFiles;
 }
 
 export interface DocFlowRole {
@@ -77,7 +115,6 @@ export interface DocFlowTarget {
   role: DocFlowRole;
   target: DocFlowInternalDocument;
   allowDeletion?: boolean;
-  files?: DocFlowFiles;
 }
 
 export interface DocFlowInternalFile {
@@ -139,9 +176,11 @@ export interface DocFlowTask {
   beginDate?: Date;
   dueDate?: Date;
   endDate?: Date;
+  changeRight?: boolean;
   description?: string;
   processStep?: string;
   author?: DocFlowUser;
+  performer?: DocFlowUser;
   accepted?: boolean;
   acceptDate?: Date;
   state?: DocFlowState;

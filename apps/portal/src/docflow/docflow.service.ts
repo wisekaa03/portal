@@ -37,7 +37,7 @@ import type {
 import type { SubscriptionPayload, DocFlowTaskSOAP, DocFlowUserSOAP, DocFlowTargetsSOAP, DocFlowFileSOAP } from '@back/shared/types';
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
-import type { DataResult, DataObjects, DataFiles, DataItems, DataUser } from '@lib/types/common';
+import type { DataResult, DataObjects, DataObject, DataFiles, DataItems, DataUser } from '@lib/types/common';
 import * as request from 'supertest';
 import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow.utils';
 //#endregion
@@ -105,7 +105,7 @@ export class DocFlowService {
 
     return soap
       .executeAsync(requestSOAP, { timeout: TIMEOUT })
-      .then((message: DataResult<DataFiles<DocFlowFileSOAP[]>>) => {
+      .then((message: DataResult<DataFiles<DocFlowFileSOAP>>) => {
         this.logger.info(`${DocFlowService.name}: [Request] ${soap.lastRequest}`);
         // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
@@ -132,7 +132,10 @@ export class DocFlowService {
 
     return {
       ...target,
-      files,
+      target: {
+        ...target.target,
+        files,
+      },
     };
   };
 
@@ -147,8 +150,8 @@ export class DocFlowService {
     };
   };
 
-  docFlowTasksWithFiles = async (soap: SoapClient, tasksSOAP: DocFlowTaskSOAP[]): Promise<DocFlowTask[]> => {
-    const tasksWithoutFiles = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP));
+  docFlowTasksWithFiles = async (soap: SoapClient, tasksSOAP: DataObject<DocFlowTaskSOAP>[]): Promise<DocFlowTask[]> => {
+    const tasksWithoutFiles = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP.object));
 
     const tasks = tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles(soap, task));
 
@@ -247,7 +250,7 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
+          .then((message: DataResult<DataItems<DataObject<DocFlowTaskSOAP>>>) => {
             this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
@@ -334,7 +337,7 @@ export class DocFlowService {
    * @param {string} password The Password
    * @returns {DocFlowTask}
    */
-  docFlowTask = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
+  docFlowTask = async (user: User, password: string, task: DocFlowTaskInput): Promise<DocFlowTask> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -361,75 +364,37 @@ export class DocFlowService {
               'tns:request': {
                 'attributes': {
                   'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                  'xsi:type': 'tns:DMGetObjectListRequest',
+                  'xsi:type': 'tns:DMRetrieveRequest',
                 },
                 'tns:dataBaseID': '',
-                'tns:type': 'DMBusinessProcessTask',
-                'tns:query': [
-                  {
-                    'tns:conditions': {
-                      'tns:property': 'byUser',
-                      'tns:value': {
-                        attributes: {
-                          'xsi:type': 'xs:boolean',
-                        },
-                        $value: true,
-                      },
-                    },
-                  },
-                  {
-                    'tns:conditions': {
-                      'tns:property': 'typed',
-                      'tns:value': {
-                        attributes: {
-                          'xsi:type': 'xs:boolean',
-                        },
-                        $value: true,
-                      },
-                    },
-                  },
-                  {
-                    'tns:conditions': {
-                      'tns:property': 'withDelayed',
-                      'tns:value': {
-                        attributes: {
-                          'xsi:type': 'xs:boolean',
-                        },
-                        $value: false,
-                      },
-                    },
-                  },
-                  {
-                    'tns:conditions': {
-                      'tns:property': 'withExecuted',
-                      'tns:value': {
-                        attributes: {
-                          'xsi:type': 'xs:boolean',
-                        },
-                        $value: false,
-                      },
-                    },
-                  },
-                ],
+                'tns:objectIds': {
+                  'tns:id': task.id,
+                  'tns:type': 'DMBusinessProcessTask',
+                },
+                'tns:columnSet': 'withDependentObjects',
               },
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataItems<DocFlowTaskSOAP[]>>) => {
-            this.logger.info(`${DocFlowService.name}: [Request] ${client.lastRequest}`);
+          .then((message: DataResult<DataObjects<DocFlowTaskSOAP>>) => {
+            this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0] && Array.isArray(message[0].return?.items)) {
-              const result = message[0]?.return?.items?.map((t) => docFlowTask(t));
+            if (message[0] && Array.isArray(message[0].return?.objects)) {
+              const result = message[0].return.objects.map((t) => docFlowTask(t));
 
-              return result;
+              if (Array.isArray(result) && result.length > 1) {
+                this.logger.info('docFlowTask: result.length > 1 ??');
+              }
+
+              return result.pop();
             }
 
             throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           })
           .catch((error: Error) => {
-            this.logger.info(`docFlowGetTasks: [Request] ${client.lastRequest}`);
-            this.logger.info(`docFlowGetTasks: [Response] ${client.lastResponse}`);
+            this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`);
+            this.logger.info(`docFlowTask: [Response] ${client.lastResponse}`);
             this.logger.error(error);
 
             throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
@@ -450,7 +415,7 @@ export class DocFlowService {
    * @param {task}
    * @returns {DocFlowTask}
    */
-  docFlowTaskCache = async (user: User, password: string, task?: DocFlowTaskInput): Promise<DocFlowTask> => {
+  docFlowTaskCache = async (user: User, password: string, task: DocFlowTaskInput): Promise<DocFlowTask> => {
     const cachedID = `${user.id}-docflow-task`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
@@ -601,7 +566,7 @@ export class DocFlowService {
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
             if (message[0]?.return?.items) {
-              const result = docFlowTargets(message[0].return.items);
+              const result = message[0].return.items.map((t) => docFlowTargets(t));
 
               return result;
             }
@@ -733,7 +698,7 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataObjects<DocFlowFileSOAP[]>>) => {
+          .then((message: DataResult<DataObjects<DocFlowFileSOAP>>) => {
             this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 

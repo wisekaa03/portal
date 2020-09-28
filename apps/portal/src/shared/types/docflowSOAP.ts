@@ -3,6 +3,41 @@
 import type React from 'react';
 import { TFunction } from 'next-i18next';
 
+export interface DocFlowLegalPrivatePersonSOAP {
+  name?: string;
+  objectID: {
+    id?: string;
+    presentation?: string;
+    type?: string;
+    navigationRef?: string;
+  };
+}
+
+export interface DocFlowOrganizationSOAP {
+  name?: string;
+  objectID: {
+    id?: string;
+    presentation?: string;
+    type?: string;
+    navigationRef?: string;
+  };
+  legalPrivatePerson?: DocFlowLegalPrivatePersonSOAP;
+  inn?: string;
+  kpp?: string;
+  fullName?: string;
+  VATpayer?: boolean;
+}
+
+export interface DocFlowSubdivision {
+  name?: string;
+  objectID: {
+    id?: string;
+    presentation?: string;
+    type?: string;
+    navigationRef?: string;
+  };
+}
+
 export interface DocFlowInternalDocumentSOAP {
   name?: string;
   objectID: {
@@ -11,6 +46,19 @@ export interface DocFlowInternalDocumentSOAP {
     type?: string; // DMInternalDocument
     navigationRef?: string;
   };
+  organization?: DocFlowOrganizationSOAP;
+  regDate?: Date;
+  responsible?: DocFlowUserSOAP;
+  regNumber?: string;
+  status?: DocFlowStatusSOAP;
+  subdivision?: DocFlowSubdivision;
+  summary?: string;
+  title?: string;
+  files?: DocFlowFileSOAP[];
+  organizationEnabled?: boolean;
+  author?: DocFlowUserSOAP;
+  beginDate?: Date;
+  openEnded?: boolean;
 }
 
 export interface DocFlowRoleSOAP {
@@ -63,24 +111,6 @@ export interface DocFlowFileSOAP {
   };
 }
 
-export interface DocFlowFileListSOAP {
-  name?: string;
-  objectID: {
-    id: string;
-    type?: string; // 'DMFile'
-  };
-  author?: DocFlowUserSOAP;
-  creationDate?: Date;
-  description?: string;
-  editing?: boolean;
-  encrypted?: boolean;
-  extension?: string;
-  modificationDateUniversal?: Date;
-  signed?: boolean;
-  size?: number;
-  activeVersion?: DocFlowFileVersionSOAP;
-}
-
 export interface DocFlowUserSOAP {
   name?: string;
   objectID?: {
@@ -110,6 +140,16 @@ export interface DocFlowProcessAcquaintanceSOAP {
   };
 }
 
+export interface DocFlowStatusSOAP {
+  name?: string;
+  objectID: {
+    id?: string;
+    navigationRef?: string;
+    presentation?: string;
+    type?: string; // 'DMDocumentStatus';
+  };
+}
+
 export interface DocFlowStateSOAP {
   name?: string;
   objectID?: {
@@ -121,40 +161,36 @@ export interface DocFlowStateSOAP {
 }
 
 export interface DocFlowTaskSOAP {
-  canHaveChildren?: boolean;
-  isFolder?: boolean;
-  object: {
-    name?: string;
-    acceptDate?: Date;
-    accepted?: boolean;
-    attributes?: {
-      type?: string; // 'DMBusinessProcessTask';
-    };
-    author?: DocFlowUserSOAP;
-    beginDate?: Date;
-    businessProcessStep?: string;
-    changeRight?: boolean;
-    description?: string;
-    dueDate?: Date;
-    endDate?: Date;
-    executed?: boolean;
-    executionComment?: string;
-    executionMark?: string;
-    importance?: DocFlowImportanceSOAP;
-    objectID?: {
-      id?: string;
-      navigationRef?: string;
-      presentation?: string;
-      type?: string; // 'DMBusinessProcessTask';
-    };
-    parentBusinessProcess?: DocFlowProcessAcquaintanceSOAP;
-    performer?: {
-      user?: DocFlowUserSOAP;
-    };
-    state?: DocFlowStateSOAP;
-    target?: DocFlowInternalDocumentSOAP;
-    targets?: {
-      items?: DocFlowTargetsSOAP[];
-    };
+  name?: string;
+  acceptDate?: Date;
+  accepted?: boolean;
+  attributes?: {
+    type?: string; // 'DMBusinessProcessTask';
+  };
+  author?: DocFlowUserSOAP;
+  beginDate?: Date;
+  businessProcessStep?: string;
+  changeRight?: boolean;
+  description?: string;
+  dueDate?: Date;
+  endDate?: Date;
+  executed?: boolean;
+  executionComment?: string;
+  executionMark?: string;
+  importance?: DocFlowImportanceSOAP;
+  objectID?: {
+    id?: string;
+    navigationRef?: string;
+    presentation?: string;
+    type?: string; // 'DMBusinessProcessTask';
+  };
+  parentBusinessProcess?: DocFlowProcessAcquaintanceSOAP;
+  performer?: {
+    user?: DocFlowUserSOAP;
+  };
+  state?: DocFlowStateSOAP;
+  target?: DocFlowInternalDocumentSOAP;
+  targets?: {
+    items?: DocFlowTargetsSOAP[];
   };
 }

@@ -10,10 +10,34 @@ type DocFlowState {
   presentation: String
 }
 
+type DocFlowOrganization {
+  id: ID!
+  name: String
+  presentation: String
+  fullName: String
+  inn: String
+  kpp: String
+  VATpayer: Boolean
+}
+
+type DocFlowSubdivision {
+  id: ID!
+  name: String
+  presentation: String
+}
+
 type DocFlowInternalDocument {
   id: ID!
   name: String
   presentation: String
+  beginDate: Date
+  regDate: Date
+  title: String
+  organization: DocFlowOrganization
+  subdivision: DocFlowSubdivision
+  files: DocFlowFiles
+  author: DocFlowUser
+  responsible: DocFlowUser
 }
 
 type DocFlowRole {
@@ -27,7 +51,6 @@ type DocFlowTarget {
   role: DocFlowRole
   target: DocFlowInternalDocument
   allowDeletion: Boolean
-  files: DocFlowFiles
 }
 
 type DocFlowFileVersion {

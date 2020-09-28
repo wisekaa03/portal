@@ -17,7 +17,7 @@ export interface DataReturn<K> {
 }
 
 export interface DataItems<K> {
-  items: K;
+  items: K[];
 }
 
 export interface DataUser<K> {
@@ -25,11 +25,15 @@ export interface DataUser<K> {
 }
 
 export interface DataFiles<K> {
-  files: K;
+  files: K[];
 }
 
 export interface DataObjects<K> {
-  objects: K;
+  objects: K[];
+}
+
+export interface DataObject<K> {
+  object: K;
 }
 
 export interface DataResult<K> {

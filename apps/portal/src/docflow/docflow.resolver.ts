@@ -79,7 +79,7 @@ export class DocFlowResolver {
   @Query('docFlowTask')
   @UseGuards(GqlAuthGuard)
   async docFlowTask(
-    @Args('task') task?: DocFlowTaskInput,
+    @Args('task') task: DocFlowTaskInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowTask> {
