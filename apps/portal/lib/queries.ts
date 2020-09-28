@@ -817,6 +817,11 @@ export const DOCFLOW_FILE = gql`
     docFlowFile(file: $file) {
       id
       name
+      encrypted
+      signed
+      author
+      description
+      creationDate
       modificationDateUniversal
       size
       extension

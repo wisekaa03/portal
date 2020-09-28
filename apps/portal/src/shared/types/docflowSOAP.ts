@@ -42,11 +42,18 @@ export interface DocFlowFileVersionSOAP {
 
 export interface DocFlowFileSOAP {
   name?: string;
+  author?: DocFlowUserSOAP;
   activeVersion?: DocFlowFileVersionSOAP;
   attributes?: string;
   binaryData?: string;
   extension?: string;
   modificationDateUniversal?: Date;
+  creationDate?: Date;
+  encrypted?: boolean;
+  signed?: boolean;
+  description?: string;
+  editing?: boolean;
+  editingUser?: DocFlowUserSOAP;
   size?: number;
   objectID: {
     id: string;

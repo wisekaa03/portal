@@ -38,6 +38,7 @@ import type { SubscriptionPayload, DocFlowTaskSOAP, DocFlowUserSOAP, DocFlowTarg
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
 import type { DataResult, DataObjects, DataFiles, DataItems, DataUser } from '@lib/types/common';
+import * as request from 'supertest';
 import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow.utils';
 //#endregion
 
@@ -72,25 +73,38 @@ export class DocFlowService {
   }
 
   docFlowFiles = async (soap: SoapClient, target: DocFlowTarget): Promise<DocFlowFiles> => {
-    const request = {
+    const requestSOAP = {
       'tns:request': {
-        'attributes': {
+        attributes: {
           'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
           'xsi:type': 'tns:DMGetFileListByOwnerRequest',
         },
-        'tns:dataBaseID': '',
-        'tns:owners': {
-          'tns:name': '',
-          'tns:objectID': {
-            'tns:id': target.target.id,
-            'tns:type': 'DMInternalDocument',
-          },
-        },
+        $xml:
+          '<tns:dataBaseID></tns:dataBaseID>' +
+          '<tns:owners>' +
+          '<tns:name />' +
+          '<tns:objectID>' +
+          `<tns:id>${target.target.id}</tns:id>` +
+          '<tns:type>DMInternalDocument</tns:type>' +
+          '</tns:objectID>' +
+          '</tns:owners>' +
+          '<tns:columnSet>objectId</tns:columnSet>' +
+          '<tns:columnSet>name</tns:columnSet>' +
+          '<tns:columnSet>author</tns:columnSet>' +
+          '<tns:columnSet>extension</tns:columnSet>' +
+          '<tns:columnSet>size</tns:columnSet>' +
+          '<tns:columnSet>creationDate</tns:columnSet>' +
+          '<tns:columnSet>modificationDateUniversal</tns:columnSet>' +
+          '<tns:columnSet>encrypted</tns:columnSet>' +
+          '<tns:columnSet>description</tns:columnSet>' +
+          '<tns:columnSet>signed</tns:columnSet>' +
+          '<tns:columnSet>editing</tns:columnSet>' +
+          '<tns:columnSet>editingUser</tns:columnSet>',
       },
     };
 
     return soap
-      .executeAsync(request, { timeout: TIMEOUT })
+      .executeAsync(requestSOAP, { timeout: TIMEOUT })
       .then((message: DataResult<DataFiles<DocFlowFileSOAP[]>>) => {
         this.logger.info(`${DocFlowService.name}: [Request] ${soap.lastRequest}`);
         // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
@@ -704,9 +718,16 @@ export class DocFlowService {
                   '</tns:objectIds>' +
                   '<tns:columnSet>objectId</tns:columnSet>' +
                   '<tns:columnSet>name</tns:columnSet>' +
+                  '<tns:columnSet>description</tns:columnSet>' +
+                  '<tns:columnSet>author</tns:columnSet>' +
+                  '<tns:columnSet>encrypted</tns:columnSet>' +
+                  '<tns:columnSet>signed</tns:columnSet>' +
+                  '<tns:columnSet>editing</tns:columnSet>' +
+                  '<tns:columnSet>editingUser</tns:columnSet>' +
                   '<tns:columnSet>binaryData</tns:columnSet>' +
                   '<tns:columnSet>extension</tns:columnSet>' +
                   '<tns:columnSet>size</tns:columnSet>' +
+                  '<tns:columnSet>creationDate</tns:columnSet>' +
                   '<tns:columnSet>modificationDateUniversal</tns:columnSet>',
               },
             },

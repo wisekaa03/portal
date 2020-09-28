@@ -66,6 +66,10 @@ export const docFlowFile = (file: DocFlowFileSOAP): DocFlowFile => ({
   id: file.objectID.id || '[file:id]',
   name: file.name || '[file:name]',
   // presentation: file?.objectID.presentation,
+  author: file.author && docFlowUser(file.author),
+  encrypted: file.encrypted,
+  signed: file.signed,
+  description: file.description,
   activeVersion: file.activeVersion && docFlowFileVersion(file.activeVersion),
   binaryData: file.binaryData,
   extension: file.extension,
@@ -73,6 +77,7 @@ export const docFlowFile = (file: DocFlowFileSOAP): DocFlowFile => ({
     file.modificationDateUniversal && file.modificationDateUniversal.toISOString() !== SOAP_DATE_NULL
       ? file.modificationDateUniversal
       : undefined,
+  creationDate: file.creationDate && file.creationDate.toISOString() !== SOAP_DATE_NULL ? file.creationDate : undefined,
   size: file.size,
 });
 

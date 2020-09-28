@@ -95,9 +95,16 @@ export interface DocFlowFileVersion {
 export interface DocFlowFile {
   id: string;
   name?: string;
+  author?: DocFlowUser;
+  encrypted?: boolean;
+  signed?: boolean;
+  description?: string;
+  editing?: boolean;
+  editingUser?: DocFlowUser;
   activeVersion?: DocFlowFileVersion;
   binaryData?: string;
   extension?: string;
+  creationDate?: Date;
   modificationDateUniversal?: Date;
   size?: number;
   type?: string;

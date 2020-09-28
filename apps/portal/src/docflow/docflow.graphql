@@ -39,9 +39,15 @@ type DocFlowFileVersion {
 type DocFlowFile {
   id: ID!
   name: String
+  author: DocFlowUser
+  encrypted: Boolean
+  signed: Boolean
+  editing: Boolean
+  description: String
   activeVersion: DocFlowFileVersion
   binaryData: String
   extension: String
+  creationDate: Date
   modificationDateUniversal: Date
   size: Int
 }
