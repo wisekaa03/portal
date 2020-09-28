@@ -799,13 +799,23 @@ export const DOCFLOW_TASKS_SUB = gql`
           id
           presentation
           name
-        }
-        files {
-          object {
-            id
-            name
+
+          files {
+            object {
+              id
+              name
+              author {
+                id
+                name
+              }
+              description
+              creationDate
+              modificationDateUniversal
+              extension
+              size
+            }
+            error
           }
-          error
         }
       }
     }
@@ -877,13 +887,23 @@ export const DOCFLOW_TASK = gql`
           id
           presentation
           name
-        }
-        files {
-          object {
-            id
-            name
+
+          files {
+            object {
+              id
+              name
+              author {
+                id
+                name
+              }
+              description
+              creationDate
+              modificationDateUniversal
+              extension
+              size
+            }
+            error
           }
-          error
         }
       }
     }
@@ -937,13 +957,23 @@ export const DOCFLOW_TASK_SUB = gql`
           id
           presentation
           name
-        }
-        files {
-          object {
-            id
-            name
+
+          files {
+            object {
+              id
+              name
+              author {
+                id
+                name
+              }
+              description
+              creationDate
+              modificationDateUniversal
+              extension
+              size
+            }
+            error
           }
-          error
         }
       }
     }
