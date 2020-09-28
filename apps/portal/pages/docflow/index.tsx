@@ -17,9 +17,9 @@ interface DocFlowTasksPageProps {
 
 const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, docFlowTask, docFlowTarget, ...rest }): React.ReactElement =>
   docFlowTask ? (
-    <DocFlowTaskPage docFlowTask={docFlowTask} {...rest} />
+    <DocFlowTaskPage id={docFlowTask} {...rest} />
   ) : docFlowTarget ? (
-    <DocFlowTargetPage docFlowTarget={docFlowTarget} {...rest} />
+    <DocFlowTargetPage id={docFlowTarget} {...rest} />
   ) : (
     <DocFlowTasksPage {...rest} />
   );
