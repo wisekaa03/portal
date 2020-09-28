@@ -2,8 +2,9 @@
 
 //#region Imports NPM
 import React, { FC, useRef } from 'react';
+import Link from 'next/link';
 import { TFunction, I18n } from 'next-i18next';
-import { Theme, fade, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
   InputBase,
@@ -37,7 +38,17 @@ const DocFlowTasksTable = withStyles((theme) => ({
   footer: {
     width: '100%',
   },
-}))(({ t, classes, columns, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, handleRow, tasks }: DocFlowTasksTableProps) => (
+  link: {
+    'display': 'block',
+    'color': theme.palette.primary.main,
+    'textDecoration': 'none',
+    '&:hover': {},
+    '&:active': {
+      color: darken(theme.palette.primary.main, 0.15),
+    },
+    '&:visited': {},
+  },
+}))(({ t, classes, columns, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, tasks }: DocFlowTasksTableProps) => (
   <>
     <TableContainer className={classes.container}>
       <Table stickyHeader aria-label="sticky table">
@@ -55,9 +66,16 @@ const DocFlowTasksTable = withStyles((theme) => ({
             <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
               {columns.map((column) => {
                 const value = column.id.split('.').reduce((acc, elem) => acc[elem], task);
+
+                const cellData = (
+                  <Link href={{ pathname: '/docflow/task', query: { id: task.id } }} as={`/docflow/task/${task.id}`}>
+                    <a className={classes.link}>{column.format ? column.format(value) : value}</a>
+                  </Link>
+                );
+
                 return (
-                  <TableCell key={column.id} align={column.align} onClick={(event) => handleRow(event, task)}>
-                    {column.format ? column.format(value) : value}
+                  <TableCell key={column.id} align={column.align}>
+                    {cellData}
                   </TableCell>
                 );
               })}
@@ -114,7 +132,7 @@ const columns = (t: TFunction, i18n: I18n): DocFlowTasksColumn[] => [
   },
 ];
 
-const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus, handleRow }) => {
+const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { i18n, t } = useTranslation();
   const tasksBox = useRef(null);
@@ -159,7 +177,6 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
               t={t}
               page={page}
               rowsPerPage={rowsPerPage}
-              handleRow={handleRow}
               handleChangePage={handleChangePage}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
               columns={columns(t, i18n)}

@@ -824,3 +824,141 @@ export const DOCFLOW_FILE = gql`
     }
   }
 `;
+
+export const DOCFLOW_TASK = gql`
+  query DocFlowTask($task: DocFlowTaskInput!) {
+    docFlowTask(task: $task) {
+      id
+      name
+      importance {
+        id
+        name
+      }
+      executor {
+        id
+        name
+      }
+      executed
+      executionMark
+      beginDate
+      dueDate
+      endDate
+      description
+      parentTask {
+        id
+        name
+      }
+      processStep
+      executionComment
+      author {
+        id
+        name
+      }
+      accepted
+      acceptDate
+      state {
+        id
+        name
+      }
+      target {
+        id
+        name
+        presentation
+      }
+      targets {
+        name
+        allowDeletion
+        target {
+          id
+          presentation
+          name
+        }
+        files {
+          object {
+            id
+            name
+          }
+          error
+        }
+      }
+    }
+  }
+`;
+
+export const DOCFLOW_TASK_SUB = gql`
+  subscription DocFlowTask($task: DocFlowTaskInput!) {
+    docFlowTask(task: $task) {
+      id
+      name
+      importance {
+        id
+        name
+      }
+      executor {
+        id
+        name
+      }
+      executed
+      executionMark
+      beginDate
+      dueDate
+      endDate
+      description
+      parentTask {
+        id
+        name
+      }
+      processStep
+      executionComment
+      author {
+        id
+        name
+      }
+      accepted
+      acceptDate
+      state {
+        id
+        name
+      }
+      target {
+        id
+        name
+        presentation
+      }
+      targets {
+        name
+        allowDeletion
+        target {
+          id
+          presentation
+          name
+        }
+        files {
+          object {
+            id
+            name
+          }
+          error
+        }
+      }
+    }
+  }
+`;
+
+export const DOCFLOW_TARGET = gql`
+  query DocFlowTarget($target: DocFlowTargetInput!) {
+    docFlowTarget(target: $target) {
+      id
+      name
+    }
+  }
+`;
+
+export const DOCFLOW_TARGET_SUB = gql`
+  subscription DocFlowTarget($target: DocFlowTargetInput!) {
+    docFlowTarget(target: $target) {
+      id
+      name
+    }
+  }
+`;

@@ -15,7 +15,7 @@ import { MaterialUI } from '@front/layout';
 import DocFlowTasksComponent from '@front/components/docflow/tasks';
 //#endregion
 
-const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   const status = '';
   const find = '';
 
@@ -58,11 +58,6 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     }
   }, [errorDocFlowTasks]);
 
-  const handleRow = async (event: unknown, task: DocFlowTask): Promise<void> => {
-    // eslint-disable-next-line no-debugger
-    debugger;
-  };
-
   return (
     <>
       <Head>
@@ -74,7 +69,6 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
           tasks={tasks}
           status={status}
           find={find}
-          handleRow={handleRow}
           handleSearch={(event) => {
             event?.preventDefault();
           }}
@@ -87,13 +81,8 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   );
 };
 
-DocFlowPage.getInitialProps = ({ query }) => {
-  const { code, where } = query;
+DocFlowTasksPage.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces(['docflow']),
+});
 
-  return {
-    query: { code, where },
-    namespacesRequired: includeDefaultNamespaces(['docflow']),
-  };
-};
-
-export default nextI18next.withTranslation('docflow')(DocFlowPage);
+export default nextI18next.withTranslation('docflow')(DocFlowTasksPage);

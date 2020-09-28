@@ -54,7 +54,7 @@ export const FileTableHeader: FC<FilesTableHeaderProps> = ({ header, handleCheck
                 // }
               >
                 <TableSortLabel
-                  active={current.label === name}
+                  active={Boolean(current.label)}
                   // direction={orderBy.direction.toLowerCase() as 'desc' | 'asc'}
                   // onClick={handleSort(current.label)}
                 >

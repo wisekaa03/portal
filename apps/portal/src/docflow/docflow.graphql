@@ -91,11 +91,12 @@ input DocFlowTasksInput {
 }
 
 input DocFlowTaskInput {
+  id: String!
   cache: Boolean
 }
 
 input DocFlowTargetInput {
-  targetId: String!
+  id: String!
   cache: Boolean
 }
 
@@ -106,13 +107,13 @@ input DocFlowFileInput {
 
 type Query {
   docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
-  docFlowTask(task: DocFlowTaskInput): DocFlowTask!
+  docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
   docFlowTarget(target: DocFlowTargetInput!): [DocFlowTarget!]
   docFlowFile(file: DocFlowFileInput!): DocFlowFile!
 }
 
 type Subscription {
   docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
-  docFlowTask(task: DocFlowTaskInput): DocFlowTask!
+  docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
   docFlowTarget(target: DocFlowTargetInput!): [DocFlowTarget!]
 }

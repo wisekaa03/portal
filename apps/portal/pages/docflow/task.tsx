@@ -7,61 +7,61 @@ import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { DOCFLOW_TASKS, DOCFLOW_TASKS_SUB } from '@lib/queries';
-import type { DocFlowTask, DocFlowTasksInput } from '@lib/types/docflow';
+import { DOCFLOW_TASK, DOCFLOW_TASK_SUB } from '@lib/queries';
+import type { DocFlowTask, DocFlowTaskInput, DocFlowTasksInput } from '@lib/types/docflow';
 import { Data } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
-import DocFlowTasksComponent from '@front/components/docflow/tasks';
+import DocFlowTaskComponent from '@front/components/docflow/task';
 //#endregion
 
-const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+interface DocFlowTaskProps {
+  id: string;
+}
+
+const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): React.ReactElement => {
   const status = '';
   const find = '';
 
   const {
-    loading: loadingDocFlowTasks,
-    data: dataDocFlowTasks,
-    error: errorDocFlowTasks,
-    refetch: refetchDocFlowTasksInt,
-    subscribeToMore: subscribeToMoreDocFlowTasks,
-  } = useQuery<Data<'docFlowTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
+    loading: loadingDocFlowTask,
+    data: dataDocFlowTask,
+    error: errorDocFlowTask,
+    refetch: refetchDocFlowTaskInt,
+    subscribeToMore: subscribeToMoreDocFlowTask,
+  } = useQuery<Data<'docFlowTask', DocFlowTask>, { task: DocFlowTaskInput }>(DOCFLOW_TASK, {
     ssr: true,
     fetchPolicy: 'cache-first',
+    variables: { task: { id } },
     // notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
     // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    subscribeToMoreDocFlowTasks({
-      document: DOCFLOW_TASKS_SUB,
+    subscribeToMoreDocFlowTask({
+      document: DOCFLOW_TASK_SUB,
       updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.docFlowTasks || [];
+        const updateData = data?.docFlowTask || [];
 
-        return { docFlowTasks: updateData };
+        return { docFlowTask: updateData };
       },
     });
-  }, [subscribeToMoreDocFlowTasks]);
+  }, [subscribeToMoreDocFlowTask]);
 
   const refetchDocFlowTasks = async (
     variables?: Partial<{
-      tasks: DocFlowTasksInput;
+      task: DocFlowTaskInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'docFlowTasks', DocFlowTask[]>>> =>
-    refetchDocFlowTasksInt({ tasks: { ...variables?.tasks, cache: false } });
+  ): Promise<ApolloQueryResult<Data<'docFlowTask', DocFlowTask>>> =>
+    refetchDocFlowTaskInt({ task: { id, ...variables?.task, cache: false } });
 
-  const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.docFlowTasks ?? [], [dataDocFlowTasks]);
+  const task = useMemo<DocFlowTask | undefined>(() => dataDocFlowTask?.docFlowTask, [dataDocFlowTask]);
 
   useEffect(() => {
-    if (errorDocFlowTasks) {
-      snackbarUtils.error(errorDocFlowTasks);
+    if (errorDocFlowTask) {
+      snackbarUtils.error(errorDocFlowTask);
     }
-  }, [errorDocFlowTasks]);
-
-  const handleRow = async (event: unknown, task: DocFlowTask): Promise<void> => {
-    // eslint-disable-next-line no-debugger
-    debugger;
-  };
+  }, [errorDocFlowTask]);
 
   return (
     <>
@@ -69,31 +69,19 @@ const DocFlowPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
         <title>{t('docflow:title')}</title>
       </Head>
       <MaterialUI refetchComponent={refetchDocFlowTasks} {...rest}>
-        <DocFlowTasksComponent
-          loading={loadingDocFlowTasks}
-          tasks={tasks}
-          status={status}
-          find={find}
-          handleRow={handleRow}
-          handleSearch={(event) => {
-            event?.preventDefault();
-          }}
-          handleStatus={(event) => {
-            event?.preventDefault();
-          }}
-        />
+        <DocFlowTaskComponent loading={loadingDocFlowTask} task={task} />
       </MaterialUI>
     </>
   );
 };
 
-DocFlowPage.getInitialProps = ({ query }) => {
-  const { code, where } = query;
+DocFlowTaskPage.getInitialProps = ({ query }) => {
+  const { id } = query;
 
   return {
-    query: { code, where },
+    id,
     namespacesRequired: includeDefaultNamespaces(['docflow']),
   };
 };
 
-export default nextI18next.withTranslation('docflow')(DocFlowPage);
+export default nextI18next.withTranslation('docflow')(DocFlowTaskPage);

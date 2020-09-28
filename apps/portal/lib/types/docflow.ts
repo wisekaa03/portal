@@ -19,7 +19,6 @@ export interface DocFlowTasksTableProps {
   tasks: DocFlowTask[];
   page: number;
   rowsPerPage: number;
-  handleRow: (event: unknown, task: DocFlowTask) => void;
   handleChangePage: (event: unknown, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -29,9 +28,18 @@ export interface DocFlowTasksComponentProps {
   tasks: DocFlowTask[];
   status: string;
   find: string;
-  handleRow: (event: unknown, task: DocFlowTask) => void;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface DocFlowTaskComponentProps {
+  loading: boolean;
+  task?: DocFlowTask;
+}
+
+export interface DocFlowTargetComponentProps {
+  loading: boolean;
+  target?: DocFlowTarget;
 }
 
 export interface DocFlowUser {
@@ -139,7 +147,9 @@ export interface DocFlowTask {
 
 export type DocFlowUserInput = GraphQLQueryInput;
 export type DocFlowTasksInput = GraphQLQueryInput;
-export type DocFlowTaskInput = GraphQLQueryInput;
+export interface DocFlowTaskInput extends GraphQLQueryInput {
+  id: string;
+}
 
 export interface DocFlowTargetInput extends GraphQLQueryInput {
   id: string;
