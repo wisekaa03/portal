@@ -54,9 +54,9 @@ export class ConfigService {
 
       PORT: Joi.number().integer().default(80).required(),
       DOMAIN: Joi.string().empty('').default('example.com').required(),
-      DEVELOPMENT: Joi.boolean().empty('').default(true).required(),
+      DEVELOPMENT: Joi.boolean().empty('').default(true).optional(),
 
-      LOG_LEVEL: Joi.string().empty('').default('debug').required(),
+      LOG_LEVEL: Joi.string().empty('').default('debug').optional(),
       LOG_SERVER: Joi.string().empty('').default('').optional(),
 
       DATABASE_URI: Joi.string().required(),
@@ -88,10 +88,10 @@ export class ConfigService {
       LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
         .empty('')
         .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')
-        .required(),
-      LDAP_SEARCH_FILTER_ALL_GROUPS: Joi.string().empty('').default('objectClass=group').required(),
-      LDAP_SEARCH_GROUP: Joi.string().empty('').default('(&(objectClass=group)(member={{dn}}))').required(),
-      LDAP_SEARCH_USER: Joi.string().empty('').default('(sAMAccountName={{username}})').required(),
+        .optional(),
+      LDAP_SEARCH_FILTER_ALL_GROUPS: Joi.string().empty('').default('objectClass=group').optional(),
+      LDAP_SEARCH_GROUP: Joi.string().empty('').default('(&(objectClass=group)(member={{dn}}))').optional(),
+      LDAP_SEARCH_USER: Joi.string().empty('').default('(sAMAccountName={{username}})').optional(),
       LDAP_NEW_BASE: Joi.string().empty('').required(),
       LDAP_DOMAIN: Joi.string().empty('').required(),
 
