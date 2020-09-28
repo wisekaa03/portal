@@ -70,16 +70,17 @@ export const docFlowRole = (role: DocFlowRoleSOAP): DocFlowRole => ({
 
 export const docFlowInternalDocument = (target: DocFlowInternalDocumentSOAP): DocFlowInternalDocument => ({
   id: target.objectID?.id || '[internalDocument:id]',
+  name: target.name || '[internalDocument:name]',
   presentation: target.objectID.presentation,
   type: target.objectID.type,
   navigationRef: target.objectID.navigationRef,
 });
 
-export const docFlowTargets = (targetCollection: DocFlowTargetsSOAP): DocFlowTarget => ({
-  name: targetCollection.name,
-  role: docFlowRole(targetCollection.role),
-  target: docFlowInternalDocument(targetCollection.target),
-  allowDeletion: targetCollection?.allowDeletion ?? false,
+export const docFlowTargets = (target: DocFlowTargetsSOAP): DocFlowTarget => ({
+  name: target.name,
+  role: docFlowRole(target.role),
+  target: docFlowInternalDocument(target.target),
+  allowDeletion: target?.allowDeletion ?? false,
 });
 
 export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({

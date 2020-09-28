@@ -113,7 +113,6 @@ export interface DocFlowTask {
   parentTask?: DocFlowParentTask;
   target?: DocFlowInternalDocument;
   targets?: DocFlowTarget[];
-  files?: DocFlowFiles | Promise<DocFlowFiles>;
 }
 
 /* DocFlow input fields */

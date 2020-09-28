@@ -70,7 +70,7 @@ export class DocFlowService {
     }
   }
 
-  docFlowFilesSOAP = async (soap: SoapClient, target: DocFlowTarget): Promise<DocFlowFiles> => {
+  docFlowFiles = async (soap: SoapClient, target: DocFlowTarget): Promise<DocFlowFiles> => {
     const request = {
       'tns:request': {
         'attributes': {
@@ -111,34 +111,35 @@ export class DocFlowService {
       });
   };
 
-  // TODO: переписать это нафих
-  docFlowTasksSOAP = async (soap: SoapClient, tasksSOAP: DocFlowTaskSOAP[]): Promise<DocFlowTask[]> => {
-    const tasks: DocFlowTask[] = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP));
+  docFlowTargetWithFiles = async (soap: SoapClient, target: DocFlowTarget): Promise<DocFlowTarget> => {
+    // TODO: переделать на allSettled
+    const files = await this.docFlowFiles(soap, target);
 
-    const tasksG = tasks.map((task) => ({
+    return {
+      ...target,
+      files,
+    };
+  };
+
+  docFlowTaskWithFiles = async (soap: SoapClient, task: DocFlowTask): Promise<DocFlowTask> => {
+    const promiseTargets = task.targets?.map((target) => this.docFlowTargetWithFiles(soap, target));
+
+    const targets = promiseTargets && (await Promise.all(promiseTargets));
+
+    return {
       ...task,
-      targets: task.targets?.map((target) => ({
-        ...target,
-        files: this.docFlowFilesSOAP(soap, target),
-      })),
-    }));
+      targets,
+    };
+  };
 
-    // // eslint-disable-next-line no-restricted-syntax
-    // for (const taskSOAP of tasksSOAP) {
-    //   const task = docFlowTask(taskSOAP);
+  docFlowTasksWithFiles = async (soap: SoapClient, tasksSOAP: DocFlowTaskSOAP[]): Promise<DocFlowTask[]> => {
+    const tasksWithoutFiles = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP));
 
-    //   if (task.targets) {
-    //     // eslint-disable-next-line no-restricted-syntax
-    //     for (const target of task.targets) {
-    //       // eslint-disable-next-line no-await-in-loop
-    //       const files = await this.docFlowFilesSOAP(soap, target);
-    //     }
-    //   }
+    const tasks = tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles(soap, task));
 
-    //   tasks.push(task);
-    // }
+    const tasksWithFiles = await Promise.all(tasks);
 
-    return tasksG as DocFlowTask[];
+    return tasksWithFiles;
   };
 
   /**
@@ -236,7 +237,9 @@ export class DocFlowService {
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
             if (message[0] && Array.isArray(message[0].return?.items)) {
-              return this.docFlowTasksSOAP(client, message[0].return.items);
+              const tasksWithFiles = this.docFlowTasksWithFiles(client, message[0].return.items);
+
+              return tasksWithFiles;
             }
 
             throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
