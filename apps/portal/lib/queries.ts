@@ -739,13 +739,23 @@ export const DOCFLOW_TASKS = gql`
           id
           presentation
           name
-        }
-        files {
-          object {
-            id
-            name
+
+          files {
+            object {
+              id
+              name
+              author {
+                id
+                name
+              }
+              description
+              creationDate
+              modificationDateUniversal
+              extension
+              size
+            }
+            error
           }
-          error
         }
       }
     }
