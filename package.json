@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.14.8",
+  "version": "4.14.9",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -150,7 +150,7 @@
     "joi": "^17.2.1",
     "libpq": "^1.8.9",
     "nest-next": "^9.2.0",
-    "nestjs-ldap": "^0.1.3",
+    "nestjs-ldap": "^0.1.4",
     "nestjs-pino": "^1.2.0",
     "next": "^9.5.4-canary.23",
     "next-compose-plugins": "^2.2.0",
@@ -228,7 +228,7 @@
     "@types/cache-manager": "*",
     "@types/connect-redis": "*",
     "@types/cookie-parser": "*",
-    "@types/deep-equal": "^1.0.1",
+    "@types/deep-equal": "*",
     "@types/enzyme": "*",
     "@types/enzyme-adapter-react-16": "*",
     "@types/express-session": "*",
