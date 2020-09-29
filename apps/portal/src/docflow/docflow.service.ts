@@ -62,7 +62,7 @@ export class DocFlowService {
     this.ttl = configService.get<number>('DOCFLOW_REDIS_TTL') || 900;
     if (configService.get<string>('DOCFLOW_REDIS_URI')) {
       this.cacheStore = redisStore.create({
-        prefix: 'DOCFLOW',
+        prefix: 'DOCFLOW:',
         url: configService.get<string>('DOCFLOW_REDIS_URI'),
       });
       this.cache = cacheManager.caching({

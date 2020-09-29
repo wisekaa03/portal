@@ -43,7 +43,7 @@ export class FilesService {
     this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
     if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
       this.cacheStore = redisStore.create({
-        prefix: 'NC',
+        prefix: 'NEXTCLOUD:',
         url: configService.get<string>('NEXTCLOUD_REDIS_URI'),
       });
       this.cache = cacheManager.caching({

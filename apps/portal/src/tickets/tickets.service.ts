@@ -73,7 +73,7 @@ export class TicketsService {
     this.ttl = configService.get<number>('TICKETS_REDIS_TTL') || 900;
     if (configService.get<string>('TICKETS_REDIS_URI')) {
       this.cacheStore = redisStore.create({
-        prefix: 'TICKETS',
+        prefix: 'TICKETS:',
         url: configService.get<string>('TICKETS_REDIS_URI'),
       });
       this.cache = cacheManager.caching({

@@ -91,7 +91,7 @@ module.exports = {
     'quote-props': 0,
     'indent': 0,
     'no-nested-ternary': 0,
-    'spaced-comment': ['error', 'always', { markers: ['#region', '#endregion'] }],
+    'spaced-comment': ['error', 'always', { markers: ['#region', '#endregion', '/'] }],
     'max-len': ['error', { code: 140, ignoreUrls: true }],
     'import/no-extraneous-dependencies': 0,
     'no-unused-vars': [

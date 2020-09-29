@@ -29,10 +29,9 @@ export class NewsService {
    *
    * @return News
    */
-  news = async (): Promise<NewsEntity[]> => {
+  news = async (): Promise<NewsEntity[]> =>
     // TODO: сделать чтобы выводилось постранично
-    return this.newsRepository.find();
-  };
+    this.newsRepository.find();
 
   /**
    * Edit news
