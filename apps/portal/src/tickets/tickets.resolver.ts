@@ -92,18 +92,9 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: PortalWebsocket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload.userId === context?.user?.id;
-    },
-    resolve: (payload: SubscriptionPayload<TkTasks>) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload.object;
-    },
+    filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: PortalWebsocket) =>
+      payload.userId === context?.user?.id,
+    resolve: (payload: SubscriptionPayload<TkTasks>) => payload.object,
   })
   async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
     return this.pubSub.asyncIterator<TkTasks>(PortalPubSub.TICKETS_TASKS);
@@ -185,18 +176,9 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTask', {
-    filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: PortalWebsocket) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code;
-    },
-    resolve: (payload: SubscriptionPayload<TkEditTask>) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
-
-      return payload.object;
-    },
+    filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: PortalWebsocket) =>
+      payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code,
+    resolve: (payload: SubscriptionPayload<TkEditTask>) => payload.object,
   })
   async ticketsTaskSubscription(): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>(PortalPubSub.TICKETS_TASK);
