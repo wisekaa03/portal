@@ -51,7 +51,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task }) 
     <Box display="flex" flexDirection="column">
       <Box display="flex" alignItems="center" p={1} className={classes.control} />
       <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-        {task}
+        {task?.id}
       </Loading>
     </Box>
   );

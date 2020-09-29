@@ -20,9 +20,6 @@ interface DocFlowTargetProps {
 }
 
 const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest }): React.ReactElement => {
-  const status = '';
-  const find = '';
-
   const {
     loading: loadingDocFlowTarget,
     data: dataDocFlowTarget,
@@ -40,15 +37,16 @@ const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest 
     // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
     subscribeToMoreDocFlowTarget({
       document: DOCFLOW_TARGET_SUB,
+      variables: { target: { id } },
       updateQuery: (prev, { subscriptionData: { data } }) => {
         const updateData = data?.docFlowTarget || [];
 
         return { docFlowTarget: updateData };
       },
     });
-  }, [subscribeToMoreDocFlowTarget]);
+  }, [subscribeToMoreDocFlowTarget, id]);
 
-  const refetchDocFlowTasks = async (
+  const refetchDocFlowTarget = async (
     variables?: Partial<{
       target: DocFlowTargetInput;
     }>,
@@ -68,7 +66,7 @@ const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest 
       <Head>
         <title>{t('docflow:title')}</title>
       </Head>
-      <MaterialUI refetchComponent={refetchDocFlowTasks} {...rest}>
+      <MaterialUI refetchComponent={refetchDocFlowTarget} {...rest}>
         <DocFlowTargetComponent loading={loadingDocFlowTarget} target={target} />
       </MaterialUI>
     </>

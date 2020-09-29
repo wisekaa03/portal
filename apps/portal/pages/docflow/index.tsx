@@ -11,26 +11,25 @@ import DocFlowTasksPage from '@front/pages/docflow/tasks';
 //#endregion
 
 interface DocFlowTasksPageProps {
-  docFlowTask?: string;
-  docFlowTarget?: string;
+  pathname?: string;
+  id?: string;
 }
 
-const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, docFlowTask, docFlowTarget, ...rest }): React.ReactElement =>
-  docFlowTask ? (
-    <DocFlowTaskPage id={docFlowTask} {...rest} />
-  ) : docFlowTarget ? (
-    <DocFlowTargetPage id={docFlowTarget} {...rest} />
+const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, pathname, id, ...rest }): React.ReactElement =>
+  pathname?.includes('task') && id ? (
+    <DocFlowTaskPage id={id} {...rest} />
+  ) : pathname?.includes('target') && id ? (
+    <DocFlowTargetPage id={id} {...rest} />
   ) : (
     <DocFlowTasksPage {...rest} />
   );
 
-DocFlowTasksPageIndex.getInitialProps = ({ query }) => {
-  const docFlowTask = query.docFlowTask as string;
-  const docFlowTarget = query.docFlowTarget as string;
+DocFlowTasksPageIndex.getInitialProps = ({ pathname, query }) => {
+  const id = query.id as string;
 
   return {
-    docFlowTask,
-    docFlowTarget,
+    pathname,
+    id,
     namespacesRequired: includeDefaultNamespaces(['docflow']),
   };
 };

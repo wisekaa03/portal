@@ -16,15 +16,15 @@ export class DocFlowController {
     res.render('docflow');
   }
 
-  @Get('task/:docFlowTask')
+  @Get('task/:id')
   @UseGuards(SessionGuard)
-  public async task(@Res() res: RenderableResponse, @Param('docFlowTask') docFlowTask: string): Promise<void> {
-    res.render('docflow', { docFlowTask });
+  public async task(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
+    res.render('docflow/task', { id });
   }
 
-  @Get('target/:docFlowTask')
+  @Get('target/:id')
   @UseGuards(SessionGuard)
-  public async target(@Res() res: RenderableResponse, @Param('docFlowTarget') docFlowTarget: string): Promise<void> {
-    res.render('docflow', { docFlowTarget });
+  public async target(@Res() res: RenderableResponse, @Param('id') id: string): Promise<void> {
+    res.render('docflow/target', { id });
   }
 }

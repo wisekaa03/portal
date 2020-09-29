@@ -51,7 +51,7 @@ const DocFlowTargetComponent: FC<DocFlowTargetComponentProps> = ({ loading, targ
     <Box display="flex" flexDirection="column">
       <Box display="flex" alignItems="center" p={1} className={classes.control} />
       <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-        {target}
+        {target?.name}
       </Loading>
     </Box>
   );
