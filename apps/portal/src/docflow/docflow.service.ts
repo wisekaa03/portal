@@ -381,13 +381,18 @@ export class DocFlowService {
             // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
             if (message[0] && Array.isArray(message[0].return?.objects)) {
-              const result = message[0].return.objects.map((t) => docFlowTask(t));
+              const tasks = message[0].return.objects.map((t) => docFlowTask(t));
 
-              if (Array.isArray(result) && result.length > 1) {
-                this.logger.info('docFlowTask: result.length > 1 ??');
+              if (Array.isArray(tasks) && tasks.length > 0) {
+                if (tasks.length > 1) {
+                  this.logger.info('docFlowTask: result.length > 1 ??');
+                }
+                const taskWithoutFiles = tasks.pop();
+                if (taskWithoutFiles) {
+                  const result = this.docFlowTaskWithFiles(client, taskWithoutFiles);
+                  return result;
+                }
               }
-
-              return result.pop();
             }
 
             throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
