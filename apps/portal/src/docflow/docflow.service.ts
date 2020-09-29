@@ -285,7 +285,7 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   docFlowTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
-    const cachedID = `docflow:tasks:${user.id}`;
+    const cachedID = `tasks:${user.id}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
       if (cached && cached !== null) {
@@ -421,7 +421,7 @@ export class DocFlowService {
    * @returns {DocFlowTask}
    */
   docFlowTaskCache = async (user: User, password: string, task: DocFlowTaskInput): Promise<DocFlowTask> => {
-    const cachedID = `docflow:task:${task.id}`;
+    const cachedID = `task:${task.id}`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
       if (cached && cached !== null) {
@@ -598,7 +598,7 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   docFlowTargetCache = async (user: User, password: string, target: DocFlowTargetInput): Promise<DocFlowTarget> => {
-    const cachedID = `docflow:target:${target.id}`;
+    const cachedID = `target:${target.id}`;
     if (this.cache && (!target || target.cache !== false)) {
       const cached: DocFlowTarget = await this.cache.get<DocFlowTarget>(cachedID);
       if (cached && cached !== null) {

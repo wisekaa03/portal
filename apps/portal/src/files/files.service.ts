@@ -231,7 +231,7 @@ export class FilesService {
         : (path.slice(-1) === '/' ? path.slice(0, -1).split('/').pop() : path.split('/').pop()) ||
           this.translateToNextCloud(user.loginIdentificator).slice(4);
 
-    const cachedID = `${user.loginIdentificator}-f-${path}`;
+    const cachedID = `files:${user.loginIdentificator}:${path}`;
     if (this.cache && cache) {
       const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
@@ -292,7 +292,7 @@ export class FilesService {
   getFile = async (path: string, user: User, password: string, options?: FilesOptions, cache = true): Promise<FilesFile> => {
     this.logger.info(`Get files: path={${path}}`);
 
-    const cachedID = `${user.loginIdentificator}-g-${path}`;
+    const cachedID = `file:${user.loginIdentificator}:${path}`;
     if (cache && this.cache) {
       const cached: FilesFile = await this.cache.get<FilesFile>(cachedID);
       if (cached && cached !== null && cached.temporaryFile) {

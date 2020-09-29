@@ -58,8 +58,8 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsRoutes', {
-    filter: (payload: SubscriptionPayload<TkRoutes>, variables: { routes: TkRoutesInput }, context: PortalWebsocket) =>
-      payload.userId === context?.user?.id,
+    // filter: (payload: SubscriptionPayload<TkRoutes>, variables: { routes: TkRoutesInput }, context: PortalWebsocket) =>
+    //   payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkRoutes>) => payload.object,
   })
   async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
