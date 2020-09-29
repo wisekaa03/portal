@@ -13690,10 +13690,10 @@ nest-next@^9.2.0:
   dependencies:
     rxjs "^6.4"
 
-nestjs-ldap@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-0.1.5.tgz#f4fd27d9e4dfd6de10a3d14a82e4ba1fc9d5871d"
-  integrity sha512-hV/2bPxi0iEfPR89DliUcIFhJjHh2PFZ5jslXMDqLTXUrpN6idjzKU77pTlANC7BDypvycgHT5s+ACiNQIgHJg==
+nestjs-ldap@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-0.1.6.tgz#872e2b70b11f637c411c705c0ee84c4d55523c28"
+  integrity sha512-VeBtEMppuUAt+onCI+61hO9IlbGczMfdihK8zDUXwj4+ubcNUbZw/KZ+TKWd1yPiFbD9fzRXxGVRBM0WKMhZEg==
   dependencies:
     bcrypt "^5"
     cache-manager "^3"
