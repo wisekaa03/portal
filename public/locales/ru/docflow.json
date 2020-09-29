@@ -9,5 +9,9 @@
       "beginDate": "Дата начала",
       "author": "Автор"
     }
+  },
+  "notFound": "Не найден",
+  "task": {
+    "title": "Задание № {{task}} от {{date}}"
   }
 }

@@ -9,5 +9,9 @@
       "beginDate": "Begin date",
       "author": "Author"
     }
+  },
+  "notFound": "Not found",
+  "task": {
+    "title": "Task № {{task}} from {{date}}"
   }
 }
