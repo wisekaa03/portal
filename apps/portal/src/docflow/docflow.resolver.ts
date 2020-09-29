@@ -95,7 +95,7 @@ export class DocFlowResolver {
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTask', {
     filter: (payload: SubscriptionPayload<DocFlowTask>, variables: { task: DocFlowTaskInput }, context: PortalWebsocket) =>
-      payload.userId === context?.user?.id,
+      payload.userId === context?.user?.id && payload.object.id === variables.task.id,
     resolve: (payload: SubscriptionPayload<DocFlowTask>) => payload.object,
   })
   async docFlowTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
@@ -112,7 +112,7 @@ export class DocFlowResolver {
   @Query('docFlowTarget')
   @UseGuards(GqlAuthGuard)
   async docFlowTarget(
-    @Args('target') target?: DocFlowTargetInput,
+    @Args('target') target: DocFlowTargetInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowTarget> {

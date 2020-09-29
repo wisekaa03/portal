@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
+import deepEqual from 'deep-equal';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
@@ -218,18 +219,21 @@ export class TicketsService {
    * @returns {TkRoutes} Services
    */
   ticketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
-    const cachedID = `${user.id}-tickets-routes`;
+    const cachedID = 'tickets:routes'; // -${user.id}
     if (this.cache && (!input || input.cache !== false)) {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
             const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, {
-              userId: user.id || '',
-              object: ticketsRoutes,
-            });
-            this.cache.set(cachedID, ticketsRoutes, this.ttl);
+
+            if (!deepEqual(ticketsRoutes, cached)) {
+              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, {
+                userId: user.id || '',
+                object: ticketsRoutes,
+              });
+              this.cache.set(cachedID, ticketsRoutes, this.ttl);
+            }
           } catch (error) {
             this.logger.error('ticketsRoutesCache error:', error);
           }
@@ -453,18 +457,21 @@ export class TicketsService {
    * @returns {TkTasks[]}
    */
   ticketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
-    const cachedID = `${user.id}-tickets-tasks`;
+    const cachedID = `tickets:tasks:${user.id}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
             const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, {
-              userId: user.id || '',
-              object: ticketsTasks,
-            });
-            this.cache.set(cachedID, ticketsTasks, this.ttl);
+
+            if (!deepEqual(ticketsTasks, cached)) {
+              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, {
+                userId: user.id || '',
+                object: ticketsTasks,
+              });
+              this.cache.set(cachedID, ticketsTasks, this.ttl);
+            }
           } catch (error) {
             this.logger.error('ticketsTasksCache error:', error);
           }
@@ -782,11 +789,14 @@ export class TicketsService {
         (async (): Promise<void> => {
           try {
             const ticketsTask = await this.ticketsTask(user, password, task);
-            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
-              userId: user.id || '',
-              object: ticketsTask,
-            });
-            this.cache.set(cachedID, ticketsTask, this.ttl);
+
+            if (!deepEqual(ticketsTask, cached)) {
+              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
+                userId: user.id || '',
+                object: ticketsTask,
+              });
+              this.cache.set(cachedID, ticketsTask, this.ttl);
+            }
           } catch (error) {
             this.logger.error('ticketsTaskCache error:', error);
           }
