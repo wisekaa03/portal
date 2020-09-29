@@ -298,7 +298,7 @@ export class DocFlowService {
                 userId: user.id || '',
                 object: ticketsTasks,
               });
-              this.cache.set(cachedID, ticketsTasks, this.ttl);
+              this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
             }
           } catch (error) {
             this.logger.error('docFlowTasksCache error:', error);
@@ -317,7 +317,7 @@ export class DocFlowService {
       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASKS, { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
-        this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, this.ttl);
+        this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
       }
 
       return ticketsTasks;
@@ -433,7 +433,7 @@ export class DocFlowService {
               userId: user.id || '',
               object: ticketsTask,
             });
-            this.cache.set(cachedID, ticketsTask, this.ttl);
+            this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
           }
         })();
 
@@ -446,7 +446,7 @@ export class DocFlowService {
       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, { userId: user.id || '', object: ticketsTask });
 
       if (this.cache) {
-        this.cache.set<DocFlowTask>(cachedID, ticketsTask, this.ttl);
+        this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
       }
 
       return ticketsTask;
@@ -611,7 +611,7 @@ export class DocFlowService {
                 userId: user.id || '',
                 object: ticketsTarget,
               });
-              this.cache.set(cachedID, ticketsTarget, this.ttl);
+              this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
             }
           } catch (error) {
             this.logger.error('docFlowTargetCache error:', error);
@@ -627,7 +627,7 @@ export class DocFlowService {
       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, { userId: user.id || '', object: ticketsTarget });
 
       if (this.cache) {
-        this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, this.ttl);
+        this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
       }
 
       return ticketsTarget;

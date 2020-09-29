@@ -232,7 +232,7 @@ export class TicketsService {
                 userId: user.id || '',
                 object: ticketsRoutes,
               });
-              this.cache.set(cachedID, ticketsRoutes, this.ttl);
+              this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
             }
           } catch (error) {
             this.logger.error('ticketsRoutesCache error:', error);
@@ -251,7 +251,7 @@ export class TicketsService {
       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, { userId: user.id || '', object: ticketsRoutes });
 
       if (this.cache) {
-        this.cache.set<TkRoutes>(cachedID, ticketsRoutes, this.ttl);
+        this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
       }
 
       return ticketsRoutes;
@@ -454,7 +454,7 @@ export class TicketsService {
    * @param {string} password The Password
    * @param {string} Status The status
    * @param {string} Find The find string
-   * @returns {TkTasks[]}
+   * @returns {TkTasks}
    */
   ticketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
     const cachedID = `tasks:${user.id}`;
@@ -470,7 +470,7 @@ export class TicketsService {
                 userId: user.id || '',
                 object: ticketsTasks,
               });
-              this.cache.set(cachedID, ticketsTasks, this.ttl);
+              this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
             }
           } catch (error) {
             this.logger.error('ticketsTasksCache error:', error);
@@ -489,7 +489,7 @@ export class TicketsService {
       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
-        this.cache.set<TkRoutes>(cachedID, ticketsTasks, this.ttl);
+        this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
       }
 
       return ticketsTasks;
@@ -795,7 +795,7 @@ export class TicketsService {
                 userId: user.id || '',
                 object: ticketsTask,
               });
-              this.cache.set(cachedID, ticketsTask, this.ttl);
+              this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
             }
           } catch (error) {
             this.logger.error('ticketsTaskCache error:', error);
@@ -817,7 +817,7 @@ export class TicketsService {
       });
 
       if (this.cache) {
-        this.cache.set<TkEditTask>(cachedID, ticketsTask, this.ttl);
+        this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
       }
 
       return ticketsTask;

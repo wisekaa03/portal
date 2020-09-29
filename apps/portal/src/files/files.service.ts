@@ -242,7 +242,7 @@ export class FilesService {
             path,
             folderFilesSubscription,
           });
-          this.cache.set(cachedID, folderFilesSubscription, this.ttl);
+          this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, { ttl: this.ttl });
         })();
 
         return cached;
@@ -253,7 +253,7 @@ export class FilesService {
     this.pubSub.publish('folderFilesSubscription', { user: user.loginIdentificator, path, folderFilesSubscription });
 
     if (this.cache) {
-      this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, this.ttl);
+      this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, { ttl: this.ttl });
     }
 
     return folderFilesSubscription;
