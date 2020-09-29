@@ -12,6 +12,10 @@
   },
   "notFound": "Не найден",
   "task": {
-    "title": "Задание № {{task}} от {{date}}"
+    "title": "{{task}}"
+  },
+  "headers": {
+    "description": "Описание",
+    "files": "Прикрепленные файлы"
   }
 }

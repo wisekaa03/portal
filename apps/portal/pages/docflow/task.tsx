@@ -28,9 +28,9 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
     subscribeToMore: subscribeToMoreDocFlowTask,
   } = useQuery<Data<'docFlowTask', DocFlowTask>, { task: DocFlowTaskInput }>(DOCFLOW_TASK, {
     ssr: true,
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
     variables: { task: { id } },
-    // notifyOnNetworkStatusChange: true,
+    notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
@@ -45,6 +45,11 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
       },
     });
   }, [subscribeToMoreDocFlowTask, id]);
+
+  const handleDownload = async (): Promise<void> => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+  };
 
   const refetchDocFlowTask = async (
     variables?: Partial<{
@@ -67,7 +72,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
         <title>{t('docflow:title')}</title>
       </Head>
       <MaterialUI refetchComponent={refetchDocFlowTask} {...rest}>
-        <DocFlowTaskComponent loading={loadingDocFlowTask} task={task} />
+        <DocFlowTaskComponent loading={loadingDocFlowTask} task={task} handleDownload={handleDownload} />
       </MaterialUI>
     </>
   );

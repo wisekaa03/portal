@@ -17,7 +17,7 @@
       "author": "Author",
       "executor": "Executor",
       "service": "Service",
-      "status": "Статус выполнения",
+      "status": "Status",
       "description": "Description",
       "files": "Files",
       "comments": "Comments"

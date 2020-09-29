@@ -35,6 +35,7 @@ export interface DocFlowTasksComponentProps {
 export interface DocFlowTaskComponentProps {
   loading: boolean;
   task?: DocFlowTask;
+  handleDownload: (task: DocFlowTask, file: DocFlowFile) => void;
 }
 
 export interface DocFlowTargetComponentProps {

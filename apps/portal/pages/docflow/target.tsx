@@ -28,7 +28,7 @@ const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest 
     subscribeToMore: subscribeToMoreDocFlowTarget,
   } = useQuery<Data<'docFlowTarget', DocFlowTarget>, { target: DocFlowTargetInput }>(DOCFLOW_TARGET, {
     ssr: true,
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
     variables: { target: { id } },
     // notifyOnNetworkStatusChange: true,
   });
