@@ -162,6 +162,23 @@ export interface DocFlowParentTask {
   presentation: string | null;
   navigationRef: string | null;
   type: string | null;
+  author: DocFlowUser | null;
+  beginDate: Date | null;
+  blockedByTemplate: boolean | null;
+  completed: boolean | null;
+  description: string | null;
+  dueDate: Date | null;
+  dueTimeEnabled: boolean | null;
+  executionComment: string | null;
+  importance: DocFlowImportance | null;
+  leadingTaskEnabled: boolean | null;
+  parentTaskEnabled: boolean | null;
+  performers: DocFlowUser[] | null;
+  started: boolean | null;
+  state: DocFlowState | null;
+  stateEnabled: boolean | null;
+  target: DocFlowInternalDocument | null;
+  targets: DocFlowTarget[] | null;
 }
 
 export interface DocFlowFiles {
@@ -184,6 +201,8 @@ export interface DocFlowTask {
   changeRight: boolean | null;
   description: string | null;
   processStep: string | null;
+  htmlView: string | null;
+  number: string | null;
   author: DocFlowUser | null;
   performer: DocFlowUser | null;
   accepted: boolean | null;

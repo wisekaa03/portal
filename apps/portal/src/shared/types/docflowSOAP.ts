@@ -139,6 +139,25 @@ export interface DocFlowProcessAcquaintanceSOAP {
     presentation?: string;
     type?: string; // 'DMBusinessProcessAcquaintance';
   };
+  author?: DocFlowUserSOAP;
+  beginDate?: Date;
+  blockedByTemplate?: boolean;
+  completed?: boolean;
+  description?: string;
+  dueDate?: Date;
+  dueTimeEnabled?: boolean;
+  executionComment?: string;
+  importance?: DocFlowImportanceSOAP;
+  leadingTaskEnabled?: boolean;
+  parentTaskEnabled?: boolean;
+  performers?: DocFlowUserSOAP[];
+  started?: boolean;
+  state?: DocFlowStateSOAP;
+  stateEnabled?: boolean;
+  target?: DocFlowInternalDocumentSOAP;
+  targets?: {
+    items?: DocFlowTargetsSOAP[];
+  };
 }
 
 export interface DocFlowStatusSOAP {
@@ -179,6 +198,7 @@ export interface DocFlowTaskSOAP {
   executionComment?: string;
   executionMark?: string;
   importance?: DocFlowImportanceSOAP;
+  number?: string;
   objectID?: {
     id?: string;
     navigationRef?: string;
@@ -194,4 +214,5 @@ export interface DocFlowTaskSOAP {
   targets?: {
     items?: DocFlowTargetsSOAP[];
   };
+  htmlView?: string;
 }

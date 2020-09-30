@@ -32,12 +32,14 @@ type DocFlowInternalDocument {
   presentation: String
   beginDate: Date
   regDate: Date
+  regNumber: String
   title: String
+  status: String
   organization: DocFlowOrganization
   subdivision: DocFlowSubdivision
-  files: DocFlowFiles
   author: DocFlowUser
   responsible: DocFlowUser
+  files: DocFlowFiles
 }
 
 type DocFlowRole {
@@ -84,6 +86,23 @@ type DocFlowParentTask {
   id: ID!
   name: String
   presentation: String
+  author: DocFlowUser
+  beginDate: Date
+  blockedByTemplate: Boolean
+  completed: Boolean
+  description: String
+  dueDate: Date
+  dueTimeEnabled: Boolean
+  executionComment: String
+  importance: DocFlowImportance
+  leadingTaskEnabled: Boolean
+  parentTaskEnabled: Boolean
+  performers: [DocFlowUser]
+  started: Boolean
+  state: DocFlowState
+  stateEnabled: Boolean
+  target: DocFlowInternalDocument
+  targets: [DocFlowTarget]
 }
 
 type DocFlowImportance {
@@ -111,6 +130,7 @@ type DocFlowTask {
   accepted: Boolean
   acceptDate: Date
   state: DocFlowState
+  htmlView: String
   target: DocFlowInternalDocument
   targets: [DocFlowTarget!]
 }

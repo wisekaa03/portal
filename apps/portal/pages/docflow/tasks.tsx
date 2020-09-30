@@ -27,20 +27,22 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement =>
     subscribeToMore: subscribeToMoreDocFlowTasks,
   } = useQuery<Data<'docFlowTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
     ssr: true,
-    fetchPolicy: 'cache-and-network',
+    // TODO: какого-то хера не получается сделать query:fragment и fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only',
     // notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
-    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    subscribeToMoreDocFlowTasks({
-      document: DOCFLOW_TASKS_SUB,
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.docFlowTasks || [];
+    if (subscribeToMoreDocFlowTasks) {
+      subscribeToMoreDocFlowTasks({
+        document: DOCFLOW_TASKS_SUB,
+        updateQuery: (prev, { subscriptionData: { data } }) => {
+          const updateData = data?.docFlowTasks || [];
 
-        return { docFlowTasks: updateData };
-      },
-    });
+          return { docFlowTasks: updateData };
+        },
+      });
+    }
   }, [subscribeToMoreDocFlowTasks]);
 
   const refetchDocFlowTasks = async (
