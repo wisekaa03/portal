@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.14.13",
+  "version": "4.14.14",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -203,7 +203,7 @@
     "tmp": "^0.2.1",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typeorm": "^0.2.27",
+    "typeorm": "^0.2",
     "typeorm-graphql-pagination": "^1.0.0",
     "url-loader": "^4.1.0",
     "uuid": "^8.3.0",

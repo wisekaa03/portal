@@ -3871,9 +3871,9 @@
     "@types/webpack" "*"
 
 "@types/webpack-sources@*":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-1.4.2.tgz#5d3d4dea04008a779a90135ff96fb5c0c9e6292c"
-  integrity sha512-77T++JyKow4BQB/m9O96n9d/UUHWLQHlcqXb9Vsf4F1+wKNrrlWNFPDLKNT92RJnCSL6CieTc+NDXtCVZswdTw==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-2.0.0.tgz#08216ab9be2be2e1499beaebc4d469cec81e82a7"
+  integrity sha512-a5kPx98CNFRKQ+wqawroFunvFqv7GHm/3KOI52NY9xWADgc8smu4R6prt4EU/M4QfVjvgBkMqU4fBhw3QfMVkg==
   dependencies:
     "@types/node" "*"
     "@types/source-list-map" "*"
@@ -6179,9 +6179,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001113, caniuse-lite@^1.0.30001135, caniuse-lite@^1.0.30001137:
-  version "1.0.30001138"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001138.tgz#4f4da47266584712f4abca3f0ffe4d22135b4d39"
-  integrity sha512-NKu/48s0YuVowzsAxoVW1ti5dn+Fm8cZf4DGG7BRoNyBEhdKAxDh42yveEovTQBYiQ043gfZuo1PVax5t0qIfg==
+  version "1.0.30001140"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001140.tgz#30dae27599f6ede2603a0962c82e468bca894232"
+  integrity sha512-xFtvBtfGrpjTOxTpjP5F2LmN04/ZGfYV8EQzUIC/RmKpdrmzJrjqlJ4ho7sGuAMPko2/Jl08h7x9uObCfBFaAA==
 
 canvg@^3.0.6:
   version "3.0.6"
@@ -19200,10 +19200,10 @@ typeorm-graphql-pagination@^1.0.0:
     opaqueid "^1.0.0"
     typeorm "^0.2.18"
 
-typeorm@^0.2.18, typeorm@^0.2.27:
-  version "0.2.27"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.27.tgz#6142a243e0259457aca226bf5cde748def73a3ca"
-  integrity sha512-squNxpZNTBSgcAhpQHV5z++vG46cHSpgdxX/44YQLJIeCwl6iLYbZw/lA78cWs5h2RChqMPiO4F58CkhEevm2g==
+typeorm@^0.2, typeorm@^0.2.18:
+  version "0.2.28"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.28.tgz#828df288d01ca75b38e990fa1628a7cd5a29f39f"
+  integrity sha512-BTtUBGwsFzODvHY+AlWL9pvJ2uEj8qpHwmo03z43RvZkG8BAryQJQ3lZ7HlGvI9IQU8y1IYGWe97HsVr8kXB9g==
   dependencies:
     "@sqltools/formatter" "1.2.2"
     app-root-path "^3.0.0"
