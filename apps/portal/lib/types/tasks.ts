@@ -22,7 +22,7 @@ export interface TaskComponentProps {
   loading: boolean;
   loadingTaskFile: boolean;
   loadingComment: boolean;
-  task?: TkTask;
+  task: TkTask | null;
   comment: string;
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
@@ -36,5 +36,5 @@ export interface TaskInfoCardProps {
   classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
   header: string;
   // TODO: !!! STRING THERE !!!
-  profile?: TkUser | string;
+  profile: TkUser | string | null;
 }

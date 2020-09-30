@@ -6,16 +6,16 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import BaseIcon from '@material-ui/core/Icon';
 //#endregion
 //#region Imports Local
-import NoImage from '@images/svg/noimage.svg?inline';
+import NoImage from '@images/svg/noimage.svg';
 //#endregion
 
 const iconWidth = 24;
 
 interface IconProps {
-  src?: string | React.ReactSVGElement;
+  src?: string | null | React.ReactSVGElement;
   base64?: boolean;
   size?: number;
-  material?: boolean;
+  // material?: boolean;
   mask?: string;
   color?: string;
 }

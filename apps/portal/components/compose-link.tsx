@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface UrlProps {
-  to?: string;
+  to?: string | null;
   body?: string;
 }
 
@@ -72,14 +72,7 @@ export const ComposeLink = ({ to, children, body, className, ...rest }: ComposeL
   );
 };
 
-export const ComposeButton = ({
-  to,
-  children,
-  body,
-  rounded,
-  className,
-  ...rest
-}: ComposeButtonProps): React.ReactElement => {
+export const ComposeButton = ({ to, children, body, rounded, className, ...rest }: ComposeButtonProps): React.ReactElement => {
   const classes = useStyles({});
 
   const handleClick = (): void => {

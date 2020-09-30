@@ -203,7 +203,9 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
   }, [dataRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
-    setCreated((!loadingCreated && !errorCreated && dataCreated?.ticketsTaskNew) || {});
+    if (!loadingCreated && !errorCreated) {
+      setCreated(dataCreated?.ticketsTaskNew || {});
+    }
   }, [dataCreated, errorCreated, loadingCreated]);
 
   // useEffect(() => {

@@ -12,13 +12,13 @@ export interface ServicesTaskProps {
 }
 
 export interface ServicesCreatedProps {
-  code?: string;
-  subject?: string;
-  organization?: string;
-  status?: string;
-  createdDate?: Date;
-  route?: string;
-  service?: string;
+  code?: string | null;
+  subject?: string | null;
+  organization?: string | null;
+  status?: string | null;
+  createdDate?: Date | null;
+  route?: string | null;
+  service?: string | null;
 }
 
 export interface TicketsWrapperProps {

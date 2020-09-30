@@ -26,18 +26,25 @@ const mockRoutes: TkRoute[] = [
     code: '1',
     name: 'Сервис 1',
     avatar: TicketsIcon,
+    description: null,
     services: [
       {
         id: `${TkWhere.Default}.4`,
         where: TkWhere.Default,
         code: '4',
         name: 'Не работает',
+        description: null,
+        avatar: null,
+        route: null,
       },
       {
         id: `${TkWhere.Default}.5`,
         where: TkWhere.Default,
         code: '5',
         name: 'Заказать услугу',
+        description: null,
+        avatar: null,
+        route: null,
       },
     ],
   },
@@ -47,6 +54,7 @@ const mockRoutes: TkRoute[] = [
     code: '2',
     name: 'Сервис 2',
     avatar: TicketsIcon,
+    description: null,
     services: [],
   },
   {
@@ -55,6 +63,7 @@ const mockRoutes: TkRoute[] = [
     code: '3',
     name: 'Сервис 3',
     avatar: TicketsIcon,
+    description: null,
     services: [],
   },
 ];
@@ -67,16 +76,64 @@ const mockFavorites: UserSettingsTaskFavorite[] = [
 
 const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
   {
-    route: { id: `${TkWhere.SOAP1C}.1`, code: '1', where: TkWhere.SOAP1C, name: 'Route Name 00001' },
-    service: { id: `${TkWhere.SOAP1C}.000001`, where: TkWhere.SOAP1C, code: '0000001', name: 'Service Name 00001' },
+    route: {
+      id: `${TkWhere.SOAP1C}.1`,
+      code: '1',
+      where: TkWhere.SOAP1C,
+      name: 'Route Name 00001',
+      description: null,
+      avatar: null,
+      services: null,
+    },
+    service: {
+      id: `${TkWhere.SOAP1C}.000001`,
+      where: TkWhere.SOAP1C,
+      code: '0000001',
+      name: 'Service Name 00001',
+      description: null,
+      avatar: null,
+      route: null,
+    },
   },
   {
-    route: { id: `${TkWhere.SOAP1C}.2`, code: '2', where: TkWhere.SOAP1C, name: 'Route Name 00002' },
-    service: { id: `${TkWhere.SOAP1C}.0000002`, where: TkWhere.SOAP1C, code: '0000002', name: 'Service Name 00002' },
+    route: {
+      id: `${TkWhere.SOAP1C}.2`,
+      code: '2',
+      where: TkWhere.SOAP1C,
+      name: 'Route Name 00002',
+      description: null,
+      avatar: null,
+      services: null,
+    },
+    service: {
+      id: `${TkWhere.SOAP1C}.0000002`,
+      where: TkWhere.SOAP1C,
+      code: '0000002',
+      name: 'Service Name 00002',
+      description: null,
+      avatar: null,
+      route: null,
+    },
   },
   {
-    route: { id: `${TkWhere.SOAP1C}.3`, code: '3', where: TkWhere.SOAP1C, name: 'Route Name 00003' },
-    service: { id: `${TkWhere.SOAP1C}.0000003`, where: TkWhere.SOAP1C, code: '0000003', name: 'Service Name 00003' },
+    route: {
+      id: `${TkWhere.SOAP1C}.3`,
+      code: '3',
+      where: TkWhere.SOAP1C,
+      name: 'Route Name 00003',
+      description: null,
+      avatar: null,
+      services: null,
+    },
+    service: {
+      id: `${TkWhere.SOAP1C}.0000003`,
+      where: TkWhere.SOAP1C,
+      code: '0000003',
+      name: 'Service Name 00003',
+      description: null,
+      avatar: null,
+      route: null,
+    },
   },
 ];
 

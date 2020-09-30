@@ -14,7 +14,7 @@ import Woman from '@public/images/svg/avatar/woman-blue.svg';
 export interface AvatarProps {
   profile?: Profile | ProfileInput;
   alt: string;
-  base64?: string;
+  base64?: string | null;
   fullSize?: boolean;
   className?: string;
 }

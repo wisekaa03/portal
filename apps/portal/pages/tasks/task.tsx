@@ -133,6 +133,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
         where: where || TkWhere.Default,
         code: code || '0',
         comment,
+        attachments: null,
         // attachments: files.map((file: DropzoneFile) => file.file),
       },
     };
@@ -171,7 +172,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
     }
   }, [errorEdit, errorTicketsTask, errorTaskFile, errorCommentFile]);
 
-  const task = dataTicketsTask?.ticketsTask;
+  const task = dataTicketsTask?.ticketsTask?.task ?? null;
 
   return (
     <>
@@ -180,8 +181,8 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
           {`${t('tasks:title')}: ${
             task
               ? t('tasks:task.header', {
-                  ticket: task.task?.code,
-                  date: dateFormat(task.task?.createdDate, i18n),
+                  ticket: task.code,
+                  date: dateFormat(task.createdDate, i18n),
                 })
               : ''
           }`}
@@ -192,7 +193,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
           loading={loadingTicketsTask}
           loadingTaskFile={loadingTaskFile}
           loadingComment={loadingComment}
-          task={task?.task}
+          task={task}
           comment={comment}
           files={files}
           setFiles={setFiles}

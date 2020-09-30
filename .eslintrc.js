@@ -142,6 +142,7 @@ module.exports = {
         varsIgnorePattern: '^(_|[A-Z]+)',
       },
     ],
+    'react/require-default-props': 0,
     'react/jsx-curly-newline': 0,
     'no-use-before-define': 0,
     'jsx-a11y/anchor-is-valid': 0,
