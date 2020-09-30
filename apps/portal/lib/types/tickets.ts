@@ -15,9 +15,9 @@ export interface TkService {
   where: TkWhere;
   code: string;
   name: string;
-  description?: string;
-  route?: string;
-  avatar?: string;
+  description: string | null;
+  route: string | null;
+  avatar: string | null;
 }
 
 export interface TkRoute {
@@ -25,14 +25,14 @@ export interface TkRoute {
   where: TkWhere;
   code: string;
   name: string;
-  description?: string;
-  avatar?: string;
-  services?: TkService[];
+  description: string | null;
+  avatar: string | null;
+  services: TkService[] | null;
 }
 
 export interface TkRoutes {
-  routes?: TkRoute[];
-  errors?: string[];
+  routes: TkRoute[] | null;
+  errors: string[] | null;
 }
 
 export interface TkRoutesInput {
@@ -52,20 +52,20 @@ export interface TkFile {
   id: string;
   where: TkWhere;
   code: string;
-  name?: string;
-  mime?: string;
-  body?: string;
+  name: string | null;
+  mime: string | null;
+  body: string | null;
 }
 
 export interface TkComment {
   id: string;
   where: TkWhere;
   code: string;
-  date?: Date;
-  authorLogin?: string;
-  body?: string;
-  parentCode?: string;
-  files?: TkFile[];
+  date: Date | null;
+  authorLogin: string | null;
+  body: string | null;
+  parentCode: string | null;
+  files: TkFile[] | null;
 }
 
 export interface TkTask {
@@ -73,20 +73,20 @@ export interface TkTask {
   where: TkWhere;
   code: string;
   subject: string;
-  smallBody?: string;
-  body?: string;
+  smallBody: string | null;
+  body: string | null;
   status: string;
-  route?: TkRoute;
-  service?: TkService;
-  createdDate?: Date;
-  timeoutDate?: Date;
-  endDate?: Date;
-  executorUser?: string;
-  initiatorUser?: string;
-  availableAction?: string;
-  availableStages?: string;
-  files?: TkFile[];
-  comments?: TkComment[];
+  route: TkRoute | null;
+  service: TkService | null;
+  createdDate: Date | null;
+  timeoutDate: Date | null;
+  endDate: Date | null;
+  executorUser: string | null;
+  initiatorUser: string | null;
+  availableAction: string | null;
+  availableStages: string | null;
+  files: TkFile[] | null;
+  comments: TkComment[] | null;
 }
 
 export interface TkUser {
@@ -94,28 +94,28 @@ export interface TkUser {
   where: TkWhere;
   code: string;
   name: string;
-  login?: string;
-  avatar?: string;
-  email?: string;
-  telephone?: string;
-  company?: string;
-  department?: string;
-  division?: string;
-  manager?: string;
-  title?: string;
+  login: string | null;
+  avatar: string | null;
+  email: string | null;
+  telephone: string | null;
+  company: string | null;
+  department: string | null;
+  division: string | null;
+  manager: string | null;
+  title: string | null;
 }
 
 export interface TkTasks {
-  users?: TkUser[];
-  tasks?: TkTask[];
-  errors?: string[];
+  users: TkUser[] | null;
+  tasks: TkTask[] | null;
+  errors: string[] | null;
 }
 
 export interface TkTaskEditInput extends GraphQLMutationInput {
   where: TkWhere;
   code: string;
   comment: string;
-  attachments?: Promise<FileUpload>[];
+  attachments: Promise<FileUpload>[] | null;
 }
 
 export interface TkTaskInput extends GraphQLQueryInput {
@@ -140,23 +140,23 @@ export interface TkTaskNewInput extends GraphQLMutationInput {
   body: string;
   route: string;
   service: string;
-  executorUser?: string;
-  attachments?: Promise<FileUpload>[];
+  executorUser: string | null;
+  attachments: Promise<FileUpload>[] | null;
 }
 
 export interface TkTaskNew {
   where: TkWhere;
   code: string;
   subject: string;
-  route?: string;
+  route: string | null;
   service: string;
-  organization?: string;
-  status?: string;
+  organization: string | null;
+  status: string | null;
   createdDate: Date;
 }
 
 export interface TkEditTask {
-  users?: TkUser[];
-  task?: TkTask;
-  errors?: string[];
+  users: TkUser[] | null;
+  task: TkTask | null;
+  errors: string[] | null;
 }

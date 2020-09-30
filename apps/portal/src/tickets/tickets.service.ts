@@ -10,6 +10,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
   UnsupportedMediaTypeException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import deepEqual from 'deep-equal';
 import { FileUpload } from 'graphql-upload';
@@ -21,7 +22,10 @@ import * as redisStore from 'cache-manager-redis-store';
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
 import type {
+  TkUser,
+  TkRoute,
   TkRoutes,
+  TkTask,
   TkTasks,
   TkEditTask,
   TkTaskNewInput,
@@ -111,7 +115,7 @@ export class TicketsService {
         .catch((error: Error) => {
           this.logger.error(error);
 
-          promises.push(Promise.resolve({ errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
+          promises.push(Promise.resolve({ routes: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
 
       if (client) {
@@ -175,10 +179,10 @@ export class TicketsService {
                   }
                 }
 
-                return { errors: [PortalError.OST_EMPTY_RESULT] };
+                return { routes: null, errors: [PortalError.OST_EMPTY_RESULT] };
               }
 
-              return { errors: [PortalError.OST_EMPTY_RESULT] };
+              return { routes: null, errors: [PortalError.OST_EMPTY_RESULT] };
             });
 
           promises.push(osTicket);
@@ -189,23 +193,32 @@ export class TicketsService {
     }
 
     return Promise.allSettled(promises)
-      .then((values) => values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] })))
+      .then((values) =>
+        values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { routes: null, errors: [promise.reason?.message] })),
+      )
       .then((routes: TkRoutes[]) =>
         routes.reduce(
           (accumulator: TkRoutes, current: TkRoutes) => {
+            let r: TkRoute[] | null = accumulator.routes;
+            let e: string[] | null = accumulator.errors;
+
             if (Array.isArray(current.routes) && current.routes.length > 0) {
-              accumulator.routes = accumulator.routes?.concat(current.routes).sort((a, b) => a.name.localeCompare(b.name));
+              r = r ? r.concat(current.routes).sort((a, b) => a.name.localeCompare(b.name)) : current.routes;
             }
             if (Array.isArray(current.errors) && current.errors.length > 0) {
-              accumulator.errors = accumulator.errors?.concat(current.errors);
+              e = e ? e.concat(current.errors) : current.errors;
             }
-            return accumulator;
+
+            return {
+              routes: r,
+              errors: e,
+            };
           },
-          { routes: [], errors: [] },
+          { routes: null, errors: null },
         ),
       )
       .catch((error) => {
-        throw new InternalServerErrorException(error);
+        throw new InternalServerErrorException(__DEV__ ? error : undefined);
       });
   };
 
@@ -227,19 +240,18 @@ export class TicketsService {
           try {
             const ticketsRoutes = await this.ticketsRoutes(user, password, input);
 
-            if (!deepEqual(ticketsRoutes, cached)) {
+            if (!deepEqual(ticketsRoutes, cached, { strict: true })) {
               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, {
                 userId: user.id || '',
                 object: ticketsRoutes,
               });
               this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
+            } else {
+              setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
             this.logger.error('ticketsRoutesCache error:', error);
           }
-
-          // TODO: продумать сервис для обновления данных по пользователям
-          // setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -290,7 +302,7 @@ export class TicketsService {
         .catch((error) => {
           this.logger.error(error);
 
-          promises.push(Promise.resolve({ errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
+          promises.push(Promise.resolve({ users: null, tasks: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
 
       if (client) {
@@ -385,10 +397,10 @@ export class TicketsService {
                   } as TkTasks;
                 }
 
-                return { errors: [PortalError.OST_EMPTY_RESULT] };
+                return { users: null, tasks: null, errors: [PortalError.OST_EMPTY_RESULT] };
               }
 
-              return { errors: [PortalError.OST_EMPTY_RESULT] };
+              return { users: null, tasks: null, errors: [PortalError.OST_EMPTY_RESULT] };
             });
           promises.push(osTicket);
         });
@@ -400,24 +412,33 @@ export class TicketsService {
     return Promise.allSettled(promises)
       .then((values: PromiseSettledResult<TkTasks>[]) =>
         values.map((promise: PromiseSettledResult<TkTasks>) =>
-          promise.status === 'fulfilled' ? promise.value : { errors: [promise.reason?.message] },
+          promise.status === 'fulfilled' ? promise.value : { users: null, tasks: null, errors: [promise.reason?.message] },
         ),
       )
       .then((routes: TkTasks[]) =>
         routes.reduce(
           (accumulator: TkTasks, current: TkTasks) => {
+            let t: TkTask[] | null = accumulator.tasks;
+            let u: TkUser[] | null = accumulator.users;
+            let e: string[] | null = accumulator.errors;
+
             if (Array.isArray(current.tasks) && current.tasks.length > 0) {
-              accumulator.tasks = accumulator.tasks?.concat(current.tasks);
+              t = t ? t.concat(current.tasks) : current.tasks;
             }
             if (Array.isArray(current.users) && current.users.length > 0) {
-              accumulator.users = accumulator.users?.concat(current.users);
+              u = u ? u.concat(current.users) : current.users;
             }
             if (Array.isArray(current.errors) && current.errors.length > 0) {
-              accumulator.errors = accumulator.errors?.concat(current.errors);
+              e = e ? e.concat(current.errors) : current.errors;
             }
-            return accumulator;
+
+            return {
+              tasks: t,
+              users: u,
+              errors: e,
+            };
           },
-          { tasks: [], users: [], errors: [] } as TkTasks,
+          { tasks: null, users: null, errors: null },
         ),
       )
       .then(
@@ -465,19 +486,18 @@ export class TicketsService {
           try {
             const ticketsTasks = await this.ticketsTasks(user, password, tasks);
 
-            if (!deepEqual(ticketsTasks, cached)) {
+            if (!deepEqual(ticketsTasks, cached, { strict: true })) {
               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, {
                 userId: user.id || '',
                 object: ticketsTasks,
               });
               this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
+            } else {
+              setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
             this.logger.error('ticketsTasksCache error:', error);
           }
-
-          // TODO: продумать сервис для обновления данных по пользователям
-          // setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -738,13 +758,14 @@ export class TicketsService {
                 if (response.status === 200) {
                   if (typeof response.data === 'object') {
                     if (typeof response.data.error === 'string') {
-                      throw new TypeError(response.data.error);
+                      throw new UnprocessableEntityException(__DEV__ ? response.data.error : undefined);
                     } else {
                       const [users, taskDescription] = descriptionOST(response.data?.description, task.where);
                       if (users && taskDescription) {
                         return {
                           users,
                           task: taskDescription,
+                          errors: null,
                         };
                       }
                     }
@@ -790,19 +811,18 @@ export class TicketsService {
           try {
             const ticketsTask = await this.ticketsTask(user, password, task);
 
-            if (!deepEqual(ticketsTask, cached)) {
+            if (!deepEqual(ticketsTask, cached, { strict: true })) {
               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
                 userId: user.id || '',
                 object: ticketsTask,
               });
               this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
+            } else {
+              setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
             this.logger.error('ticketsTaskCache error:', error);
           }
-
-          // TODO: продумать сервис для обновления данных по пользователям
-          // setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -1001,12 +1021,14 @@ export class TicketsService {
                 if (response.status === 200) {
                   if (typeof response.data === 'object') {
                     if (typeof response.data.error === 'string') {
-                      throw new TypeError(response.data.error);
+                      throw new UnprocessableEntityException(__DEV__ ? response.data.error : undefined);
                     } else {
                       return {
                         ...file,
                         id: `${whereService(file.where)}:${file.code}`,
                         body: (response.data.file as unknown) as string,
+                        name: null,
+                        mime: null,
                       };
                     }
                   }
@@ -1124,6 +1146,8 @@ export class TicketsService {
                         ...comment,
                         id: `${whereService(comment.where)}:${comment.code}`,
                         body: (response.data.file as unknown) as string,
+                        name: null,
+                        mime: null,
                       };
                     }
                   }

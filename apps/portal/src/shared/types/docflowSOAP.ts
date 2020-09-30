@@ -126,6 +126,7 @@ export interface DocFlowImportanceSOAP {
   objectID: {
     id?: string;
     presentation?: string;
+    navigationRef?: string;
     type?: string; // 'DMBusinessProcessTaskImportance';
   };
 }

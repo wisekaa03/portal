@@ -143,7 +143,7 @@ export class DocFlowService {
   docFlowTaskWithFiles = async (soap: SoapClient, task: DocFlowTask): Promise<DocFlowTask> => {
     const promiseTargets = task.targets?.map((target) => this.docFlowTargetWithFiles(soap, target));
 
-    const targets = promiseTargets && (await Promise.all(promiseTargets));
+    const targets = promiseTargets ? await Promise.all(promiseTargets) : null;
 
     return {
       ...task,
@@ -293,19 +293,18 @@ export class DocFlowService {
           try {
             const ticketsTasks = await this.docFlowTasks(user, password, tasks);
 
-            if (!deepEqual(ticketsTasks, cached)) {
+            if (!deepEqual(ticketsTasks, cached, { strict: true })) {
               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASKS, {
                 userId: user.id || '',
                 object: ticketsTasks,
               });
               this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
+            } else {
+              setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
             this.logger.error('docFlowTasksCache error:', error);
           }
-
-          // TODO: продумать сервис для обновления данных по пользователям
-          // setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
         })();
 
         return cached;
@@ -426,14 +425,20 @@ export class DocFlowService {
       const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
-          const ticketsTask = await this.docFlowTask(user, password, task);
+          try {
+            const ticketsTask = await this.docFlowTask(user, password, task);
 
-          if (!deepEqual(ticketsTask, cached)) {
-            this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, {
-              userId: user.id || '',
-              object: ticketsTask,
-            });
-            this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
+            if (!deepEqual(ticketsTask, cached, { strict: true })) {
+              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, {
+                userId: user.id || '',
+                object: ticketsTask,
+              });
+              this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
+            } else {
+              setTimeout(() => this.docFlowTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
+            }
+          } catch (error) {
+            this.logger.error('docFlowTaskCache error:', error);
           }
         })();
 
@@ -606,12 +611,14 @@ export class DocFlowService {
           try {
             const ticketsTarget = await this.docFlowTarget(user, password, target);
 
-            if (!deepEqual(ticketsTarget, cached)) {
+            if (!deepEqual(ticketsTarget, cached, { strict: true })) {
               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, {
                 userId: user.id || '',
                 object: ticketsTarget,
               });
               this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
+            } else {
+              setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
             this.logger.error('docFlowTargetCache error:', error);

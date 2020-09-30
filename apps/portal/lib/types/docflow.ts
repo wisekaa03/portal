@@ -45,77 +45,77 @@ export interface DocFlowTargetComponentProps {
 
 export interface DocFlowLegalPrivatePerson {
   id: string;
-  name?: string;
-  presentation?: string;
-  type?: string;
-  navigationRef?: string;
+  name: string | null;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
 }
 
 export interface DocFlowOrganization {
   id: string;
-  name?: string;
-  presentation?: string;
-  navigationRef?: string;
-  type?: string;
-  fullName?: string;
-  inn?: string;
-  kpp?: string;
-  VATpayer?: boolean;
-  legalPrivatePerson?: DocFlowLegalPrivatePerson;
+  name: string | null;
+  presentation: string | null;
+  navigationRef: string | null;
+  type: string | null;
+  fullName: string | null;
+  inn: string | null;
+  kpp: string | null;
+  VATpayer: boolean | null;
+  legalPrivatePerson: DocFlowLegalPrivatePerson | null;
 }
 
 export interface DocFlowUser {
   id: string;
   name: string;
-  presentation?: string;
-  type?: string;
-  navigationRef?: string;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
 }
 
 export interface DocFlowStatus {
   id: string;
-  name?: string;
-  presentation?: string;
-  type?: string;
-  navigationRef?: string;
+  name: string | null;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
 }
 
 export interface DocFlowState {
   id: string;
-  name?: string;
-  presentation?: string;
-  type?: string;
-  navigationRef?: string;
+  name: string | null;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
 }
 
 export interface DocFlowInternalDocument {
   id: string;
-  name?: string;
-  presentation?: string;
-  type?: string;
-  navigationRef?: string;
-  organization?: DocFlowOrganization;
-  author?: DocFlowUser;
-  regDate?: Date;
-  responsible?: DocFlowUser;
-  regNumber?: string;
-  status?: DocFlowStatus;
-  files?: DocFlowFiles;
+  name: string | null;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
+  organization: DocFlowOrganization | null;
+  author: DocFlowUser | null;
+  regDate: Date | null;
+  responsible: DocFlowUser | null;
+  regNumber: string | null;
+  status: DocFlowStatus | null;
+  files: DocFlowFiles | null;
 }
 
 export interface DocFlowRole {
-  name?: string;
+  name: string | null;
   id: string;
-  presentation?: string;
-  type?: string; // DMBusinessProcessTargetRole
-  navigationRef?: string;
+  presentation: string | null;
+  type: string | null; // DMBusinessProcessTargetRole
+  navigationRef: string | null;
 }
 
 export interface DocFlowTarget {
   name: string;
   role: DocFlowRole;
   target: DocFlowInternalDocument;
-  allowDeletion?: boolean;
+  allowDeletion: boolean | null;
 }
 
 export interface DocFlowInternalFile {
@@ -123,71 +123,75 @@ export interface DocFlowInternalFile {
 }
 
 export interface DocFlowFileVersion {
-  id?: string;
-  name?: string;
-  presentation?: string;
-  navigationRef?: string;
-  type?: string;
+  id: string | null;
+  name: string | null;
+  presentation: string | null;
+  navigationRef: string | null;
+  type: string | null;
 }
 
 export interface DocFlowFile {
   id: string;
-  name?: string;
-  author?: DocFlowUser;
-  encrypted?: boolean;
-  signed?: boolean;
-  description?: string;
-  editing?: boolean;
-  editingUser?: DocFlowUser;
-  activeVersion?: DocFlowFileVersion;
-  binaryData?: string;
-  extension?: string;
-  creationDate?: Date;
-  modificationDateUniversal?: Date;
-  size?: number;
-  type?: string;
+  name: string | null;
+  author: DocFlowUser | null;
+  encrypted: boolean | null;
+  signed: boolean | null;
+  description: string | null;
+  editing: boolean | null;
+  editingUser: DocFlowUser | null;
+  activeVersion: DocFlowFileVersion | null;
+  binaryData: string | null;
+  extension: string | null;
+  creationDate: Date | null;
+  modificationDateUniversal: Date | null;
+  size: number | null;
+  type: string | null;
 }
 
 export interface DocFlowImportance {
   id: string;
-  name?: string;
-  presentation?: string;
+  name: string | null;
+  presentation: string | null;
+  navigationRef: string | null;
+  type: string | null;
 }
 
 export interface DocFlowParentTask {
   id: string;
-  name?: string;
-  presentation?: string;
+  name: string | null;
+  presentation: string | null;
+  navigationRef: string | null;
+  type: string | null;
 }
 
 export interface DocFlowFiles {
-  object?: DocFlowFile[];
-  error?: string[];
+  object: DocFlowFile[] | null;
+  error: string[] | null;
 }
 
 export interface DocFlowTask {
   id: string;
-  name?: string;
-  presentation?: string;
-  importance?: DocFlowImportance;
-  executor?: DocFlowUser;
-  executed?: boolean;
-  executionMark?: string;
-  executionComment?: string;
-  beginDate?: Date;
-  dueDate?: Date;
-  endDate?: Date;
-  changeRight?: boolean;
-  description?: string;
-  processStep?: string;
-  author?: DocFlowUser;
-  performer?: DocFlowUser;
-  accepted?: boolean;
-  acceptDate?: Date;
-  state?: DocFlowState;
-  parentTask?: DocFlowParentTask;
-  target?: DocFlowInternalDocument;
-  targets?: DocFlowTarget[];
+  name: string | null;
+  presentation: string | null;
+  importance: DocFlowImportance | null;
+  executor: DocFlowUser | null;
+  executed: boolean | null;
+  executionMark: string | null;
+  executionComment: string | null;
+  beginDate: Date | null;
+  dueDate: Date | null;
+  endDate: Date | null;
+  changeRight: boolean | null;
+  description: string | null;
+  processStep: string | null;
+  author: DocFlowUser | null;
+  performer: DocFlowUser | null;
+  accepted: boolean | null;
+  acceptDate: Date | null;
+  state: DocFlowState | null;
+  parentTask: DocFlowParentTask | null;
+  target: DocFlowInternalDocument | null;
+  targets: DocFlowTarget[] | null;
 }
 
 /* DocFlow input fields */
