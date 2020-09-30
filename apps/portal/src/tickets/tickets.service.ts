@@ -113,7 +113,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error: Error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsRoutes: ${error.toString()}`);
 
           promises.push(Promise.resolve({ routes: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
@@ -136,10 +136,9 @@ export class TicketsService {
               throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             })
             .catch((error: Error) => {
-              if (error instanceof Error) {
-                this.logger.info(`TicketsRoutes: [Response] ${client.lastResponse}`);
-              }
-              this.logger.error(error);
+              this.logger.info(`ticketsRoutes: [Response] ${client.lastResponse}`);
+              this.logger.error(`ticketsRoutes: ${error.toString()}`);
+
               return { errors: [PortalError.SOAP_NOT_AUTHORIZED] };
             }),
         );
@@ -188,7 +187,7 @@ export class TicketsService {
           promises.push(osTicket);
         });
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error(`ticketsRoutes: ${error.toString()}`);
       }
     }
 
@@ -232,6 +231,7 @@ export class TicketsService {
    * @returns {TkRoutes} Services
    */
   ticketsRoutesCache = async (user: User, password: string, input?: TkRoutesInput): Promise<TkRoutes> => {
+    const userId = user.id || '';
     const cachedID = 'routes'; // -${user.id}
     if (this.cache && (!input || input.cache !== false)) {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
@@ -240,17 +240,15 @@ export class TicketsService {
           try {
             const ticketsRoutes = await this.ticketsRoutes(user, password, input);
 
-            if (!deepEqual(ticketsRoutes, cached, { strict: true })) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, {
-                userId: user.id || '',
+            if (JSON.stringify(ticketsRoutes) !== JSON.stringify(cached)) {
+              this.pubSub.publish<SubscriptionPayload<TkRoutes>>(PortalPubSub.TICKETS_ROUTES, {
+                userId,
                 object: ticketsRoutes,
               });
               this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
-            } else {
-              setTimeout(() => this.ticketsRoutesCache(user, password, input), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('ticketsRoutesCache error:', error);
+            this.logger.error(`ticketsRoutesCache: ${error.toString()}`);
           }
         })();
 
@@ -260,7 +258,6 @@ export class TicketsService {
 
     try {
       const ticketsRoutes = await this.ticketsRoutes(user, password, input);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_ROUTES, { userId: user.id || '', object: ticketsRoutes });
 
       if (this.cache) {
         this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
@@ -268,9 +265,9 @@ export class TicketsService {
 
       return ticketsRoutes;
     } catch (error) {
-      this.logger.error('ticketsRoutesCache error:', error);
+      this.logger.error(`ticketsRoutesCache: ${error.toString()}`);
 
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
   };
 
@@ -300,7 +297,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsTasks: ${error.toString()}`);
 
           promises.push(Promise.resolve({ users: null, tasks: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
@@ -339,9 +336,9 @@ export class TicketsService {
               };
             })
             .catch((error: SoapFault) => {
-              this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
-              this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
-              this.logger.error(error);
+              this.logger.info(`ticketsTasks: [Request] ${client.lastRequest}`);
+              this.logger.info(`ticketsTasks: [Response] ${client.lastResponse}`);
+              this.logger.error(`ticketsTasks: ${error.toString()}`);
 
               return { errors: [PortalError.SOAP_NOT_AUTHORIZED] };
             }),
@@ -478,7 +475,8 @@ export class TicketsService {
    * @returns {TkTasks}
    */
   ticketsTasksCache = async (user: User, password: string, tasks?: TkTasksInput): Promise<TkTasks> => {
-    const cachedID = `tasks:${user.id}`;
+    const userId = user.id || '';
+    const cachedID = `tasks:${userId}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null) {
@@ -486,9 +484,9 @@ export class TicketsService {
           try {
             const ticketsTasks = await this.ticketsTasks(user, password, tasks);
 
-            if (!deepEqual(ticketsTasks, cached, { strict: true })) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, {
-                userId: user.id || '',
+            if (JSON.stringify(ticketsTasks) !== JSON.stringify(cached)) {
+              this.pubSub.publish<SubscriptionPayload<TkTasks>>(PortalPubSub.TICKETS_TASKS, {
+                userId,
                 object: ticketsTasks,
               });
               this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
@@ -496,7 +494,7 @@ export class TicketsService {
               setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('ticketsTasksCache error:', error);
+            this.logger.error(`ticketsTasksCache: ${error.toString()}`);
           }
         })();
 
@@ -506,7 +504,6 @@ export class TicketsService {
 
     try {
       const ticketsTasks = await this.ticketsTasks(user, password, tasks);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASKS, { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
         this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
@@ -514,9 +511,9 @@ export class TicketsService {
 
       return ticketsTasks;
     } catch (error) {
-      this.logger.error('ticketsTasksCache error:', error);
+      this.logger.error(`ticketsTasksCache: ${error.toString()}`);
 
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
   };
 
@@ -538,7 +535,7 @@ export class TicketsService {
       await constructUploads(attachments, ({ filename, file }) =>
         Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: Error) => {
-        this.logger.error(error);
+        this.logger.error(`ticketsTaskNew: ${error.toString()}`);
 
         throw error;
       });
@@ -555,7 +552,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsTaskNew: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -595,7 +592,7 @@ export class TicketsService {
         .catch((error: Error) => {
           this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
-          this.logger.error(error);
+          this.logger.error(`TicketsTaskNew: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -688,7 +685,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsTask: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -721,7 +718,7 @@ export class TicketsService {
         .catch((error: SoapFault) => {
           this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`);
           this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`);
-          this.logger.error(error);
+          this.logger.error(`TicketsTask: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -803,17 +800,18 @@ export class TicketsService {
    * @returns {TkTasks}
    */
   ticketsTaskCache = async (user: User, password: string, task: TkTaskInput): Promise<TkEditTask> => {
+    const userId = user.id || '';
     const cachedID = `task:${task.where}:${task.code}`;
     if (this.cache && (!task || task.cache !== false)) {
-      const cached: TkEditTask = await this.cache.get<TkTasks>(cachedID);
+      const cached: TkEditTask = await this.cache.get<TkEditTask>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
             const ticketsTask = await this.ticketsTask(user, password, task);
 
-            if (!deepEqual(ticketsTask, cached, { strict: true })) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
-                userId: user.id || '',
+            if (JSON.stringify(ticketsTask) !== JSON.stringify(cached)) {
+              this.pubSub.publish<SubscriptionPayload<TkEditTask>>(PortalPubSub.TICKETS_TASK, {
+                userId,
                 object: ticketsTask,
               });
               this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
@@ -821,7 +819,7 @@ export class TicketsService {
               setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('ticketsTaskCache error:', error);
+            this.logger.error('ticketsTaskCache', error);
           }
         })();
 
@@ -831,10 +829,6 @@ export class TicketsService {
 
     try {
       const ticketsTask = await this.ticketsTask(user, password, task);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.TICKETS_TASK, {
-        userId: user.id || '',
-        object: ticketsTask,
-      });
 
       if (this.cache) {
         this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
@@ -842,9 +836,9 @@ export class TicketsService {
 
       return ticketsTask;
     } catch (error) {
-      this.logger.error('ticketsTaskCache error:', error);
+      this.logger.error(`ticketsTaskCache: ${error.toString()}`);
 
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
   };
 
@@ -885,9 +879,9 @@ export class TicketsService {
         await constructUploads(attachments, ({ filename, file }) =>
           Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
         ).catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsTaskEdit: ${error.toString()}`);
 
-          throw new UnsupportedMediaTypeException(error);
+          throw new UnsupportedMediaTypeException(__DEV__ ? error : undefined);
         });
       }
 
@@ -917,7 +911,7 @@ export class TicketsService {
         .catch((error: SoapFault) => {
           this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
           this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
-          this.logger.error(error);
+          this.logger.error(`TicketsTaskEdit: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -953,7 +947,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsTaskFile: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -984,7 +978,7 @@ export class TicketsService {
         .catch((error: SoapFault) => {
           this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
-          this.logger.error(error);
+          this.logger.error(`TicketsTaskFile: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -1105,7 +1099,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
           this.logger.error(error);
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
     }
 
@@ -1159,9 +1153,9 @@ export class TicketsService {
               });
           }
         } catch (error) {
-          this.logger.error(error);
+          this.logger.error(`ticketsComment: ${error.toString()}`);
 
-          throw error;
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         }
       }
 

@@ -43,6 +43,9 @@ import * as request from 'supertest';
 import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow.utils';
 //#endregion
 
+// создается микросервис, который будет обновлять данные кэша из документооборота
+// пока так... но дальше...
+
 /**
  * Tickets class
  * @class
@@ -116,14 +119,14 @@ export class DocFlowService {
           };
         }
 
-        return { error: PortalError.SOAP_EMPTY_RESULT };
+        return { error: [PortalError.SOAP_EMPTY_RESULT] };
       })
       .catch((error: Error) => {
         this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`);
         this.logger.info(`docFlowFiles: [Response] ${soap.lastResponse}`);
-        this.logger.error(error);
+        this.logger.error(`docFlowFiles: ${error.toString()}`);
 
-        return { error: __DEV__ ? error : PortalError.SOAP_EMPTY_RESULT };
+        return { error: [__DEV__ ? error : PortalError.SOAP_EMPTY_RESULT] };
       });
   };
 
@@ -183,7 +186,7 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(error);
+          this.logger.error(`docFlowTasks: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -262,9 +265,9 @@ export class DocFlowService {
           .catch((error: Error) => {
             this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`);
-            this.logger.error(error);
+            this.logger.error(`docFlowTasks: ${error.toString()}`);
 
-            throw new UnprocessableEntityException();
+            throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
 
         return tasksGraphql;
@@ -285,7 +288,8 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   docFlowTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
-    const cachedID = `tasks:${user.id}`;
+    const userId = user.id || '';
+    const cachedID = `tasks:${userId}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
       if (cached && cached !== null) {
@@ -293,17 +297,15 @@ export class DocFlowService {
           try {
             const ticketsTasks = await this.docFlowTasks(user, password, tasks);
 
-            if (!deepEqual(ticketsTasks, cached, { strict: true })) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASKS, {
-                userId: user.id || '',
+            if (JSON.stringify(ticketsTasks) !== JSON.stringify(cached)) {
+              this.pubSub.publish<SubscriptionPayload<DocFlowTask[]>>(PortalPubSub.DOCFLOW_TASKS, {
+                userId,
                 object: ticketsTasks,
               });
               this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
-            } else {
-              setTimeout(() => this.docFlowTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('docFlowTasksCache error:', error);
+            this.logger.error(`docFlowTasksCache: ${error.toString()}`);
           }
         })();
 
@@ -313,7 +315,6 @@ export class DocFlowService {
 
     try {
       const ticketsTasks = await this.docFlowTasks(user, password, tasks);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASKS, { userId: user.id || '', object: ticketsTasks });
 
       if (this.cache) {
         this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
@@ -321,9 +322,9 @@ export class DocFlowService {
 
       return ticketsTasks;
     } catch (error) {
-      this.logger.error('docFlowTasksCache error:', error);
+      this.logger.error(`docFlowTasksCache: ${error.toString()}`);
 
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
   };
 
@@ -351,7 +352,7 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(error);
+          this.logger.error(`docFlowTask: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -399,9 +400,9 @@ export class DocFlowService {
           .catch((error: Error) => {
             this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowTask: [Response] ${client.lastResponse}`);
-            this.logger.error(error);
+            this.logger.error(`docFlowTask: ${error.toString()}`);
 
-            throw new UnprocessableEntityException();
+            throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
       }
     }
@@ -420,6 +421,7 @@ export class DocFlowService {
    * @returns {DocFlowTask}
    */
   docFlowTaskCache = async (user: User, password: string, task: DocFlowTaskInput): Promise<DocFlowTask> => {
+    const userId = user.id || '';
     const cachedID = `task:${task.id}`;
     if (this.cache && (!task || task.cache !== false)) {
       const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
@@ -428,17 +430,15 @@ export class DocFlowService {
           try {
             const ticketsTask = await this.docFlowTask(user, password, task);
 
-            if (!deepEqual(ticketsTask, cached, { strict: true })) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, {
-                userId: user.id || '',
+            if (JSON.stringify(ticketsTask) !== JSON.stringify(cached)) {
+              this.pubSub.publish<SubscriptionPayload<DocFlowTask>>(PortalPubSub.DOCFLOW_TASK, {
+                userId,
                 object: ticketsTask,
               });
               this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
-            } else {
-              setTimeout(() => this.docFlowTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('docFlowTaskCache error:', error);
+            this.logger.error(`docFlowTaskCache: ${error.toString()}`);
           }
         })();
 
@@ -448,7 +448,6 @@ export class DocFlowService {
 
     try {
       const ticketsTask = await this.docFlowTask(user, password, task);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TASK, { userId: user.id || '', object: ticketsTask });
 
       if (this.cache) {
         this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
@@ -456,9 +455,9 @@ export class DocFlowService {
 
       return ticketsTask;
     } catch (error) {
-      this.logger.error('docFlowTasksCache error:', error);
+      this.logger.error(`docFlowTaskCache: ${error.toString()}`);
 
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
   };
 
@@ -486,7 +485,7 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(error);
+          this.logger.error(`docFlowCurrentUser: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -517,9 +516,9 @@ export class DocFlowService {
           .catch((error: Error) => {
             this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`);
-            this.logger.error(error);
+            this.logger.error(`docFlowCurrentUser: ${error.toString()}`);
 
-            throw new UnprocessableEntityException();
+            throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
       }
     }
@@ -551,7 +550,7 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(error);
+          this.logger.error(`docFlowTarget: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -582,9 +581,9 @@ export class DocFlowService {
           .catch((error: Error) => {
             this.logger.info(`docFlowTargetCache: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowTargetCache: [Response] ${client.lastResponse}`);
-            this.logger.error(error);
+            this.logger.error(`docFlowTargetCache: ${error.toString()}`);
 
-            throw new UnprocessableEntityException();
+            throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
       }
     }
@@ -603,6 +602,7 @@ export class DocFlowService {
    * @returns {DocFlowTask[]}
    */
   docFlowTargetCache = async (user: User, password: string, target: DocFlowTargetInput): Promise<DocFlowTarget> => {
+    const userId = user.id || '';
     const cachedID = `target:${target.id}`;
     if (this.cache && (!target || target.cache !== false)) {
       const cached: DocFlowTarget = await this.cache.get<DocFlowTarget>(cachedID);
@@ -611,9 +611,9 @@ export class DocFlowService {
           try {
             const ticketsTarget = await this.docFlowTarget(user, password, target);
 
-            if (!deepEqual(ticketsTarget, cached, { strict: true })) {
+            if (JSON.stringify(ticketsTarget) !== JSON.stringify(cached)) {
               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, {
-                userId: user.id || '',
+                userId,
                 object: ticketsTarget,
               });
               this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
@@ -621,7 +621,7 @@ export class DocFlowService {
               setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('docFlowTargetCache error:', error);
+            this.logger.error(`docFlowTargetCache: ${error.toString()}`);
           }
         })();
 
@@ -631,7 +631,6 @@ export class DocFlowService {
 
     try {
       const ticketsTarget = await this.docFlowTarget(user, password, target);
-      this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, { userId: user.id || '', object: ticketsTarget });
 
       if (this.cache) {
         this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
@@ -639,9 +638,9 @@ export class DocFlowService {
 
       return ticketsTarget;
     } catch (error) {
-      this.logger.error('docFlowTargetCache error:', error);
+      this.logger.error(`docFlowTargetCache: ${error.toString()}`);
 
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
   };
 
@@ -669,7 +668,7 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(error);
+          this.logger.error(`docFlowFile: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -725,9 +724,9 @@ export class DocFlowService {
           .catch((error: Error) => {
             this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowFile: [Response] ${client.lastResponse}`);
-            this.logger.error(error);
+            this.logger.error(`docFlowFile: ${error.toString()}`);
 
-            throw new UnprocessableEntityException();
+            throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
       }
     }
