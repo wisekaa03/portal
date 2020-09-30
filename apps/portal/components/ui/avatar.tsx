@@ -23,25 +23,23 @@ export interface AvatarProps {
  * TODO: DOCUMENT THIS
  */
 // eslint-disable-next-line react/display-name
-const Avatar = React.forwardRef(
-  ({ profile, fullSize = false, base64, ...rest }: AvatarProps, ref?: React.Ref<HTMLDivElement>) => {
-    let source = 'data:image/png;base64,';
+const Avatar = React.forwardRef(({ profile, fullSize = false, base64, ...rest }: AvatarProps, ref?: React.Ref<HTMLDivElement>) => {
+  let source = 'data:image/png;base64,';
 
-    if (base64) {
-      return <AvatarMui ref={ref} src={source + base64} {...rest} />;
-    }
+  if (base64) {
+    return <AvatarMui ref={ref} src={source + base64} {...rest} />;
+  }
 
-    if (!profile) {
-      return <AvatarMui ref={ref} src={Alien} {...rest} />;
-    }
+  if (!profile) {
+    return <AvatarMui ref={ref} src={Alien} {...rest} />;
+  }
 
-    const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
-    const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
+  const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
+  const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
 
-    source = photo ? source + photo : gender === 1 ? Man : gender === 2 ? Woman : Alien;
+  source = photo ? source + photo : gender === 1 ? Man : gender === 2 ? Woman : Alien;
 
-    return <AvatarMui ref={ref} src={source} {...rest} />;
-  },
-);
+  return <AvatarMui ref={ref} src={source} {...rest} />;
+});
 
 export default Avatar;

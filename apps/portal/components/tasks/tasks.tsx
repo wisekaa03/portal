@@ -117,6 +117,7 @@ const TasksCard = withStyles((theme) => ({
 }))(({ classes, task }: TasksCardProps) => {
   const { t, i18n } = useTranslation();
   const { where, code, route, service, subject, body, smallBody, status, createdDate } = task;
+  const avatar = (service?.avatar || route?.avatar) ?? undefined;
 
   return (
     <Card className={classes.root}>
@@ -125,7 +126,7 @@ const TasksCard = withStyles((theme) => ({
           <CardContent className={classes.content}>
             <Box display="grid" gridTemplateColumns="45px auto" style={{ height: '50px', overflow: 'hidden' }}>
               <div className={classes.label}>
-                <Icon base64 src={service?.avatar || route?.avatar} size={36} />
+                <Icon base64 src={avatar} size={36} />
               </div>
               <div>
                 <Typography variant="subtitle1">{route?.name}</Typography>
