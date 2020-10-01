@@ -1,5 +1,8 @@
 /** @format */
 
+import type { UserSettings } from '@lib/types/user.dto';
+import { TASK_STATUSES } from '@lib/constants';
+
 export const ADMIN_GROUP = 'web master';
 
 export const LDAP_SYNC = { cmd: 'sync' };
@@ -16,3 +19,12 @@ export enum PortalPubSub {
   DOCFLOW_TASK = 'docflowTask',
   DOCFLOW_TARGET = 'docflowTarget',
 }
+
+export const defaultUserSettings: UserSettings = {
+  lng: 'ru',
+  drawer: true,
+  task: {
+    status: TASK_STATUSES[0],
+    favorites: [],
+  },
+};

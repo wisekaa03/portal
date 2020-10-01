@@ -13,14 +13,13 @@ import { compare } from 'bcrypt';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE } from '@back/shared/constants';
+import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE, defaultUserSettings } from '@back/shared/constants';
 import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
-import { defaultUserSettings } from '@lib/queries';
 import { UserEntity } from './user.entity';
 //#endregion
 
