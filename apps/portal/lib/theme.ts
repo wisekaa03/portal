@@ -270,6 +270,25 @@ export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) =>
         backgroundColor: '#F5FDFF',
       },
     },
+    MuiTablePagination: {
+      root: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        borderTop: '1px solid rgba(224, 224, 224, 1)',
+        backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      },
+      toolbar: {
+        height: '3rem',
+        minHeight: '3rem',
+      },
+      input: {
+        backgroundColor: 'transparent',
+      },
+      select: {
+        backgroundColor: 'transparent',
+      },
+    },
   };
 
   return theme;
