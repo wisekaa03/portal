@@ -47,6 +47,7 @@ const FilesArea = withStyles((theme) => ({
     borderTop: '1px dotted #ccc',
     backgroundColor: '#F7FBFA',
     flexWrap: 'wrap',
+    padding: `0 ${theme.spacing(1)}px`,
   },
   file: {
     padding: 0,
@@ -54,11 +55,24 @@ const FilesArea = withStyles((theme) => ({
     textAlign: 'left',
     borderRadius: '0',
     justifyContent: 'flex-start',
-    color: '#3C6AA3',
+    color: theme.palette.primary.main,
   },
   size: {
     textAlign: 'right',
     justifyContent: 'flex-end',
+  },
+  table: {},
+  link: {
+    'display': 'block',
+    'verticalAlign': 'middle',
+    'color': theme.palette.primary.main,
+    'textDecoration': 'none',
+    '&:link': { color: theme.palette.primary.main },
+    '&:hover': { textDecoration: 'none' },
+    '&:active': {
+      color: darken(theme.palette.primary.main, 0.15),
+    },
+    '&:visited': { color: theme.palette.primary.main },
   },
 }))(
   ({
@@ -80,10 +94,11 @@ const FilesArea = withStyles((theme) => ({
       return (
         <CardActions key={task.id} disableSpacing className={classes.files}>
           {task?.targets?.map((target) => {
-            const { name } = target;
+            const name = `${target.name}: ${target?.target.name}`;
 
             const table = target?.target?.files?.object?.map((file) => (
               <TableRow key={file.id}>
+                <TableCell style={{ width: '20px', minWidth: '20px' }} />
                 <TableCell style={{ width: '36px' }}>
                   <IconButton className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
                     <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
@@ -124,14 +139,17 @@ const FilesArea = withStyles((theme) => ({
             ));
 
             return (
-              <Table key={target.target.id}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center" colSpan={5}>
-                      {t('docflow:headers.files')}
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
+              <Table key={target.target.id} className={classes.table}>
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    <Link
+                      href={{ pathname: '/docflow/target', query: { id: target?.target.id } }}
+                      as={`/docflow/target/${target?.target.id}`}
+                    >
+                      <a className={classes.link}>{name}</a>
+                    </Link>
+                  </TableCell>
+                </TableRow>
                 <TableBody>{table}</TableBody>
               </Table>
             );
