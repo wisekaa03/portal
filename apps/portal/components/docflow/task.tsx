@@ -210,7 +210,7 @@ const FilesArea = withStyles((theme) => ({
                 <TableCell style={{ width: '174px', minWidth: '174px' }}>
                   <IconButton className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
                     <Typography align="right" variant="body2">
-                      {dateFormat(file.modificationDateUniversal, i18n)}
+                      {dateFormat(file.modificationDateUniversal, i18n, t('docflow:undefined'))}
                     </Typography>
                   </IconButton>
                 </TableCell>
@@ -418,7 +418,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                     {`${t('docflow:headers.beginDate')}:`}
                   </Typography>
                   <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
-                    {dateFormat(task.beginDate, i18n)}
+                    {dateFormat(task.beginDate, i18n, t('docflow:undefined'))}
                   </Typography>
                 </CardContent>
                 <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
@@ -426,7 +426,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                     {`${t('docflow:headers.dueDate')}:`}
                   </Typography>
                   <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
-                    {dateFormat(task.dueDate, i18n)}
+                    {dateFormat(task.dueDate, i18n, t('docflow:undefined'))}
                   </Typography>
                 </CardContent>
                 <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
@@ -434,7 +434,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                     {`${t('docflow:headers.endDate')}:`}
                   </Typography>
                   <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
-                    {dateFormat(task.endDate, i18n)}
+                    {dateFormat(task.endDate, i18n, t('docflow:undefined'))}
                   </Typography>
                 </CardContent>
               </Card>
@@ -470,7 +470,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                 />
                 <CardContent
                   className={classes.body}
-                  dangerouslySetInnerHTML={{ __html: clearHtml(task.htmlView || '<не установлено>') ?? '' }}
+                  dangerouslySetInnerHTML={{ __html: clearHtml(task.htmlView || t('docflow:undefined')) ?? '' }}
                 />
                 <FilesArea i18n={i18n} t={t} task={task} loading={loading} handleDownload={handleDownload} />
               </Card>
