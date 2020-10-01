@@ -448,6 +448,16 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                   </Typography>
                 </CardContent>
               </Card>
+              <Card className={classes.card}>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.importance')}:`}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {task.importance?.name}
+                  </Typography>
+                </CardContent>
+              </Card>
               <Card className={classes.fullRow}>
                 <CardHeader
                   disableTypography

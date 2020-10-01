@@ -32,6 +32,26 @@ type DocFlowSubdivision {
   presentation: String
 }
 
+type DocFlowApprovalResult {
+  id: ID!
+  name: String
+  presentation: String
+}
+
+type DocFlowVisa {
+  id: ID!
+  name: String
+  presentation: String
+  addedBy: DocFlowUser
+  comment: String
+  date: Date
+  result: DocFlowApprovalResult
+  reviewer: DocFlowUser
+  signatureChecked: Boolean
+  signatureValid: Boolean
+  signed: Boolean
+}
+
 type DocFlowInternalDocument {
   id: ID!
   name: String
@@ -40,12 +60,19 @@ type DocFlowInternalDocument {
   regDate: Date
   regNumber: String
   title: String
+  summary: String
   status: DocFlowStatus
+  statusChangeEnabled: Boolean
+  statusEnabled: Boolean
+  statusApproval: DocFlowStatus
+  statusPerformance: DocFlowStatus
+  statusRegistration: DocFlowStatus
   organization: DocFlowOrganization
   subdivision: DocFlowSubdivision
   author: DocFlowUser
   responsible: DocFlowUser
   files: DocFlowFiles
+  visas: [DocFlowVisa]
 }
 
 type DocFlowRole {

@@ -28,7 +28,7 @@ export interface DocFlowOrganizationSOAP {
   VATpayer?: boolean;
 }
 
-export interface DocFlowSubdivision {
+export interface DocFlowSubdivisionSOAP {
   name?: string;
   objectID: {
     id?: string;
@@ -36,6 +36,34 @@ export interface DocFlowSubdivision {
     type?: string;
     navigationRef?: string;
   };
+}
+
+export interface DocFlowApprovalResultSOAP {
+  name?: string;
+  objectID: {
+    id?: string;
+    presentation?: string;
+    type?: string;
+    navigationRef?: string;
+  };
+}
+
+export interface DocFlowVisaSOAP {
+  addedBy?: DocFlowUserSOAP;
+  comment?: string;
+  date?: Date;
+  name?: string;
+  objectID: {
+    id?: string;
+    presentation?: string;
+    type?: string;
+    navigationRef?: string;
+  };
+  result?: DocFlowApprovalResultSOAP;
+  reviewer?: DocFlowUserSOAP;
+  signatureChecked?: boolean;
+  signatureValid?: boolean;
+  signed?: boolean;
 }
 
 export interface DocFlowInternalDocumentSOAP {
@@ -51,14 +79,20 @@ export interface DocFlowInternalDocumentSOAP {
   responsible?: DocFlowUserSOAP;
   regNumber?: string;
   status?: DocFlowStatusSOAP;
-  subdivision?: DocFlowSubdivision;
+  statusChangeEnabled?: boolean;
+  statusEnabled?: boolean;
+  statusApproval?: DocFlowStatusSOAP;
+  statusPerformance?: DocFlowStatusSOAP;
+  statusRegistration?: DocFlowStatusSOAP;
+  subdivision?: DocFlowSubdivisionSOAP;
   summary?: string;
   title?: string;
-  files?: DocFlowFileSOAP[];
   organizationEnabled?: boolean;
   author?: DocFlowUserSOAP;
   beginDate?: Date;
   openEnded?: boolean;
+  files?: DocFlowFileSOAP[];
+  visas?: DocFlowVisaSOAP[];
 }
 
 export interface DocFlowRoleSOAP {

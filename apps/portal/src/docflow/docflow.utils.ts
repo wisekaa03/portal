@@ -15,6 +15,9 @@ import type {
   DocFlowFiles,
   DocFlowRole,
   DocFlowFileVersion,
+  DocFlowSubdivision,
+  DocFlowVisa,
+  DocFlowApprovalResult,
 } from '@lib/types/docflow';
 import type {
   DocFlowFileSOAP,
@@ -30,6 +33,9 @@ import type {
   DocFlowInternalDocumentSOAP,
   DocFlowTargetsSOAP,
   DocFlowFileVersionSOAP,
+  DocFlowSubdivisionSOAP,
+  DocFlowVisaSOAP,
+  DocFlowApprovalResultSOAP,
 } from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@lib/types';
 /** @format */
@@ -53,6 +59,14 @@ export const docFlowOrganization = (organization: DocFlowOrganizationSOAP): DocF
   inn: organization.inn ?? null,
   kpp: organization.kpp ?? null,
   VATpayer: organization.VATpayer ?? null,
+});
+
+export const docFlowSubdivision = (subdivision: DocFlowSubdivisionSOAP): DocFlowSubdivision => ({
+  id: subdivision.objectID?.id || '[organization:id]',
+  name: subdivision.name || '[organization:name]',
+  presentation: subdivision.objectID?.presentation ?? null,
+  type: subdivision.objectID?.type ?? null,
+  navigationRef: subdivision.objectID?.navigationRef ?? null,
 });
 
 export const docFlowUser = (user: DocFlowUserSOAP): DocFlowUser => ({
@@ -143,11 +157,35 @@ export const docFlowFile = (file: DocFlowFileSOAP): DocFlowFile => ({
 });
 
 export const docFlowRole = (role: DocFlowRoleSOAP): DocFlowRole => ({
-  id: role.objectID?.id || '[target:id]',
+  id: role.objectID?.id || '[role:id]',
   name: role.name,
   presentation: role.objectID.presentation ?? null,
   type: role.objectID.type ?? null,
   navigationRef: role.objectID.navigationRef ?? null,
+});
+
+export const docFlowApprovalResult = (approvalResult: DocFlowApprovalResultSOAP): DocFlowApprovalResult => ({
+  id: approvalResult.objectID?.id || '[approvalResult:id]',
+  name: approvalResult.name ?? null,
+  presentation: approvalResult.objectID.presentation ?? null,
+  type: approvalResult.objectID.type ?? null,
+  navigationRef: approvalResult.objectID.navigationRef ?? null,
+});
+
+export const docFlowVisa = (visa: DocFlowVisaSOAP): DocFlowVisa => ({
+  id: visa.objectID?.id || '[visa:id]',
+  name: visa.name ?? null,
+  presentation: visa.objectID.presentation ?? null,
+  type: visa.objectID.type ?? null,
+  navigationRef: visa.objectID.navigationRef ?? null,
+  addedBy: visa.addedBy ? docFlowUser(visa.addedBy) : null,
+  reviewer: visa.reviewer ? docFlowUser(visa.reviewer) : null,
+  comment: visa.comment ?? null,
+  date: visa.date && visa.date.toISOString() !== SOAP_DATE_NULL ? visa.date : null,
+  result: visa.result ? docFlowApprovalResult(visa.result) : null,
+  signatureChecked: visa.signatureChecked ?? null,
+  signatureValid: visa.signatureValid ?? null,
+  signed: visa.signed ?? null,
 });
 
 export const docFlowInternalDocument = (target: DocFlowInternalDocumentSOAP): DocFlowInternalDocument => ({
@@ -158,11 +196,20 @@ export const docFlowInternalDocument = (target: DocFlowInternalDocumentSOAP): Do
   navigationRef: target.objectID.navigationRef ?? null,
   organization: target.organization ? docFlowOrganization(target.organization) : null,
   regNumber: target.regNumber ?? null,
+  statusChangeEnabled: target.statusChangeEnabled ?? null,
+  statusEnabled: target.statusEnabled ?? null,
   status: target.status ? docFlowStatus(target.status) : null,
+  statusApproval: target.statusApproval ? docFlowStatus(target.statusApproval) : null,
+  statusPerformance: target.statusPerformance ? docFlowStatus(target.statusPerformance) : null,
+  statusRegistration: target.statusRegistration ? docFlowStatus(target.statusRegistration) : null,
   regDate: target.regDate && target.regDate.toISOString() !== SOAP_DATE_NULL ? target.regDate : null,
   author: target.author ? docFlowUser(target.author) : null,
   responsible: target.responsible ? docFlowUser(target.responsible) : null,
+  subdivision: target.subdivision ? docFlowSubdivision(target.subdivision) : null,
+  title: target.title ?? null,
+  summary: target.summary ?? null,
   files: target.files ? { object: target.files.map((file) => docFlowFile(file)), error: null } : null,
+  visas: target.visas ? target.visas.map((visa) => docFlowVisa(visa)) : null,
 });
 
 export const docFlowTargets = (target: DocFlowTargetsSOAP): DocFlowTarget => ({

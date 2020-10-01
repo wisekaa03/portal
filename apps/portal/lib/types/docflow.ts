@@ -70,6 +70,14 @@ export interface DocFlowOrganization {
   legalPrivatePerson: DocFlowLegalPrivatePerson | null;
 }
 
+export interface DocFlowSubdivision {
+  id: string;
+  name: string | null;
+  presentation: string | null;
+  navigationRef: string | null;
+  type: string | null;
+}
+
 export interface DocFlowUser {
   id: string;
   name: string;
@@ -94,6 +102,30 @@ export interface DocFlowState {
   navigationRef: string | null;
 }
 
+export interface DocFlowApprovalResult {
+  id: string;
+  name: string | null;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
+}
+
+export interface DocFlowVisa {
+  id: string;
+  name: string | null;
+  presentation: string | null;
+  type: string | null;
+  navigationRef: string | null;
+  addedBy: DocFlowUser | null;
+  comment: string | null;
+  date: Date | null;
+  result: DocFlowApprovalResult | null;
+  reviewer: DocFlowUser | null;
+  signatureChecked: boolean | null;
+  signatureValid: boolean | null;
+  signed: boolean | null;
+}
+
 export interface DocFlowInternalDocument {
   id: string;
   name: string | null;
@@ -101,12 +133,21 @@ export interface DocFlowInternalDocument {
   type: string | null;
   navigationRef: string | null;
   organization: DocFlowOrganization | null;
+  subdivision: DocFlowSubdivision | null;
   author: DocFlowUser | null;
   regDate: Date | null;
   responsible: DocFlowUser | null;
   regNumber: string | null;
+  title: string | null;
+  summary: string | null;
   status: DocFlowStatus | null;
+  statusChangeEnabled: boolean | null;
+  statusEnabled: boolean | null;
+  statusApproval: DocFlowStatus | null;
+  statusPerformance: DocFlowStatus | null;
+  statusRegistration: DocFlowStatus | null;
   files: DocFlowFiles | null;
+  visas: DocFlowVisa[] | null;
 }
 
 export interface DocFlowRole {
