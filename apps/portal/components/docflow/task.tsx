@@ -30,6 +30,7 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import HourglassFullIcon from '@material-ui/icons/HourglassFull';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -63,8 +64,8 @@ const FilesArea = withStyles((theme) => ({
   },
   table: {},
   link: {
-    'display': 'block',
-    'verticalAlign': 'middle',
+    'display': 'flex',
+    'alignItems': 'center',
     'color': theme.palette.primary.main,
     'textDecoration': 'none',
     '&:link': { color: theme.palette.primary.main },
@@ -97,7 +98,7 @@ const FilesArea = withStyles((theme) => ({
             const name = `${target.name}: ${target?.target.name}`;
 
             const table = target?.target?.files?.object?.map((file) => (
-              <TableRow key={file.id}>
+              <TableRow hover key={file.id}>
                 <TableCell style={{ width: '20px', minWidth: '20px' }} />
                 <TableCell style={{ width: '36px' }}>
                   <IconButton className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
@@ -139,14 +140,17 @@ const FilesArea = withStyles((theme) => ({
             ));
 
             return (
-              <Table key={target.target.id} className={classes.table}>
-                <TableRow>
+              <Table key={target.target.id} aria-label="target files" className={classes.table}>
+                <TableRow hover>
                   <TableCell colSpan={6}>
                     <Link
                       href={{ pathname: '/docflow/target', query: { id: target?.target.id } }}
                       as={`/docflow/target/${target?.target.id}`}
                     >
-                      <a className={classes.link}>{name}</a>
+                      <a className={classes.link}>
+                        <KeyboardArrowRightIcon />
+                        <Typography component="span">{name}</Typography>
+                      </a>
                     </Link>
                   </TableCell>
                 </TableRow>
@@ -233,7 +237,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     statusContent: {
       display: 'grid',
-      gridTemplateColumns: '60px 1fr',
+      gridTemplateColumns: '90px 1fr',
       background: fade(theme.palette.secondary.main, 0.15),
       borderRadius: theme.shape.borderRadius,
       // 'gap': `${theme.spacing(4)}px`,
@@ -297,18 +301,13 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
               </CardContent>
             </Card> */}
             <Card style={{ overflow: 'visible' }}>
-              <CardHeader
-                disableTypography
-                className={clsx(classes.cardHeader, classes.background)}
-                title={
-                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                    {t('docflow:headers.state')}
-                  </Typography>
-                }
-              />
               <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                {/* <Icon src={getTicketStatusIcon(task.status)} size={48} /> */}
-                <span style={{ placeSelf: 'center stretch' }}>{task.state?.name}</span>
+                <Typography variant="subtitle1" component="span">
+                  {`${t('docflow:headers.state')}:`}
+                </Typography>
+                <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                  {task.state?.name}
+                </Typography>
               </CardContent>
             </Card>
             <Card className={classes.fullRow}>
