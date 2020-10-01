@@ -1,14 +1,14 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, ApolloQueryResult } from '@apollo/client';
+import { useQuery, useLazyQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { DOCFLOW_TASK, DOCFLOW_TASK_SUB } from '@lib/queries';
-import type { DocFlowTask, DocFlowTaskInput, DocFlowTasksInput } from '@lib/types/docflow';
+import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE } from '@lib/queries';
+import type { DocFlowFile, DocFlowTask, DocFlowTaskInput, DocFlowFileInput } from '@lib/types/docflow';
 import { Data } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
@@ -33,6 +33,11 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
     notifyOnNetworkStatusChange: true,
   });
 
+  const [getDocFlowTaskFile, { loading: loadingDocFlowTaskFile, data: dataDocFlowTaskFile, error: errorDocFlowTaskFile }] = useLazyQuery<
+    Data<'docFlowFile', DocFlowFile>,
+    { file: DocFlowFileInput }
+  >(DOCFLOW_FILE);
+
   useEffect(() => {
     // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
     subscribeToMoreDocFlowTask({
@@ -46,10 +51,36 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
     });
   }, [subscribeToMoreDocFlowTask, id]);
 
-  const handleDownload = async (): Promise<void> => {
-    // eslint-disable-next-line no-debugger
-    debugger;
+  const download = async (body: string, name: string): Promise<void> => {
+    const blob = new Blob([Buffer.from(body, 'base64')], { type: 'application/octet-stream' });
+    const temp = window.URL.createObjectURL(blob);
+    const tempLink = document.createElement('a');
+    tempLink.href = temp;
+    tempLink.setAttribute('download', name || '');
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    setTimeout(() => {
+      document.body.removeChild(tempLink);
+      window.URL.revokeObjectURL(temp);
+    }, 100);
   };
+
+  const handleDownload = async (file: DocFlowFile): Promise<void> => {
+    if (file.binaryData) {
+      download(file.binaryData, `${file.name}.${file.extension}`);
+    } else {
+      getDocFlowTaskFile({ variables: { file: { id: file.id } } });
+    }
+  };
+
+  useEffect(() => {
+    if (dataDocFlowTaskFile) {
+      download(
+        dataDocFlowTaskFile?.docFlowFile.binaryData || '',
+        `${dataDocFlowTaskFile?.docFlowFile.name}.${dataDocFlowTaskFile?.docFlowFile.extension}`,
+      );
+    }
+  }, [dataDocFlowTaskFile]);
 
   const refetchDocFlowTask = async (
     variables?: Partial<{
@@ -64,7 +95,10 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
     if (errorDocFlowTask) {
       snackbarUtils.error(errorDocFlowTask);
     }
-  }, [errorDocFlowTask]);
+    if (errorDocFlowTaskFile) {
+      snackbarUtils.error(errorDocFlowTaskFile);
+    }
+  }, [errorDocFlowTask, errorDocFlowTaskFile]);
 
   return (
     <>
@@ -72,7 +106,12 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
         <title>{t('docflow:title')}</title>
       </Head>
       <MaterialUI refetchComponent={refetchDocFlowTask} {...rest}>
-        <DocFlowTaskComponent loading={loadingDocFlowTask} task={task} handleDownload={handleDownload} />
+        <DocFlowTaskComponent
+          loading={loadingDocFlowTask}
+          loadingFile={loadingDocFlowTaskFile}
+          task={task}
+          handleDownload={handleDownload}
+        />
       </MaterialUI>
     </>
   );

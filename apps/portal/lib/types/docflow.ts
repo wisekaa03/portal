@@ -1,8 +1,17 @@
 /** @format */
 
 import type React from 'react';
-import type { TFunction } from 'next-i18next';
+import type { I18n, TFunction } from 'next-i18next';
 import type { GraphQLQueryInput } from '@back/shared/types';
+
+export interface DocFlowFileProps {
+  task: DocFlowTask;
+  loading: boolean;
+  handleDownload: (file: DocFlowFile) => void;
+  i18n: I18n;
+  t: TFunction;
+  classes: Record<string, string>;
+}
 
 export interface DocFlowTasksColumn {
   id: string;
@@ -34,8 +43,9 @@ export interface DocFlowTasksComponentProps {
 
 export interface DocFlowTaskComponentProps {
   loading: boolean;
+  loadingFile: boolean;
   task?: DocFlowTask;
-  handleDownload: (task: DocFlowTask, file: DocFlowFile) => void;
+  handleDownload: (file: DocFlowFile) => void;
 }
 
 export interface DocFlowTaskInfoCardProps {

@@ -25,6 +25,7 @@ export const DOCFLOW_FILE = gql`
   query DocFlowFile($file: DocFlowFileInput!) {
     docFlowFile(file: $file) {
       ...FileProps
+      binaryData
     }
   }
   ${DOCFLOW_FILE_FRAGMENT}
