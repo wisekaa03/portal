@@ -37,6 +37,7 @@ import HourglassFullIcon from '@material-ui/icons/HourglassFull';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 //#endregion
 //#region Imports Local
+import clearHtml from '@lib/clear-html';
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
 import type { DocFlowTaskInfoCardProps, DocFlowTask, DocFlowTaskComponentProps } from '@lib/types/docflow';
@@ -46,7 +47,6 @@ import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
-import { TableColumn } from 'typeorm';
 //#endregion
 
 const TaskInfoCard = withStyles((theme) => ({
@@ -468,7 +468,10 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                     </Typography>
                   }
                 />
-                <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.htmlView ?? '' }} />
+                <CardContent
+                  className={classes.body}
+                  dangerouslySetInnerHTML={{ __html: clearHtml(task.htmlView || '<не установлено>') ?? '' }}
+                />
                 <FilesArea i18n={i18n} t={t} task={task} loading={loading} handleDownload={handleDownload} />
               </Card>
             </Box>

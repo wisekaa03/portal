@@ -11,7 +11,7 @@ import { I18n } from 'next-i18next';
 
 const locales = { en, ru };
 
-export const dateFormat = (date: Date | number | null | undefined, formatStr: I18n): string =>
-  !date ? '' : dateFnsFormat(date, formatStr.language === 'ru' ? 'PPpp' : 'PPpp', { locale: locales[formatStr.language] });
+export const dateFormat = (date: Date | number | null | undefined, formatStr: I18n, formatIfNull = '<Дата не установлена>'): string =>
+  !date ? formatIfNull : dateFnsFormat(date, formatStr.language === 'ru' ? 'PPpp' : 'PPpp', { locale: locales[formatStr.language] });
 
 export default dateFormat;

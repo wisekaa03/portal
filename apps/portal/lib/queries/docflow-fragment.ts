@@ -142,6 +142,9 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     accepted
     acceptDate
     htmlView
+    target {
+      ...InternalDocumentProps
+    }
     targets {
       name
       allowDeletion

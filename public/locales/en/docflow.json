@@ -24,6 +24,7 @@
     "performer": "Performer",
     "beginDate": "Дата регистрации",
     "dueDate": "Срок",
-    "endDate": "Дата завершения"
+    "endDate": "Дата завершения",
+    "importance": "Importance"
   }
 }
