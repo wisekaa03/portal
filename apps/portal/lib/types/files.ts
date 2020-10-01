@@ -12,7 +12,7 @@ export interface FilesComponentProps {
   path: FilesPath[];
   handleCheckbox: (current: number | FilesFolderChk[]) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
-  handleFolder: (filesFolder: FilesFolderChk) => void;
+  handleFolder: (filesFolder: string | FilesFolderChk) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
   handleUrl: () => void;
@@ -62,7 +62,7 @@ export type FilesTableProps = {
   path: FilesPath[];
   handleCheckbox: (current: number | FilesFolderChk[]) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
-  handleFolder: (filesFolder: FilesFolderChk) => void;
+  handleFolder: (filesFolder: string | FilesFolderChk) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
   handleUrl: () => void;
@@ -72,7 +72,7 @@ export type FilesTableProps = {
 
 export interface FilesBreadcrumbsProps {
   path: FilesPath[];
-  handleFolder: (filesFolder: FilesFolderChk) => void;
+  handleFolder: (filesFolder: string | FilesFolderChk) => void;
   handleUrl: () => void;
   handleUpload: () => void;
   handleDelete: (filesFolder?: FilesFolderChk) => () => void;
