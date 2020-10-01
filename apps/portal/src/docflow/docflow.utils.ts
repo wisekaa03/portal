@@ -177,7 +177,6 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   name: task.name || '[task:name]',
   presentation: task.objectID?.presentation ?? null,
   importance: task.importance ? docFlowImportance(task.importance) : null,
-  executor: task.performer?.user ? docFlowUser(task.performer.user) : null,
   executed: task.executed ?? false,
   executionMark: task.executionMark ?? null,
   executionComment: task.executionComment ?? null,

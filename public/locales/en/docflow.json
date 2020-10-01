@@ -16,6 +16,8 @@
   },
   "headers": {
     "description": "Description",
-    "files": "Прикрепленные файлы"
+    "files": "Прикрепленные файлы",
+    "state": "Состояние",
+    "status": "Статус"
   }
 }

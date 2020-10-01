@@ -191,7 +191,6 @@ export interface DocFlowTask {
   name: string | null;
   presentation: string | null;
   importance: DocFlowImportance | null;
-  executor: DocFlowUser | null;
   executed: boolean | null;
   executionMark: string | null;
   executionComment: string | null;

@@ -107,7 +107,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
           </Box>
         )}
       >
-        <img style={{ width: size || '10em' }} src={SyncIcon} />
+        <img style={{ width: size || '10em' }} alt="Waiting..." src={SyncIcon} />
       </ConditionalWrapper>
     );
   }

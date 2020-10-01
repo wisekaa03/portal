@@ -266,7 +266,6 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                   </>
                 }
               />
-              {/* <CardContent>{task.subject}</CardContent>*/}
             </Card>
             {/* <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
               <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />*/}
@@ -280,6 +279,15 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
               </CardContent>
             </Card> */}
             <Card style={{ overflow: 'visible' }}>
+              <CardHeader
+                disableTypography
+                className={clsx(classes.cardHeader, classes.background)}
+                title={
+                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                    {t('docflow:headers.state')}
+                  </Typography>
+                }
+              />
               <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
                 {/* <Icon src={getTicketStatusIcon(task.status)} size={48} /> */}
                 <span style={{ placeSelf: 'center stretch' }}>{task.state?.name}</span>
@@ -295,7 +303,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
                   </Typography>
                 }
               />
-              {/* <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.body ?? '' }} /> */}
+              <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.htmlView ?? '' }} />
               <FilesArea i18n={i18n} t={t} task={task} loading={loading} handleDownload={handleDownload} />
             </Card>
           </Box>
