@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, ReactNode } from 'react';
 import Link from 'next/link';
 import { TFunction, I18n } from 'next-i18next';
 import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
@@ -65,11 +65,15 @@ const DocFlowTasksTable = withStyles((theme) => ({
           {tasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
             <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
               {columns.map((column) => {
-                const value = column.id.split('.').reduce((acc, elem) => acc[elem], task);
+                const value = column.id
+                  .split('.')
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore TODO:
+                  .reduce((acc, elem) => (typeof acc === 'object' && acc !== null ? acc[elem] : acc), task as unknown);
 
                 const cellData = (
                   <Link href={{ pathname: '/docflow/task', query: { id: task.id } }} as={`/docflow/task/${task.id}`}>
-                    <a className={classes.link}>{column.format ? column.format(value) : value}</a>
+                    <a className={classes.link}>{column.format ? column.format(value as Date) : (value as ReactNode)}</a>
                   </Link>
                 );
 
