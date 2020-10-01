@@ -16,8 +16,14 @@
   },
   "headers": {
     "description": "Description",
-    "files": "Прикрепленные файлы",
-    "state": "Состояние",
-    "status": "Статус"
+    "files": "Files",
+    "state": "State",
+    "status": "Status",
+    "name": "Name",
+    "author": "Author",
+    "performer": "Performer",
+    "beginDate": "Дата регистрации",
+    "dueDate": "Срок",
+    "endDate": "Дата завершения"
   }
 }

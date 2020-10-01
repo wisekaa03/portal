@@ -15,6 +15,10 @@ import {
   CardHeader,
   CardContent,
   CardActionArea,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
   Typography,
   Divider,
   TableContainer,
@@ -35,13 +39,96 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
-import type { DocFlowTask, DocFlowTaskComponentProps } from '@lib/types/docflow';
+import type { DocFlowTaskInfoCardProps, DocFlowTask, DocFlowTaskComponentProps } from '@lib/types/docflow';
+import { ComposeLink } from '@front/components/compose-link';
+import Avatar from '@front/components/ui/avatar';
 import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
 import { TableColumn } from 'typeorm';
 //#endregion
+
+const TaskInfoCard = withStyles((theme) => ({
+  root: {
+    borderRadius: theme.shape.borderRadius,
+    background: fade(theme.palette.secondary.main, 0.15),
+  },
+  center: {
+    textAlign: 'center',
+  },
+  content: {
+    'padding': theme.spacing(0, 2),
+    '&:first-child': {
+      paddingTop: theme.spacing(2),
+    },
+    '&:last-child': {
+      paddingBottom: theme.spacing(2),
+    },
+  },
+  avatar: {
+    height: 90,
+    width: 90,
+  },
+  list: {
+    '& > li': {
+      display: 'grid',
+      gap: `${theme.spacing()}px`,
+      gridTemplateColumns: '1fr 2fr',
+    },
+  },
+}))(({ classes, header, profile }: DocFlowTaskInfoCardProps) => {
+  const { t } = useTranslation();
+
+  if (typeof profile === 'string' || profile === null) {
+    return null;
+  }
+
+  return (
+    <Card className={classes.root}>
+      <CardHeader
+        disableTypography
+        title={
+          <Typography className={classes.center} variant="h6">
+            {header}
+          </Typography>
+        }
+      />
+      <CardContent className={classes.content}>
+        {profile && (
+          <Box display="flex">
+            <Box mr={2}>
+              <Avatar className={classes.avatar} alt="photo" />
+            </Box>
+            <Box flex={1}>
+              <Paper>
+                <List className={classes.list} disablePadding>
+                  <ListItem divider>
+                    <ListItemText primary={t('docflow:headers.name')} />
+                    <ListItemText primary={profile.name} />
+                  </ListItem>
+                  {/*
+                  <ListItem divider>
+                    <ListItemText primary={t('phonebook:fields.title')} />
+                    <ListItemText primary={profile.title} />
+                  </ListItem>
+                  <ListItem divider>
+                    <ListItemText primary={t('phonebook:fields.telephone')} />
+                    <ListItemText primary={profile.telephone} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary={t('phonebook:fields.email')} />
+                    <ListItemText primary={<ComposeLink to={profile.email}>{profile.email}</ComposeLink>} />
+                  </ListItem> */}
+                </List>
+              </Paper>
+            </Box>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
+  );
+});
 
 const FilesArea = withStyles((theme) => ({
   files: {
@@ -141,19 +228,21 @@ const FilesArea = withStyles((theme) => ({
 
             return (
               <Table key={target.target.id} aria-label="target files" className={classes.table}>
-                <TableRow hover>
-                  <TableCell colSpan={6}>
-                    <Link
-                      href={{ pathname: '/docflow/target', query: { id: target?.target.id } }}
-                      as={`/docflow/target/${target?.target.id}`}
-                    >
-                      <a className={classes.link}>
-                        <KeyboardArrowRightIcon />
-                        <Typography component="span">{name}</Typography>
-                      </a>
-                    </Link>
-                  </TableCell>
-                </TableRow>
+                <TableHead>
+                  <TableRow hover>
+                    <TableCell colSpan={6}>
+                      <Link
+                        href={{ pathname: '/docflow/target', query: { id: target?.target.id } }}
+                        as={`/docflow/target/${target?.target.id}`}
+                      >
+                        <a className={classes.link}>
+                          <KeyboardArrowRightIcon />
+                          <Typography component="span">{name}</Typography>
+                        </a>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>{table}</TableBody>
               </Table>
             );
@@ -224,6 +313,9 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(),
     },
     cardContent: {
+      'display': 'grid',
+      'alignItems': 'center',
+      'alignContent': 'center',
       'padding': theme.spacing(0, 2),
       '&:first-child': {
         paddingTop: theme.spacing(2),
@@ -232,13 +324,19 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingBottom: theme.spacing(2),
       },
     },
+    card: {
+      display: 'grid',
+      alignItems: 'center',
+      alignContent: 'center',
+      background: fade(theme.palette.secondary.main, 0.15),
+      overflow: 'visible',
+    },
     background: {
       background: fade(theme.palette.secondary.main, 0.15),
     },
     statusContent: {
-      display: 'grid',
-      gridTemplateColumns: '90px 1fr',
-      background: fade(theme.palette.secondary.main, 0.15),
+      display: 'flex',
+      gap: '10px',
       borderRadius: theme.shape.borderRadius,
       // 'gap': `${theme.spacing(4)}px`,
       // '&:last-child': {
@@ -251,6 +349,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, handleDownload }) => {
   const classes = useStyles({});
   const { i18n, t } = useTranslation();
+  const tasksBox = useRef(null);
+
+  const maxHeight = tasksBox.current ? `calc(100vh - ${(tasksBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
     <Box display="flex" flexDirection="column">
@@ -262,70 +363,112 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, ha
         </Link>
         <div style={{ width: '100%' }} />
       </Box>
-      {!task || loading ? (
-        <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-          <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-            {t('docflow:notFound')}
-          </Typography>
-        </Loading>
-      ) : (
-        <Box style={{ overflow: 'auto' }}>
-          <Box className={classes.content}>
-            <Card className={classes.fullRow}>
-              <CardHeader
-                disableTypography
-                className={clsx(classes.cardHeader, classes.background)}
-                title={
-                  <>
+      <BoxWithRef
+        ref={tasksBox}
+        overflow="auto"
+        style={{ maxHeight }}
+        display="flex"
+        flexGrow={1}
+        flexWrap="wrap"
+        my={2}
+        marginTop="0"
+        marginBottom="0"
+        padding="0"
+        alignItems="stretch"
+        justifyContent="flex-start"
+        alignContent="flex-start"
+      >
+        <Loading activate={loading} absolute full type="circular" color="secondary" disableShrink size={48}>
+          {task ? (
+            <Box className={classes.content}>
+              <Card className={clsx(classes.card, classes.fullRow)}>
+                <CardHeader
+                  disableTypography
+                  className={clsx(classes.cardHeader, classes.background)}
+                  title={
                     <Typography className={classes.cardHeaderTitle} variant="subtitle1">
                       {t('docflow:task.title', {
                         task: task.name,
                       })}
                     </Typography>
-                    <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                      {dateFormat(task.beginDate, i18n)}
-                    </Typography>
-                  </>
-                }
-              />
-            </Card>
-            {/* <TaskInfoCard header={t('tasks:headers.author')} profile={task.initiatorUser} />
-              <TaskInfoCard header={t('tasks:headers.executor')} profile={task.executorUser} />*/}
-            {/* <Card style={{ overflow: 'visible' }}>
-              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                <Icon base64 src={task.service?.avatar || task.route?.avatar} size={48} />
-                <span style={{ placeSelf: 'center stretch' }}>
-                  <Typography variant="subtitle1">{task.route?.name}</Typography>
-                  <Typography variant="subtitle2">{task.service?.name}</Typography>
-            </span>
-              </CardContent>
-            </Card> */}
-            <Card style={{ overflow: 'visible' }}>
-              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                <Typography variant="subtitle1" component="span">
-                  {`${t('docflow:headers.state')}:`}
-                </Typography>
-                <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
-                  {task.state?.name}
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card className={classes.fullRow}>
-              <CardHeader
-                disableTypography
-                className={clsx(classes.cardHeader, classes.background)}
-                title={
-                  <Typography className={classes.cardHeaderTitle} variant="subtitle1">
-                    {t('docflow:headers.description')}
+                  }
+                />
+              </Card>
+              <Card className={classes.card}>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.author')}:`}
                   </Typography>
-                }
-              />
-              <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.htmlView ?? '' }} />
-              <FilesArea i18n={i18n} t={t} task={task} loading={loading} handleDownload={handleDownload} />
-            </Card>
-          </Box>
-        </Box>
-      )}
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {task.author?.name}
+                  </Typography>
+                </CardContent>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.performer')}:`}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {task.performer?.name}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card className={classes.card}>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.beginDate')}:`}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {dateFormat(task.beginDate, i18n)}
+                  </Typography>
+                </CardContent>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.dueDate')}:`}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {dateFormat(task.dueDate, i18n)}
+                  </Typography>
+                </CardContent>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.endDate')}:`}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {dateFormat(task.endDate, i18n)}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card className={classes.card}>
+                <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                  <Typography variant="subtitle1" component="span">
+                    {`${t('docflow:headers.state')}:`}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
+                    {task.state?.name}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card className={classes.fullRow}>
+                <CardHeader
+                  disableTypography
+                  className={clsx(classes.cardHeader, classes.background)}
+                  title={
+                    <Typography className={classes.cardHeaderTitle} variant="subtitle1">
+                      {t('docflow:headers.description')}
+                    </Typography>
+                  }
+                />
+                <CardContent className={classes.body} dangerouslySetInnerHTML={{ __html: task.htmlView ?? '' }} />
+                <FilesArea i18n={i18n} t={t} task={task} loading={loading} handleDownload={handleDownload} />
+              </Card>
+            </Box>
+          ) : (
+            <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
+              {t('docflow:notFound')}
+            </Typography>
+          )}
+        </Loading>
+      </BoxWithRef>
     </Box>
   );
 };

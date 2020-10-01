@@ -38,6 +38,12 @@ export interface DocFlowTaskComponentProps {
   handleDownload: (task: DocFlowTask, file: DocFlowFile) => void;
 }
 
+export interface DocFlowTaskInfoCardProps {
+  classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
+  header: string;
+  profile: DocFlowUser | string | null;
+}
+
 export interface DocFlowTargetComponentProps {
   loading: boolean;
   target?: DocFlowTarget;

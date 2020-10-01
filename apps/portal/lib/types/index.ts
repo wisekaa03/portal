@@ -15,6 +15,7 @@ export * from './app-bar';
 export * from './auth';
 export * from './common';
 export * from './dropzone';
+export * from './docflow';
 export * from './file-upload-buffer';
 export * from './files.interface';
 export * from './files';

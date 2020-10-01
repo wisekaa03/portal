@@ -119,11 +119,12 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     importance {
       ...ImportanceProps
     }
-    executor {
-      ...UserProps
+    state {
+      ...StateProps
     }
     executed
     executionMark
+    executionComment
     beginDate
     dueDate
     endDate
@@ -132,19 +133,15 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
       ...ParentTaskProps
     }
     processStep
-    executionComment
+    performer {
+      ...UserProps
+    }
     author {
       ...UserProps
     }
     accepted
     acceptDate
-    state {
-      ...StateProps
-    }
     htmlView
-    target {
-      ...InternalDocumentProps
-    }
     targets {
       name
       allowDeletion
