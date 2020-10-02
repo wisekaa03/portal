@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.15.0",
+  "version": "4.15.1",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -93,10 +93,12 @@
     "**/**/dotenv-webpack": "^3",
     "**/**/dotenv": "^8",
     "**/**/find-up": "^4",
-    "**/**/cross-fetch": "^3"
+    "**/**/cross-fetch": "^3",
+    "**/**/deep-equal": "^2",
+    "**/**/yargs-parser": "^20"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.1",
+    "@apollo/client": "^3.2.2",
     "@date-io/core": "^2.10.6",
     "@date-io/date-fns": "^2.10.6",
     "@material-ui/core": "^4.11.0",
@@ -132,7 +134,7 @@
     "css-mediaquery": "^0.1.2",
     "cssnano": "^4.1.10",
     "date-fns": "^2.16.1",
-    "deep-equal": "^2.0.3",
+    "deep-equal": "^2",
     "domhandler": "^3.2.0",
     "domutils": "^2.4.1",
     "dotenv": "^8.2.0",
