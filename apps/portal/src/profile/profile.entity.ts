@@ -14,6 +14,7 @@ import {
   RelationId,
   AfterLoad,
 } from 'typeorm';
+import isPromise from 'is-promise';
 //#endregion
 //#region Imports Local
 import { Gender } from '@lib/types/gender';
@@ -273,11 +274,11 @@ export class ProfileEntity {
   @BeforeUpdate()
   @BeforeInsert()
   async resizeImage(): Promise<void> {
-    if (this.thumbnailPhoto instanceof Promise) {
+    if (isPromise(this.thumbnailPhoto)) {
       this.thumbnailPhoto = await this.thumbnailPhoto;
     }
 
-    if (this.thumbnailPhoto40 instanceof Promise) {
+    if (isPromise(this.thumbnailPhoto40)) {
       this.thumbnailPhoto40 = await this.thumbnailPhoto40;
     }
   }

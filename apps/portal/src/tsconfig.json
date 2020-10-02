@@ -1,3 +1,13 @@
 {
-  "extends": "../tsconfig.app.json"
+  "extends": "../tsconfig.app.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true
+  }
 }
