@@ -127,15 +127,15 @@ export interface PhonebookProfileNameProps extends PhonebookProfileModule<'root'
 
 export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root' | 'pointer'> {
   last?: boolean;
-  onClick?: (_?: Profile | string) => () => void;
+  onClick?: (profile?: string | Profile) => () => void;
   title: string;
   field:
     | 'company'
     | 'title'
     | 'management'
+    | 'manager'
     | 'department'
     | 'division'
-    | 'manager'
     | 'country'
     | 'region'
     | 'town'

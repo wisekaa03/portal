@@ -134,7 +134,8 @@ const ProfileField = withStyles((theme) => ({
     cursor: 'pointer',
   },
 }))(({ classes, profile, last, onClick, title, field }: PhonebookProfileFieldProps) => {
-  const text = profile ? (field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '') : '';
+  const text =
+    typeof profile === 'object' && profile !== null ? (field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '') : '';
 
   return (
     <ListItem divider={!last}>
@@ -180,8 +181,8 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
     }
   }, [setProfile, data, loading, error]);
 
-  const handleProfile = (prof: Profile) => (): void => {
-    if (!prof.disabled && !prof.notShowing && prof.id) {
+  const handleProfile = (prof?: Profile) => (): void => {
+    if (typeof prof === 'object' && prof !== null && !prof.disabled && !prof.notShowing && prof.id) {
       getProfile({
         variables: {
           id: prof.id,
@@ -190,10 +191,10 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
     }
   };
 
-  const handleSearchClose = (text?: string) => (): void => {
+  const handleSearchClose = (text?: string | Profile) => (): void => {
     if (!text) return;
 
-    handleSearch(text);
+    handleSearch(typeof text === 'string' ? text : text.fullName || '');
     handleClose();
   };
 

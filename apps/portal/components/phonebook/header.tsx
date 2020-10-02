@@ -74,9 +74,7 @@ const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ ch
                         scope="col"
                         className={classes.cell}
                         style={cellStyle}
-                        sortDirection={
-                          orderBy.field !== name ? false : (orderBy.direction.toLowerCase() as 'asc' | 'desc')
-                        }
+                        sortDirection={orderBy.field !== name ? false : (orderBy.direction.toLowerCase() as 'asc' | 'desc')}
                       >
                         <TableSortLabel
                           active={orderBy.field === name}
