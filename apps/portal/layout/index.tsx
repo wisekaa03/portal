@@ -39,7 +39,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent }) 
   const classes = useStyles({});
 
   const profile = useContext(ProfileContext);
-  const drawer = profile?.user?.settings.drawer;
+  const drawer = profile.user?.settings?.drawer;
   const { isMobile } = profile;
 
   const theme = useTheme();

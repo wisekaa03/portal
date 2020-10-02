@@ -8,7 +8,7 @@ import { User } from './user.dto';
 
 //#region Profile
 export interface News {
-  id?: string;
+  id: string;
 
   createdAt?: Date;
 
@@ -20,6 +20,6 @@ export interface News {
 
   content: string;
 
-  user?: User;
+  author: User | null;
 }
 //#endregion

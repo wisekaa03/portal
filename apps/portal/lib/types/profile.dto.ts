@@ -8,93 +8,92 @@ import { LoginService } from './login-service';
 import { Contact } from './user.dto';
 //#endregion
 
-//#region Profile
 export interface Profile {
   id?: string;
   contact?: Contact;
 
-  loginService: LoginService;
-  loginIdentificator: string;
+  loginService?: LoginService;
+  loginIdentificator?: string | null;
 
-  username?: string;
+  username?: string | null;
 
-  dn: string;
+  dn?: string | null;
 
-  fullName?: string;
+  fullName?: string | null;
 
-  firstName: string;
+  firstName?: string | null;
 
-  lastName: string;
+  lastName?: string | null;
 
-  middleName: string;
+  middleName?: string | null;
 
-  email: string;
+  email?: string | null;
 
-  birthday?: string;
+  birthday?: string | null;
 
-  gender?: Gender;
+  gender?: Gender | null;
 
-  country?: string;
+  country?: string | null;
 
-  postalCode?: string;
+  postalCode?: string | null;
 
-  region?: string;
+  region?: string | null;
 
-  town?: string;
+  town?: string | null;
 
-  street?: string;
+  street?: string | null;
 
-  room?: string;
+  room?: string | null;
 
-  employeeID?: string;
+  employeeID?: string | null;
 
-  company?: string;
+  company?: string | null;
 
-  management?: string;
+  management?: string | null;
 
-  department?: string;
+  department?: string | null;
 
-  division?: string;
+  division?: string | null;
 
-  title?: string;
+  title?: string | null;
 
-  managerId?: string;
+  managerId?: string | null;
 
-  manager?: Profile | undefined;
+  manager?: Profile | null;
 
-  telephone?: string;
+  telephone?: string | null;
 
-  workPhone?: string;
+  workPhone?: string | null;
 
-  mobile?: string;
+  mobile?: string | null;
 
-  fax?: string;
+  fax?: string | null;
 
-  companyEng?: string;
+  companyEng?: string | null;
 
-  nameEng?: string;
+  nameEng?: string | null;
 
-  managementEng?: string;
+  managementEng?: string | null;
 
-  departmentEng?: string;
+  departmentEng?: string | null;
 
-  divisionEng?: string;
+  divisionEng?: string | null;
 
-  positionEng?: string;
+  positionEng?: string | null;
 
-  accessCard?: string;
+  accessCard?: string | null;
 
-  disabled: boolean;
+  disabled?: boolean;
 
-  notShowing: boolean;
+  notShowing?: boolean;
 
-  thumbnailPhoto?: string | Promise<string | undefined> | any;
+  thumbnailPhoto?: string | Promise<string | null> | unknown;
 
-  thumbnailPhoto40?: string | Promise<string | undefined> | any;
+  thumbnailPhoto40?: string | Promise<string | null> | unknown;
 
-  createdAt?: Date;
+  createdAt?: Date | null;
 
-  updatedAt?: Date;
+  updatedAt?: Date | null;
 
   __typename?: 'Profile';
 }
@@ -107,4 +106,27 @@ export interface SearchSuggestions {
 export interface ProfileInput extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt'> {
   contact: Contact;
 }
-//#endregion
+
+export const isProfileInput = (profile: unknown): profile is ProfileInput =>
+  typeof profile === 'object' &&
+  profile !== null &&
+  'id' in profile &&
+  'username' in profile &&
+  'firstName' in profile &&
+  !('loginService' in profile) &&
+  !('loginIdentificator' in profile) &&
+  !('dn' in profile) &&
+  !('updatedAt' in profile) &&
+  !('createdAt' in profile);
+
+export const isProfile = (profile: unknown): profile is Profile =>
+  typeof profile === 'object' &&
+  profile !== null &&
+  'id' in profile &&
+  'username' in profile &&
+  'firstName' in profile &&
+  'loginService' in profile &&
+  'loginIdentificator' in profile &&
+  'dn' in profile &&
+  'updatedAt' in profile &&
+  'createdAt' in profile;

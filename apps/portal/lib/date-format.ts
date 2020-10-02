@@ -4,14 +4,15 @@
 //#region Imports NPM
 import { format as dateFnsFormat } from 'date-fns';
 import { enUS as en, ru } from 'date-fns/locale';
-import { I18n } from 'next-i18next';
+import { i18n } from 'i18next';
 //#endregion
 //#region Imports Local
 //#endregion
 
 const locales = { en, ru };
 
-export const dateFormat = (date: Date | number | null | undefined, formatStr: I18n, formatIfNull = '<Дата не установлена>'): string =>
+// TODO: разобраться с локалями
+export const dateFormat = (date: Date | number | null | undefined, formatStr: i18n, formatIfNull = '<Дата не установлена>'): string =>
   !date ? formatIfNull : dateFnsFormat(date, formatStr.language === 'ru' ? 'PPpp' : 'PPpp', { locale: locales[formatStr.language] });
 
 export default dateFormat;

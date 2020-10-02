@@ -1,21 +1,20 @@
 /** @format */
 
 //#region Imports NPM
-import { Request } from 'express';
+import type { Request } from 'express';
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import { NextPageContext } from 'next';
+import type { NextPageContext } from 'next';
 import Head from 'next/head';
 import { useQuery, useMutation } from '@apollo/client';
 import { format as dateFnsFormat } from 'date-fns';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { PROFILE, CHANGE_PROFILE, CURRENT_USER } from '@lib/queries';
-import { UserContext } from '@lib/types/user.dto';
+import { PROFILE, CHANGE_PROFILE } from '@lib/queries';
+import type { UserContext, Data, Profile, ProfileInput } from '@lib/types';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Data, Profile } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
@@ -26,10 +25,10 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { user } = ((ctx?.req as Request)?.session?.passport as UserContext) || useContext(ProfileContext);
+  const { user } = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
   const id = query?.id || user?.profile?.id;
   const locale = i18n.language as 'ru' | 'en' | undefined;
-  const { isAdmin } = user || { isAdmin: false };
+  const isAdmin = user?.isAdmin ?? false;
 
   const { loading: loadingProfile, error: errorProfile, data: dataProfile, refetch: refetchProfile } = useQuery<Data<'profile', Profile>>(
     PROFILE,
@@ -62,22 +61,23 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
     [current],
   );
 
-  const handleChange = (name: keyof Profile, value_?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const element: EventTarget & HTMLInputElement = event.target;
-    const value: string | boolean | number = value_ || (element.type === 'checkbox' ? element.checked : element.value);
+  const handleChange = (name: keyof ProfileInput) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
+    const element = event.target as HTMLInputElement;
+    const value = changedValue || (element.type === 'checkbox' ? element.checked : element.value);
 
     if (isAdmin && current && updated) {
-      const result = name === 'gender' ? +value : value;
-
-      setCurrent({ ...current, [name]: result });
-      setUpdated({ ...updated, [name]: result });
+      // const result = name === 'gender' ? +value : value;
+      setCurrent({ ...current, [name]: value });
+      setUpdated({ ...updated, [name]: value });
     }
   };
 
-  const handleBirthday = (date: Date): void => {
-    if (current && updated) {
-      setCurrent({ ...current, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : undefined });
-      setUpdated({ ...updated, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : undefined });
+  const handleBirthday = (date: Date | null): void => {
+    if (current) {
+      setCurrent({ ...current, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : null });
+    }
+    if (updated) {
+      setUpdated({ ...updated, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : null });
     }
   };
 

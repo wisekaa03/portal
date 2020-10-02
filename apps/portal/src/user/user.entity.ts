@@ -28,10 +28,10 @@ export class UserEntity {
   id: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Column({
     type: 'varchar',
@@ -47,7 +47,7 @@ export class UserEntity {
     nullable: true,
     unique: true,
   })
-  loginIdentificator: string;
+  loginIdentificator: string | null;
 
   @Column({
     type: 'varchar',
@@ -59,13 +59,13 @@ export class UserEntity {
   password: string;
 
   @RelationId((user: UserEntity) => user.groups)
-  groupIds: string[];
+  groupIds: string[] | null;
 
   @ManyToMany(() => GroupEntity, { onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
-  groups: GroupEntity[];
+  groups: GroupEntity[] | null;
 
   @Column({
     type: 'boolean',
@@ -85,7 +85,7 @@ export class UserEntity {
     type: 'jsonb',
     nullable: true,
   })
-  settings: UserSettings;
+  settings: UserSettings | null;
 
   @RelationId((user: UserEntity) => user.profile)
   profileId: string;

@@ -26,6 +26,7 @@
     "isolatedModules": true,
     "stripInternal": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": false,

@@ -10,8 +10,8 @@ import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
 import { FileUpload } from 'graphql-upload';
-import * as cacheManager from 'cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+import * as CacheManager from 'cache-manager';
+import * as RedisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
 import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
@@ -27,8 +27,9 @@ export class FilesService {
   nextCloud: NextcloudClient;
 
   private ttl: number;
-  private cacheStore: cacheManager.Store;
-  private cache: cacheManager.Cache;
+  private cacheStore?: ReturnType<typeof RedisStore.create>;
+  private cache?: ReturnType<typeof CacheManager.caching>;
+
   private staticFolder: string;
   private staticFolderURL: string;
 
@@ -42,11 +43,11 @@ export class FilesService {
 
     this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
     if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
-      this.cacheStore = redisStore.create({
+      this.cacheStore = RedisStore.create({
         prefix: 'NEXTCLOUD:',
         url: configService.get<string>('NEXTCLOUD_REDIS_URI'),
       });
-      this.cache = cacheManager.caching({
+      this.cache = CacheManager.caching({
         store: this.cacheStore,
         ttl: this.ttl,
       });
@@ -76,7 +77,7 @@ export class FilesService {
   nextCloudAs = (user: User, password: string): NextcloudClient => {
     const nextCloud = this.nextCloud.as(user.username, password);
 
-    const nextCloudUUID = this.translateToNextCloud(user.loginIdentificator);
+    const nextCloudUUID = this.translateToNextCloud(user.loginIdentificator || 'not authenticated');
 
     nextCloud.webdavConnection.options.url = nextCloud.webdavConnection.options.url.replace(
       /(remote\.php\/dav\/.+\/)(.+)(\/)?$/,
@@ -227,9 +228,9 @@ export class FilesService {
 
     const lastPath =
       path === '/' || path === ''
-        ? this.translateToNextCloud(user.loginIdentificator).slice(4)
+        ? this.translateToNextCloud(user.loginIdentificator || 'not authenticated').slice(4)
         : (path.slice(-1) === '/' ? path.slice(0, -1).split('/').pop() : path.split('/').pop()) ||
-          this.translateToNextCloud(user.loginIdentificator).slice(4);
+          this.translateToNextCloud(user.loginIdentificator || 'not authenticated').slice(4);
 
     const cachedID = `files:${user.loginIdentificator}:${path}`;
     if (this.cache && cache) {
@@ -242,7 +243,9 @@ export class FilesService {
             path,
             folderFilesSubscription,
           });
-          this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, { ttl: this.ttl });
+          if (this.cache) {
+            this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, { ttl: this.ttl });
+          }
         })();
 
         return cached;

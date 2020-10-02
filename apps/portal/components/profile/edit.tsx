@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -29,15 +29,13 @@ import { DatePicker, LocalizationProvider } from '@material-ui/pickers';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { Gender, Profile, ProfileEditComponentProps, Contact } from '@lib/types';
+import { Gender, Profile, ProfileInput, ProfileEditComponentProps, Contact } from '@lib/types';
 import IsAdmin from '@front/components/isAdmin';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import Button from '@front/components/ui/button';
 import { DropzoneWrapper } from '@front/components/dropzone';
-import RefreshButton from '@front/components/ui/refresh-button';
 import ProfileTextFieldComponent from './text-field';
-
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -166,10 +164,10 @@ const endAdornment = (
   </InputAdornment>
 );
 
-const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
-const companyes: (keyof Profile)[] = ['company', 'management', 'department', 'division', 'title'];
-const langs: (keyof Profile)[] = ['companyEng', 'managementEng', 'departmentEng', 'divisionEng', 'positionEng'];
-const others: (keyof Profile)[] = [
+const names: (keyof ProfileInput)[] = ['lastName', 'firstName', 'middleName'];
+const companyes: (keyof ProfileInput)[] = ['company', 'management', 'department', 'division', 'title'];
+const langs: (keyof ProfileInput)[] = ['companyEng', 'managementEng', 'departmentEng', 'divisionEng', 'positionEng'];
+const others: (keyof ProfileInput)[] = [
   'email',
   'telephone',
   'mobile',
@@ -274,7 +272,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           <Select
                             labelId="profile-contact"
                             autoWidth
-                            onChange={handleChange('contact')}
+                            onChange={(event) => handleChange('contact')((event as unknown) as ChangeEvent<HTMLUnknownElement>)}
                             color="secondary"
                             value={profile.contact}
                             label={t('phonebook:contact.title')}
@@ -407,7 +405,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                     />
                   </div>
                   <div>
-                    <LocalizationProvider dateAdapter={DateFnsUtils as any} locale={dateLocale}>
+                    <LocalizationProvider dateAdapter={DateFnsUtils} locale={dateLocale}>
                       <DatePicker
                         renderInput={(props) => <TextField fullWidth variant="outlined" color="secondary" {...props} />}
                         disabled={loadingChanged}

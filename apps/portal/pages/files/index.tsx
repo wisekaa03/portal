@@ -147,7 +147,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
 
   const handleDownload = (folder: FilesFolder) => async (): Promise<void> => {
     const download = await getFile({ variables: { path: `${path}${folder.name}`, options: { sync: true } } });
-    const downloadURL = `${document.location.origin}/${download.data?.getFile.path}`;
+    const downloadURL = `${document.location.origin}/${download?.data?.getFile?.path}`;
 
     const link = document.createElement('a');
     link.href = downloadURL;

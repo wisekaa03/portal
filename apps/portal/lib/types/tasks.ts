@@ -18,6 +18,13 @@ export interface TasksCardProps {
   task: TkTask;
 }
 
+export interface TaskFilesAreaProps {
+  task: TkTask;
+  loading: boolean;
+  handleDownload: (task: TkTask, file: TkFile) => void;
+  classes: Record<string, string>;
+}
+
 export interface TaskComponentProps {
   loading: boolean;
   loadingTaskFile: boolean;

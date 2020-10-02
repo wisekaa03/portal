@@ -9,7 +9,7 @@ import type { OutlinedInputProps } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import type { StyleProps as StyleProperties, Data } from './common';
-import type { User } from './user.dto';
+import type { UserSettings } from './user.dto';
 import type { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 //#endregion
 
@@ -127,7 +127,7 @@ export interface PhonebookProfileNameProps extends PhonebookProfileModule<'root'
 
 export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root' | 'pointer'> {
   last?: boolean;
-  onClick?: (profile?: string | Profile) => () => void;
+  onClick?: (profile: string | Profile) => () => void;
   title: string;
   field:
     | 'company'
@@ -146,7 +146,7 @@ export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root
 
 export interface HelpDataProps {
   id: number;
-  image: any;
+  image: unknown;
   text: React.ReactNode;
 }
 
@@ -158,19 +158,19 @@ export interface ProfileEditComponentProps {
   loadingChanged: boolean;
   hasUpdate: boolean;
   profile?: Profile | ProfileInput;
-  locale?: User['settings']['lng'];
-  onDrop: (_: any) => Promise<void>;
+  locale?: UserSettings['lng'];
+  onDrop: (_: File[]) => Promise<void>;
   handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  handleChange: (_: keyof Profile | keyof ProfileInput, ___?: string) => (__: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBirthday: (date: Date) => void;
+  handleChange: (_: keyof ProfileInput) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  handleBirthday: (date: Date | null) => void;
   handleSave: () => void;
 }
 
 export interface TextFieldComponentProps {
   disabled: boolean;
-  handleChange: (_: keyof Profile, ___?: string) => (__: React.ChangeEvent<Record<any, any>>) => void;
-  field: keyof Profile;
-  value?: any;
+  handleChange: (_: keyof ProfileInput) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  field: keyof ProfileInput;
+  value?: unknown;
   InputProps: Partial<OutlinedInputProps>;
   fullWidth?: boolean;
 }

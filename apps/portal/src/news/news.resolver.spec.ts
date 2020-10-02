@@ -5,6 +5,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 //#endregion
 //#region Imports Local
+import { UserService } from '@back/user/user.service';
 import { NewsResolver } from './news.resolver';
 import { NewsService } from './news.service';
 //#endregion
@@ -17,7 +18,7 @@ describe(NewsResolver.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [NewsResolver, { provide: NewsService, useValue: serviceMock }],
+      providers: [{ provide: UserService, useValue: serviceMock }, NewsResolver, { provide: NewsService, useValue: serviceMock }],
     }).compile();
 
     resolver = module.get<NewsResolver>(NewsResolver);

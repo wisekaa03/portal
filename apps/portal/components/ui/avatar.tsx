@@ -37,7 +37,14 @@ const Avatar = React.forwardRef(({ profile, fullSize = false, base64, ...rest }:
   const { gender, thumbnailPhoto40, thumbnailPhoto } = profile;
   const photo = fullSize ? thumbnailPhoto : thumbnailPhoto40;
 
-  source = photo ? source + photo : gender === 1 ? Man : gender === 2 ? Woman : Alien;
+  source =
+    typeof photo === 'string' && photo !== null
+      ? source + photo
+      : typeof gender === 'number' && gender !== null
+      ? gender === 1
+        ? Man
+        : Woman
+      : Alien;
 
   return <AvatarMui ref={ref} src={source} {...rest} />;
 });

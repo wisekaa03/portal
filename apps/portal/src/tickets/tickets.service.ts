@@ -11,13 +11,13 @@ import {
   UnauthorizedException,
   UnsupportedMediaTypeException,
   UnprocessableEntityException,
+  GatewayTimeoutException,
 } from '@nestjs/common';
-import deepEqual from 'deep-equal';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import * as cacheManager from 'cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+import * as CacheManager from 'cache-manager';
+import * as RedisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -51,7 +51,7 @@ import type {
 import { TkWhere, TkRoutesInput } from '@lib/types/tickets';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault, soapError } from '@app/soap';
+import { SoapService, SoapFault } from '@app/soap';
 import { constructUploads } from '@back/shared/upload';
 import { DataResult } from '@lib/types/common';
 import { PortalError } from '@back/shared/errors';
@@ -65,8 +65,8 @@ import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, rou
 @Injectable()
 export class TicketsService {
   private ttl: number;
-  private cacheStore: cacheManager.Store;
-  private cache: cacheManager.Cache;
+  private cacheStore?: ReturnType<typeof RedisStore.create>;
+  private cache?: ReturnType<typeof CacheManager.caching>;
 
   constructor(
     @InjectPinoLogger(TicketsService.name) private readonly logger: PinoLogger,
@@ -77,11 +77,11 @@ export class TicketsService {
   ) {
     this.ttl = configService.get<number>('TICKETS_REDIS_TTL') || 900;
     if (configService.get<string>('TICKETS_REDIS_URI')) {
-      this.cacheStore = redisStore.create({
+      this.cacheStore = RedisStore.create({
         prefix: 'TICKETS:',
         url: configService.get<string>('TICKETS_REDIS_URI'),
       });
-      this.cache = cacheManager.caching({
+      this.cache = CacheManager.caching({
         store: this.cacheStore,
         ttl: this.ttl,
       });
@@ -245,7 +245,9 @@ export class TicketsService {
                 userId,
                 object: ticketsRoutes,
               });
-              this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
+              if (this.cache) {
+                this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
+              }
             }
           } catch (error) {
             this.logger.error(`ticketsRoutesCache: ${error.toString()}`);
@@ -489,7 +491,9 @@ export class TicketsService {
                 userId,
                 object: ticketsTasks,
               });
-              this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
+              if (this.cache) {
+                this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
+              }
             } else {
               setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
             }
@@ -594,7 +598,7 @@ export class TicketsService {
           this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
           this.logger.error(`TicketsTaskNew: ${error.toString()}`);
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new InternalServerErrorException(__DEV__ ? error : undefined);
         });
     }
 
@@ -814,7 +818,9 @@ export class TicketsService {
                 userId,
                 object: ticketsTask,
               });
-              this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
+              if (this.cache) {
+                this.cache.set<TkEditTask>(cachedID, ticketsTask, { ttl: this.ttl });
+              }
             } else {
               setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
             }

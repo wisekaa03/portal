@@ -136,6 +136,7 @@ const ProfileField = withStyles((theme) => ({
 }))(({ classes, profile, last, onClick, title, field }: PhonebookProfileFieldProps) => {
   const text =
     typeof profile === 'object' && profile !== null ? (field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '') : '';
+  const thisField = profile?.[field];
 
   return (
     <ListItem divider={!last}>
@@ -147,7 +148,9 @@ const ProfileField = withStyles((theme) => ({
           })}
           primary={
             profile ? (
-              <Typography onClick={onClick && onClick(profile?.[field])}>{text}</Typography>
+              <Typography onClick={onClick && typeof thisField !== 'undefined' && thisField !== null ? onClick(thisField) : undefined}>
+                {text}
+              </Typography>
             ) : (
               <Skeleton variant="rect" width={250} height={25} />
             )
@@ -181,7 +184,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
     }
   }, [setProfile, data, loading, error]);
 
-  const handleProfile = (prof?: Profile) => (): void => {
+  const handleProfile = (prof: string | Profile) => (): void => {
     if (typeof prof === 'object' && prof !== null && !prof.disabled && !prof.notShowing && prof.id) {
       getProfile({
         variables: {
@@ -191,9 +194,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
     }
   };
 
-  const handleSearchClose = (text?: string | Profile) => (): void => {
-    if (!text) return;
-
+  const handleSearchClose = (text: string | Profile) => (): void => {
     handleSearch(typeof text === 'string' ? text : text.fullName || '');
     handleClose();
   };

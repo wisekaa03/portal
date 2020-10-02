@@ -5,7 +5,7 @@ type News {
   title: String!
   excerpt: String
   content: String
-  user: User!
+  author: User!
 }
 
 type Query {

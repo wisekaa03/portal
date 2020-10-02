@@ -15,7 +15,8 @@ import Button from '@front/components/ui/button';
 import { useTranslation } from '@lib/i18n-client';
 //#endregion
 
-const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false }) as any;
+// const ReactToPdf = dynamic(() => import('react-to-pdf'), { ssr: false });
+const ReactToPdf = dynamic(() => import('@front/components/react-to-pdf'), { ssr: false });
 
 const ServicesSuccessCard = withStyles((theme) => ({
   root: {
@@ -80,8 +81,8 @@ const ServicesSuccess = withStyles((theme) => ({
           <ComposeButton variant="contained" startIcon={<SendIcon />} rounded body={`<p>Код заявки: ${data.code}</p>`}>
             {t('common:send')}
           </ComposeButton> */}
-        <ReactToPdf targetRef={cardRef} filename={`ticket_${data.code}.pdf`}>
-          {({ toPdf }) => (
+        <ReactToPdf ref={cardRef} filename={`ticket_${data.code}.pdf`}>
+          {({ toPdf }: { toPdf: () => void }) => (
             <Button onClick={toPdf} actionType="save">
               {t('common:save')}
             </Button>

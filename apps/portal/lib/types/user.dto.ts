@@ -17,10 +17,10 @@ export enum Contact {
 }
 
 export interface AllUsersInfo {
-  contact?: Contact;
-  id?: string;
-  loginIdentificator?: string;
-  name?: string;
+  id: string | null;
+  loginIdentificator: string | null;
+  name: string | null;
+  contact?: Contact | null;
 }
 
 //#region User settings
@@ -75,26 +75,26 @@ export const DefinedUserSettings = [
 export interface BaseUser {
   id?: string;
 
-  loginService: LoginService;
-  loginIdentificator: string;
+  loginService?: LoginService;
+  loginIdentificator?: string | null;
 
   username: string;
 
-  password?: string;
+  password?: string | null;
 
-  disabled: boolean;
+  disabled?: boolean | null;
 
-  groups?: Group[];
+  groups?: Group[] | null;
 
-  groupIds?: string[];
+  groupIds?: string[] | null;
 
-  isAdmin: boolean;
+  isAdmin?: boolean | null;
 
-  settings: UserSettings;
+  settings?: UserSettings | null;
 
-  createdAt?: Date;
+  createdAt?: Date | null;
 
-  updatedAt?: Date;
+  updatedAt?: Date | null;
 
   __typename?: 'User';
 }
@@ -102,7 +102,7 @@ export interface BaseUser {
 //#region User
 export interface User extends BaseUser {
   profile: Profile;
-  profileId?: string;
+  profileId: string;
 }
 
 declare module 'express' {

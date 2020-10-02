@@ -62,12 +62,11 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
   });
 
   useEffect(() => {
-    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
     if (typeof subscribeTicketsRoutes === 'function') {
       subscribeTicketsRoutes({
         document: TICKETS_ROUTES_SUB,
         updateQuery: (prev, { subscriptionData: { data } }) => {
-          const updateData = data?.ticketsRoutes || [];
+          const updateData = data.ticketsRoutes;
 
           return { ticketsRoutes: updateData };
         },
@@ -203,8 +202,8 @@ const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElem
   }, [dataRoutes, errorRoutes, loadingRoutes]);
 
   useEffect(() => {
-    if (!loadingCreated && !errorCreated) {
-      setCreated(dataCreated?.ticketsTaskNew || {});
+    if (dataCreated && dataCreated.ticketsTaskNew && !loadingCreated && !errorCreated) {
+      setCreated(dataCreated.ticketsTaskNew);
     }
   }, [dataCreated, errorCreated, loadingCreated]);
 

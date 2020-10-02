@@ -206,7 +206,7 @@ export class UserService {
         return undefined;
       });
     }
-    const data: User = {
+    const data = {
       ...user,
       createdAt: ldapUser.whenCreated,
       updatedAt: ldapUser.whenChanged,
@@ -216,10 +216,10 @@ export class UserService {
       loginIdentificator: ldapUser.objectGUID,
       // eslint-disable-next-line no-bitwise
       disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),
-      groups,
+      groups: typeof groups !== 'undefined' ? groups : null,
       isAdmin: groups ? Boolean(groups.find((group) => group.name.toLowerCase() === ADMIN_GROUP)) : false,
       settings: user ? user.settings : defaultUserSettings,
-      profile: (profile as unknown) as Profile,
+      profile,
     };
 
     return save ? this.save(this.userRepository.create(data)) : this.userRepository.create(data);
@@ -239,7 +239,13 @@ export class UserService {
    * @param {User} user The user
    * @returns {UserEntity} The user entity
    */
-  create = (user: User): UserEntity => this.userRepository.create(user);
+  create = (user: unknown): UserEntity => {
+    if (typeof user === 'object' && user !== null) {
+      return this.userRepository.create(user);
+    }
+
+    throw new Error();
+  };
 
   /**
    * Save

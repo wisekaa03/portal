@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { FC, useRef, ReactNode } from 'react';
 import Link from 'next/link';
-import { TFunction, I18n } from 'next-i18next';
+import type { TFunction, i18n } from 'i18next';
 import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const columns = (t: TFunction, i18n: I18n): DocFlowTasksColumn[] => [
+const columns = (t: TFunction, I18n: i18n): DocFlowTasksColumn[] => [
   {
     id: 'name',
     label: t('docflow:tasks.column.name'),
@@ -127,7 +127,7 @@ const columns = (t: TFunction, i18n: I18n): DocFlowTasksColumn[] => [
     id: 'beginDate',
     label: t('docflow:tasks.column.beginDate'),
     minWidth: 20,
-    format: (value) => dateFormat(value, i18n),
+    format: (value) => dateFormat(value, I18n),
   },
   {
     id: 'author.name',
@@ -138,22 +138,15 @@ const columns = (t: TFunction, i18n: I18n): DocFlowTasksColumn[] => [
 
 const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
-  const { i18n, t } = useTranslation();
+  const { i18n: I18n, t } = useTranslation();
   const tasksBox = useRef(null);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const maxHeight = tasksBox.current ? `calc(100vh - ${(tasksBox.current as any)?.offsetTop}px)` : '100%';
+  const maxHeight = tasksBox.current
+    ? `calc(100vh - ${((tasksBox.current as unknown) as Record<'offsetTop', string>).offsetTop}px)`
+    : '100%';
 
   return (
     <Box display="flex" flexDirection="column">
@@ -181,9 +174,12 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
               t={t}
               page={page}
               rowsPerPage={rowsPerPage}
-              handleChangePage={handleChangePage}
-              handleChangeRowsPerPage={handleChangeRowsPerPage}
-              columns={columns(t, i18n)}
+              handleChangePage={(event, newPage) => setPage(newPage)}
+              handleChangeRowsPerPage={(event) => {
+                setRowsPerPage(+event.target.value);
+                setPage(0);
+              }}
+              columns={columns(t, I18n)}
               tasks={tasks}
             />
           ) : (

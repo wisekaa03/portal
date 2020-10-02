@@ -7,9 +7,9 @@ import { action } from '@storybook/addon-actions';
 import Service1 from '@public/images/svg/example/app_1.svg';
 import Service2 from '@public/images/svg/example/app_2.svg';
 import { story, withTranslation } from './index.stories';
-import Element from './element';
+import element from './element';
 
-const Story = withTranslation('tickets', Element);
+const Story = withTranslation('tickets', element);
 
 story.add('Element', () => (
   <>

@@ -16,7 +16,7 @@ import { NewsEntity } from './news.entity';
 
 @Resolver('News')
 export class NewsResolver {
-  constructor(private readonly newsService: NewsService) {}
+  constructor(private readonly newsService: NewsService, private readonly userService: UserService) {}
 
   /**
    * GraphQL query: news
@@ -44,11 +44,12 @@ export class NewsResolver {
     @Args('content') content: string,
     @Args('id') id: string,
   ): Promise<NewsEntity> {
-    if (user) {
-      return this.newsService.editNews({ title, excerpt, content, user, id });
+    if (!user || !user.id) {
+      throw new UnauthorizedException();
     }
 
-    throw new UnauthorizedException();
+    const author = await this.userService.byId(user.id);
+    return this.newsService.editNews({ title, excerpt, content, author, id });
   }
 
   /**

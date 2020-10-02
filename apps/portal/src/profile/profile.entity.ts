@@ -28,10 +28,10 @@ export class ProfileEntity {
   id: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date | null;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date | null;
 
   @Column({
     type: 'varchar',
@@ -47,202 +47,202 @@ export class ProfileEntity {
     nullable: true,
     unique: true,
   })
-  loginIdentificator: string;
+  loginIdentificator: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  username: string;
+  username: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  dn: string;
+  dn: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  firstName: string;
+  firstName: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  lastName: string;
+  lastName: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  middleName: string;
+  middleName: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  email: string;
+  email: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 10,
+    length: 11,
   })
-  birthday: string;
+  birthday: string | null;
 
   @Column({
     type: 'int',
     nullable: true,
     default: Gender.UNKNOWN,
   })
-  gender: Gender;
+  gender: Gender | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  country: string;
+  country: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  postalCode: string;
+  postalCode: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  region: string;
+  region: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  town: string;
+  town: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  street: string;
+  street: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  room: string;
+  room: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  employeeID: string;
+  employeeID: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  company: string;
+  company: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  management?: string;
+  management: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  department?: string;
+  department: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  division?: string;
+  division: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  title: string;
+  title: string | null;
 
   @RelationId((profile: ProfileEntity) => profile.manager)
-  managerId?: string;
+  managerId: string | null;
 
   @ManyToOne(() => ProfileEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinTable()
-  manager?: ProfileEntity | undefined;
+  manager: ProfileEntity | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  telephone: string;
+  telephone: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  workPhone: string;
+  workPhone: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  mobile: string;
+  mobile: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  fax: string;
+  fax: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  companyEng: string;
+  companyEng: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  nameEng: string;
+  nameEng: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  managementEng: string;
+  managementEng: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  departmentEng: string;
+  departmentEng: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  divisionEng: string;
+  divisionEng: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  positionEng: string;
+  positionEng: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  accessCard: string;
+  accessCard: string | null;
 
   @Column({
     type: 'boolean',
@@ -262,13 +262,13 @@ export class ProfileEntity {
     type: 'varchar',
     nullable: true,
   })
-  thumbnailPhoto?: string | Promise<string | undefined>;
+  thumbnailPhoto: string | Promise<string | null> | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  thumbnailPhoto40?: string | Promise<string | undefined>;
+  thumbnailPhoto40: string | Promise<string | null> | null;
 
   @BeforeUpdate()
   @BeforeInsert()

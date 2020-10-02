@@ -31,12 +31,12 @@ const useStyles = makeStyles(() =>
 );
 
 export interface ListItemProfile {
-  items: Edge<Profile>;
+  items: Edge<Profile>[];
   columns: Array<string>;
   largeWidth: boolean;
 }
 
-const itemKey = (index: number, data: ListItemProfile): Key => data.items[index].node.id;
+const itemKey = (index: number, data: ListItemProfile): Key => data.items[index].node.id || 'unknown';
 
 const isItemLoaded = (data: Connection<Profile>) => (index: number): boolean =>
   data && (!data.pageInfo.hasNextPage || index < data.edges.length);

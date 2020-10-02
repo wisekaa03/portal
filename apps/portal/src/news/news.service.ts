@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 //#region Imports Local
 import { News } from '@lib/types';
 // import { ConfigService } from '@app/config';
-// import { UserService } from '../user/user.service';
+import { UserService } from '@back/user/user.service';
 import { NewsEntity } from './news.entity';
 //#endregion
 
@@ -19,7 +19,7 @@ export class NewsService {
   constructor(
     @InjectPinoLogger(NewsService.name) private readonly logger: PinoLogger,
     // private readonly configService: ConfigService,
-    // private readonly userService: UserService,
+    private readonly userService: UserService,
     @InjectRepository(NewsEntity)
     private readonly newsRepository: Repository<NewsEntity>,
   ) {}
@@ -38,16 +38,16 @@ export class NewsService {
    *
    * @return id
    */
-  editNews = async ({ title, excerpt, content, user, id }: News): Promise<NewsEntity> => {
-    const data = {
+  editNews = async ({ title, excerpt, content, author, id }: NewsEntity): Promise<NewsEntity> => {
+    const data = this.newsRepository.create({
       title,
       excerpt,
       content,
-      user,
+      author,
       id,
-    };
+    });
 
-    return this.newsRepository.save(this.newsRepository.create(data)).catch((error) => {
+    return this.newsRepository.save(data).catch((error) => {
       throw error;
     });
   };

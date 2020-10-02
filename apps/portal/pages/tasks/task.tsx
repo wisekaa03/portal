@@ -44,26 +44,22 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   });
 
   useEffect(() => {
-    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    // const unsubscribe = subscribeTicketsTasks({
-    subscribeTicketsTask({
-      document: TICKETS_TASK_SUB,
-      variables: {
-        task: {
-          where,
-          code,
+    if (typeof subscribeTicketsTask === 'function') {
+      subscribeTicketsTask({
+        document: TICKETS_TASK_SUB,
+        variables: {
+          task: {
+            where,
+            code,
+          },
         },
-      },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.ticketsTask || [];
+        updateQuery: (prev, { subscriptionData: { data } }) => {
+          const updateData = data?.ticketsTask;
 
-        return { ticketsTask: updateData };
-      },
-    });
-
-    // return () => {
-    //   unsubscribe();
-    // };
+          return { ticketsTask: updateData };
+        },
+      });
+    }
   }, [subscribeTicketsTask, where, code]);
 
   const [getTaskFile, { loading: loadingTaskFile, data: dataTaskFile, error: errorTaskFile }] = useMutation<
@@ -88,7 +84,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
             where: where || TkWhere.Default,
             code: code || '0',
           },
-          data: { ticketsTask: dataEdit?.ticketsTaskEdit },
+          data: { ticketsTask: dataEdit.ticketsTaskEdit },
         });
       }
     },
@@ -152,8 +148,8 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
   };
 
   useEffect(() => {
-    if (dataTaskFile) {
-      download(dataTaskFile?.ticketsTaskFile.body || '', dataTaskFile?.ticketsTaskFile.name || '');
+    if (dataTaskFile && dataTaskFile.ticketsTaskFile) {
+      download(dataTaskFile.ticketsTaskFile.body || '', dataTaskFile.ticketsTaskFile.name || '');
     }
   }, [dataTaskFile]);
 

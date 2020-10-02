@@ -371,7 +371,7 @@ export class ProfileService {
       profile = await this.byLoginIdentificator(ldapUser.objectGUID, true, false);
     }
 
-    const data: Profile = {
+    const dataProfile = {
       ...profile,
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
@@ -380,7 +380,7 @@ export class ProfileService {
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName,
-      birthday: !birthday ? undefined : birthday,
+      birthday: !birthday ? null : birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,
       postalCode: ldapUser.postalCode,
@@ -392,7 +392,7 @@ export class ProfileService {
       department: ldapUser['msDS-cloudExtensionAttribute6'],
       division: ldapUser['msDS-cloudExtensionAttribute7'],
       title: ldapUser.title,
-      manager: (manager as unknown) as Profile | undefined,
+      manager: typeof manager !== 'undefined' ? manager : null,
       email: ldapUser.mail,
       telephone: ldapUser.telephoneNumber,
       workPhone: ldapUser.otherTelephone,
@@ -417,16 +417,24 @@ export class ProfileService {
       updatedAt: ldapUser.whenChanged,
     };
 
-    return save ? this.save(this.profileRepository.create(data)) : this.profileRepository.create(data);
+    const data = this.profileRepository.create(dataProfile);
+
+    return save ? this.save(data) : data;
   }
 
   /**
    * Create profile
    *
-   * @param {Profile} profile Profile
+   * @param {Profile} profile DeepPartial<ProfileEntity>
    * @returns {Promise<ProfileEntity>} Profile entity
    */
-  create = (profile: Profile): ProfileEntity => this.profileRepository.create(profile);
+  create = (profile: unknown): ProfileEntity => {
+    if (typeof profile === 'object' && profile !== null) {
+      return this.profileRepository.create(profile);
+    }
+
+    throw new Error();
+  };
 
   /**
    * Bulk Save
@@ -719,7 +727,11 @@ export class ProfileService {
    * @throws {Error|BadRequestException|NotAcceptableException}
    * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
    */
-  async changeProfile(request: Request, profile: Profile, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
+  async changeProfile(
+    request: Request,
+    profile: Omit<Profile, 'createdAt' | 'updatedAt' | 'fullName' | 'manager' | 'thumbnailPhoto' | 'thumbnailPhoto40'>,
+    thumbnailPhoto?: Promise<FileUpload>,
+  ): Promise<ProfileEntity> {
     let thumbnailPhotoProcessed: Buffer | undefined;
 
     if (!request.session?.passport?.user?.profile?.id) {
@@ -739,7 +751,7 @@ export class ProfileService {
       });
     }
 
-    if (created.loginService === LoginService.LDAP) {
+    if (created.dn && created.loginService === LoginService.LDAP) {
       let ldapUser: LdapResponseUser | undefined;
       try {
         ldapUser = await this.ldapService.searchByDN(created.dn);
@@ -789,7 +801,7 @@ export class ProfileService {
           .modify(
             ldapUser.dn,
             ldapUpdated,
-            created.username,
+            created && created.username ? created.username : undefined,
             // TODO: .modify with password parameter
             // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
           )
@@ -815,7 +827,7 @@ export class ProfileService {
             .then((value: Buffer | undefined) => value?.toString('base64')),
         }
       : {};
-    const result = this.profileRepository.merge(created, profile, thumbnail as ProfileEntity);
+    const result = this.profileRepository.merge(created, profile || undefined, thumbnail as ProfileEntity);
 
     return this.save(result).then(async (profileUpdated) => {
       if (request.session?.passport.user.profile.id === profileUpdated.id) {

@@ -13,9 +13,8 @@ import {
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import deepEqual from 'deep-equal';
-import * as cacheManager from 'cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+import * as CacheManager from 'cache-manager';
+import * as RedisStore from 'cache-manager-redis-store';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -53,8 +52,8 @@ import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow
 @Injectable()
 export class DocFlowService {
   private ttl: number;
-  private cacheStore: cacheManager.Store;
-  private cache: cacheManager.Cache;
+  private cacheStore?: ReturnType<typeof RedisStore.create>;
+  private cache?: ReturnType<typeof CacheManager.caching>;
 
   constructor(
     @InjectPinoLogger(DocFlowService.name) private readonly logger: PinoLogger,
@@ -64,11 +63,11 @@ export class DocFlowService {
   ) {
     this.ttl = configService.get<number>('DOCFLOW_REDIS_TTL') || 900;
     if (configService.get<string>('DOCFLOW_REDIS_URI')) {
-      this.cacheStore = redisStore.create({
+      this.cacheStore = RedisStore.create({
         prefix: 'DOCFLOW:',
         url: configService.get<string>('DOCFLOW_REDIS_URI'),
       });
-      this.cache = cacheManager.caching({
+      this.cache = CacheManager.caching({
         store: this.cacheStore,
         ttl: this.ttl,
       });
@@ -177,7 +176,7 @@ export class DocFlowService {
       const client = await this.soapService
         .connect({
           url: soapUrl,
-          username: user?.username,
+          username: user.username || 'not authenticated',
           password,
           domain: this.configService.get<string>('LDAP_DOMAIN'),
           ntlm: true,
@@ -289,9 +288,9 @@ export class DocFlowService {
    */
   docFlowTasksCache = async (user: User, password: string, tasks?: DocFlowTasksInput): Promise<DocFlowTask[]> => {
     const userId = user.id || '';
-    const cachedID = `tasks:${userId}`;
+    const cachedId = `tasks:${userId}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
-      const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedID);
+      const cached: DocFlowTask[] = await this.cache.get<DocFlowTask[]>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
@@ -302,7 +301,9 @@ export class DocFlowService {
                 userId,
                 object: ticketsTasks,
               });
-              this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
+              if (this.cache) {
+                this.cache.set<DocFlowTask[]>(cachedId, ticketsTasks, { ttl: this.ttl });
+              }
             }
           } catch (error) {
             this.logger.error(`docFlowTasksCache: ${error.toString()}`);
@@ -317,7 +318,7 @@ export class DocFlowService {
       const ticketsTasks = await this.docFlowTasks(user, password, tasks);
 
       if (this.cache) {
-        this.cache.set<DocFlowTask[]>(cachedID, ticketsTasks, { ttl: this.ttl });
+        this.cache.set<DocFlowTask[]>(cachedId, ticketsTasks, { ttl: this.ttl });
       }
 
       return ticketsTasks;
@@ -343,7 +344,7 @@ export class DocFlowService {
       const client = await this.soapService
         .connect({
           url: soapUrl,
-          username: user?.username,
+          username: user.username || 'not authenticated',
           password,
           domain: this.configService.get<string>('LDAP_DOMAIN'),
           ntlm: true,
@@ -422,9 +423,9 @@ export class DocFlowService {
    */
   docFlowTaskCache = async (user: User, password: string, task: DocFlowTaskInput): Promise<DocFlowTask> => {
     const userId = user.id || '';
-    const cachedID = `task:${task.id}`;
+    const cachedId = `task:${task.id}`;
     if (this.cache && (!task || task.cache !== false)) {
-      const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedID);
+      const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
@@ -435,7 +436,9 @@ export class DocFlowService {
                 userId,
                 object: ticketsTask,
               });
-              this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
+              if (this.cache) {
+                this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
+              }
             }
           } catch (error) {
             this.logger.error(`docFlowTaskCache: ${error.toString()}`);
@@ -450,7 +453,7 @@ export class DocFlowService {
       const ticketsTask = await this.docFlowTask(user, password, task);
 
       if (this.cache) {
-        this.cache.set<DocFlowTask>(cachedID, ticketsTask, { ttl: this.ttl });
+        this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
       }
 
       return ticketsTask;
@@ -476,7 +479,7 @@ export class DocFlowService {
       const client = await this.soapService
         .connect({
           url: soapUrl,
-          username: user?.username,
+          username: user.username || 'not authenticated',
           password,
           domain: this.configService.get<string>('LDAP_DOMAIN'),
           ntlm: true,
@@ -541,7 +544,7 @@ export class DocFlowService {
       const client = await this.soapService
         .connect({
           url: soapUrl,
-          username: user?.username,
+          username: user.username || 'not authenticated',
           password,
           domain: this.configService.get<string>('LDAP_DOMAIN'),
           ntlm: true,
@@ -603,9 +606,9 @@ export class DocFlowService {
    */
   docFlowTargetCache = async (user: User, password: string, target: DocFlowTargetInput): Promise<DocFlowTarget> => {
     const userId = user.id || '';
-    const cachedID = `target:${target.id}`;
+    const cachedId = `target:${target.id}`;
     if (this.cache && (!target || target.cache !== false)) {
-      const cached: DocFlowTarget = await this.cache.get<DocFlowTarget>(cachedID);
+      const cached: DocFlowTarget = await this.cache.get<DocFlowTarget>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
@@ -616,7 +619,9 @@ export class DocFlowService {
                 userId,
                 object: ticketsTarget,
               });
-              this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
+              if (this.cache) {
+                this.cache.set<DocFlowTarget>(cachedId, ticketsTarget, { ttl: this.ttl });
+              }
             } else {
               setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
             }
@@ -633,7 +638,7 @@ export class DocFlowService {
       const ticketsTarget = await this.docFlowTarget(user, password, target);
 
       if (this.cache) {
-        this.cache.set<DocFlowTarget>(cachedID, ticketsTarget, { ttl: this.ttl });
+        this.cache.set<DocFlowTarget>(cachedId, ticketsTarget, { ttl: this.ttl });
       }
 
       return ticketsTarget;
@@ -659,7 +664,7 @@ export class DocFlowService {
       const client = await this.soapService
         .connect({
           url: soapUrl,
-          username: user?.username,
+          username: user.username || 'not authenticated',
           password,
           domain: this.configService.get<string>('LDAP_DOMAIN'),
           ntlm: true,

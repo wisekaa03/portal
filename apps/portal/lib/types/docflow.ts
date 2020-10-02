@@ -28,7 +28,7 @@ export interface DocFlowTasksTableProps {
   tasks: DocFlowTask[];
   page: number;
   rowsPerPage: number;
-  handleChangePage: (event: unknown, newPage: number) => void;
+  handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

@@ -16,34 +16,26 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  TextField,
-  FormControl,
-  CardMedia,
   CardActions,
 } from '@material-ui/core';
 import Link from 'next/link';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import HourglassFullIcon from '@material-ui/icons/HourglassFull';
-import GetAppIcon from '@material-ui/icons/GetAppRounded';
 //#endregion
 //#region Imports Local
 import dateFormat from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
-import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
-import type { TaskInfoCardProps, TaskComponentProps, TkTask } from '@lib/types';
+import { LARGE_RESOLUTION } from '@lib/constants';
+import type { TaskInfoCardProps, TaskComponentProps, TaskFilesAreaProps } from '@lib/types';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import { Icon } from '@front/components/ui/icon';
-import Dropzone from '@front/components/dropzone';
-import Button from '@front/components/ui/button';
-import Iframe from '@front/components/iframe';
 import { ComposeLink } from '@front/components/compose-link';
 import TaskIconNew from '@public/images/svg/task/task_new.svg';
 import TaskIconPause from '@public/images/svg/task/task_pause.svg';
 import TaskIconWorked from '@public/images/svg/task/task_worked.svg';
 import TaskIconComplete from '@public/images/svg/task/task_complete.svg';
-import RefreshButton from '@front/components/ui/refresh-button';
 //#endregion
 
 const getTicketStatusIcon = (status: string): any => {
@@ -271,7 +263,7 @@ const FilesArea = withStyles((theme) => ({
     justifyContent: 'flex-start',
     color: '#3C6AA3',
   },
-}))(({ classes, task, loading, handleDownload }: { task: TkTask; loading: boolean; handleDownload; classes: Record<string, string> }) => {
+}))(({ classes, task, loading, handleDownload }: TaskFilesAreaProps) => {
   if (Array.isArray(task?.files) && task.files.length > 0) {
     return (
       <CardActions disableSpacing className={classes.files}>

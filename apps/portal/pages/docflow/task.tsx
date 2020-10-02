@@ -39,16 +39,17 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
   >(DOCFLOW_FILE);
 
   useEffect(() => {
-    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    subscribeToMoreDocFlowTask({
-      document: DOCFLOW_TASK_SUB,
-      variables: { task: { id } },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.docFlowTask || [];
+    if (typeof subscribeToMoreDocFlowTask === 'function') {
+      subscribeToMoreDocFlowTask({
+        document: DOCFLOW_TASK_SUB,
+        variables: { task: { id } },
+        updateQuery: (prev, { subscriptionData: { data } }) => {
+          const updateData = data.docFlowTask;
 
-        return { docFlowTask: updateData };
-      },
-    });
+          return { docFlowTask: updateData };
+        },
+      });
+    }
   }, [subscribeToMoreDocFlowTask, id]);
 
   const download = async (body: string, name: string): Promise<void> => {
@@ -74,10 +75,10 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
   };
 
   useEffect(() => {
-    if (dataDocFlowTaskFile) {
+    if (dataDocFlowTaskFile && dataDocFlowTaskFile.docFlowFile) {
       download(
-        dataDocFlowTaskFile?.docFlowFile.binaryData || '',
-        `${dataDocFlowTaskFile?.docFlowFile.name}.${dataDocFlowTaskFile?.docFlowFile.extension}`,
+        dataDocFlowTaskFile.docFlowFile.binaryData || '',
+        `${dataDocFlowTaskFile.docFlowFile.name}.${dataDocFlowTaskFile.docFlowFile.extension}`,
       );
     }
   }, [dataDocFlowTaskFile]);

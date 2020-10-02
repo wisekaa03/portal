@@ -28,16 +28,17 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement =>
   } = useQuery<Data<'docFlowTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
     ssr: true,
     // TODO: какого-то хера не получается сделать query:fragment и fetchPolicy: 'cache-and-network'
-    fetchPolicy: 'network-only',
+    // fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     // notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
-    if (subscribeToMoreDocFlowTasks) {
+    if (typeof subscribeToMoreDocFlowTasks === 'function') {
       subscribeToMoreDocFlowTasks({
         document: DOCFLOW_TASKS_SUB,
         updateQuery: (prev, { subscriptionData: { data } }) => {
-          const updateData = data?.docFlowTasks || [];
+          const updateData = data.docFlowTasks;
 
           return { docFlowTasks: updateData };
         },

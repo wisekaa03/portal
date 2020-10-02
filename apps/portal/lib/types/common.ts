@@ -9,7 +9,7 @@ export interface StyleProps {
 }
 
 export type Data<K extends string, V> = {
-  [P in K]: V;
+  [P in K]?: V;
 };
 
 export interface DataReturn<K> {

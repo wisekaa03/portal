@@ -76,12 +76,7 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, hand
         loading={loading}
         options={options}
         value={value}
-        onChange={(event, newValue) => {
-          // eslint-disable-next-line no-debugger
-          debugger;
-
-          return handleChange(field, newValue)(event);
-        }}
+        onChange={(event, valueChanged) => handleChange(field)(event as React.ChangeEvent<HTMLInputElement>, valueChanged)}
         renderInput={(parameters) => (
           <TextField
             {...props}

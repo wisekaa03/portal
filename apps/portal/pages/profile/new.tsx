@@ -1,7 +1,9 @@
 /** @format */
 
 //#region Imports NPM
+import type { Request } from 'express';
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import type { NextPageContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
@@ -9,11 +11,12 @@ import { format as dateFnsFormat } from 'date-fns';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
+import type { UserContext, Data, Profile, ProfileInput } from '@lib/types';
 import { LDAP_NEW_USER, LDAP_CHECK_USERNAME } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Data, Profile, ProfileInput, Contact } from '@lib/types';
+import { Contact } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
@@ -31,18 +34,19 @@ const newParameters: ProfileInput = {
   email: '',
 };
 
-const ProfileEditPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...rest }): React.ReactElement => {
   const router = useRouter();
   const [current, setCurrent] = useState<ProfileInput>(newParameters);
   const [updated, setUpdated] = useState<ProfileInput>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
-  const { user } = useContext(ProfileContext);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { user } = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
   const locale = i18n.language as 'ru' | 'en' | undefined;
-  const { isAdmin } = user || { isAdmin: false };
+  const isAdmin = user?.isAdmin ?? false;
 
   const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<Data<'ldapNewUser', Profile>>(LDAP_NEW_USER, {
     onCompleted: (data) => {
-      if (data.ldapNewUser.id) {
+      if (data.ldapNewUser?.id) {
         router.push(`/profile/edit/${data.ldapNewUser.id}`);
       }
     },
@@ -81,22 +85,23 @@ const ProfileEditPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => 
     }
   };
 
-  const handleChange = (name: keyof ProfileInput, value_?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const element: EventTarget & HTMLInputElement = event.target;
-    const value: string | boolean | number = value_ || (element.type === 'checkbox' ? element.checked : element.value);
+  const handleChange = (name: keyof ProfileInput) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
+    const element = event.target as HTMLInputElement;
+    const value = changedValue || (element.type === 'checkbox' ? element.checked : element.value);
 
     if (isAdmin && current) {
-      const result = name === 'gender' ? +value : value;
-
-      setCurrent({ ...current, [name]: result });
-      setUpdated({ ...updated, [name]: result, disabled: updated.contact !== Contact.PROFILE });
+      // const result = name === 'gender' ? +value : value;
+      setCurrent({ ...current, [name]: value });
+      setUpdated({ ...updated, [name]: value, disabled: updated.contact !== Contact.PROFILE });
     }
   };
 
-  const handleBirthday = (date: Date): void => {
-    if (current && updated) {
-      setCurrent({ ...current, birthday: dateFnsFormat(date, 'yyyy-MM-dd') });
-      setUpdated({ ...updated, birthday: dateFnsFormat(date, 'yyyy-MM-dd') });
+  const handleBirthday = (date: Date | null): void => {
+    if (current) {
+      setCurrent({ ...current, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : null });
+    }
+    if (updated) {
+      setUpdated({ ...updated, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : null });
     }
   };
 
@@ -139,7 +144,7 @@ const ProfileEditPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => 
       </Head>
       <MaterialUI {...rest}>
         <ProfileEditComponent
-          isAdmin={isAdmin}
+          isAdmin={false}
           newProfile
           loadingCheckUsername={loadingCheckUsername}
           loadingProfile={false}

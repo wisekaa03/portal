@@ -1,15 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  JoinColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from 'typeorm';
 //#endregion
 //#region Imports Local
 import { UserEntity } from '@back/user/user.entity';
@@ -18,13 +10,13 @@ import { UserEntity } from '@back/user/user.entity';
 @Entity('news')
 export class NewsEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string | null;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date | null;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date | null;
 
   @Column({
     type: 'varchar',
@@ -36,16 +28,15 @@ export class NewsEntity {
     type: 'varchar',
     nullable: true,
   })
-  excerpt: string;
+  excerpt: string | null;
 
   @Column({
     type: 'text',
     nullable: true,
   })
-  content: string;
+  content: string | null;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  user: UserEntity;
+  author: UserEntity;
 }

@@ -179,7 +179,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
                 svcCode: element.service.code,
               },
             ],
-            [],
+            [] as UserSettingsTaskFavorite[],
           );
 
           break;
@@ -325,7 +325,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
                   <Select
                     value={service}
                     inputRef={serviceRef}
-                    onChange={handleService}
+                    onChange={(event) => handleService(event as React.ChangeEvent<HTMLSelectElement>)}
                     classes={{
                       select: classes.select,
                     }}

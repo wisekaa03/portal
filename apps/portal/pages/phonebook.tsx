@@ -141,27 +141,29 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       query: PROFILES(getGraphQLColumns(columns)),
       variables: {
         orderBy,
-        after: data?.profiles.pageInfo.endCursor || '',
+        after: data?.profiles?.pageInfo.endCursor ?? '',
         first: 100,
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
         notShowing: isAdmin && columns.includes('notShowing'),
       },
       updateQuery: (previous, { fetchMoreResult }) => {
-        if (fetchMoreResult) {
-          const { pageInfo, edges, totalCount } = fetchMoreResult.profiles;
+        if (fetchMoreResult && fetchMoreResult.profiles) {
+          const { pageInfo, edges: newEdges, totalCount } = fetchMoreResult.profiles;
 
-          if (edges.length === 0) return previous;
+          if (newEdges.length === 0) return previous;
           const clean: string[] = [];
+
+          const edges = [...newEdges, ...(previous.profiles?.edges || [])].filter(
+            (edge) => edge && !clean.includes(edge.node.id || '') && clean.push(edge.node.id || ''),
+          );
 
           return {
             ...previous,
             profiles: {
               ...previous.profiles,
               totalCount,
-              edges: [...previous.profiles.edges, ...edges].filter(
-                (edge) => !clean.includes(edge.node.id || '') && clean.push(edge.node.id || ''),
-              ),
+              edges,
               pageInfo,
             },
           };
@@ -271,7 +273,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
             handleHelpOpen={handleHelpOpen}
             handleSettingsOpen={handleSettingsOpen}
           />
-          {data && (
+          {data?.profiles && (
             <PhonebookTable
               hasLoadMore={!loading}
               loadMoreItems={fetchFunction}

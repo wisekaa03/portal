@@ -9,7 +9,6 @@ import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon
 //#endregion
 //#region Imports Local
 import { PhonebookSearchProps } from '@lib/types';
-import RefreshButton from '@front/components/ui/refresh-button';
 import { useTranslation } from '@lib/i18n-client';
 import { Icon } from '@front/components/ui/icon';
 //#endregion
@@ -60,19 +59,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const PhonebookSearch = forwardRef(
+const PhonebookSearch = forwardRef<HTMLInputElement, PhonebookSearchProps>(
   (
-    {
-      search,
-      suggestions,
-      handleSearch,
-      handleSugClose,
-      handleSugKeyDown,
-      handleSugClick,
-      handleHelpOpen,
-      handleSettingsOpen,
-    }: PhonebookSearchProps,
-    ref: React.MutableRefObject<HTMLInputElement>,
+    { search, suggestions, handleSearch, handleSugClose, handleSugKeyDown, handleSugClick, handleHelpOpen, handleSettingsOpen },
+    forwardedRef,
   ) => {
     const classes = useStyles({});
     const { t } = useTranslation();
@@ -112,7 +102,7 @@ const PhonebookSearch = forwardRef(
             placement="top-start"
           >
             <InputBase
-              ref={ref}
+              ref={forwardedRef}
               placeholder={t('common:search')}
               value={search}
               onChange={handleCurrentSearch}
@@ -129,7 +119,7 @@ const PhonebookSearch = forwardRef(
             placement="bottom-start"
             className={classes.suggestionsPopper}
             open={showedSuggestions}
-            anchorEl={() => ref?.current}
+            anchorEl={typeof forwardedRef === 'object' && forwardedRef !== null ? forwardedRef.current : undefined}
             disablePortal
           >
             <Paper>

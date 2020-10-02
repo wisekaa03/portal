@@ -32,20 +32,16 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
   });
 
   useEffect(() => {
-    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
-    // const unsubscribe = subscribeTicketsTasks({
-    subscribeTicketsTasks({
-      document: TICKETS_TASKS_SUB,
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.ticketsTasks || [];
+    if (typeof subscribeTicketsTasks === 'function') {
+      subscribeTicketsTasks({
+        document: TICKETS_TASKS_SUB,
+        updateQuery: (prev, { subscriptionData: { data } }) => {
+          const updateData = data.ticketsTasks;
 
-        return { ticketsTasks: updateData };
-      },
-    });
-
-    // return () => {
-    //   unsubscribe();
-    // };
+          return { ticketsTasks: updateData };
+        },
+      });
+    }
   }, [subscribeTicketsTasks]);
 
   const tasksRefetch = (

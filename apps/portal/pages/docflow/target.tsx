@@ -39,7 +39,7 @@ const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest 
       document: DOCFLOW_TARGET_SUB,
       variables: { target: { id } },
       updateQuery: (prev, { subscriptionData: { data } }) => {
-        const updateData = data?.docFlowTarget || [];
+        const updateData = data.docFlowTarget;
 
         return { docFlowTarget: updateData };
       },

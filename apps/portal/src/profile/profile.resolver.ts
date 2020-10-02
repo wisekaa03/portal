@@ -130,7 +130,7 @@ export class ProfileResolver {
   @UseGuards(IsAdminGuard)
   async changeProfile(
     @Context('req') request: Request,
-    @Args('profile') profile: Profile,
+    @Args('profile') profile: Omit<Profile, 'createdAt' | 'updatedAt' | 'fullName' | 'manager' | 'thumbnailPhoto' | 'thumbnailPhoto40'>,
     @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
     return this.profileService
