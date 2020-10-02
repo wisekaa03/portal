@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC, Children } from 'react';
+import React, { FC, Children, ReactElement, ReactChildren } from 'react';
 import Link from 'next/link';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, ClickAwayListener, MenuList, MenuItem, Popper } from '@material-ui/core';
@@ -23,7 +23,15 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Wire = ({ children, ...props }): any => Children.only(children(props));
+const Wire: FC<ReactElement> = ({ children, ...props }): any => {
+  const child = children(props);
+
+  if (child) {
+    return Children.only(child);
+  }
+
+  return null;
+};
 
 const PhonebookProfileControl: FC<PhonebookProfileControlProps> = ({ controlEl, profileId: id, handleControl, handleCloseControl }) => {
   const classes = useStyles({});

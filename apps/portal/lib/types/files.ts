@@ -1,8 +1,8 @@
 /** @format */
 
 import React from 'react';
-import { FilesFolder, FilesFolderChk } from './files.interface';
 import { Order } from 'typeorm-graphql-pagination';
+import { FilesFolder, FilesFolderChk } from './files.interface';
 
 export interface FilesComponentProps {
   folderLoading: boolean;
@@ -10,11 +10,9 @@ export interface FilesComponentProps {
   folderRefetch: () => void;
   search: string;
   path: FilesPath[];
-  handleCheckbox: (
-    current: number | FilesFolderChk[],
-  ) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  handleCheckbox: (current: number | FilesFolderChk[]) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
-  handleFolder: (filesFolder: FilesFolderChk) => void;
+  handleFolder: (filesFolder: string | FilesFolderChk) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
   handleUrl: () => void;
@@ -62,11 +60,9 @@ export type FilesTableProps = {
   search: string;
   filesColumns: FilesColumn[];
   path: FilesPath[];
-  handleCheckbox: (
-    current: number | FilesFolderChk[],
-  ) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  handleCheckbox: (current: number | FilesFolderChk[]) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   handleDrop: (acceptedFiles: File[]) => Promise<void>;
-  handleFolder: (filesFolder: FilesFolderChk | string) => void;
+  handleFolder: (filesFolder: string | FilesFolderChk) => void;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: (filesFolder: FilesFolderChk) => () => void;
   handleUrl: () => void;
@@ -76,7 +72,7 @@ export type FilesTableProps = {
 
 export interface FilesBreadcrumbsProps {
   path: FilesPath[];
-  handleFolder: (filesFolder: FilesFolderChk | string) => void;
+  handleFolder: (filesFolder: string | FilesFolderChk) => void;
   handleUrl: () => void;
   handleUpload: () => void;
   handleDelete: (filesFolder?: FilesFolderChk) => () => void;
