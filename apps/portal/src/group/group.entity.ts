@@ -13,10 +13,10 @@ export class GroupEntity {
   id: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date | null;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date | null;
 
   @Column({
     type: 'varchar',
@@ -28,13 +28,13 @@ export class GroupEntity {
     type: 'varchar',
     nullable: true,
   })
-  dn: string;
+  dn: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  description: string;
+  description: string | null;
 
   @Column({
     type: 'varchar',
@@ -50,7 +50,7 @@ export class GroupEntity {
     nullable: true,
     unique: true,
   })
-  loginIdentificator: string;
+  loginIdentificator: string | null;
 
   toResponseObject = (): GroupEntity => ({ ...this });
 }

@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult } from 'typeorm';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
@@ -58,7 +58,8 @@ export class GroupService {
   byIdentificator = async (loginIdentificator: string, cache = true): Promise<GroupEntity | undefined> =>
     this.groupRepository.findOne({
       where: { loginIdentificator },
-      cache: cache ? this.dbCacheTtl : false,
+      // TODO:
+      cache: false,
     });
 
   /**
@@ -87,7 +88,7 @@ export class GroupService {
         }),
     );
 
-    return Promise.allSettled(groupsPromises).then((values) =>
+    const groups = await Promise.allSettled(groupsPromises).then((values) =>
       values.reduce((accumulator: GroupEntity[], current: PromiseSettledResult<GroupEntity>) => {
         if (current.status === 'fulfilled') {
           return accumulator.concat(current.value);
@@ -97,6 +98,8 @@ export class GroupService {
         return accumulator;
       }, [] as GroupEntity[]),
     );
+
+    return groups;
   }
 
   /**
@@ -141,7 +144,7 @@ export class GroupService {
       const message = error.toString();
       this.logger.error(`Unable to save data in "group": ${message}`, message);
 
-      throw error;
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     });
 
   /**
@@ -155,7 +158,7 @@ export class GroupService {
     this.groupRepository.save(group).catch((error) => {
       this.logger.error(`Unable to save data in "group": ${error.toString()}`, [{ error }]);
 
-      throw error;
+      throw new InternalServerErrorException(__DEV__ ? error : undefined);
     });
 
   /**

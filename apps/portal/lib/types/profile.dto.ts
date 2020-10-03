@@ -92,7 +92,6 @@ export interface Profile {
   thumbnailPhoto40?: string | Promise<string | null> | unknown;
 
   createdAt?: Date | null;
-
   updatedAt?: Date | null;
 
   __typename?: 'Profile';

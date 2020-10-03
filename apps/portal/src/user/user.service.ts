@@ -99,7 +99,8 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: cache ? { id: `user_id_${id}`, milliseconds: this.dbCacheTtl } : false,
+      // TODO!
+      cache: false,
     });
   };
 
@@ -130,7 +131,7 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: cache ? { id: `user_username_${username}`, milliseconds: this.dbCacheTtl } : false,
+      cache: false,
     });
   };
 
@@ -161,7 +162,8 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: cache ? { id: `user_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
+      // TODO:
+      cache: false,
     });
   };
 

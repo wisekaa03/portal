@@ -10,19 +10,18 @@ import { LoginService } from './login-service';
 export interface Group {
   id?: string;
 
-  name: string;
+  name?: string;
 
-  description: string;
+  description?: string | null;
 
-  dn: string;
+  dn?: string | null;
 
-  loginService: LoginService;
+  loginService?: LoginService;
+  loginIdentificator?: string | null;
 
-  // in ldap, we store a GUID entry
-  loginIdentificator: string;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
 
-  createdAt?: Date;
-
-  updatedAt?: Date;
+  __typename?: 'Group';
 }
 //#endregion

@@ -153,7 +153,8 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id, milliseconds: this.dbCacheTtl } : false,
+      // TODO:
+      cache: false,
     });
   };
 
@@ -172,7 +173,8 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: username, milliseconds: this.dbCacheTtl } : false,
+      // TODO:
+      cache: false,
     });
   };
 
@@ -196,7 +198,8 @@ export class ProfileService {
       .findOne({
         where,
         relations,
-        cache: cache ? { id: loginIdentificator, milliseconds: this.dbCacheTtl } : false,
+        // TODO:
+        cache: false,
       })
       .catch((error) => {
         this.logger.error(`Profile error: ${error.toString()}`);
