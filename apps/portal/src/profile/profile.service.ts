@@ -8,15 +8,24 @@ import {
   ForbiddenException,
   UnprocessableEntityException,
   UnauthorizedException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import Ldap from 'ldapjs';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-import { LdapService, LdapResponseUser, Change, Attribute, LDAPAddEntry } from 'nestjs-ldap';
+import {
+  LdapService,
+  LdapResponseUser,
+  Change,
+  Attribute,
+  LDAPAddEntry,
+  NoSuchObjectError,
+  InsufficientAccessRightsError,
+  LdapError,
+} from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { Profile, SearchSuggestions, Gender, LoginService, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
@@ -25,6 +34,7 @@ import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
+import { PortalError } from '../shared/errors';
 //#endregion
 
 @Injectable()
@@ -143,7 +153,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: `profile_ID_${id}`, milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -162,7 +172,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      cache: cache ? { id: `profile_NAME_${username}`, milliseconds: this.dbCacheTtl } : false,
+      cache: cache ? { id: username, milliseconds: this.dbCacheTtl } : false,
     });
   };
 
@@ -182,11 +192,17 @@ export class ProfileService {
     const where: FindConditions<ProfileEntity> = { loginIdentificator };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
-    const profile = await this.profileRepository.findOne({
-      where,
-      relations,
-      cache: cache ? { id: `profile_LI_${loginIdentificator}`, milliseconds: this.dbCacheTtl } : false,
-    });
+    const profile = await this.profileRepository
+      .findOne({
+        where,
+        relations,
+        cache: cache ? { id: loginIdentificator, milliseconds: this.dbCacheTtl } : false,
+      })
+      .catch((error) => {
+        this.logger.error(`Profile error: ${error.toString()}`);
+
+        return undefined;
+      });
 
     return profile;
   };
@@ -433,7 +449,7 @@ export class ProfileService {
       return this.profileRepository.create(profile);
     }
 
-    throw new Error();
+    throw new InternalServerErrorException(__DEV__ ? PortalError.NOT_IMPLEMENTED : undefined);
   };
 
   /**
@@ -756,7 +772,7 @@ export class ProfileService {
       try {
         ldapUser = await this.ldapService.searchByDN(created.dn);
       } catch (error) {
-        if (!(error instanceof Ldap.NoSuchObjectError)) {
+        if (!(error instanceof NoSuchObjectError)) {
           throw error;
         }
       }
@@ -764,7 +780,7 @@ export class ProfileService {
         try {
           ldapUser = await this.ldapService.searchByDN(created.dn, false);
         } catch (error) {
-          if (!(error instanceof Ldap.NoSuchObjectError)) {
+          if (!(error instanceof NoSuchObjectError)) {
             throw error;
           }
         }
@@ -805,13 +821,13 @@ export class ProfileService {
             // TODO: .modify with password parameter
             // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
           )
-          .catch((error: Ldap.Error) => {
-            if (error.name === 'InsufficientAccessRightsError') {
-              throw new ForbiddenException();
+          .catch((error: Error | LdapError) => {
+            if (error instanceof InsufficientAccessRightsError) {
+              throw new ForbiddenException(__DEV__ ? error : undefined);
             } else if (error.name === 'ConstraintViolationError') {
-              throw new PayloadTooLargeException();
+              throw new PayloadTooLargeException(__DEV__ ? error : undefined);
             }
-            throw new BadRequestException();
+            throw new BadRequestException(__DEV__ ? error : undefined);
           });
       } else {
         profile.disabled = true;

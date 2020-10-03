@@ -461,7 +461,7 @@ export class TicketsService {
           } as TkTasks),
       )
       .catch((error) => {
-        throw new InternalServerErrorException(error);
+        throw new InternalServerErrorException(__DEV__ ? error : undefined);
       });
   };
 

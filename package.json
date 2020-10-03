@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.15.5",
+  "version": "4.15.7",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -176,7 +176,7 @@
     "jspdf": "^2.1.1",
     "libpq": "^1.8.9",
     "nest-next": "^9.2.0",
-    "nestjs-ldap": "^0.1.6",
+    "nestjs-ldap": "*",
     "nestjs-pino": "^1.2.0",
     "next": "^9.5.4-canary.23",
     "next-compose-plugins": "^2.2.0",

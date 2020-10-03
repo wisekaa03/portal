@@ -1,11 +1,10 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, HttpService, UnauthorizedException } from '@nestjs/common';
+import { Injectable, HttpService, UnauthorizedException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
-import { LdapService } from 'nestjs-ldap';
-import Ldap from 'ldapjs';
+import { LdapService, InvalidCredentialsError } from 'nestjs-ldap';
 import Redis from 'redis';
 //#endregion
 //#region Imports Local
@@ -61,12 +60,13 @@ export class AuthService {
     this.logger.debug(`User login: username = "${username}"`);
 
     const ldapUser = await this.ldapService.authenticate(username, password).catch((error) => {
-      if (error instanceof Ldap.InvalidCredentialsError) {
-        throw new UnauthorizedException();
+      this.logger.error(`LDAP login: ${error.toString()}`);
+
+      if (error instanceof InvalidCredentialsError) {
+        throw new UnauthorizedException(__DEV__ ? error : undefined);
       }
 
-      this.logger.error(`LDAP login: ${error}`);
-      throw new UnauthorizedException();
+      throw new BadRequestException(__DEV__ ? error : undefined);
     });
 
     return this.userService
@@ -75,7 +75,7 @@ export class AuthService {
         if (user.disabled) {
           this.logger.error(`User is Disabled: ${user.username}`);
 
-          throw new Error(PortalError.USER_DISABLED);
+          throw new BadRequestException(PortalError.USER_DISABLED);
         }
 
         return user;
@@ -83,7 +83,7 @@ export class AuthService {
       .catch((error: Error) => {
         this.logger.error(`Error: not found user: ${error.toString()}`, [{ error }]);
 
-        throw error;
+        throw new InternalServerErrorException(__DEV__ ? error : undefined);
       });
   }
 
