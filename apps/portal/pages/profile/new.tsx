@@ -37,8 +37,8 @@ const newParameters: ProfileInput = {
 
 const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...rest }): React.ReactElement => {
   const router = useRouter();
-  const [current, setCurrent] = useState<ProfileInput>(newParameters);
-  const [updated, setUpdated] = useState<ProfileInput>(newParameters);
+  const [current, setCurrent] = useState<Profile>(newParameters);
+  const [updated, setUpdated] = useState<Profile>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const profileContext = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
@@ -96,7 +96,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     }
   };
 
-  const handleChange = (name: keyof ProfileInput) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
+  const handleChange = (name: keyof Profile) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
     const element = event.target as HTMLInputElement;
     const value = changedValue || (element.type === 'checkbox' ? element.checked : element.value);
 
