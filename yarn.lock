@@ -3104,7 +3104,7 @@
   dependencies:
     "@types/express" "*"
 
-"@types/css-mediaquery@^0.1.0":
+"@types/css-mediaquery@*":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@types/css-mediaquery/-/css-mediaquery-0.1.0.tgz#61d439d8163880e90b61d19aba24f7b778c4e77d"
   integrity sha512-jzZ9bRw8fTgCEllDvE7GHR1zTP5LsDHJbAX6BCwD9qdxIOq/Le5TTsdteoCIdEQaFpDMvudLHU/hLo1Lmfcy0Q==
@@ -11598,9 +11598,9 @@ jmespath@^0.15.0:
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
 jodit@*:
-  version "3.4.27"
-  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.27.tgz#c042f3b15bd575673f2559e95853bbd0f64a1756"
-  integrity sha512-l08WgJS2V/QJM8fq43Pzh7BF8V6fC1R7REtK7dH7yNkh5fN7mB0VWfwPQat+CgtXnC4jD61m74gQwOJmVq0AAA==
+  version "3.4.28"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.28.tgz#cc8aef5326b13994ee9c38d15178118bda1c4b17"
+  integrity sha512-291HKPRuBRyqRL4dVBljNiExqAJbvcOgLdrlZoUUBE0ackAaHikmQc20oa8ywekzAzT72SGWq4EpzyUFVQFfVQ==
   dependencies:
     autobind-decorator "^2.4.0"
 
