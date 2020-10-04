@@ -12,7 +12,7 @@ import Woman from '@public/images/svg/avatar/woman-blue.svg';
 //#endregion
 
 export interface AvatarProps {
-  profile?: Profile | ProfileInput;
+  profile?: Profile;
   alt: string;
   base64?: string | null;
   fullSize?: boolean;
