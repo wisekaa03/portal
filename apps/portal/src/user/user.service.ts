@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
@@ -10,6 +10,7 @@ import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { LdapResponseUser, LdapService, LDAPAddEntry } from 'nestjs-ldap';
 import { compare } from 'bcrypt';
+import defaults from 'lodash/defaults';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -317,28 +318,7 @@ export class UserService {
    * @param {User} user
    * @returns {UserSettings}
    */
-  settings = (value: UserSettings, user: User): UserSettings => {
-    let settings = { ...user.settings };
-
-    (Object.keys(value) as Array<keyof UserSettings>).forEach((key) => {
-      if (!DefinedUserSettings.some((defined) => key.includes(defined))) {
-        return;
-      }
-      if (typeof value[key] === 'object') {
-        settings = {
-          ...settings,
-          [key]: {
-            ...((settings[key] as unknown) as Record<string, any>),
-            ...((value[key] as unknown) as Record<string, any>),
-          },
-        };
-      } else {
-        settings = { ...settings, [key]: value[key] };
-      }
-    });
-
-    return settings;
-  };
+  settings = (value: UserSettings, user: User): UserSettings => defaults(value, user.settings, defaultUserSettings);
 
   ldapCheckUsername = async (value: string): Promise<boolean> =>
     this.ldapService
