@@ -10,7 +10,7 @@ import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { LdapResponseUser, LdapService, LDAPAddEntry } from 'nestjs-ldap';
 import { compare } from 'bcrypt';
-import defaults from 'lodash/defaults';
+import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -319,7 +319,7 @@ export class UserService {
    * @param {User} user
    * @returns {UserSettings}
    */
-  settings = (value: UserSettings, user: User): UserSettings => defaults(value, user.settings, defaultUserSettings);
+  settings = (value: UserSettings, user: User): UserSettings => defaultsDeep(value, user.settings, defaultUserSettings);
 
   ldapCheckUsername = async (value: string): Promise<boolean> =>
     this.ldapService
