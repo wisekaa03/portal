@@ -42,7 +42,7 @@ const ProfileProvider: React.FC<{
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
 
-  const { data, loading, error } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
+  const { data, loading } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
 

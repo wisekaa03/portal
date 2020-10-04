@@ -13,7 +13,7 @@ import { FilesHeaderContextProps, PhonebookHeaderContextProps, UserContext } fro
  * EVERY component that needs access to it. So we only do that once here, near
  * the top, then put the user object in React Context for ease of access.
  */
-export const ProfileContext = createContext<UserContext>({ user: undefined });
+export const ProfileContext = createContext<UserContext>({});
 
 export const PhonebookHeaderContext = createContext<PhonebookHeaderContextProps | undefined>(undefined);
 

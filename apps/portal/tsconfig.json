@@ -2,23 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2018",
-    "strict": false,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "allowJs": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "downlevelIteration": true,
-    "experimentalDecorators": true
+    "downlevelIteration": true
   },
   "exclude": [
     "node_modules"

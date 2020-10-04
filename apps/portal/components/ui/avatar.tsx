@@ -40,7 +40,7 @@ const Avatar = React.forwardRef(({ profile, fullSize = false, base64, ...rest }:
   source =
     typeof photo === 'string' && photo !== null
       ? source + photo
-      : typeof gender === 'number' && gender !== null
+      : typeof gender === 'number' && gender >= 1 && gender <= 2
       ? gender === 1
         ? Man
         : Woman

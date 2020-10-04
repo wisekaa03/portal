@@ -10,6 +10,7 @@ import { useMutation } from '@apollo/client';
 import { format as dateFnsFormat } from 'date-fns';
 //#endregion
 //#region Imports Local
+import { FIRST_PAGE } from '@lib/constants';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import type { UserContext, Data, Profile, ProfileInput } from '@lib/types';
 import { LDAP_NEW_USER, LDAP_CHECK_USERNAME } from '@lib/queries';
@@ -40,9 +41,19 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
   const [updated, setUpdated] = useState<ProfileInput>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { user } = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
+  const profileContext = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
   const locale = i18n.language as 'ru' | 'en' | undefined;
-  const isAdmin = user?.isAdmin ?? false;
+  const isAdmin = profileContext?.user?.isAdmin ?? false;
+  if (!isAdmin) {
+    if (__SERVER__) {
+      if (ctx?.res) {
+        ctx.res.statusCode = 303;
+        ctx.res.setHeader('Location', FIRST_PAGE);
+      }
+    } else {
+      router.push(FIRST_PAGE);
+    }
+  }
 
   const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<Data<'ldapNewUser', Profile>>(LDAP_NEW_USER, {
     onCompleted: (data) => {
@@ -143,21 +154,23 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
         <title>{t('profile:new.title')}</title>
       </Head>
       <MaterialUI {...rest}>
-        <ProfileEditComponent
-          isAdmin={false}
-          newProfile
-          loadingCheckUsername={loadingCheckUsername}
-          loadingProfile={false}
-          loadingChanged={loadingLdapNewUser}
-          profile={current}
-          hasUpdate={hasUpdate}
-          onDrop={onDrop}
-          handleCheckUsername={handleCheckUsername}
-          handleChange={handleChange}
-          handleBirthday={handleBirthday}
-          handleSave={handleSave}
-          locale={locale}
-        />
+        {isAdmin && (
+          <ProfileEditComponent
+            isAdmin
+            newProfile
+            loadingCheckUsername={loadingCheckUsername}
+            loadingProfile={false}
+            loadingChanged={loadingLdapNewUser}
+            profile={current}
+            hasUpdate={hasUpdate}
+            onDrop={onDrop}
+            handleCheckUsername={handleCheckUsername}
+            handleChange={handleChange}
+            handleBirthday={handleBirthday}
+            handleSave={handleSave}
+            locale={locale}
+          />
+        )}
       </MaterialUI>
     </>
   );
