@@ -576,7 +576,8 @@ export class ProfileService {
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const value = this.clean(profile[key as keyof Profile]) as string;
+        const v = profile[key as keyof ProfileInput];
+        const value = typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean' ? (this.clean(v) as string) : (v as string);
 
         switch (key) {
           case 'username':
