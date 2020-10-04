@@ -53,7 +53,7 @@ export class ProfileService {
     // second: '2-digit',
   };
 
-  clean = (value: string | number | boolean): string | number | boolean =>
+  clean = (value: string | number | boolean | unknown): string | number | boolean | unknown =>
     // TODO: продумать варианты очистки и безопасности
     typeof value === 'string' ? value.trim() : value;
 
@@ -576,15 +576,14 @@ export class ProfileService {
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const v = profile[key as keyof ProfileInput];
-        const value = typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean' ? (this.clean(v) as string) : (v as string);
+        const valueCleaned = this.clean(profile[key as keyof Profile]) as string;
 
         switch (key) {
           case 'username':
-            modification.sAMAccountName = value;
+            modification.sAMAccountName = valueCleaned;
             break;
           case 'firstName': {
-            modification.givenName = value;
+            modification.givenName = valueCleaned;
 
             const f: Array<string> = [];
             if (profile?.lastName) {
@@ -592,7 +591,7 @@ export class ProfileService {
             } else if (created?.lastName) {
               f.push(created.lastName);
             }
-            f.push(value as string);
+            f.push(valueCleaned);
             if (profile?.middleName) {
               f.push(profile.middleName);
             } else if (created?.middleName) {
@@ -603,10 +602,10 @@ export class ProfileService {
             break;
           }
           case 'lastName': {
-            modification.sn = value;
+            modification.sn = valueCleaned;
 
             const f: Array<string> = [];
-            f.push(value as string);
+            f.push(valueCleaned);
             if (profile?.firstName) {
               f.push(profile.firstName);
             } else if (created?.firstName) {
@@ -622,7 +621,7 @@ export class ProfileService {
             break;
           }
           case 'middleName': {
-            modification[key] = value;
+            modification[key] = valueCleaned;
 
             const f: Array<string> = [];
             if (profile?.lastName) {
@@ -635,21 +634,21 @@ export class ProfileService {
             } else if (created?.firstName) {
               f.push(created.firstName);
             }
-            f.push(value as string);
+            f.push(valueCleaned);
             modification.displayName = f.join(' ');
 
             break;
           }
           case 'gender':
-            if ([Gender.MAN, Gender.WOMAN].includes(Number.parseInt(value, 10))) {
+            if ([Gender.MAN, Gender.WOMAN].includes(Number.parseInt(valueCleaned, 10))) {
               modification.comment = {
                 ...(modification.comment as Record<string, string>),
-                [key]: ((value as unknown) as Gender) === Gender.MAN ? 'M' : 'W',
+                [key]: ((valueCleaned as unknown) as Gender) === Gender.MAN ? 'M' : 'W',
               };
             }
             break;
           case 'birthday':
-            modification.comment = { ...(modification.comment as Record<string, string>), birthday: value };
+            modification.comment = { ...(modification.comment as Record<string, string>), birthday: valueCleaned };
             break;
           case 'companyEng':
           case 'nameEng':
@@ -657,56 +656,54 @@ export class ProfileService {
           case 'departmentEng':
           case 'divisionEng':
           case 'positionEng':
-            modification.comment = { ...(modification.comment as Record<string, string>), [key]: value };
+            modification.comment = { ...(modification.comment as Record<string, string>), [key]: valueCleaned };
             break;
           case 'country':
-            modification.co = value;
+            modification.co = valueCleaned;
             break;
           case 'town':
-            modification.l = value;
+            modification.l = valueCleaned;
             break;
           case 'region':
-            modification.st = value;
+            modification.st = valueCleaned;
             break;
           case 'street':
-            modification.streetAddress = value;
+            modification.streetAddress = valueCleaned;
             break;
           case 'email':
-            modification.mail = value;
+            modification.mail = valueCleaned;
             break;
           case 'telephone':
-            modification.telephoneNumber = value;
+            modification.telephoneNumber = valueCleaned;
             break;
           case 'workPhone':
-            modification.otherTelephone = value;
+            modification.otherTelephone = valueCleaned;
             break;
           case 'fax':
-            modification.facsimileTelephoneNumber = value;
+            modification.facsimileTelephoneNumber = valueCleaned;
             break;
           case 'room':
-            modification.physicalDeliveryOfficeName = value;
-            break;
-          case 'employeeID':
-            modification.employeeID = value;
+            modification.physicalDeliveryOfficeName = valueCleaned;
             break;
           case 'notShowing':
-            modification.flags = value ? '1' : '0';
+            modification.flags = valueCleaned ? '1' : '0';
             break;
           case 'management':
-            modification.department = value;
+            modification.department = valueCleaned;
             break;
           case 'department':
-            modification['msDS-cloudExtensionAttribute6'] = value;
+            modification['msDS-cloudExtensionAttribute6'] = valueCleaned;
             break;
           case 'division':
-            modification['msDS-cloudExtensionAttribute7'] = value;
+            modification['msDS-cloudExtensionAttribute7'] = valueCleaned;
             break;
           // имена ключей совпадают
+          case 'employeeID':
           case 'postalCode':
           case 'company':
           case 'title':
           case 'mobile':
-            modification[key] = value;
+            modification[key] = valueCleaned;
             break;
           default:
             break;
