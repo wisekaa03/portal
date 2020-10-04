@@ -164,10 +164,10 @@ const endAdornment = (
   </InputAdornment>
 );
 
-const names: (keyof ProfileInput)[] = ['lastName', 'firstName', 'middleName'];
-const companyes: (keyof ProfileInput)[] = ['company', 'management', 'department', 'division', 'title'];
-const langs: (keyof ProfileInput)[] = ['companyEng', 'managementEng', 'departmentEng', 'divisionEng', 'positionEng'];
-const others: (keyof ProfileInput)[] = [
+const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
+const companyes: (keyof Profile)[] = ['company', 'management', 'department', 'division', 'title'];
+const langs: (keyof Profile)[] = ['companyEng', 'managementEng', 'departmentEng', 'divisionEng', 'positionEng'];
+const others: (keyof Profile)[] = [
   'email',
   'telephone',
   'mobile',

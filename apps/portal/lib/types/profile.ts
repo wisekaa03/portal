@@ -157,19 +157,19 @@ export interface ProfileEditComponentProps {
   loadingProfile: boolean;
   loadingChanged: boolean;
   hasUpdate: boolean;
-  profile?: Profile | ProfileInput;
+  profile?: Profile;
   locale?: UserSettings['lng'];
   onDrop: (_: File[]) => Promise<void>;
   handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  handleChange: (_: keyof ProfileInput) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  handleChange: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
   handleBirthday: (date: Date | null) => void;
   handleSave: () => void;
 }
 
 export interface TextFieldComponentProps {
   disabled: boolean;
-  handleChange: (_: keyof ProfileInput) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
-  field: keyof ProfileInput;
+  handleChange: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  field: keyof Profile;
   value?: unknown;
   InputProps: Partial<OutlinedInputProps>;
   fullWidth?: boolean;

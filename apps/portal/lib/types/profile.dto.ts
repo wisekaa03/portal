@@ -102,7 +102,19 @@ export interface SearchSuggestions {
   avatar?: string;
 }
 
-export interface ProfileInput extends Omit<Profile, 'loginService' | 'loginIdentificator' | 'dn' | 'updatedAt' | 'createdAt'> {
+export interface ProfileInput
+  extends Omit<
+    Profile,
+    | 'loginService'
+    | 'loginIdentificator'
+    | 'dn'
+    | 'updatedAt'
+    | 'createdAt'
+    | 'thumbnailPhoto'
+    | 'thumbnailPhoto40'
+    | 'fullName'
+    | 'manager'
+  > {
   contact: Contact;
 }
 

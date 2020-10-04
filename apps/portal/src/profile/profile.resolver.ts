@@ -15,7 +15,7 @@ import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import { Profile, SearchSuggestions, User } from '@lib/types';
+import type { ProfileInput, SearchSuggestions, User } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
@@ -130,7 +130,7 @@ export class ProfileResolver {
   @UseGuards(IsAdminGuard)
   async changeProfile(
     @Context('req') request: Request,
-    @Args('profile') profile: Omit<Profile, 'createdAt' | 'updatedAt' | 'fullName' | 'manager' | 'thumbnailPhoto' | 'thumbnailPhoto40'>,
+    @Args('profile') profile: ProfileInput,
     @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
   ): Promise<ProfileEntity> {
     return this.profileService

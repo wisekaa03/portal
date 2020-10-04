@@ -41,15 +41,18 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
     },
   );
 
-  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation<Data<'changeProfile', Profile>>(CHANGE_PROFILE, {
-    refetchQueries: [
-      {
-        query: PROFILE,
-        variables: { id },
-      },
-    ],
-    awaitRefetchQueries: true,
-  });
+  const [changeProfile, { loading: loadingChanged, error: errorChanged }] = useMutation<Data<'changeProfile', ProfileInput>>(
+    CHANGE_PROFILE,
+    {
+      refetchQueries: [
+        {
+          query: PROFILE,
+          variables: { id },
+        },
+      ],
+      awaitRefetchQueries: true,
+    },
+  );
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -61,7 +64,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
     [current],
   );
 
-  const handleChange = (name: keyof ProfileInput) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
+  const handleChange = (name: keyof Profile) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
     const element = event.target as HTMLInputElement;
     const value = changedValue || (element.type === 'checkbox' ? element.checked : element.value);
 

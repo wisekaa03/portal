@@ -571,12 +571,12 @@ export class ProfileService {
   /**
    * Modification
    */
-  modification = (profile: Profile | ProfileInput, created?: Profile, ldapUser?: LdapResponseUser): LDAPAddEntry => {
+  modification = (profile: ProfileInput, created?: Profile, ldapUser?: LdapResponseUser): LDAPAddEntry => {
     const modification: LDAPAddEntry = {};
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const valueCleaned = this.clean(profile[key as keyof Profile]) as string;
+        const valueCleaned = this.clean(profile[key as keyof ProfileInput]) as string;
 
         switch (key) {
           case 'username':
@@ -744,11 +744,7 @@ export class ProfileService {
    * @throws {Error|BadRequestException|NotAcceptableException}
    * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
    */
-  async changeProfile(
-    request: Request,
-    profile: Omit<Profile, 'createdAt' | 'updatedAt' | 'fullName' | 'manager' | 'thumbnailPhoto' | 'thumbnailPhoto40'>,
-    thumbnailPhoto?: Promise<FileUpload>,
-  ): Promise<ProfileEntity> {
+  async changeProfile(request: Request, profile: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
     let thumbnailPhotoProcessed: Buffer | undefined;
 
     if (!request.session?.passport?.user?.profile?.id) {
