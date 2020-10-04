@@ -1,8 +1,11 @@
 /** @format */
 
 import React from 'react';
+import { Namespace } from 'react-i18next';
+import { WithTranslation } from 'next-i18next';
 import { storiesOf } from '@storybook/react';
 import { withKnobs } from '@storybook/addon-knobs';
+import { StoryFn } from '@storybook/addons';
 import { withNextRouter } from 'storybook-addon-next-router';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,20 +17,25 @@ import { MaterialUI } from '@lib/theme';
 
 const story = storiesOf('UI', module);
 
-const withDecorator = (storyFn) => (
+const withDecorator = (storyFn: StoryFn<React.ReactNode>) => (
   <ThemeProvider theme={MaterialUI(FONT_SIZE_NORMAL)}>
     <CssBaseline />
     {storyFn()}
   </ThemeProvider>
 );
 
-const withCenter = (storyFn) => <Box p={2}>{storyFn()}</Box>;
+const withCenter = (storyFn: StoryFn<React.ReactNode>) => <Box p={2}>{storyFn()}</Box>;
 
 story.addDecorator(withKnobs);
 story.addDecorator(withDecorator);
 story.addDecorator(withNextRouter);
 story.addDecorator(withCenter);
 
-const withTranslation = (namespace, Component) => appWithTranslation(nextI18next.withTranslation(namespace)(Component));
+function withTranslation<T>(
+  namespace: Namespace,
+  Component: React.ComponentType<T>,
+): React.ComponentType<T> | StoryFn<React.ComponentType<T>> | any {
+  return appWithTranslation(nextI18next.withTranslation(namespace)((Component as unknown) as React.ComponentType<T & WithTranslation>));
+}
 
 export { story, withTranslation };
