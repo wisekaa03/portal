@@ -9,14 +9,14 @@ import PermMediaIcon from '@material-ui/icons/PermMedia';
 import FileIcon from '@material-ui/icons/DescriptionRounded';
 //#endregion
 //#region Imports Local
-import { FilesFolder } from '@lib/types/files.interface';
+import type { FilesFolder } from '@lib/types/files.interface';
 //#endregion
 
-interface FilesListType extends SvgIconProps {
+interface FilesListTypeProps extends SvgIconProps {
   current: FilesFolder;
 }
 
-export const FilesListType: FC<FilesListType> = ({ current, ...rest }) => {
+export const FilesListType: FC<FilesListTypeProps> = ({ current, ...rest }) => {
   if (current.type === 'FOLDER') {
     if (current.mount === 'group') {
       return <FolderSharedIcon {...rest} />;
