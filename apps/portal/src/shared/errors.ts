@@ -8,4 +8,6 @@ export const PortalError = {
   SOAP_NOT_AUTHORIZED: 'SOAP service error: not authorized',
   SOAP_EMPTY_RESULT: 'SOAP service: null result',
   OST_EMPTY_RESULT: 'OSTicket service: null result',
+  USERNAME_PROFILE: 'Username is found and this is a Profile',
+  USERNAME_USER: 'Username is found and this is a Profile',
 };

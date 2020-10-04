@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, InternalServerErrorException, NotAcceptableException } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
@@ -21,6 +21,7 @@ import { ProfileEntity } from '@back/profile/profile.entity';
 import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
+import { PortalError } from '@back/shared/errors';
 import { UserEntity } from './user.entity';
 //#endregion
 
@@ -330,24 +331,19 @@ export class UserService {
    * This is a LDAP new user and contact
    */
   ldapNewUser = async (value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
-    Object.keys(value).forEach((key: string) => {
-      if (value[key] === null) {
-        delete value[key];
-      }
-    });
     const entry: LDAPAddEntry = this.profileService.modification(value);
     entry.name = entry.cn;
 
     if (value.contact === Contact.PROFILE) {
       entry.objectClass = ['contact'];
       if (entry.sAMAccountName) {
-        throw new Error('Username is found and this is a Profile');
+        throw new NotAcceptableException(PortalError.USERNAME_PROFILE);
       }
     } else {
       entry.objectClass = ['user'];
       entry.userPrincipalName = `${entry.sAMAccountName}@${this.configService.get<string>('LDAP_DOMAIN')}`;
       if (!entry.sAMAccountName) {
-        throw new Error('Username is not found and this is a User');
+        throw new NotAcceptableException(PortalError.USERNAME_USER);
       }
     }
 
