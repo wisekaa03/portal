@@ -576,7 +576,7 @@ export class ProfileService {
 
     if (profile) {
       Object.keys(profile).forEach((key) => {
-        const value = this.clean(profile[key]) as string;
+        const value = this.clean(profile[key as keyof Profile]) as string;
 
         switch (key) {
           case 'username':
