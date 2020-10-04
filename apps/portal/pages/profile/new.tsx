@@ -101,9 +101,9 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     const value = changedValue || (element.type === 'checkbox' ? element.checked : element.value);
 
     if (isAdmin && current) {
-      // const result = name === 'gender' ? +value : value;
-      setCurrent({ ...current, [name]: value });
-      setUpdated({ ...updated, [name]: value, disabled: updated.contact !== Contact.PROFILE });
+      const result = name === 'gender' ? parseInt(value as string, 10) : value;
+      setCurrent({ ...current, [name]: result });
+      setUpdated({ ...updated, [name]: result, disabled: updated.contact !== Contact.PROFILE });
     }
   };
 
