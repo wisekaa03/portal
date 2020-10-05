@@ -158,7 +158,7 @@ export interface ProfileEditComponentProps {
   loadingChanged: boolean;
   hasUpdate: boolean;
   profile?: Profile;
-  locale?: UserSettings['lng'];
+  language?: string;
   onDrop: (_: File[]) => Promise<void>;
   handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleChange: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;

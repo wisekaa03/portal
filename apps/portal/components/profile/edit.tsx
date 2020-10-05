@@ -24,12 +24,12 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
-import { ru as ruLocale, enUS as enLocale } from 'date-fns/locale';
 import { DatePicker, LocalizationProvider } from '@material-ui/pickers';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { Gender, Profile, ProfileInput, ProfileEditComponentProps, Contact } from '@lib/types';
+import { dateLocale } from '@lib/locales';
+import { Gender, Profile, ProfileEditComponentProps, Contact } from '@lib/types';
 import IsAdmin from '@front/components/isAdmin';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
@@ -195,13 +195,13 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   handleChange,
   handleBirthday,
   handleSave,
-  locale,
+  language,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   const router = useRouter();
   const InputProps = isAdmin ? { endAdornment } : { readOnly: true };
-  const dateLocale = locale === 'en' ? enLocale : ruLocale;
+  const locale = dateLocale(language);
 
   return (
     <Box display="flex" flexDirection="column">
@@ -405,7 +405,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                     />
                   </div>
                   <div>
-                    <LocalizationProvider dateAdapter={DateFnsUtils} locale={dateLocale}>
+                    <LocalizationProvider dateAdapter={DateFnsUtils} locale={locale}>
                       <DatePicker
                         renderInput={(props) => <TextField fullWidth variant="outlined" color="secondary" {...props} />}
                         disabled={loadingChanged}

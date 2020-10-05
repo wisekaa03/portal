@@ -27,7 +27,7 @@ const newParameters: ProfileInput = {
   notShowing: true,
   disabled: false,
   gender: 0,
-  birthday: undefined,
+  birthday: null,
   username: '',
   firstName: '',
   lastName: '',
@@ -42,7 +42,6 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const profileContext = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
-  const locale = i18n.language as 'ru' | 'en' | undefined;
   const isAdmin = profileContext?.user?.isAdmin ?? false;
   if (!isAdmin) {
     if (__SERVER__) {
@@ -168,7 +167,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
             handleChange={handleChange}
             handleBirthday={handleBirthday}
             handleSave={handleSave}
-            locale={locale}
+            language={i18n.language}
           />
         )}
       </MaterialUI>

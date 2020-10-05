@@ -47,7 +47,7 @@ interface UserSettingsTask {
 }
 
 export interface UserSettings {
-  lng?: 'ru' | 'en';
+  lng?: string; // 'ru' | 'en' | ...
   fontSize?: number;
   drawer?: boolean;
   phonebook?: UserSettingsPhonebook;

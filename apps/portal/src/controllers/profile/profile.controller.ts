@@ -17,16 +17,16 @@ export class ProfileController {
     response.render('profile');
   }
 
-  @Get('edit')
-  @UseGuards(SessionGuard)
-  public async editMe(@Res() response: RenderableResponse): Promise<void> {
-    response.render('profile/edit');
-  }
-
   @Get('edit/new')
   @UseGuards(SessionAdminGuard)
   public async editNew(@Res() response: RenderableResponse): Promise<void> {
     response.render('profile/new');
+  }
+
+  @Get('edit')
+  @UseGuards(SessionGuard)
+  public async editMe(@Res() response: RenderableResponse): Promise<void> {
+    response.render('profile/edit');
   }
 
   @Get('edit/:id')

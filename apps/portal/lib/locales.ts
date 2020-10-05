@@ -12,3 +12,12 @@ export const localesDate: PortalLocales = {
   en,
   ru,
 };
+
+export const dateLocale = (language?: string): Locale => {
+  switch (language) {
+    case 'en':
+      return localesDate.en;
+    default:
+      return localesDate.ru;
+  }
+};
