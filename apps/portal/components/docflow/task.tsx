@@ -347,23 +347,23 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, lo
         </Link>
         <div style={{ width: '100%' }} />
       </Box>
-      <BoxWithRef
-        ref={tasksBox}
-        overflow="auto"
-        style={{ maxHeight }}
-        display="flex"
-        flexGrow={1}
-        flexWrap="wrap"
-        my={2}
-        marginTop="0"
-        marginBottom="0"
-        padding="0"
-        alignItems="stretch"
-        justifyContent="flex-start"
-        alignContent="flex-start"
-      >
-        <Loading activate={loading} absolute full type="circular" color="secondary" disableShrink size={48}>
-          {task ? (
+      <Loading activate={loading} absolute full type="circular" color="secondary" disableShrink size={48}>
+        {task ? (
+          <BoxWithRef
+            ref={tasksBox}
+            overflow="auto"
+            style={{ maxHeight }}
+            display="flex"
+            flexGrow={1}
+            flexWrap="wrap"
+            my={2}
+            marginTop="0"
+            marginBottom="0"
+            padding="0"
+            alignItems="stretch"
+            justifyContent="flex-start"
+            alignContent="flex-start"
+          >
             <Box className={classes.content}>
               <Card className={clsx(classes.card, classes.fullRow)}>
                 <CardHeader
@@ -459,13 +459,13 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, lo
                 <FilesArea i18n={i18n} t={t} task={task} loading={loadingFile} handleDownload={handleDownload} />
               </Card>
             </Box>
-          ) : (
-            <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-              {t('docflow:notFound')}
-            </Typography>
-          )}
-        </Loading>
-      </BoxWithRef>
+          </BoxWithRef>
+        ) : (
+          <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
+            {t('docflow:notFound')}
+          </Typography>
+        )}
+      </Loading>
     </Box>
   );
 };

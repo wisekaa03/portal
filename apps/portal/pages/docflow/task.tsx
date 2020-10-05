@@ -66,22 +66,17 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): 
     }, 100);
   };
 
-  const handleDownload = async (file: DocFlowFile): Promise<void> => {
-    if (file.binaryData) {
-      download(file.binaryData, `${file.name}.${file.extension}`);
-    } else {
-      getDocFlowTaskFile({ variables: { file: { id: file.id } } });
-    }
-  };
+  const handleDownload = async (file: DocFlowFile): Promise<void> =>
+    file.binaryData
+      ? download(file.binaryData, `${file.name}.${file.extension}`)
+      : getDocFlowTaskFile({ variables: { file: { id: file.id } } });
 
-  useEffect(() => {
-    if (dataDocFlowTaskFile && dataDocFlowTaskFile.docFlowFile) {
-      download(
-        dataDocFlowTaskFile.docFlowFile.binaryData || '',
-        `${dataDocFlowTaskFile.docFlowFile.name}.${dataDocFlowTaskFile.docFlowFile.extension}`,
-      );
-    }
-  }, [dataDocFlowTaskFile]);
+  if (dataDocFlowTaskFile?.docFlowFile) {
+    download(
+      dataDocFlowTaskFile.docFlowFile.binaryData || '',
+      `${dataDocFlowTaskFile.docFlowFile.name}.${dataDocFlowTaskFile.docFlowFile.extension}`,
+    );
+  }
 
   const refetchDocFlowTask = async (
     variables?: Partial<{
