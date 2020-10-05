@@ -2,6 +2,7 @@
 
 //#region Imports NPM
 import React, { FC, useState, useEffect, useContext } from 'react';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { Box, useMediaQuery } from '@material-ui/core';
@@ -33,6 +34,8 @@ const useStyles = makeStyles((/* theme: Theme */) =>
         flex: 1,
       },
     },
+    drawerOpen: {},
+    drawerClose: {},
   }));
 
 export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent }) => {
@@ -122,7 +125,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent }) 
         handlePopoverClose={handlePopoverClose}
         handleLogout={handleLogout}
       />
-      <Box display="flex" flexGrow={1}>
+      <Box display="flex" flexGrow={1} className={drawerOpen ? 'drawerOpen' : 'drawerClose'}>
         <DrawerComponent open={drawerOpen} isMobile={isMobile} handleOpen={handleDrawerOpen} />
         <Box id="content" className={classes.content}>
           {children}
