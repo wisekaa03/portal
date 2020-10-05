@@ -82,7 +82,7 @@ const TasksCard = withStyles((theme) => ({
     'alignItems': 'stretch',
     'flex': 1,
     'minWidth': 392,
-    'maxWidth': 496,
+    'maxWidth': 392,
     'width': 392,
     'borderRadius': theme.shape.borderRadius,
     'background': fade(theme.palette.secondary.main, 0.15),
