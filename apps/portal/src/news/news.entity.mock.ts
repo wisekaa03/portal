@@ -11,5 +11,5 @@ import { NewsEntity } from './news.entity';
 export class NewsEntityMock extends NewsEntity {
   @ManyToOne(() => UserEntityMock)
   @JoinColumn()
-  user: UserEntityMock;
+  user!: UserEntityMock;
 }

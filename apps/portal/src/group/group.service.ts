@@ -29,13 +29,13 @@ export class GroupService {
   /**
    * All groups in Synchronization
    */
-  allGroups = async (loginService = LoginService.LDAP): Promise<AllUsersInfo[]> =>
+  allGroups = async (loginService = LoginService.LDAP, cache = true): Promise<AllUsersInfo[]> =>
     this.groupRepository
       .find({
         where: { loginService },
         select: ['id', 'loginIdentificator', 'name'],
         loadEagerRelations: false,
-        cache: false,
+        cache,
       })
       .then((groups) =>
         groups.map((group) => ({
@@ -59,7 +59,7 @@ export class GroupService {
     this.groupRepository.findOne({
       where: { loginIdentificator },
       // TODO:
-      cache: false,
+      cache,
     });
 
   /**

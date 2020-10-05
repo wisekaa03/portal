@@ -8,5 +8,5 @@ export class UserEntityMock extends UserEntity {
     type: 'jsonb',
     nullable: true,
   })
-  settings: Record<string, string>;
+  settings!: Record<string, string>;
 }

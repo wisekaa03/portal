@@ -25,7 +25,7 @@ import { GroupEntity } from '@back/group/group.entity';
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -39,7 +39,7 @@ export class UserEntity {
     nullable: false,
     default: LoginService.LOCAL,
   })
-  loginService: LoginService;
+  loginService!: LoginService;
 
   @Column({
     type: 'varchar',
@@ -47,25 +47,25 @@ export class UserEntity {
     nullable: true,
     unique: true,
   })
-  loginIdentificator: string | null;
+  loginIdentificator!: string | null;
 
   @Column({
     type: 'varchar',
     unique: true,
   })
-  username: string;
+  username!: string;
 
   @Column('text')
-  password: string;
+  password!: string;
 
   @RelationId((user: UserEntity) => user.groups)
-  groupIds: string[] | null;
+  groupIds!: string[] | null;
 
   @ManyToMany(() => GroupEntity, { onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
-  groups: GroupEntity[] | null;
+  groups!: GroupEntity[] | null;
 
   @Column({
     type: 'boolean',
@@ -73,26 +73,26 @@ export class UserEntity {
     unique: false,
     default: false,
   })
-  disabled: boolean;
+  disabled!: boolean;
 
   @Column({
     type: 'boolean',
     default: false,
   })
-  isAdmin: boolean;
+  isAdmin!: boolean;
 
   @Column({
     type: 'jsonb',
     nullable: true,
   })
-  settings: UserSettings | null;
+  settings!: UserSettings | null;
 
   @RelationId((user: UserEntity) => user.profile)
-  profileId: string;
+  profileId!: string;
 
   @OneToOne(() => ProfileEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
-  profile: ProfileEntity;
+  profile!: ProfileEntity;
 
   toResponseObject = (): User => ({
     ...this,

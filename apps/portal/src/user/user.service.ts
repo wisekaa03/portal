@@ -60,13 +60,13 @@ export class UserService {
   /**
    * All users in Synchronization
    */
-  allUsers = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> =>
+  allUsers = async (loginService = LoginService.LDAP, disabled = false, cache = true): Promise<AllUsersInfo[]> =>
     this.userRepository
       .find({
         where: { loginService, disabled },
         select: ['loginIdentificator', 'profile'],
         loadEagerRelations: false,
-        cache: false,
+        cache,
       })
       .then((users) =>
         users.map((user) => ({
@@ -102,7 +102,7 @@ export class UserService {
       where,
       relations,
       // TODO!
-      cache: false,
+      cache,
     });
   };
 
@@ -133,7 +133,7 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      cache: false,
+      cache,
     });
   };
 
@@ -165,7 +165,7 @@ export class UserService {
       where,
       relations,
       // TODO:
-      cache: false,
+      cache,
     });
   };
 

@@ -10,31 +10,31 @@ import { LoginService } from '@lib/types/login-service';
 @Entity('group')
 export class GroupEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @CreateDateColumn()
-  createdAt: Date | null;
+  createdAt?: Date | null;
 
   @UpdateDateColumn()
-  updatedAt: Date | null;
+  updatedAt?: Date | null;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  name: string;
+  name!: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  dn: string | null;
+  dn!: string | null;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  description: string | null;
+  description!: string | null;
 
   @Column({
     type: 'varchar',
@@ -42,7 +42,7 @@ export class GroupEntity {
     nullable: false,
     default: LoginService.LOCAL,
   })
-  loginService: LoginService;
+  loginService!: LoginService;
 
   @Column({
     type: 'varchar',
@@ -50,7 +50,7 @@ export class GroupEntity {
     nullable: true,
     unique: true,
   })
-  loginIdentificator: string | null;
+  loginIdentificator!: string | null;
 
   toResponseObject = (): GroupEntity => ({ ...this });
 }

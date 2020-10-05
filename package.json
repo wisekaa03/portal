@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.15.10",
+  "version": "4.15.11",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -253,6 +253,7 @@
     "@storybook/theming": "*",
     "@types/apollo-upload-client": "*",
     "@types/cache-manager": "*",
+    "@types/color-name": "*",
     "@types/connect-redis": "*",
     "@types/cookie-parser": "*",
     "@types/css-mediaquery": "*",

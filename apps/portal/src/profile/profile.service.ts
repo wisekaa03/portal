@@ -73,13 +73,13 @@ export class ProfileService {
    *
    * @async
    */
-  allProfiles = async (loginService = LoginService.LDAP, disabled = false): Promise<AllUsersInfo[]> =>
+  allProfiles = async (loginService = LoginService.LDAP, disabled = false, cache = true): Promise<AllUsersInfo[]> =>
     this.profileRepository
       .find({
         where: { loginService, disabled },
         select: ['id', 'loginIdentificator', 'username'],
         loadEagerRelations: false,
-        cache: false,
+        cache,
       })
       .then((profile) =>
         profile.map((p) => ({
@@ -154,7 +154,7 @@ export class ProfileService {
       where,
       relations,
       // TODO:
-      cache: false,
+      cache,
     });
   };
 
@@ -174,7 +174,7 @@ export class ProfileService {
       where,
       relations,
       // TODO:
-      cache: false,
+      cache,
     });
   };
 
@@ -199,7 +199,7 @@ export class ProfileService {
         where,
         relations,
         // TODO:
-        cache: false,
+        cache,
       })
       .catch((error) => {
         this.logger.error(`Profile error: ${error.toString()}`);
@@ -848,11 +848,11 @@ export class ProfileService {
       }
 
       // TODO:  разобраться
-      await this.profileRepository.manager.connection?.queryResultCache?.remove([
-        'profile',
-        'profile_searchSuggestions',
-        'profile_fieldSelection',
-      ]);
+      // await this.profileRepository.manager.connection?.queryResultCache?.remove([
+      //   'profile',
+      //   'profile_searchSuggestions',
+      //   'profile_fieldSelection',
+      // ]);
 
       return profileUpdated;
     });

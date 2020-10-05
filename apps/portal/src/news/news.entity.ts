@@ -10,7 +10,7 @@ import { UserEntity } from '@back/user/user.entity';
 @Entity('news')
 export class NewsEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string | null;
+  id!: string | null;
 
   @CreateDateColumn()
   createdAt?: Date | null;
@@ -22,21 +22,21 @@ export class NewsEntity {
     type: 'varchar',
     nullable: false,
   })
-  title: string;
+  title!: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  excerpt: string | null;
+  excerpt!: string | null;
 
   @Column({
     type: 'text',
     nullable: true,
   })
-  content: string | null;
+  content!: string | null;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  author: UserEntity;
+  author!: UserEntity;
 }
