@@ -27,7 +27,6 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { user } = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
   const id = query?.id || user?.profile?.id;
-  const locale = i18n.language as 'ru' | 'en' | undefined;
   const isAdmin = user?.isAdmin ?? false;
 
   const { loading: loadingProfile, error: errorProfile, data: dataProfile, refetch: refetchProfile } = useQuery<Data<'profile', Profile>>(
@@ -139,7 +138,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
           handleChange={handleChange}
           handleBirthday={handleBirthday}
           handleSave={handleSave}
-          locale={locale}
+          language={i18n.language}
         />
       </MaterialUI>
     </>
