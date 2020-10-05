@@ -1,16 +1,16 @@
 /** @format */
 
 //#region Imports NPM
+import { LoggerService } from '@nestjs/common';
 import Session from 'express-session';
 import RedisSessionStore from 'connect-redis';
 import Redis from 'redis';
-import { Logger } from 'nestjs-pino';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
 //#endregion
 
-export default (configService: ConfigService, logger: Logger): Session.Store => {
+export default (configService: ConfigService, logger: LoggerService): Session.Store => {
   try {
     const sess = new (RedisSessionStore(Session))({
       client: Redis.createClient({
@@ -18,7 +18,7 @@ export default (configService: ConfigService, logger: Logger): Session.Store => 
       }),
     });
 
-    logger.debug('Redis connection...', 'Session');
+    logger.debug!('Redis connection...', 'Session');
 
     return sess;
   } catch (error) {

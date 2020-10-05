@@ -11,8 +11,9 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { FileUpload } from 'graphql-upload';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import * as CacheManager from 'cache-manager';
 import * as RedisStore from 'cache-manager-redis-store';
@@ -65,7 +66,7 @@ export class DocFlowService {
   private cache?: ReturnType<typeof CacheManager.caching>;
 
   constructor(
-    @InjectPinoLogger(DocFlowService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,

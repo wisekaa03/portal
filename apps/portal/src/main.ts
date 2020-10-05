@@ -7,12 +7,13 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
+import { WINSTON_MODULE_NEST_PROVIDER, WINSTON_MODULE_PROVIDER, WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
 import express from 'express';
 import crypto from 'crypto';
 import passport from 'passport';
 import { contentSecurityPolicy } from 'helmet';
 import cookieParser from 'cookie-parser';
-import { Logger, PinoLogger } from 'nestjs-pino';
 import 'reflect-metadata';
 //#endregion
 //#region Imports Local
@@ -20,18 +21,18 @@ import { ConfigService } from '@app/config';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
-import { pinoOptions } from '@back/shared/pino.options';
 //#endregion
 
 async function bootstrap(): Promise<void> {
   //#region NestJS options
   let secure = false;
-  let logger = new Logger(new PinoLogger(pinoOptions()), {});
+  const loggerBootstrap = WinstonModule.createLogger({ transports: [new winston.transports.Console()] });
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
     },
-    logger,
+    logger: loggerBootstrap,
+    // logger: false,
   };
   //#endregion
 
@@ -41,7 +42,7 @@ async function bootstrap(): Promise<void> {
 
     const secureDirectory = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
-      logger.log('Using HTTPS certificate', 'Bootstrap');
+      loggerBootstrap.log('Using HTTPS certificate', 'Bootstrap');
 
       // if (__DEV__) {
       //   // eslint-disable-next-line dot-notation
@@ -59,7 +60,7 @@ async function bootstrap(): Promise<void> {
       throw new Error('No files');
     }
   } catch (error) {
-    logger.warn('There are no files "private.crt", "private.key" in "secure" directory."', error.toString(), 'Bootstrap');
+    loggerBootstrap.warn(`There are no files "private.crt", "private.key" in "secure" directory." (${error.toString()})`, 'Bootstrap');
   }
   const server = express();
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
@@ -68,13 +69,13 @@ async function bootstrap(): Promise<void> {
     nestjsOptions,
   );
 
-  logger = app.get(Logger);
+  // const logger: winston.Logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  // const logger = loggerBootstrap;
+  // app.useLogger(logger);
   const configService = app.get(ConfigService);
-  configService.logger = logger;
+  configService.logger = loggerBootstrap;
   configService.secure = secure;
   const DEV = configService.get<boolean>('DEVELOPMENT');
-
-  app.useLogger(logger);
   //#endregion
 
   //#region X-Response-Time
@@ -166,8 +167,8 @@ async function bootstrap(): Promise<void> {
   //#endregion
 
   //#region Session and passport initialization
-  const store = sessionRedis(configService, logger);
-  app.use(session(configService, logger, store, secure));
+  const store = sessionRedis(configService, loggerBootstrap);
+  app.use(session(configService, loggerBootstrap, store, secure));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -179,7 +180,7 @@ async function bootstrap(): Promise<void> {
 
   //#region Start server
   await app.listen(configService.get<number>('PORT'));
-  logger.log(`HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`, 'Bootstrap');
+  loggerBootstrap.log(`HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`, 'Bootstrap');
   //#endregion
 
   //#region Webpack-HMR

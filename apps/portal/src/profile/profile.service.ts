@@ -3,6 +3,7 @@
 //#region Imports NPM
 import {
   Injectable,
+  Inject,
   PayloadTooLargeException,
   BadRequestException,
   ForbiddenException,
@@ -15,7 +16,8 @@ import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult 
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import {
   LdapService,
   LdapResponseUser,
@@ -61,7 +63,7 @@ export class ProfileService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
     private readonly configService: ConfigService,
-    @InjectPinoLogger(ProfileService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly imageService: ImageService,
     private readonly ldapService: LdapService,
   ) {

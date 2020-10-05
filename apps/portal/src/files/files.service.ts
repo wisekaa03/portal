@@ -5,8 +5,9 @@ import fs from 'fs';
 import { resolve } from 'path';
 import { tmpNameSync } from 'tmp';
 import { Inject, Injectable } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
 import { FileUpload } from 'graphql-upload';
@@ -34,7 +35,7 @@ export class FilesService {
   private staticFolderURL: string;
 
   constructor(
-    @InjectPinoLogger(FilesService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly configService: ConfigService, // private readonly userService: UserService,
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
   ) {

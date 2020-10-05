@@ -1,6 +1,6 @@
 /** @format */
 
-import { Logger } from 'nestjs-pino';
+import { Logger } from 'winston';
 import { Logger as ITypeOrmLogger, QueryRunner } from 'typeorm';
 
 export class TypeOrmLogger implements ITypeOrmLogger {

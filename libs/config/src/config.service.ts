@@ -7,7 +7,7 @@ import { readFileSync } from 'fs';
 import Joi from 'joi';
 import { Inject } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql/type/schema';
-import { Logger } from 'nestjs-pino';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { CONFIG_OPTIONS } from './config.constants';

@@ -2,9 +2,10 @@
 
 //#region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ExecutionContext, Injectable, CacheInterceptor } from '@nestjs/common';
+import { ExecutionContext, Injectable, Inject, CacheInterceptor } from '@nestjs/common';
 import { CACHE_KEY_METADATA } from '@nestjs/common/cache/cache.constants';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { Request } from 'express';
 //#endregion
 //#region Imports Local
@@ -12,11 +13,7 @@ import { Request } from 'express';
 
 @Injectable()
 export class HttpCacheInterceptor extends CacheInterceptor {
-  constructor(
-    cacheManager: any,
-    reflector: any,
-    @InjectPinoLogger(HttpCacheInterceptor.name) private readonly logger: PinoLogger,
-  ) {
+  constructor(cacheManager: any, reflector: any, @Inject(HttpCacheInterceptor.name) private readonly logger: Logger) {
     super(cacheManager, reflector);
   }
 

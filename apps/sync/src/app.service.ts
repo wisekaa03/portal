@@ -1,9 +1,10 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable } from '@nestjs/common';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { Injectable, Inject } from '@nestjs/common';
 import { LdapService } from 'nestjs-ldap';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { Contact, AllUsersInfo } from '@lib/types';
@@ -15,7 +16,7 @@ import { ProfileService } from '@back/profile/profile.service';
 @Injectable()
 export class SyncService {
   constructor(
-    @InjectPinoLogger(SyncService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly ldapService: LdapService,
     private readonly groupService: GroupService,
     private readonly userService: UserService,

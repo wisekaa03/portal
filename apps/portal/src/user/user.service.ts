@@ -5,7 +5,8 @@ import { Injectable, Inject, InternalServerErrorException, NotAcceptableExceptio
 import { FileUpload } from 'graphql-upload';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { LdapResponseUser, LdapService, LDAPAddEntry } from 'nestjs-ldap';
@@ -32,7 +33,7 @@ export class UserService {
   constructor(
     @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
     private readonly configService: ConfigService,
-    @InjectPinoLogger(UserService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly profileService: ProfileService,
     private readonly groupService: GroupService,
     @InjectRepository(UserEntity)

@@ -7,20 +7,16 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
 //#endregion
 
 @Module({
-  imports: [
-    //#region Config module
-    ConfigModule,
-    //#endregion
-  ],
+  imports: [],
 
   providers: [
     {
       provide: 'PUB_SUB',
-      inject: [ConfigService],
+      inject: [],
       useFactory: (configService: ConfigService) => {
         const host = configService.get<string>('HTTP_REDIS_URI')?.replace(/^redis:\/\/(.*?):(\d+)\/(\d+)$/, '$1');
         const redisOptions = {

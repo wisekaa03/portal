@@ -12,7 +12,7 @@ import { SessionGuard } from '@back/guards/session.guard';
 export class AdminController {
   @Get()
   @UseGuards(SessionGuard)
-  admin(@Res() res: RenderableResponse): any {
+  public async admin(@Res() res: RenderableResponse): Promise<void> {
     // render = (view: string, initialProps?: any) => any
     res.render('admin', {});
   }

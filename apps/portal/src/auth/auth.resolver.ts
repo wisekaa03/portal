@@ -4,8 +4,9 @@
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException, Inject } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Request, Response } from 'express';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { Login, LoginEmail, User, UserSettingsTaskFavorite } from '@lib/types';
@@ -27,7 +28,7 @@ export class AuthResolver {
     private readonly userService: UserService,
     private readonly configService: ConfigService,
     @Inject('PUB_SUB') private pubSub: RedisPubSub,
-    @InjectPinoLogger(AuthResolver.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   /**

@@ -1,10 +1,11 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Inject, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult } from 'typeorm';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { LdapResponseGroup, LdapResponseUser } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -19,7 +20,7 @@ export class GroupService {
 
   constructor(
     private readonly configService: ConfigService,
-    @InjectPinoLogger(GroupService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {

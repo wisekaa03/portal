@@ -16,7 +16,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { createUploadLink } from 'apollo-upload-client';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 import { isMobile as checkMobile } from 'is-mobile';
-import { Logger } from 'nestjs-pino';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';

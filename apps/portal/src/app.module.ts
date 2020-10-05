@@ -5,18 +5,17 @@
 //#region Imports NPM
 import { resolve } from 'path';
 import type Express from 'express';
-// import { APP_FILTER } from '@nestjs/core';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
-import { Module, CacheModule, UnauthorizedException } from '@nestjs/common';
+import { Module, CacheModule, UnauthorizedException, LoggerService } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import type { Context } from 'apollo-server-core';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
-import { LoggerModule, Logger, PinoLogger } from 'nestjs-pino';
+import { WinstonModule } from 'nest-winston';
+import winston, { Logger } from 'winston';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 //#endregion
 //#region Imports Local
@@ -51,7 +50,6 @@ import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
 
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
-import { pinoOptions } from '@back/shared/pino.options';
 
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 //#endregion
@@ -101,19 +99,21 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
 @Module({
   imports: [
+    //#region Logging module
+    WinstonModule.forRootAsync({
+      useFactory: () => ({
+        transports: [new winston.transports.Console()],
+      }),
+      inject: [],
+    }),
+    //#endregion
+
     //#region Config module
     ConfigModule.register(environment),
     //#endregion
 
     //#region Logging module
     PrometheusModule.register({}),
-    //#endregion
-
-    //#region Logging module
-    LoggerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => pinoOptions(configService),
-    }),
     //#endregion
 
     //#region Next RenderModule
@@ -125,8 +125,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     //#region Cache Manager - Redis
     CacheModule.registerAsync({
-      imports: [LoggerModule],
-      inject: [ConfigService, Logger],
+      inject: [],
       useFactory: async (configService: ConfigService, logger: Logger) => {
         logger.debug('Redis connection: success', 'CacheModule');
 
@@ -144,7 +143,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region GraphQL
     Upload,
     GraphQLModule.forRootAsync({
-      inject: [ConfigService, Logger],
+      inject: [],
       useFactory: (configService: ConfigService) => {
         const DEV = configService.get<boolean>('DEVELOPMENT');
 
@@ -184,7 +183,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
             ): Promise<PortalWebsocket> => {
               const user = await new Promise<User | undefined>((resolveOnConnect) => {
                 const request = (websocket as any)?.upgradeReq as Express.Request;
-                const response = ({} as any) as Express.Response;
+                const response = ({} as unknown) as Express.Response;
 
                 auth(request, response, () => resolveOnConnect((websocket as any)?.upgradeReq?.session?.passport?.user || undefined));
               });
@@ -228,8 +227,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     //#region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [LoggerModule],
-      inject: [ConfigService, Logger],
+      imports: [],
+      inject: [],
       useFactory: async (configService: ConfigService, logger: Logger) => {
         logger.debug('Database connection: success', 'Database');
 

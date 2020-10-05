@@ -2,9 +2,10 @@
 
 //#region Imports NPM
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { Injectable, Inject, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -20,10 +21,7 @@ export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 export class LoggingInterceptor implements NestInterceptor {
   microserviceUrl: string;
 
-  constructor(
-    @InjectPinoLogger(LoggingInterceptor.name) private readonly logger: PinoLogger,
-    private readonly configService: ConfigService,
-  ) {
+  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger, private readonly configService: ConfigService) {
     this.microserviceUrl = configService.get<string>('MICROSERVICE_URL');
   }
 
@@ -33,17 +31,7 @@ export class LoggingInterceptor implements NestInterceptor {
       case 'rpc': {
         const info = context.switchToRpc().getContext();
 
-        return next.handle().pipe(
-          tap(() =>
-            this.logger.info(
-              {
-                info: info.args,
-                url: this.microserviceUrl,
-              },
-              'NestMicroservice',
-            ),
-          ),
-        );
+        return next.handle().pipe(tap(() => this.logger.info(`info: ${info.args}, url: ${this.microserviceUrl}`, 'NestMicroservice')));
       }
 
       case 'http':
@@ -59,7 +47,7 @@ export class LoggingInterceptor implements NestInterceptor {
             return next.handle();
           }
 
-          return next.handle().pipe(tap(() => this.logger.info({ username }, context.getClass().name)));
+          return next.handle().pipe(tap(() => this.logger.info(`Username: '${username}'`, context.getClass().name)));
         }
 
         // GraphQL requests
@@ -74,19 +62,18 @@ export class LoggingInterceptor implements NestInterceptor {
           values.password = '* MASKED *';
         }
 
-        return next.handle().pipe(
-          tap(() =>
-            this.logger.info(
-              {
-                username,
-                parentType: info.parentType.name,
-                fieldName: info.fieldName,
-                values: Object.keys(values).length > 0 && values,
-              },
-              resolverName,
+        return next
+          .handle()
+          .pipe(
+            tap(() =>
+              this.logger.info(
+                `username: ${username}, parentType: ${info.parentType.name}, fieldName: ${info.fieldName}, values: ${
+                  Object.keys(values).length > 0 && values
+                }`,
+                resolverName,
+              ),
             ),
-          ),
-        );
+          );
       }
     }
   }

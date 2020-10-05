@@ -6,7 +6,8 @@
 import { resolve } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { LoggerModule, Logger } from 'nestjs-pino';
+import { WinstonModule } from 'nest-winston';
+import winston, { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -18,7 +19,6 @@ import { ProfileModule } from '@back/profile/profile.module';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupModule } from '@back/group/group.module';
 import { GroupEntity } from '@back/group/group.entity';
-import { pinoOptions } from '@back/shared/pino.options';
 import { TypeOrmLogger } from '@back/shared/typeormlogger';
 import { AppController } from './app.controller';
 import { SyncService } from './app.service';
@@ -30,9 +30,12 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
   imports: [
     //#region Config & Log module
     ConfigModule.register(environment),
-    LoggerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => pinoOptions(config),
+    //#region Logging module
+    WinstonModule.forRootAsync({
+      useFactory: () => ({
+        transports: [new winston.transports.Console()],
+      }),
+      inject: [],
     }),
     //#endregion
 
@@ -66,8 +69,8 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
 
     //#region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [LoggerModule],
-      inject: [ConfigService, Logger],
+      imports: [],
+      inject: [],
       useFactory: async (configService: ConfigService, logger: Logger) =>
         ({
           name: 'default',

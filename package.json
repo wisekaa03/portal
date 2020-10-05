@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.16.2",
+  "version": "4.17.0",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -176,8 +176,8 @@
     "jspdf": "*",
     "libpq": "*",
     "nest-next": "*",
+    "nest-winston": "^1",
     "nestjs-ldap": "*",
-    "nestjs-pino": "*",
     "next": "^9.5.4-canary.23",
     "next-compose-plugins": "*",
     "next-fonts": "*",
@@ -192,7 +192,6 @@
     "passport-local": "*",
     "pg": "*",
     "pg-native": "*",
-    "pino-pretty": "*",
     "postcss": "^7",
     "postcss-flexbugs-fixes": "*",
     "postcss-preset-env": "*",
@@ -227,6 +226,7 @@
     "typeorm-graphql-pagination": "*",
     "url-loader": "*",
     "uuid": "*",
+    "winston": "^3",
     "ws": "*"
   },
   "devDependencies": {

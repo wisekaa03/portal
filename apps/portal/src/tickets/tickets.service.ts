@@ -14,10 +14,11 @@ import {
   GatewayTimeoutException,
 } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import * as CacheManager from 'cache-manager';
 import * as RedisStore from 'cache-manager-redis-store';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -69,7 +70,7 @@ export class TicketsService {
   private cache?: ReturnType<typeof CacheManager.caching>;
 
   constructor(
-    @InjectPinoLogger(TicketsService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,

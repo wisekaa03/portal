@@ -2,9 +2,10 @@
 /* eslint max-classes-per-file:0 */
 
 //#region Imports NPM
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -30,7 +31,7 @@ export class SoapService {
    * @param {Object} options - Config options
    * @constructor
    */
-  constructor(@InjectPinoLogger(SoapService.name) private readonly logger: PinoLogger, private readonly configService: ConfigService) {}
+  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger, private readonly configService: ConfigService) {}
 
   /**
    * Connect the SOAP service

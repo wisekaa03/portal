@@ -1,10 +1,11 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, HttpService, UnauthorizedException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { Injectable, Inject, HttpService, UnauthorizedException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { LdapService, InvalidCredentialsError } from 'nestjs-ldap';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import Redis from 'redis';
 //#endregion
 //#region Imports Local
@@ -21,7 +22,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
-    @InjectPinoLogger(AuthService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}

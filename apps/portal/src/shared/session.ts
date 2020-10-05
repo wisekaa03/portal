@@ -3,18 +3,13 @@
 //#region Imports NPM
 import Session from 'express-session';
 import Express from 'express';
-import { Logger } from 'nestjs-pino';
+import { LoggerService } from '@nestjs/common';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
 //#endregion
 
-export default (
-  configService: ConfigService,
-  logger: Logger,
-  store: Session.Store,
-  secure: boolean,
-): Express.RequestHandler => {
+export default (configService: ConfigService, logger: LoggerService, store: Session.Store, secure: boolean): Express.RequestHandler => {
   try {
     // const DEV = configService.get<boolean>('DEVELOPMENT');
     const DEV = true;
@@ -48,7 +43,7 @@ export default (
       },
     });
 
-    logger.debug('Redis connection: success', 'Session');
+    logger.debug!('Redis connection: success', 'Session');
 
     return sess;
   } catch (error) {

@@ -1,11 +1,11 @@
 /** @format */
 
 //#region Imports NPM
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
-// import { Observable } from 'rxjs';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { News } from '@lib/types';
@@ -17,7 +17,7 @@ import { NewsEntity } from './news.entity';
 @Injectable()
 export class NewsService {
   constructor(
-    @InjectPinoLogger(NewsService.name) private readonly logger: PinoLogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     // private readonly configService: ConfigService,
     private readonly userService: UserService,
     @InjectRepository(NewsEntity)
