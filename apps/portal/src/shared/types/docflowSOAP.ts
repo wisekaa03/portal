@@ -105,7 +105,7 @@ export interface DocFlowRoleSOAP {
   };
 }
 
-export interface DocFlowTargetsSOAP {
+export interface DocFlowTargetSOAP {
   allowDeletion: boolean;
   name: string;
   role: DocFlowRoleSOAP;
@@ -190,7 +190,7 @@ export interface DocFlowProcessAcquaintanceSOAP {
   stateEnabled?: boolean;
   target?: DocFlowInternalDocumentSOAP;
   targets?: {
-    items?: DocFlowTargetsSOAP[];
+    items?: DocFlowTargetSOAP[];
   };
 }
 
@@ -246,7 +246,7 @@ export interface DocFlowTaskSOAP {
   state?: DocFlowStateSOAP;
   target?: DocFlowInternalDocumentSOAP;
   targets?: {
-    items?: DocFlowTargetsSOAP[];
+    items?: DocFlowTargetSOAP[];
   };
   htmlView?: string;
 }

@@ -1,5 +1,6 @@
 /** @format */
 
+import type { DataError } from '@lib/types/common';
 import type {
   DocFlowTask,
   DocFlowLegalPrivatePerson,
@@ -31,13 +32,14 @@ import type {
   DocFlowImportanceSOAP,
   DocFlowProcessAcquaintanceSOAP,
   DocFlowInternalDocumentSOAP,
-  DocFlowTargetsSOAP,
+  DocFlowTargetSOAP,
   DocFlowFileVersionSOAP,
   DocFlowSubdivisionSOAP,
   DocFlowVisaSOAP,
   DocFlowApprovalResultSOAP,
 } from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@lib/types';
+import { DataObjects } from '../../lib/types/common';
 /** @format */
 
 export const docFlowLegalPrivatePerson = (legal: DocFlowLegalPrivatePersonSOAP): DocFlowLegalPrivatePerson => ({
@@ -212,7 +214,7 @@ export const docFlowInternalDocument = (target: DocFlowInternalDocumentSOAP): Do
   visas: target.visas ? target.visas.map((visa) => docFlowVisa(visa)) : null,
 });
 
-export const docFlowTargets = (target: DocFlowTargetsSOAP): DocFlowTarget => ({
+export const docFlowTargets = (target: DocFlowTargetSOAP): DocFlowTarget => ({
   name: target.name,
   role: docFlowRole(target.role),
   target: docFlowInternalDocument(target.target),
@@ -244,3 +246,15 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   htmlView: task.htmlView ?? null,
   number: task.number ?? null,
 });
+
+export const docFlowError = (result: DataError | undefined): Error | undefined => {
+  if (result && result.attributes?.['xsi:type'] === 'm:DMError') {
+    return new Error(__DEV__ ? result.subject : result.description);
+  }
+
+  return undefined;
+};
+
+export function docFlowData<T>(result: unknown): result is T {
+  return !!(typeof result === 'object' && result !== null && (result as DataError)?.attributes?.['xsi:type'] !== 'm:DMError');
+}

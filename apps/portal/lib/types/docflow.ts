@@ -54,9 +54,9 @@ export interface DocFlowTaskInfoCardProps {
   profile: DocFlowUser | string | null;
 }
 
-export interface DocFlowTargetComponentProps {
+export interface DocFlowInternalDocumentComponentProps {
   loading: boolean;
-  target?: DocFlowTarget;
+  internalDocument?: DocFlowInternalDocument;
 }
 
 export interface DocFlowLegalPrivatePerson {
@@ -278,6 +278,10 @@ export interface DocFlowTaskInput extends GraphQLQueryInput {
 }
 
 export interface DocFlowTargetInput extends GraphQLQueryInput {
+  id: string;
+}
+
+export interface DocFlowInternalDocumentInput extends GraphQLQueryInput {
   id: string;
 }
 

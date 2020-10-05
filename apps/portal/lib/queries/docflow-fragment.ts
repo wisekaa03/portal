@@ -48,6 +48,13 @@ export const DOCFLOW_IMPORTANCE_FRAGMENT = gql`
   }
 `;
 
+export const DOCFLOW_ROLE_FRAGMENT = gql`
+  fragment RoleProps on DocFlowRole {
+    id
+    name
+  }
+`;
+
 export const DOCFLOW_PARENT_TASK_FRAGMENT = gql`
   fragment ParentTaskProps on DocFlowParentTask {
     id
@@ -110,6 +117,21 @@ export const DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT = gql`
   ${DOCFLOW_SUBDIVISION_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
   ${DOCFLOW_FILE_FRAGMENT}
+`;
+
+export const DOCFLOW_TARGET_FRAGMENT = gql`
+  fragment TargetProps on DocFlowTarget {
+    name
+    role {
+      ...RoleProps
+    }
+    target {
+      ...InternalDocumentProps
+    }
+    allowDeletion
+  }
+  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
+  ${DOCFLOW_ROLE_FRAGMENT}
 `;
 
 export const DOCFLOW_TASK_FRAGMENT = gql`

@@ -18,6 +18,7 @@ export enum PortalPubSub {
   DOCFLOW_TASKS = 'docflowTasks',
   DOCFLOW_TASK = 'docflowTask',
   DOCFLOW_TARGET = 'docflowTarget',
+  DOCFLOW_INTERNAL_DOCUMENT = 'docflowInternalDocument',
 }
 
 export const defaultUserSettings: UserSettings = {

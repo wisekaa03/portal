@@ -17,6 +17,8 @@ import type {
   DocFlowTarget,
   DocFlowFile,
   DocFlowInternalFile,
+  DocFlowInternalDocument,
+  DocFlowInternalDocumentInput,
 } from '@lib/types/docflow';
 import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';
@@ -109,30 +111,33 @@ export class DocFlowResolver {
    * @returns {DocFlowTarget}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('docFlowTarget')
+  @Query('docFlowInternalDocument')
   @UseGuards(GqlAuthGuard)
-  async docFlowTarget(
-    @Args('target') target: DocFlowTargetInput,
+  async docFlowInternalDocument(
+    @Args('internalDocument') internalDocument: DocFlowInternalDocumentInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
-  ): Promise<DocFlowTarget> {
+  ): Promise<DocFlowInternalDocument> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowTargetCache(user, password, target).catch((error: Error) => {
+    return this.docflowService.docFlowInternalDocumentCache(user, password, internalDocument).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('docFlowTarget', {
-    filter: (payload: SubscriptionPayload<DocFlowTarget[]>, variables: { target: DocFlowTargetInput }, context: PortalWebsocket) =>
-      payload.userId === context?.user?.id,
-    resolve: (payload: SubscriptionPayload<DocFlowTarget[]>) => payload.object,
+  @Subscription('docFlowInternalDocument', {
+    filter: (
+      payload: SubscriptionPayload<DocFlowInternalDocument>,
+      variables: { internalDocument: DocFlowInternalDocumentInput },
+      context: PortalWebsocket,
+    ) => payload.object.id === variables.internalDocument.id,
+    resolve: (payload: SubscriptionPayload<DocFlowInternalDocument>) => payload.object,
   })
-  async docFlowTargetSubscription(): Promise<AsyncIterator<DocFlowTarget[]>> {
-    return this.pubSub.asyncIterator<DocFlowTarget[]>(PortalPubSub.DOCFLOW_TARGET);
+  async docFlowInternalDocumentSubscription(): Promise<AsyncIterator<DocFlowInternalDocument>> {
+    return this.pubSub.asyncIterator<DocFlowInternalDocument>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT);
   }
 
   /**

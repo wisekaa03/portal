@@ -9,6 +9,7 @@ import {
   NotImplementedException,
   InternalServerErrorException,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
@@ -33,13 +34,21 @@ import type {
   DocFlowUser,
   DocFlowUserInput,
   DocFlowInternalFile,
+  DocFlowInternalDocument,
+  DocFlowInternalDocumentInput,
 } from '@lib/types/docflow';
-import type { SubscriptionPayload, DocFlowTaskSOAP, DocFlowUserSOAP, DocFlowTargetsSOAP, DocFlowFileSOAP } from '@back/shared/types';
+import type {
+  SubscriptionPayload,
+  DocFlowTaskSOAP,
+  DocFlowUserSOAP,
+  DocFlowTargetSOAP,
+  DocFlowFileSOAP,
+  DocFlowInternalDocumentSOAP,
+} from '@back/shared/types';
 import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
-import type { DataResult, DataObjects, DataObject, DataFiles, DataItems, DataUser } from '@lib/types/common';
-import * as request from 'supertest';
-import { docFlowTask, docFlowUser, docFlowTargets, docFlowFile } from './docflow.utils';
+import type { DataResult, DataObjects, DataObject, DataFiles, DataItems, DataUser, DataError } from '@lib/types/common';
+import { docFlowTask, docFlowUser, docFlowFile, docFlowError, docFlowData, docFlowInternalDocument } from './docflow.utils';
 //#endregion
 
 // создается микросервис, который будет обновлять данные кэша из документооборота
@@ -108,22 +117,30 @@ export class DocFlowService {
 
     return soap
       .executeAsync(requestSOAP, { timeout: TIMEOUT })
-      .then((message: DataResult<DataFiles<DocFlowFileSOAP>>) => {
-        this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`);
-        // this.logger.info(`docFlowFiles: [Response] ${client.lastResponse}`);
+      .then((message: DataResult<DataFiles<DocFlowFileSOAP>> | DataResult<DataError>) => {
+        if (docFlowData<DataFiles>(message[0]?.return)) {
+          this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`);
+          // this.logger.info(`docFlowFiles: [Response] ${client.lastResponse}`);
 
-        if (message[0]?.return) {
-          return {
-            object: message[0].return.files.map((file) => docFlowFile(file)),
-          };
+          if (message[0]?.return) {
+            return {
+              object: message[0].return.files.map((file) => docFlowFile(file)),
+            };
+          }
+
+          return { error: [PortalError.SOAP_EMPTY_RESULT] };
         }
 
-        return { error: [PortalError.SOAP_EMPTY_RESULT] };
+        throw new ForbiddenException(docFlowError(message[0]?.return));
       })
-      .catch((error: Error) => {
+      .catch((error: Error | ForbiddenException) => {
         this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`);
         this.logger.info(`docFlowFiles: [Response] ${soap.lastResponse}`);
         this.logger.error(`docFlowFiles: ${error.toString()}`);
+
+        if (error instanceof ForbiddenException) {
+          return { error: [error] };
+        }
 
         return { error: [__DEV__ ? error : PortalError.SOAP_EMPTY_RESULT] };
       });
@@ -251,20 +268,28 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataItems<DataObject<DocFlowTaskSOAP>>>) => {
-            this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`);
-            // this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`);
+          .then((message: DataResult<DataItems<DataObject<DocFlowTaskSOAP>>> | DataResult<DataError>) => {
+            if (docFlowData<DataItems>(message[0]?.return)) {
+              if (message[0] && Array.isArray(message[0].return?.items)) {
+                this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`);
+                // this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`);
 
-            if (message[0] && Array.isArray(message[0].return?.items)) {
-              return this.docFlowTasksWithFiles(client, message[0].return.items);
+                return this.docFlowTasksWithFiles(client, message[0].return.items);
+              }
+
+              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             }
 
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+            throw new ForbiddenException(docFlowError(message[0]?.return));
           })
-          .catch((error: Error) => {
+          .catch((error: Error | ForbiddenException) => {
             this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`);
             this.logger.error(`docFlowTasks: ${error.toString()}`);
+
+            if (error instanceof ForbiddenException) {
+              throw error;
+            }
 
             throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
@@ -377,31 +402,39 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataObjects<DocFlowTaskSOAP>>) => {
-            this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`);
-            // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+          .then((message: DataResult<DataObjects<DocFlowTaskSOAP>> | DataResult<DataError>) => {
+            if (docFlowData<DataObjects>(message[0]?.return)) {
+              if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
+                const tasks = message[0].return.objects.map((t) => docFlowTask(t));
 
-            if (message[0] && Array.isArray(message[0].return?.objects)) {
-              const tasks = message[0].return.objects.map((t) => docFlowTask(t));
+                if (Array.isArray(tasks) && tasks.length > 0) {
+                  if (tasks.length > 1) {
+                    this.logger.info('docFlowTask: result.length > 1 ??');
+                  }
+                  const taskWithoutFiles = tasks.pop();
+                  if (taskWithoutFiles) {
+                    this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`);
+                    // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-              if (Array.isArray(tasks) && tasks.length > 0) {
-                if (tasks.length > 1) {
-                  this.logger.info('docFlowTask: result.length > 1 ??');
-                }
-                const taskWithoutFiles = tasks.pop();
-                if (taskWithoutFiles) {
-                  const result = this.docFlowTaskWithFiles(client, taskWithoutFiles);
-                  return result;
+                    const result = this.docFlowTaskWithFiles(client, taskWithoutFiles);
+                    return result;
+                  }
                 }
               }
+
+              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             }
 
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+            throw new ForbiddenException(docFlowError(message[0]?.return));
           })
-          .catch((error: Error) => {
+          .catch((error: Error | ForbiddenException | NotFoundException) => {
             this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowTask: [Response] ${client.lastResponse}`);
             this.logger.error(`docFlowTask: ${error.toString()}`);
+
+            if (error instanceof ForbiddenException) {
+              throw error;
+            }
 
             throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
@@ -506,20 +539,28 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataUser<DocFlowUserSOAP>>) => {
-            this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`);
-            // this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`);
+          .then((message: DataResult<DataUser<DocFlowUserSOAP>> | DataResult<DataError>) => {
+            if (docFlowData<DataUser>(message[0]?.return)) {
+              this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`);
+              // this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return?.user) {
-              return docFlowUser(message[0].return.user);
+              if (message[0]?.return?.user) {
+                return docFlowUser(message[0].return.user);
+              }
+
+              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             }
 
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+            throw new ForbiddenException(docFlowError(message[0]?.return));
           })
-          .catch((error: Error) => {
+          .catch((error: Error | ForbiddenException | NotFoundException) => {
             this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`);
             this.logger.error(`docFlowCurrentUser: ${error.toString()}`);
+
+            if (error instanceof ForbiddenException) {
+              throw error;
+            }
 
             throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
@@ -533,12 +574,16 @@ export class DocFlowService {
    * DocFlow target
    *
    * @async
-   * @method docFlowTarget
+   * @method docFlowInternalDocument
    * @param {User} user User object
    * @param {string} password The Password
-   * @returns {DocFlowUser}
+   * @returns {DocFlowInternalDocument}
    */
-  docFlowTarget = async (user: User, password: string, target?: DocFlowTargetInput): Promise<DocFlowTarget> => {
+  docFlowInternalDocument = async (
+    user: User,
+    password: string,
+    internalDocument: DocFlowInternalDocumentInput,
+  ): Promise<DocFlowInternalDocument> => {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
@@ -553,7 +598,7 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(`docFlowTarget: ${error.toString()}`);
+          this.logger.error(`docFlowInternalDocument: ${error.toString()}`);
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -563,28 +608,41 @@ export class DocFlowService {
           .executeAsync(
             {
               'tns:request': {
-                attributes: {
+                'attributes': {
                   'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                  'xsi:type': 'tns:DMGetCurrentUserRequest',
+                  'xsi:type': 'tns:DMRetrieveRequest',
+                },
+                'tns:dataBaseID': '',
+                'tns:objectIds': {
+                  'tns:id': internalDocument.id,
+                  'tns:type': 'DMInternalDocument',
                 },
               },
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataItems<DocFlowTargetsSOAP>>) => {
-            this.logger.info(`docFlowTargetCache: [Request] ${client.lastRequest}`);
-            // this.logger.info(`docFlowTargetCache: [Response] ${client.lastResponse}`);
+          .then((message: DataResult<DataObjects<DocFlowInternalDocumentSOAP>> | DataResult<DataError>) => {
+            if (docFlowData<DataObjects>(message[0]?.return)) {
+              if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
+                this.logger.info(`docFlowInternalDocument: [Request] ${client.lastRequest}`);
+                // this.logger.info(`docFlowInternalDocument: [Response] ${client.lastResponse}`);
 
-            if (message[0]?.return?.items) {
-              return message[0].return.items.map((t) => docFlowTargets(t));
+                return message[0].return.objects.map((t) => docFlowInternalDocument(t));
+              }
+
+              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             }
 
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+            throw new ForbiddenException(docFlowError(message[0]?.return));
           })
-          .catch((error: Error) => {
-            this.logger.info(`docFlowTargetCache: [Request] ${client.lastRequest}`);
-            this.logger.info(`docFlowTargetCache: [Response] ${client.lastResponse}`);
-            this.logger.error(`docFlowTargetCache: ${error.toString()}`);
+          .catch((error: Error | ForbiddenException | NotFoundException) => {
+            this.logger.info(`docFlowInternalDocument: [Request] ${client.lastRequest}`);
+            this.logger.info(`docFlowInternalDocument: [Response] ${client.lastResponse}`);
+            this.logger.error(`docFlowInternalDocument: ${error.toString()}`);
+
+            if (error instanceof ForbiddenException) {
+              throw error;
+            }
 
             throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });
@@ -598,35 +656,39 @@ export class DocFlowService {
    * DocFlow target (cache)
    *
    * @async
-   * @method DocFlowTargetCache
+   * @method docFlowInternalDocumentCache
    * @param {User} user User object
    * @param {string} password The Password
    * @param {task}
-   * @returns {DocFlowTask[]}
+   * @returns {DocFlowInternalDocument}
    */
-  docFlowTargetCache = async (user: User, password: string, target: DocFlowTargetInput): Promise<DocFlowTarget> => {
+  docFlowInternalDocumentCache = async (
+    user: User,
+    password: string,
+    internalDocument: DocFlowInternalDocumentInput,
+  ): Promise<DocFlowInternalDocument> => {
     const userId = user.id || '';
-    const cachedId = `target:${target.id}`;
-    if (this.cache && (!target || target.cache !== false)) {
-      const cached: DocFlowTarget = await this.cache.get<DocFlowTarget>(cachedId);
+    const cachedId = `internalDocument:${internalDocument.id}`;
+    if (this.cache && (!internalDocument || internalDocument.cache !== false)) {
+      const cached: DocFlowInternalDocument = await this.cache.get<DocFlowInternalDocument>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
-            const ticketsTarget = await this.docFlowTarget(user, password, target);
+            const internalDocumentCache = await this.docFlowInternalDocument(user, password, internalDocument);
 
-            if (JSON.stringify(ticketsTarget) !== JSON.stringify(cached)) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_TARGET, {
+            if (JSON.stringify(internalDocumentCache) !== JSON.stringify(cached)) {
+              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
                 userId,
-                object: ticketsTarget,
+                object: internalDocumentCache,
               });
               if (this.cache) {
-                this.cache.set<DocFlowTarget>(cachedId, ticketsTarget, { ttl: this.ttl });
+                this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
               }
             } else {
-              setTimeout(() => this.docFlowTargetCache(user, password, target), TIMEOUT_REFETCH_SERVICES);
+              setTimeout(() => this.docFlowInternalDocumentCache(user, password, internalDocument), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error(`docFlowTargetCache: ${error.toString()}`);
+            this.logger.error(`docFlowInternalDocumentCache: ${error.toString()}`);
           }
         })();
 
@@ -635,15 +697,15 @@ export class DocFlowService {
     }
 
     try {
-      const ticketsTarget = await this.docFlowTarget(user, password, target);
+      const internalDocumentCache = await this.docFlowInternalDocument(user, password, internalDocument);
 
       if (this.cache) {
-        this.cache.set<DocFlowTarget>(cachedId, ticketsTarget, { ttl: this.ttl });
+        this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
       }
 
-      return ticketsTarget;
+      return internalDocumentCache;
     } catch (error) {
-      this.logger.error(`docFlowTargetCache: ${error.toString()}`);
+      this.logger.error(`docFlowInternalDocumentCache: ${error.toString()}`);
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -710,26 +772,34 @@ export class DocFlowService {
             },
             { timeout: TIMEOUT },
           )
-          .then((message: DataResult<DataObjects<DocFlowFileSOAP>>) => {
-            this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
-            // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
+          .then((message: DataResult<DataObjects<DocFlowFileSOAP>> | DataResult<DataError>) => {
+            if (docFlowData<DataObjects>(message[0]?.return)) {
+              if (message[0] && Array.isArray(message[0].return?.objects)) {
+                this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
+                // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`);
 
-            if (message[0] && Array.isArray(message[0].return?.objects)) {
-              const result = message[0].return.objects.map((f) => docFlowFile(f));
+                const result = message[0].return.objects.map((f) => docFlowFile(f));
 
-              if (Array.isArray(result) && result.length > 1) {
-                this.logger.info('docFlowFile: result.length > 1 ? Something wrong...');
+                if (Array.isArray(result) && result.length > 1) {
+                  this.logger.info('docFlowFile: result.length > 1 ? Something wrong...');
+                }
+
+                return result.pop();
               }
 
-              return result.pop();
+              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             }
 
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+            throw new ForbiddenException(docFlowError(message[0]?.return));
           })
-          .catch((error: Error) => {
+          .catch((error: Error | ForbiddenException | NotFoundException) => {
             this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`);
             this.logger.info(`docFlowFile: [Response] ${client.lastResponse}`);
             this.logger.error(`docFlowFile: ${error.toString()}`);
+
+            if (error instanceof ForbiddenException) {
+              throw error;
+            }
 
             throw new UnprocessableEntityException(__DEV__ ? error : undefined);
           });

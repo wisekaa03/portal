@@ -1,7 +1,12 @@
 /** @format */
 
 import { gql } from '@apollo/client';
-import { DOCFLOW_TASK_FRAGMENT, DOCFLOW_FILE_FRAGMENT, DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT } from './docflow-fragment';
+import {
+  DOCFLOW_TASK_FRAGMENT,
+  DOCFLOW_FILE_FRAGMENT,
+  DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT,
+  DOCFLOW_TARGET_FRAGMENT,
+} from './docflow-fragment';
 
 export const DOCFLOW_TASKS = gql`
   query DocFlowTasks($tasks: DocFlowTasksInput) {
@@ -49,18 +54,18 @@ export const DOCFLOW_TASK_SUB = gql`
   ${DOCFLOW_TASK_FRAGMENT}
 `;
 
-export const DOCFLOW_TARGET = gql`
-  query DocFlowTarget($target: DocFlowTargetInput!) {
-    docFlowTarget(target: $target) {
+export const DOCFLOW_INTERNAL_DOCUMENT = gql`
+  query DocFlowInternalDocument($internalDocument: DocFlowInternalDocumentInput!) {
+    docFlowInternalDocument(internalDocument: $internalDocument) {
       ...InternalDocumentProps
     }
   }
   ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
 `;
 
-export const DOCFLOW_TARGET_SUB = gql`
-  subscription DocFlowTarget($target: DocFlowTargetInput!) {
-    docFlowTarget(target: $target) {
+export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
+  subscription DocFlowInternalDocument($internalDocument: DocFlowInternalDocumentInput!) {
+    docFlowInternalDocument(internalDocument: $internalDocument) {
       ...InternalDocumentProps
     }
   }

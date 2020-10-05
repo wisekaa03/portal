@@ -27,7 +27,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import type { DocFlowTargetComponentProps } from '@lib/types/docflow';
+import type { DocFlowInternalDocumentComponentProps } from '@lib/types/docflow';
 import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DocFlowTargetComponent: FC<DocFlowTargetComponentProps> = ({ loading, target }) => {
+const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps> = ({ loading, internalDocument }) => {
   const classes = useStyles({});
   const { i18n, t } = useTranslation();
 
@@ -78,7 +78,7 @@ const DocFlowTargetComponent: FC<DocFlowTargetComponentProps> = ({ loading, targ
         </Link>
         <div style={{ width: '100%' }} />
       </Box>
-      {!target || loading ? (
+      {!internalDocument || loading ? (
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
             {t('docflow:notFound')}
@@ -91,4 +91,4 @@ const DocFlowTargetComponent: FC<DocFlowTargetComponentProps> = ({ loading, targ
   );
 };
 
-export default DocFlowTargetComponent;
+export default DocFlowInternalDocumentComponent;
