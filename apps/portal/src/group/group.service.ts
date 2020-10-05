@@ -71,7 +71,7 @@ export class GroupService {
    * @throws {Error} Exception
    */
   async fromLdapUser(ldap: LdapResponseUser): Promise<GroupEntity[]> {
-    const groupsPromises = ldap.groups.map(
+    const groupsPromises = ldap.groups?.map(
       async (ldapGroup: LdapResponseGroup) =>
         // eslint-disable-next-line no-return-await
         await this.byIdentificator(ldapGroup.objectGUID).then((updated) => {
@@ -88,18 +88,18 @@ export class GroupService {
         }),
     );
 
-    const groups = await Promise.allSettled(groupsPromises).then((values) =>
-      values.reduce((accumulator: GroupEntity[], current: PromiseSettledResult<GroupEntity>) => {
-        if (current.status === 'fulfilled') {
-          return accumulator.concat(current.value);
-        }
-        this.logger.error(`Groups error: ${current.reason}`, [{ error: current.reason }]);
+    return groupsPromises
+      ? Promise.allSettled(groupsPromises).then((values) =>
+          values.reduce((accumulator: GroupEntity[], current: PromiseSettledResult<GroupEntity>) => {
+            if (current.status === 'fulfilled') {
+              return accumulator.concat(current.value);
+            }
+            this.logger.error(`Groups error: ${current.reason}`, [{ error: current.reason }]);
 
-        return accumulator;
-      }, [] as GroupEntity[]),
-    );
-
-    return groups;
+            return accumulator;
+          }, [] as GroupEntity[]),
+        )
+      : [];
   }
 
   /**
