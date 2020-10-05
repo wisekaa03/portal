@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.16.1",
+  "version": "4.16.2",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
