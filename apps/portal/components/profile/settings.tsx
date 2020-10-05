@@ -62,7 +62,7 @@ const ProfileSettingsComponent: FC = () => {
     // },
   });
 
-  const handleLanguage = (previousLng?: 'ru' | 'en' | '' | null) => (): void => {
+  const handleLanguage = (previousLng?: string | null) => (): void => {
     const currentLng = previousLng || nextI18next.i18n.language;
     const lng = currentLng === 'ru' ? 'en' : 'ru';
 
