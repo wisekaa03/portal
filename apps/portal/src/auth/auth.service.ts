@@ -58,7 +58,7 @@ export class AuthService {
    * @throws {Error} Exception
    */
   async login({ username, password }: { username: string; password: string }): Promise<UserEntity> {
-    this.logger.debug(`User login: username = "${username}"`, { context: AuthService.name });
+    this.logger.info(`User login: username = "${username}"`, { context: AuthService.name });
 
     const ldapUser = await this.ldapService.authenticate(username, password).catch((error) => {
       this.logger.error(`LDAP login: ${error.toString()}`, { error, context: AuthService.name });
