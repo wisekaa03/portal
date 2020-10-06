@@ -52,7 +52,7 @@ export class FilesService {
         store: this.cacheStore,
         ttl: this.ttl,
       });
-      logger.info('Redis connection: success');
+      logger.info('Redis connection: success', { context: FilesService.name });
     }
 
     this.nextCloud = new NextcloudClient({
@@ -225,7 +225,7 @@ export class FilesService {
    * @return {FilesFolder[]}
    */
   folderFiles = async (user: User, password: string, path = '/', cache = true): Promise<FilesFolder[]> => {
-    this.logger.info(`Files entity: path={${path}}`);
+    this.logger.info(`Files entity: path={${path}}`, { context: FilesService.name });
 
     const lastPath =
       path === '/' || path === ''
@@ -273,7 +273,7 @@ export class FilesService {
    * @throws NotFoundError
    */
   putFile = async (path: string, promiseFile: Promise<FileUpload>, user: User, password: string): Promise<boolean> => {
-    this.logger.info(`Put files: path={${path}}`);
+    this.logger.info(`Put files: path={${path}}`, { context: FilesService.name });
 
     const { createReadStream } = await promiseFile;
     this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
@@ -294,7 +294,7 @@ export class FilesService {
    * @throws {Error}
    */
   getFile = async (path: string, user: User, password: string, options?: FilesOptions, cache = true): Promise<FilesFile> => {
-    this.logger.info(`Get files: path={${path}}`);
+    this.logger.info(`Get files: path={${path}}`, { context: FilesService.name });
 
     const cachedID = `file:${user.loginIdentificator}:${path}`;
     if (cache && this.cache) {
@@ -304,8 +304,7 @@ export class FilesService {
           fs.accessSync(cached.temporaryFile, fs.constants.R_OK);
           return { path: cached.path };
         } catch (error) {
-          const message = error.toString();
-          this.logger.error(`Files: no read access at "${path}": ${message}`, message);
+          this.logger.error(`Files: no read access at "${path}": ${error.toString()}`, { error, context: FilesService.name });
         }
       }
     }

@@ -1,7 +1,7 @@
 /** @format */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { ReportsService } from './reports.service';
@@ -21,8 +21,13 @@ describe(ReportsService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule.forRoot()],
-      providers: [ConfigService, ReportsService, { provide: SoapService, useValue: serviceMock }],
+      imports: [],
+      providers: [
+        ConfigService,
+        ReportsService,
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: SoapService, useValue: serviceMock },
+      ],
     }).compile();
 
     service = module.get<ReportsService>(ReportsService);

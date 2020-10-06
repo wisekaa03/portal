@@ -1,7 +1,7 @@
 /** @format */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { HttpModule } from '@nestjs/common';
@@ -24,7 +24,6 @@ describe(TicketsService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        LoggerModule.forRoot(),
         HttpModule.registerAsync({
           useFactory: () => ({
             timeout: TIMEOUT,
@@ -38,6 +37,7 @@ describe(TicketsService.name, () => {
           provide: 'PUB_SUB',
           useValue: serviceMock,
         },
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         { provide: SoapService, useValue: serviceMock },
       ],
     }).compile();

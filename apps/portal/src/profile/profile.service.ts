@@ -204,7 +204,7 @@ export class ProfileService {
         cache,
       })
       .catch((error) => {
-        this.logger.error(`Profile error: ${error.toString()}`);
+        this.logger.error(`Profile error: ${error.toString()}`, { error, context: ProfileService.name });
 
         return undefined;
       });
@@ -347,7 +347,7 @@ export class ProfileService {
         return this.fromLdap(ldapUser, undefined, true, count + 1);
       }
     } else {
-      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`);
+      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, { context: ProfileService.name });
     }
 
     return undefined;
@@ -467,8 +467,7 @@ export class ProfileService {
    */
   bulkSave = async (profiles: ProfileEntity[]): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data in "profile": ${message}`, [{ error }]);
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: ProfileService.name });
 
       throw error;
     });
@@ -501,7 +500,7 @@ export class ProfileService {
         return p;
       })
       .catch((error: Error) => {
-        this.logger.error(`Unable to save data in "profile": ${error.toString()}`, error);
+        this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: ProfileService.name });
 
         throw error;
       });

@@ -1,12 +1,10 @@
 /** @format */
 
 //#region Imports NPM
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Injectable, Inject, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, Logger, NestInterceptor } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { Request } from 'express';
+
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 //#endregion
@@ -17,40 +15,63 @@ import { ConfigService } from '@app/config/config.service';
 
 export type AppGraphQLExecutionContext = GraphQLExecutionContext;
 
+/**
+ * Interceptor that logs input/output requests
+ */
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  microserviceUrl: string;
+  private readonly ctxPrefix: string = LoggingInterceptor.name;
+  private readonly logger: Logger = new Logger(this.ctxPrefix);
 
-  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger, private readonly configService: ConfigService) {
-    this.microserviceUrl = configService.get<string>('MICROSERVICE_URL');
-  }
-
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  /**
+   * Intercept method, logs before and after the request being processed
+   * @param context details about the current request
+   * @param call$ implements the handle method that returns an Observable
+   */
+  public intercept(context: ExecutionContext, call$: CallHandler): Observable<unknown> {
     const type = context.getType();
     switch (type) {
       case 'rpc': {
         const info = context.switchToRpc().getContext();
 
-        return next.handle().pipe(tap(() => this.logger.info(`info: ${info.args}, url: ${this.microserviceUrl}`, 'NestMicroservice')));
+        return call$.handle().pipe(tap(() => this.logger.log({ page: this.ctxPrefix, info: info.args }, 'NestMicroservice')));
       }
 
       case 'http':
       default: {
-        const request = context.switchToHttp().getRequest<Request>();
         let username = '';
+        const req: Request = context.switchToHttp().getRequest();
 
         // HTTP requests
-        if (request) {
-          username = (request.session?.passport?.user as User)?.username || '';
+        if (req) {
+          const { method, url, body, headers } = req;
+          const message = `Incoming request - ${method} - ${url}`;
+          username = (req.session?.passport?.user as User)?.username || '';
 
-          if (request.url === '/health') {
-            return next.handle();
-          }
+          this.logger.log(
+            {
+              page: this.ctxPrefix,
+              message,
+              method,
+              body,
+              headers,
+              username,
+            },
+            this.ctxPrefix,
+          );
 
-          return next.handle().pipe(tap(() => this.logger.info(`Username: '${username}'`, context.getClass().name)));
+          return call$.handle().pipe(
+            tap({
+              next: (val: unknown): void => {
+                this.logNext(val, context);
+              },
+              error: (err: Error): void => {
+                this.logError(err, context);
+              },
+            }),
+          );
         }
 
-        // GraphQL requests
         const ctx: AppGraphQLExecutionContext = GqlExecutionContext.create(context);
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
@@ -62,27 +83,96 @@ export class LoggingInterceptor implements NestInterceptor {
           values.password = '* MASKED *';
         }
 
-        return next
-          .handle()
-          .pipe(
-            tap(() =>
-              this.logger.info(
-                `username: ${username}, parentType: ${info.parentType.name}, fieldName: ${info.fieldName}, values: ${
-                  Object.keys(values).length > 0 && values
-                }`,
-                resolverName,
-              ),
+        return call$.handle().pipe(
+          tap(() =>
+            this.logger.log(
+              {
+                page: this.ctxPrefix,
+                username,
+                parentType: info.parentType.name,
+                fieldName: info.fieldName,
+                values: `${Object.keys(values).length > 0 ? values.toString() : ''}`,
+              },
+              resolverName,
             ),
-          );
+          ),
+        );
       }
     }
   }
-}
 
-export const LoggingInterceptorProvider =
-  //#region Logging interceptor
-  {
-    provide: APP_INTERCEPTOR,
-    useClass: LoggingInterceptor,
-  };
-//#endregion
+  /**
+   * Logs the request response in success cases
+   * @param body body returned
+   * @param context details about the current request
+   */
+  private logNext(body: unknown, context: ExecutionContext): void {
+    const req: Request = context.switchToHttp().getRequest<Request>();
+    const res: Response = context.switchToHttp().getResponse<Response>();
+    const { method, url } = req;
+    const { statusCode } = res;
+    const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
+
+    this.logger.log(
+      {
+        page: this.ctxPrefix,
+        message,
+        body,
+        statusCode,
+      },
+      this.ctxPrefix,
+    );
+  }
+
+  /**
+   * Logs the request response in success cases
+   * @param error Error object
+   * @param context details about the current request
+   */
+  private logError(error: Error, context: ExecutionContext): void {
+    const req: Request = context.switchToHttp().getRequest<Request>();
+    const { method, url, body } = req;
+
+    if (error instanceof HttpException) {
+      const statusCode: number = error.getStatus();
+      const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
+
+      if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
+        this.logger.error(
+          {
+            page: this.ctxPrefix,
+            statusCode,
+            method,
+            url,
+            body,
+            message,
+            error,
+          },
+          error.stack,
+          this.ctxPrefix,
+        );
+      } else {
+        this.logger.warn(
+          {
+            page: this.ctxPrefix,
+            method,
+            url,
+            error,
+            body,
+            message,
+          },
+          this.ctxPrefix,
+        );
+      }
+    } else {
+      this.logger.error(
+        {
+          page: this.ctxPrefix,
+          message: `Outgoing response - ${method} - ${url}`,
+        },
+        error.stack,
+        this.ctxPrefix,
+      );
+    }
+  }
+}

@@ -4,7 +4,7 @@
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -23,7 +23,7 @@ describe('FilesService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule.forRoot()],
+      imports: [],
       providers: [
         ConfigService,
         FilesService,
@@ -31,6 +31,7 @@ describe('FilesService', () => {
           provide: 'PUB_SUB',
           useValue: serviceMock,
         },
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
       ],

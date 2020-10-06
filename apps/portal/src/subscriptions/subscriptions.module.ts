@@ -16,7 +16,7 @@ import { ConfigService } from '@app/config';
   providers: [
     {
       provide: 'PUB_SUB',
-      inject: [],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const host = configService.get<string>('HTTP_REDIS_URI')?.replace(/^redis:\/\/(.*?):(\d+)\/(\d+)$/, '$1');
         const redisOptions = {

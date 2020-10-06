@@ -182,12 +182,12 @@ export class UserService {
    */
   async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, [{ error }]);
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: UserService.name });
 
       throw error;
     });
     if (!profile) {
-      this.logger.error('Unable to save data in `profile`. Unknown error.');
+      this.logger.error('Unable to save data in `profile`. Unknown error.', { error: 'Unknown', context: UserService.name });
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
@@ -198,7 +198,7 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, error);
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: UserService.name });
 
       return undefined;
     });
@@ -206,7 +206,7 @@ export class UserService {
     if (!user) {
       // eslint-disable-next-line no-param-reassign
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, true, false).catch((error) => {
-        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, error);
+        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, { error, context: UserService.name });
 
         return undefined;
       });
@@ -262,8 +262,7 @@ export class UserService {
    */
   bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      const message = error.toString();
-      this.logger.error(`Unable to save data(s) in "user": ${message}`, message);
+      this.logger.error(`Unable to save data(s) in "user": ${error.toString()}`, { error, context: UserService.name });
 
       throw error;
     });
@@ -297,8 +296,7 @@ export class UserService {
         return user;
       })
       .catch((error: Error) => {
-        const message = error.toString();
-        this.logger.error(`Unable to save data in "user": ${message}`, message);
+        this.logger.error(`Unable to save data in "user": ${error.toString()}`, { error, context: UserService.name });
 
         throw error;
       });

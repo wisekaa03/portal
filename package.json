@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.1",
+  "version": "4.17.2",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -114,6 +114,7 @@
     "**/**/node-fetch": "^2"
   },
   "dependencies": {
+    "@algoan/nestjs-logging-interceptor": "^2.1.3",
     "@apollo/client": "*",
     "@date-io/core": "^2",
     "@date-io/date-fns": "^2",

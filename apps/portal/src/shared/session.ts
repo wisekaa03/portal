@@ -43,11 +43,9 @@ export default (configService: ConfigService, logger: LoggerService, store: Sess
       },
     });
 
-    logger.debug!('Redis connection: success', 'Session');
-
     return sess;
   } catch (error) {
-    logger.error('cannot install', error, 'Session');
+    logger.error('Redis cannot install', error.toString(), 'Session');
 
     throw error;
   }

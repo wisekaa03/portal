@@ -3,7 +3,7 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -24,10 +24,11 @@ describe(SyncService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule.forRoot()],
+      imports: [],
       providers: [
         ConfigService,
         SyncService,
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },

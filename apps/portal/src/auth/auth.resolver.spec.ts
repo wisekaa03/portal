@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config/config.service';
@@ -20,7 +20,7 @@ describe(AuthResolver.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule.forRoot()],
+      imports: [],
       providers: [
         {
           provide: 'PUB_SUB',
@@ -28,6 +28,7 @@ describe(AuthResolver.name, () => {
         },
         AuthResolver,
         ConfigService,
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: AuthService, useValue: serviceMock },
       ],

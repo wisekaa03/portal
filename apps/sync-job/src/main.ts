@@ -5,16 +5,16 @@
 //#region Imports NPM
 import { resolve } from 'path';
 import { ClientRedis } from '@nestjs/microservices';
-import { PinoLogger, Logger } from 'nestjs-pino';
+import { createLogger } from 'winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { pinoOptions } from '@back/shared/pino.options';
 import { LDAP_SYNC } from '@back/shared/constants';
+import { winstonOptions } from '@back/shared/logger.options';
 //#endregion
 
 const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
-const logger = new Logger(new PinoLogger(pinoOptions(configService)), {});
+const logger = createLogger(winstonOptions());
 
 async function bootstrap(config: ConfigService): Promise<boolean> {
   const client = new ClientRedis({

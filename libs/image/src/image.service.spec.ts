@@ -2,16 +2,15 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { ImageService } from './image.service';
 //#endregion
 
+const serviceMock = jest.fn(() => ({}));
 jest.mock('@app/config/config.service');
-
-// const serviceMock = jest.fn(() => ({}));
 jest.mock('sharp');
 
 describe(ImageService.name, () => {
@@ -19,8 +18,8 @@ describe(ImageService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule.forRoot()],
-      providers: [ConfigService, ImageService],
+      imports: [],
+      providers: [ConfigService, ImageService, { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock }],
     }).compile();
 
     service = module.get<ImageService>(ImageService);

@@ -86,7 +86,7 @@ export class TicketsService {
         store: this.cacheStore,
         ttl: this.ttl,
       });
-      logger.info('Redis connection: success');
+      logger.info('Redis connection: success', { context: TicketsService.name });
     }
   }
 
@@ -114,7 +114,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error: Error) => {
-          this.logger.error(`ticketsRoutes: ${error.toString()}`);
+          this.logger.error(`ticketsRoutes: ${error.toString()}`, { error, context: TicketsService.name });
 
           promises.push(Promise.resolve({ routes: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
@@ -124,7 +124,7 @@ export class TicketsService {
           client
             .GetRoutesAsync({ Log: user.username }, { timeout: TIMEOUT })
             .then((result: DataResult<TicketsSOAPRoutes>) => {
-              this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`);
+              this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`, { context: TicketsService.name });
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
                 const routes = result[0].return?.['Сервис']?.map((route: TicketsRouteSOAP) => routeSOAP(route, TkWhere.SOAP1C));
@@ -137,8 +137,8 @@ export class TicketsService {
               throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
             })
             .catch((error: Error) => {
-              this.logger.info(`ticketsRoutes: [Response] ${client.lastResponse}`);
-              this.logger.error(`ticketsRoutes: ${error.toString()}`);
+              this.logger.info(`ticketsRoutes: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+              this.logger.error(`ticketsRoutes: ${error.toString()}`, { error, context: TicketsService.name });
 
               return { errors: [PortalError.SOAP_NOT_AUTHORIZED] };
             }),
@@ -188,7 +188,7 @@ export class TicketsService {
           promises.push(osTicket);
         });
       } catch (error) {
-        this.logger.error(`ticketsRoutes: ${error.toString()}`);
+        this.logger.error(`ticketsRoutes: ${error.toString()}`, { error, context: TicketsService.name });
       }
     }
 
@@ -251,7 +251,7 @@ export class TicketsService {
               }
             }
           } catch (error) {
-            this.logger.error(`ticketsRoutesCache: ${error.toString()}`);
+            this.logger.error(`ticketsRoutesCache: ${error.toString()}`, { error, context: TicketsService.name });
           }
         })();
 
@@ -268,7 +268,7 @@ export class TicketsService {
 
       return ticketsRoutes;
     } catch (error) {
-      this.logger.error(`ticketsRoutesCache: ${error.toString()}`);
+      this.logger.error(`ticketsRoutesCache: ${error.toString()}`, { error, context: TicketsService.name });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -300,7 +300,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(`ticketsTasks: ${error.toString()}`);
+          this.logger.error(`ticketsTasks: ${error.toString()}`, { error, context: TicketsService.name });
 
           promises.push(Promise.resolve({ users: null, tasks: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
@@ -324,7 +324,7 @@ export class TicketsService {
               { timeout: TIMEOUT },
             )
             .then((result: DataResult<TicketsSOAPTasks>) => {
-              this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`);
+              this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`, { context: TicketsService.name });
 
               if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
                 return {
@@ -333,15 +333,15 @@ export class TicketsService {
                 };
               }
 
-              this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`);
+              this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`, { context: TicketsService.name });
               return {
                 errors: [PortalError.SOAP_EMPTY_RESULT],
               };
             })
             .catch((error: SoapFault) => {
-              this.logger.info(`ticketsTasks: [Request] ${client.lastRequest}`);
-              this.logger.info(`ticketsTasks: [Response] ${client.lastResponse}`);
-              this.logger.error(`ticketsTasks: ${error.toString()}`);
+              this.logger.info(`ticketsTasks: [Request] ${client.lastRequest}`, { context: TicketsService.name });
+              this.logger.info(`ticketsTasks: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+              this.logger.error(`ticketsTasks: ${error.toString()}`, { error, context: TicketsService.name });
 
               return { errors: [PortalError.SOAP_NOT_AUTHORIZED] };
             }),
@@ -405,7 +405,7 @@ export class TicketsService {
           promises.push(osTicket);
         });
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error(`ticketsTasks: ${error.toString()}`, { error, context: TicketsService.name });
       }
     }
 
@@ -499,7 +499,7 @@ export class TicketsService {
               setTimeout(() => this.ticketsTasksCache(user, password, tasks), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error(`ticketsTasksCache: ${error.toString()}`);
+            this.logger.error(`ticketsTasksCache: ${error.toString()}`, { error, context: TicketsService.name });
           }
         })();
 
@@ -516,7 +516,7 @@ export class TicketsService {
 
       return ticketsTasks;
     } catch (error) {
-      this.logger.error(`ticketsTasksCache: ${error.toString()}`);
+      this.logger.error(`ticketsTasksCache: ${error.toString()}`, { error, context: TicketsService.name });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -540,7 +540,7 @@ export class TicketsService {
       await constructUploads(attachments, ({ filename, file }) =>
         Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
       ).catch((error: Error) => {
-        this.logger.error(`ticketsTaskNew: ${error.toString()}`);
+        this.logger.error(`ticketsTaskNew: ${error.toString()}`, { error, context: TicketsService.name });
 
         throw error;
       });
@@ -557,7 +557,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(`ticketsTaskNew: ${error.toString()}`);
+          this.logger.error(`ticketsTaskNew: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -576,7 +576,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`, { context: TicketsService.name });
 
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
@@ -591,13 +591,13 @@ export class TicketsService {
             } as TkTaskNew;
           }
 
-          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`, { context: TicketsService.name });
           throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
         })
         .catch((error: Error) => {
-          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`);
-          this.logger.error(`TicketsTaskNew: ${error.toString()}`);
+          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`, { context: TicketsService.name });
+          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+          this.logger.error(`TicketsTaskNew: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new InternalServerErrorException(__DEV__ ? error : undefined);
         });
@@ -656,7 +656,7 @@ export class TicketsService {
               });
           }
         } catch (error) {
-          this.logger.error(error);
+          this.logger.error(`ticketsTaskNew: ${error.toString()}`, { context: TicketsService.name });
 
           throw error;
         }
@@ -690,7 +690,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(`ticketsTask: ${error.toString()}`);
+          this.logger.error(`ticketsTask: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -703,7 +703,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: DataResult<TicketsSOAPTask>) => {
-          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`, { context: TicketsService.name });
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             const usersResult = result[0].return['Пользователи']?.['Пользователь']?.map((u: TicketsUserSOAP) => userSOAP(u, task.where));
             const taskResult = taskSOAP((result[0].return?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0], task.where);
@@ -715,15 +715,15 @@ export class TicketsService {
             }
           }
 
-          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`, { context: TicketsService.name });
           return {
             error: PortalError.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`);
-          this.logger.error(`TicketsTask: ${error.toString()}`);
+          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`, { context: TicketsService.name });
+          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+          this.logger.error(`TicketsTask: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -773,16 +773,22 @@ export class TicketsService {
                     }
                   }
 
-                  this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`);
+                  this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`, {
+                    error: PortalError.OST_EMPTY_RESULT,
+                    context: TicketsService.name,
+                  });
                   throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
                 }
 
-                this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`);
+                this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`, {
+                  error: PortalError.OST_EMPTY_RESULT,
+                  context: TicketsService.name,
+                });
                 throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
               });
           }
         } catch (error) {
-          this.logger.error(error);
+          this.logger.error(`ticketsTask: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw error;
         }
@@ -826,7 +832,7 @@ export class TicketsService {
               setTimeout(() => this.ticketsTaskCache(user, password, task), TIMEOUT_REFETCH_SERVICES);
             }
           } catch (error) {
-            this.logger.error('ticketsTaskCache', error);
+            this.logger.error(`ticketsTaskCache: ${error.toString()}`, { context: TicketsService.name });
           }
         })();
 
@@ -843,7 +849,7 @@ export class TicketsService {
 
       return ticketsTask;
     } catch (error) {
-      this.logger.error(`ticketsTaskCache: ${error.toString()}`);
+      this.logger.error(`ticketsTaskCache: ${error.toString()}`, { error, context: TicketsService.name });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -886,7 +892,7 @@ export class TicketsService {
         await constructUploads(attachments, ({ filename, file }) =>
           Attaches['Вложение'].push({ DFile: file.toString('base64'), NFile: filename }),
         ).catch((error) => {
-          this.logger.error(`ticketsTaskEdit: ${error.toString()}`);
+          this.logger.error(`ticketsTaskEdit: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnsupportedMediaTypeException(__DEV__ ? error : undefined);
         });
@@ -904,21 +910,21 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result: Record<string, any>) => {
-          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`, { context: TicketsService.name });
 
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return taskSOAP(result[0].return as TicketsTaskSOAP, TkWhere.SOAP1C);
           }
 
-          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`, { context: TicketsService.name });
           return {
             error: PortalError.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`);
-          this.logger.error(`TicketsTaskEdit: ${error.toString()}`);
+          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`, { context: TicketsService.name });
+          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+          this.logger.error(`TicketsTaskEdit: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -954,7 +960,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(`ticketsTaskFile: ${error.toString()}`);
+          this.logger.error(`ticketsTaskFile: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -967,7 +973,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
+          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`, { context: TicketsService.name });
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
               ...file,
@@ -977,15 +983,15 @@ export class TicketsService {
             };
           }
 
-          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
+          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`, { context: TicketsService.name });
           return {
             error: PortalError.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
-          this.logger.error(`TicketsTaskFile: ${error.toString()}`);
+          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`, { context: TicketsService.name });
+          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+          this.logger.error(`TicketsTaskFile: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -1041,7 +1047,7 @@ export class TicketsService {
               });
           }
         } catch (error) {
-          this.logger.error(error);
+          this.logger.error(`ticketsTaskFile: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw error;
         }
@@ -1075,7 +1081,7 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`ticketsComment: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -1088,7 +1094,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
+          this.logger.info(`ticketsComment: [Request] ${client.lastRequest}`, { context: TicketsService.name });
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
             return {
               ...comment,
@@ -1096,15 +1102,15 @@ export class TicketsService {
             };
           }
 
-          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
+          this.logger.info(`ticketsComment: [Response] ${client.lastResponse}`, { context: TicketsService.name });
           return {
             error: PortalError.SOAP_EMPTY_RESULT,
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`);
-          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`);
-          this.logger.error(error);
+          this.logger.info(`ticketsComment: [Request] ${client.lastRequest}`, { context: TicketsService.name });
+          this.logger.info(`ticketsComment: [Response] ${client.lastResponse}`, { context: TicketsService.name });
+          this.logger.error(`ticketsComment: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
@@ -1160,7 +1166,7 @@ export class TicketsService {
               });
           }
         } catch (error) {
-          this.logger.error(`ticketsComment: ${error.toString()}`);
+          this.logger.error(`ticketsComment: ${error.toString()}`, { error, context: TicketsService.name });
 
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         }

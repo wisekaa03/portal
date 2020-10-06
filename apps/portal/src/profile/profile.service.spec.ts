@@ -4,7 +4,7 @@
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
-import { getLoggerToken } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -48,7 +48,7 @@ describe('ProfileService', () => {
         // TypeOrmModule.forFeature([GroupEntity]),
       ],
       providers: [
-        { provide: getLoggerToken(ProfileService.name), useValue: serviceMock },
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         ConfigService,
         ProfileService,
         { provide: LdapService, useValue: serviceMock },

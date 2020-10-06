@@ -4,16 +4,17 @@
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-import { PinoLogger, Logger } from 'nestjs-pino';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { createLogger } from 'winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { pinoOptions } from '@back/shared/pino.options';
+import { winstonOptions } from '@back/shared/logger.options';
 import { AppModule } from './app.module';
 //#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
-  let logger = new Logger(new PinoLogger(pinoOptions()), {});
+  let logger = createLogger(winstonOptions());
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     logger,
@@ -23,7 +24,7 @@ async function bootstrap(config: ConfigService): Promise<void> {
     },
   });
 
-  logger = app.get(Logger);
+  logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   const configService = app.get(ConfigService);
   configService.logger = logger;
   app.useLogger(logger);

@@ -18,11 +18,9 @@ export default (configService: ConfigService, logger: LoggerService): Session.St
       }),
     });
 
-    logger.debug!('Redis connection...', 'Session');
-
     return sess;
   } catch (error) {
-    logger.error('Error when installing', error, 'Session');
+    logger.error('Error when installing', error.toString(), 'Session');
 
     throw error;
   }

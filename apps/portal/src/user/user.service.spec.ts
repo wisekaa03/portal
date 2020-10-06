@@ -6,7 +6,7 @@ import { TypeOrmModule, getRepositoryToken, TypeOrmModuleOptions } from '@nestjs
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { getLoggerToken } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -51,7 +51,7 @@ describe(UserService.name, () => {
       ],
       providers: [
         { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
-        { provide: getLoggerToken(UserService.name), useValue: serviceMock },
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         ConfigService,
         UserService,
         { provide: ClientProxy, useValue: serviceMock },

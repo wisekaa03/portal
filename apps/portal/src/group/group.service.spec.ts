@@ -4,7 +4,7 @@
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
-import { getLoggerToken } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -42,7 +42,7 @@ describe(GroupService.name, () => {
         // TypeOrmModule.forFeature([GroupEntity]),
       ],
       providers: [
-        { provide: getLoggerToken(GroupService.name), useValue: serviceMock },
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
         GroupService,
         ConfigService,

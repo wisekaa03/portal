@@ -70,8 +70,7 @@ export class AuthResolver {
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        const message = error.toString();
-        this.logger.error(`Error when logging in: ${message}`, message);
+        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name });
 
         throw new UnauthorizedException(error);
       }
@@ -100,7 +99,7 @@ export class AuthResolver {
     @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
     return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
-      this.logger.error('Unable to login in mail', error);
+      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name });
 
       return {
         login: false,
@@ -119,7 +118,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') request: Request): Promise<boolean> {
-    this.logger.debug('User logout');
+    this.logger.debug('User logout', { context: AuthResolver.name });
 
     if (request.session) {
       request.logOut();
@@ -140,7 +139,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async cacheReset(): Promise<boolean> {
-    this.logger.debug('Cache reset');
+    this.logger.debug('Cache reset', { context: AuthResolver.name });
 
     return this.authService.cacheReset();
   }

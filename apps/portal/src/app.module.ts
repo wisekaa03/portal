@@ -7,16 +7,18 @@ import { resolve } from 'path';
 import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
-import { Module, CacheModule, UnauthorizedException, LoggerService } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { Module, CacheModule, UnauthorizedException, Type } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
-import { WinstonModule } from 'nest-winston';
+import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import winston, { Logger } from 'winston';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+// import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
 //#endregion
 //#region Imports Local
 import type { User } from '@lib/types';
@@ -26,8 +28,9 @@ import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 
 import { ConfigModule, ConfigService } from '@app/config';
-import { LoggingInterceptorProvider } from '@app/logging.interceptor';
-import { CacheInterceptorProvider } from '@app/cache.interceptor';
+import { winstonOptions } from '@back/shared/logger.options';
+import { LoggingInterceptor } from '@app/logging.interceptor';
+// import { CacheInterceptorProvider } from '@app/cache.interceptor';
 import { SoapModule } from '@app/soap';
 
 import { DateScalar } from '@back/shared/date.scalar';
@@ -101,10 +104,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
   imports: [
     //#region Logging module
     WinstonModule.forRootAsync({
-      useFactory: () => ({
-        transports: [new winston.transports.Console()],
-      }),
-      inject: [],
+      useFactory: () => winstonOptions(),
     }),
     //#endregion
 
@@ -125,9 +125,10 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     //#region Cache Manager - Redis
     CacheModule.registerAsync({
-      inject: [],
+      imports: [WinstonModule],
+      inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
       useFactory: async (configService: ConfigService, logger: Logger) => {
-        logger.debug('Redis connection: success', 'CacheModule');
+        logger.log('Redis connection: success', 'CacheModule');
 
         return {
           store: redisCacheStore,
@@ -143,7 +144,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#region GraphQL
     Upload,
     GraphQLModule.forRootAsync({
-      inject: [],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const DEV = configService.get<boolean>('DEVELOPMENT');
 
@@ -227,10 +228,10 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     //#region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [],
-      inject: [],
+      imports: [WinstonModule],
+      inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
       useFactory: async (configService: ConfigService, logger: Logger) => {
-        logger.debug('Database connection: success', 'Database');
+        logger.log('Database connection: success', 'Database');
 
         return typeOrmPostgres(configService, logger);
       },
@@ -239,12 +240,12 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     SoapModule,
 
-    //#region Profile
-    ProfileModule,
-    //#endregion
-
     //#region Authentication
     AuthModule,
+    //#endregion
+
+    //#region Profile
+    ProfileModule,
     //#endregion
 
     //#region Groups
@@ -282,17 +283,11 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     ByteArrayScalar,
     //#endregion
 
-    LoggingInterceptorProvider,
-
-    CacheInterceptorProvider,
-
-    //#region GraphQL interceptor
-    // {
-    // TODO: сделать чтобы IntrospectionQuery блокировался до тех пор пока кто-либо не воспользуется login
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: GraphQLInterceptor,
-    // },
-    //#endregion
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    // CacheInterceptorProvider,
   ],
 })
 export class AppModule {}

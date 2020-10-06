@@ -3,7 +3,7 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { getLoggerToken } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 //#endregion
 //#region Imports Local
@@ -48,7 +48,7 @@ describe(NewsService.name, () => {
         }),
       ],
       providers: [
-        { provide: getLoggerToken(NewsService.name), useValue: serviceMock },
+        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         ConfigService,
         NewsService,
         { provide: UserService, useValue: serviceMock },

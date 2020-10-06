@@ -7,7 +7,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
-import { WINSTON_MODULE_NEST_PROVIDER, WINSTON_MODULE_PROVIDER, WinstonModule } from 'nest-winston';
+import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule, WinstonLogger } from 'nest-winston';
 import * as winston from 'winston';
 import express from 'express';
 import crypto from 'crypto';
@@ -21,18 +21,18 @@ import { ConfigService } from '@app/config';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 import { AppModule } from '@back/app.module';
+import { winstonOptions } from '@back/shared/logger.options';
 //#endregion
 
 async function bootstrap(): Promise<void> {
   //#region NestJS options
   let secure = false;
-  const loggerBootstrap = WinstonModule.createLogger({ transports: [new winston.transports.Console()] });
+  const loggerBootstrap = WinstonModule.createLogger(winstonOptions());
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
     },
     logger: loggerBootstrap,
-    // logger: false,
   };
   //#endregion
 
@@ -69,11 +69,10 @@ async function bootstrap(): Promise<void> {
     nestjsOptions,
   );
 
-  // const logger: winston.Logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
-  // const logger = loggerBootstrap;
-  // app.useLogger(logger);
+  const logger: WinstonLogger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
   const configService = app.get(ConfigService);
-  configService.logger = loggerBootstrap;
+  configService.logger = logger;
   configService.secure = secure;
   const DEV = configService.get<boolean>('DEVELOPMENT');
   //#endregion

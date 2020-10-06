@@ -2,14 +2,14 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerModule } from 'nestjs-pino';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
 import { SoapService } from './soap.service';
 //#endregion
 
-// const serviceMock = jest.fn(() => ({}));
+const serviceMock = jest.fn(() => ({}));
 
 jest.mock('@app/config/config.service');
 jest.mock('soap', () => ({
@@ -21,8 +21,8 @@ describe(SoapService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule.forRoot()],
-      providers: [ConfigService, SoapService],
+      imports: [],
+      providers: [ConfigService, SoapService, { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock }],
     }).compile();
 
     service = module.get<SoapService>(SoapService);

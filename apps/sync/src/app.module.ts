@@ -4,15 +4,17 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { WinstonModule } from 'nest-winston';
-import winston, { Logger } from 'winston';
+import { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
-import { LoggingInterceptorProvider } from '@app/logging.interceptor';
+import { LoggingInterceptor } from '@app/logging.interceptor';
+import { winstonOptions } from '@back/shared/logger.options';
 import { UserModule } from '@back/user/user.module';
 import { UserEntity } from '@back/user/user.entity';
 import { ProfileModule } from '@back/profile/profile.module';
@@ -32,10 +34,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     ConfigModule.register(environment),
     //#region Logging module
     WinstonModule.forRootAsync({
-      useFactory: () => ({
-        transports: [new winston.transports.Console()],
-      }),
-      inject: [],
+      useFactory: () => winstonOptions(),
     }),
     //#endregion
 
@@ -115,6 +114,6 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     ProfileModule,
   ],
   controllers: [AppController],
-  providers: [SyncService, LoggingInterceptorProvider],
+  providers: [SyncService, { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
 export class AppModule {}
