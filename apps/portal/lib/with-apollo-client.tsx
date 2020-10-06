@@ -35,7 +35,7 @@ interface CreateClientProps {
 }
 
 let configService: ConfigService | undefined;
-let logger: Logger | any = console;
+let logger: Logger | typeof console = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
 const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
@@ -43,16 +43,16 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
     if (__SERVER__) {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message /* , path, locations, extensions */ }): void => {
-          logger.error(message, message, 'GraphQL ErrorLink from server', { error: message });
+          logger.error(`Error: ${message}`, { error: message, context: 'GraphQL' });
         });
       }
       if (networkError) {
-        logger.error(networkError, networkError.toString(), 'GraphQL NetworkError', { error: networkError });
+        logger.error(`NetworkError: ${networkError.toString()}`, { error: networkError, context: 'GraphQL' });
       }
     } else {
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message, extensions /* , locations, path, */ }): void => {
-          logger.error('GraphQL ErrorLink from client', message);
+          logger.error(`Error: ${message}`, { error: message, context: 'GraphQL' });
 
           if (extensions?.exception?.code >= 401 && extensions?.exception?.code <= 403) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
@@ -60,7 +60,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         });
       }
       if (networkError) {
-        logger.error('GraphQL NetworkError', networkError.toString());
+        logger.error(`NetworkError: ${networkError.toString()}`, { error: networkError, context: 'GraphQL' });
       }
     }
   });
@@ -185,7 +185,7 @@ export const withApolloClient = (
           });
           user = data?.me;
         } catch (error) {
-          logger.error(`query "CURRENT_USER": ${error.toString()}`, error.toString(), 'withApolloClient', error);
+          logger.error(`Query "CURRENT_USER": ${error.toString()}`, { error, context: 'withApolloClient' });
         }
         const language = user?.settings?.lng || lngFromReq(request) || 'en';
         const isMobile = checkMobile({ ua: request.headers['user-agent'] }) ?? false;
@@ -219,7 +219,7 @@ export const withApolloClient = (
               (graphQLError) => graphQLError.extensions?.exception?.status >= 401 && graphQLError.extensions?.exception?.status <= 403,
             )
           ) {
-            logger.error(`getDataFromTree: ${error.toString()}`, error.toString(), 'withApolloClient', { error });
+            logger.error(`getDataFromTree: ${error.toString()}`, { error, context: 'withApolloClient' });
           }
         }
 
