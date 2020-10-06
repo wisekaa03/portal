@@ -1,8 +1,9 @@
 /** @format */
 
 //#region Imports NPM
+import { Request } from 'express';
 import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
@@ -40,6 +41,7 @@ export class UserResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async ldapNewUser(
+    @Context('req') request: Request,
     @Args('ldap') ldap: ProfileInput,
     @Args('photo') photo?: Promise<FileUpload>,
     @CurrentUser() user?: User,
@@ -48,7 +50,7 @@ export class UserResolver {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapNewUser(ldap, photo).catch((error: Error) => {
+    return this.userService.ldapNewUser(request, ldap, photo).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -62,12 +64,12 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async ldapCheckUsername(@Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
+  async ldapCheckUsername(@Context('req') request: Request, @Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapCheckUsername(value);
+    return this.userService.ldapCheckUsername(request, value);
   }
 
   /**

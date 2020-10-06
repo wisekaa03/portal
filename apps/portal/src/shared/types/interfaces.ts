@@ -4,6 +4,10 @@ import type { IncomingMessage } from 'http';
 import type WebSocket from 'ws';
 import type { User } from '@lib/types';
 
+export interface LoggerContext {
+  [key: string]: string;
+}
+
 export interface PortalWebsocket {
   user: User;
   req: IncomingMessage;

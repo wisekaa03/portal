@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import { Request } from 'express';
 import { Injectable, Inject, InternalServerErrorException, NotAcceptableException } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,6 +24,7 @@ import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
 import { PortalError } from '@back/shared/errors';
+import { getUsername } from './user.decorator';
 import { UserEntity } from './user.entity';
 //#endregion
 
@@ -320,16 +322,16 @@ export class UserService {
    */
   settings = (value: UserSettings, user: User): UserSettings => defaultsDeep(value, user.settings, defaultUserSettings);
 
-  ldapCheckUsername = async (value: string): Promise<boolean> =>
+  ldapCheckUsername = async (request: Request, value: string): Promise<boolean> =>
     this.ldapService
-      .searchByUsername(value, false)
+      .searchByUsername({ userByUsername: value, cache: false, loggerContext: getUsername(request) })
       .then(() => false)
       .catch(() => true);
 
   /**
    * This is a LDAP new user and contact
    */
-  ldapNewUser = async (value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
+  ldapNewUser = async (request: Request, value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
     const entry: LDAPAddEntry = this.profileService.modification(value);
     entry.name = entry.cn;
 
@@ -353,7 +355,7 @@ export class UserService {
     }
 
     return this.ldapService
-      .add(entry)
+      .add({ entry, loggerContext: getUsername(request) })
       .then<UserEntity | ProfileEntity>((ldapUser) => {
         if (!ldapUser) {
           throw new Error('Cannot contact with AD');

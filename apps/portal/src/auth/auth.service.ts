@@ -9,10 +9,10 @@ import { Logger } from 'winston';
 import Redis from 'redis';
 //#endregion
 //#region Imports Local
-import { LoginEmail, EmailSession } from '@lib/types/auth';
-import { getUsername } from '@back/user/user.decorator';
-import { User } from '@lib/types/user.dto';
-import { ConfigService } from '@app/config';
+import type { LoginEmail, EmailSession } from '@lib/types/auth';
+import type { LoggerContext } from '@back/shared/types';
+import type { User } from '@lib/types/user.dto';
+import type { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
 import { PortalError } from '@back/shared/errors';
@@ -58,11 +58,19 @@ export class AuthService {
    * @returns {UserEntity} User entity
    * @throws {Error} Exception
    */
-  async login({ username, password, request }: { username: string; password: string; request: Request }): Promise<UserEntity> {
-    this.logger.info(`User login: username = "${username}"`, { context: AuthService.name, ...getUsername(request) });
+  async login({
+    username,
+    password,
+    loggerContext,
+  }: {
+    username: string;
+    password: string;
+    loggerContext: LoggerContext;
+  }): Promise<UserEntity> {
+    this.logger.info(`User login: username = "${username}"`, { context: AuthService.name, ...loggerContext });
 
-    const ldapUser = await this.ldapService.authenticate(username, password).catch((error) => {
-      this.logger.error(`LDAP login: ${error.toString()}`, { error, context: AuthService.name, ...getUsername(request) });
+    const ldapUser = await this.ldapService.authenticate({ username, password, loggerContext }).catch((error) => {
+      this.logger.error(`LDAP login: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
 
       if (error instanceof InvalidCredentialsError) {
         throw new UnauthorizedException(__DEV__ ? error : undefined);
@@ -78,7 +86,7 @@ export class AuthService {
           this.logger.error(`User is Disabled: ${user.username}`, {
             error: 'User is Disabled',
             context: AuthService.name,
-            ...getUsername(request),
+            ...loggerContext,
           });
 
           throw new BadRequestException(PortalError.USER_DISABLED);
@@ -87,7 +95,7 @@ export class AuthService {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error(`Error: not found user: ${error.toString()}`, { error, context: AuthService.name, ...getUsername(request) });
+        this.logger.error(`Error: not found user: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
 
         throw new InternalServerErrorException(__DEV__ ? error : undefined);
       });
@@ -100,7 +108,7 @@ export class AuthService {
    * @function cacheReset
    * @returns {boolean} The true/false if successful cache reset
    */
-  cacheReset = async ({ request }: { request: Request }): Promise<boolean> => {
+  cacheReset = async ({ loggerContext }: { loggerContext: LoggerContext }): Promise<boolean> => {
     let sessionStoreReset = false;
     let databaseStoreReset = false;
     let ldapCacheReset = false;
@@ -114,14 +122,14 @@ export class AuthService {
       try {
         redisDatabase.flushdb();
 
-        this.logger.info('Reset database cache', { context: AuthService.name, ...getUsername(request) });
+        this.logger.info('Reset database cache', { context: AuthService.name, ...loggerContext });
 
         databaseStoreReset = true;
       } catch (error) {
         this.logger.error(`Unable to reset database cache: ${error.toString()}`, {
           error,
           context: AuthService.name,
-          ...getUsername(request),
+          ...loggerContext,
         });
       }
 
@@ -136,11 +144,11 @@ export class AuthService {
       try {
         redisLdap.flushdb();
 
-        this.logger.info('Reset LDAP cache', { context: AuthService.name, ...getUsername(request) });
+        this.logger.info('Reset LDAP cache', { context: AuthService.name, ...loggerContext });
 
         ldapCacheReset = true;
       } catch (error) {
-        this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...getUsername(request) });
+        this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
       }
 
       redisLdap.quit();
@@ -154,11 +162,11 @@ export class AuthService {
       try {
         redisHttp.flushdb();
 
-        this.logger.info('Reset HTTP cache', { context: AuthService.name, ...getUsername(request) });
+        this.logger.info('Reset HTTP cache', { context: AuthService.name, ...loggerContext });
 
         httpStoreReset = true;
       } catch (error) {
-        this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...getUsername(request) });
+        this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
       }
 
       redisHttp.quit();
@@ -172,12 +180,12 @@ export class AuthService {
       try {
         redisSession.flushdb();
 
-        this.logger.info('Reset session cache', { context: AuthService.name, ...getUsername(request) });
+        this.logger.info('Reset session cache', { context: AuthService.name, ...loggerContext });
       } catch (error) {
         this.logger.error(`Unable to reset session cache: ${error.toString()}`, {
           error,
           context: AuthService.name,
-          ...getUsername(request),
+          ...loggerContext,
         });
       }
 
@@ -188,7 +196,7 @@ export class AuthService {
       this.logger.error(`Error in cache reset, session store: ${error.toString()}`, {
         error,
         context: AuthService.name,
-        ...getUsername(request),
+        ...loggerContext,
       });
     }
 

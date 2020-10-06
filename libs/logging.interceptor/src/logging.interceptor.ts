@@ -137,7 +137,7 @@ export class LoggingInterceptor implements NestInterceptor {
    */
   private logError(error: Error, context: ExecutionContext): void {
     const req: Request = context.switchToHttp().getRequest<Request>();
-    const { method, url, body } = req;
+    const { method, url, body, user } = req;
 
     if (error instanceof HttpException) {
       const statusCode: number = error.getStatus();
@@ -153,6 +153,7 @@ export class LoggingInterceptor implements NestInterceptor {
             body,
             message,
             error,
+            username: user?.username,
           },
           error.stack,
           this.ctxPrefix,
@@ -166,6 +167,7 @@ export class LoggingInterceptor implements NestInterceptor {
             error,
             body,
             message,
+            username: user?.username,
           },
           this.ctxPrefix,
         );
@@ -175,6 +177,7 @@ export class LoggingInterceptor implements NestInterceptor {
         {
           page: this.ctxPrefix,
           message: `Outgoing response - ${method} - ${url}`,
+          username: user?.username,
         },
         error.stack,
         this.ctxPrefix,

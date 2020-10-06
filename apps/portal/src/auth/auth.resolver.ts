@@ -62,15 +62,16 @@ export class AuthResolver {
     @Context('req') request: Request,
     // @Context('res') response: Response,
   ): Promise<Login> {
+    const loggerContext = getUsername(request);
     const email: LoginEmail = { login: false };
 
-    const user = await this.authService.login({ username: username.toLowerCase(), password, request }).catch(async (error: Error) => {
+    const user = await this.authService.login({ username: username.toLowerCase(), password, loggerContext }).catch(async (error: Error) => {
       throw new UnauthorizedException(error);
     });
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, ...getUsername(request) });
+        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, ...loggerContext });
 
         throw new UnauthorizedException(error);
       }
@@ -98,8 +99,9 @@ export class AuthResolver {
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
+    const loggerContext = getUsername(request);
     return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
-      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name, ...getUsername(request) });
+      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name, ...loggerContext });
 
       return {
         login: false,
@@ -139,8 +141,9 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async cacheReset(@Context('req') request: Request): Promise<boolean> {
-    this.logger.info('Cache reset', { context: AuthResolver.name, ...getUsername(request) });
+    const loggerContext = getUsername(request);
+    this.logger.info('Cache reset', { context: AuthResolver.name, ...loggerContext });
 
-    return this.authService.cacheReset({ request });
+    return this.authService.cacheReset({ loggerContext });
   }
 }

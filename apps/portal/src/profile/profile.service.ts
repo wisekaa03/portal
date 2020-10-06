@@ -35,6 +35,7 @@ import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
 import { constructUploads } from '@back/shared/upload';
+import { getUsername } from '@back/user/user.decorator';
 import { ProfileEntity } from './profile.entity';
 import { PortalError } from '../shared/errors';
 //#endregion
@@ -341,7 +342,7 @@ export class ProfileService {
    */
   async fromLdapDN(userByDN: string, count = 1): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
-      const ldapUser = await this.ldapService.searchByDN(userByDN);
+      const ldapUser = await this.ldapService.searchByDN({ userByDN });
 
       if (ldapUser) {
         return this.fromLdap(ldapUser, undefined, true, count + 1);
@@ -748,11 +749,12 @@ export class ProfileService {
   async changeProfile(request: Request, profile: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
     let thumbnailPhotoProcessed: Buffer | undefined;
 
-    if (!request.session?.passport?.user?.profile?.id) {
+    if (!request?.user?.profile?.id) {
       throw new UnauthorizedException();
     }
 
-    const updated = { id: request.session.passport.user.profile.id, ...profile };
+    const loggerContext = getUsername(request);
+    const updated = { id: request?.user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
     if (!created) {
@@ -768,7 +770,7 @@ export class ProfileService {
     if (created.dn && created.loginService === LoginService.LDAP) {
       let ldapUser: LdapResponseUser | undefined;
       try {
-        ldapUser = await this.ldapService.searchByDN(created.dn);
+        ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, loggerContext });
       } catch (error) {
         if (!(error instanceof NoSuchObjectError)) {
           throw error;
@@ -776,7 +778,7 @@ export class ProfileService {
       }
       if (!ldapUser) {
         try {
-          ldapUser = await this.ldapService.searchByDN(created.dn, false);
+          ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, cache: false, loggerContext });
         } catch (error) {
           if (!(error instanceof NoSuchObjectError)) {
             throw error;
@@ -785,7 +787,11 @@ export class ProfileService {
       }
       if (!ldapUser) {
         if (created.username) {
-          ldapUser = await this.ldapService.searchByUsername(created.username, false);
+          ldapUser = await this.ldapService.searchByUsername({
+            userByUsername: created.username,
+            cache: false,
+            loggerContext,
+          });
         }
       }
 
@@ -812,13 +818,14 @@ export class ProfileService {
           throw new UnprocessableEntityException();
         }
         await this.ldapService
-          .modify(
-            ldapUser.dn,
-            ldapUpdated,
-            created && created.username ? created.username : undefined,
+          .modify({
+            dn: ldapUser.dn,
+            data: ldapUpdated,
+            username: created && created.username ? created.username : undefined,
             // TODO: .modify with password parameter
-            // (req.session!.passport!.user as UserResponse)!.passwordFrontend,
-          )
+            // password: (req.session!.passport!.user as UserResponse)!.passwordFrontend,
+            loggerContext,
+          })
           .catch((error: Error | LdapError) => {
             if (error instanceof InsufficientAccessRightsError) {
               throw new ForbiddenException(__DEV__ ? error : undefined);
@@ -844,8 +851,9 @@ export class ProfileService {
     const result = this.profileRepository.merge(created, profile || undefined, thumbnail as ProfileEntity);
 
     return this.save(result).then(async (profileUpdated) => {
-      if (request.session?.passport.user.profile.id === profileUpdated.id) {
-        request.session.passport.user.profile = profileUpdated;
+      // TODO: what I do ?...
+      if (request.user.profile.id === profileUpdated.id) {
+        request.user.profile = profileUpdated;
       }
 
       // TODO:  разобраться
