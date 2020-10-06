@@ -48,17 +48,19 @@ export class LoggingInterceptor implements NestInterceptor {
           const message = `Incoming request - ${method} - ${url}`;
           username = (req.session?.passport?.user as User)?.username || '';
 
-          this.logger.log(
-            {
-              page: this.ctxPrefix,
-              message,
-              method,
-              body,
-              headers,
-              username,
-            },
-            this.ctxPrefix,
-          );
+          if (url !== '/health') {
+            this.logger.log(
+              {
+                page: this.ctxPrefix,
+                message,
+                method,
+                body,
+                headers,
+                username,
+              },
+              this.ctxPrefix,
+            );
+          }
 
           return call$.handle().pipe(
             tap({
@@ -111,17 +113,21 @@ export class LoggingInterceptor implements NestInterceptor {
     const res: Response = context.switchToHttp().getResponse<Response>();
     const { method, url } = req;
     const { statusCode } = res;
+    const username = (req?.session?.passport?.user as User)?.username || '';
     const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
 
-    this.logger.log(
-      {
-        page: this.ctxPrefix,
-        message,
-        body,
-        statusCode,
-      },
-      this.ctxPrefix,
-    );
+    if (url !== 'health') {
+      this.logger.log(
+        {
+          page: this.ctxPrefix,
+          message,
+          body,
+          statusCode,
+          username,
+        },
+        this.ctxPrefix,
+      );
+    }
   }
 
   /**

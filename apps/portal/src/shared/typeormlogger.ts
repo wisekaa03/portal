@@ -10,7 +10,9 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query and parameters used in it.
    */
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.log(query, 'Database', parameters, queryRunner);
+    if (query !== 'SELECT 1') {
+      this.logger.log(query, 'Database', parameters, queryRunner);
+    }
   }
 
   /**
