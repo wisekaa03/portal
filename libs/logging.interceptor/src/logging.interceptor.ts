@@ -46,7 +46,7 @@ export class LoggingInterceptor implements NestInterceptor {
         if (req) {
           const { method, url, body, headers } = req;
           const message = `Incoming request - ${method} - ${url}`;
-          username = (req.session?.passport?.user as User)?.username || '';
+          username = req?.user?.username || '';
 
           if (url !== '/health') {
             this.logger.log(
@@ -78,7 +78,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        username = (gqlCtx.req?.session?.passport?.user as User)?.username || '';
+        username = gqlCtx.req?.user?.username || '';
 
         const values = info.variableValues;
         if (values.password) {
@@ -114,7 +114,7 @@ export class LoggingInterceptor implements NestInterceptor {
     if (url !== '/health') {
       const res: Response = context.switchToHttp().getResponse<Response>();
       const { statusCode } = res;
-      const username = (req?.session?.passport?.user as User)?.username || '';
+      const username = req?.user?.username || '';
       const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
 
       this.logger.log(
