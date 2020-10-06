@@ -110,13 +110,13 @@ export class LoggingInterceptor implements NestInterceptor {
    */
   private logNext(body: unknown, context: ExecutionContext): void {
     const req: Request = context.switchToHttp().getRequest<Request>();
-    const res: Response = context.switchToHttp().getResponse<Response>();
     const { method, url } = req;
-    const { statusCode } = res;
-    const username = (req?.session?.passport?.user as User)?.username || '';
-    const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
+    if (url !== '/health') {
+      const res: Response = context.switchToHttp().getResponse<Response>();
+      const { statusCode } = res;
+      const username = (req?.session?.passport?.user as User)?.username || '';
+      const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
 
-    if (url !== 'health') {
       this.logger.log(
         {
           page: this.ctxPrefix,
