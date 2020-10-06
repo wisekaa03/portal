@@ -6,14 +6,14 @@ import { WinstonGraylog } from '@pskzcompany/winston-graylog';
 import { ConfigService } from '@app/config/config.service';
 
 export const winstonOptions = (configService?: ConfigService): WinstonModuleOptions => {
-  let level: string;
+  let level = 'debug';
   let graylog: string | undefined;
+  let development = true;
 
   if (configService) {
     level = configService.get<string>('LOG_LEVEL') || 'debug';
     graylog = configService.get<string>('LOG_SERVER');
-  } else {
-    level = 'debug';
+    development = configService.get<boolean>('DEVELOPMENT');
   }
 
   const options = {
@@ -33,7 +33,7 @@ export const winstonOptions = (configService?: ConfigService): WinstonModuleOpti
         level,
         graylog,
         defaultMeta: {
-          environment: __DEV__ ? 'development' : 'production',
+          environment: development ? 'development' : 'production',
         },
       }) as winston.transport,
     );
