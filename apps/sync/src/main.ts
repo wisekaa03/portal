@@ -14,7 +14,7 @@ import { AppModule } from './app.module';
 //#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
-  let logger = createLogger(winstonOptions());
+  let logger = createLogger(winstonOptions(config));
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     logger,
@@ -32,5 +32,4 @@ async function bootstrap(config: ConfigService): Promise<void> {
   await app.listen(() => logger.log('Microservice is listening', 'Sync LDAP'));
 }
 
-const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
-bootstrap(configService);
+bootstrap(new ConfigService(resolve(__dirname, '../../..', '.local/.env')));

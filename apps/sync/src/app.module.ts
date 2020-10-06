@@ -34,7 +34,8 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     ConfigModule.register(environment),
     //#region Logging module
     WinstonModule.forRootAsync({
-      useFactory: () => winstonOptions(),
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => winstonOptions(configService),
     }),
     //#endregion
 

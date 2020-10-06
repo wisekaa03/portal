@@ -5,9 +5,16 @@ import winston from 'winston';
 import { WinstonGraylog } from '@pskzcompany/winston-graylog';
 import { ConfigService } from '@app/config/config.service';
 
-export const winstonOptions = (configService: ConfigService): WinstonModuleOptions => {
-  const level = configService.get<string>('LOG_LEVEL') || 'debug';
-  const graylog = configService.get<string>('LOG_SERVER');
+export const winstonOptions = (configService?: ConfigService): WinstonModuleOptions => {
+  let level: string;
+  let graylog: string | undefined;
+
+  if (configService) {
+    level = configService.get<string>('LOG_LEVEL') || 'debug';
+    graylog = configService.get<string>('LOG_SERVER');
+  } else {
+    level = 'debug';
+  }
 
   const options = {
     level,

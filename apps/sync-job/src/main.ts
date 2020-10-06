@@ -14,7 +14,7 @@ import { winstonOptions } from '@back/shared/logger.options';
 //#endregion
 
 const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
-const logger = createLogger(winstonOptions());
+const logger = createLogger(winstonOptions(configService));
 
 async function bootstrap(config: ConfigService): Promise<boolean> {
   const client = new ClientRedis({

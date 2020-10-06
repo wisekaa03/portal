@@ -102,14 +102,15 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
 @Module({
   imports: [
-    //#region Logging module
-    WinstonModule.forRootAsync({
-      useFactory: () => winstonOptions(),
-    }),
-    //#endregion
-
     //#region Config module
     ConfigModule.register(environment),
+    //#endregion
+
+    //#region Logging module
+    WinstonModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => winstonOptions(configService),
+    }),
     //#endregion
 
     //#region Logging module
