@@ -7,7 +7,7 @@ import { resolve } from 'path';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { WinstonModule } from 'nest-winston';
+import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
 //#endregion
@@ -32,7 +32,6 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
   imports: [
     //#region Config & Log module
     ConfigModule.register(environment),
-    //#region Logging module
     WinstonModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => winstonOptions(configService),
@@ -69,8 +68,8 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
 
     //#region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [],
-      inject: [],
+      imports: [WinstonModule],
+      inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
       useFactory: async (configService: ConfigService, logger: Logger) =>
         ({
           name: 'default',

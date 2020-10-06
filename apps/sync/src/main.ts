@@ -14,22 +14,22 @@ import { AppModule } from './app.module';
 //#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
-  let logger = createLogger(winstonOptions(config));
+  const loggerBootstrap = createLogger(winstonOptions(config));
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-    logger,
+    logger: loggerBootstrap,
     transport: Transport.REDIS,
     options: {
       url: config.get<string>('MICROSERVICE_URL'),
     },
   });
 
-  logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   const configService = app.get(ConfigService);
   configService.logger = logger;
   app.useLogger(logger);
 
-  await app.listen(() => logger.log('Microservice is listening', 'Sync LDAP'));
+  await app.listen(() => loggerBootstrap.log('Microservice is listening', 'Sync LDAP'));
 }
 
 bootstrap(new ConfigService(resolve(__dirname, '../../..', '.local/.env')));
