@@ -2318,6 +2318,22 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
+"@pskzcompany/graylog@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@pskzcompany/graylog/-/graylog-1.1.0.tgz#62e5638e9462a2c1a9ed0bbf4bb46ef258402c11"
+  integrity sha512-9ZQNEF+PNrDg4O1EnsqzwG0JfgprEwEpQvc3q1GrrQd1k7ITEQIgim+WpGlkZpizH2xv2Mp+2W5gfkIC4P9/+g==
+  dependencies:
+    connection-string "^3.2.0"
+
+"@pskzcompany/winston-graylog@*":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@pskzcompany/winston-graylog/-/winston-graylog-1.0.1.tgz#ec29bce0122adddd80c61ecb6c301d147ac7c903"
+  integrity sha512-TrwWv9kQu7w+ZYFn3NjmjhD/vvteorRhBu8g2pldBhc8NKSFTkSS2zJYwAuvSdDEO5kVEN+/43PlAxv1dlTdCg==
+  dependencies:
+    "@pskzcompany/graylog" "^1.1.0"
+    winston "^3.2.0"
+    winston-transport "^4.3.0"
+
 "@reach/router@^1.3.3":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@reach/router/-/router-1.3.4.tgz#d2574b19370a70c80480ed91f3da840136d10f8c"
@@ -6549,6 +6565,11 @@ connect-redis@*:
   resolved "https://registry.yarnpkg.com/connect-redis/-/connect-redis-5.0.0.tgz#68fe890117e761ee98e13a14b835338bd6bf044c"
   integrity sha512-R4nTW5uXeG5s6zr/q4abmtcdloglZrL/A3cpa0JU0RLFJU4mTR553HUY8OZ0ngeySkGDclwQ5xmCcjjKkxdOSg==
 
+connection-string@^3.2.0:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/connection-string/-/connection-string-3.4.2.tgz#278e7f3673752e78675e5eb2647816a4b3c64d73"
+  integrity sha512-t6LmVNKVn6ynMHewmTDxP+D+Rxt/Tx86KvUilPPTAYgJlVOMWcOJO01J6pu7qnwfOZru2ynsUETF44bTrggaHg==
+
 consola@^2.3.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/consola/-/consola-2.15.0.tgz#40fc4eefa4d2f8ef2e2806147f056ea207fcc0e9"
@@ -10120,9 +10141,9 @@ i18next-http-middleware@^3.0.2:
   integrity sha512-zXZyLF+s2NexjFiJ9qV7GPdN8MCEaEk6NGirTQR994eT/PzOqSODlizewsl3n/BvfhTALgYclr1xPV50i+zxCA==
 
 i18next@^19, i18next@^19.6.3:
-  version "19.8.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.8.1.tgz#25a5cd3a96d7f7174096e94a042eb4179643358f"
-  integrity sha512-uDOyiSExuqIOoF1G5hzgyaPkds5RgOlLmklw/wR7vlsbmQ8lBuzjoV2qiL2H0jMp+xkdrHHjt0w00H0fuHpVWw==
+  version "19.8.2"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.8.2.tgz#8a20ee098c4702f14aae6dee3ecc39245a6a161e"
+  integrity sha512-YWqkUpwnmeZxbNxhQ4BENC27BlXnq4kD6NlqMUwX7T6ZN3alNnBXsWrh/8mJ37BL5cKMZaqA0k/YUo4o6rLfpA==
   dependencies:
     "@babel/runtime" "^7.10.1"
 
@@ -19059,7 +19080,7 @@ windows-release@^3.1.0:
   dependencies:
     execa "^1.0.0"
 
-winston-transport@^4.4.0:
+winston-transport@^4.3.0, winston-transport@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/winston-transport/-/winston-transport-4.4.0.tgz#17af518daa690d5b2ecccaa7acf7b20ca7925e59"
   integrity sha512-Lc7/p3GtqtqPBYYtS6KCN3c77/2QCev51DvcJKbkFPQNoj1sinkGwLGFDxkXY9J6p9+EPnYs+D90uwbnaiURTw==
@@ -19067,7 +19088,7 @@ winston-transport@^4.4.0:
     readable-stream "^2.3.7"
     triple-beam "^1.2.0"
 
-winston@^3:
+winston@^3, winston@^3.2.0:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/winston/-/winston-3.3.3.tgz#ae6172042cafb29786afa3d09c8ff833ab7c9170"
   integrity sha512-oEXTISQnC8VlSAKf1KYSSd7J6IWuRPQqDdo8eoRNaYKLvwSb5+79Z3Yi1lrl6KDpU6/VWaxpakDAtb1oQ4n9aw==
