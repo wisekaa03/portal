@@ -12,7 +12,7 @@ import Redis from 'redis';
 import type { LoginEmail, EmailSession } from '@lib/types/auth';
 import type { LoggerContext } from '@back/shared/types';
 import type { User } from '@lib/types/user.dto';
-import type { ConfigService } from '@app/config';
+import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
 import { UserEntity } from '@back/user/user.entity';
 import { PortalError } from '@back/shared/errors';
@@ -21,11 +21,11 @@ import { PortalError } from '@back/shared/errors';
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   /**

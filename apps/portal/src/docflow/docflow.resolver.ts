@@ -56,9 +56,11 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowTasksCache(user, password, tasks).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.docflowService
+      .docFlowTasksCache({ user, password, tasks, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -89,9 +91,11 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowTaskCache(user, password, task).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.docflowService
+      .docFlowTaskCache({ user, password, task, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -122,9 +126,11 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowInternalDocumentCache(user, password, internalDocument).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.docflowService
+      .docFlowInternalDocumentCache({ user, password, internalDocument, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -158,7 +164,7 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowFile(user, password, file).catch((error: Error) => {
+    return this.docflowService.docFlowFile({ user, password, file, loggerContext: { username: user.username } }).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }

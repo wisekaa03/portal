@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config';
+import { ConfigModule, ConfigService } from '@app/config';
 import { TIMEOUT } from '@back/shared/constants';
 import { UserModule } from '@back/user/user.module';
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
