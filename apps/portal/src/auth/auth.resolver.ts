@@ -11,7 +11,7 @@ import { Logger } from 'winston';
 //#region Imports Local
 import { Login, LoginEmail, User, UserSettingsTaskFavorite } from '@lib/types';
 import { ConfigService } from '@app/config';
-import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
+import { CurrentUser, PasswordFrontend, getUsername } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { AuthService } from './auth.service';
@@ -64,13 +64,13 @@ export class AuthResolver {
   ): Promise<Login> {
     const email: LoginEmail = { login: false };
 
-    const user = await this.authService.login({ username: username.toLowerCase(), password }).catch(async (error: Error) => {
+    const user = await this.authService.login({ username: username.toLowerCase(), password, request }).catch(async (error: Error) => {
       throw new UnauthorizedException(error);
     });
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name });
+        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, ...getUsername(request) });
 
         throw new UnauthorizedException(error);
       }
@@ -99,7 +99,7 @@ export class AuthResolver {
     @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
     return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
-      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name });
+      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name, ...getUsername(request) });
 
       return {
         login: false,
@@ -118,7 +118,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') request: Request): Promise<boolean> {
-    this.logger.info('User logout', { context: AuthResolver.name });
+    this.logger.info('User logout', { context: AuthResolver.name, ...getUsername(request) });
 
     if (request.session) {
       request.logOut();
@@ -138,9 +138,9 @@ export class AuthResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async cacheReset(): Promise<boolean> {
-    this.logger.info('Cache reset', { context: AuthResolver.name });
+  async cacheReset(@Context('req') request: Request): Promise<boolean> {
+    this.logger.info('Cache reset', { context: AuthResolver.name, ...getUsername(request) });
 
-    return this.authService.cacheReset();
+    return this.authService.cacheReset({ request });
   }
 }
