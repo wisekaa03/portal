@@ -61,16 +61,17 @@ export class AuthResolver {
     @Context('req') request: Request,
     // @Context('res') response: Response,
   ): Promise<Login> {
-    const loggerContext = getUsername(request);
     const email: LoginEmail = { login: false };
 
-    const user = await this.authService.login({ username: username.toLowerCase(), password, loggerContext }).catch(async (error: Error) => {
-      throw new UnauthorizedException(error);
-    });
+    const user = await this.authService
+      .login({ username: username.toLowerCase(), password, loggerContext: { username } })
+      .catch(async (error: Error) => {
+        throw new UnauthorizedException(error);
+      });
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, ...loggerContext });
+        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, username });
 
         throw new UnauthorizedException(error);
       }

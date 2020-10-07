@@ -1,5 +1,6 @@
 /** @format */
 
+import type { Request } from 'express';
 import { utilities as nestWinstonModuleUtilities, WinstonModuleOptions } from 'nest-winston';
 import winston from 'winston';
 import { WinstonGraylog } from '@pskzcompany/winston-graylog';
@@ -34,6 +35,12 @@ export const winstonOptions = (configService?: ConfigService): WinstonModuleOpti
         graylog,
         defaultMeta: {
           environment: development ? 'development' : 'production',
+          username: (req: Request) => {
+            // eslint-disable-next-line no-debugger
+            debugger;
+
+            return req?.user?.username;
+          },
         },
       }) as winston.transport,
     );

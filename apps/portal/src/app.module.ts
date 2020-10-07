@@ -16,8 +16,8 @@ import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import redisCacheStore from 'cache-manager-redis-store';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import winston, { Logger } from 'winston';
-import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { Logger } from 'winston';
+// import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 // import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
 //#endregion
 //#region Imports Local
@@ -114,7 +114,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#endregion
 
     //#region Logging module
-    PrometheusModule.register({}),
+    // PrometheusModule.register({}),
     //#endregion
 
     //#region Next RenderModule

@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, Logger, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ContextType, ExecutionContext, HttpException, HttpStatus, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 
@@ -29,7 +29,7 @@ export class LoggingInterceptor implements NestInterceptor {
    * @param call$ implements the handle method that returns an Observable
    */
   public intercept(context: ExecutionContext, call$: CallHandler): Observable<unknown> {
-    const type = context.getType();
+    const type = context.getType<'graphql' | ContextType>();
     switch (type) {
       case 'rpc': {
         const info = context.switchToRpc().getContext();
@@ -37,48 +37,49 @@ export class LoggingInterceptor implements NestInterceptor {
         return call$.handle().pipe(tap(() => this.logger.log({ page: this.ctxPrefix, info: info.args }, 'NestMicroservice')));
       }
 
-      case 'http':
-      default: {
-        let username = '';
+      case 'http': {
         const req: Request = context.switchToHttp().getRequest();
 
-        // HTTP requests
-        if (req) {
-          const { method, url, body, headers } = req;
-          const message = `Incoming request - ${method} - ${url}`;
-          username = req?.user?.username || '';
+        const { method, url, body, headers } = req;
+        const message = `Incoming request: Method: ${method}, URL: ${url}`;
+        const username = req?.user?.username || '';
 
-          if (url !== '/health') {
-            this.logger.log(
-              {
-                page: this.ctxPrefix,
-                message,
-                method,
-                body,
-                headers,
-                username,
-              },
-              this.ctxPrefix,
-            );
-          }
-
-          return call$.handle().pipe(
-            tap({
-              next: (val: unknown): void => {
-                this.logNext(val, context);
-              },
-              error: (err: Error): void => {
-                this.logError(err, context);
-              },
-            }),
-          );
+        if (url === '/health') {
+          return call$.handle();
         }
 
+        this.logger.log(
+          {
+            page: this.ctxPrefix,
+            message,
+            method,
+            body,
+            headers,
+            username,
+          },
+          this.ctxPrefix,
+        );
+
+        return call$.handle().pipe(
+          tap({
+            next: (val: unknown): void => {
+              this.logNext(val, context);
+            },
+            error: (err: Error): void => {
+              this.logError(err, context);
+            },
+          }),
+        );
+      }
+
+      case 'graphql':
+      default: {
         const ctx: AppGraphQLExecutionContext = GqlExecutionContext.create(context);
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        username = gqlCtx.req?.user?.username || '';
+        const username = gqlCtx.user?.username || '';
+        const message = `Incoming GraphQL ${resolverName} ${info.operation.operation} ${info.fieldName}`;
 
         const values = info.variableValues;
         if (values.password) {
@@ -89,11 +90,12 @@ export class LoggingInterceptor implements NestInterceptor {
           tap(() =>
             this.logger.log(
               {
+                message,
                 page: this.ctxPrefix,
                 username,
-                parentType: info.parentType.name,
+                operation: info.operation.operation,
                 fieldName: info.fieldName,
-                values: `${Object.keys(values).length > 0 ? values.toString() : ''}`,
+                values: `${Object.keys(values).length > 0 ? JSON.stringify(values) : ''}`,
               },
               resolverName,
             ),
@@ -110,24 +112,23 @@ export class LoggingInterceptor implements NestInterceptor {
    */
   private logNext(body: unknown, context: ExecutionContext): void {
     const req: Request = context.switchToHttp().getRequest<Request>();
-    const { method, url } = req;
-    if (url !== '/health') {
-      const res: Response = context.switchToHttp().getResponse<Response>();
-      const { statusCode } = res;
-      const username = req?.user?.username || '';
-      const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
+    const { method, url, user } = req;
+    const username = user?.username || '';
 
-      this.logger.log(
-        {
-          page: this.ctxPrefix,
-          message,
-          body,
-          statusCode,
-          username,
-        },
-        this.ctxPrefix,
-      );
-    }
+    const res: Response = context.switchToHttp().getResponse<Response>();
+    const { statusCode } = res;
+    const message = `Outgoing response: statusCode: ${statusCode}, Method: ${method}, URL: ${url}`;
+
+    this.logger.log(
+      {
+        page: this.ctxPrefix,
+        message,
+        body,
+        statusCode,
+        username,
+      },
+      this.ctxPrefix,
+    );
   }
 
   /**
@@ -141,7 +142,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     if (error instanceof HttpException) {
       const statusCode: number = error.getStatus();
-      const message = `Outgoing response - ${statusCode} - ${method} - ${url}`;
+      const message = `Outgoing response: statusCode: ${statusCode}, Method: ${method}, URL: ${url}`;
 
       if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
         this.logger.error(
@@ -176,7 +177,7 @@ export class LoggingInterceptor implements NestInterceptor {
       this.logger.error(
         {
           page: this.ctxPrefix,
-          message: `Outgoing response - ${method} - ${url}`,
+          message: `Outgoing response: Method: ${method}, URL: ${url}`,
           username: user?.username,
         },
         error.stack,

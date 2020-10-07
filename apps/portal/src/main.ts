@@ -8,7 +8,6 @@ import { NestFactory } from '@nestjs/core';
 import { NestApplicationOptions } from '@nestjs/common';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
 import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule, WinstonLogger } from 'nest-winston';
-import * as winston from 'winston';
 import express from 'express';
 import crypto from 'crypto';
 import passport from 'passport';
@@ -24,10 +23,10 @@ import { AppModule } from '@back/app.module';
 import { winstonOptions } from '@back/shared/logger.options';
 //#endregion
 
-async function bootstrap(): Promise<void> {
+async function bootstrap(configService: ConfigService): Promise<void> {
   //#region NestJS options
   let secure = false;
-  const loggerBootstrap = WinstonModule.createLogger(winstonOptions());
+  const loggerBootstrap = WinstonModule.createLogger(winstonOptions(configService));
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
@@ -71,7 +70,7 @@ async function bootstrap(): Promise<void> {
 
   const logger: WinstonLogger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
-  const configService = app.get(ConfigService);
+  configService = app.get(ConfigService);
   configService.logger = logger;
   configService.secure = secure;
   const DEV = configService.get<boolean>('DEVELOPMENT');
@@ -190,4 +189,5 @@ async function bootstrap(): Promise<void> {
   //#endregion
 }
 
-bootstrap();
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env'));
+bootstrap(configService);
