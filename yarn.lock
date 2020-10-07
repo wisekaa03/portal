@@ -13289,9 +13289,9 @@ node-gyp@3.x:
     which "1"
 
 node-html-parser@^1.2.19:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/node-html-parser/-/node-html-parser-1.3.0.tgz#0b59cc8b7a3dd27f474586df4db7701f20a9ad45"
-  integrity sha512-G9G6O45tgEh2fa1P/+nqXDPqj1tRcGffa8ihaqA+GwC6k6mTTP12YVjDNnHsh4RFZ8mKAj1oDM7W9vMRav3igA==
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/node-html-parser/-/node-html-parser-1.3.1.tgz#f58e55a029b51deae8924312be9817ef5cf5ed96"
+  integrity sha512-AwYVI6GyEKj9NGoyMfSx4j5l7Axf7obQgLWGxtasLjED6RggTTQoq5ZRzjwSUfgSZ+Mv8Nzbi3pID0gFGqNUsA==
   dependencies:
     he "1.2.0"
 
