@@ -57,7 +57,7 @@ const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, c
         <TableBody component="div" className={classes.tbody}>
           <AutoSizer disableWidth>
             {({ height }) => (
-              <InfiniteLoader isItemLoaded={isItemLoaded(data)} itemCount={itemCount} loadMoreItems={loadMoreItemsFunction} threshold={50}>
+              <InfiniteLoader isItemLoaded={isItemLoaded(data)} itemCount={itemCount} loadMoreItems={loadMoreItemsFunction} threshold={25}>
                 {({ onItemsRendered, ref }) => (
                   <PhonebookHeaderContext.Provider value={{ columns, orderBy, handleSort, largeWidth }}>
                     <List

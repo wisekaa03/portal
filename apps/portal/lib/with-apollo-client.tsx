@@ -10,7 +10,7 @@ import Router from 'next/router';
 import { GraphQLError, OperationDefinitionNode } from 'graphql';
 import { ApolloClient, ApolloError, from, split, ApolloLink, InMemoryCache, HttpLink } from '@apollo/client';
 import { NormalizedCacheObject } from '@apollo/client/cache';
-import { getMainDefinition } from '@apollo/client/utilities';
+import { getMainDefinition, relayStylePagination } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
 // import { SchemaLink } from '@apollo/client/link/schema';
@@ -99,7 +99,19 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
 
   let link: ApolloLink;
 
-  const cache = new InMemoryCache().restore(initialState || {});
+  const cache = new InMemoryCache(
+    !__SERVER__
+      ? {
+          typePolicies: {
+            Query: {
+              fields: {
+                profiles: relayStylePagination(),
+              },
+            },
+          },
+        }
+      : undefined,
+  ).restore(initialState || {});
 
   if (__SERVER__) {
     // if (configService?.schema) {

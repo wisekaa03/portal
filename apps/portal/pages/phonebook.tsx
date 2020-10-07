@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useLazyQuery, useMutation, ApolloQueryResult } from '@apollo/client';
@@ -90,7 +90,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       ssr: false,
       variables: {
         orderBy,
-        first: 100,
+        first: 50,
         after: '',
         search: search.length > 3 ? search : '',
         disabled: columns.includes('disabled'),
@@ -132,50 +132,31 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
     }
   }, [suggestionsLoading, suggestionsData, _search]);
 
-  const fetchFunction = async (): Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<Profile>>>> =>
-    fetchMore<
-      Data<'profiles', Connection<Profile>>,
-      ProfileQueryProps,
-      'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing'
-    >({
-      query: PROFILES(getGraphQLColumns(columns)),
-      variables: {
-        orderBy,
-        after: data?.profiles?.pageInfo.endCursor ?? '',
-        first: 100,
-        search: search.length > 3 ? search : '',
-        disabled: columns.includes('disabled'),
-        notShowing: isAdmin && columns.includes('notShowing'),
-      },
-      updateQuery: (previous, { fetchMoreResult }) => {
-        if (fetchMoreResult && fetchMoreResult.profiles) {
-          const { pageInfo, edges: newEdges, totalCount } = fetchMoreResult.profiles;
-
-          if (newEdges.length === 0) return previous;
-          const clean: string[] = [];
-
-          const edges = [...newEdges, ...(previous.profiles?.edges || [])].filter(
-            (edge) => edge && !clean.includes(edge.node.id || '') && clean.push(edge.node.id || ''),
-          );
-
-          return {
-            ...previous,
-            profiles: {
-              ...previous.profiles,
-              totalCount,
-              edges,
-              pageInfo,
+  const fetchFunction = useCallback(
+    async (): Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<Profile>>>> =>
+      data?.profiles?.pageInfo.endCursor
+        ? fetchMore<
+            Data<'profiles', Connection<Profile>>,
+            ProfileQueryProps,
+            'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing'
+          >({
+            query: PROFILES(getGraphQLColumns(columns)),
+            variables: {
+              orderBy,
+              after: data.profiles.pageInfo.endCursor,
+              first: 50,
+              search: search.length > 3 ? search : '',
+              disabled: columns.includes('disabled'),
+              notShowing: isAdmin && columns.includes('notShowing'),
             },
-          };
-        }
+          }).catch((e) => {
+            snackbarUtils.error(e);
 
-        return previous;
-      },
-    }).catch((e) => {
-      snackbarUtils.error(e);
-
-      return undefined;
-    });
+            return undefined;
+          })
+        : undefined,
+    [columns, data, fetchMore, isAdmin, orderBy, search],
+  );
 
   const handleColumns = (values: PhonebookColumnNames[]): void => {
     userSettings({
