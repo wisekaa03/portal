@@ -74,7 +74,7 @@ export class SyncService {
         const promises = ldapUsers.map(async (ldapUser) => {
           if (ldapUser.sAMAccountName) {
             try {
-              const user = await this.userService.fromLdap(ldapUser);
+              const user = await this.userService.fromLdap({ ldapUser });
 
               return {
                 contact: Contact.USER,
@@ -131,7 +131,7 @@ export class SyncService {
     const profilesLdap = await this.syncUser();
 
     this.logger.info('LDAP: Blocking profiles');
-    const fromDB = [...(await this.userService.allUsers()), ...(await this.profileService.allProfiles())];
+    const fromDB = [...(await this.userService.allUsers({})), ...(await this.profileService.allProfiles())];
     const profilesPromises = fromDB.map(async (element) => {
       if (element.id && element.loginIdentificator) {
         const value = profilesLdap.find((v) => v.loginIdentificator === element.loginIdentificator);

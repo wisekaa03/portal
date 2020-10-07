@@ -42,15 +42,15 @@ export class UserResolver {
   @UseGuards(GqlAuthGuard)
   async ldapNewUser(
     @Context('req') request: Request,
-    @Args('ldap') ldap: ProfileInput,
-    @Args('photo') photo?: Promise<FileUpload>,
+    @Args('ldap') value: ProfileInput,
+    @Args('photo') thumbnailPhoto?: Promise<FileUpload>,
     @CurrentUser() user?: User,
   ): Promise<Profile> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapNewUser(request, ldap, photo).catch((error: Error) => {
+    return this.userService.ldapNewUser({ request, value, thumbnailPhoto }).catch((error: Error) => {
       throw new HttpException(error.message, 500);
     });
   }
@@ -89,6 +89,6 @@ export class UserResolver {
     // eslint-disable-next-line no-param-reassign
     user.settings = this.userService.settings(value, user);
 
-    return this.userService.save(this.userService.create(user));
+    return this.userService.save({ user: this.userService.create(user), loggerContext: { username: user.username } });
   }
 }

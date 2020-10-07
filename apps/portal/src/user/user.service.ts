@@ -16,6 +16,7 @@ import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
+import type { LoggerContext } from '@back/shared/types';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE, defaultUserSettings } from '@back/shared/constants';
 import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { constructUploads } from '@back/shared/upload';
@@ -55,7 +56,7 @@ export class UserService {
    * @returns {UserEntity | undefined} The user
    */
   comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
-    const user = await this.byUsername(username);
+    const user = await this.byUsername({ username, loggerContext: { username } });
 
     return compare(password, user.password) ? user : undefined;
   };
@@ -63,7 +64,17 @@ export class UserService {
   /**
    * All users in Synchronization
    */
-  allUsers = async (loginService = LoginService.LDAP, disabled = false, cache = true): Promise<AllUsersInfo[]> =>
+  allUsers = async ({
+    loginService = LoginService.LDAP,
+    disabled = false,
+    cache = true,
+    loggerContext,
+  }: {
+    loginService?: LoginService;
+    disabled?: boolean;
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<AllUsersInfo[]> =>
     this.userRepository
       .find({
         where: { loginService, disabled },
@@ -119,12 +130,19 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity} The user
    */
-  byUsername = async (
-    username: string,
+  byUsername = async ({
+    username,
     isDisabled = true,
-    isRelations: boolean | 'profile' | 'groups' = true,
+    isRelations = true,
     cache = true,
-  ): Promise<UserEntity> => {
+    loggerContext,
+  }: {
+    username: string;
+    isDisabled?: boolean;
+    isRelations?: boolean | 'profile' | 'groups';
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { username };
 
     if (isDisabled) {
@@ -182,14 +200,28 @@ export class UserService {
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error}
    */
-  async fromLdap(ldapUser: LdapResponseUser, user?: UserEntity, save = true): Promise<UserEntity> {
+  async fromLdap({
+    ldapUser,
+    user,
+    save = true,
+    loggerContext,
+  }: {
+    ldapUser: LdapResponseUser;
+    user?: UserEntity;
+    save?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<UserEntity> {
     const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: UserService.name });
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
 
       throw error;
     });
     if (!profile) {
-      this.logger.error('Unable to save data in `profile`. Unknown error.', { error: 'Unknown', context: UserService.name });
+      this.logger.error('Unable to save data in `profile`. Unknown error.', {
+        error: 'Unknown',
+        context: UserService.name,
+        ...loggerContext,
+      });
 
       throw new Error('Unable to save data in `profile`. Unknown error.');
     }
@@ -200,7 +232,7 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: UserService.name });
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
 
       return undefined;
     });
@@ -208,7 +240,11 @@ export class UserService {
     if (!user) {
       // eslint-disable-next-line no-param-reassign
       user = await this.byLoginIdentificator(ldapUser.objectGUID, false, true, false).catch((error) => {
-        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, { error, context: UserService.name });
+        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
+          error,
+          context: UserService.name,
+          ...loggerContext,
+        });
 
         return undefined;
       });
@@ -229,7 +265,7 @@ export class UserService {
       profile,
     };
 
-    return save ? this.save(this.userRepository.create(data)) : this.userRepository.create(data);
+    return save ? this.save({ user: this.userRepository.create(data), loggerContext }) : this.userRepository.create(data);
   }
 
   /**
@@ -262,9 +298,9 @@ export class UserService {
    * @returns {Promise<UserEntity[]>} The return users after save
    * @throws {Error} Exception
    */
-  bulkSave = async (user: UserEntity[]): Promise<UserEntity[]> =>
+  bulkSave = async ({ user, loggerContext }: { user: UserEntity[]; loggerContext?: LoggerContext }): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logger.error(`Unable to save data(s) in "user": ${error.toString()}`, { error, context: UserService.name });
+      this.logger.error(`Unable to save data(s) in "user": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
 
       throw error;
     });
@@ -277,7 +313,7 @@ export class UserService {
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error} Exception
    */
-  save = async (userPromise: UserEntity): Promise<UserEntity> =>
+  save = async ({ user: userPromise, loggerContext }: { user: UserEntity; loggerContext?: LoggerContext }): Promise<UserEntity> =>
     this.userRepository
       .save<UserEntity>(userPromise)
       .then((user) => {
@@ -298,7 +334,7 @@ export class UserService {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error(`Unable to save data in "user": ${error.toString()}`, { error, context: UserService.name });
+        this.logger.error(`Unable to save data in "user": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
 
         throw error;
       });
@@ -331,7 +367,18 @@ export class UserService {
   /**
    * This is a LDAP new user and contact
    */
-  ldapNewUser = async (request: Request, value: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<Profile> => {
+  ldapNewUser = async ({
+    request,
+    value,
+    thumbnailPhoto,
+    loggerContext: loggerContextDefault,
+  }: {
+    request: Request;
+    value: ProfileInput;
+    thumbnailPhoto?: Promise<FileUpload>;
+    loggerContext?: LoggerContext;
+  }): Promise<Profile> => {
+    const loggerContext = { username: request?.user?.username, ...loggerContextDefault };
     const entry: LDAPAddEntry = this.profileService.modification(value);
     entry.name = entry.cn;
 
@@ -365,7 +412,7 @@ export class UserService {
           return this.profileService.fromLdap(ldapUser);
         }
 
-        return this.fromLdap(ldapUser);
+        return this.fromLdap({ ldapUser, loggerContext });
       })
       .then<Profile>((userProfile) => {
         if (userProfile instanceof ProfileEntity) {

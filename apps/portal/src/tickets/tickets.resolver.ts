@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import { Inject, UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Query, Resolver, Mutation, Subscription, Args } from '@nestjs/graphql';
+import { Query, Resolver, Mutation, Subscription, Args, Context } from '@nestjs/graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
 //#endregion
@@ -43,7 +43,7 @@ export class TicketsResolver {
   @Query('ticketsRoutes')
   @UseGuards(GqlAuthGuard)
   async ticketsRoutes(
-    @Args('routes') routes?: TkRoutesInput,
+    @Args('routes') input?: TkRoutesInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<TkRoutes> {
@@ -51,9 +51,11 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsRoutesCache(user, password, routes).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsRoutesCache({ user, password, input, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -85,9 +87,11 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTasksCache(user, password, tasks).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsTasksCache({ user, password, tasks, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -122,9 +126,11 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTaskNew(user, password, task, attachments).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsTaskNew({ user, password, task, attachments, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   /**
@@ -146,9 +152,11 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTaskEdit(user, password, task, attachments).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsTaskEdit({ user, password, task, attachments, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   /**
@@ -169,9 +177,11 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTaskCache(user, password, task).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsTaskCache({ user, password, task, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -202,9 +212,11 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsTaskFile(user, password, file).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsTaskFile({ user, password, file, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   /**
@@ -225,8 +237,10 @@ export class TicketsResolver {
       throw new UnauthorizedException();
     }
 
-    return this.ticketsService.ticketsComment(user, password, comment).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.ticketsService
+      .ticketsComment({ user, password, comment, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 }

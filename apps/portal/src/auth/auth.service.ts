@@ -80,7 +80,7 @@ export class AuthService {
     });
 
     return this.userService
-      .fromLdap(ldapUser)
+      .fromLdap({ ldapUser, loggerContext })
       .then((user) => {
         if (user.disabled) {
           this.logger.error(`User is Disabled: ${user.username}`, {
