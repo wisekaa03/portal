@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@algoan/nestjs-logging-interceptor@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@algoan/nestjs-logging-interceptor/-/nestjs-logging-interceptor-2.1.3.tgz#579bf340ff488f0700025c6412df22b3397d5d1e"
-  integrity sha512-0qFFo9Tbl0Q4LnHYTz4K/jlOxFVGrYSzL5Y8gGlLYUjaOeyWFRcU2ahNYcI9LmOduan9dZMZDL+9VO6NFOwe0A==
-
 "@ampproject/toolbox-core@^2.6.0":
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/@ampproject/toolbox-core/-/toolbox-core-2.6.1.tgz#af97ec253bf39e5fe5121b8ec28f1f35d1878446"
@@ -13294,9 +13289,9 @@ node-gyp@3.x:
     which "1"
 
 node-html-parser@^1.2.19:
-  version "1.2.21"
-  resolved "https://registry.yarnpkg.com/node-html-parser/-/node-html-parser-1.2.21.tgz#93b074d877007c7148d594968a642cd65d254daa"
-  integrity sha512-6vDhgen6J332syN5HUmeT4FfBG7m6bFRrPN+FXY8Am7FGuVpsIxTASVbeoO5PF2IHbX2s+WEIudb1hgxOjllNQ==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/node-html-parser/-/node-html-parser-1.3.0.tgz#0b59cc8b7a3dd27f474586df4db7701f20a9ad45"
+  integrity sha512-G9G6O45tgEh2fa1P/+nqXDPqj1tRcGffa8ihaqA+GwC6k6mTTP12YVjDNnHsh4RFZ8mKAj1oDM7W9vMRav3igA==
   dependencies:
     he "1.2.0"
 

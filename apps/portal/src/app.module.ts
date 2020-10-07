@@ -18,7 +18,6 @@ import redisCacheStore from 'cache-manager-redis-store';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 // import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-// import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
 //#endregion
 //#region Imports Local
 import type { User } from '@lib/types';
