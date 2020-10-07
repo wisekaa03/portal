@@ -7,6 +7,7 @@ import { NextComponentType } from 'next';
 import { AppContext } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
+import { GraphQLError, OperationDefinitionNode } from 'graphql';
 import { ApolloClient, ApolloError, from, split, ApolloLink, InMemoryCache, HttpLink } from '@apollo/client';
 import { NormalizedCacheObject } from '@apollo/client/cache';
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -22,7 +23,6 @@ import { Logger } from 'winston';
 import { ConfigService } from '@app/config';
 import { Data, User, UserContext, AppContextMy, AppInitialPropsMy } from '@lib/types';
 // import { nextI18next } from './i18n-client';
-import { GraphQLError } from 'graphql';
 import { resolvers } from './state-link';
 import getRedirect from './get-redirect';
 
@@ -40,14 +40,19 @@ let logger: Logger | typeof console = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
 const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
-  const errorMiddleware = onError(({ graphQLErrors, networkError /* , response, operation */ }) => {
+  const errorMiddleware = onError(({ graphQLErrors, networkError, operation /* , response */ }) => {
     if (__SERVER__) {
       if (graphQLErrors) {
-        graphQLErrors.forEach(({ message, path, locations, extensions, originalError }): void => {
+        graphQLErrors.forEach(({ message, path, locations, extensions /* originalError */ }): void => {
+          const definition = operation.query.definitions[0]?.kind;
           logger.error({
-            message: `Error: "${message}". Locations: "${locations}". Path: "${path}". Original error: ${originalError}`,
+            message: `Error: "${message}". ${
+              definition === 'OperationDefinition' ? (operation.query.definitions[0] as OperationDefinitionNode)?.operation : ''
+            } ${operation.operationName}`,
             error: extensions,
             context: 'GraphQL backend',
+            stack: extensions?.exception?.stacktrace,
+            statusCode: extensions?.exception?.response?.statusCode,
           });
         });
       }
@@ -56,14 +61,19 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       }
     } else {
       if (graphQLErrors) {
-        graphQLErrors.forEach(({ message, extensions, locations, path, originalError }): void => {
+        graphQLErrors.forEach(({ message, extensions, locations, path /* originalError */ }): void => {
+          const definition = operation.query.definitions[0]?.kind;
           logger.error({
-            message: `Error: "${message}". Locations: "${locations}". Path: "${path}". Original error: ${originalError}`,
+            message: `Error: "${message}". ${
+              definition === 'OperationDefinition' ? (operation.query.definitions[0] as OperationDefinitionNode)?.operation : ''
+            } ${operation.operationName}`,
             error: extensions,
             context: 'GraphQL frontend',
+            stack: extensions?.exception?.stacktrace,
+            statusCode: extensions?.exception?.response?.statusCode,
           });
 
-          if (extensions?.exception?.code >= 401 && extensions?.exception?.code <= 403) {
+          if (extensions?.exception?.status >= 401 && extensions?.exception?.status <= 403) {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
           }
         });
@@ -194,20 +204,9 @@ export const withApolloClient = (
           });
           user = data?.me;
         } catch (error: unknown) {
-          if (error instanceof ApolloError) {
-            error.graphQLErrors?.forEach((graphqlError) => {
-              logger.error({
-                message: `Query "CURRENT_USER": ${graphqlError.message}`,
-                statusCode: graphqlError?.extensions?.exception?.statusCode,
-                error: graphqlError,
-                context: 'withApolloClient',
-                username: request?.user?.username,
-                headers: request?.headers,
-              });
-            });
-          } else {
+          if (error instanceof Error) {
             logger.error({
-              message: `Query "CURRENT_USER": ${(error as Error).toString()}`,
+              message: `Query "CURRENT_USER": ${error.toString()}`,
               statusCode: 500,
               error,
               context: 'withApolloClient',
