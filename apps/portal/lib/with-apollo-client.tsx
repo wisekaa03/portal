@@ -204,7 +204,7 @@ export const withApolloClient = (
           });
           user = data?.me;
         } catch (error: unknown) {
-          if (error instanceof Error) {
+          if (!(error instanceof ApolloError) && error instanceof Error) {
             logger.error({
               message: `Query "CURRENT_USER": ${error.toString()}`,
               statusCode: 500,
