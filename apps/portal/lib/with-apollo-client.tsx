@@ -211,10 +211,12 @@ export const withApolloClient = (
 
         let user: User | undefined;
         try {
-          const { data } = await apolloClient.query<Data<'me', User>, undefined>({
-            query: CURRENT_USER,
-          });
-          user = data?.me;
+          if (request.user?.username) {
+            const { data } = await apolloClient.query<Data<'me', User>, undefined>({
+              query: CURRENT_USER,
+            });
+            user = data?.me;
+          }
         } catch (error: unknown) {
           if (!(error instanceof ApolloError) && error instanceof Error) {
             logger.error({
