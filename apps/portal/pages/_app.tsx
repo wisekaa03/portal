@@ -7,7 +7,7 @@ import { NextPageContext } from 'next';
 import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
-import { ApolloProvider, QueryResult, useLazyQuery } from '@apollo/client';
+import { ApolloProvider, useQuery } from '@apollo/client';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -41,43 +41,39 @@ const ProfileProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ context, ctx, router, children }): React.ReactElement | null => {
   const pathname = ctx?.asPath || router?.asPath;
-  const [me, { data, loading }] = useLazyQuery<Data<'me', User>, undefined>(CURRENT_USER, {
+
+  const { data, loading } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
     fetchPolicy: 'cache-first',
   });
-  const user = data?.me;
 
-  useEffect(() => {
-    me();
-  }, [me]);
-
-  useEffect(() => {
-    if (user) {
-      if (user.settings?.fontSize) {
-        changeFontSize(user.settings.fontSize);
-      }
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (__SERVER__ && ctx?.res && ctx?.req) {
-      // TODO:
-      if (user) {
+  if (__SERVER__) {
+    if (ctx && ctx.res && ctx.req) {
+      if (data?.me) {
         if (pathname.startsWith(AUTH_PAGE)) {
           const location = decodeURI((ctx.req as Request).query.redirect as string) || FIRST_PAGE;
           ctx.res.statusCode = 303;
           ctx.res.setHeader('Location', location);
+          return null;
         }
       } else if (!loading) {
         if (ctx.req?.url && !ctx.req.url.startsWith(AUTH_PAGE)) {
           const location = `${AUTH_PAGE}?redirect=${getRedirect(ctx.req.url)}`;
           ctx.res.statusCode = 303;
           ctx.res.setHeader('Location', location);
+          return null;
         }
       }
     }
-  }, [ctx, loading, user, pathname]);
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      if (data?.me?.settings) {
+        changeFontSize(data.me.settings.fontSize);
+      }
+    }, [data]);
+  }
 
-  return <ProfileContext.Provider value={{ ...context, user }}>{children}</ProfileContext.Provider>;
+  return <ProfileContext.Provider value={{ ...context, user: data?.me }}>{children}</ProfileContext.Provider>;
 };
 
 /**

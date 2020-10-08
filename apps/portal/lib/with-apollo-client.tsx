@@ -43,17 +43,19 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
   const errorMiddleware = onError(({ graphQLErrors, networkError, operation /* , response */ }) => {
     if (__SERVER__) {
       if (graphQLErrors) {
-        graphQLErrors.forEach(({ message, path, locations, extensions /* originalError */ }): void => {
-          const definition = operation.query.definitions[0]?.kind;
-          logger.error({
-            message: `Error: "${message}". ${
-              definition === 'OperationDefinition' ? (operation.query.definitions[0] as OperationDefinitionNode)?.operation : ''
-            } ${operation.operationName}`,
-            error: extensions,
-            context: 'GraphQL backend',
-            stack: extensions?.exception?.stacktrace,
-            statusCode: extensions?.exception?.response?.statusCode,
-          });
+        graphQLErrors.forEach(({ message, extensions /* , path, locations, originalError */ }): void => {
+          const definition = operation.query.definitions[0] as OperationDefinitionNode;
+          if (message !== 'Unauthorized') {
+            logger.error({
+              message: `Error: "${message}". ${definition?.kind === 'OperationDefinition' ? definition?.operation : ''} ${
+                operation.operationName
+              }`,
+              error: extensions,
+              // stack: extensions?.exception?.stacktrace,
+              statusCode: extensions?.exception?.response?.statusCode,
+              context: 'GraphQL backend',
+            });
+          }
         });
       }
       if (networkError) {
@@ -61,19 +63,19 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       }
     } else {
       if (graphQLErrors) {
-        graphQLErrors.forEach(({ message, extensions, locations, path /* originalError */ }): void => {
-          const definition = operation.query.definitions[0]?.kind;
-          logger.error({
-            message: `Error: "${message}". ${
-              definition === 'OperationDefinition' ? (operation.query.definitions[0] as OperationDefinitionNode)?.operation : ''
-            } ${operation.operationName}`,
-            error: extensions,
-            context: 'GraphQL frontend',
-            stack: extensions?.exception?.stacktrace,
-            statusCode: extensions?.exception?.response?.statusCode,
-          });
-
-          if (extensions?.exception?.status >= 401 && extensions?.exception?.status <= 403) {
+        graphQLErrors.forEach(({ message, extensions /* , locations, path, originalError */ }): void => {
+          const definition = operation.query.definitions[0] as OperationDefinitionNode;
+          if (message !== 'Unauthorized') {
+            logger.error({
+              message: `Error: "${message}". ${definition?.kind === 'OperationDefinition' ? definition?.operation : ''} ${
+                operation.operationName
+              }`,
+              error: extensions,
+              // stack: extensions?.exception?.stacktrace,
+              statusCode: extensions?.exception?.response?.statusCode,
+              context: 'GraphQL frontend',
+            });
+          } else {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
           }
         });

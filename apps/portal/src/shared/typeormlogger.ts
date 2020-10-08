@@ -11,7 +11,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    */
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): void {
     if (query !== 'SELECT 1') {
-      this.logger.log('debug', query, { context: 'Database', parameters, queryRunner });
+      this.logger.debug(query, 'Database', { parameters, queryRunner });
     }
   }
 
@@ -19,9 +19,8 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is failed.
    */
   logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.error('error', query, {
+    this.logger.error(query, 'Database', {
       error,
-      context: 'Database',
       parameters,
       queryRunner,
     });
@@ -31,15 +30,14 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is slow.
    */
   logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.log('debug', `Time is slow: ${time}`, { context: 'Database', parameters, queryRunner });
+    this.logger.debug(`Time is slow: ${time}`, { context: 'Database', parameters, queryRunner });
   }
 
   /**
    * Logs events from the schema build process.
    */
   logSchemaBuild(message: string, queryRunner?: QueryRunner): void {
-    this.logger.log('debug', message, {
-      context: 'Database',
+    this.logger.debug(message, 'Database', {
       queryRunner,
     });
   }
@@ -48,8 +46,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs events from the migrations run process.
    */
   logMigration(message: string, queryRunner?: QueryRunner): void {
-    this.logger.log('debug', message, {
-      context: 'Database',
+    this.logger.debug(message, 'Database', {
       queryRunner,
     });
   }
@@ -59,8 +56,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Log has its own level and message.
    */
   log(level: 'log' | 'info' | 'warn', message: any, queryRunner?: QueryRunner): void {
-    this.logger.log('debug' || level, message, {
-      context: 'Database',
+    this.logger.debug(message, 'Database', {
       queryRunner,
     });
   }
