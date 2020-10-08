@@ -11,7 +11,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    */
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): void {
     if (query !== 'SELECT 1') {
-      this.logger.log('info', query, 'Database', parameters, queryRunner);
+      this.logger.log('info', query, { context: 'Database', parameters, queryRunner });
     }
   }
 
