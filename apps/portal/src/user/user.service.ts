@@ -25,7 +25,6 @@ import { ProfileService } from '@back/profile/profile.service';
 import { GroupService } from '@back/group/group.service';
 import { GroupEntity } from '@back/group/group.entity';
 import { PortalError } from '@back/shared/errors';
-import { getUsername } from './user.decorator';
 import { UserEntity } from './user.entity';
 //#endregion
 
@@ -387,9 +386,9 @@ export class UserService {
    */
   settings = (value: UserSettings, user: User): UserSettings => defaultsDeep(value, user.settings, defaultUserSettings);
 
-  ldapCheckUsername = async (request: Request, value: string): Promise<boolean> =>
+  ldapCheckUsername = async ({ value, loggerContext }: { value: string; loggerContext: LoggerContext }): Promise<boolean> =>
     this.ldapService
-      .searchByUsername({ userByUsername: value, cache: false, loggerContext: getUsername(request) })
+      .searchByUsername({ userByUsername: value, cache: false, loggerContext })
       .then(() => false)
       .catch(() => true);
 
@@ -397,17 +396,15 @@ export class UserService {
    * This is a LDAP new user and contact
    */
   ldapNewUser = async ({
-    request,
     value,
     thumbnailPhoto,
-    loggerContext: loggerContextDefault,
+    loggerContext,
   }: {
     request: Request;
     value: ProfileInput;
     thumbnailPhoto?: Promise<FileUpload>;
     loggerContext?: LoggerContext;
   }): Promise<Profile> => {
-    const loggerContext = { username: request?.user?.username, ...loggerContextDefault };
     const entry: LDAPAddEntry = this.profileService.modification({ profile: value, loggerContext });
     entry.name = entry.cn;
 
@@ -431,7 +428,7 @@ export class UserService {
     }
 
     return this.ldapService
-      .add({ entry, loggerContext: getUsername(request) })
+      .add({ entry, loggerContext })
       .then<UserEntity | ProfileEntity>((ldapUser) => {
         if (!ldapUser) {
           throw new Error('Cannot contact with AD');

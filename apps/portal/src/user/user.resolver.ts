@@ -50,9 +50,11 @@ export class UserResolver {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapNewUser({ request, value, thumbnailPhoto }).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.userService
+      .ldapNewUser({ request, value, thumbnailPhoto, loggerContext: { username: user.username } })
+      .catch((error: Error) => {
+        throw new HttpException(error.message, 500);
+      });
   }
 
   /**
@@ -64,12 +66,12 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async ldapCheckUsername(@Context('req') request: Request, @Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
+  async ldapCheckUsername(@Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapCheckUsername(request, value);
+    return this.userService.ldapCheckUsername({ value, loggerContext: { username: user.username } });
   }
 
   /**
