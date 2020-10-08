@@ -5,7 +5,7 @@ import type WebSocket from 'ws';
 import type { User } from '@lib/types';
 
 export interface LoggerContext {
-  [key: string]: string;
+  [key: string]: string | undefined | null;
 }
 
 export interface PortalWebsocket {

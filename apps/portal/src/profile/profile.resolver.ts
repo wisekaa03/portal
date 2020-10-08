@@ -1,18 +1,22 @@
 /** @format */
 
 //#region Imports NPM
-import { Query, Mutation, Resolver, Args, Context, ResolveProperty } from '@nestjs/graphql';
+import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
 import {
+  Inject,
   UseGuards,
   NotAcceptableException,
   BadRequestException,
   ForbiddenException,
   PayloadTooLargeException,
   UnprocessableEntityException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import type { ProfileInput, SearchSuggestions, User } from '@lib/types';
@@ -22,11 +26,12 @@ import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
 import { CurrentUser } from '@back/user/user.decorator';
 import { ProfileService } from './profile.service';
 import { ProfileEntity } from './profile.entity';
+
 //#endregion
 
 @Resolver('Profile')
 export class ProfileResolver {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService, @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
 
   /**
    * GraphQL query: profiles
@@ -60,7 +65,7 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: false,
         orderFieldToKey: (field: string) => field,
-        queryBuilder: this.profileService.getProfiles(search, disabled, notShowing),
+        queryBuilder: this.profileService.getProfiles({ search, disabled, notShowing, loggerContext: { username: user?.username } }),
       },
     );
   }
@@ -80,9 +85,10 @@ export class ProfileResolver {
     @Args('field')
     field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number],
     @Args('department') department: string,
+    @CurrentUser() user?: User,
   ): Promise<string[]> {
     if (PROFILE_AUTOCOMPLETE_FIELDS.includes(field)) {
-      return this.profileService.fieldSelection(field, department);
+      return this.profileService.fieldSelection({ field, department, loggerContext: { username: user?.username } });
     }
 
     throw new NotAcceptableException();
@@ -98,8 +104,8 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async searchSuggestions(@Args('search') search: string): Promise<SearchSuggestions[]> {
-    return this.profileService.searchSuggestions(search);
+  async searchSuggestions(@Args('search') search: string, @CurrentUser() user?: User): Promise<SearchSuggestions[]> {
+    return this.profileService.searchSuggestions({ search, loggerContext: { username: user?.username } });
   }
 
   /**
@@ -111,8 +117,8 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profile(@Args('id') id: string): Promise<ProfileEntity | undefined> {
-    return this.profileService.byId(id) || undefined;
+  async profile(@Args('id') id: string, @CurrentUser() user?: User): Promise<ProfileEntity | undefined> {
+    return this.profileService.byId({ id, loggerContext: { username: user?.username } }) || undefined;
   }
 
   /**
@@ -132,9 +138,29 @@ export class ProfileResolver {
     @Context('req') request: Request,
     @Args('profile') profile: ProfileInput,
     @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
+    @CurrentUser() user?: User,
   ): Promise<ProfileEntity> {
+    if (!user?.profile?.id) {
+      throw new UnauthorizedException();
+    }
+
     return this.profileService
-      .changeProfile(request, profile, thumbnailPhoto)
+      .changeProfile({ user, profile, thumbnailPhoto, loggerContext: { username: user.username } })
+      .then((value) => {
+        request.logIn(user, async (error: Error) => {
+          if (error) {
+            this.logger.error(`Error when changing profile: ${error.toString()}`, {
+              error,
+              context: ProfileResolver.name,
+              username: user?.username,
+            });
+
+            throw new UnauthorizedException(error);
+          }
+        });
+
+        return value;
+      })
       .catch(
         async (
           error:

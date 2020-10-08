@@ -14,7 +14,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -35,9 +34,10 @@ import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
 import { constructUploads } from '@back/shared/upload';
-import { getUsername } from '@back/user/user.decorator';
 import { ProfileEntity } from './profile.entity';
 import { PortalError } from '../shared/errors';
+import { LoggerContext } from '../shared/types/interfaces';
+import { User } from '../../lib/types/user.dto';
 //#endregion
 
 @Injectable()
@@ -76,7 +76,17 @@ export class ProfileService {
    *
    * @async
    */
-  allProfiles = async (loginService = LoginService.LDAP, disabled = false, cache = true): Promise<AllUsersInfo[]> =>
+  allProfiles = async ({
+    loginService = LoginService.LDAP,
+    disabled = false,
+    cache = true,
+    loggerContext,
+  }: {
+    loginService?: LoginService;
+    disabled?: boolean;
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<AllUsersInfo[]> =>
     this.profileRepository
       .find({
         where: { loginService, disabled },
@@ -102,7 +112,17 @@ export class ProfileService {
    * @param {boolean} notShowing The not showing flag
    * @return {SelectQueryBuilder<ProfileEntity>}
    */
-  getProfiles = (search: string, disabled: boolean, notShowing: boolean): SelectQueryBuilder<ProfileEntity> => {
+  getProfiles = ({
+    search,
+    disabled,
+    notShowing,
+    loggerContext,
+  }: {
+    search: string;
+    disabled: boolean;
+    notShowing: boolean;
+    loggerContext?: LoggerContext;
+  }): SelectQueryBuilder<ProfileEntity> => {
     const query = this.profileRepository.createQueryBuilder('profile').leftJoinAndSelect('profile.manager', 'manager');
 
     const parameters = { notShowing, disabled };
@@ -149,7 +169,17 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byId = async (id: string, isRelations: boolean | 'manager' = true, cache = true): Promise<ProfileEntity | undefined> => {
+  byId = async ({
+    id,
+    isRelations = true,
+    cache = true,
+    loggerContext,
+  }: {
+    id: string;
+    isRelations?: boolean | 'manager';
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<ProfileEntity | undefined> => {
     const where: FindConditions<ProfileEntity> = { id };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
@@ -169,7 +199,17 @@ export class ProfileService {
    * @param {boolean} cache From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byUsername = async (username: string, isRelations: boolean | 'manager' = true, cache = true): Promise<ProfileEntity | undefined> => {
+  byUsername = async ({
+    username,
+    isRelations = true,
+    cache = true,
+    loggerContext,
+  }: {
+    username: string;
+    isRelations: boolean | 'manager';
+    cache: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<ProfileEntity | undefined> => {
     const where: FindConditions<ProfileEntity> = { username };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
@@ -186,14 +226,20 @@ export class ProfileService {
    *
    * @async
    * @param {string} id LoginIdentificator (LDAP: ObjectGUID)
-   * @param {boolean} cache From cache
+   * @param {boolean} cache =true, From cache
    * @return {Promise<ProfileEntity | undefined>} Profile
    */
-  byLoginIdentificator = async (
-    loginIdentificator: string,
-    isRelations: boolean | 'manager' = true,
+  byLoginIdentificator = async ({
+    loginIdentificator,
+    isRelations = true,
     cache = true,
-  ): Promise<ProfileEntity | undefined> => {
+    loggerContext,
+  }: {
+    loginIdentificator: string;
+    isRelations?: boolean | 'manager';
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<ProfileEntity | undefined> => {
     const where: FindConditions<ProfileEntity> = { loginIdentificator };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
@@ -205,7 +251,7 @@ export class ProfileService {
         cache,
       })
       .catch((error) => {
-        this.logger.error(`Profile error: ${error.toString()}`, { error, context: ProfileService.name });
+        this.logger.error(`Profile error: ${error.toString()}`, { error, context: ProfileService.name, ...loggerContext });
 
         return undefined;
       });
@@ -214,14 +260,20 @@ export class ProfileService {
   };
 
   /**
-   * searchSuggestions
+   * Search suggestions
    *
    * @async
    * @param {string} search Search string
    * @return {Promise<string[]>} The search suggestions
    * @throws {Error} Exception
    */
-  searchSuggestions = async (search: string): Promise<SearchSuggestions[]> => {
+  searchSuggestions = async ({
+    search,
+    loggerContext,
+  }: {
+    search: string;
+    loggerContext?: LoggerContext;
+  }): Promise<SearchSuggestions[]> => {
     const query = this.profileRepository
       .createQueryBuilder('profile')
       .where('profile.notShowing = :notShowing')
@@ -329,7 +381,7 @@ export class ProfileService {
       return [...accumulator, { name: showing, avatar }];
     }, [] as SearchSuggestions[]);
 
-    return result.length > 10 ? [...result.slice(0, 10), { name: '...' }] : result;
+    return result.length <= 1 ? [] : result.length > 10 ? [...result.slice(0, 10), { name: '...' }] : result;
   };
 
   /**
@@ -340,15 +392,23 @@ export class ProfileService {
    * @param {number} [count = 1] Count for manager
    * @returns {Promise<ProfileEntity | undefined>} Profile entity
    */
-  async fromLdapDN(userByDN: string, count = 1): Promise<ProfileEntity | undefined> {
+  async fromLdapDN({
+    userByDN,
+    count = 1,
+    loggerContext,
+  }: {
+    userByDN: string;
+    count?: number;
+    loggerContext?: LoggerContext;
+  }): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
-      const ldapUser = await this.ldapService.searchByDN({ userByDN });
+      const ldapUser = await this.ldapService.searchByDN({ userByDN, loggerContext });
 
       if (ldapUser) {
-        return this.fromLdap(ldapUser, undefined, true, count + 1);
+        return this.fromLdap({ ldapUser, save: true, count: count + 1, loggerContext });
       }
     } else {
-      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, { context: ProfileService.name });
+      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, { context: ProfileService.name, ...loggerContext });
     }
 
     return undefined;
@@ -365,8 +425,23 @@ export class ProfileService {
    * @returns {Promise<ProfileEntity>} The profile entity
    * @throws {Error} Exception
    */
-  async fromLdap(ldapUser: LdapResponseUser, profile?: ProfileEntity, save = true, count = 1): Promise<ProfileEntity> {
-    const manager = ldapUser.manager && ldapUser.dn !== ldapUser.manager ? await this.fromLdapDN(ldapUser.manager, count) : undefined;
+  async fromLdap({
+    ldapUser,
+    profile,
+    save = true,
+    count = 1,
+    loggerContext,
+  }: {
+    ldapUser: LdapResponseUser;
+    profile?: ProfileEntity;
+    save?: boolean;
+    count?: number;
+    loggerContext?: LoggerContext;
+  }): Promise<ProfileEntity> {
+    const manager =
+      ldapUser.manager && ldapUser.dn !== ldapUser.manager
+        ? await this.fromLdapDN({ userByDN: ldapUser.manager, count, loggerContext })
+        : undefined;
 
     let comment: Record<string, string>;
     try {
@@ -390,7 +465,7 @@ export class ProfileService {
 
     if (!profile) {
       // eslint-disable-next-line no-param-reassign
-      profile = await this.byLoginIdentificator(ldapUser.objectGUID, true, false);
+      profile = await this.byLoginIdentificator({ loginIdentificator: ldapUser.objectGUID, loggerContext });
     }
 
     const dataProfile = {
@@ -441,7 +516,7 @@ export class ProfileService {
 
     const data = this.profileRepository.create(dataProfile);
 
-    return save ? this.save(data) : data;
+    return save ? this.save({ profile: data, loggerContext }) : data;
   }
 
   /**
@@ -450,7 +525,7 @@ export class ProfileService {
    * @param {Profile} profile DeepPartial<ProfileEntity>
    * @returns {Promise<ProfileEntity>} Profile entity
    */
-  create = (profile: unknown): ProfileEntity => {
+  create = ({ profile, loggerContext }: { profile: unknown; loggerContext?: LoggerContext }): ProfileEntity => {
     if (typeof profile === 'object' && profile !== null) {
       return this.profileRepository.create(profile);
     }
@@ -466,9 +541,9 @@ export class ProfileService {
    * @returns {Promise<ProfileEntity[]>} The profile after save
    * @throws {Error} Exception
    */
-  bulkSave = async (profiles: ProfileEntity[]): Promise<ProfileEntity[]> =>
+  bulkSave = async ({ profiles, loggerContext }: { profiles: ProfileEntity[]; loggerContext?: LoggerContext }): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: ProfileService.name });
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: ProfileService.name, ...loggerContext });
 
       throw error;
     });
@@ -481,7 +556,7 @@ export class ProfileService {
    * @returns {Promise<ProfileEntity>} The profile after save
    * @throws {Error} Exception
    */
-  save = async (profile: ProfileEntity): Promise<ProfileEntity> =>
+  save = async ({ profile, loggerContext }: { profile: ProfileEntity; loggerContext?: LoggerContext }): Promise<ProfileEntity> =>
     this.profileRepository
       .save<ProfileEntity>(profile)
       .then((p) => {
@@ -501,7 +576,11 @@ export class ProfileService {
         return p;
       })
       .catch((error: Error) => {
-        this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: ProfileService.name });
+        this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
+          error,
+          context: ProfileService.name,
+          ...loggerContext,
+        });
 
         throw error;
       });
@@ -511,10 +590,15 @@ export class ProfileService {
    *
    * @async
    */
-  update = async (
-    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<ProfileEntity>,
-    partialEntity: QueryDeepPartialEntity<ProfileEntity>,
-  ): Promise<UpdateResult> => this.profileRepository.update(criteria, partialEntity);
+  update = async ({
+    criteria,
+    partialEntity,
+    loggerContext,
+  }: {
+    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<ProfileEntity>;
+    partialEntity: QueryDeepPartialEntity<ProfileEntity>;
+    loggerContext?: LoggerContext;
+  }): Promise<UpdateResult> => this.profileRepository.update(criteria, partialEntity);
 
   /**
    * Profile field selection
@@ -525,7 +609,15 @@ export class ProfileService {
    * @returns {Promise<string[]>} Field selection
    * @throws {Error} Exception
    */
-  fieldSelection = async (field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number], department?: string): Promise<string[]> => {
+  fieldSelection = async ({
+    field,
+    department,
+    loggerContext,
+  }: {
+    field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number];
+    department?: string;
+    loggerContext?: LoggerContext;
+  }): Promise<string[]> => {
     const query = this.profileRepository.createQueryBuilder('profile');
     const ifManager = field === 'manager' && department;
 
@@ -573,7 +665,17 @@ export class ProfileService {
   /**
    * Modification
    */
-  modification = (profile: ProfileInput, created?: Profile, ldapUser?: LdapResponseUser): LDAPAddEntry => {
+  modification = ({
+    profile,
+    created,
+    ldapUser,
+    loggerContext,
+  }: {
+    profile: ProfileInput;
+    created?: Profile;
+    ldapUser?: LdapResponseUser;
+    loggerContext?: LoggerContext;
+  }): LDAPAddEntry => {
     const modification: LDAPAddEntry = {};
 
     if (profile) {
@@ -746,15 +848,20 @@ export class ProfileService {
    * @throws {Error|BadRequestException|NotAcceptableException}
    * @throws {ForbiddenException|PayloadTooLargeException|UnprocessableEntityException}
    */
-  async changeProfile(request: Request, profile: ProfileInput, thumbnailPhoto?: Promise<FileUpload>): Promise<ProfileEntity> {
+  async changeProfile({
+    user,
+    profile,
+    thumbnailPhoto,
+    loggerContext,
+  }: {
+    user: User;
+    profile: ProfileInput;
+    thumbnailPhoto?: Promise<FileUpload>;
+    loggerContext?: LoggerContext;
+  }): Promise<ProfileEntity> {
     let thumbnailPhotoProcessed: Buffer | undefined;
 
-    if (!request?.user?.profile?.id) {
-      throw new UnauthorizedException();
-    }
-
-    const loggerContext = getUsername(request);
-    const updated = { id: request?.user.profile.id, ...profile };
+    const updated = { id: user.profile.id, ...profile };
 
     const created = await this.profileRepository.findOne(updated.id);
     if (!created) {
@@ -796,7 +903,7 @@ export class ProfileService {
       }
 
       if (ldapUser) {
-        const modification = this.modification(profile, created, ldapUser);
+        const modification = this.modification({ profile, created, ldapUser, loggerContext });
 
         const ldapUpdated = Object.keys(modification).map(
           (key) =>
@@ -850,20 +957,22 @@ export class ProfileService {
       : {};
     const result = this.profileRepository.merge(created, profile || undefined, thumbnail as ProfileEntity);
 
-    return this.save(result).then(async (profileUpdated) => {
-      // TODO: what I do ?...
-      if (request.user.profile.id === profileUpdated.id) {
-        request.user.profile = profileUpdated;
-      }
+    return this.save({ profile: result, loggerContext });
 
-      // TODO:  разобраться
-      // await this.profileRepository.manager.connection?.queryResultCache?.remove([
-      //   'profile',
-      //   'profile_searchSuggestions',
-      //   'profile_fieldSelection',
-      // ]);
+    // .then(async (profileUpdated) => {
+    //     // TODO: what I do ?...
+    //   if (user.profile.id === profileUpdated.id) {
+    //     user.profile = profileUpdated;
+    //   }
 
-      return profileUpdated;
-    });
+    //   // TODO:  разобраться
+    //   // await this.profileRepository.manager.connection?.queryResultCache?.remove([
+    //   //   'profile',
+    //   //   'profile_searchSuggestions',
+    //   //   'profile_fieldSelection',
+    //   // ]);
+
+    //   return profileUpdated;
+    // });
   }
 }

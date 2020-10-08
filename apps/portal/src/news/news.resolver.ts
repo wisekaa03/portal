@@ -38,17 +38,17 @@ export class NewsResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async editNews(
-    @CurrentUser() user: User,
     @Args('title') title: string,
     @Args('excerpt') excerpt: string,
     @Args('content') content: string,
     @Args('id') id: string,
+    @CurrentUser() user?: User,
   ): Promise<NewsEntity> {
     if (!user || !user.id) {
       throw new UnauthorizedException();
     }
 
-    const author = await this.userService.byId(user.id);
+    const author = await this.userService.byId({ id: user.id, loggerContext: { username: user.username } });
     return this.newsService.editNews({ title, excerpt, content, author, id });
   }
 

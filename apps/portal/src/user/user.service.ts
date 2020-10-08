@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import { Request } from 'express';
-import { Injectable, Inject, InternalServerErrorException, NotAcceptableException } from '@nestjs/common';
+import { Injectable, Inject, InternalServerErrorException, NotAcceptableException, LoggerService } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
@@ -103,7 +103,19 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results. default true.
    * @returns {UserEntity} The user
    */
-  byId = async (id: string, isDisabled = true, isRelations: boolean | 'profile' | 'groups' = true, cache = true): Promise<UserEntity> => {
+  byId = async ({
+    id,
+    isDisabled = true,
+    isRelations = true,
+    cache = true,
+    loggerContext,
+  }: {
+    id: string;
+    isDisabled?: boolean;
+    isRelations?: boolean | 'profile' | 'groups';
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { id };
 
     if (isDisabled) {
@@ -168,12 +180,19 @@ export class UserService {
    * @param {boolean} [cache = true] whether to cache results
    * @returns {UserEntity | undefined} The user
    */
-  byLoginIdentificator = async (
-    loginIdentificator: string,
+  byLoginIdentificator = async ({
+    loginIdentificator,
     isDisabled = true,
-    isRelations: boolean | 'profile' | 'groups' = true,
+    isRelations = true,
     cache = true,
-  ): Promise<UserEntity> => {
+    loggerContext,
+  }: {
+    loginIdentificator: string;
+    isDisabled?: boolean;
+    isRelations?: boolean | 'profile' | 'groups';
+    cache?: boolean;
+    loggerContext?: LoggerContext;
+  }): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { loginIdentificator };
 
     if (isDisabled) {
@@ -211,7 +230,7 @@ export class UserService {
     save?: boolean;
     loggerContext?: LoggerContext;
   }): Promise<UserEntity> {
-    const profile = await this.profileService.fromLdap(ldapUser).catch((error: Error) => {
+    const profile = await this.profileService.fromLdap({ ldapUser, loggerContext }).catch((error: Error) => {
       this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
 
       throw error;
@@ -239,15 +258,17 @@ export class UserService {
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator(ldapUser.objectGUID, false, true, false).catch((error) => {
-        this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
-          error,
-          context: UserService.name,
-          ...loggerContext,
-        });
+      user = await this.byLoginIdentificator({ loginIdentificator: ldapUser.objectGUID, isDisabled: false, loggerContext }).catch(
+        (error) => {
+          this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
+            error,
+            context: UserService.name,
+            ...loggerContext,
+          });
 
-        return undefined;
-      });
+          return undefined;
+        },
+      );
     }
     const data = {
       ...user,
@@ -274,7 +295,10 @@ export class UserService {
    * @async
    * @returns {boolean} The result of synchronization
    */
-  syncLdap = async (): Promise<boolean> => this.client.send<boolean>(LDAP_SYNC, []).toPromise();
+  syncLdap = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<boolean> =>
+    this.client
+      .send<boolean>(LDAP_SYNC, [{ loggerContext }])
+      .toPromise();
 
   /**
    * Create
@@ -344,10 +368,15 @@ export class UserService {
    *
    * @async
    */
-  update = async (
-    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<UserEntity>,
-    partialEntity: QueryDeepPartialEntity<UserEntity>,
-  ): Promise<UpdateResult> => this.userRepository.update(criteria, partialEntity);
+  update = async ({
+    criteria,
+    partialEntity,
+    loggerContext,
+  }: {
+    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<UserEntity>;
+    partialEntity: QueryDeepPartialEntity<UserEntity>;
+    loggerContext?: LoggerContext;
+  }): Promise<UpdateResult> => this.userRepository.update(criteria, partialEntity);
 
   /**
    * Save the settings
@@ -379,7 +408,7 @@ export class UserService {
     loggerContext?: LoggerContext;
   }): Promise<Profile> => {
     const loggerContext = { username: request?.user?.username, ...loggerContextDefault };
-    const entry: LDAPAddEntry = this.profileService.modification(value);
+    const entry: LDAPAddEntry = this.profileService.modification({ profile: value, loggerContext });
     entry.name = entry.cn;
 
     if (value.contact === Contact.PROFILE) {
@@ -409,7 +438,7 @@ export class UserService {
         }
 
         if (value.contact === Contact.PROFILE) {
-          return this.profileService.fromLdap(ldapUser);
+          return this.profileService.fromLdap({ ldapUser, loggerContext });
         }
 
         return this.fromLdap({ ldapUser, loggerContext });

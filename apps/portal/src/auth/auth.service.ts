@@ -39,7 +39,7 @@ export class AuthService {
    */
   public validate = async (request: Request): Promise<User> => {
     if (request.user?.id) {
-      const user = await this.userService.byId(request.user.id);
+      const user = await this.userService.byId({ id: request.user.id, loggerContext: { username: request.user.username } });
 
       return user;
     }

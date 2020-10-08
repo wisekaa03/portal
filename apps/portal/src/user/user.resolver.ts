@@ -26,8 +26,8 @@ export class UserResolver {
    */
   @Mutation('syncLdap')
   @UseGuards(GqlAuthGuard)
-  async syncLdap(): Promise<boolean> {
-    return this.userService.syncLdap();
+  async syncLdap(@CurrentUser() user?: User): Promise<boolean> {
+    return this.userService.syncLdap({ loggerContext: { username: user?.username } });
   }
 
   /**
