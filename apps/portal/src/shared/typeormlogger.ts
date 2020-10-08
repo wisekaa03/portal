@@ -11,7 +11,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    */
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): void {
     if (query !== 'SELECT 1') {
-      this.logger.log('info', query, { context: 'Database', parameters, queryRunner });
+      this.logger.log('debug', query, { context: 'Database', parameters, queryRunner });
     }
   }
 
@@ -31,14 +31,14 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is slow.
    */
   logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.log('info', `Time is slow: ${time}`, { context: 'Database', parameters, queryRunner });
+    this.logger.log('debug', `Time is slow: ${time}`, { context: 'Database', parameters, queryRunner });
   }
 
   /**
    * Logs events from the schema build process.
    */
   logSchemaBuild(message: string, queryRunner?: QueryRunner): void {
-    this.logger.log('info', message, {
+    this.logger.log('debug', message, {
       context: 'Database',
       queryRunner,
     });
@@ -48,7 +48,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs events from the migrations run process.
    */
   logMigration(message: string, queryRunner?: QueryRunner): void {
-    this.logger.log('info', message, {
+    this.logger.log('debug', message, {
       context: 'Database',
       queryRunner,
     });
@@ -59,7 +59,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Log has its own level and message.
    */
   log(level: 'log' | 'info' | 'warn', message: any, queryRunner?: QueryRunner): void {
-    this.logger.log(level, message, {
+    this.logger.log('debug' || level, message, {
       context: 'Database',
       queryRunner,
     });
