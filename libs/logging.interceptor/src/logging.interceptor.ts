@@ -78,10 +78,10 @@ export class LoggingInterceptor implements NestInterceptor {
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
         const gqlCtx = ctx.getContext();
-        const username = gqlCtx.user?.username || '';
+        const values = info.variableValues;
+        const username = values.username ? values.username : gqlCtx.user?.username || '';
         const message = `Incoming GraphQL ${resolverName} ${info.operation.operation} ${info.fieldName}`;
 
-        const values = info.variableValues;
         if (values.password) {
           values.password = '* MASKED *';
         }
