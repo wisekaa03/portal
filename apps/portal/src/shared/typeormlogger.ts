@@ -11,12 +11,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    */
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): void {
     if (query !== 'SELECT 1') {
-      this.logger.info({
-        message: query,
-        context: 'Database',
-        parameters,
-        queryRunner,
-      });
+      this.logger.log('info', query, 'Database', parameters, queryRunner);
     }
   }
 
@@ -24,7 +19,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is failed.
    */
   logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.error(query, {
+    this.logger.error('info', query, {
       error,
       context: 'Database',
       parameters,
@@ -36,20 +31,14 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is slow.
    */
   logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.info({
-      message: `Time is slow: ${time}`,
-      context: 'Database',
-      parameters,
-      queryRunner,
-    });
+    this.logger.log('info', `Time is slow: ${time}`, { context: 'Database', parameters, queryRunner });
   }
 
   /**
    * Logs events from the schema build process.
    */
   logSchemaBuild(message: string, queryRunner?: QueryRunner): void {
-    this.logger.info({
-      message,
+    this.logger.log('info', message, {
       context: 'Database',
       queryRunner,
     });
@@ -59,8 +48,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs events from the migrations run process.
    */
   logMigration(message: string, queryRunner?: QueryRunner): void {
-    this.logger.info({
-      message,
+    this.logger.log('info', message, {
       context: 'Database',
       queryRunner,
     });
@@ -71,9 +59,8 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Log has its own level and message.
    */
   log(level: 'log' | 'info' | 'warn', message: any, queryRunner?: QueryRunner): void {
-    this.logger.info({
+    this.logger.log(level, message, {
       context: 'Database',
-      message,
       queryRunner,
     });
   }
