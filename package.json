@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.6",
+  "version": "4.17.7",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -178,7 +178,7 @@
     "nest-next": "*",
     "nest-winston": "^1",
     "nestjs-ldap": "*",
-    "next": "^9.5.4-canary.24",
+    "next": "^9.5.4",
     "next-compose-plugins": "*",
     "next-fonts": "*",
     "next-i18next": "*",
@@ -333,7 +333,7 @@
     "stylelint-config-prettier": "*",
     "stylelint-prettier": "*",
     "supertest": "*",
-    "terser-webpack-plugin": "*",
+    "terser-webpack-plugin": "^4",
     "ts-jest": "*",
     "ts-loader": "*",
     "typescript": "*",
