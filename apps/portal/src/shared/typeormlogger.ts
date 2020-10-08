@@ -1,17 +1,17 @@
 /** @format */
 
-import { Logger } from 'winston';
+import { LoggerService } from '@nestjs/common';
 import { Logger as ITypeOrmLogger, QueryRunner } from 'typeorm';
 
 export class TypeOrmLogger implements ITypeOrmLogger {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly logger: LoggerService) {}
 
   /**
    * Logs query and parameters used in it.
    */
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    if (query !== 'SELECT 1') {
-      this.logger.debug(query, 'Database', { parameters, queryRunner });
+    if (query !== 'SELECT 1' && this.logger.debug) {
+      this.logger.debug({ message: query, parameters }, 'Database');
     }
   }
 
@@ -19,36 +19,51 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is failed.
    */
   logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.error(query, 'Database', {
-      error,
-      parameters,
-      queryRunner,
-    });
+    this.logger.error(
+      {
+        message: query,
+        error,
+        parameters,
+      },
+      'Database',
+    );
   }
 
   /**
    * Logs query that is slow.
    */
   logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.debug(`Time is slow: ${time}`, { context: 'Database', parameters, queryRunner });
+    if (this.logger.debug) {
+      this.logger.debug({ message: `Time is slow: ${time}`, parameters }, 'Database');
+    }
   }
 
   /**
    * Logs events from the schema build process.
    */
   logSchemaBuild(message: string, queryRunner?: QueryRunner): void {
-    this.logger.debug(message, 'Database', {
-      queryRunner,
-    });
+    if (this.logger.debug) {
+      this.logger.debug(
+        {
+          message,
+        },
+        'Database',
+      );
+    }
   }
 
   /**
    * Logs events from the migrations run process.
    */
   logMigration(message: string, queryRunner?: QueryRunner): void {
-    this.logger.debug(message, 'Database', {
-      queryRunner,
-    });
+    if (this.logger.debug) {
+      this.logger.debug(
+        {
+          message,
+        },
+        'Database',
+      );
+    }
   }
 
   /**
@@ -56,8 +71,13 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Log has its own level and message.
    */
   log(level: 'log' | 'info' | 'warn', message: any, queryRunner?: QueryRunner): void {
-    this.logger.debug(message, 'Database', {
-      queryRunner,
-    });
+    if (this.logger.debug) {
+      this.logger.debug(
+        {
+          message,
+        },
+        'Database',
+      );
+    }
   }
 }
