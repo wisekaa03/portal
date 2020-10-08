@@ -19,7 +19,7 @@ export class TypeOrmLogger implements ITypeOrmLogger {
    * Logs query that is failed.
    */
   logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): void {
-    this.logger.error('info', query, {
+    this.logger.error('error', query, {
       error,
       context: 'Database',
       parameters,
