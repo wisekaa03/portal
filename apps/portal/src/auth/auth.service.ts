@@ -6,7 +6,7 @@ import type { Request, Response } from 'express';
 import { LdapService, InvalidCredentialsError } from 'nestjs-ldap';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import Redis from 'redis';
+import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import type { LoginEmail, EmailSession } from '@lib/types/auth';
@@ -109,96 +109,96 @@ export class AuthService {
    * @returns {boolean} The true/false if successful cache reset
    */
   cacheReset = async ({ loggerContext }: { loggerContext: LoggerContext }): Promise<boolean> => {
-    let sessionStoreReset = false;
-    let databaseStoreReset = false;
-    let ldapCacheReset = false;
-    let httpStoreReset = false;
+    const sessionStoreReset = false;
+    const databaseStoreReset = false;
+    const ldapCacheReset = false;
+    const httpStoreReset = false;
 
-    if (this.configService.get<string>('DATABASE_REDIS_URI')) {
-      const redisDatabase = Redis.createClient({
-        url: this.configService.get<string>('DATABASE_REDIS_URI'),
-      });
+    // if (this.configService.get<string>('DATABASE_REDIS_URI')) {
+    //   const redisDatabase = Redis.createClient({
+    //     url: this.configService.get<string>('DATABASE_REDIS_URI'),
+    //   });
 
-      try {
-        redisDatabase.flushdb();
+    //   try {
+    //     redisDatabase.flushdb();
 
-        this.logger.info('Reset database cache', { context: AuthService.name, ...loggerContext });
+    //     this.logger.info('Reset database cache', { context: AuthService.name, ...loggerContext });
 
-        databaseStoreReset = true;
-      } catch (error) {
-        this.logger.error(`Unable to reset database cache: ${error.toString()}`, {
-          error,
-          context: AuthService.name,
-          ...loggerContext,
-        });
-      }
+    //     databaseStoreReset = true;
+    //   } catch (error) {
+    //     this.logger.error(`Unable to reset database cache: ${error.toString()}`, {
+    //       error,
+    //       context: AuthService.name,
+    //       ...loggerContext,
+    //     });
+    //   }
 
-      redisDatabase.quit();
-    }
+    //   redisDatabase.quit();
+    // }
 
-    if (this.configService.get<string>('LDAP_REDIS_URI')) {
-      const redisLdap = Redis.createClient({
-        url: this.configService.get<string>('LDAP_REDIS_URI'),
-      });
+    // if (this.configService.get<string>('LDAP_REDIS_URI')) {
+    //   const redisLdap = Redis.createClient({
+    //     url: this.configService.get<string>('LDAP_REDIS_URI'),
+    //   });
 
-      try {
-        redisLdap.flushdb();
+    //   try {
+    //     redisLdap.flushdb();
 
-        this.logger.info('Reset LDAP cache', { context: AuthService.name, ...loggerContext });
+    //     this.logger.info('Reset LDAP cache', { context: AuthService.name, ...loggerContext });
 
-        ldapCacheReset = true;
-      } catch (error) {
-        this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
-      }
+    //     ldapCacheReset = true;
+    //   } catch (error) {
+    //     this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
+    //   }
 
-      redisLdap.quit();
-    }
+    //   redisLdap.quit();
+    // }
 
-    if (this.configService.get<string>('HTTP_REDIS_URI')) {
-      const redisHttp = Redis.createClient({
-        url: this.configService.get<string>('HTTP_REDIS_URI'),
-      });
+    // if (this.configService.get<string>('HTTP_REDIS_URI')) {
+    //   const redisHttp = Redis.createClient({
+    //     url: this.configService.get<string>('HTTP_REDIS_URI'),
+    //   });
 
-      try {
-        redisHttp.flushdb();
+    //   try {
+    //     redisHttp.flushdb();
 
-        this.logger.info('Reset HTTP cache', { context: AuthService.name, ...loggerContext });
+    //     this.logger.info('Reset HTTP cache', { context: AuthService.name, ...loggerContext });
 
-        httpStoreReset = true;
-      } catch (error) {
-        this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
-      }
+    //     httpStoreReset = true;
+    //   } catch (error) {
+    //     this.logger.error(`Unable to reset LDAP cache: ${error.toString()}`, { error, context: AuthService.name, ...loggerContext });
+    //   }
 
-      redisHttp.quit();
-    }
+    //   redisHttp.quit();
+    // }
 
-    try {
-      const redisSession = Redis.createClient({
-        url: this.configService.get<string>('SESSION_REDIS_URI'),
-      });
+    // try {
+    //   const redisSession = Redis.createClient({
+    //     url: this.configService.get<string>('SESSION_REDIS_URI'),
+    //   });
 
-      try {
-        redisSession.flushdb();
+    //   try {
+    //     redisSession.flushdb();
 
-        this.logger.info('Reset session cache', { context: AuthService.name, ...loggerContext });
-      } catch (error) {
-        this.logger.error(`Unable to reset session cache: ${error.toString()}`, {
-          error,
-          context: AuthService.name,
-          ...loggerContext,
-        });
-      }
+    //     this.logger.info('Reset session cache', { context: AuthService.name, ...loggerContext });
+    //   } catch (error) {
+    //     this.logger.error(`Unable to reset session cache: ${error.toString()}`, {
+    //       error,
+    //       context: AuthService.name,
+    //       ...loggerContext,
+    //     });
+    //   }
 
-      redisSession.quit();
+    //   redisSession.quit();
 
-      sessionStoreReset = true;
-    } catch (error) {
-      this.logger.error(`Error in cache reset, session store: ${error.toString()}`, {
-        error,
-        context: AuthService.name,
-        ...loggerContext,
-      });
-    }
+    //   sessionStoreReset = true;
+    // } catch (error) {
+    //   this.logger.error(`Error in cache reset, session store: ${error.toString()}`, {
+    //     error,
+    //     context: AuthService.name,
+    //     ...loggerContext,
+    //   });
+    // }
 
     if (databaseStoreReset && sessionStoreReset && ldapCacheReset && httpStoreReset) {
       return true;

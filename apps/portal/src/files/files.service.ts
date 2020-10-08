@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import { parse as urlLibParse } from 'url';
 import fs from 'fs';
 import { resolve } from 'path';
 import { tmpNameSync } from 'tmp';
@@ -11,8 +12,8 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
 import { FileUpload } from 'graphql-upload';
-import * as CacheManager from 'cache-manager';
-import * as RedisStore from 'cache-manager-redis-store';
+import CacheManager from 'cache-manager';
+import RedisStore from 'cache-manager-ioredis';
 //#endregion
 //#region Imports Local
 import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
@@ -44,15 +45,32 @@ export class FilesService {
 
     this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
     if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
-      this.cacheStore = RedisStore.create({
-        prefix: 'NEXTCLOUD:',
-        url: configService.get<string>('NEXTCLOUD_REDIS_URI'),
-      });
-      this.cache = CacheManager.caching({
-        store: this.cacheStore,
-        ttl: this.ttl,
-      });
-      logger.info('Redis connection: success', { context: FilesService.name });
+      const redisArray = urlLibParse(configService.get<string>('NEXTCLOUD_REDIS_URI'));
+      if (redisArray && (redisArray.protocol === 'redis:' || redisArray.protocol === 'rediss:')) {
+        let username: string | undefined;
+        let password: string | undefined;
+        const db = parseInt(redisArray.pathname?.slice(1) || '0', 10);
+        if (redisArray.auth) {
+          [username, password] = redisArray.auth.split(':');
+        }
+
+        this.cache = CacheManager.caching({
+          store: RedisStore,
+          host: redisArray.hostname,
+          port: parseInt(redisArray.port || '6379', 10),
+          username,
+          password,
+          db,
+          keyPrefix: 'NEXTCLOUD:',
+          ttl: this.ttl,
+        });
+
+        if (this.cache.store) {
+          logger.info('Redis connection: success', { context: FilesService.name });
+        } else {
+          logger.error('Redis connection: not connected', { context: FilesService.name });
+        }
+      }
     }
 
     this.nextCloud = new NextcloudClient({

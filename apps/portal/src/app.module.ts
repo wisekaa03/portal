@@ -14,7 +14,6 @@ import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
-import redisCacheStore from 'cache-manager-redis-store';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 // import { PrometheusModule } from '@willsoto/nestjs-prometheus';
@@ -82,12 +81,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
   entities: [GroupEntity, ProfileEntity, UserEntity, NewsEntity],
   migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
   cache: {
-    type: 'redis', // "ioredis/cluster"
-    options: {
-      url: configService.get<string>('DATABASE_REDIS_URI'),
-      scaleReads: 'slave',
-      max: 10000,
-    },
+    type: 'ioredis', // "ioredis/cluster"
+    options: configService.get<string>('DATABASE_REDIS_URI'),
     alwaysEnabled: true,
     /**
      * Time in milliseconds in which cache will expire.
@@ -124,21 +119,21 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     //#endregion
 
     //#region Cache Manager - Redis
-    CacheModule.registerAsync({
-      imports: [WinstonModule],
-      inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
-      useFactory: async (configService: ConfigService, logger: Logger) => {
-        logger.log('Redis connection: success', 'CacheModule');
+    // CacheModule.registerAsync({
+    //   imports: [WinstonModule],
+    //   inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
+    //   useFactory: async (configService: ConfigService, logger: Logger) => {
+    //     logger.log('Redis connection: success', 'CacheModule');
 
-        return {
-          store: redisCacheStore,
-          ttl: configService.get<number>('HTTP_REDIS_TTL'), // seconds
-          max: configService.get<number>('HTTP_REDIS_MAX_OBJECTS'), // maximum number of items in cache
-          url: configService.get<string>('HTTP_REDIS_URI'),
-          // retry_strategy: (options) => {}
-        };
-      },
-    }),
+    //     return {
+    //       store: redisCacheStore,
+    //       ttl: configService.get<number>('HTTP_REDIS_TTL'), // seconds
+    //       max: configService.get<number>('HTTP_REDIS_MAX_OBJECTS'), // maximum number of items in cache
+    //       url: configService.get<string>('HTTP_REDIS_URI'),
+    //       // retry_strategy: (options) => {}
+    //     };
+    //   },
+    // }),
     //#endregion
 
     //#region GraphQL

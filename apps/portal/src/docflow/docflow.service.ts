@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import { parse as urlLibParse } from 'url';
 import {
   Inject,
   Injectable,
@@ -15,8 +16,8 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { FileUpload } from 'graphql-upload';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import * as CacheManager from 'cache-manager';
-import * as RedisStore from 'cache-manager-redis-store';
+import CacheManager from 'cache-manager';
+import RedisStore from 'cache-manager-ioredis';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -74,15 +75,32 @@ export class DocFlowService {
   ) {
     this.ttl = configService.get<number>('DOCFLOW_REDIS_TTL') || 900;
     if (configService.get<string>('DOCFLOW_REDIS_URI')) {
-      this.cacheStore = RedisStore.create({
-        prefix: 'DOCFLOW:',
-        url: configService.get<string>('DOCFLOW_REDIS_URI'),
-      });
-      this.cache = CacheManager.caching({
-        store: this.cacheStore,
-        ttl: this.ttl,
-      });
-      logger.info('Redis connection: success', { context: DocFlowService.name });
+      const redisArray = urlLibParse(configService.get<string>('DOCFLOW_REDIS_URI'));
+      if (redisArray && (redisArray.protocol === 'redis:' || redisArray.protocol === 'rediss:')) {
+        let username: string | undefined;
+        let password: string | undefined;
+        const db = parseInt(redisArray.pathname?.slice(1) || '0', 10);
+        if (redisArray.auth) {
+          [username, password] = redisArray.auth.split(':');
+        }
+
+        this.cache = CacheManager.caching({
+          store: RedisStore,
+          host: redisArray.hostname,
+          port: parseInt(redisArray.port || '6379', 10),
+          username,
+          password,
+          db,
+          keyPrefix: 'DOCFLOW:',
+          ttl: this.ttl,
+        });
+
+        if (this.cache.store) {
+          logger.info('Redis connection: success', { context: DocFlowService.name });
+        } else {
+          logger.error('Redis connection: not connected', { context: DocFlowService.name });
+        }
+      }
     }
   }
 
