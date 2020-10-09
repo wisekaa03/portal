@@ -413,7 +413,11 @@ export class ProfileService {
         return this.fromLdap({ ldapUser, save: true, count: count + 1, loggerContext });
       }
     } else {
-      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, { context: ProfileService.name, ...loggerContext });
+      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, {
+        context: ProfileService.name,
+        function: 'fromLdapDN',
+        ...loggerContext,
+      });
     }
 
     return undefined;
@@ -588,9 +592,8 @@ export class ProfileService {
       .catch((error: Error) => {
         this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
           error,
-
-          function: 'save',
           context: ProfileService.name,
+          function: 'save',
           ...loggerContext,
         });
 

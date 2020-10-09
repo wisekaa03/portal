@@ -48,17 +48,21 @@ export class LoggingInterceptor implements NestInterceptor {
           return call$.handle();
         }
 
-        this.logger.log(
-          {
-            page: this.ctxPrefix,
-            message,
-            method,
-            body,
-            headers,
-            username,
-          },
-          this.ctxPrefix,
-        );
+        try {
+          this.logger.log(
+            {
+              page: this.ctxPrefix,
+              message,
+              method,
+              body,
+              headers,
+              username,
+              function: context.getHandler().name,
+            },
+            this.ctxPrefix,
+          );
+          // eslint-disable-next-line no-empty
+        } catch {}
 
         return call$.handle().pipe(
           tap({
@@ -87,19 +91,23 @@ export class LoggingInterceptor implements NestInterceptor {
         }
 
         return call$.handle().pipe(
-          tap(() =>
-            this.logger.log(
-              {
-                message,
-                page: this.ctxPrefix,
-                username,
-                operation: info.operation.operation,
-                fieldName: info.fieldName,
-                values: `${Object.keys(values).length > 0 ? JSON.stringify(values) : ''}`,
-              },
-              resolverName,
-            ),
-          ),
+          tap(() => {
+            try {
+              this.logger.log(
+                {
+                  message,
+                  page: this.ctxPrefix,
+                  username,
+                  operation: info.operation.operation,
+                  fieldName: info.fieldName,
+                  values: `${Object.keys(values).length > 0 ? JSON.stringify(values) : ''}`,
+                  function: context.getHandler().name,
+                },
+                resolverName,
+              );
+              // eslint-disable-next-line no-empty
+            } catch {}
+          }),
         );
       }
     }
@@ -119,16 +127,20 @@ export class LoggingInterceptor implements NestInterceptor {
     const { statusCode } = res;
     const message = `Outgoing response: statusCode: ${statusCode}, Method: ${method}, URL: ${url}`;
 
-    this.logger.log(
-      {
-        page: this.ctxPrefix,
-        message,
-        body,
-        statusCode,
-        username,
-      },
-      this.ctxPrefix,
-    );
+    try {
+      this.logger.log(
+        {
+          page: this.ctxPrefix,
+          message,
+          body,
+          statusCode,
+          username,
+          function: context.getHandler().name,
+        },
+        this.ctxPrefix,
+      );
+      // eslint-disable-next-line no-empty
+    } catch {}
   }
 
   /**

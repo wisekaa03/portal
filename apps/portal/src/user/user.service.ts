@@ -243,6 +243,7 @@ export class UserService {
       this.logger.error('Unable to save data in `profile`. Unknown error.', {
         error: 'Unknown',
         context: UserService.name,
+        function: 'fromLdap',
         ...loggerContext,
       });
 
@@ -272,6 +273,7 @@ export class UserService {
           this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
             error,
             context: UserService.name,
+            function: 'fromLdap',
             ...loggerContext,
           });
 

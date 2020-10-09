@@ -31,13 +31,19 @@ import { UserResolver } from './user.resolver';
 
     {
       provide: LDAP_SYNC_SERVICE,
-      useFactory: (configService: ConfigService) =>
-        ClientProxyFactory.create({
-          transport: Transport.REDIS,
-          options: {
-            url: configService.get<string>('MICROSERVICE_URL'),
-          },
-        }),
+      useFactory: (configService: ConfigService) => {
+        const microservice = configService.get<string>('MICROSERVICE_URL');
+        if (microservice) {
+          return ClientProxyFactory.create({
+            transport: Transport.REDIS,
+            options: {
+              url: microservice,
+            },
+          });
+        }
+
+        return null;
+      },
       inject: [ConfigService],
     },
   ],
