@@ -30,8 +30,6 @@ import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserService {
-  dbCacheTtl = 10000;
-
   constructor(
     @Inject(LDAP_SYNC_SERVICE) private readonly client: ClientProxy,
     private readonly configService: ConfigService,
@@ -41,9 +39,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly ldapService: LdapService,
-  ) {
-    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
-  }
+  ) {}
 
   /**
    * Compare password
@@ -233,7 +229,7 @@ export class UserService {
       this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
         error,
         context: UserService.name,
-        function: 'fromLdap',
+        function: this.fromLdap.name,
         ...loggerContext,
       });
 
@@ -243,7 +239,7 @@ export class UserService {
       this.logger.error('Unable to save data in `profile`. Unknown error.', {
         error: 'Unknown',
         context: UserService.name,
-        function: 'fromLdap',
+        function: this.fromLdap.name,
         ...loggerContext,
       });
 
@@ -259,7 +255,7 @@ export class UserService {
       this.logger.error(`Unable to save data in "group": ${error.toString()}`, {
         error,
         context: UserService.name,
-        function: 'fromLdap',
+        function: this.fromLdap.name,
         ...loggerContext,
       });
 
@@ -273,7 +269,7 @@ export class UserService {
           this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
             error,
             context: UserService.name,
-            function: 'fromLdap',
+            function: this.fromLdap.name,
             ...loggerContext,
           });
 
