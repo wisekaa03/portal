@@ -4066,9 +4066,9 @@
     webpack-log "^1.1.2"
 
 "@willsoto/nestjs-prometheus@*":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@willsoto/nestjs-prometheus/-/nestjs-prometheus-1.0.0.tgz#181d01777637d1087c3ccb9edaf006767ab9c6b3"
-  integrity sha512-prq86UZYFEPTVT5DCH1WzFvhhmwmDgWjaXQLI9l4FwwMmpTWwq+ZH9WOAmM3k4+K/lqWvKH7fmBuD2JeQj3gOQ==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@willsoto/nestjs-prometheus/-/nestjs-prometheus-2.0.0.tgz#81011c8a50e4713cc4ee32d192a113a251082b5f"
+  integrity sha512-C1E1WywFcIwLz9k/QpkGwHWCGb7AJQIDsr/9GGINbsejHRGt1YbDuKi3xn9kOeBgLSjmlEVjZ6EdC7XoaGTq5Q==
 
 "@wry/context@^0.5.2":
   version "0.5.2"
