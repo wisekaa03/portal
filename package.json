@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.12",
+  "version": "4.17.13",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -157,7 +157,7 @@
     "express": "*",
     "express-session": "*",
     "fast-safe-stringify": "*",
-    "file-loader": "*",
+    "file-loader": "^6",
     "filesize": "*",
     "fs-capacitor": "*",
     "graphql": "*",
@@ -225,7 +225,7 @@
     "tsconfig-paths": "*",
     "typeorm": "*",
     "typeorm-graphql-pagination": "*",
-    "url-loader": "*",
+    "url-loader": "^4",
     "uuid": "*",
     "winston": "^3",
     "ws": "*"
