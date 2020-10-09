@@ -67,10 +67,19 @@ export class AuthService {
     password: string;
     loggerContext: LoggerContext;
   }): Promise<UserEntity> {
-    this.logger.info(`User login: username = "${username}"`, { context: AuthService.name, function: 'login', ...loggerContext });
+    this.logger.info(`User login: username = "${username}"`, {
+      context: AuthService.name,
+      function: this.login.name,
+      ...loggerContext,
+    });
 
     const ldapUser = await this.ldapService.authenticate({ username, password, loggerContext }).catch((error) => {
-      this.logger.error(`LDAP login: ${error.toString()}`, { error, context: AuthService.name, function: 'login', ...loggerContext });
+      this.logger.error(`LDAP login: ${error.toString()}`, {
+        error,
+        context: AuthService.name,
+        function: this.login.name,
+        ...loggerContext,
+      });
 
       if (error instanceof InvalidCredentialsError) {
         throw new UnauthorizedException(__DEV__ ? error : undefined);
@@ -86,8 +95,7 @@ export class AuthService {
           this.logger.error(`User is Disabled: ${user.username}`, {
             error: 'User is Disabled',
             context: AuthService.name,
-
-            function: 'login',
+            function: this.login.name,
             ...loggerContext,
           });
 
@@ -100,7 +108,7 @@ export class AuthService {
         this.logger.error(`Error: not found user: ${error.toString()}`, {
           error,
           context: AuthService.name,
-          function: 'login',
+          function: this.login.name,
           ...loggerContext,
         });
 
