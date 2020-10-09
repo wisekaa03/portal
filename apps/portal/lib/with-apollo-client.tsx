@@ -54,12 +54,18 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
               // stack: extensions?.exception?.stacktrace,
               statusCode: extensions?.exception?.response?.statusCode,
               context: 'GraphQL backend',
+              function: 'errorMiddleware',
             });
           }
         });
       }
       if (networkError) {
-        logger.error({ message: `NetworkError: ${networkError.toString()}`, error: networkError, context: 'GraphQL backend' });
+        logger.error({
+          message: `NetworkError: ${networkError.toString()}`,
+          error: networkError,
+          context: 'GraphQL backend',
+          function: 'errorMiddleware',
+        });
       }
     } else {
       if (graphQLErrors) {
@@ -74,6 +80,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
               // stack: extensions?.exception?.stacktrace,
               statusCode: extensions?.exception?.response?.statusCode,
               context: 'GraphQL frontend',
+              function: 'errorMiddleware',
             });
           } else {
             Router.push({ pathname: AUTH_PAGE, query: { redirect: getRedirect(window.location.pathname) } });
@@ -81,7 +88,12 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
         });
       }
       if (networkError) {
-        logger.error({ message: `NetworkError: ${networkError.toString()}`, error: networkError, context: 'GraphQL frontend' });
+        logger.error({
+          message: `NetworkError: ${networkError.toString()}`,
+          error: networkError,
+          context: 'GraphQL frontend',
+          function: 'errorMiddleware',
+        });
       }
     }
   });
@@ -225,9 +237,10 @@ export const withApolloClient = (
               message: `Query "CURRENT_USER": ${error.toString()}`,
               statusCode: 500,
               error,
-              context: 'withApolloClient',
+              context: 'GraphQL backend',
               username: request?.user?.username,
               headers: request?.headers,
+              function: 'withApolloClient',
             });
           }
         }
@@ -266,9 +279,10 @@ export const withApolloClient = (
             logger.error({
               message: `getDataFromTree: ${error.toString()}`,
               error,
-              context: 'withApolloClient',
+              context: 'GraphQL backend',
               username: request?.user?.username,
               headers: request?.headers,
+              function: 'withApolloClient',
             });
           }
         }

@@ -91,7 +91,11 @@ export class GroupService {
             if (current.status === 'fulfilled') {
               return accumulator.concat(current.value);
             }
-            this.logger.error(`Groups error: ${current.reason}`, { error: current.reason, context: GroupService.name });
+            this.logger.error(`Groups error: ${current.reason}`, {
+              error: current.reason,
+              context: GroupService.name,
+              function: 'fromLdapUser',
+            });
 
             return accumulator;
           }, [] as GroupEntity[]),
@@ -138,7 +142,7 @@ export class GroupService {
    */
   bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[]> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: GroupService.name });
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: GroupService.name, function: 'bulkSave' });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     });
@@ -152,7 +156,7 @@ export class GroupService {
    */
   save = async (group: GroupEntity): Promise<GroupEntity> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: GroupService.name });
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: GroupService.name, function: 'save' });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     });

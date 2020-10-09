@@ -83,9 +83,9 @@ export class DocFlowService {
       });
 
       if (this.cache.store) {
-        logger.debug('Redis connection: success', { context: DocFlowService.name });
+        logger.debug('Redis connection: success', { context: DocFlowService.name, function: 'constructor' });
       } else {
-        logger.error('Redis connection: not connected', { context: DocFlowService.name });
+        logger.error('Redis connection: not connected', { context: DocFlowService.name, function: 'constructor' });
       }
     }
   }
@@ -133,8 +133,12 @@ export class DocFlowService {
       .executeAsync(requestSOAP, { timeout: TIMEOUT })
       .then((message: DataResult<DataFiles<DocFlowFileSOAP>> | DataResult<DataError>) => {
         if (docFlowData<DataFiles>(message[0]?.return)) {
-          this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-          // this.logger.info(`docFlowFiles: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+          this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`, {
+            context: DocFlowService.name,
+            function: 'docFlowFiles',
+            ...loggerContext,
+          });
+          // this.logger.info(`docFlowFiles: [Response] ${client.lastResponse}`, { context:DocFlowService.name, function:'docFlowFiles' });
 
           if (message[0]?.return) {
             return {
@@ -148,9 +152,22 @@ export class DocFlowService {
         throw new ForbiddenException(docFlowError(message[0]?.return));
       })
       .catch((error: Error | ForbiddenException) => {
-        this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-        this.logger.info(`docFlowFiles: [Response] ${soap.lastResponse}`, { context: DocFlowService.name, ...loggerContext });
-        this.logger.error(`docFlowFiles: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+        this.logger.error(`docFlowFiles: [Request] ${soap.lastRequest}`, {
+          context: DocFlowService.name,
+          function: 'docFlowFiles',
+          ...loggerContext,
+        });
+        this.logger.error(`docFlowFiles: [Response] ${soap.lastResponse}`, {
+          context: DocFlowService.name,
+          function: 'docFlowFiles',
+          ...loggerContext,
+        });
+        this.logger.error(`docFlowFiles: ${error.toString()}`, {
+          error,
+          context: DocFlowService.name,
+          function: 'docFlowFiles',
+          ...loggerContext,
+        });
 
         if (error instanceof ForbiddenException) {
           return { error: [error] };
@@ -250,7 +267,12 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(`docFlowTasks: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+          this.logger.error(`docFlowTasks: ${error.toString()}`, {
+            error,
+            context: DocFlowService.name,
+            function: 'docFlowTasks',
+            ...loggerContext,
+          });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -319,7 +341,11 @@ export class DocFlowService {
           .then((message: DataResult<DataItems<DataObject<DocFlowTaskSOAP>>> | DataResult<DataError>) => {
             if (docFlowData<DataItems>(message[0]?.return)) {
               if (message[0] && Array.isArray(message[0].return?.items)) {
-                this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
+                this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`, {
+                  context: DocFlowService.name,
+                  function: 'docFlowTasks',
+                  ...loggerContext,
+                });
                 // this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
 
                 return this.docFlowTasksWithFiles({ soap: client, tasksSOAP: message[0].return.items, loggerContext });
@@ -331,9 +357,22 @@ export class DocFlowService {
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
           .catch((error: Error | ForbiddenException) => {
-            this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.error(`docFlowTasks: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowTasks: [Request] ${client.lastRequest}`, {
+              context: DocFlowService.name,
+              function: 'docFlowTasks',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowTasks: [Response] ${client.lastResponse}`, {
+              context: DocFlowService.name,
+              function: 'docFlowTasks',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowTasks: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowTasks',
+              ...loggerContext,
+            });
 
             if (error instanceof ForbiddenException) {
               throw error;
@@ -389,7 +428,12 @@ export class DocFlowService {
               }
             }
           } catch (error) {
-            this.logger.error(`docFlowTasksCache: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowTasksCache: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowTasksCache',
+              ...loggerContext,
+            });
           }
         })();
 
@@ -406,7 +450,12 @@ export class DocFlowService {
 
       return ticketsTasks;
     } catch (error) {
-      this.logger.error(`docFlowTasksCache: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+      this.logger.error(`docFlowTasksCache: ${error.toString()}`, {
+        error,
+        context: DocFlowService.name,
+        function: 'docFlowTasksCache',
+        ...loggerContext,
+      });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -446,7 +495,12 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(`docFlowTask: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+          this.logger.error(`docFlowTask: ${error.toString()}`, {
+            error,
+            context: DocFlowService.name,
+            function: 'docFlowTask',
+            ...loggerContext,
+          });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -477,12 +531,21 @@ export class DocFlowService {
 
                 if (Array.isArray(tasks) && tasks.length > 0) {
                   if (tasks.length > 1) {
-                    this.logger.info('docFlowTask: result.length > 1 ??', { context: DocFlowService.name, ...loggerContext });
+                    this.logger.info('docFlowTask: result.length > 1 ??', {
+                      context: DocFlowService.name,
+                      function: 'docFlowTask',
+                      ...loggerContext,
+                    });
                   }
                   const taskWithoutFiles = tasks.pop();
                   if (taskWithoutFiles) {
-                    this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-                    // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+                    this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`, {
+                      context: DocFlowService.name,
+                      function: 'docFlowTask',
+                      ...loggerContext,
+                    });
+                    // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
+                    // { context: DocFlowService.name, function: 'docFlowTask' });
 
                     const result = this.docFlowTaskWithFiles({ soap: client, task: taskWithoutFiles, loggerContext });
                     return result;
@@ -496,9 +559,22 @@ export class DocFlowService {
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
           .catch((error: Error | ForbiddenException | NotFoundException) => {
-            this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.info(`docFlowTask: [Response] ${client.lastResponse}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.error(`docFlowTask: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowTask: [Request] ${client.lastRequest}`, {
+              context: DocFlowService.name,
+              function: 'docFlowTask',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowTask: [Response] ${client.lastResponse}`, {
+              context: DocFlowService.name,
+              function: 'docFlowTask',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowTask: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowTask',
+              ...loggerContext,
+            });
 
             if (error instanceof ForbiddenException) {
               throw error;
@@ -552,7 +628,12 @@ export class DocFlowService {
               }
             }
           } catch (error) {
-            this.logger.error(`docFlowTaskCache: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowTaskCache: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowTaskCache',
+              ...loggerContext,
+            });
           }
         })();
 
@@ -569,7 +650,12 @@ export class DocFlowService {
 
       return ticketsTask;
     } catch (error) {
-      this.logger.error(`docFlowTaskCache: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+      this.logger.error(`docFlowTaskCache: ${error.toString()}`, {
+        error,
+        context: DocFlowService.name,
+        function: 'docFlowTaskCache',
+        ...loggerContext,
+      });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -609,7 +695,12 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(`docFlowCurrentUser: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+          this.logger.error(`docFlowCurrentUser: ${error.toString()}`, {
+            error,
+            context: DocFlowService.name,
+            function: 'docFlowCurrentUser',
+            ...loggerContext,
+          });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -629,7 +720,11 @@ export class DocFlowService {
           )
           .then((message: DataResult<DataUser<DocFlowUserSOAP>> | DataResult<DataError>) => {
             if (docFlowData<DataUser>(message[0]?.return)) {
-              this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
+              this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`, {
+                context: DocFlowService.name,
+                function: 'docFlowCurrentUser',
+                ...loggerContext,
+              });
               // this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
 
               if (message[0]?.return?.user) {
@@ -642,9 +737,22 @@ export class DocFlowService {
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
           .catch((error: Error | ForbiddenException | NotFoundException) => {
-            this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.error(`docFlowCurrentUser: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowCurrentUser: [Request] ${client.lastRequest}`, {
+              context: DocFlowService.name,
+              function: 'docFlowCurrentUser',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowCurrentUser: [Response] ${client.lastResponse}`, {
+              context: DocFlowService.name,
+              function: 'docFlowCurrentUser',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowCurrentUser: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowCurrentUser',
+              ...loggerContext,
+            });
 
             if (error instanceof ForbiddenException) {
               throw error;
@@ -692,7 +800,12 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(`docFlowInternalDocument: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+          this.logger.error(`docFlowInternalDocument: ${error.toString()}`, {
+            error,
+            context: DocFlowService.name,
+            function: 'docFlowInternalDocument',
+            ...loggerContext,
+          });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -720,9 +833,12 @@ export class DocFlowService {
               if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
                 this.logger.info(`docFlowInternalDocument: [Request] ${client.lastRequest}`, {
                   context: DocFlowService.name,
+
+                  function: 'docFlowInternalDocument',
                   ...loggerContext,
                 });
-                // this.logger.info(`docFlowInternalDocument: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+                // this.logger.info(`docFlowInternalDocument: [Response] ${client.lastResponse}`,
+                // { context: DocFlowService.name, function: 'docFlowInternalDocument' });
 
                 return message[0].return.objects.map((t) => docFlowInternalDocument(t));
               }
@@ -733,15 +849,24 @@ export class DocFlowService {
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
           .catch((error: Error | ForbiddenException | NotFoundException) => {
-            this.logger.info(`docFlowInternalDocument: [Request] ${client.lastRequest}`, {
+            this.logger.error(`docFlowInternalDocument: [Request] ${client.lastRequest}`, {
               context: DocFlowService.name,
+
+              function: 'docFlowInternalDocument',
               ...loggerContext,
             });
-            this.logger.info(`docFlowInternalDocument: [Response] ${client.lastResponse}`, {
+            this.logger.error(`docFlowInternalDocument: [Response] ${client.lastResponse}`, {
               context: DocFlowService.name,
+
+              function: 'docFlowInternalDocument',
               ...loggerContext,
             });
-            this.logger.error(`docFlowInternalDocument: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowInternalDocument: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowInternalDocument',
+              ...loggerContext,
+            });
 
             if (error instanceof ForbiddenException) {
               throw error;
@@ -802,6 +927,9 @@ export class DocFlowService {
           } catch (error) {
             this.logger.error(`docFlowInternalDocumentCache: ${error.toString()}`, {
               error,
+
+              function: 'docFlowInternalDocumentCache',
+
               context: DocFlowService.name,
               ...loggerContext,
             });
@@ -821,7 +949,12 @@ export class DocFlowService {
 
       return internalDocumentCache;
     } catch (error) {
-      this.logger.error(`docFlowInternalDocumentCache: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+      this.logger.error(`docFlowInternalDocumentCache: ${error.toString()}`, {
+        error,
+        context: DocFlowService.name,
+        function: 'docFlowInternalDocumentCache',
+        ...loggerContext,
+      });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     }
@@ -861,7 +994,12 @@ export class DocFlowService {
           },
         })
         .catch((error: Error) => {
-          this.logger.error(`docFlowFile: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+          this.logger.error(`docFlowFile: ${error.toString()}`, {
+            error,
+            context: DocFlowService.name,
+            function: 'docFlowFile',
+            ...loggerContext,
+          });
 
           throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -901,14 +1039,21 @@ export class DocFlowService {
           .then((message: DataResult<DataObjects<DocFlowFileSOAP>> | DataResult<DataError>) => {
             if (docFlowData<DataObjects>(message[0]?.return)) {
               if (message[0] && Array.isArray(message[0].return?.objects)) {
-                this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-                // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+                this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`, {
+                  context: DocFlowService.name,
+                  function: 'docFlowFile',
+                  ...loggerContext,
+                });
+                // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
+                // { context: DocFlowService.name, function: 'docFlowFile' });
 
                 const result = message[0].return.objects.map((f) => docFlowFile(f));
 
                 if (Array.isArray(result) && result.length > 1) {
                   this.logger.info('docFlowFile: result.length > 1 ? Something wrong...', {
                     context: DocFlowService.name,
+
+                    function: 'docFlowFile',
                     ...loggerContext,
                   });
                 }
@@ -922,9 +1067,22 @@ export class DocFlowService {
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
           .catch((error: Error | ForbiddenException | NotFoundException) => {
-            this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.info(`docFlowFile: [Response] ${client.lastResponse}`, { context: DocFlowService.name, ...loggerContext });
-            this.logger.error(`docFlowFile: ${error.toString()}`, { error, context: DocFlowService.name, ...loggerContext });
+            this.logger.error(`docFlowFile: [Request] ${client.lastRequest}`, {
+              context: DocFlowService.name,
+              function: 'docFlowFile',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowFile: [Response] ${client.lastResponse}`, {
+              context: DocFlowService.name,
+              function: 'docFlowFile',
+              ...loggerContext,
+            });
+            this.logger.error(`docFlowFile: ${error.toString()}`, {
+              error,
+              context: DocFlowService.name,
+              function: 'docFlowFile',
+              ...loggerContext,
+            });
 
             if (error instanceof ForbiddenException) {
               throw error;

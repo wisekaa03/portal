@@ -251,7 +251,12 @@ export class ProfileService {
         cache,
       })
       .catch((error) => {
-        this.logger.error(`Profile error: ${error.toString()}`, { error, context: ProfileService.name, ...loggerContext });
+        this.logger.error(`Profile error: ${error.toString()}`, {
+          error,
+          context: ProfileService.name,
+          function: 'fromLoginIdentificator',
+          ...loggerContext,
+        });
 
         return undefined;
       });
@@ -543,7 +548,12 @@ export class ProfileService {
    */
   bulkSave = async ({ profiles, loggerContext }: { profiles: ProfileEntity[]; loggerContext?: LoggerContext }): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: ProfileService.name, ...loggerContext });
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
+        error,
+        context: ProfileService.name,
+        function: 'bulkSave',
+        ...loggerContext,
+      });
 
       throw error;
     });
@@ -578,6 +588,8 @@ export class ProfileService {
       .catch((error: Error) => {
         this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
           error,
+
+          function: 'save',
           context: ProfileService.name,
           ...loggerContext,
         });

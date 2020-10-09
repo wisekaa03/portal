@@ -71,7 +71,7 @@ export class AuthResolver {
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, username });
+        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, function: 'login', username });
 
         throw new UnauthorizedException(error);
       }
@@ -101,7 +101,7 @@ export class AuthResolver {
   ): Promise<LoginEmail> {
     const loggerContext = getUsername(request);
     return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
-      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name, ...loggerContext });
+      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name, function: 'loginEmail', ...loggerContext });
 
       return {
         login: false,
@@ -120,7 +120,7 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') request: Request): Promise<boolean> {
-    this.logger.info('User logout', { context: AuthResolver.name, ...getUsername(request) });
+    this.logger.info('User logout', { context: AuthResolver.name, function: 'logout', ...getUsername(request) });
 
     if (request.session) {
       request.logOut();
@@ -142,7 +142,7 @@ export class AuthResolver {
   @UseGuards(GqlAuthGuard)
   async cacheReset(@Context('req') request: Request): Promise<boolean> {
     const loggerContext = getUsername(request);
-    this.logger.info('Cache reset', { context: AuthResolver.name, ...loggerContext });
+    this.logger.info('Cache reset', { context: AuthResolver.name, function: 'cacheReset', ...loggerContext });
 
     return this.authService.cacheReset({ loggerContext });
   }

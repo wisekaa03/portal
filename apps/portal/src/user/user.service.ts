@@ -230,7 +230,12 @@ export class UserService {
     loggerContext?: LoggerContext;
   }): Promise<UserEntity> {
     const profile = await this.profileService.fromLdap({ ldapUser, loggerContext }).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
+      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
+        error,
+        context: UserService.name,
+        function: 'fromLdap',
+        ...loggerContext,
+      });
 
       throw error;
     });
@@ -250,7 +255,12 @@ export class UserService {
     }
 
     const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
+      this.logger.error(`Unable to save data in "group": ${error.toString()}`, {
+        error,
+        context: UserService.name,
+        function: 'fromLdap',
+        ...loggerContext,
+      });
 
       return undefined;
     });
@@ -323,7 +333,12 @@ export class UserService {
    */
   bulkSave = async ({ user, loggerContext }: { user: UserEntity[]; loggerContext?: LoggerContext }): Promise<UserEntity[]> =>
     this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logger.error(`Unable to save data(s) in "user": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
+      this.logger.error(`Unable to save data(s) in "user": ${error.toString()}`, {
+        error,
+        context: UserService.name,
+        function: 'bulkSave',
+        ...loggerContext,
+      });
 
       throw error;
     });
@@ -357,7 +372,12 @@ export class UserService {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error(`Unable to save data in "user": ${error.toString()}`, { error, context: UserService.name, ...loggerContext });
+        this.logger.error(`Unable to save data in "user": ${error.toString()}`, {
+          error,
+          context: UserService.name,
+          function: 'save',
+          ...loggerContext,
+        });
 
         throw error;
       });
