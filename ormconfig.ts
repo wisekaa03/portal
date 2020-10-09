@@ -1,7 +1,11 @@
 /** @format */
 
 //#region Imports Local
+import { WinstonModule } from 'nest-winston';
 import { ConfigService } from '@app/config/config.service';
+
+import { winstonOptions } from '@back/shared/logger.options';
+import { TypeOrmLogger } from '@back/shared/typeorm.logger';
 
 import { GroupEntity } from '@back/group/group.entity';
 import { ProfileEntity } from '@back/profile/profile.entity';
@@ -15,6 +19,7 @@ const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 
 const configService = new ConfigService('.local/.env');
+const logger = WinstonModule.createLogger(winstonOptions());
 
 module.exports = {
   name: 'default',
@@ -33,7 +38,7 @@ module.exports = {
   synchronize: configService.get('DATABASE_SYNCHRONIZE'),
   dropSchema: configService.get('DATABASE_DROP_SCHEMA'),
   logging: 'all',
-  logger: 'simple-console',
+  logger: new TypeOrmLogger(logger),
   entities,
   migrationsRun: configService.get('DATABASE_MIGRATIONS_RUN'),
   cache: false,

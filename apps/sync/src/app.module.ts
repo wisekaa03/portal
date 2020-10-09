@@ -4,16 +4,18 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
+import { parse as urlLibParse } from 'url';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
-import { RedisService } from 'nestjs-redis';
+import { RedisModule, RedisModuleOptions, RedisService } from 'nestjs-redis';
+import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
+import { redisOptions } from '@back/shared/redis.options';
 import { LoggingInterceptor } from '@app/logging.interceptor';
 import { winstonOptions } from '@back/shared/logger.options';
 import { UserModule } from '@back/user/user.module';
@@ -22,7 +24,10 @@ import { ProfileModule } from '@back/profile/profile.module';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { GroupModule } from '@back/group/group.module';
 import { GroupEntity } from '@back/group/group.entity';
-import { TypeOrmLogger } from '@back/shared/typeormlogger';
+import { TypeOrmLogger } from '@back/shared/typeorm.logger';
+
+import { ConfigModule, ConfigService } from '@app/config';
+
 import { AppController } from './app.controller';
 import { SyncService } from './app.service';
 //#endregion
@@ -39,31 +44,72 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     }),
     //#endregion
 
+    //#region Redis module
+    RedisModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const result: RedisModuleOptions[] = [];
+
+        if (configService.get<string>('DATABASE_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'DATABASE',
+              url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
+              ttl: configService.get<number>('DATABASE_REDIS_TTL') || 60,
+              prefix: 'DATABASE:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('LDAP_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'LDAP',
+              url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
+              ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
+              prefix: 'LDAP:',
+            }),
+          );
+        }
+
+        return result;
+      },
+    }),
+    //#endregion
+
     //#region LDAP Module
     LdapModule.registerAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService, redisService: RedisService) => ({
-        url: configService.get<string>('LDAP_URL'),
-        bindDN: configService.get<string>('LDAP_BIND_DN'),
-        bindCredentials: configService.get<string>('LDAP_BIND_PW'),
-        searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-        searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
-        searchScope: 'sub' as Scope,
-        groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-        groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
-        groupSearchScope: 'sub' as Scope,
-        groupDnProperty: 'dn',
-        groupSearchAttributes: ldapADattributes,
-        searchAttributes: ldapADattributes,
-        searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
-        searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
-        searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
-        searchScopeAllUsers: 'sub' as Scope,
-        searchAttributesAllUsers: ldapADattributes,
-        reconnect: true,
-        cache: redisService.getClient('LDAP'),
-        cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
-      }),
+      useFactory: async (configService: ConfigService, redisService: RedisService) => {
+        let cache: Redis | undefined;
+        try {
+          cache = redisService.getClient('LDAP');
+        } catch {
+          cache = undefined;
+        }
+        return {
+          url: configService.get<string>('LDAP_URL'),
+          bindDN: configService.get<string>('LDAP_BIND_DN'),
+          bindCredentials: configService.get<string>('LDAP_BIND_PW'),
+          searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
+          searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
+          searchScope: 'sub' as Scope,
+          groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
+          groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
+          groupSearchScope: 'sub' as Scope,
+          groupDnProperty: 'dn',
+          groupSearchAttributes: ldapADattributes,
+          searchAttributes: ldapADattributes,
+          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
+          searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
+          searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
+          searchScopeAllUsers: 'sub' as Scope,
+          searchAttributesAllUsers: ldapADattributes,
+          reconnect: true,
+          cache,
+          cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
+        };
+      },
     }),
     //#endregion
 

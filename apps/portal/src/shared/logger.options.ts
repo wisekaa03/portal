@@ -1,10 +1,31 @@
 /** @format */
 
-import type { Request } from 'express';
-import { utilities as nestWinstonModuleUtilities, WinstonModuleOptions } from 'nest-winston';
+import type { Format } from 'logform';
+import bare from 'cli-color/bare';
+import clc from 'cli-color';
+import safeStringify from 'fast-safe-stringify';
+import type { WinstonModuleOptions } from 'nest-winston';
 import winston from 'winston';
 import { WinstonGraylog } from '@pskzcompany/winston-graylog';
 import { ConfigService } from '@app/config/config.service';
+
+const nestLikeColorScheme: Record<string, bare.Format> = {
+  info: clc.greenBright,
+  error: clc.red,
+  warn: clc.yellow,
+  debug: clc.magentaBright,
+  verbose: clc.cyanBright,
+};
+
+const nestLike = (): Format =>
+  winston.format.printf(({ context, level, timestamp, message, ...meta }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const color = nestLikeColorScheme[level] || ((text: string): string => text);
+
+    return `${`${clc.yellow(level.charAt(0).toUpperCase() + level.slice(1))}\t`}${
+      typeof timestamp !== 'undefined' ? `${new Date(timestamp).toLocaleString()} ` : ''
+    }${typeof context !== 'undefined' ? `${clc.yellow(`[${context}]`)} ` : ''}${color(message)} - ${safeStringify(meta)}`;
+  });
 
 export const winstonOptions = (configService?: ConfigService): WinstonModuleOptions => {
   let level = 'debug';
@@ -19,11 +40,12 @@ export const winstonOptions = (configService?: ConfigService): WinstonModuleOpti
 
   const options = {
     level,
-    exitOnError: false,
+    // exitOnError: true,
+    handleExceptions: false,
     transports: [
       new winston.transports.Console({
         level,
-        format: winston.format.combine(winston.format.timestamp(), nestWinstonModuleUtilities.format.nestLike()),
+        format: winston.format.combine(winston.format.timestamp(), nestLike()),
       }) as winston.transport,
     ],
   };
@@ -35,12 +57,6 @@ export const winstonOptions = (configService?: ConfigService): WinstonModuleOpti
         graylog,
         defaultMeta: {
           environment: development ? 'development' : 'production',
-          username: (req: Request) => {
-            // eslint-disable-next-line no-debugger
-            debugger;
-
-            return req?.user?.username;
-          },
         },
       }) as winston.transport,
     );

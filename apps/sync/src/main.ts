@@ -4,8 +4,7 @@
 import { resolve } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { createLogger } from 'winston';
+import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -14,7 +13,7 @@ import { AppModule } from './app.module';
 //#endregion
 
 async function bootstrap(config: ConfigService): Promise<void> {
-  const loggerBootstrap = createLogger(winstonOptions(config));
+  const loggerBootstrap = WinstonModule.createLogger(winstonOptions(config));
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     logger: loggerBootstrap,
@@ -29,7 +28,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
   configService.logger = logger;
   app.useLogger(logger);
 
-  await app.listen(() => loggerBootstrap.log('Microservice is listening', 'Sync LDAP'));
+  await app.listen(() => loggerBootstrap.verbose!({ message: 'Microservice is listening', context: 'Sync LDAP', function: 'bootstrap' }));
 }
 
-bootstrap(new ConfigService(resolve(__dirname, '../../..', '.local/.env')));
+const configService = new ConfigService(resolve(__dirname, __DEV__ ? '../../..' : '../../..', '.local/.env'));
+bootstrap(configService);

@@ -41,7 +41,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
     const secureDirectory = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
-      loggerBootstrap.log('Using HTTPS certificate', 'Bootstrap');
+      loggerBootstrap.verbose!({ message: 'Using HTTPS certificate', context: 'Bootstrap' });
 
       // if (__DEV__) {
       //   // eslint-disable-next-line dot-notation
@@ -59,7 +59,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
       throw new Error('No files');
     }
   } catch (error) {
-    loggerBootstrap.warn(`There are no files "private.crt", "private.key" in "secure" directory." (${error.toString()})`, 'Bootstrap');
+    loggerBootstrap.warn({
+      message: `There are no files "private.crt", "private.key" in "secure" directory." (${error.toString()})`,
+      context: 'Bootstrap',
+      function: 'bootstrap',
+    });
   }
   const server = express();
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(
@@ -178,7 +182,11 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   //#region Start server
   await app.listen(configService.get<number>('PORT'));
-  loggerBootstrap.log(`HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`, 'Bootstrap');
+  loggerBootstrap.verbose!({
+    message: `HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`,
+    context: 'Bootstrap',
+    function: 'bootstrap',
+  });
   //#endregion
 
   //#region Webpack-HMR

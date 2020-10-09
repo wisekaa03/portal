@@ -5,7 +5,7 @@
 //#region Imports NPM
 import { resolve } from 'path';
 import { ClientRedis } from '@nestjs/microservices';
-import { createLogger } from 'winston';
+import { WinstonModule } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -14,7 +14,7 @@ import { winstonOptions } from '@back/shared/logger.options';
 //#endregion
 
 const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
-const logger = createLogger(winstonOptions(configService));
+const logger = WinstonModule.createLogger(winstonOptions(configService));
 
 async function bootstrap(config: ConfigService): Promise<boolean> {
   const client = new ClientRedis({
@@ -28,7 +28,7 @@ async function bootstrap(config: ConfigService): Promise<boolean> {
 
 bootstrap(configService)
   .then((result) => {
-    logger.log(`Microservice returns: ${result}`, 'Sync LDAP Job');
+    logger.verbose!({ message: `Microservice returns: ${result}`, context: 'Sync LDAP Job', function: 'bootstrap' });
   })
   .catch((error) => {
     throw new Error(`Synch job: Result: ${JSON.stringify(error)}`);

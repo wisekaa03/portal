@@ -53,9 +53,9 @@ export class FilesService {
       });
 
       if (this.cache.store) {
-        logger.debug('Redis connection: success', { context: FilesService.name });
+        logger.debug('Redis connection: success', { context: FilesService.name, function: 'constructor' });
       } else {
-        logger.error('Redis connection: not connected', { context: FilesService.name });
+        logger.error('Redis connection: not connected', { context: FilesService.name, function: 'constructor' });
       }
     }
 
@@ -229,7 +229,7 @@ export class FilesService {
    * @return {FilesFolder[]}
    */
   folderFiles = async (user: User, password: string, path = '/', cache = true): Promise<FilesFolder[]> => {
-    this.logger.info(`Files entity: path={${path}}`, { context: FilesService.name });
+    this.logger.info(`Files entity: path={${path}}`, { context: FilesService.name, function: 'folderFiles' });
 
     const lastPath =
       path === '/' || path === ''
@@ -277,7 +277,7 @@ export class FilesService {
    * @throws NotFoundError
    */
   putFile = async (path: string, promiseFile: Promise<FileUpload>, user: User, password: string): Promise<boolean> => {
-    this.logger.info(`Put files: path={${path}}`, { context: FilesService.name });
+    this.logger.info(`Put files: path={${path}}`, { context: FilesService.name, function: 'putFile' });
 
     const { createReadStream } = await promiseFile;
     this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
@@ -298,7 +298,7 @@ export class FilesService {
    * @throws {Error}
    */
   getFile = async (path: string, user: User, password: string, options?: FilesOptions, cache = true): Promise<FilesFile> => {
-    this.logger.info(`Get files: path={${path}}`, { context: FilesService.name });
+    this.logger.info(`Get files: path={${path}}`, { context: FilesService.name, function: 'getFile' });
 
     const cachedID = `file:${user.loginIdentificator}:${path}`;
     if (cache && this.cache) {
@@ -308,7 +308,11 @@ export class FilesService {
           fs.accessSync(cached.temporaryFile, fs.constants.R_OK);
           return { path: cached.path };
         } catch (error) {
-          this.logger.error(`Files: no read access at "${path}": ${error.toString()}`, { error, context: FilesService.name });
+          this.logger.error(`Files: no read access at "${path}": ${error.toString()}`, {
+            error,
+            context: FilesService.name,
+            function: 'getFile',
+          });
         }
       }
     }

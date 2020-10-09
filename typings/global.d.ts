@@ -6,6 +6,7 @@ declare const __PRODUCTION__: boolean;
 declare const __TEST__: boolean;
 declare const __SERVER__: boolean;
 
+declare module 'cli-color';
 declare module 'next-i18next/dist/commonjs/utils';
 
 declare namespace NodeJS {

@@ -4,7 +4,7 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
-import { parse as urlLibParse, UrlWithStringQuery } from 'url';
+import { parse as urlLibParse } from 'url';
 import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
@@ -27,21 +27,25 @@ import type { PortalWebsocket } from '@back/shared/types';
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
 
+import { redisOptions } from '@back/shared/redis.options';
+import { TypeOrmLogger } from '@back/shared/typeorm.logger';
+import { DateScalar } from '@back/shared/date.scalar';
+import { Upload } from '@back/shared/upload.scalar';
+import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
+
 import { ConfigModule, ConfigService } from '@app/config';
 import { winstonOptions } from '@back/shared/logger.options';
 import { LoggingInterceptor } from '@app/logging.interceptor';
 // import { CacheInterceptorProvider } from '@app/cache.interceptor';
+
 import { SoapModule } from '@app/soap';
 
-import { DateScalar } from '@back/shared/date.scalar';
-import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
 import { ControllersModule } from '@back/controllers/controllers.module';
 import { AuthModule } from '@back/auth/auth.module';
 import { UserModule } from '@back/user/user.module';
 import { NewsModule } from '@back/news/news.module';
 import { ProfileModule } from '@back/profile/profile.module';
 import { GroupModule } from '@back/group/group.module';
-import { Upload } from '@back/shared/upload.scalar';
 
 import { GroupEntity } from '@back/group/group.entity';
 import { ProfileEntity } from '@back/profile/profile.entity';
@@ -52,46 +56,10 @@ import { DocFlowModule } from '@back/docflow/docflow.module';
 import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
 
-import { TypeOrmLogger } from '@back/shared/typeormlogger';
-
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 //#endregion
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
-
-export const redisOptions = ({
-  name,
-  url,
-  ttl,
-  prefix,
-}: {
-  name: string;
-  url: UrlWithStringQuery;
-  ttl?: number;
-  prefix?: string;
-}): RedisModuleOptions => {
-  if (typeof url === 'object' && url && (url.protocol === 'redis:' || url.protocol === 'rediss:')) {
-    let username: string | undefined;
-    let password: string | undefined;
-    const db = parseInt(url.pathname?.slice(1) || '0', 10);
-    if (url.auth) {
-      [username, password] = url.auth.split(':');
-    }
-
-    return {
-      name,
-      host: url.hostname || 'localhost',
-      port: parseInt(url.port || '6379', 10),
-      username,
-      password,
-      db,
-      keyPrefix: prefix,
-      // ttl: TTL,
-    };
-  }
-
-  throw new Error(`Redis must be redis: or rediss: ${JSON.stringify(url)}`);
-};
 
 //#region TypeOrm config options
 export const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
@@ -148,7 +116,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     }),
     //#endregion
 
-    //#region Logging module
+    //#region Redis module
     RedisModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -165,7 +133,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           );
         }
 
-        if (configService.get<string>('LDAP')) {
+        if (configService.get<string>('LDAP_REDIS_URI')) {
           result.push(
             redisOptions({
               name: 'LDAP',
