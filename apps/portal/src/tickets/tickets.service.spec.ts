@@ -2,6 +2,8 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { RedisService } from 'nestjs-redis';
+
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { HttpModule } from '@nestjs/common';
@@ -9,6 +11,7 @@ import { TIMEOUT } from '@back/shared/constants';
 import { TicketsService } from './tickets.service';
 
 jest.mock('@app/config/config.service');
+jest.mock('nestjs-redis');
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -33,6 +36,7 @@ describe(TicketsService.name, () => {
       providers: [
         ConfigService,
         TicketsService,
+        RedisService,
         {
           provide: 'PUB_SUB',
           useValue: serviceMock,

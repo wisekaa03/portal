@@ -4,6 +4,7 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
+import { parse as urlLibParse, UrlWithStringQuery } from 'url';
 import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
@@ -16,6 +17,7 @@ import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+import { RedisModule, RedisModuleOptions } from 'nestjs-redis';
 // import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 //#endregion
 //#region Imports Local
@@ -57,6 +59,40 @@ import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
 
+export const redisOptions = ({
+  name,
+  url,
+  ttl,
+  prefix,
+}: {
+  name: string;
+  url: UrlWithStringQuery;
+  ttl?: number;
+  prefix?: string;
+}): RedisModuleOptions => {
+  if (typeof url === 'object' && url && (url.protocol === 'redis:' || url.protocol === 'rediss:')) {
+    let username: string | undefined;
+    let password: string | undefined;
+    const db = parseInt(url.pathname?.slice(1) || '0', 10);
+    if (url.auth) {
+      [username, password] = url.auth.split(':');
+    }
+
+    return {
+      name,
+      host: url.hostname || 'localhost',
+      port: parseInt(url.port || '6379', 10),
+      username,
+      password,
+      db,
+      keyPrefix: prefix,
+      // ttl: TTL,
+    };
+  }
+
+  throw new Error(`Redis must be redis: or rediss: ${JSON.stringify(url)}`);
+};
+
 //#region TypeOrm config options
 export const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
   name: 'default',
@@ -82,14 +118,19 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
   migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
   cache: {
     type: 'ioredis', // "ioredis/cluster"
-    options: configService.get<string>('DATABASE_REDIS_URI'),
+    options: redisOptions({
+      name: 'DATABASE',
+      url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
+      ttl: configService.get<number>('DATABASE_REDIS_TTL') || 600,
+      prefix: 'DATABASE:',
+    }),
     alwaysEnabled: true,
     /**
      * Time in milliseconds in which cache will expire.
      * This can be setup per-query.
      * Default value is 1000 which is equivalent to 1 second.
      */
-    duration: configService.get<number>('DATABASE_REDIS_TTL'),
+    duration: configService.get<number>('DATABASE_REDIS_TTL') || 600,
   },
 });
 //#endregion
@@ -104,6 +145,94 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     WinstonModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => winstonOptions(configService),
+    }),
+    //#endregion
+
+    //#region Logging module
+    RedisModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const result: RedisModuleOptions[] = [];
+
+        if (configService.get<string>('DATABASE_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'DATABASE',
+              url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
+              ttl: configService.get<number>('DATABASE_REDIS_TTL') || 60,
+              prefix: 'DATABASE:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('LDAP')) {
+          result.push(
+            redisOptions({
+              name: 'LDAP',
+              url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
+              ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
+              prefix: 'LDAP:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('SESSION_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'SESSION',
+              url: urlLibParse(configService.get<string>('SESSION_REDIS_URI')),
+              ttl: configService.get<number>('SESSION_REDIS_TTL') || 60,
+              prefix: 'SESSION:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('HTTP_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'SUBSCRIPTION',
+              url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
+              ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
+              prefix: 'SUBSCRIPTION:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'NEXTCLOUD',
+              url: urlLibParse(configService.get<string>('NEXTCLOUD_REDIS_URI')),
+              ttl: configService.get<number>('NEXTCLOUD_REDIS_TTL') || 60,
+              prefix: 'NEXTCLOUD:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('DOCFLOW_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'DOCFLOW',
+              url: urlLibParse(configService.get<string>('DOCFLOW_REDIS_URI')),
+              ttl: configService.get<number>('DOCFLOW_REDIS_TTL') || 60,
+              prefix: 'DOCFLOW:',
+            }),
+          );
+        }
+
+        if (configService.get<string>('TICKETS_REDIS_URI')) {
+          result.push(
+            redisOptions({
+              name: 'TICKETS',
+              url: urlLibParse(configService.get<string>('TICKETS_REDIS_URI')),
+              ttl: configService.get<number>('TICKETS_REDIS_TTL') || 60,
+              prefix: 'TICKETS:',
+            }),
+          );
+        }
+
+        return result;
+      },
     }),
     //#endregion
 

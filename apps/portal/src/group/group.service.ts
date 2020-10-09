@@ -16,16 +16,12 @@ import { GroupEntity } from './group.entity';
 
 @Injectable()
 export class GroupService {
-  dbCacheTtl = 10000;
-
   constructor(
     private readonly configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
-  ) {
-    this.dbCacheTtl = this.configService.get<number>('DATABASE_REDIS_TTL');
-  }
+  ) {}
 
   /**
    * All groups in Synchronization

@@ -3,8 +3,8 @@
 
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { RedisService } from 'nestjs-redis';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -15,6 +15,7 @@ import { FilesService } from './files.service';
 
 jest.mock('nextcloud-link');
 jest.mock('@app/config/config.service');
+jest.mock('nestjs-redis');
 
 const serviceMock = jest.fn(() => ({}));
 
@@ -27,6 +28,7 @@ describe('FilesService', () => {
       providers: [
         ConfigService,
         FilesService,
+        RedisService,
         {
           provide: 'PUB_SUB',
           useValue: serviceMock,

@@ -1,7 +1,6 @@
 /** @format */
 
 //#region Imports NPM
-import { parse as urlLibParse } from 'url';
 import fs from 'fs';
 import { resolve } from 'path';
 import { tmpNameSync } from 'tmp';
@@ -14,6 +13,7 @@ import { NextcloudClient } from 'nextcloud-link';
 import { FileUpload } from 'graphql-upload';
 import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
+import { RedisService } from 'nestjs-redis';
 //#endregion
 //#region Imports Local
 import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
@@ -29,7 +29,6 @@ export class FilesService {
   nextCloud: NextcloudClient;
 
   private ttl: number;
-  private cacheStore?: ReturnType<typeof RedisStore.create>;
   private cache?: ReturnType<typeof CacheManager.caching>;
 
   private staticFolder: string;
@@ -39,37 +38,24 @@ export class FilesService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly configService: ConfigService, // private readonly userService: UserService,
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
+    private readonly redisService: RedisService, // private readonly userService: UserService,
   ) {
     this.staticFolder = resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/tmp');
     this.staticFolderURL = 'tmp';
 
     this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
-    if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
-      const redisArray = urlLibParse(configService.get<string>('NEXTCLOUD_REDIS_URI'));
-      if (redisArray && (redisArray.protocol === 'redis:' || redisArray.protocol === 'rediss:')) {
-        let username: string | undefined;
-        let password: string | undefined;
-        const db = parseInt(redisArray.pathname?.slice(1) || '0', 10);
-        if (redisArray.auth) {
-          [username, password] = redisArray.auth.split(':');
-        }
+    const redisInstance = this.redisService.getClient('NEXTCLOUD');
+    if (redisInstance) {
+      this.cache = CacheManager.caching({
+        store: RedisStore,
+        redisInstance,
+        ttl: this.ttl,
+      });
 
-        this.cache = CacheManager.caching({
-          store: RedisStore,
-          host: redisArray.hostname,
-          port: parseInt(redisArray.port || '6379', 10),
-          username,
-          password,
-          db,
-          keyPrefix: 'NEXTCLOUD:',
-          ttl: this.ttl,
-        });
-
-        if (this.cache.store) {
-          logger.info('Redis connection: success', { context: FilesService.name });
-        } else {
-          logger.error('Redis connection: not connected', { context: FilesService.name });
-        }
+      if (this.cache.store) {
+        logger.debug('Redis connection: success', { context: FilesService.name });
+      } else {
+        logger.error('Redis connection: not connected', { context: FilesService.name });
       }
     }
 

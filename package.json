@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.10",
+  "version": "4.17.11",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -67,7 +67,7 @@
   "resolutions": {
     "**/**/@babel/core": "^7",
     "**/**/apollo-graphql": "^0.6",
-    "**/**/apollo-server-core": "^2.18",
+    "**/**/apollo-server-core": "^2",
     "**/**/graphql-upload": "^11",
     "**/**/fs-capacitor": "^6",
     "**/**/file-loader": "^6",
@@ -111,7 +111,8 @@
     "**/**/is-plain-object": "^3",
     "**/**/isobject": "^4",
     "**/**/isarray": "^2",
-    "**/**/node-fetch": "^2"
+    "**/**/node-fetch": "^2",
+    "**/**/rxjs": "^6"
   },
   "dependencies": {
     "@apollo/client": "*",
@@ -178,6 +179,7 @@
     "nest-next": "*",
     "nest-winston": "*",
     "nestjs-ldap": "*",
+    "nestjs-redis": "*",
     "next": "*",
     "next-compose-plugins": "*",
     "next-fonts": "*",
@@ -212,6 +214,7 @@
     "react-virtualized-auto-sizer": "*",
     "react-window": "*",
     "react-window-infinite-loader": "*",
+    "redis": "*",
     "reflect-metadata": "*",
     "rxjs": "*",
     "sharp": "*",
@@ -251,6 +254,7 @@
     "@storybook/preset-typescript": "*",
     "@storybook/react": "*",
     "@storybook/theming": "*",
+    "@types/anymatch": "*",
     "@types/apollo-upload-client": "*",
     "@types/cache-manager": "*",
     "@types/cache-manager-ioredis": "*",

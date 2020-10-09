@@ -1,7 +1,6 @@
 /** @format */
 
 //#region Imports NPM
-import { parse as urlLibParse } from 'url';
 import {
   Inject,
   Injectable,
@@ -14,12 +13,13 @@ import {
   UnprocessableEntityException,
   GatewayTimeoutException,
 } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { FileUpload } from 'graphql-upload';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { RedisService } from 'nestjs-redis';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -68,7 +68,6 @@ import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, rou
 @Injectable()
 export class TicketsService {
   private ttl: number;
-  private cacheStore?: ReturnType<typeof RedisStore.create>;
   private cache?: ReturnType<typeof CacheManager.caching>;
 
   constructor(
@@ -77,34 +76,21 @@ export class TicketsService {
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
     private readonly httpService: HttpService,
+    private readonly redisService: RedisService,
   ) {
     this.ttl = configService.get<number>('TICKETS_REDIS_TTL') || 900;
-    if (configService.get<string>('TICKETS_REDIS_URI')) {
-      const redisArray = urlLibParse(configService.get<string>('TICKETS_REDIS_URI'));
-      if (redisArray && (redisArray.protocol === 'redis:' || redisArray.protocol === 'rediss:')) {
-        let username: string | undefined;
-        let password: string | undefined;
-        const db = parseInt(redisArray.pathname?.slice(1) || '0', 10);
-        if (redisArray.auth) {
-          [username, password] = redisArray.auth.split(':');
-        }
+    const redisInstance = this.redisService.getClient('TICKETS');
+    if (redisInstance) {
+      this.cache = CacheManager.caching({
+        store: RedisStore,
+        redisInstance,
+        ttl: this.ttl,
+      });
 
-        this.cache = CacheManager.caching({
-          store: RedisStore,
-          host: redisArray.hostname,
-          port: parseInt(redisArray.port || '6379', 10),
-          username,
-          password,
-          db,
-          keyPrefix: 'TICKETS:',
-          ttl: this.ttl,
-        });
-
-        if (this.cache.store) {
-          logger.info('Redis connection: success', { context: TicketsService.name });
-        } else {
-          logger.error('Redis connection: not connected', { context: TicketsService.name });
-        }
+      if (this.cache.store) {
+        logger.debug('Redis connection: success', { context: TicketsService.name });
+      } else {
+        logger.error('Redis connection: not connected', { context: TicketsService.name });
       }
     }
   }

@@ -9,7 +9,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { LdapModule, Scope, ldapADattributes, LdapModuleOptions } from 'nestjs-ldap';
+import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
+import { RedisService } from 'nestjs-redis';
 //#endregion
 //#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -41,7 +42,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     //#region LDAP Module
     LdapModule.registerAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService, redisService: RedisService) => ({
         url: configService.get<string>('LDAP_URL'),
         bindDN: configService.get<string>('LDAP_BIND_DN'),
         bindCredentials: configService.get<string>('LDAP_BIND_PW'),
@@ -60,7 +61,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
         searchScopeAllUsers: 'sub' as Scope,
         searchAttributesAllUsers: ldapADattributes,
         reconnect: true,
-        cacheUrl: configService.get<string>('LDAP_REDIS_URI'),
+        cache: redisService.getClient('LDAP'),
         cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
       }),
     }),

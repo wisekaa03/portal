@@ -4,6 +4,7 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
+import { RedisService } from 'nestjs-redis';
 //#endregion
 //#region Imports Local
 import { ConfigModule, ConfigService } from '@app/config';
@@ -32,8 +33,8 @@ import { LocalStrategy } from './strategies/local.strategy';
 
     //#region LDAP Module
     LdapModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      inject: [ConfigService, RedisService],
+      useFactory: async (configService: ConfigService, redisService: RedisService) => ({
         url: configService.get<string>('LDAP_URL'),
         bindDN: configService.get<string>('LDAP_BIND_DN'),
         bindCredentials: configService.get<string>('LDAP_BIND_PW'),
@@ -52,8 +53,7 @@ import { LocalStrategy } from './strategies/local.strategy';
         searchScopeAllUsers: 'sub' as Scope,
         searchAttributesAllUsers: ldapADattributes,
         reconnect: true,
-        cacheUrl: configService.get<string>('LDAP_REDIS_URI'),
-        cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
+        cache: redisService.getClient('LDAP'),
         newObject: configService.get<string>('LDAP_NEW_BASE'),
       }),
     }),

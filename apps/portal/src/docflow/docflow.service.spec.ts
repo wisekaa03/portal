@@ -2,11 +2,14 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { RedisService } from 'nestjs-redis';
+
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { DocFlowService } from './docflow.service';
 
 jest.mock('@app/config/config.service');
+jest.mock('nestjs-redis');
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({
@@ -25,6 +28,7 @@ describe(DocFlowService.name, () => {
       providers: [
         ConfigService,
         DocFlowService,
+        RedisService,
         { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
         { provide: 'PUB_SUB', useValue: serviceMock },
         { provide: SoapService, useValue: serviceMock },

@@ -3,8 +3,8 @@
 
 //#region Imports NPM
 import { Module } from '@nestjs/common';
+import { RedisService } from 'nestjs-redis';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -16,16 +16,13 @@ import { ConfigService } from '@app/config';
   providers: [
     {
       provide: 'PUB_SUB',
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const host = configService.get<string>('HTTP_REDIS_URI')?.replace(/^redis:\/\/(.*?):(\d+)\/(\d+)$/, '$1');
-        const redisOptions = {
-          host,
-        };
+      inject: [ConfigService, RedisService],
+      useFactory: (configService: ConfigService, redisService: RedisService) => {
+        const redisInstance = redisService.getClient('SUBSCRIPTION');
 
         return new RedisPubSub({
-          publisher: new Redis(redisOptions),
-          subscriber: new Redis(redisOptions),
+          publisher: redisInstance,
+          subscriber: redisInstance,
         });
       },
     },
