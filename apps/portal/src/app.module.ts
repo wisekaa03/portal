@@ -22,7 +22,7 @@ import { RedisModule, RedisModuleOptions } from 'nestjs-redis';
 //#endregion
 //#region Imports Local
 import type { User } from '@lib/types';
-import type { PortalWebsocket } from '@back/shared/types';
+import type { GraphQLContext, WebsocketContext } from '@back/shared/types';
 
 import sessionRedis from '@back/shared/session-redis';
 import session from '@back/shared/session';
@@ -273,12 +273,12 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
               connectionParameters: Record<string, any>,
               websocket: WebSocket,
               context: ConnectionContext,
-            ): Promise<PortalWebsocket> => {
+            ): Promise<WebsocketContext> => {
               const user = await new Promise<User | undefined>((resolveOnConnect) => {
-                const request = (websocket as any)?.upgradeReq as Express.Request;
+                const request = (websocket as Record<string, unknown>)?.upgradeReq as Express.Request;
                 const response = ({} as unknown) as Express.Response;
 
-                auth(request, response, () => resolveOnConnect((websocket as any)?.upgradeReq?.session?.passport?.user || undefined));
+                auth(request, response, () => resolveOnConnect(request.session?.passport?.user || undefined));
               });
 
               if (user) {
@@ -295,7 +295,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           uploads: {
             maxFileSize,
           },
-          context: async ({ req, res, connection }) => {
+          context: async ({ req, res, connection }): Promise<GraphQLContext> => {
             // subscriptions
             if (connection) {
               return connection.context;

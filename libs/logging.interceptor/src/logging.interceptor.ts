@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 //#endregion
 //#region Imports Local
+import type { GraphQLContext } from '@back/shared/types/interfaces';
 import { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config/config.service';
 //#endregion
@@ -81,10 +82,11 @@ export class LoggingInterceptor implements NestInterceptor {
         const ctx: AppGraphQLExecutionContext = GqlExecutionContext.create(context);
         const resolverName = ctx.getClass().name;
         const info = ctx.getInfo();
-        const gqlCtx = ctx.getContext();
+        const gqlCtx = ctx.getContext<GraphQLContext>();
         const values = info.variableValues;
+        const { headers } = gqlCtx.req;
         const username = values.username ? values.username : gqlCtx.user?.username || '';
-        const message = `Incoming GraphQL ${resolverName} ${info.operation.operation} ${info.fieldName}`;
+        const message = `Incoming GraphQL ${resolverName} ${info.operation.operation}: ${info.fieldName}`;
 
         if (values.password) {
           values.password = '* MASKED *';
@@ -97,6 +99,7 @@ export class LoggingInterceptor implements NestInterceptor {
                 {
                   message,
                   page: this.ctxPrefix,
+                  headers,
                   username,
                   operation: info.operation.operation,
                   fieldName: info.fieldName,
@@ -120,7 +123,7 @@ export class LoggingInterceptor implements NestInterceptor {
    */
   private logNext(body: unknown, context: ExecutionContext): void {
     const req: Request = context.switchToHttp().getRequest<Request>();
-    const { method, url, user } = req;
+    const { method, url, user, headers } = req;
     const username = user?.username || '';
 
     const res: Response = context.switchToHttp().getResponse<Response>();
@@ -136,6 +139,7 @@ export class LoggingInterceptor implements NestInterceptor {
           statusCode,
           username,
           function: context.getHandler().name,
+          headers,
         },
         this.ctxPrefix,
       );
@@ -150,7 +154,7 @@ export class LoggingInterceptor implements NestInterceptor {
    */
   private logError(error: Error, context: ExecutionContext): void {
     const req: Request = context.switchToHttp().getRequest<Request>();
-    const { method, url, body, user } = req;
+    const { method, url, body, user, headers } = req;
 
     if (error instanceof HttpException) {
       const statusCode: number = error.getStatus();
@@ -167,6 +171,7 @@ export class LoggingInterceptor implements NestInterceptor {
             message,
             error,
             username: user?.username,
+            headers,
           },
           error.stack,
           this.ctxPrefix,
@@ -181,6 +186,7 @@ export class LoggingInterceptor implements NestInterceptor {
             body,
             message,
             username: user?.username,
+            headers,
           },
           this.ctxPrefix,
         );
@@ -191,6 +197,7 @@ export class LoggingInterceptor implements NestInterceptor {
           page: this.ctxPrefix,
           message: `Outgoing response: Method: ${method}, URL: ${url}`,
           username: user?.username,
+          headers,
         },
         error.stack,
         this.ctxPrefix,

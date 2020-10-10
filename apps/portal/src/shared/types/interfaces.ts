@@ -1,5 +1,6 @@
 /** @format */
 
+import type { Request, Response } from 'express';
 import type { IncomingMessage } from 'http';
 import type WebSocket from 'ws';
 import type { User } from '@lib/types';
@@ -8,10 +9,16 @@ export interface LoggerContext {
   [key: string]: string | undefined | null;
 }
 
-export interface PortalWebsocket {
+export interface WebsocketContext {
   user: User;
   req: IncomingMessage;
   socket: WebSocket;
+}
+
+export interface GraphQLContext {
+  user?: User;
+  req: Request;
+  res: Response;
 }
 
 export interface GraphQLQueryInput {

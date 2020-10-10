@@ -21,7 +21,7 @@ import type {
   TkFileInput,
   TkCommentInput,
 } from '@lib/types/tickets';
-import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
+import type { SubscriptionPayload, WebsocketContext } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';
 import { User } from '@lib/types/user.dto';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -96,7 +96,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTasks', {
-    filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: PortalWebsocket) =>
+    filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: WebsocketContext) =>
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkTasks>) => payload.object,
   })
@@ -186,7 +186,7 @@ export class TicketsResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('ticketsTask', {
-    filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: PortalWebsocket) =>
+    filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: WebsocketContext) =>
       payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code,
     resolve: (payload: SubscriptionPayload<TkEditTask>) => payload.object,
   })

@@ -20,7 +20,7 @@ import type {
   DocFlowInternalDocument,
   DocFlowInternalDocumentInput,
 } from '@lib/types/docflow';
-import type { SubscriptionPayload, PortalWebsocket } from '@back/shared/types';
+import type { SubscriptionPayload, WebsocketContext } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -65,7 +65,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTasks', {
-    filter: (payload: SubscriptionPayload<DocFlowTask[]>, variables: { tasks: DocFlowTasksInput }, context: PortalWebsocket) =>
+    filter: (payload: SubscriptionPayload<DocFlowTask[]>, variables: { tasks: DocFlowTasksInput }, context: WebsocketContext) =>
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<DocFlowTask[]>) => payload.object,
   })
@@ -100,7 +100,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription('docFlowTask', {
-    filter: (payload: SubscriptionPayload<DocFlowTask>, variables: { task: DocFlowTaskInput }, context: PortalWebsocket) =>
+    filter: (payload: SubscriptionPayload<DocFlowTask>, variables: { task: DocFlowTaskInput }, context: WebsocketContext) =>
       payload.object.id === variables.task.id,
     resolve: (payload: SubscriptionPayload<DocFlowTask>) => payload.object,
   })
@@ -138,7 +138,7 @@ export class DocFlowResolver {
     filter: (
       payload: SubscriptionPayload<DocFlowInternalDocument>,
       variables: { internalDocument: DocFlowInternalDocumentInput },
-      context: PortalWebsocket,
+      context: WebsocketContext,
     ) => payload.object.id === variables.internalDocument.id,
     resolve: (payload: SubscriptionPayload<DocFlowInternalDocument>) => payload.object,
   })
