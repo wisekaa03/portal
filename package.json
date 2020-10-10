@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.14",
+  "version": "4.17.15",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -346,7 +346,7 @@
     "ts-loader": "*",
     "typescript": "*",
     "webp-loader": "*",
-    "webpack": "*",
+    "webpack": "^4",
     "webpack-cli": "*",
     "webpack-node-externals": "*"
   }
