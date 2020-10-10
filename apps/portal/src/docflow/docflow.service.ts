@@ -457,7 +457,7 @@ export class DocFlowService {
         ...loggerContext,
       });
 
-      throw new InternalServerErrorException(__DEV__ ? error : undefined);
+      throw error;
     }
   };
 
@@ -657,7 +657,7 @@ export class DocFlowService {
         ...loggerContext,
       });
 
-      throw new InternalServerErrorException(__DEV__ ? error : undefined);
+      throw error;
     }
   };
 
@@ -956,7 +956,7 @@ export class DocFlowService {
         ...loggerContext,
       });
 
-      throw new InternalServerErrorException(__DEV__ ? error : undefined);
+      throw error;
     }
   };
 

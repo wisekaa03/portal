@@ -328,7 +328,7 @@ export class TicketsService {
         ...loggerContext,
       });
 
-      throw new InternalServerErrorException(__DEV__ ? error : undefined);
+      throw error;
     }
   };
 
@@ -637,7 +637,7 @@ export class TicketsService {
         ...loggerContext,
       });
 
-      throw new InternalServerErrorException(__DEV__ ? error : undefined);
+      throw error;
     }
   };
 
@@ -1079,7 +1079,7 @@ export class TicketsService {
         ...loggerContext,
       });
 
-      throw new InternalServerErrorException(__DEV__ ? error : undefined);
+      throw error;
     }
   };
 
