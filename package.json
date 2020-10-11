@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.18",
+  "version": "4.17.19",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -86,6 +86,13 @@
     "**/**/async": "^3",
     "**/**/axios": "^0",
     "**/**/bl": "^4",
+    "**/**/braces": "^3",
+    "**/**/filesize": "^6",
+    "**/**/clone-deep": "^4",
+    "**/**/color-convert": "^2",
+    "**/**/concat-stream": "^2",
+    "**/**/cosmiconfig": "^7",
+    "**/**/cross-spawn": "^7",
     "**/**/graphql-upload": "^11",
     "**/**/fs-capacitor": "^6",
     "**/**/file-loader": "^6",
