@@ -10,13 +10,13 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { LdapResponseUser, LdapService, LDAPAddEntry } from 'nestjs-ldap';
+import { LdapService } from 'nestjs-ldap';
+import type { LoggerContext, LdapResponseUser, LDAPAddEntry } from 'nestjs-ldap';
 import { compare } from 'bcrypt';
 import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import type { LoggerContext } from '@back/shared/types';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE, defaultUserSettings } from '@back/shared/constants';
 import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
 import { constructUploads } from '@back/shared/upload';

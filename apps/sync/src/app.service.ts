@@ -3,15 +3,15 @@
 //#region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
 import { LdapService } from 'nestjs-ldap';
+import type { LoggerContext } from 'nestjs-ldap';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { Contact, AllUsersInfo } from '@lib/types';
 import { GroupService } from '@back/group/group.service';
 import { UserService } from '@back/user/user.service';
 import { ProfileService } from '@back/profile/profile.service';
-import { LoggerContext } from '../../portal/src/shared/types/interfaces';
 //#endregion
 
 @Injectable()

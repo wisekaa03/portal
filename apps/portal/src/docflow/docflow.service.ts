@@ -18,6 +18,7 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
 import { RedisService } from 'nestjs-redis';
+import type { LoggerContext } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -40,7 +41,6 @@ import type {
   DocFlowInternalDocumentInput,
 } from '@lib/types/docflow';
 import type {
-  LoggerContext,
   SubscriptionPayload,
   DocFlowTaskSOAP,
   DocFlowUserSOAP,

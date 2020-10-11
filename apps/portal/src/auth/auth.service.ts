@@ -3,14 +3,13 @@
 //#region Imports NPM
 import { Injectable, Inject, HttpService, UnauthorizedException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { LdapService, InvalidCredentialsError } from 'nestjs-ldap';
+import { LdapService, InvalidCredentialsError, LoggerContext } from 'nestjs-ldap';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import type { LoginEmail, EmailSession } from '@lib/types/auth';
-import type { LoggerContext } from '@back/shared/types';
 import type { User } from '@lib/types/user.dto';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';

@@ -14,30 +14,21 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { FileUpload } from 'graphql-upload';
+import type { FileUpload } from 'graphql-upload';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import {
-  LdapService,
-  LdapResponseUser,
-  Change,
-  Attribute,
-  LDAPAddEntry,
-  NoSuchObjectError,
-  InsufficientAccessRightsError,
-  LdapError,
-} from 'nestjs-ldap';
+import { LdapService, Change, Attribute, NoSuchObjectError, InsufficientAccessRightsError } from 'nestjs-ldap';
+import type { LoggerContext, LdapResponseUser, LDAPAddEntry, LdapError } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import { Profile, SearchSuggestions, Gender, LoginService, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
+import type { User, Profile, SearchSuggestions, AllUsersInfo, ProfileInput } from '@lib/types';
+import { LoginService, Contact, Gender } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
 import { ImageService } from '@app/image';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from './profile.entity';
 import { PortalError } from '../shared/errors';
-import { LoggerContext } from '../shared/types/interfaces';
-import { User } from '../../lib/types/user.dto';
 //#endregion
 
 @Injectable()

@@ -3,9 +3,9 @@
 //#region Imports NPM
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import type { LoggerContext } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import type { LoggerContext } from '@back/shared/types';
 import { LDAP_SYNC } from '@back/shared/constants';
 import { SyncService } from './app.service';
 //#endregion
