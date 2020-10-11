@@ -6,7 +6,7 @@ import type WebSocket from 'ws';
 import type { User } from '@lib/types';
 
 export interface LoggerContext {
-  [key: string]: string | undefined | null;
+  [key: string]: string | unknown | null;
 }
 
 export interface WebsocketContext {
