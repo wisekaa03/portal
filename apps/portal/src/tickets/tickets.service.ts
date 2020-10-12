@@ -8,10 +8,9 @@ import {
   NotFoundException,
   NotImplementedException,
   InternalServerErrorException,
-  UnauthorizedException,
   UnsupportedMediaTypeException,
   UnprocessableEntityException,
-  GatewayTimeoutException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -144,7 +143,7 @@ export class TicketsService {
           client
             .GetRoutesAsync({ Log: user.username }, { timeout: TIMEOUT })
             .then((result: DataResult<TicketsSOAPRoutes>) => {
-              this.logger.info(`TicketsRoutes: [Request] ${client.lastRequest}`, {
+              this.logger.debug(`TicketsRoutes: [Request] ${client.lastRequest}`, {
                 context: TicketsService.name,
                 function: 'ticketsRoutes',
                 ...loggerContext,
@@ -397,7 +396,7 @@ export class TicketsService {
               { timeout: TIMEOUT },
             )
             .then((result: DataResult<TicketsSOAPTasks>) => {
-              this.logger.info(`TicketsTasks: [Request] ${client.lastRequest}`, {
+              this.logger.debug(`TicketsTasks: [Request] ${client.lastRequest}`, {
                 context: TicketsService.name,
                 function: 'ticketsTasks',
                 ...loggerContext,
@@ -410,7 +409,7 @@ export class TicketsService {
                 };
               }
 
-              this.logger.info(`TicketsTasks: [Response] ${client.lastResponse}`, {
+              this.logger.debug(`TicketsTasks: [Response] ${client.lastResponse}`, {
                 context: TicketsService.name,
                 function: 'ticketsTasks',
                 ...loggerContext,
@@ -700,7 +699,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -717,7 +716,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.info(`TicketsTaskNew: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`TicketsTaskNew: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsTaskNew',
             ...loggerContext,
@@ -736,7 +735,7 @@ export class TicketsService {
             } as TkTaskNew;
           }
 
-          this.logger.info(`TicketsTaskNew: [Response] ${client.lastResponse}`, { context: TicketsService.name, ...loggerContext });
+          this.logger.debug(`TicketsTaskNew: [Response] ${client.lastResponse}`, { context: TicketsService.name, ...loggerContext });
           throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
         })
         .catch((error: Error) => {
@@ -757,7 +756,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new InternalServerErrorException(__DEV__ ? error : undefined);
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
     }
 
@@ -869,7 +868,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -880,7 +879,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: DataResult<TicketsSOAPTask>) => {
-          this.logger.info(`TicketsTask: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`TicketsTask: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsTask',
             ...loggerContext,
@@ -896,7 +895,7 @@ export class TicketsService {
             }
           }
 
-          this.logger.info(`TicketsTask: [Response] ${client.lastResponse}`, {
+          this.logger.debug(`TicketsTask: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
             function: 'ticketsTask',
             ...loggerContext,
@@ -923,7 +922,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
     }
 
@@ -1118,7 +1117,14 @@ export class TicketsService {
           ntlm: true,
         })
         .catch((error) => {
-          throw error;
+          this.logger.error(`docFlowTasks: ${error.toString()}`, {
+            error,
+            context: TicketsService.name,
+            function: 'ticketsTaskEdit',
+            ...loggerContext,
+          });
+
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       const Attaches: AttachesSOAP = { Вложение: [] };
@@ -1150,7 +1156,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result: Record<string, any>) => {
-          this.logger.info(`TicketsTaskEdit: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`TicketsTaskEdit: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsTaskEdit',
             ...loggerContext,
@@ -1160,7 +1166,7 @@ export class TicketsService {
             return taskSOAP(result[0].return as TicketsTaskSOAP, TkWhere.SOAP1C);
           }
 
-          this.logger.info(`TicketsTaskEdit: [Response] ${client.lastResponse}`, {
+          this.logger.debug(`TicketsTaskEdit: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
             function: 'ticketsTaskEdit',
             ...loggerContext,
@@ -1170,24 +1176,24 @@ export class TicketsService {
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.error(`TicketsTaskEdit: [Request] ${client.lastRequest}`, {
+          this.logger.error(`ticketsTaskEdit: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsTaskEdit',
             ...loggerContext,
           });
-          this.logger.error(`TicketsTaskEdit: [Response] ${client.lastResponse}`, {
+          this.logger.error(`ticketsTaskEdit: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
             function: 'ticketsTaskEdit',
             ...loggerContext,
           });
-          this.logger.error(`TicketsTaskEdit: ${error.toString()}`, {
+          this.logger.error(`ticketsTaskEdit: ${error.toString()}`, {
             error,
             context: TicketsService.name,
             function: 'ticketsTaskEdit',
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
     }
 
@@ -1238,7 +1244,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -1249,7 +1255,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.info(`TicketsTaskFile: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`TicketsTaskFile: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsTaskFile',
             ...loggerContext,
@@ -1263,7 +1269,7 @@ export class TicketsService {
             };
           }
 
-          this.logger.info(`TicketsTaskFile: [Response] ${client.lastResponse}`, {
+          this.logger.debug(`TicketsTaskFile: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
             function: 'ticketsTaskFile',
             ...loggerContext,
@@ -1290,7 +1296,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
     }
 
@@ -1400,7 +1406,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       return client
@@ -1411,7 +1417,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.info(`ticketsComment: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`ticketsComment: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsComment',
             ...loggerContext,
@@ -1423,7 +1429,7 @@ export class TicketsService {
             };
           }
 
-          this.logger.info(`ticketsComment: [Response] ${client.lastResponse}`, {
+          this.logger.debug(`ticketsComment: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
             function: 'ticketsComment',
             ...loggerContext,

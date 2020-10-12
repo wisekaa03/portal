@@ -9,7 +9,7 @@ import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, CacheModule, UnauthorizedException, Type } from '@nestjs/common';
+import { Module, CacheModule, UnauthorizedException, Type, HttpModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
@@ -330,6 +330,11 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     }),
     //#endregion
 
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        // timeout: TIMEOUT,
+      }),
+    }),
     SoapModule,
 
     //#region Authentication

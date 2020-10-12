@@ -1,13 +1,12 @@
 /** @format */
 
+import { HttpModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { RedisService } from 'nestjs-redis';
 
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
-import { HttpModule } from '@nestjs/common';
-import { TIMEOUT } from '@back/shared/constants';
 import { TicketsService } from './tickets.service';
 
 jest.mock('@app/config/config.service');
@@ -28,9 +27,7 @@ describe(TicketsService.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         HttpModule.registerAsync({
-          useFactory: () => ({
-            timeout: TIMEOUT,
-          }),
+          useFactory: () => ({}),
         }),
       ],
       providers: [

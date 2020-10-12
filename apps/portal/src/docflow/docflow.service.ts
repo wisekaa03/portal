@@ -4,12 +4,10 @@
 import {
   Inject,
   Injectable,
-  UnauthorizedException,
+  ForbiddenException,
   UnprocessableEntityException,
   NotImplementedException,
-  InternalServerErrorException,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -19,6 +17,7 @@ import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
 import { RedisService } from 'nestjs-redis';
 import type { LoggerContext } from 'nestjs-ldap';
+import { OperationCanceledException } from 'typescript';
 //#endregion
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
@@ -133,12 +132,12 @@ export class DocFlowService {
       .executeAsync(requestSOAP, { timeout: TIMEOUT })
       .then((message: DataResult<DataFiles<DocFlowFileSOAP>> | DataResult<DataError>) => {
         if (docFlowData<DataFiles>(message[0]?.return)) {
-          this.logger.info(`docFlowFiles: [Request] ${soap.lastRequest}`, {
+          this.logger.debug(`docFlowFiles: [Request] ${soap.lastRequest}`, {
             context: DocFlowService.name,
             function: 'docFlowFiles',
             ...loggerContext,
           });
-          // this.logger.info(`docFlowFiles: [Response] ${client.lastResponse}`, { context:DocFlowService.name, function:'docFlowFiles' });
+          // this.logger.debug(`docFlowFiles: [Response] ${client.lastResponse}`, { context:DocFlowService.name, function:'docFlowFiles' });
 
           if (message[0]?.return) {
             return {
@@ -274,7 +273,7 @@ export class DocFlowService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -341,12 +340,12 @@ export class DocFlowService {
           .then((message: DataResult<DataItems<DataObject<DocFlowTaskSOAP>>> | DataResult<DataError>) => {
             if (docFlowData<DataItems>(message[0]?.return)) {
               if (message[0] && Array.isArray(message[0].return?.items)) {
-                this.logger.info(`docFlowTasks: [Request] ${client.lastRequest}`, {
+                this.logger.debug(`docFlowTasks: [Request] ${client.lastRequest}`, {
                   context: DocFlowService.name,
                   function: 'docFlowTasks',
                   ...loggerContext,
                 });
-                // this.logger.info(`docFlowTasks: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+                // this.logger.debug(`docFlowTasks: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
 
                 return this.docFlowTasksWithFiles({ soap: client, tasksSOAP: message[0].return.items, loggerContext });
               }
@@ -375,6 +374,8 @@ export class DocFlowService {
             });
 
             if (error instanceof ForbiddenException) {
+              throw error;
+            } else if (error instanceof OperationCanceledException) {
               throw error;
             }
 
@@ -502,7 +503,7 @@ export class DocFlowService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -539,12 +540,12 @@ export class DocFlowService {
                   }
                   const taskWithoutFiles = tasks.pop();
                   if (taskWithoutFiles) {
-                    this.logger.info(`docFlowTask: [Request] ${client.lastRequest}`, {
+                    this.logger.debug(`docFlowTask: [Request] ${client.lastRequest}`, {
                       context: DocFlowService.name,
                       function: 'docFlowTask',
                       ...loggerContext,
                     });
-                    // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
+                    // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
                     // { context: DocFlowService.name, function: 'docFlowTask' });
 
                     const result = this.docFlowTaskWithFiles({ soap: client, task: taskWithoutFiles, loggerContext });
@@ -702,7 +703,7 @@ export class DocFlowService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -720,12 +721,12 @@ export class DocFlowService {
           )
           .then((message: DataResult<DataUser<DocFlowUserSOAP>> | DataResult<DataError>) => {
             if (docFlowData<DataUser>(message[0]?.return)) {
-              this.logger.info(`docFlowCurrentUser: [Request] ${client.lastRequest}`, {
+              this.logger.debug(`docFlowCurrentUser: [Request] ${client.lastRequest}`, {
                 context: DocFlowService.name,
                 function: 'docFlowCurrentUser',
                 ...loggerContext,
               });
-              // this.logger.info(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+              // this.logger.debug(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
 
               if (message[0]?.return?.user) {
                 return docFlowUser(message[0].return.user);
@@ -807,7 +808,7 @@ export class DocFlowService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -831,13 +832,13 @@ export class DocFlowService {
           .then((message: DataResult<DataObjects<DocFlowInternalDocumentSOAP>> | DataResult<DataError>) => {
             if (docFlowData<DataObjects>(message[0]?.return)) {
               if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
-                this.logger.info(`docFlowInternalDocument: [Request] ${client.lastRequest}`, {
+                this.logger.debug(`docFlowInternalDocument: [Request] ${client.lastRequest}`, {
                   context: DocFlowService.name,
 
                   function: 'docFlowInternalDocument',
                   ...loggerContext,
                 });
-                // this.logger.info(`docFlowInternalDocument: [Response] ${client.lastResponse}`,
+                // this.logger.debug(`docFlowInternalDocument: [Response] ${client.lastResponse}`,
                 // { context: DocFlowService.name, function: 'docFlowInternalDocument' });
 
                 return message[0].return.objects.map((t) => docFlowInternalDocument(t));
@@ -1001,7 +1002,7 @@ export class DocFlowService {
             ...loggerContext,
           });
 
-          throw new UnauthorizedException(PortalError.SOAP_NOT_AUTHORIZED);
+          throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
       if (client) {
@@ -1039,12 +1040,12 @@ export class DocFlowService {
           .then((message: DataResult<DataObjects<DocFlowFileSOAP>> | DataResult<DataError>) => {
             if (docFlowData<DataObjects>(message[0]?.return)) {
               if (message[0] && Array.isArray(message[0].return?.objects)) {
-                this.logger.info(`docFlowFile: [Request] ${client.lastRequest}`, {
+                this.logger.debug(`docFlowFile: [Request] ${client.lastRequest}`, {
                   context: DocFlowService.name,
                   function: 'docFlowFile',
                   ...loggerContext,
                 });
-                // this.logger.info(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
+                // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
                 // { context: DocFlowService.name, function: 'docFlowFile' });
 
                 const result = message[0].return.objects.map((f) => docFlowFile(f));

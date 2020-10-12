@@ -8,8 +8,7 @@ import { RedisService } from 'nestjs-redis';
 import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
-import { ConfigModule, ConfigService } from '@app/config';
-import { TIMEOUT } from '@back/shared/constants';
+import { ConfigService } from '@app/config';
 import { UserModule } from '@back/user/user.module';
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 import { AuthService } from './auth.service';
@@ -68,16 +67,10 @@ import { LocalStrategy } from './strategies/local.strategy';
     }),
     //#endregion
 
+    HttpModule,
+
     //#region Users module
     UserModule,
-    //#endregion
-
-    //#region HTTP service
-    HttpModule.registerAsync({
-      useFactory: () => ({
-        timeout: TIMEOUT,
-      }),
-    }),
     //#endregion
 
     SubscriptionsModule,
