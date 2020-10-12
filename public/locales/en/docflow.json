@@ -11,6 +11,7 @@
     }
   },
   "notFound": "Not found",
+  "notFounds": "Not found",
   "task": {
     "title": "{{task}}"
   },

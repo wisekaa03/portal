@@ -184,7 +184,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
             />
           ) : (
             <Typography className={classes.notFounds} variant="h4">
-              {t('docflow:task.notFounds')}
+              {t('docflow:notFounds')}
             </Typography>
           )}
         </Loading>
