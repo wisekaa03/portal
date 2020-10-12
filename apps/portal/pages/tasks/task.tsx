@@ -184,7 +184,7 @@ const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): R
           }`}
         </title>
       </Head>
-      <MaterialUI refetchComponent={taskRefetch} {...rest}>
+      <MaterialUI refetchComponent={taskRefetch} refetchLoading={loadingTicketsTask} {...rest}>
         <TaskComponent
           loading={loadingTicketsTask}
           loadingTaskFile={loadingTaskFile}

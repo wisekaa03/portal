@@ -14,6 +14,7 @@ import { MaterialUI } from '@front/layout';
 
 const HomePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
   if (!__SERVER__) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useRouter().push({ pathname: FIRST_PAGE });
   }
 

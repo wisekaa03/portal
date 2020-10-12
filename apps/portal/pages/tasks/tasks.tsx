@@ -28,7 +28,7 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
     ssr: true,
     variables: { tasks: { status, find } },
     fetchPolicy: 'cache-first',
-    // notifyOnNetworkStatusChange: true,
+    notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('tasks:title')}</title>
       </Head>
-      <MaterialUI refetchComponent={tasksRefetch} {...rest}>
+      <MaterialUI refetchComponent={tasksRefetch} refetchLoading={loadingTasks} {...rest}>
         <TasksComponent
           loading={loadingTasks}
           tasks={tasks}

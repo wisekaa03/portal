@@ -84,7 +84,7 @@ export class ConfigService {
       LDAP_URL: Joi.string().required(),
       LDAP_BIND_DN: Joi.string().required(),
       LDAP_BIND_PW: Joi.string().required(),
-      LDAP_SEARCH_BASE: Joi.string().required(),
+      LDAP_SEARCH_BASE: Joi.string().empty('').default('').optional(),
       LDAP_SEARCH_FILTER_ALL_USERS: Joi.string()
         .empty('')
         .default('(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))')

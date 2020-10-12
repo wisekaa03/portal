@@ -38,7 +38,7 @@ const useStyles = makeStyles((/* theme: Theme */) =>
     drawerClose: {},
   }));
 
-export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent }) => {
+export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, refetchLoading }) => {
   const classes = useStyles({});
 
   const profile = useContext(ProfileContext);
@@ -120,6 +120,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent }) 
         open={Boolean(anchorElement)}
         anchorEl={anchorElement}
         refetchComponent={refetchComponent}
+        refetchLoading={refetchLoading}
         handleDrawerOpen={handleDrawerOpen}
         handlePopoverOpen={handlePopoverOpen}
         handlePopoverClose={handlePopoverClose}

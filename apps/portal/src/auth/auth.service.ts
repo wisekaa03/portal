@@ -75,20 +75,24 @@ export class AuthService {
       ...loggerContext,
     });
 
-    const ldapUser = await this.ldapService.authenticate({ username, password, loggerContext }).catch((error) => {
-      this.logger.error(`LDAP login: ${error.toString()}`, {
-        error,
-        context: AuthService.name,
-        function: this.login.name,
-        ...loggerContext,
+    // const trustedDomain = await this.ldapService.trustedDomain({ searchBase: this.configService.get<string>('LDAP_SEARCH_BASE') });
+
+    const ldapUser = await this.ldapService
+      .authenticate({ username, password, loggerContext })
+      .catch((error: Error | InvalidCredentialsError) => {
+        this.logger.error(`LDAP login: ${error.toString()}`, {
+          error,
+          context: AuthService.name,
+          function: this.login.name,
+          ...loggerContext,
+        });
+
+        if (error instanceof InvalidCredentialsError) {
+          throw new UnauthorizedException(__DEV__ ? error : undefined);
+        }
+
+        throw new BadRequestException(__DEV__ ? error : undefined);
       });
-
-      if (error instanceof InvalidCredentialsError) {
-        throw new UnauthorizedException(__DEV__ ? error : undefined);
-      }
-
-      throw new BadRequestException(__DEV__ ? error : undefined);
-    });
 
     return this.userService
       .fromLdap({ ldapUser, loggerContext })

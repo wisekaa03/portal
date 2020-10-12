@@ -93,6 +93,7 @@ const AppBarComponent: FC<AppBarComponentProps> = ({
   open,
   anchorEl,
   refetchComponent,
+  refetchLoading,
   handleDrawerOpen,
   handlePopoverOpen,
   handlePopoverClose,
@@ -117,7 +118,7 @@ const AppBarComponent: FC<AppBarComponentProps> = ({
                   </div>
                   {refetchComponent && (
                     <Box className={classes.refresh} id="refresh-component">
-                      <RefreshButton noAbsolute dense onClick={() => refetchComponent()} />
+                      <RefreshButton loading={refetchLoading} noAbsolute dense onClick={() => refetchComponent()} />
                     </Box>
                   )}
                   <Box id="profile-avatar" className={classes.avatarWrap} onClick={handlePopoverOpen}>

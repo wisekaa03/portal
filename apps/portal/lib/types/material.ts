@@ -15,4 +15,5 @@ export type RefreshComponentProps<TData = any, TResultImpl = TResultImplProps, T
 
 export interface MaterialUIProps<TData = any, TResultImpl = TResultImplProps, TResult = any> {
   refetchComponent?: RefreshComponentProps<TData, TResultImpl, TResult>;
+  refetchLoading?: boolean;
 }

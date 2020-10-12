@@ -241,7 +241,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
       <Head>
         <title>{t('phonebook:title')}</title>
       </Head>
-      <MaterialUI refetchComponent={refetch} {...rest}>
+      <MaterialUI refetchComponent={refetch} refetchLoading={loading} {...rest}>
         <Box display="flex" flexDirection="column">
           <PhonebookSearch
             ref={searchRef}

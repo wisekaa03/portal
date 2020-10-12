@@ -7,6 +7,7 @@ export interface AppBarComponentProps<TData = any, TResultImpl = '*', TResult = 
   open: boolean;
   anchorEl: null | HTMLElement;
   refetchComponent?: RefreshComponentProps<TData, TResultImpl, TResult>;
+  refetchLoading?: boolean;
   handleDrawerOpen: () => void;
   handlePopoverOpen: (_: React.MouseEvent<HTMLElement>) => void;
   handlePopoverClose: () => void;
