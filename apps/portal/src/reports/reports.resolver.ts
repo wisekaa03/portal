@@ -1,8 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
+import type { Request } from 'express';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
@@ -27,7 +28,12 @@ export class ReportsResolver {
    */
   @Mutation('reports')
   @UseGuards(GqlAuthGuard)
-  async reports(@Args('report') report: ReportsInput, @CurrentUser() user?: User, @PasswordFrontend() password?: string): Promise<boolean> {
+  async reports(
+    @Context('req') request: Request,
+    @Args('report') report: ReportsInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<boolean> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }

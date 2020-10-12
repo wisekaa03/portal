@@ -1,7 +1,8 @@
 /** @format */
 
 //#region Imports NPM
-import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
+import type { Request, Response } from 'express';
+import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 //#endregion
 //#region Imports Local
@@ -38,6 +39,7 @@ export class NewsResolver {
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async editNews(
+    @Context('req') request: Request,
     @Args('title') title: string,
     @Args('excerpt') excerpt: string,
     @Args('content') content: string,
@@ -48,7 +50,7 @@ export class NewsResolver {
       throw new UnauthorizedException();
     }
 
-    const author = await this.userService.byId({ id: user.id, loggerContext: { username: user.username } });
+    const author = await this.userService.byId({ id: user.id, loggerContext: { username: user.username, headers: request.headers } });
     return this.newsService.editNews({ title, excerpt, content, author, id });
   }
 

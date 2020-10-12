@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import type { Request, Response } from 'express';
 import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
 import {
   Inject,
@@ -13,7 +14,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
-import { Request } from 'express';
 import { FileUpload } from 'graphql-upload';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -46,6 +46,7 @@ export class ProfileResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async profiles(
+    @Context('req') request: Request,
     @Args('first') first: number,
     @Args('after') after: string,
     @Args('orderBy') orderBy: Order<string>,
@@ -65,7 +66,12 @@ export class ProfileResolver {
         alias: 'profile',
         validateCursor: false,
         orderFieldToKey: (field: string) => field,
-        queryBuilder: this.profileService.getProfiles({ search, disabled, notShowing, loggerContext: { username: user?.username } }),
+        queryBuilder: this.profileService.getProfiles({
+          search,
+          disabled,
+          notShowing,
+          loggerContext: { username: user?.username, headers: request.headers },
+        }),
       },
     );
   }
@@ -82,13 +88,18 @@ export class ProfileResolver {
   @Query()
   @UseGuards(GqlAuthGuard)
   async profileFieldSelection(
+    @Context('req') request: Request,
     @Args('field')
     field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number],
     @Args('department') department: string,
     @CurrentUser() user?: User,
   ): Promise<string[]> {
     if (PROFILE_AUTOCOMPLETE_FIELDS.includes(field)) {
-      return this.profileService.fieldSelection({ field, department, loggerContext: { username: user?.username } });
+      return this.profileService.fieldSelection({
+        field,
+        department,
+        loggerContext: { username: user?.username, headers: request.headers },
+      });
     }
 
     throw new NotAcceptableException();
@@ -104,8 +115,12 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async searchSuggestions(@Args('search') search: string, @CurrentUser() user?: User): Promise<SearchSuggestions[]> {
-    return this.profileService.searchSuggestions({ search, loggerContext: { username: user?.username } });
+  async searchSuggestions(
+    @Context('req') request: Request,
+    @Args('search') search: string,
+    @CurrentUser() user?: User,
+  ): Promise<SearchSuggestions[]> {
+    return this.profileService.searchSuggestions({ search, loggerContext: { username: user?.username, headers: request.headers } });
   }
 
   /**
@@ -117,8 +132,8 @@ export class ProfileResolver {
    */
   @Query()
   @UseGuards(GqlAuthGuard)
-  async profile(@Args('id') id: string, @CurrentUser() user?: User): Promise<ProfileEntity | undefined> {
-    return this.profileService.byId({ id, loggerContext: { username: user?.username } }) || undefined;
+  async profile(@Context('req') request: Request, @Args('id') id: string, @CurrentUser() user?: User): Promise<ProfileEntity | undefined> {
+    return this.profileService.byId({ id, loggerContext: { username: user?.username, headers: request.headers } }) || undefined;
   }
 
   /**
@@ -145,7 +160,7 @@ export class ProfileResolver {
     }
 
     return this.profileService
-      .changeProfile({ user, profile, thumbnailPhoto, loggerContext: { username: user.username } })
+      .changeProfile({ user, profile, thumbnailPhoto, loggerContext: { username: user.username, headers: request.headers } })
       .then((value) => {
         request.logIn(user, async (error: Error) => {
           if (error) {
@@ -153,26 +168,14 @@ export class ProfileResolver {
               error,
               context: ProfileResolver.name,
               username: user?.username,
+              headers: request.headers,
             });
 
-            throw new UnauthorizedException(error);
+            throw new NotAcceptableException(__DEV__ ? error : undefined);
           }
         });
 
         return value;
-      })
-      .catch(
-        async (
-          error:
-            | Error
-            | BadRequestException
-            | NotAcceptableException
-            | ForbiddenException
-            | PayloadTooLargeException
-            | UnprocessableEntityException,
-        ) => {
-          throw error;
-        },
-      );
+      });
   }
 }

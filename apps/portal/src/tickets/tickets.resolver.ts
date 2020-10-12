@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import type { Request, Response } from 'express';
 import { Inject, UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Query, Resolver, Mutation, Subscription, Args, Context } from '@nestjs/graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';

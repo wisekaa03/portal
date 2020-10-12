@@ -61,19 +61,26 @@ export class AuthResolver {
     @Context('req') request: Request,
     // @Context('res') response: Response,
   ): Promise<Login> {
+    const usernameLOW = username.toLowerCase();
     const email: LoginEmail = { login: false };
 
-    const user = await this.authService
-      .login({ username: username.toLowerCase(), password, loggerContext: { username } })
-      .catch(async (error: Error) => {
-        throw new UnauthorizedException(error);
-      });
+    const user = await this.authService.login({
+      username: usernameLOW,
+      password,
+      loggerContext: { username: usernameLOW, headers: request.headers },
+    });
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error(`Error when logging in: ${error.toString()}`, { error, context: AuthResolver.name, function: 'login', username });
+        this.logger.error(`Error when logging in: ${error.toString()}`, {
+          error,
+          context: AuthResolver.name,
+          function: 'login',
+          username,
+          headers: request.headers,
+        });
 
-        throw new UnauthorizedException(error);
+        throw new UnauthorizedException(__DEV__ ? error : undefined);
       }
     });
 
@@ -119,8 +126,13 @@ export class AuthResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async logout(@Context('req') request: Request): Promise<boolean> {
-    this.logger.info('User logout', { context: AuthResolver.name, function: 'logout', ...getUsername(request) });
+  async logout(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
+    this.logger.info('User logout', {
+      context: AuthResolver.name,
+      function: 'logout',
+      username: user?.username,
+      headers: request.headers,
+    });
 
     if (request.session) {
       request.logOut();
@@ -140,8 +152,8 @@ export class AuthResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async cacheReset(@Context('req') request: Request): Promise<boolean> {
-    const loggerContext = getUsername(request);
+  async cacheReset(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
+    const loggerContext = { username: user?.username, headers: request.headers };
     this.logger.info('Cache reset', { context: AuthResolver.name, function: 'cacheReset', ...loggerContext });
 
     return this.authService.cacheReset({ loggerContext });

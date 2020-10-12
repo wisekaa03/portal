@@ -1,8 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { UseGuards, Inject, UnauthorizedException, HttpException } from '@nestjs/common';
-import { Query, Resolver, Mutation, Subscription, Args } from '@nestjs/graphql';
+import type { Request } from 'express';
+import { UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
+import { Query, Resolver, Mutation, Subscription, Args, Context } from '@nestjs/graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
 //#endregion
@@ -48,6 +49,7 @@ export class DocFlowResolver {
   @Query('docFlowTasks')
   @UseGuards(GqlAuthGuard)
   async docFlowTasks(
+    @Context('req') request: Request,
     @Args('tasks') tasks?: DocFlowTasksInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -56,11 +58,12 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService
-      .docFlowTasksCache({ user, password, tasks, loggerContext: { username: user.username } })
-      .catch((error: Error) => {
-        throw new HttpException(error.message, 500);
-      });
+    return this.docflowService.docFlowTasksCache({
+      user,
+      password,
+      tasks,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -83,6 +86,7 @@ export class DocFlowResolver {
   @Query('docFlowTask')
   @UseGuards(GqlAuthGuard)
   async docFlowTask(
+    @Context('req') request: Request,
     @Args('task') task: DocFlowTaskInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -91,11 +95,12 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService
-      .docFlowTaskCache({ user, password, task, loggerContext: { username: user.username } })
-      .catch((error: Error) => {
-        throw new HttpException(error.message, 500);
-      });
+    return this.docflowService.docFlowTaskCache({
+      user,
+      password,
+      task,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -118,6 +123,7 @@ export class DocFlowResolver {
   @Query('docFlowInternalDocument')
   @UseGuards(GqlAuthGuard)
   async docFlowInternalDocument(
+    @Context('req') request: Request,
     @Args('internalDocument') internalDocument: DocFlowInternalDocumentInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -126,11 +132,12 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService
-      .docFlowInternalDocumentCache({ user, password, internalDocument, loggerContext: { username: user.username } })
-      .catch((error: Error) => {
-        throw new HttpException(error.message, 500);
-      });
+    return this.docflowService.docFlowInternalDocumentCache({
+      user,
+      password,
+      internalDocument,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -156,6 +163,7 @@ export class DocFlowResolver {
   @Query('docFlowFile')
   @UseGuards(GqlAuthGuard)
   async docFlowFile(
+    @Context('req') request: Request,
     @Args('file') file: DocFlowFileInput,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
@@ -164,8 +172,6 @@ export class DocFlowResolver {
       throw new UnauthorizedException();
     }
 
-    return this.docflowService.docFlowFile({ user, password, file, loggerContext: { username: user.username } }).catch((error: Error) => {
-      throw new HttpException(error.message, 500);
-    });
+    return this.docflowService.docFlowFile({ user, password, file, loggerContext: { username: user.username, headers: request.headers } });
   }
 }

@@ -1,8 +1,8 @@
 /** @format */
 
 //#region Imports NPM
-import { Request } from 'express';
-import { UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
+import type { Request } from 'express';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { FileUpload } from 'graphql-upload';
 //#endregion
@@ -26,8 +26,8 @@ export class UserResolver {
    */
   @Mutation('syncLdap')
   @UseGuards(GqlAuthGuard)
-  async syncLdap(@CurrentUser() user?: User): Promise<boolean> {
-    return this.userService.syncLdap({ loggerContext: { username: user?.username } });
+  async syncLdap(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
+    return this.userService.syncLdap({ loggerContext: { username: user?.username, headers: request.headers } });
   }
 
   /**
@@ -50,11 +50,12 @@ export class UserResolver {
       throw new UnauthorizedException();
     }
 
-    return this.userService
-      .ldapNewUser({ request, value, thumbnailPhoto, loggerContext: { username: user.username } })
-      .catch((error: Error) => {
-        throw new HttpException(error.message, 500);
-      });
+    return this.userService.ldapNewUser({
+      request,
+      value,
+      thumbnailPhoto,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 
   /**
@@ -66,12 +67,12 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async ldapCheckUsername(@Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
+  async ldapCheckUsername(@Context('req') request: Request, @Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapCheckUsername({ value, loggerContext: { username: user.username } });
+    return this.userService.ldapCheckUsername({ value, loggerContext: { username: user.username, headers: request.headers } });
   }
 
   /**
@@ -83,7 +84,7 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async userSettings(@Args('value') value: UserSettings, @CurrentUser() user?: User): Promise<User> {
+  async userSettings(@Context('req') request: Request, @Args('value') value: UserSettings, @CurrentUser() user?: User): Promise<User> {
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -91,6 +92,9 @@ export class UserResolver {
     // eslint-disable-next-line no-param-reassign
     user.settings = this.userService.settings(value, user);
 
-    return this.userService.save({ user: this.userService.create(user), loggerContext: { username: user.username } });
+    return this.userService.save({
+      user: this.userService.create(user),
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 }
