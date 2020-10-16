@@ -111,7 +111,6 @@ service:
   # nodePort: 30300
 
   # externalIPs:
-  # - 10.10.205.40
 
 tls:
   enabled: false
