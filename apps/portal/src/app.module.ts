@@ -17,8 +17,10 @@ import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { RedisModule, RedisModuleOptions } from 'nestjs-redis';
+import { RedisModule, RedisService, RedisModuleOptions } from 'nestjs-redis';
 // import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
+import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
 import type { User } from '@lib/types';
@@ -326,6 +328,42 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         logger.log('Database connection: success', 'Database');
 
         return typeOrmPostgres(configService, logger);
+      },
+    }),
+    //#endregion
+
+    //#region LDAP Module
+    LdapModule.registerAsync({
+      inject: [ConfigService, RedisService],
+      useFactory: async (configService: ConfigService, redisService: RedisService) => {
+        let cache: Redis | undefined;
+        try {
+          cache = redisService.getClient('LDAP');
+        } catch {
+          cache = undefined;
+        }
+        return {
+          url: configService.get<string>('LDAP_URL'),
+          bindDN: configService.get<string>('LDAP_BIND_DN'),
+          bindCredentials: configService.get<string>('LDAP_BIND_PW'),
+          searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
+          searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
+          searchScope: 'sub' as Scope,
+          groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
+          groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
+          groupSearchScope: 'sub' as Scope,
+          groupDnProperty: 'dn',
+          groupSearchAttributes: ldapADattributes,
+          searchAttributes: ldapADattributes,
+          searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
+          searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
+          searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
+          searchScopeAllUsers: 'sub' as Scope,
+          searchAttributesAllUsers: ldapADattributes,
+          reconnect: true,
+          cache,
+          newObject: configService.get<string>('LDAP_NEW_BASE'),
+        };
       },
     }),
     //#endregion
