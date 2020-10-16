@@ -12,15 +12,13 @@ import { MaterialUI } from '@front/layout';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({}));
 
-const NewsEditPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
-  return (
-    <MaterialUI {...rest}>
-      <Head>
-        <title>{t('news:add:title')}</title>
-      </Head>
-    </MaterialUI>
-  );
-};
+const NewsEditPage: I18nPage = ({ t, ...rest }) => (
+  <MaterialUI {...rest}>
+    <Head>
+      <title>{t('news:add:title')}</title>
+    </Head>
+  </MaterialUI>
+);
 
 NewsEditPage.getInitialProps = () => ({
   namespacesRequired: includeDefaultNamespaces(['news']),

@@ -17,7 +17,7 @@ import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
 //#endregion
 
-const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }): React.ReactElement => {
+const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 

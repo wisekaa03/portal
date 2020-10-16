@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React from 'react';
 import { Theme, makeStyles, createStyles, darken } from '@material-ui/core/styles';
 import {
   Box,
@@ -21,8 +21,8 @@ import {
 import { useTranslation } from '@lib/i18n-client';
 import { LoginComponentProps } from '@lib/types';
 import Loading from '@front/components/loading';
-import Logo from '@images/svg/logo.svg?inline';
-import Background from '@images/svg/background.svg?inline';
+import Logo from '@images/svg/logo.svg'; // TODO: ?inline
+import Background from '@images/svg/background.svg'; // TODO: ?inline
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const LoginComponent: FC<LoginComponentProps> = ({
+export const LoginComponent: React.FC<LoginComponentProps> = ({
   usernameRef,
   passwordRef,
   values,
@@ -166,13 +166,7 @@ export const LoginComponent: FC<LoginComponentProps> = ({
                   <FormControlLabel
                     className={classes.checkBox}
                     control={
-                      <Checkbox
-                        checked={values.save}
-                        onChange={handleValues('save')}
-                        value="save"
-                        color="primary"
-                        disabled={loading}
-                      />
+                      <Checkbox checked={values.save} onChange={handleValues('save')} value="save" color="primary" disabled={loading} />
                     }
                     label={t('login:remember')}
                   />

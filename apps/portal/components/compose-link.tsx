@@ -32,7 +32,7 @@ type ComposeButtonProps = UrlProps & ButtonProps & { rounded?: boolean };
 
 const smallWidth = 1200;
 
-const openHandler = ({ to, body }: UrlProps): void => {
+const openHandler = ({ to, body }: UrlProps) => {
   let href = `${process.env.MAIL_URL}/?_task=mail&_action=compose`;
 
   if (to) {
@@ -56,7 +56,7 @@ const openHandler = ({ to, body }: UrlProps): void => {
   );
 };
 
-export const ComposeLink = ({ to, children, body, className, ...rest }: ComposeLinkProps): React.ReactElement => {
+export const ComposeLink: React.FC<ComposeLinkProps> = ({ to, children, body, className, ...rest }) => {
   const classes = useStyles({});
 
   const handleClick = (event: React.SyntheticEvent): void => {
@@ -72,7 +72,7 @@ export const ComposeLink = ({ to, children, body, className, ...rest }: ComposeL
   );
 };
 
-export const ComposeButton = ({ to, children, body, rounded, className, ...rest }: ComposeButtonProps): React.ReactElement => {
+export const ComposeButton: React.FC<ComposeButtonProps> = ({ to, children, body, rounded, className, ...rest }) => {
   const classes = useStyles({});
 
   const handleClick = (): void => {

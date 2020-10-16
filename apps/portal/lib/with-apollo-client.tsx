@@ -39,11 +39,11 @@ let configService: ConfigService | undefined;
 let logger: Logger | typeof console = console;
 let browserApolloClient: ApolloClient<NormalizedCacheObject>;
 
-const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient<NormalizedCacheObject> => {
+const createClient = ({ initialState, cookie }: CreateClientProps) => {
   const errorMiddleware = onError(({ graphQLErrors, networkError, operation /* , response */ }) => {
     if (__SERVER__) {
       if (graphQLErrors) {
-        graphQLErrors.forEach(({ message, extensions /* , path, locations, originalError */ }): void => {
+        graphQLErrors.forEach(({ message, extensions /* , path, locations, originalError */ }) => {
           const definition = operation.query.definitions[0] as OperationDefinitionNode;
           if (message !== 'Unauthorized') {
             logger.error({
@@ -69,7 +69,7 @@ const createClient = ({ initialState, cookie }: CreateClientProps): ApolloClient
       }
     } else {
       if (graphQLErrors) {
-        graphQLErrors.forEach(({ message, extensions /* , locations, path, originalError */ }): void => {
+        graphQLErrors.forEach(({ message, extensions /* , locations, path, originalError */ }) => {
           const definition = operation.query.definitions[0] as OperationDefinitionNode;
           if (message !== 'Unauthorized') {
             logger.error({

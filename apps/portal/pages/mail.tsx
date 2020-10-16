@@ -18,7 +18,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const MailPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const MailPage: I18nPage = ({ t, ...rest }) => {
   const { to } = __SERVER__ ? { to: false } : queryString.parse(window.location.search);
   const url = `${process.env.MAIL_URL}${to ? `?_task=mail&_action=compose&to=${to}` : ''}`;
 

@@ -40,7 +40,7 @@ const rows = [
   createData('0024003440043', 'Монитор Samsung UE40', 1),
 ];
 
-const ProfileEquipmentPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const ProfileEquipmentPage: I18nPage = ({ t, ...rest }) => {
   const classes = useStyles({});
   const profile = useContext(ProfileContext);
 

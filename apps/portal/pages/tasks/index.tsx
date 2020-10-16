@@ -15,7 +15,7 @@ interface TasksPageProps {
   code: string;
 }
 
-const TasksPageIndex: I18nPage<TasksPageProps> = ({ t, i18n, code, where, ...rest }): React.ReactElement =>
+const TasksPageIndex: I18nPage<TasksPageProps> = ({ t, i18n, code, where, ...rest }) =>
   code && where ? <TaskPage code={code} where={where} {...rest} /> : <TasksPage {...rest} />;
 
 TasksPageIndex.getInitialProps = ({ query }) => {

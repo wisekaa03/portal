@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const AdminPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const AdminPage: I18nPage = ({ t, ...rest }) => {
   const classes = useStyles({});
   const router = useRouter();
   // const [syncLoading, setSyncLoading] = useState<boolean>(false);

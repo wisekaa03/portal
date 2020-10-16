@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 
 interface ConditionalWrapperProps {
   condition?: boolean;
@@ -8,7 +8,7 @@ interface ConditionalWrapperProps {
   children: any;
 }
 
-const ConditionalWrapper = ({ condition = true, wrapper, children }: PropsWithChildren<ConditionalWrapperProps>): React.ReactElement =>
+const ConditionalWrapper: React.FC<ConditionalWrapperProps> = ({ condition = true, wrapper, children }) =>
   condition ? wrapper(children) : children;
 
 export default ConditionalWrapper;

@@ -17,7 +17,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const MeetingsPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const MeetingsPage: I18nPage = ({ t, ...rest }) => {
   const url = 'https://ww.kngk-group.ru/site3/';
 
   return (

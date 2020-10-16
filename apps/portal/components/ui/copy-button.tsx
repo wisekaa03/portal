@@ -32,7 +32,7 @@ interface CopyButtonProps extends IconButtonProps {
   text: string;
 }
 
-const CopyButton = ({ text, ...rest }: CopyButtonProps): React.ReactElement => {
+const CopyButton: React.FC<CopyButtonProps> = ({ text, ...rest }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 

@@ -21,7 +21,7 @@ interface TaskPageProps {
   code: string;
 }
 
-const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }): React.ReactElement => {
+const TaskPage: I18nPage<TaskPageProps> = ({ t, i18n, where, code, ...rest }) => {
   const [files, setFiles] = useState<DropzoneFile[]>([]);
   const [comment, setComment] = useState<string>('');
 

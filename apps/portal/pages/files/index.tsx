@@ -29,7 +29,7 @@ const handleUrl = () => {
 const thePathArray = (path: string): FilesPath[] =>
   path?.split('/').reduce((accumulator, element) => (element ? [...accumulator, element] : accumulator), [''] as FilesPath[]) || [''];
 
-const FilesPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
+const FilesPage: I18nPage = ({ t, query, ...rest }) => {
   // const [attachments, setAttachments] = useState<DropzoneFile[]>([]);
   // const [showDropzone, setShowDropzone] = useState<boolean>(false);
   // const [openFolderDialog, setOpenFolderDialog] = useState<number>(0);

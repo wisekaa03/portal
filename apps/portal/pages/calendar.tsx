@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CalendarPage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const CalendarPage: I18nPage = ({ t, ...rest }) => {
   const classes = useStyles({});
 
   return (

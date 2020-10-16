@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { LinearProgress, CircularProgress, Box } from '@material-ui/core';
 import clsx from 'clsx';
@@ -55,7 +55,7 @@ interface LoadingComponentProps {
   children?: any;
 }
 
-const LoadingComponent: FC<LoadingComponentProps> = ({
+const LoadingComponent: React.FC<LoadingComponentProps> = ({
   service = true,
   activate = true,
   variant,
@@ -69,7 +69,7 @@ const LoadingComponent: FC<LoadingComponentProps> = ({
   wrapperClasses,
   absolute,
   children,
-}): React.ReactElement => {
+}) => {
   const classes = useStyles({});
 
   if (!activate) {

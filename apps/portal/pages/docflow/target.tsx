@@ -19,7 +19,7 @@ interface DocFlowTargetProps {
   id: string;
 }
 
-const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest }): React.ReactElement => {
+const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest }) => {
   const {
     loading: loadingDocFlowInternalDocument,
     data: dataDocFlowInternalDocument,

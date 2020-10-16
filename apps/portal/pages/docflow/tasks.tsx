@@ -15,7 +15,7 @@ import { MaterialUI } from '@front/layout';
 import DocFlowTasksComponent from '@front/components/docflow/tasks';
 //#endregion
 
-const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
   const status = '';
   const find = '';
 

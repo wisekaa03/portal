@@ -120,7 +120,7 @@ interface NewsProps {
   excerpt: string;
 }
 
-const NewsPage: I18nPage = ({ t, i18n, query, ...rest }): React.ReactElement => {
+const NewsPage: I18nPage = ({ t, i18n, query, ...rest }) => {
   const classes = useStyles({});
   const { loading, data, error }: QueryResult<Data<'news', NewsProps[]>> = useQuery(NEWS, { ssr: false });
   const [current, setCurrent] = useState<NewsProps | null>(null);

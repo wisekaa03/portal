@@ -19,7 +19,7 @@ import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
 
-const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, ctx, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, ctx, ...rest }) => {
   const [current, setCurrent] = useState<Profile | undefined>();
   const [updated, setUpdated] = useState<Partial<Profile> | undefined>();
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();

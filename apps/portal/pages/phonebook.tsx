@@ -45,7 +45,7 @@ const getGraphQLColumns = (columns: PhonebookColumnNames[]): string => {
   return result;
 };
 
-const PhonebookPage: I18nPage = ({ t, query, ...rest }): React.ReactElement => {
+const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));

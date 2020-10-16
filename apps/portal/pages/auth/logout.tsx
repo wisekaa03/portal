@@ -17,7 +17,7 @@ import getRedirect from '@lib/get-redirect';
 import LogoutComponent from '@front/components/auth/logout';
 //#endregion
 
-const Logout: I18nPage = ({ t }): React.ReactElement => {
+const Logout: I18nPage = ({ t }) => {
   const client = useApolloClient();
   const router = useRouter();
 

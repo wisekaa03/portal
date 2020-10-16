@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React from 'react';
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import SyncIcon from '@material-ui/icons/Sync';
@@ -70,14 +70,7 @@ interface RefreshButtonProps extends IconButtonProps {
   onClick: () => void;
 }
 
-const RefreshButton: FC<RefreshButtonProps> = ({
-  onClick,
-  loading = true,
-  noAbsolute,
-  disableBackground,
-  where,
-  dense,
-}): React.ReactElement => {
+const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick, loading = true, noAbsolute, disableBackground, where, dense }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
   let icon: React.ReactElement;

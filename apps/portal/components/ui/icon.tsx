@@ -36,7 +36,7 @@ const useStyles = makeStyles<Theme, IconProps, string>((theme: Theme) =>
   }),
 );
 
-export const Icon = ({ size, mask, color, src, base64 }: IconProps): React.ReactElement => {
+export const Icon: React.FC<IconProps> = ({ size, mask, color, src, base64 }) => {
   const classes = useStyles({ size, mask, color });
 
   if (mask) {

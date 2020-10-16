@@ -35,7 +35,7 @@ const newParameters: ProfileInput = {
   email: '',
 };
 
-const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...rest }): React.ReactElement => {
+const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...rest }) => {
   const router = useRouter();
   const [current, setCurrent] = useState<Profile>(newParameters);
   const [updated, setUpdated] = useState<Profile>(newParameters);

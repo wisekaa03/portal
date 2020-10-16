@@ -30,7 +30,7 @@ import { TkRoutesInput } from '../lib/types/tickets';
 
 //#endregion
 
-const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }): React.ReactElement => {
+const TicketsPage: I18nPage = ({ t, pathname, query, ...rest }) => {
   const router = useRouter();
 
   const [currentTab, setCurrentTab] = useState<number>(0);

@@ -12,7 +12,7 @@ import ProfileInfoComponent from '@front/components/profile/info';
 import ProfileSettingsComponent from '@front/components/profile/settings';
 //#endregion
 
-const ProfilePage: I18nPage = ({ t, ...rest }): React.ReactElement => (
+const ProfilePage: I18nPage = ({ t, ...rest }) => (
   <>
     <Head>
       <title>{t('profile:title')}</title>

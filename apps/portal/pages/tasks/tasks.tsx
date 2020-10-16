@@ -14,7 +14,7 @@ import { MaterialUI } from '@front/layout';
 import TasksComponent from '@front/components/tasks/tasks';
 //#endregion
 
-const TasksPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => {
+const TasksPage: I18nPage = ({ t, i18n, ...rest }) => {
   const status = '';
   const find = '';
 

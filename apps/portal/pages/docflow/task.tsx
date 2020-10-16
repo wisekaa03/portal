@@ -19,7 +19,7 @@ interface DocFlowTaskProps {
   id: string;
 }
 
-const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }): React.ReactElement => {
+const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) => {
   const {
     loading: loadingDocFlowTask,
     data: dataDocFlowTask,

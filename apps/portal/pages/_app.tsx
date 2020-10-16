@@ -39,7 +39,7 @@ const ProfileProvider: React.FC<{
   ctx: NextPageContext;
   router: NextRouter;
   children: React.ReactNode;
-}> = ({ context, ctx, router, children }): React.ReactElement | null => {
+}> = ({ context, ctx, router, children }) => {
   const pathname = ctx?.asPath || router?.asPath;
 
   const { data, loading } = useQuery<Data<'me', User>, undefined>(CURRENT_USER, {
@@ -97,7 +97,7 @@ class App extends NextApp<AppContextMy> {
     // }
   }
 
-  render(): React.ReactElement {
+  render() {
     const { disableGeneration = false, Component, apolloClient, pageProps, context, router, ctx } = this.props;
 
     const ssrMatchMedia = (query: string) => ({

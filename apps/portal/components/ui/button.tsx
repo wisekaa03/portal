@@ -81,32 +81,33 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const BaseButton = ({ actionType = 'accept', children, className, ...rest }: ButtonBaseProps): React.ReactElement => {
+const BaseButton: React.FC<ButtonBaseProps> = ({ actionType = 'accept', children, className, ...rest }) => {
   const classes = useStyles({});
-  let icon: React.ReactElement;
 
-  switch (actionType) {
-    case 'cancel':
-      icon = <HighlightOffIcon />;
-      break;
-    case 'save':
-      icon = <SaveOutlinedIcon />;
-      break;
-    case 'print':
-      icon = <PrintOutlinedIcon />;
-      break;
-    case 'reset':
-      icon = <RestoreOutlinedIcon />;
-      break;
-    case 'close':
-      icon = <CloseOutlinedIcon />;
-      break;
-    case 'favorite':
-      icon = <StarBorderOutlinedIcon />;
-      break;
-    default:
-      icon = <CheckCircleIcon />;
-  }
+  // TODO: design changes...
+  // let icon: React.ReactElement;
+  // switch (actionType) {
+  //   case 'cancel':
+  //     icon = <HighlightOffIcon />;
+  //     break;
+  //   case 'save':
+  //     icon = <SaveOutlinedIcon />;
+  //     break;
+  //   case 'print':
+  //     icon = <PrintOutlinedIcon />;
+  //     break;
+  //   case 'reset':
+  //     icon = <RestoreOutlinedIcon />;
+  //     break;
+  //   case 'close':
+  //     icon = <CloseOutlinedIcon />;
+  //     break;
+  //   case 'favorite':
+  //     icon = <StarBorderOutlinedIcon />;
+  //     break;
+  //   default:
+  //     icon = <CheckCircleIcon />;
+  // }
 
   return (
     <Button

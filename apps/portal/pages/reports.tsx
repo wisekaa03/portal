@@ -15,7 +15,7 @@ import { MaterialUI } from '@front/layout';
 import TasksComponent from '@front/components/tasks/tasks';
 //#endregion
 
-const ReportsPage: I18nPage = ({ t, i18n, ...rest }): React.ReactElement => (
+const ReportsPage: I18nPage = ({ t, i18n, ...rest }) => (
   <>
     <Head>
       <title>{t('reports:title')}</title>

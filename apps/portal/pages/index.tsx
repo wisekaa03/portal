@@ -12,7 +12,7 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-clien
 import { MaterialUI } from '@front/layout';
 //#endregion
 
-const HomePage: I18nPage = ({ t, ...rest }): React.ReactElement => {
+const HomePage: I18nPage = ({ t, ...rest }) => {
   if (!__SERVER__) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useRouter().push({ pathname: FIRST_PAGE });

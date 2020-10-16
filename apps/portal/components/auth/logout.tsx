@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React from 'react';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Typography, Button, Card, CardContent, FormControl } from '@material-ui/core';
 //#endregion
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const LogoutComponent: FC<LogoutPageProps> = ({ loading, logout }): React.ReactElement => {
+const LogoutComponent: React.FC<LogoutPageProps> = ({ loading, logout }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
@@ -113,14 +113,7 @@ const LogoutComponent: FC<LogoutPageProps> = ({ loading, logout }): React.ReactE
               </Typography>
               <Loading activate={loading}>
                 <FormControl className={classes.submitButtonContainer}>
-                  <Button
-                    className={classes.submitButton}
-                    type="submit"
-                    variant="outlined"
-                    color="primary"
-                    size="large"
-                    disabled={loading}
-                  >
+                  <Button className={classes.submitButton} type="submit" variant="outlined" color="primary" size="large" disabled={loading}>
                     {t('login:signOut')}
                   </Button>
                 </FormControl>

@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
 import BaseDropzone, { DropzoneState, useDropzone, FileRejection } from 'react-dropzone';
@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const DropzoneWrapper: FC<{ onDrop: (acceptedFiles: File[]) => Promise<void> }> = ({ onDrop, children }) => {
+export const DropzoneWrapper: React.FC<{ onDrop: (acceptedFiles: File[]) => Promise<void> }> = ({ onDrop, children }) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
@@ -138,7 +138,7 @@ export const DropzoneWrapper: FC<{ onDrop: (acceptedFiles: File[]) => Promise<vo
 
 const NO_PREVIEW = 'no_preview';
 
-const Dropzone: FC<DropzoneProps> = ({
+const Dropzone: React.FC<DropzoneProps> = ({
   files,
   setFiles,
   filesLimit = 50,
@@ -149,7 +149,7 @@ const Dropzone: FC<DropzoneProps> = ({
   children,
   border = 'full',
   maxFileSize,
-}): React.ReactElement => {
+}) => {
   const classes = useStyles({ color, border });
   const { t } = useTranslation();
   const [errors, setErrors] = useState<string[]>([]);

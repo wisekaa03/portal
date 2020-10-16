@@ -15,7 +15,7 @@ interface DocFlowTasksPageProps {
   id?: string;
 }
 
-const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, pathname, id, ...rest }): React.ReactElement =>
+const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, pathname, id, ...rest }) =>
   pathname?.includes('task') && id ? (
     <DocFlowTaskPage id={id} {...rest} />
   ) : pathname?.includes('target') && id ? (
