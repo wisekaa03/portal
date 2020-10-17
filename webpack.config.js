@@ -1,5 +1,5 @@
 /** @format */
-/* eslint global-require:0, @typescript-eslint/no-var-requires:0 */
+/* eslint global-require:0, @typescript-eslint/no-var-requires:0, no-console:0 */
 
 const { resolve } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
@@ -36,7 +36,6 @@ module.exports = (options) => {
   // };
 
   // Babel
-  // TODO: https://stackoverflow.com/questions/59972341/how-to-make-webpack-accept-optional-chaining-without-babel
   c.module.rules.unshift({
     test: /\.tsx?$/,
     exclude: /node_modules/,
@@ -44,8 +43,9 @@ module.exports = (options) => {
       {
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-env'],
-          // plugins: ['@babel/plugin-proposal-optional-chaining', '@babel/plugin-proposal-nullish-coalescing-operator'],
+          // presets: ['@babel/preset-env'],
+          // TODO: https://stackoverflow.com/questions/59972341/how-to-make-webpack-accept-optional-chaining-without-babel
+          plugins: ['@babel/plugin-proposal-optional-chaining', '@babel/plugin-proposal-nullish-coalescing-operator'],
         },
       },
     ],
