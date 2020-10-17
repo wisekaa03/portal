@@ -10,9 +10,8 @@ import clsx from 'clsx';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { ServicesElementProps } from '@lib/types';
-import ConditionalWrapper from '@lib/conditional-wrapper';
 import { Icon } from '@front/components/ui/icon';
-import { TkService, TkRoute } from '@lib/types/tickets';
+import { TkService } from '@lib/types/tickets';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>

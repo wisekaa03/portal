@@ -300,7 +300,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
           </Box>
           <Box style={{ minHeight: contentHeight }} display="flex" flexDirection="column" alignItems="center" justifyContent="center" p={3}>
             {submitted ? (
-              <Loading activate={loadingCreated || !created} full type="circular" color="secondary" disableShrink size={48}>
+              <Loading activate={loadingCreated} full type="circular" color="secondary" disableShrink size={48}>
                 {errorCreated ? (
                   <ServicesError error={errorCreated} onClose={handleResetTicket} />
                 ) : (

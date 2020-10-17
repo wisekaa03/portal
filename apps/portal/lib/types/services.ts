@@ -75,7 +75,6 @@ export interface ServicesElementFavProps {
 }
 
 export interface ServicesSuccessProps {
-  classes: Record<'root' | 'actions', string>;
   data: ServicesCreatedProps;
   onClose: () => void;
 }
@@ -86,7 +85,5 @@ export interface ServicesErrorProps {
 }
 
 export interface ServicesSuccessCardProps {
-  cardRef: React.Ref<any>;
-  classes: Record<'root' | 'title', string>;
   data: ServicesCreatedProps;
 }
