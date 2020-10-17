@@ -322,7 +322,16 @@
       "дефолтных",
       "ощепков",
       "юзера",
-      "jspdf"
+      "jspdf",
+      "cacache",
+      "ardatan",
+      "arrify",
+      "cosmiconfig",
+      "globby",
+      "isobject",
+      "lpad",
+      "pskzcompany",
+      "Wasm"
     ]
   }
 }

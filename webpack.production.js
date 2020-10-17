@@ -37,11 +37,10 @@ module.exports = (original) => {
       minimize: true,
       minimizer: [
         new TerserPlugin({
-          cache: true,
           parallel: true,
-          sourceMap: false,
           terserOptions: {
             warnings: true,
+            ecma: 2020,
             compress: {
               // arrows: true,
               // arguments: false,
@@ -65,7 +64,6 @@ module.exports = (original) => {
               // if_return: false,
               // inline: false,
               // join_vars: true,
-              keep_classnames: true,
               // keep_fargs: true,
               // keep_fnames: true,
               // keep_infinity: true,
@@ -97,13 +95,13 @@ module.exports = (original) => {
             },
             mangle: {
               // eval: false,
-              keep_classnames: true,
-              // keep_fnames: true,
               // module: true,
               // reserved: [],
               // toplevel: false,
               // safari10: false,
             },
+            keep_classnames: true,
+            keep_fnames: false,
             // module: false,
           },
         }),
