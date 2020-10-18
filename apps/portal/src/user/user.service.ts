@@ -346,6 +346,7 @@ export class UserService {
    *
    * @async
    * @param {UserEntity} user The user
+   * @param {LoggerContext} loggerContext
    * @returns {Promise<UserEntity>} The return user after save
    * @throws {Error} Exception
    */
@@ -404,6 +405,11 @@ export class UserService {
    */
   settings = (value: UserSettings, user: User): UserSettings => defaultsDeep(value, user.settings, defaultUserSettings);
 
+  /**
+   * Ldap check username
+   *
+   * @async
+   */
   ldapCheckUsername = async ({ value, loggerContext }: { value: string; loggerContext: LoggerContext }): Promise<boolean> =>
     this.ldapService
       .searchByUsername({ userByUsername: value, cache: false, loggerContext })
@@ -412,6 +418,8 @@ export class UserService {
 
   /**
    * This is a LDAP new user and contact
+   *
+   * @async
    */
   ldapNewUser = async ({
     value,

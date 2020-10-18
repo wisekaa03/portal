@@ -29,7 +29,7 @@ const ReactToPdf: React.FC<ReactToPdfProps> = ({ trigger, content, filename, x =
         scale,
       }).then((canvas) => {
         const pdf = new JsPDF(options);
-        pdf.addImage(canvas, 'JPEG', x, y, 800, 600);
+        pdf.addImage(canvas, x, y, 600, 800);
         pdf.save(filename);
 
         if (onComplete) onComplete();
