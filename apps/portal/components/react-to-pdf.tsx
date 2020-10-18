@@ -20,7 +20,7 @@ const ReactToPdf: React.FC<ReactToPdfProps> = ({ trigger, content, filename, x =
     onClick: () => {
       const contentEl = content();
       if (!contentEl) {
-        throw new Error('Ref must be used or informed.');
+        throw new Error('Content must be used');
       }
 
       html2canvas((contentEl as unknown) as HTMLElement, {
