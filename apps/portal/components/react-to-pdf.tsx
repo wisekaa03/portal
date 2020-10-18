@@ -1,21 +1,39 @@
 /** @format */
 
 import React from 'react';
-import { jsPDF as JsPDF } from 'jspdf';
+import { jsPDF as JsPDF, jsPDFOptions } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 export interface ReactToPdfProps {
   filename: string;
   x?: number;
   y?: number;
-  options?: Record<string, string>;
+  w?: number;
+  h?: number;
+  options?: jsPDFOptions;
   scale?: number;
   onComplete?: () => void;
   trigger: () => React.ReactElement;
   content: () => React.ReactInstance | null;
 }
 
-const ReactToPdf: React.FC<ReactToPdfProps> = ({ trigger, content, filename, x = 0, y = 0, options, scale = 1, onComplete }) =>
+const defaultOptions: jsPDFOptions = {
+  orientation: 'portrait',
+  unit: 'px',
+};
+
+const ReactToPdf: React.FC<ReactToPdfProps> = ({
+  trigger,
+  content,
+  filename,
+  x = 0,
+  y = 0,
+  w = 300,
+  h = 150,
+  options,
+  scale = 8,
+  onComplete,
+}) =>
   React.cloneElement(trigger(), {
     onClick: () => {
       const contentEl = content();
@@ -28,8 +46,8 @@ const ReactToPdf: React.FC<ReactToPdfProps> = ({ trigger, content, filename, x =
         useCORS: true,
         scale,
       }).then((canvas) => {
-        const pdf = new JsPDF(options);
-        pdf.addImage(canvas, x, y, 600, 800);
+        const pdf = new JsPDF(Object.assign(defaultOptions, options));
+        pdf.addImage(canvas, x, y, w, h);
         pdf.save(filename);
 
         if (onComplete) onComplete();
