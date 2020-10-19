@@ -11,6 +11,7 @@ import {
   UnsupportedMediaTypeException,
   UnprocessableEntityException,
   ForbiddenException,
+  GatewayTimeoutException,
 } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -120,13 +121,16 @@ export class TicketsService {
     const soapUrl = this.configService.get<string>('TICKETS_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: soapUrl,
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error: Error) => {
           this.logger.error(`ticketsRoutes: ${error.toString()}`, {
             error,
@@ -171,6 +175,10 @@ export class TicketsService {
                 function: 'ticketsRoutes',
                 ...loggerContext,
               });
+
+              if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+                return { errors: [new GatewayTimeoutException(__DEV__ ? error : undefined)] };
+              }
 
               return { errors: [PortalError.SOAP_NOT_AUTHORIZED] };
             }),
@@ -359,13 +367,16 @@ export class TicketsService {
     const soapUrl = this.configService.get<string>('TICKETS_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: soapUrl,
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error) => {
           this.logger.error(`ticketsTasks: ${error.toString()}`, {
             error,
@@ -418,7 +429,7 @@ export class TicketsService {
                 errors: [PortalError.SOAP_EMPTY_RESULT],
               };
             })
-            .catch((error: SoapFault) => {
+            .catch((error: SoapFault | Error) => {
               this.logger.error(`ticketsTasks: [Request] ${client.lastRequest}`, {
                 context: TicketsService.name,
                 function: 'ticketsTasks',
@@ -435,6 +446,10 @@ export class TicketsService {
                 function: 'ticketsTasks',
                 ...loggerContext,
               });
+
+              if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+                return { errors: [new GatewayTimeoutException(__DEV__ ? error : undefined)] };
+              }
 
               return { errors: [PortalError.SOAP_NOT_AUTHORIZED] };
             }),
@@ -684,13 +699,16 @@ export class TicketsService {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const client = await this.soapService
-        .connect({
-          url: this.configService.get<string>('TICKETS_URL'),
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: this.configService.get<string>('TICKETS_URL'),
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error) => {
           this.logger.error(`ticketsTaskNew: ${error.toString()}`, {
             error,
@@ -735,11 +753,11 @@ export class TicketsService {
             } as TkTaskNew;
           }
 
-          this.logger.debug(`TicketsTaskNew: [Response] ${client.lastResponse}`, { context: TicketsService.name, ...loggerContext });
+          this.logger.debug(`ticketsTaskNew: [Response] ${client.lastResponse}`, { context: TicketsService.name, ...loggerContext });
           throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
         })
         .catch((error: Error) => {
-          this.logger.error(`TicketsTaskNew: [Request] ${client.lastRequest}`, {
+          this.logger.error(`ticketsTaskNew: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: 'ticketsTaskNew',
             ...loggerContext,
@@ -749,12 +767,16 @@ export class TicketsService {
             function: 'ticketsTaskNew',
             ...loggerContext,
           });
-          this.logger.error(`TicketsTaskNew: ${error.toString()}`, {
+          this.logger.error(`ticketsTaskNew: ${error.toString()}`, {
             error,
             context: TicketsService.name,
             function: 'ticketsTaskNew',
             ...loggerContext,
           });
+
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          }
 
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
@@ -853,13 +875,16 @@ export class TicketsService {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C && task.code) {
       const client = await this.soapService
-        .connect({
-          url: this.configService.get<string>('TICKETS_URL'),
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: this.configService.get<string>('TICKETS_URL'),
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error) => {
           this.logger.error(`ticketsTask: ${error.toString()}`, {
             error,
@@ -921,6 +946,10 @@ export class TicketsService {
             function: 'ticketsTask',
             ...loggerContext,
           });
+
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          }
 
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
@@ -1109,13 +1138,16 @@ export class TicketsService {
     /* 1C SOAP */
     if (task.where === TkWhere.SOAP1C) {
       const client = await this.soapService
-        .connect({
-          url: this.configService.get<string>('TICKETS_URL'),
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: this.configService.get<string>('TICKETS_URL'),
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error) => {
           this.logger.error(`docFlowTasks: ${error.toString()}`, {
             error,
@@ -1193,6 +1225,10 @@ export class TicketsService {
             ...loggerContext,
           });
 
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          }
+
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
     }
@@ -1229,13 +1265,16 @@ export class TicketsService {
     /* 1C SOAP */
     if (file.where === TkWhere.SOAP1C && file.code) {
       const client = await this.soapService
-        .connect({
-          url: this.configService.get<string>('TICKETS_URL'),
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: this.configService.get<string>('TICKETS_URL'),
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error) => {
           this.logger.error(`ticketsTaskFile: ${error.toString()}`, {
             error,
@@ -1295,6 +1334,10 @@ export class TicketsService {
             function: 'ticketsTaskFile',
             ...loggerContext,
           });
+
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          }
 
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });
@@ -1391,13 +1434,16 @@ export class TicketsService {
     /* 1C SOAP */
     if (comment.where === TkWhere.SOAP1C && comment.code) {
       const client = await this.soapService
-        .connect({
-          url: this.configService.get<string>('TICKETS_URL'),
-          username: user?.username,
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-        })
+        .connect(
+          {
+            url: this.configService.get<string>('TICKETS_URL'),
+            username: user?.username,
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+          },
+          loggerContext,
+        )
         .catch((error) => {
           this.logger.error(`ticketsComment: ${error.toString()}`, {
             error,
@@ -1455,6 +1501,10 @@ export class TicketsService {
             function: 'ticketsComment',
             ...loggerContext,
           });
+
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          }
 
           throw new UnprocessableEntityException(__DEV__ ? error : undefined);
         });

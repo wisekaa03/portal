@@ -4,6 +4,7 @@
 //#region Imports NPM
 import { Injectable, Inject } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
+import { LoggerContext } from 'nestjs-ldap';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 //#endregion
@@ -40,7 +41,7 @@ export class SoapService {
    * @returns {SoapClient} Client with the needed SOAP functions
    * @throws {Error}
    */
-  async connect(connect: SoapConnect): Promise<SoapClient> {
+  async connect(connect: SoapConnect, loggerContext?: LoggerContext): Promise<SoapClient> {
     let options: SoapOptions;
 
     if (connect.ntlm) {
@@ -82,10 +83,9 @@ export class SoapService {
         return client as SoapClient;
       })
       .catch((error: ISoapFaultError | Error) => {
-        const message = error.toString();
-        this.logger.error(`SOAP connect error: ${message}`, [{ error }]);
+        this.logger.error(`SOAP connect error: ${error.toString()}`, { error, loggerContext });
 
-        throw new Error(soapError(error));
+        throw error;
       });
   }
 }

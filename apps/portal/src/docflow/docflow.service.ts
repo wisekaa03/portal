@@ -8,6 +8,7 @@ import {
   UnprocessableEntityException,
   NotImplementedException,
   NotFoundException,
+  GatewayTimeoutException,
 } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -168,6 +169,10 @@ export class DocFlowService {
           ...loggerContext,
         });
 
+        if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+          throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+        }
+
         if (error instanceof ForbiddenException) {
           return { error: [error] };
         }
@@ -255,16 +260,19 @@ export class DocFlowService {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user.username || 'not authenticated',
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-          soapOptions: {
-            namespaceArrayElements: false,
+        .connect(
+          {
+            url: soapUrl,
+            username: user.username || 'not authenticated',
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+            soapOptions: {
+              namespaceArrayElements: false,
+            },
           },
-        })
+          loggerContext,
+        )
         .catch((error: Error) => {
           this.logger.error(`docFlowTasks: ${error.toString()}`, {
             error,
@@ -272,6 +280,10 @@ export class DocFlowService {
             function: 'docFlowTasks',
             ...loggerContext,
           });
+
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          }
 
           throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
@@ -355,7 +367,7 @@ export class DocFlowService {
 
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
-          .catch((error: Error | ForbiddenException) => {
+          .catch((error: Error | ForbiddenException | OperationCanceledException) => {
             this.logger.error(`docFlowTasks: [Request] ${client.lastRequest}`, {
               context: DocFlowService.name,
               function: 'docFlowTasks',
@@ -373,7 +385,9 @@ export class DocFlowService {
               ...loggerContext,
             });
 
-            if (error instanceof ForbiddenException) {
+            if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+              throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+            } else if (error instanceof ForbiddenException) {
               throw error;
             } else if (error instanceof OperationCanceledException) {
               throw error;
@@ -485,16 +499,19 @@ export class DocFlowService {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user.username || 'not authenticated',
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-          soapOptions: {
-            namespaceArrayElements: false,
+        .connect(
+          {
+            url: soapUrl,
+            username: user.username || 'not authenticated',
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+            soapOptions: {
+              namespaceArrayElements: false,
+            },
           },
-        })
+          loggerContext,
+        )
         .catch((error: Error) => {
           this.logger.error(`docFlowTask: ${error.toString()}`, {
             error,
@@ -577,7 +594,9 @@ export class DocFlowService {
               ...loggerContext,
             });
 
-            if (error instanceof ForbiddenException) {
+            if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+              throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+            } else if (error instanceof ForbiddenException) {
               throw error;
             }
 
@@ -685,16 +704,19 @@ export class DocFlowService {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user.username || 'not authenticated',
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-          soapOptions: {
-            namespaceArrayElements: false,
+        .connect(
+          {
+            url: soapUrl,
+            username: user.username || 'not authenticated',
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+            soapOptions: {
+              namespaceArrayElements: false,
+            },
           },
-        })
+          loggerContext,
+        )
         .catch((error: Error) => {
           this.logger.error(`docFlowCurrentUser: ${error.toString()}`, {
             error,
@@ -755,7 +777,9 @@ export class DocFlowService {
               ...loggerContext,
             });
 
-            if (error instanceof ForbiddenException) {
+            if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+              throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+            } else if (error instanceof ForbiddenException) {
               throw error;
             }
 
@@ -790,16 +814,19 @@ export class DocFlowService {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user.username || 'not authenticated',
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-          soapOptions: {
-            namespaceArrayElements: false,
+        .connect(
+          {
+            url: soapUrl,
+            username: user.username || 'not authenticated',
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+            soapOptions: {
+              namespaceArrayElements: false,
+            },
           },
-        })
+          loggerContext,
+        )
         .catch((error: Error) => {
           this.logger.error(`docFlowInternalDocument: ${error.toString()}`, {
             error,
@@ -869,7 +896,9 @@ export class DocFlowService {
               ...loggerContext,
             });
 
-            if (error instanceof ForbiddenException) {
+            if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+              throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+            } else if (error instanceof ForbiddenException) {
               throw error;
             }
 
@@ -984,16 +1013,19 @@ export class DocFlowService {
     const soapUrl = this.configService.get<string>('DOCFLOW_URL');
     if (soapUrl) {
       const client = await this.soapService
-        .connect({
-          url: soapUrl,
-          username: user.username || 'not authenticated',
-          password,
-          domain: this.configService.get<string>('LDAP_DOMAIN'),
-          ntlm: true,
-          soapOptions: {
-            namespaceArrayElements: false,
+        .connect(
+          {
+            url: soapUrl,
+            username: user.username || 'not authenticated',
+            password,
+            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            ntlm: true,
+            soapOptions: {
+              namespaceArrayElements: false,
+            },
           },
-        })
+          loggerContext,
+        )
         .catch((error: Error) => {
           this.logger.error(`docFlowFile: ${error.toString()}`, {
             error,
@@ -1085,7 +1117,9 @@ export class DocFlowService {
               ...loggerContext,
             });
 
-            if (error instanceof ForbiddenException) {
+            if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+              throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+            } else if (error instanceof ForbiddenException) {
               throw error;
             }
 
