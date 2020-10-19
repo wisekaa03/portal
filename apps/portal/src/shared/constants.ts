@@ -9,7 +9,7 @@ export const LDAP_SYNC = { cmd: 'sync' };
 export const LDAP_SYNC_SERVICE = 'LDAP_SYNC_SERVICE';
 
 export const TIMEOUT_REFETCH_SERVICES = 60000;
-export const TIMEOUT = 1500;
+export const TIMEOUT = 15000;
 
 export enum PortalPubSub {
   TICKETS_ROUTES = 'ticketsRoutes',
