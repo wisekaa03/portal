@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.30",
+  "version": "4.17.31",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -79,9 +79,6 @@
     "**/**/browserslist": "^4",
     "**/**/chokidar": "^3",
     "**/**/rimraf": "^3",
-    "webpack": "^4",
-    "webpack/**/acorn": "^6",
-    "!(webpack)/**/acorn": "^8",
     "**/**/@nestjs/common": "^7",
     "**/**/@nestjs/core": "^7",
     "**/**/@storybook/api": "^6",

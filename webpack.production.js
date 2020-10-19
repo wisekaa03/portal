@@ -102,7 +102,7 @@ module.exports = (original) => {
             },
             keep_classnames: true,
             keep_fnames: false,
-            // module: false,
+            module: true,
           },
         }),
       ],
