@@ -13,8 +13,11 @@ module.exports = (original) => ({
     inline: true,
     hot: true,
   },
+  optimization: {
+    minimize: false,
+  },
   plugins: [
-    ...(original.plugins || []),
+    ...(original?.plugins ?? []),
     // new webpack.IgnorePlugin({
     //   /**
     //    * There is a small problem with Nest's idea of lazy require() calls,
@@ -52,10 +55,10 @@ module.exports = (original) => ({
   stats: {
     // This is optional, but it hides noisey warnings
     warningsFilter: [
-      'node_modules/express/lib/view.js',
-      'node_modules/@nestjs/common/utils/load-package.util.js',
-      'node_modules/@nestjs/core/helpers/load-adapter.js',
-      'node_modules/optional/optional.js',
+      // 'node_modules/express/lib/view.js',
+      // 'node_modules/@nestjs/common/utils/load-package.util.js',
+      // 'node_modules/@nestjs/core/helpers/load-adapter.js',
+      // 'node_modules/optional/optional.js',
       (/* warning */) => false,
     ],
   },

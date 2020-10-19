@@ -331,7 +331,8 @@
       "isobject",
       "lpad",
       "pskzcompany",
-      "Wasm"
+      "Wasm",
+      "printf"
     ]
   }
 }

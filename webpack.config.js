@@ -11,12 +11,12 @@ console.log(`-- Webpack <${NODE_ENV}> build --`);
 
 module.exports = (options) => {
   const config = NODE_ENV === 'production' ? require('./webpack.production.js')(options) : require('./webpack.development.js')(options);
-  const entry = NODE_ENV !== 'production' ? ['webpack/hot/poll?100', options.entry] : [options.entry];
+  const entry = NODE_ENV === 'production' ? options?.entry ?? [] : ['webpack/hot/poll?100', options?.entry ?? []];
 
   const c = {
     ...options,
     ...config,
-    entry: [...entry],
+    entry,
     plugins: [
       ...config.plugins,
       new Webpack.DefinePlugin({
@@ -36,6 +36,26 @@ module.exports = (options) => {
   // };
 
   // Babel
+  if (!c.module) {
+    c.module = {
+      rules: [
+        {
+          test: /\.js$/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['es2020'],
+              },
+            },
+            {
+              loader: 'shebang-loader',
+            },
+          ],
+        },
+      ],
+    };
+  }
   c.module.rules.unshift({
     test: /\.tsx?$/,
     exclude: /node_modules/,
