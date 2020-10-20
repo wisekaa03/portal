@@ -35,6 +35,7 @@
     "test:next": "jest --watch __tests__",
     "coverage": "yarn test -u --coverage",
     "typeorm": "ts-node -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:cli": "node ./node_modules/typeorm/cli.js schema:sync",
     "typeorm:transpile": "tsc -P ./tsconfig.ormconfig.json",
     "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync",
     "typeorm:sync": "yarn typeorm schema:sync"
@@ -368,6 +369,7 @@
     "terser-webpack-plugin": "^4",
     "ts-jest": "*",
     "ts-loader": "*",
+    "tsconfig-paths-webpack-plugin": "*",
     "typescript": "*",
     "webp-loader": "*",
     "webpack": "^4",
