@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.32",
+  "version": "4.17.33",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -127,7 +127,6 @@
     "**/**/filesize": "^6",
     "**/**/color-convert": "^2",
     "**/**/cosmiconfig": "^7",
-    "**/**/github-username": "^5",
     "**/**/globby": "^11",
     "**/**/get-stream": "^6",
     "**/**/clone-deep": "^4",

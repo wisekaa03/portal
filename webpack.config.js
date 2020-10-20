@@ -70,7 +70,7 @@ module.exports = (options) => {
       },
     };
   } else {
-    const entry = NODE_ENV === 'production' ? options?.entry ?? [] : ['webpack/hot/poll?100', options?.entry || undefined];
+    const entry = NODE_ENV === 'production' ? options.entry ?? [] : ['webpack/hot/poll?100', options.entry || undefined];
 
     c = {
       ...options,

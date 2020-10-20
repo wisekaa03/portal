@@ -15,7 +15,9 @@ module.exports = (original) => {
     mode: 'production',
     target: 'node',
     resolve: {
+      ...original?.resolve,
       alias: {
+        ...original?.resolve?.alias,
         'google-libphonenumber': path.resolve(__dirname, 'apps/portal/libphonenumber-stub.js'),
       },
     },
