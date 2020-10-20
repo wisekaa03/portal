@@ -1,6 +1,8 @@
 /** @format */
 /* eslint @typescript-eslint/no-var-requires:0 */
 
+const path = require('path');
+
 const { resolve } = require('path');
 // const webpack = require('webpack');
 // const nodeExternals = require('webpack-node-externals');
@@ -12,11 +14,11 @@ module.exports = (original) => {
     watch: false,
     mode: 'production',
     target: 'node',
-    // resolve: {
-    //   alias: {
-    //     'google-libphonenumber': path.resolve(__dirname, 'apps/portal/libphonenumber-stub.js'),
-    //   },
-    // },
+    resolve: {
+      alias: {
+        'google-libphonenumber': path.resolve(__dirname, 'apps/portal/libphonenumber-stub.js'),
+      },
+    },
     optimization: {
       namedModules: false,
       namedChunks: false,
@@ -108,7 +110,7 @@ module.exports = (original) => {
       ],
     },
     plugins: [
-      ...(original.plugins || []),
+      ...(original?.plugins || []),
       // new webpack.IgnorePlugin({
       //   /**
       //    * There is a small problem with Nest's idea of lazy require() calls,
@@ -144,7 +146,7 @@ module.exports = (original) => {
     ],
   };
 
-  if (original.output.filename.includes('/portal/')) {
+  if (original?.output.filename.includes('/portal/')) {
     config.output = {
       path: resolve(__dirname, '.next/nest'),
       filename: 'main.js',

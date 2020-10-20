@@ -12,7 +12,7 @@
     "sourceMap": false,
     "noEmit": false,
     "allowJs": false,
-    "outDir": "./.next/nest",
+    "outDir": "./.next/typeorm",
     "baseUrl": "./",
     "isolatedModules": false,
     "experimentalDecorators": true
