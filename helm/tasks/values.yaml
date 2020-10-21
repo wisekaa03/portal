@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 4
 
 image:
   repository: docker-registry.mycompany.com/portal
@@ -11,35 +11,138 @@ image:
 
 imageCredentials:
   enabled: true
-  name: portal-sync-registry
+  name: portal-tasks-registry
   registry: docker-registry.mycompany.com
   username: docker-reg-user
   password: XXXXXXXXXXXX
 
-nameOverride: "portal-tasks"
-fullnameOverride: "portal-tasks"
+nameOverride: "portal"
+fullnameOverride: "portal"
 
 # App
-PORT: 4222
+PORT: 4000
+PORT_DEBUG: 9229
+DOMAIN: "example.com"
+DEVELOPMENT: "false"
+
+# Logging
+LOG_LEVEL: "debug"
+LOG_SERVER: "graylog"
+
+# DB
+DATABASE_URI: "postgres://postgres:1234567890@postgresql.default.svc.cluster.local:5432/portaldb"
+DATABASE_URI_RD: "postgres://postgres:1234567890@postgresql-read.default.svc.cluster.local:5432/portaldb"
+DATABASE_SCHEMA: "public"
+DATABASE_SYNCHRONIZE: "true"
+DATABASE_DROP_SCHEMA: "true"
+DATABASE_MIGRATIONS_RUN: "true"
+DATABASE_LOGGING: "true"
+DATABASE_CACHE: "true"
+# DB Redis
+DATABASE_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/0"
+DATABASE_REDIS_TTL: 300
+
+# HTTP Redis
+HTTP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/1"
+HTTP_REDIS_TTL: 300
+HTTP_REDIS_MAX_OBJECTS: 10000
+
+# Session Redis
+SESSION_NAME: portal
+SESSION_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
+SESSION_COOKIE_TTL: 300
+SESSION_SECRET: "supersecret"
+
+# LDAP
+LDAP_URL: "ldap://activedirectory:389"
+LDAP_BIND_DN: "CN=user,DC=example,DC=local"
+LDAP_BIND_PW: ""
+LDAP_SEARCH_BASE: "DC=example,DC=local"
+LDAP_SEARCH_FILTER_ALL_USERS: "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
+LDAP_SEARCH_FILTER_ALL_GROUPS: "objectClass=group"
+LDAP_SEARCH_GROUP: "(&(objectClass=group)(member={{dn}}))"
+LDAP_SEARCH_USER: "(sAMAccountName={{username}})"
+LDAP_NEW_BASE: "OU=User,DC=example,DC=local"
+LDAP_DOMAIN: "example.com"
+# LDAP Redis
+LDAP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
+LDAP_REDIS_TTL: 300
+
+MICROSERVICE_URL: "redis://redis.default.svc.cluster.local:6379"
+
+TICKETS_URL: ""
+REPORTS_URL: ""
+DOCFLOW_URL: ""
+
+TICKETS_REDIS_URI: ""
+TICKETS_REDIS_TTL: ""
+
+REPORTS_REDIS_URI: ""
+REPORTS_REDIS_TTL: ""
+
+DOCFLOW_REDIS_URI: ""
+DOCFLOW_REDIS_TTL: ""
+
+OSTICKET_URL: "{}"
+
+NEXTCLOUD_URL: "https://cloud.example.com"
+NEXTCLOUD_REDIS_URI: ""
+NEXTCLOUD_REDIS_TTL: "60"
+MAX_FILE_SIZE: "250000000"
+
+NEWS_URL: "https://news"
+NEWS_API_URL: "https://news/api"
+
+MAIL_URL: "/roundcube/"
+MAIL_LOGIN_URL: "https://roundcube.production/login/index.php"
+
+MEETING_URL: "https://meeting"
+
+persistence:
+  enabled: true
+  # existingClaim:
+  storageClassName: nfs-storage
+  accessMode: ReadWriteOnce
+  size: 100Gi
 
 service:
   type: ClusterIP
 
+  # nodePort: 30300
+
+  # externalIPs:
+
 tls:
   enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  hosts:
+    - host: portal.example.com
+      paths:
+        - /
+
+  tls:
+    - secretName: portal-tls
+      hosts:
+        - portal.example.com
 
 ## Liveness and Readiness probe values.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
 livenessProbe:
-  initialDelaySeconds: 10
-  periodSeconds: 5
-  timeoutSeconds: 5
+  initialDelaySeconds: 15
+  periodSeconds: 50
+  timeoutSeconds: 10
   successThreshold: 1
   failureThreshold: 5
 readinessProbe:
-  initialDelaySeconds: 10
-  periodSeconds: 5
-  timeoutSeconds: 5
+  initialDelaySeconds: 3
+  periodSeconds: 10
+  timeoutSeconds: 1
   successThreshold: 1
   failureThreshold: 5
 
@@ -49,11 +152,11 @@ resources: {}
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   #limits:
-  #  cpu: 500m
-  #  memory: 4Gi
-  #requests:
-  #  cpu: 250m
+  #  cpu: 1000m
   #  memory: 2Gi
+  #requests:
+  #  cpu: 400m
+  #  memory: 1Gi
   #  ephemeral-storage: 1Gi
 
 nodeSelector: {}

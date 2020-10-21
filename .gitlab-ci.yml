@@ -172,7 +172,7 @@ helm_development:
         --debug --values helm/portal/values.yaml
     # Portal tasks
     - |
-      helm upgrade ${CI_PROJECT_NAME} helm/tasks \
+      helm upgrade ${CI_PROJECT_NAME}-tasks helm/tasks \
         --set replicaCount="1" \
         --set PORT="${PORT:=4000}" \
         --set PORT_DEBUG="${PORT_DEBUG:=9229}" \
@@ -336,7 +336,7 @@ helm_production:
         --debug --values helm/portal/values.yaml
     # Portal tasks
     - |
-      helm upgrade ${CI_PROJECT_NAME} helm/tasks \
+      helm upgrade ${CI_PROJECT_NAME}-tasks helm/tasks \
         --set PORT="${PORT:=4000}" \
         --set DOMAIN="${DOMAIN}" \
         --set DEVELOPMENT="false" \
@@ -396,9 +396,6 @@ helm_production:
         --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
         --set image.repository="${CI_REGISTRY_IMAGE}" \
         --set image.tag="${CI_COMMIT_SHA}" \
-        --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
-        --set ingress.hosts[0].host="${INGRESS_HOST}" \
-        --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/tasks/values.yaml
     # Portal-sync
