@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.36",
+  "version": "4.17.37",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -34,8 +34,8 @@
     "test": "jest",
     "test:next": "jest --watch __tests__",
     "coverage": "yarn test -u --coverage",
-    "typeorm": "yarn typeorm:transpile && node ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js",
-    "typeorm:transpile": "(test -f .next/typeorm/ormconfig.js) || tsc -P ./tsconfig.ormconfig.json",
+    "typeorm": "node ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js",
+    "typeorm:transpile": "webpack ormconfig.ts",
     "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync",
     "typeorm:sync": "yarn typeorm schema:sync"
   },
