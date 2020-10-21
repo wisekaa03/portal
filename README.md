@@ -39,7 +39,8 @@
   - [dotenv](https://github.com/motdotla/dotenv) - Loads environment variables from .env for nodejs projects
 - Database
   - [PostgreSQL](https://www.postgresql.org) - The World's Most Advanced Open Source Relational Database
-  - [GraphQL](https://github.com/graphql/express-graphql) - Create a GraphQL HTTP server with Express.
+  - [TypeORM](https://typeorm.io/) - TypeORM is an ORM that can run in NodeJS, Browser, Cordova, PhoneGap, Ionic, React Native, NativeScript, Expo, and Electron platforms and can be used with TypeScript and JavaScript (ES5, ES6, ES7, ES8)
+  - [GraphQL](https://github.com/graphql/express-graphql) - Create a GraphQL HTTP server with Express
 - User authentication
   - [LDAP](https://github.com/wisekaa03/nestjs-ldap) - NestJS LDAP Service, internally using [ldapjs](http://ldapjs.org/)
   - [Passport](http://www.passportjs.org) - Simple, unobtrusive authentication for Node.js
