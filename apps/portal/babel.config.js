@@ -91,7 +91,7 @@ module.exports = function (api) {
           modules: false,
           exclude: ['transform-typeof-symbol'],
           useBuiltIns: 'usage',
-          corejs: '3.8',
+          corejs: '3',
         },
       ],
       [
@@ -115,7 +115,7 @@ module.exports = function (api) {
           modules: false,
           exclude: ['transform-typeof-symbol'],
           useBuiltIns: 'usage',
-          corejs: '3.8',
+          corejs: '3',
         },
       ],
       '@babel/preset-react',
