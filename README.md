@@ -1,6 +1,6 @@
 # Portal
 
-[Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport](http://www.passportjs.org/), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
+[Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), [LDAP Service](https://github.com/wisekaa03/nestjs-ldap), [Passport](http://www.passportjs.org/), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
 ## Features
 
@@ -15,7 +15,6 @@
 - [x] User authentication - powered by [Passport](http://www.passportjs.org)
 - [x] LDAP through custom NestJS LDAPService
 - [x] [WebSockets](https://www.apollographql.com/docs/link/links/ws/)
-- [ ] Admin page
 
 ## Technologies
 
@@ -38,12 +37,11 @@
   - [Next.js](https://nextjs.org) - The React Framework
 - Environment variables
   - [dotenv](https://github.com/motdotla/dotenv) - Loads environment variables from .env for nodejs projects
-  - [dotenv-webpack](https://github.com/mrsteele/dotenv-webpack) - A secure webpack plugin that supports dotenv and other environment variables and only exposes what you choose and use.
 - Database
   - [PostgreSQL](https://www.postgresql.org) - The World's Most Advanced Open Source Relational Database
   - [GraphQL](https://github.com/graphql/express-graphql) - Create a GraphQL HTTP server with Express.
 - User authentication
-  - [LDAP] - Custom NestJS LDAPService, internally using [ldapjs](http://ldapjs.org/)
+  - [LDAP](https://github.com/wisekaa03/nestjs-ldap) - NestJS LDAP Service, internally using [ldapjs](http://ldapjs.org/)
   - [Passport](http://www.passportjs.org) - Simple, unobtrusive authentication for Node.js
 - UI framework
   - [Next.js](https://nextjs.org) - The React Framework
