@@ -332,7 +332,8 @@
       "lpad",
       "pskzcompany",
       "Wasm",
-      "printf"
+      "printf",
+      "Kubernetes"
     ]
   }
 }

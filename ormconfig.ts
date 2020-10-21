@@ -1,16 +1,19 @@
 /** @format */
 
+//#region Imports NPM
+import { resolve } from 'path';
+//#endregion
 //#region Imports Local
 import { WinstonModule } from 'nest-winston';
-import { ConfigService } from '@app/config/config.service';
+import { ConfigService } from './libs/config/src/config.service';
 
-import { winstonOptions } from '@back/shared/logger.options';
-import { TypeOrmLogger } from '@back/shared/typeorm.logger';
+import { winstonOptions } from './apps/portal/src/shared/logger.options';
+import { TypeOrmLogger } from './apps/portal/src/shared/typeorm.logger';
 
-import { GroupEntity } from '@back/group/group.entity';
-import { ProfileEntity } from '@back/profile/profile.entity';
-import { UserEntity } from '@back/user/user.entity';
-import { NewsEntity } from '@back/news/news.entity';
+import { GroupEntity } from './apps/portal/src/group/group.entity';
+import { ProfileEntity } from './apps/portal/src/profile/profile.entity';
+import { UserEntity } from './apps/portal/src/user/user.entity';
+import { NewsEntity } from './apps/portal/src/news/news.entity';
 //#endregion
 
 const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity];
@@ -18,7 +21,7 @@ const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity];
 // const entities = ['./.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 
-const configService = new ConfigService('.local/.env');
+const configService = new ConfigService(resolve(__dirname, '../../.local/.env'));
 const logger = WinstonModule.createLogger(winstonOptions());
 
 module.exports = {

@@ -20,13 +20,10 @@ function withCustomWebpack(c = {}) {
   const { webpack } = c;
 
   c.webpack = (config, { isServer, buildId, dev /* , defaultLoaders */, ...rest }) => {
-    config.resolve = {
-      ...(config.resolve || []),
-      alias: {
-        ...config.resolve.alias,
-        'google-libphonenumber': resolve(__dirname, './libphonenumber-stub.js'),
-        ...resolveTsconfigPaths({ tsconfigPaths: '../../tsconfig.json' }),
-      },
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'google-libphonenumber': resolve(__dirname, './libphonenumber-stub.js'),
+      ...resolveTsconfigPaths({ tsconfigPaths: '../../tsconfig.json' }),
     };
 
     config.plugins = [
