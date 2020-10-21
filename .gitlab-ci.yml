@@ -170,6 +170,75 @@ helm_development:
         --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
+    # Portal tasks
+    - |
+      helm upgrade ${CI_PROJECT_NAME} helm/tasks \
+        --set replicaCount="1" \
+        --set PORT="${PORT:=4000}" \
+        --set PORT_DEBUG="${PORT_DEBUG:=9229}" \
+        --set DOMAIN="${DOMAIN}" \
+        --set DEVELOPMENT="true" \
+        --set LOG_LEVEL="${LOG_LEVEL}" \
+        --set LOG_SERVER="${LOG_SERVER}" \
+        --set DATABASE_URI="${DATABASE_URI}" \
+        --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
+        --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
+        --set DATABASE_SYNCHRONIZE="${DATABASE_SYNCHRONIZE}" \
+        --set DATABASE_DROP_SCHEMA="${DATABASE_DROP_SCHEMA}" \
+        --set DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}" \
+        --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
+        --set DATABASE_REDIS_URI="${DATABASE_REDIS_URI}" \
+        --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
+        --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
+        --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
+        --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
+        --set SESSION_NAME="${SESSION_NAME}" \
+        --set SESSION_REDIS_URI="${SESSION_REDIS_URI}" \
+        --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
+        --set SESSION_SECRET="${SESSION_SECRET}" \
+        --set LDAP_URL="${LDAP_URL}" \
+        --set LDAP_BIND_DN="${LDAP_BIND_DN}" \
+        --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
+        --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
+        --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
+        --set LDAP_SEARCH_FILTER_ALL_GROUPS="${LDAP_SEARCH_FILTER_ALL_GROUPS}" \
+        --set LDAP_SEARCH_USER="${LDAP_SEARCH_USER}" \
+        --set LDAP_SEARCH_GROUP="${LDAP_SEARCH_GROUP}" \
+        --set LDAP_NEW_BASE="${LDAP_NEW_BASE}" \
+        --set LDAP_DOMAIN="${LDAP_DOMAIN}" \
+        --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
+        --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
+        --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
+        --set TICKETS_URL="${TICKETS_URL}" \
+        --set REPORTS_URL="${REPORTS_URL}" \
+        --set DOCFLOW_URL="${DOCFLOW_URL}" \
+        --set TICKETS_REDIS_URI="${TICKETS_REDIS_URI}" \
+        --set TICKETS_REDIS_TTL="${TICKETS_REDIS_TTL}" \
+        --set REPORTS_REDIS_URI="${REPORTS_REDIS_URI}" \
+        --set REPORTS_REDIS_TTL="${REPORTS_REDIS_TTL}" \
+        --set DOCFLOW_REDIS_URI="${DOCFLOW_REDIS_URI}" \
+        --set DOCFLOW_REDIS_TTL="${DOCFLOW_REDIS_TTL}" \
+        --set OSTICKET_URL="${OSTICKET_URL}" \
+        --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
+        --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
+        --set NEXTCLOUD_REDIS_TTL="${NEXTCLOUD_REDIS_TTL}" \
+        --set MAX_FILE_SIZE="${MAX_FILE_SIZE}" \
+        --set NEWS_URL="${NEWS_URL}" \
+        --set NEWS_API_URL="${NEWS_API_URL}" \
+        --set MAIL_URL="${MAIL_URL}" \
+        --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
+        --set MEETING_URL="${MEETING_URL}" \
+        --set service.type="ClusterIP" \
+        --set imageCredentials.registry="${CI_REGISTRY}" \
+        --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
+        --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
+        --set image.repository="${CI_REGISTRY_IMAGE}" \
+        --set image.tag="${CI_COMMIT_SHA}" \
+        --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
+        --set ingress.hosts[0].host="${INGRESS_HOST}" \
+        --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
+        --install --namespace=${KUBE_NAMESPACE} \
+        --debug --values helm/tasks/values.yaml
     # Portal-sync
     - |
       helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \
@@ -265,6 +334,73 @@ helm_production:
         --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
         --install --namespace=${KUBE_NAMESPACE} \
         --debug --values helm/portal/values.yaml
+    # Portal tasks
+    - |
+      helm upgrade ${CI_PROJECT_NAME} helm/tasks \
+        --set PORT="${PORT:=4000}" \
+        --set DOMAIN="${DOMAIN}" \
+        --set DEVELOPMENT="false" \
+        --set LOG_LEVEL="${LOG_LEVEL}" \
+        --set LOG_SERVER="${LOG_SERVER}" \
+        --set DATABASE_URI="${DATABASE_URI}" \
+        --set DATABASE_URI_RD="${DATABASE_URI_RD}" \
+        --set DATABASE_SCHEMA="${DATABASE_SCHEMA}" \
+        --set DATABASE_SYNCHRONIZE="${DATABASE_SYNCHRONIZE}" \
+        --set DATABASE_DROP_SCHEMA="${DATABASE_DROP_SCHEMA}" \
+        --set DATABASE_MIGRATIONS_RUN="${DATABASE_MIGRATIONS_RUN}" \
+        --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
+        --set DATABASE_REDIS_URI="${DATABASE_REDIS_URI}" \
+        --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
+        --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
+        --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
+        --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
+        --set SESSION_NAME="${SESSION_NAME}" \
+        --set SESSION_REDIS_URI="${SESSION_REDIS_URI}" \
+        --set SESSION_COOKIE_TTL="${SESSION_COOKIE_TTL}" \
+        --set SESSION_SECRET="${SESSION_SECRET}" \
+        --set LDAP_URL="${LDAP_URL}" \
+        --set LDAP_BIND_DN="${LDAP_BIND_DN}" \
+        --set LDAP_BIND_PW="${LDAP_BIND_PW}" \
+        --set LDAP_SEARCH_BASE="${LDAP_SEARCH_BASE}" \
+        --set LDAP_SEARCH_FILTER_ALL_USERS="${LDAP_SEARCH_FILTER_ALL_USERS}" \
+        --set LDAP_SEARCH_FILTER_ALL_GROUPS="${LDAP_SEARCH_FILTER_ALL_GROUPS}" \
+        --set LDAP_SEARCH_USER="${LDAP_SEARCH_USER}" \
+        --set LDAP_SEARCH_GROUP="${LDAP_SEARCH_GROUP}" \
+        --set LDAP_NEW_BASE="${LDAP_NEW_BASE}" \
+        --set LDAP_DOMAIN="${LDAP_DOMAIN}" \
+        --set LDAP_REDIS_URI="${LDAP_REDIS_URI}" \
+        --set LDAP_REDIS_TTL="${LDAP_REDIS_TTL}" \
+        --set MICROSERVICE_URL="${MICROSERVICE_URL}" \
+        --set TICKETS_URL="${TICKETS_URL}" \
+        --set REPORTS_URL="${REPORTS_URL}" \
+        --set DOCFLOW_URL="${DOCFLOW_URL}" \
+        --set TICKETS_REDIS_URI="${TICKETS_REDIS_URI}" \
+        --set TICKETS_REDIS_TTL="${TICKETS_REDIS_TTL}" \
+        --set REPORTS_REDIS_URI="${REPORTS_REDIS_URI}" \
+        --set REPORTS_REDIS_TTL="${REPORTS_REDIS_TTL}" \
+        --set DOCFLOW_REDIS_URI="${DOCFLOW_REDIS_URI}" \
+        --set DOCFLOW_REDIS_TTL="${DOCFLOW_REDIS_TTL}" \
+        --set OSTICKET_URL="${OSTICKET_URL}" \
+        --set NEXTCLOUD_URL="${NEXTCLOUD_URL}" \
+        --set NEXTCLOUD_REDIS_URI="${NEXTCLOUD_REDIS_URI}" \
+        --set NEXTCLOUD_REDIS_TTL="${NEXTCLOUD_REDIS_TTL}" \
+        --set MAX_FILE_SIZE="${MAX_FILE_SIZE}" \
+        --set NEWS_URL="${NEWS_URL}" \
+        --set NEWS_API_URL="${NEWS_API_URL}" \
+        --set MAIL_URL="${MAIL_URL}" \
+        --set MAIL_LOGIN_URL="${MAIL_LOGIN_URL}" \
+        --set MEETING_URL="${MEETING_URL}" \
+        --set service.type="ClusterIP" \
+        --set imageCredentials.registry="${CI_REGISTRY}" \
+        --set imageCredentials.username="${CI_DEPLOY_USER:-CI_REGISTRY_USER}" \
+        --set imageCredentials.password="${CI_DEPLOY_PASSWORD:-CI_REGISTRY_PASSWORD}" \
+        --set image.repository="${CI_REGISTRY_IMAGE}" \
+        --set image.tag="${CI_COMMIT_SHA}" \
+        --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-prod" \
+        --set ingress.hosts[0].host="${INGRESS_HOST}" \
+        --set ingress.tls[0].hosts[0]="${INGRESS_HOST}" \
+        --install --namespace=${KUBE_NAMESPACE} \
+        --debug --values helm/tasks/values.yaml
     # Portal-sync
     - |
       helm upgrade ${CI_PROJECT_NAME}-sync helm/portal-sync \

@@ -1,7 +1,6 @@
 #!/bin/sh
 
 export NODE=`which node`
-export TSNODE="./node_modules/.bin/ts-node"
 export NODE_OPTIONS=--max_old_space_size=1024
 export NODE_PG_FORCE_NATIVE=true
 export NODE_ENV=${NODE_ENV:=production}
@@ -15,17 +14,17 @@ if [ -n "$*" -a "$1" = "test" ]; then
   node_modules/.bin/jest $2 $3 $4 $5
 
 elif [ -n "$*" -a "$1" = "schema" ]; then
-  $TSNODE -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync
+  $NODE ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js schema:sync
 
 elif [ -n "$*" -a "$1" = "start" ]; then
   $NODE .next/nest/main.js
 
 elif [ -n "$*" -a "$1" = "start:sync" ]; then
-  $TSNODE -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync
+  $NODE ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js schema:sync
   $NODE dist/apps/sync/main.js
 
 elif [ -n "$*" -a "$1" = "start:syncJob" ]; then
-  $TSNODE -P ./tsconfig.ormconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync
+  $NODE ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js schema:sync
   $NODE dist/apps/sync-job/main.js
 
 elif [ -n "$*" -a "$1" = "build" ]; then

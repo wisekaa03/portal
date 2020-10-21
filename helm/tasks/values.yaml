@@ -16,19 +16,14 @@ imageCredentials:
   username: docker-reg-user
   password: XXXXXXXXXXXX
 
-nameOverride: "portal-ldap-sync"
-fullnameOverride: "portal-ldap-sync"
-
-signatureShedule: "10 * * * *"
+nameOverride: "portal-tasks"
+fullnameOverride: "portal-tasks"
 
 # App
 PORT: 4222
 
 service:
   type: ClusterIP
-
-  # nodePort: 30300
-  # nodePort_debug: 30301
 
 tls:
   enabled: false
