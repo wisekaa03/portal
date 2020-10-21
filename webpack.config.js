@@ -23,9 +23,11 @@ module.exports = (options) => {
       },
       // entry: resolve(__dirname, 'ormconfig.ts'),
       output: {
-        path: resolve(__dirname),
+        path: resolve(__dirname, '.next/typeorm'),
         filename: 'ormconfig.js',
-        // library: 'postgres',
+        library: '',
+        libraryTarget: 'commonjs2',
+        libraryExport: 'default',
       },
       resolve: {
         ...config.resolve,
@@ -42,7 +44,7 @@ module.exports = (options) => {
         }),
         new DotenvWebpackPlugin({ path: resolve(__dirname, '.local/.env') }),
       ],
-      externals: [nodeExternals({ allowlist: [/node_modules/, /apps/, /libs/] })],
+      externals: [nodeExternals({ allowlist: [/apps/, /libs/] })],
       module: {
         rules: [
           {
