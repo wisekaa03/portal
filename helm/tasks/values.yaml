@@ -16,8 +16,8 @@ imageCredentials:
   username: docker-reg-user
   password: XXXXXXXXXXXX
 
-nameOverride: "portal"
-fullnameOverride: "portal"
+nameOverride: "portal-tasks"
+fullnameOverride: "portal-tasks"
 
 # App
 PORT: 4000
