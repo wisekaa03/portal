@@ -2,8 +2,6 @@
 
 [Nest.js](https://nestjs.com), [TypeORM](https://typeorm.io), [GraphQL](https://graphql.org/), LDAP Service, [Passport](http://www.passportjs.org/), [Next.js (v9)](https://nextjs.org), [React.js](https://reactjs.org/), [Material UI (v4)](https://material-ui.com)
 
-[![pipeline status](https://gitlab.kube.i-npz.ru/Project/portal/badges/master/pipeline.svg)](https://gitlab.kube.i-npz.ru/Project/portal/commits/master)
-
 ## Features
 
 - [x] Cross platform - Mac, Linux and Windows
@@ -16,7 +14,7 @@
 - [x] [React.js](https://reactjs.org/)
 - [x] User authentication - powered by [Passport](http://www.passportjs.org)
 - [x] LDAP through custom NestJS LDAPService
-- [ ] [WebSockets](https://www.apollographql.com/docs/link/links/ws/)
+- [x] [WebSockets](https://www.apollographql.com/docs/link/links/ws/)
 - [ ] Admin page
 
 ## Technologies
@@ -236,21 +234,5 @@ We use Kubernetes/Docker production.
 - [x] Authentication with LDAP
 - [x] Test: unit tests
 - [-] Test: e2e tests
-- [ ] [Nest.JS WebSockets](https://github.com/nestjs/nest/tree/master/packages/platform-ws)
-- [ ] [Apollo Link WebSockets](https://www.apollographql.com/docs/link/links/ws/)
-
-## Trouble Shootings
-
-### Node.js v10 vs v13
-
-We use Node.js **v13**, so if you use v10, please `rm -f yarn.lock`:
-
-(Because Node.js v10 and v13 are incompatible in terms of no coexistence. APIs are compatible.)
-
-```bash
-# remove incompatible dependencies
-$ rm -rf node_modules yarn.lock
-
-# use your compatible dependencies
-$ yarn
-```
+- [x] [Nest.JS WebSockets](https://github.com/nestjs/nest/tree/master/packages/platform-ws)
+- [x] [Apollo Link WebSockets](https://www.apollographql.com/docs/link/links/ws/)
