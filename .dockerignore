@@ -1,4 +1,11 @@
 .vscode
+.storybook
+tsconfig*
+typings/
+ormconfig.ts
+apps/
+libs/
+node_modules/@types/
 
 .git*
 doc/
