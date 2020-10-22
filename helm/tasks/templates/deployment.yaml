@@ -39,34 +39,6 @@ spec:
               containerPort: {{ .Values.PORT_DEBUG }}
               protocol: TCP
             {{- end }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: http
-          #     {{- if .Values.tls.enabled }}
-          #     scheme: HTTPS
-          #     {{ else }}
-          #     scheme: HTTP
-          #     {{- end }}
-          #   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-          #   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-          #   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-          #   successThreshold: {{ .Values.livenessProbe.successThreshold }}
-          #   failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-          # readinessProbe:
-          #   httpGet:
-          #     path: /health
-          #     port: http
-          #     {{- if .Values.tls.enabled }}
-          #     scheme: HTTPS
-          #     {{ else }}
-          #     scheme: HTTP
-          #     {{- end }}
-          #   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-          #   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-          #   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-          #   successThreshold: {{ .Values.readinessProbe.successThreshold }}
-          #   failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: PORT
               value: {{ .Values.PORT | quote }}
@@ -79,7 +51,16 @@ spec:
           volumeMounts:
             - name: configmap
               mountPath: /portal/.local
+            - name: portal-tmp
+              mountPath: /portal/public/tmp
       volumes:
+        - name: portal-tmp
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
         - name: configmap
           configMap:
             name: portal-configmap
