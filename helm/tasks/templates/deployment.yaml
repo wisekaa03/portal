@@ -57,7 +57,7 @@ spec:
         - name: portal-tmp
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "portal.fullname" .) }}
+            claimName: {{ .Values.persistence.existingClaim | 'portal' }}
         {{- else }}
           emptyDir: {}
         {{- end }}
