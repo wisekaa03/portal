@@ -3,7 +3,7 @@
 tsconfig*
 typings/
 ormconfig.ts
-apps/
+# apps/
 libs/
 node_modules/@types/
 
