@@ -101,7 +101,7 @@ const App = ({ disableGeneration = false, Component, apolloClient, pageProps, co
     }),
   });
 
-  const { fontSize, isMobile } = context;
+  const { fontSize = 16, isMobile } = context;
   const themeUser = MaterialUI(fontSize, ssrMatchMedia);
 
   return (
