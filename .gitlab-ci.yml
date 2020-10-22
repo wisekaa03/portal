@@ -337,6 +337,7 @@ helm_production:
     # Portal tasks
     - |
       helm upgrade ${CI_PROJECT_NAME}-tasks helm/tasks \
+        --set replicaCount="1" \
         --set PORT="${PORT:=4000}" \
         --set DOMAIN="${DOMAIN}" \
         --set DEVELOPMENT="false" \
