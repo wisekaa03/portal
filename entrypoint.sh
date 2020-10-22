@@ -118,8 +118,4 @@ MAIL_LOGIN_URL="${MAIL_LOGIN_URL}"
 MEETING_URL="${MEETING_URL}"
 EOF
 
-elif [ -n "$*" ]; then
-  NODE_ENV=development
-  yarn dev
-
 fi
