@@ -3,12 +3,12 @@
 //#region Imports NPM
 import React from 'react';
 import { Response } from 'express';
-import Document, { Html, Head, Main, NextScript, DocumentInitialProps } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 //#endregion
 //#region Imports Local
-import { DocumentContextMy, DocumentInitialPropsMy } from '@lib/types';
+import { DocumentPortalContext, DocumentPortalInitialProps } from '@lib/types';
 import { MaterialUIPrimaryMain } from '@lib/theme';
 import { nextI18next } from '@lib/i18n-client';
 //#endregion
@@ -35,7 +35,7 @@ import { nextI18next } from '@lib/i18n-client';
 // 3. app.render
 // 4. page.render
 
-class MainDocument extends Document<DocumentInitialPropsMy> {
+class MainDocument extends Document<DocumentPortalInitialProps> {
   render(): React.ReactElement {
     const { nonce, language } = this.props;
 
@@ -57,7 +57,7 @@ class MainDocument extends Document<DocumentInitialPropsMy> {
     );
   }
 
-  static async getInitialProps(ctx: DocumentContextMy): Promise<DocumentInitialPropsMy> {
+  static async getInitialProps(ctx: DocumentPortalContext): Promise<DocumentPortalInitialProps> {
     const sheets = new ServerStyleSheets();
     const { renderPage: originalRenderPage, req, res } = ctx;
 
