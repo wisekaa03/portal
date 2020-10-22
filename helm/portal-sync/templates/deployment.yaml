@@ -29,7 +29,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: "/portal/entrypoint.sh"
+          command: ["/portal/entrypoint.sh"]
           args: ["start:sync"]
           ports:
             - name: microsvc
