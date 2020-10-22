@@ -21,7 +21,7 @@ import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
-import { Data, User, UserContext, AppContextMy, AppInitialPropsMy } from '@lib/types';
+import { Data, User, UserContext, AppPortalProps, AppPortalInitialProps } from '@lib/types';
 // import { nextI18next } from './i18n-client';
 import { resolvers } from './state-link';
 import getRedirect from './get-redirect';
@@ -196,14 +196,14 @@ const initApollo = (options: CreateClientProps): ApolloClient<NormalizedCacheObj
 };
 
 export const withApolloClient = (
-  MainApp: NextComponentType<AppContext, AppInitialPropsMy, AppContextMy>,
-): NextComponentType<AppContext, AppInitialPropsMy, AppContextMy> =>
-  class Apollo extends React.Component<AppContextMy> {
+  MainApp: NextComponentType<AppContext, AppPortalInitialProps, AppPortalProps>,
+): NextComponentType<AppContext, AppPortalInitialProps, AppPortalProps> =>
+  class Apollo extends React.Component<AppPortalProps> {
     private apolloClient: ApolloClient<NormalizedCacheObject>;
 
     static displayName = 'withApolloClient(App)';
 
-    public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<AppInitialPropsMy> {
+    public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<AppPortalInitialProps> {
       const appProps =
         typeof MainApp.getInitialProps === 'function'
           ? await MainApp.getInitialProps({ AppTree, Component, router, ctx })
@@ -306,7 +306,7 @@ export const withApolloClient = (
       };
     }
 
-    public constructor(props: AppContextMy) {
+    public constructor(props: AppPortalProps) {
       super(props);
 
       if (__SERVER__ && props.apolloClient) {

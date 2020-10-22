@@ -4,7 +4,6 @@
 import React, { useEffect } from 'react';
 import { Request } from 'express';
 import { NextPageContext } from 'next';
-import NextApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { ApolloProvider, useQuery } from '@apollo/client';
@@ -23,7 +22,7 @@ import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { MaterialUI } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
-import { AppContextMy, Data, User, UserContext } from '@lib/types';
+import { AppPortalProps, Data, User, UserContext } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
@@ -36,9 +35,9 @@ import getRedirect from '@lib/get-redirect';
  */
 const ProfileProvider: React.FC<{
   context: UserContext;
-  ctx: NextPageContext;
   router: NextRouter;
   children: React.ReactNode;
+  ctx?: NextPageContext;
 }> = ({ context, ctx, router, children }) => {
   const pathname = ctx?.asPath || router?.asPath;
 
@@ -79,9 +78,8 @@ const ProfileProvider: React.FC<{
 /**
  * App
  */
-class App extends NextApp<AppContextMy> {
-  componentDidMount(): void {
-    // Remove the server-sie injected CSS
+const App = ({ disableGeneration = false, Component, apolloClient, pageProps, context, router, ctx }: AppPortalProps) => {
+  useEffect(() => {
     document.querySelector('#jss-server-side')?.remove();
 
     // Service worker
@@ -95,52 +93,49 @@ class App extends NextApp<AppContextMy> {
     //       console.warn('service worker registration failed', err.message);
     //     });
     // }
-  }
+  }, []);
 
-  render() {
-    const { disableGeneration = false, Component, apolloClient, pageProps, context, router, ctx } = this.props;
+  const ssrMatchMedia = (query: string) => ({
+    matches: mediaQuery.match(query, {
+      width: context.isMobile ? 0 : 1280,
+    }),
+  });
 
-    const ssrMatchMedia = (query: string) => ({
-      matches: mediaQuery.match(query, {
-        width: context.isMobile ? 0 : 1280,
-      }),
-    });
+  const { fontSize, isMobile } = context;
+  const themeUser = MaterialUI(fontSize, ssrMatchMedia);
 
-    const themeUser = MaterialUI(context?.fontSize, ssrMatchMedia);
-
-    return (
-      <>
-        <Head>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
-        </Head>
-        <StylesProvider disableGeneration={disableGeneration}>
-          <ThemeProvider theme={themeUser}>
-            <CssBaseline />
-            <ApolloProvider client={apolloClient}>
-              <Head>
-                <title>Corporate portal</title>
-              </Head>
-              <SnackbarProvider
-                maxSnack={3}
-                dense={context.isMobile}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-              >
-                <DndProvider backend={context.isMobile ? TouchBackend : HTML5Backend}>
-                  <SnackbarUtilsConfigurator />
-                  <ProfileProvider context={context} router={router} ctx={ctx}>
-                    <Component {...pageProps} context={context} ctx={ctx} />
-                  </ProfileProvider>
-                </DndProvider>
-              </SnackbarProvider>
-            </ApolloProvider>
-          </ThemeProvider>
-        </StylesProvider>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Head>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+      </Head>
+      <StylesProvider disableGeneration={disableGeneration}>
+        <ThemeProvider theme={themeUser}>
+          <CssBaseline />
+          <ApolloProvider client={apolloClient}>
+            <Head>
+              <title>Corporate portal</title>
+            </Head>
+            <SnackbarProvider
+              maxSnack={3}
+              dense={isMobile}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+                <SnackbarUtilsConfigurator />
+                <ProfileProvider context={context} router={router} ctx={ctx}>
+                  <Component {...pageProps} context={context} ctx={ctx} />
+                </ProfileProvider>
+              </DndProvider>
+            </SnackbarProvider>
+          </ApolloProvider>
+        </ThemeProvider>
+      </StylesProvider>
+    </>
+  );
+};
 
 export default withApolloClient(appWithTranslation(App));

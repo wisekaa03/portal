@@ -1,8 +1,9 @@
 /** @format */
 
 //#region Import NPM
-// import React from 'react';
-import { AppContext, AppInitialProps } from 'next/app';
+import React from 'react';
+import { NextPageContext } from 'next';
+import { AppProps, AppInitialProps } from 'next/app';
 import { DocumentContext, DocumentInitialProps } from 'next/document';
 // import { GraphQLSchema } from 'graphql/type/schema';
 import { ApolloClient } from '@apollo/client';
@@ -33,26 +34,27 @@ export * from './treeview';
 export * from './user.dto';
 //#endregion
 
-export interface AppInitialPropsMy<TCache = NormalizedCacheObject> extends AppInitialProps {
+export interface AppPortalInitialProps<TCache = NormalizedCacheObject> extends AppInitialProps {
   initialLanguage?: string;
   language?: string;
   context?: UserContext;
   apollo?: NormalizedCacheObject;
 }
 
-export interface AppContextMy<TCache = NormalizedCacheObject> extends AppContext {
+export interface AppPortalProps<TCache = NormalizedCacheObject> extends AppProps {
   disableGeneration?: boolean;
   context: UserContext;
   apollo: NormalizedCacheObject;
   apolloClient: ApolloClient<NormalizedCacheObject>;
+  ctx?: NextPageContext;
 }
 
-export interface DocumentContextMy extends DocumentContext {
+export interface DocumentPortalContext extends DocumentContext {
   language?: string;
   nonce?: string;
 }
 
-export interface DocumentInitialPropsMy extends DocumentInitialProps {
+export interface DocumentPortalInitialProps extends DocumentInitialProps {
   language?: string;
   nonce?: string;
 }
