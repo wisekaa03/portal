@@ -29,7 +29,8 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["/bin/sh"]
+          command: ["/bin/sh"]
+          args: ["tail", "-f", "/var/log/faillog"]
           ports:
             - name: microsvc
               containerPort: {{ .Values.PORT }}
