@@ -55,9 +55,9 @@ spec:
               mountPath: /portal/public/tmp
       volumes:
         - name: portal-tmp
-        {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.existingClaim }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | 'portal' }}
+            claimName: {{ .Values.persistence.existingClaim }}
         {{- else }}
           emptyDir: {}
         {{- end }}
