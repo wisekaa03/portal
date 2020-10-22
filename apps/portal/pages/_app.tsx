@@ -4,9 +4,11 @@
 import React, { useEffect } from 'react';
 import { Request } from 'express';
 import { NextPageContext } from 'next';
+import BasicApp from 'next/app';
 import Head from 'next/head';
 import { NextRouter } from 'next/dist/next-server/lib/router/router';
 import { ApolloProvider, useQuery } from '@apollo/client';
+import { NormalizedCacheObject } from '@apollo/client/cache';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import mediaQuery from 'css-mediaquery';
@@ -22,7 +24,7 @@ import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { MaterialUI } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
-import { AppPortalProps, Data, User, UserContext } from '@lib/types';
+import { AppPortalProps, AppPortalContext, Data, User, UserContext, AppPortalInitialProps } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';
@@ -137,5 +139,9 @@ const App = ({ disableGeneration = false, Component, apolloClient, pageProps, co
     </>
   );
 };
+
+App.getInitialProps = async (appContext: AppPortalContext): Promise<AppPortalInitialProps<NormalizedCacheObject>> => ({
+  ...(await BasicApp.getInitialProps(appContext)),
+});
 
 export default withApolloClient(appWithTranslation(App));

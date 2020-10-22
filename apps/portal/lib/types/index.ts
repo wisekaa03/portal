@@ -3,7 +3,7 @@
 //#region Import NPM
 import React from 'react';
 import { NextPageContext } from 'next';
-import { AppProps, AppInitialProps } from 'next/app';
+import { AppProps, AppInitialProps, AppContext } from 'next/app';
 import { DocumentContext, DocumentInitialProps } from 'next/document';
 // import { GraphQLSchema } from 'graphql/type/schema';
 import { ApolloClient } from '@apollo/client';
@@ -39,6 +39,12 @@ export interface AppPortalInitialProps<TCache = NormalizedCacheObject> extends A
   language?: string;
   context?: UserContext;
   apollo?: NormalizedCacheObject;
+}
+
+export interface AppPortalContext<TCache = NormalizedCacheObject> extends AppContext {
+  context: UserContext;
+  apollo: NormalizedCacheObject;
+  apolloClient: ApolloClient<NormalizedCacheObject>;
 }
 
 export interface AppPortalProps<TCache = NormalizedCacheObject> extends AppProps {
