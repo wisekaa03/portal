@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.43",
+  "version": "4.17.44",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -156,7 +156,6 @@
     "**/**/domhandler": "^3",
     "**/**/dom-serializer": "^1",
     "**/**/espree": "^7",
-    "**/**/execa": "^4",
     "**/**/figures": "^3",
     "**/**/file-type": "^12",
     "**/**/find-cache-dir": "^3",
@@ -169,7 +168,16 @@
     "**/**/http-errors": "^1",
     "**/**/imagemin": "^7",
     "**/**/inherits": "^2",
-    "**/**/inquirer": "^7"
+    "**/**/inquirer": "^7",
+    "**/**/jpeg-js": "^0",
+    "**/**/json5": "^2",
+    "**/**/kind-of": "^6",
+    "**/**/loader-utils": "^2",
+    "**/**/log-symbols": "^4",
+    "**/**/lru-cache": "^6",
+    "**/**/micromatch": "^4",
+    "**/**/minimist": "^1",
+    "**/**/ms": "^2"
   },
   "dependencies": {
     "@apollo/client": "*",
