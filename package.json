@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.44",
+  "version": "4.17.45",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -80,6 +80,8 @@
     "**/**/browserslist": "^4",
     "**/**/chokidar": "^3",
     "**/**/rimraf": "^3",
+    "**/**/@babel/parser": "^7",
+    "**/**/@babel/types": "^7",
     "**/**/@nestjs/common": "^7",
     "**/**/@nestjs/core": "^7",
     "**/**/@storybook/api": "^6",
@@ -177,7 +179,9 @@
     "**/**/lru-cache": "^6",
     "**/**/micromatch": "^4",
     "**/**/minimist": "^1",
-    "**/**/ms": "^2"
+    "**/**/ms": "^2",
+    "**/**/webpack": "^4",
+    "**/**/whatwg-url": "^8"
   },
   "dependencies": {
     "@apollo/client": "*",
