@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.45",
+  "version": "4.17.46",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -164,6 +164,7 @@
     "**/**/fork-ts-checker-webpack-plugin": "^5",
     "**/**/form-data": "^3",
     "**/**/fs-extra": "^9",
+    "**/**/cookie": "^0",
     "**/**/has-value": "^1",
     "**/**/has-values": "^1",
     "**/**/htmlparser2": "^5",
@@ -184,6 +185,8 @@
     "**/**/ora": "^5",
     "**/**/node-gyp": "^7",
     "**/**/node-pre-gyp": "^0",
+    "**/**/nopt": "^5",
+    "**/**/normalize-path": "^3",
     "**/**/pg-types": "^3",
     "**/**/postcss-place": "^5",
     "**/**/postcss-sass": "^0",
@@ -333,7 +336,6 @@
     "@types/enzyme": "*",
     "@types/enzyme-adapter-react-16": "*",
     "@types/express-session": "*",
-    "@types/helmet": "*",
     "@types/ioredis": "*",
     "@types/jest": "*",
     "@types/joi": "*",
