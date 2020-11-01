@@ -333,7 +333,9 @@
       "pskzcompany",
       "Wasm",
       "printf",
-      "Kubernetes"
+      "Kubernetes",
+      "espree",
+      "sugarss"
     ]
   }
 }
