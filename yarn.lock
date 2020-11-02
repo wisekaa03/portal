@@ -1419,14 +1419,14 @@
     tslib "~2.0.1"
 
 "@graphql-tools/delegate@^7.0.0", "@graphql-tools/delegate@^7.0.1":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-7.0.2.tgz#f933254727173bab4f6e0e13b2d8d4500eadf426"
-  integrity sha512-AkNkg8w966+cHEVNddYUPeuPybNvbnkL+iFA8rrW5V3F8e6LHRep5MnFwNKD4JTae9HeKEs9Jx0UQDwnuCsZng==
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-7.0.3.tgz#d25028de64acc886be6e0514162aa6739d9acd51"
+  integrity sha512-BSRF/Wg9XNllWo3Kdt0QBBaFltexn3vAnTOWH1qLrNcmfQAvUMf17/TsAqH9ZLSKU1NW9XCOsd7YMHhhUuTCEg==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     "@graphql-tools/batch-execute" "^7.0.0"
     "@graphql-tools/schema" "^7.0.0"
-    "@graphql-tools/utils" "^7.0.1"
+    "@graphql-tools/utils" "^7.0.2"
     dataloader "2.0.0"
     is-promise "4.0.0"
     tslib "~2.0.1"
@@ -1506,10 +1506,10 @@
     valid-url "1.0.9"
     websocket "1.0.32"
 
-"@graphql-tools/utils@^6.0.0", "@graphql-tools/utils@^7", "@graphql-tools/utils@^7.0.0", "@graphql-tools/utils@^7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.0.1.tgz#8bf54676de65878d2b1ba34fcd58ef4d8ae0b589"
-  integrity sha512-DsV7XfEJE6rPQ3Ysusf28MPun/YL+pc7L0hiBOph/F8+/H1pW1ndRqRrnmX3Owrq9xW1EHSw2WU8qvdjn8kOjw==
+"@graphql-tools/utils@^6.0.0", "@graphql-tools/utils@^7", "@graphql-tools/utils@^7.0.0", "@graphql-tools/utils@^7.0.1", "@graphql-tools/utils@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.0.2.tgz#1977d3277158bf32df792a5ff76d3fdc04647a64"
+  integrity sha512-VQQ7krHeoXO0FS3qbWsb/vZb8c8oyiCYPIH4RSgeK9SKOUpatWYt3DW4jmLmyHZLVVMk0yjUbsOhKTBEMejKSA==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.1"
@@ -8798,9 +8798,9 @@ he@1.2.0, he@^1.1.0, he@^1.2.0:
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 helmet@*:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/helmet/-/helmet-4.1.1.tgz#751f0e273d809ace9c172073e0003bed27d27a4a"
-  integrity sha512-Avg4XxSBrehD94mkRwEljnO+6RZx7AGfk8Wa6K1nxaU+hbXlFOhlOIMgPfFqOYQB/dBCsTpootTGuiOG+CHiQA==
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/helmet/-/helmet-4.2.0.tgz#e81f5613cc1c90402af581794dc9878ad078b237"
+  integrity sha512-aoiSxXMd0ks1ojYpSCFoCRzgv4rY/uB9jKStaw8PkXwsdLYa/Gq+Nc5l0soH0cwBIsLAlujPnx4HLQs+LaXCrQ==
 
 helpbox@^7.1.1:
   version "7.2.0"
