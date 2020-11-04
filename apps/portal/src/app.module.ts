@@ -17,7 +17,7 @@ import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { RedisModule, RedisService, RedisModuleOptions } from 'nestjs-redis';
+import { RedisModule, RedisService, RedisModuleOptions } from 'nest-redis';
 // import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
 import type { Redis } from 'ioredis';

@@ -13,7 +13,7 @@ import { NextcloudClient } from 'nextcloud-link';
 import { FileUpload } from 'graphql-upload';
 import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
-import { RedisService } from 'nestjs-redis';
+import { RedisService } from 'nest-redis';
 //#endregion
 //#region Imports Local
 import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';

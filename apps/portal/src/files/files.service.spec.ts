@@ -4,7 +4,7 @@
 //#region Imports NPM
 import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { RedisService } from 'nestjs-redis';
+import { RedisService } from 'nest-redis';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -15,7 +15,7 @@ import { FilesService } from './files.service';
 
 jest.mock('nextcloud-link');
 jest.mock('@app/config/config.service');
-jest.mock('nestjs-redis');
+jest.mock('nest-redis');
 
 const serviceMock = jest.fn(() => ({}));
 

@@ -1,7 +1,7 @@
 /** @format */
 
 import type { UrlWithStringQuery } from 'url';
-import type { RedisModuleOptions } from 'nestjs-redis';
+import type { RedisModuleOptions } from 'nest-redis';
 
 export const redisOptions = ({
   name,

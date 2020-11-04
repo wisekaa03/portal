@@ -16,7 +16,7 @@ import { FileUpload } from 'graphql-upload';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
-import { RedisService } from 'nestjs-redis';
+import { RedisService } from 'nest-redis';
 import type { LoggerContext } from 'nestjs-ldap';
 import { OperationCanceledException } from 'typescript';
 //#endregion

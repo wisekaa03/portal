@@ -2,14 +2,14 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { RedisService } from 'nestjs-redis';
+import { RedisService } from 'nest-redis';
 
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { DocFlowService } from './docflow.service';
 
 jest.mock('@app/config/config.service');
-jest.mock('nestjs-redis');
+jest.mock('nest-redis');
 
 const serviceMock = jest.fn(() => ({}));
 // const repositoryMock = jest.fn(() => ({

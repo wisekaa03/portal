@@ -3,7 +3,7 @@
 
 //#region Imports NPM
 import { Module } from '@nestjs/common';
-import { RedisService } from 'nestjs-redis';
+import { RedisService } from 'nest-redis';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 //#endregion
 //#region Imports Local
