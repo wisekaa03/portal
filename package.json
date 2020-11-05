@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.52",
+  "version": "4.17.53",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -117,7 +117,7 @@
     "**/**/pkg-dir": "^4",
     "**/**/pkg-up": "^3",
     "**/**/debug": "^4",
-    "**/**/buffer": "^5",
+    "**/**/buffer": "^6",
     "**/**/find-up": "^4",
     "**/**/cross-fetch": "^3",
     "**/**/deep-equal": "^2",

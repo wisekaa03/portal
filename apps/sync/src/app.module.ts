@@ -11,7 +11,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
-import { RedisModule, RedisModuleOptions, RedisService } from 'nestjs-redis';
+import { RedisModule, RedisModuleOptions, RedisService } from 'nest-redis';
 import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
