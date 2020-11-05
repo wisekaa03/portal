@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.51",
+  "version": "4.17.52",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -250,6 +250,7 @@
     "apollo-upload-client": "*",
     "bcrypt": "*",
     "body-parser": "*",
+    "buffer": "*",
     "cache-manager": "*",
     "cache-manager-ioredis": "*",
     "chokidar": "^3",
