@@ -4,12 +4,12 @@ import type { UrlWithStringQuery } from 'url';
 import type { RedisModuleOptions } from 'nest-redis';
 
 export const redisOptions = ({
-  name,
+  clientName,
   url,
   ttl,
   prefix,
 }: {
-  name: string;
+  clientName: string;
   url: UrlWithStringQuery;
   ttl?: number;
   prefix?: string;
@@ -23,7 +23,7 @@ export const redisOptions = ({
     }
 
     return {
-      name,
+      clientName,
       host: url.hostname || 'localhost',
       port: parseInt(url.port || '6379', 10),
       username,

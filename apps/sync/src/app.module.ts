@@ -53,7 +53,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
         if (configService.get<string>('DATABASE_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'DATABASE',
+              clientName: 'DATABASE',
               url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
               ttl: configService.get<number>('DATABASE_REDIS_TTL') || 60,
               prefix: 'DATABASE:',
@@ -64,7 +64,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
         if (configService.get<string>('LDAP_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'LDAP',
+              clientName: 'LDAP',
               url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
               ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
               prefix: 'LDAP:',

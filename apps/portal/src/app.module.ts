@@ -89,7 +89,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
   cache: {
     type: 'ioredis', // "ioredis/cluster"
     options: redisOptions({
-      name: 'DATABASE',
+      clientName: 'DATABASE',
       url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
       ttl: configService.get<number>('DATABASE_REDIS_TTL') || 600,
       prefix: 'DATABASE:',
@@ -127,7 +127,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('DATABASE_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'DATABASE',
+              clientName: 'DATABASE',
               url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
               ttl: configService.get<number>('DATABASE_REDIS_TTL') || 60,
               prefix: 'DATABASE:',
@@ -138,7 +138,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('LDAP_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'LDAP',
+              clientName: 'LDAP',
               url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
               ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
               prefix: 'LDAP:',
@@ -149,7 +149,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('SESSION_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'SESSION',
+              clientName: 'SESSION',
               url: urlLibParse(configService.get<string>('SESSION_REDIS_URI')),
               ttl: configService.get<number>('SESSION_REDIS_TTL') || 60,
               prefix: 'SESSION:',
@@ -160,7 +160,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('HTTP_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'SUBSCRIPTION',
+              clientName: 'SUBSCRIPTION',
               url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
               ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
               prefix: 'SUBSCRIPTION:',
@@ -171,7 +171,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('NEXTCLOUD_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'NEXTCLOUD',
+              clientName: 'NEXTCLOUD',
               url: urlLibParse(configService.get<string>('NEXTCLOUD_REDIS_URI')),
               ttl: configService.get<number>('NEXTCLOUD_REDIS_TTL') || 60,
               prefix: 'NEXTCLOUD:',
@@ -182,7 +182,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('DOCFLOW_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'DOCFLOW',
+              clientName: 'DOCFLOW',
               url: urlLibParse(configService.get<string>('DOCFLOW_REDIS_URI')),
               ttl: configService.get<number>('DOCFLOW_REDIS_TTL') || 60,
               prefix: 'DOCFLOW:',
@@ -193,7 +193,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         if (configService.get<string>('TICKETS_REDIS_URI')) {
           result.push(
             redisOptions({
-              name: 'TICKETS',
+              clientName: 'TICKETS',
               url: urlLibParse(configService.get<string>('TICKETS_REDIS_URI')),
               ttl: configService.get<number>('TICKETS_REDIS_TTL') || 60,
               prefix: 'TICKETS:',

@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.53",
+  "version": "4.17.54",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -169,6 +169,7 @@
     "**/**/dom-serializer": "^1",
     "**/**/espree": "^7",
     "**/**/figures": "^3",
+    "**/**/fsevents": "^2",
     "**/**/file-type": "^12",
     "**/**/find-cache-dir": "^3",
     "**/**/form-data": "^3",
