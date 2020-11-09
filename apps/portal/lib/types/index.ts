@@ -34,24 +34,27 @@ export * from './treeview';
 export * from './user.dto';
 //#endregion
 
-export interface AppPortalInitialProps<TCache = NormalizedCacheObject> extends AppInitialProps {
+export interface ApolloProps<TCache = NormalizedCacheObject> {
+  apollo: TCache;
+  apolloClient: ApolloClient<TCache>;
+}
+
+export interface PageProps {
+  context: UserContext;
+}
+
+export interface AppPortalInitialProps<TCache = NormalizedCacheObject>
+  extends AppInitialProps,
+    Partial<ApolloProps<TCache>>,
+    Partial<PageProps> {
   initialLanguage?: string;
   language?: string;
-  context?: UserContext;
-  apollo?: NormalizedCacheObject;
 }
 
-export interface AppPortalContext<TCache = NormalizedCacheObject> extends AppContext {
-  context: UserContext;
-  apollo: NormalizedCacheObject;
-  apolloClient: ApolloClient<NormalizedCacheObject>;
-}
+export interface AppPortalContext<TCache = NormalizedCacheObject> extends AppContext, ApolloProps<TCache>, PageProps {}
 
-export interface AppPortalProps<TCache = NormalizedCacheObject> extends AppProps {
+export interface AppPortalProps<TCache = NormalizedCacheObject> extends AppProps, ApolloProps<TCache>, PageProps {
   disableGeneration?: boolean;
-  context: UserContext;
-  apollo: NormalizedCacheObject;
-  apolloClient: ApolloClient<NormalizedCacheObject>;
   ctx?: NextPageContext;
 }
 

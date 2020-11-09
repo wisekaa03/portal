@@ -129,7 +129,7 @@ const App = ({ disableGeneration = false, Component, apolloClient, pageProps, co
               <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
                 <SnackbarUtilsConfigurator />
                 <ProfileProvider context={context} router={router} ctx={ctx}>
-                  <Component {...pageProps} context={context} ctx={ctx} />
+                  <Component {...pageProps} context={context} router={router} ctx={ctx} />
                 </ProfileProvider>
               </DndProvider>
             </SnackbarProvider>
@@ -140,7 +140,7 @@ const App = ({ disableGeneration = false, Component, apolloClient, pageProps, co
   );
 };
 
-App.getInitialProps = async (appContext: AppPortalContext): Promise<AppPortalInitialProps<NormalizedCacheObject>> => ({
+App.getInitialProps = async (appContext: AppPortalContext): Promise<AppPortalInitialProps> => ({
   ...(await BasicApp.getInitialProps(appContext)),
 });
 
