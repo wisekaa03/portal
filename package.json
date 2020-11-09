@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.60",
+  "version": "4.17.61",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -222,8 +222,8 @@
     "**/**/typescript": "^4",
     "**/**/url-loader": "^4",
     "**/**/watchpack": "^2",
-    "**/**/webpack-log": "^2",
     "**/**/webpack-bundle-analyzer": "^4",
+    "**/**/webpack-log": "^2",
     "**/**/webpack-node-externals": "^2",
     "**/**/webpack": "^4",
     "**/**/whatwg-url": "^8",
