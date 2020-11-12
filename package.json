@@ -149,7 +149,7 @@
     "**/**/concat-stream": "^2",
     "**/**/cross-spawn": "^7",
     "**/**/is-promise": "^4",
-    "**/**/is-plain-object": "^3",
+    "**/**/is-plain-object": "^5.0.0",
     "**/**/isobject": "^4",
     "**/**/isarray": "^2",
     "**/**/meow": "^7",
