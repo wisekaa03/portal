@@ -110,6 +110,19 @@ declare module 'express' {
     user: User;
   }
 }
+
+export interface MailSession {
+  sessid: string;
+  sessauth: string;
+}
+
+declare module 'express-session' {
+  interface SessionData {
+    passport: UserContext;
+    password: string;
+    mailSession: MailSession;
+  }
+}
 //#endregion
 
 export interface UserToSave extends BaseUser {

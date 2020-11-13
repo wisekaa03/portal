@@ -25,7 +25,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { user } = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
+  const { user } = __SERVER__ ? (ctx.req as Request)?.session?.passport || { user: null } : useContext(ProfileContext);
   const id = query?.id || user?.profile?.id;
   const isAdmin = user?.isAdmin ?? false;
 

@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.17.62",
+  "version": "4.17.63",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -92,6 +92,11 @@
     "**/**/@storybook/client-api": "^6",
     "**/**/@storybook/client-logger": "^6",
     "**/**/@storybook/components": "^6",
+    "**/**/@typescript-eslint/experimental-utils": "^4",
+    "**/**/@typescript-eslint/parser": "^4",
+    "**/**/@typescript-eslint/types": "^4",
+    "**/**/@typescript-eslint/typescript-estree": "^4",
+    "**/**/@typescript-eslint/visitor-keys": "^4",
     "**/**/ajv": "^6",
     "**/**/ansi-regex": "^5",
     "**/**/ansi-styles": "^4",
