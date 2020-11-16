@@ -225,7 +225,7 @@
     "**/**/typescript": "^4",
     "**/**/url-loader": "^4",
     "**/**/webpack-bundle-analyzer": "^4",
-    "**/**/webpack-log": "^2",
+    "**/**/webpack-log": "^3.0.0",
     "**/**/webpack-node-externals": "^2",
     "**/**/webpack": "^4",
     "**/**/whatwg-url": "^8",
