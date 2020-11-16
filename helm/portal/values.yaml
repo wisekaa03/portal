@@ -54,16 +54,7 @@ SESSION_COOKIE_TTL: 300
 SESSION_SECRET: "supersecret"
 
 # LDAP
-LDAP_URL: "ldap://activedirectory:389"
-LDAP_BIND_DN: "CN=user,DC=example,DC=local"
-LDAP_BIND_PW: ""
-LDAP_SEARCH_BASE: "DC=example,DC=local"
-LDAP_SEARCH_FILTER_ALL_USERS: "(&(&(|(&(objectClass=user)(objectCategory=person))(&(objectClass=contact)(objectCategory=person)))))"
-LDAP_SEARCH_FILTER_ALL_GROUPS: "objectClass=group"
-LDAP_SEARCH_GROUP: "(&(objectClass=group)(member={{dn}}))"
-LDAP_SEARCH_USER: "(sAMAccountName={{username}})"
-LDAP_NEW_BASE: "OU=User,DC=example,DC=local"
-LDAP_DOMAIN: "example.com"
+LDAP: "{\"example.com\":{\"url\":\"ldap://activedirectory:389\"}"
 # LDAP Redis
 LDAP_REDIS_URI: "redis://redis.default.svc.cluster.local:6379/2"
 LDAP_REDIS_TTL: 300
