@@ -36,7 +36,7 @@ data:
     SESSION_SECRET={{ .Values.SESSION_SECRET | quote }}
 
     # LDAP
-    LDAP={{ .Values.LDAP | quote }}
+    LDAP={{ .Values.LDAP }}
     # LDAP Redis
     LDAP_REDIS_URI={{ .Values.LDAP_REDIS_URI | quote }}
     LDAP_REDIS_TTL={{ .Values.LDAP_REDIS_TTL }}
