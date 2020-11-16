@@ -3,7 +3,7 @@
 import React, { FC, useState } from 'react';
 import clsx from 'clsx';
 import filesize from 'filesize';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { AutoSizer } from 'react-virtualized/dist/commonjs/AutoSizer';
 import { darken, Theme, makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Box,

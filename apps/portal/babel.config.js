@@ -11,17 +11,7 @@ module.exports = function (api) {
   api.cache(true);
 
   //#region Constants
-  const constantsPresets = [
-    [
-      'next/babel',
-      {
-        'transform-runtime': {
-          corejs: '3',
-        },
-      },
-    ],
-    ['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }],
-  ];
+  const constantsPresets = [['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }]];
 
   const constantsPlugins = [
     // 'babel-plugin-react-require',
@@ -239,8 +229,8 @@ module.exports = function (api) {
 
   // console.warn('process.env:', process.env);
   // console.warn('config:', config);
-  // console.warn('config.env.production.presets:', config.env.production.presets);
-  // console.warn('config.env.production.plugins:', config.env.production.plugins);
+  // console.warn('config.env.development.presets:', config.env.production.presets);
+  // console.warn('config.env.development.plugins:', config.env.production.plugins);
 
   return config;
 };
