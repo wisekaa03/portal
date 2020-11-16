@@ -9,7 +9,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
-import { Login, LoginEmail, User, UserSettingsTaskFavorite } from '@lib/types';
+import { Login, LoginEmail, User, AvailableAuthenticationProfiles } from '@lib/types';
 import { ConfigService } from '@app/config';
 import { CurrentUser, PasswordFrontend, getUsername } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
@@ -29,6 +29,19 @@ export class AuthResolver {
     private readonly configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
+
+  /**
+   * Available Authentication Profiles
+   *
+   * @async
+   * @method availableAuthenticationProfiles
+   * @returns {AvailableAuthenticationProfiles[]} Profiles
+   * @throws {Error}
+   */
+  @Query('availableAuthenticationProfiles')
+  async availableAuthenticationProfiles(): Promise<string[]> {
+    return this.userService.availableAuthenticationProfiles();
+  }
 
   /**
    * Current User

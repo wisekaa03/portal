@@ -16,9 +16,19 @@ import { compare } from 'bcrypt';
 import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config';
+import { ConfigService, LDAPDomainConfig } from '@app/config';
 import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE, defaultUserSettings } from '@back/shared/constants';
-import { LoginService, Profile, User, UserSettings, DefinedUserSettings, Contact, AllUsersInfo, ProfileInput } from '@lib/types';
+import {
+  AvailableAuthenticationProfiles,
+  LoginService,
+  Profile,
+  User,
+  UserSettings,
+  DefinedUserSettings,
+  Contact,
+  AllUsersInfo,
+  ProfileInput,
+} from '@lib/types';
 import { constructUploads } from '@back/shared/upload';
 import { ProfileEntity } from '@back/profile/profile.entity';
 import { ProfileService } from '@back/profile/profile.service';
@@ -40,6 +50,25 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     private readonly ldapService: LdapService,
   ) {}
+
+  /**
+   * Available Authentication Profiles
+   * @async
+   * @method availableAuthenticationProfiles
+   * @returns {AvailableAuthenticationProfiles[]} Profile
+   * @throws {Error} Exception
+   */
+  public availableAuthenticationProfiles = async (): Promise<string[]> => {
+    const domainString = this.configService.get<string>('LDAP');
+    let domains: Record<string, LDAPDomainConfig>;
+    try {
+      domains = JSON.parse(domainString);
+    } catch {
+      throw new Error('Not available authentication profiles.');
+    }
+
+    return Object.keys(domains);
+  };
 
   /**
    * Compare password

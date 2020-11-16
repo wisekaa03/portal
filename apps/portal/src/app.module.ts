@@ -35,7 +35,7 @@ import { DateScalar } from '@back/shared/date.scalar';
 import { Upload } from '@back/shared/upload.scalar';
 import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
 
-import { ConfigModule, ConfigService } from '@app/config';
+import { ConfigModule, ConfigService, LDAPDomainConfig } from '@app/config';
 import { winstonOptions } from '@back/shared/logger.options';
 import { LoggingInterceptor } from '@app/logging.interceptor';
 // import { CacheInterceptorProvider } from '@app/cache.interceptor';
@@ -342,30 +342,38 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
         } catch {
           cache = undefined;
         }
-        const domains = [
-          {
-            name: 'I-NPZ',
-            url: configService.get<string>('LDAP_URL'),
-            bindDN: configService.get<string>('LDAP_BIND_DN'),
-            bindCredentials: configService.get<string>('LDAP_BIND_PW'),
-            searchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-            searchFilter: configService.get<string>('LDAP_SEARCH_USER'),
-            searchScope: 'sub' as Scope,
-            groupSearchBase: configService.get<string>('LDAP_SEARCH_BASE'),
-            groupSearchFilter: configService.get<string>('LDAP_SEARCH_GROUP'),
-            groupSearchScope: 'sub' as Scope,
-            groupDnProperty: 'dn',
-            groupSearchAttributes: ldapADattributes,
-            searchAttributes: ldapADattributes,
-            searchBaseAllUsers: configService.get<string>('LDAP_SEARCH_BASE'),
-            searchFilterAllUsers: configService.get<string>('LDAP_SEARCH_FILTER_ALL_USERS'),
-            searchFilterAllGroups: configService.get<string>('LDAP_SEARCH_FILTER_ALL_GROUPS'),
-            searchScopeAllUsers: 'sub' as Scope,
-            searchAttributesAllUsers: ldapADattributes,
-            reconnect: true,
-            newObject: configService.get<string>('LDAP_NEW_BASE'),
-          },
-        ];
+
+        const domainString = configService.get<string>('LDAP');
+        let domainsConfig: Record<string, LDAPDomainConfig>;
+        try {
+          domainsConfig = JSON.parse(domainString);
+        } catch {
+          throw new Error('Not available authentication profiles.');
+        }
+
+        const domains = Object.keys(domainsConfig).map((name) => ({
+          name,
+          url: domainsConfig[name].url,
+          bindDN: domainsConfig[name].bindDn,
+          bindCredentials: domainsConfig[name].bindPw,
+          searchBase: domainsConfig[name].searchBase,
+          searchFilter: domainsConfig[name].searchUser,
+          searchScope: 'sub' as Scope,
+          groupSearchBase: domainsConfig[name].searchBase,
+          groupSearchFilter: domainsConfig[name].searchGroup,
+          groupSearchScope: 'sub' as Scope,
+          groupDnProperty: 'dn',
+          groupSearchAttributes: ldapADattributes,
+          searchAttributes: ldapADattributes,
+          searchBaseAllUsers: domainsConfig[name].searchBase,
+          searchFilterAllUsers: domainsConfig[name].searchAllUsers,
+          searchFilterAllGroups: domainsConfig[name].searchAllGroups,
+          searchScopeAllUsers: 'sub' as Scope,
+          searchAttributesAllUsers: ldapADattributes,
+          reconnect: true,
+          newObject: domainsConfig[name].newBase,
+        }));
+
         return {
           cache,
           cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),

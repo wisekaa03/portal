@@ -10,7 +10,8 @@ type Login {
 
 type Query {
   me: User
-  login(username: String!, password: String!): Login!
+  availableAuthenticationProfiles: [String!]!
+  login(username: String!, password: String!, domain: String!): Login!
   loginEmail: LoginEmail!
 }
 

@@ -1,5 +1,6 @@
 /** @format */
 
+import React from 'react';
 import { MutationFunction } from '@apollo/client';
 import { User } from './user.dto';
 
@@ -50,3 +51,7 @@ export interface Login {
   email: LoginEmail;
 }
 //#endregion
+
+export interface AvailableAuthenticationProfiles {
+  domain: string;
+}

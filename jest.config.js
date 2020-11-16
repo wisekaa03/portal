@@ -24,7 +24,7 @@ module.exports = {
   snapshotSerializers: ['enzyme-to-json/serializer'],
   globals: {
     'ts-jest': {
-      tsConfig: 'tsconfig.jest.json',
+      tsconfig: 'tsconfig.jest.json',
       // Disable type-checking
       isolatedModules: true,
     },
