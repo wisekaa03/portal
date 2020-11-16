@@ -201,8 +201,6 @@ export const withApolloClient = (
   class Apollo extends React.Component<AppPortalProps> {
     private apolloClient: ApolloClient<NormalizedCacheObject>;
 
-    static displayName = 'withApolloClient(App)';
-
     public static async getInitialProps({ AppTree, Component, router, ctx }: AppContext): Promise<AppPortalInitialProps> {
       const appProps =
         typeof MainApp.getInitialProps === 'function'
