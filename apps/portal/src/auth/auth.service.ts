@@ -78,7 +78,7 @@ export class AuthService {
     // const trustedDomain = await this.ldapService.trustedDomain({ searchBase: this.configService.get<string>('LDAP_SEARCH_BASE') });
 
     const ldapUser = await this.ldapService
-      .authenticate({ username, password, loggerContext })
+      .authenticate({ username, password, domain: 'I-NPZ', loggerContext })
       .catch((error: Error | InvalidCredentialsError) => {
         this.logger.error(`LDAP login: ${error.toString()}`, {
           error,

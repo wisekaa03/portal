@@ -398,7 +398,7 @@ export class ProfileService {
     loggerContext?: LoggerContext;
   }): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
-      const ldapUser = await this.ldapService.searchByDN({ userByDN, loggerContext });
+      const ldapUser = await this.ldapService.searchByDN({ userByDN, domain: 'I-NPZ', loggerContext });
 
       if (ldapUser) {
         return this.fromLdap({ ldapUser, save: true, count: count + 1, loggerContext });
@@ -883,7 +883,7 @@ export class ProfileService {
     if (created.dn && created.loginService === LoginService.LDAP) {
       let ldapUser: LdapResponseUser | undefined;
       try {
-        ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, loggerContext });
+        ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain: 'I-NPZ', loggerContext });
       } catch (error) {
         if (!(error instanceof NoSuchObjectError)) {
           throw error;
@@ -891,7 +891,7 @@ export class ProfileService {
       }
       if (!ldapUser) {
         try {
-          ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, cache: false, loggerContext });
+          ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain: 'I-NPZ', cache: false, loggerContext });
         } catch (error) {
           if (!(error instanceof NoSuchObjectError)) {
             throw error;
@@ -902,6 +902,7 @@ export class ProfileService {
         if (created.username) {
           ldapUser = await this.ldapService.searchByUsername({
             userByUsername: created.username,
+            domain: 'I-NPZ',
             cache: false,
             loggerContext,
           });
@@ -934,6 +935,7 @@ export class ProfileService {
           .modify({
             dn: ldapUser.dn,
             data: ldapUpdated,
+            domain: 'I-NPZ',
             username: created && created.username ? created.username : undefined,
             // TODO: .modify with password parameter
             // password: (req.session!.passport!.user as UserResponse)!.passwordFrontend,

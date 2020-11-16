@@ -412,7 +412,7 @@ export class UserService {
    */
   ldapCheckUsername = async ({ value, loggerContext }: { value: string; loggerContext: LoggerContext }): Promise<boolean> =>
     this.ldapService
-      .searchByUsername({ userByUsername: value, cache: false, loggerContext })
+      .searchByUsername({ userByUsername: value, domain: 'I-NPZ', cache: false, loggerContext })
       .then(() => false)
       .catch(() => true);
 
@@ -454,7 +454,7 @@ export class UserService {
     }
 
     return this.ldapService
-      .add({ entry, loggerContext })
+      .add({ entry, domain: 'I-NPZ', loggerContext })
       .then<UserEntity | ProfileEntity>((ldapUser) => {
         if (!ldapUser) {
           throw new Error('Cannot contact with AD');
