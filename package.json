@@ -151,7 +151,7 @@
     "**/**/eslint": "^7",
     "**/**/espree": "^7",
     "**/**/figures": "^3",
-    "**/**/file-entry-cache": "^3",
+    "**/**/file-entry-cache": "^6",
     "**/**/file-loader": "^6",
     "**/**/file-type": "^12",
     "**/**/filesize": "^6",
