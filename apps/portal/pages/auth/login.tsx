@@ -5,14 +5,15 @@ import React, { useRef, useState, useEffect } from 'react';
 import queryString from 'query-string';
 import Router from 'next/router';
 import Head from 'next/head';
-import { useLazyQuery, useApolloClient } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
+import { AutocompleteChangeReason, AutocompleteChangeDetails } from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
 import { Data, LoginValuesProps, LoginPageProps, Login } from '@lib/types';
 import { FIRST_PAGE } from '@lib/constants';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import Cookie from '@lib/cookie';
-import { CURRENT_USER, LOGIN } from '@lib/queries';
+import { CURRENT_USER, LOGIN, AVAILABLE_DOMAIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
 //#endregion
@@ -20,7 +21,6 @@ import { LoginComponent } from '@front/components/auth/login';
 const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }) => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const domainRef = useRef<HTMLInputElement>(null);
 
   const [values, setValues] = useState<LoginValuesProps>({
     save: !!initUsername,
@@ -37,6 +37,14 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }
     fetchPolicy: 'no-cache',
   });
 
+  const [getDomain, { loading: loadingDomain, data: dataDomain, error: errorDomain, called: calledDomain }] = useLazyQuery<
+    Data<'availableAuthenticationProfiles', string[]>
+  >(AVAILABLE_DOMAIN, {
+    ssr: true,
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+  });
+
   const handleValues = (name: keyof LoginValuesProps) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const element: EventTarget & HTMLInputElement = event.target;
     const value: string | boolean = element.type === 'checkbox' ? element.checked : element.value;
@@ -45,13 +53,11 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }
   };
 
   const handleDomain = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
+    event: React.ChangeEvent<Record<string, unknown>>,
+    value: unknown,
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<unknown>,
   ) => {
-    const { value } = event.target;
-
     setValues({ ...values, domain: value as string });
   };
 
@@ -78,6 +84,12 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }
       handleSubmit((event as unknown) as React.MouseEvent<HTMLButtonElement, MouseEvent>);
     }
   };
+
+  useEffect(() => {
+    if (!calledDomain && !values.domain) {
+      getDomain();
+    }
+  }, [calledDomain, getDomain, values]);
 
   useEffect(() => {
     const user = data?.login?.user;
@@ -116,7 +128,10 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }
         passwordRef.current.focus();
       }
     }
-  }, [passwordRef, error]);
+    if (errorDomain) {
+      snackbarUtils.error(errorDomain);
+    }
+  }, [passwordRef, error, errorDomain]);
 
   return (
     <>
@@ -126,10 +141,12 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }
       <LoginComponent
         usernameRef={usernameRef}
         passwordRef={passwordRef}
-        domainRef={domainRef}
         values={values}
         loading={loading}
         handleValues={handleValues}
+        getDomain={getDomain}
+        dataDomain={dataDomain}
+        loadingDomain={loadingDomain}
         handleDomain={handleDomain}
         handleSubmit={handleSubmit}
         handleKeyDown={handleKeyDown}

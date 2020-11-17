@@ -57,6 +57,12 @@ export const CACHE = gql`
   }
 `;
 
+export const AVAILABLE_DOMAIN = gql`
+  query AvailableAuthenticationProfiles {
+    availableAuthenticationProfiles
+  }
+`;
+
 export const LOGIN = gql`
   query Login($username: String!, $password: String!, $domain: String!) {
     login(username: $username, password: $password, domain: $domain) {

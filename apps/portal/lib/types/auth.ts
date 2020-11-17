@@ -1,8 +1,10 @@
 /** @format */
 
 import React from 'react';
-import { MutationFunction } from '@apollo/client';
+import { MutationFunction, QueryLazyOptions } from '@apollo/client';
+import { AutocompleteChangeDetails, AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
 import { User } from './user.dto';
+import { Data } from './common';
 
 export interface LoginPageProps {
   initUsername: string;
@@ -18,15 +20,17 @@ export interface LogoutPageProps {
 export interface LoginComponentProps {
   usernameRef: React.Ref<HTMLInputElement>;
   passwordRef: React.Ref<HTMLInputElement>;
-  domainRef: React.Ref<HTMLInputElement>;
   values: LoginValuesProps;
   loading: boolean;
   handleValues: (_: keyof LoginValuesProps) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  getDomain: (options?: QueryLazyOptions<Record<string, any>> | undefined) => void;
+  loadingDomain: boolean;
+  dataDomain?: Data<'availableAuthenticationProfiles', string[]>;
   handleDomain: (
-    __: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
+    event: React.ChangeEvent<Record<string, unknown>>,
+    value: unknown,
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<unknown>,
   ) => void;
   handleSubmit: (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleKeyDown: (_: React.KeyboardEvent<HTMLDivElement>) => void;

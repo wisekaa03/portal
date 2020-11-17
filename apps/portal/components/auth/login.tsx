@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Theme, makeStyles, createStyles, darken } from '@material-ui/core/styles';
 import {
   Box,
@@ -15,10 +15,10 @@ import {
   TextField,
   Tooltip,
   CardActions,
-  InputLabel,
-  Select,
-  MenuItem,
+  CircularProgress,
+  OutlinedTextFieldProps,
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -113,12 +113,49 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
   values,
   loading,
   handleValues,
+  getDomain,
   handleDomain,
+  loadingDomain,
+  dataDomain,
   handleSubmit,
   handleKeyDown,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
+
+  const [options, setOptions] = useState<string[]>([]);
+  const [openDomain, setOpenDomain] = useState<boolean>(false);
+
+  const handleOpen = (): void => {
+    getDomain();
+    setOpenDomain(true);
+  };
+
+  const handleClose = (): void => {
+    setOpenDomain(false);
+  };
+
+  useEffect(() => {
+    if (!loadingDomain && dataDomain?.availableAuthenticationProfiles) {
+      setOptions(dataDomain.availableAuthenticationProfiles);
+      if (
+        !values.domain &&
+        Array.isArray(dataDomain.availableAuthenticationProfiles) &&
+        dataDomain.availableAuthenticationProfiles.length > 0
+      ) {
+        // eslint-disable-next-line prefer-destructuring
+        values.domain = dataDomain.availableAuthenticationProfiles[0];
+      }
+    }
+  }, [loadingDomain, dataDomain, values]);
+
+  const propsDomain: OutlinedTextFieldProps = {
+    fullWidth: true,
+    disabled: loading,
+    color: 'secondary',
+    label: t('login:profile'),
+    variant: 'outlined',
+  };
 
   return (
     <Box className={classes.root}>
@@ -168,14 +205,38 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
                     />
                   </FormControl>
                   <FormControl className={classes.formControl} fullWidth variant="outlined">
-                    <InputLabel id="profile-label">{t('login:profile')}</InputLabel>
-                    <Select labelId="profile-label" id="profile" value={values.domain} onChange={handleDomain} label="Domain">
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value="i-npz.ru">i-npz.ru</MenuItem>
-                      <MenuItem value="khgk.local">khgk.local</MenuItem>
-                    </Select>
+                    <Autocomplete
+                      autoHighlight
+                      forcePopupIcon
+                      disableClearable
+                      noOptionsText={t('login:profileNoOptions')}
+                      clearText={t('login:profileClearText')}
+                      openText={t('login:profileOpen')}
+                      loadingText={t('login:profileLoading')}
+                      options={options}
+                      open={openDomain}
+                      onOpen={handleOpen}
+                      onClose={handleClose}
+                      loading={loadingDomain}
+                      value={values.domain}
+                      onChange={handleDomain}
+                      renderInput={(parameters) => (
+                        <TextField
+                          {...propsDomain}
+                          {...parameters}
+                          InputProps={{
+                            ...parameters.InputProps,
+                            endAdornment: (
+                              <>
+                                {loadingDomain ? <CircularProgress color="inherit" size={20} /> : null}
+                                {parameters.InputProps.endAdornment}
+                                {/* InputProps.endAdornment */}
+                              </>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
                   </FormControl>
                   <FormControlLabel
                     className={classes.checkBox}
