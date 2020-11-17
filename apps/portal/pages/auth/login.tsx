@@ -17,17 +17,22 @@ import snackbarUtils from '@lib/snackbar-utils';
 import { LoginComponent } from '@front/components/auth/login';
 //#endregion
 
-const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
+const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }) => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const domainRef = useRef<HTMLInputElement>(null);
 
   const [values, setValues] = useState<LoginValuesProps>({
     save: !!initUsername,
     username: initUsername,
     password: '',
+    domain: initDomain,
   });
 
-  const [login, { data, loading, error, client }] = useLazyQuery<Data<'login', Login>, { username: string; password: string }>(LOGIN, {
+  const [login, { data, loading, error, client }] = useLazyQuery<
+    Data<'login', Login>,
+    { username: string; password: string; domain: string }
+  >(LOGIN, {
     ssr: false,
     fetchPolicy: 'no-cache',
   });
@@ -39,8 +44,19 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
     setValues({ ...values, [name]: value });
   };
 
+  const handleDomain = (
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: unknown;
+    }>,
+  ) => {
+    const { value } = event.target;
+
+    setValues({ ...values, domain: value as string });
+  };
+
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
-    const { username, password } = values;
+    const { username, password, domain } = values;
 
     event.preventDefault();
 
@@ -53,7 +69,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
         passwordRef.current.focus();
       }
     } else {
-      login({ variables: { username, password } });
+      login({ variables: { username, password, domain } });
     }
   };
 
@@ -81,10 +97,11 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
   useEffect(() => {
     if (values.save) {
       Cookie.set('username', values.username);
+      Cookie.set('domain', values.domain);
     } else {
       Cookie.remove('username');
     }
-  }, [values.save, values.username]);
+  }, [values.save, values.username, values.domain]);
 
   useEffect(() => {
     if (usernameRef.current && initUsername && passwordRef.current) {
@@ -109,9 +126,11 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
       <LoginComponent
         usernameRef={usernameRef}
         passwordRef={passwordRef}
+        domainRef={domainRef}
         values={values}
         loading={loading}
         handleValues={handleValues}
+        handleDomain={handleDomain}
         handleSubmit={handleSubmit}
         handleKeyDown={handleKeyDown}
       />
@@ -120,10 +139,11 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername }) => {
 };
 
 AuthLoginPage.getInitialProps = (ctx) => {
-  const { username } = Cookie.get(ctx);
+  const { username, domain } = Cookie.get(ctx);
 
   return {
     initUsername: username || '',
+    initDomain: domain || '',
     namespacesRequired: includeDefaultNamespaces(['login']),
   };
 };

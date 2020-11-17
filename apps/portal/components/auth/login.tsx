@@ -15,6 +15,9 @@ import {
   TextField,
   Tooltip,
   CardActions,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 //#endregion
 //#region Imports Local
@@ -110,6 +113,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
   values,
   loading,
   handleValues,
+  handleDomain,
   handleSubmit,
   handleKeyDown,
 }) => {
@@ -162,6 +166,16 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
                       autoComplete="current-password"
                       // required
                     />
+                  </FormControl>
+                  <FormControl className={classes.formControl} fullWidth variant="outlined">
+                    <InputLabel id="profile-label">{t('login:profile')}</InputLabel>
+                    <Select labelId="profile-label" id="profile" value={values.domain} onChange={handleDomain} label="Domain">
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="i-npz.ru">i-npz.ru</MenuItem>
+                      <MenuItem value="khgk.local">khgk.local</MenuItem>
+                    </Select>
                   </FormControl>
                   <FormControlLabel
                     className={classes.checkBox}

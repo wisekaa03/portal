@@ -6,6 +6,7 @@ import { User } from './user.dto';
 
 export interface LoginPageProps {
   initUsername: string;
+  initDomain: string;
   namespacesRequired: string[];
 }
 
@@ -17,9 +18,16 @@ export interface LogoutPageProps {
 export interface LoginComponentProps {
   usernameRef: React.Ref<HTMLInputElement>;
   passwordRef: React.Ref<HTMLInputElement>;
+  domainRef: React.Ref<HTMLInputElement>;
   values: LoginValuesProps;
   loading: boolean;
   handleValues: (_: keyof LoginValuesProps) => (__: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDomain: (
+    __: React.ChangeEvent<{
+      name?: string | undefined;
+      value: unknown;
+    }>,
+  ) => void;
   handleSubmit: (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleKeyDown: (_: React.KeyboardEvent<HTMLDivElement>) => void;
 }
@@ -28,6 +36,7 @@ export interface LoginValuesProps {
   save: boolean;
   username: string;
   password: string;
+  domain: string;
 }
 
 //#region Email session

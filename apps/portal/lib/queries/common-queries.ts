@@ -58,8 +58,8 @@ export const CACHE = gql`
 `;
 
 export const LOGIN = gql`
-  query Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
+  query Login($username: String!, $password: String!, $domain: String!) {
+    login(username: $username, password: $password, domain: $domain) {
       user {
         id
         username

@@ -4,6 +4,7 @@
   "authorization": "Авторизация",
   "username": "Пользователь",
   "password": "Пароль",
+  "profile": "Домен",
   "remember": "Запомнить меня на этом компьютере",
   "signIn": "Вход",
   "signOut": "Выход",

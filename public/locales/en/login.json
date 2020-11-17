@@ -4,6 +4,7 @@
   "authorization": "Authorization",
   "username": "Username",
   "password": "Password",
+  "profile": "Domain",
   "remember": "Remember me on this computer",
   "signIn": "Sign in",
   "signOut": "Sign out",

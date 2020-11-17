@@ -71,6 +71,7 @@ export class AuthResolver {
   async login(
     @Args('username') username: string,
     @Args('password') password: string,
+    @Args('domain') domain: string,
     @Context('req') request: Request,
     // @Context('res') response: Response,
   ): Promise<Login> {
@@ -80,6 +81,7 @@ export class AuthResolver {
     const user = await this.authService.login({
       username: usernameLOW,
       password,
+      domain,
       loggerContext: { username: usernameLOW, headers: request.headers },
     });
 

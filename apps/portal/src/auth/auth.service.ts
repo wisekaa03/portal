@@ -63,13 +63,15 @@ export class AuthService {
   async login({
     username,
     password,
+    domain,
     loggerContext,
   }: {
     username: string;
     password: string;
+    domain: string;
     loggerContext: LoggerContext;
   }): Promise<UserEntity> {
-    this.logger.info(`User login: username = "${username}"`, {
+    this.logger.info(`User login: domain="${domain}", username="${username}"`, {
       context: AuthService.name,
       function: this.login.name,
       ...loggerContext,
@@ -78,7 +80,7 @@ export class AuthService {
     // const trustedDomain = await this.ldapService.trustedDomain({ searchBase: this.configService.get<string>('LDAP_SEARCH_BASE') });
 
     const ldapUser = await this.ldapService
-      .authenticate({ username, password, domain: 'I-NPZ', loggerContext })
+      .authenticate({ username, password, domain, loggerContext })
       .catch((error: Error | InvalidCredentialsError) => {
         this.logger.error(`LDAP login: ${error.toString()}`, {
           error,
