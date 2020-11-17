@@ -81,13 +81,6 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     LdapModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService, redisService: RedisService) => {
-        let cache: Redis | undefined;
-        try {
-          cache = redisService.getClient('LDAP');
-        } catch {
-          cache = undefined;
-        }
-
         const domainString = configService.get<string>('LDAP');
         let domainsConfig: Record<string, LDAPDomainConfig>;
         try {
@@ -115,13 +108,11 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
           searchFilterAllGroups: domainsConfig[name].searchAllGroups,
           searchScopeAllUsers: 'sub' as Scope,
           searchAttributesAllUsers: ldapADattributes,
-          reconnect: true,
+          reconnect: false,
           newObject: domainsConfig[name].newBase,
         }));
 
         return {
-          cache,
-          cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
           domains,
         };
       },
