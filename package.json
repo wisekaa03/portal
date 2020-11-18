@@ -195,7 +195,7 @@
     "**/**/node-pre-gyp": "^0",
     "**/**/nopt": "^5",
     "**/**/normalize-path": "^3",
-    "**/**/normalize-url": "^3",
+    "**/**/normalize-url": "^5.0.0",
     "**/**/ora": "^5",
     "**/**/pg-types": "^3",
     "**/**/pkg-dir": "^4",
