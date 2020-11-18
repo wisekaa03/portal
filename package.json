@@ -198,7 +198,7 @@
     "**/**/normalize-url": "^3",
     "**/**/ora": "^5",
     "**/**/pg-types": "^3",
-    "**/**/pkg-dir": "^4",
+    "**/**/pkg-dir": "^5.0.0",
     "**/**/pkg-up": "^3",
     "**/**/postcss-place": "^5",
     "**/**/postcss-sass": "^0",
