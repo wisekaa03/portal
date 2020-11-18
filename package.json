@@ -106,7 +106,7 @@
     "**/**/apollo-server-types": "^0",
     "**/**/array-union": "^2",
     "**/**/arrify": "^2",
-    "**/**/assert": "^1",
+    "**/**/assert": "^2.0.0",
     "**/**/ast-types": "^0",
     "**/**/astral-regex": "^2",
     "**/**/async": "^3",
