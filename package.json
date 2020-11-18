@@ -147,7 +147,7 @@
     "**/**/domutils": "^2",
     "**/**/dotenv-webpack": "^5",
     "**/**/dotenv": "^8",
-    "**/**/download": "^7",
+    "**/**/download": "^8.0.0",
     "**/**/eslint": "^7",
     "**/**/espree": "^7",
     "**/**/figures": "^3",
