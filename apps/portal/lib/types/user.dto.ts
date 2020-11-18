@@ -17,6 +17,7 @@ export enum Contact {
 }
 
 export interface AllUsersInfo {
+  domain: string | null;
   id: string | null;
   loginIdentificator: string | null;
   name: string | null;

@@ -2,6 +2,7 @@ type Profile {
   id: ID!
 
   loginService: String
+  loginDomain: String
   loginIdentificator: String
   dn: String
 

@@ -46,6 +46,12 @@ export class GroupEntity {
 
   @Column({
     type: 'varchar',
+    nullable: true,
+  })
+  loginDomain!: string | null;
+
+  @Column({
+    type: 'varchar',
     length: 50,
     nullable: true,
     unique: true,

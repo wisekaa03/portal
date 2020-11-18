@@ -30,7 +30,7 @@ export class GroupService {
     this.groupRepository
       .find({
         where: { loginService },
-        select: ['id', 'loginIdentificator', 'name'],
+        select: ['id', 'loginDomain', 'loginIdentificator', 'name'],
         loadEagerRelations: false,
         cache,
       })
@@ -38,6 +38,7 @@ export class GroupService {
         groups.map((group) => ({
           contact: Contact.GROUP,
           id: group.id,
+          domain: group.loginDomain,
           loginIdentificator: group.loginIdentificator,
           name: group.name,
         })),
@@ -75,6 +76,7 @@ export class GroupService {
           const group: Group = {
             ...updated,
             loginService: LoginService.LDAP,
+            loginDomain: ldapGroup.loginDomain,
             loginIdentificator: ldapGroup.objectGUID,
             name: ldapGroup.name,
             description: ldapGroup.description,
@@ -116,6 +118,7 @@ export class GroupService {
     const group: Group = {
       ...loginIdentificator,
       loginService: LoginService.LDAP,
+      loginDomain: ldap.loginDomain,
       loginIdentificator: ldap.objectGUID,
       name: ldap.sAMAccountName,
       description: ldap.description,

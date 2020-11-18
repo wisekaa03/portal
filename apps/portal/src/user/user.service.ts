@@ -102,7 +102,7 @@ export class UserService {
     this.userRepository
       .find({
         where: { loginService, disabled },
-        select: ['loginIdentificator', 'profile'],
+        select: ['loginDomain', 'loginIdentificator', 'profile'],
         loadEagerRelations: false,
         cache,
       })
@@ -110,6 +110,7 @@ export class UserService {
         users.map((user) => ({
           contact: Contact.USER,
           id: user.id,
+          domain: user.loginDomain,
           loginIdentificator: user.loginIdentificator,
           name: user.username,
           disabled: user.disabled,

@@ -81,7 +81,7 @@ export class ProfileService {
     this.profileRepository
       .find({
         where: { loginService, disabled },
-        select: ['id', 'loginIdentificator', 'username'],
+        select: ['id', 'loginDomain', 'loginIdentificator', 'username'],
         loadEagerRelations: false,
         cache,
       })
@@ -89,6 +89,7 @@ export class ProfileService {
         profile.map((p) => ({
           contact: Contact.PROFILE,
           id: p.id,
+          domain: p.loginDomain,
           loginIdentificator: p.loginIdentificator,
           name: p.username,
           disable: p.disabled,
@@ -473,6 +474,7 @@ export class ProfileService {
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
       loginService: LoginService.LDAP,
+      loginDomain: ldapUser.loginDomain,
       loginIdentificator: ldapUser.objectGUID,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,

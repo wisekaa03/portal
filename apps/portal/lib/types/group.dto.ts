@@ -17,6 +17,7 @@ export interface Group {
   dn?: string | null;
 
   loginService?: LoginService;
+  loginDomain?: string | null;
   loginIdentificator?: string | null;
 
   createdAt?: Date | null;

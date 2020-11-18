@@ -1,6 +1,7 @@
 type Group {
   id: ID!
   name: String!
+  loginDomain: String
   dn: String
   description: String
   createdAt: Date

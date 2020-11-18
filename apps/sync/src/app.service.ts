@@ -15,10 +15,11 @@ import { ProfileService } from '@back/profile/profile.service';
 //#endregion
 
 interface LdapPromise {
+  domain: string | null;
   contact: Contact;
   id: string;
   loginIdentificator: string | null;
-  name: string;
+  name: string | null;
   disabled?: boolean;
 }
 
@@ -62,11 +63,12 @@ export class SyncService {
               const group = await this.groupService.fromLdap(ldapGroup);
 
               return {
+                domain: domainName,
                 contact: Contact.GROUP,
                 id: group.id,
                 loginIdentificator: group.loginIdentificator,
                 name: group.name,
-              } as LdapPromise;
+              };
             } catch (error) {
               this.logger.error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`, {
                 error,
@@ -101,6 +103,7 @@ export class SyncService {
                 const user = await this.userService.fromLdap({ ldapUser });
 
                 return {
+                  domain: domainName,
                   contact: Contact.USER,
                   id: user.id,
                   loginIdentificator: user.loginIdentificator,
@@ -122,12 +125,13 @@ export class SyncService {
                 const profile = await this.profileService.fromLdap({ ldapUser, loggerContext });
 
                 return {
+                  domain: domainName,
                   contact: Contact.PROFILE,
                   id: profile.id,
                   loginIdentificator: profile.loginIdentificator,
                   name: profile.username,
                   disabled: profile.disabled,
-                } as LdapPromise;
+                };
               } catch (error) {
                 this.logger.error(`LDAP ${domainName}: synchronization profile "${ldapUser.name}": ${error.toString()}`, {
                   error,
@@ -146,7 +150,7 @@ export class SyncService {
 
         return Promise.allSettled(promises).then((values) =>
           values.reduce(
-            (accumulator, promise) => (promise.status === 'fulfilled' && promise.value ? [...accumulator, promise.value] : accumulator),
+            (accumulator, promise) => (promise.status === 'fulfilled' && promise.value ? accumulator.concat(promise.value) : accumulator),
             [] as AllUsersInfo[],
           ),
         );
@@ -176,18 +180,24 @@ export class SyncService {
         const value = profilesLdap.find((v) => v.loginIdentificator === element.loginIdentificator);
 
         if (element.contact === Contact.USER) {
-          this.logger.info(`LDAP: ${!value ? 'Blocking user' : 'Granting user access'}: [id=${element.id}] ${element.name}`, {
-            context: SyncService.name,
-            function: this.synchronization.name,
-            ...loggerContext,
-          });
+          this.logger.info(
+            `LDAP: ${!value ? 'Blocking user' : 'Granting user access'}: [domain=${element.domain},id=${element.id}] ${element.name}`,
+            {
+              context: SyncService.name,
+              function: this.synchronization.name,
+              ...loggerContext,
+            },
+          );
           await this.userService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
         } else if (element.contact === Contact.PROFILE) {
-          this.logger.info(`LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [id=${element.id}] ${element.name}`, {
-            context: SyncService.name,
-            function: this.synchronization.name,
-            ...loggerContext,
-          });
+          this.logger.info(
+            `LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [domain=${element.domain},id=${element.id}] ${element.name}`,
+            {
+              context: SyncService.name,
+              function: this.synchronization.name,
+              ...loggerContext,
+            },
+          );
           await this.profileService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
         }
       }
