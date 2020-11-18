@@ -156,7 +156,7 @@
     "**/**/file-type": "^12",
     "**/**/filesize": "^6",
     "**/**/find-cache-dir": "^3",
-    "**/**/find-up": "^4",
+    "**/**/find-up": "^5.0.0",
     "**/**/flat-cache": "^3",
     "**/**/flatted": "^3",
     "**/**/fork-ts-checker-webpack-plugin": "^5",
