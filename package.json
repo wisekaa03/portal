@@ -159,7 +159,7 @@
     "**/**/find-up": "^4",
     "**/**/flat-cache": "^3",
     "**/**/flatted": "^3",
-    "**/**/fork-ts-checker-webpack-plugin": "^5",
+    "**/**/fork-ts-checker-webpack-plugin": "^6.0.0",
     "**/**/form-data": "^3",
     "**/**/fs-capacitor": "^6",
     "**/**/fs-extra": "^9",
