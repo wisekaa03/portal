@@ -95,7 +95,7 @@ export class SyncService {
         const domain = ldapUsers[domainName].map(async (ldapUser) => {
           if (ldapUser.sAMAccountName) {
             try {
-              const user = await this.userService.fromLdap({ domain: domainName, ldapUser });
+              const user = await this.userService.fromLdap({ domain: domainName, ldapUser, loggerContext });
 
               return {
                 domain: domainName,

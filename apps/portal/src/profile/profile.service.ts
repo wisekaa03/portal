@@ -246,7 +246,7 @@ export class ProfileService {
         this.logger.error(`Profile error: ${error.toString()}`, {
           error,
           context: ProfileService.name,
-          function: 'fromLoginIdentificator',
+          function: this.byLoginIdentificator.name,
           ...loggerContext,
         });
 
