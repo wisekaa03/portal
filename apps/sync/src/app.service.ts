@@ -34,132 +34,124 @@ export class SyncService {
   ) {}
 
   syncGroup = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<void> => {
-    try {
-      const ldapGroups = await this.ldapService.synchronizationGroups({ loggerContext });
+    const ldapGroups = await this.ldapService.synchronizationGroups({ loggerContext });
 
-      const ldapGroupsDB = await this.groupService.allGroups();
-      const groupPromises = ldapGroupsDB.map(async (element) => {
-        if (element.id && element.loginIdentificator) {
-          const ldapValue = Object.keys(ldapGroups).find((value) =>
-            ldapGroups[value].find((domain) => domain.objectGUID === element.loginIdentificator),
-          );
+    const ldapGroupsDB = await this.groupService.allGroups();
+    const groupPromises = ldapGroupsDB.map(async (element) => {
+      if (element.id && element.loginIdentificator) {
+        const ldapValue = Object.keys(ldapGroups).find((value) =>
+          ldapGroups[value].find((domain) => domain.objectGUID === element.loginIdentificator),
+        );
 
-          if (!ldapValue) {
-            const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
-            this.logger.info(`LDAP: Deleting group: [id=${element.id}] ${element.name}: ${affected}`, {
+        if (!ldapValue) {
+          const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
+          this.logger.info(`LDAP: Deleting group: [id=${element.id}] ${element.name}: ${affected}`, {
+            context: SyncService.name,
+            function: this.syncGroup.name,
+            ...loggerContext,
+          });
+        }
+      }
+    });
+    await Promise.allSettled(groupPromises);
+
+    if (ldapGroups) {
+      const promises = Object.keys(ldapGroups).reduce((accumulator, domainName) => {
+        const domains = ldapGroups[domainName].map(async (ldapGroup) => {
+          try {
+            const group = await this.groupService.fromLdap(ldapGroup);
+
+            return {
+              domain: domainName,
+              contact: Contact.GROUP,
+              id: group.id,
+              loginIdentificator: group.loginIdentificator,
+              name: group.name,
+            };
+          } catch (error) {
+            this.logger.error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`, {
+              error,
               context: SyncService.name,
               function: this.syncGroup.name,
               ...loggerContext,
             });
+
+            throw new Error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`);
           }
-        }
-      });
-      await Promise.allSettled(groupPromises);
+        });
 
-      if (ldapGroups) {
-        const promises = Object.keys(ldapGroups).reduce((accumulator, domainName) => {
-          const domains = ldapGroups[domainName].map(async (ldapGroup) => {
-            try {
-              const group = await this.groupService.fromLdap(ldapGroup);
+        return accumulator.concat(domains);
+      }, [] as Promise<LdapPromise>[]);
 
-              return {
-                domain: domainName,
-                contact: Contact.GROUP,
-                id: group.id,
-                loginIdentificator: group.loginIdentificator,
-                name: group.name,
-              };
-            } catch (error) {
-              this.logger.error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`, {
-                error,
-                context: SyncService.name,
-                function: this.syncGroup.name,
-                ...loggerContext,
-              });
-
-              throw new Error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`);
-            }
-          });
-
-          return accumulator.concat(domains);
-        }, [] as Promise<LdapPromise>[]);
-
-        await Promise.allSettled(promises);
-      }
-    } catch (error) {
-      throw new Error(error.toString());
+      await Promise.allSettled(promises);
     }
   };
 
   syncUser = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<AllUsersInfo[]> => {
-    try {
-      const ldapUsers = await this.ldapService.synchronization({ loggerContext });
+    const ldapUsers = await this.ldapService.synchronization({ loggerContext });
 
-      if (ldapUsers) {
-        const promises = Object.keys(ldapUsers).reduce((accumulator, domainName) => {
-          const domain = ldapUsers[domainName].map(async (ldapUser) => {
-            if (ldapUser.sAMAccountName) {
-              try {
-                const user = await this.userService.fromLdap({ ldapUser });
+    if (ldapUsers) {
+      const promises = Object.keys(ldapUsers).reduce((accumulator, domainName) => {
+        const domain = ldapUsers[domainName].map(async (ldapUser) => {
+          if (ldapUser.sAMAccountName) {
+            try {
+              const user = await this.userService.fromLdap({ ldapUser });
 
-                return {
-                  domain: domainName,
-                  contact: Contact.USER,
-                  id: user.id,
-                  loginIdentificator: user.loginIdentificator,
-                  name: user.username,
-                  disabled: user.disabled,
-                };
-              } catch (error) {
-                this.logger.error(`LDAP ${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
-                  error,
-                  context: SyncService.name,
-                  function: this.syncUser.name,
-                  ...loggerContext,
-                });
+              return {
+                domain: domainName,
+                contact: Contact.USER,
+                id: user.id,
+                loginIdentificator: user.loginIdentificator,
+                name: user.username,
+                disabled: user.disabled,
+              };
+            } catch (error) {
+              this.logger.error(`LDAP ${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
+                error,
+                context: SyncService.name,
+                function: this.syncUser.name,
+                ...loggerContext,
+              });
 
-                throw new Error(`LDAP ${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`);
-              }
-            } else {
-              try {
-                const profile = await this.profileService.fromLdap({ ldapUser, loggerContext });
-
-                return {
-                  domain: domainName,
-                  contact: Contact.PROFILE,
-                  id: profile.id,
-                  loginIdentificator: profile.loginIdentificator,
-                  name: profile.username,
-                  disabled: profile.disabled,
-                };
-              } catch (error) {
-                this.logger.error(`LDAP ${domainName}: synchronization profile "${ldapUser.name}": ${error.toString()}`, {
-                  error,
-                  context: SyncService.name,
-                  function: this.syncUser.name,
-                  ...loggerContext,
-                });
-
-                throw new Error(`LDAP ${domainName}: synchronization profile "${ldapUser.name}": ${error.toString()}`);
-              }
+              throw new Error(`LDAP ${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`);
             }
-          });
+          } else {
+            try {
+              const profile = await this.profileService.fromLdap({ ldapUser, loggerContext });
 
-          return accumulator.concat(domain);
-        }, [] as Promise<LdapPromise>[]);
+              return {
+                domain: domainName,
+                contact: Contact.PROFILE,
+                id: profile.id,
+                loginIdentificator: profile.loginIdentificator,
+                name: profile.username,
+                disabled: profile.disabled,
+              };
+            } catch (error) {
+              this.logger.error(`LDAP ${domainName}: synchronization profile "${ldapUser.name}": ${error.toString()}`, {
+                error,
+                context: SyncService.name,
+                function: this.syncUser.name,
+                ...loggerContext,
+              });
 
-        return Promise.allSettled(promises).then((values) =>
-          values.reduce(
-            (accumulator, promise) => (promise.status === 'fulfilled' && promise.value ? accumulator.concat(promise.value) : accumulator),
-            [] as AllUsersInfo[],
-          ),
-        );
-      }
+              throw new Error(`LDAP ${domainName}: synchronization profile "${ldapUser.name}": ${error.toString()}`);
+            }
+          }
+        });
 
-      throw new Error('No users found');
-    } catch (error) {
-      throw new Error(error.toString());
+        return accumulator.concat(domain);
+      }, [] as Promise<LdapPromise>[]);
+
+      return Promise.allSettled(promises).then((values) =>
+        values.reduce(
+          (accumulator, promise) => (promise.status === 'fulfilled' && promise.value ? accumulator.concat(promise.value) : accumulator),
+          [] as AllUsersInfo[],
+        ),
+      );
     }
+
+    throw new Error('No users found');
   };
 
   synchronization = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<boolean> => {

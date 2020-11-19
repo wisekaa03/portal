@@ -3144,9 +3144,9 @@
     "@types/range-parser" "*"
 
 "@types/express-session@*":
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/@types/express-session/-/express-session-1.17.2.tgz#ed6a36dd9f267c7fef86004f653bfb9b5cea3c21"
-  integrity sha512-QRm/fUuvr/BAosL9CvK351SDQP7wpD8+h3S8ZEE/8IvHJ/ZqHrjZbjx/flYfazyPw7yNi9O5fbjFZbh0vZ1ccg==
+  version "1.17.3"
+  resolved "https://registry.yarnpkg.com/@types/express-session/-/express-session-1.17.3.tgz#4a37c5c4428b8f922ac8ac1cb4bd9190a4d2b097"
+  integrity sha512-57DnyxiqClXOIjoCgeKCUYfKxBPOlOY/k+l1TPK+7bSwyiPTrS5FIk1Ycql7twk4wO7P5lfOVy6akDGiaMSLfw==
   dependencies:
     "@types/express" "*"
 
@@ -7096,9 +7096,9 @@ ejs@^3.1.2, ejs@^3.1.5:
     jake "^10.6.1"
 
 electron-to-chromium@^1.3.591:
-  version "1.3.600"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.600.tgz#eb6aa7233ca1fbf0fa9b5943c0f1061b54a433bf"
-  integrity sha512-QmdzrDk4eOoqkhld+XflF6znZHMFN120EfLdXgFP2TzvQuD6EABwKIjOIopx5hvVOIb1ELUPkEgs/rXo0iiXbw==
+  version "1.3.601"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.601.tgz#881824eaef0b2f97c89e1abb5835fdd224997d34"
+  integrity sha512-ctRyXD9y0mZu8pgeNwBUhLP3Guyr5YuqkfLKYmpTwYx7o9JtCEJme9JVX4xBXPr5ZNvr/iBXUvHLFEVJQThATg==
 
 element-resize-detector@^1.2.1:
   version "1.2.1"
@@ -11663,9 +11663,9 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 nestjs-ldap@*:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-2.0.8.tgz#8e402aaeaec14e8c82fcf683bde436f1ad17b37b"
-  integrity sha512-QcKy6mE5cXlzdgXCXSlTwo7qEVXUAwj0QSFUcDnCNNENeVExWXCejzTL9czLixSNlGS/J6qs57dLFGyhxthmzw==
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-2.0.9.tgz#c14ce764238d7d806ad879caa2c2a497ad626801"
+  integrity sha512-MKN6W6hRwOV3OyG1ghEqT6wXOoNoMHiUORnMez3Ff8AG1gO0OLD8lqkak1SnEXqvpBmOgH5fPNJNQYQ4OsdO0w==
   dependencies:
     "@nestjs/common" "*"
     bcrypt "*"
