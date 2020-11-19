@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.18.7",
+  "version": "4.18.8",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -166,7 +166,7 @@
     "**/**/globby": "^11",
     "**/**/graphql-upload": "^11",
     "**/**/has-values": "^1",
-    "**/**/highlight.js": "^9",
+    "**/**/highlight.js": "^10",
     "**/**/htmlparser2": "^5",
     "**/**/http-errors": "^1",
     "**/**/imagemin": "^7",
