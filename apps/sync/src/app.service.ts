@@ -40,7 +40,7 @@ export class SyncService {
     const groupPromises = ldapGroupsDB.map(async (element) => {
       if (element.id && element.loginIdentificator) {
         const ldapValue = Object.keys(ldapGroups).find((value) =>
-          ldapGroups[value].find((domain) => domain.objectGUID === element.loginIdentificator),
+          ldapGroups[value].find((domain) => /* value === element.domain && */ domain.objectGUID === element.loginIdentificator),
         );
 
         if (!ldapValue) {
@@ -163,38 +163,49 @@ export class SyncService {
       function: this.synchronization.name,
       ...loggerContext,
     });
-    const profilesLdap = await this.syncUser({ loggerContext });
 
-    this.logger.info('LDAP: Blocking profiles', { context: SyncService.name, function: this.synchronization.name, ...loggerContext });
-    const fromDB = [...(await this.userService.allUsers({})), ...(await this.profileService.allProfiles({ loggerContext }))];
-    const profilesPromises = fromDB.map(async (element) => {
-      if (element.id && element.loginIdentificator) {
-        const value = profilesLdap.find((v) => v.loginIdentificator === element.loginIdentificator);
+    try {
+      const profilesLdap = await this.syncUser({ loggerContext });
 
-        if (element.contact === Contact.USER) {
-          this.logger.info(
-            `LDAP: ${!value ? 'Blocking user' : 'Granting user access'}: [domain=${element.domain},id=${element.id}] ${element.name}`,
-            {
-              context: SyncService.name,
-              function: this.synchronization.name,
-              ...loggerContext,
-            },
-          );
-          await this.userService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
-        } else if (element.contact === Contact.PROFILE) {
-          this.logger.info(
-            `LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [domain=${element.domain},id=${element.id}] ${element.name}`,
-            {
-              context: SyncService.name,
-              function: this.synchronization.name,
-              ...loggerContext,
-            },
-          );
-          await this.profileService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
+      this.logger.info('LDAP: Blocking profiles', { context: SyncService.name, function: this.synchronization.name, ...loggerContext });
+      const fromDB = [...(await this.userService.allUsers({})), ...(await this.profileService.allProfiles({ loggerContext }))];
+      const profilesPromises = fromDB.map(async (element) => {
+        if (element.id && element.loginIdentificator) {
+          const value = profilesLdap.find((v) => v.loginIdentificator === element.loginIdentificator);
+
+          if (element.contact === Contact.USER) {
+            this.logger.info(
+              `LDAP: ${!value ? 'Blocking user' : 'Granting user access'}: [domain=${element.domain},id=${element.id}] ${element.name}`,
+              {
+                context: SyncService.name,
+                function: this.synchronization.name,
+                ...loggerContext,
+              },
+            );
+            await this.userService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
+          } else if (element.contact === Contact.PROFILE) {
+            this.logger.info(
+              `LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [domain=${element.domain},id=${element.id}] ${
+                element.name
+              }`,
+              {
+                context: SyncService.name,
+                function: this.synchronization.name,
+                ...loggerContext,
+              },
+            );
+            await this.profileService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
+          }
         }
-      }
-    });
-    await Promise.allSettled(profilesPromises);
+      });
+      await Promise.allSettled(profilesPromises);
+    } catch (error) {
+      this.logger.info(`LDAP: ${error}`, {
+        context: SyncService.name,
+        function: this.synchronization.name,
+        ...loggerContext,
+      });
+    }
 
     this.logger.info('LDAP: success end of synchronization', {
       context: SyncService.name,
