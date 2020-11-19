@@ -95,7 +95,7 @@ export class SyncService {
         const domain = ldapUsers[domainName].map(async (ldapUser) => {
           if (ldapUser.sAMAccountName) {
             try {
-              const user = await this.userService.fromLdap({ domain: domainName, ldapUser, loggerContext });
+              const user = await this.userService.fromLdap({ domain: ldapUser.loginDomain || domainName, ldapUser, loggerContext });
 
               return {
                 domain: domainName,
@@ -117,7 +117,7 @@ export class SyncService {
             }
           } else {
             try {
-              const profile = await this.profileService.fromLdap({ domain: domainName, ldapUser, loggerContext });
+              const profile = await this.profileService.fromLdap({ domain: ldapUser.loginDomain || domainName, ldapUser, loggerContext });
 
               return {
                 domain: domainName,
@@ -182,7 +182,11 @@ export class SyncService {
                 ...loggerContext,
               },
             );
-            await this.userService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
+            await this.userService.update({
+              criteria: element.id,
+              partialEntity: { loginDomain: element.domain, disabled: !value },
+              loggerContext,
+            });
           } else if (element.contact === Contact.PROFILE) {
             this.logger.info(
               `LDAP: ${!value ? 'Blocking profile' : 'Granting profile access'}: [domain=${element.domain},id=${element.id}] ${
@@ -194,7 +198,11 @@ export class SyncService {
                 ...loggerContext,
               },
             );
-            await this.profileService.update({ criteria: element.id, partialEntity: { disabled: !value }, loggerContext });
+            await this.profileService.update({
+              criteria: element.id,
+              partialEntity: { loginDomain: element.domain, disabled: !value },
+              loggerContext,
+            });
           }
         }
       });
