@@ -107,7 +107,7 @@ input ProfileInput {
 
 type Mutation {
   syncLdap: Boolean
-  ldapNewUser(ldap: ProfileInput!, photo: Upload): Profile
-  ldapCheckUsername(value: String!): Boolean
+  ldapNewUser(ldap: ProfileInput!, photo: Upload, domain: String!): Profile
+  ldapCheckUsername(value: String!, domain: String!): Boolean
   userSettings(value: UserSettingsInput): User
 }

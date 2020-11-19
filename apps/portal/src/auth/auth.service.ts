@@ -97,10 +97,10 @@ export class AuthService {
       });
 
     return this.userService
-      .fromLdap({ ldapUser, loggerContext })
+      .fromLdap({ ldapUser, domain, loggerContext })
       .then((user) => {
         if (user.disabled) {
-          this.logger.error(`User is Disabled: ${user.username}`, {
+          this.logger.error(`User is Disabled in domain ${domain}: ${user.username}`, {
             error: 'User is Disabled',
             context: AuthService.name,
             function: this.login.name,
@@ -113,7 +113,7 @@ export class AuthService {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error(`Error: not found user: ${error.toString()}`, {
+        this.logger.error(`Error: not found user in domain ${domain}: ${error.toString()}`, {
           error,
           context: AuthService.name,
           function: this.login.name,

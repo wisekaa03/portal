@@ -38,16 +38,16 @@ export const PROFILE = gql`
 `;
 
 export const CHANGE_PROFILE = gql`
-  mutation ChangeProfile($profile: ProfileSettingsInput, $thumbnailPhoto: Upload) {
-    changeProfile(profile: $profile, thumbnailPhoto: $thumbnailPhoto) {
+  mutation ChangeProfile($profile: ProfileSettingsInput, $thumbnailPhoto: Upload, $domain: String!) {
+    changeProfile(profile: $profile, thumbnailPhoto: $thumbnailPhoto, domain: $domain) {
       id
     }
   }
 `;
 
 export const LDAP_NEW_USER = gql`
-  mutation LdapNewUser($ldap: ProfileInput!, $photo: Upload) {
-    ldapNewUser(ldap: $ldap, photo: $photo) {
+  mutation LdapNewUser($ldap: ProfileInput!, $photo: Upload, $domain: String!) {
+    ldapNewUser(ldap: $ldap, photo: $photo, domain: $domain) {
       ...ProfileProps
     }
   }

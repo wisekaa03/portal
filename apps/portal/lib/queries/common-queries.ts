@@ -7,6 +7,7 @@ export const CURRENT_USER = gql`
   query Me {
     me {
       id
+      loginDomain
       username
       updatedAt
       createdAt
@@ -68,6 +69,7 @@ export const LOGIN = gql`
     login(username: $username, password: $password, domain: $domain) {
       user {
         id
+        loginDomain
         username
         updatedAt
         createdAt
@@ -118,8 +120,8 @@ export const LOGOUT = gql`
 `;
 
 export const LDAP_CHECK_USERNAME = gql`
-  mutation LdapCheckUsername($value: String!) {
-    ldapCheckUsername(value: $value)
+  mutation LdapCheckUsername($value: String!, $domain: String!) {
+    ldapCheckUsername(value: $value, domain: $domain)
   }
 `;
 

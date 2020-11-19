@@ -391,18 +391,20 @@ export class ProfileService {
    */
   async fromLdapDN({
     userByDN,
+    domain,
     count = 1,
     loggerContext,
   }: {
     userByDN: string;
+    domain: string;
     count?: number;
     loggerContext?: LoggerContext;
   }): Promise<ProfileEntity | undefined> {
     if (count <= 10) {
-      const ldapUser = await this.ldapService.searchByDN({ userByDN, domain: 'I-NPZ', loggerContext });
+      const ldapUser = await this.ldapService.searchByDN({ userByDN, domain, loggerContext });
 
       if (ldapUser) {
-        return this.fromLdap({ ldapUser, save: true, count: count + 1, loggerContext });
+        return this.fromLdap({ ldapUser, domain, save: true, count: count + 1, loggerContext });
       }
     } else {
       this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, {
@@ -428,12 +430,14 @@ export class ProfileService {
    */
   async fromLdap({
     ldapUser,
+    domain,
     profile,
     save = true,
     count = 1,
     loggerContext,
   }: {
     ldapUser: LdapResponseUser;
+    domain: string;
     profile?: ProfileEntity;
     save?: boolean;
     count?: number;
@@ -441,7 +445,7 @@ export class ProfileService {
   }): Promise<ProfileEntity> {
     const manager =
       ldapUser.manager && ldapUser.dn !== ldapUser.manager
-        ? await this.fromLdapDN({ userByDN: ldapUser.manager, count, loggerContext })
+        ? await this.fromLdapDN({ userByDN: ldapUser.manager, domain, count, loggerContext })
         : undefined;
 
     let comment: Record<string, string>;
@@ -474,7 +478,7 @@ export class ProfileService {
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
       loginService: LoginService.LDAP,
-      loginDomain: ldapUser.loginDomain,
+      loginDomain: domain || ldapUser.loginDomain,
       loginIdentificator: ldapUser.objectGUID,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
@@ -883,9 +887,10 @@ export class ProfileService {
     }
 
     if (created.dn && created.loginService === LoginService.LDAP) {
+      const domain = user.loginDomain as string;
       let ldapUser: LdapResponseUser | undefined;
       try {
-        ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain: 'I-NPZ', loggerContext });
+        ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain, loggerContext });
       } catch (error) {
         if (!(error instanceof NoSuchObjectError)) {
           throw error;
@@ -893,7 +898,7 @@ export class ProfileService {
       }
       if (!ldapUser) {
         try {
-          ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain: 'I-NPZ', cache: false, loggerContext });
+          ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain, cache: false, loggerContext });
         } catch (error) {
           if (!(error instanceof NoSuchObjectError)) {
             throw error;
@@ -904,7 +909,7 @@ export class ProfileService {
         if (created.username) {
           ldapUser = await this.ldapService.searchByUsername({
             userByUsername: created.username,
-            domain: 'I-NPZ',
+            domain,
             cache: false,
             loggerContext,
           });
@@ -937,7 +942,7 @@ export class ProfileService {
           .modify({
             dn: ldapUser.dn,
             data: ldapUpdated,
-            domain: 'I-NPZ',
+            domain,
             username: created && created.username ? created.username : undefined,
             // TODO: .modify with password parameter
             // password: (req.session!.passport!.user as UserResponse)!.passwordFrontend,

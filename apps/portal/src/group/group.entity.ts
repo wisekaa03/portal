@@ -8,6 +8,7 @@ import { LoginService } from '@lib/types/login-service';
 //#endregion
 
 @Entity('group')
+@Index(['loginService', 'loginDomain'])
 @Index(['loginService', 'loginDomain', 'loginIdentificator', 'name'], { unique: true })
 export class GroupEntity {
   @PrimaryGeneratedColumn('uuid')

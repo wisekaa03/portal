@@ -24,6 +24,7 @@ import { GroupEntity } from '@back/group/group.entity';
 //#endregion
 
 @Entity('user')
+@Index(['loginService', 'loginDomain'])
 @Index(['loginService', 'loginDomain', 'loginIdentificator', 'username'], { unique: true })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')

@@ -77,6 +77,7 @@ export interface BaseUser {
   id?: string;
 
   loginService?: LoginService;
+  loginDomain?: string | null;
   loginIdentificator?: string | null;
 
   username: string;

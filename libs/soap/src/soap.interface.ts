@@ -10,7 +10,7 @@ export interface SoapConnect {
   url: string;
   username: string;
   password: string;
-  domain?: string;
+  domain?: string | null;
   workstation?: string;
   ntlm?: boolean;
   soapOptions?: IOptions;

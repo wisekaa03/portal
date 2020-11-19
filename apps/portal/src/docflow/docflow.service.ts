@@ -265,7 +265,7 @@ export class DocFlowService {
             url: soapUrl,
             username: user.username || 'not authenticated',
             password,
-            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            domain: user.loginDomain,
             ntlm: true,
             soapOptions: {
               namespaceArrayElements: false,
@@ -504,7 +504,7 @@ export class DocFlowService {
             url: soapUrl,
             username: user.username || 'not authenticated',
             password,
-            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            domain: user.loginDomain,
             ntlm: true,
             soapOptions: {
               namespaceArrayElements: false,
@@ -709,7 +709,7 @@ export class DocFlowService {
             url: soapUrl,
             username: user.username || 'not authenticated',
             password,
-            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            domain: user.loginDomain,
             ntlm: true,
             soapOptions: {
               namespaceArrayElements: false,
@@ -819,7 +819,7 @@ export class DocFlowService {
             url: soapUrl,
             username: user.username || 'not authenticated',
             password,
-            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            domain: user.loginDomain,
             ntlm: true,
             soapOptions: {
               namespaceArrayElements: false,
@@ -1018,7 +1018,7 @@ export class DocFlowService {
             url: soapUrl,
             username: user.username || 'not authenticated',
             password,
-            domain: this.configService.get<string>('LDAP_DOMAIN'),
+            domain: user.loginDomain,
             ntlm: true,
             soapOptions: {
               namespaceArrayElements: false,

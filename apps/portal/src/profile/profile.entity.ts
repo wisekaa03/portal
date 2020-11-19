@@ -25,6 +25,7 @@ import { Profile } from '@lib/types/profile.dto';
 //#endregion
 
 @Entity('profile')
+@Index(['loginService', 'loginDomain'])
 @Index(['loginService', 'loginDomain', 'loginIdentificator', 'username'], { unique: true })
 export class ProfileEntity {
   @PrimaryGeneratedColumn('uuid')

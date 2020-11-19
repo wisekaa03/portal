@@ -246,16 +246,18 @@ export class UserService {
    */
   async fromLdap({
     ldapUser,
+    domain,
     user,
     save = true,
     loggerContext,
   }: {
     ldapUser: LdapResponseUser;
+    domain: string;
     user?: UserEntity;
     save?: boolean;
     loggerContext?: LoggerContext;
   }): Promise<UserEntity> {
-    const profile = await this.profileService.fromLdap({ ldapUser, loggerContext }).catch((error: Error) => {
+    const profile = await this.profileService.fromLdap({ ldapUser, domain, loggerContext }).catch((error: Error) => {
       this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
         error,
         context: UserService.name,
@@ -440,9 +442,17 @@ export class UserService {
    *
    * @async
    */
-  ldapCheckUsername = async ({ value, loggerContext }: { value: string; loggerContext: LoggerContext }): Promise<boolean> =>
+  ldapCheckUsername = async ({
+    value,
+    domain,
+    loggerContext,
+  }: {
+    value: string;
+    domain: string;
+    loggerContext: LoggerContext;
+  }): Promise<boolean> =>
     this.ldapService
-      .searchByUsername({ userByUsername: value, domain: 'I-NPZ', cache: false, loggerContext })
+      .searchByUsername({ userByUsername: value, domain, cache: false, loggerContext })
       .then(() => false)
       .catch(() => true);
 
@@ -453,11 +463,13 @@ export class UserService {
    */
   ldapNewUser = async ({
     value,
+    domain,
     thumbnailPhoto,
     loggerContext,
   }: {
     request: Request;
     value: ProfileInput;
+    domain: string;
     thumbnailPhoto?: Promise<FileUpload>;
     loggerContext?: LoggerContext;
   }): Promise<Profile> => {
@@ -471,7 +483,7 @@ export class UserService {
       }
     } else {
       entry.objectClass = ['user'];
-      entry.userPrincipalName = `${entry.sAMAccountName}@${this.configService.get<string>('LDAP_DOMAIN')}`;
+      entry.userPrincipalName = `${entry.sAMAccountName}@${domain}`;
       if (!entry.sAMAccountName) {
         throw new NotAcceptableException(PortalError.USERNAME_USER);
       }
@@ -484,17 +496,17 @@ export class UserService {
     }
 
     return this.ldapService
-      .add({ entry, domain: 'I-NPZ', loggerContext })
+      .add({ entry, domain, loggerContext })
       .then<UserEntity | ProfileEntity>((ldapUser) => {
         if (!ldapUser) {
           throw new Error('Cannot contact with AD');
         }
 
         if (value.contact === Contact.PROFILE) {
-          return this.profileService.fromLdap({ ldapUser, loggerContext });
+          return this.profileService.fromLdap({ ldapUser, domain, loggerContext });
         }
 
-        return this.fromLdap({ ldapUser, loggerContext });
+        return this.fromLdap({ ldapUser, domain, loggerContext });
       })
       .then<Profile>((userProfile) => {
         if (userProfile instanceof ProfileEntity) {

@@ -43,6 +43,7 @@ export class UserResolver {
   async ldapNewUser(
     @Context('req') request: Request,
     @Args('ldap') value: ProfileInput,
+    @Args('domain') domain: string,
     @Args('photo') thumbnailPhoto?: Promise<FileUpload>,
     @CurrentUser() user?: User,
   ): Promise<Profile> {
@@ -53,6 +54,7 @@ export class UserResolver {
     return this.userService.ldapNewUser({
       request,
       value,
+      domain,
       thumbnailPhoto,
       loggerContext: { username: user.username, headers: request.headers },
     });
@@ -67,12 +69,17 @@ export class UserResolver {
    */
   @Mutation()
   @UseGuards(GqlAuthGuard)
-  async ldapCheckUsername(@Context('req') request: Request, @Args('value') value: string, @CurrentUser() user?: User): Promise<boolean> {
+  async ldapCheckUsername(
+    @Context('req') request: Request,
+    @Args('value') value: string,
+    @Args('domain') domain: string,
+    @CurrentUser() user?: User,
+  ): Promise<boolean> {
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.userService.ldapCheckUsername({ value, loggerContext: { username: user.username, headers: request.headers } });
+    return this.userService.ldapCheckUsername({ value, domain, loggerContext: { username: user.username, headers: request.headers } });
   }
 
   /**
