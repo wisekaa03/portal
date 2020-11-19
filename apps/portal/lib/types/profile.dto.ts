@@ -13,6 +13,7 @@ export interface Profile {
   contact?: Contact;
 
   loginService?: LoginService;
+  loginDomain?: string | null;
   loginIdentificator?: string | null;
 
   username?: string | null;

@@ -6,6 +6,7 @@ export const PROFILE_FRAGMENT = gql`
   fragment ProfileProps on Profile {
     id
     contact
+    loginDomain
     username
     firstName
     lastName

@@ -277,6 +277,12 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
                   <span>{profile.workPhone}</span>
                 </Box>
               )}
+              {profile?.loginDomain && (
+                <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
+                  <PersonRounded className={classes.username} />
+                  <span>{profile.loginDomain}</span>
+                </Box>
+              )}
               {profile?.username && (
                 <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
                   <PersonRounded className={classes.username} />
