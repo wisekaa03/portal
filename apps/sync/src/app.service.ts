@@ -45,7 +45,7 @@ export class SyncService {
 
         if (!ldapValue) {
           const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
-          this.logger.info(`LDAP: Deleting group: [id=${element.id}] ${element.name}: ${affected}`, {
+          this.logger.info(`LDAP: Deleting group: [domain=${element.domain},id=${element.id}] ${element.name}: ${affected}`, {
             context: SyncService.name,
             function: this.syncGroup.name,
             ...loggerContext,
