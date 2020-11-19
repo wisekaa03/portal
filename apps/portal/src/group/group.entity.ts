@@ -1,13 +1,14 @@
 /** @format */
 
 //#region Imports NPM
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Index, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 //#endregion
 //#region Imports Local
 import { LoginService } from '@lib/types/login-service';
 //#endregion
 
 @Entity('group')
+@Index(['loginService', 'loginDomain', 'loginIdentificator', 'name'], { unique: true })
 export class GroupEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -54,7 +55,6 @@ export class GroupEntity {
     type: 'varchar',
     length: 50,
     nullable: true,
-    unique: true,
   })
   loginIdentificator!: string | null;
 

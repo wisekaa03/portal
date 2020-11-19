@@ -13,6 +13,7 @@ import {
   JoinTable,
   RelationId,
   AfterLoad,
+  Index,
 } from 'typeorm';
 import isPromise from 'is-promise';
 //#endregion
@@ -24,6 +25,7 @@ import { Profile } from '@lib/types/profile.dto';
 //#endregion
 
 @Entity('profile')
+@Index(['loginService', 'loginDomain', 'loginIdentificator', 'username'], { unique: true })
 export class ProfileEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -52,7 +54,6 @@ export class ProfileEntity {
     type: 'varchar',
     length: 50,
     nullable: true,
-    unique: true,
   })
   loginIdentificator!: string | null;
 

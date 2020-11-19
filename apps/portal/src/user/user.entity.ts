@@ -13,6 +13,7 @@ import {
   JoinTable,
   RelationId,
   AfterLoad,
+  Index,
 } from 'typeorm';
 //#endregion
 //#region Imports Local
@@ -23,6 +24,7 @@ import { GroupEntity } from '@back/group/group.entity';
 //#endregion
 
 @Entity('user')
+@Index(['loginService', 'loginDomain', 'loginIdentificator', 'username'], { unique: true })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -57,7 +59,6 @@ export class UserEntity {
 
   @Column({
     type: 'varchar',
-    unique: true,
   })
   username!: string;
 
@@ -76,7 +77,6 @@ export class UserEntity {
   @Column({
     type: 'boolean',
     nullable: false,
-    unique: false,
     default: false,
   })
   disabled!: boolean;
