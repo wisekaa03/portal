@@ -316,6 +316,7 @@ export class UserService {
       username: ldapUser.sAMAccountName,
       password: `$${LoginService.LDAP}`,
       loginService: LoginService.LDAP,
+      loginDomain: domain,
       loginIdentificator: ldapUser.objectGUID,
       // eslint-disable-next-line no-bitwise
       disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),

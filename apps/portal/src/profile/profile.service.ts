@@ -478,7 +478,7 @@ export class ProfileService {
       dn: ldapUser.dn,
       username: ldapUser.sAMAccountName,
       loginService: LoginService.LDAP,
-      loginDomain: domain || ldapUser.loginDomain,
+      loginDomain: ldapUser.loginDomain || domain,
       loginIdentificator: ldapUser.objectGUID,
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
