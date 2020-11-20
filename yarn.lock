@@ -3544,9 +3544,9 @@
     "@types/react" "*"
 
 "@types/react@*":
-  version "16.9.56"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.56.tgz#ea25847b53c5bec064933095fc366b1462e2adf0"
-  integrity sha512-gIkl4J44G/qxbuC6r2Xh+D3CGZpJ+NdWTItAPmZbR5mUS+JQ8Zvzpl0ea5qT/ZT3ZNTUcDKUVqV3xBE8wv/DyQ==
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.0.tgz#bc022cfe1609899b0f2196376b267724e7300f0e"
+  integrity sha512-jJjHo1uOe+NENRIBvF46tJimUvPnmbQ41Ax0pEm7pRvhPg+wuj8VMOHHiMvaGmZRzRrCtm7KnL5OOE/6kHPK8w==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
@@ -11640,9 +11640,9 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 nestjs-ldap@*:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-2.0.9.tgz#c14ce764238d7d806ad879caa2c2a497ad626801"
-  integrity sha512-MKN6W6hRwOV3OyG1ghEqT6wXOoNoMHiUORnMez3Ff8AG1gO0OLD8lqkak1SnEXqvpBmOgH5fPNJNQYQ4OsdO0w==
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-2.0.10.tgz#63dd695026f0b368f6ba3182e2f1072e1a4d68a6"
+  integrity sha512-qC+L9vOqG/fkXzyZ4PhK/Z4MEcr0GiToSxLPoID+WtDHRdbF+O1lcc0KxiQZKtHITevkVj55mzJXXueedOliCQ==
   dependencies:
     "@nestjs/common" "*"
     bcrypt "*"

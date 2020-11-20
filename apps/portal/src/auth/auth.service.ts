@@ -82,7 +82,7 @@ export class AuthService {
     const ldapUser = await this.ldapService
       .authenticate({ username, password, domain, loggerContext })
       .catch((error: Error | InvalidCredentialsError) => {
-        this.logger.error(`LDAP login: ${error.toString()}`, {
+        this.logger.error(`LDAP login in ${domain}: ${error.toString()}`, {
           error,
           context: AuthService.name,
           function: this.login.name,
