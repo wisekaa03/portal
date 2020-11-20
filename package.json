@@ -165,7 +165,7 @@
     "**/**/get-stream": "^6",
     "**/**/globby": "^11",
     "**/**/graphql-upload": "^11",
-    "**/**/has-values": "^1",
+    "**/**/has-values": "^2.0.0",
     "**/**/highlight.js": "^10",
     "**/**/htmlparser2": "^5",
     "**/**/http-errors": "^1",
