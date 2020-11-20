@@ -8,14 +8,7 @@ import { useLazyQuery } from '@apollo/client';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
-import {
-  AlternateEmailRounded,
-  ArrowBackRounded,
-  PhoneRounded,
-  PhoneAndroidRounded,
-  PersonRounded,
-  CallEndRounded,
-} from '@material-ui/icons';
+import { DomainRounded, ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded, CallEndRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 //#endregion
 //#region Imports Local
@@ -286,7 +279,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
               )}
               {profile?.loginDomain && (
                 <Box display="flex" alignItems="center" justifyContent="center" className={classes.telephone}>
-                  <AlternateEmailRounded className={classes.username} />
+                  <DomainRounded className={classes.username} />
                   <span>{profile.loginDomain}</span>
                 </Box>
               )}
