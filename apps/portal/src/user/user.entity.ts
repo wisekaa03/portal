@@ -54,12 +54,12 @@ export class UserEntity {
     type: 'varchar',
     length: 50,
     nullable: true,
-    unique: true,
   })
   loginIdentificator!: string | null;
 
   @Column({
     type: 'varchar',
+    nullable: false,
   })
   username!: string;
 
