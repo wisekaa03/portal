@@ -297,7 +297,7 @@
     "nest-redis": "*",
     "nest-winston": "*",
     "nestjs-ldap": "*",
-    "next": "10.0.2-canary.4",
+    "next": "10.0.2",
     "next-compose-plugins": "*",
     "next-fonts": "*",
     "next-i18next": "*",
