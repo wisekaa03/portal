@@ -175,12 +175,24 @@ export class ProfileService {
     const where: FindConditions<ProfileEntity> = { id };
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
-    return this.profileRepository.findOne({
-      where,
-      relations,
-      // TODO:
-      cache,
-    });
+    return this.profileRepository
+      .findOne({
+        where,
+        relations,
+        // TODO:
+        cache,
+      })
+      .then((value) => {
+        const valueTrimmed = value;
+
+        if (valueTrimmed) {
+          valueTrimmed.workPhone = valueTrimmed.workPhone?.trim() ?? null;
+          valueTrimmed.email = valueTrimmed.email?.trim() ?? null;
+          valueTrimmed.management = valueTrimmed.management?.trim() ?? null;
+        }
+
+        return valueTrimmed;
+      });
   };
 
   /**
