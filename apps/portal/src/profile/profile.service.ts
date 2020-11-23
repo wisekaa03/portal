@@ -186,9 +186,9 @@ export class ProfileService {
         const valueTrimmed = value;
 
         if (valueTrimmed) {
-          valueTrimmed.workPhone = valueTrimmed.workPhone?.trim() ?? null;
-          valueTrimmed.email = valueTrimmed.email?.trim() ?? null;
-          valueTrimmed.management = valueTrimmed.management?.trim() ?? null;
+          valueTrimmed.workPhone = valueTrimmed.workPhone?.trim() === '' ? null : valueTrimmed.workPhone?.trim() ?? null;
+          valueTrimmed.email = valueTrimmed.email?.trim() === '' ? null : valueTrimmed.email?.trim() ?? null;
+          valueTrimmed.management = valueTrimmed.management?.trim() === '' ? null : valueTrimmed.management?.trim() ?? null;
         }
 
         return valueTrimmed;
