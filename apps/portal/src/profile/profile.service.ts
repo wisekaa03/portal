@@ -495,7 +495,7 @@ export class ProfileService {
       firstName: ldapUser.givenName,
       lastName: ldapUser.sn,
       middleName,
-      birthday: !birthday ? null : birthday,
+      birthday: !birthday ? null : birthday.slice(0, 11),
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co,
       postalCode: ldapUser.postalCode,
