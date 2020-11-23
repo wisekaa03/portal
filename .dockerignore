@@ -1,7 +1,8 @@
 .vscode
 .storybook
 typings/
-renovate.js
+renovate.json
+tsconfig*
 ormconfig.ts
 **/next-env.d.ts
 **/next.config.js

@@ -734,7 +734,7 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: Record<string, any>) => {
-          this.logger.debug(`TicketsTaskNew: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`ticketsTaskNew: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
             function: this.ticketsTaskNew.name,
             ...loggerContext,
@@ -762,7 +762,7 @@ export class TicketsService {
             function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
-          this.logger.error(`TicketsTaskNew: [Response] ${client.lastResponse}`, {
+          this.logger.error(`ticketsTaskNew: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
             function: this.ticketsTaskNew.name,
             ...loggerContext,
@@ -889,7 +889,7 @@ export class TicketsService {
           this.logger.error(`ticketsTask: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
 
@@ -904,9 +904,9 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result?: DataResult<TicketsSOAPTask>) => {
-          this.logger.debug(`TicketsTask: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`ticketsTask: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
@@ -920,9 +920,9 @@ export class TicketsService {
             }
           }
 
-          this.logger.debug(`TicketsTask: [Response] ${client.lastResponse}`, {
+          this.logger.debug(`ticketsTask: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
           return {
@@ -930,20 +930,20 @@ export class TicketsService {
           };
         })
         .catch((error: SoapFault) => {
-          this.logger.error(`TicketsTask: [Request] ${client.lastRequest}`, {
+          this.logger.error(`ticketsTask: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
-          this.logger.error(`TicketsTask: [Response] ${client.lastResponse}`, {
+          this.logger.error(`ticketsTask: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
-          this.logger.error(`TicketsTask: ${error.toString()}`, {
+          this.logger.error(`ticketsTask: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
 
@@ -1002,8 +1002,7 @@ export class TicketsService {
                   this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`, {
                     error: PortalError.OST_EMPTY_RESULT,
                     context: TicketsService.name,
-
-                    function: 'ticketsTask',
+                    function: this.ticketsTask.name,
                     ...loggerContext,
                   });
                   throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
@@ -1012,8 +1011,7 @@ export class TicketsService {
                 this.logger.error(`ticketsTask: ${PortalError.OST_EMPTY_RESULT}`, {
                   error: PortalError.OST_EMPTY_RESULT,
                   context: TicketsService.name,
-
-                  function: 'ticketsTask',
+                  function: this.ticketsTask.name,
                   ...loggerContext,
                 });
                 throw new NotFoundException(PortalError.OST_EMPTY_RESULT);
@@ -1023,7 +1021,7 @@ export class TicketsService {
           this.logger.error(`ticketsTask: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTask',
+            function: this.ticketsTask.name,
             ...loggerContext,
           });
 
@@ -1081,7 +1079,7 @@ export class TicketsService {
           } catch (error) {
             this.logger.error(`ticketsTaskCache: ${error.toString()}`, {
               context: TicketsService.name,
-              function: 'ticketsTaskCache',
+              function: this.ticketsTaskCache.name,
               ...loggerContext,
             });
           }
@@ -1103,7 +1101,7 @@ export class TicketsService {
       this.logger.error(`ticketsTaskCache: ${error.toString()}`, {
         error,
         context: TicketsService.name,
-        function: 'ticketsTaskCache',
+        function: this.ticketsTaskCache.name,
         ...loggerContext,
       });
 
@@ -1149,10 +1147,10 @@ export class TicketsService {
           loggerContext,
         )
         .catch((error) => {
-          this.logger.error(`docFlowTasks: ${error.toString()}`, {
+          this.logger.error(`ticketsTaskEdit: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
 
@@ -1168,7 +1166,7 @@ export class TicketsService {
           this.logger.error(`ticketsTaskEdit: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
 
@@ -1188,9 +1186,9 @@ export class TicketsService {
           { timeout: TIMEOUT },
         )
         .then((result: Record<string, any>) => {
-          this.logger.debug(`TicketsTaskEdit: [Request] ${client.lastRequest}`, {
+          this.logger.debug(`ticketsTaskEdit: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
 
@@ -1198,9 +1196,9 @@ export class TicketsService {
             return taskSOAP(result[0].return as TicketsTaskSOAP, TkWhere.SOAP1C);
           }
 
-          this.logger.debug(`TicketsTaskEdit: [Response] ${client.lastResponse}`, {
+          this.logger.debug(`ticketsTaskEdit: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
           return {
@@ -1210,18 +1208,18 @@ export class TicketsService {
         .catch((error: SoapFault) => {
           this.logger.error(`ticketsTaskEdit: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
           this.logger.error(`ticketsTaskEdit: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
           this.logger.error(`ticketsTaskEdit: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTaskEdit',
+            function: this.ticketsTaskEdit.name,
             ...loggerContext,
           });
 
