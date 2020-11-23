@@ -25,7 +25,8 @@ import { GroupEntity } from '@back/group/group.entity';
 
 @Entity('user')
 @Index(['loginService', 'loginDomain'])
-@Index(['loginService', 'loginDomain', 'loginIdentificator', 'username'], { unique: true })
+@Index(['loginService', 'loginDomain', 'loginIdentificator'])
+@Index(['loginService', 'loginDomain', 'username'], { unique: true })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -46,6 +47,7 @@ export class UserEntity {
 
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
   loginDomain!: string | null;

@@ -26,7 +26,8 @@ import { Profile } from '@lib/types/profile.dto';
 
 @Entity('profile')
 @Index(['loginService', 'loginDomain'])
-@Index(['loginService', 'loginDomain', 'loginIdentificator', 'username'], { unique: true })
+@Index(['loginService', 'loginDomain', 'loginIdentificator'])
+@Index(['loginService', 'loginDomain', 'username'], { unique: true })
 export class ProfileEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -47,6 +48,7 @@ export class ProfileEntity {
 
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
   loginDomain!: string | null;

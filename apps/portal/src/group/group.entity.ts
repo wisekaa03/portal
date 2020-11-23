@@ -9,7 +9,8 @@ import { LoginService } from '@lib/types/login-service';
 
 @Entity('group')
 @Index(['loginService', 'loginDomain'])
-@Index(['loginService', 'loginDomain', 'loginIdentificator', 'name'], { unique: true })
+@Index(['loginService', 'loginDomain', 'loginIdentificator'])
+@Index(['loginService', 'loginDomain', 'name'], { unique: true })
 export class GroupEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -48,6 +49,7 @@ export class GroupEntity {
 
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
   loginDomain!: string | null;
