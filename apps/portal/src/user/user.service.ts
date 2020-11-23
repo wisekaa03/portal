@@ -169,18 +169,24 @@ export class UserService {
    */
   byUsername = async ({
     username,
+    domain,
     isDisabled = true,
     isRelations = true,
     cache = true,
     loggerContext,
   }: {
     username: string;
+    domain?: string | null;
     isDisabled?: boolean;
     isRelations?: boolean | 'profile' | 'groups';
     cache?: boolean;
     loggerContext?: LoggerContext;
   }): Promise<UserEntity> => {
     const where: FindConditions<UserEntity> = { username };
+    if (domain) {
+      where.loginService = LoginService.LDAP;
+      where.loginDomain = domain;
+    }
 
     if (isDisabled) {
       where.disabled = false;
@@ -206,6 +212,7 @@ export class UserService {
    * @returns {UserEntity | undefined} The user
    */
   byLoginIdentificator = async ({
+    domain,
     loginIdentificator,
     isDisabled = true,
     isRelations = true,
@@ -213,12 +220,16 @@ export class UserService {
     loggerContext,
   }: {
     loginIdentificator: string;
+    domain?: string | null;
     isDisabled?: boolean;
     isRelations?: boolean | 'profile' | 'groups';
     cache?: boolean;
     loggerContext?: LoggerContext;
   }): Promise<UserEntity> => {
-    const where: FindConditions<UserEntity> = { loginIdentificator };
+    const where: FindConditions<UserEntity> = { loginService: LoginService.LDAP, loginIdentificator };
+    if (domain) {
+      where.loginDomain = domain;
+    }
 
     if (isDisabled) {
       where.disabled = false;
@@ -296,7 +307,7 @@ export class UserService {
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator({ loginIdentificator: ldapUser.objectGUID, isDisabled: false, loggerContext }).catch(
+      user = await this.byLoginIdentificator({ domain, loginIdentificator: ldapUser.objectGUID, isDisabled: false, loggerContext }).catch(
         (error) => {
           this.logger.error(`New user "${ldapUser.sAMAccountName}": ${error.toString()}`, {
             error,
