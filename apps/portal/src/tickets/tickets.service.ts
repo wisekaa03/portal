@@ -688,7 +688,7 @@ export class TicketsService {
         this.logger.error(`ticketsTaskNew: ${error.toString()}`, {
           error,
           context: TicketsService.name,
-          function: 'ticketsTaskNew',
+          function: this.ticketsTaskNew.name,
           ...loggerContext,
         });
 
@@ -713,7 +713,7 @@ export class TicketsService {
           this.logger.error(`ticketsTaskNew: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTaskNew',
+            function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
 
@@ -736,7 +736,7 @@ export class TicketsService {
         .then((result?: Record<string, any>) => {
           this.logger.debug(`TicketsTaskNew: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskNew',
+            function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
 
@@ -759,18 +759,18 @@ export class TicketsService {
         .catch((error: Error) => {
           this.logger.error(`ticketsTaskNew: [Request] ${client.lastRequest}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskNew',
+            function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
           this.logger.error(`TicketsTaskNew: [Response] ${client.lastResponse}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskNew',
+            function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
           this.logger.error(`ticketsTaskNew: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsTaskNew',
+            function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
 
@@ -837,7 +837,7 @@ export class TicketsService {
         } catch (error) {
           this.logger.error(`ticketsTaskNew: ${error.toString()}`, {
             context: TicketsService.name,
-            function: 'ticketsTaskNew',
+            function: this.ticketsTaskNew.name,
             ...loggerContext,
           });
 
