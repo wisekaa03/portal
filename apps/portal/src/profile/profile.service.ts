@@ -205,16 +205,22 @@ export class ProfileService {
    */
   byUsername = async ({
     username,
+    domain,
     isRelations = true,
     cache = true,
     loggerContext,
   }: {
     username: string;
+    domain?: string | null;
     isRelations: boolean | 'manager';
     cache: boolean;
     loggerContext?: LoggerContext;
   }): Promise<ProfileEntity | undefined> => {
     const where: FindConditions<ProfileEntity> = { username };
+    if (domain) {
+      where.loginService = LoginService.LDAP;
+      where.loginDomain = domain;
+    }
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
     return this.profileRepository.findOne({
@@ -235,16 +241,21 @@ export class ProfileService {
    */
   byLoginIdentificator = async ({
     loginIdentificator,
+    domain,
     isRelations = true,
     cache = true,
     loggerContext,
   }: {
     loginIdentificator: string;
+    domain?: string | null;
     isRelations?: boolean | 'manager';
     cache?: boolean;
     loggerContext?: LoggerContext;
   }): Promise<ProfileEntity | undefined> => {
-    const where: FindConditions<ProfileEntity> = { loginIdentificator };
+    const where: FindConditions<ProfileEntity> = { loginService: LoginService.LDAP, loginIdentificator };
+    if (domain) {
+      where.loginDomain = domain;
+    }
     const relations = typeof isRelations === 'string' ? [isRelations] : isRelations ? ['manager'] : [];
 
     const profile = await this.profileRepository
@@ -421,7 +432,7 @@ export class ProfileService {
     } else {
       this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, {
         context: ProfileService.name,
-        function: 'fromLdapDN',
+        function: this.fromLdapDN.name,
         ...loggerContext,
       });
     }
@@ -482,7 +493,7 @@ export class ProfileService {
 
     if (!profile) {
       // eslint-disable-next-line no-param-reassign
-      profile = await this.byLoginIdentificator({ loginIdentificator: ldapUser.objectGUID, loggerContext });
+      profile = await this.byLoginIdentificator({ domain, loginIdentificator: ldapUser.objectGUID, loggerContext });
     }
 
     const dataProfile = {
@@ -492,37 +503,37 @@ export class ProfileService {
       loginService: LoginService.LDAP,
       loginDomain: ldapUser.loginDomain || domain,
       loginIdentificator: ldapUser.objectGUID,
-      firstName: ldapUser.givenName,
-      lastName: ldapUser.sn,
-      middleName,
+      firstName: ldapUser.givenName.trim(),
+      lastName: ldapUser.sn.trim(),
+      middleName: middleName.trim(),
       birthday: !birthday ? null : birthday.slice(0, 11),
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
-      country: ldapUser.co,
-      postalCode: ldapUser.postalCode,
-      town: ldapUser.l,
-      region: ldapUser.st,
-      street: ldapUser.streetAddress,
-      company: ldapUser.company,
-      management: ldapUser.department,
-      department: ldapUser['msDS-cloudExtensionAttribute6'],
-      division: ldapUser['msDS-cloudExtensionAttribute7'],
-      title: ldapUser.title,
+      country: ldapUser.co.trim(),
+      postalCode: ldapUser.postalCode.trim(),
+      town: ldapUser.l.trim(),
+      region: ldapUser.st.trim(),
+      street: ldapUser.streetAddress.trim(),
+      company: ldapUser.company.trim(),
+      management: ldapUser.department.trim(),
+      department: ldapUser['msDS-cloudExtensionAttribute6']?.trim(),
+      division: ldapUser['msDS-cloudExtensionAttribute7']?.trim(),
+      title: ldapUser.title.trim(),
       manager: typeof manager !== 'undefined' ? manager : null,
-      email: ldapUser.mail,
-      telephone: ldapUser.telephoneNumber,
-      workPhone: ldapUser.otherTelephone,
-      mobile: ldapUser.mobile,
-      fax: ldapUser.facsimileTelephoneNumber,
-      room: ldapUser.physicalDeliveryOfficeName,
-      employeeID: ldapUser.employeeID,
-      companyEng,
-      nameEng,
-      managementEng,
-      departmentEng,
-      divisionEng,
-      positionEng,
+      email: ldapUser.mail.trim(),
+      telephone: ldapUser.telephoneNumber.trim(),
+      workPhone: ldapUser.otherTelephone.trim(),
+      mobile: ldapUser.mobile.trim(),
+      fax: ldapUser.facsimileTelephoneNumber.trim(),
+      room: ldapUser.physicalDeliveryOfficeName.trim(),
+      employeeID: ldapUser.employeeID?.trim(),
+      companyEng: companyEng.trim(),
+      nameEng: nameEng.trim(),
+      managementEng: managementEng.trim(),
+      departmentEng: departmentEng.trim(),
+      divisionEng: divisionEng.trim(),
+      positionEng: positionEng.trim(),
       // Access Card is msDS-cloudExtensionAttribute13
-      accessCard: ldapUser['msDS-cloudExtensionAttribute13'],
+      accessCard: ldapUser['msDS-cloudExtensionAttribute13']?.trim(),
       // eslint-disable-next-line no-bitwise
       disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),
       notShowing: Number.parseInt(ldapUser.flags, 10) === 1,
