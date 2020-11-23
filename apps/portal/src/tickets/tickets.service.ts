@@ -135,7 +135,7 @@ export class TicketsService {
           this.logger.error(`ticketsRoutes: ${error.toString()}`, {
             error,
             context: TicketsService.name,
-            function: 'ticketsRoutes',
+            function: this.ticketsRoutes.name,
             ...loggerContext,
           });
 

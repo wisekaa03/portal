@@ -57,7 +57,7 @@ export class TicketsResolver {
       user,
       password,
       input,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 
@@ -95,7 +95,7 @@ export class TicketsResolver {
       user,
       password,
       tasks,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 
@@ -137,7 +137,7 @@ export class TicketsResolver {
       password,
       task,
       attachments,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 
@@ -166,7 +166,7 @@ export class TicketsResolver {
       password,
       task,
       attachments,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 
@@ -193,7 +193,7 @@ export class TicketsResolver {
       user,
       password,
       task,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 
@@ -230,7 +230,7 @@ export class TicketsResolver {
       user,
       password,
       file,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 
@@ -257,7 +257,7 @@ export class TicketsResolver {
       user,
       password,
       comment,
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, domain: user.loginDomain, headers: request.headers },
     });
   }
 }
