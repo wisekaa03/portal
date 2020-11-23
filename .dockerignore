@@ -1,14 +1,16 @@
 .vscode
 .storybook
-tsconfig*
 typings/
+renovate.js
 ormconfig.ts
+**/next-env.d.ts
+**/next.config.js
 # apps/
 libs/
 node_modules/@types/
 
 .git*
-doc/
+doc
 ssl.conf
 .yarnrc
 
@@ -25,7 +27,7 @@ prettier.*
 postcss.*
 
 apollo.client.*
-babel.*
+**/babel.*
 
 jest.*
 
@@ -45,21 +47,24 @@ docker-compose*
 .env.example
 .env.test
 
-__mocks__/
-__tests__/
+**/__mocks__/**
+**/__tests__/**
 helm/
 coverage/
 
-package.json
+**/libphonenumber-stub.js
+# package.json
 
 node_modules/.yarn-integrity
 
 webpack.*
 
-apps/portal/components/
-apps/portal/layouts/
-apps/portal/pages/
+apps/
+# apps/portal/components
+# apps/portal/layouts
+# apps/portal/pages
+# apps/portal/layout
 .local/
 
-tsconfig.jest.json
-tsconfig.server.json
+**/tsconfig.*.json
+**/tsconfig.json
