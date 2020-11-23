@@ -506,7 +506,7 @@ export class ProfileService {
       firstName: ldapUser.givenName.trim(),
       lastName: ldapUser.sn.trim(),
       middleName: middleName.trim(),
-      birthday: !birthday ? null : birthday.slice(0, 11),
+      birthday: !birthday ? null : birthday.slice(0, 10),
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co.trim(),
       postalCode: ldapUser.postalCode.trim(),
