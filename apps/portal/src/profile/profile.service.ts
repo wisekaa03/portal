@@ -477,7 +477,7 @@ export class ProfileService {
     } catch {
       comment = {};
     }
-    const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender, birthday } = comment;
+    const { companyEng, nameEng, managementEng, departmentEng, divisionEng, positionEng, gender, birthday: birthdayRaw } = comment;
 
     const thumbnailPhotoBuffer = ldapUser.thumbnailPhoto ? Buffer.from(ldapUser.thumbnailPhoto, 'base64') : undefined;
 
@@ -490,6 +490,8 @@ export class ProfileService {
 
     const displayName = 'displayName' in ldapUser && ldapUser.displayName.split(' ');
     const middleName = displayName && displayName.length === 3 ? displayName[2] : '';
+    const birthday =
+      birthdayRaw.trim() === '' ? null : birthdayRaw.indexOf('T') < 0 ? birthdayRaw.trim() : birthdayRaw.slice(0, birthdayRaw.indexOf('T'));
 
     if (!profile) {
       // eslint-disable-next-line no-param-reassign
@@ -506,7 +508,7 @@ export class ProfileService {
       firstName: ldapUser.givenName.trim(),
       lastName: ldapUser.sn.trim(),
       middleName: middleName.trim(),
-      birthday: !birthday ? null : birthday.slice(0, 10),
+      birthday,
       gender: gender === 'M' ? Gender.MAN : gender === 'W' ? Gender.WOMAN : Gender.UNKNOWN,
       country: ldapUser.co.trim(),
       postalCode: ldapUser.postalCode.trim(),
