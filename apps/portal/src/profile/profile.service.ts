@@ -499,8 +499,8 @@ export class ProfileService {
 
     const dataProfile = {
       ...profile,
-      dn: ldapUser.dn,
-      username: ldapUser.sAMAccountName,
+      dn: ldapUser.dn ?? null,
+      username: ldapUser.sAMAccountName ?? null,
       loginService: LoginService.LDAP,
       loginDomain: ldapUser.loginDomain || domain,
       loginIdentificator: ldapUser.objectGUID,
