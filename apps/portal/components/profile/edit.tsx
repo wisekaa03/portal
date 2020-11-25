@@ -147,12 +147,10 @@ const useStyles = makeStyles((theme: Theme) =>
         opacity: 0.4,
       },
     },
-    notFound: {
+    loading: {
       marginTop: theme.spacing(2),
       textAlign: 'center',
       color: '#949494',
-    },
-    loading: {
       zIndex: 1,
     },
   }),
@@ -430,8 +428,8 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                 </div>
               </>
             ) : (
-              <Typography className={classes.notFound} variant="h4">
-                {t('profile:notFound')}
+              <Typography className={classes.loading} variant="h4">
+                {t('profile:edit.loading')}
               </Typography>
             )}
           </Box>
