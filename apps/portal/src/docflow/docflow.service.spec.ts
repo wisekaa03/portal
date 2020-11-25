@@ -1,7 +1,7 @@
 /** @format */
 
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { RedisService } from 'nest-redis';
 
 import { ConfigService } from '@app/config';
@@ -29,7 +29,7 @@ describe(DocFlowService.name, () => {
         ConfigService,
         DocFlowService,
         RedisService,
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: 'PUB_SUB', useValue: serviceMock },
         { provide: SoapService, useValue: serviceMock },
       ],
