@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       flexWrap: 'nowrap',
       alignItems: 'stretch',
+      gap: '1em',
     },
     fullNameBlock: {
       [theme.breakpoints.down('xs')]: {
@@ -279,6 +280,14 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             <MenuItem value="PROFILE">{t('phonebook:contact.profile')}</MenuItem>
                           </Select>
                         </FormControl>
+                        <ProfileTextFieldComponent
+                          disabled={!newProfile}
+                          handleChange={handleChange}
+                          field="loginDomain"
+                          value={profile.loginDomain}
+                          InputProps={newProfile ? InputProps : { readOnly: true }}
+                          fullWidth={false}
+                        />
                         {newProfile && profile.contact === Contact.USER && (
                           <>
                             <ProfileTextFieldComponent

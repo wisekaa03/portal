@@ -10,6 +10,7 @@
     "header": "Адресная книга - настройки отображения"
   },
   "fields": {
+    "loginDomain": "Домен",
     "fullName": "Ф.И.О.",
     "lastName": "Фамилия",
     "firstName": "Имя",

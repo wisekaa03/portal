@@ -10,6 +10,7 @@
     "header": "Address book - settings"
   },
   "fields": {
+    "loginDomain": "Domain",
     "fullName": "Full name",
     "lastName": "Surname",
     "firstName": "Name",

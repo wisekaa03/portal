@@ -168,7 +168,7 @@ export interface ProfileEditComponentProps {
 
 export interface TextFieldComponentProps {
   disabled: boolean;
-  handleChange: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  handleChange?: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
   field: keyof Profile;
   value?: unknown;
   InputProps: Partial<OutlinedInputProps>;
