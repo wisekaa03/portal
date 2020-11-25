@@ -1,11 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { News } from '@lib/types';
@@ -17,7 +15,7 @@ import { NewsEntity } from './news.entity';
 @Injectable()
 export class NewsService {
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
     // private readonly configService: ConfigService,
     private readonly userService: UserService,
     @InjectRepository(NewsEntity)

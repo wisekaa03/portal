@@ -12,11 +12,11 @@ import {
   PayloadTooLargeException,
   UnprocessableEntityException,
   UnauthorizedException,
+  Logger,
+  LoggerService,
 } from '@nestjs/common';
 import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { FileUpload } from 'graphql-upload';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import type { ProfileInput, SearchSuggestions, User } from '@lib/types';
@@ -31,7 +31,7 @@ import { ProfileEntity } from './profile.entity';
 
 @Resolver('Profile')
 export class ProfileResolver {
-  constructor(private readonly profileService: ProfileService, @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
+  constructor(private readonly profileService: ProfileService, @Inject(Logger) private readonly logger: LoggerService) {}
 
   /**
    * GraphQL query: profiles
@@ -164,7 +164,8 @@ export class ProfileResolver {
       .then((value) => {
         request.logIn(user, async (error: Error) => {
           if (error) {
-            this.logger.error(`Error when changing profile: ${error.toString()}`, {
+            this.logger.error({
+              message: `Error when changing profile: ${error.toString()}`,
               error,
               context: ProfileResolver.name,
               username: user?.username,

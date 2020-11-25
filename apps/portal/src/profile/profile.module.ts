@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 //#endregion
 //#region Imports Local
@@ -21,7 +21,7 @@ import { ProfileResolver } from './profile.resolver';
     TypeOrmModule.forFeature([ProfileEntity]),
     //#endregion
   ],
-  providers: [ProfileService, ProfileResolver],
+  providers: [Logger, ProfileService, ProfileResolver],
   exports: [ProfileService],
 })
 export class ProfileModule {}

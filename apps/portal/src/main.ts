@@ -26,12 +26,12 @@ import { winstonOptions } from '@back/shared/logger.options';
 async function bootstrap(configService: ConfigService): Promise<void> {
   //#region NestJS options
   let secure = false;
-  const loggerBootstrap = WinstonModule.createLogger(winstonOptions(configService));
+  const logger = WinstonModule.createLogger(winstonOptions(configService));
   const nestjsOptions: NestApplicationOptions = {
     cors: {
       credentials: true,
     },
-    logger: loggerBootstrap,
+    logger,
   };
   //#endregion
 
@@ -41,7 +41,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
     const secureDirectory = fs.readdirSync(resolve(__dirname, __DEV__ ? '../../..' : '..', 'secure'));
     if (secureDirectory.filter((file) => file.includes('private.key') || file.includes('private.crt')).length > 0) {
-      loggerBootstrap.verbose!({ message: 'Using HTTPS certificate', context: 'Bootstrap' });
+      logger.log({ message: 'Using HTTPS certificate', context: 'Bootstrap' });
 
       // if (__DEV__) {
       //   // eslint-disable-next-line dot-notation
@@ -59,7 +59,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
       throw new Error('No files');
     }
   } catch (error) {
-    loggerBootstrap.warn({
+    logger.warn({
       message: `There are no files "private.crt", "private.key" in "secure" directory." (${error.toString()})`,
       context: 'Bootstrap',
       function: 'bootstrap',
@@ -72,7 +72,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
     nestjsOptions,
   );
 
-  const logger: WinstonLogger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  // const logger: WinstonLogger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
   configService = app.get(ConfigService);
   configService.logger = logger;
@@ -169,8 +169,8 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   //#endregion
 
   //#region Session and passport initialization
-  const store = sessionRedis(configService, loggerBootstrap);
-  app.use(session(configService, loggerBootstrap, store, secure));
+  const store = sessionRedis(configService, logger);
+  app.use(session(configService, logger, store, secure));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -182,7 +182,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   //#region Start server
   await app.listen(configService.get<number>('PORT'));
-  loggerBootstrap.verbose!({
+  logger.verbose!({
     message: `HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`,
     context: 'Bootstrap',
     function: 'bootstrap',

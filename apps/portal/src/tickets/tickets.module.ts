@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { HttpModule, Module } from '@nestjs/common';
+import { HttpModule, Logger, Module } from '@nestjs/common';
 //#endregion
 //#region Imports Local
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
@@ -11,7 +11,6 @@ import { TicketsService } from './tickets.service';
 
 @Module({
   imports: [HttpModule, SubscriptionsModule],
-
-  providers: [TicketsService, TicketsResolver],
+  providers: [Logger, TicketsService, TicketsResolver],
 })
 export class TicketsModule {}

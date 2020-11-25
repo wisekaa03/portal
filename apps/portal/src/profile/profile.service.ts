@@ -10,13 +10,13 @@ import {
   UnprocessableEntityException,
   UnauthorizedException,
   InternalServerErrorException,
+  Logger,
+  LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Brackets, SelectQueryBuilder, FindConditions, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import type { FileUpload } from 'graphql-upload';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 import { LdapService, Change, Attribute, NoSuchObjectError, InsufficientAccessRightsError } from 'nestjs-ldap';
 import type { LoggerContext, LdapResponseUser, LDAPAddEntry, LdapError } from 'nestjs-ldap';
 //#endregion
@@ -55,7 +55,7 @@ export class ProfileService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepository: Repository<ProfileEntity>,
     private readonly configService: ConfigService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly imageService: ImageService,
     private readonly ldapService: LdapService,
   ) {
@@ -266,7 +266,8 @@ export class ProfileService {
         cache,
       })
       .catch((error) => {
-        this.logger.error(`Profile error: ${error.toString()}`, {
+        this.logger.error({
+          message: `Profile error: ${error.toString()}`,
           error,
           context: ProfileService.name,
           function: this.byLoginIdentificator.name,
@@ -430,7 +431,8 @@ export class ProfileService {
         return this.fromLdap({ ldapUser, domain, save: true, count: count + 1, loggerContext });
       }
     } else {
-      this.logger.info(`The LDAP count > 10, manager is not inserted: ${userByDN}`, {
+      this.logger.verbose!({
+        message: `The LDAP count > 10, manager is not inserted: ${userByDN}`,
         context: ProfileService.name,
         function: this.fromLdapDN.name,
         ...loggerContext,
@@ -573,7 +575,8 @@ export class ProfileService {
    */
   bulkSave = async ({ profiles, loggerContext }: { profiles: ProfileEntity[]; loggerContext?: LoggerContext }): Promise<ProfileEntity[]> =>
     this.profileRepository.save<ProfileEntity>(profiles).catch((error: Error) => {
-      this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
+      this.logger.error({
+        message: `Unable to save data in "profile": ${error.toString()}`,
         error,
         context: ProfileService.name,
         function: 'bulkSave',
@@ -611,7 +614,8 @@ export class ProfileService {
         return p;
       })
       .catch((error: Error) => {
-        this.logger.error(`Unable to save data in "profile": ${error.toString()}`, {
+        this.logger.error({
+          message: `Unable to save data in "profile": ${error.toString()}`,
           error,
           context: ProfileService.name,
           function: 'save',

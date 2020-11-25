@@ -35,7 +35,9 @@ export class LoggingInterceptor implements NestInterceptor {
       case 'rpc': {
         const info = context.switchToRpc().getContext();
 
-        return call$.handle().pipe(tap(() => this.logger.log({ page: this.ctxPrefix, info: info.args }, 'NestMicroservice')));
+        return call$
+          .handle()
+          .pipe(tap(() => this.logger.log({ message: this.ctxPrefix, page: this.ctxPrefix, info: info.args }, 'NestMicroservice')));
       }
 
       case 'http': {

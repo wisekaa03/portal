@@ -8,7 +8,7 @@ import { parse as urlLibParse } from 'url';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER, WINSTON_MODULE_PROVIDER, WinstonLogger } from 'nest-winston';
 import { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
 import { RedisModule, RedisModuleOptions, RedisService } from 'nest-redis';
@@ -61,16 +61,16 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
           );
         }
 
-        if (configService.get<string>('LDAP_REDIS_URI')) {
-          result.push(
-            redisOptions({
-              clientName: 'LDAP',
-              url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
-              ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
-              prefix: 'LDAP:',
-            }),
-          );
-        }
+        // if (configService.get<string>('LDAP_REDIS_URI')) {
+        //   result.push(
+        //     redisOptions({
+        //       clientName: 'LDAP',
+        //       url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
+        //       ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
+        //       prefix: 'LDAP:',
+        //     }),
+        //   );
+        // }
 
         return result;
       },
@@ -79,8 +79,8 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
 
     //#region LDAP Module
     LdapModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService, redisService: RedisService) => {
+      inject: [ConfigService, WINSTON_MODULE_PROVIDER],
+      useFactory: async (configService: ConfigService, logger: WinstonLogger) => {
         const domainString = configService.get<string>('LDAP');
         let domainsConfig: Record<string, LDAPDomainConfig>;
         try {
@@ -114,6 +114,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
 
         return {
           domains,
+          logger,
         };
       },
     }),
@@ -121,9 +122,8 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
 
     //#region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [WinstonModule],
       inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
-      useFactory: async (configService: ConfigService, logger: Logger) =>
+      useFactory: async (configService: ConfigService, logger: WinstonLogger) =>
         ({
           name: 'default',
           keepConnectionAlive: true,

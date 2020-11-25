@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 //#endregion
 //#region Imports Local
 import { UserModule } from '@back/user/user.module';
@@ -12,6 +12,6 @@ import { FilesResolver } from './files.resolver';
 
 @Module({
   imports: [UserModule, SubscriptionsModule],
-  providers: [FilesService, FilesResolver],
+  providers: [Logger, FilesService, FilesResolver],
 })
 export class FilesModule {}

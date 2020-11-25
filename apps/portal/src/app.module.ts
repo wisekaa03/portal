@@ -9,17 +9,15 @@ import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, CacheModule, UnauthorizedException, Type, HttpModule } from '@nestjs/common';
+import { Module, UnauthorizedException, HttpModule, LoggerService, Logger } from '@nestjs/common';
+import { WinstonModule, WinstonLogger, WINSTON_MODULE_PROVIDER, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { GraphQLModule } from '@nestjs/graphql';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
-import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 import { RedisModule, RedisService, RedisModuleOptions } from 'nest-redis';
-// import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
+import { LdapModule, Scope, ldapADattributes, LoggerContext } from 'nestjs-ldap';
 import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
@@ -36,7 +34,6 @@ import { Upload } from '@back/shared/upload.scalar';
 import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
 
 import { ConfigModule, ConfigService, LDAPDomainConfig } from '@app/config';
-import { winstonOptions } from '@back/shared/logger.options';
 import { LoggingInterceptor } from '@app/logging.interceptor';
 // import { CacheInterceptorProvider } from '@app/cache.interceptor';
 
@@ -59,12 +56,13 @@ import { NewsEntity } from '@back/news/news.entity';
 import { FilesModule } from '@back/files/files.module';
 
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
+import { winstonOptions } from './shared/logger.options';
 //#endregion
 
 const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
 
 //#region TypeOrm config options
-export const typeOrmPostgres = (configService: ConfigService, logger: Logger): TypeOrmModuleOptions => ({
+export const typeOrmPostgres = (configService: ConfigService, logger: LoggerService, redis?: Redis): TypeOrmModuleOptions => ({
   name: 'default',
   keepConnectionAlive: true,
   type: 'postgres',
@@ -86,7 +84,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     : JSON.parse(configService.get('DATABASE_LOGGING')),
   entities: [GroupEntity, ProfileEntity, UserEntity, NewsEntity],
   migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-  cache: {
+  cache: /* redis */ {
     type: 'ioredis', // "ioredis/cluster"
     options: redisOptions({
       clientName: 'DATABASE',
@@ -111,12 +109,10 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
     ConfigModule.register(environment),
     //#endregion
 
-    //#region Logging module
     WinstonModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => winstonOptions(configService),
     }),
-    //#endregion
 
     //#region Redis module
     RedisModule.forRootAsync({
@@ -322,20 +318,26 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
 
     //#region TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [WinstonModule],
-      inject: [ConfigService, WINSTON_MODULE_NEST_PROVIDER],
-      useFactory: async (configService: ConfigService, logger: Logger) => {
+      inject: [WINSTON_MODULE_NEST_PROVIDER, ConfigService, RedisService],
+      useFactory: async (logger: WinstonLogger, configService: ConfigService, redisService: RedisService) => {
         logger.log('Database connection: success', 'Database');
 
-        return typeOrmPostgres(configService, logger);
+        let cache: Redis | undefined;
+        try {
+          cache = redisService.getClient('DATABASE');
+        } catch {
+          cache = undefined;
+        }
+
+        return typeOrmPostgres(configService, logger, cache);
       },
     }),
     //#endregion
 
     //#region LDAP Module
     LdapModule.registerAsync({
-      inject: [ConfigService, RedisService],
-      useFactory: async (configService: ConfigService, redisService: RedisService) => {
+      inject: [WINSTON_MODULE_NEST_PROVIDER, ConfigService, RedisService],
+      useFactory: async (logger: WinstonLogger, configService: ConfigService, redisService: RedisService) => {
         let cache: Redis | undefined;
         try {
           cache = redisService.getClient('LDAP');
@@ -378,6 +380,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: Logger): T
           cache,
           cacheTtl: configService.get<number>('LDAP_REDIS_TTL'),
           domains,
+          logger,
         };
       },
     }),

@@ -1,12 +1,19 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject, HttpService, UnauthorizedException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  HttpService,
+  UnauthorizedException,
+  BadRequestException,
+  InternalServerErrorException,
+  LoggerService,
+  Logger,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { LdapService, InvalidCredentialsError, LoggerContext } from 'nestjs-ldap';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import Redis from 'ioredis';
+// import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
 import type { LoginEmail, EmailSession } from '@lib/types/auth';
@@ -24,7 +31,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly ldapService: LdapService,
     private readonly httpService: HttpService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
   ) {}
 
   /**
@@ -71,7 +78,8 @@ export class AuthService {
     domain: string;
     loggerContext: LoggerContext;
   }): Promise<UserEntity> {
-    this.logger.info(`User login: domain="${domain}", username="${username}"`, {
+    this.logger.log({
+      message: `User login: domain="${domain}", username="${username}"`,
       context: AuthService.name,
       function: this.login.name,
       ...loggerContext,
@@ -82,7 +90,8 @@ export class AuthService {
     const ldapUser = await this.ldapService
       .authenticate({ username, password, domain, loggerContext })
       .catch((error: Error | InvalidCredentialsError) => {
-        this.logger.error(`LDAP login in ${domain}: ${error.toString()}`, {
+        this.logger.error({
+          message: `LDAP login in ${domain}: ${error.toString()}`,
           error,
           context: AuthService.name,
           function: this.login.name,
@@ -100,7 +109,8 @@ export class AuthService {
       .fromLdap({ ldapUser, domain, loggerContext })
       .then((user) => {
         if (user.disabled) {
-          this.logger.error(`User is Disabled in domain ${domain}: ${user.username}`, {
+          this.logger.error({
+            message: `User is Disabled in domain ${domain}: ${user.username}`,
             error: 'User is Disabled',
             context: AuthService.name,
             function: this.login.name,
@@ -113,7 +123,8 @@ export class AuthService {
         return user;
       })
       .catch((error: Error) => {
-        this.logger.error(`Error: not found user in domain ${domain}: ${error.toString()}`, {
+        this.logger.error({
+          message: `Error: not found user in domain ${domain}: ${error.toString()}`,
           error,
           context: AuthService.name,
           function: this.login.name,
@@ -205,9 +216,9 @@ export class AuthService {
     //   try {
     //     redisSession.flushdb();
 
-    //     this.logger.info('Reset session cache', { context: AuthService.name, function: 'cacheReset', ...loggerContext });
+    //     this.logger.log({ message: 'Reset session cache', context: AuthService.name, function: 'cacheReset', ...loggerContext });
     //   } catch (error) {
-    //     this.logger.error(`Unable to reset session cache: ${error.toString()}`, {
+    //     this.logger.error({message: `Unable to reset session cache: ${error.toString()}`,
     //       error, function: 'cacheReset',
     //       context: AuthService.name,
     //       ...loggerContext,
@@ -218,7 +229,7 @@ export class AuthService {
 
     //   sessionStoreReset = true;
     // } catch (error) {
-    //   this.logger.error(`Error in cache reset, session store: ${error.toString()}`, {
+    //   this.logger.error({message: `Error in cache reset, session store: ${error.toString()}`,
     //     error, function: 'cacheReset',
     //     context: AuthService.name,
     //     ...loggerContext,

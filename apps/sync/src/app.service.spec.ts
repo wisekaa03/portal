@@ -2,8 +2,8 @@
 /* eslint max-classes-per-file:0 */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -28,7 +28,7 @@ describe(SyncService.name, () => {
       providers: [
         ConfigService,
         SyncService,
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: ImageService, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },

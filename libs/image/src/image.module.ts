@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, Logger } from '@nestjs/common';
 //#endregion
 //#region Imports Local
 import { ImageService } from './image.service';
@@ -10,7 +10,7 @@ import { ImageService } from './image.service';
 @Global()
 @Module({
   imports: [],
-  providers: [ImageService],
+  providers: [Logger, ImageService],
   exports: [ImageService],
 })
 export class ImageModule {}

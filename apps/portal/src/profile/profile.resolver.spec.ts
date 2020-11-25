@@ -1,8 +1,8 @@
 /** @format */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { GqlAuthGuard } from '../guards/gqlauth.guard';
@@ -19,11 +19,7 @@ describe('ProfileResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
-        ProfileResolver,
-        { provide: ProfileService, useValue: serviceMock },
-      ],
+      providers: [{ provide: Logger, useValue: serviceMock }, ProfileResolver, { provide: ProfileService, useValue: serviceMock }],
     })
       .overrideGuard(GqlAuthGuard)
       .useValue(serviceMock)

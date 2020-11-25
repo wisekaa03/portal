@@ -2,11 +2,9 @@
 /* eslint max-classes-per-file:0 */
 
 //#region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
 import { createClientAsync, Client, NTLMSecurity, ISoapFaultError, ISoapFault11, ISoapFault12 } from 'soap';
 import { LoggerContext } from 'nestjs-ldap';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -32,7 +30,7 @@ export class SoapService {
    * @param {Object} options - Config options
    * @constructor
    */
-  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger, private readonly configService: ConfigService) {}
+  constructor(@Inject(Logger) private readonly logger: LoggerService, private readonly configService: ConfigService) {}
 
   /**
    * Connect the SOAP service
@@ -83,7 +81,7 @@ export class SoapService {
         return client as SoapClient;
       })
       .catch((error: ISoapFaultError | Error) => {
-        this.logger.error(`SOAP connect error: ${error.toString()}`, { error, loggerContext });
+        this.logger.error({ message: `SOAP connect error: ${error.toString()}`, error, loggerContext });
 
         throw error;
       });

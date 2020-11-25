@@ -1,11 +1,9 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Inject, InternalServerErrorException, Logger, LoggerService } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult } from 'typeorm';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 import { LdapResponseGroup, LdapResponseUser } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -18,7 +16,7 @@ import { GroupEntity } from './group.entity';
 export class GroupService {
   constructor(
     private readonly configService: ConfigService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {}
@@ -93,7 +91,8 @@ export class GroupService {
             if (current.status === 'fulfilled') {
               return accumulator.concat(current.value);
             }
-            this.logger.error(`Groups error: ${current.reason}`, {
+            this.logger.error({
+              message: `Groups error: ${current.reason}`,
               error: current.reason,
               context: GroupService.name,
               function: 'fromLdapUser',
@@ -145,7 +144,12 @@ export class GroupService {
    */
   bulkSave = async (group: GroupEntity[]): Promise<GroupEntity[]> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: GroupService.name, function: 'bulkSave' });
+      this.logger.error({
+        message: `Unable to save data in "group": ${error.toString()}`,
+        error,
+        context: GroupService.name,
+        function: 'bulkSave',
+      });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     });
@@ -159,7 +163,12 @@ export class GroupService {
    */
   save = async (group: GroupEntity): Promise<GroupEntity> =>
     this.groupRepository.save(group).catch((error) => {
-      this.logger.error(`Unable to save data in "group": ${error.toString()}`, { error, context: GroupService.name, function: 'save' });
+      this.logger.error({
+        message: `Unable to save data in "group": ${error.toString()}`,
+        error,
+        context: GroupService.name,
+        function: 'save',
+      });
 
       throw new InternalServerErrorException(__DEV__ ? error : undefined);
     });

@@ -2,11 +2,11 @@
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { TypeOrmModule, getRepositoryToken, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
@@ -51,7 +51,7 @@ describe(UserService.name, () => {
       ],
       providers: [
         { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         ConfigService,
         UserService,
         { provide: ClientProxy, useValue: serviceMock },

@@ -4,9 +4,7 @@
 import fs from 'fs';
 import { resolve } from 'path';
 import { tmpNameSync } from 'tmp';
-import { Inject, Injectable } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { Inject, Injectable, Logger, LoggerService } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import * as Webdav from 'webdav-client';
 import { NextcloudClient } from 'nextcloud-link';
@@ -35,7 +33,7 @@ export class FilesService {
   private staticFolderURL: string;
 
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly configService: ConfigService, // private readonly userService: UserService,
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
     private readonly redisService: RedisService, // private readonly userService: UserService,
@@ -53,9 +51,9 @@ export class FilesService {
       });
 
       if (this.cache.store) {
-        logger.debug('Redis connection: success', { context: FilesService.name, function: 'constructor' });
+        logger.debug!({ message: 'Redis connection: success', context: FilesService.name, function: 'constructor' });
       } else {
-        logger.error('Redis connection: not connected', { context: FilesService.name, function: 'constructor' });
+        logger.error({ message: 'Redis connection: not connected', context: FilesService.name, function: 'constructor' });
       }
     }
 
@@ -229,7 +227,7 @@ export class FilesService {
    * @return {FilesFolder[]}
    */
   folderFiles = async (user: User, password: string, path = '/', cache = true): Promise<FilesFolder[]> => {
-    this.logger.info(`Files entity: path={${path}}`, { context: FilesService.name, function: 'folderFiles' });
+    this.logger.log({ message: `Files entity: path={${path}}`, context: FilesService.name, function: 'folderFiles' });
 
     const lastPath =
       path === '/' || path === ''
@@ -277,7 +275,7 @@ export class FilesService {
    * @throws NotFoundError
    */
   putFile = async (path: string, promiseFile: Promise<FileUpload>, user: User, password: string): Promise<boolean> => {
-    this.logger.info(`Put files: path={${path}}`, { context: FilesService.name, function: 'putFile' });
+    this.logger.log({ message: `Put files: path={${path}}`, context: FilesService.name, function: 'putFile' });
 
     const { createReadStream } = await promiseFile;
     this.nextCloudAs(user, password).uploadFromStream(path, createReadStream());
@@ -298,7 +296,7 @@ export class FilesService {
    * @throws {Error}
    */
   getFile = async (path: string, user: User, password: string, options?: FilesOptions, cache = true): Promise<FilesFile> => {
-    this.logger.info(`Get files: path={${path}}`, { context: FilesService.name, function: 'getFile' });
+    this.logger.log({ message: `Get files: path={${path}}`, context: FilesService.name, function: 'getFile' });
 
     const cachedID = `file:${user.loginIdentificator}:${path}`;
     if (cache && this.cache) {
@@ -308,7 +306,8 @@ export class FilesService {
           fs.accessSync(cached.temporaryFile, fs.constants.R_OK);
           return { path: cached.path };
         } catch (error) {
-          this.logger.error(`Files: no read access at "${path}": ${error.toString()}`, {
+          this.logger.error({
+            message: `Files: no read access at "${path}": ${error.toString()}`,
             error,
             context: FilesService.name,
             function: 'getFile',

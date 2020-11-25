@@ -2,11 +2,9 @@
 
 //#region Imports NPM
 import { Resolver, Subscription, Query, Mutation, Args, registerEnumType } from '@nestjs/graphql';
-import { Inject, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Inject, UseGuards, UnauthorizedException, LoggerService, Logger } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
@@ -25,7 +23,7 @@ registerEnumType(Folder, {
 @Resolver('Files')
 export class FilesResolver {
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly filesService: FilesService,
     private readonly userService: UserService,
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,

@@ -342,6 +342,7 @@
     "soap": "*",
     "subscriptions-transport-ws": "*",
     "tmp": "*",
+    "type-fest": "^0",
     "typeorm": "*",
     "typeorm-graphql-pagination": "*",
     "url-loader": "^4",

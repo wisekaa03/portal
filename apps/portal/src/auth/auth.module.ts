@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Module, HttpModule } from '@nestjs/common';
+import { Module, HttpModule, Logger } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 //#endregion
 //#region Imports Local
@@ -35,7 +35,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 
     SubscriptionsModule,
   ],
-  providers: [AuthService, AuthResolver, LocalStrategy, CookieSerializer] /* , JwtStrategy */,
+  providers: [Logger, AuthService, AuthResolver, LocalStrategy, CookieSerializer] /* , JwtStrategy */,
   exports: [PassportModule, AuthService],
 })
 export class AuthModule {}

@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 //#endregion
 //#region Imports Local
@@ -19,7 +19,7 @@ import { UserModule } from '../user/user.module';
     TypeOrmModule.forFeature([NewsEntity]),
     //#endregion
   ],
-  providers: [NewsService, NewsResolver],
+  providers: [Logger, NewsService, NewsResolver],
   exports: [NewsService],
 })
 export class NewsModule {}

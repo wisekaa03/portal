@@ -1,8 +1,8 @@
 /** @format */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config/config.service';
@@ -28,7 +28,7 @@ describe(AuthResolver.name, () => {
         },
         AuthResolver,
         ConfigService,
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
         { provide: AuthService, useValue: serviceMock },
       ],

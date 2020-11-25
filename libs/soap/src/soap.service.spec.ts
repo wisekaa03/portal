@@ -1,8 +1,8 @@
 /** @format */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -22,7 +22,7 @@ describe(SoapService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [ConfigService, SoapService, { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock }],
+      providers: [ConfigService, SoapService, { provide: Logger, useValue: serviceMock }],
     }).compile();
 
     service = module.get<SoapService>(SoapService);

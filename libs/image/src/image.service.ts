@@ -2,9 +2,7 @@
 /* eslint prettier/prettier: 0 */
 
 //#region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { Injectable, Inject, Logger, LoggerService } from '@nestjs/common';
 import Sharp from 'sharp';
 //#endregion
 //#region Imports Local
@@ -12,7 +10,7 @@ import Sharp from 'sharp';
 
 @Injectable()
 export class ImageService {
-  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {
+  constructor(@Inject(Logger) private readonly logger: LoggerService) {
   }
 
   // eslint-disable-next-line no-confusing-arrow

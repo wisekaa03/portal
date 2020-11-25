@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Global, Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 //#endregion
 //#region Imports Local
 import { SoapService } from './soap.service';
@@ -10,7 +10,7 @@ import { SoapService } from './soap.service';
 @Global()
 @Module({
   imports: [],
-  providers: [SoapService],
+  providers: [Logger, SoapService],
   exports: [SoapService],
 })
 export class SoapModule {}

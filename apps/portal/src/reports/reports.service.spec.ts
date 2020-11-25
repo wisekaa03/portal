@@ -1,7 +1,7 @@
 /** @format */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@app/config';
 import { SoapService } from '@app/soap';
 import { ReportsService } from './reports.service';
@@ -25,7 +25,7 @@ describe(ReportsService.name, () => {
       providers: [
         ConfigService,
         ReportsService,
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: SoapService, useValue: serviceMock },
       ],
     }).compile();

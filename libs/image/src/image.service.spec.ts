@@ -1,8 +1,8 @@
 /** @format */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -19,7 +19,7 @@ describe(ImageService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
-      providers: [ConfigService, ImageService, { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock }],
+      providers: [ConfigService, ImageService, { provide: Logger, useClass: serviceMock }],
     }).compile();
 
     service = module.get<ImageService>(ImageService);

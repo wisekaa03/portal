@@ -2,9 +2,9 @@
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config';
@@ -42,7 +42,7 @@ describe(GroupService.name, () => {
         // TypeOrmModule.forFeature([GroupEntity]),
       ],
       providers: [
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
         GroupService,
         ConfigService,

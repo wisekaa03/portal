@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transport, ClientProxyFactory } from '@nestjs/microservices';
 //#endregion
@@ -26,6 +26,7 @@ import { UserResolver } from './user.resolver';
   ],
   controllers: [],
   providers: [
+    Logger,
     UserService,
     UserResolver,
 

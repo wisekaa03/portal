@@ -1,8 +1,7 @@
 /** @format */
 
-import { HttpModule } from '@nestjs/common';
+import { HttpModule, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { RedisService } from 'nest-redis';
 
 import { ConfigService } from '@app/config';
@@ -38,7 +37,7 @@ describe(TicketsService.name, () => {
           provide: 'PUB_SUB',
           useValue: serviceMock,
         },
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: SoapService, useValue: serviceMock },
       ],
     }).compile();

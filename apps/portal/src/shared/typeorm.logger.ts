@@ -1,10 +1,10 @@
 /** @format */
 
-import { LoggerService } from '@nestjs/common';
+import { Inject, Logger, LoggerService } from '@nestjs/common';
 import { Logger as ITypeOrmLogger, QueryRunner } from 'typeorm';
 
 export class TypeOrmLogger implements ITypeOrmLogger {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(@Inject(Logger) private readonly logger: LoggerService) {}
 
   /**
    * Logs query and parameters used in it.

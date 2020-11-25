@@ -28,7 +28,7 @@ async function bootstrap(config: ConfigService): Promise<boolean> {
 
 bootstrap(configService)
   .then((result) => {
-    logger.verbose!({ message: `Microservice returns: ${result}`, context: 'Sync LDAP Job', function: 'bootstrap' });
+    logger.log({ message: `Microservice returns: ${result}`, context: 'Sync LDAP Job', function: 'bootstrap' });
   })
   .catch((error) => {
     throw new Error(`Synch job: Result: ${JSON.stringify(error)}`);

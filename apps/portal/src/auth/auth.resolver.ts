@@ -2,11 +2,9 @@
 
 //#region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards, UnauthorizedException, Inject } from '@nestjs/common';
+import { UseGuards, UnauthorizedException, Inject, LoggerService, Logger } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { Request, Response } from 'express';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { Login, LoginEmail, User, AvailableAuthenticationProfiles } from '@lib/types';
@@ -27,7 +25,7 @@ export class AuthResolver {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
   ) {}
 
   /**
@@ -87,7 +85,8 @@ export class AuthResolver {
 
     request.logIn(user, async (error: Error) => {
       if (error) {
-        this.logger.error(`Error when logging in: ${error.toString()}`, {
+        this.logger.error({
+          message: `Error when logging in: ${error.toString()}`,
           error,
           context: AuthResolver.name,
           function: 'login',
@@ -123,7 +122,13 @@ export class AuthResolver {
   ): Promise<LoginEmail> {
     const loggerContext = getUsername(request);
     return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
-      this.logger.error('Unable to login in mail', { error, context: AuthResolver.name, function: 'loginEmail', ...loggerContext });
+      this.logger.error({
+        message: 'Unable to login in mail',
+        error,
+        context: AuthResolver.name,
+        function: 'loginEmail',
+        ...loggerContext,
+      });
 
       return {
         login: false,
@@ -142,7 +147,8 @@ export class AuthResolver {
   @Mutation()
   @UseGuards(GqlAuthGuard)
   async logout(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
-    this.logger.info('User logout', {
+    this.logger.log({
+      message: 'User logout',
       context: AuthResolver.name,
       function: 'logout',
       username: user?.username,
@@ -169,7 +175,7 @@ export class AuthResolver {
   @UseGuards(GqlAuthGuard)
   async cacheReset(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
     const loggerContext = { username: user?.username, headers: request.headers };
-    this.logger.info('Cache reset', { context: AuthResolver.name, function: 'cacheReset', ...loggerContext });
+    this.logger.log({ message: 'Cache reset', context: AuthResolver.name, function: 'cacheReset', ...loggerContext });
 
     return this.authService.cacheReset({ loggerContext });
   }

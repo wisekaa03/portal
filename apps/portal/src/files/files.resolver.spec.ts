@@ -2,8 +2,8 @@
 /* eslint spaced-comment:0, max-classes-per-file:0 */
 
 //#region Imports NPM
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 //#endregion
 //#region Imports Local
 import { ConfigService } from '@app/config/config.service';
@@ -29,7 +29,7 @@ describe(FilesResolver.name, () => {
           provide: 'PUB_SUB',
           useValue: serviceMock,
         },
-        { provide: WINSTON_MODULE_PROVIDER, useValue: serviceMock },
+        { provide: Logger, useValue: serviceMock },
         { provide: FilesService, useValue: serviceMock },
         { provide: UserService, useValue: serviceMock },
       ],

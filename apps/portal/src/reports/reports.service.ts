@@ -1,10 +1,8 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
 import { User } from '@lib/types/user.dto';
@@ -20,7 +18,7 @@ import { constructUploads } from '@back/shared/upload';
 @Injectable()
 export class ReportsService {
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly configService: ConfigService,
     private readonly soapService: SoapService,
   ) {}
