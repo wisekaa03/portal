@@ -27,7 +27,7 @@ export const PROFILES = (_columns: string): DocumentNode => gql`
 `;
 
 export const PROFILE = gql`
-  query Profile($id: ID) {
+  query Profile($id: ID!) {
     profile(id: $id) {
       ...ProfileProps
       id
@@ -38,8 +38,8 @@ export const PROFILE = gql`
 `;
 
 export const CHANGE_PROFILE = gql`
-  mutation ChangeProfile($profile: ProfileSettingsInput, $thumbnailPhoto: Upload, $domain: String!) {
-    changeProfile(profile: $profile, thumbnailPhoto: $thumbnailPhoto, domain: $domain) {
+  mutation ChangeProfile($profile: ProfileSettingsInput!, $thumbnailPhoto: Upload) {
+    changeProfile(profile: $profile, thumbnailPhoto: $thumbnailPhoto) {
       id
     }
   }

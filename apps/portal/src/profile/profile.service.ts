@@ -915,7 +915,7 @@ export class ProfileService {
     }
 
     if (created.dn && created.loginService === LoginService.LDAP) {
-      const domain = user.loginDomain as string;
+      const domain = created.loginDomain as string;
       let ldapUser: LdapResponseUser | undefined;
       try {
         ldapUser = await this.ldapService.searchByDN({ userByDN: created.dn, domain, loggerContext });

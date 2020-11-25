@@ -126,7 +126,6 @@ export const isProfileInput = (profile: unknown): profile is ProfileInput =>
   'username' in profile &&
   'firstName' in profile &&
   !('loginService' in profile) &&
-  !('loginIdentificator' in profile) &&
   !('dn' in profile) &&
   !('updatedAt' in profile) &&
   !('createdAt' in profile);
@@ -138,7 +137,6 @@ export const isProfile = (profile: unknown): profile is Profile =>
   'username' in profile &&
   'firstName' in profile &&
   'loginService' in profile &&
-  'loginIdentificator' in profile &&
   'dn' in profile &&
   'updatedAt' in profile &&
   'createdAt' in profile;
