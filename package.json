@@ -413,7 +413,7 @@
     "autoprefixer": "*",
     "babel-jest": "*",
     "babel-loader": "*",
-    "babel-plugin-import": "1.13.1",
+    "babel-plugin-import": "1.13.3",
     "babel-plugin-module-resolver": "*",
     "babel-plugin-transform-imports": "*",
     "browserslist": "*",
