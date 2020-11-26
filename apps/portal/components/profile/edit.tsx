@@ -287,6 +287,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                         <div className={classes.domain}>
                           <DomainComponent
                             disabled={!newProfile}
+                            newProfile={newProfile}
                             handleDomain={handleChange('loginDomain')}
                             domain={profile.loginDomain}
                             InputProps={newProfile ? InputProps : { readOnly: true }}

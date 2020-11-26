@@ -77,6 +77,7 @@ export const PHONEBOOK_ROW_HEIGHT = 72;
  * PROFILE
  */
 export const PROFILE_AUTOCOMPLETE_FIELDS = [
+  'loginDomain',
   'company',
   'management',
   'department',

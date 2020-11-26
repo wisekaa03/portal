@@ -13,14 +13,22 @@ import { AVAILABLE_DOMAIN } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 //#endregion
 
-const DomainComponent: FC<DomainComponentProps> = ({ disabled = false, handleDomain, domain, InputProps = {}, fullWidth = true }) => {
+const DomainComponent: FC<DomainComponentProps> = ({
+  newProfile = false,
+  disabled = false,
+  handleDomain,
+  domain,
+  InputProps = {},
+  fullWidth = true,
+}) => {
   const { t } = useTranslation();
 
   const [options, setOptions] = useState<string[]>([]);
   const [openDomain, setOpenDomain] = useState<boolean>(false);
 
   const [getDomain, { loading: loadingDomain, data: dataDomain, error: errorDomain, called: calledDomain }] = useLazyQuery<
-    Data<'availableAuthenticationProfiles', string[]>
+    Data<'availableAuthenticationProfiles', string[]>,
+    { synchronization?: boolean; newProfile?: boolean }
   >(AVAILABLE_DOMAIN, {
     ssr: true,
     fetchPolicy: 'cache-and-network',
@@ -28,7 +36,7 @@ const DomainComponent: FC<DomainComponentProps> = ({ disabled = false, handleDom
   });
 
   const handleOpen = (): void => {
-    getDomain();
+    getDomain({ variables: { newProfile } });
     setOpenDomain(true);
   };
 
@@ -44,9 +52,9 @@ const DomainComponent: FC<DomainComponentProps> = ({ disabled = false, handleDom
 
   useEffect(() => {
     if (!calledDomain && !domain) {
-      getDomain();
+      getDomain({ variables: { newProfile } });
     }
-  }, [calledDomain, getDomain, domain]);
+  }, [calledDomain, getDomain, domain, newProfile]);
 
   useEffect(() => {
     if (errorDomain) {

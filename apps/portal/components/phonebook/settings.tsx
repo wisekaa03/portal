@@ -4,16 +4,7 @@
 import React, { useState } from 'react';
 // import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import {
-  CardHeader,
-  Card,
-  CardContent,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Checkbox,
-  CardActions,
-} from '@material-ui/core';
+import { CardHeader, Card, CardContent, FormControl, FormControlLabel, FormGroup, Checkbox, CardActions } from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
@@ -113,10 +104,10 @@ export const allColumns: PhonebookColumn[] = [
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'nameEng',
+    name: 'loginDomain',
     admin: false,
-    defaultStyle: { minWidth: 160, maxWidth: 160 },
-    largeStyle: { minWidth: 180, maxWidth: 180 },
+    defaultStyle: { minWidth: 80, maxWidth: 80 },
+    largeStyle: { minWidth: 80, maxWidth: 80 },
   },
   {
     name: 'username',
@@ -131,19 +122,7 @@ export const allColumns: PhonebookColumn[] = [
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'companyEng',
-    admin: false,
-    defaultStyle: { minWidth: 200, maxWidth: 200 },
-    largeStyle: { minWidth: 270, maxWidth: 270 },
-  },
-  {
     name: 'management',
-    admin: false,
-    defaultStyle: { minWidth: 260, maxWidth: 260 },
-    largeStyle: { minWidth: 270, maxWidth: 270 },
-  },
-  {
-    name: 'managementEng',
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
@@ -155,19 +134,7 @@ export const allColumns: PhonebookColumn[] = [
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'departmentEng',
-    admin: false,
-    defaultStyle: { minWidth: 260, maxWidth: 260 },
-    largeStyle: { minWidth: 270, maxWidth: 270 },
-  },
-  {
     name: 'division',
-    admin: false,
-    defaultStyle: { minWidth: 200, maxWidth: 200 },
-    largeStyle: { minWidth: 270, maxWidth: 270 },
-  },
-  {
-    name: 'divisionEng',
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
@@ -177,6 +144,54 @@ export const allColumns: PhonebookColumn[] = [
     admin: false,
     defaultStyle: { minWidth: 240, maxWidth: 240 },
     largeStyle: { minWidth: 240, maxWidth: 240 },
+  },
+  {
+    name: 'email',
+    admin: false,
+    defaultStyle: { minWidth: 210, maxWidth: 210 },
+    largeStyle: { minWidth: 250, maxWidth: 250 },
+  },
+  {
+    name: 'mobile',
+    admin: false,
+    defaultStyle: { minWidth: 130, maxWidth: 130 },
+    largeStyle: { minWidth: 140, maxWidth: 140 },
+  },
+  {
+    name: 'workPhone',
+    admin: false,
+    defaultStyle: { minWidth: 120, maxWidth: 120 },
+    largeStyle: { minWidth: 120, maxWidth: 120 },
+  },
+  {
+    name: 'nameEng',
+    admin: false,
+    defaultStyle: { minWidth: 160, maxWidth: 160 },
+    largeStyle: { minWidth: 180, maxWidth: 180 },
+  },
+  {
+    name: 'companyEng',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 270, maxWidth: 270 },
+  },
+  {
+    name: 'managementEng',
+    admin: false,
+    defaultStyle: { minWidth: 260, maxWidth: 260 },
+    largeStyle: { minWidth: 270, maxWidth: 270 },
+  },
+  {
+    name: 'departmentEng',
+    admin: false,
+    defaultStyle: { minWidth: 260, maxWidth: 260 },
+    largeStyle: { minWidth: 270, maxWidth: 270 },
+  },
+  {
+    name: 'divisionEng',
+    admin: false,
+    defaultStyle: { minWidth: 200, maxWidth: 200 },
+    largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
     name: 'positionEng',
@@ -207,24 +222,6 @@ export const allColumns: PhonebookColumn[] = [
     admin: false,
     defaultStyle: { minWidth: 140, maxWidth: 140 },
     largeStyle: { minWidth: 160, maxWidth: 160 },
-  },
-  {
-    name: 'mobile',
-    admin: false,
-    defaultStyle: { minWidth: 130, maxWidth: 130 },
-    largeStyle: { minWidth: 140, maxWidth: 140 },
-  },
-  {
-    name: 'workPhone',
-    admin: false,
-    defaultStyle: { minWidth: 120, maxWidth: 120 },
-    largeStyle: { minWidth: 120, maxWidth: 120 },
-  },
-  {
-    name: 'email',
-    admin: false,
-    defaultStyle: { minWidth: 210, maxWidth: 210 },
-    largeStyle: { minWidth: 250, maxWidth: 250 },
   },
   {
     name: 'country',
@@ -264,7 +261,7 @@ export const allColumns: PhonebookColumn[] = [
   },
 ];
 
-const countInBlocks = 4;
+const countInBlocks = 6;
 
 const PhonebookSettings = React.forwardRef(
   ({ columns, changeColumn, handleClose, handleReset, isAdmin }: SettingsProps, ref?: React.Ref<React.Component>) => {
@@ -292,18 +289,14 @@ const PhonebookSettings = React.forwardRef(
             {[...new Array(blocks).keys()].map((i) => (
               <FormControl key={i} className={classes.group}>
                 <FormGroup>
-                  {renderColumns
-                    .slice(i * countInBlocks, i * countInBlocks + countInBlocks)
-                    .map(({ name }: PhonebookColumn) => (
-                      <FormControlLabel
-                        key={name}
-                        className={classes.item}
-                        label={t(`phonebook:fields.${name}`)}
-                        control={
-                          <Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />
-                        }
-                      />
-                    ))}
+                  {renderColumns.slice(i * countInBlocks, i * countInBlocks + countInBlocks).map(({ name }: PhonebookColumn) => (
+                    <FormControlLabel
+                      key={name}
+                      className={classes.item}
+                      label={t(`phonebook:fields.${name}`)}
+                      control={<Checkbox color="primary" onChange={handleCheckbox(name)} checked={current.includes(name)} />}
+                    />
+                  ))}
                 </FormGroup>
               </FormControl>
             ))}

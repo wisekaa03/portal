@@ -34,6 +34,11 @@ const useStyles = makeStyles(() =>
       alignItems: 'center',
       border: 'none',
     },
+    nowrap: {
+      flexWrap: 'nowrap',
+      whiteSpace: 'nowrap',
+      flexFlow: 'nowrap',
+    },
     disabled: {
       color: red[600],
     },
@@ -67,6 +72,7 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
           };
 
           let cellData: ReactElement | string = '';
+          let cellNowrap = false;
 
           switch (name) {
             case 'thumbnailPhoto40': {
@@ -88,6 +94,12 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
               }
 
               cellData = cell.manager.fullName;
+              break;
+            }
+
+            case 'loginDomain': {
+              cellNowrap = true;
+              cellData = cell[name];
               break;
             }
 
@@ -128,6 +140,7 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
               component="div"
               variant="body"
               className={clsx(classes.cell, {
+                [classes.nowrap]: cellNowrap,
                 [classes.disabled]: cell.disabled && name === 'lastName',
                 [classes.notShowing]: cell.notShowing && name === 'lastName',
               })}

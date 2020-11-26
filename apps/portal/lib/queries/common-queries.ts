@@ -59,8 +59,8 @@ export const CACHE = gql`
 `;
 
 export const AVAILABLE_DOMAIN = gql`
-  query AvailableAuthenticationProfiles {
-    availableAuthenticationProfiles
+  query AvailableAuthenticationProfiles($synchronization: Boolean, $newProfile: Boolean) {
+    availableAuthenticationProfiles(synchronization: $synchronization, newProfile: $newProfile)
   }
 `;
 

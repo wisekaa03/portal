@@ -15,6 +15,7 @@ import type { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 //#endregion
 
 export type PhonebookColumnNames =
+  | 'loginDomain'
   | 'lastName'
   | 'nameEng'
   | 'username'
@@ -192,6 +193,7 @@ export interface TextFieldComponentProps {
 
 export interface DomainComponentProps {
   disabled?: boolean;
+  newProfile?: boolean;
   handleDomain?: (
     event: React.ChangeEvent<Record<string, unknown>>,
     value: unknown,

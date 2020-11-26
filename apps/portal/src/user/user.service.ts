@@ -56,7 +56,7 @@ export class UserService {
    * @returns {AvailableAuthenticationProfiles[]} Profile
    * @throws {Error} Exception
    */
-  public availableAuthenticationProfiles = async (): Promise<string[]> => {
+  public availableAuthenticationProfiles = async (synchronization: boolean, newProfile: boolean): Promise<string[]> => {
     const domainString = this.configService.get<string>('LDAP');
     let domains: Record<string, LDAPDomainConfig>;
     try {
@@ -64,8 +64,11 @@ export class UserService {
     } catch {
       throw new Error('Not available authentication profiles.');
     }
-
-    return Object.keys(domains);
+    return Object.keys(domains).filter((domain) => {
+      const sync = synchronization ? domains[domain].hideSynchronization === 'false' : true;
+      const newProf = newProfile ? Boolean(domains[domain].newBase) : true;
+      return sync && newProf;
+    });
   };
 
   /**

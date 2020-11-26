@@ -37,8 +37,11 @@ export class AuthResolver {
    * @throws {Error}
    */
   @Query('availableAuthenticationProfiles')
-  async availableAuthenticationProfiles(): Promise<string[]> {
-    return this.userService.availableAuthenticationProfiles();
+  async availableAuthenticationProfiles(
+    @Args('synchronization') synchronization?: boolean,
+    @Args('newProfile') newProfile?: boolean,
+  ): Promise<string[]> {
+    return this.userService.availableAuthenticationProfiles(synchronization ?? false, newProfile ?? true);
   }
 
   /**
