@@ -31,6 +31,13 @@
   "adminPanel": "Admin panel",
   "copied": "Copied",
   "search": "Search",
+  "domain": {
+    "name": "Domain",
+    "noOptions": "No results for domain",
+    "clearText": "Clear text",
+    "open": "Open",
+    "loading": "Loading..."
+  },
   "gender": {
     "MAN": "Man",
     "WOMAN": "Woman",

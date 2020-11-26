@@ -6,6 +6,7 @@ import type { WithTranslation } from 'next-i18next';
 import type { ApolloQueryResult } from '@apollo/client';
 import type { Order, Connection } from 'typeorm-graphql-pagination';
 import type { OutlinedInputProps } from '@material-ui/core';
+import { AutocompleteChangeDetails, AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
 import type { StyleProps as StyleProperties, Data } from './common';
@@ -161,16 +162,43 @@ export interface ProfileEditComponentProps {
   language?: string;
   onDrop: (_: File[]) => Promise<void>;
   handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  handleChange: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  handleChange: (
+    field: keyof Profile,
+  ) => (
+    event: React.ChangeEvent<Record<string, unknown>>,
+    value: unknown,
+    reason?: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<unknown> | undefined,
+  ) => void;
   handleBirthday: (date: Date | null) => void;
   handleSave: () => void;
 }
 
 export interface TextFieldComponentProps {
   disabled: boolean;
-  handleChange?: (_: keyof Profile) => (event: React.ChangeEvent<Element>, value?: unknown) => void;
+  handleChange?: (
+    field: keyof Profile,
+  ) => (
+    event: React.ChangeEvent<Record<string, unknown>>,
+    value: unknown,
+    reason?: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<unknown> | undefined,
+  ) => void;
   field: keyof Profile;
   value?: unknown;
   InputProps: Partial<OutlinedInputProps>;
+  fullWidth?: boolean;
+}
+
+export interface DomainComponentProps {
+  disabled?: boolean;
+  handleDomain?: (
+    event: React.ChangeEvent<Record<string, unknown>>,
+    value: unknown,
+    reason?: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<unknown> | undefined,
+  ) => void;
+  domain?: unknown;
+  InputProps?: Partial<OutlinedInputProps>;
   fullWidth?: boolean;
 }

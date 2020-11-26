@@ -31,6 +31,13 @@
   "adminPanel": "Панель управления",
   "copied": "Скопировано",
   "search": "Быстрый поиск",
+  "domain": {
+    "name": "Домен",
+    "noOptions": "Нет результатов по домену",
+    "clearText": "Clear text",
+    "open": "Open",
+    "loading": "Загрузка..."
+  },
   "gender": {
     "MAN": "Мужской",
     "WOMAN": "Женский",

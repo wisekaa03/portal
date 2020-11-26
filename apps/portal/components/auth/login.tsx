@@ -18,14 +18,14 @@ import {
   CircularProgress,
   OutlinedTextFieldProps,
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
+import Logo from '@images/svg/logo.svg'; // TODO: ?inline
+import Background from '@images/svg/background.svg'; // TODO: ?inline
 import { useTranslation } from '@lib/i18n-client';
 import { LoginComponentProps } from '@lib/types';
 import Loading from '@front/components/loading';
-import Logo from '@images/svg/logo.svg'; // TODO: ?inline
-import Background from '@images/svg/background.svg'; // TODO: ?inline
+import DomainComponent from '@front/components/domain-component';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -112,50 +112,13 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
   passwordRef,
   values,
   loading,
-  handleValues,
-  getDomain,
   handleDomain,
-  loadingDomain,
-  dataDomain,
+  handleValues,
   handleSubmit,
   handleKeyDown,
 }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
-
-  const [options, setOptions] = useState<string[]>([]);
-  const [openDomain, setOpenDomain] = useState<boolean>(false);
-
-  const handleOpen = (): void => {
-    getDomain();
-    setOpenDomain(true);
-  };
-
-  const handleClose = (): void => {
-    setOpenDomain(false);
-  };
-
-  useEffect(() => {
-    if (!loadingDomain && dataDomain?.availableAuthenticationProfiles) {
-      setOptions(dataDomain.availableAuthenticationProfiles);
-      if (
-        !values.domain &&
-        Array.isArray(dataDomain.availableAuthenticationProfiles) &&
-        dataDomain.availableAuthenticationProfiles.length > 0
-      ) {
-        // eslint-disable-next-line prefer-destructuring
-        values.domain = dataDomain.availableAuthenticationProfiles[0];
-      }
-    }
-  }, [loadingDomain, dataDomain, values]);
-
-  const propsDomain: OutlinedTextFieldProps = {
-    fullWidth: true,
-    disabled: loading,
-    color: 'secondary',
-    label: t('login:profile'),
-    variant: 'outlined',
-  };
 
   return (
     <Box className={classes.root}>
@@ -205,38 +168,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
                     />
                   </FormControl>
                   <FormControl className={classes.formControl} fullWidth variant="outlined">
-                    <Autocomplete
-                      autoHighlight
-                      forcePopupIcon
-                      disableClearable
-                      noOptionsText={t('login:profileNoOptions')}
-                      clearText={t('login:profileClearText')}
-                      openText={t('login:profileOpen')}
-                      loadingText={t('login:profileLoading')}
-                      options={options}
-                      open={openDomain}
-                      onOpen={handleOpen}
-                      onClose={handleClose}
-                      loading={loadingDomain}
-                      value={values.domain}
-                      onChange={handleDomain}
-                      renderInput={(parameters) => (
-                        <TextField
-                          {...propsDomain}
-                          {...parameters}
-                          InputProps={{
-                            ...parameters.InputProps,
-                            endAdornment: (
-                              <>
-                                {loadingDomain ? <CircularProgress color="inherit" size={20} /> : null}
-                                {parameters.InputProps.endAdornment}
-                                {/* InputProps.endAdornment */}
-                              </>
-                            ),
-                          }}
-                        />
-                      )}
-                    />
+                    <DomainComponent handleDomain={handleDomain} domain={values.domain} fullWidth={false} />
                   </FormControl>
                   <FormControlLabel
                     className={classes.checkBox}

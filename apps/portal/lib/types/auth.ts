@@ -22,18 +22,15 @@ export interface LoginComponentProps {
   passwordRef: React.Ref<HTMLInputElement>;
   values: LoginValuesProps;
   loading: boolean;
-  handleValues: (_: keyof LoginValuesProps) => (__: React.ChangeEvent<HTMLInputElement>) => void;
-  getDomain: (options?: QueryLazyOptions<Record<string, any>> | undefined) => void;
-  loadingDomain: boolean;
-  dataDomain?: Data<'availableAuthenticationProfiles', string[]>;
+  handleValues: (values: keyof LoginValuesProps) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDomain: (
     event: React.ChangeEvent<Record<string, unknown>>,
-    value: unknown,
-    reason: AutocompleteChangeReason,
+    value?: unknown,
+    reason?: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<unknown>,
   ) => void;
-  handleSubmit: (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  handleKeyDown: (_: React.KeyboardEvent<HTMLDivElement>) => void;
+  handleSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export interface LoginValuesProps {

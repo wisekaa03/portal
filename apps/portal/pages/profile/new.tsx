@@ -95,14 +95,23 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     }
   };
 
-  const handleChange = (name: keyof Profile) => (event: React.ChangeEvent<Element>, changedValue?: unknown) => {
-    const element = event.target as HTMLInputElement;
-    const value = changedValue || (element.type === 'checkbox' ? element.checked : element.value);
+  const handleChange = (name: keyof Profile) => (event: React.ChangeEvent<Record<string, unknown>>, changedValue?: unknown) => {
+    const element = (event.target as unknown) as HTMLInputElement;
+    let value: unknown;
+    if (changedValue && typeof changedValue === 'object' && React.isValidElement<{ value: string; children: string }>(changedValue)) {
+      value = changedValue.props.value;
+    } else if (changedValue) {
+      value = changedValue;
+    } else if (element.type === 'checkbox') {
+      value = element.checked;
+    } else {
+      value = element.value;
+    }
 
-    if (isAdmin && current) {
+    if (isAdmin && current && updated) {
       const result = name === 'gender' ? parseInt(value as string, 10) : value;
       setCurrent({ ...current, [name]: result });
-      setUpdated({ ...updated, [name]: result, disabled: updated.contact !== Contact.PROFILE });
+      setUpdated({ ...updated, [name]: result });
     }
   };
 

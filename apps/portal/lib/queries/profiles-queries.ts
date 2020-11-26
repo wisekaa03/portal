@@ -14,6 +14,7 @@ export const PROFILES = (_columns: string): DocumentNode => gql`
           disabled
           notShowing
           gender
+          loginDomain
           ${_columns}
         }
         cursor

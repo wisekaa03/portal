@@ -76,7 +76,7 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, hand
         loading={loading}
         options={options}
         value={value}
-        onChange={(event, valueChanged) => handleChange && handleChange(field)(event as React.ChangeEvent<HTMLInputElement>, valueChanged)}
+        onChange={(event, valueChanged) => handleChange && handleChange(field)(event, valueChanged)}
         renderInput={(parameters) => (
           <TextField
             {...props}
@@ -98,7 +98,16 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, hand
     );
   }
 
-  return <TextField {...props} value={value || ''} InputProps={InputProps} onChange={handleChange && handleChange(field)} />;
+  return (
+    <TextField
+      {...props}
+      value={value || ''}
+      InputProps={InputProps}
+      onChange={
+        handleChange && ((handleChange(field) as unknown) as (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void)
+      }
+    />
+  );
 };
 
 export default ProfileTextFieldComponent;

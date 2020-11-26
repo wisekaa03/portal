@@ -35,6 +35,7 @@ import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
 import Button from '@front/components/ui/button';
 import { DropzoneWrapper } from '@front/components/dropzone';
+import DomainComponent from '@front/components/domain-component';
 import ProfileTextFieldComponent from './text-field';
 //#endregion
 
@@ -88,6 +89,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'nowrap',
       alignItems: 'stretch',
       gap: '1em',
+    },
+    domain: {
+      minWidth: '10em',
     },
     fullNameBlock: {
       [theme.breakpoints.down('xs')]: {
@@ -271,7 +275,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           <Select
                             labelId="profile-contact"
                             autoWidth
-                            onChange={(event) => handleChange('contact')((event as unknown) as ChangeEvent<HTMLUnknownElement>)}
+                            onChange={handleChange('contact')}
                             color="secondary"
                             value={profile.contact}
                             label={t('phonebook:contact.title')}
@@ -280,14 +284,14 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             <MenuItem value="PROFILE">{t('phonebook:contact.profile')}</MenuItem>
                           </Select>
                         </FormControl>
-                        <ProfileTextFieldComponent
-                          disabled={!newProfile}
-                          handleChange={handleChange}
-                          field="loginDomain"
-                          value={profile.loginDomain}
-                          InputProps={newProfile ? InputProps : { readOnly: true }}
-                          fullWidth={false}
-                        />
+                        <div className={classes.domain}>
+                          <DomainComponent
+                            disabled={!newProfile}
+                            handleDomain={handleChange('loginDomain')}
+                            domain={profile.loginDomain}
+                            InputProps={newProfile ? InputProps : { readOnly: true }}
+                          />
+                        </div>
                         {newProfile && profile.contact === Contact.USER && (
                           <>
                             <ProfileTextFieldComponent
@@ -315,7 +319,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       <div className={classes.topRightBlock}>
                         <RadioGroup
                           className={classes.genderBlock}
-                          onChange={handleChange('gender')}
+                          onChange={(handleChange('gender') as unknown) as (event: ChangeEvent<HTMLInputElement>, value: string) => void}
                           aria-label="gender"
                           name="gender"
                           value={profile.gender}
@@ -343,7 +347,12 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                               <Checkbox
                                 disabled={loadingChanged}
                                 checked={profile.notShowing}
-                                onChange={handleChange('notShowing')}
+                                onChange={
+                                  (handleChange('notShowing') as unknown) as (
+                                    event: ChangeEvent<HTMLInputElement>,
+                                    checked: boolean,
+                                  ) => void
+                                }
                                 color="secondary"
                                 value="notShowing"
                               />
@@ -357,7 +366,9 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                               <Checkbox
                                 disabled
                                 checked={profile.disabled}
-                                onChange={handleChange('disabled')}
+                                onChange={
+                                  (handleChange('disabled') as unknown) as (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void
+                                }
                                 color="secondary"
                                 value="disabled"
                               />
