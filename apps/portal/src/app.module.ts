@@ -367,6 +367,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           groupDnProperty: 'dn',
           groupSearchAttributes: ldapADattributes,
           searchAttributes: ldapADattributes,
+          hideSynchronization: domainsConfig[name].hideSynchronization !== 'false' ?? false,
           searchBaseAllUsers: domainsConfig[name].searchBase,
           searchFilterAllUsers: domainsConfig[name].searchAllUsers,
           searchFilterAllGroups: domainsConfig[name].searchAllGroups,

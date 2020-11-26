@@ -102,6 +102,7 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
           groupDnProperty: 'dn',
           groupSearchAttributes: ldapADattributes,
           searchAttributes: ldapADattributes,
+          hideSynchronization: domainsConfig[name].hideSynchronization !== 'false' ?? false,
           searchBaseAllUsers: domainsConfig[name].searchBase,
           searchFilterAllUsers: domainsConfig[name].searchAllUsers,
           searchFilterAllGroups: domainsConfig[name].searchAllGroups,

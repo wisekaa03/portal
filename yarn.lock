@@ -2980,9 +2980,9 @@
     "@babel/types" "^7.0.0"
 
 "@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6":
-  version "7.0.15"
-  resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.0.15.tgz#db9e4238931eb69ef8aab0ad6523d4d4caa39d03"
-  integrity sha512-Pzh9O3sTK8V6I1olsXpCfj2k/ygO2q1X0vhhnDrEQyYLHZesWz+zMZMVcwXLCYf0U36EtmyYaFGPfXlTtDHe3A==
+  version "7.0.16"
+  resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.0.16.tgz#0bbbf70c7bc4193210dd27e252c51260a37cd6a7"
+  integrity sha512-S63Dt4CZOkuTmpLGGWtT/mQdVORJOpx6SZWGVaP56dda/0Nx5nEe82K7/LAm8zYr6SfMq+1N2OreIOrHAx656w==
   dependencies:
     "@babel/types" "^7.3.0"
 
@@ -11560,9 +11560,9 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 nestjs-ldap@*:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.0.1.tgz#b4086ed73488074d5af5b5a5d5eab6d194ae0949"
-  integrity sha512-t06lLM3r1eQYTNMf7tDTIHIsYfVeSVLMlMGdTGOYy4QmuS4YU6He/IFKweAQzDOKuWw1PlEUyjqkNqg7SaRNdw==
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.0.2.tgz#bbd5d286d0b59c5d272ef736464c7113c9c0595e"
+  integrity sha512-wBC79aWU3oMUOrfYD+3aSN4+K+CZPsExAebGmtBhXAqYLahw+5BIt2c5FsEAs07spNvBL3sipWKniDTCvuN/+A==
   dependencies:
     "@nestjs/common" "*"
     bcrypt "*"

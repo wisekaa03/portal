@@ -9,7 +9,8 @@ export interface LDAPDomainConfig {
   searchBase: string;
   searchUser: string;
   searchGroup: string;
-  searchAllUsers: string;
-  searchAllGroups: string;
-  newBase: string;
+  hideSynchronization?: string;
+  searchAllUsers?: string;
+  searchAllGroups?: string;
+  newBase?: string;
 }
