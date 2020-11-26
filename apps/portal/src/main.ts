@@ -182,7 +182,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
 
   //#region Start server
   await app.listen(configService.get<number>('PORT'));
-  logger.verbose!({
+  logger.log({
     message: `HTTP${secure ? 'S' : ''} running on port ${configService.get<number>('PORT')}`,
     context: 'Bootstrap',
     function: 'bootstrap',

@@ -6,10 +6,9 @@
 import { resolve } from 'path';
 import { parse as urlLibParse } from 'url';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER, WINSTON_MODULE_PROVIDER, WinstonLogger } from 'nest-winston';
-import { Logger } from 'winston';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
 import { RedisModule, RedisModuleOptions, RedisService } from 'nest-redis';
 import type { Redis } from 'ioredis';
@@ -167,6 +166,6 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     ProfileModule,
   ],
   controllers: [AppController],
-  providers: [SyncService, { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
+  providers: [Logger, SyncService, { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
 export class AppModule {}
