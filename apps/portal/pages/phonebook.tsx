@@ -11,7 +11,7 @@ import { useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-import { Data, ProfileQueryProps, PhonebookColumnNames, UserSettings, Profile, SearchSuggestions } from '@lib/types';
+import { Data, ProfileQueryProps, PhonebookColumnNames, UserSettings, Profile, SearchSuggestions, PhonebookFilter } from '@lib/types';
 import useDebounce from '@lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '@lib/queries';
 import { MaterialUI } from '@front/layout';
@@ -56,6 +56,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   const me = useContext(ProfileContext);
 
   const defaultColumns = me?.user?.settings?.phonebook?.columns || null;
+  const defaultFilters = me?.user?.settings?.phonebook?.filters || [];
 
   const [columns, setColumns] = useState<PhonebookColumnNames[]>(
     defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
@@ -63,6 +64,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<SearchSuggestions[]>([]);
+  const [filters, setFiltersOriginal] = useState<PhonebookFilter[]>(defaultFilters);
   const [orderBy, setOrderBy] = useState<Order<PhonebookColumnNames>>({
     direction: OrderDirection.ASC,
     field: 'lastName',
@@ -96,6 +98,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
         disabled: columns.includes('disabled'),
         // TODO: for admins only
         notShowing: isAdmin && columns.includes('notShowing'),
+        filters,
       },
       fetchPolicy: 'cache-and-network',
       notifyOnNetworkStatusChange: true,
@@ -138,7 +141,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
         ? fetchMore<
             Data<'profiles', Connection<Profile>>,
             ProfileQueryProps,
-            'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing'
+            'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing' | 'filters'
           >({
             query: PROFILES(getGraphQLColumns(columns)),
             variables: {
@@ -148,6 +151,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
               search: search.length > 3 ? search : '',
               disabled: columns.includes('disabled'),
               notShowing: isAdmin && columns.includes('notShowing'),
+              filters,
             },
           }).catch((e) => {
             snackbarUtils.error(e);
@@ -155,16 +159,18 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
             return undefined;
           })
         : undefined,
-    [columns, data, fetchMore, isAdmin, orderBy, search],
+    [columns, data, fetchMore, isAdmin, orderBy, search, filters],
   );
 
-  const handleColumns = (values: PhonebookColumnNames[]): void => {
+  const handleColumns = (columnsVal: PhonebookColumnNames[], filtersVal: PhonebookFilter[]): void => {
     userSettings({
       variables: {
-        value: { phonebook: { columns: values } },
+        value: { phonebook: { columns: columnsVal, filters: filtersVal } },
       },
     });
-    setColumns(values);
+    setColumns(columnsVal);
+    setFiltersOriginal(filtersVal);
+    refetch();
   };
 
   const handleSort = (column: PhonebookColumnNames) => (): void => {
@@ -219,6 +225,11 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
     });
     setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
     setSettingsOpen(false);
+  };
+
+  const setFilters = (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => {
+    setFiltersOriginal([{ name: 'loginDomain', value: value as string }]);
+    refetch();
   };
 
   const handleSugClose = (event: React.MouseEvent<EventTarget>): void => {
@@ -279,6 +290,8 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
       <Modal open={settingsOpen} onClose={handleSettingsClose}>
         <PhonebookSettings
           columns={columns}
+          filters={filters}
+          setFilters={setFilters}
           changeColumn={handleColumns}
           handleClose={handleSettingsClose}
           handleReset={handleSettingsReset}

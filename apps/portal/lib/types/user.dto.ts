@@ -5,7 +5,7 @@
 //#region Imports Local
 import type { Profile } from './profile.dto';
 import type { Group } from './group.dto';
-import type { PhonebookColumnNames } from './profile';
+import type { PhonebookColumnNames, PhonebookFilter } from './profile';
 import type { LoginService } from './login-service';
 import type { TkService, TkRoute, TkWhere } from './tickets';
 //#endregion
@@ -27,6 +27,7 @@ export interface AllUsersInfo {
 //#region User settings
 export interface UserSettingsPhonebook {
   columns?: PhonebookColumnNames[];
+  filters?: PhonebookFilter[];
   __typename?: 'UserSettingsPhonebook';
 }
 

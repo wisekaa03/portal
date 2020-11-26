@@ -52,6 +52,11 @@ export interface PhonebookColumn {
   largeStyle: StyleProperties;
 }
 
+export interface PhonebookFilter {
+  name: string;
+  value: string;
+}
+
 export interface ProfileQueryProps {
   first: number;
   after: string;
@@ -59,6 +64,7 @@ export interface ProfileQueryProps {
   search: string;
   disabled: boolean;
   notShowing: boolean;
+  filters?: PhonebookFilter[];
 }
 
 export interface PhonebookSearchProps {
@@ -82,8 +88,10 @@ export interface SettingsProps extends WithTranslation {
   columns: PhonebookColumnNames[];
   handleClose: () => void;
   handleReset: () => void;
-  changeColumn(columns: PhonebookColumnNames[]): void;
+  changeColumn: (columnsVal: PhonebookColumnNames[], filtersVal: PhonebookFilter[]) => void;
   isAdmin: boolean;
+  filters: PhonebookFilter[];
+  setFilters: (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => void;
 }
 
 export interface PhonebookHelpProps extends WithTranslation {

@@ -19,7 +19,7 @@ import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import type { ProfileInput, SearchSuggestions, User } from '@lib/types';
+import type { ProfileInput, SearchSuggestions, User, PhonebookFilter } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
@@ -47,12 +47,13 @@ export class ProfileResolver {
   @UseGuards(GqlAuthGuard)
   async profiles(
     @Context('req') request: Request,
-    @Args('first') first: number,
-    @Args('after') after: string,
-    @Args('orderBy') orderBy: Order<string>,
-    @Args('search') search: string,
-    @Args('disabled') disabled: boolean,
-    @Args('notShowing') notShowing: boolean,
+    @Args('first') first?: number,
+    @Args('after') after?: string,
+    @Args('orderBy') orderBy?: Order<string>,
+    @Args('search') search?: string,
+    @Args('disabled') disabled?: boolean,
+    @Args('notShowing') notShowing?: boolean,
+    @Args('filters') filters?: PhonebookFilter[],
     @CurrentUser() user?: User,
   ): Promise<Connection<ProfileEntity>> {
     if (notShowing && !user?.isAdmin) {
@@ -60,7 +61,7 @@ export class ProfileResolver {
     }
 
     return paginate(
-      { first, after, orderBy },
+      { first: first || 0, after: after || '', orderBy },
       {
         type: 'Profile',
         alias: 'profile',
@@ -70,6 +71,7 @@ export class ProfileResolver {
           search,
           disabled,
           notShowing,
+          filters,
           loggerContext: { username: user?.username, headers: request.headers },
         }),
       },

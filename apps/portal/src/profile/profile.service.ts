@@ -21,7 +21,7 @@ import { LdapService, Change, Attribute, NoSuchObjectError, InsufficientAccessRi
 import type { LoggerContext, LdapResponseUser, LDAPAddEntry, LdapError } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import type { User, Profile, SearchSuggestions, AllUsersInfo, ProfileInput } from '@lib/types';
+import type { User, Profile, SearchSuggestions, AllUsersInfo, ProfileInput, PhonebookFilter } from '@lib/types';
 import { LoginService, Contact, Gender } from '@lib/types';
 import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
 import { ConfigService } from '@app/config';
@@ -108,16 +108,18 @@ export class ProfileService {
     search,
     disabled,
     notShowing,
+    filters,
     loggerContext,
   }: {
-    search: string;
-    disabled: boolean;
-    notShowing: boolean;
+    search?: string;
+    disabled?: boolean;
+    notShowing?: boolean;
+    filters?: PhonebookFilter[];
     loggerContext?: LoggerContext;
   }): SelectQueryBuilder<ProfileEntity> => {
     const query = this.profileRepository.createQueryBuilder('profile').leftJoinAndSelect('profile.manager', 'manager');
 
-    const parameters = { notShowing, disabled };
+    const parameters: Record<string, boolean | string | undefined> = { notShowing, disabled };
 
     if (!disabled) {
       query.andWhere('profile.disabled = :disabled');
@@ -127,7 +129,16 @@ export class ProfileService {
       query.andWhere('profile.notShowing = :notShowing');
     }
 
-    search.split('+').forEach((value) => {
+    if (filters) {
+      filters.forEach((filter) => {
+        if (filter.name.search(/(disabled)|(notShowing)/g) < 0) {
+          parameters[filter.name] = filter.value;
+          query.andWhere(`profile.${filter.name} = :${filter.name}`);
+        }
+      });
+    }
+
+    search?.split('+').forEach((value) => {
       const cleared = value.trim() !== '' ? `'%${value.trim()}%'` : '';
 
       if (cleared) {

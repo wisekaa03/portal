@@ -9,6 +9,7 @@
   "settings": {
     "header": "Address book - settings"
   },
+  "filters": "Filters",
   "fields": {
     "loginDomain": "Domain",
     "fullName": "Full name",

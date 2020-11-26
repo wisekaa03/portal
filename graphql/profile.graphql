@@ -178,8 +178,18 @@ type SearchSuggestions {
   avatar: String
 }
 
+type PhonebookFilter {
+  name: String!
+  value: String!
+}
+
+input PhonebookFilterInput {
+  name: String!
+  value: String!
+}
+
 type Query {
-  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean): ProfileConnection!
+  profiles(first: Int, after: String, orderBy: ProfileOrder, search: String, disabled: Boolean, notShowing: Boolean, filters: [PhonebookFilterInput]): ProfileConnection!
   profile(id: ID!): Profile!
   searchSuggestions(search: String): [SearchSuggestions]
   profileFieldSelection(field: FieldSelection!, department: String): [String]

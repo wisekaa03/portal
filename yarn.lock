@@ -1481,11 +1481,11 @@
     tslib "~2.0.1"
 
 "@graphql-tools/schema@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-7.0.0.tgz#f87e307d00a3d388f5c54d32f4697611396c0127"
-  integrity sha512-yDKgoT2+Uf3cdLYmiFB9lRIGsB6lZhILtCXHgZigYgURExrEPmfj3ZyszfEpPKYcPmKaO9FI4coDhIN0Toxl3w==
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-7.1.0.tgz#ddf6ede376164ff4d9d768a1b6a6dc4cb4ce9ce3"
+  integrity sha512-1TwaRfWOfxtTqk8ckBrLi3283Sl0tQmUleAnelID1mql4YgYyArrKRkHfWZs9DbydngTxj/uV10aLYioJMR6tQ==
   dependencies:
-    "@graphql-tools/utils" "^7.0.0"
+    "@graphql-tools/utils" "^7.1.0"
     tslib "~2.0.1"
 
 "@graphql-tools/url-loader@^6.0.0":
@@ -1504,10 +1504,10 @@
     valid-url "1.0.9"
     websocket "1.0.32"
 
-"@graphql-tools/utils@6.2.4", "@graphql-tools/utils@^6.0.0", "@graphql-tools/utils@^6.2.4", "@graphql-tools/utils@^7", "@graphql-tools/utils@^7.0.0", "@graphql-tools/utils@^7.0.1", "@graphql-tools/utils@^7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.0.2.tgz#1977d3277158bf32df792a5ff76d3fdc04647a64"
-  integrity sha512-VQQ7krHeoXO0FS3qbWsb/vZb8c8oyiCYPIH4RSgeK9SKOUpatWYt3DW4jmLmyHZLVVMk0yjUbsOhKTBEMejKSA==
+"@graphql-tools/utils@6.2.4", "@graphql-tools/utils@^6.0.0", "@graphql-tools/utils@^6.2.4", "@graphql-tools/utils@^7", "@graphql-tools/utils@^7.0.0", "@graphql-tools/utils@^7.0.1", "@graphql-tools/utils@^7.0.2", "@graphql-tools/utils@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.1.0.tgz#0cbcfa7b6e7741650f78e8bde4823780ed9e8c57"
+  integrity sha512-lMTgy08BdqQ31zyyCRrxcKZ6gAKQB9amGKJGg0mb3b4I3iJQKeaw9a7T96yGe1frGak1UK9y7OoYqx8RG7KitA==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.1"
@@ -11560,9 +11560,9 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 nestjs-ldap@*:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.0.2.tgz#bbd5d286d0b59c5d272ef736464c7113c9c0595e"
-  integrity sha512-wBC79aWU3oMUOrfYD+3aSN4+K+CZPsExAebGmtBhXAqYLahw+5BIt2c5FsEAs07spNvBL3sipWKniDTCvuN/+A==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.0.3.tgz#e6e5a8d806fc382254be923e2820eca8c20a0a94"
+  integrity sha512-pdptvZF1R2I9fio9RPLOxUnr0lT0rTE8QwBfKY0t+xwmgNdEixVGW16k0Q0DVUYSGJeaMZUJ/CRWrLQR3NJ48A==
   dependencies:
     "@nestjs/common" "*"
     bcrypt "*"

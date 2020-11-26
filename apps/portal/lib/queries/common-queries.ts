@@ -26,6 +26,7 @@ export const CURRENT_USER = gql`
         }
         phonebook {
           columns
+          filters
         }
       }
       groups {
@@ -88,6 +89,10 @@ export const LOGIN = gql`
           }
           phonebook {
             columns
+            filters {
+              name
+              value
+            }
           }
         }
         profile {
@@ -135,6 +140,10 @@ export const USER_SETTINGS = gql`
         drawer
         phonebook {
           columns
+          filters {
+            name
+            value
+          }
         }
         task {
           status

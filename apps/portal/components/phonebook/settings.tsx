@@ -4,12 +4,24 @@
 import React, { useState } from 'react';
 // import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { CardHeader, Card, CardContent, FormControl, FormControlLabel, FormGroup, Checkbox, CardActions } from '@material-ui/core';
+import {
+  CardHeader,
+  Card,
+  CardContent,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Checkbox,
+  CardActions,
+  Typography,
+  Container,
+} from '@material-ui/core';
 //#endregion
 //#region Imports Local
 import { nextI18next, useTranslation } from '@lib/i18n-client';
-import { PhonebookColumn, PhonebookColumnNames, SettingsProps } from '@lib/types';
+import { PhonebookColumn, PhonebookColumnNames, SettingsProps, PhonebookFilter } from '@lib/types';
 import Button from '@front/components/ui/button';
+import DomainComponent from '@front/components/domain-component';
 // import HeaderBg from '@public/images/jpeg/header_bg.jpg';
 //#endregion
 
@@ -80,6 +92,12 @@ const useStyles = makeStyles((theme: Theme) =>
           marginRight: theme.spacing(),
         },
       },
+    },
+    filters: {
+      height: '100%',
+      display: 'grid',
+      paddingTop: '1em',
+      paddingBottom: '1em',
     },
     buttonAccept: {
       backgroundColor: '#DEECEC',
@@ -264,7 +282,7 @@ export const allColumns: PhonebookColumn[] = [
 const countInBlocks = 6;
 
 const PhonebookSettings = React.forwardRef(
-  ({ columns, changeColumn, handleClose, handleReset, isAdmin }: SettingsProps, ref?: React.Ref<React.Component>) => {
+  ({ columns, changeColumn, handleClose, handleReset, isAdmin, filters, setFilters }: SettingsProps, ref?: React.Ref<React.Component>) => {
     const classes = useStyles({});
     const { t } = useTranslation();
     const [current, setCurrent] = useState<PhonebookColumnNames[]>(columns);
@@ -274,7 +292,7 @@ const PhonebookSettings = React.forwardRef(
     };
 
     const handleAccept = (): void => {
-      changeColumn(current);
+      changeColumn(current, filters);
       handleClose();
     };
 
@@ -300,6 +318,17 @@ const PhonebookSettings = React.forwardRef(
                 </FormGroup>
               </FormControl>
             ))}
+            <FormControl key="filterLoginDomain" className={classes.group}>
+              <Container className={classes.filters}>
+                <Typography component="p">{t('phonebook:filters')}</Typography>
+                <DomainComponent
+                  domain={
+                    filters.filter((filter) => filter.name === 'loginDomain').reduce((accumulator, filter) => filter.value, '') ?? null
+                  }
+                  handleDomain={setFilters}
+                />
+              </Container>
+            </FormControl>
           </div>
         </CardContent>
         <CardActions className={classes.actions} disableSpacing>

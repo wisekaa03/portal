@@ -9,6 +9,7 @@
   "settings": {
     "header": "Адресная книга - настройки отображения"
   },
+  "filters": "Фильтры",
   "fields": {
     "loginDomain": "Домен",
     "fullName": "Ф.И.О.",
