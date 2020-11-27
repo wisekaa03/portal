@@ -5,10 +5,12 @@ import type { Request } from 'express';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { FileUpload } from 'graphql-upload';
+import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
 import { Profile, User, UserSettings, ProfileInput } from '@lib/types';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
+import { defaultUserSettings } from '@back/shared/constants';
 import { UserService } from './user.service';
 import { CurrentUser } from './user.decorator';
 //#endregion
@@ -96,12 +98,14 @@ export class UserResolver {
       throw new UnauthorizedException();
     }
 
+    const settings = defaultsDeep(value, user.settings, defaultUserSettings);
+
     // eslint-disable-next-line no-param-reassign
-    user.settings = this.userService.settings(value, user);
+    user.settings = settings as UserSettings;
 
     return this.userService.save({
       user: this.userService.create(user),
-      loggerContext: { username: user.username, headers: request.headers },
+      loggerContext: { username: user.username, context: UserResolver.name, function: this.userSettings.name, headers: request.headers },
     });
   }
 }

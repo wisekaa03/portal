@@ -86,12 +86,12 @@ export interface ProfileProps extends WithTranslation {
 
 export interface SettingsProps extends WithTranslation {
   columns: PhonebookColumnNames[];
+  filters: PhonebookFilter[];
   handleClose: () => void;
   handleReset: () => void;
   changeColumn: (columnsVal: PhonebookColumnNames[], filtersVal: PhonebookFilter[]) => void;
+  handleFilters: (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => void;
   isAdmin: boolean;
-  filters: PhonebookFilter[];
-  setFilters: (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => void;
 }
 
 export interface PhonebookHelpProps extends WithTranslation {

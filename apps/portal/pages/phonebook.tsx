@@ -26,7 +26,7 @@ import Modal from '@front/components/ui/modal';
 import Loading from '@front/components/loading';
 //#endregion
 
-const columnsXS: PhonebookColumnNames[] = ['thumbnailPhoto40', 'lastName', 'workPhone'];
+const columnsXS: PhonebookColumnNames[] = ['thumbnailPhoto40', 'lastName', 'loginDomain', 'workPhone'];
 const columnsSM: PhonebookColumnNames[] = [...columnsXS, 'title'];
 const columnsMD: PhonebookColumnNames[] = [...columnsSM, 'company', 'department'];
 const columnsLG: PhonebookColumnNames[] = [...columnsMD, 'mobile', 'email'];
@@ -56,7 +56,8 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   const me = useContext(ProfileContext);
 
   const defaultColumns = me?.user?.settings?.phonebook?.columns || null;
-  const defaultFilters = me?.user?.settings?.phonebook?.filters || [];
+
+  const defaultFilters = me?.user?.settings?.phonebook?.filters?.map((value) => ({ name: value.name, value: value.value })) || [];
 
   const [columns, setColumns] = useState<PhonebookColumnNames[]>(
     defaultColumns || (lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS),
@@ -64,7 +65,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<SearchSuggestions[]>([]);
-  const [filters, setFiltersOriginal] = useState<PhonebookFilter[]>(defaultFilters);
+  const [filters, setFilters] = useState<PhonebookFilter[]>(defaultFilters);
   const [orderBy, setOrderBy] = useState<Order<PhonebookColumnNames>>({
     direction: OrderDirection.ASC,
     field: 'lastName',
@@ -169,8 +170,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
       },
     });
     setColumns(columnsVal);
-    setFiltersOriginal(filtersVal);
-    refetch();
+    setFilters(filtersVal);
   };
 
   const handleSort = (column: PhonebookColumnNames) => (): void => {
@@ -224,11 +224,12 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
       },
     });
     setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
+    setFilters([]);
     setSettingsOpen(false);
   };
 
-  const setFilters = (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => {
-    setFiltersOriginal([{ name: 'loginDomain', value: value as string }]);
+  const handleFilters = (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => {
+    setFilters([{ name: 'loginDomain', value: value as string }]);
     refetch();
   };
 
@@ -291,7 +292,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
         <PhonebookSettings
           columns={columns}
           filters={filters}
-          setFilters={setFilters}
+          handleFilters={handleFilters}
           changeColumn={handleColumns}
           handleClose={handleSettingsClose}
           handleReset={handleSettingsReset}

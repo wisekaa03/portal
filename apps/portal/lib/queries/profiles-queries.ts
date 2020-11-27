@@ -5,8 +5,14 @@ import type { DocumentNode } from '@apollo/client';
 import { PROFILE_FRAGMENT } from './profiles-fragment';
 
 export const PROFILES = (_columns: string): DocumentNode => gql`
-  query Profiles($first: Int, $after: String, $orderBy: ProfileOrder, $search: String, $disabled: Boolean, $notShowing: Boolean) {
-    profiles(first: $first, after: $after, orderBy: $orderBy, search: $search, disabled: $disabled, notShowing: $notShowing) {
+  query Profiles(
+    $first: Int, $after: String, $orderBy: ProfileOrder,
+    $search: String, $disabled: Boolean, $notShowing: Boolean, $filters: [PhonebookFilterInput]
+  ) {
+    profiles(
+      first: $first, after: $after, orderBy: $orderBy,
+      search: $search, disabled: $disabled, notShowing: $notShowing, filters: $filters
+    ) {
       totalCount
       edges {
         node {

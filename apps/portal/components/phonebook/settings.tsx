@@ -282,7 +282,10 @@ export const allColumns: PhonebookColumn[] = [
 const countInBlocks = 6;
 
 const PhonebookSettings = React.forwardRef(
-  ({ columns, changeColumn, handleClose, handleReset, isAdmin, filters, setFilters }: SettingsProps, ref?: React.Ref<React.Component>) => {
+  (
+    { columns, changeColumn, handleClose, handleReset, isAdmin, filters, handleFilters }: SettingsProps,
+    ref?: React.Ref<React.Component>,
+  ) => {
     const classes = useStyles({});
     const { t } = useTranslation();
     const [current, setCurrent] = useState<PhonebookColumnNames[]>(columns);
@@ -322,10 +325,8 @@ const PhonebookSettings = React.forwardRef(
               <Container className={classes.filters}>
                 <Typography component="p">{t('phonebook:filters')}</Typography>
                 <DomainComponent
-                  domain={
-                    filters.filter((filter) => filter.name === 'loginDomain').reduce((accumulator, filter) => filter.value, '') ?? null
-                  }
-                  handleDomain={setFilters}
+                  domain={filters.filter((filter) => filter.name === 'loginDomain').reduce((accumulator, filter) => filter.value, '') ?? ''}
+                  handleDomain={handleFilters}
                 />
               </Container>
             </FormControl>

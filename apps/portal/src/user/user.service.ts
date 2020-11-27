@@ -11,7 +11,6 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { LdapService } from 'nestjs-ldap';
 import type { LoggerContext, LdapResponseUser, LDAPAddEntry } from 'nestjs-ldap';
 import { compare } from 'bcrypt';
-import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
 import { ConfigService, LDAPDomainConfig } from '@app/config';
@@ -446,15 +445,6 @@ export class UserService {
     partialEntity: QueryDeepPartialEntity<UserEntity>;
     loggerContext?: LoggerContext;
   }): Promise<UpdateResult> => this.userRepository.update(criteria, partialEntity);
-
-  /**
-   * Save the settings
-   *
-   * @param {UserSettings} value
-   * @param {User} user
-   * @returns {UserSettings}
-   */
-  settings = (value: UserSettings, user: User): UserSettings => defaultsDeep(value, user.settings, defaultUserSettings);
 
   /**
    * Ldap check username

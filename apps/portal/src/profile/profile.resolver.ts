@@ -15,7 +15,7 @@ import {
   Logger,
   LoggerService,
 } from '@nestjs/common';
-import { paginate, Order, Connection } from 'typeorm-graphql-pagination';
+import { paginate, Order, Connection, OrderDirection } from 'typeorm-graphql-pagination';
 import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
@@ -60,8 +60,10 @@ export class ProfileResolver {
       notShowing = false;
     }
 
+    const order: Order<string> = orderBy ?? { direction: OrderDirection.ASC, field: 'lastName' };
+
     return paginate(
-      { first: first || 0, after: after || '', orderBy },
+      { first: first || 0, after: after || '', orderBy: order },
       {
         type: 'Profile',
         alias: 'profile',

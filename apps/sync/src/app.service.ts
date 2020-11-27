@@ -234,7 +234,7 @@ export class SyncService implements OnApplicationShutdown {
       await Promise.allSettled(profilesPromises);
     } catch (error) {
       this.logger.error({
-        message: `${error}`,
+        message: error,
         context: SyncService.name,
         function: this.synchronization.name,
         ...loggerContext,
