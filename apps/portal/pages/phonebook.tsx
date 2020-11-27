@@ -154,11 +154,15 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
               notShowing: isAdmin && columns.includes('notShowing'),
               filters,
             },
-          }).catch((e) => {
-            snackbarUtils.error(e);
-
-            return undefined;
           })
+            .then((d: ApolloQueryResult<Data<'profiles', Connection<Profile>>> | undefined) => {
+              console.info(`Total count: ${d?.data.profiles?.totalCount}`);
+              return d;
+            })
+            .catch((e: Error) => {
+              snackbarUtils.error(e);
+              return undefined;
+            })
         : undefined,
     [columns, data, fetchMore, isAdmin, orderBy, search, filters],
   );
