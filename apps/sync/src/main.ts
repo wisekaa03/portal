@@ -27,6 +27,8 @@ async function bootstrap(config: ConfigService): Promise<void> {
   configService.logger = logger;
   app.useLogger(logger);
 
+  app.enableShutdownHooks();
+
   await app.listen(() => logger.log({ message: 'Microservice is listening', context: 'Sync LDAP', function: 'bootstrap' }));
 }
 

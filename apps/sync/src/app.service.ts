@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
+import { Injectable, Inject, LoggerService, Logger, OnApplicationShutdown } from '@nestjs/common';
 import { LdapService } from 'nestjs-ldap';
 import type { LoggerContext } from 'nestjs-ldap';
 //#endregion
@@ -22,7 +22,7 @@ interface LdapPromise {
 }
 
 @Injectable()
-export class SyncService {
+export class SyncService implements OnApplicationShutdown {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly ldapService: LdapService,
@@ -30,6 +30,22 @@ export class SyncService {
     private readonly userService: UserService,
     private readonly profileService: ProfileService,
   ) {}
+
+  beforeApplicationShutdown(): void {
+    this.logger.warn({
+      message: 'Before Application Shutdown',
+      context: SyncService.name,
+      function: this.syncGroup.name,
+    });
+  }
+
+  onApplicationShutdown(): void {
+    this.logger.warn({
+      message: 'Application Shutdown',
+      context: SyncService.name,
+      function: this.syncGroup.name,
+    });
+  }
 
   syncGroup = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<void> => {
     const ldapGroups = await this.ldapService.synchronizationGroups({ loggerContext });
@@ -44,7 +60,7 @@ export class SyncService {
         if (!ldapValue) {
           const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
           this.logger.log({
-            message: `LDAP: Deleting group: [domain=${element.domain},id=${element.id}] ${element.name}: ${affected}`,
+            message: `Deleting group: [domain=${element.domain},id=${element.id}] ${element.name}: ${affected}`,
             context: SyncService.name,
             function: this.syncGroup.name,
             ...loggerContext,
@@ -69,7 +85,7 @@ export class SyncService {
             };
           } catch (error) {
             this.logger.error({
-              message: `LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`,
+              message: `${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`,
               error,
               context: SyncService.name,
               function: this.syncGroup.name,
@@ -107,14 +123,14 @@ export class SyncService {
               };
             } catch (error) {
               this.logger.error({
-                message: `LDAP ${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`,
+                message: `${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`,
                 error,
                 context: SyncService.name,
                 function: this.syncUser.name,
                 ...loggerContext,
               });
 
-              throw new Error(`LDAP ${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`);
+              throw new Error(`${domainName}: synchronization user "${ldapUser.sAMAccountName}": ${error.toString()}`);
             }
           } else {
             try {
