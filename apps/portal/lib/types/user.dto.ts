@@ -71,6 +71,7 @@ export const DefinedUserSettings = [
   'service',
   'where',
   'columns',
+  'filters',
 ];
 //#endregion
 

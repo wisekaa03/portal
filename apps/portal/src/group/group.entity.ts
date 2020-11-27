@@ -23,7 +23,7 @@ export class GroupEntity {
 
   @Column({
     type: 'varchar',
-    nullable: false,
+    nullable: true,
   })
   name!: string;
 

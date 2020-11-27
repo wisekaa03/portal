@@ -119,7 +119,7 @@ export class GroupService {
       loginService: LoginService.LDAP,
       loginDomain: ldap.loginDomain,
       loginIdentificator: ldap.objectGUID,
-      name: ldap.sAMAccountName,
+      name: ldap.sAMAccountName || ldap.name,
       description: ldap.description,
       dn: ldap.dn,
     };
