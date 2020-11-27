@@ -4,7 +4,7 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useQuery, useLazyQuery, useMutation, ApolloQueryResult } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation, ApolloQueryResult, ApolloError } from '@apollo/client';
 import { Order, OrderDirection, Connection } from 'typeorm-graphql-pagination';
 import { Box, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
@@ -155,11 +155,11 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
               filters,
             },
           })
-            .then((d: ApolloQueryResult<Data<'profiles', Connection<Profile>>> | undefined) => {
-              console.info(`Total count: ${d?.data.profiles?.totalCount}`);
-              return d;
+            .then((result: ApolloQueryResult<Data<'profiles', Connection<Profile>>> | undefined) => {
+              console.info(`Total count: ${result?.data.profiles?.totalCount}`);
+              return result;
             })
-            .catch((e: Error) => {
+            .catch((e: ApolloError) => {
               snackbarUtils.error(e);
               return undefined;
             })
