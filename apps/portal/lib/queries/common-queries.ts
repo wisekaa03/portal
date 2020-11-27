@@ -26,7 +26,10 @@ export const CURRENT_USER = gql`
         }
         phonebook {
           columns
-          filters
+          filters {
+            name
+            value
+          }
         }
       }
       groups {
