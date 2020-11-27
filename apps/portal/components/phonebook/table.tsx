@@ -2,10 +2,9 @@
 
 //#region Imports NPM
 import React, { FC, Key } from 'react';
-import type { Index } from 'react-virtualized';
-import { FixedSizeList as List, ListOnItemsRenderedProps } from 'react-window';
+import { FixedSizeList as List } from 'react-window';
 import { AutoSizer } from 'react-virtualized/dist/commonjs/AutoSizer';
-import { InfiniteLoader } from 'react-virtualized/dist/commonjs/InfiniteLoader';
+import InfiniteLoader from 'react-window-infinite-loader';
 import { ApolloQueryResult } from '@apollo/client';
 import { Connection, Edge } from 'typeorm-graphql-pagination';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
@@ -39,7 +38,7 @@ export interface ListItemProfile {
 
 const itemKey = (index: number, data: ListItemProfile): Key => data.items[index].node.id || 'unknown';
 
-const isRowLoaded = (data: Connection<Profile>) => ({ index }: Index): boolean =>
+const isRowLoaded = (data: Connection<Profile>) => (index: number): boolean =>
   data && (!data.pageInfo.hasNextPage || index < data.edges.length);
 
 const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, columns, orderBy, handleSort, largeWidth, data }) => {
@@ -54,15 +53,15 @@ const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, c
     <Box id="phonebook-wrap" display="flex" flexGrow={1}>
       <Table component="div" className={classes.table}>
         <TableBody component="div" className={classes.tbody}>
-          <InfiniteLoader isRowLoaded={isRowLoaded(data)} rowCount={itemCount} loadMoreRows={loadMoreItemsFunction} threshold={25}>
-            {({ onRowsRendered, registerChild }) => (
+          <InfiniteLoader isItemLoaded={isRowLoaded(data)} itemCount={itemCount} loadMoreItems={loadMoreItemsFunction} threshold={25}>
+            {({ onItemsRendered, ref: registerChild }) => (
               <AutoSizer disableWidth>
                 {({ height }) => (
                   <PhonebookHeaderContext.Provider value={{ columns, orderBy, handleSort, largeWidth }}>
                     <List
                       style={{ display: 'flex' }}
                       ref={registerChild}
-                      onItemsRendered={(onRowsRendered as unknown) as (props: ListOnItemsRenderedProps) => void}
+                      onItemsRendered={onItemsRendered}
                       width="100%"
                       height={height}
                       itemCount={data.edges.length}
