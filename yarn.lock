@@ -1993,9 +1993,9 @@
     uuid "8.3.1"
 
 "@nestjs/graphql@^7":
-  version "7.9.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-7.9.0.tgz#d06fb9661bdca6fce698cf0ac923d2e7043ddeb5"
-  integrity sha512-z1WdBxlKwn31Eh6+c0K20zuGZcwECB+cxJewyPeN9DVhqjYXDmqg+pE3nOjzd3TABYORJyUPJFM8ybIuzBWP2g==
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-7.9.1.tgz#eb97f5fdfefe24142463e2f142bbafd2b0a0e397"
+  integrity sha512-r1SwcOIvmSXm6n28VkzXMOW3VkF7szBdJLo9aZfYo1XiostFDwiRIisaQtIpDgijeSHOwIINEJve+ZRuLex4Yg==
   dependencies:
     "@graphql-tools/merge" "6.2.5"
     "@graphql-tools/schema" "6.2.4"
@@ -5532,9 +5532,9 @@ camelcase@5.3.1, camelcase@^5.3.1, camelcase@^6, camelcase@^6.0.0, camelcase@^6.
   integrity sha512-c7wVvbw3f37nuobQNtgsgG9POC9qMbNuMQmTCqZv23b6MIz0fcYpBiOlv9gEN/hdLdnZTDQhg6e9Dq5M1vKvfg==
 
 caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001113, caniuse-lite@^1.0.30001157, caniuse-lite@^1.0.30001161:
-  version "1.0.30001161"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001161.tgz#64f7ffe79ee780b8c92843ff34feb36cea4651e0"
-  integrity sha512-JharrCDxOqPLBULF9/SPa6yMcBRTjZARJ6sc3cuKrPfyIk64JN6kuMINWqA99Xc8uElMFcROliwtz0n9pYej+g==
+  version "1.0.30001162"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001162.tgz#9f83aad1f42539ce9aab58bb177598f2f8e22ec6"
+  integrity sha512-E9FktFxaNnp4ky3ucIGzEXLM+Knzlpuq1oN1sFAU0KeayygabGTmOsndpo8QrL4D9pcThlf4D2pUKaDxPCUmVw==
 
 canvg@^3.0.6:
   version "3.0.7"
@@ -11449,9 +11449,9 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 nestjs-ldap@*:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.0.3.tgz#e6e5a8d806fc382254be923e2820eca8c20a0a94"
-  integrity sha512-pdptvZF1R2I9fio9RPLOxUnr0lT0rTE8QwBfKY0t+xwmgNdEixVGW16k0Q0DVUYSGJeaMZUJ/CRWrLQR3NJ48A==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.1.2.tgz#ecba5937378b6246842be96e7e76203d7116a5bb"
+  integrity sha512-fNK7w9nJo1KjYCHEj7aXvQfZf8GQryuspBXCe0TwCGmbx3tnNQkYZpZAR0//tmpm0RGVcyoH2+VJrsZYuDKunA==
   dependencies:
     "@nestjs/common" "*"
     bcrypt "*"

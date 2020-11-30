@@ -47,66 +47,80 @@ export class SyncService implements OnApplicationShutdown {
     });
   }
 
+  isNormal = <T>(domains: Record<string, Error | T>): domains is Record<string, T> =>
+    !Object.keys(domains).some((domain) => domains[domain] instanceof Error);
+
   syncGroup = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<void> => {
     const ldapGroups = await this.ldapService.synchronizationGroups({ loggerContext });
+    if (this.isNormal(ldapGroups)) {
+      const ldapGroupsDB = await this.groupService.allGroups();
+      const groupPromises = ldapGroupsDB.map(async (element) => {
+        if (element.id && element.loginIdentificator) {
+          const ldapValue = Object.keys(ldapGroups).find((value) =>
+            ldapGroups[value].find((domain) => /* value === element.domain && */ domain.objectGUID === element.loginIdentificator),
+          );
 
-    const ldapGroupsDB = await this.groupService.allGroups();
-    const groupPromises = ldapGroupsDB.map(async (element) => {
-      if (element.id && element.loginIdentificator) {
-        const ldapValue = Object.keys(ldapGroups).find((value) =>
-          ldapGroups[value].find((domain) => /* value === element.domain && */ domain.objectGUID === element.loginIdentificator),
-        );
-
-        if (!ldapValue) {
-          const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
-          this.logger.log({
-            message: `Deleting group: [domain=${element.domain},id=${element.id}] ${element.name}: ${affected}`,
-            context: SyncService.name,
-            function: this.syncGroup.name,
-            ...loggerContext,
-          });
-        }
-      }
-    });
-    await Promise.allSettled(groupPromises);
-
-    if (ldapGroups) {
-      const promises = Object.keys(ldapGroups).reduce((accumulator, domainName) => {
-        const domains = ldapGroups[domainName].map(async (ldapGroup) => {
-          try {
-            const group = await this.groupService.fromLdap(ldapGroup);
-
-            return {
-              domain: domainName,
-              contact: Contact.GROUP,
-              id: group.id,
-              loginIdentificator: group.loginIdentificator,
-              name: group.name,
-            };
-          } catch (error) {
-            this.logger.error({
-              message: `${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`,
-              error,
+          if (!ldapValue) {
+            const affected = (await this.groupService.deleteLoginIdentificator(element.loginIdentificator))?.affected;
+            this.logger.log({
+              message: `Deleting group: [domain=${element.domain},id=${element.id}] ${element.name}: ${affected}`,
               context: SyncService.name,
               function: this.syncGroup.name,
               ...loggerContext,
             });
-
-            throw new Error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`);
           }
-        });
+        }
+      });
+      await Promise.allSettled(groupPromises);
 
-        return accumulator.concat(domains);
-      }, [] as Promise<LdapPromise>[]);
+      if (ldapGroups) {
+        const promises = Object.keys(ldapGroups).reduce((accumulator, domainName) => {
+          const domains = ldapGroups[domainName].map(async (ldapGroup) => {
+            try {
+              const group = await this.groupService.fromLdap(ldapGroup);
 
-      await Promise.allSettled(promises);
+              return {
+                domain: domainName,
+                contact: Contact.GROUP,
+                id: group.id,
+                loginIdentificator: group.loginIdentificator,
+                name: group.name,
+              };
+            } catch (error) {
+              this.logger.error({
+                message: `${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`,
+                error,
+                context: SyncService.name,
+                function: this.syncGroup.name,
+                ...loggerContext,
+              });
+
+              throw new Error(`LDAP ${domainName}: synchronization group "${ldapGroup.name}": ${error.toString()}`);
+            }
+          });
+
+          return accumulator.concat(domains);
+        }, [] as Promise<LdapPromise>[]);
+
+        await Promise.allSettled(promises);
+      }
+    } else {
+      const ldapRejects = Object.keys(ldapGroups).filter((domain) => ldapGroups[domain] instanceof Error);
+      ldapRejects.forEach((error) =>
+        this.logger.error({
+          message: `Group error: ${ldapGroups[error]}`,
+          context: SyncService.name,
+          function: this.syncGroup.name,
+          ...loggerContext,
+        }),
+      );
     }
   };
 
   syncUser = async ({ loggerContext }: { loggerContext?: LoggerContext }): Promise<AllUsersInfo[]> => {
     const ldapUsers = await this.ldapService.synchronization({ loggerContext });
 
-    if (ldapUsers) {
+    if (this.isNormal(ldapUsers)) {
       const promises = Object.keys(ldapUsers).reduce((accumulator, domainName) => {
         const domain = ldapUsers[domainName].map(async (ldapUser) => {
           if (ldapUser.sAMAccountName) {
@@ -168,6 +182,16 @@ export class SyncService implements OnApplicationShutdown {
         ),
       );
     }
+
+    const ldapRejects = Object.keys(ldapUsers).filter((domain) => ldapUsers[domain] instanceof Error);
+    ldapRejects.forEach((error) =>
+      this.logger.error({
+        message: `User error: ${ldapUsers[error]}`,
+        context: SyncService.name,
+        function: this.syncGroup.name,
+        ...loggerContext,
+      }),
+    );
 
     throw new Error('No users found');
   };
