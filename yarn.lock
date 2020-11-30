@@ -4573,7 +4573,7 @@ attr-accept@^2.2.1:
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.2.2.tgz#646613809660110749e92f2c10833b70968d929b"
   integrity sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==
 
-autobind-decorator@^2.4.0:
+autobind-decorator@*:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
   integrity sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
@@ -10150,12 +10150,9 @@ jimp@^0.2.28:
     tinycolor2 "^1.1.2"
     url-regex "^3.0.0"
 
-jodit@*:
+"jodit@https://github.com/xdan/jodit.git#groups":
   version "3.4.29"
-  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.4.29.tgz#fba8d9678b954d5d5ea5015b50628c704f7658a2"
-  integrity sha512-1rW4aBeG5hgdTjNxYOWN2hc51M5O4U3BNdwxaxwLR8pIlrjmeDVxZu2YZ6L4TI1MfFRCpczL0vPzj6hlTFyvng==
-  dependencies:
-    autobind-decorator "^2.4.0"
+  resolved "https://github.com/xdan/jodit.git#3dd248ae314d1ef292676c20879125d53e8f0ec5"
 
 joi@*:
   version "17.3.0"
@@ -15757,10 +15754,10 @@ typeorm@*, typeorm@^0.2.18:
     yargonaut "^1.1.2"
     yargs "^16.0.3"
 
-typescript@4.0.5, typescript@^3.5.3, typescript@^3.9.3, typescript@~4.0.5, typescript@~4.1.2:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
-  integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
+typescript@*, typescript@4.0.5, typescript@^3.5.3, typescript@^3.9.3, typescript@~4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
+  integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
 
 typical@^5.0.0, typical@^5.2.0:
   version "5.2.0"
