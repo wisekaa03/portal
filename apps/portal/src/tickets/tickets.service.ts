@@ -293,10 +293,10 @@ export class TicketsService {
     loggerContext?: LoggerContext;
   }): Promise<TkRoutes> => {
     const userId = user.id || '';
-    const cachedID = 'routes'; // -${user.id}
+    const cachedID = 'routes'; // -${user.id}`;
     if (this.cache && (!input || input.cache !== false)) {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
-      if (cached && cached !== null) {
+      if (cached && cached !== null && (!Array.isArray(cached.errors) || cached.errors?.length === 0)) {
         (async (): Promise<void> => {
           try {
             const ticketsRoutes = await this.ticketsRoutes({ user, password, input, loggerContext });
@@ -306,7 +306,7 @@ export class TicketsService {
                 userId,
                 object: ticketsRoutes,
               });
-              if (this.cache) {
+              if (this.cache && (!Array.isArray(ticketsRoutes.errors) || ticketsRoutes.errors?.length === 0)) {
                 this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
               }
             }
@@ -328,7 +328,7 @@ export class TicketsService {
     try {
       const ticketsRoutes = await this.ticketsRoutes({ user, password, input, loggerContext });
 
-      if (this.cache) {
+      if (this.cache && (!Array.isArray(ticketsRoutes.errors) || ticketsRoutes.errors?.length === 0)) {
         this.cache.set<TkRoutes>(cachedID, ticketsRoutes, { ttl: this.ttl });
       }
 
@@ -619,7 +619,7 @@ export class TicketsService {
     const cachedID = `tasks:${userId}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
       const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
-      if (cached && cached !== null) {
+      if (cached && cached !== null && (!Array.isArray(cached.errors) || cached.errors?.length === 0)) {
         (async (): Promise<void> => {
           try {
             const ticketsTasks = await this.ticketsTasks({ user, password, tasks, loggerContext });
@@ -629,7 +629,7 @@ export class TicketsService {
                 userId,
                 object: ticketsTasks,
               });
-              if (this.cache) {
+              if (this.cache && (!Array.isArray(ticketsTasks.errors) || ticketsTasks.errors?.length === 0)) {
                 this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
               }
             } else {
@@ -653,7 +653,7 @@ export class TicketsService {
     try {
       const ticketsTasks = await this.ticketsTasks({ user, password, tasks, loggerContext });
 
-      if (this.cache) {
+      if (this.cache && (!Array.isArray(ticketsTasks.errors) || ticketsTasks.errors?.length === 0)) {
         this.cache.set<TkTasks>(cachedID, ticketsTasks, { ttl: this.ttl });
       }
 
