@@ -99,7 +99,7 @@
     "**/**/@typescript-eslint/visitor-keys": "^4",
     "**/**/ajv": "^6",
     "**/**/ansi-regex": "^5",
-    "**/**/ansi-styles": "^4",
+    "**/**/ansi-styles": "^5.0.0",
     "**/**/anymatch": "^3",
     "**/**/apollo-graphql": "^0",
     "**/**/apollo-server-core": "^2",
