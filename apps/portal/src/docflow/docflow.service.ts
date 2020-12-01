@@ -374,7 +374,7 @@ export class DocFlowService {
             throw new ForbiddenException(docFlowError(message[0]?.return));
           })
           .catch((error: Error | ForbiddenException | OperationCanceledException) => {
-            this.logger.error!({
+            this.logger.error({
               message: `docFlowTasks: [Request] ${client.lastRequest}`,
               context: DocFlowService.name,
               function: 'docFlowTasks',
