@@ -32,7 +32,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
     { synchronization?: boolean; newProfile?: boolean }
   >(AVAILABLE_DOMAIN, {
     ssr: true,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
   });
 
@@ -46,13 +46,19 @@ const DomainComponent: FC<DomainComponentProps> = ({
   };
 
   useEffect(() => {
-    if (!loadingDomain && dataDomain?.availableAuthenticationProfiles) {
-      if (!rawDomain) {
-        setDomain(dataDomain.availableAuthenticationProfiles?.[0] || '');
+    if (
+      !loadingDomain &&
+      dataDomain?.availableAuthenticationProfiles &&
+      Array.isArray(dataDomain.availableAuthenticationProfiles) &&
+      dataDomain.availableAuthenticationProfiles.length > 0
+    ) {
+      if (!rawDomain && handleDomain) {
+        setDomain(dataDomain.availableAuthenticationProfiles[0]);
+        handleDomain({} as React.ChangeEvent<Record<string, unknown>>, dataDomain.availableAuthenticationProfiles[0]);
       }
       setOptions(dataDomain.availableAuthenticationProfiles);
     }
-  }, [loadingDomain, rawDomain, dataDomain?.availableAuthenticationProfiles]);
+  }, [loadingDomain, handleDomain, rawDomain, dataDomain?.availableAuthenticationProfiles]);
 
   useEffect(() => {
     if (!calledDomain && !domain) {
@@ -90,7 +96,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
       onOpen={handleOpen}
       onClose={handleClose}
       loading={loadingDomain}
-      value={rawDomain || ''}
+      value={rawDomain}
       onChange={handleDomain}
       renderInput={(parameters) => (
         <TextField
