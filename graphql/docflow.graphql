@@ -192,11 +192,15 @@ type DocFlowTask {
 
 input DocFlowTasksInput {
   cache: Boolean
+  withFiles: Boolean
+  setCache: Boolean
 }
 
 input DocFlowTaskInput {
   id: String!
   cache: Boolean
+  withFiles: Boolean
+  setCache: Boolean
 }
 
 input DocFlowTargetInput {

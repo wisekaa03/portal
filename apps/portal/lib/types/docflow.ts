@@ -280,9 +280,14 @@ export interface DocFlowTask {
 /* DocFlow input fields */
 
 export type DocFlowUserInput = GraphQLQueryInput;
-export type DocFlowTasksInput = GraphQLQueryInput;
+
+export interface DocFlowTasksInput extends GraphQLQueryInput {
+  withFiles?: boolean;
+}
+
 export interface DocFlowTaskInput extends GraphQLQueryInput {
   id: string;
+  withFiles?: boolean;
 }
 
 export interface DocFlowTargetInput extends GraphQLQueryInput {

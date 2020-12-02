@@ -19,10 +19,12 @@ export interface GraphQLContext {
 
 export interface GraphQLQueryInput {
   cache?: boolean;
+  setCache?: boolean;
 }
 
 export interface GraphQLMutationInput {
   cache?: boolean;
+  setCache?: boolean;
 }
 
 export interface SubscriptionPayload<T = any> {

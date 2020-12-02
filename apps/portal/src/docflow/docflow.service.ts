@@ -231,16 +231,20 @@ export class DocFlowService {
     soap,
     tasksSOAP,
     loggerContext,
+    withFiles,
   }: {
     soap: SoapClient;
+    withFiles?: boolean;
     tasksSOAP: DataObject<DocFlowTaskSOAP>[];
     loggerContext?: LoggerContext;
   }): Promise<DocFlowTask[]> => {
     const tasksWithoutFiles = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP.object));
 
-    const tasks = tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles({ soap, task, loggerContext }));
+    if (withFiles !== false) {
+      return Promise.all(tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles({ soap, task, loggerContext })));
+    }
 
-    return Promise.all(tasks);
+    return Promise.all(tasksWithoutFiles);
   };
 
   /**
@@ -365,9 +369,13 @@ export class DocFlowService {
                   function: 'docFlowTasks',
                   ...loggerContext,
                 });
-                // this.logger.debug(`docFlowTasks: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
 
-                return this.docFlowTasksWithFiles({ soap: client, tasksSOAP: message[0].return.items, loggerContext });
+                return this.docFlowTasksWithFiles({
+                  soap: client,
+                  tasksSOAP: message[0].return.items,
+                  withFiles: tasks?.withFiles || true,
+                  loggerContext,
+                });
               }
 
               throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
@@ -449,7 +457,7 @@ export class DocFlowService {
                 userId,
                 object: ticketsTasks,
               });
-              if (this.cache) {
+              if (this.cache && !(tasks?.setCache === false)) {
                 this.cache.set<DocFlowTask[]>(cachedId, ticketsTasks, { ttl: this.ttl });
               }
             }
@@ -471,7 +479,7 @@ export class DocFlowService {
     try {
       const ticketsTasks = await this.docFlowTasks({ user, password, tasks, loggerContext });
 
-      if (this.cache) {
+      if (this.cache && !(tasks?.setCache === false)) {
         this.cache.set<DocFlowTask[]>(cachedId, ticketsTasks, { ttl: this.ttl });
       }
 
@@ -542,16 +550,18 @@ export class DocFlowService {
           .executeAsync(
             {
               'tns:request': {
-                'attributes': {
+                attributes: {
                   'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
                   'xsi:type': 'tns:DMRetrieveRequest',
                 },
-                'tns:dataBaseID': '',
-                'tns:objectIds': {
-                  'tns:id': task.id,
-                  'tns:type': 'DMBusinessProcessTask',
-                },
-                'tns:columnSet': 'withDependentObjects',
+                $xml:
+                  '<tns:dataBaseID></tns:dataBaseID>' +
+                  '<tns:objectIds>' +
+                  `<tns:id>${task.id}</tns:id>` +
+                  '<tns:type>DMBusinessProcessTask</tns:type>' +
+                  '</tns:objectIds>' +
+                  '<tns:columnSet>withDependentObjects</tns:columnSet>' +
+                  '<tns:columnSet>type</tns:columnSet>',
               },
             },
             { timeout: TIMEOUT },
@@ -581,8 +591,11 @@ export class DocFlowService {
                     // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
                     // { context: DocFlowService.name, function: 'docFlowTask' });
 
-                    const result = this.docFlowTaskWithFiles({ soap: client, task: taskWithoutFiles, loggerContext });
-                    return result;
+                    if (task?.withFiles === false) {
+                      return taskWithoutFiles;
+                    }
+
+                    return this.docFlowTaskWithFiles({ soap: client, task: taskWithoutFiles, loggerContext });
                   }
                 }
               }
@@ -662,7 +675,7 @@ export class DocFlowService {
                 userId,
                 object: ticketsTask,
               });
-              if (this.cache) {
+              if (this.cache && !(task?.setCache === false)) {
                 this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
               }
             }
@@ -684,7 +697,7 @@ export class DocFlowService {
     try {
       const ticketsTask = await this.docFlowTask({ user, password, task, loggerContext });
 
-      if (this.cache) {
+      if (this.cache && !(task?.setCache === false)) {
         this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
       }
 
@@ -1187,7 +1200,12 @@ export class DocFlowService {
     loggerContext?: LoggerContext;
   }): Promise<DocFlowTask> => {
     try {
-      const task = await this.docFlowTaskCache({ task: { id: taskID, cache: true }, user, password, loggerContext });
+      const task = await this.docFlowTaskCache({
+        task: { id: taskID, cache: true, setCache: false, withFiles: false },
+        user,
+        password,
+        loggerContext,
+      });
       let error = 0;
 
       if (step === DocFlowProcessStep.Execute) {
