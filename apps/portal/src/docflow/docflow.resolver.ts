@@ -188,7 +188,7 @@ export class DocFlowResolver {
   async docFlowProcessStep(
     @Context('req') request: Request,
     @Args('step') step: DocFlowProcessStep,
-    @Args('id') taskID: string,
+    @Args('taskID') taskID: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowTask> {
