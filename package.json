@@ -142,7 +142,7 @@
     "**/**/doctrine": "^3",
     "**/**/dom-serializer": "^1",
     "**/**/domelementtype": "^2",
-    "**/**/domhandler": "^3",
+    "**/**/domhandler": "^4.0.0",
     "**/**/domutils": "^2",
     "**/**/dotenv-webpack": "^5",
     "**/**/dotenv": "^8",
