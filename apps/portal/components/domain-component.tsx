@@ -23,7 +23,8 @@ const DomainComponent: FC<DomainComponentProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const [options, setOptions] = useState<string[]>([]);
+  const [rawDomain, setDomain] = useState<string>((domain as string) || '');
+  const [options, setOptions] = useState<string[]>(['']);
   const [openDomain, setOpenDomain] = useState<boolean>(false);
 
   const [getDomain, { loading: loadingDomain, data: dataDomain, error: errorDomain, called: calledDomain }] = useLazyQuery<
@@ -46,9 +47,12 @@ const DomainComponent: FC<DomainComponentProps> = ({
 
   useEffect(() => {
     if (!loadingDomain && dataDomain?.availableAuthenticationProfiles) {
+      if (!rawDomain) {
+        setDomain(dataDomain.availableAuthenticationProfiles?.[0] || '');
+      }
       setOptions(dataDomain.availableAuthenticationProfiles);
     }
-  }, [loadingDomain, dataDomain]);
+  }, [loadingDomain, rawDomain, dataDomain?.availableAuthenticationProfiles]);
 
   useEffect(() => {
     if (!calledDomain && !domain) {
@@ -86,7 +90,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
       onOpen={handleOpen}
       onClose={handleClose}
       loading={loadingDomain}
-      value={domain}
+      value={rawDomain || ''}
       onChange={handleDomain}
       renderInput={(parameters) => (
         <TextField
