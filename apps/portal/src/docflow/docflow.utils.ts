@@ -240,6 +240,7 @@ export const docFlowProcessStep = (processStep?: string): DocFlowProcessStep | n
 export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   id: task.objectID?.id || '[task:id]',
   name: task.name || '[task:name]',
+  type: task.objectID?.type ?? null,
   presentation: task.objectID?.presentation ?? null,
   importance: task.importance ? docFlowImportance(task.importance) : null,
   executed: task.executed ?? false,

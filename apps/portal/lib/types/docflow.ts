@@ -5,10 +5,10 @@ import type { I18n, TFunction } from 'next-i18next';
 import type { GraphQLQueryInput } from '@back/shared/types';
 
 export enum DocFlowProcessStep {
-  Execute /* Исполнить */,
-  Familiarize /* Ознакомиться */,
-  Conform /* Согласовать */,
-  Approve /* Утвердить */,
+  Execute = 'Execute' /* Исполнить */,
+  Familiarize = 'Familiarize' /* Ознакомиться */,
+  Conform = 'Conform' /* Согласовать */,
+  Approve = 'Approve' /* Утвердить */,
 }
 
 export interface DocFlowFileProps {
@@ -253,6 +253,7 @@ export interface DocFlowFiles {
 export interface DocFlowTask {
   id: string;
   name: string | null;
+  type: string | null;
   presentation: string | null;
   importance: DocFlowImportance | null;
   executed: boolean | null;
