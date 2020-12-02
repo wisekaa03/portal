@@ -78,14 +78,16 @@ export class AuthService {
     domain: string;
     loggerContext: LoggerContext;
   }): Promise<UserEntity> {
+    if (!domain) {
+      throw new UnauthorizedException('Domain is not exist');
+    }
+
     this.logger.log({
       message: `User login: domain="${domain}", username="${username}"`,
       context: AuthService.name,
       function: this.login.name,
       ...loggerContext,
     });
-
-    // const trustedDomain = await this.ldapService.trustedDomain({ searchBase: this.configService.get<string>('LDAP_SEARCH_BASE') });
 
     const ldapUser = await this.ldapService
       .authenticate({ username, password, domain, loggerContext })
