@@ -144,6 +144,13 @@ type DocFlowImportance {
   presentation: String
 }
 
+enum DocFlowProcessStep {
+  Execute
+  Familiarize
+  Conform
+  Approve
+}
+
 type DocFlowTask {
   id: ID!
   name: String
@@ -157,7 +164,7 @@ type DocFlowTask {
   endDate: Date
   description: String
   parentTask: DocFlowParentTask
-  processStep: String
+  processStep: DocFlowProcessStep
   executionComment: String
   author: DocFlowUser!
   accepted: Boolean
@@ -197,6 +204,10 @@ type Query {
   docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
   docFlowInternalDocument(internalDocument: DocFlowInternalDocumentInput!): [DocFlowInternalDocument!]
   docFlowFile(file: DocFlowFileInput!): DocFlowFile!
+}
+
+type Mutation {
+  docFlowProcessStep(step: DocFlowProcessStep!, task: ID!): DocFlowTask!
 }
 
 type Subscription {

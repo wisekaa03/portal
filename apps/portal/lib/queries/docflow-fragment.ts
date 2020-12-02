@@ -6,6 +6,7 @@ export const DOCFLOW_USER_FRAGMENT = gql`
   fragment UserProps on DocFlowUser {
     id
     name
+    type
   }
 `;
 
@@ -13,6 +14,7 @@ export const DOCFLOW_STATE_FRAGMENT = gql`
   fragment StateProps on DocFlowState {
     id
     name
+    type
   }
 `;
 
@@ -20,6 +22,7 @@ export const DOCFLOW_STATUS_FRAGMENT = gql`
   fragment StatusProps on DocFlowStatus {
     id
     name
+    type
   }
 `;
 
@@ -27,6 +30,7 @@ export const DOCFLOW_ORGANIZATION_FRAGMENT = gql`
   fragment OrganizationProps on DocFlowOrganization {
     id
     name
+    type
     fullName
     inn
     kpp
@@ -38,6 +42,7 @@ export const DOCFLOW_SUBDIVISION_FRAGMENT = gql`
   fragment SubdivisionProps on DocFlowSubdivision {
     id
     name
+    type
   }
 `;
 
@@ -45,6 +50,7 @@ export const DOCFLOW_IMPORTANCE_FRAGMENT = gql`
   fragment ImportanceProps on DocFlowImportance {
     id
     name
+    type
   }
 `;
 
@@ -52,6 +58,7 @@ export const DOCFLOW_ROLE_FRAGMENT = gql`
   fragment RoleProps on DocFlowRole {
     id
     name
+    type
   }
 `;
 
@@ -59,6 +66,7 @@ export const DOCFLOW_PARENT_TASK_FRAGMENT = gql`
   fragment ParentTaskProps on DocFlowParentTask {
     id
     name
+    type
   }
 `;
 
@@ -66,6 +74,7 @@ export const DOCFLOW_FILE_FRAGMENT = gql`
   fragment FileProps on DocFlowFile {
     id
     name
+    type
     author {
       ...UserProps
     }
@@ -85,6 +94,7 @@ export const DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT = gql`
   fragment InternalDocumentProps on DocFlowInternalDocument {
     id
     name
+    type
     presentation
     beginDate
     regDate
@@ -122,6 +132,7 @@ export const DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT = gql`
 export const DOCFLOW_TARGET_FRAGMENT = gql`
   fragment TargetProps on DocFlowTarget {
     name
+    type
     role {
       ...RoleProps
     }
@@ -138,6 +149,7 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
   fragment TaskProps on DocFlowTask {
     id
     name
+    type
     importance {
       ...ImportanceProps
     }

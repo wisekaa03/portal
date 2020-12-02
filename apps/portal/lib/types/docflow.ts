@@ -4,6 +4,13 @@ import type React from 'react';
 import type { I18n, TFunction } from 'next-i18next';
 import type { GraphQLQueryInput } from '@back/shared/types';
 
+export enum DocFlowProcessStep {
+  Execute /* Исполнить */,
+  Familiarize /* Ознакомиться */,
+  Conform /* Согласовать */,
+  Approve /* Утвердить */,
+}
+
 export interface DocFlowFileProps {
   task: DocFlowTask;
   loading: boolean;
@@ -256,7 +263,7 @@ export interface DocFlowTask {
   endDate: Date | null;
   changeRight: boolean | null;
   description: string | null;
-  processStep: string | null;
+  processStep: DocFlowProcessStep | null;
   htmlView: string | null;
   number: string | null;
   author: DocFlowUser | null;

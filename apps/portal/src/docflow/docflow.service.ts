@@ -12,7 +12,7 @@ import {
   Logger,
   LoggerService,
 } from '@nestjs/common';
-import { FileUpload } from 'graphql-upload';
+// import { FileUpload } from 'graphql-upload';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import CacheManager from 'cache-manager';
 import RedisStore from 'cache-manager-ioredis';
@@ -40,6 +40,7 @@ import type {
   DocFlowInternalDocument,
   DocFlowInternalDocumentInput,
 } from '@lib/types/docflow';
+import { DocFlowProcessStep } from '@lib/types/docflow';
 import type {
   SubscriptionPayload,
   DocFlowTaskSOAP,
@@ -48,7 +49,7 @@ import type {
   DocFlowFileSOAP,
   DocFlowInternalDocumentSOAP,
 } from '@back/shared/types';
-import { constructUploads } from '@back/shared/upload';
+// import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
 import type { DataResult, DataObjects, DataObject, DataFiles, DataItems, DataUser, DataError } from '@lib/types/common';
 import { docFlowTask, docFlowUser, docFlowFile, docFlowError, docFlowData, docFlowInternalDocument } from './docflow.utils';
@@ -1160,5 +1161,40 @@ export class DocFlowService {
     }
 
     throw new NotImplementedException(PortalError.NOT_IMPLEMENTED);
+  };
+
+  /**
+   * DocFlow process step
+   *
+   * @async
+   * @method docFlowProcessStep
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @returns {DocFlowTask}
+   */
+  docFlowProcessStep = async ({
+    step,
+    taskID,
+    user,
+    password,
+    loggerContext,
+  }: {
+    step: DocFlowProcessStep;
+    taskID: string;
+    user: User;
+    password: string;
+    loggerContext?: LoggerContext;
+  }): Promise<DocFlowTask> => {
+    if (step === DocFlowProcessStep.Execute) {
+      throw new NotImplementedException();
+    } else if (step === DocFlowProcessStep.Familiarize) {
+      throw new NotImplementedException();
+    } else if (step === DocFlowProcessStep.Conform) {
+      throw new NotImplementedException();
+    } else if (step === DocFlowProcessStep.Approve) {
+      throw new NotImplementedException();
+    }
+
+    throw new NotImplementedException();
   };
 }

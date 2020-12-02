@@ -10,6 +10,7 @@ import { FileUpload } from 'graphql-upload';
 //#region Imports Local
 import { User } from '@lib/types/user.dto';
 import type {
+  DocFlowProcessStep,
   DocFlowTask,
   DocFlowTasksInput,
   DocFlowTaskInput,
@@ -173,5 +174,34 @@ export class DocFlowResolver {
     }
 
     return this.docflowService.docFlowFile({ user, password, file, loggerContext: { username: user.username, headers: request.headers } });
+  }
+
+  /**
+   * DocFlow process step
+   *
+   * @async
+   * @returns {DocFlowTask}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Mutation('docFlowProcessStep')
+  @UseGuards(GqlAuthGuard)
+  async docFlowProcessStep(
+    @Context('req') request: Request,
+    @Args('step') step: DocFlowProcessStep,
+    @Args('id') taskID: string,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<DocFlowTask> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
+
+    return this.docflowService.docFlowProcessStep({
+      step,
+      taskID,
+      user,
+      password,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 }

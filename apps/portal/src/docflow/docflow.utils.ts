@@ -20,6 +20,7 @@ import type {
   DocFlowVisa,
   DocFlowApprovalResult,
 } from '@lib/types/docflow';
+import { DocFlowProcessStep } from '@lib/types/docflow';
 import type {
   DocFlowFileSOAP,
   DocFlowRoleSOAP,
@@ -39,7 +40,6 @@ import type {
   DocFlowApprovalResultSOAP,
 } from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@lib/types';
-import { DataObjects } from '../../lib/types/common';
 /** @format */
 
 export const docFlowLegalPrivatePerson = (legal: DocFlowLegalPrivatePersonSOAP): DocFlowLegalPrivatePerson => ({
@@ -221,6 +221,22 @@ export const docFlowTargets = (target: DocFlowTargetSOAP): DocFlowTarget => ({
   allowDeletion: target?.allowDeletion ?? false,
 });
 
+export const docFlowProcessStep = (processStep?: string): DocFlowProcessStep | null => {
+  switch (processStep) {
+    case 'Исполнить':
+      return DocFlowProcessStep.Execute;
+    case 'Ознакомиться':
+      return DocFlowProcessStep.Familiarize;
+    case 'Согласовать':
+      return DocFlowProcessStep.Conform;
+    case 'Утвердить':
+      return DocFlowProcessStep.Approve;
+    default:
+  }
+
+  return null;
+};
+
 export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   id: task.objectID?.id || '[task:id]',
   name: task.name || '[task:name]',
@@ -233,7 +249,7 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   dueDate: task.dueDate && task.dueDate.toISOString() !== SOAP_DATE_NULL ? task.dueDate : null,
   endDate: task.endDate && task.endDate.toISOString() !== SOAP_DATE_NULL ? task.endDate : null,
   description: task.description ?? null,
-  processStep: task.businessProcessStep ?? null,
+  processStep: docFlowProcessStep(task.businessProcessStep),
   changeRight: task.changeRight ?? null,
   performer: task.performer && task.performer.user ? docFlowUser(task.performer.user) : null,
   author: task.author ? docFlowUser(task.author) : null,
