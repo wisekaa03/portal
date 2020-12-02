@@ -8,6 +8,7 @@ import {
   UnprocessableEntityException,
   NotImplementedException,
   NotFoundException,
+  NotAcceptableException,
   GatewayTimeoutException,
   Logger,
   LoggerService,
@@ -1185,14 +1186,45 @@ export class DocFlowService {
     password: string;
     loggerContext?: LoggerContext;
   }): Promise<DocFlowTask> => {
-    if (step === DocFlowProcessStep.Execute) {
-      throw new NotImplementedException();
-    } else if (step === DocFlowProcessStep.Familiarize) {
-      throw new NotImplementedException();
-    } else if (step === DocFlowProcessStep.Conform) {
-      throw new NotImplementedException();
-    } else if (step === DocFlowProcessStep.Approve) {
-      throw new NotImplementedException();
+    try {
+      const task = await this.docFlowTaskCache({ task: { id: taskID, cache: true }, user, password, loggerContext });
+      let error = 0;
+
+      if (step === DocFlowProcessStep.Execute) {
+        if (task.type !== 'DMBusinessProcessTask') {
+          error = 1;
+        } else {
+          // eslint-disable-next-line no-debugger
+          debugger;
+        }
+      } else if (step === DocFlowProcessStep.Familiarize) {
+        if (task.type !== 'DMBusinessProcessTask') {
+          error = 1;
+        } else {
+          // eslint-disable-next-line no-debugger
+          debugger;
+        }
+      } else if (step === DocFlowProcessStep.Conform) {
+        if (task.type !== 'DMBusinessProcessApprovalTaskApproval') {
+          error = 1;
+        } else {
+          // eslint-disable-next-line no-debugger
+          debugger;
+        }
+      } else if (step === DocFlowProcessStep.Approve) {
+        if (task.type !== 'DMBusinessProcessConfirmationTaskConfirmation') {
+          error = 1;
+        } else {
+          // eslint-disable-next-line no-debugger
+          debugger;
+        }
+      }
+
+      if (error === 1) {
+        throw new NotAcceptableException(__DEV__ ? "Can't add processStep to taskID" : null);
+      }
+    } catch (error) {
+      throw new NotAcceptableException(__DEV__ ? error : null);
     }
 
     throw new NotImplementedException();
