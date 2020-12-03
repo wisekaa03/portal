@@ -51,8 +51,10 @@ export interface DocFlowTasksComponentProps {
 export interface DocFlowTaskComponentProps {
   loading: boolean;
   loadingFile: boolean;
+  loadingProcessStep: boolean;
   task?: DocFlowTask;
   handleDownload: (file: DocFlowFile) => void;
+  handleProcessStep: (taskID: string, step: DocFlowProcessStep) => void;
 }
 
 export interface DocFlowTaskInfoCardProps {
@@ -64,6 +66,12 @@ export interface DocFlowTaskInfoCardProps {
 export interface DocFlowInternalDocumentComponentProps {
   loading: boolean;
   internalDocument?: DocFlowInternalDocument;
+}
+
+export interface DocFlowProcessStepProps {
+  loading: boolean;
+  handleProcessStep: (taskID: string, step: DocFlowProcessStep) => void;
+  task?: DocFlowTask;
 }
 
 export interface DocFlowLegalPrivatePerson {

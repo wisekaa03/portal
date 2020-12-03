@@ -41,12 +41,14 @@ import clearHtml from '@lib/clear-html';
 import { useTranslation } from '@lib/i18n-client';
 import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
 import type { DocFlowTaskInfoCardProps, DocFlowFileProps, DocFlowTask, DocFlowTaskComponentProps } from '@lib/types/docflow';
+import { DocFlowProcessStep } from '@lib/types/docflow';
 import { ComposeLink } from '@front/components/compose-link';
 import Avatar from '@front/components/ui/avatar';
 import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
+import DocFlowProcessStepButtons from './processStep';
 //#endregion
 
 const TaskInfoCard = withStyles((theme) => ({
@@ -330,7 +332,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, loadingFile, handleDownload }) => {
+const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
+  loading,
+  task,
+  loadingFile,
+  loadingProcessStep,
+  handleProcessStep,
+  handleDownload,
+}) => {
   const classes = useStyles({});
   const { i18n, t } = useTranslation();
   const tasksBox = useRef(null);
@@ -458,6 +467,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({ loading, task, lo
                 />
                 <FilesArea i18n={i18n} t={t} task={task} loading={loadingFile} handleDownload={handleDownload} />
               </Card>
+              <DocFlowProcessStepButtons loading={loadingProcessStep} handleProcessStep={handleProcessStep} task={task} />
             </Box>
           </BoxWithRef>
         ) : (

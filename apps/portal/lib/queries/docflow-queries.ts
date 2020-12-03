@@ -71,3 +71,11 @@ export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
   }
   ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
 `;
+
+export const DOCFLOW_PROCESS_STEP = gql`
+  mutation DocFlowProcessStep($step: DocFlowProcessStep!, $taskID: ID!) {
+    docFlowProcessStep(step: $step, taskID: $taskID) {
+      ...TaskProps
+    }
+  }
+`;

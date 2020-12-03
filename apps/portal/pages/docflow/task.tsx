@@ -3,12 +3,13 @@
 //#region Imports NPM
 import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head';
-import { useQuery, useLazyQuery, ApolloQueryResult } from '@apollo/client';
+import { useQuery, useLazyQuery, ApolloQueryResult, useMutation } from '@apollo/client';
 //#endregion
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE } from '@lib/queries';
+import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_PROCESS_STEP } from '@lib/queries';
 import type { DocFlowFile, DocFlowTask, DocFlowTaskInput, DocFlowFileInput } from '@lib/types/docflow';
+import { DocFlowProcessStep } from '@lib/types/docflow';
 import { Data } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
@@ -38,6 +39,11 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     { file: DocFlowFileInput }
   >(DOCFLOW_FILE);
 
+  const [
+    getDocFlowProcessStep,
+    { loading: loadingDocFlowProcessStep, data: dataDocFlowProcessStep, error: errorDocFlowProcessStep },
+  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; step: DocFlowProcessStep }>(DOCFLOW_PROCESS_STEP);
+
   useEffect(() => {
     if (typeof subscribeToMoreDocFlowTask === 'function') {
       subscribeToMoreDocFlowTask({
@@ -51,6 +57,10 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
       });
     }
   }, [subscribeToMoreDocFlowTask, id]);
+
+  const handleProcessStep = async (taskID: string, step: DocFlowProcessStep): Promise<void> => {
+    getDocFlowProcessStep({ variables: { taskID, step } });
+  };
 
   const download = async (body: string, name: string): Promise<void> => {
     const blob = new Blob([Buffer.from(body, 'base64')], { type: 'application/octet-stream' });
@@ -94,7 +104,10 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     if (errorDocFlowTaskFile) {
       snackbarUtils.error(errorDocFlowTaskFile);
     }
-  }, [errorDocFlowTask, errorDocFlowTaskFile]);
+    if (errorDocFlowProcessStep) {
+      snackbarUtils.error(errorDocFlowProcessStep);
+    }
+  }, [errorDocFlowTask, errorDocFlowTaskFile, errorDocFlowProcessStep]);
 
   return (
     <>
@@ -105,8 +118,10 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
         <DocFlowTaskComponent
           loading={loadingDocFlowTask}
           loadingFile={loadingDocFlowTaskFile}
+          loadingProcessStep={loadingDocFlowProcessStep}
           task={task}
           handleDownload={handleDownload}
+          handleProcessStep={handleProcessStep}
         />
       </MaterialUI>
     </>
