@@ -153,22 +153,22 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
       <Box display="flex" alignItems="center" p={1} className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
       </Box>
-      <BoxWithRef
-        ref={tasksBox}
-        overflow="auto"
-        style={{ maxHeight }}
-        display="flex"
-        flexGrow={1}
-        flexWrap="wrap"
-        my={2}
-        marginTop="0"
-        marginBottom="0"
-        padding="0"
-        alignItems="stretch"
-        justifyContent="flex-start"
-        alignContent="flex-start"
-      >
-        <Loading activate={loading} absolute full type="linear" color="secondary" noMargin disableShrink size={48}>
+      <Loading activate={loading} type="linear" variant="indeterminate" color="secondary" noMargin>
+        <BoxWithRef
+          ref={tasksBox}
+          overflow="auto"
+          style={{ maxHeight }}
+          display="flex"
+          flexGrow={1}
+          flexWrap="wrap"
+          my={2}
+          marginTop="0"
+          marginBottom="0"
+          padding="0"
+          alignItems="stretch"
+          justifyContent="flex-start"
+          alignContent="flex-start"
+        >
           {tasks.length > 0 ? (
             <DocFlowTasksTable
               t={t}
@@ -187,8 +187,8 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
               {t('docflow:notFounds')}
             </Typography>
           )}
-        </Loading>
-      </BoxWithRef>
+        </BoxWithRef>
+      </Loading>
     </Box>
   );
 };
