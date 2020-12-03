@@ -18,11 +18,12 @@ import { ConfigService } from '@app/config';
       provide: 'PUB_SUB',
       inject: [ConfigService, RedisService],
       useFactory: (configService: ConfigService, redisService: RedisService) => {
-        const redisInstance = redisService.getClient('SUBSCRIPTION');
+        const redisInstancePublisher = redisService.getClient('PUBLISHER');
+        const redisInstanceSubscriber = redisService.getClient('SUBSCRIBER');
 
         return new RedisPubSub({
-          publisher: redisInstance,
-          subscriber: redisInstance,
+          publisher: redisInstancePublisher,
+          subscriber: redisInstanceSubscriber,
         });
       },
     },

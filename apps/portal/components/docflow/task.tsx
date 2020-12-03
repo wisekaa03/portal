@@ -30,6 +30,7 @@ import {
   TablePagination,
   CardActions,
   Icon,
+  TextField,
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
@@ -337,6 +338,8 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
   task,
   loadingFile,
   loadingProcessStep,
+  comments,
+  handleComments,
   handleProcessStep,
   handleDownload,
 }) => {
@@ -356,7 +359,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
         </Link>
         <div style={{ width: '100%' }} />
       </Box>
-      <Loading activate={loading} absolute full type="circular" color="secondary" disableShrink size={48}>
+      <Loading activate={loading} absolute full type="linear" color="secondary" noMargin disableShrink size={48}>
         {task ? (
           <BoxWithRef
             ref={tasksBox}
@@ -467,7 +470,20 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
                 />
                 <FilesArea i18n={i18n} t={t} task={task} loading={loadingFile} handleDownload={handleDownload} />
               </Card>
-              <DocFlowProcessStepButtons loading={loadingProcessStep} handleProcessStep={handleProcessStep} task={task} />
+              <div className={classes.fullRow}>
+                <TextField
+                  label={t('docflow:headers.comments')}
+                  multiline
+                  fullWidth
+                  rows={5}
+                  defaultValue={comments}
+                  onChange={handleComments}
+                  variant="outlined"
+                />
+              </div>
+              <div className={classes.fullRow}>
+                <DocFlowProcessStepButtons loading={loadingProcessStep} handleProcessStep={handleProcessStep} task={task} />
+              </div>
             </Box>
           </BoxWithRef>
         ) : (

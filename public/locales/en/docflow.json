@@ -10,6 +10,15 @@
       "author": "Author"
     }
   },
+  "processStep": {
+    "execute": "Executed",
+    "familiarize": "Familiarized",
+    "conform": "Conform",
+    "conformWithComments": "Conform with comments",
+    "notConform": "Not conform",
+    "approve": "Approve",
+    "notApprove": "Not approve"
+  },
   "notFound": "Not found",
   "notFounds": "Not found",
   "task": {
@@ -27,6 +36,7 @@
     "beginDate": "Дата регистрации",
     "dueDate": "Срок",
     "endDate": "Дата завершения",
-    "importance": "Importance"
+    "importance": "Importance",
+    "comments": "Comments"
   }
 }

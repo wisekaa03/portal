@@ -53,8 +53,10 @@ export interface DocFlowTaskComponentProps {
   loadingFile: boolean;
   loadingProcessStep: boolean;
   task?: DocFlowTask;
+  comments: string;
   handleDownload: (file: DocFlowFile) => void;
-  handleProcessStep: (taskID: string, step: DocFlowProcessStep) => void;
+  handleComments: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  handleProcessStep: (step: DocFlowProcessStep, taskID?: string, comments?: string) => void;
 }
 
 export interface DocFlowTaskInfoCardProps {
@@ -70,8 +72,8 @@ export interface DocFlowInternalDocumentComponentProps {
 
 export interface DocFlowProcessStepProps {
   loading: boolean;
-  handleProcessStep: (taskID: string, step: DocFlowProcessStep) => void;
-  task?: DocFlowTask;
+  handleProcessStep: (step: DocFlowProcessStep, taskID?: string, comments?: string) => void;
+  task: DocFlowTask;
 }
 
 export interface DocFlowLegalPrivatePerson {

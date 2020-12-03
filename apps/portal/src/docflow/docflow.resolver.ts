@@ -189,6 +189,7 @@ export class DocFlowResolver {
     @Context('req') request: Request,
     @Args('step') step: DocFlowProcessStep,
     @Args('taskID') taskID: string,
+    @Args('comments') comments: string,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowTask> {
@@ -199,6 +200,7 @@ export class DocFlowResolver {
     return this.docflowService.docFlowProcessStep({
       step,
       taskID,
+      comments,
       user,
       password,
       loggerContext: { username: user.username, headers: request.headers },

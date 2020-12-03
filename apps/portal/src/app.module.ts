@@ -156,10 +156,28 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
         if (configService.get<string>('HTTP_REDIS_URI')) {
           result.push(
             redisOptions({
-              clientName: 'SUBSCRIPTION',
+              clientName: 'HTTP',
               url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
               ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
-              prefix: 'SUBSCRIPTION:',
+              prefix: 'HTTP:',
+            }),
+          );
+
+          result.push(
+            redisOptions({
+              clientName: 'PUBLISHER',
+              url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
+              ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
+              prefix: 'PUBLISHER:',
+            }),
+          );
+
+          result.push(
+            redisOptions({
+              clientName: 'SUBSCRIBER',
+              url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
+              ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
+              prefix: 'SUBSCRIBER:',
             }),
           );
         }

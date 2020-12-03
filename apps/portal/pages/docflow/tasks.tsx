@@ -29,8 +29,8 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
     ssr: true,
     // TODO: какого-то хера не получается сделать query:fragment и fetchPolicy: 'cache-and-network'
     // fetchPolicy: 'network-only',
-    fetchPolicy: 'cache-and-network',
-    // notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {

@@ -168,7 +168,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
         justifyContent="flex-start"
         alignContent="flex-start"
       >
-        <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
+        <Loading activate={loading} absolute full type="linear" color="secondary" noMargin disableShrink size={48}>
           {tasks.length > 0 ? (
             <DocFlowTasksTable
               t={t}

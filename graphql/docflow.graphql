@@ -226,7 +226,7 @@ type Query {
 }
 
 type Mutation {
-  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!): DocFlowTask!
+  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, comments: String): DocFlowTask!
 }
 
 type Subscription {

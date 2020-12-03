@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Head from 'next/head';
 import { useQuery, useLazyQuery, ApolloQueryResult, useMutation } from '@apollo/client';
 //#endregion
@@ -29,9 +29,9 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     subscribeToMore: subscribeToMoreDocFlowTask,
   } = useQuery<Data<'docFlowTask', DocFlowTask>, { task: DocFlowTaskInput }>(DOCFLOW_TASK, {
     ssr: true,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     variables: { task: { id } },
-    // notifyOnNetworkStatusChange: true,
+    notifyOnNetworkStatusChange: true,
   });
 
   const [getDocFlowTaskFile, { loading: loadingDocFlowTaskFile, data: dataDocFlowTaskFile, error: errorDocFlowTaskFile }] = useLazyQuery<
@@ -42,7 +42,9 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
   const [
     getDocFlowProcessStep,
     { loading: loadingDocFlowProcessStep, data: dataDocFlowProcessStep, error: errorDocFlowProcessStep },
-  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; step: DocFlowProcessStep }>(DOCFLOW_PROCESS_STEP);
+  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; step: DocFlowProcessStep; comments: string }>(
+    DOCFLOW_PROCESS_STEP,
+  );
 
   useEffect(() => {
     if (typeof subscribeToMoreDocFlowTask === 'function') {
@@ -58,8 +60,18 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     }
   }, [subscribeToMoreDocFlowTask, id]);
 
-  const handleProcessStep = async (taskID: string, step: DocFlowProcessStep): Promise<void> => {
-    getDocFlowProcessStep({ variables: { taskID, step } });
+  const handleComments = async (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): Promise<void> => {
+    setComments(event.target.value);
+  };
+
+  const handleProcessStep = async (step: DocFlowProcessStep, taskID?: string, commentsThis?: string): Promise<void> => {
+    getDocFlowProcessStep({
+      variables: {
+        taskID: typeof taskID === 'undefined' ? task?.id || '0' : taskID,
+        step,
+        comments: typeof commentsThis === 'undefined' ? comments : commentsThis,
+      },
+    });
   };
 
   const download = async (body: string, name: string): Promise<void> => {
@@ -97,6 +109,13 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
 
   const task = useMemo<DocFlowTask | undefined>(() => dataDocFlowTask?.docFlowTask, [dataDocFlowTask]);
 
+  const [comments, setComments] = useState<string>('');
+  useEffect(() => {
+    if (task?.executionComment) {
+      setComments(task.executionComment || '');
+    }
+  }, [task?.executionComment]);
+
   useEffect(() => {
     if (errorDocFlowTask) {
       snackbarUtils.error(errorDocFlowTask);
@@ -120,7 +139,9 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
           loadingFile={loadingDocFlowTaskFile}
           loadingProcessStep={loadingDocFlowProcessStep}
           task={task}
+          comments={comments}
           handleDownload={handleDownload}
+          handleComments={handleComments}
           handleProcessStep={handleProcessStep}
         />
       </MaterialUI>

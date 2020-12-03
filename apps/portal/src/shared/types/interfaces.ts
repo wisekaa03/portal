@@ -20,6 +20,7 @@ export interface GraphQLContext {
 export interface GraphQLQueryInput {
   cache?: boolean;
   setCache?: boolean;
+  websocket?: boolean;
 }
 
 export interface GraphQLMutationInput {

@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import { format as dateFnsFormat } from 'date-fns';
 import {
   Inject,
   Injectable,
@@ -500,6 +501,12 @@ export class DocFlowService {
       if (this.cache && !(tasks?.setCache === false)) {
         this.cache.set<DocFlowTask[]>(cachedId, ticketsTasks, { ttl: this.ttl });
       }
+      if (tasks?.websocket === true) {
+        this.pubSub.publish<SubscriptionPayload<DocFlowTask[]>>(PortalPubSub.DOCFLOW_TASKS, {
+          userId,
+          object: ticketsTasks,
+        });
+      }
 
       return ticketsTasks;
     } catch (error) {
@@ -690,6 +697,12 @@ export class DocFlowService {
 
       if (this.cache && !(task?.setCache === false)) {
         this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
+      }
+      if (task?.websocket === true) {
+        this.pubSub.publish<SubscriptionPayload<DocFlowTask>>(PortalPubSub.DOCFLOW_TASK, {
+          userId,
+          object: ticketsTask,
+        });
       }
 
       return ticketsTask;
@@ -1106,6 +1119,7 @@ export class DocFlowService {
   docFlowProcessStep = async ({
     step,
     taskID,
+    comments,
     user,
     password,
     soapClient,
@@ -1113,6 +1127,7 @@ export class DocFlowService {
   }: {
     step: DocFlowProcessStep;
     taskID: string;
+    comments: string;
     user: User;
     password: string;
     soapClient?: SoapClient;
@@ -1145,13 +1160,13 @@ export class DocFlowService {
               'attributes': {
                 'xsi:type': 'tns:DMBusinessProcessTask',
               },
-              'tns:name': task.name,
+              'tns:name': '',
               'tns:objectID': {
                 'tns:id': task.id,
                 'tns:type': 'DMBusinessProcessTask',
               },
               'tns:importance': {
-                'tns:name': task.importance?.name,
+                'tns:name': '',
                 'tns:objectID': {
                   'tns:id': task.importance?.id,
                   'tns:type': 'DMBusinessProcessTaskImportance',
@@ -1159,7 +1174,7 @@ export class DocFlowService {
               },
               'tns:performer': {
                 'tns:user': {
-                  'tns:name': task.performer?.name,
+                  'tns:name': '',
                   'tns:objectID': {
                     'tns:id': task.performer?.id,
                     'tns:type': task.performer?.type,
@@ -1167,21 +1182,22 @@ export class DocFlowService {
                 },
               },
               'tns:executed': task.executed,
-              'tns:beginDate': task.beginDate,
-              'tns:dueDate': task.dueDate,
-              'tns:endDate': task.endDate,
+              'tns:beginDate': task.beginDate ? dateFnsFormat(new Date(task.beginDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
+              'tns:dueDate': task.dueDate ? dateFnsFormat(new Date(task.dueDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
+              'tns:endDate': task.endDate ? dateFnsFormat(new Date(task.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
               'tns:description': task.description,
               'tns:parentBusinessProcess': {
                 'attributes': {
                   'xsi:type': 'tns:DMBusinessProcessAcquaintance',
                 },
-                'tns:name': task.parentTask?.name,
+                'tns:name': '',
                 'tns:objectID': {
                   'tns:id': task.parentTask?.id,
                   'tns:type': 'DMBusinessProcessAcquaintance',
                 },
               },
               'tns:businessProcessStep': docFlowProcessStepToString(step),
+              'tns:executionComment': comments,
             },
           },
         };
@@ -1223,9 +1239,9 @@ export class DocFlowService {
                 },
               },
               'tns:executed': task.executed,
-              'tns:beginDate': task.beginDate,
-              'tns:dueDate': task.dueDate,
-              'tns:endDate': task.endDate,
+              'tns:beginDate': task.beginDate ? dateFnsFormat(new Date(task.beginDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
+              'tns:dueDate': task.dueDate ? dateFnsFormat(new Date(task.dueDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
+              'tns:endDate': task.endDate ? dateFnsFormat(new Date(task.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
               'tns:description': task.description,
               'tns:parentBusinessProcess': {
                 'attributes': {
@@ -1238,6 +1254,7 @@ export class DocFlowService {
                 },
               },
               'tns:businessProcessStep': docFlowProcessStepToString(step),
+              'tns:executionComment': comments,
             },
           },
         };
@@ -1267,6 +1284,14 @@ export class DocFlowService {
         .executeAsync(request, { timeout: TIMEOUT })
         .then((message: DataResult<DataObjects<DocFlowTaskSOAP>> | DataResult<DataError>) => {
           if (docFlowData<DataObjects>(message[0]?.return)) {
+            this.docFlowTaskCache({
+              user,
+              password,
+              task: { id: task.id, cache: true, websocket: true, setCache: true, withFiles: true },
+              soapClient: client,
+              loggerContext,
+            });
+
             if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
               const tasks = message[0].return.objects.map((t) => docFlowTask(t));
 
