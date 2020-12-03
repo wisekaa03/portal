@@ -1291,6 +1291,13 @@ export class DocFlowService {
               soapClient: client,
               loggerContext,
             });
+            this.docFlowTasksCache({
+              user,
+              password,
+              tasks: { cache: true, websocket: true, setCache: true, withFiles: true },
+              soapClient: client,
+              loggerContext,
+            });
 
             if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
               const tasks = message[0].return.objects.map((t) => docFlowTask(t));
