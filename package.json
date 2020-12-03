@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.18.27",
+  "version": "4.18.28",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -141,7 +141,7 @@
     "**/**/doctrine": "^3",
     "**/**/dom-serializer": "^1",
     "**/**/domelementtype": "^2",
-    "**/**/domhandler": "^3",
+    "**/**/domhandler": "^4",
     "**/**/domutils": "^2",
     "**/**/dotenv-webpack": "^5",
     "**/**/dotenv": "^8",
@@ -212,6 +212,7 @@
     "**/**/postcss-values-parser": "^4",
     "**/**/raw-body": "^2",
     "**/**/raw-loader": "^4",
+    "**/**/react-is": "^17",
     "**/**/read-pkg": "^5",
     "**/**/readdirp": "^3",
     "**/**/rimraf": "^3",
