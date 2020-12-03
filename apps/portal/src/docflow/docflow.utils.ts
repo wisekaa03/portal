@@ -221,7 +221,23 @@ export const docFlowTargets = (target: DocFlowTargetSOAP): DocFlowTarget => ({
   allowDeletion: target?.allowDeletion ?? false,
 });
 
-export const docFlowProcessStep = (processStep?: string): DocFlowProcessStep | null => {
+export const docFlowProcessStepToString = (processStep: DocFlowProcessStep): string | null => {
+  switch (processStep) {
+    case DocFlowProcessStep.Execute:
+      return 'Исполнить';
+    case DocFlowProcessStep.Familiarize:
+      return 'Ознакомиться';
+    case DocFlowProcessStep.Conform:
+      return 'Согласовать';
+    case DocFlowProcessStep.Approve:
+      return 'Утвердить';
+    default:
+  }
+
+  return null;
+};
+
+export const docFlowProcessStepToEnum = (processStep?: string): DocFlowProcessStep | null => {
   switch (processStep) {
     case 'Исполнить':
       return DocFlowProcessStep.Execute;
@@ -250,7 +266,7 @@ export const docFlowTask = (task: DocFlowTaskSOAP): DocFlowTask => ({
   dueDate: task.dueDate && task.dueDate.toISOString() !== SOAP_DATE_NULL ? task.dueDate : null,
   endDate: task.endDate && task.endDate.toISOString() !== SOAP_DATE_NULL ? task.endDate : null,
   description: task.description ?? null,
-  processStep: docFlowProcessStep(task.businessProcessStep),
+  processStep: docFlowProcessStepToEnum(task.businessProcessStep),
   changeRight: task.changeRight ?? null,
   performer: task.performer && task.performer.user ? docFlowUser(task.performer.user) : null,
   author: task.author ? docFlowUser(task.author) : null,
