@@ -472,10 +472,12 @@ export class DocFlowService {
             const ticketsTasks = await this.docFlowTasks({ user, password, tasks, soapClient, loggerContext });
 
             if (JSON.stringify(ticketsTasks) !== JSON.stringify(cached)) {
-              this.pubSub.publish<SubscriptionPayload<DocFlowTask[]>>(PortalPubSub.DOCFLOW_TASKS, {
-                userId,
-                object: ticketsTasks,
-              });
+              if (!(tasks?.websocket === false)) {
+                this.pubSub.publish<SubscriptionPayload<DocFlowTask[]>>(PortalPubSub.DOCFLOW_TASKS, {
+                  userId,
+                  object: ticketsTasks,
+                });
+              }
               if (this.cache && !(tasks?.setCache === false)) {
                 this.cache.set<DocFlowTask[]>(cachedId, ticketsTasks, { ttl: this.ttl });
               }
@@ -669,11 +671,13 @@ export class DocFlowService {
             const ticketsTask = await this.docFlowTask({ user, password, task, soapClient, loggerContext });
 
             if (JSON.stringify(ticketsTask) !== JSON.stringify(cached)) {
-              this.pubSub.publish<SubscriptionPayload<DocFlowTask>>(PortalPubSub.DOCFLOW_TASK, {
-                userId,
-                object: ticketsTask,
-              });
-              if (this.cache && !(task?.setCache === false)) {
+              if (!(task.websocket === false)) {
+                this.pubSub.publish<SubscriptionPayload<DocFlowTask>>(PortalPubSub.DOCFLOW_TASK, {
+                  userId,
+                  object: ticketsTask,
+                });
+              }
+              if (this.cache && !(task.setCache === false)) {
                 this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
               }
             }
@@ -695,10 +699,10 @@ export class DocFlowService {
     try {
       const ticketsTask = await this.docFlowTask({ user, password, task, soapClient, loggerContext });
 
-      if (this.cache && !(task?.setCache === false)) {
+      if (this.cache && !(task.setCache === false)) {
         this.cache.set<DocFlowTask>(cachedId, ticketsTask, { ttl: this.ttl });
       }
-      if (task?.websocket === true) {
+      if (task.websocket === true) {
         this.pubSub.publish<SubscriptionPayload<DocFlowTask>>(PortalPubSub.DOCFLOW_TASK, {
           userId,
           object: ticketsTask,
@@ -936,11 +940,13 @@ export class DocFlowService {
             });
 
             if (JSON.stringify(internalDocumentCache) !== JSON.stringify(cached)) {
-              this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
-                userId,
-                object: internalDocumentCache,
-              });
-              if (this.cache) {
+              if (!(internalDocument.websocket === false)) {
+                this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
+                  userId,
+                  object: internalDocumentCache,
+                });
+              }
+              if (this.cache && !(internalDocument.setCache === false)) {
                 this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
               }
             } else {
@@ -967,7 +973,13 @@ export class DocFlowService {
     try {
       const internalDocumentCache = await this.docFlowInternalDocument({ user, password, internalDocument, soapClient, loggerContext });
 
-      if (this.cache) {
+      if (internalDocument.websocket === true) {
+        this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
+          userId,
+          object: internalDocumentCache,
+        });
+      }
+      if (this.cache && !(internalDocument.setCache === false)) {
         this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
       }
 

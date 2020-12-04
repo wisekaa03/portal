@@ -191,31 +191,40 @@ type DocFlowTask {
 }
 
 input DocFlowTasksInput {
-  cache: Boolean
+  "With files, default = true"
   withFiles: Boolean
+  "Cache this, default = true"
+  cache: Boolean
+  "Set cache, default = true"
   setCache: Boolean
+  "WebSocket results, default = true"
+  websocket: Boolean
 }
 
 input DocFlowTaskInput {
   id: String!
-  cache: Boolean
+  "With files, default = true"
   withFiles: Boolean
-  setCache: Boolean
-}
-
-input DocFlowTargetInput {
-  id: String!
+  "Cache this, default = true"
   cache: Boolean
+  "Set cache, default = true"
+  setCache: Boolean
+  "WebSocket results, default = true"
+  websocket: Boolean
 }
 
 input DocFlowInternalDocumentInput {
   id: String!
+  "Cache this, default = true"
   cache: Boolean
+  "Set cache, default = true"
+  setCache: Boolean
+  "WebSocket results, default = true"
+  websocket: Boolean
 }
 
 input DocFlowFileInput {
   id: String!
-  cache: Boolean
 }
 
 type Query {
@@ -226,6 +235,7 @@ type Query {
 }
 
 type Mutation {
+  "Change processStep"
   docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, comments: String): DocFlowTask!
 }
 
