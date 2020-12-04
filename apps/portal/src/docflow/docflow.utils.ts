@@ -228,9 +228,16 @@ export const docFlowProcessStepToString = (processStep: DocFlowProcessStep): str
     case DocFlowProcessStep.Familiarize:
       return 'Ознакомиться';
     case DocFlowProcessStep.Conform:
-      return 'Согласовать';
+      return 'Согласовано';
+    case DocFlowProcessStep.ConformWithComments:
+      return 'СогласованоСЗамечаниями';
+    case DocFlowProcessStep.NotConform:
+      return 'НеСогласовано';
     case DocFlowProcessStep.Approve:
-      return 'Утвердить';
+      return 'Утверждено';
+    case DocFlowProcessStep.NotApprove:
+      return 'НеУтверждено';
+
     default:
   }
 

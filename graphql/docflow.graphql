@@ -158,11 +158,19 @@ type DocFlowImportance {
   presentation: String
 }
 
+input DocFlowDataInput {
+  comments: String
+  endDate: Date
+}
+
 enum DocFlowProcessStep {
   Execute
   Familiarize
   Conform
+  ConformWithComments
+  NotConform
   Approve
+  NotApprove
 }
 
 type DocFlowTask {
@@ -252,7 +260,7 @@ type Query {
 
 type Mutation {
   "Change processStep"
-  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, comments: String): DocFlowTask!
+  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, data: DocFlowDataInput): DocFlowTask!
 }
 
 type Subscription {

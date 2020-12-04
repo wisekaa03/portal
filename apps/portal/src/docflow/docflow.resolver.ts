@@ -21,6 +21,7 @@ import type {
   DocFlowInternalFile,
   DocFlowInternalDocument,
   DocFlowInternalDocumentInput,
+  DocFlowData,
 } from '@lib/types/docflow';
 import type { SubscriptionPayload, WebsocketContext } from '@back/shared/types';
 import { PortalPubSub } from '@back/shared/constants';
@@ -189,7 +190,7 @@ export class DocFlowResolver {
     @Context('req') request: Request,
     @Args('step') step: DocFlowProcessStep,
     @Args('taskID') taskID: string,
-    @Args('comments') comments: string,
+    @Args('data') data?: DocFlowData,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowTask> {
@@ -200,7 +201,7 @@ export class DocFlowResolver {
     return this.docflowService.docFlowProcessStep({
       step,
       taskID,
-      comments,
+      data,
       user,
       password,
       loggerContext: { username: user.username, headers: request.headers },

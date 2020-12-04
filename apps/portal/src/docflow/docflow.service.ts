@@ -41,6 +41,7 @@ import type {
   DocFlowInternalFile,
   DocFlowInternalDocument,
   DocFlowInternalDocumentInput,
+  DocFlowData,
 } from '@lib/types/docflow';
 import { DocFlowProcessStep } from '@lib/types/docflow';
 import type {
@@ -1135,7 +1136,7 @@ export class DocFlowService {
   docFlowProcessStep = async ({
     step,
     taskID,
-    comments,
+    data,
     user,
     password,
     soapClient,
@@ -1143,7 +1144,7 @@ export class DocFlowService {
   }: {
     step: DocFlowProcessStep;
     taskID: string;
-    comments: string;
+    data?: DocFlowData;
     user: User;
     password: string;
     soapClient?: SoapClient;
@@ -1200,7 +1201,7 @@ export class DocFlowService {
               'tns:executed': task.executed,
               'tns:beginDate': task.beginDate ? dateFnsFormat(new Date(task.beginDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
               'tns:dueDate': task.dueDate ? dateFnsFormat(new Date(task.dueDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:endDate': task.endDate ? dateFnsFormat(new Date(task.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
+              'tns:endDate': data?.endDate ? dateFnsFormat(new Date(data.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
               'tns:description': task.description,
               'tns:parentBusinessProcess': {
                 'attributes': {
@@ -1213,7 +1214,7 @@ export class DocFlowService {
                 },
               },
               'tns:businessProcessStep': docFlowProcessStepToString(step),
-              'tns:executionComment': comments,
+              'tns:executionComment': data?.comments ?? '',
             },
           },
         };
@@ -1257,7 +1258,7 @@ export class DocFlowService {
               'tns:executed': task.executed,
               'tns:beginDate': task.beginDate ? dateFnsFormat(new Date(task.beginDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
               'tns:dueDate': task.dueDate ? dateFnsFormat(new Date(task.dueDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:endDate': task.endDate ? dateFnsFormat(new Date(task.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
+              'tns:endDate': data?.endDate ? dateFnsFormat(new Date(data.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
               'tns:description': task.description,
               'tns:parentBusinessProcess': {
                 'attributes': {
@@ -1270,7 +1271,7 @@ export class DocFlowService {
                 },
               },
               'tns:businessProcessStep': docFlowProcessStepToString(step),
-              'tns:executionComment': comments,
+              'tns:executionComment': data?.comments ?? '',
             },
           },
         };

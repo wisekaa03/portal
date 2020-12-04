@@ -8,7 +8,15 @@ export enum DocFlowProcessStep {
   Execute = 'Execute' /* Исполнить */,
   Familiarize = 'Familiarize' /* Ознакомиться */,
   Conform = 'Conform' /* Согласовать */,
+  NotConform = 'NotConform' /* Не согласовано */,
+  ConformWithComments = 'ConformWithComments' /* Согласовать с комментариями */,
   Approve = 'Approve' /* Утвердить */,
+  NotApprove = 'NotApprove' /* Не утвердить */,
+}
+
+export interface DocFlowData {
+  comments?: string;
+  endDate?: Date | null;
 }
 
 export interface DocFlowFileProps {
@@ -54,9 +62,11 @@ export interface DocFlowTaskComponentProps {
   loadingProcessStep: boolean;
   task?: DocFlowTask;
   comments: string;
+  endDate: Date | null;
+  handleEndDate?: (date: Date | null | undefined, keyboardInputValue?: string | undefined) => void;
   handleDownload: (file: DocFlowFile) => void;
   handleComments: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
-  handleProcessStep: (step: DocFlowProcessStep, taskID?: string, comments?: string) => void;
+  handleProcessStep: (step: DocFlowProcessStep, taskID?: string, data?: DocFlowData) => void;
 }
 
 export interface DocFlowTaskInfoCardProps {
@@ -72,7 +82,9 @@ export interface DocFlowInternalDocumentComponentProps {
 
 export interface DocFlowProcessStepProps {
   loading: boolean;
-  handleProcessStep: (step: DocFlowProcessStep, taskID?: string, comments?: string) => void;
+  endDate: Date | null;
+  handleEndDate?: (date: Date | null | undefined, keyboardInputValue?: string | undefined) => void;
+  handleProcessStep: (step: DocFlowProcessStep, taskID?: string, data?: DocFlowData) => void;
   task: DocFlowTask;
 }
 

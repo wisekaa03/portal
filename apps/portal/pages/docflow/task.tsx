@@ -9,7 +9,7 @@ import { useQuery, useLazyQuery, ApolloQueryResult, useMutation } from '@apollo/
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_PROCESS_STEP } from '@lib/queries';
 import type { DocFlowFile, DocFlowTask, DocFlowTaskInput, DocFlowFileInput } from '@lib/types/docflow';
-import { DocFlowProcessStep } from '@lib/types/docflow';
+import { DocFlowProcessStep, DocFlowData } from '@lib/types/docflow';
 import { Data } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
@@ -42,7 +42,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
   const [
     getDocFlowProcessStep,
     { loading: loadingDocFlowProcessStep, data: dataDocFlowProcessStep, error: errorDocFlowProcessStep },
-  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; step: DocFlowProcessStep; comments: string }>(
+  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; step: DocFlowProcessStep; data?: DocFlowData }>(
     DOCFLOW_PROCESS_STEP,
   );
 
@@ -64,12 +64,19 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     setComments(event.target.value);
   };
 
-  const handleProcessStep = async (step: DocFlowProcessStep, taskID?: string, commentsThis?: string): Promise<void> => {
+  const handleEndDate = async (date: Date | null | undefined, keyboardInputValue?: string | undefined): Promise<void> => {
+    setEndDate(date ?? null);
+  };
+
+  const handleProcessStep = async (step: DocFlowProcessStep, taskID?: string, data?: DocFlowData): Promise<void> => {
     getDocFlowProcessStep({
       variables: {
         taskID: typeof taskID === 'undefined' ? task?.id || '0' : taskID,
         step,
-        comments: typeof commentsThis === 'undefined' ? comments : commentsThis,
+        data: {
+          comments: typeof data?.comments === 'undefined' ? comments : data.comments,
+          endDate: typeof data?.endDate === 'undefined' ? endDate : data.endDate,
+        },
       },
     });
   };
@@ -110,11 +117,15 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
   const task = useMemo<DocFlowTask | undefined>(() => dataDocFlowTask?.docFlowTask, [dataDocFlowTask]);
 
   const [comments, setComments] = useState<string>('');
+  const [endDate, setEndDate] = useState<Date | null>(null);
   useEffect(() => {
     if (task?.executionComment) {
       setComments(task.executionComment || '');
     }
-  }, [task?.executionComment]);
+    if (task?.endDate) {
+      setEndDate(task.endDate ?? null);
+    }
+  }, [task]);
 
   useEffect(() => {
     if (errorDocFlowTask) {
@@ -140,6 +151,8 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
           loadingProcessStep={loadingDocFlowProcessStep}
           task={task}
           comments={comments}
+          endDate={endDate}
+          handleEndDate={handleEndDate}
           handleDownload={handleDownload}
           handleComments={handleComments}
           handleProcessStep={handleProcessStep}
