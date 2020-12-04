@@ -156,6 +156,7 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     state {
       ...StateProps
     }
+    changeRight
     executed
     executionMark
     executionComment

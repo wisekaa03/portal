@@ -18,7 +18,7 @@ export const DOCFLOW_TASKS = gql`
 `;
 
 export const DOCFLOW_TASKS_SUB = gql`
-  subscription DocFlowTasks($tasks: DocFlowTasksInput) {
+  subscription DocFlowTasks($tasks: DocFlowTasksSubInput) {
     docFlowTasks(tasks: $tasks) {
       ...TaskProps
     }
@@ -46,7 +46,7 @@ export const DOCFLOW_TASK = gql`
 `;
 
 export const DOCFLOW_TASK_SUB = gql`
-  subscription DocFlowTask($task: DocFlowTaskInput!) {
+  subscription DocFlowTask($task: DocFlowTaskSubInput!) {
     docFlowTask(task: $task) {
       ...TaskProps
     }
@@ -64,7 +64,7 @@ export const DOCFLOW_INTERNAL_DOCUMENT = gql`
 `;
 
 export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
-  subscription DocFlowInternalDocument($internalDocument: DocFlowInternalDocumentInput!) {
+  subscription DocFlowInternalDocument($internalDocument: DocFlowInternalDocumentSubInput!) {
     docFlowInternalDocument(internalDocument: $internalDocument) {
       ...InternalDocumentProps
     }
@@ -75,8 +75,7 @@ export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
 export const DOCFLOW_PROCESS_STEP = gql`
   mutation DocFlowProcessStep($step: DocFlowProcessStep!, $taskID: ID!, $comments: String) {
     docFlowProcessStep(step: $step, taskID: $taskID, comments: $comments) {
-      ...TaskProps
+      id
     }
   }
-  ${DOCFLOW_TASK_FRAGMENT}
 `;

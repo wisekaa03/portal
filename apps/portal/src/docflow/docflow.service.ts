@@ -137,7 +137,7 @@ export class DocFlowService {
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.soapClient.name,
+          function: 'soapClient',
           ...loggerContext,
         });
 
@@ -190,7 +190,7 @@ export class DocFlowService {
           this.logger.debug!({
             message: `[Request] ${soapClient.lastRequest}`,
             context: DocFlowService.name,
-            function: this.docFlowFiles.name,
+            function: 'docFlowFiles',
             ...loggerContext,
           });
           // this.logger.debug(`docFlowFiles: [Response] ${client.lastResponse}`, { context:DocFlowService.name, function:'docFlowFiles' });
@@ -210,20 +210,20 @@ export class DocFlowService {
         this.logger.error({
           message: `[Request] ${soapClient.lastRequest}`,
           context: DocFlowService.name,
-          function: this.docFlowFiles.name,
+          function: 'docFlowFiles',
           ...loggerContext,
         });
         this.logger.error({
           message: `[Response] ${soapClient.lastResponse}`,
           context: DocFlowService.name,
-          function: this.docFlowFiles.name,
+          function: 'docFlowFiles',
           ...loggerContext,
         });
         this.logger.error({
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.docFlowFiles.name,
+          function: 'docFlowFiles',
           ...loggerContext,
         });
 
@@ -292,11 +292,15 @@ export class DocFlowService {
   }): Promise<DocFlowTask[]> => {
     const tasksWithoutFiles = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP.object));
 
-    if (withFiles !== false) {
-      return Promise.all(tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles({ soapClient, task, loggerContext })));
+    if (withFiles === true) {
+      const tasksWithFiles = await Promise.all(
+        tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles({ soapClient, task, loggerContext })),
+      );
+      return tasksWithFiles;
     }
 
-    return Promise.all(tasksWithoutFiles);
+    const tasks = await Promise.all(tasksWithoutFiles);
+    return tasks;
   };
 
   /**
@@ -389,14 +393,14 @@ export class DocFlowService {
             this.logger.debug!({
               message: `[Request] ${client.lastRequest}`,
               context: DocFlowService.name,
-              function: this.docFlowTasks.name,
+              function: 'docFlowTasks',
               ...loggerContext,
             });
 
             return this.docFlowTasksWithFiles({
               soapClient: client,
               tasksSOAP: message[0].return.items,
-              withFiles: tasks?.withFiles || true,
+              withFiles: tasks?.withFiles ?? true,
               loggerContext,
             });
           }
@@ -410,20 +414,20 @@ export class DocFlowService {
         this.logger.error({
           message: `[Request] ${client.lastRequest}`,
           context: DocFlowService.name,
-          function: this.docFlowTasks.name,
+          function: 'docFlowTasks',
           ...loggerContext,
         });
         this.logger.error({
           message: `[Response] ${client.lastResponse}`,
           context: DocFlowService.name,
-          function: this.docFlowTasks.name,
+          function: 'docFlowTasks',
           ...loggerContext,
         });
         this.logger.error({
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.docFlowTasks.name,
+          function: 'docFlowTasks',
           ...loggerContext,
         });
 
@@ -487,7 +491,7 @@ export class DocFlowService {
               message: `${error.toString()}`,
               error,
               context: DocFlowService.name,
-              function: this.docFlowTasksCache.name,
+              function: 'docFlowTasksCache',
               ...loggerContext,
             });
           }
@@ -516,7 +520,7 @@ export class DocFlowService {
         message: `${error.toString()}`,
         error,
         context: DocFlowService.name,
-        function: this.docFlowTasksCache.name,
+        function: 'docFlowTasksCache',
         ...loggerContext,
       });
 
@@ -578,7 +582,7 @@ export class DocFlowService {
                 this.logger.verbose!({
                   message: 'result.length > 1 ??',
                   context: DocFlowService.name,
-                  function: this.docFlowTask.name,
+                  function: 'docFlowTask',
                   ...loggerContext,
                 });
               }
@@ -587,7 +591,7 @@ export class DocFlowService {
                 this.logger.debug!({
                   message: `[Request] ${client.lastRequest}`,
                   context: DocFlowService.name,
-                  function: this.docFlowTask.name,
+                  function: 'docFlowTask',
                   ...loggerContext,
                 });
                 // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
@@ -611,20 +615,20 @@ export class DocFlowService {
         this.logger.error({
           message: `[Request] ${client.lastRequest}`,
           context: DocFlowService.name,
-          function: this.docFlowTask.name,
+          function: 'docFlowTask',
           ...loggerContext,
         });
         this.logger.error({
           message: `[Response] ${client.lastResponse}`,
           context: DocFlowService.name,
-          function: this.docFlowTask.name,
+          function: 'docFlowTask',
           ...loggerContext,
         });
         this.logger.error({
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.docFlowTask.name,
+          function: 'docFlowTask',
           ...loggerContext,
         });
 
@@ -686,7 +690,7 @@ export class DocFlowService {
               message: `${error.toString()}`,
               error,
               context: DocFlowService.name,
-              function: this.docFlowTaskCache.name,
+              function: 'docFlowTaskCache',
               ...loggerContext,
             });
           }
@@ -715,7 +719,7 @@ export class DocFlowService {
         message: `${error.toString()}`,
         error,
         context: DocFlowService.name,
-        function: this.docFlowTaskCache.name,
+        function: 'docFlowTaskCache',
         ...loggerContext,
       });
 
@@ -764,7 +768,7 @@ export class DocFlowService {
           this.logger.debug!({
             message: `[Request] ${client.lastRequest}`,
             context: DocFlowService.name,
-            function: this.docFlowCurrentUser.name,
+            function: 'docFlowCurrentUser',
             ...loggerContext,
           });
           // this.logger.debug(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
@@ -782,20 +786,20 @@ export class DocFlowService {
         this.logger.error({
           message: `[Request] ${client.lastRequest}`,
           context: DocFlowService.name,
-          function: this.docFlowCurrentUser.name,
+          function: 'docFlowCurrentUser',
           ...loggerContext,
         });
         this.logger.error({
           message: `[Response] ${client.lastResponse}`,
           context: DocFlowService.name,
-          function: this.docFlowCurrentUser.name,
+          function: 'docFlowCurrentUser',
           ...loggerContext,
         });
         this.logger.error({
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.docFlowCurrentUser.name,
+          function: 'docFlowCurrentUser',
           ...loggerContext,
         });
 
@@ -856,7 +860,7 @@ export class DocFlowService {
             this.logger.debug!({
               message: `[Request] ${client.lastRequest}`,
               context: DocFlowService.name,
-              function: this.docFlowInternalDocument.name,
+              function: 'docFlowInternalDocument',
               ...loggerContext,
             });
             // this.logger.debug(`docFlowInternalDocument: [Response] ${client.lastResponse}`,
@@ -874,20 +878,20 @@ export class DocFlowService {
         this.logger.error({
           message: `[Request] ${client.lastRequest}`,
           context: DocFlowService.name,
-          function: this.docFlowInternalDocument.name,
+          function: 'docFlowInternalDocument',
           ...loggerContext,
         });
         this.logger.error({
           message: `[Response] ${client.lastResponse}`,
           context: DocFlowService.name,
-          function: this.docFlowInternalDocument.name,
+          function: 'docFlowInternalDocument',
           ...loggerContext,
         });
         this.logger.error({
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.docFlowInternalDocument.name,
+          function: 'docFlowInternalDocument',
           ...loggerContext,
         });
 
@@ -959,7 +963,7 @@ export class DocFlowService {
             this.logger.error({
               message: `${error.toString()}`,
               error,
-              function: this.docFlowInternalDocumentCache.name,
+              function: 'docFlowInternalDocumentCache',
               context: DocFlowService.name,
               ...loggerContext,
             });
@@ -989,7 +993,7 @@ export class DocFlowService {
         message: `${error.toString()}`,
         error,
         context: DocFlowService.name,
-        function: this.docFlowInternalDocumentCache.name,
+        function: 'docFlowInternalDocumentCache',
         ...loggerContext,
       });
 
@@ -1058,7 +1062,7 @@ export class DocFlowService {
             this.logger.debug!({
               message: `[Request] ${client.lastRequest}`,
               context: DocFlowService.name,
-              function: this.docFlowFile.name,
+              function: 'docFlowFile',
               ...loggerContext,
             });
             // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
@@ -1070,7 +1074,7 @@ export class DocFlowService {
               this.logger.verbose!({
                 message: 'result.length > 1 ? Something wrong...',
                 context: DocFlowService.name,
-                function: this.docFlowFile.name,
+                function: 'docFlowFile',
                 ...loggerContext,
               });
             }
@@ -1087,20 +1091,20 @@ export class DocFlowService {
         this.logger.error({
           message: `[Request] ${client.lastRequest}`,
           context: DocFlowService.name,
-          function: this.docFlowFile.name,
+          function: 'docFlowFile',
           ...loggerContext,
         });
         this.logger.error({
           message: `[Response] ${client.lastResponse}`,
           context: DocFlowService.name,
-          function: this.docFlowFile.name,
+          function: 'docFlowFile',
           ...loggerContext,
         });
         this.logger.error({
           message: `${error.toString()}`,
           error,
           context: DocFlowService.name,
-          function: this.docFlowFile.name,
+          function: 'docFlowFile',
           ...loggerContext,
         });
 
@@ -1149,7 +1153,7 @@ export class DocFlowService {
     const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
 
     const task = await this.docFlowTaskCache({
-      task: { id: taskID, cache: true, setCache: false, withFiles: false },
+      task: { id: taskID, websocket: false },
       user,
       password,
       soapClient: client,

@@ -175,6 +175,7 @@ type DocFlowTask {
   executed: Boolean
   executionMark: String
   beginDate: Date
+  changeRight: Boolean
   dueDate: Date
   endDate: Date
   description: String
@@ -201,6 +202,11 @@ input DocFlowTasksInput {
   websocket: Boolean
 }
 
+input DocFlowTasksSubInput {
+  "With files, default = true"
+  withFiles: Boolean
+}
+
 input DocFlowTaskInput {
   id: String!
   "With files, default = true"
@@ -213,6 +219,12 @@ input DocFlowTaskInput {
   websocket: Boolean
 }
 
+input DocFlowTaskSubInput {
+  id: String!
+  "With files, default = true"
+  withFiles: Boolean
+}
+
 input DocFlowInternalDocumentInput {
   id: String!
   "Cache this, default = true"
@@ -221,6 +233,10 @@ input DocFlowInternalDocumentInput {
   setCache: Boolean
   "WebSocket results, default = true"
   websocket: Boolean
+}
+
+input DocFlowInternalDocumentSubInput {
+  id: String!
 }
 
 input DocFlowFileInput {
@@ -240,7 +256,7 @@ type Mutation {
 }
 
 type Subscription {
-  docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTask!]
-  docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
-  docFlowInternalDocument(target: DocFlowInternalDocumentInput!): [DocFlowInternalDocument!]
+  docFlowTasks(tasks: DocFlowTasksSubInput): [DocFlowTask!]
+  docFlowTask(task: DocFlowTaskSubInput!): DocFlowTask!
+  docFlowInternalDocument(target: DocFlowInternalDocumentSubInput!): [DocFlowInternalDocument!]
 }
