@@ -23,22 +23,16 @@ import { VerticalCenter } from '@front/components/vertical-center';
 //   }),
 // );
 
-const Wait: I18nPage = ({ t }) => {
-  // const classes = useStyles({});
+const Wait: I18nPage = ({ t }) => (
+  <VerticalCenter>
+    <Typography display="block" variant="h2" component="h2">
+      {t('common:wait')}
+    </Typography>
+  </VerticalCenter>
+);
 
-  return (
-    <VerticalCenter>
-      <Typography display="block" variant="h2" component="h2">
-        {t('common:wait')}
-      </Typography>
-    </VerticalCenter>
-  );
-};
-
-Wait.getInitialProps = () => {
-  return {
-    namespacesRequired: includeDefaultNamespaces([]),
-  };
-};
+Wait.getInitialProps = () => ({
+  namespacesRequired: includeDefaultNamespaces([]),
+});
 
 export default nextI18next.withTranslation()(Wait);

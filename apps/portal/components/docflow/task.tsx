@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import filesize from 'filesize';
 import { TFunction, I18n } from 'next-i18next';
-import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import { Theme, alpha, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
   IconButton,
@@ -55,7 +55,7 @@ import DocFlowProcessStepButtons from './processStep';
 const TaskInfoCard = withStyles((theme) => ({
   root: {
     borderRadius: theme.shape.borderRadius,
-    background: fade(theme.palette.secondary.main, 0.15),
+    background: alpha(theme.palette.secondary.main, 0.15),
   },
   center: {
     textAlign: 'center',
@@ -99,11 +99,11 @@ const TaskInfoCard = withStyles((theme) => ({
       />
       <CardContent className={classes.content}>
         {profile && (
-          <Box display="flex">
-            <Box mr={2}>
+          <Box sx={{ display: 'flex' }}>
+            <Box>
               <Avatar className={classes.avatar} alt="photo" />
             </Box>
-            <Box flex={1}>
+            <Box sx={{ flex: 1 }}>
               <Paper>
                 <List className={classes.list} disablePadding>
                   <ListItem divider>
@@ -239,7 +239,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
-      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      backgroundColor: alpha(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     controlLeft: {
@@ -306,11 +306,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       alignItems: 'center',
       alignContent: 'center',
-      background: fade(theme.palette.secondary.main, 0.15),
+      background: alpha(theme.palette.secondary.main, 0.15),
       overflow: 'visible',
     },
     background: {
-      background: fade(theme.palette.secondary.main, 0.15),
+      background: alpha(theme.palette.secondary.main, 0.15),
     },
     statusContent: {
       display: 'flex',
@@ -330,6 +330,8 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
   loadingFile,
   loadingProcessStep,
   comments,
+  endDate,
+  handleEndDate,
   handleComments,
   handleProcessStep,
   handleDownload,
@@ -341,8 +343,8 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
   const maxHeight = tasksBox.current ? `calc(100vh - ${(tasksBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Link href={{ pathname: '/docflow' }} as="/docflow" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />
@@ -354,18 +356,19 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
         {task ? (
           <BoxWithRef
             ref={tasksBox}
-            overflow="auto"
-            style={{ maxHeight }}
-            display="flex"
-            flexGrow={1}
-            flexWrap="wrap"
-            my={2}
-            marginTop="0"
-            marginBottom="0"
-            padding="0"
-            alignItems="stretch"
-            justifyContent="flex-start"
-            alignContent="flex-start"
+            sx={{
+              display: 'flex',
+              overflow: 'auto',
+              flexGrow: 1,
+              flexWrap: 'wrap',
+              marginTop: '0',
+              marginBottom: '0',
+              padding: '0',
+              alignItems: 'stretch',
+              justifyContent: 'flex-start',
+              alignContent: 'flex-start',
+              maxHeight,
+            }}
           >
             <Box className={classes.content}>
               <Card className={clsx(classes.card, classes.fullRow)}>
@@ -476,6 +479,8 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
               <div className={classes.fullRow}>
                 <DocFlowProcessStepButtons
                   loading={!task.changeRight || loadingProcessStep}
+                  endDate={endDate}
+                  handleEndDate={handleEndDate}
                   handleProcessStep={handleProcessStep}
                   task={task}
                 />

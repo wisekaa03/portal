@@ -51,8 +51,8 @@ const FilesComponent: FC<FilesComponentProps> = ({
   const classes = useStyles({});
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Search value={search} handleChange={handleSearch} />
         <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
       </Box>

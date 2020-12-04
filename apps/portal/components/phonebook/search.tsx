@@ -88,9 +88,12 @@ const PhonebookSearch = forwardRef<HTMLInputElement, PhonebookSearchProps>(
     const showedSuggestions = suggestions.length > 0;
 
     return (
-      <Box display="flex" alignItems="center" className={classes.panel}>
-        <Box flexGrow={1} position="relative" ml={0} mr={2} className={classes.search}>
-          <Box position="absolute" display="flex" alignItems="center" justifyContent="center" className={classes.searchIcon}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.panel}>
+        <Box sx={{ flexGrow: 1, position: 'relative' }} className={classes.search}>
+          <Box
+            sx={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            className={classes.searchIcon}
+          >
             <SearchIcon color="secondary" />
           </Box>
           <Tooltip
@@ -98,7 +101,6 @@ const PhonebookSearch = forwardRef<HTMLInputElement, PhonebookSearchProps>(
             onOpen={handleOpenTooltip}
             onClose={handleCloseTooltip}
             title={t('phonebook:help.search') || ''}
-            interactive
             placement="top-start"
           >
             <InputBase

@@ -68,7 +68,7 @@ const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t, ...rest }
         <title>{t(title(statusCode))}</title>
       </Head>
       <MaterialUI {...rest}>
-        <Grid className={classes.grid} container direction="column" justify="center" alignItems="center">
+        <Grid className={classes.grid} container style={{ /* direction: 'column', */ justify: 'center', alignItems: 'center' }}>
           <Grid item>
             <Paper className={classes.paper}>
               <Typography variant="h3" component="h3">

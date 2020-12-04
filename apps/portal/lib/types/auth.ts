@@ -23,12 +23,7 @@ export interface LoginComponentProps {
   values: LoginValuesProps;
   loading: boolean;
   handleValues: (values: keyof LoginValuesProps) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDomain: (
-    event: React.ChangeEvent<Record<string, unknown>>,
-    value?: unknown,
-    reason?: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<unknown>,
-  ) => void;
+  handleDomain: (value?: string) => void;
   handleSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 }

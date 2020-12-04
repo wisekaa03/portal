@@ -55,8 +55,8 @@ const SearchComponent: FC<SearchComponentProps> = ({ value, handleChange }) => {
   const { t } = useTranslation();
 
   return (
-    <Box position="relative" className={classes.root}>
-      <Box display="flex" alignItems="center" justifyContent="center" position="absolute" className={classes.icon}>
+    <Box sx={{ position: 'relative' }} className={classes.root}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute' }} className={classes.icon}>
         <SearchIcon />
       </Box>
       <InputBase

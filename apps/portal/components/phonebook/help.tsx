@@ -117,7 +117,7 @@ const helpData: HelpDataProps[] = [
           Поисковая строка адресной книги поддерживает комбинированные запросы, набранные через знак «+». Например, чтобы отобразить всех
           сотрудников департамента ИТ наберите в поисковой строке
         </Typography>
-        <Box textAlign="center">
+        <Box sx={{ textAlign: 'center' }}>
           <b>Деп + ит</b>
         </Box>
         <Typography variant="body1">В появившемся выпадающем списке выберите «Департамент ИТ и разработки».</Typography>
@@ -130,7 +130,7 @@ const helpData: HelpDataProps[] = [
     text: (
       <>
         <Typography variant="body1">При вводе в поисковую форму</Typography>
-        <Box textAlign="center">
+        <Box sx={{ textAlign: 'center' }}>
           <b>1112 + поддерж</b>
         </Box>
         <Typography variant="body1">

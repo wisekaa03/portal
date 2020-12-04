@@ -54,7 +54,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
     ) {
       if (!rawDomain && handleDomain) {
         setDomain(dataDomain.availableAuthenticationProfiles[0]);
-        handleDomain({} as React.ChangeEvent<Record<string, unknown>>, dataDomain.availableAuthenticationProfiles[0]);
+        handleDomain(dataDomain.availableAuthenticationProfiles[0]);
       }
       setOptions(dataDomain.availableAuthenticationProfiles);
     }
@@ -97,7 +97,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
       onClose={handleClose}
       loading={loadingDomain}
       value={rawDomain}
-      onChange={handleDomain}
+      onChange={(event: React.SyntheticEvent<Element, Event>, value: string) => handleDomain && handleDomain(value)}
       renderInput={(parameters) => (
         <TextField
           {...propsDomain}

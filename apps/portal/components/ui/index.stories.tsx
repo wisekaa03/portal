@@ -24,7 +24,7 @@ const withDecorator = (storyFn: StoryFn<React.ReactNode>) => (
   </ThemeProvider>
 );
 
-const withCenter = (storyFn: StoryFn<React.ReactNode>) => <Box p={2}>{storyFn()}</Box>;
+const withCenter = (storyFn: StoryFn<React.ReactNode>) => <Box>{storyFn()}</Box>;
 
 story.addDecorator(withKnobs);
 story.addDecorator(withDecorator);

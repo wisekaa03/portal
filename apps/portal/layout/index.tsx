@@ -115,7 +115,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, re
   }, [lgUp, drawer, isMobile, ifModal, isCollapse]);
 
   return (
-    <Box display="flex" flexDirection="column" style={{ height: '100vh' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <AppBarComponent
         open={Boolean(anchorElement)}
         anchorEl={anchorElement}
@@ -126,7 +126,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, re
         handlePopoverClose={handlePopoverClose}
         handleLogout={handleLogout}
       />
-      <Box display="flex" flexGrow={1} className={drawerOpen ? 'drawerOpen' : 'drawerClose'}>
+      <Box sx={{ display: 'flex', flexGrow: 1 }} className={drawerOpen ? 'drawerOpen' : 'drawerClose'}>
         <DrawerComponent open={drawerOpen} isMobile={isMobile} handleOpen={handleDrawerOpen} />
         <Box id="content" className={classes.content}>
           {children}

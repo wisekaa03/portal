@@ -4,7 +4,7 @@
 import React, { FC, useRef, ReactNode } from 'react';
 import Link from 'next/link';
 import type { TFunction, i18n } from 'i18next';
-import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import { Theme, alpha, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
   InputBase,
@@ -95,8 +95,8 @@ const DocFlowTasksTable = withStyles((theme) => ({
       count={tasks.length}
       rowsPerPage={rowsPerPage}
       page={page}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
       labelRowsPerPage={t('docflow:tasks.rowsPerPage')}
       labelDisplayedRows={({ from, to, count }) =>
         `${from}-${to} ${t('docflow:tasks.to')} ${count !== -1 ? count : `${t('docflow:tasks.more')} ${to}`}`
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
-      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      backgroundColor: alpha(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
   }),
@@ -149,25 +149,26 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
     : '100%';
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
       </Box>
       <Loading activate={loading} type="linear" variant="indeterminate" color="secondary" noMargin>
         <BoxWithRef
           ref={tasksBox}
-          overflow="auto"
-          style={{ maxHeight }}
-          display="flex"
-          flexGrow={1}
-          flexWrap="wrap"
-          my={2}
-          marginTop="0"
-          marginBottom="0"
-          padding="0"
-          alignItems="stretch"
-          justifyContent="flex-start"
-          alignContent="flex-start"
+          sx={{
+            overflow: 'auto',
+            maxHeight,
+            display: 'flex',
+            flexGrow: 1,
+            flexWrap: 'wrap',
+            marginTop: 0,
+            marginBottom: 0,
+            padding: 0,
+            alignItems: 'stretch',
+            justifyContent: 'flex-start',
+            alignContent: 'flex-start',
+          }}
         >
           {tasks.length > 0 ? (
             <DocFlowTasksTable

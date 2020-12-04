@@ -90,7 +90,7 @@ export interface SettingsProps extends WithTranslation {
   handleClose: () => void;
   handleReset: () => void;
   changeColumn: (columnsVal: PhonebookColumnNames[], filtersVal: PhonebookFilter[]) => void;
-  handleFilters: (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => void;
+  handleFilters: (value?: unknown) => void;
   isAdmin: boolean;
 }
 
@@ -174,7 +174,7 @@ export interface ProfileEditComponentProps {
   handleChange: (
     field: keyof Profile,
   ) => (
-    event: React.ChangeEvent<Record<string, unknown>>,
+    event: React.SyntheticEvent<Element, Event>,
     value: unknown,
     reason?: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<unknown> | undefined,
@@ -188,7 +188,7 @@ export interface TextFieldComponentProps {
   handleChange?: (
     field: keyof Profile,
   ) => (
-    event: React.ChangeEvent<Record<string, unknown>>,
+    event: React.SyntheticEvent<Element, Event>,
     value: unknown,
     reason?: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<unknown> | undefined,
@@ -202,12 +202,7 @@ export interface TextFieldComponentProps {
 export interface DomainComponentProps {
   disabled?: boolean;
   newProfile?: boolean;
-  handleDomain?: (
-    event: React.ChangeEvent<Record<string, unknown>>,
-    value: unknown,
-    reason?: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<unknown> | undefined,
-  ) => void;
+  handleDomain?: (value: string) => void;
   domain?: unknown;
   InputProps?: Partial<OutlinedInputProps>;
   fullWidth?: boolean;

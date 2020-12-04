@@ -126,7 +126,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
         <img src={Logo} alt="logo" className={classes.logo} />
       </Box>
       <form action="" method="POST">
-        <Box display="flex" textAlign="center" justifyContent="center" alignItems="center" height="70vh">
+        <Box sx={{ display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
           <Card className={classes.rootCard}>
             <CardContent className={classes.rootContent}>
               <Card className={classes.card}>

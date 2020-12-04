@@ -6,7 +6,7 @@ import React, { FC, useRef, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import SwipeableViews from 'react-swipeable-views';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField, Typography, Grid } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 //#endregion
 //#region Imports Local
@@ -247,7 +247,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
   const service = useMemo<string>(() => task.service?.code || '', [task.service]);
 
   return (
-    <Box style={{ overflow: 'hidden' }} display="flex" flexDirection="column" position="relative">
+    <Box sx={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       <Paper ref={headerReference} square className={classes.header}>
         <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
           <Tab label={t('tickets:tabs.tab1')} />
@@ -264,7 +264,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
           containerStyle={{ flexGrow: 1 }}
           onSwitching={handleCurrentTab}
         >
-          <Box py={1} px={0.5} style={{ minHeight: contentHeight }}>
+          <Box sx={{ minHeight: contentHeight }}>
             {Array.isArray(favorites) && favorites.length > 0 && (
               <>
                 <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
@@ -298,7 +298,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
                 )}
             </Box>
           </Box>
-          <Box style={{ minHeight: contentHeight }} display="flex" flexDirection="column" alignItems="center" justifyContent="center" p={3}>
+          <Box sx={{ minHeight: contentHeight, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             {submitted ? (
               <Loading activate={loadingCreated} full type="circular" color="secondary" disableShrink size={48}>
                 {errorCreated ? (
@@ -310,16 +310,16 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
             ) : (
               <>
                 {task.route && (
-                  <Box display="grid" gridTemplateColumns="1fr 300px" gridGap="8px" className={classes.formControl}>
+                  <Grid container spacing={8} style={{ gridTemplateColumns: '1fr 300px' }} className={classes.formControl}>
                     <ServicesElement key={`t-${task.route}`} base64 route={task.route} active />
-                    <Box display="flex" justifyContent="flex-end" alignItems="center">
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                       {!isFavorite && (
                         <Button actionType="favorite" onClick={handleAddFavorite}>
                           {t('common:favorite')}
                         </Button>
                       )}
                     </Box>
-                  </Box>
+                  </Grid>
                 )}
                 <FormControl className={classes.formControl} variant="outlined">
                   <Select

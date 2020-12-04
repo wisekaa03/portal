@@ -97,11 +97,7 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({
         wrapper={(child) => (
           <Box
             className={clsx(wrapperClasses, { [classes.absolute]: absolute })}
-            display="flex"
-            height="100%"
-            width="100%"
-            justifyContent="center"
-            alignItems="center"
+            sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}
           >
             {child}
           </Box>
@@ -118,11 +114,13 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({
       wrapper={(child) => (
         <Box
           className={clsx(wrapperClasses, { [classes.absolute]: absolute })}
-          display="flex"
-          height="100%"
-          width="100%"
-          justifyContent="center"
-          alignItems="center"
+          sx={{
+            display: 'flex',
+            height: '100%',
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
           {child}
         </Box>
@@ -130,7 +128,7 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({
     >
       <CircularProgress
         color={color || 'primary'}
-        variant={(variant as 'determinate' | 'indeterminate' | 'static') || 'indeterminate'}
+        variant={(variant as 'determinate' | 'indeterminate') || 'indeterminate'}
         disableShrink={disableShrink || false}
         size={size || 24}
         thickness={thickness || 4}

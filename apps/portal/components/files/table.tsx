@@ -21,6 +21,7 @@ import {
   ListItem,
   ListItemText,
   List,
+  Grid,
 } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
@@ -135,7 +136,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
 
   return (
     <div className={classes.root}>
-      <Box display="flex" className={classes.breadcrumbs} p={1}>
+      <Box sx={{ display: 'flex' }} className={classes.breadcrumbs}>
         <FilesBreadcrumbs
           path={path}
           handleFolder={handleFolder}
@@ -145,7 +146,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
         />
       </Box>
       {filtered.length === 0 ? (
-        <Box display="flex" justifyContent="center" mt={2} color="gray">
+        <Box sx={{ display: 'flex', justifyContent: 'center', color: 'gray' }}>
           <Typography variant="h5">{t('files:notFound')}</Typography>
         </Box>
       ) : (
@@ -153,7 +154,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
           <AutoSizer disableWidth>
             {({ height }) => (
               <Paper elevation={0}>
-                <TableContainer style={{ height: height - 79 - theme.spacing(2) }}>
+                <TableContainer style={{ height: 79 - /* theme.spacing(2) - */ height }}>
                   <Table stickyHeader>
                     <TableHead>
                       <FileTableHeader handleCheckbox={handleCheckbox(filtered)} header={filesColumns} />
@@ -180,8 +181,8 @@ const FilesTableComponent: FC<FilesTableProps> = ({
           {detail && (
             <Dialog open={open} onClose={handleClose} classes={{ paper: classes.paper }}>
               <DialogContent>
-                <Box display="grid" gridGap={16}>
-                  <Box display="flex" justifyContent="center">
+                <Grid container spacing={2}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <FilesListType current={detail} className={clsx(classes.fileIcon, classes.absolute)} fontSize="large" />
                     <Typography variant="subtitle1">{detail.name}</Typography>
                     {/* <Tooltip title={t('files:edit') || ''}>
@@ -212,7 +213,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
                       </List>
                     </Paper>
                   </Box>
-                </Box>
+                </Grid>
               </DialogContent>
               <DialogActions>
                 {detail.type === 'FILE' && (

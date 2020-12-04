@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
     control: {
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      marginTop: theme.spacing() / 4,
+      marginTop: /* theme.spacing() */ 8 / 4,
     },
     controlLeft: {
       'padding': 4,
@@ -208,11 +208,11 @@ const TaskInfoCard = withStyles((theme) => ({
       />
       <CardContent className={classes.content}>
         {profile && (
-          <Box display="flex">
-            <Box mr={2}>
+          <Box sx={{ display: 'flex' }}>
+            <Box>
               <Avatar className={classes.avatar} base64={profile.avatar} alt="photo" />
             </Box>
-            <Box flex={1}>
+            <Box sx={{ flex: 1 }}>
               <Paper>
                 <List className={classes.list} disablePadding>
                   <ListItem divider>
@@ -269,7 +269,7 @@ const FilesArea = withStyles((theme) => ({
       <CardActions disableSpacing className={classes.files}>
         {task?.files?.map((file) => (
           <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
-            <Box display="grid" gridTemplateColumns="20px auto auto">
+            <Box sx={{ display: 'grid', gridTemplateColumns: '20px auto auto' }}>
               <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
               {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
               <Typography variant="body1" key={file.id}>
@@ -302,8 +302,8 @@ const TaskComponent: FC<TaskComponentProps> = ({
   const { t, i18n } = useTranslation();
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Link href={{ pathname: '/tasks' }} as="/tasks" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />

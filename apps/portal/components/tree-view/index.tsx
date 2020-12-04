@@ -111,22 +111,22 @@ export const TreeItem = ({
             {labelText}
           </Typography>
           {active && (
-            <Box mr={1}>
+            <Box>
               <Tooltip title={t('files:addFolder') || ''} enterDelay={1000}>
-                <IconButton className={classes.action} size="small" /* onClick={handleEditItem(1)} */>
+                <IconButton className={classes.action} size="small">
                   <AddIcon />
                 </IconButton>
               </Tooltip>
               {!!id && (
                 <>
                   <Tooltip title={t('files:editFolder') || ''} enterDelay={1000}>
-                    <IconButton className={classes.action} size="small" /* onClick={handleEditItem(2)} */>
+                    <IconButton className={classes.action} size="small">
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
                   {!parent && (
                     <Tooltip title={t('files:deleteFolder') || ''} enterDelay={1000}>
-                      <IconButton className={classes.action} size="small" /* onClick={handleEditItem(3)} */>
+                      <IconButton className={classes.action} size="small">
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>

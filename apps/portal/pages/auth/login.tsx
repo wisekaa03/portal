@@ -44,12 +44,7 @@ const AuthLoginPage: I18nPage<LoginPageProps> = ({ t, initUsername, initDomain }
     setValues({ ...values, [name]: value });
   };
 
-  const handleDomain = (
-    event: React.ChangeEvent<Record<string, unknown>>,
-    value: unknown,
-    // reason: AutocompleteChangeReason,
-    // details?: AutocompleteChangeDetails<unknown>,
-  ) => {
+  const handleDomain = (value?: string) => {
     setValues({ ...values, domain: value as string });
   };
 

@@ -125,7 +125,7 @@ const TasksCard = withStyles((theme) => ({
       <CardActionArea>
         <Link href={{ pathname: '/tasks', query: { where, code } }} as={`/tasks/${where}/${code}`} passHref>
           <CardContent className={classes.content}>
-            <Box display="grid" gridTemplateColumns="45px auto" style={{ height: '50px', overflow: 'hidden' }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '45px auto', height: '50px', overflow: 'hidden' }}>
               <div className={classes.label}>
                 <Icon base64 src={avatar} size={36} />
               </div>
@@ -138,7 +138,7 @@ const TasksCard = withStyles((theme) => ({
               <Typography variant="body1">{subject}</Typography>
             </div>
             <Divider />
-            <Box display="flex" flexDirection="column" color="gray">
+            <Box sx={{ display: 'flex', flexDirection: 'column', color: 'gray' }}>
               <span>
                 {t('tasks:status')}:{' '}
                 <span
@@ -168,24 +168,25 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, find,
   const maxHeight = ticketBox.current ? `calc(100vh - ${(ticketBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
       </Box>
       <BoxWithRef
         ref={ticketBox}
-        overflow="auto"
-        style={{ maxHeight }}
-        display="flex"
-        flexGrow={1}
-        flexWrap="wrap"
-        my={2}
-        marginTop="0"
-        marginBottom="0"
-        padding="16px 0 0 16px"
-        alignItems="stretch"
-        justifyContent="flex-start"
-        alignContent="flex-start"
+        sx={{
+          overflow: 'auto',
+          maxHeight,
+          display: 'flex',
+          flexGrow: 1,
+          flexWrap: 'wrap',
+          marginTop: '0',
+          marginBottom: '0',
+          padding: '16px 0 0 16px',
+          alignItems: 'stretch',
+          justifyContent: 'flex-start',
+          alignContent: 'flex-start',
+        }}
       >
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
           {tasks.length > 0 ? (

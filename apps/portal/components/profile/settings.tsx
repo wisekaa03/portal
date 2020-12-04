@@ -74,7 +74,7 @@ const ProfileSettingsComponent: FC = () => {
     });
   };
 
-  const handleFontSize = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number | number[]) => {
+  const handleFontSize = (event: React.SyntheticEvent<Element, Event>, newValue: number | number[]) => {
     const fontSize = (Array.isArray(newValue) ? newValue.pop() : newValue) || FONT_SIZE_NORMAL;
 
     changeFontSize(fontSize);

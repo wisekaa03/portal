@@ -24,7 +24,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker, LocalizationProvider } from '@material-ui/pickers';
+import { DatePicker, LocalizationProvider } from '@material-ui/lab';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     control: {
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      marginTop: theme.spacing() / 4,
+      marginTop: /* theme.spacing() */ 8 / 4,
     },
     controlLeft: {
       'padding': 4,
@@ -207,21 +207,21 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   const locale = dateLocale(language);
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <IconButton className={classes.controlLeft} onClick={() => router.back()}>
           <ArrowBackIcon />
         </IconButton>
         <div style={{ width: '100%' }} />
         <IsAdmin>
-          <Box flex={1} display="flex" alignItems="center" justifyContent="flex-end">
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Button style={{ marginRight: '10px' }} size="small" disabled={!hasUpdate} onClick={handleSave}>
               {newProfile ? t('common:save') : t('common:accept')}
             </Button>
           </Box>
         </IsAdmin>
       </Box>
-      <Box display="flex" flexDirection="column" p={2} overflow="auto">
+      <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
         <Loading
           wrapperClasses={classes.loading}
           activate={loadingProfile}
@@ -232,7 +232,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           disableShrink
           size={48}
         >
-          <Box display="flex" position="relative" flexDirection="column">
+          <Box sx={{ display: 'flex', position: 'relative', flexDirection: 'column' }}>
             {profile ? (
               <>
                 <Loading
@@ -245,8 +245,8 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   type="circular"
                 />
                 <div className={classes.firstBlock}>
-                  <Box display="flex" className={classes.fullNameBlock}>
-                    <Box mr={1} position="relative">
+                  <Box sx={{ display: 'flex' }} className={classes.fullNameBlock}>
+                    <Box sx={{ position: 'relative' }}>
                       <DropzoneWrapper onDrop={onDrop}>
                         <IconButton className={classes.pickPhoto}>
                           <PhotoCameraIcon />
@@ -275,7 +275,9 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           <Select
                             labelId="profile-contact"
                             autoWidth
-                            onChange={handleChange('contact')}
+                            onChange={(event) =>
+                              handleChange('contact')((event as unknown) as React.SyntheticEvent<Element, Event>, event.target.value)
+                            }
                             color="secondary"
                             value={profile.contact}
                             label={t('phonebook:contact.title')}
@@ -288,7 +290,9 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           <DomainComponent
                             disabled={!newProfile}
                             newProfile={newProfile}
-                            handleDomain={handleChange('loginDomain')}
+                            handleDomain={(value: string) =>
+                              handleChange('loginDomain')(({} as unknown) as React.SyntheticEvent<Element, Event>, value)
+                            }
                             domain={profile.loginDomain}
                             InputProps={newProfile ? InputProps : { readOnly: true }}
                           />

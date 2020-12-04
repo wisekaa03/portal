@@ -3,7 +3,7 @@
 //#region Imports NPM
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Theme, alpha, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Button } from '@material-ui/core';
 //#endregion
 //#region Imports Local
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     personal: {
       flex: 1,
-      background: fade(theme.palette.secondary.main, 0.15),
+      background: alpha(theme.palette.secondary.main, 0.15),
       padding: theme.spacing(),
       color: theme.palette.secondary.main,
       borderRadius: theme.shape.borderRadius,
@@ -52,14 +52,14 @@ const ProfileInfoComponent: FC = () => {
   return (
     <ProfileContext.Consumer>
       {({ user }) => (
-        <Box display="flex" flexWrap="wrap">
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
           {user && (
             <>
-              <Box mr={1} mb={1}>
+              <Box>
                 <Avatar fullSize className={classes.avatar} profile={user.profile} alt="photo" />
               </Box>
               <div className={classes.personal}>
-                <Box display="flex" flexDirection="column" mb={1}>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   {user.profile.lastName && <span>{user.profile.lastName}</span>}
                   {user.profile.firstName && <span>{user.profile.firstName}</span>}
                   {user.profile.middleName && <span>{user.profile.middleName}</span>}

@@ -1,11 +1,11 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC, useRef } from 'react';
+import React, { FC } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { TFunction, I18n } from 'next-i18next';
-import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import { Theme, alpha, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
   IconButton,
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
-      backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      backgroundColor: alpha(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     controlLeft: {
@@ -66,11 +66,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps> = ({ loading, internalDocument }) => {
   const classes = useStyles({});
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box display="flex" alignItems="center" p={1} className={classes.control}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Link href={{ pathname: '/docflow' }} as="/docflow" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />
