@@ -165,82 +165,73 @@ const FilesArea = withStyles((theme) => ({
     },
     '&:visited': { color: theme.palette.primary.main },
   },
-}))(({ classes, task, loading, i18n, t, handleDownload }: DocFlowFileProps) => {
-  if (Array.isArray(task?.targets) && task.targets.length > 0) {
-    return (
-      <CardActions key={task.id} disableSpacing className={classes.files}>
-        {task?.targets?.map((target) => {
-          const name = `${target.name}: ${target?.target.name}`;
+}))(({ classes, task, loading, i18n, t, handleDownload }: DocFlowFileProps) => (
+  <CardActions key={task.id} disableSpacing className={classes.files}>
+    {task.targets?.map((target) => {
+      const name = `${target.name}: ${target.target.name}`;
 
-          const table = target?.target?.files?.object?.map((file) => (
-            <TableRow hover key={file.id}>
-              <TableCell style={{ width: '20px', minWidth: '20px' }} />
-              <TableCell style={{ width: '36px' }}>
-                <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
-                  <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
-                  {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
-                </IconButton>
-              </TableCell>
-              <TableCell style={{ width: '90%' }}>
-                <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(file)}>
-                  <Typography variant="body2">{`${file.name}.${file.extension}`}</Typography>
-                </IconButton>
-              </TableCell>
-              <TableCell style={{ minWidth: '260px' }}>
-                <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
-                  {file.author?.name && (
-                    <Typography align="right" variant="body2">
-                      {file.author.name}
-                    </Typography>
-                  )}
-                </IconButton>
-              </TableCell>
-              <TableCell style={{ width: '174px', minWidth: '174px' }}>
-                <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
-                  <Typography align="right" variant="body2">
-                    {dateFormat(file.modificationDateUniversal, i18n, t('docflow:undefined'))}
-                  </Typography>
-                </IconButton>
-              </TableCell>
-              <TableCell style={{ textAlign: 'right', width: '100px', minWidth: '100px' }}>
-                <IconButton className={clsx(classes.file, classes.size)} size="small" onClick={() => handleDownload(file)}>
-                  {file.size && (
-                    <Typography align="right" variant="body2">
-                      {filesize(file.size, { locale: i18n.language })}
-                    </Typography>
-                  )}
-                </IconButton>
+      const table = target.target.files?.object?.map((file) => (
+        <TableRow hover key={file.id}>
+          <TableCell style={{ width: '20px', minWidth: '20px' }} />
+          <TableCell style={{ width: '36px' }}>
+            <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
+              {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ width: '90%' }}>
+            <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              <Typography variant="body2">{`${file.name}.${file.extension}`}</Typography>
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ minWidth: '260px' }}>
+            <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              {file.author?.name && (
+                <Typography align="right" variant="body2">
+                  {file.author.name}
+                </Typography>
+              )}
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ width: '174px', minWidth: '174px' }}>
+            <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              <Typography align="right" variant="body2">
+                {dateFormat(file.modificationDateUniversal, i18n, t('docflow:undefined'))}
+              </Typography>
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ textAlign: 'right', width: '100px', minWidth: '100px' }}>
+            <IconButton className={clsx(classes.file, classes.size)} size="small" onClick={() => handleDownload(file)}>
+              {file.size && (
+                <Typography align="right" variant="body2">
+                  {filesize(file.size, { locale: i18n.language })}
+                </Typography>
+              )}
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      ));
+
+      return (
+        <Table key={target.target.id} aria-label="target files" className={classes.table}>
+          <TableHead>
+            <TableRow hover>
+              <TableCell colSpan={6}>
+                <Link href={{ pathname: '/docflow/target', query: { id: target?.target.id } }} as={`/docflow/target/${target.target.id}`}>
+                  <a className={classes.link}>
+                    <KeyboardArrowRightIcon />
+                    <Typography component="span">{name}</Typography>
+                  </a>
+                </Link>
               </TableCell>
             </TableRow>
-          ));
-
-          return (
-            <Table key={target.target.id} aria-label="target files" className={classes.table}>
-              <TableHead>
-                <TableRow hover>
-                  <TableCell colSpan={6}>
-                    <Link
-                      href={{ pathname: '/docflow/target', query: { id: target?.target.id } }}
-                      as={`/docflow/target/${target?.target.id}`}
-                    >
-                      <a className={classes.link}>
-                        <KeyboardArrowRightIcon />
-                        <Typography component="span">{name}</Typography>
-                      </a>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{table}</TableBody>
-            </Table>
-          );
-        })}
-      </CardActions>
-    );
-  }
-
-  return null;
-});
+          </TableHead>
+          <TableBody>{table}</TableBody>
+        </Table>
+      );
+    })}
+  </CardActions>
+));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -472,6 +463,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
               </Card>
               <div className={classes.fullRow}>
                 <TextField
+                  disabled={!task.changeRight}
                   label={t('docflow:headers.comments')}
                   multiline
                   fullWidth
@@ -482,7 +474,11 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
                 />
               </div>
               <div className={classes.fullRow}>
-                <DocFlowProcessStepButtons loading={loadingProcessStep} handleProcessStep={handleProcessStep} task={task} />
+                <DocFlowProcessStepButtons
+                  loading={!task.changeRight || loadingProcessStep}
+                  handleProcessStep={handleProcessStep}
+                  task={task}
+                />
               </div>
             </Box>
           </BoxWithRef>
