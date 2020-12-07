@@ -39,8 +39,12 @@ const useStyles = makeStyles((/* theme: Theme */) =>
         flex: 1,
       },
     },
-    drawerOpen: { display: 'flex', flexGrow: 1 },
-    drawerClose: { display: 'flex', flexGrow: 1 },
+    drawer: {
+      display: 'flex',
+      flexGrow: 1,
+    },
+    drawerOpen: {},
+    drawerClose: {},
   }));
 
 export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, refetchLoading }) => {
@@ -131,7 +135,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, re
         handlePopoverClose={handlePopoverClose}
         handleLogout={handleLogout}
       />
-      <Box className={drawerOpen ? 'drawerOpen' : 'drawerClose'}>
+      <Box className={clsx(classes.drawer, { drawerOpen, drawerClose: !drawerOpen })}>
         <DrawerComponent open={drawerOpen} isMobile={isMobile} handleOpen={handleDrawerOpen} />
         <Box id="content" className={classes.content}>
           {children}

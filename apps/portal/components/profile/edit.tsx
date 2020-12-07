@@ -24,7 +24,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker, LocalizationProvider } from '@material-ui/lab';
+import { DatePicker, LocalizationProvider } from '@material-ui/pickers';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';

@@ -101,7 +101,7 @@ const ProfileAvatar = withStyles({
     {profile ? (
       <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
     ) : (
-      <Skeleton className={classes.avatar} variant="circular" />
+      <Skeleton className={classes.avatar} variant="circle" />
     )}
   </Box>
 ));
@@ -114,7 +114,7 @@ const ProfileName = withStyles((theme) => ({
     textAlign: 'center',
   },
 }))(({ classes, profile, type }: PhonebookProfileNameProps) => (
-  <h2 className={classes.root}>{profile ? profile[type] : <Skeleton variant="rectangular" width={120} />}</h2>
+  <h2 className={classes.root}>{profile ? profile[type] : <Skeleton variant="rect" width={120} />}</h2>
 ));
 
 const ProfileField = withStyles((theme) => ({
@@ -152,7 +152,7 @@ const ProfileField = withStyles((theme) => ({
                 {text}
               </Typography>
             ) : (
-              <Skeleton variant="rectangular" width={250} height={25} />
+              <Skeleton variant="rect" width={250} height={25} />
             )
           }
         />

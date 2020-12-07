@@ -4,7 +4,7 @@
 import React, { FC } from 'react';
 import { ButtonGroup, TextField, Grid } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, LocalizationProvider } from '@material-ui/lab';
+import { DateTimePicker, LocalizationProvider } from '@material-ui/pickers';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local

@@ -97,7 +97,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
       onClose={handleClose}
       loading={loadingDomain}
       value={rawDomain}
-      onChange={(event: React.SyntheticEvent<Element, Event>, value: string) => handleDomain && handleDomain(value)}
+      onChange={(event, value: string) => handleDomain && handleDomain(value)}
       renderInput={(parameters: Record<string, any>) => (
         <TextField
           {...propsDomain}
