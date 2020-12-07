@@ -53,7 +53,7 @@
   dependencies:
     cross-fetch "^3.0.6"
 
-"@angular-devkit/core@11.0.0", "@angular-devkit/core@11.0.1", "@angular-devkit/core@11.0.3", "@angular-devkit/core@^11":
+"@angular-devkit/core@11.0.1", "@angular-devkit/core@11.0.3", "@angular-devkit/core@^11":
   version "11.0.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-11.0.3.tgz#2acc7c90f1597b87455e0a5f93ebb1cd01b873aa"
   integrity sha512-gJRiBj0gWDR2VtIvLvwwc/GM2MZvg1xw69ZbBJ1VuUgDqPBHdC8q3UMW3B82wdhxK+RBYa7ZOJxtIVggaHkm9g==
@@ -77,7 +77,7 @@
     minimist "1.2.5"
     symbol-observable "2.0.3"
 
-"@angular-devkit/schematics@11.0.0", "@angular-devkit/schematics@11.0.1", "@angular-devkit/schematics@^11":
+"@angular-devkit/schematics@11.0.1", "@angular-devkit/schematics@^11":
   version "11.0.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-11.0.3.tgz#fc7fb9432d9e2678162794afdaf4fd338e731509"
   integrity sha512-VZnqgnnfyzyMluIDvGp+ZlDU2P9BnjrhacBOdqBS/jNQ7oxyE0AWrUApGXcejOJ13Z7pEf31E64P3bImcjwP+A==
@@ -2101,12 +2101,12 @@
     tslib "2.0.3"
 
 "@nestjs/schematics@^7.1.0":
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-7.2.2.tgz#ccd7512caf993983aaa338d05d82e12a36eab0ab"
-  integrity sha512-3y0LE1z50CEzXr5rFlOpaJ+0ctkyQWtREkMuvQd/SUILF75+6cNTqmfjjnUJw12vdkdkc+zsksgXFWEPkns4Pg==
+  version "7.2.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-7.2.5.tgz#60945ee12136dde78cf01c706413e7676e4bf494"
+  integrity sha512-RwoPNV6ot1sCq+/CDH9fDAE/NX/r6UtzDGn+S/XiEIP4AuRqUphKPyAMxXc8k4dLi3VFRCchAshYQfaOgDc9Qg==
   dependencies:
-    "@angular-devkit/core" "11.0.0"
-    "@angular-devkit/schematics" "11.0.0"
+    "@angular-devkit/core" "11.0.1"
+    "@angular-devkit/schematics" "11.0.1"
     fs-extra "9.0.1"
     pluralize "8.0.0"
 
