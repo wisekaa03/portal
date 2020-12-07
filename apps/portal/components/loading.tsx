@@ -72,7 +72,7 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({
   noMargin,
   full = false,
   wrapperClasses,
-  absolute,
+  absolute = true,
   children,
 }) => {
   const classes = useStyles({});

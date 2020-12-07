@@ -120,6 +120,8 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
+      display: 'flex',
+      alignItems: 'center',
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
@@ -159,7 +161,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors
 
   return (
     <Box style={{ display: 'flex', flexDirection: 'column' }}>
-      <Box style={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+      <Box className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
       </Box>
       <Loading activate={loading} type="linear" variant="indeterminate" color="secondary" noMargin>

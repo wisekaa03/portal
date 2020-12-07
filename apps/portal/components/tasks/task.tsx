@@ -62,9 +62,9 @@ const useStyles = makeStyles((theme: Theme) =>
     control: {
       display: 'flex',
       alignItems: 'center',
+      minHeight: theme.spacing(6),
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      marginTop: /* theme.spacing() */ 8 / 4,
     },
     controlLeft: {
       'padding': 4,
