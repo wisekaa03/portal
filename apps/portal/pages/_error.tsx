@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     flexGrow: 1,
     padding: theme.spacing(6),
+    direction: 'column',
+    justify: 'center',
+    alignItems: 'center',
 
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(2),
@@ -68,7 +71,7 @@ const ErrorPage: I18nPage<{ statusCode?: number }> = ({ statusCode, t, ...rest }
         <title>{t(title(statusCode))}</title>
       </Head>
       <MaterialUI {...rest}>
-        <Grid className={classes.grid} container style={{ /* direction: 'column', */ justify: 'center', alignItems: 'center' }}>
+        <Grid className={classes.grid} container>
           <Grid item>
             <Paper className={classes.paper}>
               <Typography variant="h3" component="h3">
