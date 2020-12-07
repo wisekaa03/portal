@@ -60,6 +60,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {},
     control: {
+      display: 'flex',
+      alignItems: 'center',
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
       marginTop: /* theme.spacing() */ 8 / 4,
@@ -208,11 +210,11 @@ const TaskInfoCard = withStyles((theme) => ({
       />
       <CardContent className={classes.content}>
         {profile && (
-          <Box sx={{ display: 'flex' }}>
+          <Box style={{ display: 'flex' }}>
             <Box>
               <Avatar className={classes.avatar} base64={profile.avatar} alt="photo" />
             </Box>
-            <Box sx={{ flex: 1 }}>
+            <Box style={{ flex: 1 }}>
               <Paper>
                 <List className={classes.list} disablePadding>
                   <ListItem divider>
@@ -269,7 +271,7 @@ const FilesArea = withStyles((theme) => ({
       <CardActions disableSpacing className={classes.files}>
         {task?.files?.map((file) => (
           <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(task, file)}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '20px auto auto' }}>
+            <Box style={{ display: 'grid', gridTemplateColumns: '20px auto auto' }}>
               <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
               {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
               <Typography variant="body1" key={file.id}>
@@ -302,8 +304,8 @@ const TaskComponent: FC<TaskComponentProps> = ({
   const { t, i18n } = useTranslation();
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box className={classes.control}>
         <Link href={{ pathname: '/tasks' }} as="/tasks" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />

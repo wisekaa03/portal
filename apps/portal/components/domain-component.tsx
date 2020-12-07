@@ -98,7 +98,7 @@ const DomainComponent: FC<DomainComponentProps> = ({
       loading={loadingDomain}
       value={rawDomain}
       onChange={(event: React.SyntheticEvent<Element, Event>, value: string) => handleDomain && handleDomain(value)}
-      renderInput={(parameters) => (
+      renderInput={(parameters: Record<string, any>) => (
         <TextField
           {...propsDomain}
           {...parameters}

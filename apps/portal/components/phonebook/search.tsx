@@ -18,11 +18,16 @@ const panelHeight = 48;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     panel: {
+      display: 'flex',
+
+      alignItems: 'center',
       height: panelHeight,
       backgroundColor: '#F7FBFA',
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     search: {
+      'flexGrow': 1,
+      'position': 'relative',
       'backgroundColor': fade(theme.palette.common.white, 0.15),
       '&:hover': {
         backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -88,10 +93,10 @@ const PhonebookSearch = forwardRef<HTMLInputElement, PhonebookSearchProps>(
     const showedSuggestions = suggestions.length > 0;
 
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.panel}>
-        <Box sx={{ flexGrow: 1, position: 'relative' }} className={classes.search}>
+      <Box className={classes.panel}>
+        <Box className={classes.search}>
           <Box
-            sx={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             className={classes.searchIcon}
           >
             <SearchIcon color="secondary" />

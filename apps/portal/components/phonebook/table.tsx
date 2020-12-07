@@ -50,7 +50,7 @@ const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, c
     hasLoadMore ? loadMoreItems() : undefined;
 
   return (
-    <Box id="phonebook-wrap" sx={{ display: 'flex', flexGrow: 1 }}>
+    <Box style={{ display: 'flex', flexGrow: 1 }} id="phonebook-wrap">
       <Table component="div" className={classes.table}>
         <TableBody component="div" className={classes.tbody}>
           <InfiniteLoader isItemLoaded={isRowLoaded(data)} itemCount={itemCount} loadMoreItems={loadMoreItemsFunction} threshold={25}>

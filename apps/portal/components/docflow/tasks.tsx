@@ -4,7 +4,7 @@
 import React, { FC, useRef, ReactNode } from 'react';
 import Link from 'next/link';
 import type { TFunction, i18n } from 'i18next';
-import { Theme, alpha, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
   InputBase,
@@ -95,8 +95,8 @@ const DocFlowTasksTable = withStyles((theme) => ({
       count={tasks.length}
       rowsPerPage={rowsPerPage}
       page={page}
-      onPageChange={handleChangePage}
-      onRowsPerPageChange={handleChangeRowsPerPage}
+      onChangePage={handleChangePage}
+      onChangeRowsPerPage={handleChangeRowsPerPage}
       labelRowsPerPage={t('docflow:tasks.rowsPerPage')}
       labelDisplayedRows={({ from, to, count }) =>
         `${from}-${to} ${t('docflow:tasks.to')} ${count !== -1 ? count : `${t('docflow:tasks.more')} ${to}`}`
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
-      backgroundColor: alpha(theme.palette.secondary.main, 0.05),
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
   }),
@@ -149,14 +149,14 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
     : '100%';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box style={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
       </Box>
       <Loading activate={loading} type="linear" variant="indeterminate" color="secondary" noMargin>
         <BoxWithRef
           ref={tasksBox}
-          sx={{
+          style={{
             overflow: 'auto',
             maxHeight,
             display: 'flex',

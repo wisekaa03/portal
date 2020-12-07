@@ -76,8 +76,8 @@ const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, hand
         loading={loading}
         options={options}
         value={value}
-        onChange={(event, valueChanged) => handleChange && handleChange(field)(event, valueChanged)}
-        renderInput={(parameters) => (
+        onChange={(event: any, valueChanged: any) => handleChange && handleChange(field)(event, valueChanged)}
+        renderInput={(parameters: Record<string, any>) => (
           <TextField
             {...props}
             {...parameters}

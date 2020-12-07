@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     breadcrumbs: {
+      display: 'flex',
       fontSize: '1.2em',
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
@@ -136,7 +137,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
 
   return (
     <div className={classes.root}>
-      <Box sx={{ display: 'flex' }} className={classes.breadcrumbs}>
+      <Box className={classes.breadcrumbs}>
         <FilesBreadcrumbs
           path={path}
           handleFolder={handleFolder}
@@ -146,7 +147,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
         />
       </Box>
       {filtered.length === 0 ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', color: 'gray' }}>
+        <Box style={{ display: 'flex', justifyContent: 'center', color: 'gray' }}>
           <Typography variant="h5">{t('files:notFound')}</Typography>
         </Box>
       ) : (
@@ -182,7 +183,7 @@ const FilesTableComponent: FC<FilesTableProps> = ({
             <Dialog open={open} onClose={handleClose} classes={{ paper: classes.paper }}>
               <DialogContent>
                 <Grid container spacing={2}>
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <FilesListType current={detail} className={clsx(classes.fileIcon, classes.absolute)} fontSize="large" />
                     <Typography variant="subtitle1">{detail.name}</Typography>
                     {/* <Tooltip title={t('files:edit') || ''}>

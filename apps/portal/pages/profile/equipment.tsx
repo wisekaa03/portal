@@ -50,17 +50,17 @@ const ProfileEquipmentPage: I18nPage = ({ t, ...rest }) => {
         <title>{t('profile:title')}</title>
       </Head>
       <MaterialUI {...rest}>
-        <Box display="flex" flexDirection="column">
+        <Box style={{ display: 'flex', flexDirection: 'column' }}>
           <Loading activate={!profile?.user} noMargin type="linear" variant="indeterminate" />
-          <Box display="flex" flexDirection="column" p={2}>
-            <Box display="flex">
+          <Box style={{ display: 'flex', flexDirection: 'column' }}>
+            <Box style={{ display: 'flex' }}>
               <Link href={{ pathname: '/profile' }} as="/profile" passHref>
                 <IconButton>
                   <ArrowBackIcon />
                 </IconButton>
               </Link>
             </Box>
-            <Box display="flex" flexDirection="column">
+            <Box style={{ display: 'flex', flexDirection: 'column' }}>
               {profile && profile.user && (
                 <div>
                   <Paper>

@@ -232,7 +232,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
     setSettingsOpen(false);
   };
 
-  const handleFilters = (event: React.ChangeEvent<Record<string, unknown>>, value: unknown) => {
+  const handleFilters = (value: unknown) => {
     setFilters([{ name: 'loginDomain', value: value as string }]);
     refetch();
   };
@@ -258,7 +258,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
         <title>{t('phonebook:title')}</title>
       </Head>
       <MaterialUI refetchComponent={refetch} refetchLoading={loading} {...rest}>
-        <Box display="flex" flexDirection="column">
+        <Box style={{ display: 'flex', flexDirection: 'column' }}>
           <PhonebookSearch
             ref={searchRef}
             search={_search}

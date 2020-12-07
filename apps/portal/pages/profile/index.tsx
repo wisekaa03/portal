@@ -18,7 +18,7 @@ const ProfilePage: I18nPage = ({ t, ...rest }) => (
       <title>{t('profile:title')}</title>
     </Head>
     <MaterialUI {...rest}>
-      <Box display="flex" flexDirection="column" p={1}>
+      <Box style={{ display: 'flex', flexDirection: 'column' }}>
         <ProfileInfoComponent />
         <ProfileSettingsComponent />
       </Box>

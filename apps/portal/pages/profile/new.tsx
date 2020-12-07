@@ -95,7 +95,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     }
   };
 
-  const handleChange = (name: keyof Profile) => (event: React.ChangeEvent<Record<string, unknown>>, changedValue?: unknown) => {
+  const handleChange = (name: keyof Profile) => (event: React.SyntheticEvent<Element, Event>, changedValue?: unknown) => {
     const element = (event.target as unknown) as HTMLInputElement;
     let value: unknown;
     if (changedValue && typeof changedValue === 'object' && React.isValidElement<{ value: string; children: string }>(changedValue)) {

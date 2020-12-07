@@ -247,7 +247,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
   const service = useMemo<string>(() => task.service?.code || '', [task.service]);
 
   return (
-    <Box sx={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <Box style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       <Paper ref={headerReference} square className={classes.header}>
         <Tabs value={currentTab} indicatorColor="secondary" textColor="secondary" onChange={handleChangeTab}>
           <Tab label={t('tickets:tabs.tab1')} />
@@ -264,7 +264,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
           containerStyle={{ flexGrow: 1 }}
           onSwitching={handleCurrentTab}
         >
-          <Box sx={{ minHeight: contentHeight }}>
+          <Box style={{ minHeight: contentHeight }}>
             {Array.isArray(favorites) && favorites.length > 0 && (
               <>
                 <Box className={clsx(classes.blockTitle, classes.blockTitleWithIcon)}>
@@ -298,7 +298,9 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
                 )}
             </Box>
           </Box>
-          <Box sx={{ minHeight: contentHeight, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Box
+            style={{ minHeight: contentHeight, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+          >
             {submitted ? (
               <Loading activate={loadingCreated} full type="circular" color="secondary" disableShrink size={48}>
                 {errorCreated ? (
@@ -312,7 +314,7 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
                 {task.route && (
                   <Grid container spacing={8} style={{ gridTemplateColumns: '1fr 300px' }} className={classes.formControl}>
                     <ServicesElement key={`t-${task.route}`} base64 route={task.route} active />
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <Box style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                       {!isFavorite && (
                         <Button actionType="favorite" onClick={handleAddFavorite}>
                           {t('common:favorite')}

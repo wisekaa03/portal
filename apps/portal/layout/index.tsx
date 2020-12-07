@@ -23,6 +23,11 @@ import DrawerComponent from '@front/components/drawer';
 
 const useStyles = makeStyles((/* theme: Theme */) =>
   createStyles({
+    entry: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100vh',
+    },
     content: {
       'flex': 1,
       'display': 'flex',
@@ -34,8 +39,8 @@ const useStyles = makeStyles((/* theme: Theme */) =>
         flex: 1,
       },
     },
-    drawerOpen: {},
-    drawerClose: {},
+    drawerOpen: { display: 'flex', flexGrow: 1 },
+    drawerClose: { display: 'flex', flexGrow: 1 },
   }));
 
 export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, refetchLoading }) => {
@@ -115,7 +120,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, re
   }, [lgUp, drawer, isMobile, ifModal, isCollapse]);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <Box className={classes.entry}>
       <AppBarComponent
         open={Boolean(anchorElement)}
         anchorEl={anchorElement}
@@ -126,7 +131,7 @@ export const MaterialUI: FC<MaterialUIProps> = ({ children, refetchComponent, re
         handlePopoverClose={handlePopoverClose}
         handleLogout={handleLogout}
       />
-      <Box sx={{ display: 'flex', flexGrow: 1 }} className={drawerOpen ? 'drawerOpen' : 'drawerClose'}>
+      <Box className={drawerOpen ? 'drawerOpen' : 'drawerClose'}>
         <DrawerComponent open={drawerOpen} isMobile={isMobile} handleOpen={handleDrawerOpen} />
         <Box id="content" className={classes.content}>
           {children}

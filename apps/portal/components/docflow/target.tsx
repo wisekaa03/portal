@@ -5,7 +5,7 @@ import React, { FC } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { TFunction, I18n } from 'next-i18next';
-import { Theme, alpha, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Theme, fade, makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Box,
   IconButton,
@@ -40,7 +40,10 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
-      backgroundColor: alpha(theme.palette.secondary.main, 0.05),
+      display: 'flex',
+
+      alignItems: 'center',
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     controlLeft: {
@@ -69,8 +72,8 @@ const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps
   const { t } = useTranslation();
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box className={classes.control}>
         <Link href={{ pathname: '/docflow' }} as="/docflow" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />

@@ -18,8 +18,13 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: fade(theme.palette.common.white, 0.25),
       },
       'width': '100%',
+      'position': 'relative',
     },
     icon: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
       color: theme.palette.secondary.main,
       width: theme.spacing(7),
       height: '100%',
@@ -55,8 +60,8 @@ const SearchComponent: FC<SearchComponentProps> = ({ value, handleChange }) => {
   const { t } = useTranslation();
 
   return (
-    <Box sx={{ position: 'relative' }} className={classes.root}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute' }} className={classes.icon}>
+    <Box className={classes.root}>
+      <Box className={classes.icon}>
         <SearchIcon />
       </Box>
       <InputBase

@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     flexGrow: 1,
     padding: theme.spacing(6),
-    direction: 'column',
+    // direction: 'column',
     justify: 'center',
     alignItems: 'center',
 

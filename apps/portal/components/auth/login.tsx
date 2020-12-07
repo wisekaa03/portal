@@ -37,6 +37,13 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundPosition: 'bottom center',
       height: '100vh',
     },
+    flex: {
+      display: 'flex',
+      textAlign: 'center',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '70vh',
+    },
     logo: {
       height: '11vh',
       margin: '10px auto',
@@ -126,7 +133,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({
         <img src={Logo} alt="logo" className={classes.logo} />
       </Box>
       <form action="" method="POST">
-        <Box sx={{ display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <Box className={classes.flex}>
           <Card className={classes.rootCard}>
             <CardContent className={classes.rootContent}>
               <Card className={classes.card}>

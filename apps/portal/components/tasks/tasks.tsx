@@ -65,6 +65,8 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
+      display: 'flex',
+      alignItems: 'center',
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
@@ -125,7 +127,7 @@ const TasksCard = withStyles((theme) => ({
       <CardActionArea>
         <Link href={{ pathname: '/tasks', query: { where, code } }} as={`/tasks/${where}/${code}`} passHref>
           <CardContent className={classes.content}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '45px auto', height: '50px', overflow: 'hidden' }}>
+            <Box style={{ display: 'grid', gridTemplateColumns: '45px auto', height: '50px', overflow: 'hidden' }}>
               <div className={classes.label}>
                 <Icon base64 src={avatar} size={36} />
               </div>
@@ -138,7 +140,7 @@ const TasksCard = withStyles((theme) => ({
               <Typography variant="body1">{subject}</Typography>
             </div>
             <Divider />
-            <Box sx={{ display: 'flex', flexDirection: 'column', color: 'gray' }}>
+            <Box style={{ display: 'flex', flexDirection: 'column', color: 'gray' }}>
               <span>
                 {t('tasks:status')}:{' '}
                 <span
@@ -168,13 +170,13 @@ const TasksComponent: FC<TasksComponentProps> = ({ loading, tasks, status, find,
   const maxHeight = ticketBox.current ? `calc(100vh - ${(ticketBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box className={classes.control}>
         <Search value={find} handleChange={handleSearch} />
       </Box>
       <BoxWithRef
         ref={ticketBox}
-        sx={{
+        style={{
           overflow: 'auto',
           maxHeight,
           display: 'flex',

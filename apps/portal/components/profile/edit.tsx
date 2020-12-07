@@ -42,6 +42,8 @@ import ProfileTextFieldComponent from './text-field';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     control: {
+      display: 'flex',
+      alignItems: 'center',
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
       marginTop: /* theme.spacing() */ 8 / 4,
@@ -207,21 +209,21 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
   const locale = dateLocale(language);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box className={classes.control}>
         <IconButton className={classes.controlLeft} onClick={() => router.back()}>
           <ArrowBackIcon />
         </IconButton>
         <div style={{ width: '100%' }} />
         <IsAdmin>
-          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Box style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Button style={{ marginRight: '10px' }} size="small" disabled={!hasUpdate} onClick={handleSave}>
               {newProfile ? t('common:save') : t('common:accept')}
             </Button>
           </Box>
         </IsAdmin>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+      <Box style={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
         <Loading
           wrapperClasses={classes.loading}
           activate={loadingProfile}
@@ -232,7 +234,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
           disableShrink
           size={48}
         >
-          <Box sx={{ display: 'flex', position: 'relative', flexDirection: 'column' }}>
+          <Box style={{ display: 'flex', position: 'relative', flexDirection: 'column' }}>
             {profile ? (
               <>
                 <Loading
@@ -245,8 +247,8 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                   type="circular"
                 />
                 <div className={classes.firstBlock}>
-                  <Box sx={{ display: 'flex' }} className={classes.fullNameBlock}>
-                    <Box sx={{ position: 'relative' }}>
+                  <Box style={{ display: 'flex' }} className={classes.fullNameBlock}>
+                    <Box style={{ position: 'relative' }}>
                       <DropzoneWrapper onDrop={onDrop}>
                         <IconButton className={classes.pickPhoto}>
                           <PhotoCameraIcon />

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useLazyQuery } from '@apollo/client';
 import { Theme, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
-import Skeleton from '@material-ui/core/Skeleton';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { Box, Card, CardContent, Paper, List, ListItem, ListItemText, IconButton, Typography } from '@material-ui/core';
 import { DomainRounded, ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, PersonRounded, CallEndRounded } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
@@ -97,7 +97,7 @@ const ProfileAvatar = withStyles({
     width: '180px',
   },
 })(({ classes, profile }: PhonebookProfileModule<'avatar'>) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     {profile ? (
       <Avatar fullSize className={classes.avatar} profile={profile} alt="photo" />
     ) : (
@@ -222,7 +222,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
               [classes.fullRow]: error,
             })}
           >
-            <Box sx={{ justifyContent: 'space-between', display: 'flex' }}>
+            <Box style={{ justifyContent: 'space-between', display: 'flex' }}>
               <Link href={{ pathname: '/phonebook' }} as="/phonebook">
                 <IconButton size="small">
                   <ArrowBackRounded />
@@ -239,58 +239,58 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
             </Box>
             <>
               <ProfileAvatar profile={profile} />
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <ProfileName profile={profile} type="lastName" />
                 <ProfileName profile={profile} type="firstName" />
                 <ProfileName profile={profile} type="middleName" />
               </Box>
               {profile?.disabled && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.disabled}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.disabled}>
                   <span>{t('phonebook:fields.disabled')}</span>
                 </Box>
               )}
               {profile?.notShowing && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.notShowing}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.notShowing}>
                   <span>{t('phonebook:fields.notShowing')}</span>
                 </Box>
               )}
               {profile?.nameEng && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <span>{profile.nameEng}</span>
                 </Box>
               )}
               {profile?.mobile && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
                   <PhoneAndroidRounded />
                   <span>{profile.mobile}</span>
                 </Box>
               )}
               {profile?.telephone && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
                   <CallEndRounded />
                   <span>{profile.telephone}</span>
                 </Box>
               )}
               {profile?.workPhone && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
                   <PhoneRounded />
                   <span>{profile.workPhone}</span>
                 </Box>
               )}
               {profile?.loginDomain && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
                   <DomainRounded className={classes.username} />
                   <span>{profile.loginDomain}</span>
                 </Box>
               )}
               {profile?.username && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className={classes.telephone}>
                   <PersonRounded className={classes.username} />
                   <span>{profile.username}</span>
                 </Box>
               )}
               {profile?.email && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <ComposeLink className={classes.email} to={profile.email}>
                     {profile.email}
                   </ComposeLink>

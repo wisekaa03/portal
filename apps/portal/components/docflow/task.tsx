@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import filesize from 'filesize';
 import { TFunction, I18n } from 'next-i18next';
-import { Theme, alpha, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import { Theme, fade, darken, makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Box,
   IconButton,
@@ -55,7 +55,7 @@ import DocFlowProcessStepButtons from './processStep';
 const TaskInfoCard = withStyles((theme) => ({
   root: {
     borderRadius: theme.shape.borderRadius,
-    background: alpha(theme.palette.secondary.main, 0.15),
+    background: fade(theme.palette.secondary.main, 0.15),
   },
   center: {
     textAlign: 'center',
@@ -99,11 +99,11 @@ const TaskInfoCard = withStyles((theme) => ({
       />
       <CardContent className={classes.content}>
         {profile && (
-          <Box sx={{ display: 'flex' }}>
+          <Box style={{ display: 'flex' }}>
             <Box>
               <Avatar className={classes.avatar} alt="photo" />
             </Box>
-            <Box sx={{ flex: 1 }}>
+            <Box style={{ flex: 1 }}>
               <Paper>
                 <List className={classes.list} disablePadding>
                   <ListItem divider>
@@ -239,7 +239,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#949494',
     },
     control: {
-      backgroundColor: alpha(theme.palette.secondary.main, 0.05),
+      backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
     controlLeft: {
@@ -306,11 +306,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       alignItems: 'center',
       alignContent: 'center',
-      background: alpha(theme.palette.secondary.main, 0.15),
+      background: fade(theme.palette.secondary.main, 0.15),
       overflow: 'visible',
     },
     background: {
-      background: alpha(theme.palette.secondary.main, 0.15),
+      background: fade(theme.palette.secondary.main, 0.15),
     },
     statusContent: {
       display: 'flex',
@@ -343,8 +343,8 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
   const maxHeight = tasksBox.current ? `calc(100vh - ${(tasksBox.current as any)?.offsetTop}px)` : '100%';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box style={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
         <Link href={{ pathname: '/docflow' }} as="/docflow" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />
@@ -356,7 +356,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
         {task ? (
           <BoxWithRef
             ref={tasksBox}
-            sx={{
+            style={{
               display: 'flex',
               overflow: 'auto',
               flexGrow: 1,

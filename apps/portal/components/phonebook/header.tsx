@@ -48,7 +48,7 @@ const PhonebookHeader: RefForwardingComponent<Component, HeaderPropsRef> = ({ ch
   return (
     <PhonebookHeaderContext.Consumer>
       {(context) => (
-        <Box ref={ref} sx={{ flexGrow: 1, height: style.height }}>
+        <Box ref={ref} style={{ flexGrow: 1, height: style.height }}>
           <>
             {context && (
               <TableRow component="div" className={classes.row}>

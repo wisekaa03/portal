@@ -16,6 +16,9 @@ import FilesTableComponent from './table';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     control: {
+      display: 'flex',
+
+      alignItems: 'center',
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
@@ -51,8 +54,8 @@ const FilesComponent: FC<FilesComponentProps> = ({
   const classes = useStyles({});
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+      <Box className={classes.control}>
         <Search value={search} handleChange={handleSearch} />
         <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
       </Box>

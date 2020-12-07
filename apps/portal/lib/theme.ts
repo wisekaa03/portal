@@ -1,6 +1,6 @@
 /** @format */
 
-import { alpha, darken, createMuiTheme, Theme } from '@material-ui/core/styles';
+import { fade, darken, createMuiTheme, Theme } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import {
   RobotoLightCyr,
@@ -58,285 +58,235 @@ export const MaterialUI = (fontSize?: number, ssrMatchMedia?: (query: string) =>
     shape: {
       borderRadius: 4,
     },
-    components: {
+    props: {
       MuiButtonBase: {
-        styleOverrides: {
-          // disableRipple: true,
-        },
+        disableRipple: true,
       },
     },
   });
 
   if (ssrMatchMedia) {
-    theme.components = {
+    theme.props = {
       MuiUseMediaQuery: {
-        defaultProps: {
-          ssrMatchMedia,
-        },
+        ssrMatchMedia,
       },
     };
   }
 
-  theme.components = {
+  theme.overrides = {
     MuiPaper: {
-      styleOverrides: {
-        root: {
-          color: '#31312F',
-        },
+      root: {
+        color: '#31312F',
       },
     },
     MuiSvgIcon: {
-      styleOverrides: {
-        root: {
-          // 'color': '#6AA7C8',
-          // '&:hover': {
-          //   color: darken('#6AA7C8', 0.3),
-          // },
-        },
+      root: {
+        // 'color': '#6AA7C8',
+        // '&:hover': {
+        //   color: darken('#6AA7C8', 0.3),
+        // },
       },
     },
     MuiCssBaseline: {
-      styleOverrides: {
-        '@global': {
-          '@font-face': [
-            RobotoItalicCyr,
-            RobotoRegularCyr,
-            RobotoBoldItalicCyr,
-            RobotoBoldCyr,
-            RobotoLightItalicCyr,
-            RobotoLightCyr,
-            RobotoThinItalicCyr,
-            RobotoThinCyr,
+      '@global': {
+        '@font-face': [
+          RobotoItalicCyr,
+          RobotoRegularCyr,
+          RobotoBoldItalicCyr,
+          RobotoBoldCyr,
+          RobotoLightItalicCyr,
+          RobotoLightCyr,
+          RobotoThinItalicCyr,
+          RobotoThinCyr,
 
-            RobotoItalicLatin,
-            RobotoRegularLatin,
-            RobotoBoldItalicLatin,
-            RobotoBoldLatin,
-            RobotoLightItalicLatin,
-            RobotoLightLatin,
-            RobotoThinItalicLatin,
-            RobotoThinLatin,
-          ],
-          'html': {
-            fontSize,
-            overflow: 'hidden',
-          },
+          RobotoItalicLatin,
+          RobotoRegularLatin,
+          RobotoBoldItalicLatin,
+          RobotoBoldLatin,
+          RobotoLightItalicLatin,
+          RobotoLightLatin,
+          RobotoThinItalicLatin,
+          RobotoThinLatin,
+        ],
+        'html': {
+          fontSize,
+          overflow: 'hidden',
         },
       },
     },
     MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          color: '#000',
-          backgroundColor: '#fff',
-          boxShadow: theme.shadows[3],
-        },
+      tooltip: {
+        color: '#000',
+        backgroundColor: '#fff',
+        boxShadow: theme.shadows[3],
       },
     },
     MuiToolbar: {
-      styleOverrides: {
-        root: {
-          height: '64px',
-        },
+      root: {
+        height: '64px',
       },
     },
     MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          'backgroundColor': '#F5FDFF',
-          'borderRadius': theme.shape.borderRadius,
-          '&:hover:not($focused):not($disabled) $notchedOutline': {
-            borderColor: alpha(theme.palette.primary.main, 0.75),
-          },
-          '&$focused $notchedOutline': {
-            borderColor: theme.palette.primary.main,
-          },
+      root: {
+        'backgroundColor': '#F5FDFF',
+        'borderRadius': theme.shape.borderRadius,
+        '&:hover:not($focused):not($disabled) $notchedOutline': {
+          borderColor: fade(theme.palette.primary.main, 0.75),
         },
-        colorSecondary: {
-          '&, & $notchedOutline': {
-            borderColor: alpha(theme.palette.secondary.main, 0.5),
-          },
-          '&:hover:not($focused):not($disabled) $notchedOutline': {
-            borderColor: alpha(theme.palette.secondary.main, 0.75),
-          },
-          '&$focused $notchedOutline': {
-            borderColor: theme.palette.secondary.main,
-          },
+        '&$focused $notchedOutline': {
+          borderColor: theme.palette.primary.main,
         },
-        notchedOutline: {
-          borderWidth: 2,
-          borderRadius: 'inherit',
-          borderColor: alpha(theme.palette.primary.main, 0.5),
+      },
+      colorSecondary: {
+        '&, & $notchedOutline': {
+          borderColor: fade(theme.palette.secondary.main, 0.5),
         },
+        '&:hover:not($focused):not($disabled) $notchedOutline': {
+          borderColor: fade(theme.palette.secondary.main, 0.75),
+        },
+        '&$focused $notchedOutline': {
+          borderColor: theme.palette.secondary.main,
+        },
+      },
+      notchedOutline: {
+        borderWidth: 2,
+        borderRadius: 'inherit',
+        borderColor: fade(theme.palette.primary.main, 0.5),
       },
     },
     MuiCheckbox: {
-      styleOverrides: {
-        colorPrimary: {
-          color: '#6AA7C8!important',
-        },
+      colorPrimary: {
+        color: '#6AA7C8!important',
       },
     },
     MuiRadio: {
-      styleOverrides: {
-        root: {
-          color: 'inherit',
-        },
+      root: {
+        color: 'inherit',
       },
     },
     MuiFormLabel: {
-      styleOverrides: {
-        root: {
-          'color:not($disabled)': theme.palette.primary.main,
-          '&$colorSecondary:not($disabled)': {
-            color: theme.palette.secondary.main,
-          },
+      root: {
+        'color:not($disabled)': theme.palette.primary.main,
+        '&$colorSecondary:not($disabled)': {
+          color: theme.palette.secondary.main,
         },
       },
     },
     MuiInputBase: {
-      styleOverrides: {
-        root: {
-          'borderColor': theme.palette.primary.main,
-          '&$colorSecondary': {
-            borderColor: theme.palette.secondary.main,
-          },
+      root: {
+        'borderColor': theme.palette.primary.main,
+        '&$colorSecondary': {
+          borderColor: theme.palette.secondary.main,
         },
       },
     },
     MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: `${alpha('#31312F', 0.5)}!important`,
-        },
+      root: {
+        color: `${fade('#31312F', 0.5)}!important`,
       },
     },
     MuiFab: {
-      styleOverrides: {
-        primary: {
-          'backgroundColor': '#6AA7C8',
-          '&:hover': {
-            backgroundColor: darken('#6AA7C8', 0.2),
-          },
+      primary: {
+        'backgroundColor': '#6AA7C8',
+        '&:hover': {
+          backgroundColor: darken('#6AA7C8', 0.2),
         },
       },
     },
     MuiCard: {
-      styleOverrides: {
-        root: {},
-      },
+      root: {},
     },
     MuiCardContent: {
-      styleOverrides: {
-        root: {
-          'padding': 0,
-          [theme.breakpoints.up('sm')]: {
-            padding: '8px 46px',
-          },
-          '&:last-child': {
-            paddingBottom: 8,
-          },
+      root: {
+        'padding': 0,
+        [theme.breakpoints.up('sm')]: {
+          padding: '8px 46px',
+        },
+        '&:last-child': {
+          paddingBottom: 8,
         },
       },
     },
     MuiFormControl: {
-      styleOverrides: {
-        root: {
-          borderRadius: theme.shape.borderRadius,
-        },
+      root: {
+        borderRadius: theme.shape.borderRadius,
       },
     },
     MuiSelect: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#F5FDFF',
-        },
+      root: {
+        backgroundColor: '#F5FDFF',
       },
     },
     MuiButton: {
-      styleOverrides: {
-        containedSecondary: {
-          color: '#fff',
+      containedSecondary: {
+        color: '#fff',
+      },
+      contained: {
+        color: '#fff',
+        backgroundColor: theme.palette.primary.main,
+      },
+      outlinedPrimary: {
+        'color': '#fff',
+        'backgroundColor': theme.palette.primary.main,
+        '&:hover': {
+          color: theme.palette.primary.main,
         },
-        contained: {
-          color: '#fff',
-          backgroundColor: theme.palette.primary.main,
-        },
-        outlinedPrimary: {
-          'color': '#fff',
-          'backgroundColor': theme.palette.primary.main,
-          '&:hover': {
-            color: theme.palette.primary.main,
-          },
-          '&:disabled': {
-            color: 'rgba(0, 0, 0, 0.5)',
-            backgroundColor: 'rgba(255, 255, 255, 0.3)',
-          },
+        '&:disabled': {
+          color: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: 'rgba(255, 255, 255, 0.3)',
         },
       },
     },
     MuiIconButton: {
-      styleOverrides: {
-        root: {
-          'color': 'inherit',
-          '&:hover': {
-            backgroundColor: 'inherit',
-          },
+      root: {
+        'color': 'inherit',
+        '&:hover': {
+          backgroundColor: 'inherit',
         },
       },
     },
     MuiTypography: {
-      styleOverrides: {
-        body1: {
-          fontSize: 'inherit',
-        },
+      body1: {
+        fontSize: 'inherit',
       },
     },
     MuiTableCell: {
-      styleOverrides: {
-        root: {
-          padding: theme.spacing(),
-        },
-        stickyHeader: {
-          backgroundColor: '#F5FDFF',
-        },
+      root: {
+        padding: theme.spacing(),
+      },
+      stickyHeader: {
+        backgroundColor: '#F5FDFF',
       },
     },
     MuiListItem: {
-      styleOverrides: {
-        root: {
-          '&$selected, &$selected:hover': {
-            backgroundColor: 'rgba(146, 159, 183, 0.3)',
-          },
+      root: {
+        '&$selected, &$selected:hover': {
+          backgroundColor: 'rgba(146, 159, 183, 0.3)',
         },
       },
     },
     MuiAppBar: {
-      styleOverrides: {
-        colorPrimary: {
-          backgroundColor: '#F5FDFF',
-        },
+      colorPrimary: {
+        backgroundColor: '#F5FDFF',
       },
     },
     MuiTablePagination: {
-      styleOverrides: {
-        root: {
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          borderTop: '1px solid rgba(224, 224, 224, 1)',
-          backgroundColor: alpha(theme.palette.secondary.main, 0.05),
-        },
-        toolbar: {
-          height: '3rem',
-          minHeight: '3rem',
-        },
-        input: {
-          backgroundColor: 'transparent',
-        },
-        select: {
-          backgroundColor: 'transparent',
-        },
+      root: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        borderTop: '1px solid rgba(224, 224, 224, 1)',
+        backgroundColor: fade(theme.palette.secondary.main, 0.05),
+      },
+      toolbar: {
+        height: '3rem',
+        minHeight: '3rem',
+      },
+      input: {
+        backgroundColor: 'transparent',
+      },
+      select: {
+        backgroundColor: 'transparent',
       },
     },
   };

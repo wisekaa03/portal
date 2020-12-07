@@ -30,6 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     absolute: {
+      display: 'flex',
+      height: '100%',
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -94,14 +99,7 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({
     return (
       <ConditionalWrapper
         condition={full}
-        wrapper={(child) => (
-          <Box
-            className={clsx(wrapperClasses, { [classes.absolute]: absolute })}
-            sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}
-          >
-            {child}
-          </Box>
-        )}
+        wrapper={(child) => <Box className={clsx(wrapperClasses, { [classes.absolute]: absolute })}>{child}</Box>}
       >
         <img style={{ width: size || '10em' }} alt="Waiting..." src={SyncIcon} />
       </ConditionalWrapper>
@@ -111,20 +109,7 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({
   return (
     <ConditionalWrapper
       condition={full}
-      wrapper={(child) => (
-        <Box
-          className={clsx(wrapperClasses, { [classes.absolute]: absolute })}
-          sx={{
-            display: 'flex',
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {child}
-        </Box>
-      )}
+      wrapper={(child) => <Box className={clsx(wrapperClasses, { [classes.absolute]: absolute })}>{child}</Box>}
     >
       <CircularProgress
         color={color || 'primary'}

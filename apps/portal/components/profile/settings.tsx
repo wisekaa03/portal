@@ -111,7 +111,7 @@ const ProfileSettingsComponent: FC = () => {
                       <Slider
                         defaultValue={context.user.settings?.fontSize || FONT_SIZE_NORMAL}
                         value={context.user.settings?.fontSize || FONT_SIZE_NORMAL}
-                        onChange={handleFontSize}
+                        onChange={(event, value) => handleFontSize(event as React.SyntheticEvent<Element, Event>, value)}
                         // step={5}
                         marks={fontSizeMarks(t)}
                         min={FONT_SIZE_SMALL}

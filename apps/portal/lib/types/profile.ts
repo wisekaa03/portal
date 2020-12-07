@@ -6,7 +6,7 @@ import type { WithTranslation } from 'next-i18next';
 import type { ApolloQueryResult } from '@apollo/client';
 import type { Order, Connection } from 'typeorm-graphql-pagination';
 import type { OutlinedInputProps } from '@material-ui/core';
-import { AutocompleteChangeDetails, AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
+// import { AutocompleteChangeDetails, AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
 import type { StyleProps as StyleProperties, Data } from './common';
@@ -176,8 +176,8 @@ export interface ProfileEditComponentProps {
   ) => (
     event: React.SyntheticEvent<Element, Event>,
     value: unknown,
-    reason?: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<unknown> | undefined,
+    reason?: any /* AutocompleteChangeReason, */,
+    details?: any /* AutocompleteChangeDetails<unknown> | undefined, */,
   ) => void;
   handleBirthday: (date: Date | null) => void;
   handleSave: () => void;
@@ -190,8 +190,8 @@ export interface TextFieldComponentProps {
   ) => (
     event: React.SyntheticEvent<Element, Event>,
     value: unknown,
-    reason?: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<unknown> | undefined,
+    reason?: any /* AutocompleteChangeReason, */,
+    details?: any /* AutocompleteChangeDetails<unknown> | undefined, */,
   ) => void;
   field: keyof Profile;
   value?: unknown;

@@ -1,10 +1,8 @@
 /** @format */
 
 import React from 'react';
-import { MutationFunction, QueryLazyOptions } from '@apollo/client';
-import { AutocompleteChangeDetails, AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
+import { MutationFunction } from '@apollo/client';
 import { User } from './user.dto';
-import { Data } from './common';
 
 export interface LoginPageProps {
   initUsername: string;
