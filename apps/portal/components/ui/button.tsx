@@ -14,6 +14,8 @@ import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
 
 export interface ButtonBaseProps extends ButtonProps {
   actionType?: 'accept' | 'cancel' | 'save' | 'print' | 'reset' | 'close' | 'favorite';
+  fullWidth?: boolean;
+  fullHeight?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -70,6 +72,12 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#B3BCC6',
       },
     },
+    fullWidth: {
+      width: '100%',
+    },
+    fullHeight: {
+      height: '100%',
+    },
     favorite: {
       'color': '#31312F',
       'backgroundColor': '#ECA365',
@@ -81,7 +89,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const BaseButton: React.FC<ButtonBaseProps> = ({ actionType = 'accept', children, className, ...rest }) => {
+const BaseButton: React.FC<ButtonBaseProps> = ({
+  actionType = 'accept',
+  fullHeight = false,
+  fullWidth = true,
+  children,
+  className,
+  ...rest
+}) => {
   const classes = useStyles({});
 
   // TODO: design changes...
@@ -114,7 +129,7 @@ const BaseButton: React.FC<ButtonBaseProps> = ({ actionType = 'accept', children
       {...rest}
       variant="contained"
       // startIcon={icon}
-      className={clsx(classes.root, classes[actionType], className)}
+      className={clsx(classes.root, classes[actionType], className, { [classes.fullHeight]: fullHeight, [classes.fullWidth]: fullWidth })}
     >
       {children}
     </Button>

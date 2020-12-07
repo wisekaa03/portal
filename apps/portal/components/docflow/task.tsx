@@ -236,10 +236,10 @@ const FilesArea = withStyles((theme) => ({
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    notFounds: {
-      color: '#949494',
-    },
     control: {
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: theme.spacing(7),
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     },
@@ -346,7 +346,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
 
   return (
     <Box style={{ display: 'flex', flexDirection: 'column' }}>
-      <Box style={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+      <Box className={classes.control}>
         <Link href={{ pathname: '/docflow' }} as="/docflow" passHref>
           <IconButton className={classes.controlLeft}>
             <ArrowBackIcon />

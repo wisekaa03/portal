@@ -30,7 +30,7 @@ const DocFlowProcessStepButtons: FC<DocFlowProcessStepProps> = ({ loading, endDa
       return (
         <Grid container spacing={3}>
           <Grid item>
-            <BaseButton disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Execute)}>
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Execute)}>
               {t('docflow:processStep:execute')}
             </BaseButton>
           </Grid>
@@ -40,8 +40,13 @@ const DocFlowProcessStepButtons: FC<DocFlowProcessStepProps> = ({ loading, endDa
       return (
         <Grid container spacing={3}>
           <Grid item>
-            <ButtonGroup color="primary">
-              <BaseButton disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Familiarize)}>
+            <ButtonGroup style={{ height: '100%' }} color="primary">
+              <BaseButton
+                fullHeight
+                disabled={loading}
+                actionType="accept"
+                onClick={() => handleProcessStep(DocFlowProcessStep.Familiarize)}
+              >
                 {t('docflow:processStep:familiarize')}
               </BaseButton>
             </ButtonGroup>
@@ -50,7 +55,7 @@ const DocFlowProcessStepButtons: FC<DocFlowProcessStepProps> = ({ loading, endDa
             <Grid item>
               <LocalizationProvider dateAdapter={DateFnsUtils} locale={locale}>
                 <DateTimePicker
-                  renderInput={(props) => <TextField variant="outlined" helperText={null} color="secondary" {...props} />}
+                  renderInput={(props) => <TextField {...props} variant="outlined" helperText={null} color="secondary" />}
                   disabled={loading}
                   clearable
                   disableFuture
