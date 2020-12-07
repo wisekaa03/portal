@@ -327,7 +327,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
   loading,
-  error,
+  errors,
   task,
   loadingFile,
   loadingProcessStep,
@@ -490,7 +490,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
             </Box>
           </BoxWithRef>
         ) : (
-          <Errors error={error} />
+          <Errors errors={errors} />
         )}
       </Loading>
     </Box>
