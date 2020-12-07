@@ -11,7 +11,6 @@ import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_PROCESS_STEP } fr
 import type { DocFlowFile, DocFlowTask, DocFlowTaskInput, DocFlowFileInput } from '@lib/types/docflow';
 import { DocFlowProcessStep, DocFlowData } from '@lib/types/docflow';
 import { Data } from '@lib/types';
-import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import DocFlowTaskComponent from '@front/components/docflow/task';
 //#endregion
@@ -127,18 +126,6 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     }
   }, [task]);
 
-  useEffect(() => {
-    if (errorDocFlowTask) {
-      snackbarUtils.error(errorDocFlowTask);
-    }
-    if (errorDocFlowTaskFile) {
-      snackbarUtils.error(errorDocFlowTaskFile);
-    }
-    if (errorDocFlowProcessStep) {
-      snackbarUtils.error(errorDocFlowProcessStep);
-    }
-  }, [errorDocFlowTask, errorDocFlowTaskFile, errorDocFlowProcessStep]);
-
   return (
     <>
       <Head>
@@ -149,6 +136,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
           loading={loadingDocFlowTask}
           loadingFile={loadingDocFlowTaskFile}
           loadingProcessStep={loadingDocFlowProcessStep}
+          errors={[errorDocFlowTask, errorDocFlowTaskFile, errorDocFlowProcessStep]}
           task={task}
           comments={comments}
           endDate={endDate}

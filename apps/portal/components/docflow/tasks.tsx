@@ -27,6 +27,7 @@ import { useTranslation } from '@lib/i18n-client';
 import type { DocFlowTasksComponentProps, DocFlowTasksTableProps, DocFlowTasksColumn } from '@lib/types/docflow';
 import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
+import PortalErrors from '@front/components/errors';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
 //#endregion
@@ -107,7 +108,15 @@ const DocFlowTasksTable = withStyles((theme) => ({
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    notFounds: {
+    error: {
+      display: 'flex',
+      width: '100%',
+      height: '100%',
+      alignContent: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    errorText: {
       color: '#949494',
     },
     control: {
@@ -136,7 +145,7 @@ const columns = (t: TFunction, I18n: i18n): DocFlowTasksColumn[] => [
   },
 ];
 
-const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks, status, find, handleSearch, handleStatus }) => {
+const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { i18n: I18n, t } = useTranslation();
   const tasksBox = useRef(null);
@@ -184,9 +193,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, tasks,
               tasks={tasks}
             />
           ) : (
-            <Typography className={classes.notFounds} variant="h4">
-              {t('docflow:notFounds')}
-            </Typography>
+            <PortalErrors errors={errors} />
           )}
         </BoxWithRef>
       </Loading>

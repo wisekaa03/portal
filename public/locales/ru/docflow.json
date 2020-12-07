@@ -19,8 +19,6 @@
     "approve": "Утверждено",
     "notApprove": "Не утверждено"
   },
-  "notFound": "Не найден",
-  "notFounds": "Не найдены",
   "task": {
     "title": "{{task}}"
   },

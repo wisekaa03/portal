@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head';
 import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
@@ -10,7 +10,6 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-clien
 import { DOCFLOW_INTERNAL_DOCUMENT, DOCFLOW_INTERNAL_DOCUMENT_SUB } from '@lib/queries';
 import type { DocFlowInternalDocument, DocFlowInternalDocumentInput, DocFlowTarget, DocFlowTargetInput } from '@lib/types/docflow';
 import { Data } from '@lib/types';
-import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import DocFlowInternalDocumentComponent from '@front/components/docflow/target';
 //#endregion
@@ -60,19 +59,17 @@ const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest 
     dataDocFlowInternalDocument,
   ]);
 
-  useEffect(() => {
-    if (errorDocFlowInternalDocument) {
-      snackbarUtils.error(errorDocFlowInternalDocument);
-    }
-  }, [errorDocFlowInternalDocument]);
-
   return (
     <>
       <Head>
         <title>{t('docflow:title')}</title>
       </Head>
       <MaterialUI refetchComponent={refetchDocFlowInternalDocument} {...rest}>
-        <DocFlowInternalDocumentComponent loading={loadingDocFlowInternalDocument} internalDocument={internalDocument} />
+        <DocFlowInternalDocumentComponent
+          loading={loadingDocFlowInternalDocument}
+          errors={errorDocFlowInternalDocument}
+          internalDocument={internalDocument}
+        />
       </MaterialUI>
     </>
   );

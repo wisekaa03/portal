@@ -49,6 +49,7 @@ import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
+import Errors from '@front/components/errors';
 import DocFlowProcessStepButtons from './processStep';
 //#endregion
 
@@ -326,6 +327,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
   loading,
+  error,
   task,
   loadingFile,
   loadingProcessStep,
@@ -488,9 +490,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
             </Box>
           </BoxWithRef>
         ) : (
-          <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-            {t('docflow:notFound')}
-          </Typography>
+          <Errors error={error} />
         )}
       </Loading>
     </Box>

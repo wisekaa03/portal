@@ -32,6 +32,7 @@ import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
+import PortalErrors from '@front/components/errors';
 //#endregion
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps> = ({ loading, internalDocument }) => {
+const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps> = ({ loading, errors, internalDocument }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 
@@ -83,12 +84,10 @@ const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps
       </Box>
       {!internalDocument || loading ? (
         <Loading activate={loading} full type="circular" color="secondary" disableShrink size={48}>
-          <Typography className={clsx(classes.cardHeaderTitle, classes.notFound)} variant="h4">
-            {t('docflow:notFound')}
-          </Typography>
+          Loading...
         </Loading>
       ) : (
-        <Box style={{ overflow: 'auto' }} />
+        <PortalErrors errors={errors} />
       )}
     </Box>
   );

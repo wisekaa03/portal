@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     inputInput: {
+      height: theme.spacing(4),
       padding: theme.spacing(1, 1, 1, 7),
       transition: theme.transitions.create('width'),
       width: '100%',

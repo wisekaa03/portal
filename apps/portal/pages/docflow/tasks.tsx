@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head';
 import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
@@ -10,7 +10,6 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-clien
 import { DOCFLOW_TASKS, DOCFLOW_TASKS_SUB } from '@lib/queries';
 import type { DocFlowTask, DocFlowTasksInput } from '@lib/types/docflow';
 import { Data } from '@lib/types';
-import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import DocFlowTasksComponent from '@front/components/docflow/tasks';
 //#endregion
@@ -55,12 +54,6 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
 
   const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.docFlowTasks ?? [], [dataDocFlowTasks]);
 
-  useEffect(() => {
-    if (errorDocFlowTasks) {
-      snackbarUtils.error(errorDocFlowTasks);
-    }
-  }, [errorDocFlowTasks]);
-
   return (
     <>
       <Head>
@@ -69,6 +62,7 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
       <MaterialUI refetchComponent={refetchDocFlowTasks} {...rest}>
         <DocFlowTasksComponent
           loading={loadingDocFlowTasks}
+          errors={errorDocFlowTasks}
           tasks={tasks}
           status={status}
           find={find}

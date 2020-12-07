@@ -43,5 +43,8 @@
     "WOMAN": "Woman",
     "UNKNOWN": "Unknown"
   },
-  "more": "More..."
+  "more": "More...",
+  "errors": {
+    "notFound": "Not found"
+  }
 }

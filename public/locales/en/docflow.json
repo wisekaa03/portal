@@ -19,8 +19,6 @@
     "approve": "Approve",
     "notApprove": "Not approve"
   },
-  "notFound": "Not found",
-  "notFounds": "Not found",
   "task": {
     "title": "{{task}}"
   },

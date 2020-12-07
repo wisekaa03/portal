@@ -3,6 +3,7 @@
 import type React from 'react';
 import type { I18n, TFunction } from 'next-i18next';
 import type { GraphQLQueryInput } from '@back/shared/types';
+import type { PortalErrorsProps } from './errors';
 
 export enum DocFlowProcessStep {
   Execute = 'Execute' /* Исполнить */,
@@ -47,7 +48,7 @@ export interface DocFlowTasksTableProps {
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export interface DocFlowTasksComponentProps {
+export interface DocFlowTasksComponentProps extends PortalErrorsProps {
   loading: boolean;
   tasks: DocFlowTask[];
   status: string;
@@ -56,7 +57,7 @@ export interface DocFlowTasksComponentProps {
   handleStatus: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export interface DocFlowTaskComponentProps {
+export interface DocFlowTaskComponentProps extends PortalErrorsProps {
   loading: boolean;
   loadingFile: boolean;
   loadingProcessStep: boolean;
@@ -75,12 +76,12 @@ export interface DocFlowTaskInfoCardProps {
   profile: DocFlowUser | string | null;
 }
 
-export interface DocFlowInternalDocumentComponentProps {
+export interface DocFlowInternalDocumentComponentProps extends PortalErrorsProps {
   loading: boolean;
   internalDocument?: DocFlowInternalDocument;
 }
 
-export interface DocFlowProcessStepProps {
+export interface DocFlowProcessStepProps extends PortalErrorsProps {
   loading: boolean;
   endDate: Date | null;
   handleEndDate?: (date: Date | null | undefined, keyboardInputValue?: string | undefined) => void;
