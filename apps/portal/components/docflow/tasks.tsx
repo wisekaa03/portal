@@ -27,7 +27,7 @@ import { useTranslation } from '@lib/i18n-client';
 import type { DocFlowTasksComponentProps, DocFlowTasksTableProps, DocFlowTasksColumn } from '@lib/types/docflow';
 import dateFormat from '@lib/date-format';
 import BoxWithRef from '@lib/box-ref';
-import PortalErrors from '@front/components/errors';
+import Errors from '@front/components/errors';
 import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
 //#endregion
@@ -150,14 +150,12 @@ const columns = (t: TFunction, I18n: i18n): DocFlowTasksColumn[] => [
 const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors, tasks, status, find, handleSearch, handleStatus }) => {
   const classes = useStyles({});
   const { i18n: I18n, t } = useTranslation();
-  const tasksBox = useRef(null);
+  const tasksBox = useRef<{ offsetTop: string }>(null);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const maxHeight = tasksBox.current
-    ? `calc(100vh - ${((tasksBox.current as unknown) as Record<'offsetTop', string>).offsetTop}px)`
-    : '100%';
+  const maxHeight = tasksBox.current ? `calc(100vh - ${tasksBox.current.offsetTop}px)` : '100%';
 
   return (
     <Box style={{ display: 'flex', flexDirection: 'column' }}>
@@ -181,7 +179,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors
             alignContent: 'flex-start',
           }}
         >
-          {tasks.length > 0 ? (
+          {loading && tasks.length > 0 ? (
             <DocFlowTasksTable
               t={t}
               page={page}
@@ -195,7 +193,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors
               tasks={tasks}
             />
           ) : (
-            <PortalErrors errors={errors} />
+            <Errors errors={errors} />
           )}
         </BoxWithRef>
       </Loading>

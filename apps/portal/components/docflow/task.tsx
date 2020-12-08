@@ -355,7 +355,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
         <div style={{ width: '100%' }} />
       </Box>
       <Loading activate={loading} absolute full type="linear" color="secondary" noMargin disableShrink size={48}>
-        {task ? (
+        {loading && task ? (
           <BoxWithRef
             ref={tasksBox}
             style={{
