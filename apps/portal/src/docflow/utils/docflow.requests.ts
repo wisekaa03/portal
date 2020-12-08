@@ -41,7 +41,6 @@ export function docFlowOutputTargets(task: DocFlowTask): Record<string, any> {
           },
         },
         'tns:name': target.name,
-        'tns:allowDeletion': target.allowDeletion,
         'tns:target': {
           'attributes': {
             'xsi:type': 'tns:DMInternalDocument',
@@ -52,6 +51,7 @@ export function docFlowOutputTargets(task: DocFlowTask): Record<string, any> {
             'tns:type': target.target.type,
           },
         },
+        'tns:allowDeletion': target.allowDeletion ?? false,
       })),
     },
   };
@@ -66,6 +66,7 @@ export const docFlowRequestProcessStep = (task: DocFlowTask, processStep: DocFlo
     'tns:request': {
       'attributes': {
         'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+        'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
         'xsi:type': 'tns:DMUpdateRequest',
       },
       'tns:dataBaseID': '',
