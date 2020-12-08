@@ -221,29 +221,6 @@ export const docFlowTargets = (target: DocFlowTargetSOAP): DocFlowTarget => ({
   allowDeletion: target?.allowDeletion ?? false,
 });
 
-export const docFlowProcessStepToString = (processStep: DocFlowProcessStep): string | null => {
-  switch (processStep) {
-    case DocFlowProcessStep.Execute:
-      return 'Исполнить';
-    case DocFlowProcessStep.Familiarize:
-      return 'Ознакомиться';
-    case DocFlowProcessStep.Conform:
-      return 'Согласовано';
-    case DocFlowProcessStep.ConformWithComments:
-      return 'СогласованоСЗамечаниями';
-    case DocFlowProcessStep.NotConform:
-      return 'НеСогласовано';
-    case DocFlowProcessStep.Approve:
-      return 'Утверждено';
-    case DocFlowProcessStep.NotApprove:
-      return 'НеУтверждено';
-
-    default:
-  }
-
-  return null;
-};
-
 export const docFlowProcessStepToEnum = (processStep?: string): DocFlowProcessStep | null => {
   switch (processStep) {
     case 'Исполнить':

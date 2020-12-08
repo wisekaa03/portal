@@ -16,6 +16,7 @@ export enum DocFlowProcessStep {
 }
 
 export interface DocFlowData {
+  processStep?: DocFlowProcessStep;
   comments?: string;
   endDate?: Date | null;
 }

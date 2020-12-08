@@ -159,6 +159,7 @@ type DocFlowImportance {
 }
 
 input DocFlowDataInput {
+  processStep: DocFlowProcessStep
   comments: String
   endDate: Date
 }
@@ -260,7 +261,7 @@ type Query {
 
 type Mutation {
   "Change processStep"
-  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, data: DocFlowDataInput): DocFlowTask!
+  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, data: DocFlowDataInput!): DocFlowTask!
 }
 
 type Subscription {

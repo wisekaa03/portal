@@ -179,7 +179,7 @@ const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors
             alignContent: 'flex-start',
           }}
         >
-          {loading && tasks.length > 0 ? (
+          {tasks.length > 0 ? (
             <DocFlowTasksTable
               t={t}
               page={page}

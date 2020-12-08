@@ -73,7 +73,7 @@ export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
 `;
 
 export const DOCFLOW_PROCESS_STEP = gql`
-  mutation DocFlowProcessStep($step: DocFlowProcessStep!, $taskID: ID!, $data: DocFlowData) {
+  mutation DocFlowProcessStep($step: DocFlowProcessStep!, $taskID: ID!, $data: DocFlowDataInput!) {
     docFlowProcessStep(step: $step, taskID: $taskID, data: $data) {
       id
     }

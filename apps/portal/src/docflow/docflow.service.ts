@@ -1,7 +1,6 @@
 /** @format */
 
 //#region Imports NPM
-import { format as dateFnsFormat } from 'date-fns';
 import {
   Inject,
   Injectable,
@@ -55,15 +54,8 @@ import type {
 // import { constructUploads } from '@back/shared/upload';
 import { PortalError } from '@back/shared/errors';
 import type { DataResult, DataObjects, DataObject, DataFiles, DataItems, DataUser, DataError } from '@lib/types/common';
-import {
-  docFlowTask,
-  docFlowUser,
-  docFlowFile,
-  docFlowError,
-  docFlowData,
-  docFlowInternalDocument,
-  docFlowProcessStepToString,
-} from './docflow.utils';
+import { docFlowTask, docFlowUser, docFlowFile, docFlowError, docFlowData, docFlowInternalDocument } from './utils/docflow.inputs';
+import { docFlowRequestProcessStep, docFlowOutputTargets, docFlowOutputProcessStep } from './utils/docflow.requests';
 //#endregion
 
 // создается микросервис, который будет обновлять данные кэша из документооборота
@@ -1134,7 +1126,6 @@ export class DocFlowService {
    * @returns {DocFlowTask}
    */
   docFlowProcessStep = async ({
-    step,
     taskID,
     data,
     user,
@@ -1142,9 +1133,8 @@ export class DocFlowService {
     soapClient,
     loggerContext,
   }: {
-    step: DocFlowProcessStep;
     taskID: string;
-    data?: DocFlowData;
+    data: DocFlowData;
     user: User;
     password: string;
     soapClient?: SoapClient;
@@ -1160,226 +1150,104 @@ export class DocFlowService {
       soapClient: client,
       loggerContext,
     });
-    let errorProcessStep = 0;
 
-    if (step === DocFlowProcessStep.Execute) {
-      if (task.type !== 'DMBusinessProcessTask') {
-        errorProcessStep = 1;
-      } else {
-        request = {
-          'tns:request': {
-            'attributes': {
-              'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-              'xsi:type': 'tns:DMUpdateRequest',
-            },
-            'tns:dataBaseID': '',
-            'tns:objects': {
-              'attributes': {
-                'xsi:type': 'tns:DMBusinessProcessTask',
-              },
-              'tns:name': '',
-              'tns:objectID': {
-                'tns:id': task.id,
-                'tns:type': 'DMBusinessProcessTask',
-              },
-              'tns:importance': {
-                'tns:name': '',
-                'tns:objectID': {
-                  'tns:id': task.importance?.id,
-                  'tns:type': 'DMBusinessProcessTaskImportance',
-                },
-              },
-              'tns:performer': {
-                'tns:user': {
-                  'tns:name': '',
-                  'tns:objectID': {
-                    'tns:id': task.performer?.id,
-                    'tns:type': task.performer?.type,
-                  },
-                },
-              },
-              'tns:executed': task.executed,
-              'tns:beginDate': task.beginDate ? dateFnsFormat(new Date(task.beginDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:dueDate': task.dueDate ? dateFnsFormat(new Date(task.dueDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:endDate': data?.endDate ? dateFnsFormat(new Date(data.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:description': task.description,
-              'tns:parentBusinessProcess': {
-                'attributes': {
-                  'xsi:type': 'tns:DMBusinessProcessAcquaintance',
-                },
-                'tns:name': '',
-                'tns:objectID': {
-                  'tns:id': task.parentTask?.id,
-                  'tns:type': 'DMBusinessProcessAcquaintance',
-                },
-              },
-              'tns:businessProcessStep': docFlowProcessStepToString(step),
-              'tns:executionComment': data?.comments ?? '',
-            },
-          },
-        };
-      }
-    } else if (step === DocFlowProcessStep.Familiarize) {
-      if (task.type !== 'DMBusinessProcessTask') {
-        errorProcessStep = 1;
-      } else {
-        request = {
-          'tns:request': {
-            'attributes': {
-              'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-              'xsi:type': 'tns:DMUpdateRequest',
-            },
-            'tns:dataBaseID': '',
-            'tns:objects': {
-              'attributes': {
-                'xsi:type': 'tns:DMBusinessProcessTask',
-              },
-              'tns:name': task.name,
-              'tns:objectID': {
-                'tns:id': task.id,
-                'tns:type': 'DMBusinessProcessTask',
-              },
-              'tns:importance': {
-                'tns:name': task.importance?.name,
-                'tns:objectID': {
-                  'tns:id': task.importance?.id,
-                  'tns:type': 'DMBusinessProcessTaskImportance',
-                },
-              },
-              'tns:performer': {
-                'tns:user': {
-                  'tns:name': task.performer?.name,
-                  'tns:objectID': {
-                    'tns:id': task.performer?.id,
-                    'tns:type': task.performer?.type,
-                  },
-                },
-              },
-              'tns:executed': task.executed,
-              'tns:beginDate': task.beginDate ? dateFnsFormat(new Date(task.beginDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:dueDate': task.dueDate ? dateFnsFormat(new Date(task.dueDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:endDate': data?.endDate ? dateFnsFormat(new Date(data.endDate), "yyyy-MM-dd'T'hh:mm:ss") : '0001-01-01T00:00:00',
-              'tns:description': task.description,
-              'tns:parentBusinessProcess': {
-                'attributes': {
-                  'xsi:type': 'tns:DMBusinessProcessAcquaintance',
-                },
-                'tns:name': task.parentTask?.name,
-                'tns:objectID': {
-                  'tns:id': task.parentTask?.id,
-                  'tns:type': 'DMBusinessProcessAcquaintance',
-                },
-              },
-              'tns:businessProcessStep': docFlowProcessStepToString(step),
-              'tns:executionComment': data?.comments ?? '',
-            },
-          },
-        };
-      }
-    } else if (step === DocFlowProcessStep.Conform) {
-      if (task.type !== 'DMBusinessProcessApprovalTaskApproval') {
-        errorProcessStep = 1;
-      } else {
-        // eslint-disable-next-line no-debugger
-        debugger;
-      }
-    } else if (step === DocFlowProcessStep.Approve) {
-      if (task.type !== 'DMBusinessProcessConfirmationTaskConfirmation') {
-        errorProcessStep = 1;
-      } else {
-        // eslint-disable-next-line no-debugger
-        debugger;
-      }
+    if (
+      !(
+        (task.type === 'DMBusinessProcessTask' && data.processStep === DocFlowProcessStep.Execute) ||
+        (task.type === 'DMBusinessProcessTask' && data.processStep === DocFlowProcessStep.Familiarize) ||
+        (task.type === 'DMBusinessProcessApprovalTaskApproval' &&
+          (data.processStep === DocFlowProcessStep.Conform ||
+            data.processStep === DocFlowProcessStep.NotConform ||
+            data.processStep === DocFlowProcessStep.ConformWithComments)) ||
+        (task.type === 'DMBusinessProcessConfirmationTaskConfirmation' &&
+          (data.processStep === DocFlowProcessStep.Approve || data.processStep === DocFlowProcessStep.NotApprove))
+      )
+    ) {
+      throw new NotImplementedException();
     }
 
-    if (errorProcessStep === 1) {
-      throw new NotAcceptableException(__DEV__ ? "Can't add processStep to taskID" : null);
-    }
+    request = docFlowRequestProcessStep(task, data.processStep, data);
 
-    if (request) {
-      return client
-        .executeAsync(request, { timeout: TIMEOUT })
-        .then((message: DataResult<DataObjects<DocFlowTaskSOAP>> | DataResult<DataError>) => {
-          if (docFlowData<DataObjects>(message[0]?.return)) {
-            this.docFlowTaskCache({
-              user,
-              password,
-              task: { id: task.id, cache: true, websocket: true, setCache: true, withFiles: true },
-              soapClient: client,
-              loggerContext,
-            });
-            this.docFlowTasksCache({
-              user,
-              password,
-              tasks: { cache: true, websocket: true, setCache: true, withFiles: true },
-              soapClient: client,
-              loggerContext,
-            });
+    return client
+      .executeAsync(request, { timeout: TIMEOUT })
+      .then((message: DataResult<DataObjects<DocFlowTaskSOAP>> | DataResult<DataError>) => {
+        if (docFlowData<DataObjects>(message[0]?.return)) {
+          this.docFlowTaskCache({
+            user,
+            password,
+            task: { id: task.id, cache: true, websocket: true, setCache: true, withFiles: true },
+            soapClient: client,
+            loggerContext,
+          });
+          this.docFlowTasksCache({
+            user,
+            password,
+            tasks: { cache: true, websocket: true, setCache: true, withFiles: true },
+            soapClient: client,
+            loggerContext,
+          });
 
-            if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
-              const tasks = message[0].return.objects.map((t) => docFlowTask(t));
+          if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
+            const tasks = message[0].return.objects.map((t) => docFlowTask(t));
 
-              if (Array.isArray(tasks) && tasks.length > 0) {
-                if (tasks.length > 1) {
-                  this.logger.verbose!({
-                    message: 'result.length > 1 ??',
-                    context: DocFlowService.name,
-                    function: 'docFlowProcessStep',
-                    ...loggerContext,
-                  });
-                }
-                const taskWithoutFiles = tasks.pop();
-                if (taskWithoutFiles) {
-                  this.logger.debug!({
-                    message: `[Request] ${client.lastRequest}`,
-                    context: DocFlowService.name,
-                    function: 'docFlowProcessStep',
-                    ...loggerContext,
-                  });
-                  // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
-                  // { context: DocFlowService.name, function: 'docFlowTask' });
+            if (Array.isArray(tasks) && tasks.length > 0) {
+              if (tasks.length > 1) {
+                this.logger.verbose!({
+                  message: 'result.length > 1 ??',
+                  context: DocFlowService.name,
+                  function: 'docFlowProcessStep',
+                  ...loggerContext,
+                });
+              }
+              const taskWithoutFiles = tasks.pop();
+              if (taskWithoutFiles) {
+                this.logger.debug!({
+                  message: `[Request] ${client.lastRequest}`,
+                  context: DocFlowService.name,
+                  function: 'docFlowProcessStep',
+                  ...loggerContext,
+                });
+                // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
+                // { context: DocFlowService.name, function: 'docFlowTask' });
 
-                  return taskWithoutFiles;
-                }
+                return taskWithoutFiles;
               }
             }
-
-            throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
           }
 
-          throw new ForbiddenException(docFlowError(message[0]?.return));
-        })
-        .catch((error: Error | ForbiddenException | NotFoundException) => {
-          this.logger.error({
-            message: `[Request] ${client.lastRequest}`,
-            context: DocFlowService.name,
-            function: 'docFlowProcessStep',
-            ...loggerContext,
-          });
-          this.logger.error({
-            message: `[Response] ${client.lastResponse}`,
-            context: DocFlowService.name,
-            function: 'docFlowProcessStep',
-            ...loggerContext,
-          });
-          this.logger.error({
-            message: `${error.toString()}`,
-            error,
-            context: DocFlowService.name,
-            function: 'docFlowProcessStep',
-            ...loggerContext,
-          });
+          throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+        }
 
-          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
-            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
-          } else if (error instanceof ForbiddenException) {
-            throw error;
-          }
-
-          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
+        throw new ForbiddenException(docFlowError(message[0]?.return));
+      })
+      .catch((error: Error | ForbiddenException | NotFoundException) => {
+        this.logger.error({
+          message: `[Request] ${client.lastRequest}`,
+          context: DocFlowService.name,
+          function: 'docFlowProcessStep',
+          ...loggerContext,
         });
-    }
+        this.logger.error({
+          message: `[Response] ${client.lastResponse}`,
+          context: DocFlowService.name,
+          function: 'docFlowProcessStep',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `${error.toString()}`,
+          error,
+          context: DocFlowService.name,
+          function: 'docFlowProcessStep',
+          ...loggerContext,
+        });
 
-    throw new NotImplementedException();
+        if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+          throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+        } else if (error instanceof ForbiddenException) {
+          throw error;
+        }
+
+        throw new UnprocessableEntityException(__DEV__ ? error : undefined);
+      });
   };
 }

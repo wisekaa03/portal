@@ -41,9 +41,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
   const [
     getDocFlowProcessStep,
     { loading: loadingDocFlowProcessStep, data: dataDocFlowProcessStep, error: errorDocFlowProcessStep },
-  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; step: DocFlowProcessStep; data?: DocFlowData }>(
-    DOCFLOW_PROCESS_STEP,
-  );
+  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; data: DocFlowData }>(DOCFLOW_PROCESS_STEP);
 
   useEffect(() => {
     if (typeof subscribeToMoreDocFlowTask === 'function') {
@@ -67,12 +65,12 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     setEndDate(date ?? null);
   };
 
-  const handleProcessStep = async (step: DocFlowProcessStep, taskID?: string, data?: DocFlowData): Promise<void> => {
+  const handleProcessStep = async (processStep: DocFlowProcessStep, taskID?: string, data?: DocFlowData): Promise<void> => {
     getDocFlowProcessStep({
       variables: {
         taskID: typeof taskID === 'undefined' ? task?.id || '0' : taskID,
-        step,
         data: {
+          processStep,
           comments: typeof data?.comments === 'undefined' ? comments : data.comments,
           endDate: typeof data?.endDate === 'undefined' ? endDate : data.endDate,
         },

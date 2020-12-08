@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import type { Request } from 'express';
-import { UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
+import { UseGuards, Inject, UnauthorizedException, NotAcceptableException } from '@nestjs/common';
 import { Query, Resolver, Mutation, Subscription, Args, Context } from '@nestjs/graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { FileUpload } from 'graphql-upload';
@@ -188,18 +188,19 @@ export class DocFlowResolver {
   @UseGuards(GqlAuthGuard)
   async docFlowProcessStep(
     @Context('req') request: Request,
-    @Args('step') step: DocFlowProcessStep,
     @Args('taskID') taskID: string,
-    @Args('data') data?: DocFlowData,
+    @Args('data') data: DocFlowData,
     @CurrentUser() user?: User,
     @PasswordFrontend() password?: string,
   ): Promise<DocFlowTask> {
     if (!user || !password) {
       throw new UnauthorizedException();
     }
+    if (!data.processStep) {
+      throw new NotAcceptableException();
+    }
 
     return this.docflowService.docFlowProcessStep({
-      step,
       taskID,
       data,
       user,
