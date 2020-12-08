@@ -261,7 +261,7 @@ type Query {
 
 type Mutation {
   "Change processStep"
-  docFlowProcessStep(step: DocFlowProcessStep!, taskID: ID!, data: DocFlowDataInput!): DocFlowTask!
+  docFlowProcessStep(taskID: ID!, data: DocFlowDataInput!): DocFlowTask!
 }
 
 type Subscription {
