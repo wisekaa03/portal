@@ -26,6 +26,17 @@ function withCustomWebpack(c = {}) {
       ...resolveTsconfigPaths({ tsconfigPaths: '../../tsconfig.json' }),
     };
 
+    if (!isServer) {
+      config.node = {
+        ...config.node,
+        net: 'empty',
+        tls: 'empty',
+        dns: 'empty',
+        fs: 'empty',
+        dgram: 'empty',
+      };
+    }
+
     config.plugins = [
       ...(config.plugins || []),
       new Webpack.DefinePlugin({

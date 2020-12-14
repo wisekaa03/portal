@@ -3,7 +3,8 @@
   "compilerOptions": {
     "target": "es2018",
     "skipLibCheck": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules"
