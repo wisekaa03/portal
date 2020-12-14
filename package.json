@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "4.18.35",
+  "version": "4.18.36",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -262,6 +262,7 @@
     "@nestjs/platform-express": "^7",
     "@nestjs/terminus": "^7",
     "@nestjs/typeorm": "^7",
+    "@nestjs/websockets": "^7",
     "@next/bundle-analyzer": "^10",
     "@pskzcompany/winston-graylog": "*",
     "@willsoto/nestjs-prometheus": "*",

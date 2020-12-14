@@ -3,6 +3,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/portal/src",
   "compilerOptions": {
+    "plugins": ["@nestjs/graphql"],
     "tsConfigPath": "apps/portal/tsconfig.app.json",
     "webpackConfigPath": "webpack.config.js",
     "webpack": true,
