@@ -166,7 +166,7 @@
       "source.fixAll.eslint": true
     },
     "npm.packageManager": "yarn",
-    "debug.node.autoAttach": "off",
+    "debug.node.autoAttach": "onlyWithFlag",
     "cSpell.language": "en,ru,en-GB,en-US",
     "cSpell.allowCompoundWords": true,
     "cSpell.enableFiletypes": [

@@ -5,35 +5,41 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "name": "vscode-jest-tests",
-      "request": "launch",
-      "args": [
-        "--runInBand"
+      "name": "Attach to portal: 9229",
+      "port": 9229,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
       ],
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
-      "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      "type": "pwa-node"
     },
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Debug Nest Framework",
-      "args": [
-        "${workspaceFolder}/apps/portal/src/main.ts"
+      "name": "Attach to portal-ldapsync: 9230",
+      "port": 9230,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
       ],
-      "env": {
-        "TS_NODE_PROJECT": "${workspaceFolder}/apps/portal/tsconfig.app.json"
-      },
-      "runtimeArgs": [
-        "--nolazy",
-        "-r", "ts-node/register"
+      "type": "pwa-node"
+    },
+    {
+      "name": "Attach to portal-ldapsyncJob: 9231",
+      "port": 9231,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
       ],
-      "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
-      "protocol": "inspector"
-    }
+      "type": "pwa-node"
+    },
+    {
+      "name": "Attach by Process ID",
+      "processId": "${command:PickProcess}",
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "pwa-node"
+    },
+
   ]
 }
