@@ -11478,9 +11478,9 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 nestjs-ldap@*:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.2.1.tgz#6766aaa6b4937da55590eae12d53c998898bc5de"
-  integrity sha512-XAEl9fasLA4R4Qo5wEmrQaJoLPW/HEvEyOcvmrDdaET/dXda5Hh0BTpK8nUtSSbJR3Hj5UMy2cnHEvhVIeW1Sg==
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/nestjs-ldap/-/nestjs-ldap-3.2.2.tgz#1b6c270e7d355b0bf351377cf28a367ab25fbb36"
+  integrity sha512-GjUsF54zJNPhmL+TBQ5o0nZWX/jQyXZWRgSc9C1J2tWkib1w2zO6RU3HbcJTStAKrYO+yabHSRXQPzsEDvZxng==
   dependencies:
     "@nestjs/common" "*"
     bcrypt "*"
