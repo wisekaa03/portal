@@ -4619,7 +4619,7 @@ attr-accept@^2.2.1:
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.2.2.tgz#646613809660110749e92f2c10833b70968d929b"
   integrity sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==
 
-autobind-decorator@*:
+autobind-decorator@*, autobind-decorator@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
   integrity sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
@@ -10186,9 +10186,12 @@ jimp@^0.2.28:
     tinycolor2 "^1.1.2"
     url-regex "^3.0.0"
 
-"jodit@https://github.com/xdan/jodit.git#groups":
-  version "3.5.0"
-  resolved "https://github.com/xdan/jodit.git#bd243c099b4b35df0986c92183e789eadb9e5d0f"
+jodit@^3:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.5.2.tgz#a7b99806651624ad627f303bbd95d9e6303fa23b"
+  integrity sha512-gEjJsSpGUzncD9mVZiK3IDKjOpI074P0/u81iH9BwNeXXTKfanjDTvT+WMmnz52HpPwHovwqMZpM3wieBjxNrQ==
+  dependencies:
+    autobind-decorator "^2.4.0"
 
 joi@*:
   version "17.3.0"
