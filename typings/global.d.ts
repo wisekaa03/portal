@@ -44,12 +44,6 @@ declare module '*.png' {
   export = content;
 }
 
-declare module '*.png?inline' {
-  const content: string;
-  const className: string;
-  export = content;
-}
-
 declare module '*.webp' {
   const content: string;
   const className: string;

@@ -1,0 +1,99 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "baseUrl": ".",
+    "paths": {
+      "@public": [
+        "${workspaceRoot}/eRoot}/public"
+      ],
+      "@public/*": [
+        "${workspaceRoot}/eRoot}/public/*"
+      ],
+      "@images": [
+        "${workspaceRoot}/eRoot}/eRoot}/public/images"
+      ],
+      "@images/*": [
+        "${workspaceRoot}/eRoot}/eRoot}/public/images/*"
+      ],
+      "@front/layout": [
+        "${workspaceRoot}/eRoot}/apps/portal/layout"
+      ],
+      "@front/layout/*": [
+        "${workspaceRoot}/eRoot}/apps/portal/layout/*"
+      ],
+      "@lib": [
+        "${workspaceRoot}/eRoot}/apps/portal/lib"
+      ],
+      "@lib/*": [
+        "${workspaceRoot}/eRoot}/apps/portal/lib/*"
+      ],
+      "@back": [
+        "${workspaceRoot}/eRoot}/apps/portal/src"
+      ],
+      "@back/*": [
+        "${workspaceRoot}/eRoot}/apps/portal/src/*"
+      ],
+      "@front/components": [
+        "${workspaceRoot}/eRoot}/apps/portal/components"
+      ],
+      "@front/components/*": [
+        "${workspaceRoot}/eRoot}/apps/portal/components/*"
+      ],
+      "@front/pages": [
+        "${workspaceRoot}/eRoot}/apps/portal/pages"
+      ],
+      "@front/pages/*": [
+        "${workspaceRoot}/eRoot}/apps/portal/pages/*"
+      ],
+      "@app/portal": [
+        "${workspaceRoot}/eRoot}/apps/portal/src"
+      ],
+      "@app/portal/*": [
+        "${workspaceRoot}/eRoot}/apps/portal/src/*"
+      ],
+      "@app/sync": [
+        "${workspaceRoot}/eRoot}/apps/sync/src"
+      ],
+      "@app/sync/*": [
+        "${workspaceRoot}/eRoot}/apps/sync/src/*"
+      ],
+      "@app/sync-job": [
+        "${workspaceRoot}/eRoot}/apps/sync-job/src"
+      ],
+      "@app/sync-job/*": [
+        "${workspaceRoot}/eRoot}/apps/sync-job/src/*"
+      ],
+      "@app/soap": [
+        "${workspaceRoot}/eRoot}/libs/soap/src"
+      ],
+      "@app/soap/*": [
+        "${workspaceRoot}/eRoot}/libs/soap/src/*"
+      ],
+      "@app/config": [
+        "${workspaceRoot}/eRoot}/libs/config/src"
+      ],
+      "@app/config/*": [
+        "${workspaceRoot}/eRoot}/libs/config/src/*"
+      ],
+      "@app/image": [
+        "${workspaceRoot}/eRoot}/libs/image/src"
+      ],
+      "@app/image/*": [
+        "${workspaceRoot}/eRoot}/libs/image/src/*"
+      ],
+      "@app/logging.interceptor": [
+        "${workspaceRoot}/eRoot}/libs/logging.interceptor/src"
+      ],
+      "@app/logging.interceptor/*": [
+        "${workspaceRoot}/eRoot}/libs/logging.interceptor/src/*"
+      ],
+      "@app/cache.interceptor": [
+        "${workspaceRoot}/eRoot}/libs/cache.interceptor/src"
+      ],
+      "@app/cache.interceptor/*": [
+        "${workspaceRoot}/eRoot}/libs/cache.interceptor/src/*"
+      ]
+    }
+  },
+  "exclude": ["node_modules"]
+}

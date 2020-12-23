@@ -32,97 +32,97 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@public": [
-        "public"
+        "./public"
       ],
       "@public/*": [
-        "public/*"
+        "./public/*"
       ],
       "@images": [
-        "public/images"
+        "./public/images"
       ],
       "@images/*": [
-        "public/images/*"
+        "./public/images/*"
       ],
       "@front/layout": [
-        "apps/portal/layout"
+        "./apps/portal/layout"
       ],
       "@front/layout/*": [
-        "apps/portal/layout/*"
+        "./apps/portal/layout/*"
       ],
       "@lib": [
-        "apps/portal/lib"
+        "./apps/portal/lib"
       ],
       "@lib/*": [
-        "apps/portal/lib/*"
+        "./apps/portal/lib/*"
       ],
       "@back": [
-        "apps/portal/src"
+        "./apps/portal/src"
       ],
       "@back/*": [
-        "apps/portal/src/*"
+        "./apps/portal/src/*"
       ],
       "@front/components": [
-        "apps/portal/components"
+        "./apps/portal/components"
       ],
       "@front/components/*": [
-        "apps/portal/components/*"
+        "./apps/portal/components/*"
       ],
       "@front/pages": [
-        "apps/portal/pages"
+        "./apps/portal/pages"
       ],
       "@front/pages/*": [
-        "apps/portal/pages/*"
+        "./apps/portal/pages/*"
       ],
       "@app/portal": [
-        "apps/portal/src"
+        "./apps/portal/src"
       ],
       "@app/portal/*": [
-        "apps/portal/src/*"
+        "./apps/portal/src/*"
       ],
       "@app/sync": [
-        "apps/sync/src"
+        "./apps/sync/src"
       ],
       "@app/sync/*": [
-        "apps/sync/src/*"
+        "./apps/sync/src/*"
       ],
       "@app/sync-job": [
-        "apps/sync-job/src"
+        "./apps/sync-job/src"
       ],
       "@app/sync-job/*": [
-        "apps/sync-job/src/*"
+        "./apps/sync-job/src/*"
       ],
       "@app/soap": [
-        "libs/soap/src"
+        "./libs/soap/src"
       ],
       "@app/soap/*": [
-        "libs/soap/src/*"
+        "./libs/soap/src/*"
       ],
       "@app/config": [
-        "libs/config/src"
+        "./libs/config/src"
       ],
       "@app/config/*": [
-        "libs/config/src/*"
+        "./libs/config/src/*"
       ],
       "@app/image": [
-        "libs/image/src"
+        "./libs/image/src"
       ],
       "@app/image/*": [
-        "libs/image/src/*"
+        "./libs/image/src/*"
       ],
       "@app/logging.interceptor": [
-        "libs/logging.interceptor/src"
+        "./libs/logging.interceptor/src"
       ],
       "@app/logging.interceptor/*": [
-        "libs/logging.interceptor/src/*"
+        "./libs/logging.interceptor/src/*"
       ],
       "@app/cache.interceptor": [
-        "libs/cache.interceptor/src"
+        "./libs/cache.interceptor/src"
       ],
       "@app/cache.interceptor/*": [
-        "libs/cache.interceptor/src/*"
+        "./libs/cache.interceptor/src/*"
       ]
     }
   },

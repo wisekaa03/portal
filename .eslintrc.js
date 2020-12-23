@@ -1,4 +1,20 @@
 /** @format */
+/* eslint @typescript-eslint/no-var-requires:0 */
+
+const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { compilerOptions } = require('./tsconfig');
+
+const localPathMapper = {
+  ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: './' }),
+  '^@public/(.*?)(\\?.*)?$': './public/$1',
+  '^@images/(.*?)(\\?.*)?$': './public/images/$1',
+};
+if (localPathMapper['^@public/(.*)$']) {
+  delete localPathMapper['^@public/(.*)$'];
+}
+if (localPathMapper['^@images/(.*)$']) {
+  delete localPathMapper['^@images/(.*)$'];
+}
 
 module.exports = {
   parser: '@typescript-eslint/parser',
@@ -47,6 +63,11 @@ module.exports = {
         project: ['tsconfig.json', 'tsconfig.server.json', 'apps/*/tsconfig.json', 'libs/*/tsconfig.json'],
       },
       node: {
+        map: localPathMapper,
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      },
+      alias: {
+        map: localPathMapper,
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
       },
     },
