@@ -15,12 +15,12 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import CloseIcon from '@material-ui/icons/Close';
 //#endregion
 //#region Imports Local
+import type { Data } from '@lib/types';
 import dateFormat from '@lib/date-format';
 import { MaterialUI } from '@front/layout';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { NEWS, NEWS_EDIT, NEWS_DELETE } from '@lib/queries';
 import { LARGE_RESOLUTION } from '@lib/constants';
-import { Data } from '@lib/types';
 import Loading from '@front/components/loading';
 import IsAdmin from '@front/components/isAdmin';
 //#endregion

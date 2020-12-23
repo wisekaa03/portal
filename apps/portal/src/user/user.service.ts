@@ -14,25 +14,15 @@ import { compare } from 'bcrypt';
 //#endregion
 //#region Imports Local
 import { ConfigService, LDAPDomainConfig } from '@app/config';
-import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE, defaultUserSettings } from '@back/shared/constants';
-import {
-  AvailableAuthenticationProfiles,
-  LoginService,
-  Profile,
-  User,
-  UserSettings,
-  DefinedUserSettings,
-  Contact,
-  AllUsersInfo,
-  ProfileInput,
-} from '@lib/types';
-import { constructUploads } from '@back/shared/upload';
-import { ProfileEntity } from '@back/profile/profile.entity';
+import { AllUsersInfo } from '@lib/types';
+import { ADMIN_GROUP, LDAP_SYNC, LDAP_SYNC_SERVICE, PortalError, constructUploads, defaultUserSettings } from '@back/shared';
+import { LoginService, Contact } from '@back/shared/graphql';
 import { ProfileService } from '@back/profile/profile.service';
-import { GroupService } from '@back/group/group.service';
-import { GroupEntity } from '@back/group/group.entity';
-import { PortalError } from '@back/shared/errors';
-import { UserEntity } from './user.entity';
+import type { ProfileInput } from '@back/profile/graphql/ProfileInput.input';
+import { Profile } from '@back/profile/profile.entity';
+import { GroupService } from '@back/group';
+import type { Group } from '@back/group/group.entity';
+import { User } from './user.entity';
 //#endregion
 
 @Injectable()
@@ -43,8 +33,8 @@ export class UserService {
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly profileService: ProfileService,
     private readonly groupService: GroupService,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly ldapService: LdapService,
   ) {}
 
@@ -52,7 +42,7 @@ export class UserService {
    * Available Authentication Profiles
    * @async
    * @method availableAuthenticationProfiles
-   * @returns {AvailableAuthenticationProfiles[]} Profile
+   * @returns {string[]} Profile
    * @throws {Error} Exception
    */
   public availableAuthenticationProfiles = async (synchronization: boolean, newProfile: boolean): Promise<string[]> => {
@@ -77,9 +67,9 @@ export class UserService {
    * @method comparePassword
    * @param {string} username User
    * @param {string} password Password
-   * @returns {UserEntity | undefined} The user
+   * @returns {User | undefined} The user
    */
-  comparePassword = async (username: string, password: string): Promise<UserEntity | undefined> => {
+  comparePassword = async (username: string, password: string): Promise<User | undefined> => {
     const user = await this.byUsername({ username, loggerContext: { username } });
 
     return compare(password, user.password) ? user : undefined;
@@ -92,26 +82,30 @@ export class UserService {
     loginService = LoginService.LDAP,
     disabled = false,
     cache = true,
+    transaction = false,
     loggerContext,
   }: {
     loginService?: LoginService;
     disabled?: boolean;
     cache?: boolean;
+    transaction?: boolean;
     loggerContext?: LoggerContext;
   }): Promise<AllUsersInfo[]> =>
     this.userRepository
       .find({
         where: { loginService, disabled },
-        select: ['loginDomain', 'loginIdentificator', 'profile'],
+        select: ['id', 'loginDomain', 'loginGUID', 'username', 'disabled'],
+        relations: [],
         loadEagerRelations: false,
         cache,
+        transaction,
       })
       .then((users) =>
         users.map((user) => ({
           contact: Contact.USER,
           id: user.id,
-          domain: user.loginDomain,
-          loginIdentificator: user.loginIdentificator,
+          loginDomain: user.loginDomain,
+          loginGUID: user.loginGUID,
           name: user.username,
           disabled: user.disabled,
         })),
@@ -126,22 +120,24 @@ export class UserService {
    * @param {boolean} [isDisabled = true] Is this user disabled. default true.
    * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'. default true.
    * @param {boolean} [cache = true] whether to cache results. default true.
-   * @returns {UserEntity} The user
+   * @returns {User} The user
    */
   byId = async ({
     id,
     isDisabled = true,
     isRelations = true,
     cache = true,
+    transaction = false,
     loggerContext,
   }: {
     id: string;
     isDisabled?: boolean;
     isRelations?: boolean | 'profile' | 'groups';
     cache?: boolean;
+    transaction?: boolean;
     loggerContext?: LoggerContext;
-  }): Promise<UserEntity> => {
-    const where: FindConditions<UserEntity> = { id };
+  }): Promise<User> => {
+    const where: FindConditions<User> = { id };
 
     if (isDisabled) {
       where.disabled = false;
@@ -154,6 +150,7 @@ export class UserService {
       relations,
       // TODO!
       cache,
+      transaction,
     });
   };
 
@@ -165,7 +162,7 @@ export class UserService {
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean | 'profile' | 'groups'} [isRelation = true] The relation of this user
    * @param {boolean} [cache = true] whether to cache results
-   * @returns {UserEntity} The user
+   * @returns {User} The user
    */
   byUsername = async ({
     username,
@@ -173,6 +170,7 @@ export class UserService {
     isDisabled = true,
     isRelations = true,
     cache = true,
+    transaction = false,
     loggerContext,
   }: {
     username: string;
@@ -180,9 +178,10 @@ export class UserService {
     isDisabled?: boolean;
     isRelations?: boolean | 'profile' | 'groups';
     cache?: boolean;
+    transaction?: boolean;
     loggerContext?: LoggerContext;
-  }): Promise<UserEntity> => {
-    const where: FindConditions<UserEntity> = { username };
+  }): Promise<User> => {
+    const where: FindConditions<User> = { username };
     if (domain) {
       where.loginService = LoginService.LDAP;
       where.loginDomain = domain;
@@ -198,6 +197,7 @@ export class UserService {
       where,
       relations,
       cache,
+      transaction,
     });
   };
 
@@ -205,28 +205,30 @@ export class UserService {
    * Reads by Login identificator (LDAP ObjectGUID)
    *
    * @async
-   * @param {string} loginIdentificator LDAP: Object GUID
+   * @param {string} loginGUID LDAP: Object GUID
    * @param {boolean} [isDisabled = true] Is this user disabled
    * @param {boolean} [isRelation = true] boolean | 'profile' | 'groups'
    * @param {boolean} [cache = true] whether to cache results
-   * @returns {UserEntity | undefined} The user
+   * @returns {User | undefined} The user
    */
-  byLoginIdentificator = async ({
+  byLoginGUID = async ({
     domain,
-    loginIdentificator,
+    loginGUID,
     isDisabled = true,
     isRelations = true,
     cache = true,
+    transaction = false,
     loggerContext,
   }: {
-    loginIdentificator: string;
+    loginGUID: string;
     domain?: string | null;
     isDisabled?: boolean;
     isRelations?: boolean | 'profile' | 'groups';
     cache?: boolean;
+    transaction?: boolean;
     loggerContext?: LoggerContext;
-  }): Promise<UserEntity> => {
-    const where: FindConditions<UserEntity> = { loginService: LoginService.LDAP, loginIdentificator };
+  }): Promise<User> => {
+    const where: FindConditions<User> = { loginService: LoginService.LDAP, loginGUID };
     if (domain) {
       where.loginDomain = domain;
     }
@@ -242,6 +244,7 @@ export class UserService {
       relations,
       // TODO:
       cache,
+      transaction,
     });
   };
 
@@ -250,9 +253,9 @@ export class UserService {
    *
    * @async
    * @param {LdapResponseUser} ldapUser Ldap user
-   * @param {UserEntity} user User
+   * @param {User} user User
    * @param {boolean} [save = true] Save the profile
-   * @returns {Promise<UserEntity>} The return user after save
+   * @returns {Promise<User>} The return user after save
    * @throws {Error}
    */
   async fromLdap({
@@ -260,20 +263,22 @@ export class UserService {
     domain,
     user,
     save = true,
+    transaction = true,
     loggerContext,
   }: {
     ldapUser: LdapResponseUser;
     domain: string;
-    user?: UserEntity;
+    user?: User;
     save?: boolean;
+    transaction?: boolean;
     loggerContext?: LoggerContext;
-  }): Promise<UserEntity> {
-    const profile = await this.profileService.fromLdap({ ldapUser, domain, loggerContext }).catch((error: Error) => {
+  }): Promise<User> {
+    const profile = await this.profileService.fromLdap({ ldapUser, domain, loggerContext, transaction }).catch((error: Error) => {
       this.logger.error({
         message: `Unable to save data in "profile": ${error.toString()}`,
         error,
         context: UserService.name,
-        function: this.fromLdap.name,
+        function: 'fromLdap',
         ...loggerContext,
       });
 
@@ -284,7 +289,7 @@ export class UserService {
         message: 'Unable to save data in `profile`. Unknown error.',
         error: 'Unknown',
         context: UserService.name,
-        function: this.fromLdap.name,
+        function: 'fromLdap',
         ...loggerContext,
       });
 
@@ -292,31 +297,33 @@ export class UserService {
     }
 
     // Contact
-    if (!ldapUser.sAMAccountName) {
-      throw new Error('sAMAccountName is missing');
+    if (ldapUser.objectClass.includes('contact')) {
+      throw new Error('This is an objectClass=contact');
     }
 
-    const groups: GroupEntity[] | undefined = await this.groupService.fromLdapUser(ldapUser).catch((error: Error) => {
-      this.logger.error({
-        message: `Unable to save data in "group": ${error.toString()}`,
-        error,
-        context: UserService.name,
-        function: this.fromLdap.name,
-        ...loggerContext,
-      });
+    const groups: Group[] | undefined = await this.groupService
+      .fromLdapUser({ ldapUser, transaction, loggerContext })
+      .catch((error: Error) => {
+        this.logger.error({
+          message: `Unable to save data in "group": ${error.toString()}`,
+          error,
+          context: UserService.name,
+          function: 'fromLdap',
+          ...loggerContext,
+        });
 
-      return undefined;
-    });
+        return undefined;
+      });
 
     if (!user) {
       // eslint-disable-next-line no-param-reassign
-      user = await this.byLoginIdentificator({ domain, loginIdentificator: ldapUser.objectGUID, isDisabled: false, loggerContext }).catch(
+      user = await this.byLoginGUID({ domain, loginGUID: ldapUser.objectGUID, isRelations: false, isDisabled: false, loggerContext }).catch(
         (error) => {
-          this.logger.error({
-            message: `New user "${ldapUser.sAMAccountName}": ${error.toString()}`,
+          this.logger.warn({
+            message: `New user "${ldapUser.sAMAccountName}"`,
             error,
             context: UserService.name,
-            function: this.fromLdap.name,
+            function: 'fromLdap',
             ...loggerContext,
           });
 
@@ -328,20 +335,20 @@ export class UserService {
       ...user,
       createdAt: ldapUser.whenCreated,
       updatedAt: ldapUser.whenChanged,
-      username: ldapUser.sAMAccountName,
+      username: ldapUser.sAMAccountName || ldapUser.name,
       password: `$${LoginService.LDAP}`,
       loginService: LoginService.LDAP,
       loginDomain: domain,
-      loginIdentificator: ldapUser.objectGUID,
+      loginGUID: ldapUser.objectGUID,
       // eslint-disable-next-line no-bitwise
       disabled: !!(Number.parseInt(ldapUser.userAccountControl, 10) & 2),
-      groups: typeof groups !== 'undefined' ? groups : null,
+      groups,
       isAdmin: groups ? Boolean(groups.find((group) => group.name.toLowerCase() === ADMIN_GROUP)) : false,
       settings: user ? user.settings : defaultUserSettings,
       profile,
     };
 
-    return save ? this.save({ user: this.userRepository.create(data), loggerContext }) : this.userRepository.create(data);
+    return save ? this.save({ user: this.userRepository.create(data), loggerContext, transaction }) : this.userRepository.create(data);
   }
 
   /**
@@ -359,9 +366,9 @@ export class UserService {
    * Create
    *
    * @param {User} user The user
-   * @returns {UserEntity} The user entity
+   * @returns {User} The user entity
    */
-  create = (user: unknown): UserEntity => {
+  create = (user: unknown): User => {
     if (typeof user === 'object' && user !== null) {
       return this.userRepository.create(user);
     }
@@ -373,49 +380,56 @@ export class UserService {
    * Save
    *
    * @async
-   * @param {UserEntity[]} user The users
-   * @returns {Promise<UserEntity[]>} The return users after save
+   * @param {User[]} user The users
+   * @returns {Promise<User[]>} The return users after save
    * @throws {Error} Exception
    */
-  bulkSave = async ({ user, loggerContext }: { user: UserEntity[]; loggerContext?: LoggerContext }): Promise<UserEntity[]> =>
-    this.userRepository.save<UserEntity>(user).catch((error: Error) => {
-      this.logger.error({
-        message: `Unable to save data(s) in "user": ${error.toString()}`,
-        error,
-        context: UserService.name,
-        function: 'bulkSave',
-        ...loggerContext,
-      });
+  bulkSave = async ({
+    user,
+    loggerContext,
+    transaction = true,
+  }: {
+    user: User[];
+    loggerContext?: LoggerContext;
+    transaction?: boolean;
+  }): Promise<User[]> =>
+    this.userRepository
+      .save<User>(user, { transaction })
+      .catch((error: Error) => {
+        this.logger.error({
+          message: `Unable to save data(s) in "user": ${error.toString()}`,
+          error,
+          context: UserService.name,
+          function: 'bulkSave',
+          ...loggerContext,
+        });
 
-      throw error;
-    });
+        throw error;
+      });
 
   /**
    * Save
    *
    * @async
-   * @param {UserEntity} user The user
+   * @param {User} user The user
    * @param {LoggerContext} loggerContext
-   * @returns {Promise<UserEntity>} The return user after save
+   * @returns {Promise<User>} The return user after save
    * @throws {Error} Exception
    */
-  save = async ({ user: userPromise, loggerContext }: { user: UserEntity; loggerContext?: LoggerContext }): Promise<UserEntity> =>
+  save = async ({
+    user: userPromise,
+    loggerContext,
+    transaction = true,
+  }: {
+    user: User;
+    loggerContext?: LoggerContext;
+    transaction?: boolean;
+  }): Promise<User> =>
     this.userRepository
-      .save<UserEntity>(userPromise)
+      .save<User>(userPromise, { transaction })
       .then((user) => {
         if (typeof user.profile === 'object' && Object.keys(user.profile).length > 1 && !user.profile.fullName) {
-          const f: Array<string> = [];
-          if (user.profile.lastName) {
-            f.push(user.profile.lastName);
-          }
-          if (user.profile.firstName) {
-            f.push(user.profile.firstName);
-          }
-          if (user.profile.middleName) {
-            f.push(user.profile.middleName);
-          }
-          user.profile.fullName = f.join(' ');
-          user.profile.contact = user.profile.username ? Contact.USER : Contact.PROFILE;
+          user.profile.setComputed();
         }
         return user;
       })
@@ -441,8 +455,8 @@ export class UserService {
     partialEntity,
     loggerContext,
   }: {
-    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<UserEntity>;
-    partialEntity: QueryDeepPartialEntity<UserEntity>;
+    criteria: string | string[] | number | number[] | Date | Date[] | FindConditions<User>;
+    partialEntity: QueryDeepPartialEntity<User>;
     loggerContext?: LoggerContext;
   }): Promise<UpdateResult> => this.userRepository.update(criteria, partialEntity);
 
@@ -452,16 +466,16 @@ export class UserService {
    * @async
    */
   ldapCheckUsername = async ({
-    value,
+    username,
     domain,
     loggerContext,
   }: {
-    value: string;
+    username: string;
     domain: string;
     loggerContext: LoggerContext;
   }): Promise<boolean> =>
     this.ldapService
-      .searchByUsername({ userByUsername: value, domain, cache: false, loggerContext })
+      .searchByUsername({ username, domain, cache: false, loggerContext })
       .then(() => false)
       .catch(() => true);
 
@@ -471,21 +485,21 @@ export class UserService {
    * @async
    */
   ldapNewUser = async ({
-    value,
+    ldap,
     domain,
     thumbnailPhoto,
     loggerContext,
   }: {
     request: Request;
-    value: ProfileInput;
+    ldap: ProfileInput;
     domain: string;
     thumbnailPhoto?: Promise<FileUpload>;
     loggerContext?: LoggerContext;
   }): Promise<Profile> => {
-    const entry: LDAPAddEntry = this.profileService.modification({ profile: value, loggerContext });
+    const entry: LDAPAddEntry = this.profileService.modification({ profile: ldap, loggerContext });
     entry.name = entry.cn;
 
-    if (value.contact === Contact.PROFILE) {
+    if (ldap.contact === Contact.PROFILE) {
       entry.objectClass = ['contact'];
       if (entry.sAMAccountName) {
         throw new NotAcceptableException(PortalError.USERNAME_PROFILE);
@@ -506,19 +520,19 @@ export class UserService {
 
     return this.ldapService
       .add({ entry, domain, loggerContext })
-      .then<UserEntity | ProfileEntity>((ldapUser) => {
+      .then<User | Profile>((ldapUser) => {
         if (!ldapUser) {
           throw new Error('Cannot contact with AD');
         }
 
-        if (value.contact === Contact.PROFILE) {
+        if (ldap.contact === Contact.PROFILE) {
           return this.profileService.fromLdap({ ldapUser, domain, loggerContext });
         }
 
         return this.fromLdap({ ldapUser, domain, loggerContext });
       })
       .then<Profile>((userProfile) => {
-        if (userProfile instanceof ProfileEntity) {
+        if (userProfile instanceof Profile) {
           return userProfile;
         }
 

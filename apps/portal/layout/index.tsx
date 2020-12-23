@@ -9,8 +9,9 @@ import { Box, useMediaQuery } from '@material-ui/core';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
+import { UserSettings } from '@back/user/graphql/UserSettings';
+
 import { ProfileContext } from '@lib/context';
-import type { UserSettings } from '@lib/types/user.dto';
 import type { MaterialUIProps } from '@lib/types/material';
 import { LOGOUT, USER_SETTINGS } from '@lib/queries';
 import { removeStorage } from '@lib/session-storage';

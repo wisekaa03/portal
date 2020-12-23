@@ -9,52 +9,75 @@ import type { OutlinedInputProps } from '@material-ui/core';
 // import { AutocompleteChangeDetails, AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
+import { UserSettingsPhonebookFilterInput } from '@back/user/graphql/UserSettingsPhonebookFilter.input';
+import type { Profile } from '@back/profile/profile.entity';
+import { ProfileInput } from '@back/profile/graphql/ProfileInput.input';
+import { SearchSuggestions } from '@back/profile/graphql/SearchSuggestions';
+import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
+
 import type { StyleProps as StyleProperties, Data } from './common';
-import type { UserSettings } from './user.dto';
-import type { Profile, SearchSuggestions, ProfileInput } from './profile.dto';
 //#endregion
 
-export type PhonebookColumnNames =
-  | 'loginDomain'
-  | 'lastName'
-  | 'nameEng'
-  | 'username'
-  | 'thumbnailPhoto'
-  | 'thumbnailPhoto40'
-  | 'company'
-  | 'companyEng'
-  | 'management'
-  | 'managementEng'
-  | 'department'
-  | 'departmentEng'
-  | 'division'
-  | 'divisionEng'
-  | 'title'
-  | 'positionEng'
-  | 'manager'
-  | 'room'
-  | 'telephone'
-  | 'fax'
-  | 'mobile'
-  | 'workPhone'
-  | 'email'
-  | 'country'
-  | 'region'
-  | 'town'
-  | 'street'
-  | 'disabled'
-  | 'notShowing';
+export type PROFILE_TYPE = Partial<Omit<Profile, 'resizeImage' | 'setComputed' | 'managerId' | 'manager'>> & {
+  manager?: PROFILE_TYPE;
+};
+
+export class ProfileAutocompleteFields
+  implements
+    Pick<
+      PROFILE_TYPE,
+      | 'loginDomain'
+      | 'company'
+      | 'management'
+      | 'department'
+      | 'division'
+      | 'country'
+      | 'region'
+      | 'city'
+      | 'street'
+      | 'postalCode'
+      | 'manager'
+    > {
+  loginDomain?: string;
+  company?: string;
+  management?: string;
+  department?: string;
+  division?: string;
+  country?: string;
+  region?: string;
+  city?: string;
+  street?: string;
+  postalCode?: string;
+  manager?: PROFILE_TYPE;
+}
+
+export const isProfileInput = (profile: unknown): profile is ProfileInput =>
+  typeof profile === 'object' &&
+  profile !== null &&
+  'id' in profile &&
+  'username' in profile &&
+  'firstName' in profile &&
+  !('loginService' in profile) &&
+  !('loginDN' in profile) &&
+  !('updatedAt' in profile) &&
+  !('createdAt' in profile);
+
+export const isProfile = (profile: unknown): profile is PROFILE_TYPE =>
+  typeof profile === 'object' &&
+  profile !== null &&
+  'id' in profile &&
+  'username' in profile &&
+  'firstName' in profile &&
+  'loginService' in profile &&
+  'loginDN' in profile &&
+  'updatedAt' in profile &&
+  'createdAt' in profile;
 
 export interface PhonebookColumn {
   name: PhonebookColumnNames;
   admin: boolean;
   defaultStyle: StyleProperties;
   largeStyle: StyleProperties;
-}
-
-export interface PhonebookFilter {
-  name: string;
-  value: string;
 }
 
 export interface ProfileQueryProps {
@@ -64,7 +87,7 @@ export interface ProfileQueryProps {
   search: string;
   disabled: boolean;
   notShowing: boolean;
-  filters?: PhonebookFilter[];
+  filters?: UserSettingsPhonebookFilterInput[];
 }
 
 export interface PhonebookSearchProps {
@@ -86,10 +109,10 @@ export interface ProfileProps extends WithTranslation {
 
 export interface SettingsProps extends WithTranslation {
   columns: PhonebookColumnNames[];
-  filters: PhonebookFilter[];
+  filters: UserSettingsPhonebookFilterInput[];
   handleClose: () => void;
   handleReset: () => void;
-  changeColumn: (columnsVal: PhonebookColumnNames[], filtersVal: PhonebookFilter[]) => void;
+  changeColumn: (columnsVal: PhonebookColumnNames[], filtersVal: UserSettingsPhonebookFilterInput[]) => void;
   handleFilters: (value?: unknown) => void;
   isAdmin: boolean;
 }
@@ -111,12 +134,12 @@ export interface PhonebookHeaderContextProps {
 
 export interface PhonebookTableProps {
   hasLoadMore: boolean;
-  loadMoreItems: () => Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<Profile>>>>;
+  loadMoreItems: () => Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<PROFILE_TYPE>>>>;
   columns: PhonebookColumnNames[];
   orderBy: Order<PhonebookColumnNames>;
   handleSort: (_: PhonebookColumnNames) => () => void;
   largeWidth: boolean;
-  data: Connection<Profile>;
+  data: Connection<PROFILE_TYPE>;
 }
 
 export interface PhonebookProfileControlProps {
@@ -127,7 +150,7 @@ export interface PhonebookProfileControlProps {
 }
 
 export interface PhonebookProfileModule<T extends string | number | symbol> {
-  profile?: Profile;
+  profile?: PROFILE_TYPE;
   classes: Record<T, string>;
 }
 
@@ -137,21 +160,9 @@ export interface PhonebookProfileNameProps extends PhonebookProfileModule<'root'
 
 export interface PhonebookProfileFieldProps extends PhonebookProfileModule<'root' | 'pointer'> {
   last?: boolean;
-  onClick?: (profile: string | Profile) => () => void;
+  onClick?: (profile: PhonebookColumnNames) => () => void;
   title: string;
-  field:
-    | 'company'
-    | 'title'
-    | 'management'
-    | 'manager'
-    | 'department'
-    | 'division'
-    | 'country'
-    | 'region'
-    | 'town'
-    | 'street'
-    | 'room'
-    | 'postalCode';
+  field: PhonebookColumnNames;
 }
 
 export interface HelpDataProps {
@@ -167,33 +178,33 @@ export interface ProfileEditComponentProps {
   loadingProfile: boolean;
   loadingChanged: boolean;
   hasUpdate: boolean;
-  profile?: Profile;
+  profile?: PROFILE_TYPE;
   language?: string;
   onDrop: (_: File[]) => Promise<void>;
   handleCheckUsername?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleChange: (
-    field: keyof Profile,
+    field: PhonebookColumnNames,
   ) => (
     event: React.SyntheticEvent<Element, Event>,
     value: unknown,
     reason?: any /* AutocompleteChangeReason, */,
     details?: any /* AutocompleteChangeDetails<unknown> | undefined, */,
   ) => void;
-  handleBirthday: (date: Date | null) => void;
+  handleBirthday: (date?: Date | null) => void;
   handleSave: () => void;
 }
 
 export interface TextFieldComponentProps {
   disabled: boolean;
   handleChange?: (
-    field: keyof Profile,
+    field: PhonebookColumnNames,
   ) => (
     event: React.SyntheticEvent<Element, Event>,
     value: unknown,
     reason?: any /* AutocompleteChangeReason, */,
     details?: any /* AutocompleteChangeDetails<unknown> | undefined, */,
   ) => void;
-  field: keyof Profile;
+  field: PhonebookColumnNames;
   value?: unknown;
   InputProps: Partial<OutlinedInputProps>;
   fullWidth?: boolean;

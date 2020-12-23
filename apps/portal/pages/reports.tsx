@@ -9,7 +9,6 @@ import { useQuery, useMutation, useLazyQuery, QueryResult } from '@apollo/client
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASKS } from '@lib/queries';
-import { TkTask, TkTasks, Data, TkWhere, TkEditTask, TkFileInput, TkFile, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import TasksComponent from '@front/components/tasks/tasks';

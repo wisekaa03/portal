@@ -92,7 +92,7 @@ export const TICKETS_TASKS_SUB = gql`
 `;
 
 export const TICKETS_TASK_NEW = gql`
-  mutation TicketsTaskNew($task: TkTaskNewInput!, $attachments: [Upload]) {
+  mutation TicketsTaskNew($task: TkTaskNewInput!, $attachments: [Upload!]) {
     ticketsTaskNew(task: $task, attachments: $attachments) {
       where
       code
@@ -159,7 +159,7 @@ export const TICKETS_TASK_SUB = gql`
 `;
 
 export const TICKETS_TASK_EDIT = gql`
-  mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload]) {
+  mutation TicketsEdit($task: TkTaskEditInput!, $attachments: [Upload!]) {
     ticketsTaskEdit(task: $task, attachments: $attachments) {
       users {
         ...TicketsUserProps
@@ -194,9 +194,9 @@ export const TICKETS_TASK_FILE = gql`
 `;
 
 export const TICKETS_COMMENT = gql`
-  mutation TicketsComment($file: TkFileInput!) {
-    ticketsComment(file: $file) {
-      ...TicketsFiles
+  mutation TicketsComment($comment: TkCommentInput!) {
+    ticketsComment(comment: $comment) {
+      ...TicketsComments
     }
   }
   ${TICKETS_TASK_COMMENTS}

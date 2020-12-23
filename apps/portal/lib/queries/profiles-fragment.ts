@@ -23,7 +23,7 @@ export const PROFILE_FRAGMENT = gql`
     managementEng
     departmentEng
     divisionEng
-    positionEng
+    titleEng
     title
     employeeID
     telephone
@@ -42,7 +42,7 @@ export const PROFILE_FRAGMENT = gql`
     country
     postalCode
     region
-    town
+    city
     street
     room
     accessCard

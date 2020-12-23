@@ -4,17 +4,12 @@ import React, { FC, useState, useRef, useCallback, useEffect } from 'react';
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 
-import type {
-  ServicesTaskProps,
-  ServicesCreatedProps,
-  DropzoneFile,
-  TicketsWrapperProps,
-  TkRoutes,
-  TkRoute,
-  UserSettingsTaskFavorite,
-  UserSettingsTaskFavoriteFull,
-} from '@lib/types';
-import { TkWhere } from '@lib/types/tickets';
+import type { ServicesTaskProps, ServicesCreatedProps, DropzoneFile, TicketsWrapperProps } from '@lib/types';
+import { UserSettingsTaskFavorite } from '@back/user/graphql/UserSettingsTaskFavorite';
+import { UserSettingsTaskFavoriteFull } from '@back/user/graphql/UserSettingsTaskFavoriteFull';
+import { TkWhere } from '@back/tickets/graphql/TkWhere';
+import { TkRoutes } from '@back/tickets/graphql/TkRoutes';
+import { TkRoute } from '@back/tickets/graphql/TkRoute';
 import TicketsIcon from '@public/images/svg/drawer/tickets.svg';
 import { story, withTranslation } from './index.stories';
 import Tickets from '.';
@@ -26,25 +21,25 @@ const mockRoutes: TkRoute[] = [
     code: '1',
     name: 'Сервис 1',
     avatar: TicketsIcon,
-    description: null,
+    description: undefined,
     services: [
       {
         id: `${TkWhere.Default}.4`,
         where: TkWhere.Default,
         code: '4',
         name: 'Не работает',
-        description: null,
-        avatar: null,
-        route: null,
+        description: undefined,
+        avatar: undefined,
+        route: undefined,
       },
       {
         id: `${TkWhere.Default}.5`,
         where: TkWhere.Default,
         code: '5',
         name: 'Заказать услугу',
-        description: null,
-        avatar: null,
-        route: null,
+        description: undefined,
+        avatar: undefined,
+        route: undefined,
       },
     ],
   },
@@ -54,7 +49,7 @@ const mockRoutes: TkRoute[] = [
     code: '2',
     name: 'Сервис 2',
     avatar: TicketsIcon,
-    description: null,
+    description: undefined,
     services: [],
   },
   {
@@ -63,7 +58,7 @@ const mockRoutes: TkRoute[] = [
     code: '3',
     name: 'Сервис 3',
     avatar: TicketsIcon,
-    description: null,
+    description: undefined,
     services: [],
   },
 ];
@@ -81,18 +76,18 @@ const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
       code: '1',
       where: TkWhere.SOAP1C,
       name: 'Route Name 00001',
-      description: null,
-      avatar: null,
-      services: null,
+      description: undefined,
+      avatar: undefined,
+      services: undefined,
     },
     service: {
       id: `${TkWhere.SOAP1C}.000001`,
       where: TkWhere.SOAP1C,
       code: '0000001',
       name: 'Service Name 00001',
-      description: null,
-      avatar: null,
-      route: null,
+      description: undefined,
+      avatar: undefined,
+      route: undefined,
     },
   },
   {
@@ -101,18 +96,18 @@ const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
       code: '2',
       where: TkWhere.SOAP1C,
       name: 'Route Name 00002',
-      description: null,
-      avatar: null,
-      services: null,
+      description: undefined,
+      avatar: undefined,
+      services: undefined,
     },
     service: {
       id: `${TkWhere.SOAP1C}.0000002`,
       where: TkWhere.SOAP1C,
       code: '0000002',
       name: 'Service Name 00002',
-      description: null,
-      avatar: null,
-      route: null,
+      description: undefined,
+      avatar: undefined,
+      route: undefined,
     },
   },
   {
@@ -121,18 +116,18 @@ const mockFavoritesFull: UserSettingsTaskFavoriteFull[] = [
       code: '3',
       where: TkWhere.SOAP1C,
       name: 'Route Name 00003',
-      description: null,
-      avatar: null,
-      services: null,
+      description: undefined,
+      avatar: undefined,
+      services: undefined,
     },
     service: {
       id: `${TkWhere.SOAP1C}.0000003`,
       where: TkWhere.SOAP1C,
       code: '0000003',
       name: 'Service Name 00003',
-      description: null,
-      avatar: null,
-      route: null,
+      description: undefined,
+      avatar: undefined,
+      route: undefined,
     },
   },
 ];

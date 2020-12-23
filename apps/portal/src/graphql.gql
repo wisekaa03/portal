@@ -1,0 +1,476 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+enum Contact {
+  GROUP
+  PROFILE
+  USER
+}
+
+"""Date scalar type"""
+scalar Date
+
+enum Gender {
+  MAN
+  UNKNOWN
+  WOMAN
+}
+
+type Group {
+  createdAt: Date
+  description: String
+  id: ID
+  loginDN: String
+  loginDomain: String
+  loginGUID: String
+  loginService: LoginService!
+  name: String!
+  updatedAt: Date
+}
+
+type Login {
+  loginEmail: LoginEmail
+  user: User!
+}
+
+type LoginEmail {
+  error: String
+  login: Boolean!
+}
+
+enum LoginService {
+  FACEBOOK
+  GITHUB
+  GOOGLE
+  LDAP
+  LOCAL
+  TWITTER
+}
+
+type Mutation {
+  cacheReset: Boolean!
+  changeProfile(profile: ProfileInput!, thumbnailPhoto: Upload!): Profile!
+  ldapCheckUsername(domain: String!, username: String!): Boolean!
+  ldapNewUser(domain: String!, ldap: ProfileInput!, photo: Upload): Profile!
+  logout: Boolean!
+  syncLdap: Boolean!
+  ticketsComment(comment: TkCommentInput!): TkFile!
+  ticketsTaskEdit(attachments: [Upload!], task: TkTaskEditInput!): TkEditTask!
+  ticketsTaskFile(file: TkFileInput!): TkFile!
+  ticketsTaskNew(attachments: [Upload!], task: TkTaskNewInput!): TkTaskNew!
+  userSettings(value: UserSettingsInput!): User!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+type PaginatedProfile {
+  edges: [ProfileEdge!]
+  pageInfo: ProfilePageInfo
+  totalCount: Int!
+}
+
+enum PhonebookColumnNames {
+  accessCard
+  city
+  company
+  companyEng
+  contact
+  country
+  department
+  departmentEng
+  disabled
+  division
+  divisionEng
+  email
+  employeeID
+  fax
+  firstName
+  fullName
+  gender
+  lastName
+  loginDomain
+  management
+  managementEng
+  manager
+  middleName
+  mobile
+  nameEng
+  notShowing
+  postalCode
+  region
+  room
+  street
+  telephone
+  thumbnailPhoto
+  thumbnailPhoto40
+  title
+  titleEng
+  username
+  workPhone
+}
+
+type Profile {
+  accessCard: String
+  addressPersonal: String
+  birthday: Date
+  city: String
+  company: String
+  companyEng: String
+  contact: Contact
+  country: String
+  createdAt: Date
+  department: String
+  departmentEng: String
+  disabled: Boolean
+  division: String
+  divisionEng: String
+  email: String
+  employeeID: String
+  fax: String
+  firstName: String
+  fullName: String
+  gender: Gender
+  id: ID
+  lastName: String
+  loginDN: String
+  loginDomain: String
+  loginGUID: String
+  loginService: LoginService
+  management: String
+  managementEng: String
+  manager: Profile
+  middleName: String
+  mobile: String
+  nameEng: String
+  notShowing: Boolean
+  postalCode: String
+  region: String
+  room: String
+  street: String
+  telephone: String
+  thumbnailPhoto: String
+  thumbnailPhoto40: String
+  title: String
+  titleEng: String
+  updatedAt: Date
+  username: String
+  workPhone: String
+}
+
+type ProfileEdge {
+  cursor: String!
+  node: Profile!
+}
+
+input ProfileInput {
+  accessCard: String
+  addressPersonal: String
+  birthday: Date
+  city: String
+  company: String
+  companyEng: String
+  contact: Contact
+  country: String
+  department: String
+  departmentEng: String
+  disabled: Boolean
+  division: String
+  divisionEng: String
+  email: String
+  employeeID: String
+  fax: String
+  firstName: String
+  gender: Gender
+  id: String
+  lastName: String
+  management: String
+  managementEng: String
+  middleName: String
+  mobile: String
+  nameEng: String
+  notShowing: Boolean
+  postalCode: String
+  region: String
+  room: String
+  street: String
+  telephone: String
+  title: String
+  titleEng: String
+  username: String
+  workPhone: String
+}
+
+input ProfileOrderInput {
+  direction: OrderDirection
+  field: PhonebookColumnNames
+}
+
+type ProfilePageInfo {
+  endCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor: String
+}
+
+type Query {
+  availableAuthenticationProfiles(newProfile: Boolean, synchronization: Boolean): [String!]!
+  login(domain: String!, password: String!, username: String!): Login!
+  loginEmail: LoginEmail!
+  me: User!
+  profile(id: String!): Profile!
+  profileFieldSelection(field: PhonebookColumnNames!): [String!]!
+  profiles(after: String, disabled: Boolean, filters: [UserSettingsPhonebookFilterInput!], first: Int, notShowing: Boolean, orderBy: ProfileOrderInput, search: String): PaginatedProfile!
+  searchSuggestions(search: String!): [SearchSuggestions!]!
+  ticketsRoutes(routes: TkRoutesInput): TkRoutes!
+  ticketsTask(task: TkTaskInput!): TkEditTask!
+  ticketsTasks(tasks: TkTasksInput): TkTasks!
+}
+
+type SearchSuggestions {
+  avatar: String
+  name: String
+}
+
+type Subscription {
+  ticketsRoutesSubscription: TkRoutes!
+  ticketsTasksSubscription: TkTasks!
+  ticketsTaskSubscription: TkEditTask!
+}
+
+type TkComment {
+  authorLogin: String
+  body: String
+  code: String!
+  date: Date
+  files: [TkFile!]
+  id: ID!
+  parentCode: String
+  where: TkWhere!
+}
+
+input TkCommentInput {
+  code: String
+  id: String
+  where: TkWhere
+}
+
+type TkEditTask {
+  errors: [String!]
+  task: TkTask
+  users: [TkUser!]
+}
+
+type TkFile {
+  body: String
+  code: String!
+  id: ID!
+  mime: String
+  name: String
+  where: TkWhere!
+}
+
+input TkFileInput {
+  code: String
+  where: TkWhere
+}
+
+type TkRoute {
+  avatar: String
+  code: String!
+  description: String
+  id: ID!
+  name: String
+  services: [TkService!]
+  where: TkWhere!
+}
+
+type TkRoutes {
+  errors: [String!]
+  routes: [TkRoute!]
+}
+
+input TkRoutesInput {
+  cache: Boolean
+}
+
+type TkService {
+  avatar: String
+  code: String!
+  description: String
+  id: ID!
+  name: String!
+  route: String
+  where: TkWhere!
+}
+
+type TkTask {
+  availableAction: String
+  availableStages: String
+  body: String
+  code: String!
+  comments: [TkComment!]
+  createdDate: Date
+  endDate: Date
+  executorUser: String
+  files: [TkFile!]
+  id: ID!
+  initiatorUser: String
+  route: TkRoute
+  service: TkService
+  smallBody: String
+  status: String!
+  subject: String!
+  timeoutDate: Date
+  where: TkWhere!
+}
+
+input TkTaskEditInput {
+  code: String
+  comment: String
+  where: TkWhere
+}
+
+input TkTaskInput {
+  cache: Boolean
+  code: String
+  where: TkWhere
+}
+
+type TkTaskNew {
+  code: String
+  createdDate: Date
+  organization: String
+  route: String
+  service: String
+  status: String
+  subject: String
+  where: TkWhere
+}
+
+input TkTaskNewInput {
+  body: String
+  executorUser: String
+  route: String
+  service: String
+  subject: String
+  where: TkWhere
+}
+
+type TkTasks {
+  errors: [String!]
+  tasks: [TkTask!]
+  users: [TkUser!]
+}
+
+input TkTasksInput {
+  cache: Boolean
+  find: String
+  routeId: String
+  serviceId: String
+  status: String
+  where: TkWhere
+}
+
+type TkUser {
+  avatar: String
+  code: String!
+  company: String
+  department: String
+  division: String
+  email: String
+  id: ID!
+  login: String
+  manager: String
+  name: String!
+  telephone: String
+  title: String
+  where: TkWhere!
+}
+
+enum TkWhere {
+  Default
+  OSTaudit
+  OSThr
+  OSTmedia
+  SOAP1C
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type User {
+  createdAt: Date
+  disabled: Boolean!
+  groups: [Group!]
+  id: ID!
+  isAdmin: Boolean!
+  loginDomain: String
+  loginGUID: String
+  loginService: LoginService!
+  profile: Profile!
+  settings: UserSettings!
+  updatedAt: Date
+  username: String!
+}
+
+type UserSettings {
+  drawer: Boolean
+  fontSize: Int
+  lng: String
+  phonebook: [UserSettingsPhonebook!]
+  task: UserSettingsTask
+}
+
+input UserSettingsInput {
+  drawer: Boolean
+  fontSize: Int
+  lng: String
+  phonebook: [UserSettingsPhonebookInput!]
+  task: UserSettingsTaskInput
+}
+
+type UserSettingsPhonebook {
+  columns: [PhonebookColumnNames!]
+  filters: [UserSettingsPhonebookFilter!]
+}
+
+type UserSettingsPhonebookFilter {
+  name: PhonebookColumnNames!
+  value: String!
+}
+
+input UserSettingsPhonebookFilterInput {
+  name: PhonebookColumnNames
+  value: String
+}
+
+input UserSettingsPhonebookInput {
+  columns: [PhonebookColumnNames!]
+  filters: [UserSettingsPhonebookFilterInput!]
+}
+
+type UserSettingsTask {
+  favorites: [UserSettingsTaskFavorite!]
+  status: String
+}
+
+type UserSettingsTaskFavorite {
+  code: String!
+  svcCode: String!
+  where: TkWhere!
+}
+
+input UserSettingsTaskFavoriteInput {
+  code: String!
+  svcCode: String!
+  where: TkWhere!
+}
+
+input UserSettingsTaskInput {
+  favorites: [UserSettingsTaskFavoriteInput!]
+  status: String
+}

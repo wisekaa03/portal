@@ -7,7 +7,7 @@ import { Typography, Button, Card, CardContent, FormControl } from '@material-ui
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { LogoutPageProps } from '@lib/types';
+import type { LogoutPageProps } from '@lib/types';
 import Loading from '@front/components/loading';
 import Background from '@public/images/svg/background.svg';
 import Logo from '@public/images/svg/logo.svg';

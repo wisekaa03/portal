@@ -5,7 +5,6 @@ import { Request } from 'express';
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { User } from '@lib/types/user.dto';
 //#endregion
 
 @Injectable()

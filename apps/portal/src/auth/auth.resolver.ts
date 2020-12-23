@@ -2,22 +2,19 @@
 
 //#region Imports NPM
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards, UnauthorizedException, Inject, LoggerService, Logger } from '@nestjs/common';
-import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { UseGuards, UnauthorizedException, Inject, LoggerService, Logger, ServiceUnavailableException } from '@nestjs/common';
+// import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { Request, Response } from 'express';
 //#endregion
 //#region Imports Local
-import { Login, LoginEmail, User, AvailableAuthenticationProfiles } from '@lib/types';
+import { User } from '@back/user/user.entity';
 import { ConfigService } from '@app/config';
 import { CurrentUser, PasswordFrontend, getUsername } from '@back/user/user.decorator';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
+import { Login, LoginEmail } from './graphql';
 import { AuthService } from './auth.service';
 //#endregion
-
-interface Ping {
-  ping: number;
-}
 
 @Resolver()
 export class AuthResolver {
@@ -33,13 +30,13 @@ export class AuthResolver {
    *
    * @async
    * @method availableAuthenticationProfiles
-   * @returns {AvailableAuthenticationProfiles[]} Profiles
+   * @returns {string[]} Profiles string
    * @throws {Error}
    */
-  @Query('availableAuthenticationProfiles')
+  @Query(() => [String])
   async availableAuthenticationProfiles(
-    @Args('synchronization') synchronization?: boolean,
-    @Args('newProfile') newProfile?: boolean,
+    @Args('synchronization', { type: () => Boolean, nullable: true }) synchronization?: boolean,
+    @Args('newProfile', { type: () => Boolean, nullable: true }) newProfile?: boolean,
   ): Promise<string[]> {
     return this.userService.availableAuthenticationProfiles(synchronization ?? false, newProfile ?? true);
   }
@@ -52,7 +49,7 @@ export class AuthResolver {
    * @returns {User} Current User
    * @throws {GraphQLError}
    */
-  @Query('me')
+  @Query(() => User)
   @UseGuards(GqlAuthGuard)
   async me(@Context('req') request: Request): Promise<User> {
     return this.authService.validate(request);
@@ -68,22 +65,21 @@ export class AuthResolver {
    * @returns {Login} The login response
    * @throws {GraphQLError}
    */
-  @Query()
+  @Query(() => Login)
   async login(
-    @Args('username') username: string,
-    @Args('password') password: string,
-    @Args('domain') domain: string,
+    @Args('username', { type: () => String }) username: string,
+    @Args('password', { type: () => String }) password: string,
+    @Args('domain', { type: () => String }) domain: string,
     @Context('req') request: Request,
-    // @Context('res') response: Response,
   ): Promise<Login> {
-    const usernameLOW = username.toLowerCase();
-    const email: LoginEmail = { login: false };
+    const usernameLow = username.toLowerCase();
+    const loginEmail: LoginEmail = { login: false };
 
     const user = await this.authService.login({
-      username: usernameLOW,
+      username: usernameLow,
       password,
       domain,
-      loggerContext: { username: usernameLOW, headers: request.headers },
+      loggerContext: { username: usernameLow, headers: request.headers },
     });
 
     request.logIn(user, async (error: Error) => {
@@ -105,7 +101,7 @@ export class AuthResolver {
       request.session.password = password;
     }
 
-    return { user, email };
+    return { user, loginEmail };
   }
 
   /**
@@ -116,15 +112,19 @@ export class AuthResolver {
    * @returns {boolean} True if a login successful
    * @throws {GraphQLError}
    */
-  @Query()
+  @Query(() => LoginEmail)
   async loginEmail(
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
     @Context('req') request: Request,
     @Context('res') response: Response,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
   ): Promise<LoginEmail> {
+    if (!user.profile.email) {
+      throw new ServiceUnavailableException();
+    }
+
     const loggerContext = getUsername(request);
-    return this.authService.loginEmail(user?.profile.email || '', password || '', request, response).catch((error: Error) => {
+    return this.authService.loginEmail(user.profile.email, password, request, response).catch((error: Error) => {
       this.logger.error({
         message: 'Unable to login in mail',
         error,
@@ -147,14 +147,14 @@ export class AuthResolver {
    * @method logout
    * @returns {boolean} The true/false of logout
    */
-  @Mutation()
+  @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async logout(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
+  async logout(@Context('req') request: Request, @CurrentUser() user: User): Promise<boolean> {
     this.logger.log({
       message: 'User logout',
       context: AuthResolver.name,
       function: 'logout',
-      username: user?.username,
+      username: user.username,
       headers: request.headers,
     });
 
@@ -174,10 +174,10 @@ export class AuthResolver {
    * @method cacheReset
    * @returns {boolean} Cache reset true/false
    */
-  @Mutation()
+  @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async cacheReset(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
-    const loggerContext = { username: user?.username, headers: request.headers };
+  async cacheReset(@Context('req') request: Request, @CurrentUser() user: User): Promise<boolean> {
+    const loggerContext = { username: user.username, headers: request.headers };
     this.logger.log({ message: 'Cache reset', context: AuthResolver.name, function: 'cacheReset', ...loggerContext });
 
     return this.authService.cacheReset({ loggerContext });

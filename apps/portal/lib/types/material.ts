@@ -2,6 +2,7 @@
 
 import type React from 'react';
 import type { ApolloQueryResult } from '@apollo/client';
+
 import type { Data } from './common';
 
 // refetchRoutes: () => Promise<ApolloQueryResult<Data<'TicketsRoutes', TkRoutes>>>;

@@ -2,9 +2,12 @@
 
 import type React from 'react';
 import type { ApolloError } from '@apollo/client';
+import { UserSettingsTaskFavoriteFull } from '@back/user/graphql/UserSettingsTaskFavoriteFull';
+import { UserSettingsTaskFavorite } from '@back/user/graphql/UserSettingsTaskFavorite';
+import { TkService } from '@back/tickets/graphql/TkService';
+import { TkRoute } from '@back/tickets/graphql/TkRoute';
+
 import type { DropzoneFile } from './dropzone';
-import type { TkRoute, TkService } from './tickets';
-import type { UserSettingsTaskFavorite, UserSettingsTaskFavoriteFull } from './user.dto';
 
 export interface ServicesTaskProps {
   route?: TkRoute;

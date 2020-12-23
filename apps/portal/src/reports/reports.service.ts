@@ -2,13 +2,13 @@
 
 //#region Imports NPM
 import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
-import { FileUpload } from 'graphql-upload';
+// import { FileUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import { User } from '@lib/types/user.dto';
+import { User } from '@back/user/user.entity';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService } from '@app/soap';
-import { constructUploads } from '@back/shared/upload';
+// import { constructUploads } from '@back/shared/constructUploads';
 //#endregion
 
 /**

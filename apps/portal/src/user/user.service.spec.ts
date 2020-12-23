@@ -7,18 +7,16 @@ import { TypeOrmModule, getRepositoryToken, TypeOrmModuleOptions } from '@nestjs
 // import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { LdapService } from 'nestjs-ldap';
+import { LdapService, LdapModule, LDAP_OPTIONS } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config';
+import { ConfigModule, ConfigService } from '@app/config';
 import { LDAP_SYNC_SERVICE } from '@back/shared/constants';
-import { ProfileService } from '@back/profile/profile.service';
-import { ProfileEntity } from '@back/profile/profile.entity';
-import { GroupService } from '@back/group/group.service';
-import { GroupEntity } from '@back/group/group.entity';
+import { ProfileService, Profile } from '@back/profile';
+import { GroupService, Group } from '@back/group';
 import { UserService } from './user.service';
-import { UserEntity } from './user.entity';
-import { UserEntityMock } from './user.entity.mock';
+import { User } from './user.entity';
+import { ProfileModule } from '../profile/profile.module';
 //#endregion
 
 jest.mock('@app/config/config.service');
@@ -37,30 +35,37 @@ describe(UserService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: async () =>
-            ({
-              type: 'sqlite',
-              database: ':memory:',
-              dropSchema: true,
-              entities: [GroupEntity, UserEntityMock, ProfileEntity],
-              synchronize: true,
-              logging: false,
-            } as TypeOrmModuleOptions),
-        }),
+        // ConfigModule.register(join('../../.env.example')),
+        // TypeOrmModule.forRootAsync({
+        //   useFactory: async () =>
+        //     ({
+        //       type: 'sqlite',
+        //       database: ':memory:',
+        //       dropSchema: true,
+        //       entities: [Group, UserMock, ProfileMock],
+        //       synchronize: true,
+        //       logging: false,
+        //     } as TypeOrmModuleOptions),
+        // }),
+        // TypeOrmModule.forFeature([UserMock]),
+        // LdapModule.register({
+        //   domains: [],
+        //   logger: console,
+        // }),
+        // ProfileModule,
       ],
       providers: [
         { provide: LDAP_SYNC_SERVICE, useValue: serviceMock },
+        { provide: LDAP_OPTIONS, useValue: serviceMock },
         { provide: Logger, useValue: serviceMock },
         ConfigService,
         UserService,
+        { provide: GroupService, useValue: serviceMock },
+        { provide: ProfileService, useValue: serviceMock },
         { provide: ClientProxy, useValue: serviceMock },
         { provide: LdapService, useValue: serviceMock },
-        { provide: ProfileService, useValue: serviceMock },
-        { provide: GroupService, useValue: serviceMock },
-        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
-        { provide: getRepositoryToken(UserEntity), useValue: UserEntityMock },
-        { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
+        { provide: getRepositoryToken(User), useClass: repositoryMock },
+        { provide: getRepositoryToken(Profile), useClass: repositoryMock },
       ],
     }).compile();
 

@@ -40,7 +40,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 //#region Imports Local
 import clearHtml from '@lib/clear-html';
 import { useTranslation } from '@lib/i18n-client';
-import { LARGE_RESOLUTION, TASK_STATUSES } from '@lib/constants';
+import { LARGE_RESOLUTION } from '@lib/constants';
 import type { DocFlowTaskInfoCardProps, DocFlowFileProps, DocFlowTask, DocFlowTaskComponentProps } from '@lib/types/docflow';
 import { DocFlowProcessStep } from '@lib/types/docflow';
 import { ComposeLink } from '@front/components/compose-link';

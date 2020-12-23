@@ -65,27 +65,8 @@ export const AUTO_COLLAPSE_ROUTES = [
   /* '/mail' */
 ];
 
-export const TASK_STATUSES = ['Все', 'Регистрация', 'В работе', 'Выполнено', 'Завершено'];
-
 /**
  * PHONEBOOK
  */
 export const PHONEBOOK_HIDDEN_COLS = ['disabled', 'notShowing'];
 export const PHONEBOOK_ROW_HEIGHT = 72;
-
-/**
- * PROFILE
- */
-export const PROFILE_AUTOCOMPLETE_FIELDS = [
-  'loginDomain',
-  'company',
-  'management',
-  'department',
-  'division',
-  'country',
-  'region',
-  'town',
-  'street',
-  'postalCode',
-  'manager',
-];

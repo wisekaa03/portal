@@ -6,7 +6,11 @@ import Head from 'next/head';
 import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
-import type { TkTask, TkTasks, TkTasksInput, Data } from '@lib/types';
+import { TkTask } from '@back/tickets/graphql/TkTask';
+import { TkTasks } from '@back/tickets/graphql/TkTasks';
+import { TkTasksInput } from '@back/tickets/graphql/TkTasks.input';
+
+import type { Data } from '@lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASKS, TICKETS_TASKS_SUB } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';

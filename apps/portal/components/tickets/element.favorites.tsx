@@ -12,6 +12,8 @@ import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import clsx from 'clsx';
 //#endregion
 //#region Imports Local
+import { TkWhere } from '@back/tickets/graphql/TkWhere';
+
 import { ServicesElementFavProps } from '@lib/types';
 import ConditionalWrapper from '@lib/conditional-wrapper';
 import { Icon } from '@front/components/ui/icon';
@@ -123,9 +125,9 @@ const ServicesElementFavorites: FC<ServicesElementFavProps> = ({
       if (typeof setFavorite === 'function' && favorite.route && favorite.service) {
         setFavorite({
           favorite: {
-            code: favorite.route.code,
-            where: favorite.route.where,
-            svcCode: favorite.service.code,
+            code: favorite.route.code || '',
+            where: favorite.route.where || TkWhere.Default,
+            svcCode: favorite.service.code || '',
           },
           action,
         });

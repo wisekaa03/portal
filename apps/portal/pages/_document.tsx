@@ -8,7 +8,7 @@ import { ServerStyleSheets } from '@material-ui/styles';
 import { lngFromReq } from 'next-i18next/dist/commonjs/utils';
 //#endregion
 //#region Imports Local
-import { DocumentPortalContext, DocumentPortalInitialProps } from '@lib/types';
+import type { DocumentPortalContext, DocumentPortalInitialProps } from '@lib/types';
 import { MaterialUIPrimaryMain } from '@lib/theme';
 import { nextI18next } from '@lib/i18n-client';
 //#endregion

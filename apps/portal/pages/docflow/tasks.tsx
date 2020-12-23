@@ -9,7 +9,7 @@ import { useQuery, ApolloQueryResult } from '@apollo/client';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { DOCFLOW_TASKS, DOCFLOW_TASKS_SUB } from '@lib/queries';
 import type { DocFlowTask, DocFlowTasksInput } from '@lib/types/docflow';
-import { Data } from '@lib/types';
+import type { Data } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import DocFlowTasksComponent from '@front/components/docflow/tasks';
 //#endregion

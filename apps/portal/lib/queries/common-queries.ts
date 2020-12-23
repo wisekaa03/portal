@@ -35,7 +35,7 @@ export const CURRENT_USER = gql`
       groups {
         id
         name
-        dn
+        loginDN
         description
         createdAt
         updatedAt
@@ -106,13 +106,13 @@ export const LOGIN = gql`
         groups {
           id
           name
-          dn
+          loginDN
           description
           createdAt
           updatedAt
         }
       }
-      email {
+      loginEmail {
         login
         error
       }

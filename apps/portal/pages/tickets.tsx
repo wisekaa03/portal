@@ -1,32 +1,28 @@
 /** @format */
 
 //#region Imports NPM
-import React, { useState, useEffect, useMemo, useRef, useCallback, useContext, Component } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback, useContext } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
+import { TkRoute } from '@back/tickets/graphql/TkRoute';
+import { TkTaskNew } from '@back/tickets/graphql/TkTaskNew';
+import { TkRoutes } from '@back/tickets/graphql/TkRoutes';
+import { TkRoutesInput } from '@back/tickets/graphql/TkRoutes.input';
+
+import { UserSettings } from '@back/user/graphql/UserSettings';
+import { UserSettingsTaskFavoriteFull } from '@back/user/graphql/UserSettingsTaskFavoriteFull';
+
 import { ProfileContext } from '@lib/context';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { MINIMAL_SUBJECT_LENGTH, MINIMAL_BODY_LENGTH } from '@lib/constants';
 import { USER_SETTINGS, TICKETS_ROUTES, TICKETS_TASK_NEW, TICKETS_ROUTES_SUB } from '@lib/queries';
-import {
-  Data,
-  DropzoneFile,
-  ServicesTaskProps,
-  ServicesCreatedProps,
-  TkRoutes,
-  UserSettings,
-  UserSettingsTaskFavoriteFull,
-  UserSettingsTaskFavorite,
-  TkRoute,
-  TkTaskNew,
-} from '@lib/types';
+import type { Data, DropzoneFile, ServicesTaskProps, ServicesCreatedProps } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import TicketsComponent from '@front/components/tickets';
 import { MaterialUI } from '@front/layout';
-import { TkRoutesInput } from '../lib/types/tickets';
 
 //#endregion
 

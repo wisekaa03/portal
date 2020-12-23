@@ -10,11 +10,13 @@ import { Paper, Tabs, Tab, Box, FormControl, Select, MenuItem, TextField, Typogr
 import StarBorderIcon from '@material-ui/icons/StarBorderOutlined';
 //#endregion
 //#region Imports Local
+import { UserSettingsTaskFavorite } from '@back/user/graphql/UserSettingsTaskFavorite';
+import { TkWhere } from '@back/tickets/graphql/TkWhere';
+
 import { useTranslation } from '@lib/i18n-client';
 import { appBarHeight } from '@lib/constants';
-import type { TicketsWrapperProps, ServicesFavoriteProps, UserSettingsTaskFavorite } from '@lib/types';
+import type { TicketsWrapperProps, ServicesFavoriteProps } from '@lib/types';
 import Button from '@front/components/ui/button';
-import RefreshButton from '@front/components/ui/refresh-button';
 import Loading from '@front/components/loading';
 import Dropzone from '@front/components/dropzone';
 import { Icon } from '@front/components/ui/icon';
@@ -152,9 +154,9 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
             return [
               ...accumulator,
               {
-                where: current.route.where,
-                code: current.route.code,
-                svcCode: current.service.code,
+                where: current.route.where || TkWhere.Default,
+                code: current.route.code || '',
+                svcCode: current.service.code || '',
               },
             ];
           }, [] as UserSettingsTaskFavorite[]);
@@ -174,9 +176,9 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
             (accumulator, element) => [
               ...accumulator,
               {
-                where: element.route.where,
-                code: element.route.code,
-                svcCode: element.service.code,
+                where: element.route.where || TkWhere.Default,
+                code: element.route.code || '',
+                svcCode: element.service.code || '',
               },
             ],
             [] as UserSettingsTaskFavorite[],
@@ -220,9 +222,9 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
       task.service &&
       updateFavorites({
         favorite: {
-          where: task.route?.where,
-          code: task.route?.code,
-          svcCode: task.service?.code,
+          where: task.route.where || TkWhere.Default,
+          code: task.route.code || '',
+          svcCode: task.service.code || '',
         },
         action: 'add',
       }),

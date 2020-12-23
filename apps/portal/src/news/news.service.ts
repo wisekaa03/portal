@@ -6,10 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 //#endregion
 //#region Imports Local
-import { News } from '@lib/types';
 // import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
-import { NewsEntity } from './news.entity';
+import { News } from './news.entity';
 //#endregion
 
 @Injectable()
@@ -18,8 +17,8 @@ export class NewsService {
     @Inject(Logger) private readonly logger: LoggerService,
     // private readonly configService: ConfigService,
     private readonly userService: UserService,
-    @InjectRepository(NewsEntity)
-    private readonly newsRepository: Repository<NewsEntity>,
+    @InjectRepository(News)
+    private readonly newsRepository: Repository<News>,
   ) {}
 
   /**
@@ -27,7 +26,7 @@ export class NewsService {
    *
    * @return News
    */
-  news = async (): Promise<NewsEntity[]> =>
+  news = async (): Promise<News[]> =>
     // TODO: сделать чтобы выводилось постранично
     this.newsRepository.find();
 
@@ -36,7 +35,7 @@ export class NewsService {
    *
    * @return id
    */
-  editNews = async ({ title, excerpt, content, author, id }: NewsEntity): Promise<NewsEntity> => {
+  editNews = async ({ title, excerpt, content, author, id }: News): Promise<News> => {
     const data = this.newsRepository.create({
       title,
       excerpt,

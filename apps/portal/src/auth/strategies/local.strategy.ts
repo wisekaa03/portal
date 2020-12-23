@@ -1,13 +1,13 @@
 /** @format */
 
 //#region Imports NPM
-import { Request } from 'express';
+import type { Request } from 'express';
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 //#endregion
 //#region Imports Local
-import { User } from '@lib/types/user.dto';
+import { User } from '@back/user/user.entity';
 import { AuthService } from '../auth.service';
 //#endregion
 

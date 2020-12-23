@@ -4,15 +4,20 @@
 import type { Request } from 'express';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-import { FileUpload } from 'graphql-upload';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import defaultsDeep from 'lodash/defaultsDeep';
 //#endregion
 //#region Imports Local
-import { Profile, User, UserSettings, ProfileInput } from '@lib/types';
+import { PROFILE_TYPE } from '@lib/types/profile';
+import { Profile } from '@back/profile/profile.entity';
+import { ProfileInput } from '@back/profile/graphql/ProfileInput.input';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { defaultUserSettings } from '@back/shared/constants';
+import { UserSettings } from './graphql/UserSettings';
+import { User } from './user.entity';
 import { UserService } from './user.service';
 import { CurrentUser } from './user.decorator';
+import { UserSettingsInput } from './graphql';
 //#endregion
 
 @Resolver()
@@ -26,10 +31,10 @@ export class UserResolver {
    * @async
    * @returns {boolean}
    */
-  @Mutation('syncLdap')
+  @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
-  async syncLdap(@Context('req') request: Request, @CurrentUser() user?: User): Promise<boolean> {
-    return this.userService.syncLdap({ loggerContext: { username: user?.username, headers: request.headers } });
+  async syncLdap(@Context('req') request: Request, @CurrentUser() user: User): Promise<boolean> {
+    return this.userService.syncLdap({ loggerContext: { username: user.username, headers: request.headers } });
   }
 
   /**
@@ -40,22 +45,18 @@ export class UserResolver {
    * @param {FileUpload} photo Avatar
    * @returns {Profile}
    */
-  @Mutation()
+  @Mutation(() => Profile)
   @UseGuards(GqlAuthGuard)
   async ldapNewUser(
     @Context('req') request: Request,
-    @Args('ldap') value: ProfileInput,
-    @Args('domain') domain: string,
-    @Args('photo') thumbnailPhoto?: Promise<FileUpload>,
-    @CurrentUser() user?: User,
-  ): Promise<Profile> {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
+    @CurrentUser() user: User,
+    @Args('ldap', { type: () => ProfileInput }) ldap: ProfileInput,
+    @Args('domain', { type: () => String }) domain: string,
+    @Args('photo', { type: () => GraphQLUpload, nullable: true }) thumbnailPhoto?: Promise<FileUpload>,
+  ): Promise<PROFILE_TYPE> {
     return this.userService.ldapNewUser({
       request,
-      value,
+      ldap,
       domain,
       thumbnailPhoto,
       loggerContext: { username: user.username, headers: request.headers },
@@ -69,19 +70,15 @@ export class UserResolver {
    * @param {string} value The username to check
    * @returns {boolean}
    */
-  @Mutation()
+  @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async ldapCheckUsername(
     @Context('req') request: Request,
-    @Args('value') value: string,
-    @Args('domain') domain: string,
-    @CurrentUser() user?: User,
+    @CurrentUser() user: User,
+    @Args('username', { type: () => String }) username: string,
+    @Args('domain', { type: () => String }) domain: string,
   ): Promise<boolean> {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    return this.userService.ldapCheckUsername({ value, domain, loggerContext: { username: user.username, headers: request.headers } });
+    return this.userService.ldapCheckUsername({ username, domain, loggerContext: { username: user.username, headers: request.headers } });
   }
 
   /**
@@ -91,13 +88,13 @@ export class UserResolver {
    * @param {UserSettings} value User settings
    * @returns {User} User
    */
-  @Mutation()
+  @Mutation(() => User)
   @UseGuards(GqlAuthGuard)
-  async userSettings(@Context('req') request: Request, @Args('value') value: UserSettings, @CurrentUser() user?: User): Promise<User> {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
+  async userSettings(
+    @Context('req') request: Request,
+    @CurrentUser() user: User,
+    @Args('value', { type: () => UserSettingsInput }) value: UserSettingsInput,
+  ): Promise<User> {
     const settings = defaultsDeep(value, user.settings, defaultUserSettings);
 
     // eslint-disable-next-line no-param-reassign

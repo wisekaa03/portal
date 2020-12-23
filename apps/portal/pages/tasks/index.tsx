@@ -4,7 +4,8 @@
 import React from 'react';
 //#endregion
 //#region Imports Local
-import { TkWhere } from '@lib/types';
+import { TkWhere } from '@back/tickets/graphql/TkWhere';
+
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import TaskPage from '@front/pages/tasks/task';
 import TasksPage from '@front/pages/tasks/tasks';

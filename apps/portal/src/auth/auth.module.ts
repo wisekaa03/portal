@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 //#region Imports Local
 import { UserModule } from '@back/user/user.module';
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
+// import { ConfigService, ConfigModule } from '@app/config';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { CookieSerializer } from './cookie.serializer';
@@ -15,6 +16,12 @@ import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
+    HttpModule,
+
+    //#region Users module
+    UserModule,
+    //#endregion
+
     //#region Passport module
     PassportModule.register({ session: true, defaultStrategy: 'local' }),
     // JwtModule.registerAsync({
@@ -25,12 +32,6 @@ import { LocalStrategy } from './strategies/local.strategy';
     //     };
     //   },
     // }),
-    //#endregion
-
-    HttpModule,
-
-    //#region Users module
-    UserModule,
     //#endregion
 
     SubscriptionsModule,

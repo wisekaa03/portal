@@ -11,9 +11,10 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Table, TableBody } from '@material-ui/core';
 //#endregion
 //#region Imports Local
+import { PROFILE_TYPE } from '@lib/types/profile';
 import { PHONEBOOK_ROW_HEIGHT } from '@lib/constants';
 import { PhonebookHeaderContext } from '@lib/context';
-import type { PhonebookTableProps, Profile, Data } from '@lib/types';
+import type { PhonebookTableProps, Data } from '@lib/types';
 import PhonebookHeader from './header';
 import PhonebookRow from './row';
 //#endregion
@@ -31,14 +32,14 @@ const useStyles = makeStyles(() =>
 );
 
 export interface ListItemProfile {
-  items: Edge<Profile>[];
+  items: Edge<PROFILE_TYPE>[];
   columns: Array<string>;
   largeWidth: boolean;
 }
 
 const itemKey = (index: number, data: ListItemProfile): Key => data.items[index].node.id || 'unknown';
 
-const isRowLoaded = (data: Connection<Profile>) => (index: number): boolean =>
+const isRowLoaded = (data: Connection<PROFILE_TYPE>) => (index: number): boolean =>
   data && (!data.pageInfo.hasNextPage || index < data.edges.length);
 
 const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, columns, orderBy, handleSort, largeWidth, data }) => {
@@ -46,7 +47,7 @@ const PhonebookTable: FC<PhonebookTableProps> = ({ hasLoadMore, loadMoreItems, c
 
   const itemCount: number = data.pageInfo.hasNextPage ? data.edges.length + 1 : data.edges.length;
 
-  const loadMoreItemsFunction = async (): Promise<ApolloQueryResult<Data<'profiles', Connection<Profile>>> | undefined> =>
+  const loadMoreItemsFunction = async (): Promise<ApolloQueryResult<Data<'profiles', Connection<PROFILE_TYPE>>> | undefined> =>
     hasLoadMore ? loadMoreItems() : undefined;
 
   return (

@@ -10,7 +10,7 @@ import { ConfigService } from '@app/config';
 import { LDAP_SYNC_SERVICE } from '@back/shared/constants';
 import { ProfileModule } from '@back/profile/profile.module';
 import { GroupModule } from '@back/group/group.module';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserResolver } from './user.resolver';
 //#endregion
@@ -21,7 +21,7 @@ import { UserResolver } from './user.resolver';
     ProfileModule,
 
     //#region TypeORM
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([User]),
     //#endregion
   ],
   controllers: [],

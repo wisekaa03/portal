@@ -5,13 +5,13 @@ import { CallHandler, ContextType, ExecutionContext, HttpException, HttpStatus, 
 import { Request, Response } from 'express';
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 //#endregion
 //#region Imports Local
-import type { GraphQLContext } from '@back/shared/types/interfaces';
-import { User } from '@lib/types/user.dto';
-import { ConfigService } from '@app/config/config.service';
+import type { GraphQLContext } from '@back/shared/types';
+// import { User } from '@back/user/user.entity';
+// import { ConfigService } from '@app/config/config.service';
 //#endregion
 
 export type AppGraphQLExecutionContext = GraphQLExecutionContext;

@@ -41,7 +41,7 @@
     "email": "E-mail",
     "country": "Country",
     "region": "Region",
-    "town": "City",
+    "city": "City",
     "street": "Street",
     "postalCode": "Postal code",
     "disabled": "Dismissed",

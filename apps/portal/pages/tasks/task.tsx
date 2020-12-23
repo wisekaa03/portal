@@ -6,11 +6,18 @@ import Head from 'next/head';
 import { useQuery, useMutation, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
+import { TkWhere } from '@back/tickets/graphql/TkWhere';
+import { TkTask } from '@back/tickets/graphql/TkTask';
+import { TkEditTask } from '@back/tickets/graphql/TkEditTask';
+import { TkFile } from '@back/tickets/graphql/TkFile';
+import { TkFileInput } from '@back/tickets/graphql/TkFile.input';
+import { TkTaskInput } from '@back/tickets/graphql/TkTask.input';
+import { TkTaskEditInput } from '@back/tickets/graphql/TkTaskEdit.input';
+
 import dateFormat from '@lib/date-format';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { TICKETS_TASK, TICKETS_TASK_SUB, TICKETS_TASK_EDIT, TICKETS_TASK_FILE, TICKETS_COMMENT } from '@lib/queries';
-import type { Data, TkTask, TkEditTask, TkFileInput, TkFile, DropzoneFile, TkTaskInput, TkTaskEditInput } from '@lib/types';
-import { TkWhere } from '@lib/types';
+import type { Data, DropzoneFile } from '@lib/types';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 import TaskComponent from '@front/components/tasks/task';

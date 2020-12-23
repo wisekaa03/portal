@@ -10,7 +10,8 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import { dateLocale } from '@lib/locales';
-import { DocFlowProcessStep, DocFlowProcessStepProps } from '@lib/types/docflow';
+import type { DocFlowProcessStepProps } from '@lib/types/docflow';
+import { DocFlowProcessStep } from '@lib/types/docflow';
 import BaseButton from '@front/components/ui/button';
 //#endregion
 

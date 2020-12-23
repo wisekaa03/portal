@@ -5,15 +5,15 @@
 //#region Imports Local
 import { WinstonModule } from 'nest-winston';
 import { winstonOptions } from '@back/shared/logger.options';
+import { TypeOrmLogger } from '@back/shared/typeorm.logger';
 import { ConfigService } from '@app/config/config.service';
-import { TypeOrmLogger } from '@app/portal/shared/typeorm.logger';
-import { GroupEntity } from '@app/portal/group/group.entity';
-import { ProfileEntity } from '@app/portal/profile/profile.entity';
-import { UserEntity } from '@app/portal/user/user.entity';
-import { NewsEntity } from '@app/portal/news/news.entity';
+import { Group } from '@back/group/group.entity';
+import { Profile } from '@back/profile/profile.entity';
+import { User } from '@back/user/user.entity';
+import { News } from '@back/news/news.entity';
 //#endregion
 
-const entities = [GroupEntity, ProfileEntity, UserEntity, NewsEntity];
+const entities = [Group, Profile, User, News];
 // const entities = ['apps/portal/src/**/*.entity.ts'];
 // const entities = ['./.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];

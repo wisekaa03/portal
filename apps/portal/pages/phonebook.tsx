@@ -10,8 +10,15 @@ import { Box, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 //#endregion
 //#region Imports Local
+import { PROFILE_TYPE } from '@lib/types/profile';
+import { UserSettings } from '@back/user/graphql/UserSettings';
+import { UserSettingsInput } from '@back/user/graphql/UserSettings.input';
+import { UserSettingsPhonebookFilterInput } from '@back/user/graphql/UserSettingsPhonebookFilter.input';
+import { SearchSuggestions } from '@back/profile/graphql/SearchSuggestions';
+import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
+
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
-import { Data, ProfileQueryProps, PhonebookColumnNames, UserSettings, Profile, SearchSuggestions, PhonebookFilter } from '@lib/types';
+import type { Data, ProfileQueryProps } from '@lib/types';
 import useDebounce from '@lib/debounce';
 import { PROFILES, SEARCH_SUGGESTIONS, USER_SETTINGS } from '@lib/queries';
 import { MaterialUI } from '@front/layout';
@@ -26,19 +33,24 @@ import Modal from '@front/components/ui/modal';
 import Loading from '@front/components/loading';
 //#endregion
 
-const columnsXS: PhonebookColumnNames[] = ['thumbnailPhoto40', 'lastName', 'loginDomain', 'workPhone'];
-const columnsSM: PhonebookColumnNames[] = [...columnsXS, 'title'];
-const columnsMD: PhonebookColumnNames[] = [...columnsSM, 'company', 'department'];
-const columnsLG: PhonebookColumnNames[] = [...columnsMD, 'mobile', 'email'];
+const columnsXS: PhonebookColumnNames[] = [
+  PhonebookColumnNames.thumbnailPhoto40,
+  PhonebookColumnNames.lastName,
+  PhonebookColumnNames.loginDomain,
+  PhonebookColumnNames.workPhone,
+];
+const columnsSM: PhonebookColumnNames[] = [...columnsXS, PhonebookColumnNames.title];
+const columnsMD: PhonebookColumnNames[] = [...columnsSM, PhonebookColumnNames.company, PhonebookColumnNames.department];
+const columnsLG: PhonebookColumnNames[] = [...columnsMD, PhonebookColumnNames.mobile, PhonebookColumnNames.email];
 
 const getGraphQLColumns = (columns: PhonebookColumnNames[]): string => {
   let result = columns.filter((col) => col !== 'disabled' && col !== 'notShowing').join(' ');
 
-  if (columns.includes('lastName')) {
+  if (columns.includes(PhonebookColumnNames.lastName)) {
     result = result.replace('lastName', 'fullName');
   }
 
-  if (columns.includes('manager')) {
+  if (columns.includes(PhonebookColumnNames.manager)) {
     result = result.replace('manager', 'manager { id fullName }');
   }
 
@@ -65,10 +77,10 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [suggestionsFiltered, setSuggestionsFiltered] = useState<SearchSuggestions[]>([]);
-  const [filters, setFilters] = useState<PhonebookFilter[]>(defaultFilters);
+  const [filters, setFilters] = useState<UserSettingsPhonebookFilterInput[]>(defaultFilters);
   const [orderBy, setOrderBy] = useState<Order<PhonebookColumnNames>>({
     direction: OrderDirection.ASC,
-    field: 'lastName',
+    field: PhonebookColumnNames.lastName,
   });
 
   const [_search, setSearch] = useState<string>('');
@@ -78,7 +90,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
 
   const isAdmin = Boolean(me?.user?.isAdmin);
 
-  const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettings }>(USER_SETTINGS);
+  const [userSettings, { error: errorSettings }] = useMutation<UserSettings, { value: UserSettingsInput }>(USER_SETTINGS);
 
   const [getSearchSuggestions, { loading: suggestionsLoading, data: suggestionsData, error: suggestionsError }] = useLazyQuery<
     Data<'searchSuggestions', SearchSuggestions[]>,
@@ -87,7 +99,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
     ssr: false,
   });
 
-  const { loading, data, error, fetchMore, refetch } = useQuery<Data<'profiles', Connection<Profile>>, ProfileQueryProps>(
+  const { loading, data, error, fetchMore, refetch } = useQuery<Data<'profiles', Connection<PROFILE_TYPE>>, ProfileQueryProps>(
     PROFILES(getGraphQLColumns(columns)),
     {
       ssr: false,
@@ -96,9 +108,9 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
         first: 50,
         after: '',
         search: search.length > 3 ? search : '',
-        disabled: columns.includes('disabled'),
+        disabled: columns.includes(PhonebookColumnNames.disabled),
         // TODO: for admins only
-        notShowing: isAdmin && columns.includes('notShowing'),
+        notShowing: isAdmin && columns.includes(PhonebookColumnNames.notShowing),
         filters,
       },
       fetchPolicy: 'cache-and-network',
@@ -137,10 +149,10 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   }, [suggestionsLoading, suggestionsData, _search]);
 
   const fetchFunction = useCallback(
-    async (): Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<Profile>>>> =>
+    async (): Promise<undefined | ApolloQueryResult<Data<'profiles', Connection<PROFILE_TYPE>>>> =>
       data?.profiles?.pageInfo.endCursor
         ? fetchMore<
-            Data<'profiles', Connection<Profile>>,
+            Data<'profiles', Connection<PROFILE_TYPE>>,
             ProfileQueryProps,
             'orderBy' | 'after' | 'first' | 'search' | 'disabled' | 'notShowing' | 'filters'
           >({
@@ -150,12 +162,12 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
               after: data.profiles.pageInfo.endCursor,
               first: 50,
               search: search.length > 3 ? search : '',
-              disabled: columns.includes('disabled'),
-              notShowing: isAdmin && columns.includes('notShowing'),
+              disabled: columns.includes(PhonebookColumnNames.disabled),
+              notShowing: isAdmin && columns.includes(PhonebookColumnNames.notShowing),
               filters,
             },
           })
-            .then((result: ApolloQueryResult<Data<'profiles', Connection<Profile>>> | undefined) => {
+            .then((result: ApolloQueryResult<Data<'profiles', Connection<PROFILE_TYPE>>> | undefined) => {
               console.info(`Total count: ${result?.data.profiles?.totalCount}`);
               return result;
             })
@@ -167,7 +179,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
     [columns, data, fetchMore, isAdmin, orderBy, search, filters],
   );
 
-  const handleColumns = (columnsVal: PhonebookColumnNames[], filtersVal: PhonebookFilter[]): void => {
+  const handleColumns = (columnsVal: PhonebookColumnNames[], filtersVal: UserSettingsPhonebookFilterInput[]): void => {
     userSettings({
       variables: {
         value: { phonebook: { columns: columnsVal, filters: filtersVal } },
@@ -233,7 +245,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
   };
 
   const handleFilters = (value: unknown) => {
-    setFilters([{ name: 'loginDomain', value: value as string }]);
+    setFilters([{ name: PhonebookColumnNames.loginDomain, value: value as string }]);
     refetch();
   };
 

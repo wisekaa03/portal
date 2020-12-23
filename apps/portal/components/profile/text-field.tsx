@@ -8,15 +8,15 @@ import { TextField, OutlinedTextFieldProps, CircularProgress } from '@material-u
 import Autocomplete from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
-import { TextFieldComponentProps } from '@lib/types';
-import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
+import { ProfileAutocompleteFields } from '@lib/types/profile';
+import type { TextFieldComponentProps } from '@lib/types';
 import { PROFILE_FIELD_SELECTION } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 //#endregion
 
 const ProfileTextFieldComponent: FC<TextFieldComponentProps> = ({ disabled, handleChange, field, value, InputProps, fullWidth = true }) => {
   const { t } = useTranslation();
-  const autocomplete = PROFILE_AUTOCOMPLETE_FIELDS.includes(field);
+  const autocomplete = field in ProfileAutocompleteFields;
 
   const [options, setOptions] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);

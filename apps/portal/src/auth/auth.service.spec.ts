@@ -6,8 +6,8 @@ import { HttpService, Logger } from '@nestjs/common';
 import { LdapService } from 'nestjs-ldap';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config';
-import { UserService } from '@back/user/user.service';
+import { UserService } from '../user';
+import { ConfigService } from '../../../../libs/config/src';
 import { AuthService } from './auth.service';
 //#endregion
 
@@ -28,6 +28,7 @@ describe(AuthService.name, () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
+        { provide: 'PUB_SUB', useValue: serviceMock },
         ConfigService,
         AuthService,
         { provide: Logger, useValue: serviceMock },

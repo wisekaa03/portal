@@ -9,7 +9,7 @@ import { MoreVertRounded as MoreVertIcon } from '@material-ui/icons';
 //#endregion
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
-import { PhonebookProfileControlProps } from '@lib/types';
+import type { PhonebookProfileControlProps } from '@lib/types';
 //#endregion
 
 const useStyles = makeStyles(() =>

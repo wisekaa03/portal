@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import type { Request, Response } from 'express';
-import { Query, Mutation, Resolver, Args, Context } from '@nestjs/graphql';
+import { Query, Mutation, Resolver, Args, Context, Int } from '@nestjs/graphql';
 import {
   Inject,
   UseGuards,
@@ -16,20 +16,19 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { paginate, Order, Connection, OrderDirection } from 'typeorm-graphql-pagination';
-import { FileUpload } from 'graphql-upload';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import type { ProfileInput, SearchSuggestions, User, PhonebookFilter } from '@lib/types';
-import { PROFILE_AUTOCOMPLETE_FIELDS } from '@lib/constants';
-import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
-import { IsAdminGuard } from '@back/guards/gqlauth-admin.guard';
-import { CurrentUser } from '@back/user/user.decorator';
+import { PROFILE_TYPE } from '@lib/types/profile';
+import { IsAdminGuard, GqlAuthGuard } from '@back/guards';
+import { User, CurrentUser } from '@back/user';
+import { UserSettingsPhonebookFilterInput } from '@back/user/graphql/UserSettingsPhonebookFilter.input';
+import { ProfileInput, PaginatedProfile, ProfileOrderInput, SearchSuggestions, PhonebookColumnNames } from './graphql';
+import { Profile } from './profile.entity';
 import { ProfileService } from './profile.service';
-import { ProfileEntity } from './profile.entity';
-
 //#endregion
 
-@Resolver('Profile')
+@Resolver()
 export class ProfileResolver {
   constructor(private readonly profileService: ProfileService, @Inject(Logger) private readonly logger: LoggerService) {}
 
@@ -43,27 +42,26 @@ export class ProfileResolver {
    * @param {boolean} disabled
    * @returns {Promise<Connection<ProfilesEntity>>}
    */
-  @Query()
+  @Query(() => PaginatedProfile)
   @UseGuards(GqlAuthGuard)
   async profiles(
     @Context('req') request: Request,
-    @Args('first') first?: number,
-    @Args('after') after?: string,
-    @Args('orderBy') orderBy?: Order<string>,
-    @Args('search') search?: string,
-    @Args('disabled') disabled?: boolean,
-    @Args('notShowing') notShowing?: boolean,
-    @Args('filters') filters?: PhonebookFilter[],
-    @CurrentUser() user?: User,
-  ): Promise<Connection<ProfileEntity>> {
-    if (notShowing && !user?.isAdmin) {
+    @CurrentUser() user: User,
+    @Args('filters', { type: () => [UserSettingsPhonebookFilterInput], nullable: true }) filters: UserSettingsPhonebookFilterInput[] = [],
+    @Args('first', { type: () => Int, nullable: true }) first = 0,
+    @Args('after', { type: () => String, nullable: true }) after = '',
+    @Args('orderBy', { type: () => ProfileOrderInput, nullable: true })
+    orderBy: Order<string> = { direction: OrderDirection.ASC, field: 'lastName' },
+    @Args('search', { type: () => String, nullable: true }) search?: string,
+    @Args('disabled', { type: () => Boolean, nullable: true }) disabled?: boolean,
+    @Args('notShowing', { type: () => Boolean, nullable: true }) notShowing?: boolean,
+  ): Promise<Connection<PROFILE_TYPE>> {
+    if (notShowing && !user.isAdmin) {
       notShowing = false;
     }
 
-    const order: Order<string> = orderBy ?? { direction: OrderDirection.ASC, field: 'lastName' };
-
     return paginate(
-      { first: first || 0, after: after || '', orderBy: order },
+      { first, after, orderBy },
       {
         type: 'Profile',
         alias: 'profile',
@@ -74,7 +72,7 @@ export class ProfileResolver {
           disabled,
           notShowing,
           filters,
-          loggerContext: { username: user?.username, headers: request.headers },
+          loggerContext: { username: user.username, headers: request.headers },
         }),
       },
     );
@@ -85,28 +83,21 @@ export class ProfileResolver {
    *
    * @async
    * @method profileFieldSelection
-   * @param {string} field Field: 'company' | 'management' | 'department' | 'division' | 'country' |
-   *                              'region' | 'town' | 'street' | 'postalCode'
+   * @param {string} field PhonebookFieldSelection
    * @returns {Promise<string[]>} Field selection
    */
-  @Query()
+  @Query(() => [String])
   @UseGuards(GqlAuthGuard)
   async profileFieldSelection(
     @Context('req') request: Request,
-    @Args('field')
-    field: typeof PROFILE_AUTOCOMPLETE_FIELDS[number],
-    @Args('department') department: string,
-    @CurrentUser() user?: User,
+    @CurrentUser() user: User,
+    @Args('field', { type: () => PhonebookColumnNames })
+    field: PhonebookColumnNames,
   ): Promise<string[]> {
-    if (PROFILE_AUTOCOMPLETE_FIELDS.includes(field)) {
-      return this.profileService.fieldSelection({
-        field,
-        department,
-        loggerContext: { username: user?.username, headers: request.headers },
-      });
-    }
-
-    throw new NotAcceptableException();
+    return this.profileService.fieldSelection({
+      field,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
   }
 
   /**
@@ -117,14 +108,14 @@ export class ProfileResolver {
    * @param {string} search The search suggestions string
    * @returns {Promise<string[]>} The search suggestions
    */
-  @Query()
+  @Query(() => [SearchSuggestions])
   @UseGuards(GqlAuthGuard)
   async searchSuggestions(
     @Context('req') request: Request,
-    @Args('search') search: string,
-    @CurrentUser() user?: User,
+    @CurrentUser() user: User,
+    @Args('search', { type: () => String }) search: string,
   ): Promise<SearchSuggestions[]> {
-    return this.profileService.searchSuggestions({ search, loggerContext: { username: user?.username, headers: request.headers } });
+    return this.profileService.searchSuggestions({ search, loggerContext: { username: user.username, headers: request.headers } });
   }
 
   /**
@@ -132,12 +123,16 @@ export class ProfileResolver {
    *
    * @async
    * @param {string} id optional id of profile
-   * @returns {ProfilesEntity | undefined}
+   * @returns {PROFILE_TYPE | undefined}
    */
-  @Query()
+  @Query(() => Profile)
   @UseGuards(GqlAuthGuard)
-  async profile(@Context('req') request: Request, @Args('id') id: string, @CurrentUser() user?: User): Promise<ProfileEntity | undefined> {
-    return this.profileService.byId({ id, loggerContext: { username: user?.username, headers: request.headers } }) || undefined;
+  async profile(
+    @Context('req') request: Request,
+    @CurrentUser() user: User,
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<PROFILE_TYPE | undefined> {
+    return this.profileService.byId({ id, loggerContext: { username: user.username, headers: request.headers } }) || undefined;
   }
 
   /**
@@ -148,24 +143,20 @@ export class ProfileResolver {
    * @param {Request} req The request from which I try to compose user
    * @param {Profile} profile The profile
    * @param {Promise<FileUpload>} thumbnailPhoto Avatar
-   * @returns {Promise<ProfileEntity>}
+   * @returns {Promise<PROFILE_TYPE>}
    */
-  @Mutation()
+  @Mutation(() => Profile)
   @UseGuards(GqlAuthGuard)
   @UseGuards(IsAdminGuard)
   async changeProfile(
     @Context('req') request: Request,
-    @Args('profile') profile: ProfileInput,
-    @Args('thumbnailPhoto') thumbnailPhoto?: Promise<FileUpload>,
-    @CurrentUser() user?: User,
-  ): Promise<ProfileEntity> {
-    if (!user?.profile?.id) {
-      throw new UnauthorizedException();
-    }
-
+    @CurrentUser() user: User,
+    @Args('profile', { type: () => ProfileInput }) profile: ProfileInput,
+    @Args('thumbnailPhoto', { type: () => GraphQLUpload }) thumbnailPhoto?: Promise<FileUpload>,
+  ): Promise<PROFILE_TYPE> {
     return this.profileService
       .changeProfile({ user, profile, thumbnailPhoto, loggerContext: { username: user.username, headers: request.headers } })
-      .then((value) => {
+      .then((userLogin) => {
         request.logIn(user, async (error: Error) => {
           if (error) {
             this.logger.error({
@@ -180,7 +171,7 @@ export class ProfileResolver {
           }
         });
 
-        return value;
+        return userLogin;
       });
   }
 }

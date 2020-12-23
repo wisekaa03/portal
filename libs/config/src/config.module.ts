@@ -9,7 +9,11 @@ import { ConfigService } from './config.service';
 //#endregion
 
 @Global()
-@Module({})
+@Module({
+  imports: [],
+  providers: [ConfigService],
+  exports: [ConfigService],
+})
 export class ConfigModule {
   static register(filepath: string): DynamicModule {
     return {

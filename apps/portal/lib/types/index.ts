@@ -10,7 +10,7 @@ import { ApolloClient } from '@apollo/client';
 import { NormalizedCacheObject } from '@apollo/client/cache';
 //#endregion
 //#region Imports Local
-import { UserContext } from './user.dto';
+import { UserContext } from './user';
 
 export * from './app-bar';
 export * from './auth';
@@ -18,20 +18,12 @@ export * from './common';
 export * from './dropzone';
 export * from './docflow';
 export * from './file-upload-buffer';
-export * from './files.interface';
 export * from './files';
-export * from './gender';
-export * from './group.dto';
 export * from './iframe';
-export * from './login-service';
-export * from './news.dto';
-export * from './tasks';
 export * from './tickets';
-export * from './profile.dto';
 export * from './profile';
 export * from './services';
-export * from './treeview';
-export * from './user.dto';
+export * from './user';
 //#endregion
 
 export interface ApolloProps<TCache = NormalizedCacheObject> {

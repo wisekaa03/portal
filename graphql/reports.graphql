@@ -1,7 +1,0 @@
-input ReportsInput {
-  date: Date
-}
-
-type Mutation {
-  reports(report: ReportsInput!): Boolean
-}

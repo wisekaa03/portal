@@ -14,8 +14,9 @@ import RedisStore from 'cache-manager-ioredis';
 import { RedisService } from 'nest-redis';
 //#endregion
 //#region Imports Local
-import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
+import { User } from '@back/user/user.entity';
 import { ConfigService } from '@app/config';
+import { FilesFile, FilesOptionsInput, FilesFolder, Folder } from './graphql';
 //#endregion
 
 interface CachedObject {
@@ -65,8 +66,8 @@ export class FilesService {
   /**
    * Fcking nextCloud in AD translate this UUID in other way
    */
-  translateToNextCloud = (loginIdentificator: string): string =>
-    loginIdentificator.replace(
+  translateToNextCloud = (loginGUID: string): string =>
+    loginGUID.replace(
       /^(..)(..)(..)(..)-(..)(..)-(..)(..)-(..)(..)-(..)(..)(..)(..)(..)(..)$/,
       '$1$2$3$4-$5$6-$7$8-$10$9-$16$15$14$13$12$11',
     );
@@ -80,7 +81,7 @@ export class FilesService {
   nextCloudAs = (user: User, password: string): NextcloudClient => {
     const nextCloud = this.nextCloud.as(user.username, password);
 
-    const nextCloudUUID = this.translateToNextCloud(user.loginIdentificator || 'not authenticated');
+    const nextCloudUUID = this.translateToNextCloud(user.loginGUID || 'not authenticated');
 
     nextCloud.webdavConnection.options.url = nextCloud.webdavConnection.options.url.replace(
       /(remote\.php\/dav\/.+\/)(.+)(\/)?$/,
@@ -231,18 +232,18 @@ export class FilesService {
 
     const lastPath =
       path === '/' || path === ''
-        ? this.translateToNextCloud(user.loginIdentificator || 'not authenticated').slice(4)
+        ? this.translateToNextCloud(user.loginGUID || 'not authenticated').slice(4)
         : (path.slice(-1) === '/' ? path.slice(0, -1).split('/').pop() : path.split('/').pop()) ||
-          this.translateToNextCloud(user.loginIdentificator || 'not authenticated').slice(4);
+          this.translateToNextCloud(user.loginGUID || 'not authenticated').slice(4);
 
-    const cachedID = `files:${user.loginIdentificator}:${path}`;
+    const cachedID = `files:${user.loginGUID}:${path}`;
     if (this.cache && cache) {
       const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const folderFilesSubscription = await this.folder(path, lastPath, user, password);
           this.pubSub.publish('folderFilesSubscription', {
-            user: user.loginIdentificator,
+            user: user.loginGUID,
             path,
             folderFilesSubscription,
           });
@@ -256,7 +257,7 @@ export class FilesService {
     }
 
     const folderFilesSubscription = await this.folder(path, lastPath, user, password);
-    this.pubSub.publish('folderFilesSubscription', { user: user.loginIdentificator, path, folderFilesSubscription });
+    this.pubSub.publish('folderFilesSubscription', { user: user.loginGUID, path, folderFilesSubscription });
 
     if (this.cache) {
       this.cache.set<FilesFolder[]>(cachedID, folderFilesSubscription, { ttl: this.ttl });
@@ -295,10 +296,10 @@ export class FilesService {
    * @return {FilesFile}
    * @throws {Error}
    */
-  getFile = async (path: string, user: User, password: string, options?: FilesOptions, cache = true): Promise<FilesFile> => {
+  getFile = async (path: string, user: User, password: string, options?: FilesOptionsInput, cache = true): Promise<FilesFile> => {
     this.logger.log({ message: `Get files: path={${path}}`, context: FilesService.name, function: 'getFile' });
 
-    const cachedID = `file:${user.loginIdentificator}:${path}`;
+    const cachedID = `file:${user.loginGUID}:${path}`;
     if (cache && this.cache) {
       const cached: FilesFile = await this.cache.get<FilesFile>(cachedID);
       if (cached && cached !== null && cached.temporaryFile) {

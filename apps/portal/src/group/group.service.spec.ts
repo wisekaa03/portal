@@ -7,9 +7,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions, getRepositoryToken } from '@nestjs/typeorm';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config';
+import { ConfigService } from '../../../../libs/config/src';
 import { GroupService } from './group.service';
-import { GroupEntity } from './group.entity';
+import { Group } from './group.entity';
 //#endregion
 
 jest.mock('@app/config/config.service');
@@ -28,24 +28,24 @@ describe(GroupService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: async () =>
-            ({
-              type: 'sqlite',
-              database: ':memory:',
-              dropSchema: true,
-              entities: [GroupEntity],
-              synchronize: true,
-              logging: false,
-            } as TypeOrmModuleOptions),
-        }),
-        // TypeOrmModule.forFeature([GroupEntity]),
+        // TypeOrmModule.forRootAsync({
+        //   useFactory: async () =>
+        //     ({
+        //       type: 'sqlite',
+        //       database: ':memory:',
+        //       dropSchema: true,
+        //       entities: [Group],
+        //       synchronize: true,
+        //       logging: false,
+        //     } as TypeOrmModuleOptions),
+        // }),
+        // TypeOrmModule.forFeature([Group]),
       ],
       providers: [
         { provide: Logger, useValue: serviceMock },
-        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
         GroupService,
         ConfigService,
+        { provide: getRepositoryToken(Group), useValue: repositoryMock },
       ],
     }).compile();
 

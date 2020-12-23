@@ -6,8 +6,8 @@ import { PROFILE_FRAGMENT } from './profiles-fragment';
 
 export const PROFILES = (_columns: string): DocumentNode => gql`
   query Profiles(
-    $first: Int, $after: String, $orderBy: ProfileOrder,
-    $search: String, $disabled: Boolean, $notShowing: Boolean, $filters: [PhonebookFilterInput]
+    $first: Int, $after: String, $orderBy: ProfileOrderInput,
+    $search: String, $disabled: Boolean, $notShowing: Boolean, $filters: [UserSettingsPhonebookFilterInput!]
   ) {
     profiles(
       first: $first, after: $after, orderBy: $orderBy,

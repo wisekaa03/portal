@@ -1,7 +1,10 @@
 /** @format */
 
-import type { UserSettings } from '@lib/types/user.dto';
-import { TASK_STATUSES } from '@lib/constants';
+import { UserSettings } from '@back/user/graphql/UserSettings';
+
+export const TASK_STATUSES = ['Все', 'Регистрация', 'В работе', 'Выполнено', 'Завершено'];
+
+export const SOAP_DATE_NULL = '0000-12-31T21:29:43.000Z';
 
 export const ADMIN_GROUP = 'web master';
 

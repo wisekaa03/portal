@@ -9,19 +9,31 @@ export class TypeOrmLogger implements ITypeOrmLogger {
   /**
    * Logs query and parameters used in it.
    */
-  logQuery(query: string, parameters?: unknown[], queryRunner?: QueryRunner): void {
-    if (query !== 'SELECT 1' && this.logger.debug) {
-      this.logger.debug({ message: query, parameters }, 'Database');
+  logQuery(message: string, param?: unknown[], queryRunner?: QueryRunner): void {
+    if (message !== 'SELECT 1' && this.logger.debug) {
+      let parameters: unknown[] | undefined;
+      if (Array.isArray(param) && param.length > 0) {
+        parameters = param.map((field) => (typeof field === 'string' ? field.slice(0, 50) : field));
+      } else {
+        parameters = param;
+      }
+      this.logger.debug({ message, parameters }, 'Database');
     }
   }
 
   /**
    * Logs query that is failed.
    */
-  logQueryError(error: string, query: string, parameters?: unknown[], queryRunner?: QueryRunner): void {
+  logQueryError(error: string, message: string, param?: unknown[], queryRunner?: QueryRunner): void {
+    let parameters: unknown[] | undefined;
+    if (Array.isArray(param) && param.length > 0) {
+      parameters = param.map((field) => (typeof field === 'string' ? field.slice(0, 50) : field));
+    } else {
+      parameters = param;
+    }
     this.logger.error(
       {
-        message: query,
+        message,
         error,
         parameters,
       },

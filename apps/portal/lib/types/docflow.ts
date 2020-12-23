@@ -1,13 +1,17 @@
 /** @format */
 
 import type React from 'react';
+
+import type { GraphQLQueryInput } from '@back/shared/types/interfaces';
+
 import type { I18n, TFunction } from 'next-i18next';
-import type { GraphQLQueryInput } from '@back/shared/types';
 import type { PortalErrorsProps } from './errors';
 
 export enum DocFlowProcessStep {
+  CheckExecute = 'CheckExecute' /* Проверить исполнение */,
   Execute = 'Execute' /* Исполнить */,
   Familiarize = 'Familiarize' /* Ознакомиться */,
+  CheckFamiliarize = 'CheckFamiliarize' /* Ознакомиться с результатом согласования */,
   Conform = 'Conform' /* Согласовать */,
   NotConform = 'NotConform' /* Не согласовано */,
   ConformWithComments = 'ConformWithComments' /* Согласовать с комментариями */,
@@ -288,6 +292,14 @@ export interface DocFlowTask {
   endDate: Date | null;
   changeRight: boolean | null;
   description: string | null;
+  checkResults:
+    | {
+        checkComment: string;
+        executorTask: DocFlowTask | null;
+        returned: boolean;
+      }[]
+    | null;
+  iterationNumber: string | null;
   processStep: DocFlowProcessStep | null;
   htmlView: string | null;
   number: string | null;

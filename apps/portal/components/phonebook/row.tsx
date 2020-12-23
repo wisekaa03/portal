@@ -114,7 +114,7 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
             case 'division':
             case 'divisionEng':
             case 'title':
-            case 'positionEng':
+            case 'titleEng':
             case 'room':
             case 'telephone':
             case 'fax':
@@ -123,7 +123,7 @@ const PhonebookRow: FC<ListChildComponentProps> = ({ index, style: { width, top,
             case 'email':
             case 'country':
             case 'region':
-            case 'town':
+            case 'city':
             case 'street': {
               cellData = cell[name];
               break;

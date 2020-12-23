@@ -349,10 +349,14 @@ const TaskComponent: FC<TaskComponentProps> = ({
               </CardContent>
             </Card>
             <Card style={{ overflow: 'visible' }}>
-              <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
-                <Icon src={getTicketStatusIcon(task.status)} size={48} />
-                <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
-              </CardContent>
+              {task.status && (
+                <>
+                  <CardContent className={clsx(classes.cardContent, classes.statusContent)}>
+                    <Icon src={getTicketStatusIcon(task.status)} size={48} />
+                    <span style={{ placeSelf: 'center stretch' }}>{task.status}</span>
+                  </CardContent>
+                </>
+              )}
             </Card>
             <Card className={classes.fullRow}>
               <CardHeader

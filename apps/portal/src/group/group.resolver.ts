@@ -2,5 +2,5 @@
 
 import { Resolver } from '@nestjs/graphql';
 
-@Resolver('Group')
+@Resolver()
 export class GroupResolver {}

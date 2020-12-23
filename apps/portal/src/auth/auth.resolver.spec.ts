@@ -5,8 +5,8 @@ import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 //#endregion
 //#region Imports Local
-import { ConfigService } from '@app/config/config.service';
-import { UserService } from '@back/user/user.service';
+import { UserService } from '../user';
+import { ConfigService } from '../../../../libs/config/src';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 //#endregion

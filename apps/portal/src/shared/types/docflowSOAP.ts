@@ -224,6 +224,12 @@ export interface DocFlowTaskSOAP {
   author?: DocFlowUserSOAP;
   beginDate?: Date;
   businessProcessStep?: string;
+  checkResults?: {
+    checkComment?: string;
+    executorTask?: DocFlowTaskSOAP;
+    returned?: boolean;
+  }[];
+  iterationNumber?: string;
   changeRight?: boolean;
   description?: string;
   dueDate?: Date;

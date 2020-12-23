@@ -6,10 +6,9 @@ import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core';
 //#endregion
 //#region Imports Local
-import type { FilesComponentProps, FilesColumn } from '@lib/types';
+import { FilesComponentProps, FilesColumn } from '@lib/types';
 import Loading from '@front/components/loading';
 import Search from '@front/components/ui/search';
-import RefreshButton from '@front/components/ui/refresh-button';
 import FilesTableComponent from './table';
 //#endregion
 
@@ -40,7 +39,6 @@ const FilesComponent: FC<FilesComponentProps> = ({
   path,
   folderLoading,
   folderData,
-  folderRefetch,
   search,
   handleCheckbox,
   handleDrop,
@@ -57,7 +55,6 @@ const FilesComponent: FC<FilesComponentProps> = ({
     <Box style={{ display: 'flex', flexDirection: 'column' }}>
       <Box className={classes.control}>
         <Search value={search} handleChange={handleSearch} />
-        <RefreshButton noAbsolute dense onClick={() => folderRefetch && folderRefetch()} />
       </Box>
       <Loading activate={folderLoading} noMargin type="linear" variant="indeterminate">
         {folderData && (

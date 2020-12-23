@@ -3,7 +3,13 @@
 import type { Request, Response } from 'express';
 import type { IncomingMessage } from 'http';
 import type WebSocket from 'ws';
-import type { User } from '@lib/types';
+import { User } from '@back/user/user.entity';
+
+export interface EmailSession {
+  error?: string;
+  sessid?: string;
+  sessauth?: string;
+}
 
 export interface WebsocketContext {
   user: User;

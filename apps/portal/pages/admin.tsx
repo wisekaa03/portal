@@ -9,10 +9,11 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Button, CardActions, Typography } from '@material-ui/core';
 //#endregion
 //#region Imports Local
+import { defaultUserSettings } from '@back/shared/constants';
+import { UserSettings } from '@back/user/graphql/UserSettings';
+
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { SYNC, CACHE, USER_SETTINGS } from '@lib/queries';
-import { defaultUserSettings } from '@back/shared/constants';
-import type { UserSettings } from '@lib/types/user.dto';
 import snackbarUtils from '@lib/snackbar-utils';
 import { MaterialUI } from '@front/layout';
 //#endregion

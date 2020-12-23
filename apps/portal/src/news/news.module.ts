@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 //#region Imports Local
 import { NewsService } from './news.service';
 import { NewsResolver } from './news.resolver';
-import { NewsEntity } from './news.entity';
+import { News } from './news.entity';
 import { UserModule } from '../user/user.module';
 //#endregion
 
@@ -16,7 +16,7 @@ import { UserModule } from '../user/user.module';
     UserModule,
 
     //#region TypeORM
-    TypeOrmModule.forFeature([NewsEntity]),
+    TypeOrmModule.forFeature([News]),
     //#endregion
   ],
   providers: [Logger, NewsService, NewsResolver],

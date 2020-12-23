@@ -13,7 +13,7 @@ export interface IframeInterface {
   target?: string;
   importance?: 'auto' | 'high' | 'low';
   overflow?: string;
-  styles?: object;
+  styles?: Record<string, any>;
   name?: string;
   allowpaymentrequest?: boolean;
   referrerpolicy?:

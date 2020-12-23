@@ -14,7 +14,7 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import { useTranslation } from '@lib/i18n-client';
 import { ProfileContext } from '@lib/context';
 import { appBarHeight } from '@lib/constants';
-import { AppBarComponentProps } from '@lib/types';
+import type { AppBarComponentProps } from '@lib/types';
 import RefreshButton from '@front/components/ui/refresh-button';
 import Avatar from '@front/components/ui/avatar';
 import LogoMin from '@images/png/logo_min.png'; // TODO: ?inline';

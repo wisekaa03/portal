@@ -16,12 +16,12 @@ import { LdapService, InvalidCredentialsError, LoggerContext } from 'nestjs-ldap
 // import Redis from 'ioredis';
 //#endregion
 //#region Imports Local
-import type { LoginEmail, EmailSession } from '@lib/types/auth';
-import type { User } from '@lib/types/user.dto';
+import type { EmailSession } from '@back/shared/types/interfaces';
 import { ConfigService } from '@app/config';
 import { UserService } from '@back/user/user.service';
-import { UserEntity } from '@back/user/user.entity';
+import { User } from '@back/user/user.entity';
 import { PortalError } from '@back/shared/errors';
+import { LoginEmail } from './graphql/LoginEmail';
 //#endregion
 
 @Injectable()
@@ -64,7 +64,7 @@ export class AuthService {
    * @param {string} username User login
    * @param {string} password User password
    * @param {Express.Request} req Request where the user comes from
-   * @returns {UserEntity} User entity
+   * @returns {User} User entity
    * @throws {Error} Exception
    */
   async login({
@@ -77,7 +77,7 @@ export class AuthService {
     password: string;
     domain: string;
     loggerContext: LoggerContext;
-  }): Promise<UserEntity> {
+  }): Promise<User> {
     if (!domain) {
       throw new UnauthorizedException('Domain is not exist');
     }

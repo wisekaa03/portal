@@ -23,7 +23,7 @@ import {
 import Logo from '@images/svg/logo.svg'; // TODO: ?inline
 import Background from '@images/svg/background.svg'; // TODO: ?inline
 import { useTranslation } from '@lib/i18n-client';
-import { LoginComponentProps } from '@lib/types';
+import type { LoginComponentProps } from '@lib/types';
 import Loading from '@front/components/loading';
 import DomainComponent from '@front/components/domain-component';
 //#endregion

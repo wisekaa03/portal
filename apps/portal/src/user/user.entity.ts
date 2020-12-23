@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import { ObjectType, Field, ID, HideField } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,66 +18,78 @@ import {
 } from 'typeorm';
 //#endregion
 //#region Imports Local
-import { LoginService } from '@lib/types/login-service';
-import { User, UserSettings } from '@lib/types/user.dto';
-import { ProfileEntity } from '@back/profile/profile.entity';
-import { GroupEntity } from '@back/group/group.entity';
+import { LoginService } from '@back/shared/graphql';
+import { Profile } from '@back/profile/profile.entity';
+import { Group } from '@back/group/group.entity';
+import { UserSettings } from './graphql';
 //#endregion
 
+@ObjectType()
 @Entity('user')
 @Index(['loginService', 'loginDomain'])
-@Index(['loginService', 'loginDomain', 'loginIdentificator'])
+@Index(['loginService', 'loginDomain', 'loginGUID'])
 @Index(['loginService', 'loginDomain', 'username'], { unique: true })
-export class UserEntity {
+export class User {
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Field(() => Date, { nullable: true })
   @CreateDateColumn()
   createdAt?: Date;
 
+  @Field(() => Date, { nullable: true })
   @UpdateDateColumn()
   updatedAt?: Date;
 
+  @Field(() => LoginService)
   @Column({
-    type: 'varchar',
-    length: 10,
+    type: 'enum',
+    enum: LoginService,
     nullable: false,
     default: LoginService.LOCAL,
   })
   loginService!: LoginService;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     length: 100,
     nullable: true,
   })
-  loginDomain!: string | null;
+  loginDomain?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     length: 50,
     nullable: true,
   })
-  loginIdentificator!: string | null;
+  loginGUID?: string;
 
+  @Field(() => String)
   @Column({
     type: 'varchar',
     nullable: false,
   })
   username!: string;
 
+  @HideField()
   @Column('text')
   password!: string;
 
-  @RelationId((user: UserEntity) => user.groups)
-  groupIds!: string[] | null;
+  @HideField()
+  @RelationId((user: User) => user.groups)
+  groupIds?: string[];
 
-  @ManyToMany(() => GroupEntity, { onDelete: 'CASCADE', nullable: true })
+  @Field(() => [Group], { nullable: true })
+  @ManyToMany(() => Group, { onDelete: 'CASCADE', nullable: true })
   @JoinTable({
     name: 'user_groups',
   })
-  groups!: GroupEntity[] | null;
+  groups?: Group[];
 
+  @Field(() => Boolean)
   @Column({
     type: 'boolean',
     nullable: false,
@@ -84,26 +97,26 @@ export class UserEntity {
   })
   disabled!: boolean;
 
+  @Field(() => Boolean)
   @Column({
     type: 'boolean',
     default: false,
   })
   isAdmin!: boolean;
 
+  @Field(() => UserSettings)
   @Column({
     type: 'jsonb',
     nullable: true,
   })
-  settings!: UserSettings | null;
+  settings!: UserSettings;
 
-  @RelationId((user: UserEntity) => user.profile)
+  @HideField()
+  @RelationId((user: User) => user.profile)
   profileId!: string;
 
-  @OneToOne(() => ProfileEntity, { onDelete: 'CASCADE' })
+  @Field(() => Profile)
+  @OneToOne(() => Profile, { onDelete: 'CASCADE' })
   @JoinColumn()
-  profile!: ProfileEntity;
-
-  toResponseObject = (): User => ({
-    ...this,
-  });
+  profile!: Profile;
 }

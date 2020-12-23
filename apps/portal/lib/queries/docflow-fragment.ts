@@ -164,6 +164,14 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     dueDate
     endDate
     description
+    checkResults {
+      checkComment
+      returned
+      executorTask {
+        id
+      }
+    }
+    iterationNumber
     parentTask {
       ...ParentTaskProps
     }

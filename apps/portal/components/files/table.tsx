@@ -27,9 +27,12 @@ import GetAppIcon from '@material-ui/icons/GetAppRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 //#endregion
 //#region Imports Local
+import { Folder } from '@back/files/graphql/Folder';
+import { FilesFolderChk } from '@back/files/graphql/FilesFolderChk';
+
 import { dateFormat } from '@lib/date-format';
 import { useTranslation } from '@lib/i18n-client';
-import { FilesTableProps, Folder, FilesFolderChk } from '@lib/types';
+import { FilesTableProps } from '@lib/types';
 import { FilesListType } from './files-list-type';
 import { FileTableRow } from './table-row';
 import { FileTableHeader } from './table-header';

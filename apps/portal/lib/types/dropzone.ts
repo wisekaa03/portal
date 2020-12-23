@@ -1,7 +1,7 @@
 /** @format */
 
-import React from 'react';
-import { WithTranslation } from 'next-i18next';
+import type React from 'react';
+import type { WithTranslation } from 'next-i18next';
 
 export interface DropzoneFile {
   file: File;
@@ -9,9 +9,7 @@ export interface DropzoneFile {
   preview: string;
 }
 
-export interface DropzoneProps
-  extends WithTranslation,
-    React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
+export interface DropzoneProps extends WithTranslation, React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
   files: DropzoneFile[];
   setFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>;
   filesLimit?: number;

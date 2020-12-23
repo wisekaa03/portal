@@ -1,13 +1,15 @@
 /** @format */
 
-import React from 'react';
-import { Order } from 'typeorm-graphql-pagination';
-import { FilesFolder, FilesFolderChk } from './files.interface';
+import type React from 'react';
+import type { Order } from 'typeorm-graphql-pagination';
+
+import { FilesFolder } from '@back/files/graphql/FilesFolder';
+import { FilesFolderChk } from '@back/files/graphql/FilesFolderChk';
+import { FilesFile } from '@back/files/graphql/FilesFile';
 
 export interface FilesComponentProps {
   folderLoading: boolean;
   folderData?: FilesFolderChk[];
-  folderRefetch: () => void;
   search: string;
   path: FilesPath[];
   handleCheckbox: (current: number | FilesFolderChk[]) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
@@ -91,6 +93,7 @@ export type FilesColumnNames = 'checked' | 'id' | 'type' | 'name' | 'mime' | 'la
 export type FilesColumn = {
   label: FilesColumnNames;
   hidden: boolean;
+  files?: FilesFile;
   width?: number;
   colspan?: number;
   align?: string;

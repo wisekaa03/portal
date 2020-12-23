@@ -4,25 +4,21 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
-import { parse as urlLibParse } from 'url';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { WinstonModule, WINSTON_MODULE_NEST_PROVIDER, WINSTON_MODULE_PROVIDER, WinstonLogger } from 'nest-winston';
 import { LdapModule, Scope, ldapADattributes } from 'nestjs-ldap';
-import { RedisModule, RedisModuleOptions, RedisService } from 'nest-redis';
-import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
-import { redisOptions } from '@back/shared/redis.options';
 import { LoggingInterceptor } from '@app/logging.interceptor';
 import { winstonOptions } from '@back/shared/logger.options';
 import { UserModule } from '@back/user/user.module';
-import { UserEntity } from '@back/user/user.entity';
+import { User } from '@back/user/user.entity';
 import { ProfileModule } from '@back/profile/profile.module';
-import { ProfileEntity } from '@back/profile/profile.entity';
+import { Profile } from '@back/profile/profile.entity';
 import { GroupModule } from '@back/group/group.module';
-import { GroupEntity } from '@back/group/group.entity';
+import { Group } from '@back/group/group.entity';
 import { TypeOrmLogger } from '@back/shared/typeorm.logger';
 
 import { ConfigModule, ConfigService, LDAPDomainConfig } from '@app/config';
@@ -40,39 +36,6 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
     WinstonModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => winstonOptions(configService),
-    }),
-    //#endregion
-
-    //#region Redis module
-    RedisModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const result: RedisModuleOptions[] = [];
-
-        if (configService.get<string>('DATABASE_REDIS_URI')) {
-          result.push(
-            redisOptions({
-              clientName: 'DATABASE',
-              url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
-              ttl: configService.get<number>('DATABASE_REDIS_TTL') || 60,
-              prefix: 'DATABASE:',
-            }),
-          );
-        }
-
-        // if (configService.get<string>('LDAP_REDIS_URI')) {
-        //   result.push(
-        //     redisOptions({
-        //       clientName: 'LDAP',
-        //       url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
-        //       ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
-        //       prefix: 'LDAP:',
-        //     }),
-        //   );
-        // }
-
-        return result;
-      },
     }),
     //#endregion
 
@@ -145,21 +108,15 @@ const environment = resolve(__dirname, '../../..', '.local/.env');
               : configService.get('DATABASE_LOGGING') === 'true'
               ? true
               : JSON.parse(configService.get('DATABASE_LOGGING')),
-          entities: [ProfileEntity, GroupEntity, UserEntity],
+          entities: [Profile, Group, User],
           migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
-          cache: {
-            type: 'redis',
-            options: {
-              url: configService.get<string>('DATABASE_REDIS_URI'),
-            },
-            duration: configService.get<number>('DATABASE_REDIS_TTL'),
-          },
+          cache: false,
         } as TypeOrmModuleOptions),
     }),
     //#endregion
 
     //#region TypeORM
-    TypeOrmModule.forFeature([ProfileEntity, GroupEntity, UserEntity]),
+    TypeOrmModule.forFeature([Profile, Group, User]),
     //#endregion
 
     GroupModule,

@@ -1,26 +1,21 @@
 /** @format */
 
 //#region Imports NPM
-import { Resolver, Subscription, Query, Mutation, Args, registerEnumType } from '@nestjs/graphql';
+import { Resolver, Subscription, Query, Mutation, Args } from '@nestjs/graphql';
 import { Inject, UseGuards, UnauthorizedException, LoggerService, Logger } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { FileUpload } from 'graphql-upload';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import { User, FilesFile, FilesOptions, FilesFolder, Folder } from '@lib/types';
+import { User } from '@back/user/user.entity';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { UserService } from '@back/user/user.service';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
+import { FilesFile, FilesOptionsInput, FilesFolder, Folder } from './graphql';
 import { FilesService } from './files.service';
-
 //#endregion
 
-registerEnumType(Folder, {
-  name: 'Folder & files',
-  description: 'All possible: Folder and Files',
-});
-
-@Resolver('Files')
+@Resolver()
 export class FilesResolver {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
@@ -35,17 +30,13 @@ export class FilesResolver {
    * @param {string} path
    * @returns {FilesFolder[]}
    */
-  @Query('folderFiles')
+  @Query(() => [FilesFolder])
   @UseGuards(GqlAuthGuard)
   async folderFiles(
-    @Args('path') path?: string,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('path', { type: () => String, nullable: true }) path?: string,
   ): Promise<FilesFolder[]> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.filesService.folderFiles(user, password, path);
   }
 
@@ -56,18 +47,14 @@ export class FilesResolver {
    * @param {Promise<FileUpload>} file
    * @returns {void}
    */
-  @Mutation('putFile')
+  @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async putFile(
-    @Args('path') path: string,
-    @Args('file') file: Promise<FileUpload>,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('path', { type: () => String }) path: string,
+    @Args('file', { type: () => GraphQLUpload }) file: Promise<FileUpload>,
   ): Promise<boolean> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.filesService.putFile(path, file, user, password);
   }
 
@@ -77,23 +64,19 @@ export class FilesResolver {
    * @param {string} path
    * @returns {void}
    */
-  @Mutation('getFile')
+  @Mutation(() => FilesFile)
   @UseGuards(GqlAuthGuard)
   async getFile(
-    @Args('path') path: string,
-    @Args('options') options?: FilesOptions,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('path', { type: () => String }) path: string,
+    @Args('options', { type: () => FilesOptionsInput }) options?: FilesOptionsInput,
   ): Promise<FilesFile> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.filesService.getFile(path, user, password, options);
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('folderFilesSubscription', {
+  @Subscription(() => [FilesFolder], {
     filter: (payload, variables) =>
       // TODO: сделать чтобы по пользакам отбиралось
       payload.path === variables.path,

@@ -9,7 +9,7 @@ import { useQuery, ApolloQueryResult } from '@apollo/client';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { DOCFLOW_INTERNAL_DOCUMENT, DOCFLOW_INTERNAL_DOCUMENT_SUB } from '@lib/queries';
 import type { DocFlowInternalDocument, DocFlowInternalDocumentInput, DocFlowTarget, DocFlowTargetInput } from '@lib/types/docflow';
-import { Data } from '@lib/types';
+import type { Data } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import DocFlowInternalDocumentComponent from '@front/components/docflow/target';
 //#endregion

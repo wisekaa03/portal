@@ -25,6 +25,25 @@ import type { LoggerContext } from 'nestjs-ldap';
 //#region Imports Local
 import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared/constants';
 import type {
+  SubscriptionPayload,
+  TkUserOST,
+  RecordsOST,
+  TicketsRouteSOAP,
+  TicketsUserSOAP,
+  TicketsTaskSOAP,
+  TicketsSOAPRoutes,
+  TicketsSOAPTasks,
+  TicketsSOAPTask,
+} from '@back/shared/types';
+import { User } from '@back/user/user.entity';
+import { ConfigService } from '@app/config/config.service';
+import { SoapService, SoapFault } from '@app/soap';
+import { constructUploads } from '@back/shared/constructUploads';
+import { DataResult } from '@lib/types/common';
+import { PortalError } from '@back/shared/errors';
+import { TkCommentInput } from '@back/tickets/graphql/TkComment.input';
+import {
+  TkWhere,
   TkUser,
   TkRoute,
   TkRoutes,
@@ -38,26 +57,8 @@ import type {
   TkTasksInput,
   TkFileInput,
   TkFile,
-  TkCommentInput,
-} from '@lib/types/tickets';
-import type {
-  SubscriptionPayload,
-  TkUserOST,
-  RecordsOST,
-  TicketsRouteSOAP,
-  TicketsUserSOAP,
-  TicketsTaskSOAP,
-  TicketsSOAPRoutes,
-  TicketsSOAPTasks,
-  TicketsSOAPTask,
-} from '@back/shared/types';
-import { TkWhere, TkRoutesInput } from '@lib/types/tickets';
-import { User } from '@lib/types/user.dto';
-import { ConfigService } from '@app/config/config.service';
-import { SoapService, SoapFault } from '@app/soap';
-import { constructUploads } from '@back/shared/upload';
-import { DataResult } from '@lib/types/common';
-import { PortalError } from '@back/shared/errors';
+  TkRoutesInput,
+} from './graphql';
 import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
 //#endregion
 
@@ -140,7 +141,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          promises.push(Promise.resolve({ routes: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
+          promises.push(Promise.resolve({ routes: undefined, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
 
       if (client) {
@@ -223,10 +224,10 @@ export class TicketsService {
                   }
                 }
 
-                return { routes: null, errors: [PortalError.OST_EMPTY_RESULT] };
+                return { routes: undefined, errors: [PortalError.OST_EMPTY_RESULT] };
               }
 
-              return { routes: null, errors: [PortalError.OST_EMPTY_RESULT] };
+              return { routes: undefined, errors: [PortalError.OST_EMPTY_RESULT] };
             });
 
           promises.push(osTicket);
@@ -244,16 +245,18 @@ export class TicketsService {
 
     return Promise.allSettled(promises)
       .then((values) =>
-        values.map((promise) => (promise.status === 'fulfilled' ? promise.value : { routes: null, errors: [promise.reason?.message] })),
+        values.map((promise) =>
+          promise.status === 'fulfilled' ? promise.value : { routes: undefined, errors: [promise.reason?.message] },
+        ),
       )
       .then((routes: TkRoutes[]) =>
         routes.reduce(
           (accumulator: TkRoutes, current: TkRoutes) => {
-            let r: TkRoute[] | null = accumulator.routes;
-            let e: string[] | null = accumulator.errors;
+            let r: TkRoute[] | undefined = accumulator.routes;
+            let e: string[] | undefined = accumulator.errors;
 
             if (Array.isArray(current.routes) && current.routes.length > 0) {
-              r = r ? r.concat(current.routes).sort((a, b) => a.name.localeCompare(b.name)) : current.routes;
+              r = r ? r.concat(current.routes).sort((a, b) => (a.name && b.name && a.name.localeCompare(b.name)) || -1) : current.routes;
             }
             if (Array.isArray(current.errors) && current.errors.length > 0) {
               e = e ? e.concat(current.errors) : current.errors;
@@ -264,7 +267,7 @@ export class TicketsService {
               errors: e,
             };
           },
-          { routes: null, errors: null },
+          { routes: undefined, errors: undefined },
         ),
       )
       .catch((error) => {
@@ -293,7 +296,7 @@ export class TicketsService {
     loggerContext?: LoggerContext;
   }): Promise<TkRoutes> => {
     const userId = user.id || '';
-    const cachedID = 'routes'; // -${user.id}`;
+    const cachedID = 'tasks:routes'; // -${user.id}`;
     if (this.cache && (!input || input.cache !== false)) {
       const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
       if (cached && cached !== null && (!Array.isArray(cached.errors) || cached.errors?.length === 0)) {
@@ -393,7 +396,7 @@ export class TicketsService {
             ...loggerContext,
           });
 
-          promises.push(Promise.resolve({ users: null, tasks: null, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
+          promises.push(Promise.resolve({ users: undefined, tasks: undefined, errors: [PortalError.SOAP_NOT_AUTHORIZED] }));
         });
 
       if (client) {
@@ -518,10 +521,10 @@ export class TicketsService {
                   } as TkTasks;
                 }
 
-                return { users: null, tasks: null, errors: [PortalError.OST_EMPTY_RESULT] };
+                return { users: undefined, tasks: undefined, errors: [PortalError.OST_EMPTY_RESULT] };
               }
 
-              return { users: null, tasks: null, errors: [PortalError.OST_EMPTY_RESULT] };
+              return { users: undefined, tasks: undefined, errors: [PortalError.OST_EMPTY_RESULT] };
             });
           promises.push(osTicket);
         });
@@ -539,15 +542,15 @@ export class TicketsService {
     return Promise.allSettled(promises)
       .then((values: PromiseSettledResult<TkTasks>[]) =>
         values.map((promise: PromiseSettledResult<TkTasks>) =>
-          promise.status === 'fulfilled' ? promise.value : { users: null, tasks: null, errors: [promise.reason?.message] },
+          promise.status === 'fulfilled' ? promise.value : { users: undefined, tasks: undefined, errors: [promise.reason?.message] },
         ),
       )
       .then((routes: TkTasks[]) =>
         routes.reduce(
           (accumulator: TkTasks, current: TkTasks) => {
-            let t: TkTask[] | null = accumulator.tasks;
-            let u: TkUser[] | null = accumulator.users;
-            let e: string[] | null = accumulator.errors;
+            let t: TkTask[] | undefined = accumulator.tasks;
+            let u: TkUser[] | undefined = accumulator.users;
+            let e: string[] | undefined = accumulator.errors;
 
             if (Array.isArray(current.tasks) && current.tasks.length > 0) {
               t = t ? t.concat(current.tasks) : current.tasks;
@@ -565,7 +568,7 @@ export class TicketsService {
               errors: e,
             };
           },
-          { tasks: null, users: null, errors: null },
+          { tasks: undefined, users: undefined, errors: undefined },
         ),
       )
       .then(
@@ -847,7 +850,7 @@ export class TicketsService {
                     if (typeof response.data.error === 'string') {
                       throw new TypeError(response.data.error);
                     } else {
-                      const ticketNew = newOST(response.data, task.where);
+                      const ticketNew = newOST(response.data, task.where as TkWhere);
                       if (ticketNew) {
                         return ticketNew;
                       }
@@ -939,8 +942,10 @@ export class TicketsService {
             ...loggerContext,
           });
           if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
-            const usersResult = result[0].return['Пользователи']?.['Пользователь']?.map((u: TicketsUserSOAP) => userSOAP(u, task.where));
-            const taskResult = taskSOAP((result[0].return?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0], task.where);
+            const usersResult = result[0].return['Пользователи']?.['Пользователь']?.map((u: TicketsUserSOAP) =>
+              userSOAP(u, task.where as TkWhere),
+            );
+            const taskResult = taskSOAP((result[0].return?.['Задания']?.['Задание'] as TicketsTaskSOAP[])[0], task.where as TkWhere);
             if (usersResult && taskResult) {
               return {
                 users: usersResult,
@@ -1021,12 +1026,12 @@ export class TicketsService {
                     if (typeof response.data.error === 'string') {
                       throw new UnprocessableEntityException(__DEV__ ? response.data.error : undefined);
                     } else {
-                      const [users, taskDescription] = descriptionOST(response.data?.description, task.where);
+                      const [users, taskDescription] = descriptionOST(response.data?.description, task.where as TkWhere);
                       if (users && taskDescription) {
                         return {
                           users,
                           task: taskDescription,
-                          errors: null,
+                          errors: undefined,
                         };
                       }
                     }
@@ -1429,8 +1434,8 @@ export class TicketsService {
                         ...file,
                         id: `${whereService(file.where)}:${file.code}`,
                         body: (response.data.file as unknown) as string,
-                        name: null,
-                        mime: null,
+                        name: undefined,
+                        mime: undefined,
                       };
                     }
                   }
@@ -1600,11 +1605,12 @@ export class TicketsService {
                       throw new TypeError(response.data.error);
                     } else {
                       return {
-                        ...comment,
+                        where: (comment.where as TkWhere) || TkWhere.Default,
+                        code: comment.code || '',
                         id: `${whereService(comment.where)}:${comment.code}`,
                         body: (response.data.file as unknown) as string,
-                        name: null,
-                        mime: null,
+                        name: undefined,
+                        mime: undefined,
                       };
                     }
                   }

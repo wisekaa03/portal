@@ -10,7 +10,7 @@ import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-clien
 import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_PROCESS_STEP } from '@lib/queries';
 import type { DocFlowFile, DocFlowTask, DocFlowTaskInput, DocFlowFileInput } from '@lib/types/docflow';
 import { DocFlowProcessStep, DocFlowData } from '@lib/types/docflow';
-import { Data } from '@lib/types';
+import type { Data } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import DocFlowTaskComponent from '@front/components/docflow/task';
 //#endregion

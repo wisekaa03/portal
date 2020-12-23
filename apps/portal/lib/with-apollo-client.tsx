@@ -20,8 +20,10 @@ import { isMobile as checkMobile } from 'is-mobile';
 import { Logger } from 'winston';
 //#endregion
 //#region Imports Local
+import { User } from '@back/user/user.entity';
 import { ConfigService } from '@app/config';
-import { Data, User, UserContext, AppPortalProps, AppPortalInitialProps } from '@lib/types';
+
+import type { Data, UserContext, AppPortalProps, AppPortalInitialProps } from '@lib/types';
 // import { nextI18next } from './i18n-client';
 import { resolvers } from './state-link';
 import getRedirect from './get-redirect';

@@ -16,6 +16,8 @@ export class AppController {
 
   @MessagePattern(LDAP_SYNC)
   async synchronization({ loggerContext }: { loggerContext?: LoggerContext }): Promise<boolean> {
-    return this.syncService.synchronization({ loggerContext });
+    const syncResult = await this.syncService.synchronization({ loggerContext });
+
+    return syncResult;
   }
 }

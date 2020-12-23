@@ -11,12 +11,9 @@ import { ConfigService } from '@app/config';
 import { NewsService } from './news.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user/user.service';
-import { UserEntity } from '../user/user.entity';
-import { UserEntityMock } from '../user/user.entity.mock';
-import { GroupEntity } from '../group/group.entity';
-import { ProfileEntity } from '../profile/profile.entity';
-import { NewsEntity } from './news.entity';
-import { NewsEntityMock } from './news.entity.mock';
+import { User } from '../user/user.entity';
+import { Profile } from '../profile/profile.entity';
+import { News } from './news.entity';
 //#endregion
 
 jest.mock('@app/config/config.service');
@@ -35,17 +32,18 @@ describe(NewsService.name, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: async () =>
-            ({
-              type: 'sqlite',
-              database: ':memory:',
-              dropSchema: true,
-              entities: [NewsEntityMock, GroupEntity, UserEntityMock, ProfileEntity],
-              synchronize: true,
-              logging: false,
-            } as TypeOrmModuleOptions),
-        }),
+        // TypeOrmModule.forRootAsync({
+        //   useFactory: async () =>
+        //     ({
+        //       type: 'sqlite',
+        //       database: ':memory:',
+        //       dropSchema: true,
+        //       entities: [NewsMock, Group, UserMock, ProfileMock],
+        //       synchronize: true,
+        //       logging: false,
+        //     } as TypeOrmModuleOptions),
+        // }),
+        // TypeOrmModule.forFeature([News]),
       ],
       providers: [
         { provide: Logger, useValue: serviceMock },
@@ -53,10 +51,9 @@ describe(NewsService.name, () => {
         NewsService,
         { provide: UserService, useValue: serviceMock },
         { provide: ProfileService, useValue: serviceMock },
-        { provide: getRepositoryToken(GroupEntity), useValue: repositoryMock },
-        { provide: getRepositoryToken(UserEntity), useValue: UserEntityMock },
-        { provide: getRepositoryToken(ProfileEntity), useValue: repositoryMock },
-        { provide: getRepositoryToken(NewsEntity), useValue: NewsEntityMock },
+        { provide: getRepositoryToken(News), useClass: repositoryMock },
+        { provide: getRepositoryToken(User), useClass: repositoryMock },
+        { provide: getRepositoryToken(Profile), useClass: repositoryMock },
       ],
     }).compile();
 

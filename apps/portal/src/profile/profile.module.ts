@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 //#endregion
 //#region Imports Local
 import { ImageModule } from '@app/image';
-import { ProfileEntity } from './profile.entity';
+import { Profile } from './profile.entity';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
 //#endregion
@@ -18,7 +18,7 @@ import { ProfileResolver } from './profile.resolver';
     //#endregion
 
     //#region TypeORM
-    TypeOrmModule.forFeature([ProfileEntity]),
+    TypeOrmModule.forFeature([Profile]),
     //#endregion
   ],
   providers: [Logger, ProfileService, ProfileResolver],

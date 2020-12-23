@@ -27,9 +27,13 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, LocalizationProvider } from '@material-ui/pickers';
 //#endregion
 //#region Imports Local
+import { Gender } from '@back/shared/graphql/Gender';
+import { Contact } from '@back/shared/graphql/Contact';
+import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
+
 import { useTranslation } from '@lib/i18n-client';
 import { dateLocale } from '@lib/locales';
-import { Gender, Profile, ProfileEditComponentProps, Contact } from '@lib/types';
+import type { ProfileEditComponentProps } from '@lib/types';
 import IsAdmin from '@front/components/isAdmin';
 import Avatar from '@front/components/ui/avatar';
 import Loading from '@front/components/loading';
@@ -169,22 +173,34 @@ const endAdornment = (
   </InputAdornment>
 );
 
-const names: (keyof Profile)[] = ['lastName', 'firstName', 'middleName'];
-const companyes: (keyof Profile)[] = ['company', 'management', 'department', 'division', 'title'];
-const langs: (keyof Profile)[] = ['companyEng', 'managementEng', 'departmentEng', 'divisionEng', 'positionEng'];
-const others: (keyof Profile)[] = [
-  'email',
-  'telephone',
-  'mobile',
-  'workPhone',
-  'country',
-  'region',
-  'town',
-  'street',
-  'room',
-  'postalCode',
-  'employeeID',
-  'accessCard',
+const names: PhonebookColumnNames[] = [PhonebookColumnNames.lastName, PhonebookColumnNames.firstName, PhonebookColumnNames.middleName];
+const companyes: PhonebookColumnNames[] = [
+  PhonebookColumnNames.company,
+  PhonebookColumnNames.management,
+  PhonebookColumnNames.department,
+  PhonebookColumnNames.division,
+  PhonebookColumnNames.title,
+];
+const langs: PhonebookColumnNames[] = [
+  PhonebookColumnNames.companyEng,
+  PhonebookColumnNames.managementEng,
+  PhonebookColumnNames.departmentEng,
+  PhonebookColumnNames.divisionEng,
+  PhonebookColumnNames.titleEng,
+];
+const others: PhonebookColumnNames[] = [
+  PhonebookColumnNames.email,
+  PhonebookColumnNames.telephone,
+  PhonebookColumnNames.mobile,
+  PhonebookColumnNames.workPhone,
+  PhonebookColumnNames.country,
+  PhonebookColumnNames.region,
+  PhonebookColumnNames.city,
+  PhonebookColumnNames.street,
+  PhonebookColumnNames.room,
+  PhonebookColumnNames.postalCode,
+  PhonebookColumnNames.employeeID,
+  PhonebookColumnNames.accessCard,
 ];
 
 const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
@@ -278,7 +294,10 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             labelId="profile-contact"
                             autoWidth
                             onChange={(event) =>
-                              handleChange('contact')((event as unknown) as React.SyntheticEvent<Element, Event>, event.target.value)
+                              handleChange(PhonebookColumnNames.contact)(
+                                (event as unknown) as React.SyntheticEvent<Element, Event>,
+                                event.target.value,
+                              )
                             }
                             color="secondary"
                             value={profile.contact}
@@ -293,7 +312,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             disabled={!newProfile}
                             newProfile={newProfile}
                             handleDomain={(value: string) =>
-                              handleChange('loginDomain')(({} as unknown) as React.SyntheticEvent<Element, Event>, value)
+                              handleChange(PhonebookColumnNames.loginDomain)(({} as unknown) as React.SyntheticEvent<Element, Event>, value)
                             }
                             domain={profile.loginDomain}
                             InputProps={newProfile ? InputProps : { readOnly: true }}
@@ -304,7 +323,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                             <ProfileTextFieldComponent
                               disabled={loadingCheckUsername || false}
                               handleChange={handleChange}
-                              field="username"
+                              field={PhonebookColumnNames.username}
                               value={profile.username}
                               InputProps={newProfile ? InputProps : { readOnly: true }}
                               fullWidth={false}
@@ -316,7 +335,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                           <ProfileTextFieldComponent
                             disabled
                             handleChange={handleChange}
-                            field="username"
+                            field={PhonebookColumnNames.username}
                             value={profile.username}
                             InputProps={newProfile ? InputProps : { readOnly: true }}
                             fullWidth={false}
@@ -326,7 +345,12 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       <div className={classes.topRightBlock}>
                         <RadioGroup
                           className={classes.genderBlock}
-                          onChange={(handleChange('gender') as unknown) as (event: ChangeEvent<HTMLInputElement>, value: string) => void}
+                          onChange={
+                            (handleChange(PhonebookColumnNames.gender) as unknown) as (
+                              event: ChangeEvent<HTMLInputElement>,
+                              value: string,
+                            ) => void
+                          }
                           aria-label="gender"
                           name="gender"
                           value={profile.gender}
@@ -355,7 +379,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                                 disabled={loadingChanged}
                                 checked={profile.notShowing}
                                 onChange={
-                                  (handleChange('notShowing') as unknown) as (
+                                  (handleChange(PhonebookColumnNames.notShowing) as unknown) as (
                                     event: ChangeEvent<HTMLInputElement>,
                                     checked: boolean,
                                   ) => void
@@ -374,7 +398,10 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                                 disabled
                                 checked={profile.disabled}
                                 onChange={
-                                  (handleChange('disabled') as unknown) as (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void
+                                  (handleChange(PhonebookColumnNames.disabled) as unknown) as (
+                                    event: ChangeEvent<HTMLInputElement>,
+                                    checked: boolean,
+                                  ) => void
                                 }
                                 color="secondary"
                                 value="disabled"
@@ -387,7 +414,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                       <ProfileTextFieldComponent
                         disabled={loadingChanged}
                         handleChange={handleChange}
-                        field="nameEng"
+                        field={PhonebookColumnNames.nameEng}
                         value={profile.nameEng}
                         InputProps={InputProps}
                       />
@@ -424,7 +451,7 @@ const ProfileEditComponent: FC<ProfileEditComponentProps> = ({
                     <ProfileTextFieldComponent
                       disabled={loadingChanged}
                       handleChange={handleChange}
-                      field="manager"
+                      field={PhonebookColumnNames.manager}
                       value={profile.manager?.fullName}
                       InputProps={InputProps}
                     />

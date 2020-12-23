@@ -9,7 +9,8 @@ import { useLazyQuery } from '@apollo/client';
 // import { AutocompleteChangeReason, AutocompleteChangeDetails } from '@material-ui/lab/Autocomplete';
 //#endregion
 //#region Imports Local
-import { Data, LoginValuesProps, LoginPageProps, Login } from '@lib/types';
+import type { Data, LoginValuesProps, LoginPageProps } from '@lib/types';
+import type { Login } from '@back/auth/graphql/Login';
 import { FIRST_PAGE } from '@lib/constants';
 import { I18nPage, includeDefaultNamespaces, nextI18next } from '@lib/i18n-client';
 import Cookie from '@lib/cookie';

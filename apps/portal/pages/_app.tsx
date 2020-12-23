@@ -20,11 +20,13 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 import 'jodit/build/jodit.es2018.min.css';
 //#endregion
 //#region Imports Local
+import { User } from '@back/user/user.entity';
+
 import { AUTH_PAGE, FIRST_PAGE } from '@lib/constants';
 import { MaterialUI } from '@lib/theme';
 import { CURRENT_USER } from '@lib/queries';
 import { ProfileContext } from '@lib/context';
-import { AppPortalProps, AppPortalContext, Data, User, UserContext, AppPortalInitialProps } from '@lib/types';
+import type { AppPortalProps, AppPortalContext, Data, UserContext, AppPortalInitialProps } from '@lib/types';
 import { withApolloClient } from '@lib/with-apollo-client';
 import { appWithTranslation } from '@lib/i18n-client';
 import { SnackbarUtilsConfigurator } from '@lib/snackbar-utils';

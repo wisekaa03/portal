@@ -18,8 +18,10 @@ import {
 } from '@material-ui/core';
 //#endregion
 //#region Imports Local
+import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
+
 import { nextI18next, useTranslation } from '@lib/i18n-client';
-import { PhonebookColumn, PhonebookColumnNames, SettingsProps, PhonebookFilter } from '@lib/types';
+import type { PhonebookColumn, SettingsProps } from '@lib/types';
 import Button from '@front/components/ui/button';
 import DomainComponent from '@front/components/domain-component';
 // import HeaderBg from '@public/images/jpeg/header_bg.jpg';
@@ -110,169 +112,169 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const allColumns: PhonebookColumn[] = [
   {
-    name: 'thumbnailPhoto40',
+    name: PhonebookColumnNames.thumbnailPhoto40,
     admin: false,
     defaultStyle: { minWidth: 60, maxWidth: 60 },
     largeStyle: { minWidth: 60, maxWidth: 60 },
   },
   {
-    name: 'lastName',
+    name: PhonebookColumnNames.lastName,
     admin: false,
     defaultStyle: { minWidth: 160, maxWidth: 160 },
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'loginDomain',
+    name: PhonebookColumnNames.loginDomain,
     admin: false,
     defaultStyle: { minWidth: 80, maxWidth: 80 },
     largeStyle: { minWidth: 80, maxWidth: 80 },
   },
   {
-    name: 'username',
+    name: PhonebookColumnNames.username,
     admin: false,
     defaultStyle: { minWidth: 110, maxWidth: 110 },
     largeStyle: { minWidth: 110, maxWidth: 110 },
   },
   {
-    name: 'company',
+    name: PhonebookColumnNames.company,
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'management',
+    name: PhonebookColumnNames.management,
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'department',
+    name: PhonebookColumnNames.department,
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'division',
+    name: PhonebookColumnNames.division,
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'title',
+    name: PhonebookColumnNames.title,
     admin: false,
     defaultStyle: { minWidth: 240, maxWidth: 240 },
     largeStyle: { minWidth: 240, maxWidth: 240 },
   },
   {
-    name: 'email',
+    name: PhonebookColumnNames.email,
     admin: false,
     defaultStyle: { minWidth: 210, maxWidth: 210 },
     largeStyle: { minWidth: 250, maxWidth: 250 },
   },
   {
-    name: 'mobile',
+    name: PhonebookColumnNames.mobile,
     admin: false,
     defaultStyle: { minWidth: 130, maxWidth: 130 },
     largeStyle: { minWidth: 140, maxWidth: 140 },
   },
   {
-    name: 'workPhone',
+    name: PhonebookColumnNames.workPhone,
     admin: false,
     defaultStyle: { minWidth: 120, maxWidth: 120 },
     largeStyle: { minWidth: 120, maxWidth: 120 },
   },
   {
-    name: 'nameEng',
+    name: PhonebookColumnNames.nameEng,
     admin: false,
     defaultStyle: { minWidth: 160, maxWidth: 160 },
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'companyEng',
+    name: PhonebookColumnNames.companyEng,
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'managementEng',
+    name: PhonebookColumnNames.managementEng,
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'departmentEng',
+    name: PhonebookColumnNames.departmentEng,
     admin: false,
     defaultStyle: { minWidth: 260, maxWidth: 260 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'divisionEng',
+    name: PhonebookColumnNames.divisionEng,
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 270, maxWidth: 270 },
   },
   {
-    name: 'positionEng',
+    name: PhonebookColumnNames.titleEng,
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 240, maxWidth: 240 },
   },
   {
-    name: 'manager',
+    name: PhonebookColumnNames.manager,
     admin: false,
     defaultStyle: { minWidth: 160, maxWidth: 160 },
     largeStyle: { minWidth: 200, maxWidth: 200 },
   },
   {
-    name: 'room',
+    name: PhonebookColumnNames.room,
     admin: false,
     defaultStyle: { minWidth: 110, maxWidth: 110 },
     largeStyle: { minWidth: 110, maxWidth: 110 },
   },
   {
-    name: 'telephone',
+    name: PhonebookColumnNames.telephone,
     admin: false,
     defaultStyle: { minWidth: 130, maxWidth: 130 },
     largeStyle: { minWidth: 130, maxWidth: 130 },
   },
   {
-    name: 'fax',
+    name: PhonebookColumnNames.fax,
     admin: false,
     defaultStyle: { minWidth: 140, maxWidth: 140 },
     largeStyle: { minWidth: 160, maxWidth: 160 },
   },
   {
-    name: 'country',
+    name: PhonebookColumnNames.country,
     admin: false,
     defaultStyle: { minWidth: 150, maxWidth: 150 },
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'region',
+    name: PhonebookColumnNames.region,
     admin: false,
     defaultStyle: { minWidth: 150, maxWidth: 150 },
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'town',
+    name: PhonebookColumnNames.city,
     admin: false,
     defaultStyle: { minWidth: 150, maxWidth: 150 },
     largeStyle: { minWidth: 180, maxWidth: 180 },
   },
   {
-    name: 'street',
+    name: PhonebookColumnNames.street,
     admin: false,
     defaultStyle: { minWidth: 200, maxWidth: 200 },
     largeStyle: { minWidth: 250, maxWidth: 250 },
   },
   {
-    name: 'disabled',
+    name: PhonebookColumnNames.disabled,
     admin: false,
     defaultStyle: { minWidth: 100, maxWidth: 100 },
     largeStyle: { minWidth: 100, maxWidth: 100 },
   },
   {
-    name: 'notShowing',
+    name: PhonebookColumnNames.notShowing,
     admin: true,
     defaultStyle: { minWidth: 100, maxWidth: 100 },
     largeStyle: { minWidth: 100, maxWidth: 100 },
@@ -325,7 +327,11 @@ const PhonebookSettings = React.forwardRef(
               <Container className={classes.filters}>
                 <Typography component="p">{t('phonebook:filters')}</Typography>
                 <DomainComponent
-                  domain={filters.filter((filter) => filter.name === 'loginDomain').reduce((accumulator, filter) => filter.value, '') ?? ''}
+                  domain={
+                    filters
+                      .filter((filter) => filter.name === PhonebookColumnNames.loginDomain)
+                      .reduce((accumulator, filter) => filter.value || '', '') ?? ''
+                  }
                   handleDomain={handleFilters}
                 />
               </Container>

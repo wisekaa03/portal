@@ -7,7 +7,11 @@ import Head from 'next/head';
 import { useMutation, useLazyQuery } from '@apollo/client';
 //#endregion
 //#region Imports Local
-import type { Data, FilesFile, FilesFolder, FilesPath, FilesFolderChk } from '@lib/types';
+import { FilesFile } from '@back/files/graphql/FilesFile';
+import { FilesFolder } from '@back/files/graphql/FilesFolder';
+import { FilesFolderChk } from '@back/files/graphql/FilesFolderChk';
+
+import type { Data, FilesPath } from '@lib/types';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import {
   FILES_FOLDER_LIST,
@@ -78,11 +82,11 @@ const FilesPage: I18nPage = ({ t, query, ...rest }) => {
 
   useEffect(() => {
     if (getFolder) {
-      const pathString = `${path.join('/')}/`;
+      const pathString = path.join('/');
       router.push(router.route, `${router.route}${pathString}`);
       getFolder({
         variables: {
-          path: pathString,
+          path: `${pathString}/`,
         },
       });
     }
@@ -115,14 +119,6 @@ const FilesPage: I18nPage = ({ t, query, ...rest }) => {
       snackbarUtils.error(errorGetFile);
     }
   }, [errorFolderList, errorDeleteFile, errorDeleteFolder, errorGetFile, path]);
-
-  const folderRefetch = (): void => {
-    if (refetchFolderList) {
-      refetchFolderList({
-        path: path.join('/'),
-      });
-    }
-  };
 
   const handleFolder = (folder: FilesFolder | string): void => {
     if (typeof folder === 'string') {
@@ -217,11 +213,10 @@ const FilesPage: I18nPage = ({ t, query, ...rest }) => {
       <Head>
         <title>{t('files:title')}</title>
       </Head>
-      <MaterialUI {...rest}>
+      <MaterialUI refetchComponent={refetchFolderList} refetchLoading={loadingFolderList} {...rest}>
         <FilesComponent
           folderLoading={loadingFolderList}
           folderData={filesFolder}
-          folderRefetch={folderRefetch}
           search={search}
           path={path}
           handleCheckbox={handleCheckbox}

@@ -6,13 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 //#region Imports Local
 import { GroupService } from './group.service';
 import { GroupResolver } from './group.resolver';
-import { GroupEntity } from './group.entity';
+import { Group } from './group.entity';
 //#endregion
 
 @Module({
   imports: [
     //#region TypeORM
-    TypeOrmModule.forFeature([GroupEntity]),
+    TypeOrmModule.forFeature([Group]),
     //#endregion
   ],
   providers: [Logger, GroupService, GroupResolver],

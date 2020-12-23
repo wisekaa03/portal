@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import type React from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { TFunction, I18n } from 'next-i18next';
@@ -28,9 +28,9 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 //#region Imports Local
 import { useTranslation } from '@lib/i18n-client';
 import type { DocFlowInternalDocumentComponentProps } from '@lib/types/docflow';
-import dateFormat from '@lib/date-format';
-import BoxWithRef from '@lib/box-ref';
-import Search from '@front/components/ui/search';
+// import dateFormat from '@lib/date-format';
+// import BoxWithRef from '@lib/box-ref';
+// import Search from '@front/components/ui/search';
 import Loading from '@front/components/loading';
 import PortalErrors from '@front/components/errors';
 //#endregion
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DocFlowInternalDocumentComponent: FC<DocFlowInternalDocumentComponentProps> = ({ loading, errors, internalDocument }) => {
+const DocFlowInternalDocumentComponent: React.FC<DocFlowInternalDocumentComponentProps> = ({ loading, errors, internalDocument }) => {
   const classes = useStyles({});
   const { t } = useTranslation();
 

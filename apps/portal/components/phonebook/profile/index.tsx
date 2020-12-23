@@ -12,8 +12,11 @@ import { DomainRounded, ArrowBackRounded, PhoneRounded, PhoneAndroidRounded, Per
 import { red } from '@material-ui/core/colors';
 //#endregion
 //#region Imports Local
+import { PROFILE_TYPE } from '@lib/types/profile';
+import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
+
 import { nextI18next } from '@lib/i18n-client';
-import { Data, Profile, ProfileProps, PhonebookProfileModule, PhonebookProfileNameProps, PhonebookProfileFieldProps } from '@lib/types';
+import type { Data, ProfileProps, PhonebookProfileModule, PhonebookProfileNameProps, PhonebookProfileFieldProps } from '@lib/types';
 import { PROFILE } from '@lib/queries';
 import snackbarUtils from '@lib/snackbar-utils';
 import Avatar from '@front/components/ui/avatar';
@@ -135,8 +138,12 @@ const ProfileField = withStyles((theme) => ({
   },
 }))(({ classes, profile, last, onClick, title, field }: PhonebookProfileFieldProps) => {
   const text =
-    typeof profile === 'object' && profile !== null ? (field !== 'manager' ? profile[field] || '' : profile.manager?.fullName || '') : '';
-  const thisField = profile?.[field];
+    typeof profile === 'object' && profile !== null
+      ? field !== PhonebookColumnNames.manager
+        ? (profile[field] as string) || ''
+        : profile.manager?.fullName || ''
+      : '';
+  const thisField = profile?.[field] as PhonebookColumnNames;
 
   return (
     <ListItem divider={!last}>
@@ -165,10 +172,10 @@ const ProfileField = withStyles((theme) => ({
 const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, profileId, handleClose, handleSearch }, ref) => {
   const classes = useStyles({});
 
-  const [profile, setProfile] = useState<Profile | undefined>();
+  const [profile, setProfile] = useState<PROFILE_TYPE | undefined>();
   const [controlElement, setControlElement] = useState<HTMLElement | null>(null);
 
-  const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', Profile>, { id: string }>(PROFILE, {
+  const [getProfile, { loading, error, data }] = useLazyQuery<Data<'profile', PROFILE_TYPE>, { id: string }>(PROFILE, {
     ssr: false,
   });
 
@@ -184,7 +191,7 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
     }
   }, [setProfile, data, loading, error]);
 
-  const handleProfile = (prof: string | Profile) => (): void => {
+  const handleProfile = (prof: string | PROFILE_TYPE) => (): void => {
     if (typeof prof === 'object' && prof !== null && !prof.disabled && !prof.notShowing && prof.id) {
       getProfile({
         variables: {
@@ -194,8 +201,8 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
     }
   };
 
-  const handleSearchClose = (text: string | Profile) => (): void => {
-    handleSearch(typeof text === 'string' ? text : text.fullName || '');
+  const handleSearchClose = (text: string | PROFILE_TYPE) => (): void => {
+    handleSearch(typeof text === 'object' && text !== null ? text.fullName || '' : text);
     handleClose();
   };
 
@@ -303,21 +310,52 @@ const PhonebookProfile = React.forwardRef<React.Component, ProfileProps>(({ t, p
             <Box className={clsx(classes.grid, classes.gridFull)}>
               <Paper>
                 <List className={classes.list}>
-                  <ProfileField title={t('phonebook:fields.company')} profile={profile} field="company" onClick={handleSearchClose} />
-                  <ProfileField title={t('phonebook:fields.management')} profile={profile} field="management" onClick={handleSearchClose} />
-                  <ProfileField title={t('phonebook:fields.department')} profile={profile} field="department" onClick={handleSearchClose} />
-                  <ProfileField title={t('phonebook:fields.division')} profile={profile} field="division" onClick={handleSearchClose} />
-                  <ProfileField title={t('phonebook:fields.title')} profile={profile} field="title" onClick={handleSearchClose} />
-                  <ProfileField last title={t('phonebook:fields.manager')} profile={profile} field="manager" onClick={handleProfile} />
+                  <ProfileField
+                    title={t('phonebook:fields.company')}
+                    profile={profile}
+                    field={PhonebookColumnNames.company}
+                    onClick={handleSearchClose}
+                  />
+                  <ProfileField
+                    title={t('phonebook:fields.management')}
+                    profile={profile}
+                    field={PhonebookColumnNames.management}
+                    onClick={handleSearchClose}
+                  />
+                  <ProfileField
+                    title={t('phonebook:fields.department')}
+                    profile={profile}
+                    field={PhonebookColumnNames.department}
+                    onClick={handleSearchClose}
+                  />
+                  <ProfileField
+                    title={t('phonebook:fields.division')}
+                    profile={profile}
+                    field={PhonebookColumnNames.division}
+                    onClick={handleSearchClose}
+                  />
+                  <ProfileField
+                    title={t('phonebook:fields.title')}
+                    profile={profile}
+                    field={PhonebookColumnNames.title}
+                    onClick={handleSearchClose}
+                  />
+                  <ProfileField
+                    last
+                    title={t('phonebook:fields.manager')}
+                    profile={profile}
+                    field={PhonebookColumnNames.manager}
+                    onClick={handleProfile}
+                  />
                 </List>
               </Paper>
               <Paper>
                 <List className={classes.list}>
-                  <ProfileField title={t('phonebook:fields.country')} profile={profile} field="country" />
-                  <ProfileField title={t('phonebook:fields.region')} profile={profile} field="region" />
-                  <ProfileField title={t('phonebook:fields.town')} profile={profile} field="town" />
-                  <ProfileField title={t('phonebook:fields.street')} profile={profile} field="street" />
-                  <ProfileField last title={t('phonebook:fields.room')} profile={profile} field="room" />
+                  <ProfileField title={t('phonebook:fields.country')} profile={profile} field={PhonebookColumnNames.country} />
+                  <ProfileField title={t('phonebook:fields.region')} profile={profile} field={PhonebookColumnNames.region} />
+                  <ProfileField title={t('phonebook:fields.city')} profile={profile} field={PhonebookColumnNames.city} />
+                  <ProfileField title={t('phonebook:fields.street')} profile={profile} field={PhonebookColumnNames.street} />
+                  <ProfileField last title={t('phonebook:fields.room')} profile={profile} field={PhonebookColumnNames.room} />
                 </List>
               </Paper>
             </Box>

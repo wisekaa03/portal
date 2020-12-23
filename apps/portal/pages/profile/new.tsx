@@ -10,24 +10,27 @@ import { useMutation } from '@apollo/client';
 import { format as dateFnsFormat } from 'date-fns';
 //#endregion
 //#region Imports Local
+import { ProfileInput } from '@back/profile/graphql/ProfileInput.input';
+import { Gender, Contact } from '@back/shared/graphql';
+
+import { PROFILE_TYPE } from '@lib/types/profile';
 import { FIRST_PAGE } from '@lib/constants';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import type { UserContext, Data, Profile, ProfileInput } from '@lib/types';
+import type { UserContext, Data } from '@lib/types';
 import { LDAP_NEW_USER, LDAP_CHECK_USERNAME } from '@lib/queries';
 import { resizeImage } from '@lib/utils';
 import { ProfileContext } from '@lib/context';
 import snackbarUtils from '@lib/snackbar-utils';
-import { Contact } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import ProfileEditComponent from '@front/components/profile/edit';
 //#endregion
 
-const newParameters: ProfileInput = {
+const newParameters: PROFILE_TYPE = {
   contact: Contact.PROFILE,
   notShowing: true,
   disabled: false,
-  gender: 0,
-  birthday: null,
+  gender: Gender.UNKNOWN,
+  birthday: undefined,
   username: '',
   firstName: '',
   lastName: '',
@@ -37,8 +40,8 @@ const newParameters: ProfileInput = {
 
 const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...rest }) => {
   const router = useRouter();
-  const [current, setCurrent] = useState<Profile>(newParameters);
-  const [updated, setUpdated] = useState<Profile>(newParameters);
+  const [current, setCurrent] = useState<PROFILE_TYPE>(newParameters);
+  const [updated, setUpdated] = useState<PROFILE_TYPE>(newParameters);
   const [thumbnailPhoto, setThumbnail] = useState<File | undefined>();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const profileContext = __SERVER__ ? ((ctx?.req as Request)?.session?.passport as UserContext) : useContext(ProfileContext);
@@ -54,13 +57,16 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     }
   }
 
-  const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<Data<'ldapNewUser', Profile>>(LDAP_NEW_USER, {
-    onCompleted: (data) => {
-      if (data.ldapNewUser?.id) {
-        router.push(`/profile/edit/${data.ldapNewUser.id}`);
-      }
+  const [ldapNewUser, { loading: loadingLdapNewUser, error: errorLdapNewUser }] = useMutation<Data<'ldapNewUser', PROFILE_TYPE>>(
+    LDAP_NEW_USER,
+    {
+      onCompleted: (data) => {
+        if (data.ldapNewUser?.id) {
+          router.push(`/profile/edit/${data.ldapNewUser.id}`);
+        }
+      },
     },
-  });
+  );
 
   const [checkUsername, { loading: loadingCheckUsername, error: errorCheckUsername }] = useMutation<
     Data<'ldapCheckUsername', boolean>,
@@ -95,7 +101,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     }
   };
 
-  const handleChange = (name: keyof Profile) => (event: React.SyntheticEvent<Element, Event>, changedValue?: unknown) => {
+  const handleChange = (name: keyof PROFILE_TYPE) => (event: React.SyntheticEvent<Element, Event>, changedValue?: unknown) => {
     const element = (event.target as unknown) as HTMLInputElement;
     let value: unknown;
     if (changedValue && typeof changedValue === 'object' && React.isValidElement<{ value: string; children: string }>(changedValue)) {
@@ -115,12 +121,12 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, ctx, ...
     }
   };
 
-  const handleBirthday = (date: Date | null): void => {
+  const handleBirthday = (birthday?: Date | null): void => {
     if (current) {
-      setCurrent({ ...current, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : null });
+      setCurrent({ ...current, birthday });
     }
     if (updated) {
-      setUpdated({ ...updated, birthday: date ? dateFnsFormat(date, 'yyyy-MM-dd') : null });
+      setUpdated({ ...updated, birthday });
     }
   };
 

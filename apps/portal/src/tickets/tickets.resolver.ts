@@ -5,10 +5,14 @@ import type { Request, Response } from 'express';
 import { Inject, UseGuards, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Query, Resolver, Mutation, Subscription, Args, Context } from '@nestjs/graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { FileUpload } from 'graphql-upload';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 //#endregion
 //#region Imports Local
-import type {
+import type { SubscriptionPayload, WebsocketContext } from '@back/shared/types';
+import { PortalPubSub } from '@back/shared/constants';
+import { User, CurrentUser, PasswordFrontend } from '@back/user';
+import { GqlAuthGuard } from '@back/guards';
+import {
   TkRoutes,
   TkRoutesInput,
   TkTasks,
@@ -20,17 +24,12 @@ import type {
   TkTaskInput,
   TkFile,
   TkFileInput,
-  TkCommentInput,
-} from '@lib/types/tickets';
-import type { SubscriptionPayload, WebsocketContext } from '@back/shared/types';
-import { PortalPubSub } from '@back/shared/constants';
-import { User } from '@lib/types/user.dto';
-import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
-import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
+} from './graphql';
+import { TkCommentInput } from './graphql/TkComment.input';
 import { TicketsService } from './tickets.service';
 //#endregion
 
-@Resolver('TicketsResolver')
+@Resolver()
 export class TicketsResolver {
   constructor(private readonly ticketsService: TicketsService, @Inject('PUB_SUB') private readonly pubSub: RedisPubSub) {}
 
@@ -41,18 +40,14 @@ export class TicketsResolver {
    * @returns {TkRoutes}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('ticketsRoutes')
+  @Query(() => TkRoutes)
   @UseGuards(GqlAuthGuard)
   async ticketsRoutes(
     @Context('req') request: Request,
-    @Args('routes') input?: TkRoutesInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('routes', { type: () => TkRoutesInput, nullable: true }) input?: TkRoutesInput,
   ): Promise<TkRoutes> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsRoutesCache({
       user,
       password,
@@ -62,7 +57,7 @@ export class TicketsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('ticketsRoutes', {
+  @Subscription((returns) => TkRoutes, {
     // filter: (payload: SubscriptionPayload<TkRoutes>, variables: { routes: TkRoutesInput }, context: WebsocketContext) =>
     //   payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkRoutes>) => payload.object,
@@ -79,18 +74,14 @@ export class TicketsResolver {
    * @returns {TkTasks}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('ticketsTasks')
+  @Query(() => TkTasks)
   @UseGuards(GqlAuthGuard)
   async ticketsTasks(
     @Context('req') request: Request,
-    @Args('tasks') tasks?: TkTasksInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('tasks', { type: () => TkTasksInput, nullable: true }) tasks?: TkTasksInput,
   ): Promise<TkTasks> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsTasksCache({
       user,
       password,
@@ -100,7 +91,7 @@ export class TicketsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('ticketsTasks', {
+  @Subscription((returns) => TkTasks, {
     filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: WebsocketContext) =>
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkTasks>) => payload.object,
@@ -119,19 +110,15 @@ export class TicketsResolver {
    * @returns {TkTaskNew}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('ticketsTaskNew')
+  @Mutation(() => TkTaskNew)
   @UseGuards(GqlAuthGuard)
   async ticketsTaskNew(
     @Context('req') request: Request,
-    @Args('task') task: TkTaskNewInput,
-    @Args('attachments') attachments: Promise<FileUpload>[],
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('task', { type: () => TkTaskNewInput }) task: TkTaskNewInput,
+    @Args('attachments', { type: () => [GraphQLUpload], nullable: true }) attachments: Promise<FileUpload>[],
   ): Promise<TkTaskNew> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsTaskNew({
       user,
       password,
@@ -148,19 +135,15 @@ export class TicketsResolver {
    * @returns {TkTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('ticketsTaskEdit')
+  @Mutation(() => TkEditTask)
   @UseGuards(GqlAuthGuard)
   async ticketsTaskEdit(
     @Context('req') request: Request,
-    @Args('task') task: TkTaskEditInput,
-    @Args('attachments') attachments: Promise<FileUpload>[],
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('task', { type: () => TkTaskEditInput }) task: TkTaskEditInput,
+    @Args('attachments', { type: () => [GraphQLUpload], nullable: true }) attachments: Promise<FileUpload>[],
   ): Promise<TkEditTask> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsTaskEdit({
       user,
       password,
@@ -177,18 +160,14 @@ export class TicketsResolver {
    * @returns {TkTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query('ticketsTask')
+  @Query((returns) => TkEditTask)
   @UseGuards(GqlAuthGuard)
   async ticketsTask(
     @Context('req') request: Request,
-    @Args('task') task: TkTaskInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('task', { type: () => TkTaskInput }) task: TkTaskInput,
   ): Promise<TkEditTask> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsTaskCache({
       user,
       password,
@@ -198,7 +177,7 @@ export class TicketsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription('ticketsTask', {
+  @Subscription((returns) => TkEditTask, {
     filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: WebsocketContext) =>
       payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code,
     resolve: (payload: SubscriptionPayload<TkEditTask>) => payload.object,
@@ -214,18 +193,14 @@ export class TicketsResolver {
    * @returns {TkFile}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('ticketsTaskFile')
   @UseGuards(GqlAuthGuard)
+  @Mutation(() => TkFile)
   async ticketsTaskFile(
     @Context('req') request: Request,
-    @Args('file') file: TkFileInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('file', { type: () => TkFileInput }) file: TkFileInput,
   ): Promise<TkFile> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsTaskFile({
       user,
       password,
@@ -241,18 +216,14 @@ export class TicketsResolver {
    * @returns {TkFile}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Mutation('ticketsComment')
   @UseGuards(GqlAuthGuard)
+  @Mutation(() => TkFile)
   async ticketsComment(
     @Context('req') request: Request,
-    @Args('comment') comment: TkCommentInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('comment', { type: () => TkCommentInput }) comment: TkCommentInput,
   ): Promise<TkFile> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.ticketsService.ticketsComment({
       user,
       password,

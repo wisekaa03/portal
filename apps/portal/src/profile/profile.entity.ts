@@ -1,6 +1,8 @@
 /** @format */
+/* eslint max-classes-per-file:0 */
 
 //#region Imports NPM
+import { ObjectType, Field, ID, HideField } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -18,269 +20,331 @@ import {
 import isPromise from 'is-promise';
 //#endregion
 //#region Imports Local
-import { Gender } from '@lib/types/gender';
-import { LoginService } from '@lib/types/login-service';
-import { Contact } from '@lib/types/user.dto';
-import { Profile } from '@lib/types/profile.dto';
+import { Contact, Gender, LoginService } from '@back/shared/graphql';
+import { ProfileBase } from './graphql/ProfileBase';
 //#endregion
 
+@ObjectType()
 @Entity('profile')
 @Index(['loginService', 'loginDomain'])
-@Index(['loginService', 'loginDomain', 'loginIdentificator'])
-@Index(['loginService', 'loginDomain', 'username'], { unique: true })
-export class ProfileEntity {
+@Index(['loginService', 'loginDomain', 'loginGUID'])
+@Index(['loginService', 'loginDomain', 'loginDN'])
+@Index(['loginService', 'loginDomain', 'username'])
+export class Profile implements ProfileBase {
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  id?: string;
 
+  @Field(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  disabled?: boolean;
+
+  @Field(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  notShowing?: boolean;
+
+  @Field(() => Date, { nullable: true })
   @CreateDateColumn()
   createdAt?: Date | null;
 
+  @Field(() => Date, { nullable: true })
   @UpdateDateColumn()
   updatedAt?: Date | null;
 
+  @Field(() => LoginService)
   @Column({
-    type: 'varchar',
-    length: 10,
+    type: 'enum',
+    enum: LoginService,
     nullable: false,
     default: LoginService.LOCAL,
   })
-  loginService!: LoginService;
+  loginService?: LoginService;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     length: 100,
     nullable: true,
   })
-  loginDomain!: string | null;
+  loginDomain?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     length: 50,
     nullable: true,
   })
-  loginIdentificator!: string | null;
+  loginGUID?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  username!: string | null;
+  loginDN?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
-  dn!: string | null;
+  username?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
-  firstName!: string | null;
+  firstName?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
-  lastName!: string | null;
+  lastName?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
-  middleName!: string | null;
+  middleName?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
+    length: 100,
     nullable: true,
   })
-  email!: string | null;
+  email?: string;
 
+  @Field(() => Date, { nullable: true })
   @Column({
-    type: 'varchar',
+    type: 'date',
     nullable: true,
-    length: 11,
   })
-  birthday!: string | null;
+  birthday?: Date | null;
 
+  @Field(() => Gender, { nullable: true })
   @Column({
-    type: 'int',
+    type: 'enum',
+    enum: Gender,
     nullable: true,
     default: Gender.UNKNOWN,
   })
-  gender!: Gender | null;
+  gender?: Gender;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  country!: string | null;
+  country?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  postalCode!: string | null;
+  postalCode?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  region!: string | null;
+  region?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  town!: string | null;
+  city?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  street!: string | null;
+  street?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  room!: string | null;
+  room?: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'json',
+    nullable: true,
+  })
+  addressPersonal?: string;
+
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  employeeID!: string | null;
+  company?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  company!: string | null;
+  management?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  management!: string | null;
+  department?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  department!: string | null;
+  division?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  division!: string | null;
+  title?: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  title!: string | null;
+  telephone?: string;
 
-  @RelationId((profile: ProfileEntity) => profile.manager)
-  managerId!: string | null;
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  workPhone?: string;
 
-  @ManyToOne(() => ProfileEntity, { nullable: true, onDelete: 'SET NULL' })
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  mobile?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  fax?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  employeeID?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  accessCard?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  companyEng?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  nameEng?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  managementEng?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  departmentEng?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  divisionEng?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  titleEng?: string;
+
+  @HideField()
+  @RelationId((profile: Profile) => profile.manager)
+  managerId?: string | null;
+
+  @Field(() => Profile, { nullable: true })
+  @ManyToOne(() => Profile, { nullable: true, onDelete: 'SET NULL' })
   @JoinTable()
-  manager!: ProfileEntity | null;
+  manager?: Profile;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  telephone!: string | null;
+  thumbnailPhoto?: string | Promise<string | null> | null;
 
+  @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  workPhone!: string | null;
+  thumbnailPhoto40?: string | Promise<string | null> | null;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  mobile!: string | null;
+  @Field(() => Contact, { nullable: true })
+  contact?: Contact;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  fax!: string | null;
+  @Field(() => String, { nullable: true })
+  fullName?: string;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  companyEng!: string | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  nameEng!: string | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  managementEng!: string | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  departmentEng!: string | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  divisionEng!: string | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  positionEng!: string | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  accessCard!: string | null;
-
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: false,
-  })
-  disabled!: boolean;
-
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: false,
-  })
-  notShowing!: boolean;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  thumbnailPhoto!: string | Promise<string | null> | null;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  thumbnailPhoto40!: string | Promise<string | null> | null;
-
+  @HideField()
   @BeforeUpdate()
   @BeforeInsert()
   async resizeImage(): Promise<void> {
@@ -293,27 +357,24 @@ export class ProfileEntity {
     }
   }
 
-  contact?: Contact;
-  fullName?: string;
+  @HideField()
   @AfterLoad()
   setComputed(): void {
-    const f: Array<string> = [];
-    if (this.lastName) {
-      f.push(this.lastName);
+    if (!this.fullName) {
+      const f: Array<string> = [];
+      if (this.lastName) {
+        f.push(this.lastName);
+      }
+      if (this.firstName) {
+        f.push(this.firstName);
+      }
+      if (this.middleName) {
+        f.push(this.middleName);
+      }
+      this.fullName = f.join(' ');
     }
-    if (this.firstName) {
-      f.push(this.firstName);
+    if (!this.contact) {
+      this.contact = typeof this.username === 'string' && this.username !== '' ? Contact.USER : Contact.PROFILE;
     }
-    if (this.middleName) {
-      f.push(this.middleName);
-    }
-    this.fullName = f.join(' ');
-    this.contact = this.username ? Contact.USER : Contact.PROFILE;
   }
-
-  toResponseObject = (): Profile => ({
-    ...this,
-    fullName: `${this.lastName || ''} ${this.firstName || ''} ${this.middleName || ''}`,
-    contact: this.username ? Contact.USER : Contact.PROFILE,
-  });
 }

@@ -4,7 +4,6 @@
 import React, { forwardRef, useState } from 'react';
 import { Typography, Box, InputBase, IconButton, Popper, ClickAwayListener, MenuList, MenuItem, Paper, Tooltip } from '@material-ui/core';
 import { fade, Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-
 import { Search as SearchIcon, Settings as SettingsIcon, HelpOutline as HelpIcon, Clear as ClearIcon } from '@material-ui/icons';
 //#endregion
 //#region Imports Local

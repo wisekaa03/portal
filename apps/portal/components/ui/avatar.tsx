@@ -5,14 +5,14 @@ import React from 'react';
 import AvatarMui from '@material-ui/core/Avatar';
 //#endregion
 //#region Imports Local
-import { Profile, ProfileInput } from '@lib/types';
+import { PROFILE_TYPE } from '@lib/types/profile';
 import Alien from '@public/images/svg/avatar/alien-blue.svg';
 import Man from '@public/images/svg/avatar/man-blue.svg';
 import Woman from '@public/images/svg/avatar/woman-blue.svg';
 //#endregion
 
 export interface AvatarProps {
-  profile?: Profile;
+  profile?: PROFILE_TYPE;
   alt: string;
   base64?: string | null;
   fullSize?: boolean;
@@ -22,7 +22,6 @@ export interface AvatarProps {
 /**
  * TODO: DOCUMENT THIS
  */
-// eslint-disable-next-line react/display-name
 const Avatar = React.forwardRef(({ profile, fullSize = false, base64, ...rest }: AvatarProps, ref?: React.Ref<HTMLDivElement>) => {
   let source = 'data:image/png;base64,';
 

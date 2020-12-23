@@ -2,7 +2,7 @@
 /* eslint no-use-before-define:0 */
 
 //#region Imports NPM
-import React, { FC } from 'react';
+import React from 'react';
 import { Box, Fab, Menu, MenuProps, MenuItem, Paper, Button, ListItemIcon, ListItemText } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -46,7 +46,7 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export const FilesBreadcrumbsLast: FC<FilesBreadcrumbsLastProps> = ({ handleUpload, handleDelete, handleUrl }) => {
+export const FilesBreadcrumbsLast: React.FC<FilesBreadcrumbsLastProps> = ({ handleUpload, handleDelete, handleUrl }) => {
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

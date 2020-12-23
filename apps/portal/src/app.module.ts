@@ -8,10 +8,11 @@ import { parse as urlLibParse } from 'url';
 import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
+import { OrderDirection } from 'typeorm-graphql-pagination';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, UnauthorizedException, HttpModule, LoggerService, Logger } from '@nestjs/common';
+import { Module, UnauthorizedException, HttpModule, LoggerService, Logger, OnModuleInit } from '@nestjs/common';
 import { WinstonModule, WinstonLogger, WINSTON_MODULE_PROVIDER, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLModule, registerEnumType } from '@nestjs/graphql';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
@@ -21,7 +22,6 @@ import { LdapModule, Scope, ldapADattributes, LoggerContext } from 'nestjs-ldap'
 import type { Redis } from 'ioredis';
 //#endregion
 //#region Imports Local
-import type { User } from '@lib/types';
 import type { GraphQLContext, WebsocketContext } from '@back/shared/types';
 
 import sessionRedis from '@back/shared/session-redis';
@@ -29,31 +29,31 @@ import session from '@back/shared/session';
 
 import { redisOptions } from '@back/shared/redis.options';
 import { TypeOrmLogger } from '@back/shared/typeorm.logger';
-import { DateScalar } from '@back/shared/date.scalar';
-import { Upload } from '@back/shared/upload.scalar';
-import { ByteArrayScalar } from '@back/shared/bytearray.scalar';
+// import { Upload } from '@back/shared/Upload.scalar';
+import { DateScalar } from '@back/shared/Date.scalar';
+// import { ByteArray } from '@back/shared/ByteArray.scalar';
+
+import { Folder } from '@back/files/graphql/Folder';
+import { TkWhere } from '@back/tickets/graphql/TkWhere';
+import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
+import { Contact } from '@back/shared/graphql/Contact';
+import { LoginService } from '@back/shared/graphql/LoginService';
+import { Gender } from '@back/shared/graphql/Gender';
 
 import { ConfigModule, ConfigService, LDAPDomainConfig } from '@app/config';
 import { LoggingInterceptor } from '@app/logging.interceptor';
 // import { CacheInterceptorProvider } from '@app/cache.interceptor';
-
 import { SoapModule } from '@app/soap';
-
 import { ControllersModule } from '@back/controllers/controllers.module';
-import { AuthModule } from '@back/auth/auth.module';
-import { UserModule } from '@back/user/user.module';
-import { NewsModule } from '@back/news/news.module';
-import { ProfileModule } from '@back/profile/profile.module';
-import { GroupModule } from '@back/group/group.module';
-
-import { GroupEntity } from '@back/group/group.entity';
-import { ProfileEntity } from '@back/profile/profile.entity';
-import { UserEntity } from '@back/user/user.entity';
-import { TicketsModule } from '@back/tickets/tickets.module';
-import { ReportsModule } from '@back/reports/reports.module';
-import { DocFlowModule } from '@back/docflow/docflow.module';
-import { NewsEntity } from '@back/news/news.entity';
-import { FilesModule } from '@back/files/files.module';
+import { AuthModule } from '@back/auth';
+import { GroupModule, Group } from '@back/group';
+import { ProfileModule, Profile } from '@back/profile';
+import { UserModule, User } from '@back/user';
+import { NewsModule, News } from '@back/news';
+import { TicketsModule } from '@back/tickets';
+// import { ReportsModule } from '@back/reports';
+// import { DocFlowModule } fro.local/docflowlow';
+// import { FilesModule } from '@back/files';
 
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 import { winstonOptions } from './shared/logger.options';
@@ -82,7 +82,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     : configService.get('DATABASE_LOGGING') === 'true'
     ? true
     : JSON.parse(configService.get('DATABASE_LOGGING')),
-  entities: [GroupEntity, ProfileEntity, UserEntity, NewsEntity],
+  entities: [Group, Profile, News, User],
   migrationsRun: configService.get<boolean>('DATABASE_MIGRATIONS_RUN'),
   cache: /* redis */ {
     type: 'ioredis', // "ioredis/cluster"
@@ -224,13 +224,6 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     // PrometheusModule.register({}),
     //#endregion
 
-    //#region Next RenderModule
-    RenderModule.forRootAsync(Next({ dev: __DEV__, dir: __DEV__ ? 'apps/portal' : '', quiet: false }), {
-      // passthrough404: true,
-      viewsDir: null,
-    }),
-    //#endregion
-
     //#region Cache Manager - Redis
     // CacheModule.registerAsync({
     //   imports: [WinstonModule],
@@ -249,8 +242,14 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     // }),
     //#endregion
 
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        // timeout: TIMEOUT,
+      }),
+    }),
+    SoapModule,
+
     //#region GraphQL
-    Upload,
     GraphQLModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -260,6 +259,28 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
         const store = sessionRedis(configService, logger);
         const auth = session(configService, logger, store, true);
         const maxFileSize = configService.get<number>('MAX_FILE_SIZE');
+
+        registerEnumType(Contact, {
+          name: 'Contact',
+        });
+        registerEnumType(Gender, {
+          name: 'Gender',
+        });
+        registerEnumType(LoginService, {
+          name: 'LoginService',
+        });
+        registerEnumType(PhonebookColumnNames, {
+          name: 'PhonebookColumnNames',
+        });
+        registerEnumType(Folder, {
+          name: 'Folder',
+        });
+        registerEnumType(TkWhere, {
+          name: 'TkWhere',
+        });
+        registerEnumType(OrderDirection, {
+          name: 'OrderDirection',
+        });
 
         return {
           debug: DEV,
@@ -277,12 +298,17 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
                 },
               }
             : false,
-          typePaths: ['./**/*.graphql'],
+          // typePaths: ['./**/*.graphql'],
           cors: {
             // origin: 'https://localhost:4000',
             credentials: true,
           },
+          buildSchemaOptions: {
+            dateScalarMode: 'timestamp',
+          },
           installSubscriptionHandlers: true,
+          autoSchemaFile: resolve(process.cwd(), 'apps/portal/src/graphql.gql'),
+          sortSchema: true,
           subscriptions: {
             keepAlive: 0,
             onConnect: async (
@@ -294,7 +320,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
                 const request = (websocket as Record<string, unknown>)?.upgradeReq as Express.Request;
                 const response = ({} as unknown) as Express.Response;
 
-                auth(request, response, () => resolveOnConnect(request.session?.passport?.user || undefined));
+                auth(request, response, () => resolveOnConnect(request.session?.passport?.user));
               });
 
               if (user) {
@@ -405,41 +431,34 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     }),
     //#endregion
 
-    HttpModule.registerAsync({
-      useFactory: () => ({
-        // timeout: TIMEOUT,
-      }),
-    }),
-    SoapModule,
-
-    //#region Authentication
-    AuthModule,
+    //#region Groups
+    GroupModule,
     //#endregion
 
     //#region Profile
     ProfileModule,
     //#endregion
 
-    //#region Groups
-    GroupModule,
-    //#endregion
-
     //#region Users
     UserModule,
     //#endregion
 
-    //#region News
-    NewsModule,
+    //#region News module
+    // NewsModule,
     //#endregion
 
     //#region Files module
-    FilesModule,
+    // FilesModule,
     //#endregion
 
-    //#region Tickets module
+    //#region Tickets
     TicketsModule,
-    ReportsModule,
-    DocFlowModule,
+    // ReportsModule,
+    // DocFlowModule,
+    //#endregion
+
+    //#region Authentication
+    AuthModule,
     //#endregion
 
     //#region Controllers module
@@ -447,12 +466,19 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     //#endregion
 
     SubscriptionsModule,
+
+    //#region Next RenderModule
+    RenderModule.forRootAsync(Next({ dev: __DEV__, dir: __DEV__ ? 'apps/portal' : '', quiet: false }), {
+      // passthrough404: true,
+      viewsDir: null,
+    }),
+    //#endregion
   ],
 
   providers: [
     //#region GraphQL
     DateScalar,
-    ByteArrayScalar,
+    // ByteArray,
     //#endregion
 
     {

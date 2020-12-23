@@ -6,7 +6,7 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql';
 //#endregion
 //#region Imports Local
-import { User } from '@lib/types/user.dto';
+import { User } from '@back/user/user.entity';
 //#endregion
 
 @Injectable()
