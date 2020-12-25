@@ -55,12 +55,13 @@ type DocFlowBusinessProcessApprovalParticipant {
   approvalOrder: [DocFlowApprovalOrder!]
 }
 
-type DocFlowBusinessProcessApprovalTaskApproval implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+type DocFlowBusinessProcessApprovalTaskApproval implements DocFlowInterfaceObject {
   acceptDate: Date
   accepted: Boolean!
   approvalResult: DocFlowApprovalResult
   author: DocFlowUser!
   beginDate: Date
+  businessProcessStep: DocFlowProcessStep
   changeRight: Boolean
   description: String
   dueDate: Date
@@ -74,9 +75,9 @@ type DocFlowBusinessProcessApprovalTaskApproval implements DocFlowInterfaceBusin
   iterationNumber: Int
   name: String!
   navigationRef: String
-  performer: DocFlowUser
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
   presentation: String
-  processStep: DocFlowProcessStep
   project: DocFlowProject
   state: DocFlowBusinessProcessState
   target: DocFlowInternalDocument
@@ -84,11 +85,14 @@ type DocFlowBusinessProcessApprovalTaskApproval implements DocFlowInterfaceBusin
   type: String!
 }
 
-type DocFlowBusinessProcessApprovalTaskCheckup implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+type DocFlowBusinessProcessApprovalTaskCheckup implements DocFlowInterfaceObject {
   acceptDate: Date
   accepted: Boolean!
+  approvalResult: DocFlowApprovalResult
+  approvalResults: [DocFlowBusinessProcessApprovalTaskCheckupApprovalResult!]
   author: DocFlowUser!
   beginDate: Date
+  businessProcessStep: DocFlowProcessStep
   changeRight: Boolean
   description: String
   dueDate: Date
@@ -99,12 +103,14 @@ type DocFlowBusinessProcessApprovalTaskCheckup implements DocFlowInterfaceBusine
   htmlView: String
   id: ID!
   importance: DocFlowBusinessProcessTaskImportance
+  iterationNumber: Int
   name: String!
   navigationRef: String
-  performer: DocFlowUser
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
   presentation: String
-  processStep: DocFlowProcessStep
   project: DocFlowProject
+  returned: Boolean
   state: DocFlowBusinessProcessState
   target: DocFlowInternalDocument
   targets: [DocFlowBusinessProcessTarget!]
@@ -127,13 +133,12 @@ type DocFlowBusinessProcessExecutorRole implements DocFlowInterfaceObject {
   type: String!
 }
 
-type DocFlowBusinessProcessOrderTaskCheckup implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+type DocFlowBusinessProcessOrderTaskCheckup implements DocFlowInterfaceObject {
   acceptDate: Date
   accepted: Boolean!
-  approvalResult: DocFlowApprovalResult
-  approvalResults: [DocFlowBusinessProcessApprovalTaskCheckupApprovalResult!]
   author: DocFlowUser!
   beginDate: Date
+  businessProcessStep: DocFlowProcessStep
   changeRight: Boolean
   description: String
   dueDate: Date
@@ -147,9 +152,9 @@ type DocFlowBusinessProcessOrderTaskCheckup implements DocFlowInterfaceBusinessP
   iterationNumber: Int
   name: String!
   navigationRef: String
-  performer: DocFlowUser
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
   presentation: String
-  processStep: DocFlowProcessStep
   project: DocFlowProject
   returned: Boolean
   state: DocFlowBusinessProcessState
@@ -158,12 +163,14 @@ type DocFlowBusinessProcessOrderTaskCheckup implements DocFlowInterfaceBusinessP
   type: String!
 }
 
-type DocFlowBusinessProcessPerfomanceTaskCheckup implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+type DocFlowBusinessProcessPerfomanceTaskCheckup implements DocFlowInterfaceObject {
   acceptDate: Date
   accepted: Boolean!
   author: DocFlowUser!
   beginDate: Date
+  businessProcessStep: DocFlowProcessStep
   changeRight: Boolean
+  checkResults: [DocFlowBusinessProcessPerfomanceTaskCheckupResult!]
   description: String
   dueDate: Date
   endDate: Date
@@ -173,16 +180,23 @@ type DocFlowBusinessProcessPerfomanceTaskCheckup implements DocFlowInterfaceBusi
   htmlView: String
   id: ID!
   importance: DocFlowBusinessProcessTaskImportance
+  iterationNumber: Int
   name: String!
   navigationRef: String
-  performer: DocFlowUser
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
   presentation: String
-  processStep: DocFlowProcessStep
   project: DocFlowProject
   state: DocFlowBusinessProcessState
   target: DocFlowInternalDocument
   targets: [DocFlowBusinessProcessTarget!]
   type: String!
+}
+
+type DocFlowBusinessProcessPerfomanceTaskCheckupResult {
+  checkComment: String
+  executorTask: DocFlowBusinessProcessTask
+  returned: Boolean
 }
 
 type DocFlowBusinessProcessState implements DocFlowInterfaceObject {
@@ -208,11 +222,12 @@ type DocFlowBusinessProcessTargetRole implements DocFlowInterfaceObject {
   type: String!
 }
 
-type DocFlowBusinessProcessTask implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+type DocFlowBusinessProcessTask implements DocFlowInterfaceObject {
   acceptDate: Date
   accepted: Boolean!
   author: DocFlowUser!
   beginDate: Date
+  businessProcessStep: DocFlowProcessStep
   changeRight: Boolean
   description: String
   dueDate: Date
@@ -225,9 +240,9 @@ type DocFlowBusinessProcessTask implements DocFlowInterfaceBusinessProcessTask &
   importance: DocFlowBusinessProcessTaskImportance
   name: String!
   navigationRef: String
-  performer: DocFlowUser
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
   presentation: String
-  processStep: DocFlowProcessStep
   project: DocFlowProject
   state: DocFlowBusinessProcessState
   target: DocFlowInternalDocument
@@ -402,33 +417,6 @@ type DocFlowFileVersion implements DocFlowInterfaceObject {
   signed: Boolean
   size: Int
   text: String
-  type: String!
-}
-
-interface DocFlowInterfaceBusinessProcessTask {
-  acceptDate: Date
-  accepted: Boolean!
-  author: DocFlowUser!
-  beginDate: Date
-  changeRight: Boolean
-  description: String
-  dueDate: Date
-  endDate: Date
-  executed: Boolean!
-  executionComment: String
-  executionMark: String
-  htmlView: String
-  id: ID!
-  importance: DocFlowBusinessProcessTaskImportance
-  name: String!
-  navigationRef: String
-  performer: DocFlowUser
-  presentation: String
-  processStep: DocFlowProcessStep
-  project: DocFlowProject
-  state: DocFlowBusinessProcessState
-  target: DocFlowInternalDocument
-  targets: [DocFlowBusinessProcessTarget!]
   type: String!
 }
 
@@ -687,7 +675,7 @@ union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusiness
 type DocFlowTasks {
   canHaveChildren: Boolean
   isFolder: Boolean
-  object: DocFlowTask
+  tasks: DocFlowTask
 }
 
 input DocFlowTasksInput {

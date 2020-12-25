@@ -6,6 +6,8 @@ import { DocFlowInterfaceObject } from './DocFlowInterfaceObject';
 import { DocFlowInterfaceBusinessProcessTask } from './DocFlowInterfaceBusinessProcessTask';
 
 @ObjectType({
-  implements: () => [DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask],
+  implements: () => [DocFlowInterfaceObject],
 })
-export class DocFlowBusinessProcessTask extends DocFlowInterfaceBusinessProcessTask {}
+export class DocFlowBusinessProcessTask
+  extends DocFlowInterfaceBusinessProcessTask
+  implements DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask {}

@@ -8,17 +8,13 @@ import { DocFlowApprovalResult } from './DocFlowApprovalResult';
 import { DocFlowBusinessProcessApprovalTaskCheckupApprovalResult } from './DocFlowBusinessProcessApprovalTaskCheckupApprovalResult';
 
 @ObjectType({
-  implements: () => [DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask],
+  implements: () => [DocFlowInterfaceObject],
 })
-export class DocFlowBusinessProcessOrderTaskCheckup extends DocFlowInterfaceBusinessProcessTask {
+export class DocFlowBusinessProcessOrderTaskCheckup
+  extends DocFlowInterfaceBusinessProcessTask
+  implements DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask {
   @Field(() => Int, { nullable: true })
   iterationNumber?: number;
-
-  @Field(() => DocFlowApprovalResult, { nullable: true })
-  approvalResult?: DocFlowApprovalResult;
-
-  @Field(() => [DocFlowBusinessProcessApprovalTaskCheckupApprovalResult], { nullable: true })
-  approvalResults?: DocFlowBusinessProcessApprovalTaskCheckupApprovalResult[];
 
   @Field(() => Boolean, { nullable: true })
   returned?: boolean;

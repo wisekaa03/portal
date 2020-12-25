@@ -33,7 +33,7 @@ import { TypeOrmLogger } from '@back/shared/typeorm.logger';
 import { DateScalar } from '@back/shared/Date.scalar';
 // import { ByteArray } from '@back/shared/ByteArray.scalar';
 
-import { DocFlowProcessStep } from '@lib/types/docflow';
+import { DocFlowProcessStep, DocFlowExecutionMark } from '@lib/types/docflow';
 import { Folder } from '@back/files/graphql/Folder';
 import { TkWhere } from '@back/tickets/graphql/TkWhere';
 import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
@@ -284,6 +284,9 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
         });
         registerEnumType(DocFlowProcessStep, {
           name: 'DocFlowProcessStep',
+        });
+        registerEnumType(DocFlowExecutionMark, {
+          name: 'DocFlowExecutionMark',
         });
 
         return {

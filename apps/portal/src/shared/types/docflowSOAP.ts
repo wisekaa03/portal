@@ -92,7 +92,7 @@ export interface DocFlowInternalDocumentSOAP {
   visas?: DocFlowVisaSOAP[];
 }
 
-export interface DocFlowRoleSOAP {
+export interface DocFlowBusinessProcessExecutorRoleSOAP {
   name: string;
   objectID: {
     id: string;
@@ -105,7 +105,7 @@ export interface DocFlowRoleSOAP {
 export interface DocFlowTargetSOAP {
   allowDeletion: boolean;
   name: string;
-  role: DocFlowRoleSOAP;
+  role: DocFlowBusinessProcessExecutorRoleSOAP;
   target: DocFlowInternalDocumentSOAP;
 }
 
@@ -146,8 +146,8 @@ export interface DocFlowUserSOAP {
   name: string;
   objectID: {
     id: string;
-    navigationRef: string;
-    presentation: string;
+    navigationRef?: string;
+    presentation?: string;
     type: string; // 'DMUser';
   };
 }
@@ -156,6 +156,8 @@ export interface DocFlowImportanceSOAP {
   name: string;
   objectID: {
     id: string;
+    navigationRef?: string;
+    presentation?: string;
     type: string; // 'DMBusinessProcessTaskImportance';
   };
 }
@@ -219,6 +221,13 @@ export interface DocFlowProjectSOAP {
   };
 }
 
+export interface DocFlowBusinessProcessTaskExecutorSOAP {
+  user?: DocFlowUserSOAP;
+  role?: DocFlowBusinessProcessExecutorRoleSOAP;
+}
+
+// export interface DocFlowBusinessProcessSOAP extends DocFlow
+
 export interface DocFlowTaskSOAP {
   name: string;
   acceptDate?: Date;
@@ -250,10 +259,9 @@ export interface DocFlowTaskSOAP {
     presentation?: string;
     type: string; // 'DMBusinessProcessTask';
   };
-  parentBusinessProcess?: DocFlowProcessAcquaintanceSOAP;
-  performer?: {
-    user?: DocFlowUserSOAP;
-  };
+  // parentBusinessProcess?: DocFlowBusinessProcessSOAP;
+  // businessProcesses?: DocFlowBusinessProcessSOAP[];
+  performer?: DocFlowBusinessProcessTaskExecutorSOAP;
   state?: DocFlowStateSOAP;
   project?: DocFlowProjectSOAP;
   target?: DocFlowInternalDocumentSOAP;

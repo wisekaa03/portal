@@ -22,7 +22,7 @@ import type { LoggerContext } from 'nestjs-ldap';
 import { OperationCanceledException } from 'typescript';
 //#endregion
 //#region Imports Local
-import { TIMEOUT_REFETCH_SERVICES, TIMEOUT, PortalPubSub } from '@back/shared';
+import { TIMEOUT, PortalPubSub } from '@back/shared';
 import { User } from '@back/user/user.entity';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapClient } from '@app/soap';
@@ -42,7 +42,14 @@ import type {
 import { PortalError } from '@back/shared/errors';
 import type { DataResult, DataObjects, DataObject, DataFiles, DataItems, DataUser, DataError } from '@lib/types/common';
 
-import { docFlowTask, docFlowUser, docFlowError, docFlowData, docFlowInternalDocument, docFlowTasks } from './utils/docflow.soap-graphql';
+import {
+  docFlowBusinessProcessTask,
+  docFlowUser,
+  docFlowError,
+  docFlowData,
+  docFlowInternalDocument,
+  docFlowBusinessProcessTasks,
+} from './utils/docflow.soap-graphql';
 import { docFlowRequestProcessStep, docFlowOutputTargets, docFlowOutputProcessStep } from './utils/docflow.graphql-soap';
 
 import { DocFlowTasksInput } from './graphql/DocFlowTasks.input';
@@ -223,10 +230,7 @@ export class DocFlowService {
             ...loggerContext,
           });
 
-          return docFlowTasks({
-            tasks: returnResult.items,
-            loggerContext,
-          });
+          return docFlowBusinessProcessTasks(returnResult.items);
         }
 
         throw new ForbiddenException(docFlowError(returnResult));

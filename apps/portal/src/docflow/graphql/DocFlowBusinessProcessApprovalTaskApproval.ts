@@ -7,9 +7,11 @@ import { DocFlowInterfaceBusinessProcessTask } from './DocFlowInterfaceBusinessP
 import { DocFlowApprovalResult } from './DocFlowApprovalResult';
 
 @ObjectType({
-  implements: () => [DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask],
+  implements: () => [DocFlowInterfaceObject],
 })
-export class DocFlowBusinessProcessApprovalTaskApproval extends DocFlowInterfaceBusinessProcessTask {
+export class DocFlowBusinessProcessApprovalTaskApproval
+  extends DocFlowInterfaceBusinessProcessTask
+  implements DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask {
   @Field(() => Int, { nullable: true })
   iterationNumber?: number;
 

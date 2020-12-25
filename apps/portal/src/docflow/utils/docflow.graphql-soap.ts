@@ -88,10 +88,10 @@ export const docFlowRequestProcessStep = (task: DocFlowTask, processStep: DocFlo
         },
         'tns:performer': {
           'tns:user': {
-            'tns:name': task.performer?.name,
+            'tns:name': task.performer?.user?.name,
             'tns:objectID': {
-              'tns:id': task.performer?.id,
-              'tns:type': task.performer?.type,
+              'tns:id': task.performer?.user?.id,
+              'tns:type': task.performer?.user?.type,
             },
           },
         },

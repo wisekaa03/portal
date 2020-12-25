@@ -32,6 +32,20 @@ export enum DocFlowProcessStep {
   NotApprove = 'NotApprove' /* Не утвердить */,
 }
 
+export enum DocFlowExecutionMark {
+  NotExecuted = 'NotExecuted',
+  Stopped = 'Stopped',
+  Interrupted = 'Interrupted',
+  ReadyToStart = 'ReadyToStart',
+  StartCanceled = 'StartCanceled',
+  ExecutedNeutral = 'ExecutedNeutral',
+  ExecutedNegative = 'ExecutedNegative',
+  ExecutedAlmostPositive = 'ExecutedAlmostPositive',
+  ExecutedPositive = 'ExecutedPositive',
+  ReadyToExecute = 'ReadyToExecute',
+  ExecutionCanceled = 'ExecutionCanceled',
+}
+
 export interface DocFlowData {
   processStep?: DocFlowProcessStep;
   comments?: string;
