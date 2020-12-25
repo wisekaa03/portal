@@ -96,6 +96,9 @@ export class TicketsService {
     }
   }
 
+  getDomainPart = (value?: string): string => (value ? value.slice(0, value.lastIndexOf('.')) : '');
+  getUsername = (user: User): string => `\\\\${this.getDomainPart(user.loginDomain)}\\${user.username}`;
+
   /**
    * Tickets: get array of routes and services
    *
@@ -145,9 +148,10 @@ export class TicketsService {
         });
 
       if (client) {
+        const Log = this.getUsername(user);
         promises.push(
           client
-            .GetRoutesAsync({ Log: user.username }, { timeout: TIMEOUT })
+            .GetRoutesAsync({ Log }, { timeout: TIMEOUT })
             .then((result: DataResult<TicketsSOAPRoutes>) => {
               this.logger.debug!({
                 message: `TicketsRoutes: [Request] ${client.lastRequest}`,
@@ -400,13 +404,14 @@ export class TicketsService {
         });
 
       if (client) {
+        const Log = this.getUsername(user);
         promises.push(
           client
             .GetTasksAsync(
               {
                 Filter: {
                   Users: {
-                    Log: user.username,
+                    Log,
                   },
                   Departments: {},
                   Statuses: {
@@ -741,10 +746,11 @@ export class TicketsService {
           throw new ForbiddenException(PortalError.SOAP_NOT_AUTHORIZED);
         });
 
+      const Log = this.getUsername(user);
       return client
         .NewTaskAsync(
           {
-            Log: user.username,
+            Log,
             Title: task.subject,
             Description: task.body,
             Route: task.route,

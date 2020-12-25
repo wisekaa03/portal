@@ -224,11 +224,11 @@ export const docFlowBusinessProcessTask = (task: DocFlowTaskSOAP): DocFlowTask =
   return result;
 };
 
-export const docFlowBusinessProcessTasks = (tasks: DocFlowTasksSOAP[]): DocFlowTasks[] =>
-  tasks.map((task) => ({
+export const docFlowBusinessProcessTasks = (values: DocFlowTasksSOAP[]): DocFlowTasks[] =>
+  values.map((task) => ({
     canHaveChildren: task.canHaveChildren,
     isFolder: task.isFolder,
-    tasks: docFlowBusinessProcessTask(task.object),
+    task: docFlowBusinessProcessTask(task.object),
   }));
 
 export const docFlowError = (result: DataError | undefined): Error | undefined => {

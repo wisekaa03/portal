@@ -13,5 +13,5 @@ export class DocFlowTasks {
   isFolder?: boolean;
 
   @Field(() => DocFlowTaskGraphql, { nullable: true })
-  tasks?: typeof DocFlowTaskGraphql;
+  task?: typeof DocFlowTaskGraphql;
 }

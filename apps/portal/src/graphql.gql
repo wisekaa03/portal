@@ -675,7 +675,7 @@ union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusiness
 type DocFlowTasks {
   canHaveChildren: Boolean
   isFolder: Boolean
-  tasks: DocFlowTask
+  task: DocFlowTask
 }
 
 input DocFlowTasksInput {
