@@ -13,7 +13,7 @@
     // "editor.fontWeight": "500", // Medium
     // "editor.fontWeight": "600", // Bold
     "jest.debugMode": true,
-    "jest.showCoverageOnLoad": true,
+    "jest.showCoverageOnLoad": false,
     // "jest.pathToJest": "yarn test",
     // "jest.restartJestOnSnapshotUpdate": true,
     "javascript.format.enable": false,
