@@ -1,8 +1,5 @@
 /** @format */
 
-import type React from 'react';
-import { TFunction } from 'next-i18next';
-
 export interface DocFlowLegalPrivatePersonSOAP {
   name?: string;
   objectID: {
@@ -39,12 +36,12 @@ export interface DocFlowSubdivisionSOAP {
 }
 
 export interface DocFlowApprovalResultSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     presentation?: string;
-    type?: string;
     navigationRef?: string;
+    type: string;
   };
 }
 
@@ -67,12 +64,12 @@ export interface DocFlowVisaSOAP {
 }
 
 export interface DocFlowInternalDocumentSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     presentation?: string;
-    type?: string; // DMInternalDocument
     navigationRef?: string;
+    type: string; // DMInternalDocument
   };
   organization?: DocFlowOrganizationSOAP;
   regDate?: Date;
@@ -101,7 +98,7 @@ export interface DocFlowRoleSOAP {
     id: string;
     navigationRef?: string;
     presentation?: string;
-    type?: string; // 'DMBusinessProcessTargetRole';
+    type: string; // 'DMBusinessProcessTargetRole';
   };
 }
 
@@ -146,32 +143,30 @@ export interface DocFlowFileSOAP {
 }
 
 export interface DocFlowUserSOAP {
-  name?: string;
-  objectID?: {
-    id?: string;
-    navigationRef?: string;
-    presentation?: string;
-    type?: string; // 'DMUser';
+  name: string;
+  objectID: {
+    id: string;
+    navigationRef: string;
+    presentation: string;
+    type: string; // 'DMUser';
   };
 }
 
 export interface DocFlowImportanceSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
-    presentation?: string;
-    navigationRef?: string;
-    type?: string; // 'DMBusinessProcessTaskImportance';
+    id: string;
+    type: string; // 'DMBusinessProcessTaskImportance';
   };
 }
 
 export interface DocFlowProcessAcquaintanceSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     navigationRef?: string;
     presentation?: string;
-    type?: string; // 'DMBusinessProcessAcquaintance';
+    type: string; // 'DMBusinessProcessAcquaintance';
   };
   author?: DocFlowUserSOAP;
   beginDate?: Date;
@@ -195,33 +190,43 @@ export interface DocFlowProcessAcquaintanceSOAP {
 }
 
 export interface DocFlowStatusSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     navigationRef?: string;
     presentation?: string;
-    type?: string; // 'DMDocumentStatus';
+    type: string; // 'DMDocumentStatus';
   };
 }
 
 export interface DocFlowStateSOAP {
-  name?: string;
-  objectID?: {
-    id?: string;
+  name: string;
+  objectID: {
+    id: string;
     navigationRef?: string;
-    presentation?: string;
-    type?: string; // 'DMBusinessProcessState';
+    presentation: string;
+    type: string; // 'DMBusinessProcessState';
+  };
+}
+
+export interface DocFlowProjectSOAP {
+  name: string;
+  objectID: {
+    id: string;
+    navigationRef?: string;
+    presentation: string;
+    type: string; // 'DMBusinessProcessState';
   };
 }
 
 export interface DocFlowTaskSOAP {
-  name?: string;
+  name: string;
   acceptDate?: Date;
   accepted?: boolean;
   attributes?: {
     type?: string; // 'DMBusinessProcessTask';
   };
-  author?: DocFlowUserSOAP;
+  author: DocFlowUserSOAP;
   beginDate?: Date;
   businessProcessStep?: string;
   checkResults?: {
@@ -234,25 +239,36 @@ export interface DocFlowTaskSOAP {
   description?: string;
   dueDate?: Date;
   endDate?: Date;
-  executed?: boolean;
+  executed: boolean;
   executionComment?: string;
   executionMark?: string;
   importance?: DocFlowImportanceSOAP;
   number?: string;
-  objectID?: {
-    id?: string;
+  objectID: {
+    id: string;
     navigationRef?: string;
     presentation?: string;
-    type?: string; // 'DMBusinessProcessTask';
+    type: string; // 'DMBusinessProcessTask';
   };
   parentBusinessProcess?: DocFlowProcessAcquaintanceSOAP;
   performer?: {
     user?: DocFlowUserSOAP;
   };
   state?: DocFlowStateSOAP;
+  project?: DocFlowProjectSOAP;
   target?: DocFlowInternalDocumentSOAP;
   targets?: {
     items?: DocFlowTargetSOAP[];
   };
   htmlView?: string;
+
+  approvalResult?: DocFlowApprovalResultSOAP;
+  approvalResults?: DocFlowApprovalResultSOAP;
+  returned?: boolean;
+}
+
+export interface DocFlowTasksSOAP {
+  canHaveChildren: boolean;
+  isFolder: boolean;
+  object: DocFlowTaskSOAP;
 }

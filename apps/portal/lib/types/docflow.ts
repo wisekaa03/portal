@@ -1,11 +1,24 @@
 /** @format */
 
 import type React from 'react';
-
-import type { GraphQLQueryInput } from '@back/shared/types/interfaces';
-
 import type { I18n, TFunction } from 'next-i18next';
+
+import type { DocFlowUser } from '@back/docflow/graphql/DocFlowUser';
+import type { DocFlowInternalDocument } from '@back/docflow/graphql/DocFlowInternalDocument';
+import type { DocFlowBusinessProcessTask } from '@back/docflow/graphql/DocFlowBusinessProcessTask';
+import type { DocFlowBusinessProcessOrderTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessOrderTaskCheckup';
+import type { DocFlowBusinessProcessApprovalTaskApproval } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskApproval';
+import type { DocFlowBusinessProcessPerfomanceTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessPerfomanceTaskCheckup';
+import type { DocFlowBusinessProcessApprovalTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskCheckup';
+
 import type { PortalErrorsProps } from './errors';
+
+export type DocFlowTask =
+  | DocFlowBusinessProcessTask
+  | DocFlowBusinessProcessOrderTaskCheckup
+  | DocFlowBusinessProcessApprovalTaskApproval
+  | DocFlowBusinessProcessPerfomanceTaskCheckup
+  | DocFlowBusinessProcessApprovalTaskCheckup;
 
 export enum DocFlowProcessStep {
   CheckExecute = 'CheckExecute' /* Проверить исполнение */,
@@ -26,9 +39,9 @@ export interface DocFlowData {
 }
 
 export interface DocFlowFileProps {
-  task: DocFlowTask;
+  task: DocFlowBusinessProcessTask;
   loading: boolean;
-  handleDownload: (file: DocFlowFile) => void;
+  handleDownload: (file: any /* DocFlowFile */) => void;
   i18n: I18n;
   t: TFunction;
   classes: Record<string, string>;
@@ -46,7 +59,7 @@ export interface DocFlowTasksTableProps {
   t: TFunction;
   classes: Record<string, string>;
   columns: DocFlowTasksColumn[];
-  tasks: DocFlowTask[];
+  tasks: DocFlowBusinessProcessTask[];
   page: number;
   rowsPerPage: number;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
@@ -55,7 +68,7 @@ export interface DocFlowTasksTableProps {
 
 export interface DocFlowTasksComponentProps extends PortalErrorsProps {
   loading: boolean;
-  tasks: DocFlowTask[];
+  tasks: DocFlowBusinessProcessTask[];
   status: string;
   find: string;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
@@ -66,11 +79,11 @@ export interface DocFlowTaskComponentProps extends PortalErrorsProps {
   loading: boolean;
   loadingFile: boolean;
   loadingProcessStep: boolean;
-  task?: DocFlowTask;
+  task?: DocFlowBusinessProcessTask;
   comments: string;
   endDate: Date | null;
   handleEndDate?: (date: Date | null | undefined, keyboardInputValue?: string | undefined) => void;
-  handleDownload: (file: DocFlowFile) => void;
+  handleDownload: (file: any /* DocFlowFile */) => void;
   handleComments: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   handleProcessStep: (step: DocFlowProcessStep, taskID?: string, data?: DocFlowData) => void;
 }
@@ -91,249 +104,5 @@ export interface DocFlowProcessStepProps extends PortalErrorsProps {
   endDate: Date | null;
   handleEndDate?: (date: Date | null | undefined, keyboardInputValue?: string | undefined) => void;
   handleProcessStep: (step: DocFlowProcessStep, taskID?: string, data?: DocFlowData) => void;
-  task: DocFlowTask;
-}
-
-export interface DocFlowLegalPrivatePerson {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-}
-
-export interface DocFlowOrganization {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  navigationRef: string | null;
-  type: string | null;
-  fullName: string | null;
-  inn: string | null;
-  kpp: string | null;
-  VATpayer: boolean | null;
-  legalPrivatePerson: DocFlowLegalPrivatePerson | null;
-}
-
-export interface DocFlowSubdivision {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  navigationRef: string | null;
-  type: string | null;
-}
-
-export interface DocFlowUser {
-  id: string;
-  name: string;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-}
-
-export interface DocFlowStatus {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-}
-
-export interface DocFlowState {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-}
-
-export interface DocFlowApprovalResult {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-}
-
-export interface DocFlowVisa {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-  addedBy: DocFlowUser | null;
-  comment: string | null;
-  date: Date | null;
-  result: DocFlowApprovalResult | null;
-  reviewer: DocFlowUser | null;
-  signatureChecked: boolean | null;
-  signatureValid: boolean | null;
-  signed: boolean | null;
-}
-
-export interface DocFlowInternalDocument {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  type: string | null;
-  navigationRef: string | null;
-  organization: DocFlowOrganization | null;
-  subdivision: DocFlowSubdivision | null;
-  author: DocFlowUser | null;
-  regDate: Date | null;
-  responsible: DocFlowUser | null;
-  regNumber: string | null;
-  title: string | null;
-  summary: string | null;
-  status: DocFlowStatus | null;
-  statusChangeEnabled: boolean | null;
-  statusEnabled: boolean | null;
-  statusApproval: DocFlowStatus | null;
-  statusPerformance: DocFlowStatus | null;
-  statusRegistration: DocFlowStatus | null;
-  files: DocFlowFiles | null;
-  visas: DocFlowVisa[] | null;
-}
-
-export interface DocFlowRole {
-  name: string | null;
-  id: string;
-  presentation: string | null;
-  type: string | null; // DMBusinessProcessTargetRole
-  navigationRef: string | null;
-}
-
-export interface DocFlowTarget {
-  name: string;
-  role: DocFlowRole;
-  target: DocFlowInternalDocument;
-  allowDeletion: boolean | null;
-}
-
-export interface DocFlowInternalFile {
-  name: string;
-}
-
-export interface DocFlowFileVersion {
-  id: string | null;
-  name: string | null;
-  presentation: string | null;
-  navigationRef: string | null;
-  type: string | null;
-}
-
-export interface DocFlowFile {
-  id: string;
-  name: string | null;
-  author: DocFlowUser | null;
-  encrypted: boolean | null;
-  signed: boolean | null;
-  description: string | null;
-  editing: boolean | null;
-  editingUser: DocFlowUser | null;
-  activeVersion: DocFlowFileVersion | null;
-  binaryData: string | null;
-  extension: string | null;
-  creationDate: Date | null;
-  modificationDateUniversal: Date | null;
-  size: number | null;
-  type: string | null;
-}
-
-export interface DocFlowImportance {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  navigationRef: string | null;
-  type: string | null;
-}
-
-export interface DocFlowParentTask {
-  id: string;
-  name: string | null;
-  presentation: string | null;
-  navigationRef: string | null;
-  type: string | null;
-  author: DocFlowUser | null;
-  beginDate: Date | null;
-  blockedByTemplate: boolean | null;
-  completed: boolean | null;
-  description: string | null;
-  dueDate: Date | null;
-  dueTimeEnabled: boolean | null;
-  executionComment: string | null;
-  importance: DocFlowImportance | null;
-  leadingTaskEnabled: boolean | null;
-  parentTaskEnabled: boolean | null;
-  performers: DocFlowUser[] | null;
-  started: boolean | null;
-  state: DocFlowState | null;
-  stateEnabled: boolean | null;
-  target: DocFlowInternalDocument | null;
-  targets: DocFlowTarget[] | null;
-}
-
-export interface DocFlowFiles {
-  object: DocFlowFile[] | null;
-  error: string[] | null;
-}
-
-export interface DocFlowTask {
-  id: string;
-  name: string | null;
-  type: string | null;
-  presentation: string | null;
-  importance: DocFlowImportance | null;
-  executed: boolean | null;
-  executionMark: string | null;
-  executionComment: string | null;
-  beginDate: Date | null;
-  dueDate: Date | null;
-  endDate: Date | null;
-  changeRight: boolean | null;
-  description: string | null;
-  checkResults:
-    | {
-        checkComment: string;
-        executorTask: DocFlowTask | null;
-        returned: boolean;
-      }[]
-    | null;
-  iterationNumber: string | null;
-  processStep: DocFlowProcessStep | null;
-  htmlView: string | null;
-  number: string | null;
-  author: DocFlowUser | null;
-  performer: DocFlowUser | null;
-  accepted: boolean | null;
-  acceptDate: Date | null;
-  state: DocFlowState | null;
-  parentTask: DocFlowParentTask | null;
-  target: DocFlowInternalDocument | null;
-  targets: DocFlowTarget[] | null;
-}
-
-/* DocFlow input fields */
-
-export type DocFlowUserInput = GraphQLQueryInput;
-
-export interface DocFlowTasksInput extends GraphQLQueryInput {
-  withFiles?: boolean;
-}
-
-export interface DocFlowTaskInput extends GraphQLQueryInput {
-  id: string;
-  withFiles?: boolean;
-}
-
-export interface DocFlowTargetInput extends GraphQLQueryInput {
-  id: string;
-}
-
-export interface DocFlowInternalDocumentInput extends GraphQLQueryInput {
-  id: string;
-}
-
-export interface DocFlowFileInput extends GraphQLQueryInput {
-  id: string;
+  task: DocFlowBusinessProcessTask;
 }

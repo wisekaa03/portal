@@ -33,6 +33,7 @@ import { TypeOrmLogger } from '@back/shared/typeorm.logger';
 import { DateScalar } from '@back/shared/Date.scalar';
 // import { ByteArray } from '@back/shared/ByteArray.scalar';
 
+import { DocFlowProcessStep } from '@lib/types/docflow';
 import { Folder } from '@back/files/graphql/Folder';
 import { TkWhere } from '@back/tickets/graphql/TkWhere';
 import { PhonebookColumnNames } from '@back/profile/graphql/PhonebookColumnNames';
@@ -52,7 +53,7 @@ import { UserModule, User } from '@back/user';
 import { NewsModule, News } from '@back/news';
 import { TicketsModule } from '@back/tickets';
 // import { ReportsModule } from '@back/reports';
-// import { DocFlowModule } fro.local/docflowlow';
+import { DocFlowModule } from '@back/docflow';
 // import { FilesModule } from '@back/files';
 
 import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
@@ -281,6 +282,9 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
         registerEnumType(OrderDirection, {
           name: 'OrderDirection',
         });
+        registerEnumType(DocFlowProcessStep, {
+          name: 'DocFlowProcessStep',
+        });
 
         return {
           debug: DEV,
@@ -454,7 +458,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     //#region Tickets
     TicketsModule,
     // ReportsModule,
-    // DocFlowModule,
+    DocFlowModule,
     //#endregion
 
     //#region Authentication

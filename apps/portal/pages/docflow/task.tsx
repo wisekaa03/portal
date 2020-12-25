@@ -6,9 +6,10 @@ import Head from 'next/head';
 import { useQuery, useLazyQuery, ApolloQueryResult, useMutation } from '@apollo/client';
 //#endregion
 //#region Imports Local
+import { DocFlowTaskInput /*  DocFlowFileInput */ } from '@back/docflow/graphql';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_PROCESS_STEP } from '@lib/queries';
-import type { DocFlowFile, DocFlowTask, DocFlowTaskInput, DocFlowFileInput } from '@lib/types/docflow';
+import type { /* DocFlowFile, */ DocFlowTask } from '@lib/types/docflow';
 import { DocFlowProcessStep, DocFlowData } from '@lib/types/docflow';
 import type { Data } from '@lib/types';
 import { MaterialUI } from '@front/layout';
@@ -33,10 +34,14 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     notifyOnNetworkStatusChange: true,
   });
 
-  const [getDocFlowTaskFile, { loading: loadingDocFlowTaskFile, data: dataDocFlowTaskFile, error: errorDocFlowTaskFile }] = useLazyQuery<
-    Data<'docFlowFile', DocFlowFile>,
-    { file: DocFlowFileInput }
-  >(DOCFLOW_FILE);
+  const loadingDocFlowTaskFile: any = () => false;
+  const errorDocFlowTaskFile: any = () => false;
+  const handleDownload: any = () => false;
+
+  // const [getDocFlowTaskFile, { loading: loadingDocFlowTaskFile, data: dataDocFlowTaskFile, error: errorDocFlowTaskFile }] = useLazyQuery<
+  //   Data<'docFlowFile', DocFlowFile>,
+  //   { file: DocFlowFileInput }
+  // >(DOCFLOW_FILE);
 
   const [
     getDocFlowProcessStep,
@@ -92,17 +97,17 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
     }, 100);
   };
 
-  const handleDownload = async (file: DocFlowFile): Promise<void> =>
-    file.binaryData
-      ? download(file.binaryData, `${file.name}.${file.extension}`)
-      : getDocFlowTaskFile({ variables: { file: { id: file.id } } });
+  // const handleDownload = async (file: DocFlowFile): Promise<void> =>
+  //   file.binaryData
+  //     ? download(file.binaryData, `${file.name}.${file.extension}`)
+  //     : getDocFlowTaskFile({ variables: { file: { id: file.id } } });
 
-  if (dataDocFlowTaskFile?.docFlowFile) {
-    download(
-      dataDocFlowTaskFile.docFlowFile.binaryData || '',
-      `${dataDocFlowTaskFile.docFlowFile.name}.${dataDocFlowTaskFile.docFlowFile.extension}`,
-    );
-  }
+  // if (dataDocFlowTaskFile?.docFlowFile) {
+  //   download(
+  //     dataDocFlowTaskFile.docFlowFile.binaryData || '',
+  //     `${dataDocFlowTaskFile.docFlowFile.name}.${dataDocFlowTaskFile.docFlowFile.extension}`,
+  //   );
+  // }
 
   const refetchDocFlowTask = async (
     variables?: Partial<{

@@ -57,7 +57,7 @@ export class TicketsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription((returns) => TkRoutes, {
+  @Subscription(() => TkRoutes, {
     // filter: (payload: SubscriptionPayload<TkRoutes>, variables: { routes: TkRoutesInput }, context: WebsocketContext) =>
     //   payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkRoutes>) => payload.object,
@@ -91,7 +91,7 @@ export class TicketsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription((returns) => TkTasks, {
+  @Subscription(() => TkTasks, {
     filter: (payload: SubscriptionPayload<TkTasks>, variables: { tasks: TkTasksInput }, context: WebsocketContext) =>
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkTasks>) => payload.object,
@@ -160,7 +160,7 @@ export class TicketsResolver {
    * @returns {TkTask}
    * @throws {UnauthorizedException | HttpException}
    */
-  @Query((returns) => TkEditTask)
+  @Query(() => TkEditTask)
   @UseGuards(GqlAuthGuard)
   async ticketsTask(
     @Context('req') request: Request,
@@ -177,7 +177,7 @@ export class TicketsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Subscription((returns) => TkEditTask, {
+  @Subscription(() => TkEditTask, {
     filter: (payload: SubscriptionPayload<TkEditTask>, variables: { task: TkTaskInput }, _context: WebsocketContext) =>
       payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code,
     resolve: (payload: SubscriptionPayload<TkEditTask>) => payload.object,

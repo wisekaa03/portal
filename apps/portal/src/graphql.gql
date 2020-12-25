@@ -11,6 +11,725 @@ enum Contact {
 """Date scalar type"""
 scalar Date
 
+type DocFlowAccessLevel implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowActivityMatter implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowApprovalOrder implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowApprovalResult implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowApprovalType implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowBusinessProcessApprovalParticipant {
+  approvalOrder: [DocFlowApprovalOrder!]
+}
+
+type DocFlowBusinessProcessApprovalTaskApproval implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  approvalResult: DocFlowApprovalResult
+  author: DocFlowUser!
+  beginDate: Date
+  changeRight: Boolean
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  iterationNumber: Int
+  name: String!
+  navigationRef: String
+  performer: DocFlowUser
+  presentation: String
+  processStep: DocFlowProcessStep
+  project: DocFlowProject
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+type DocFlowBusinessProcessApprovalTaskCheckup implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  author: DocFlowUser!
+  beginDate: Date
+  changeRight: Boolean
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  name: String!
+  navigationRef: String
+  performer: DocFlowUser
+  presentation: String
+  processStep: DocFlowProcessStep
+  project: DocFlowProject
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+type DocFlowBusinessProcessApprovalTaskCheckupApprovalResult {
+  approvalComment: String
+  approvalDate: Date
+  approvalPerformer: DocFlowBusinessProcessTaskExecutor
+  approvalResult: DocFlowApprovalResult
+}
+
+type DocFlowBusinessProcessExecutorRole implements DocFlowInterfaceObject {
+  comment: String
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowBusinessProcessOrderTaskCheckup implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  approvalResult: DocFlowApprovalResult
+  approvalResults: [DocFlowBusinessProcessApprovalTaskCheckupApprovalResult!]
+  author: DocFlowUser!
+  beginDate: Date
+  changeRight: Boolean
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  iterationNumber: Int
+  name: String!
+  navigationRef: String
+  performer: DocFlowUser
+  presentation: String
+  processStep: DocFlowProcessStep
+  project: DocFlowProject
+  returned: Boolean
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+type DocFlowBusinessProcessPerfomanceTaskCheckup implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  author: DocFlowUser!
+  beginDate: Date
+  changeRight: Boolean
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  name: String!
+  navigationRef: String
+  performer: DocFlowUser
+  presentation: String
+  processStep: DocFlowProcessStep
+  project: DocFlowProject
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+type DocFlowBusinessProcessState implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowBusinessProcessTarget {
+  allowDeletion: Boolean
+  name: String!
+  role: DocFlowBusinessProcessTargetRole!
+  target: DocFlowInternalDocument!
+}
+
+type DocFlowBusinessProcessTargetRole implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowBusinessProcessTask implements DocFlowInterfaceBusinessProcessTask & DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  author: DocFlowUser!
+  beginDate: Date
+  changeRight: Boolean
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  name: String!
+  navigationRef: String
+  performer: DocFlowUser
+  presentation: String
+  processStep: DocFlowProcessStep
+  project: DocFlowProject
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+type DocFlowBusinessProcessTaskExecutor {
+  role: DocFlowBusinessProcessExecutorRole
+  user: DocFlowUser
+}
+
+type DocFlowBusinessProcessTaskImportance implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowCashFlowItem implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowCashFlowRow {
+  item: [DocFlowCashFlowItem!]!
+  total: Float!
+  VAT: Float!
+}
+
+type DocFlowCorrespondent implements DocFlowInterfaceObject {
+  id: ID!
+  inn: String
+  kpp: String
+  legalPrivatePerson: DocFlowLegalPrivatePerson
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowCurrency implements DocFlowInterfaceObject {
+  code: String
+  fullName: String
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowDocument implements DocFlowInterfaceDocument & DocFlowInterfaceObject {
+  accessLevel: DocFlowAccessLevel
+  accessLevelEnabled: Boolean
+  activityMatter: DocFlowActivityMatter
+  activityMatterEnabled: Boolean
+  checkRelations: Boolean
+  comment: String
+  containsScannedOriginals: Boolean
+  contentAvailable: Boolean
+  currency: DocFlowCurrency
+  deletionMark: Boolean
+  documentTypeEnabled: Boolean
+  enabledProperties: String
+  files: [DocFlowFile!]
+  filesEnabled: Boolean
+  id: ID!
+  keyPropertiesValue: String
+  limitPropertiesAvailability: Boolean
+  name: String!
+  navigationRef: String
+  numberOfAnnexes: Int
+  numberOfCopies: Int
+  numberOfSheets: Int
+  organization: DocFlowOrganization
+  organizationEnabled: Boolean
+  performanceDate: Date
+  presentation: String
+  project: DocFlowProject
+  projectsEnabled: Boolean
+  regDate: Date
+  registrationAvailable: Boolean
+  regNumber: String
+  relations: [DocFlowDocumentRelation!]
+  responsible: DocFlowUser
+  sheetsOfAnnexes: Int
+  status: DocFlowDocumentStatus
+  statusApproval: DocFlowDocumentStatus
+  statusChangeEnabled: Boolean
+  statusConsideration: DocFlowDocumentStatus
+  statusEnabled: Boolean
+  statusPerformance: DocFlowDocumentStatus
+  statusRegistration: DocFlowDocumentStatus
+  statusSigning: DocFlowDocumentStatus
+  subdivision: DocFlowSubdivision
+  sum: Int
+  summary: String
+  title: String
+  titleBlockedByTemplate: Boolean
+  type: String!
+  useCaseFiles: Boolean
+}
+
+type DocFlowDocumentRelation {
+  document: [DocFlowDocument!]
+  relatedDocument: [DocFlowDocument!]
+  relationType: [DocFlowRelationType!]
+}
+
+type DocFlowDocumentStatus implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowDueDateSpecificationOption implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowFile implements DocFlowInterfaceObject {
+  activeVersion: DocFlowFileVersion
+  author: DocFlowUser
+  binaryData: String
+  creationDate: Date
+  deletionMark: Boolean
+  description: String
+  editing: Boolean
+  editingUser: DocFlowUser
+  encrypted: Boolean
+  extension: String
+  id: ID!
+  lockDate: Date
+  modificationDate: Date
+  modificationDateUniversal: Date
+  name: String!
+  navigationRef: String
+  owner: DocFlowUser
+  presentation: String
+  scannedOriginal: Boolean
+  signed: Boolean
+  size: Int
+  template: DocFlowFile
+  text: String
+  type: String!
+}
+
+type DocFlowFileVersion implements DocFlowInterfaceObject {
+  author: DocFlowUser
+  binaryData: String
+  comment: String
+  creationDate: Date
+  deletionMark: Boolean
+  encrypted: Boolean
+  extension: String
+  id: ID!
+  modificationDate: Date
+  modificationDateUniversal: Date
+  name: String!
+  navigationRef: String
+  owner: DocFlowUser
+  presentation: String
+  signed: Boolean
+  size: Int
+  text: String
+  type: String!
+}
+
+interface DocFlowInterfaceBusinessProcessTask {
+  acceptDate: Date
+  accepted: Boolean!
+  author: DocFlowUser!
+  beginDate: Date
+  changeRight: Boolean
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  name: String!
+  navigationRef: String
+  performer: DocFlowUser
+  presentation: String
+  processStep: DocFlowProcessStep
+  project: DocFlowProject
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+interface DocFlowInterfaceDocument {
+  accessLevel: DocFlowAccessLevel
+  accessLevelEnabled: Boolean
+  activityMatter: DocFlowActivityMatter
+  activityMatterEnabled: Boolean
+  checkRelations: Boolean
+  comment: String
+  containsScannedOriginals: Boolean
+  contentAvailable: Boolean
+  currency: DocFlowCurrency
+  deletionMark: Boolean
+  documentTypeEnabled: Boolean
+  enabledProperties: String
+  files: [DocFlowFile!]
+  filesEnabled: Boolean
+  id: ID!
+  keyPropertiesValue: String
+  limitPropertiesAvailability: Boolean
+  name: String!
+  navigationRef: String
+  numberOfAnnexes: Int
+  numberOfCopies: Int
+  numberOfSheets: Int
+  organization: DocFlowOrganization
+  organizationEnabled: Boolean
+  performanceDate: Date
+  presentation: String
+  project: DocFlowProject
+  projectsEnabled: Boolean
+  regDate: Date
+  registrationAvailable: Boolean
+  regNumber: String
+  relations: [DocFlowDocumentRelation!]
+  responsible: DocFlowUser
+  sheetsOfAnnexes: Int
+  status: DocFlowDocumentStatus
+  statusApproval: DocFlowDocumentStatus
+  statusChangeEnabled: Boolean
+  statusConsideration: DocFlowDocumentStatus
+  statusEnabled: Boolean
+  statusPerformance: DocFlowDocumentStatus
+  statusRegistration: DocFlowDocumentStatus
+  statusSigning: DocFlowDocumentStatus
+  subdivision: DocFlowSubdivision
+  sum: Int
+  summary: String
+  title: String
+  titleBlockedByTemplate: Boolean
+  type: String!
+  useCaseFiles: Boolean
+}
+
+interface DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowInternalDocument implements DocFlowInterfaceDocument & DocFlowInterfaceObject {
+  accessLevel: DocFlowAccessLevel
+  accessLevelEnabled: Boolean
+  activityMatter: DocFlowActivityMatter
+  activityMatterEnabled: Boolean
+  addressee: DocFlowUser
+  author: DocFlowUser
+  beginDate: Date
+  cashFlowRows: [DocFlowCashFlowRow!]
+  checkRelations: Boolean
+  comment: String
+  containsScannedOriginals: Boolean
+  contentAvailable: Boolean
+  correspondent: DocFlowCorrespondent
+  currency: DocFlowCurrency
+  deletionMark: Boolean
+  documentType: DocFlowInternalDocumentType
+  documentTypeEnabled: Boolean
+  enabledProperties: String
+  endDate: Date
+  files: [DocFlowFile!]
+  filesEnabled: Boolean
+  folder: DocFlowInternalDocumentFolder
+  id: ID!
+  keyPropertiesValue: String
+  limitPropertiesAvailability: Boolean
+  name: String!
+  navigationRef: String
+  numberOfAnnexes: Int
+  numberOfCopies: Int
+  numberOfSheets: Int
+  openEnded: Boolean
+  organization: DocFlowOrganization
+  organizationEnabled: Boolean
+  performanceDate: Date
+  presentation: String
+  project: DocFlowProject
+  projectsEnabled: Boolean
+  regDate: Date
+  registrationAvailable: Boolean
+  regNumber: String
+  relations: [DocFlowDocumentRelation!]
+  resolutions: [DocFlowResolution!]
+  responsible: DocFlowUser
+  sheetsOfAnnexes: Int
+  signer: DocFlowUser
+  status: DocFlowDocumentStatus
+  statusApproval: DocFlowDocumentStatus
+  statusChangeEnabled: Boolean
+  statusConsideration: DocFlowDocumentStatus
+  statusEnabled: Boolean
+  statusPerformance: DocFlowDocumentStatus
+  statusRegistration: DocFlowDocumentStatus
+  statusSigning: DocFlowDocumentStatus
+  subdivision: DocFlowSubdivision
+  sum: Int
+  summary: String
+  template: [DocFlowInternalDocumentTemplate!]
+  title: String
+  titleBlockedByTemplate: Boolean
+  type: String!
+  useCaseFiles: Boolean
+  VAT: Int
+  visas: [DocFlowVisa!]
+}
+
+type DocFlowInternalDocumentFolder implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowInternalDocumentTemplate implements DocFlowInterfaceObject {
+  blockDerivedDocuments: Boolean
+  documentType: DocFlowInternalDocumentType
+  folder: DocFlowInternalDocumentFolder
+  id: ID!
+  name: String!
+  navigationRef: String
+  organization: DocFlowOrganization
+  presentation: String
+  type: String!
+}
+
+type DocFlowInternalDocumentType implements DocFlowInterfaceObject {
+  accountingForCaseFilesEnabled: Boolean
+  addresseeEnabled: Boolean
+  automaticNumeration: Boolean
+  cashFlowDetailsEnabled: Boolean
+  correspondentEnabled: Boolean
+  durationEnabled: Boolean
+  id: ID!
+  name: String!
+  navigationRef: String
+  organizationEnabled: Boolean
+  performanceDateEnabled: Boolean
+  presentation: String
+  productRowsEnabled: Boolean
+  sumEnabled: Boolean
+  templateRequired: Boolean
+  type: String!
+  useConfirmation: Boolean
+  useSigningByManager: Boolean
+}
+
+type DocFlowLegalPrivatePerson implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowOrganization implements DocFlowInterfaceObject {
+  fullName: String
+  id: ID!
+  inn: String
+  kpp: String
+  legalPrivate: DocFlowLegalPrivatePerson
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+  VATpayer: Boolean
+}
+
+type DocFlowPrivatePerson implements DocFlowInterfaceObject {
+  birthday: Date
+  comment: String
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+enum DocFlowProcessStep {
+  Approve
+  CheckExecute
+  CheckFamiliarize
+  Conform
+  ConformWithComments
+  Execute
+  Familiarize
+  NotApprove
+  NotConform
+}
+
+type DocFlowProject implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowRelationType implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+type DocFlowResolution implements DocFlowInterfaceObject {
+  addedBy: DocFlowUser
+  date: Date
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  reviewer: DocFlowUser
+  signatureChecked: Boolean
+  signatureValid: Boolean
+  signed: Boolean
+  text: String
+  type: String!
+}
+
+type DocFlowSubdivision implements DocFlowInterfaceObject {
+  head: [DocFlowUser!]
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
+}
+
+union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusinessProcessApprovalTaskCheckup | DocFlowBusinessProcessOrderTaskCheckup | DocFlowBusinessProcessPerfomanceTaskCheckup | DocFlowBusinessProcessTask
+
+type DocFlowTasks {
+  canHaveChildren: Boolean
+  isFolder: Boolean
+  object: DocFlowTask
+}
+
+input DocFlowTasksInput {
+  """Cache this result, default = true"""
+  cache: Boolean
+
+  """Set cache, default = true"""
+  setCache: Boolean
+
+  """WebSocket results, default = true"""
+  websocket: Boolean
+
+  """With files, default = true"""
+  withFiles: Boolean
+}
+
+type DocFlowUser implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  privatePerson: DocFlowPrivatePerson
+  subdivision: DocFlowSubdivision
+  type: String!
+}
+
+type DocFlowVisa implements DocFlowInterfaceObject {
+  addedBy: DocFlowUser
+  comment: String!
+  date: Date!
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  result: DocFlowApprovalResult!
+  reviewer: DocFlowUser
+  signatureChecked: Boolean!
+  signatureValid: Boolean!
+  signed: Boolean!
+  type: String!
+}
+
 enum Gender {
   MAN
   UNKNOWN
@@ -218,6 +937,7 @@ type ProfilePageInfo {
 
 type Query {
   availableAuthenticationProfiles(newProfile: Boolean, synchronization: Boolean): [String!]!
+  docFlowTasks(tasks: DocFlowTasksInput!): [DocFlowTasks!]!
   login(domain: String!, password: String!, username: String!): Login!
   loginEmail: LoginEmail!
   me: User!
@@ -236,6 +956,7 @@ type SearchSuggestions {
 }
 
 type Subscription {
+  docFlowTasksSubscription: [DocFlowTasks!]!
   ticketsRoutesSubscription: TkRoutes!
   ticketsTasksSubscription: TkTasks!
   ticketsTaskSubscription: TkEditTask!
