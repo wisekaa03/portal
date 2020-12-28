@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import type { Request, Response } from 'express';
-import { Query, Mutation, Resolver, Args, Context, Int } from '@nestjs/graphql';
+import { Query, Mutation, Resolver, Args, Context, Int, ID } from '@nestjs/graphql';
 import {
   Inject,
   UseGuards,
@@ -130,7 +130,7 @@ export class ProfileResolver {
   async profile(
     @Context('req') request: Request,
     @CurrentUser() user: User,
-    @Args('id', { type: () => String }) id: string,
+    @Args('id', { type: () => ID }) id: string,
   ): Promise<PROFILE_TYPE | undefined> {
     return this.profileService.byId({ id, loggerContext: { username: user.username, headers: request.headers } }) || undefined;
   }
