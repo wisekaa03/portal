@@ -402,7 +402,7 @@ const DocFlowTaskComponent: FC<DocFlowTaskComponentProps> = ({
                     {`${t('docflow:headers.performer')}:`}
                   </Typography>
                   <Typography variant="subtitle1" style={{ placeSelf: 'center stretch' }} component="span">
-                    {task.performer?.name}
+                    {task?.performer?.user?.name}
                   </Typography>
                 </CardContent>
               </Card>

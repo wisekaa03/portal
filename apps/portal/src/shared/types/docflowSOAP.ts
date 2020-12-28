@@ -226,9 +226,21 @@ export interface DocFlowBusinessProcessTaskExecutorSOAP {
   role?: DocFlowBusinessProcessExecutorRoleSOAP;
 }
 
-// export interface DocFlowBusinessProcessSOAP extends DocFlow
+export interface DocFlowBusinessProcessApprovalTaskCheckupApprovalResultSOAP {
+  approvalResult?: DocFlowApprovalResultSOAP;
+  approvalComment?: string;
+  approvalPerformer?: DocFlowBusinessProcessTaskExecutorSOAP;
+  approvalDate?: Date;
+}
 
-export interface DocFlowTaskSOAP {
+export interface DocFlowBusinessProcessPerfomanceTaskCheckupResultSOAP {
+  executorTask?: DocFlowBusinessProcessTaskSOAP;
+  returned?: boolean;
+  checkComment?: string;
+}
+
+// export interface DocFlowBusinessProcessSOAP extends DocFlow
+export interface DocFlowBusinessProcessTaskSOAP {
   name: string;
   acceptDate?: Date;
   accepted?: boolean;
@@ -238,11 +250,6 @@ export interface DocFlowTaskSOAP {
   author: DocFlowUserSOAP;
   beginDate?: Date;
   businessProcessStep?: string;
-  checkResults?: {
-    checkComment?: string;
-    executorTask?: DocFlowTaskSOAP;
-    returned?: boolean;
-  }[];
   iterationNumber?: string;
   changeRight?: boolean;
   description?: string;
@@ -271,12 +278,13 @@ export interface DocFlowTaskSOAP {
   htmlView?: string;
 
   approvalResult?: DocFlowApprovalResultSOAP;
-  approvalResults?: DocFlowApprovalResultSOAP;
+  approvalResults?: DocFlowBusinessProcessApprovalTaskCheckupApprovalResultSOAP[];
   returned?: boolean;
+  checkResults?: DocFlowBusinessProcessPerfomanceTaskCheckupResultSOAP[];
 }
 
 export interface DocFlowTasksSOAP {
   canHaveChildren: boolean;
   isFolder: boolean;
-  object: DocFlowTaskSOAP;
+  object: DocFlowBusinessProcessTaskSOAP;
 }

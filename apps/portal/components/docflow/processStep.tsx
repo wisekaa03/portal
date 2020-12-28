@@ -26,7 +26,7 @@ const DocFlowProcessStepButtons: FC<DocFlowProcessStepProps> = ({ loading, endDa
   const { i18n, t } = useTranslation();
   const locale = dateLocale(i18n.language);
 
-  switch (task.processStep) {
+  switch (task.businessProcessStep) {
     case DocFlowProcessStep.Execute:
       return (
         <Grid container spacing={3}>

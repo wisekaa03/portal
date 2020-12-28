@@ -6,7 +6,7 @@ import { DocFlowProcessStep, DocFlowTask } from '@lib/types/docflow';
 import type {
   DocFlowFileSOAP,
   DocFlowBusinessProcessExecutorRoleSOAP,
-  DocFlowTaskSOAP,
+  DocFlowBusinessProcessTaskSOAP,
   DocFlowStatusSOAP,
   DocFlowLegalPrivatePersonSOAP,
   DocFlowOrganizationSOAP,
@@ -23,6 +23,8 @@ import type {
   DocFlowProjectSOAP,
   DocFlowTasksSOAP,
   DocFlowBusinessProcessTaskExecutorSOAP,
+  DocFlowBusinessProcessApprovalTaskCheckupApprovalResultSOAP,
+  DocFlowBusinessProcessPerfomanceTaskCheckupResultSOAP,
 } from '@back/shared/types';
 
 import { dateSOAP } from '@back/shared/dateSOAP';
@@ -44,6 +46,9 @@ import { DocFlowApprovalResult } from '../graphql/DocFlowApprovalResult';
 import { DocFlowTasks } from '../graphql/DocFlowTasks';
 import { DocFlowBusinessProcessPerfomanceTaskCheckup } from '../graphql/DocFlowBusinessProcessPerfomanceTaskCheckup';
 import { DocFlowBusinessProcessTaskExecutor } from '../graphql/DocFlowBusinessProcessTaskExecutor';
+// eslint-disable-next-line max-len
+import { DocFlowBusinessProcessApprovalTaskCheckupApprovalResult } from '../graphql/DocFlowBusinessProcessApprovalTaskCheckupApprovalResult';
+import { DocFlowBusinessProcessPerfomanceTaskCheckupResult } from '../graphql/DocFlowBusinessProcessPerfomanceTaskCheckupResult';
 
 export const docFlowProcessStepToEnum = (processStep?: string): DocFlowProcessStep | undefined => {
   switch (processStep) {
@@ -155,7 +160,24 @@ export const docFlowBusinessProcessTaskExecutor = (value: DocFlowBusinessProcess
   role: value.role ? docFlowRole(value.role) : undefined,
 });
 
-export const docFlowBusinessProcessTask = (task: DocFlowTaskSOAP): DocFlowTask => {
+export const docFlowBusinessProcessApprovalTaskCheckupApprovalResult = (
+  value: DocFlowBusinessProcessApprovalTaskCheckupApprovalResultSOAP,
+): DocFlowBusinessProcessApprovalTaskCheckupApprovalResult => ({
+  approvalResult: value.approvalResult ? docFlowApprovalResult(value.approvalResult) : undefined,
+  approvalComment: value.approvalComment,
+  approvalPerformer: value.approvalPerformer ? docFlowBusinessProcessTaskExecutor(value.approvalPerformer) : undefined,
+  approvalDate: value.approvalDate,
+});
+
+export const docFlowBusinessProcessPerfomanceTaskCheckupResult = (
+  value: DocFlowBusinessProcessPerfomanceTaskCheckupResultSOAP,
+): DocFlowBusinessProcessPerfomanceTaskCheckupResult => ({
+  returned: value.returned,
+  checkComment: value.checkComment,
+  executorTask: value.executorTask ? docFlowBusinessProcessTask(value.executorTask) : undefined,
+});
+
+export const docFlowBusinessProcessTask = (task: DocFlowBusinessProcessTaskSOAP): DocFlowTask => {
   const result: DocFlowTask = {
     id: task.objectID.id,
     name: task.name,
@@ -206,15 +228,19 @@ export const docFlowBusinessProcessTask = (task: DocFlowTaskSOAP): DocFlowTask =
       break;
     case 'DMBusinessProcessPerfomanceTaskCheckup':
       (result as DocFlowBusinessProcessPerfomanceTaskCheckup).iterationNumber = parseInt(task.iterationNumber || '0', 10);
-      // (result as DocFlowBusinessProcessPerfomanceTaskCheckup).checkResults =
-      //   task.checkResults && docFlowPerformanceTaskCheckup(task.approvalResult);
+      (result as DocFlowBusinessProcessPerfomanceTaskCheckup).checkResults =
+        task.checkResults && Array.isArray(task.checkResults) && task.checkResults.length > 0
+          ? task.checkResults.map((value) => docFlowBusinessProcessPerfomanceTaskCheckupResult(value))
+          : undefined;
       break;
     case 'DMBusinessProcessApprovalTaskCheckup':
       (result as DocFlowBusinessProcessApprovalTaskCheckup).iterationNumber = parseInt(task.iterationNumber || '0', 10);
       (result as DocFlowBusinessProcessApprovalTaskCheckup).approvalResult =
         task.approvalResult && docFlowApprovalResult(task.approvalResult);
-      // (result as DocFlowBusinessProcessOrderTaskCheckup).approvalResults =
-      //   task.approvalResults && docFlowApprovalResults(task.approvalResults);
+      (result as DocFlowBusinessProcessApprovalTaskCheckup).approvalResults =
+        task.approvalResults && Array.isArray(task.approvalResults) && task.approvalResults.length > 0
+          ? task.approvalResults.map((value) => docFlowBusinessProcessApprovalTaskCheckupApprovalResult(value))
+          : undefined;
       (result as DocFlowBusinessProcessApprovalTaskCheckup).returned = task.returned;
       break;
     case 'DMBusinessProcessTask':
