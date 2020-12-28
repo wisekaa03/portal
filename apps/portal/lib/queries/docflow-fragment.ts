@@ -11,7 +11,7 @@ export const DOCFLOW_USER_FRAGMENT = gql`
 `;
 
 export const DOCFLOW_STATE_FRAGMENT = gql`
-  fragment StateProps on DocFlowState {
+  fragment StateProps on DocFlowBusinessProcessState {
     id
     name
     type
@@ -47,7 +47,7 @@ export const DOCFLOW_SUBDIVISION_FRAGMENT = gql`
 `;
 
 export const DOCFLOW_IMPORTANCE_FRAGMENT = gql`
-  fragment ImportanceProps on DocFlowImportance {
+  fragment ImportanceProps on DocFlowBusinessProcessTaskImportance {
     id
     name
     type
@@ -147,57 +147,184 @@ export const DOCFLOW_TARGET_FRAGMENT = gql`
 
 export const DOCFLOW_BPT_APPROVAL_TASK_APPROVAL = gql`
   fragment TaskApprovalTaskApproval on DocFlowBusinessProcessApprovalTaskApproval {
-    id
-    name
-    type
-    importance {
-      ...ImportanceProps
+    ... on DocFlowBusinessProcessApprovalTaskApproval {
+      id
+      name
+      type
+      importance {
+        ...ImportanceProps
+      }
+      state {
+        ...StateProps
+      }
+      changeRight
+      executed
+      executionMark
+      executionComment
+      beginDate
+      dueDate
+      endDate
+      #description
+      #checkResults {
+      #  checkComment
+      #  returned
+      #  executorTask {
+      #    id
+      #  }
+      #}
+      #parentTask {
+      #  ...ParentTaskProps
+      #}
+      businessProcessStep
+      #performer {
+      #  users {
+      #    ...UserProps
+      #  }
+      #}
+      author {
+        ...UserProps
+      }
+      accepted
+      acceptDate
+      #htmlView
+      #target {
+      #  ...InternalDocumentProps
+      #}
+      #targets {
+      #  name
+      #  allowDeletion
+      #  target {
+      #    ...InternalDocumentProps
+      #  }
+      #}
     }
-    state {
-      ...StateProps
-    }
-    changeRight
-    executed
-    executionMark
-    executionComment
-    beginDate
-    dueDate
-    endDate
-    #description
-    #checkResults {
-    #  checkComment
-    #  returned
-    #  executorTask {
-    #    id
-    #  }
-    #}
-    #parentTask {
-    #  ...ParentTaskProps
-    #}
-    businesProcessStep
-    #performer {
-    #  users {
-    #    ...UserProps
-    #  }
-    #}
-    author {
-      ...UserProps
-    }
-    accepted
-    acceptDate
-    #htmlView
-    #target {
-    #  ...InternalDocumentProps
-    #}
-    #targets {
-    #  name
-    #  allowDeletion
-    #  target {
-    #    ...InternalDocumentProps
-    #  }
-    #}
   }
+  ${DOCFLOW_IMPORTANCE_FRAGMENT}
+  ${DOCFLOW_USER_FRAGMENT}
+  ${DOCFLOW_STATE_FRAGMENT}
 `;
+
+export const DOCFLOW_BPT_APPROVAL_TASK_CHECKUP = gql`
+  fragment TaskApprovalTaskCheckup on DocFlowBusinessProcessApprovalTaskCheckup {
+    ... on DocFlowBusinessProcessApprovalTaskCheckup {
+      id
+      name
+      type
+      importance {
+        ...ImportanceProps
+      }
+      state {
+        ...StateProps
+      }
+      changeRight
+      executed
+      executionMark
+      executionComment
+      beginDate
+      dueDate
+      endDate
+      #description
+      #checkResults {
+      #  checkComment
+      #  returned
+      #  executorTask {
+      #    id
+      #  }
+      #}
+      #parentTask {
+      #  ...ParentTaskProps
+      #}
+      businessProcessStep
+      #performer {
+      #  users {
+      #    ...UserProps
+      #  }
+      #}
+      author {
+        ...UserProps
+      }
+      accepted
+      acceptDate
+      #htmlView
+      #target {
+      #  ...InternalDocumentProps
+      #}
+      #targets {
+      #  name
+      #  allowDeletion
+      #  target {
+      #    ...InternalDocumentProps
+      #  }
+      #}
+    }
+  }
+  ${DOCFLOW_IMPORTANCE_FRAGMENT}
+  ${DOCFLOW_USER_FRAGMENT}
+  ${DOCFLOW_STATE_FRAGMENT}
+`;
+
+export const DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP = gql`
+  fragment TaskPerformanceTaskCheckup on DocFlowBusinessProcessPerfomanceTaskCheckup {
+    ... on DocFlowBusinessProcessPerfomanceTaskCheckup {
+      id
+      name
+      type
+      importance {
+        ...ImportanceProps
+      }
+      state {
+        ...StateProps
+      }
+      changeRight
+      executed
+      executionMark
+      executionComment
+      beginDate
+      dueDate
+      endDate
+      #description
+      #checkResults {
+      #  checkComment
+      #  returned
+      #  executorTask {
+      #    id
+      #  }
+      #}
+      #parentTask {
+      #  ...ParentTaskProps
+      #}
+      businessProcessStep
+      #performer {
+      #  users {
+      #    ...UserProps
+      #  }
+      #}
+      author {
+        ...UserProps
+      }
+      accepted
+      acceptDate
+      #htmlView
+      #target {
+      #  ...InternalDocumentProps
+      #}
+      #targets {
+      #  name
+      #  allowDeletion
+      #  target {
+      #    ...InternalDocumentProps
+      #  }
+      #}
+    }
+  }
+  ${DOCFLOW_IMPORTANCE_FRAGMENT}
+  ${DOCFLOW_USER_FRAGMENT}
+  ${DOCFLOW_STATE_FRAGMENT}
+`;
+
+// ${DOCFLOW_FILE_FRAGMENT}
+// ${DOCFLOW_PARENT_TASK_FRAGMENT}
+// ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
 
 export const DOCFLOW_TASK_FRAGMENT = gql`
   fragment TaskProps on DocFlowTask {
@@ -206,19 +333,17 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     }
   }
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
-  #${DOCFLOW_FILE_FRAGMENT}
-  #${DOCFLOW_PARENT_TASK_FRAGMENT}
-  ${DOCFLOW_IMPORTANCE_FRAGMENT}
-  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
-  ${DOCFLOW_USER_FRAGMENT}
-  ${DOCFLOW_STATE_FRAGMENT}
 `;
 
 export const DOCFLOW_TASKS_FRAGMENT = gql`
-  fragment TasksProps on DocFlowTask {
-    ... on DocFlowBusinessProcessApprovalTaskApproval {
+  fragment TasksProps on DocFlowTasks {
+    task {
       ...TaskApprovalTaskApproval
+      ...TaskApprovalTaskCheckup
+      ...TaskPerformanceTaskCheckup
     }
   }
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
+  ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
+  ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
 `;

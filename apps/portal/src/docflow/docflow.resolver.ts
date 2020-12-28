@@ -171,7 +171,7 @@ export class DocFlowResolver {
   //  */
   // @Mutation('docFlowProcessStep')
   // @UseGuards(GqlAuthGuard)
-  // async docFlowProcessStep(
+  // async docFlowChangeProcessStep(
   //   @Context('req') request: Request,
   //   @Args('taskID') taskID: string,
   //   @Args('data') data: DocFlowData,

@@ -12,10 +12,10 @@ import {
 export const DOCFLOW_TASKS = gql`
   query DocFlowTasks($tasks: DocFlowTasksInput) {
     docFlowTasks(tasks: $tasks) {
-      ...TaskProps
+      ...TasksProps
     }
   }
-  ${DOCFLOW_TASK_FRAGMENT}
+  ${DOCFLOW_TASKS_FRAGMENT}
 `;
 
 export const DOCFLOW_TASKS_SUB = gql`
@@ -74,8 +74,8 @@ export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
 `;
 
 export const DOCFLOW_PROCESS_STEP = gql`
-  mutation DocFlowProcessStep($taskID: ID!, $data: DocFlowDataInput!) {
-    docFlowProcessStep(taskID: $taskID, data: $data) {
+  mutation DocFlowChangeProcessStep($taskID: ID!, $data: DocFlowDataInput!) {
+    docFlowChangeProcessStep(taskID: $taskID, data: $data) {
       id
     }
   }
