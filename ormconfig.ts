@@ -1,6 +1,7 @@
 /** @format */
 
 //#region Imports NPM
+import { resolve } from 'path';
 //#endregion
 //#region Imports Local
 import { WinstonModule } from 'nest-winston';
@@ -18,7 +19,7 @@ const entities = [Group, Profile, User, News];
 // const entities = ['./.next/nest/**/*.entity.js'];
 // const migrations = dev ? ['src/migrations/*.migration.ts'] : ['.nest/migrations/*.migration.js'];
 
-const configService = new ConfigService('.local/.env');
+const configService = new ConfigService(resolve('./.local/.env'));
 const logger = WinstonModule.createLogger(winstonOptions());
 
 export default {
