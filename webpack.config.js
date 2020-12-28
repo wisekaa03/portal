@@ -7,15 +7,42 @@ const Webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-const { NODE_ENV = 'production' } = process.env;
-
-console.log(`-- Webpack <${NODE_ENV}> build --`);
-
 module.exports = (options) => {
+  const { NODE_ENV = 'production' } = options || process.env;
+
+  console.log(`-- Webpack <${NODE_ENV}> build --`);
+
   let c;
   const config = NODE_ENV === 'production' ? require('./webpack.production.js')(options) : require('./webpack.development.js')(options);
 
-  if (!options) {
+  // console.log('Config.module.rules:', config.module.rules);
+  // config.module.rules.forEach((rule) => {
+  //   console.log(`Config.module.rules.use "${rule.test}":`, rule.use);
+  // });
+
+  // console.log('Options:', options);
+  // console.log('Config:', config);
+
+  if (options?.entry?.includes('portal/src/main.ts')) {
+    const entry = NODE_ENV === 'production' ? options.entry ?? [] : ['webpack/hot/poll?100', options.entry || undefined];
+
+    c = {
+      ...options,
+      ...config,
+      entry,
+      plugins: [
+        ...config.plugins,
+        new Webpack.DefinePlugin({
+          __DEV__: JSON.stringify(NODE_ENV === 'development'),
+          __PRODUCTION__: JSON.stringify(NODE_ENV === 'production'),
+          __TEST__: JSON.stringify(NODE_ENV === 'test'),
+          __SERVER__: JSON.stringify(true),
+        }),
+        new DotenvWebpackPlugin({ path: resolve(__dirname, '.local/.env') }),
+      ],
+      stats: { ...config.stats },
+    };
+  } else {
     c = {
       ...config,
       optimization: {
@@ -71,28 +98,11 @@ module.exports = (options) => {
         ],
       },
     };
-  } else {
-    const entry = NODE_ENV === 'production' ? options.entry ?? [] : ['webpack/hot/poll?100', options.entry || undefined];
-
-    c = {
-      ...options,
-      ...config,
-      entry,
-      plugins: [
-        ...config.plugins,
-        new Webpack.DefinePlugin({
-          __DEV__: JSON.stringify(NODE_ENV === 'development'),
-          __PRODUCTION__: JSON.stringify(NODE_ENV === 'production'),
-          __TEST__: JSON.stringify(NODE_ENV === 'test'),
-          __SERVER__: JSON.stringify(true),
-        }),
-        new DotenvWebpackPlugin({ path: resolve(__dirname, '.local/.env') }),
-      ],
-      stats: { ...config.stats },
-    };
   }
-
   // Babel
+  if (!Array.isArray(c.module.rules)) {
+    c.module.rules = [];
+  }
   c.module.rules.unshift({
     test: /\.tsx?$/,
     exclude: /node_modules/,
@@ -107,14 +117,6 @@ module.exports = (options) => {
       },
     ],
   });
-
-  // console.log('Config.module.rules:', c.module.rules);
-  // c.module.rules.forEach((rule) => {
-  //   console.log(`Config.module.rules.use "${rule.test}":`, rule.use);
-  // });
-
-  // console.log('Options:', options);
-  // console.log('Config:', c);
 
   return c;
 };

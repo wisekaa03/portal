@@ -148,7 +148,7 @@ module.exports = (original) => {
     ],
   };
 
-  if (original?.output.filename.includes('/portal/')) {
+  if (original?.output?.filename.includes('/portal/')) {
     config.output = {
       path: resolve(__dirname, '.next/nest'),
       filename: 'main.js',

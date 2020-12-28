@@ -35,7 +35,7 @@
     "test:next": "jest --watch __tests__",
     "coverage": "yarn test -u --coverage",
     "typeorm": "node ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js",
-    "typeorm:transpile": "webpack ormconfig.ts",
+    "typeorm:transpile": "npx webpack --entry ./ormconfig.ts",
     "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync",
     "typeorm:sync": "yarn typeorm schema:sync"
   },
