@@ -3,7 +3,6 @@
 import { createUnionType } from '@nestjs/graphql';
 
 import { DocFlowTask } from '@lib/types/docflow';
-import { DocFlowTaskSOAP } from '@back/shared/types/docflowSOAP';
 
 import { DocFlowBusinessProcessTask } from './DocFlowBusinessProcessTask';
 import { DocFlowBusinessProcessOrderTaskCheckup } from './DocFlowBusinessProcessOrderTaskCheckup';
@@ -41,28 +40,3 @@ export const DocFlowTaskGraphql = createUnionType({
     return null;
   },
 });
-
-export const docFlowBusinessProcessTask = (result: DocFlowTask, task: DocFlowTaskSOAP): result is DocFlowBusinessProcessTask =>
-  task.objectID.type === 'DMBusinessProcessTask';
-
-export const docFlowBusinessProcessOrderTaskCheckup = (
-  result: DocFlowTask,
-  task: DocFlowTaskSOAP,
-): result is DocFlowBusinessProcessOrderTaskCheckup => task.objectID.type === 'DMBusinessProcessOrderTaskCheckup';
-
-export const docFlowBusinessProcessApprovalTaskApproval = (
-  result: DocFlowTask,
-  task: DocFlowTaskSOAP,
-): result is DocFlowBusinessProcessApprovalTaskApproval => task.objectID.type === 'DMBusinessProcessApprovalTaskApproval';
-
-export const docFlowBusinessProcessPerfomanceTaskCheckup = (
-  result: DocFlowTask,
-  task: DocFlowTaskSOAP,
-  type: string,
-): result is DocFlowBusinessProcessPerfomanceTaskCheckup => task.objectID.type === 'DMBusinessProcessPerfomanceTaskCheckup';
-
-export const docFlowBusinessProcessApprovalTaskCheckup = (
-  result: DocFlowTask,
-  task: DocFlowTaskSOAP,
-  type: string,
-): result is DocFlowBusinessProcessApprovalTaskCheckup => task.objectID.type === 'DMBusinessProcessApprovalTaskCheckup';

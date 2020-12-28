@@ -31,7 +31,7 @@ import type { DocFlowData } from '@lib/types/docflow';
 import { DocFlowProcessStep, DocFlowTask } from '@lib/types/docflow';
 import type {
   SubscriptionPayload,
-  DocFlowTaskSOAP,
+  DocFlowBusinessProcessTaskSOAP,
   DocFlowUserSOAP,
   DocFlowTargetSOAP,
   DocFlowFileSOAP,
