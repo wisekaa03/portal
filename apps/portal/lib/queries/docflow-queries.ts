@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import {
   DOCFLOW_TASK_FRAGMENT,
   DOCFLOW_FILE_FRAGMENT,
+  DOCFLOW_TASKS_FRAGMENT,
   DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT,
   DOCFLOW_TARGET_FRAGMENT,
 } from './docflow-fragment';
@@ -20,10 +21,10 @@ export const DOCFLOW_TASKS = gql`
 export const DOCFLOW_TASKS_SUB = gql`
   subscription DocFlowTasks($tasks: DocFlowTasksSubInput) {
     docFlowTasks(tasks: $tasks) {
-      ...TaskProps
+      ...TasksProps
     }
   }
-  ${DOCFLOW_TASK_FRAGMENT}
+  ${DOCFLOW_TASKS_FRAGMENT}
 `;
 
 export const DOCFLOW_FILE = gql`

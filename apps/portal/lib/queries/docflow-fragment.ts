@@ -115,18 +115,18 @@ export const DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT = gql`
     author {
       ...UserProps
     }
-    files {
-      object {
-        ...FileProps
-      }
-      error
-    }
+    #files {
+    #  object {
+    #    ...FileProps
+    #  }
+    #  error
+    #}
   }
   ${DOCFLOW_STATUS_FRAGMENT}
   ${DOCFLOW_ORGANIZATION_FRAGMENT}
   ${DOCFLOW_SUBDIVISION_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
-  ${DOCFLOW_FILE_FRAGMENT}
+  #${DOCFLOW_FILE_FRAGMENT}
 `;
 
 export const DOCFLOW_TARGET_FRAGMENT = gql`
@@ -145,8 +145,8 @@ export const DOCFLOW_TARGET_FRAGMENT = gql`
   ${DOCFLOW_ROLE_FRAGMENT}
 `;
 
-export const DOCFLOW_TASK_FRAGMENT = gql`
-  fragment TaskProps on DocFlowTask {
+export const DOCFLOW_BPT_APPROVAL_TASK_APPROVAL = gql`
+  fragment TaskApprovalTaskApproval on DocFlowBusinessProcessApprovalTaskApproval {
     id
     name
     type
@@ -163,43 +163,62 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     beginDate
     dueDate
     endDate
-    description
-    checkResults {
-      checkComment
-      returned
-      executorTask {
-        id
-      }
-    }
-    iterationNumber
-    parentTask {
-      ...ParentTaskProps
-    }
-    processStep
-    performer {
-      ...UserProps
-    }
+    #description
+    #checkResults {
+    #  checkComment
+    #  returned
+    #  executorTask {
+    #    id
+    #  }
+    #}
+    #parentTask {
+    #  ...ParentTaskProps
+    #}
+    businesProcessStep
+    #performer {
+    #  users {
+    #    ...UserProps
+    #  }
+    #}
     author {
       ...UserProps
     }
     accepted
     acceptDate
-    htmlView
-    target {
-      ...InternalDocumentProps
-    }
-    targets {
-      name
-      allowDeletion
-      target {
-        ...InternalDocumentProps
-      }
+    #htmlView
+    #target {
+    #  ...InternalDocumentProps
+    #}
+    #targets {
+    #  name
+    #  allowDeletion
+    #  target {
+    #    ...InternalDocumentProps
+    #  }
+    #}
+  }
+`;
+
+export const DOCFLOW_TASK_FRAGMENT = gql`
+  fragment TaskProps on DocFlowTask {
+    ... on DocFlowBusinessProcessApprovalTaskApproval {
+      ...TaskApprovalTaskApproval
     }
   }
-  ${DOCFLOW_FILE_FRAGMENT}
-  ${DOCFLOW_PARENT_TASK_FRAGMENT}
+  ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
+  #${DOCFLOW_FILE_FRAGMENT}
+  #${DOCFLOW_PARENT_TASK_FRAGMENT}
   ${DOCFLOW_IMPORTANCE_FRAGMENT}
   ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
   ${DOCFLOW_STATE_FRAGMENT}
+`;
+
+export const DOCFLOW_TASKS_FRAGMENT = gql`
+  fragment TasksProps on DocFlowTask {
+    ... on DocFlowBusinessProcessApprovalTaskApproval {
+      ...TaskApprovalTaskApproval
+    }
+  }
+  ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
 `;

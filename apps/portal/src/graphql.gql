@@ -929,7 +929,7 @@ type Query {
   login(domain: String!, password: String!, username: String!): Login!
   loginEmail: LoginEmail!
   me: User!
-  profile(id: String!): Profile!
+  profile(id: ID!): Profile!
   profileFieldSelection(field: PhonebookColumnNames!): [String!]!
   profiles(after: String, disabled: Boolean, filters: [UserSettingsPhonebookFilterInput!], first: Int, notShowing: Boolean, orderBy: ProfileOrderInput, search: String): PaginatedProfile!
   searchSuggestions(search: String!): [SearchSuggestions!]!
@@ -945,9 +945,9 @@ type SearchSuggestions {
 
 type Subscription {
   docFlowTasksSubscription: [DocFlowTasks!]!
-  ticketsRoutesSubscription: TkRoutes!
-  ticketsTasksSubscription: TkTasks!
-  ticketsTaskSubscription: TkEditTask!
+  ticketsRoutesSubscription(routes: TkRoutesInput): TkRoutes!
+  ticketsTasksSubscription(tasks: TkTasksInput): TkTasks!
+  ticketsTaskSubscription(task: TkTaskInput!): TkEditTask!
 }
 
 type TkComment {
