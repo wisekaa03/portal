@@ -42,7 +42,7 @@ export class DocFlowResolver {
     @Context('req') request: Request,
     @CurrentUser() user: User,
     @PasswordFrontend() password: string,
-    @Args('tasks', { type: () => DocFlowTasksInput }) tasks?: DocFlowTasksInput,
+    @Args('tasks', { type: () => DocFlowTasksInput, nullable: true }) tasks?: DocFlowTasksInput,
   ): Promise<DocFlowTasks[]> {
     return this.docflowService.docFlowTasksCache({
       user,
@@ -54,7 +54,7 @@ export class DocFlowResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription(() => [DocFlowTasks], {
-    filter: (payload: SubscriptionPayload<DocFlowTasks[]>, variables: { tasks: DocFlowTasksInput }, context: WebsocketContext) =>
+    filter: (payload: SubscriptionPayload<DocFlowTasks[]>, variables: { tasks?: DocFlowTasksInput }, context: WebsocketContext) =>
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<DocFlowTasks[]>) => payload.object,
   })

@@ -628,6 +628,7 @@ enum DocFlowProcessStep {
   Familiarize
   NotApprove
   NotConform
+  SeeResultAgreement
 }
 
 type DocFlowProject implements DocFlowInterfaceObject {
@@ -925,7 +926,7 @@ type ProfilePageInfo {
 
 type Query {
   availableAuthenticationProfiles(newProfile: Boolean, synchronization: Boolean): [String!]!
-  docFlowTasks(tasks: DocFlowTasksInput!): [DocFlowTasks!]!
+  docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   login(domain: String!, password: String!, username: String!): Login!
   loginEmail: LoginEmail!
   me: User!
