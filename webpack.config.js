@@ -8,7 +8,7 @@ const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = (options) => {
-  const { NODE_ENV = 'production' } = options || process.env;
+  const { NODE_ENV = 'production' } = process.env || options;
 
   console.log(`-- Webpack <${NODE_ENV}> build --`);
 
