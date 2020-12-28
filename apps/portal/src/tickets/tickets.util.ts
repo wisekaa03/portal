@@ -2,6 +2,7 @@
 /* eslint no-confusing-arrow:0 */
 
 import clearHtml from '@lib/clear-html';
+import type { DataError } from '@lib/types';
 import type {
   TicketsTaskSOAP,
   TicketsCommentSOAP,
@@ -12,6 +13,23 @@ import type {
 } from '@back/shared/types';
 import { SOAP_DATE_NULL } from '@back/shared/constants';
 import { TkWhere, TkTaskNew, TkRoute, TkService, TkTask, TkUser, TkFile, TkComment } from './graphql';
+
+export const ticketsError = (result: DataError | undefined): Error | undefined => {
+  if (result && result.attributes?.['xsi:type']?.includes('Ошибка')) {
+    return new Error(result.ОписаниеОшибки);
+  }
+
+  return undefined;
+};
+
+export function ticketsData<T>(result: unknown): result is T {
+  return !!(
+    typeof result === 'object' &&
+    result !== null &&
+    (result as DataError)?.attributes?.['xsi:type']?.search(/Ошибка/) !== -1 &&
+    !(result as DataError)?.ОписаниеОшибки
+  );
+}
 
 export const SMALL_BODY_STRING = 250;
 

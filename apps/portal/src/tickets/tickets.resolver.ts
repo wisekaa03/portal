@@ -62,7 +62,9 @@ export class TicketsResolver {
     //   payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkRoutes>) => payload.object,
   })
-  async ticketsRoutesSubscription(): Promise<AsyncIterator<TkRoutes>> {
+  async ticketsRoutesSubscription(
+    @Args('routes', { type: () => TkRoutesInput, nullable: true }) input?: TkRoutesInput,
+  ): Promise<AsyncIterator<TkRoutes>> {
     return this.pubSub.asyncIterator<TkRoutes>(PortalPubSub.TICKETS_ROUTES);
   }
 
@@ -96,7 +98,9 @@ export class TicketsResolver {
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<TkTasks>) => payload.object,
   })
-  async ticketsTasksSubscription(): Promise<AsyncIterator<TkTasks>> {
+  async ticketsTasksSubscription(
+    @Args('tasks', { type: () => TkTasksInput, nullable: true }) tasks?: TkTasksInput,
+  ): Promise<AsyncIterator<TkTasks>> {
     return this.pubSub.asyncIterator<TkTasks>(PortalPubSub.TICKETS_TASKS);
   }
 
@@ -182,7 +186,7 @@ export class TicketsResolver {
       payload.object.task?.where === variables.task.where && payload.object.task?.code === variables.task.code,
     resolve: (payload: SubscriptionPayload<TkEditTask>) => payload.object,
   })
-  async ticketsTaskSubscription(): Promise<AsyncIterator<TkEditTask>> {
+  async ticketsTaskSubscription(@Args('task', { type: () => TkTaskInput }) task: TkTaskInput): Promise<AsyncIterator<TkEditTask>> {
     return this.pubSub.asyncIterator<TkEditTask>(PortalPubSub.TICKETS_TASK);
   }
 

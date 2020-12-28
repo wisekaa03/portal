@@ -18,6 +18,7 @@ export interface DataError {
   attributes?: {
     'xsi:type'?: string;
   };
+  ОписаниеОшибки?: string;
   description?: string;
   subject?: string;
 }

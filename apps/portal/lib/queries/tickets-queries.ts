@@ -29,7 +29,7 @@ export const TICKETS_ROUTES = gql`
 
 export const TICKETS_ROUTES_SUB = gql`
   subscription TicketsRoutes($routes: TkRoutesInput) {
-    ticketsRoutes(routes: $routes) {
+    ticketsRoutesSubscription(routes: $routes) {
       routes {
         id
         where
@@ -73,7 +73,7 @@ export const TICKETS_TASKS = gql`
 
 export const TICKETS_TASKS_SUB = gql`
   subscription TicketsTasks($tasks: TkTasksInput) {
-    ticketsTasks(tasks: $tasks) {
+    ticketsTasksSubscription(tasks: $tasks) {
       users {
         id
         where
@@ -134,7 +134,7 @@ export const TICKETS_TASK = gql`
 
 export const TICKETS_TASK_SUB = gql`
   subscription TicketsTask($task: TkTaskInput!) {
-    ticketsTask(task: $task) {
+    ticketsTaskSubscription(task: $task) {
       users {
         ...TicketsUserProps
       }

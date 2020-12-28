@@ -39,7 +39,7 @@ import { User } from '@back/user/user.entity';
 import { ConfigService } from '@app/config/config.service';
 import { SoapService, SoapFault } from '@app/soap';
 import { constructUploads } from '@back/shared/constructUploads';
-import { DataResult } from '@lib/types/common';
+import { DataResult, DataError } from '@lib/types/common';
 import { PortalError } from '@back/shared/errors';
 import { TkCommentInput } from '@back/tickets/graphql/TkComment.input';
 import {
@@ -59,7 +59,19 @@ import {
   TkFile,
   TkRoutesInput,
 } from './graphql';
-import { taskSOAP, AttachesSOAP, descriptionOST, taskOST, routesOST, newOST, routeSOAP, whereService, userSOAP } from './tickets.util';
+import {
+  ticketsError,
+  ticketsData,
+  taskSOAP,
+  AttachesSOAP,
+  descriptionOST,
+  taskOST,
+  routesOST,
+  newOST,
+  routeSOAP,
+  whereService,
+  userSOAP,
+} from './tickets.util';
 //#endregion
 
 /**
@@ -152,23 +164,28 @@ export class TicketsService {
         promises.push(
           client
             .GetRoutesAsync({ Log }, { timeout: TIMEOUT })
-            .then((result: DataResult<TicketsSOAPRoutes>) => {
-              this.logger.debug!({
-                message: `TicketsRoutes: [Request] ${client.lastRequest}`,
-                context: TicketsService.name,
-                function: 'ticketsRoutes',
-                ...loggerContext,
-              });
+            .then((result: DataResult<TicketsSOAPRoutes> | DataResult<DataError>) => {
+              const returnResult = result[0]?.return;
 
-              if (result?.[0]?.return && Object.keys(result[0].return).length > 0) {
-                const routes = result[0].return?.['Сервис']?.map((route: TicketsRouteSOAP) => routeSOAP(route, TkWhere.SOAP1C));
+              if (ticketsData<TicketsSOAPRoutes>(returnResult)) {
+                this.logger.debug!({
+                  message: `TicketsRoutes: [Request] ${client.lastRequest}`,
+                  context: TicketsService.name,
+                  function: 'ticketsRoutes',
+                  ...loggerContext,
+                });
+
+                let routes: (TkRoute | undefined)[] | undefined;
+                if (result?.[0]) {
+                  routes = returnResult?.['Сервис']?.map((route) => routeSOAP(route, TkWhere.SOAP1C));
+                }
 
                 return {
                   routes,
                 };
               }
 
-              throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+              throw new InternalServerErrorException(ticketsError(returnResult));
             })
             .catch((error: Error) => {
               this.logger.error({
@@ -413,11 +430,18 @@ export class TicketsService {
                   Users: {
                     Log,
                   },
-                  Departments: {},
-                  Statuses: {
-                    Status: tasks?.status ?? '',
+                  Departments: {
+                    Dept: '',
                   },
-                  Context: {},
+                  Statuses: {
+                    Status: '',
+                  },
+                  Context: {
+                    Find: '',
+                  },
+                  // UsersPositions: {
+                  //   Position: ['инициатор', 'исполнитель'],
+                  // },
                 },
               },
               { timeout: TIMEOUT },
@@ -1225,13 +1249,15 @@ export class TicketsService {
         });
       }
 
+      const Executor = this.getUsername(user);
+      const AutorComment = this.getUsername(user);
       return client
         .EditTaskAsync(
           {
             TaskId: task.code,
-            Executor: '',
+            Executor,
             NewComment: task.comment,
-            AutorComment: user.username,
+            AutorComment,
             Attaches,
           },
           { timeout: TIMEOUT },
