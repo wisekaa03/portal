@@ -23,7 +23,7 @@ module.exports = (options) => {
   // console.log('Options:', options);
   // console.log('Config:', config);
 
-  if (options?.entry?.includes('portal/src/main.ts')) {
+  if (options?.entry?.includes('portal/apps/')) {
     const entry = NODE_ENV === 'production' ? options.entry ?? [] : ['webpack/hot/poll?100', options.entry || undefined];
 
     c = {

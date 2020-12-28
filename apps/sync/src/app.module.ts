@@ -27,7 +27,7 @@ import { AppController } from './app.controller';
 import { SyncService } from './app.service';
 //#endregion
 
-const environment = resolve(__dirname, '../../..', '.local/.env');
+const environment = resolve(__dirname, '../../../.local/.env');
 
 @Module({
   imports: [

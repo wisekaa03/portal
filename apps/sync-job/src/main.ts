@@ -13,7 +13,7 @@ import { LDAP_SYNC } from '@back/shared/constants';
 import { winstonOptions } from '@back/shared/logger.options';
 //#endregion
 
-const configService = new ConfigService(resolve(__dirname, '../../..', '.local/.env'));
+const configService = new ConfigService(resolve(__dirname, '../../../.local/.env'));
 const logger = WinstonModule.createLogger(winstonOptions(configService));
 
 async function bootstrap(config: ConfigService): Promise<boolean> {
