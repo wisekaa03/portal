@@ -22,7 +22,6 @@ export type DocFlowTask =
 
 export enum DocFlowProcessStep {
   CheckExecute = 'CheckExecute' /* Проверить исполнение */,
-  SeeResultAgreement = 'SeeResultAgreement' /* Ознакомиться с результатом согласования */,
   Execute = 'Execute' /* Исполнить */,
   Familiarize = 'Familiarize' /* Ознакомиться */,
   CheckFamiliarize = 'CheckFamiliarize' /* Ознакомиться с результатом согласования */,

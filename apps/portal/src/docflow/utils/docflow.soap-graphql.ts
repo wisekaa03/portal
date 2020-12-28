@@ -53,7 +53,7 @@ import { DocFlowBusinessProcessPerfomanceTaskCheckupResult } from '../graphql/Do
 export const docFlowProcessStepToEnum = (processStep?: string): DocFlowProcessStep | undefined => {
   switch (processStep) {
     case 'Ознакомиться с результатом согласования':
-      return DocFlowProcessStep.SeeResultAgreement;
+      return DocFlowProcessStep.CheckFamiliarize;
     case 'Проверить исполнение':
       return DocFlowProcessStep.CheckExecute;
     case 'Исполнить':

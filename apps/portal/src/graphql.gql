@@ -628,7 +628,6 @@ enum DocFlowProcessStep {
   Familiarize
   NotApprove
   NotConform
-  SeeResultAgreement
 }
 
 type DocFlowProject implements DocFlowInterfaceObject {
