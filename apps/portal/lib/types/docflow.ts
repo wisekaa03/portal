@@ -96,7 +96,7 @@ export interface DocFlowTaskComponentProps extends PortalErrorsProps {
   loading: boolean;
   loadingFile: boolean;
   loadingProcessStep: boolean;
-  task?: DocFlowBusinessProcessTask;
+  task?: DocFlowTask;
   comments: string;
   endDate: Date | null;
   handleEndDate?: (date: Date | null | undefined, keyboardInputValue?: string | undefined) => void;

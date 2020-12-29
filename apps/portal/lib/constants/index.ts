@@ -20,7 +20,7 @@ export const ADMIN_PAGES = [
   '/mail',
   // '/profile',
   // '/services',
-  '/docflow',
+  // '/docflow',
   '/reports',
   '/calendar',
   '/faq',
