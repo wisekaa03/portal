@@ -672,6 +672,23 @@ type DocFlowSubdivision implements DocFlowInterfaceObject {
 
 union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusinessProcessApprovalTaskCheckup | DocFlowBusinessProcessOrderTaskCheckup | DocFlowBusinessProcessPerfomanceTaskCheckup | DocFlowBusinessProcessTask
 
+input DocFlowTaskInput {
+  """Cache this result, default = true"""
+  cache: Boolean
+
+  """ID of a document flow task"""
+  id: String!
+
+  """Set cache, default = true"""
+  setCache: Boolean
+
+  """Type of a document flow task"""
+  type: String!
+
+  """WebSocket results, default = true"""
+  websocket: Boolean
+}
+
 type DocFlowTasks {
   canHaveChildren: Boolean
   isFolder: Boolean
@@ -687,9 +704,6 @@ input DocFlowTasksInput {
 
   """WebSocket results, default = true"""
   websocket: Boolean
-
-  """With files, default = true"""
-  withFiles: Boolean
 }
 
 type DocFlowUser implements DocFlowInterfaceObject {
@@ -925,6 +939,7 @@ type ProfilePageInfo {
 
 type Query {
   availableAuthenticationProfiles(newProfile: Boolean, synchronization: Boolean): [String!]!
+  docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
   docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   login(domain: String!, password: String!, username: String!): Login!
   loginEmail: LoginEmail!
@@ -945,6 +960,7 @@ type SearchSuggestions {
 
 type Subscription {
   docFlowTasksSubscription(tasks: DocFlowTasksInput): [DocFlowTasks!]!
+  docFlowTaskSubscription(task: DocFlowTaskInput!): DocFlowTask!
   ticketsRoutesSubscription(routes: TkRoutesInput): TkRoutes!
   ticketsTasksSubscription(tasks: TkTasksInput): TkTasks!
   ticketsTaskSubscription(task: TkTaskInput!): TkEditTask!

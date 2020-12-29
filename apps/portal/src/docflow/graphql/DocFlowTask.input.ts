@@ -11,6 +11,6 @@ export class DocFlowTaskInput extends GraphQLInputQueryType {
   @Field({ nullable: false, description: 'Type of a document flow task' })
   type!: string;
 
-  @Field({ nullable: true, description: 'With files, default = true' })
-  withFiles?: boolean;
+  // @Field({ nullable: true, description: 'With files, default = true' })
+  // withFiles?: boolean;
 }

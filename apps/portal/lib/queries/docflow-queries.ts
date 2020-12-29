@@ -7,6 +7,10 @@ import {
   DOCFLOW_TASKS_FRAGMENT,
   DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT,
   DOCFLOW_TARGET_FRAGMENT,
+  DOCFLOW_BPT_APPROVAL_TASK_APPROVAL,
+  DOCFLOW_BPT_APPROVAL_TASK_CHECKUP,
+  DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP,
+  DOCFLOW_BPT_TASK,
 } from './docflow-fragment';
 
 export const DOCFLOW_TASKS = gql`
@@ -40,15 +44,21 @@ export const DOCFLOW_FILE = gql`
 export const DOCFLOW_TASK = gql`
   query DocFlowTask($task: DocFlowTaskInput!) {
     docFlowTask(task: $task) {
-      ...TaskProps
+      ...TaskApprovalTaskApproval
+      ...TaskApprovalTaskCheckup
+      ...TaskPerformanceTaskCheckup
+      ...Task
     }
   }
-  ${DOCFLOW_TASK_FRAGMENT}
+  ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
+  ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
+  ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
+  ${DOCFLOW_BPT_TASK}
 `;
 
 export const DOCFLOW_TASK_SUB = gql`
-  subscription DocFlowTask($task: DocFlowTaskSubInput!) {
-    docFlowTask(task: $task) {
+  subscription DocFlowTaskSubscription($task: DocFlowTaskInput!) {
+    docFlowTaskSubscription(task: $task) {
       ...TaskProps
     }
   }
@@ -73,7 +83,7 @@ export const DOCFLOW_INTERNAL_DOCUMENT_SUB = gql`
   ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
 `;
 
-export const DOCFLOW_PROCESS_STEP = gql`
+export const DOCFLOW_CHANGE_PROCESS_STEP = gql`
   mutation DocFlowChangeProcessStep($taskID: ID!, $data: DocFlowDataInput!) {
     docFlowChangeProcessStep(taskID: $taskID, data: $data) {
       id

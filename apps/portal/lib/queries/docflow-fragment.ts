@@ -19,7 +19,7 @@ export const DOCFLOW_STATE_FRAGMENT = gql`
 `;
 
 export const DOCFLOW_STATUS_FRAGMENT = gql`
-  fragment StatusProps on DocFlowStatus {
+  fragment StatusProps on DocFlowDocumentStatus {
     id
     name
     type
@@ -126,8 +126,9 @@ export const DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT = gql`
   ${DOCFLOW_ORGANIZATION_FRAGMENT}
   ${DOCFLOW_SUBDIVISION_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
-  #${DOCFLOW_FILE_FRAGMENT}
 `;
+
+// ${DOCFLOW_FILE_FRAGMENT}
 
 export const DOCFLOW_TARGET_FRAGMENT = gql`
   fragment TargetProps on DocFlowTarget {
@@ -177,7 +178,7 @@ export const DOCFLOW_BPT_APPROVAL_TASK_APPROVAL = gql`
       #}
       businessProcessStep
       #performer {
-      #  users {
+      #  user {
       #    ...UserProps
       #  }
       #}
@@ -186,19 +187,20 @@ export const DOCFLOW_BPT_APPROVAL_TASK_APPROVAL = gql`
       }
       accepted
       acceptDate
-      #htmlView
+      htmlView
       #target {
       #  ...InternalDocumentProps
       #}
-      #targets {
-      #  name
-      #  allowDeletion
-      #  target {
-      #    ...InternalDocumentProps
-      #  }
-      #}
+      targets {
+        name
+        allowDeletion
+        target {
+          ...InternalDocumentProps
+        }
+      }
     }
   }
+  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
   ${DOCFLOW_IMPORTANCE_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
   ${DOCFLOW_STATE_FRAGMENT}
@@ -236,7 +238,7 @@ export const DOCFLOW_BPT_APPROVAL_TASK_CHECKUP = gql`
       #}
       businessProcessStep
       #performer {
-      #  users {
+      #  user {
       #    ...UserProps
       #  }
       #}
@@ -245,19 +247,20 @@ export const DOCFLOW_BPT_APPROVAL_TASK_CHECKUP = gql`
       }
       accepted
       acceptDate
-      #htmlView
+      htmlView
       #target {
       #  ...InternalDocumentProps
       #}
-      #targets {
-      #  name
-      #  allowDeletion
-      #  target {
-      #    ...InternalDocumentProps
-      #  }
-      #}
+      targets {
+        name
+        allowDeletion
+        target {
+          ...InternalDocumentProps
+        }
+      }
     }
   }
+  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
   ${DOCFLOW_IMPORTANCE_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
   ${DOCFLOW_STATE_FRAGMENT}
@@ -304,19 +307,80 @@ export const DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP = gql`
       }
       accepted
       acceptDate
-      #htmlView
+      htmlView
       #target {
       #  ...InternalDocumentProps
       #}
-      #targets {
-      #  name
-      #  allowDeletion
-      #  target {
-      #    ...InternalDocumentProps
-      #  }
-      #}
+      targets {
+        name
+        allowDeletion
+        target {
+          ...InternalDocumentProps
+        }
+      }
     }
   }
+  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
+  ${DOCFLOW_IMPORTANCE_FRAGMENT}
+  ${DOCFLOW_USER_FRAGMENT}
+  ${DOCFLOW_STATE_FRAGMENT}
+`;
+
+export const DOCFLOW_BPT_TASK = gql`
+  fragment Task on DocFlowBusinessProcessTask {
+    ... on DocFlowBusinessProcessTask {
+      id
+      name
+      type
+      importance {
+        ...ImportanceProps
+      }
+      state {
+        ...StateProps
+      }
+      changeRight
+      executed
+      executionMark
+      executionComment
+      beginDate
+      dueDate
+      endDate
+      #description
+      #checkResults {
+      #  checkComment
+      #  returned
+      #  executorTask {
+      #    id
+      #  }
+      #}
+      #parentTask {
+      #  ...ParentTaskProps
+      #}
+      businessProcessStep
+      performer {
+        user {
+          ...UserProps
+        }
+      }
+      author {
+        ...UserProps
+      }
+      accepted
+      acceptDate
+      htmlView
+      #target {
+      #  ...InternalDocumentProps
+      #}
+      targets {
+        name
+        allowDeletion
+        target {
+          ...InternalDocumentProps
+        }
+      }
+    }
+  }
+  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
   ${DOCFLOW_IMPORTANCE_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
   ${DOCFLOW_STATE_FRAGMENT}
@@ -328,11 +392,15 @@ export const DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP = gql`
 
 export const DOCFLOW_TASK_FRAGMENT = gql`
   fragment TaskProps on DocFlowTask {
-    ... on DocFlowBusinessProcessApprovalTaskApproval {
-      ...TaskApprovalTaskApproval
-    }
+    ...TaskApprovalTaskApproval
+    ...TaskApprovalTaskCheckup
+    ...TaskPerformanceTaskCheckup
+    ...Task
   }
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
+  ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
+  ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
+  ${DOCFLOW_BPT_TASK}
 `;
 
 export const DOCFLOW_TASKS_FRAGMENT = gql`
@@ -341,9 +409,11 @@ export const DOCFLOW_TASKS_FRAGMENT = gql`
       ...TaskApprovalTaskApproval
       ...TaskApprovalTaskCheckup
       ...TaskPerformanceTaskCheckup
+      ...Task
     }
   }
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
   ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
   ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
+  ${DOCFLOW_BPT_TASK}
 `;

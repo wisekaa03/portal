@@ -8,7 +8,7 @@ import { useQuery, useLazyQuery, ApolloQueryResult, useMutation } from '@apollo/
 //#region Imports Local
 import { DocFlowTaskInput /*  DocFlowFileInput */ } from '@back/docflow/graphql';
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
-import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_PROCESS_STEP } from '@lib/queries';
+import { DOCFLOW_TASK, DOCFLOW_TASK_SUB, DOCFLOW_FILE, DOCFLOW_CHANGE_PROCESS_STEP } from '@lib/queries';
 import type { /* DocFlowFile, */ DocFlowTask } from '@lib/types/docflow';
 import { DocFlowProcessStep, DocFlowData } from '@lib/types/docflow';
 import type { Data } from '@lib/types';
@@ -47,7 +47,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...res
   const [
     getDocFlowProcessStep,
     { loading: loadingDocFlowProcessStep, data: dataDocFlowProcessStep, error: errorDocFlowProcessStep },
-  ] = useMutation<Data<'docFlowProcessStep', DocFlowTask>, { taskID: string; data: DocFlowData }>(DOCFLOW_PROCESS_STEP);
+  ] = useMutation<Data<'docFlowChangeProcessStep', DocFlowTask>, { taskID: string; data: DocFlowData }>(DOCFLOW_CHANGE_PROCESS_STEP);
 
   useEffect(() => {
     if (typeof subscribeToMoreDocFlowTask === 'function') {

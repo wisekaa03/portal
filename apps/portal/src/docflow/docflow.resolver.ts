@@ -64,42 +64,42 @@ export class DocFlowResolver {
     return this.pubSub.asyncIterator<DocFlowTasks[]>(PortalPubSub.DOCFLOW_TASKS);
   }
 
-  // /**
-  //  * docflow Task
-  //  *
-  //  * @async
-  //  * @returns {DocFlowTask}
-  //  * @throws {UnauthorizedException | HttpException}
-  //  */
-  // @Query('docFlowTask')
-  // @UseGuards(GqlAuthGuard)
-  // async docFlowTask(
-  //   @Context('req') request: Request,
-  //   @Args('task') task: DocFlowTaskInput,
-  //   @CurrentUser() user?: User,
-  //   @PasswordFrontend() password?: string,
-  // ): Promise<DocFlowTask> {
-  //   if (!user || !password) {
-  //     throw new UnauthorizedException();
-  //   }
+  /**
+   * docflow Task
+   *
+   * @async
+   * @returns {DocFlowTask}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query(() => DocFlowTaskGraphql)
+  @UseGuards(GqlAuthGuard)
+  async docFlowTask(
+    @Context('req') request: Request,
+    @Args('task') task: DocFlowTaskInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<typeof DocFlowTaskGraphql> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
 
-  //   return this.docflowService.docFlowTaskCache({
-  //     user,
-  //     password,
-  //     task,
-  //     loggerContext: { username: user.username, headers: request.headers },
-  //   });
-  // }
+    return this.docflowService.docFlowTaskCache({
+      user,
+      password,
+      task,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
+  }
 
-  // @UseGuards(GqlAuthGuard)
-  // @Subscription('docFlowTask', {
-  //   filter: (payload: SubscriptionPayload<DocFlowTask>, variables: { task: DocFlowTaskInput }, context: WebsocketContext) =>
-  //     payload.object.id === variables.task.id,
-  //   resolve: (payload: SubscriptionPayload<DocFlowTask>) => payload.object,
-  // })
-  // async docFlowTaskSubscription(): Promise<AsyncIterator<DocFlowTask>> {
-  //   return this.pubSub.asyncIterator<DocFlowTask>(PortalPubSub.DOCFLOW_TASK);
-  // }
+  @UseGuards(GqlAuthGuard)
+  @Subscription(() => DocFlowTaskGraphql, {
+    filter: (payload: SubscriptionPayload<typeof DocFlowTaskGraphql>, variables: { task: DocFlowTaskInput }, context: WebsocketContext) =>
+      payload.object.id === variables.task.id,
+    resolve: (payload: SubscriptionPayload<typeof DocFlowTaskGraphql>) => payload.object,
+  })
+  async docFlowTaskSubscription(@Args('task') task: DocFlowTaskInput): Promise<AsyncIterator<typeof DocFlowTaskGraphql>> {
+    return this.pubSub.asyncIterator<typeof DocFlowTaskGraphql>(PortalPubSub.DOCFLOW_TASK);
+  }
 
   // /**
   //  * docflow Target
