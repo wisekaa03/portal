@@ -22,34 +22,22 @@ export type PROFILE_TYPE = Partial<Omit<Profile, 'resizeImage' | 'setComputed' |
   manager?: PROFILE_TYPE;
 };
 
-export class ProfileAutocompleteFields
-  implements
-    Pick<
-      PROFILE_TYPE,
-      | 'loginDomain'
-      | 'company'
-      | 'management'
-      | 'department'
-      | 'division'
-      | 'country'
-      | 'region'
-      | 'city'
-      | 'street'
-      | 'postalCode'
-      | 'manager'
-    > {
-  loginDomain?: string;
-  company?: string;
-  management?: string;
-  department?: string;
-  division?: string;
-  country?: string;
-  region?: string;
-  city?: string;
-  street?: string;
-  postalCode?: string;
-  manager?: PROFILE_TYPE;
-}
+export const ProfileAutocompleteFields: Pick<
+  PROFILE_TYPE,
+  'loginDomain' | 'company' | 'management' | 'department' | 'division' | 'country' | 'region' | 'city' | 'street' | 'postalCode' | 'manager'
+> = {
+  loginDomain: undefined,
+  company: undefined,
+  management: undefined,
+  department: undefined,
+  division: undefined,
+  country: undefined,
+  region: undefined,
+  city: undefined,
+  street: undefined,
+  postalCode: undefined,
+  manager: undefined,
+};
 
 export const isProfileInput = (profile: unknown): profile is ProfileInput =>
   typeof profile === 'object' &&

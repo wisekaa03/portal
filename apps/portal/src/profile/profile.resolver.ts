@@ -48,13 +48,13 @@ export class ProfileResolver {
     @Context('req') request: Request,
     @CurrentUser() user: User,
     @Args('filters', { type: () => [UserSettingsPhonebookFilterInput], nullable: true }) filters: UserSettingsPhonebookFilterInput[] = [],
-    @Args('first', { type: () => Int, nullable: true }) first = 0,
+    @Args('first', { type: () => Int, nullable: true }) first = 50,
     @Args('after', { type: () => String, nullable: true }) after = '',
     @Args('orderBy', { type: () => ProfileOrderInput, nullable: true })
     orderBy: Order<string> = { direction: OrderDirection.ASC, field: 'lastName' },
-    @Args('search', { type: () => String, nullable: true }) search?: string,
+    @Args('search', { type: () => String, nullable: true }) search = '',
     @Args('disabled', { type: () => Boolean, nullable: true }) disabled?: boolean,
-    @Args('notShowing', { type: () => Boolean, nullable: true }) notShowing?: boolean,
+    @Args('notShowing', { type: () => Boolean, nullable: true }) notShowing = false,
   ): Promise<Connection<PROFILE_TYPE>> {
     if (notShowing && !user.isAdmin) {
       notShowing = false;

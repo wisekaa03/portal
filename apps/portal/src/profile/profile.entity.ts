@@ -26,6 +26,9 @@ import { ProfileBase } from './graphql/ProfileBase';
 
 @ObjectType()
 @Entity('profile')
+@Index(['notShowing'])
+@Index(['disabled'])
+@Index(['notShowing', 'disabled'])
 @Index(['loginService', 'loginDomain'])
 @Index(['loginService', 'loginDomain', 'loginGUID'])
 @Index(['loginService', 'loginDomain', 'loginDN'])

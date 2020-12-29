@@ -12,7 +12,7 @@ export const SEARCH_SUGGESTIONS = gql`
 `;
 
 export const PROFILE_FIELD_SELECTION = gql`
-  query ProfileFieldSelection($field: FieldSelection!) {
+  query ProfileFieldSelection($field: PhonebookColumnNames!) {
     profileFieldSelection(field: $field)
   }
 `;
