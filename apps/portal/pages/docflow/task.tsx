@@ -31,7 +31,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...res
   } = useQuery<Data<'docFlowTask', DocFlowTask>, { task: DocFlowTaskInput }>(DOCFLOW_TASK, {
     ssr: true,
     fetchPolicy: 'cache-first',
-    variables: { task: { id } },
+    variables: { task: { type, id } },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -53,7 +53,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...res
     if (typeof subscribeToMoreDocFlowTask === 'function') {
       subscribeToMoreDocFlowTask({
         document: DOCFLOW_TASK_SUB,
-        variables: { task: { id } },
+        variables: { task: { type, id } },
         updateQuery: (prev, { subscriptionData: { data } }) => {
           const updateData = data.docFlowTask;
 
@@ -61,7 +61,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...res
         },
       });
     }
-  }, [subscribeToMoreDocFlowTask, id]);
+  }, [subscribeToMoreDocFlowTask, type, id]);
 
   const handleComments = async (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): Promise<void> => {
     setComments(event.target.value);
@@ -115,7 +115,7 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...res
       task: DocFlowTaskInput;
     }>,
   ): Promise<ApolloQueryResult<Data<'docFlowTask', DocFlowTask>>> =>
-    refetchDocFlowTaskInt({ task: { id, ...variables?.task, cache: false } });
+    refetchDocFlowTaskInt({ task: { type, id, ...variables?.task, cache: false } });
 
   const task = useMemo<DocFlowTask | undefined>(() => dataDocFlowTask?.docFlowTask, [dataDocFlowTask]);
 
