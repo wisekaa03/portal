@@ -65,7 +65,7 @@ export interface DocFlowFileProps {
 }
 
 export interface DocFlowTasksColumn {
-  id: string;
+  id: string; // keyof DocFlowTask;
   label: string;
   minWidth?: number;
   align?: 'right';

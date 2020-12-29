@@ -1,7 +1,6 @@
 /** @format */
 
-import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { DocFlowInterfaceObject } from './DocFlowInterfaceObject';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { DocFlowTaskGraphql } from './DocFlowTask';
 
 @ObjectType()

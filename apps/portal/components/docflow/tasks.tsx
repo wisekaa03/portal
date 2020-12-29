@@ -1,4 +1,5 @@
 /** @format */
+/* eslint no-underscore-dangle:0 */
 
 //#region Imports NPM
 import React, { FC, useRef, ReactNode } from 'react';
@@ -75,7 +76,10 @@ const DocFlowTasksTable = withStyles((theme) => ({
                       .reduce((acc, elem) => (typeof acc === 'object' && acc !== null ? acc[elem] : acc), task.task as unknown);
 
                     const cellData = (
-                      <Link href={{ pathname: '/docflow/task', query: { id: task.task.id } }} as={`/docflow/task/${task.task.id}`}>
+                      <Link
+                        href={{ pathname: '/docflow/task', query: { type: task.task.type, id: task.task.id } }}
+                        as={`/docflow/task/${task.task.type}/${task.task.id}`}
+                      >
                         <a className={classes.link}>{column.format ? column.format(value as Date) : (value as ReactNode)}</a>
                       </Link>
                     );
@@ -150,6 +154,11 @@ const columns = (t: TFunction, I18n: i18n): DocFlowTasksColumn[] => [
     label: t('docflow:tasks.column.author'),
     minWidth: 100,
   },
+  // {
+  //   id: 'performer.user.name',
+  //   label: t('docflow:tasks.column.performer'),
+  //   minWidth: 100,
+  // },
 ];
 
 const DocFlowTasksComponent: FC<DocFlowTasksComponentProps> = ({ loading, errors, tasks, status, find, handleSearch, handleStatus }) => {

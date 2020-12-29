@@ -294,11 +294,11 @@ export const DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP = gql`
       #  ...ParentTaskProps
       #}
       businessProcessStep
-      #performer {
-      #  users {
-      #    ...UserProps
-      #  }
-      #}
+      performer {
+        user {
+          ...UserProps
+        }
+      }
       author {
         ...UserProps
       }

@@ -17,10 +17,11 @@ import DocFlowTaskComponent from '@front/components/docflow/task';
 //#endregion
 
 interface DocFlowTaskProps {
+  type: string;
   id: string;
 }
 
-const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) => {
+const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...rest }) => {
   const {
     loading: loadingDocFlowTask,
     data: dataDocFlowTask,
@@ -154,10 +155,11 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, id, ...rest }) =
 };
 
 DocFlowTaskPage.getInitialProps = ({ query }) => {
-  const { id } = query;
+  const { id, type } = query;
 
   return {
     id,
+    type,
     namespacesRequired: includeDefaultNamespaces(['docflow']),
   };
 };

@@ -88,4 +88,6 @@ export abstract class DocFlowInterfaceBusinessProcessTask extends DocFlowInterfa
 
   @Field({ nullable: true })
   htmlView?: string;
+
+  __typename?: string;
 }
