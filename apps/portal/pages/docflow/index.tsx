@@ -12,12 +12,13 @@ import DocFlowTasksPage from '@front/pages/docflow/tasks';
 
 interface DocFlowTasksPageProps {
   pathname?: string;
-  id?: string;
+  type: string;
+  id: string;
 }
 
-const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, pathname, id, ...rest }) =>
-  pathname?.includes('task') && id ? (
-    <DocFlowTaskPage id={id} {...rest} />
+const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, pathname, type, id, ...rest }) =>
+  pathname?.includes('task') && type && id ? (
+    <DocFlowTaskPage type={type} id={id} {...rest} />
   ) : (
     // ) : pathname?.includes('target') && id ? (
     //   <DocFlowTargetPage id={id} {...rest} />
@@ -25,11 +26,12 @@ const DocFlowTasksPageIndex: I18nPage<DocFlowTasksPageProps> = ({ t, i18n, pathn
   );
 
 DocFlowTasksPageIndex.getInitialProps = ({ pathname, query }) => {
-  const id = query.id as string;
+  const { id, type } = query;
 
   return {
     pathname,
     id,
+    type,
     namespacesRequired: includeDefaultNamespaces(['docflow']),
   };
 };
