@@ -152,7 +152,7 @@ export class ProfileResolver {
     @Context('req') request: Request,
     @CurrentUser() user: User,
     @Args('profile', { type: () => ProfileInput }) profile: ProfileInput,
-    @Args('thumbnailPhoto', { type: () => GraphQLUpload }) thumbnailPhoto?: Promise<FileUpload>,
+    @Args('thumbnailPhoto', { type: () => GraphQLUpload, nullable: true }) thumbnailPhoto?: Promise<FileUpload>,
   ): Promise<PROFILE_TYPE> {
     return this.profileService
       .changeProfile({ user, profile, thumbnailPhoto, loggerContext: { username: user.username, headers: request.headers } })

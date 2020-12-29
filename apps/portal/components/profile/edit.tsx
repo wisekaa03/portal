@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: fade(theme.palette.secondary.main, 0.05),
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
       marginTop: /* theme.spacing() */ 8 / 4,
+      minHeight: '45px',
     },
     controlLeft: {
       'padding': 4,

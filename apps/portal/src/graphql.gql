@@ -757,7 +757,7 @@ enum LoginService {
 
 type Mutation {
   cacheReset: Boolean!
-  changeProfile(profile: ProfileInput!, thumbnailPhoto: Upload!): Profile!
+  changeProfile(profile: ProfileInput!, thumbnailPhoto: Upload): Profile!
   ldapCheckUsername(domain: String!, username: String!): Boolean!
   ldapNewUser(domain: String!, ldap: ProfileInput!, photo: Upload): Profile!
   logout: Boolean!
@@ -944,7 +944,7 @@ type SearchSuggestions {
 }
 
 type Subscription {
-  docFlowTasksSubscription: [DocFlowTasks!]!
+  docFlowTasksSubscription(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   ticketsRoutesSubscription(routes: TkRoutesInput): TkRoutes!
   ticketsTasksSubscription(tasks: TkTasksInput): TkTasks!
   ticketsTaskSubscription(task: TkTaskInput!): TkEditTask!
