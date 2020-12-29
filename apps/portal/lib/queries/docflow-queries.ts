@@ -19,7 +19,7 @@ export const DOCFLOW_TASKS = gql`
 `;
 
 export const DOCFLOW_TASKS_SUB = gql`
-  subscription DocFlowTasksSubscription($tasks: DocFlowTasksSubInput) {
+  subscription DocFlowTasksSubscription($tasks: DocFlowTasksInput) {
     docFlowTasksSubscription(tasks: $tasks) {
       ...TasksProps
     }
