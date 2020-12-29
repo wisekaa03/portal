@@ -58,7 +58,9 @@ export class DocFlowResolver {
       payload.userId === context?.user?.id,
     resolve: (payload: SubscriptionPayload<DocFlowTasks[]>) => payload.object,
   })
-  async docFlowTasksSubscription(): Promise<AsyncIterator<DocFlowTasks[]>> {
+  async docFlowTasksSubscription(
+    @Args('tasks', { type: () => DocFlowTasksInput, nullable: true }) tasks?: DocFlowTasksInput,
+  ): Promise<AsyncIterator<DocFlowTasks[]>> {
     return this.pubSub.asyncIterator<DocFlowTasks[]>(PortalPubSub.DOCFLOW_TASKS);
   }
 
