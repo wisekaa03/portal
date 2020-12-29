@@ -134,7 +134,7 @@ export const LDAP_CHECK_USERNAME = gql`
 `;
 
 export const USER_SETTINGS = gql`
-  mutation UserSettings($value: UserSettingsInput) {
+  mutation UserSettings($value: UserSettingsInput!) {
     userSettings(value: $value) {
       id
       settings {
