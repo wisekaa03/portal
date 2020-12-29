@@ -8,7 +8,7 @@ import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#region Imports Local
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { DOCFLOW_TASKS, DOCFLOW_TASKS_SUB } from '@lib/queries';
-import type { DocFlowTask } from '@lib/types/docflow';
+import type { DocFlowTasks } from '@lib/types/docflow';
 import type { DocFlowTasksInput } from '@back/docflow/graphql';
 import type { Data } from '@lib/types';
 import { MaterialUI } from '@front/layout';
@@ -25,7 +25,7 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
     error: errorDocFlowTasks,
     refetch: refetchDocFlowTasksInt,
     subscribeToMore: subscribeToMoreDocFlowTasks,
-  } = useQuery<Data<'docFlowTasks', DocFlowTask[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
+  } = useQuery<Data<'docFlowTasks', DocFlowTasks[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
     ssr: true,
     // TODO: какого-то хера не получается сделать query:fragment и fetchPolicy: 'cache-and-network'
     // fetchPolicy: 'network-only',
@@ -50,10 +50,10 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
     variables?: Partial<{
       tasks: DocFlowTasksInput;
     }>,
-  ): Promise<ApolloQueryResult<Data<'docFlowTasks', DocFlowTask[]>>> =>
+  ): Promise<ApolloQueryResult<Data<'docFlowTasks', DocFlowTasks[]>>> =>
     refetchDocFlowTasksInt({ tasks: { ...variables?.tasks, cache: false } });
 
-  const tasks = useMemo<DocFlowTask[]>(() => dataDocFlowTasks?.docFlowTasks ?? [], [dataDocFlowTasks]);
+  const tasks = useMemo<DocFlowTasks[]>(() => dataDocFlowTasks?.docFlowTasks ?? [], [dataDocFlowTasks]);
 
   return (
     <>

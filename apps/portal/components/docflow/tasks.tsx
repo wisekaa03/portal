@@ -63,29 +63,34 @@ const DocFlowTasksTable = withStyles((theme) => ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {tasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) => (
-            <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
-              {columns.map((column) => {
-                const value = column.id
-                  .split('.')
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore TODO:
-                  .reduce((acc, elem) => (typeof acc === 'object' && acc !== null ? acc[elem] : acc), task as unknown);
+          {tasks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((task) =>
+            task && task.task ? (
+              <TableRow hover role="checkbox" tabIndex={-1} key={task.task.id}>
+                {columns.map((column) => {
+                  if (task && task.task) {
+                    const value = column.id
+                      .split('.')
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore TODO:
+                      .reduce((acc, elem) => (typeof acc === 'object' && acc !== null ? acc[elem] : acc), task.task as unknown);
 
-                const cellData = (
-                  <Link href={{ pathname: '/docflow/task', query: { id: task.id } }} as={`/docflow/task/${task.id}`}>
-                    <a className={classes.link}>{column.format ? column.format(value as Date) : (value as ReactNode)}</a>
-                  </Link>
-                );
+                    const cellData = (
+                      <Link href={{ pathname: '/docflow/task', query: { id: task.task.id } }} as={`/docflow/task/${task.task.id}`}>
+                        <a className={classes.link}>{column.format ? column.format(value as Date) : (value as ReactNode)}</a>
+                      </Link>
+                    );
 
-                return (
-                  <TableCell key={column.id} align={column.align}>
-                    {cellData}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          ))}
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {cellData}
+                      </TableCell>
+                    );
+                  }
+                  return null;
+                })}
+              </TableRow>
+            ) : null,
+          )}
         </TableBody>
       </Table>
     </TableContainer>

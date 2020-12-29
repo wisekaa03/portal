@@ -10,8 +10,11 @@ import type { DocFlowBusinessProcessOrderTaskCheckup } from '@back/docflow/graph
 import type { DocFlowBusinessProcessApprovalTaskApproval } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskApproval';
 import type { DocFlowBusinessProcessPerfomanceTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessPerfomanceTaskCheckup';
 import type { DocFlowBusinessProcessApprovalTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskCheckup';
+import type { DocFlowTasks } from '@back/docflow/graphql/DocFlowTasks';
 
 import type { PortalErrorsProps } from './errors';
+
+export type { DocFlowTasks } from '@back/docflow/graphql/DocFlowTasks';
 
 export type DocFlowTask =
   | DocFlowBusinessProcessTask
@@ -73,7 +76,7 @@ export interface DocFlowTasksTableProps {
   t: TFunction;
   classes: Record<string, string>;
   columns: DocFlowTasksColumn[];
-  tasks: DocFlowBusinessProcessTask[];
+  tasks: DocFlowTasks[];
   page: number;
   rowsPerPage: number;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
@@ -82,7 +85,7 @@ export interface DocFlowTasksTableProps {
 
 export interface DocFlowTasksComponentProps extends PortalErrorsProps {
   loading: boolean;
-  tasks: DocFlowBusinessProcessTask[];
+  tasks: DocFlowTasks[];
   status: string;
   find: string;
   handleSearch: (_: React.ChangeEvent<HTMLInputElement>) => void;
