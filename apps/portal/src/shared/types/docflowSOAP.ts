@@ -1,22 +1,22 @@
 /** @format */
 
 export interface DocFlowLegalPrivatePersonSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     presentation?: string;
-    type?: string;
     navigationRef?: string;
+    type: string;
   };
 }
 
 export interface DocFlowOrganizationSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     presentation?: string;
-    type?: string;
     navigationRef?: string;
+    type: string;
   };
   legalPrivatePerson?: DocFlowLegalPrivatePersonSOAP;
   inn?: string;
@@ -26,11 +26,11 @@ export interface DocFlowOrganizationSOAP {
 }
 
 export interface DocFlowSubdivisionSOAP {
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     presentation?: string;
-    type?: string;
+    type: string;
     navigationRef?: string;
   };
 }
@@ -49,18 +49,18 @@ export interface DocFlowVisaSOAP {
   addedBy?: DocFlowUserSOAP;
   comment?: string;
   date?: Date;
-  name?: string;
+  name: string;
   objectID: {
-    id?: string;
+    id: string;
     presentation?: string;
-    type?: string;
     navigationRef?: string;
+    type: string;
   };
   result?: DocFlowApprovalResultSOAP;
   reviewer?: DocFlowUserSOAP;
   signatureChecked?: boolean;
   signatureValid?: boolean;
-  signed?: boolean;
+  signed: boolean;
 }
 
 export interface DocFlowInternalDocumentSOAP {
@@ -71,6 +71,7 @@ export interface DocFlowInternalDocumentSOAP {
     navigationRef?: string;
     type: string; // DMInternalDocument
   };
+  addressee?: DocFlowUserSOAP;
   organization?: DocFlowOrganizationSOAP;
   regDate?: Date;
   responsible?: DocFlowUserSOAP;
@@ -110,36 +111,55 @@ export interface DocFlowTargetSOAP {
 }
 
 export interface DocFlowFileVersionSOAP {
-  name?: string;
+  name: string;
   objectID: {
     id: string;
     presentation?: string;
     navigationRef?: string;
-    type?: string; // 'DMFileVersion'
+    type: string; // 'DMFileVersion'
   };
+  author?: DocFlowUserSOAP;
+  binaryData?: string;
+  creationDate?: Date;
+  encrypted?: boolean;
+  extension?: string;
+  modificationDate?: Date;
+  modificationDateUniversal?: Date;
+  signed?: boolean;
+  size?: number;
+  text?: string;
+  owner?: DocFlowUserSOAP;
+  comment?: string;
+  deletionMark?: boolean;
 }
 
 export interface DocFlowFileSOAP {
-  name?: string;
+  name: string;
   author?: DocFlowUserSOAP;
   activeVersion?: DocFlowFileVersionSOAP;
   attributes?: string;
   binaryData?: string;
   extension?: string;
+  modificationDate?: Date;
   modificationDateUniversal?: Date;
   creationDate?: Date;
+  lockDate?: Date;
   encrypted?: boolean;
   signed?: boolean;
   description?: string;
   editing?: boolean;
+  deletionMark?: boolean;
   editingUser?: DocFlowUserSOAP;
   size?: number;
+  text?: string;
+  owner?: DocFlowUserSOAP;
   objectID: {
     id: string;
     presentation?: string;
     navigationRef?: string;
-    type?: string; // 'DMFile'
+    type: string; // 'DMFile'
   };
+  template?: DocFlowFileSOAP;
 }
 
 export interface DocFlowUserSOAP {
@@ -273,7 +293,7 @@ export interface DocFlowBusinessProcessTaskSOAP {
   project?: DocFlowProjectSOAP;
   target?: DocFlowInternalDocumentSOAP;
   targets?: {
-    items?: DocFlowTargetSOAP[];
+    items: DocFlowTargetSOAP[];
   };
   htmlView?: string;
 

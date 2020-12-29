@@ -600,7 +600,7 @@ type DocFlowOrganization implements DocFlowInterfaceObject {
   id: ID!
   inn: String
   kpp: String
-  legalPrivate: DocFlowLegalPrivatePerson
+  legalPrivatePerson: DocFlowLegalPrivatePerson
   name: String!
   navigationRef: String
   presentation: String
@@ -718,17 +718,17 @@ type DocFlowUser implements DocFlowInterfaceObject {
 
 type DocFlowVisa implements DocFlowInterfaceObject {
   addedBy: DocFlowUser
-  comment: String!
-  date: Date!
+  comment: String
+  date: Date
   id: ID!
   name: String!
   navigationRef: String
   presentation: String
-  result: DocFlowApprovalResult!
+  result: DocFlowApprovalResult
   reviewer: DocFlowUser
-  signatureChecked: Boolean!
-  signatureValid: Boolean!
-  signed: Boolean!
+  signatureChecked: Boolean
+  signatureValid: Boolean
+  signed: Boolean
   type: String!
 }
 

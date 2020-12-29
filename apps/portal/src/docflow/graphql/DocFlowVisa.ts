@@ -15,21 +15,21 @@ export class DocFlowVisa extends DocFlowInterfaceObject {
   @Field(() => DocFlowUser, { nullable: true })
   addedBy?: DocFlowUser;
 
-  @Field(() => Date)
-  date!: Date;
+  @Field(() => Date, { nullable: true })
+  date!: Date | null;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   signed!: boolean;
 
-  @Field(() => Boolean)
-  signatureChecked!: boolean;
+  @Field(() => Boolean, { nullable: true })
+  signatureChecked?: boolean;
 
-  @Field(() => Boolean)
-  signatureValid!: boolean;
+  @Field(() => Boolean, { nullable: true })
+  signatureValid?: boolean;
 
-  @Field(() => DocFlowApprovalResult)
-  result!: DocFlowApprovalResult;
+  @Field(() => DocFlowApprovalResult, { nullable: true })
+  result?: DocFlowApprovalResult;
 
-  @Field()
-  comment!: string;
+  @Field({ nullable: true })
+  comment?: string;
 }

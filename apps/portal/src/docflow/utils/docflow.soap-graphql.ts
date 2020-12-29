@@ -49,6 +49,12 @@ import { DocFlowBusinessProcessTaskExecutor } from '../graphql/DocFlowBusinessPr
 // eslint-disable-next-line max-len
 import { DocFlowBusinessProcessApprovalTaskCheckupApprovalResult } from '../graphql/DocFlowBusinessProcessApprovalTaskCheckupApprovalResult';
 import { DocFlowBusinessProcessPerfomanceTaskCheckupResult } from '../graphql/DocFlowBusinessProcessPerfomanceTaskCheckupResult';
+import { DocFlowOrganization } from '../graphql/DocFlowOrganization';
+import { DocFlowSubdivision } from '../graphql/DocFlowSubdivision';
+import { DocFlowLegalPrivatePerson } from '../graphql/DocFlowLegalPrivatePerson';
+import { DocFlowVisa } from '../graphql/DocFlowVisa';
+import { DocFlowFile } from '../graphql/DocFlowFile';
+import { DocFlowFileVersion } from '../graphql/DocFlowFileVersion';
 
 export const docFlowProcessStepToEnum = (processStep?: string): DocFlowProcessStep | undefined => {
   switch (processStep) {
@@ -102,6 +108,35 @@ export const docFlowStatus = (value: DocFlowStatusSOAP): DocFlowDocumentStatus =
   type: value.objectID.type,
 });
 
+export const docFlowLegalPrivatePerson = (value: DocFlowLegalPrivatePersonSOAP): DocFlowLegalPrivatePerson => ({
+  id: value.objectID.id,
+  name: value.name,
+  presentation: value.objectID.presentation,
+  navigationRef: value.objectID.navigationRef,
+  type: value.objectID.type,
+});
+
+export const docFlowOrganization = (value: DocFlowOrganizationSOAP): DocFlowOrganization => ({
+  id: value.objectID.id,
+  name: value.name,
+  presentation: value.objectID.presentation,
+  navigationRef: value.objectID.navigationRef,
+  type: value.objectID.type,
+  fullName: value.fullName,
+  inn: value.inn,
+  kpp: value.kpp,
+  VATpayer: value.VATpayer,
+  legalPrivatePerson: value.legalPrivatePerson ? docFlowLegalPrivatePerson(value.legalPrivatePerson) : undefined,
+});
+
+export const docFlowSubdivision = (value: DocFlowSubdivisionSOAP): DocFlowSubdivision => ({
+  id: value.objectID.id,
+  name: value.name,
+  presentation: value.objectID.presentation,
+  navigationRef: value.objectID.navigationRef,
+  type: value.objectID.type,
+});
+
 export const docFlowBusinessProcessImportance = (value: DocFlowImportanceSOAP): DocFlowBusinessProcessTaskImportance => ({
   id: value.objectID.id,
   name: value.name,
@@ -125,6 +160,68 @@ export const docFlowApprovalResult = (value: DocFlowApprovalResultSOAP): DocFlow
   type: value.objectID.type,
   navigationRef: value.objectID.navigationRef,
 });
+
+export const docFlowVisa = (value: DocFlowVisaSOAP): DocFlowVisa => ({
+  id: value.objectID.id,
+  name: value.name,
+  presentation: value.objectID.presentation,
+  type: value.objectID.type,
+  navigationRef: value.objectID.navigationRef,
+  reviewer: value.reviewer ? docFlowUser(value.reviewer) : undefined,
+  addedBy: value.addedBy ? docFlowUser(value.addedBy) : undefined,
+  date: dateSOAP(value.date) || null,
+  signed: value.signed,
+  signatureChecked: value.signatureChecked,
+  signatureValid: value.signatureValid,
+  result: value.result ? docFlowApprovalResult(value.result) : undefined,
+});
+
+export const docFlowFileVersion = (value: DocFlowFileVersionSOAP): DocFlowFileVersion => ({
+  id: value.objectID.id,
+  name: value.name,
+  presentation: value.objectID.presentation,
+  type: value.objectID.type,
+  navigationRef: value.objectID.navigationRef,
+  author: value.author ? docFlowUser(value.author) : undefined,
+  binaryData: value.binaryData,
+  creationDate: dateSOAP(value.creationDate),
+  encrypted: value.encrypted,
+  extension: value.extension,
+  modificationDate: dateSOAP(value.modificationDate),
+  modificationDateUniversal: dateSOAP(value.modificationDateUniversal),
+  signed: value.signed,
+  size: value.size,
+  text: value.text,
+  comment: value.comment,
+  owner: value.owner ? docFlowUser(value.owner) : undefined,
+  deletionMark: value.deletionMark,
+});
+
+export const docFlowFile = (value: DocFlowFileSOAP): DocFlowFile => ({
+  id: value.objectID.id,
+  name: value.name,
+  presentation: value.objectID.presentation,
+  type: value.objectID.type,
+  navigationRef: value.objectID.navigationRef,
+  author: value.author ? docFlowUser(value.author) : undefined,
+  binaryData: value.binaryData,
+  creationDate: dateSOAP(value.creationDate),
+  description: value.description,
+  editing: value.editing,
+  encrypted: value.encrypted,
+  extension: value.extension,
+  modificationDate: dateSOAP(value.modificationDate),
+  modificationDateUniversal: dateSOAP(value.modificationDateUniversal),
+  lockDate: dateSOAP(value.lockDate),
+  signed: value.signed,
+  size: value.size,
+  text: value.text,
+  owner: value.owner ? docFlowUser(value.owner) : undefined,
+  editingUser: value.editingUser ? docFlowUser(value.editingUser) : undefined,
+  deletionMark: value.deletionMark,
+  activeVersion: value.activeVersion ? docFlowFileVersion(value.activeVersion) : undefined,
+});
+
 export const docFlowInternalDocument = (value: DocFlowInternalDocumentSOAP): DocFlowInternalDocument => ({
   id: value.objectID.id,
   name: value.name,
@@ -132,22 +229,25 @@ export const docFlowInternalDocument = (value: DocFlowInternalDocumentSOAP): Doc
   navigationRef: value.objectID.navigationRef,
   type: value.objectID.type,
 
-  // organization: value.organization ? docFlowOrganization(value.organization) : null,
-  // regNumber: value.regNumber ?? null,
-  // statusChangeEnabled: value.statusChangeEnabled ?? null,
-  // statusEnabled: value.statusEnabled ?? null,
-  // status: value.status ? docFlowStatus(value.status) : null,
-  // statusApproval: value.statusApproval ? docFlowStatus(value.statusApproval) : null,
-  // statusPerformance: value.statusPerformance ? docFlowStatus(value.statusPerformance) : null,
-  // statusRegistration: value.statusRegistration ? docFlowStatus(value.statusRegistration) : null,
-  // regDate: value.regDate && value.regDate.toISOString() !== SOAP_DATE_NULL ? value.regDate : null,
-  // author: value.author ? docFlowUser(value.author) : null,
-  // responsible: value.responsible ? docFlowUser(value.responsible) : null,
-  // subdivision: value.subdivision ? docFlowSubdivision(value.subdivision) : null,
-  // title: value.title ?? null,
-  // summary: value.summary ?? null,
-  // files: value.files ? { object: value.files.map((file) => docFlowFile(file)), error: null } : null,
-  // visas: value.visas ? value.visas.map((visa) => docFlowVisa(visa)) : null,
+  openEnded: value.openEnded,
+  organization: value.organization ? docFlowOrganization(value.organization) : undefined,
+  regNumber: value.regNumber,
+  statusChangeEnabled: value.statusChangeEnabled,
+  statusEnabled: value.statusEnabled,
+  status: value.status ? docFlowStatus(value.status) : undefined,
+  statusApproval: value.statusApproval ? docFlowStatus(value.statusApproval) : undefined,
+  statusPerformance: value.statusPerformance ? docFlowStatus(value.statusPerformance) : undefined,
+  statusRegistration: value.statusRegistration ? docFlowStatus(value.statusRegistration) : undefined,
+  regDate: dateSOAP(value.regDate),
+  beginDate: dateSOAP(value.beginDate),
+  author: value.author ? docFlowUser(value.author) : undefined,
+  responsible: value.responsible ? docFlowUser(value.responsible) : undefined,
+  subdivision: value.subdivision ? docFlowSubdivision(value.subdivision) : undefined,
+  addressee: value.addressee ? docFlowUser(value.addressee) : undefined,
+  title: value.title,
+  summary: value.summary,
+  files: value.files ? value.files.map((file) => docFlowFile(file)) : undefined,
+  visas: value.visas ? value.visas.map((visa) => docFlowVisa(visa)) : undefined,
 });
 
 export const docFlowTargets = (value: DocFlowTargetSOAP): DocFlowBusinessProcessTarget => ({
@@ -215,7 +315,8 @@ export const docFlowBusinessProcessTask = (task: DocFlowBusinessProcessTaskSOAP)
     htmlView: task.htmlView,
 
     project: task.project ? docFlowProject(task.project) : undefined,
-    targets: task.targets && Array.isArray(task.targets) ? task.targets.map((target) => docFlowTargets(target)) : undefined,
+    targets:
+      task.targets?.items && Array.isArray(task.targets.items) ? task.targets.items.map((value) => docFlowTargets(value)) : undefined,
   };
 
   switch (task.objectID.type) {

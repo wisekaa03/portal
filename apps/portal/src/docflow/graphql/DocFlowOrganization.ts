@@ -21,5 +21,5 @@ export class DocFlowOrganization extends DocFlowInterfaceObject {
   VATpayer?: boolean;
 
   @Field(() => DocFlowLegalPrivatePerson, { nullable: true })
-  legalPrivate?: DocFlowLegalPrivatePerson;
+  legalPrivatePerson?: DocFlowLegalPrivatePerson;
 }
