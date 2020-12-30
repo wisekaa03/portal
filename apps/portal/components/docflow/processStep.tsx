@@ -72,17 +72,18 @@ const DocFlowProcessStepButtons: FC<DocFlowProcessStepProps> = ({ loading, endDa
       return (
         <Grid container spacing={3}>
           <Grid item>
-            <BaseButton
-              fullHeight
-              disabled={loading}
-              actionType="accept"
-              onClick={() => handleProcessStep(DocFlowProcessStep.CheckExecute)}
-            >
-              {t('docflow:processStep:checkExecute')}
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Conform)}>
+              {t('docflow:processStep:checkExecuteTrue')}
+            </BaseButton>
+          </Grid>
+          <Grid item>
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.NotConform)}>
+              {t('docflow:processStep:checkExecuteFalse')}
             </BaseButton>
           </Grid>
         </Grid>
       );
+
     case DocFlowProcessStep.CheckFamiliarize:
       return (
         <Grid container spacing={3}>

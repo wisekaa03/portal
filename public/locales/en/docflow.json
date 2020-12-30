@@ -12,7 +12,8 @@
   },
   "processStep": {
     "execute": "Executed",
-    "checkExecute": "Familiarized",
+    "checkExecuteTrue": "Завершить",
+    "checkExecuteFalse": "Вернуть",
     "familiarize": "Familiarized",
     "checkFamiliarize": "Familiarized",
     "conform": "Conform",
