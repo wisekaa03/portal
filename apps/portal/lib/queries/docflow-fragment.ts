@@ -335,8 +335,8 @@ export const DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP = gql`
 `;
 
 export const DOCFLOW_BPT_CONFIRMATION_TASK_CHECKUP = gql`
-  fragment TaskConfirmationTaskConfirmation on DocFlowBusinessProcessConfirmationTaskConfirmation {
-    ... on DocFlowBusinessProcessConfirmationTaskConfirmation {
+  fragment TaskConfirmationTaskCheckup on DocFlowBusinessProcessConfirmationTaskCheckup {
+    ... on DocFlowBusinessProcessConfirmationTaskCheckup {
       id
       name
       type
