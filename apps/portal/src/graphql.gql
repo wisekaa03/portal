@@ -124,7 +124,7 @@ type DocFlowBusinessProcessApprovalTaskCheckupApprovalResult {
   approvalResult: DocFlowApprovalResult
 }
 
-type DocFlowBusinessProcessConfirmationTaskConfirmation implements DocFlowInterfaceObject {
+type DocFlowBusinessProcessConfirmationTaskCheckup implements DocFlowInterfaceObject {
   acceptDate: Date
   accepted: Boolean!
   author: DocFlowUser!
@@ -152,6 +152,36 @@ type DocFlowBusinessProcessConfirmationTaskConfirmation implements DocFlowInterf
   presentation: String
   project: DocFlowProject
   returned: Boolean
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
+type DocFlowBusinessProcessConfirmationTaskConfirmation implements DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  author: DocFlowUser!
+  beginDate: Date
+  businessProcessStep: DocFlowProcessStep
+  changeRight: Boolean
+  confirmationResult: DocFlowConfirmationResult
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  iterationNumber: Int
+  name: String!
+  navigationRef: String
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
+  presentation: String
+  project: DocFlowProject
   state: DocFlowBusinessProcessState
   target: DocFlowInternalDocument
   targets: [DocFlowBusinessProcessTarget!]
@@ -726,7 +756,7 @@ type DocFlowSubdivision implements DocFlowInterfaceObject {
   type: String!
 }
 
-union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusinessProcessApprovalTaskCheckup | DocFlowBusinessProcessConfirmationTaskConfirmation | DocFlowBusinessProcessOrderTaskCheckup | DocFlowBusinessProcessPerfomanceTaskCheckup | DocFlowBusinessProcessTask
+union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusinessProcessApprovalTaskCheckup | DocFlowBusinessProcessConfirmationTaskCheckup | DocFlowBusinessProcessConfirmationTaskConfirmation | DocFlowBusinessProcessOrderTaskCheckup | DocFlowBusinessProcessPerfomanceTaskCheckup | DocFlowBusinessProcessTask
 
 input DocFlowTaskInput {
   """Cache this result, default = true"""

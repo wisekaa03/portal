@@ -12,6 +12,7 @@ import {
   DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP,
   DOCFLOW_BPT_TASK,
   DOCFLOW_BPT_CONFIRMATION_TASK_CONFIRMATION,
+  DOCFLOW_BPT_CONFIRMATION_TASK_CHECKUP,
 } from './docflow-fragment';
 
 export const DOCFLOW_TASKS = gql`
@@ -48,6 +49,7 @@ export const DOCFLOW_TASK = gql`
       ...TaskApprovalTaskApproval
       ...TaskApprovalTaskCheckup
       ...TaskPerformanceTaskCheckup
+      ...TaskConfirmationTaskCheckup
       ...TaskConfirmationTaskConfirmation
       ...Task
     }
@@ -55,6 +57,7 @@ export const DOCFLOW_TASK = gql`
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
   ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
   ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
+  ${DOCFLOW_BPT_CONFIRMATION_TASK_CHECKUP}
   ${DOCFLOW_BPT_CONFIRMATION_TASK_CONFIRMATION}
   ${DOCFLOW_BPT_TASK}
 `;

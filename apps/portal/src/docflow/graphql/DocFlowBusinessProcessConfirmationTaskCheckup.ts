@@ -10,7 +10,7 @@ import { DocFlowConfirmationResult } from './DocFlowConfirmationResult';
 @ObjectType({
   implements: () => [DocFlowInterfaceObject],
 })
-export class DocFlowBusinessProcessConfirmationTaskConfirmation
+export class DocFlowBusinessProcessConfirmationTaskCheckup
   extends DocFlowInterfaceBusinessProcessTask
   implements DocFlowInterfaceObject, DocFlowInterfaceBusinessProcessTask {
   @Field(() => Int, { nullable: true })
@@ -18,4 +18,16 @@ export class DocFlowBusinessProcessConfirmationTaskConfirmation
 
   @Field(() => DocFlowConfirmationResult, { nullable: true })
   confirmationResult?: DocFlowConfirmationResult;
+
+  @Field({ nullable: true })
+  confirmationComment?: string;
+
+  @Field(() => DocFlowBusinessProcessTaskExecutor, { nullable: true })
+  confirmationPerformer?: DocFlowBusinessProcessTaskExecutor;
+
+  @Field(() => Date, { nullable: true })
+  confirmationDate?: Date;
+
+  @Field(() => Boolean, { nullable: true })
+  returned?: boolean;
 }

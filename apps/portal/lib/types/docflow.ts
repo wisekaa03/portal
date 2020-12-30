@@ -11,8 +11,9 @@ import type { DocFlowBusinessProcessOrderTaskCheckup } from '@back/docflow/graph
 import type { DocFlowBusinessProcessApprovalTaskApproval } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskApproval';
 import type { DocFlowBusinessProcessPerfomanceTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessPerfomanceTaskCheckup';
 import type { DocFlowBusinessProcessApprovalTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskCheckup';
-import type { DocFlowTasks } from '@back/docflow/graphql/DocFlowTasks';
+import type { DocFlowBusinessProcessConfirmationTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessConfirmationTaskCheckup';
 import type { DocFlowBusinessProcessConfirmationTaskConfirmation } from '@back/docflow/graphql/DocFlowBusinessProcessConfirmationTaskConfirmation';
+import type { DocFlowTasks } from '@back/docflow/graphql/DocFlowTasks';
 
 import type { PortalErrorsProps } from './errors';
 
@@ -24,6 +25,7 @@ export type DocFlowTask =
   | DocFlowBusinessProcessApprovalTaskApproval
   | DocFlowBusinessProcessPerfomanceTaskCheckup
   | DocFlowBusinessProcessApprovalTaskCheckup
+  | DocFlowBusinessProcessConfirmationTaskCheckup
   | DocFlowBusinessProcessConfirmationTaskConfirmation;
 
 export enum DocFlowProcessStep {
