@@ -34,10 +34,10 @@ export function docFlowOutputTargets(task: DocFlowTask): Record<string, any> {
     'tns:targets': {
       'tns:items': task.targets?.map((target) => ({
         'tns:role': {
-          'tns:name': target.role.name,
+          'tns:name': target.role?.name,
           'tns:objectID': {
-            'tns:id': target.role.id,
-            'tns:type': target.role.type,
+            'tns:id': target.role?.id,
+            'tns:type': target.role?.type,
           },
         },
         'tns:name': target.name,

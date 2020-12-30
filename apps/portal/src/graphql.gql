@@ -209,9 +209,9 @@ type DocFlowBusinessProcessState implements DocFlowInterfaceObject {
 
 type DocFlowBusinessProcessTarget {
   allowDeletion: Boolean
-  name: String!
-  role: DocFlowBusinessProcessTargetRole!
-  target: DocFlowInternalDocument!
+  name: String
+  role: DocFlowBusinessProcessTargetRole
+  target: DocFlowInternalDocument
 }
 
 type DocFlowBusinessProcessTargetRole implements DocFlowInterfaceObject {

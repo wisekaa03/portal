@@ -57,6 +57,7 @@ import { DocFlowTasks } from './graphql/DocFlowTasks';
 
 import { DocFlowTaskInput } from './graphql/DocFlowTask.input';
 import { DocFlowBusinessProcessTarget } from './graphql/DocFlowBusinessProcessTarget';
+import { DocFlowInternalDocument } from './graphql';
 //#endregion
 
 // создается микросервис, который будет обновлять данные кэша из документооборота
@@ -447,68 +448,67 @@ export class DocFlowService {
         throw new UnprocessableEntityException(__DEV__ ? error : undefined);
       });
 
-    const targetsPromise =
-      returnedTask.targets && Array.isArray(returnedTask)
-        ? returnedTask.targets.map(async ({ target }) =>
-            client
-              .executeAsync(
-                {
-                  'tns:request': {
-                    'attributes': {
-                      'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-                      'xsi:type': 'tns:DMRetrieveRequest',
-                    },
-                    'tns:dataBaseID': '',
-                    'tns:objectIds': {
-                      'tns:id': target.id,
-                      'tns:type': target.type,
-                    },
-                    // 'tns:columnSet': ['withDependentObjects'],
-                  },
-                },
-                { timeout: TIMEOUT },
-              )
-              .then((message: DataResult<DataObjects<DocFlowInternalDocumentSOAP>> | DataResult<DataError>) => {
-                const returnResult = message[0]?.return;
-                if (docFlowData<DataObjects<DocFlowInternalDocumentSOAP>>(returnResult)) {
-                  return returnResult.objects.map((t) => docFlowInternalDocument(t));
-                }
+    const internalDocument = async (target: DocFlowInternalDocument): Promise<DocFlowInternalDocument> =>
+      client
+        .executeAsync(
+          {
+            'tns:request': {
+              'attributes': {
+                'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+                'xsi:type': 'tns:DMRetrieveRequest',
+              },
+              'tns:dataBaseID': '',
+              'tns:objectIds': {
+                'tns:id': target.id,
+                'tns:type': target.type,
+              },
+            },
+          },
+          { timeout: TIMEOUT },
+        )
+        .then((message: DataResult<DataObjects<DocFlowInternalDocumentSOAP>> | DataResult<DataError>) => {
+          const returnResult = message[0]?.return;
+          if (docFlowData<DataObjects<DocFlowInternalDocumentSOAP>>(returnResult)) {
+            return returnResult.objects.map((t) => docFlowInternalDocument(t)).pop();
+          }
 
-                throw new ForbiddenException(docFlowError(returnResult));
-              })
-              .catch((error: Error | ForbiddenException | NotFoundException) => {
-                this.logger.error({
-                  message: `[Request] ${client.lastRequest}`,
-                  context: DocFlowService.name,
-                  function: 'docFlowTask',
-                  ...loggerContext,
-                });
-                this.logger.error({
-                  message: `[Response] ${client.lastResponse}`,
-                  context: DocFlowService.name,
-                  function: 'docFlowTask',
-                  ...loggerContext,
-                });
-                this.logger.error({
-                  message: `${error.toString()}`,
-                  error,
-                  context: DocFlowService.name,
-                  function: 'docFlowTask',
-                  ...loggerContext,
-                });
+          throw new ForbiddenException(docFlowError(returnResult));
+        })
+        .catch((error: Error | ForbiddenException | NotFoundException) => {
+          this.logger.error({
+            message: `[Request] ${client.lastRequest}`,
+            context: DocFlowService.name,
+            function: 'docFlowTask',
+            ...loggerContext,
+          });
+          this.logger.error({
+            message: `[Response] ${client.lastResponse}`,
+            context: DocFlowService.name,
+            function: 'docFlowTask',
+            ...loggerContext,
+          });
+          this.logger.error({
+            message: `${error.toString()}`,
+            error,
+            context: DocFlowService.name,
+            function: 'docFlowTask',
+            ...loggerContext,
+          });
 
-                if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
-                  throw new GatewayTimeoutException(__DEV__ ? error : undefined);
-                } else if (error instanceof ForbiddenException) {
-                  throw error;
-                }
+          if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+            throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+          } else if (error instanceof ForbiddenException) {
+            throw error;
+          }
 
-                throw new UnprocessableEntityException(__DEV__ ? error : undefined);
-              }),
-          )
-        : [];
+          throw new UnprocessableEntityException(__DEV__ ? error : undefined);
+        });
 
-    returnedTask.targets = await Promise.all<DocFlowBusinessProcessTarget>(targetsPromise);
+    const targetsPromise = returnedTask.targets?.map(async (target) => ({ ...target, target: await internalDocument(target.target) }));
+
+    if (targetsPromise) {
+      returnedTask.targets = await Promise.all<DocFlowBusinessProcessTarget>(targetsPromise);
+    }
 
     return returnedTask;
   };

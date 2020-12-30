@@ -7,13 +7,13 @@ import { DocFlowBusinessProcessTargetRole } from './DocFlowBusinessProcessTarget
 
 @ObjectType({})
 export class DocFlowBusinessProcessTarget {
-  @Field()
+  @Field({ nullable: true })
   name!: string;
 
-  @Field(() => DocFlowBusinessProcessTargetRole)
-  role!: DocFlowBusinessProcessTargetRole;
+  @Field(() => DocFlowBusinessProcessTargetRole, { nullable: true })
+  role?: DocFlowBusinessProcessTargetRole;
 
-  @Field(() => DocFlowInternalDocument)
+  @Field(() => DocFlowInternalDocument, { nullable: true })
   target!: DocFlowInternalDocument;
 
   @Field(() => Boolean, { nullable: true })
