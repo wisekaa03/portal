@@ -640,6 +640,20 @@ type DocFlowInternalDocumentFolder implements DocFlowInterfaceObject {
   type: String!
 }
 
+input DocFlowInternalDocumentInput {
+  """Cache this result, default = true"""
+  cache: Boolean
+
+  """ID of a internal document"""
+  id: String!
+
+  """Set cache, default = true"""
+  setCache: Boolean
+
+  """WebSocket results, default = true"""
+  websocket: Boolean
+}
+
 type DocFlowInternalDocumentTemplate implements DocFlowInterfaceObject {
   blockDerivedDocuments: Boolean
   documentType: DocFlowInternalDocumentType
@@ -1026,6 +1040,7 @@ type ProfilePageInfo {
 type Query {
   availableAuthenticationProfiles(newProfile: Boolean, synchronization: Boolean): [String!]!
   docFlowFile(file: DocFlowFileInput!): DocFlowFile!
+  docFlowInternalDocument(internalDocument: DocFlowInternalDocumentInput!): DocFlowInternalDocument!
   docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
   docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   login(domain: String!, password: String!, username: String!): Login!
@@ -1046,6 +1061,7 @@ type SearchSuggestions {
 }
 
 type Subscription {
+  docFlowInternalDocumentSubscription(internalDocument: DocFlowInternalDocumentInput!): DocFlowInternalDocument!
   docFlowTasksSubscription(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   docFlowTaskSubscription(task: DocFlowTaskInput!): DocFlowTask!
   ticketsRoutesSubscription(routes: TkRoutesInput): TkRoutes!

@@ -60,6 +60,7 @@ import { DocFlowTaskInput } from './graphql/DocFlowTask.input';
 import { DocFlowBusinessProcessTarget } from './graphql/DocFlowBusinessProcessTarget';
 import { DocFlowFileInput, DocFlowInternalDocument, DocFlowUser } from './graphql';
 import { DocFlowFile } from './graphql/DocFlowFile';
+import { DocFlowInternalDocumentInput } from './graphql/DocFlowInternalDocument.input';
 //#endregion
 
 // создается микросервис, который будет обновлять данные кэша из документооборота
@@ -686,193 +687,188 @@ export class DocFlowService {
       });
   };
 
-  // /**
-  //  * DocFlow target
-  //  *
-  //  * @async
-  //  * @method docFlowInternalDocument
-  //  * @param {User} user User object
-  //  * @param {string} password The Password
-  //  * @returns {DocFlowInternalDocument}
-  //  */
-  // docFlowInternalDocument = async ({
-  //   user,
-  //   password,
-  //   internalDocument,
-  //   soapClient,
-  //   loggerContext,
-  // }: {
-  //   user: User;
-  //   password: string;
-  //   internalDocument: DocFlowInternalDocumentInput;
-  //   soapClient?: SoapClient;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowInternalDocument> => {
-  //   const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
+  /**
+   * DocFlow internal document
+   *
+   * @async
+   * @method docFlowInternalDocument
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @returns {DocFlowInternalDocument}
+   */
+  docFlowInternalDocument = async ({
+    user,
+    password,
+    internalDocument,
+    soapClient,
+    loggerContext,
+  }: {
+    user: User;
+    password: string;
+    internalDocument: DocFlowInternalDocumentInput;
+    soapClient?: SoapClient;
+    loggerContext?: LoggerContext;
+  }): Promise<DocFlowInternalDocument> => {
+    const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
 
-  //   return client
-  //     .executeAsync(
-  //       {
-  //         'tns:request': {
-  //           'attributes': {
-  //             'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-  //             'xsi:type': 'tns:DMRetrieveRequest',
-  //           },
-  //           'tns:dataBaseID': '',
-  //           'tns:objectIds': {
-  //             'tns:id': internalDocument.id,
-  //             'tns:type': 'DMInternalDocument',
-  //           },
-  //         },
-  //       },
-  //       { timeout: TIMEOUT },
-  //     )
-  //     .then((message: DataResult<DataObjects<DocFlowInternalDocumentSOAP>> | DataResult<DataError>) => {
-  //       if (docFlowData<DataObjects>(message[0]?.return)) {
-  //         if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
-  //           this.logger.debug!({
-  //             message: `[Request] ${client.lastRequest}`,
-  //             context: DocFlowService.name,
-  //             function: 'docFlowInternalDocument',
-  //             ...loggerContext,
-  //           });
-  //           // this.logger.debug(`docFlowInternalDocument: [Response] ${client.lastResponse}`,
-  //           // { context: DocFlowService.name, function: 'docFlowInternalDocument' });
+    return client
+      .executeAsync(
+        {
+          'tns:request': {
+            'attributes': {
+              'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+              'xsi:type': 'tns:DMRetrieveRequest',
+            },
+            'tns:dataBaseID': '',
+            'tns:objectIds': {
+              'tns:id': internalDocument.id,
+              'tns:type': 'DMInternalDocument',
+            },
+          },
+        },
+        { timeout: TIMEOUT },
+      )
+      .then((message: DataResult<DataObjects<DocFlowInternalDocumentSOAP>> | DataResult<DataError>) => {
+        if (docFlowData<DataObjects>(message[0]?.return)) {
+          if (message[0]?.return?.objects && Array.isArray(message[0].return.objects) && message[0].return.objects.length > 0) {
+            this.logger.debug!({
+              message: `[Request] ${client.lastRequest}`,
+              context: DocFlowService.name,
+              function: 'docFlowInternalDocument',
+              ...loggerContext,
+            });
+            // this.logger.debug(`docFlowInternalDocument: [Response] ${client.lastResponse}`,
+            // { context: DocFlowService.name, function: 'docFlowInternalDocument' });
 
-  //           return message[0].return.objects.map((t) => docFlowInternalDocument(t));
-  //         }
+            return message[0].return.objects.map((t) => docFlowInternalDocument(t));
+          }
 
-  //         throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
-  //       }
+          throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+        }
 
-  //       throw new ForbiddenException(docFlowError(message[0]?.return));
-  //     })
-  //     .catch((error: Error | ForbiddenException | NotFoundException) => {
-  //       this.logger.error({
-  //         message: `[Request] ${client.lastRequest}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowInternalDocument',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `[Response] ${client.lastResponse}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowInternalDocument',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `${error.toString()}`,
-  //         error,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowInternalDocument',
-  //         ...loggerContext,
-  //       });
+        throw new ForbiddenException(docFlowError(message[0]?.return));
+      })
+      .catch((error: Error | ForbiddenException | NotFoundException) => {
+        this.logger.error({
+          message: `[Request] ${client.lastRequest}`,
+          context: DocFlowService.name,
+          function: 'docFlowInternalDocument',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `[Response] ${client.lastResponse}`,
+          context: DocFlowService.name,
+          function: 'docFlowInternalDocument',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `${error.toString()}`,
+          error,
+          context: DocFlowService.name,
+          function: 'docFlowInternalDocument',
+          ...loggerContext,
+        });
 
-  //       if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
-  //         throw new GatewayTimeoutException(__DEV__ ? error : undefined);
-  //       } else if (error instanceof ForbiddenException) {
-  //         throw error;
-  //       }
+        if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+          throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+        } else if (error instanceof ForbiddenException) {
+          throw error;
+        }
 
-  //       throw new UnprocessableEntityException(__DEV__ ? error : undefined);
-  //     });
-  // };
+        throw new UnprocessableEntityException(__DEV__ ? error : undefined);
+      });
+  };
 
-  // /**
-  //  * DocFlow target (cache)
-  //  *
-  //  * @async
-  //  * @method docFlowInternalDocumentCache
-  //  * @param {User} user User object
-  //  * @param {string} password The Password
-  //  * @param {task}
-  //  * @returns {DocFlowInternalDocument}
-  //  */
-  // docFlowInternalDocumentCache = async ({
-  //   user,
-  //   password,
-  //   internalDocument,
-  //   soapClient,
-  //   loggerContext,
-  // }: {
-  //   user: User;
-  //   password: string;
-  //   internalDocument: DocFlowInternalDocumentInput;
-  //   soapClient?: SoapClient;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowInternalDocument> => {
-  //   const userId = user.id || '';
-  //   const cachedId = `internalDocument:${internalDocument.id}`;
-  //   if (this.cache && (!internalDocument || internalDocument.cache !== false)) {
-  //     const cached: DocFlowInternalDocument = await this.cache.get<DocFlowInternalDocument>(cachedId);
-  //     if (cached && cached !== null) {
-  //       (async (): Promise<void> => {
-  //         try {
-  //           const internalDocumentCache = await this.docFlowInternalDocument({
-  //             user,
-  //             password,
-  //             internalDocument,
-  //             soapClient,
-  //             loggerContext,
-  //           });
+  /**
+   * DocFlow target (cache)
+   *
+   * @async
+   * @method docFlowInternalDocumentCache
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @param {task}
+   * @returns {DocFlowInternalDocument}
+   */
+  docFlowInternalDocumentCache = async ({
+    user,
+    password,
+    internalDocument,
+    soapClient,
+    loggerContext,
+  }: {
+    user: User;
+    password: string;
+    internalDocument: DocFlowInternalDocumentInput;
+    soapClient?: SoapClient;
+    loggerContext?: LoggerContext;
+  }): Promise<DocFlowInternalDocument> => {
+    const userId = user.id || '';
+    const cachedId = `internalDocument:${internalDocument.id}`;
+    if (this.cache && (!internalDocument || internalDocument.cache !== false)) {
+      const cached: DocFlowInternalDocument = await this.cache.get<DocFlowInternalDocument>(cachedId);
+      if (cached && cached !== null) {
+        (async (): Promise<void> => {
+          try {
+            const internalDocumentCache = await this.docFlowInternalDocument({
+              user,
+              password,
+              internalDocument,
+              soapClient,
+              loggerContext,
+            });
 
-  //           if (JSON.stringify(internalDocumentCache) !== JSON.stringify(cached)) {
-  //             if (!(internalDocument.websocket === false)) {
-  //               this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
-  //                 userId,
-  //                 object: internalDocumentCache,
-  //               });
-  //             }
-  //             if (this.cache && !(internalDocument.setCache === false)) {
-  //               this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
-  //             }
-  //           } else {
-  //             setTimeout(
-  //               () => this.docFlowInternalDocumentCache({ user, password, internalDocument, soapClient, loggerContext }),
-  //               TIMEOUT_REFETCH_SERVICES,
-  //             );
-  //           }
-  //         } catch (error) {
-  //           this.logger.error({
-  //             message: `${error.toString()}`,
-  //             error,
-  //             function: 'docFlowInternalDocumentCache',
-  //             context: DocFlowService.name,
-  //             ...loggerContext,
-  //           });
-  //         }
-  //       })();
+            if (JSON.stringify(internalDocumentCache) !== JSON.stringify(cached)) {
+              if (!(internalDocument.websocket === false)) {
+                this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
+                  userId,
+                  object: internalDocumentCache,
+                });
+              }
+              if (this.cache && !(internalDocument.setCache === false)) {
+                this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
+              }
+            }
+          } catch (error) {
+            this.logger.error({
+              message: `${error.toString()}`,
+              error,
+              function: 'docFlowInternalDocumentCache',
+              context: DocFlowService.name,
+              ...loggerContext,
+            });
+          }
+        })();
 
-  //       return cached;
-  //     }
-  //   }
+        return cached;
+      }
+    }
 
-  //   try {
-  //     const internalDocumentCache = await this.docFlowInternalDocument({ user, password, internalDocument, soapClient, loggerContext });
+    try {
+      const internalDocumentCache = await this.docFlowInternalDocument({ user, password, internalDocument, soapClient, loggerContext });
 
-  //     if (internalDocument.websocket === true) {
-  //       this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
-  //         userId,
-  //         object: internalDocumentCache,
-  //       });
-  //     }
-  //     if (this.cache && !(internalDocument.setCache === false)) {
-  //       this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
-  //     }
+      if (internalDocument.websocket === true) {
+        this.pubSub.publish<SubscriptionPayload>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT, {
+          userId,
+          object: internalDocumentCache,
+        });
+      }
+      if (this.cache && !(internalDocument.setCache === false)) {
+        this.cache.set<DocFlowInternalDocument>(cachedId, internalDocumentCache, { ttl: this.ttl });
+      }
 
-  //     return internalDocumentCache;
-  //   } catch (error) {
-  //     this.logger.error({
-  //       message: `${error.toString()}`,
-  //       error,
-  //       context: DocFlowService.name,
-  //       function: 'docFlowInternalDocumentCache',
-  //       ...loggerContext,
-  //     });
+      return internalDocumentCache;
+    } catch (error) {
+      this.logger.error({
+        message: `${error.toString()}`,
+        error,
+        context: DocFlowService.name,
+        function: 'docFlowInternalDocumentCache',
+        ...loggerContext,
+      });
 
-  //     throw error;
-  //   }
-  // };
+      throw error;
+    }
+  };
 
   /**
    * DocFlow get file
@@ -1129,165 +1125,5 @@ export class DocFlowService {
 
   //       throw new UnprocessableEntityException(__DEV__ ? error : undefined);
   //     });
-  // };
-
-  // docFlowFiles = async ({
-  //   soapClient,
-  //   target,
-  //   loggerContext,
-  // }: {
-  //   soapClient: SoapClient;
-  //   target: DocFlowTarget;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowFiles> => {
-  //   const requestSOAP = {
-  //     'tns:request': {
-  //       attributes: {
-  //         'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-  //         'xsi:type': 'tns:DMGetFileListByOwnerRequest',
-  //       },
-  //       $xml:
-  //         '<tns:dataBaseID></tns:dataBaseID>' +
-  //         '<tns:owners>' +
-  //         '<tns:name />' +
-  //         '<tns:objectID>' +
-  //         `<tns:id>${target.target.id}</tns:id>` +
-  //         '<tns:type>DMInternalDocument</tns:type>' +
-  //         '</tns:objectID>' +
-  //         '</tns:owners>' +
-  //         '<tns:columnSet>objectId</tns:columnSet>' +
-  //         '<tns:columnSet>name</tns:columnSet>' +
-  //         '<tns:columnSet>author</tns:columnSet>' +
-  //         '<tns:columnSet>extension</tns:columnSet>' +
-  //         '<tns:columnSet>size</tns:columnSet>' +
-  //         '<tns:columnSet>creationDate</tns:columnSet>' +
-  //         '<tns:columnSet>modificationDateUniversal</tns:columnSet>' +
-  //         '<tns:columnSet>encrypted</tns:columnSet>' +
-  //         '<tns:columnSet>description</tns:columnSet>' +
-  //         '<tns:columnSet>signed</tns:columnSet>' +
-  //         '<tns:columnSet>editing</tns:columnSet>' +
-  //         '<tns:columnSet>editingUser</tns:columnSet>',
-  //     },
-  //   };
-
-  //   return soapClient
-  //     .executeAsync(requestSOAP, { timeout: TIMEOUT })
-  //     .then((message: DataResult<DataFiles<DocFlowFileSOAP>> | DataResult<DataError>) => {
-  //       if (docFlowData<DataFiles>(message[0]?.return)) {
-  //         this.logger.debug!({
-  //           message: `[Request] ${soapClient.lastRequest}`,
-  //           context: DocFlowService.name,
-  //           function: 'docFlowFiles',
-  //           ...loggerContext,
-  //         });
-  //         // this.logger.debug(`docFlowFiles: [Response] ${client.lastResponse}`,
-  //         //      { context:DocFlowService.name, function:'docFlowFiles' });
-
-  //         if (message[0]?.return) {
-  //           return {
-  //             object: message[0].return.files.map((file) => docFlowFile(file)),
-  //           };
-  //         }
-
-  //         return { error: [PortalError.SOAP_EMPTY_RESULT] };
-  //       }
-
-  //       throw new ForbiddenException(docFlowError(message[0]?.return));
-  //     })
-  //     .catch((error: Error | ForbiddenException) => {
-  //       this.logger.error({
-  //         message: `[Request] ${soapClient.lastRequest}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowFiles',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `[Response] ${soapClient.lastResponse}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowFiles',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `${error.toString()}`,
-  //         error,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowFiles',
-  //         ...loggerContext,
-  //       });
-
-  //       if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
-  //         throw new GatewayTimeoutException(__DEV__ ? error : undefined);
-  //       }
-
-  //       if (error instanceof ForbiddenException) {
-  //         return { error: [error] };
-  //       }
-
-  //       return { error: [__DEV__ ? error : PortalError.SOAP_EMPTY_RESULT] };
-  //     });
-  // };
-
-  // docFlowTargetWithFiles = async ({
-  //   soapClient,
-  //   target,
-  //   loggerContext,
-  // }: {
-  //   soapClient: SoapClient;
-  //   target: DocFlowTarget;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowTarget> => {
-  //   // TODO: переделать на allSettled
-  //   const files = await this.docFlowFiles({ soapClient, target, loggerContext });
-
-  //   return {
-  //     ...target,
-  //     target: {
-  //       ...target.target,
-  //       files,
-  //     },
-  //   };
-  // };
-
-  // docFlowTaskWithFiles = async ({
-  //   soapClient,
-  //   task,
-  //   loggerContext,
-  // }: {
-  //   soapClient: SoapClient;
-  //   task: DocFlowTask;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowTask> => {
-  //   const promiseTargets = task.targets?.map((target) => this.docFlowTargetWithFiles({ soapClient, target, loggerContext }));
-
-  //   const targets = promiseTargets ? await Promise.all(promiseTargets) : null;
-
-  //   return {
-  //     ...task,
-  //     targets,
-  //   };
-  // };
-
-  // docFlowTasksWithFiles = async ({
-  //   soapClient,
-  //   tasksSOAP,
-  //   loggerContext,
-  //   withFiles,
-  // }: {
-  //   soapClient: SoapClient;
-  //   withFiles?: boolean;
-  //   tasksSOAP: DataObject<DocFlowTaskSOAP>[];
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowTask[]> => {
-  //   const tasksWithoutFiles = tasksSOAP.map((taskSOAP) => docFlowTask(taskSOAP.object));
-
-  //   if (withFiles === true) {
-  //     const tasksWithFiles = await Promise.all(
-  //       tasksWithoutFiles.map((task) => this.docFlowTaskWithFiles({ soapClient, task, loggerContext })),
-  //     );
-  //     return tasksWithFiles;
-  //   }
-
-  //   const tasks = await Promise.all(tasksWithoutFiles);
-  //   return tasks;
   // };
 }

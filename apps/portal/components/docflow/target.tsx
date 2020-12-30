@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import type React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { TFunction, I18n } from 'next-i18next';

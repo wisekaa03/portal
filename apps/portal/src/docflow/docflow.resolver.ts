@@ -16,10 +16,18 @@ import { PortalPubSub } from '@back/shared/constants';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
-import { DocFlowTaskGraphql, DocFlowTaskInput, DocFlowTasksInput, DocFlowBusinessProcessTask, DocFlowFileInput } from './graphql';
+import {
+  DocFlowTaskGraphql,
+  DocFlowTaskInput,
+  DocFlowTasksInput,
+  DocFlowBusinessProcessTask,
+  DocFlowFileInput,
+  DocFlowInternalDocument,
+} from './graphql';
 import { DocFlowService } from './docflow.service';
 import { DocFlowTasks } from './graphql/DocFlowTasks';
 import { DocFlowFile } from './graphql/DocFlowFile';
+import { DocFlowInternalDocumentInput } from './graphql/DocFlowInternalDocument.input';
 //#endregion
 
 @Resolver()
@@ -76,14 +84,10 @@ export class DocFlowResolver {
   @UseGuards(GqlAuthGuard)
   async docFlowTask(
     @Context('req') request: Request,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
     @Args('task') task: DocFlowTaskInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
   ): Promise<typeof DocFlowTaskGraphql> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.docflowService.docFlowTaskCache({
       user,
       password,
@@ -102,45 +106,43 @@ export class DocFlowResolver {
     return this.pubSub.asyncIterator<typeof DocFlowTaskGraphql>(PortalPubSub.DOCFLOW_TASK);
   }
 
-  // /**
-  //  * docflow Target
-  //  *
-  //  * @async
-  //  * @returns {DocFlowTarget}
-  //  * @throws {UnauthorizedException | HttpException}
-  //  */
-  // @Query('docFlowInternalDocument')
-  // @UseGuards(GqlAuthGuard)
-  // async docFlowInternalDocument(
-  //   @Context('req') request: Request,
-  //   @Args('internalDocument') internalDocument: DocFlowInternalDocumentInput,
-  //   @CurrentUser() user?: User,
-  //   @PasswordFrontend() password?: string,
-  // ): Promise<DocFlowInternalDocument> {
-  //   if (!user || !password) {
-  //     throw new UnauthorizedException();
-  //   }
+  /**
+   * docflow Internal Document
+   *
+   * @async
+   * @returns {DocFlowTarget}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query(() => DocFlowInternalDocument)
+  @UseGuards(GqlAuthGuard)
+  async docFlowInternalDocument(
+    @Context('req') request: Request,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
+    @Args('internalDocument') internalDocument: DocFlowInternalDocumentInput,
+  ): Promise<DocFlowInternalDocument> {
+    return this.docflowService.docFlowInternalDocumentCache({
+      user,
+      password,
+      internalDocument,
+      loggerContext: { username: user.username, headers: request.headers },
+    });
+  }
 
-  //   return this.docflowService.docFlowInternalDocumentCache({
-  //     user,
-  //     password,
-  //     internalDocument,
-  //     loggerContext: { username: user.username, headers: request.headers },
-  //   });
-  // }
-
-  // @UseGuards(GqlAuthGuard)
-  // @Subscription('docFlowInternalDocument', {
-  //   filter: (
-  //     payload: SubscriptionPayload<DocFlowInternalDocument>,
-  //     variables: { internalDocument: DocFlowInternalDocumentInput },
-  //     context: WebsocketContext,
-  //   ) => payload.object.id === variables.internalDocument.id,
-  //   resolve: (payload: SubscriptionPayload<DocFlowInternalDocument>) => payload.object,
-  // })
-  // async docFlowInternalDocumentSubscription(): Promise<AsyncIterator<DocFlowInternalDocument>> {
-  //   return this.pubSub.asyncIterator<DocFlowInternalDocument>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT);
-  // }
+  @UseGuards(GqlAuthGuard)
+  @Subscription(() => DocFlowInternalDocument, {
+    filter: (
+      payload: SubscriptionPayload<DocFlowInternalDocument>,
+      variables: { internalDocument: DocFlowInternalDocumentInput },
+      context: WebsocketContext,
+    ) => payload.object.id === variables.internalDocument.id,
+    resolve: (payload: SubscriptionPayload<DocFlowInternalDocument>) => payload.object,
+  })
+  async docFlowInternalDocumentSubscription(
+    @Args('internalDocument') internalDocument: DocFlowInternalDocumentInput,
+  ): Promise<AsyncIterator<DocFlowInternalDocument>> {
+    return this.pubSub.asyncIterator<DocFlowInternalDocument>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT);
+  }
 
   /**
    * DocFlow file
@@ -153,14 +155,10 @@ export class DocFlowResolver {
   @UseGuards(GqlAuthGuard)
   async docFlowFile(
     @Context('req') request: Request,
+    @CurrentUser() user: User,
+    @PasswordFrontend() password: string,
     @Args('file') file: DocFlowFileInput,
-    @CurrentUser() user?: User,
-    @PasswordFrontend() password?: string,
   ): Promise<DocFlowFile> {
-    if (!user || !password) {
-      throw new UnauthorizedException();
-    }
-
     return this.docflowService.docFlowFile({ user, password, file, loggerContext: { username: user.username, headers: request.headers } });
   }
 

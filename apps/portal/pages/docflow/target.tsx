@@ -6,9 +6,11 @@ import Head from 'next/head';
 import { useQuery, ApolloQueryResult } from '@apollo/client';
 //#endregion
 //#region Imports Local
+import type { DocFlowInternalDocument } from '@back/docflow/graphql/DocFlowInternalDocument';
+import type { DocFlowInternalDocumentInput } from '@back/docflow/graphql/DocFlowInternalDocument.input';
+
 import { includeDefaultNamespaces, nextI18next, I18nPage } from '@lib/i18n-client';
 import { DOCFLOW_INTERNAL_DOCUMENT, DOCFLOW_INTERNAL_DOCUMENT_SUB } from '@lib/queries';
-import type { DocFlowInternalDocument, DocFlowInternalDocumentInput, DocFlowTarget, DocFlowTargetInput } from '@lib/types/docflow';
 import type { Data } from '@lib/types';
 import { MaterialUI } from '@front/layout';
 import DocFlowInternalDocumentComponent from '@front/components/docflow/target';
