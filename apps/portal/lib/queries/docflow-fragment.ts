@@ -70,6 +70,14 @@ export const DOCFLOW_PARENT_TASK_FRAGMENT = gql`
   }
 `;
 
+export const DOCFLOW_VISA_FRAGMENT = gql`
+  fragment VisaProps on DocFlowVisa {
+    id
+    name
+    type
+  }
+`;
+
 export const DOCFLOW_FILE_FRAGMENT = gql`
   fragment FileProps on DocFlowFile {
     id
@@ -115,20 +123,20 @@ export const DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT = gql`
     author {
       ...UserProps
     }
-    #files {
-    #  object {
-    #    ...FileProps
-    #  }
-    #  error
-    #}
+    visas {
+      ...VisaProps
+    }
+    files {
+      ...FileProps
+    }
   }
   ${DOCFLOW_STATUS_FRAGMENT}
   ${DOCFLOW_ORGANIZATION_FRAGMENT}
   ${DOCFLOW_SUBDIVISION_FRAGMENT}
   ${DOCFLOW_USER_FRAGMENT}
+  ${DOCFLOW_VISA_FRAGMENT}
+  ${DOCFLOW_FILE_FRAGMENT}
 `;
-
-// ${DOCFLOW_FILE_FRAGMENT}
 
 export const DOCFLOW_TARGET_FRAGMENT = gql`
   fragment TargetProps on DocFlowTarget {

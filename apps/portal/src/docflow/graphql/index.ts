@@ -17,6 +17,7 @@ export * from './DocFlowTaskExecutionOrder';
 export * from './DocFlowTimeInputMethod';
 export * from './DocFlowUser';
 
+export * from './DocFlowFile.input';
 export * from './DocFlowTasks.input';
 export * from './DocFlowTask.input';
 

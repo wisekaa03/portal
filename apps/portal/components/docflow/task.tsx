@@ -171,49 +171,47 @@ const FilesArea = withStyles((theme) => ({
     {task.targets?.map((target) => {
       const name = `${target.name}: ${target.target.name}`;
 
-      // const table = target.target.files?.object?.map((file) => (
-      //   <TableRow hover key={file.id}>
-      //     <TableCell style={{ width: '20px', minWidth: '20px' }} />
-      //     <TableCell style={{ width: '36px' }}>
-      //       <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
-      //         <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
-      //         {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
-      //       </IconButton>
-      //     </TableCell>
-      //     <TableCell style={{ width: '90%' }}>
-      //       <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(file)}>
-      //         <Typography variant="body2">{`${file.name}.${file.extension}`}</Typography>
-      //       </IconButton>
-      //     </TableCell>
-      //     <TableCell style={{ minWidth: '260px' }}>
-      //       <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
-      //         {file.author?.name && (
-      //           <Typography align="right" variant="body2">
-      //             {file.author.name}
-      //           </Typography>
-      //         )}
-      //       </IconButton>
-      //     </TableCell>
-      //     <TableCell style={{ width: '174px', minWidth: '174px' }}>
-      //       <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
-      //         <Typography align="right" variant="body2">
-      //           {dateFormat(file.modificationDateUniversal, i18n, t('docflow:undefined'))}
-      //         </Typography>
-      //       </IconButton>
-      //     </TableCell>
-      //     <TableCell style={{ textAlign: 'right', width: '100px', minWidth: '100px' }}>
-      //       <IconButton className={clsx(classes.file, classes.size)} size="small" onClick={() => handleDownload(file)}>
-      //         {file.size && (
-      //           <Typography align="right" variant="body2">
-      //             {filesize(file.size, { locale: i18n.language })}
-      //           </Typography>
-      //         )}
-      //       </IconButton>
-      //     </TableCell>
-      //   </TableRow>
-      // ));
-
-      const table = undefined;
+      const table = target.target.files?.map((file) => (
+        <TableRow hover key={file.id}>
+          <TableCell style={{ width: '20px', minWidth: '20px' }} />
+          <TableCell style={{ width: '36px' }}>
+            <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              <AttachFileIcon style={{ placeSelf: 'center' }} fontSize="small" />
+              {loading ? <HourglassFullIcon style={{ placeSelf: 'center' }} fontSize="small" /> : <span />}
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ width: '90%' }}>
+            <IconButton key={file.id} className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              <Typography variant="body2">{`${file.name}.${file.extension}`}</Typography>
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ minWidth: '260px' }}>
+            <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              {file.author?.name && (
+                <Typography align="right" variant="body2">
+                  {file.author.name}
+                </Typography>
+              )}
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ width: '174px', minWidth: '174px' }}>
+            <IconButton className={classes.file} size="small" onClick={() => handleDownload(file)}>
+              <Typography align="right" variant="body2">
+                {dateFormat(file.modificationDateUniversal, i18n, t('docflow:undefined'))}
+              </Typography>
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ textAlign: 'right', width: '100px', minWidth: '100px' }}>
+            <IconButton className={clsx(classes.file, classes.size)} size="small" onClick={() => handleDownload(file)}>
+              {file.size && (
+                <Typography align="right" variant="body2">
+                  {filesize(file.size, { locale: i18n.language })}
+                </Typography>
+              )}
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      ));
 
       return (
         <Table key={target.target.id} aria-label="target files" className={classes.table}>
