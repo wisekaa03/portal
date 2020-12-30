@@ -1,4 +1,5 @@
 /** @format */
+/* eslint max-len:0 */
 
 import type React from 'react';
 import type { I18n, TFunction } from 'next-i18next';
@@ -11,6 +12,7 @@ import type { DocFlowBusinessProcessApprovalTaskApproval } from '@back/docflow/g
 import type { DocFlowBusinessProcessPerfomanceTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessPerfomanceTaskCheckup';
 import type { DocFlowBusinessProcessApprovalTaskCheckup } from '@back/docflow/graphql/DocFlowBusinessProcessApprovalTaskCheckup';
 import type { DocFlowTasks } from '@back/docflow/graphql/DocFlowTasks';
+import type { DocFlowBusinessProcessConfirmationTaskConfirmation } from '@back/docflow/graphql/DocFlowBusinessProcessConfirmationTaskConfirmation';
 
 import type { PortalErrorsProps } from './errors';
 
@@ -21,7 +23,8 @@ export type DocFlowTask =
   | DocFlowBusinessProcessOrderTaskCheckup
   | DocFlowBusinessProcessApprovalTaskApproval
   | DocFlowBusinessProcessPerfomanceTaskCheckup
-  | DocFlowBusinessProcessApprovalTaskCheckup;
+  | DocFlowBusinessProcessApprovalTaskCheckup
+  | DocFlowBusinessProcessConfirmationTaskConfirmation;
 
 export enum DocFlowProcessStep {
   CheckExecute = 'CheckExecute' /* Проверить исполнение */,

@@ -334,6 +334,66 @@ export const DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP = gql`
   ${DOCFLOW_STATE_FRAGMENT}
 `;
 
+export const DOCFLOW_BPT_CONFIRMATION_TASK_CONFIRMATION = gql`
+  fragment TaskConfirmationTaskConfirmation on DocFlowBusinessProcessConfirmationTaskConfirmation {
+    ... on DocFlowBusinessProcessConfirmationTaskConfirmation {
+      id
+      name
+      type
+      importance {
+        ...ImportanceProps
+      }
+      state {
+        ...StateProps
+      }
+      changeRight
+      executed
+      executionMark
+      executionComment
+      beginDate
+      dueDate
+      endDate
+      #description
+      #checkResults {
+      #  checkComment
+      #  returned
+      #  executorTask {
+      #    id
+      #  }
+      #}
+      #parentTask {
+      #  ...ParentTaskProps
+      #}
+      businessProcessStep
+      performer {
+        user {
+          ...UserProps
+        }
+      }
+      author {
+        ...UserProps
+      }
+      accepted
+      acceptDate
+      htmlView
+      #target {
+      #  ...InternalDocumentProps
+      #}
+      targets {
+        name
+        allowDeletion
+        target {
+          ...InternalDocumentProps
+        }
+      }
+    }
+  }
+  ${DOCFLOW_INTERNAL_DOCUMENT_FRAGMENT}
+  ${DOCFLOW_IMPORTANCE_FRAGMENT}
+  ${DOCFLOW_USER_FRAGMENT}
+  ${DOCFLOW_STATE_FRAGMENT}
+`;
+
 export const DOCFLOW_BPT_TASK = gql`
   fragment Task on DocFlowBusinessProcessTask {
     ... on DocFlowBusinessProcessTask {
@@ -403,11 +463,13 @@ export const DOCFLOW_TASK_FRAGMENT = gql`
     ...TaskApprovalTaskApproval
     ...TaskApprovalTaskCheckup
     ...TaskPerformanceTaskCheckup
+    ...TaskConfirmationTaskConfirmation
     ...Task
   }
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
   ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
   ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
+  ${DOCFLOW_BPT_CONFIRMATION_TASK_CONFIRMATION}
   ${DOCFLOW_BPT_TASK}
 `;
 
@@ -417,11 +479,13 @@ export const DOCFLOW_TASKS_FRAGMENT = gql`
       ...TaskApprovalTaskApproval
       ...TaskApprovalTaskCheckup
       ...TaskPerformanceTaskCheckup
+      ...TaskConfirmationTaskConfirmation
       ...Task
     }
   }
   ${DOCFLOW_BPT_APPROVAL_TASK_APPROVAL}
   ${DOCFLOW_BPT_APPROVAL_TASK_CHECKUP}
   ${DOCFLOW_BPT_PERFORMANCE_TASK_CHECKUP}
+  ${DOCFLOW_BPT_CONFIRMATION_TASK_CONFIRMATION}
   ${DOCFLOW_BPT_TASK}
 `;

@@ -12,7 +12,9 @@
   },
   "processStep": {
     "execute": "Исполнено",
+    "checkExecute": "Ознакомился",
     "familiarize": "Ознакомился",
+    "checkFamiliarize": "Ознакомился",
     "conform": "Согласовано",
     "conformWithComments": "Согласовано с замечаниями",
     "notConform": "Не согласовано",

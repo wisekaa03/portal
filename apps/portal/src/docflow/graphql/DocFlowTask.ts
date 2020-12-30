@@ -9,6 +9,7 @@ import { DocFlowBusinessProcessOrderTaskCheckup } from './DocFlowBusinessProcess
 import { DocFlowBusinessProcessApprovalTaskApproval } from './DocFlowBusinessProcessApprovalTaskApproval';
 import { DocFlowBusinessProcessPerfomanceTaskCheckup } from './DocFlowBusinessProcessPerfomanceTaskCheckup';
 import { DocFlowBusinessProcessApprovalTaskCheckup } from './DocFlowBusinessProcessApprovalTaskCheckup';
+import { DocFlowBusinessProcessConfirmationTaskConfirmation } from './DocFlowBusinessProcessConfirmationTaskConfirmation';
 
 export const DocFlowTaskGraphql = createUnionType({
   name: 'DocFlowTask',
@@ -18,6 +19,7 @@ export const DocFlowTaskGraphql = createUnionType({
     DocFlowBusinessProcessApprovalTaskApproval,
     DocFlowBusinessProcessPerfomanceTaskCheckup,
     DocFlowBusinessProcessApprovalTaskCheckup,
+    DocFlowBusinessProcessConfirmationTaskConfirmation,
   ],
   resolveType: (value: DocFlowTask) => {
     if (value.type === 'DMBusinessProcessTask') {
@@ -35,6 +37,9 @@ export const DocFlowTaskGraphql = createUnionType({
     }
     if (value.type === 'DMBusinessProcessApprovalTaskCheckup') {
       return DocFlowBusinessProcessApprovalTaskCheckup;
+    }
+    if (value.type === 'DMBusinessProcessConfirmationTaskConfirmation') {
+      return DocFlowBusinessProcessConfirmationTaskConfirmation;
     }
 
     return null;

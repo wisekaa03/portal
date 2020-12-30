@@ -124,6 +124,40 @@ type DocFlowBusinessProcessApprovalTaskCheckupApprovalResult {
   approvalResult: DocFlowApprovalResult
 }
 
+type DocFlowBusinessProcessConfirmationTaskConfirmation implements DocFlowInterfaceObject {
+  acceptDate: Date
+  accepted: Boolean!
+  author: DocFlowUser!
+  beginDate: Date
+  businessProcessStep: DocFlowProcessStep
+  changeRight: Boolean
+  confirmationComment: String
+  confirmationDate: Date
+  confirmationPerformer: DocFlowBusinessProcessTaskExecutor
+  confirmationResult: DocFlowConfirmationResult
+  description: String
+  dueDate: Date
+  endDate: Date
+  executed: Boolean!
+  executionComment: String
+  executionMark: String
+  htmlView: String
+  id: ID!
+  importance: DocFlowBusinessProcessTaskImportance
+  iterationNumber: Int
+  name: String!
+  navigationRef: String
+  number: String
+  performer: DocFlowBusinessProcessTaskExecutor
+  presentation: String
+  project: DocFlowProject
+  returned: Boolean
+  state: DocFlowBusinessProcessState
+  target: DocFlowInternalDocument
+  targets: [DocFlowBusinessProcessTarget!]
+  type: String!
+}
+
 type DocFlowBusinessProcessExecutorRole implements DocFlowInterfaceObject {
   comment: String
   id: ID!
@@ -275,6 +309,14 @@ type DocFlowCashFlowRow {
   item: [DocFlowCashFlowItem!]!
   total: Float!
   VAT: Float!
+}
+
+type DocFlowConfirmationResult implements DocFlowInterfaceObject {
+  id: ID!
+  name: String!
+  navigationRef: String
+  presentation: String
+  type: String!
 }
 
 type DocFlowCorrespondent implements DocFlowInterfaceObject {
@@ -684,7 +726,7 @@ type DocFlowSubdivision implements DocFlowInterfaceObject {
   type: String!
 }
 
-union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusinessProcessApprovalTaskCheckup | DocFlowBusinessProcessOrderTaskCheckup | DocFlowBusinessProcessPerfomanceTaskCheckup | DocFlowBusinessProcessTask
+union DocFlowTask = DocFlowBusinessProcessApprovalTaskApproval | DocFlowBusinessProcessApprovalTaskCheckup | DocFlowBusinessProcessConfirmationTaskConfirmation | DocFlowBusinessProcessOrderTaskCheckup | DocFlowBusinessProcessPerfomanceTaskCheckup | DocFlowBusinessProcessTask
 
 input DocFlowTaskInput {
   """Cache this result, default = true"""

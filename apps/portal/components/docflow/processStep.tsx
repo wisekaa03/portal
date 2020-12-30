@@ -27,12 +27,73 @@ const DocFlowProcessStepButtons: FC<DocFlowProcessStepProps> = ({ loading, endDa
   const locale = dateLocale(i18n.language);
 
   switch (task.businessProcessStep) {
+    case DocFlowProcessStep.Approve:
+      return (
+        <Grid container spacing={3}>
+          <Grid item>
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Approve)}>
+              {t('docflow:processStep:approve')}
+            </BaseButton>
+          </Grid>
+          <Grid item>
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.NotApprove)}>
+              {t('docflow:processStep:notApprove')}
+            </BaseButton>
+          </Grid>
+        </Grid>
+      );
+
+    case DocFlowProcessStep.Conform:
+      return (
+        <Grid container spacing={3}>
+          <Grid item>
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Conform)}>
+              {t('docflow:processStep:conform')}
+            </BaseButton>
+          </Grid>
+          <Grid item>
+            <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.NotConform)}>
+              {t('docflow:processStep:notConform')}
+            </BaseButton>
+          </Grid>
+        </Grid>
+      );
     case DocFlowProcessStep.Execute:
       return (
         <Grid container spacing={3}>
           <Grid item>
             <BaseButton fullHeight disabled={loading} actionType="accept" onClick={() => handleProcessStep(DocFlowProcessStep.Execute)}>
               {t('docflow:processStep:execute')}
+            </BaseButton>
+          </Grid>
+        </Grid>
+      );
+    case DocFlowProcessStep.CheckExecute:
+      return (
+        <Grid container spacing={3}>
+          <Grid item>
+            <BaseButton
+              fullHeight
+              disabled={loading}
+              actionType="accept"
+              onClick={() => handleProcessStep(DocFlowProcessStep.CheckExecute)}
+            >
+              {t('docflow:processStep:checkExecute')}
+            </BaseButton>
+          </Grid>
+        </Grid>
+      );
+    case DocFlowProcessStep.CheckFamiliarize:
+      return (
+        <Grid container spacing={3}>
+          <Grid item>
+            <BaseButton
+              fullHeight
+              disabled={loading}
+              actionType="accept"
+              onClick={() => handleProcessStep(DocFlowProcessStep.CheckFamiliarize)}
+            >
+              {t('docflow:processStep:checkFamiliarize')}
             </BaseButton>
           </Grid>
         </Grid>

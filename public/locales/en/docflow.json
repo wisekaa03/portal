@@ -12,7 +12,9 @@
   },
   "processStep": {
     "execute": "Executed",
+    "checkExecute": "Familiarized",
     "familiarize": "Familiarized",
+    "checkFamiliarize": "Familiarized",
     "conform": "Conform",
     "conformWithComments": "Conform with comments",
     "notConform": "Not conform",
