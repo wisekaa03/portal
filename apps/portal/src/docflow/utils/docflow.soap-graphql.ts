@@ -222,7 +222,7 @@ export const docFlowFile = (value: DocFlowFileSOAP, binaryData = false): DocFlow
     activeVersion: value.activeVersion ? docFlowFileVersion(value.activeVersion) : undefined,
   };
 
-  if (binaryData && value.binaryData) {
+  if (binaryData && typeof value.binaryData === 'string') {
     file.binaryData = value.binaryData;
   }
 
