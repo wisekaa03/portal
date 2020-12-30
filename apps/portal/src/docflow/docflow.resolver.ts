@@ -16,9 +16,10 @@ import { PortalPubSub } from '@back/shared/constants';
 import { ConfigService } from '@app/config';
 import { GqlAuthGuard } from '@back/guards/gqlauth.guard';
 import { CurrentUser, PasswordFrontend } from '@back/user/user.decorator';
-import { DocFlowTaskGraphql, DocFlowTaskInput, DocFlowTasksInput, DocFlowBusinessProcessTask } from './graphql';
+import { DocFlowTaskGraphql, DocFlowTaskInput, DocFlowTasksInput, DocFlowBusinessProcessTask, DocFlowFileInput } from './graphql';
 import { DocFlowService } from './docflow.service';
 import { DocFlowTasks } from './graphql/DocFlowTasks';
+import { DocFlowFile } from './graphql/DocFlowFile';
 //#endregion
 
 @Resolver()
@@ -141,28 +142,27 @@ export class DocFlowResolver {
   //   return this.pubSub.asyncIterator<DocFlowInternalDocument>(PortalPubSub.DOCFLOW_INTERNAL_DOCUMENT);
   // }
 
-  // /**
-  //  * DocFlow file
-  //  *
-  //  * @async
-  //  * @returns {DocFlowFileVersion}
-  //  * @throws {UnauthorizedException | HttpException}
-  //  */
-  // @Query('docFlowFile')
-  // @UseGuards(GqlAuthGuard)
-  // async docFlowFile(
-  //   @Context('req') request: Request,
-  //   @Args('file') file: DocFlowFileInput,
-  //   @CurrentUser() user?: User,
-  //   @PasswordFrontend() password?: string,
-  // ): Promise<DocFlowFile> {
-  //   if (!user || !password) {
-  //     throw new UnauthorizedException();
-  //   }
+  /**
+   * DocFlow file
+   *
+   * @async
+   * @returns {DocFlowFileVersion}
+   * @throws {UnauthorizedException | HttpException}
+   */
+  @Query(() => DocFlowFile)
+  @UseGuards(GqlAuthGuard)
+  async docFlowFile(
+    @Context('req') request: Request,
+    @Args('file') file: DocFlowFileInput,
+    @CurrentUser() user?: User,
+    @PasswordFrontend() password?: string,
+  ): Promise<DocFlowFile> {
+    if (!user || !password) {
+      throw new UnauthorizedException();
+    }
 
-  //   return this.docflowService.docFlowFile({ user, password, file
-  // loggerContext: { username: user.username, headers: request.headers } });
-  // }
+    return this.docflowService.docFlowFile({ user, password, file, loggerContext: { username: user.username, headers: request.headers } });
+  }
 
   // /**
   //  * DocFlow process step

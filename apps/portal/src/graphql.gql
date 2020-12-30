@@ -399,6 +399,20 @@ type DocFlowFile implements DocFlowInterfaceObject {
   type: String!
 }
 
+input DocFlowFileInput {
+  """Cache this result, default = true"""
+  cache: Boolean
+
+  """ID of a document flow file"""
+  id: String!
+
+  """Set cache, default = true"""
+  setCache: Boolean
+
+  """WebSocket results, default = true"""
+  websocket: Boolean
+}
+
 type DocFlowFileVersion implements DocFlowInterfaceObject {
   author: DocFlowUser
   binaryData: String
@@ -939,6 +953,7 @@ type ProfilePageInfo {
 
 type Query {
   availableAuthenticationProfiles(newProfile: Boolean, synchronization: Boolean): [String!]!
+  docFlowFile(file: DocFlowFileInput!): DocFlowFile!
   docFlowTask(task: DocFlowTaskInput!): DocFlowTask!
   docFlowTasks(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   login(domain: String!, password: String!, username: String!): Login!

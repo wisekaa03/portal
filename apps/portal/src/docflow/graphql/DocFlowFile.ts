@@ -1,7 +1,8 @@
 /** @format */
 
-import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 
+import { ByteArray } from '@back/shared/ByteArray.scalar';
 import { DocFlowInterfaceObject } from './DocFlowInterfaceObject';
 import { DocFlowFileVersion } from './DocFlowFileVersion';
 import { DocFlowUser } from './DocFlowUser';
@@ -13,7 +14,7 @@ export class DocFlowFile extends DocFlowInterfaceObject {
   @Field(() => DocFlowUser, { nullable: true })
   author?: DocFlowUser;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   binaryData?: string;
 
   @Field(() => Date, { nullable: true })

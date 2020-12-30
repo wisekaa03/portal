@@ -197,30 +197,37 @@ export const docFlowFileVersion = (value: DocFlowFileVersionSOAP): DocFlowFileVe
   deletionMark: value.deletionMark,
 });
 
-export const docFlowFile = (value: DocFlowFileSOAP): DocFlowFile => ({
-  id: value.objectID.id,
-  name: value.name,
-  presentation: value.objectID.presentation,
-  type: value.objectID.type,
-  navigationRef: value.objectID.navigationRef,
-  author: value.author ? docFlowUser(value.author) : undefined,
-  binaryData: value.binaryData,
-  creationDate: dateSOAP(value.creationDate),
-  description: value.description,
-  editing: value.editing,
-  encrypted: value.encrypted,
-  extension: value.extension,
-  modificationDate: dateSOAP(value.modificationDate),
-  modificationDateUniversal: dateSOAP(value.modificationDateUniversal),
-  lockDate: dateSOAP(value.lockDate),
-  signed: value.signed,
-  size: value.size,
-  text: value.text,
-  owner: value.owner ? docFlowUser(value.owner) : undefined,
-  editingUser: value.editingUser ? docFlowUser(value.editingUser) : undefined,
-  deletionMark: value.deletionMark,
-  activeVersion: value.activeVersion ? docFlowFileVersion(value.activeVersion) : undefined,
-});
+export const docFlowFile = (value: DocFlowFileSOAP, binaryData = false): DocFlowFile => {
+  const file: DocFlowFile = {
+    id: value.objectID.id,
+    name: value.name,
+    presentation: value.objectID.presentation,
+    type: value.objectID.type,
+    navigationRef: value.objectID.navigationRef,
+    author: value.author ? docFlowUser(value.author) : undefined,
+    creationDate: dateSOAP(value.creationDate),
+    description: value.description,
+    editing: value.editing,
+    encrypted: value.encrypted,
+    extension: value.extension,
+    modificationDate: dateSOAP(value.modificationDate),
+    modificationDateUniversal: dateSOAP(value.modificationDateUniversal),
+    lockDate: dateSOAP(value.lockDate),
+    signed: value.signed,
+    size: value.size,
+    text: value.text,
+    owner: value.owner ? docFlowUser(value.owner) : undefined,
+    editingUser: value.editingUser ? docFlowUser(value.editingUser) : undefined,
+    deletionMark: value.deletionMark,
+    activeVersion: value.activeVersion ? docFlowFileVersion(value.activeVersion) : undefined,
+  };
+
+  if (binaryData && value.binaryData) {
+    file.binaryData = value.binaryData;
+  }
+
+  return file;
+};
 
 export const docFlowInternalDocument = (value: DocFlowInternalDocumentSOAP): DocFlowInternalDocument => ({
   id: value.objectID.id,

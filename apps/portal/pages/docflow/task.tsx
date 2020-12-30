@@ -81,29 +81,31 @@ const DocFlowTaskPage: I18nPage<DocFlowTaskProps> = ({ t, i18n, type, id, ...res
     });
   };
 
-  const download = async (body: string, name: string): Promise<void> => {
-    const blob = new Blob([Buffer.from(body, 'base64')], { type: 'application/octet-stream' });
-    const temp = window.URL.createObjectURL(blob);
-    const tempLink = document.createElement('a');
-    tempLink.href = temp;
-    tempLink.setAttribute('download', name || '');
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    setTimeout(() => {
-      document.body.removeChild(tempLink);
-      window.URL.revokeObjectURL(temp);
-    }, 100);
+  const download = async (name: string, body?: string): Promise<void> => {
+    if (body) {
+      const blob = new Blob([Buffer.from(body, 'base64')], { type: 'application/octet-stream' });
+      const temp = window.URL.createObjectURL(blob);
+      const tempLink = document.createElement('a');
+      tempLink.href = temp;
+      tempLink.setAttribute('download', name || '');
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      setTimeout(() => {
+        document.body.removeChild(tempLink);
+        window.URL.revokeObjectURL(temp);
+      }, 100);
+    }
   };
 
   const handleDownload = async (file: DocFlowFile): Promise<void> =>
     file.binaryData
-      ? download(file.binaryData, `${file.name}.${file.extension}`)
+      ? download(`${file.name}.${file.extension}`, file.binaryData)
       : getDocFlowTaskFile({ variables: { file: { id: file.id } } });
 
   if (dataDocFlowTaskFile?.docFlowFile) {
     download(
-      dataDocFlowTaskFile.docFlowFile.binaryData || '',
       `${dataDocFlowTaskFile.docFlowFile.name}.${dataDocFlowTaskFile.docFlowFile.extension}`,
+      dataDocFlowTaskFile.docFlowFile.binaryData,
     );
   }
 

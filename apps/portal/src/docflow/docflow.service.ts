@@ -49,6 +49,7 @@ import {
   docFlowData,
   docFlowInternalDocument,
   docFlowBusinessProcessTasks,
+  docFlowFile,
 } from './utils/docflow.soap-graphql';
 import { docFlowRequestProcessStep, docFlowOutputTargets, docFlowOutputProcessStep } from './utils/docflow.graphql-soap';
 
@@ -57,7 +58,8 @@ import { DocFlowTasks } from './graphql/DocFlowTasks';
 
 import { DocFlowTaskInput } from './graphql/DocFlowTask.input';
 import { DocFlowBusinessProcessTarget } from './graphql/DocFlowBusinessProcessTarget';
-import { DocFlowInternalDocument } from './graphql';
+import { DocFlowFileInput, DocFlowInternalDocument, DocFlowUser } from './graphql';
+import { DocFlowFile } from './graphql/DocFlowFile';
 //#endregion
 
 // создается микросервис, который будет обновлять данные кэша из документооборота
@@ -598,91 +600,91 @@ export class DocFlowService {
     }
   };
 
-  // /**
-  //  * DocFlow get current user
-  //  *
-  //  * @async
-  //  * @method docFlowGetCurrentUser
-  //  * @param {User} user User object
-  //  * @param {string} password The Password
-  //  * @returns {DocFlowUser}
-  //  */
-  // docFlowCurrentUser = async ({
-  //   user,
-  //   password,
-  //   input,
-  //   soapClient,
-  //   loggerContext,
-  // }: {
-  //   user: User;
-  //   password: string;
-  //   input?: DocFlowUserInput;
-  //   soapClient?: SoapClient;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowUser> => {
-  //   const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
+  /**
+   * DocFlow get current user
+   *
+   * @async
+   * @method docFlowGetCurrentUser
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @returns {DocFlowUser}
+   */
+  docFlowCurrentUser = async ({
+    user,
+    password,
+    // input,
+    soapClient,
+    loggerContext,
+  }: {
+    user: User;
+    password: string;
+    // input?: DocFlowUserInput;
+    soapClient?: SoapClient;
+    loggerContext?: LoggerContext;
+  }): Promise<DocFlowUser> => {
+    const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
 
-  //   return client
-  //     .executeAsync(
-  //       {
-  //         'tns:request': {
-  //           attributes: {
-  //             'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-  //             'xsi:type': 'tns:DMGetCurrentUserRequest',
-  //           },
-  //         },
-  //       },
-  //       { timeout: TIMEOUT },
-  //     )
-  //     .then((message: DataResult<DataUser<DocFlowUserSOAP>> | DataResult<DataError>) => {
-  //       if (docFlowData<DataUser>(message[0]?.return)) {
-  //         this.logger.debug!({
-  //           message: `[Request] ${client.lastRequest}`,
-  //           context: DocFlowService.name,
-  //           function: 'docFlowCurrentUser',
-  //           ...loggerContext,
-  //         });
-  //         // this.logger.debug(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
+    return client
+      .executeAsync(
+        {
+          'tns:request': {
+            attributes: {
+              'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+              'xsi:type': 'tns:DMGetCurrentUserRequest',
+            },
+          },
+        },
+        { timeout: TIMEOUT },
+      )
+      .then((message: DataResult<DataUser<DocFlowUserSOAP>> | DataResult<DataError>) => {
+        if (docFlowData<DataUser>(message[0]?.return)) {
+          this.logger.debug!({
+            message: `[Request] ${client.lastRequest}`,
+            context: DocFlowService.name,
+            function: 'docFlowCurrentUser',
+            ...loggerContext,
+          });
+          // this.logger.debug(`docFlowCurrentUser: [Response] ${client.lastResponse}`, { context: DocFlowService.name });
 
-  //         if (message[0]?.return?.user) {
-  //           return docFlowUser(message[0].return.user);
-  //         }
+          if (message[0]?.return?.user) {
+            return docFlowUser(message[0].return.user);
+          }
 
-  //         throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
-  //       }
+          throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+        }
 
-  //       throw new ForbiddenException(docFlowError(message[0]?.return));
-  //     })
-  //     .catch((error: Error | ForbiddenException | NotFoundException) => {
-  //       this.logger.error({
-  //         message: `[Request] ${client.lastRequest}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowCurrentUser',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `[Response] ${client.lastResponse}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowCurrentUser',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `${error.toString()}`,
-  //         error,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowCurrentUser',
-  //         ...loggerContext,
-  //       });
+        throw new ForbiddenException(docFlowError(message[0]?.return));
+      })
+      .catch((error: Error | ForbiddenException | NotFoundException) => {
+        this.logger.error({
+          message: `[Request] ${client.lastRequest}`,
+          context: DocFlowService.name,
+          function: 'docFlowCurrentUser',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `[Response] ${client.lastResponse}`,
+          context: DocFlowService.name,
+          function: 'docFlowCurrentUser',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `${error.toString()}`,
+          error,
+          context: DocFlowService.name,
+          function: 'docFlowCurrentUser',
+          ...loggerContext,
+        });
 
-  //       if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
-  //         throw new GatewayTimeoutException(__DEV__ ? error : undefined);
-  //       } else if (error instanceof ForbiddenException) {
-  //         throw error;
-  //       }
+        if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+          throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+        } else if (error instanceof ForbiddenException) {
+          throw error;
+        }
 
-  //       throw new UnprocessableEntityException(__DEV__ ? error : undefined);
-  //     });
-  // };
+        throw new UnprocessableEntityException(__DEV__ ? error : undefined);
+      });
+  };
 
   // /**
   //  * DocFlow target
@@ -872,122 +874,122 @@ export class DocFlowService {
   //   }
   // };
 
-  // /**
-  //  * DocFlow get file
-  //  *
-  //  * @async
-  //  * @method docFlowFile
-  //  * @param {User} user User object
-  //  * @param {string} password The Password
-  //  * @returns {DocFlowFile}
-  //  */
-  // docFlowFile = async ({
-  //   user,
-  //   password,
-  //   file,
-  //   soapClient,
-  //   loggerContext,
-  // }: {
-  //   user: User;
-  //   password: string;
-  //   file: DocFlowFileInput;
-  //   soapClient?: SoapClient;
-  //   loggerContext?: LoggerContext;
-  // }): Promise<DocFlowFile> => {
-  //   const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
+  /**
+   * DocFlow get file
+   *
+   * @async
+   * @method docFlowFile
+   * @param {User} user User object
+   * @param {string} password The Password
+   * @returns {DocFlowFile}
+   */
+  docFlowFile = async ({
+    user,
+    password,
+    file,
+    soapClient,
+    loggerContext,
+  }: {
+    user: User;
+    password: string;
+    file: DocFlowFileInput;
+    soapClient?: SoapClient;
+    loggerContext?: LoggerContext;
+  }): Promise<DocFlowFile> => {
+    const client = soapClient || (await this.soapClient({ user, password, loggerContext }));
 
-  //   return client
-  //     .executeAsync(
-  //       {
-  //         'tns:request': {
-  //           attributes: {
-  //             'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
-  //             'xsi:type': 'tns:DMRetrieveRequest',
-  //           },
-  //           $xml:
-  //             '<tns:dataBaseID></tns:dataBaseID>' +
-  //             '<tns:objectIds>' +
-  //             `<tns:id>${file.id}</tns:id>` +
-  //             '<tns:type>DMFile</tns:type>' +
-  //             '</tns:objectIds>' +
-  //             '<tns:columnSet>objectId</tns:columnSet>' +
-  //             '<tns:columnSet>name</tns:columnSet>' +
-  //             '<tns:columnSet>description</tns:columnSet>' +
-  //             '<tns:columnSet>author</tns:columnSet>' +
-  //             '<tns:columnSet>encrypted</tns:columnSet>' +
-  //             '<tns:columnSet>signed</tns:columnSet>' +
-  //             '<tns:columnSet>editing</tns:columnSet>' +
-  //             '<tns:columnSet>editingUser</tns:columnSet>' +
-  //             '<tns:columnSet>binaryData</tns:columnSet>' +
-  //             '<tns:columnSet>extension</tns:columnSet>' +
-  //             '<tns:columnSet>size</tns:columnSet>' +
-  //             '<tns:columnSet>creationDate</tns:columnSet>' +
-  //             '<tns:columnSet>modificationDateUniversal</tns:columnSet>',
-  //         },
-  //       },
-  //       { timeout: TIMEOUT },
-  //     )
-  //     .then((message: DataResult<DataObjects<DocFlowFileSOAP>> | DataResult<DataError>) => {
-  //       if (docFlowData<DataObjects>(message[0]?.return)) {
-  //         if (message[0] && Array.isArray(message[0].return?.objects)) {
-  //           this.logger.debug!({
-  //             message: `[Request] ${client.lastRequest}`,
-  //             context: DocFlowService.name,
-  //             function: 'docFlowFile',
-  //             ...loggerContext,
-  //           });
-  //           // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
-  //           // { context: DocFlowService.name, function: 'docFlowFile' });
+    return client
+      .executeAsync(
+        {
+          'tns:request': {
+            attributes: {
+              'xmlns:xs': 'http://www.w3.org/2001/XMLSchema',
+              'xsi:type': 'tns:DMRetrieveRequest',
+            },
+            $xml:
+              '<tns:dataBaseID></tns:dataBaseID>' +
+              '<tns:objectIds>' +
+              `<tns:id>${file.id}</tns:id>` +
+              '<tns:type>DMFile</tns:type>' +
+              '</tns:objectIds>' +
+              '<tns:columnSet>objectId</tns:columnSet>' +
+              '<tns:columnSet>name</tns:columnSet>' +
+              '<tns:columnSet>description</tns:columnSet>' +
+              '<tns:columnSet>author</tns:columnSet>' +
+              '<tns:columnSet>encrypted</tns:columnSet>' +
+              '<tns:columnSet>signed</tns:columnSet>' +
+              '<tns:columnSet>editing</tns:columnSet>' +
+              '<tns:columnSet>editingUser</tns:columnSet>' +
+              '<tns:columnSet>binaryData</tns:columnSet>' +
+              '<tns:columnSet>extension</tns:columnSet>' +
+              '<tns:columnSet>size</tns:columnSet>' +
+              '<tns:columnSet>creationDate</tns:columnSet>' +
+              '<tns:columnSet>modificationDateUniversal</tns:columnSet>',
+          },
+        },
+        { timeout: TIMEOUT },
+      )
+      .then((message: DataResult<DataObjects<DocFlowFileSOAP>> | DataResult<DataError>) => {
+        if (docFlowData<DataObjects>(message[0]?.return)) {
+          if (message[0] && Array.isArray(message[0].return?.objects)) {
+            this.logger.debug!({
+              message: `[Request] ${client.lastRequest}`,
+              context: DocFlowService.name,
+              function: 'docFlowFile',
+              ...loggerContext,
+            });
+            // this.logger.debug(`${DocFlowService.name}: [Response] ${client.lastResponse}`,
+            // { context: DocFlowService.name, function: 'docFlowFile' });
 
-  //           const result = message[0].return.objects.map((f) => docFlowFile(f));
+            const result = message[0].return.objects.map((f) => docFlowFile(f, true));
 
-  //           if (Array.isArray(result) && result.length > 1) {
-  //             this.logger.verbose!({
-  //               message: 'result.length > 1 ? Something wrong...',
-  //               context: DocFlowService.name,
-  //               function: 'docFlowFile',
-  //               ...loggerContext,
-  //             });
-  //           }
+            if (Array.isArray(result) && result.length > 1) {
+              this.logger.verbose!({
+                message: 'result.length > 1 ? Something wrong...',
+                context: DocFlowService.name,
+                function: 'docFlowFile',
+                ...loggerContext,
+              });
+            }
 
-  //           return result.pop();
-  //         }
+            return result.pop();
+          }
 
-  //         throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
-  //       }
+          throw new NotFoundException(PortalError.SOAP_EMPTY_RESULT);
+        }
 
-  //       throw new ForbiddenException(docFlowError(message[0]?.return));
-  //     })
-  //     .catch((error: Error | ForbiddenException | NotFoundException) => {
-  //       this.logger.error({
-  //         message: `[Request] ${client.lastRequest}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowFile',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `[Response] ${client.lastResponse}`,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowFile',
-  //         ...loggerContext,
-  //       });
-  //       this.logger.error({
-  //         message: `${error.toString()}`,
-  //         error,
-  //         context: DocFlowService.name,
-  //         function: 'docFlowFile',
-  //         ...loggerContext,
-  //       });
+        throw new ForbiddenException(docFlowError(message[0]?.return));
+      })
+      .catch((error: Error | ForbiddenException | NotFoundException) => {
+        this.logger.error({
+          message: `[Request] ${client.lastRequest}`,
+          context: DocFlowService.name,
+          function: 'docFlowFile',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `[Response] ${client.lastResponse}`,
+          context: DocFlowService.name,
+          function: 'docFlowFile',
+          ...loggerContext,
+        });
+        this.logger.error({
+          message: `${error.toString()}`,
+          error,
+          context: DocFlowService.name,
+          function: 'docFlowFile',
+          ...loggerContext,
+        });
 
-  //       if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
-  //         throw new GatewayTimeoutException(__DEV__ ? error : undefined);
-  //       } else if (error instanceof ForbiddenException) {
-  //         throw error;
-  //       }
+        if (error instanceof Error && (error as any)?.code === 'TIMEOUT') {
+          throw new GatewayTimeoutException(__DEV__ ? error : undefined);
+        } else if (error instanceof ForbiddenException) {
+          throw error;
+        }
 
-  //       throw new UnprocessableEntityException(__DEV__ ? error : undefined);
-  //     });
-  // };
+        throw new UnprocessableEntityException(__DEV__ ? error : undefined);
+      });
+  };
 
   // /**
   //  * DocFlow process step
