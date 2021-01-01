@@ -23,8 +23,6 @@ if (localPathMapper['^@images/(.*)$']) {
   delete localPathMapper['^@images/(.*)$'];
 }
 
-console.log(localPathMapper);
-
 module.exports = {
   testTimeout: 180000,
   verbose: true,
