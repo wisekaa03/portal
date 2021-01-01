@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:15
 WORKDIR /portal/
 
 # LABELS
@@ -9,12 +9,12 @@ ENV PORT=4000
 ENV PORT_DEBUG=9229
 
 # PREPARE DEVELOPMENT
-#RUN apt-get update && apt-get install -y \
-#  net-tools \ip
-#  telnet \
-#  dnsutils \
-#  nano \
-#  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+  net-tools \
+  telnet \
+  dnsutils \
+  nano \
+  && rm -rf /var/lib/apt/lists/*
 
 # FOR BUILD
 # RUN set -ex; \

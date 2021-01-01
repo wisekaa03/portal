@@ -61,7 +61,7 @@
   },
   "private": true,
   "engines": {
-    "node": ">= 14",
+    "node": ">= 15",
     "yarn": ">= 1.22"
   },
   "os": [],
@@ -208,6 +208,7 @@
     "**/**/postcss-sass": "^0",
     "**/**/postcss-scss": "^3",
     "**/**/postcss-values-parser": "^4",
+    "**/**/prismjs": "^1",
     "**/**/raw-body": "^2",
     "**/**/raw-loader": "^4",
     "**/**/react-i18next": "^11",
