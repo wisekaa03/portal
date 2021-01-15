@@ -108,6 +108,7 @@
     "**/**/anymatch": "^3",
     "**/**/apollo-graphql": "^0",
     "**/**/apollo-server-core": "^2",
+    "**/**/apollo-server-env": "^3",
     "**/**/apollo-server-types": "^0",
     "**/**/array-union": "^2",
     "**/**/arrify": "^2",
