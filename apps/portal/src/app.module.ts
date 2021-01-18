@@ -4,7 +4,7 @@
 
 //#region Imports NPM
 import { resolve } from 'path';
-import { parse as urlLibParse } from 'url';
+import { URL } from 'url';
 import type Express from 'express';
 import Next from 'next';
 import { ConnectionContext } from 'subscriptions-transport-ws';
@@ -13,13 +13,15 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Module, UnauthorizedException, HttpModule, LoggerService, Logger, OnModuleInit } from '@nestjs/common';
 import { WinstonModule, WinstonLogger, WINSTON_MODULE_PROVIDER, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { GraphQLModule, registerEnumType } from '@nestjs/graphql';
+import { KeyValueCache } from 'apollo-server-core';
+import { RedisCache as GraphQLRedisCache } from 'apollo-server-cache-redis';
 import type { GraphQLSchema } from 'graphql/type/schema';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import type WebSocket from 'ws';
 import { RenderModule } from 'nest-next';
 import { RedisModule, RedisService, RedisModuleOptions } from 'nest-redis';
 import { LdapModule, Scope, ldapADattributes, LoggerContext } from 'nestjs-ldap';
-import type { Redis } from 'ioredis';
+import type { Redis, RedisOptions } from 'ioredis';
 //#endregion
 //#region Imports Local
 import type { GraphQLContext, WebsocketContext } from '@back/shared/types';
@@ -89,7 +91,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
     type: 'ioredis', // "ioredis/cluster"
     options: redisOptions({
       clientName: 'DATABASE',
-      url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
+      url: new URL(configService.get<string>('DATABASE_REDIS_URI')),
       ttl: configService.get<number>('DATABASE_REDIS_TTL') || 600,
       prefix: 'DATABASE:',
     }),
@@ -125,7 +127,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'DATABASE',
-              url: urlLibParse(configService.get<string>('DATABASE_REDIS_URI')),
+              url: new URL(configService.get<string>('DATABASE_REDIS_URI')),
               ttl: configService.get<number>('DATABASE_REDIS_TTL') || 60,
               prefix: 'DATABASE:',
             }),
@@ -136,7 +138,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'LDAP',
-              url: urlLibParse(configService.get<string>('LDAP_REDIS_URI')),
+              url: new URL(configService.get<string>('LDAP_REDIS_URI')),
               ttl: configService.get<number>('LDAP_REDIS_TTL') || 60,
               prefix: 'LDAP:',
             }),
@@ -147,7 +149,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'SESSION',
-              url: urlLibParse(configService.get<string>('SESSION_REDIS_URI')),
+              url: new URL(configService.get<string>('SESSION_REDIS_URI')),
               ttl: configService.get<number>('SESSION_REDIS_TTL') || 60,
               prefix: 'SESSION:',
             }),
@@ -158,7 +160,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'HTTP',
-              url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
+              url: new URL(configService.get<string>('HTTP_REDIS_URI')),
               ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
               prefix: 'HTTP:',
             }),
@@ -167,7 +169,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'PUBLISHER',
-              url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
+              url: new URL(configService.get<string>('HTTP_REDIS_URI')),
               ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
               prefix: 'PUBLISHER:',
             }),
@@ -176,7 +178,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'SUBSCRIBER',
-              url: urlLibParse(configService.get<string>('HTTP_REDIS_URI')),
+              url: new URL(configService.get<string>('HTTP_REDIS_URI')),
               ttl: configService.get<number>('HTTP_REDIS_TTL') || 60,
               prefix: 'SUBSCRIBER:',
             }),
@@ -187,7 +189,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'NEXTCLOUD',
-              url: urlLibParse(configService.get<string>('NEXTCLOUD_REDIS_URI')),
+              url: new URL(configService.get<string>('NEXTCLOUD_REDIS_URI')),
               ttl: configService.get<number>('NEXTCLOUD_REDIS_TTL') || 60,
               prefix: 'NEXTCLOUD:',
             }),
@@ -198,7 +200,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'DOCFLOW',
-              url: urlLibParse(configService.get<string>('DOCFLOW_REDIS_URI')),
+              url: new URL(configService.get<string>('DOCFLOW_REDIS_URI')),
               ttl: configService.get<number>('DOCFLOW_REDIS_TTL') || 60,
               prefix: 'DOCFLOW:',
             }),
@@ -209,7 +211,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           result.push(
             redisOptions({
               clientName: 'TICKETS',
-              url: urlLibParse(configService.get<string>('TICKETS_REDIS_URI')),
+              url: new URL(configService.get<string>('TICKETS_REDIS_URI')),
               ttl: configService.get<number>('TICKETS_REDIS_TTL') || 60,
               prefix: 'TICKETS:',
             }),
@@ -260,6 +262,22 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
         const store = sessionRedis(configService, logger);
         const auth = session(configService, logger, store, true);
         const maxFileSize = configService.get<number>('MAX_FILE_SIZE');
+
+        let cache: KeyValueCache<string> | undefined;
+        try {
+          if (configService.get<string>('GRAPHQL_REDIS_URI')) {
+            cache = new GraphQLRedisCache(
+              redisOptions({
+                clientName: 'GRAPHQL',
+                url: new URL(configService.get<string>('GRAPHQL_REDIS_URI')),
+                ttl: configService.get<number>('GRAPHQL_REDIS_TTL') || 60,
+                prefix: 'GRAPHQL:',
+              }),
+            );
+          }
+        } catch {
+          cache = undefined;
+        }
 
         registerEnumType(Contact, {
           name: 'Contact',
@@ -313,6 +331,7 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           buildSchemaOptions: {
             dateScalarMode: 'timestamp',
           },
+          cache,
           installSubscriptionHandlers: true,
           autoSchemaFile: resolve(process.cwd(), 'apps/portal/src/graphql.gql'),
           sortSchema: true,

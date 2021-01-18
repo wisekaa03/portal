@@ -1,7 +1,6 @@
 /** @format */
-
-import type { UrlWithStringQuery } from 'url';
 import type { RedisModuleOptions } from 'nest-redis';
+import { URL } from 'url';
 
 export const redisOptions = ({
   clientName,
@@ -10,17 +9,13 @@ export const redisOptions = ({
   prefix,
 }: {
   clientName: string;
-  url: UrlWithStringQuery;
+  url: URL;
   ttl?: number;
   prefix?: string;
 }): RedisModuleOptions => {
   if (typeof url === 'object' && url && (url.protocol === 'redis:' || url.protocol === 'rediss:')) {
-    let username: string | undefined;
-    let password: string | undefined;
-    const db = parseInt(url.pathname?.slice(1) || '0', 10);
-    if (url.auth) {
-      [username, password] = url.auth.split(':');
-    }
+    const { username, password } = url;
+    const db = parseInt(url.pathname || '0', 10);
 
     return {
       clientName,
