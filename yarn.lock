@@ -8542,11 +8542,19 @@ graphql-redis-subscriptions@^2:
   optionalDependencies:
     ioredis "^4.17.3"
 
-graphql-subscriptions@^1.0.0, "graphql-subscriptions@https://github.com/apollographql/graphql-subscriptions":
-  version "1.1.0"
-  resolved "https://github.com/apollographql/graphql-subscriptions#2baf18a44c61e3d51d1a55bd1a0ea0b6769c9e91"
+graphql-subscriptions-2@^1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions-2/-/graphql-subscriptions-2-1.1.1.tgz#3ad98bb39e354d63131d871ef1ba9476b656b03b"
+  integrity sha512-GlYw1viHQWi8I+DYRXGfUDsayxTG/wMBtr801i1YpGhQTUnAcwiGNpl2Wopf9NCkRAVXu2dcf2jl8mog4jlZ/A==
   dependencies:
     iterall "^1.3.0"
+
+graphql-subscriptions@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.1.0.tgz#5f2fa4233eda44cf7570526adfcf3c16937aef11"
+  integrity sha512-6WzlBFC0lWmXJbIVE8OgFgXIP4RJi3OQgTPa0DVMsDXdpRDjTsM1K9wfl5HSYX7R87QAGlvcv2Y4BIZa/ItonA==
+  dependencies:
+    iterall "^1.2.1"
 
 graphql-tag@^2.11.0:
   version "2.11.0"
