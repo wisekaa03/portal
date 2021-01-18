@@ -69,6 +69,9 @@ export class ConfigService {
       DATABASE_REDIS_URI: Joi.string().empty('').optional(),
       DATABASE_REDIS_TTL: Joi.number().empty('').default(60).optional(),
 
+      GRAPHQL_REDIS_URI: Joi.string().empty('').optional(),
+      GRAPHQL_REDIS_TTL: Joi.number().empty('').default(3600).optional(),
+
       HTTP_REDIS_URI: Joi.string().empty('').optional(),
       HTTP_REDIS_TTL: Joi.number().empty('').default(60).optional(),
       HTTP_REDIS_MAX_OBJECTS: Joi.number().empty('').default(1000).optional(),
