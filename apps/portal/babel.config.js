@@ -11,7 +11,7 @@ module.exports = function (api) {
   api.cache(true);
 
   //#region Constants
-  const constantsPresets = [['@zeit/next-typescript/babel', { isTSX: true, allExtensions: true }]];
+  const constantsPresets = ['next/babel'];
 
   const constantsPlugins = [
     // 'babel-plugin-react-require',
