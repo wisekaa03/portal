@@ -15,7 +15,7 @@ export const redisOptions = ({
 }): RedisModuleOptions => {
   if (typeof url === 'object' && url && (url.protocol === 'redis:' || url.protocol === 'rediss:')) {
     const { username, password } = url;
-    const db = parseInt(url.pathname || '0', 10);
+    const db = parseInt(url.pathname?.slice(1) || '0', 10);
 
     return {
       clientName,
