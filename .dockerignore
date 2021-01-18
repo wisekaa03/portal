@@ -1,13 +1,16 @@
 .vscode
 .storybook
-typings/
 renovate.json
 tsconfig*
 ormconfig.ts
+nest-cli.json
+next-env.d.ts
 **/next-env.d.ts
 **/next.config.js
 # apps/
 libs/
+
+typings/
 node_modules/@types/
 
 .git*
@@ -35,9 +38,6 @@ jest.*
 README.md
 LICENSE
 
-nest-cli.json
-next-env.d.ts
-
 yarn.lock
 
 npm-debug.log
@@ -48,8 +48,8 @@ docker-compose*
 .env.example
 .env.test
 
-**/__mocks__/**
-**/__tests__/**
+**/__mocks__/*
+**/__tests__/*
 helm/
 coverage/
 
