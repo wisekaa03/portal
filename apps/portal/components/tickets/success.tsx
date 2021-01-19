@@ -15,6 +15,8 @@ import Button from '@front/components/ui/button';
 import { useTranslation } from '../../lib/i18n-client';
 //#endregion
 
+const ReactToPdf = dynamic(() => import('@front/components/react-to-pdf'), { ssr: false });
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -48,8 +50,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-const ReactToPdf = dynamic(() => import('@front/components/react-to-pdf'), { ssr: false });
 
 const TicketsSuccessCard = React.forwardRef<HTMLDivElement, ServicesSuccessCardProps>(({ data }, ref) => {
   const { code, route, createdDate, service, organization, status, subject } = data;

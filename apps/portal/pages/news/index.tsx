@@ -4,7 +4,7 @@
 import React, { useState /* , useContext */ } from 'react';
 import clsx from 'clsx';
 import Head from 'next/head';
-import { I18n } from 'next-i18next';
+// import { I18n } from 'next-i18next';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { useQuery, useMutation, QueryResult } from '@apollo/client';
 import { Card, CardActionArea, CardMedia, CardHeader, Typography, CardContent, CardActions, Fab, IconButton } from '@material-ui/core';
@@ -24,13 +24,6 @@ import { LARGE_RESOLUTION } from '@lib/constants';
 import Loading from '@front/components/loading';
 import IsAdmin from '@front/components/isAdmin';
 //#endregion
-
-// TODO: Import jodit-react:
-// import dynamic from 'next/dynamic';
-// const importJodit = () => import('jodit-react');
-// const JoditEditor = dynamic(importJodit, {
-//     ssr: false,
-// });
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -11,7 +11,25 @@ module.exports = function (api) {
   api.cache(true);
 
   //#region Constants
-  const constantsPresets = ['next/babel'];
+  const constantsPresets = [
+    [
+      'next/babel',
+      {
+        'preset-env': {
+          debug: process.env.NODE_ENV === 'development',
+          modules: false,
+          exclude: ['transform-typeof-symbol'],
+          useBuiltIns: 'usage',
+          // corejs: '3',
+          // targets: {
+          //   esmodules: false,
+          //   // browsers: ['last 2 version', '> 2%', 'not dead', 'node >= 15', 'not ie 11', 'not ie_mob 11', 'not op_mini all'],
+          // },
+          corejs: { version: '3.8', proposals: true },
+        },
+      },
+    ],
+  ];
 
   const constantsPlugins = [
     // 'babel-plugin-react-require',
@@ -75,22 +93,22 @@ module.exports = function (api) {
   //#region Development
   const development = {
     presets: [
-      [
-        '@babel/preset-env',
-        {
-          debug: true,
-          modules: false,
-          exclude: ['transform-typeof-symbol'],
-          useBuiltIns: 'usage',
-          corejs: '3',
-        },
-      ],
       // [
-      //   '@babel/preset-react',
+      //   '@babel/preset-env',
       //   {
-      //     development: true,
+      //     debug: true,
+      //     modules: false,
+      //     exclude: ['transform-typeof-symbol'],
+      //     useBuiltIns: 'usage',
+      //     // corejs: '3',
+      //     // targets: {
+      //     //   esmodules: false,
+      //     //   // browsers: ['last 2 version', '> 2%', 'not dead', 'node >= 15', 'not ie 11', 'not ie_mob 11', 'not op_mini all'],
+      //     // },
+      //     corejs: { version: '3.8', proposals: true },
       //   },
       // ],
+      // '@babel/preset-react',
       ...constantsPresets,
     ],
     plugins: [...constantsPlugins],
@@ -100,15 +118,20 @@ module.exports = function (api) {
   //#region Production
   const production = {
     presets: [
-      [
-        '@babel/preset-env',
-        {
-          modules: false,
-          exclude: ['transform-typeof-symbol'],
-          useBuiltIns: 'usage',
-          corejs: '3',
-        },
-      ],
+      // [
+      //   '@babel/preset-env',
+      //   {
+      //     modules: false,
+      //     exclude: ['transform-typeof-symbol'],
+      //     useBuiltIns: 'usage',
+      //     // corejs: '3',
+      //     // targets: {
+      //     //   esmodules: false,
+      //     //   // browsers: ['last 2 version', '> 2%', 'not dead', 'node >= 15', 'not ie 11', 'not ie_mob 11', 'not op_mini all'],
+      //     // },
+      //     corejs: { version: '3.8', proposals: true },
+      //   },
+      // ],
       // '@babel/preset-react',
       ...constantsPresets,
     ],
@@ -119,20 +142,15 @@ module.exports = function (api) {
   //#region Test
   const test = {
     presets: [
-      [
-        '@babel/preset-env',
-        {
-          targets: 'node 14',
-          useBuiltIns: false,
-          ignoreBrowserslistConfig: true,
-        },
-      ],
       // [
-      //   '@babel/preset-react',
+      //   '@babel/preset-env',
       //   {
-      //     development: true,
+      //     targets: { node: 'current' },
+      //     useBuiltIns: false,
+      //     ignoreBrowserslistConfig: true,
       //   },
       // ],
+      // '@babel/preset-react',
       ...constantsPresets,
     ],
     plugins: [...constantsPlugins],

@@ -8,6 +8,8 @@ declare const __SERVER__: boolean;
 
 declare module 'cli-color';
 declare module 'next-i18next/dist/commonjs/utils';
+declare module 'jodit/build/jodit.es2018';
+declare module 'jodit/build/jodit.es2018.min';
 
 declare namespace NodeJS {
   interface GlobalFetch {}
