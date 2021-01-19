@@ -36,6 +36,7 @@ export default (configService: ConfigService, logger: LoggerService, store: Sess
         path: '/',
         domain,
         secure,
+        sameSite: 'lax',
         // expires: false,
         httpOnly,
         // в миллисекундах, 1000 * 60 - минута
