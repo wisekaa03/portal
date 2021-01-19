@@ -85,12 +85,12 @@ module.exports = function (api) {
           corejs: '3',
         },
       ],
-      [
-        '@babel/preset-react',
-        {
-          development: true,
-        },
-      ],
+      // [
+      //   '@babel/preset-react',
+      //   {
+      //     development: true,
+      //   },
+      // ],
       ...constantsPresets,
     ],
     plugins: [...constantsPlugins],
@@ -109,7 +109,7 @@ module.exports = function (api) {
           corejs: '3',
         },
       ],
-      '@babel/preset-react',
+      // '@babel/preset-react',
       ...constantsPresets,
     ],
     plugins: [...constantsPlugins],
@@ -127,12 +127,12 @@ module.exports = function (api) {
           ignoreBrowserslistConfig: true,
         },
       ],
-      [
-        '@babel/preset-react',
-        {
-          development: true,
-        },
-      ],
+      // [
+      //   '@babel/preset-react',
+      //   {
+      //     development: true,
+      //   },
+      // ],
       ...constantsPresets,
     ],
     plugins: [...constantsPlugins],

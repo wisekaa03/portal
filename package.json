@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "5.1.1",
+  "version": "5.2.0",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -335,12 +335,12 @@
     "pg-native": "^3",
     "prom-client": "^13",
     "query-string": "^6",
-    "react": "^16",
+    "react": "^17",
     "react-copy-to-clipboard": "^5",
     "react-dnd": "^11",
     "react-dnd-html5-backend": "^11",
     "react-dnd-touch-backend": "^11",
-    "react-dom": "^16",
+    "react-dom": "^17",
     "react-dropzone": "^11",
     "react-i18next": "^11",
     "react-swipeable-views": "0.14.0-alpha.0",
