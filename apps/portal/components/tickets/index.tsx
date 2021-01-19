@@ -314,7 +314,12 @@ const TicketsComponent: FC<TicketsWrapperProps> = ({
             ) : (
               <>
                 {task.route && (
-                  <Grid container spacing={8} style={{ gridTemplateColumns: '1fr 300px' }} className={classes.formControl}>
+                  <Grid
+                    container
+                    spacing={8}
+                    style={{ gridTemplateColumns: '1fr 300px', flexWrap: 'nowrap' }}
+                    className={classes.formControl}
+                  >
                     <ServicesElement key={`t-${task.route}`} base64 route={task.route} active />
                     <Box style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                       {!isFavorite && (
