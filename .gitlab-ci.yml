@@ -120,6 +120,8 @@ helm_development:
         --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
         --set DATABASE_REDIS_URI="${DATABASE_REDIS_URI}" \
         --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
+        --set GRAPHQL_REDIS_URI="${GRAPHQL_REDIS_URI}" \
+        --set GRAPHQL_REDIS_TTL="${GRAPHQL_REDIS_TTL}" \
         --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
         --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
         --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
@@ -180,6 +182,8 @@ helm_development:
         --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
         --set DATABASE_REDIS_URI="${DATABASE_REDIS_URI}" \
         --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
+        --set GRAPHQL_REDIS_URI="${GRAPHQL_REDIS_URI}" \
+        --set GRAPHQL_REDIS_TTL="${GRAPHQL_REDIS_TTL}" \
         --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
         --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
         --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
@@ -266,6 +270,8 @@ helm_production:
         --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
         --set DATABASE_REDIS_URI="${DATABASE_REDIS_URI}" \
         --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
+        --set GRAPHQL_REDIS_URI="${GRAPHQL_REDIS_URI}" \
+        --set GRAPHQL_REDIS_TTL="${GRAPHQL_REDIS_TTL}" \
         --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
         --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
         --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
@@ -325,6 +331,8 @@ helm_production:
         --set DATABASE_LOGGING="${DATABASE_LOGGING}" \
         --set DATABASE_REDIS_URI="${DATABASE_REDIS_URI}" \
         --set DATABASE_REDIS_TTL="${DATABASE_REDIS_TTL}" \
+        --set GRAPHQL_REDIS_URI="${GRAPHQL_REDIS_URI}" \
+        --set GRAPHQL_REDIS_TTL="${GRAPHQL_REDIS_TTL}" \
         --set HTTP_REDIS_URI="${HTTP_REDIS_URI}" \
         --set HTTP_REDIS_TTL="${HTTP_REDIS_TTL}" \
         --set HTTP_REDIS_MAX_OBJECTS="${HTTP_REDIS_MAX_OBJECTS}" \
