@@ -1,7 +1,7 @@
 /** @format */
 
 //#region Imports NPM
-import { parse as urlLibParse } from 'url';
+import { URL } from 'url';
 import { LoggerService } from '@nestjs/common';
 import Session from 'express-session';
 import RedisSessionStore from 'connect-redis';
@@ -12,15 +12,11 @@ import { ConfigService } from '@app/config';
 //#endregion
 
 export default (configService: ConfigService, logger: LoggerService): Session.Store => {
-  const redisArray = urlLibParse(configService.get<string>('SESSION_REDIS_URI'));
+  const redisArray = new URL(configService.get<string>('SESSION_REDIS_URI'));
 
   if (redisArray && (redisArray.protocol === 'redis:' || redisArray.protocol === 'rediss:')) {
-    let username: string | undefined;
-    let password: string | undefined;
+    const { username, password } = redisArray;
     const db = parseInt(redisArray.pathname?.slice(1) || '0', 10);
-    if (redisArray.auth) {
-      [username, password] = redisArray.auth.split(':');
-    }
 
     try {
       const sess = new (RedisSessionStore(Session))({
