@@ -323,7 +323,7 @@
     "pg-native": "*",
     "prom-client": "*",
     "query-string": "*",
-    "react": "^16",
+    "react": "^17.0.0",
     "react-copy-to-clipboard": "*",
     "react-dnd": "*",
     "react-dnd-html5-backend": "*",
