@@ -153,7 +153,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
         objectSrc: ["'none'"],
         imgSrc,
         fontSrc,
-        scriptSrc: !DEV ? scriptSrc.concat(`'nonce-${(res as any).locals.nonce}'`) : scriptSrc,
+        scriptSrc: DEV ? scriptSrc : scriptSrc.concat(`'nonce-${(res as any).locals.nonce}'`),
         frameSrc,
         styleSrc,
         connectSrc,
@@ -171,6 +171,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
   //#region Session and passport initialization
   const store = sessionRedis(configService, logger);
   app.use(session(configService, logger, store, secure));
+  app.disable('x-powered-by');
 
   app.use(passport.initialize());
   app.use(passport.session());
