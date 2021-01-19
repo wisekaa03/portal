@@ -238,7 +238,7 @@
     "**/**/webpack-bundle-analyzer": "^4",
     "**/**/webpack-log": "^3",
     "**/**/webpack-node-externals": "^2",
-    "**/**/webpack": "^4",
+    "**/**/webpack": "^5.0.0",
     "**/**/whatwg-url": "^8",
     "**/**/ws": "^7",
     "**/**/yargs-parser": "^20",
@@ -477,7 +477,7 @@
     "typescript": "*",
     "vscode-test": "*",
     "webp-loader": "*",
-    "webpack": "^4",
+    "webpack": "^5.0.0",
     "webpack-cli": "*",
     "webpack-node-externals": "*"
   }
