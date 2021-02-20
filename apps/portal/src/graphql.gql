@@ -336,9 +336,9 @@ type DocFlowCashFlowItem implements DocFlowInterfaceObject {
 }
 
 type DocFlowCashFlowRow {
+  VAT: Float!
   item: [DocFlowCashFlowItem!]!
   total: Float!
-  VAT: Float!
 }
 
 type DocFlowConfirmationResult implements DocFlowInterfaceObject {
@@ -400,8 +400,8 @@ type DocFlowDocument implements DocFlowInterfaceDocument & DocFlowInterfaceObjec
   project: DocFlowProject
   projectsEnabled: Boolean
   regDate: Date
-  registrationAvailable: Boolean
   regNumber: String
+  registrationAvailable: Boolean
   relations: [DocFlowDocumentRelation!]
   responsible: DocFlowUser
   sheetsOfAnnexes: Int
@@ -536,8 +536,8 @@ interface DocFlowInterfaceDocument {
   project: DocFlowProject
   projectsEnabled: Boolean
   regDate: Date
-  registrationAvailable: Boolean
   regNumber: String
+  registrationAvailable: Boolean
   relations: [DocFlowDocumentRelation!]
   responsible: DocFlowUser
   sheetsOfAnnexes: Int
@@ -567,6 +567,7 @@ interface DocFlowInterfaceObject {
 }
 
 type DocFlowInternalDocument implements DocFlowInterfaceDocument & DocFlowInterfaceObject {
+  VAT: Int
   accessLevel: DocFlowAccessLevel
   accessLevelEnabled: Boolean
   activityMatter: DocFlowActivityMatter
@@ -605,8 +606,8 @@ type DocFlowInternalDocument implements DocFlowInterfaceDocument & DocFlowInterf
   project: DocFlowProject
   projectsEnabled: Boolean
   regDate: Date
-  registrationAvailable: Boolean
   regNumber: String
+  registrationAvailable: Boolean
   relations: [DocFlowDocumentRelation!]
   resolutions: [DocFlowResolution!]
   responsible: DocFlowUser
@@ -628,7 +629,6 @@ type DocFlowInternalDocument implements DocFlowInterfaceDocument & DocFlowInterf
   titleBlockedByTemplate: Boolean
   type: String!
   useCaseFiles: Boolean
-  VAT: Int
   visas: [DocFlowVisa!]
 }
 
@@ -696,6 +696,7 @@ type DocFlowLegalPrivatePerson implements DocFlowInterfaceObject {
 }
 
 type DocFlowOrganization implements DocFlowInterfaceObject {
+  VATpayer: Boolean
   fullName: String
   id: ID!
   inn: String
@@ -705,7 +706,6 @@ type DocFlowOrganization implements DocFlowInterfaceObject {
   navigationRef: String
   presentation: String
   type: String!
-  VATpayer: Boolean
 }
 
 type DocFlowPrivatePerson implements DocFlowInterfaceObject {
@@ -1062,11 +1062,11 @@ type SearchSuggestions {
 
 type Subscription {
   docFlowInternalDocumentSubscription(internalDocument: DocFlowInternalDocumentInput!): DocFlowInternalDocument!
-  docFlowTasksSubscription(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   docFlowTaskSubscription(task: DocFlowTaskInput!): DocFlowTask!
+  docFlowTasksSubscription(tasks: DocFlowTasksInput): [DocFlowTasks!]!
   ticketsRoutesSubscription(routes: TkRoutesInput): TkRoutes!
-  ticketsTasksSubscription(tasks: TkTasksInput): TkTasks!
   ticketsTaskSubscription(task: TkTaskInput!): TkEditTask!
+  ticketsTasksSubscription(tasks: TkTasksInput): TkTasks!
 }
 
 type TkComment {

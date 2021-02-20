@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -37,8 +37,7 @@
     "typeorm": "node ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js",
     "typeorm:transpile": "npx webpack --entry ./ormconfig.ts",
     "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync",
-    "typeorm:sync": "yarn typeorm schema:sync",
-    "postinstall": "husky install"
+    "typeorm:sync": "yarn typeorm schema:sync"
   },
   "browserslist": [
     "last 2 version",
@@ -234,7 +233,7 @@
     "**/**/table": "^6",
     "**/**/tar-stream": "^2",
     "**/**/tar": "^6",
-    "**/**/terser-webpack-plugin": "^4",
+    "**/**/terser-webpack-plugin": "^5",
     "**/**/terser": "^5",
     "**/**/timers-browserify": "^2",
     "**/**/tmp": "^0",
