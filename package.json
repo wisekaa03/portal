@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "scripts": {
     "v": "yarn version --patch",
     "v:major": "yarn version --major",
@@ -37,7 +37,8 @@
     "typeorm": "node ./node_modules/typeorm/cli.js -f .next/typeorm/ormconfig.js",
     "typeorm:transpile": "npx webpack --entry ./ormconfig.ts",
     "typeorm:clean": "yarn typeorm schema:drop && yarn typeorm schema:sync",
-    "typeorm:sync": "yarn typeorm schema:sync"
+    "typeorm:sync": "yarn typeorm schema:sync",
+    "postinstall": "husky install"
   },
   "browserslist": [
     "last 2 version",
@@ -389,7 +390,7 @@
     "@types/anymatch": "^1",
     "@types/apollo-upload-client": "^14",
     "@types/bcrypt": "^3",
-    "@types/cache-manager": "^2",
+    "@types/cache-manager": "^3",
     "@types/cache-manager-ioredis": "^2",
     "@types/cli-color": "^2",
     "@types/color-name": "^1",
@@ -399,6 +400,7 @@
     "@types/enzyme": "^3",
     "@types/enzyme-adapter-react-16": "^1",
     "@types/express-session": "^1",
+    "@types/graphql-upload": "^8",
     "@types/ioredis": "^4",
     "@types/jest": "^26",
     "@types/lodash": "^4",
@@ -453,7 +455,7 @@
     "eslint-plugin-react": "^7",
     "eslint-plugin-react-hooks": "^4",
     "file-loader": "^6",
-    "husky": "^4",
+    "husky": "^5",
     "imagemin-gifsicle": "^7",
     "imagemin-mozjpeg": "^9",
     "imagemin-optipng": "^8",

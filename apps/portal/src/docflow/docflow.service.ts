@@ -301,7 +301,7 @@ export class DocFlowService {
     const userId = user.id || '';
     const cachedId = `docflow:${userId}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
-      const cached: DocFlowTasks[] = await this.cache.get<DocFlowTasks[]>(cachedId);
+      const cached: DocFlowTasks[] | undefined = await this.cache.get<DocFlowTasks[]>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
@@ -542,7 +542,7 @@ export class DocFlowService {
     const userId = user.id || '';
     const cachedId = `docflow:${task.id}`;
     if (this.cache && (!task || task.cache !== false)) {
-      const cached: DocFlowTask = await this.cache.get<DocFlowTask>(cachedId);
+      const cached: DocFlowTask | undefined = await this.cache.get<DocFlowTask>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {
@@ -805,7 +805,7 @@ export class DocFlowService {
     const userId = user.id || '';
     const cachedId = `internalDocument:${internalDocument.id}`;
     if (this.cache && (!internalDocument || internalDocument.cache !== false)) {
-      const cached: DocFlowInternalDocument = await this.cache.get<DocFlowInternalDocument>(cachedId);
+      const cached: DocFlowInternalDocument | undefined = await this.cache.get<DocFlowInternalDocument>(cachedId);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {

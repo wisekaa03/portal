@@ -319,7 +319,7 @@ export class TicketsService {
     const userId = user.id || '';
     const cachedID = 'tasks:routes'; // -${user.id}`;
     if (this.cache && (!input || input.cache !== false)) {
-      const cached: TkRoutes = await this.cache.get<TkRoutes>(cachedID);
+      const cached: TkRoutes | undefined = await this.cache.get<TkRoutes>(cachedID);
       if (cached && cached !== null && (!Array.isArray(cached.errors) || cached.errors?.length === 0)) {
         (async (): Promise<void> => {
           try {
@@ -650,7 +650,7 @@ export class TicketsService {
     const userId = user.id || '';
     const cachedID = `tasks:${userId}`;
     if (this.cache && (!tasks || tasks.cache !== false)) {
-      const cached: TkTasks = await this.cache.get<TkTasks>(cachedID);
+      const cached: TkTasks | undefined = await this.cache.get<TkTasks>(cachedID);
       if (cached && cached !== null && (!Array.isArray(cached.errors) || cached.errors?.length === 0)) {
         (async (): Promise<void> => {
           try {
@@ -1130,7 +1130,7 @@ export class TicketsService {
     const userId = user.id || '';
     const cachedID = `task:${task.where}:${task.code}`;
     if (this.cache && (!task || task.cache !== false)) {
-      const cached: TkEditTask = await this.cache.get<TkEditTask>(cachedID);
+      const cached: TkEditTask | undefined = await this.cache.get<TkEditTask>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           try {

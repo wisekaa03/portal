@@ -238,7 +238,7 @@ export class FilesService {
 
     const cachedID = `files:${user.loginGUID}:${path}`;
     if (this.cache && cache) {
-      const cached: FilesFolder[] = await this.cache.get<FilesFolder[]>(cachedID);
+      const cached: FilesFolder[] | undefined = await this.cache.get<FilesFolder[]>(cachedID);
       if (cached && cached !== null) {
         (async (): Promise<void> => {
           const folderFilesSubscription = await this.folder(path, lastPath, user, password);
@@ -301,7 +301,7 @@ export class FilesService {
 
     const cachedID = `file:${user.loginGUID}:${path}`;
     if (cache && this.cache) {
-      const cached: FilesFile = await this.cache.get<FilesFile>(cachedID);
+      const cached: FilesFile | undefined = await this.cache.get<FilesFile>(cachedID);
       if (cached && cached !== null && cached.temporaryFile) {
         try {
           fs.accessSync(cached.temporaryFile, fs.constants.R_OK);
