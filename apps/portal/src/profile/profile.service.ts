@@ -50,7 +50,7 @@ export class ProfileService {
   };
 
   clean = (value: string | number | boolean | unknown): string | number | boolean | unknown =>
-    // TODO: продумать варианты очистки и безопасности
+    // @todo: продумать варианты очистки и безопасности
     typeof value === 'string' ? value.trim() : value;
 
   constructor(
@@ -195,7 +195,7 @@ export class ProfileService {
       .findOne({
         where,
         relations,
-        // TODO:
+        // @todo:
         cache,
         transaction,
       })
@@ -245,7 +245,7 @@ export class ProfileService {
     return this.profileRepository.findOne({
       where,
       relations,
-      // TODO:
+      // @todo:
       cache,
       transaction,
     });
@@ -284,7 +284,7 @@ export class ProfileService {
       .findOne({
         where,
         relations,
-        // TODO:
+        // @todo:
         cache,
         transaction,
       })
@@ -1033,7 +1033,7 @@ export class ProfileService {
             data: ldapUpdated,
             domain,
             username: created && created.username ? created.username : undefined,
-            // TODO: .modify with password parameter
+            // @todo: .modify with password parameter
             // password: (req.session!.passport!.user as UserResponse)!.passwordFrontend,
             loggerContext,
           })
@@ -1064,12 +1064,12 @@ export class ProfileService {
     return this.save({ profile: result, loggerContext });
 
     // .then(async (profileUpdated) => {
-    //     // TODO: what I do ?...
+    //     // @todo: what I do ?...
     //   if (user.profile.id === profileUpdated.id) {
     //     user.profile = profileUpdated;
     //   }
 
-    //   // TODO:  разобраться
+    //   // @todo:  разобраться
     //   // await this.profileRepository.manager.connection?.queryResultCache?.remove([
     //   //   'profile',
     //   //   'profile_searchSuggestions',

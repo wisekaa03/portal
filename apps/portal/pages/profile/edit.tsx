@@ -36,7 +36,7 @@ const ProfileEditPage: I18nPage<{ ctx: NextPageContext }> = ({ t, i18n, query, c
     Data<'profile', PROFILE_TYPE>
   >(PROFILE, {
     variables: { id },
-    // TODO: check if this is available
+    // @todo: check if this is available
     ssr: false,
     context: { user },
     notifyOnNetworkStatusChange: true,

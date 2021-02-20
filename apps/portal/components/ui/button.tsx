@@ -99,7 +99,7 @@ const BaseButton: React.FC<ButtonBaseProps> = ({
 }) => {
   const classes = useStyles({});
 
-  // TODO: design changes...
+  // @todo: design changes...
   // let icon: React.ReactElement;
   // switch (actionType) {
   //   case 'cancel':

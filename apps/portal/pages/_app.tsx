@@ -116,26 +116,28 @@ const App = ({ disableGeneration = false, Component, apolloClient, pageProps, co
       <StylesProvider disableGeneration={disableGeneration}>
         <ThemeProvider theme={themeUser}>
           <CssBaseline />
-          <ApolloProvider client={apolloClient}>
-            <Head>
-              <title>Corporate portal</title>
-            </Head>
-            <SnackbarProvider
-              maxSnack={3}
-              dense={isMobile}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-            >
-              <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-                <SnackbarUtilsConfigurator />
-                <ProfileProvider context={context} router={router} ctx={ctx}>
-                  <Component {...pageProps} context={context} router={router} ctx={ctx} />
-                </ProfileProvider>
-              </DndProvider>
-            </SnackbarProvider>
-          </ApolloProvider>
+          {apolloClient && (
+            <ApolloProvider client={apolloClient}>
+              <Head>
+                <title>Corporate portal</title>
+              </Head>
+              <SnackbarProvider
+                maxSnack={3}
+                dense={isMobile}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+                  <SnackbarUtilsConfigurator />
+                  <ProfileProvider context={context} router={router} ctx={ctx}>
+                    <Component {...pageProps} context={context} router={router} ctx={ctx} />
+                  </ProfileProvider>
+                </DndProvider>
+              </SnackbarProvider>
+            </ApolloProvider>
+          )}
         </ThemeProvider>
       </StylesProvider>
     </>

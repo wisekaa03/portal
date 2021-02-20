@@ -38,7 +38,7 @@ const DocFlowTargetPage: I18nPage<DocFlowTargetProps> = ({ t, i18n, id, ...rest 
   );
 
   useEffect(() => {
-    // TODO: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
+    // @todo: when a subscription used, a fully object is transmitted to client, old too. try to minimize this.
     subscribeToMoreDocFlowInternalDocument({
       document: DOCFLOW_INTERNAL_DOCUMENT_SUB,
       variables: { internalDocument: { id } },

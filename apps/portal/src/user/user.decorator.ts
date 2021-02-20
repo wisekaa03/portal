@@ -14,7 +14,7 @@ export const CurrentUser = createParamDecorator<any, any, User>(
 );
 
 /**
- * TODO: !!! This is a security RISK !!!
+ * @todo: !!! This is a security RISK !!!
  */
 export const PasswordFrontend = createParamDecorator<any, any, string>(
   (_data: unknown, context: ExecutionContext) => GqlExecutionContext.create(context).getContext()?.req?.session?.password ?? '',

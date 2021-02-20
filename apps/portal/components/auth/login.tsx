@@ -20,8 +20,8 @@ import {
 } from '@material-ui/core';
 //#endregion
 //#region Imports Local
-import Logo from '@images/svg/logo.svg'; // TODO: ?inline
-import Background from '@images/svg/background.svg'; // TODO: ?inline
+import Logo from '@images/svg/logo.svg'; // @todo: ?inline
+import Background from '@images/svg/background.svg'; // @todo: ?inline
 import { useTranslation } from '@lib/i18n-client';
 import type { LoginComponentProps } from '@lib/types';
 import Loading from '@front/components/loading';

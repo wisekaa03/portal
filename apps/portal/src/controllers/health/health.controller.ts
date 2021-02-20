@@ -24,7 +24,7 @@ export class HealthController {
   public readiness(): Promise<HealthCheckResult> {
     return this.health.check([
       () => this.database.pingCheck('database', { timeout: 400 }),
-      // TODO: some problem
+      // @todo: some problem
       // () =>
       //   this.microservice.pingCheck('microservice', {
       //     transport: Transport.REDIS,

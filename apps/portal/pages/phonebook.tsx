@@ -109,7 +109,7 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
         after: '',
         search: search.length > 3 ? search : '',
         disabled: columns.includes(PhonebookColumnNames.disabled),
-        // TODO: for admins only
+        // @todo: for admins only
         notShowing: isAdmin && columns.includes(PhonebookColumnNames.notShowing),
         filters,
       },
@@ -130,8 +130,8 @@ const PhonebookPage: I18nPage = ({ t, query, ...rest }) => {
     }
   }, [error, suggestionsError, errorSettings]);
 
-  // TODO: тут 2 варианта: либо под каждую диагональ свои дефолтные колонки,
-  // TODO: либо нет подстановки дефолтных колонок, если есть в settings
+  // @todo: тут 2 варианта: либо под каждую диагональ свои дефолтные колонки,
+  // @todo: либо нет подстановки дефолтных колонок, если есть в settings
   // useEffect(() => {
   //   setColumns(lgUp ? columnsLG : mdUp ? columnsMD : smUp ? columnsSM : columnsXS);
   // }, [lgUp, mdUp, smUp]);

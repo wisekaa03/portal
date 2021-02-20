@@ -78,7 +78,7 @@ export class FilesResolver {
   @UseGuards(GqlAuthGuard)
   @Subscription(() => [FilesFolder], {
     filter: (payload, variables) =>
-      // TODO: сделать чтобы по пользакам отбиралось
+      // @todo: сделать чтобы по пользакам отбиралось
       payload.path === variables.path,
   })
   folderFilesSubscription(): AsyncIterator<FilesFolder[]> {

@@ -97,6 +97,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    'no-return-assign': [2, 'except-parens'],
     'jest/valid-title': 0,
     'no-confusing-arrow': 0,
     '@typescript-eslint/indent': 0,

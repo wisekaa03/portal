@@ -108,19 +108,19 @@
         "backgroundColor": "transparent"
       },
       {
-        "tag": "todo",
+        "tag": "@todo",
         "color": "#FF8C00",
         "strikethrough": false,
         "backgroundColor": "transparent"
       },
       {
-        "tag": "fixme",
+        "tag": "@fixme",
         "color": "#FFD666",
         "strikethrough": false,
         "backgroundColor": "transparent"
       },
       {
-        "tag": "debug",
+        "tag": "@debug",
         "color": "#FF0000",
         "strikethrough": false,
         "backgroundColor": "transparent"
@@ -139,17 +139,22 @@
       }
     ],
     "todo-tree.highlights.customHighlight": {
-      "TODO": {
+      "@todo": {
         "icon": "issue-opened",
         "foreground": "#FF8C00",
         "iconColour": "#FF8C00"
       },
-      "FIXME": {
+      "@description": {
+        "icon": "issue-opened",
+        "foreground": "#FF8C00",
+        "iconColour": "#FF8C00"
+      },
+      "@fixme": {
         "icon": "bug",
         "foreground": "#FFD666",
         "iconColour": "#FFD666"
       },
-      "DEBUG": {
+      "@debug": {
         "icon": "bug",
         "foreground": "#FFD666",
         "iconColour": "#FFD666"

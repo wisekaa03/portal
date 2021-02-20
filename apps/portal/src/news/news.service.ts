@@ -27,7 +27,7 @@ export class NewsService {
    * @return News
    */
   news = async (): Promise<News[]> =>
-    // TODO: сделать чтобы выводилось постранично
+    // @todo: сделать чтобы выводилось постранично
     this.newsRepository.find();
 
   /**

@@ -72,7 +72,7 @@ const DocFlowTasksTable = withStyles((theme) => ({
                     const value = column.id
                       .split('.')
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore TODO:
+                      // @ts-ignore @todo:
                       .reduce((acc, elem) => (typeof acc === 'object' && acc !== null ? acc[elem] : acc), task.task as unknown);
 
                     const cellData = (

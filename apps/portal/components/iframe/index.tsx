@@ -72,7 +72,7 @@ const Iframe: ComponentType<IframeInterface> = ({
   });
   const props = Object.create(null);
 
-  // TODO: сделать
+  // @todo: сделать
   // eslint-disable-next-line no-restricted-syntax
   for (const prop of Object.keys(defaultProps)) {
     if (defaultProps[prop] !== null) {

@@ -3,7 +3,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { DocFlowInterfaceObject } from './DocFlowInterfaceObject';
 
-// TODO: доделать
+// @todo: доделать
 
 @ObjectType({
   implements: () => [DocFlowInterfaceObject],

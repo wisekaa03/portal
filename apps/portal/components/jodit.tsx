@@ -61,7 +61,7 @@ const configDefault = {
   // useAceEditor: false,
   // sourceEditor: 'area',
   // placeholder: 'Подробное описание',
-  // TODO: ,image,file
+  // @todo: ,image,file
   style: {
     font: '16px "Roboto", "Arial", "Helvetica"',
     backgroundColor: '#F5FDFF',

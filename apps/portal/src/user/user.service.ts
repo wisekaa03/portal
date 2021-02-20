@@ -242,7 +242,7 @@ export class UserService {
     return this.userRepository.findOneOrFail({
       where,
       relations,
-      // TODO:
+      // @todo:
       cache,
       transaction,
     });

@@ -16,7 +16,7 @@ export const toBase64 = (file: Blob): Promise<string | ArrayBuffer> =>
     reader.addEventListener('error', (error) => reject(error));
   });
 
-// TODO: надо потестировать как оно работает
+// @todo: надо потестировать как оно работает
 export const resizeImage = (file: Blob): Promise<string | ArrayBuffer> =>
   new Promise((resolve, reject) => {
     const MAX_WIDTH = 250;
@@ -48,7 +48,9 @@ export const resizeImage = (file: Blob): Promise<string | ArrayBuffer> =>
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
           ctx.canvas.toBlob((blob: Blob | null) => {
-            blob && resolve(toBase64(blob));
+            if (blob) {
+              resolve(toBase64(blob));
+            }
           });
         }
       });

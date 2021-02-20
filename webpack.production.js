@@ -22,11 +22,10 @@ module.exports = (original) => {
       },
     },
     optimization: {
-      namedModules: false,
-      namedChunks: false,
       nodeEnv: 'production',
       flagIncludedChunks: true,
-      occurrenceOrder: true,
+      chunkIds: 'total-size',
+      moduleIds: 'size',
       sideEffects: true,
       usedExports: true,
       concatenateModules: true,
@@ -36,7 +35,7 @@ module.exports = (original) => {
         maxAsyncRequests: 5,
         maxInitialRequests: 3,
       },
-      noEmitOnErrors: true,
+      emitOnErrors: false,
       checkWasmTypes: true,
       minimize: true,
       minimizer: [

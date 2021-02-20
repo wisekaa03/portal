@@ -9,7 +9,7 @@ import { i18n } from 'i18next';
 import { localesDate, PortalLocales } from './locales';
 //#endregion
 
-// TODO: разобраться с локалями
+// @todo: разобраться с локалями
 export const dateFormat = (date: Date | number | null | undefined, formatStr: i18n, formatIfNull = '<Дата не установлена>'): string => {
   const { language } = formatStr;
   return !date

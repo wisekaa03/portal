@@ -17,7 +17,7 @@ import { appBarHeight } from '@lib/constants';
 import type { AppBarComponentProps } from '@lib/types';
 import RefreshButton from '@front/components/ui/refresh-button';
 import Avatar from '@front/components/ui/avatar';
-import LogoMin from '@images/png/logo_min.png'; // TODO: ?inline';
+import LogoMin from '@images/png/logo_min.png'; // @todo: ?inline';
 //#endregion
 
 const avatarHeight = 48;

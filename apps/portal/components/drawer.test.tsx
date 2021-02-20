@@ -54,7 +54,7 @@ describe('Drawer component', () => {
     });
   });
 
-  // TODO: почему то контекст не пробрасывается
+  // @todo: почему то контекст не пробрасывается
   // describe('With context', () => {
   //   beforeAll(() => {
   //     component = createShallow({ dive: true })(

@@ -49,11 +49,6 @@
     "not ie_mob 11",
     "not op_mini all"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
@@ -250,7 +245,7 @@
     "**/**/webpack-bundle-analyzer": "^4",
     "**/**/webpack-log": "^3",
     "**/**/webpack-node-externals": "^2",
-    "**/**/webpack": "^4",
+    "**/**/webpack": "^5",
     "**/**/whatwg-url": "^8",
     "**/**/ws": "^7",
     "**/**/yargs-parser": "^20",
@@ -480,7 +475,7 @@
     "stylelint-prettier": "^1",
     "supertest": "^6",
     "terser": "^5",
-    "terser-webpack-plugin": "^4",
+    "terser-webpack-plugin": "^5",
     "ts-jest": "^26",
     "ts-loader": "^8",
     "ts-node": "^9",
@@ -489,7 +484,7 @@
     "typescript": "^4",
     "vscode-test": "^1",
     "webp-loader": "^0",
-    "webpack": "^4",
+    "webpack": "^5",
     "webpack-cli": "^4",
     "webpack-node-externals": "^2"
   }

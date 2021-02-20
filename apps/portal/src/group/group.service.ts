@@ -74,7 +74,7 @@ export class GroupService {
   }): Promise<Group | undefined> =>
     this.groupRepository.findOne({
       where: { loginService: LoginService.LDAP, loginDomain, loginGUID },
-      // TODO:
+      // @todo:
       cache,
       transaction,
     });

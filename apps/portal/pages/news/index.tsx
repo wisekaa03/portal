@@ -191,7 +191,7 @@ const NewsPage: I18nPage = ({ t, i18n, query, ...rest }) => {
             <div className={classes.container}>
               <div>
                 {data?.news?.map((news: NewsProps) => {
-                  // TODO: regexp может быть улучшен
+                  // @todo: regexp может быть улучшен
                   const images = news.content.match(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/gi);
                   const anchor = `news-${news.id}`;
 

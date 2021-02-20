@@ -27,7 +27,7 @@ const DocFlowTasksPage: I18nPage = ({ t, i18n, ...rest }) => {
     subscribeToMore: subscribeToMoreDocFlowTasks,
   } = useQuery<Data<'docFlowTasks', DocFlowTasks[]>, { tasks: DocFlowTasksInput }>(DOCFLOW_TASKS, {
     ssr: true,
-    // TODO: какого-то хера не получается сделать query:fragment и fetchPolicy: 'cache-and-network'
+    // @todo: какого-то хера не получается сделать query:fragment и fetchPolicy: 'cache-and-network'
     // fetchPolicy: 'network-only',
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,

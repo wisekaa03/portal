@@ -157,7 +157,7 @@ async function bootstrap(configService: ConfigService): Promise<void> {
         frameSrc,
         styleSrc,
         connectSrc,
-        // TODO: helmet bug ?
+        // @todo: helmet bug ?
         // upgradeInsecureRequests: 'true',
       },
     })(_req, res, next);

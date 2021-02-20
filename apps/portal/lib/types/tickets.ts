@@ -46,6 +46,6 @@ export interface TaskComponentProps {
 export interface TaskInfoCardProps {
   classes: Record<'root' | 'center' | 'content' | 'avatar' | 'list', string>;
   header: string;
-  // TODO: !!! STRING THERE !!!
+  // @todo: !!! STRING THERE !!!
   profile?: TkUser | string;
 }

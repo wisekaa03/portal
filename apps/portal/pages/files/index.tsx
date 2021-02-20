@@ -53,7 +53,7 @@ const FilesPage: I18nPage = ({ t, query, ...rest }) => {
       subscribeToMore: folderListSubscribe,
     },
   ] = useLazyQuery<Data<'folderFiles', FilesFolder[]>, { path: string }>(FILES_FOLDER_LIST, {
-    // TODO: subscriptions
+    // @todo: subscriptions
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });

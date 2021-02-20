@@ -111,7 +111,7 @@ module.exports = (options) => {
         loader: 'babel-loader',
         options: {
           // presets: ['@babel/preset-env'],
-          // TODO: https://stackoverflow.com/questions/59972341/how-to-make-webpack-accept-optional-chaining-without-babel
+          // @todo: https://stackoverflow.com/questions/59972341/how-to-make-webpack-accept-optional-chaining-without-babel
           plugins: ['@babel/plugin-proposal-optional-chaining', '@babel/plugin-proposal-nullish-coalescing-operator'],
         },
       },

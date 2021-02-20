@@ -38,7 +38,7 @@ describe('Login page', () => {
     expect(wrapper.find(() => TextField)).toBeDefined();
   });
 
-  // TODO: чота непонятное тута, разобраться
+  // @todo: чота непонятное тута, разобраться
   // it('test username input', () => {
   //   const username = 'testuser';
   //   component.find('[data-field-name="username"]').simulate('change', {

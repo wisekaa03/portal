@@ -28,7 +28,7 @@ export * from './user';
 
 export interface ApolloProps<TCache = NormalizedCacheObject> {
   apollo: TCache;
-  apolloClient: ApolloClient<TCache>;
+  apolloClient?: ApolloClient<TCache>;
 }
 
 export interface PageProps {

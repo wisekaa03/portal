@@ -20,7 +20,7 @@ export interface AvatarProps {
 }
 
 /**
- * TODO: DOCUMENT THIS
+ * @todo: DOCUMENT THIS
  */
 const Avatar = React.forwardRef(({ profile, fullSize = false, base64, ...rest }: AvatarProps, ref?: React.Ref<HTMLDivElement>) => {
   let source = 'data:image/png;base64,';

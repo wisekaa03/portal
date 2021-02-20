@@ -26,7 +26,7 @@ export class UserResolver {
 
   /**
    * Synchronization from LDAP
-   * TODO: show that synchronization is in progress
+   * @todo: show that synchronization is in progress
    *
    * @async
    * @returns {boolean}

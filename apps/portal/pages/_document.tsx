@@ -44,7 +44,7 @@ class MainDocument extends Document<DocumentPortalInitialProps> {
         <Head>
           <meta charSet="utf-8" />
           <meta name="Description" content="Корпоративный портал" />
-          {/* TODO: disable robots */}
+          {/* @todo: disable robots */}
           <meta name="robots" content="noindex" />
           {nonce && <meta property="csp-nonce" content={nonce} />}
           <meta name="theme-color" content={MaterialUIPrimaryMain} />

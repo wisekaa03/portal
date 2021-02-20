@@ -241,7 +241,7 @@ module.exports = function (api) {
     // config.env.production.plugins.push('minify-guarded-expressions');
     // Minify Standard built-in Objects - Error
     // config.env.production.plugins.push('minify-builtins');
-    // TODO: разобраться почему navbar не работает при включенном
+    // @todo: разобраться почему navbar не работает при включенном
     // config.env.production.plugins.push('minify-simplify');
   }
   //#endregion
