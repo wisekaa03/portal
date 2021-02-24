@@ -1,5 +1,5 @@
 /** @format */
-/* eslint-disable no-underscore-dangle */
+/* eslint no-underscore-dangle:0 */
 
 //#region Imports NPM
 import type { Request } from 'express';

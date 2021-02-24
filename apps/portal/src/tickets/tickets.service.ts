@@ -1054,7 +1054,7 @@ export class TicketsService {
                 if (response.status === 200) {
                   if (typeof response.data === 'object') {
                     if (typeof response.data.error === 'string') {
-                      throw new UnprocessableEntityException(__DEV__ ? response.data.error : undefined);
+                      throw new UnprocessableEntityException(__DEV__ && response.data.error);
                     } else {
                       const [users, taskDescription] = descriptionOST(response.data?.description, task.where as TkWhere);
                       if (users && taskDescription) {
@@ -1460,7 +1460,7 @@ export class TicketsService {
                 if (response.status === 200) {
                   if (typeof response.data === 'object') {
                     if (typeof response.data.error === 'string') {
-                      throw new UnprocessableEntityException(__DEV__ ? response.data.error : undefined);
+                      throw new UnprocessableEntityException(__DEV__ && response.data.error);
                     } else {
                       return {
                         ...file,

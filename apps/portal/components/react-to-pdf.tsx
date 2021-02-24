@@ -35,23 +35,25 @@ const ReactToPdf: React.FC<ReactToPdfProps> = ({
   onComplete,
 }) =>
   React.cloneElement(trigger(), {
-    onClick: () => {
+    onClick: async () => {
       const contentEl = content();
       if (!contentEl) {
         throw new Error('Content must be used');
       }
 
-      html2canvas((contentEl as unknown) as HTMLElement, {
+      const canvas = await html2canvas((contentEl as unknown) as HTMLElement, {
         logging: true,
         useCORS: true,
         scale,
-      }).then((canvas) => {
-        const pdf = new JsPDF(Object.assign(defaultOptions, options));
-        pdf.addImage(canvas, x, y, w, h);
-        pdf.save(filename);
-
-        if (onComplete) onComplete();
       });
+
+      const pdf = new JsPDF(Object.assign(defaultOptions, options));
+      pdf.addImage(canvas, x, y, w, h);
+      pdf.save(filename);
+
+      if (onComplete) {
+        onComplete();
+      }
     },
   });
 

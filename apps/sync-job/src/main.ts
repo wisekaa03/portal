@@ -38,7 +38,7 @@ async function bootstrap(config: ConfigService): Promise<boolean> {
 bootstrap(configService)
   .then((result) => {
     logger.log({ message: `${LDAP_SYNC.toString()} returns: ${result}`, context: 'Sync LDAP Job', function: 'bootstrap' });
-    process.exit(result === true ? 0 : 1);
+    return process.exit(result === true ? 0 : 1);
   })
   .catch((error) => {
     throw new Error(`Sync job: Result: ${JSON.stringify(error)}`);

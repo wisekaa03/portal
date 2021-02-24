@@ -9,7 +9,7 @@ import { FormControl, InputLabel, MenuItem, Select as MuiSelect } from '@materia
 interface SelectProps {
   label: string;
   items: string[];
-  icons?: string[];
+  // icons?: string[];
   value: string;
   onChange: (
     event: React.ChangeEvent<{

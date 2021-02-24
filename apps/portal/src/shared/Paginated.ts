@@ -1,5 +1,5 @@
 /** @format */
-/* eslint-disable max-classes-per-file */
+/* eslint max-classes-per-file:0 */
 
 import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';

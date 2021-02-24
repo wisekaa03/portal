@@ -2,7 +2,7 @@
 
 //#region Imports NPM
 import fs from 'fs';
-import { resolve } from 'path';
+import { resolve as pathResolve } from 'path';
 import { tmpNameSync } from 'tmp';
 import { Inject, Injectable, Logger, LoggerService } from '@nestjs/common';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
@@ -39,7 +39,7 @@ export class FilesService {
     @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
     private readonly redisService: RedisService, // private readonly userService: UserService,
   ) {
-    this.staticFolder = resolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/tmp');
+    this.staticFolder = pathResolve(__dirname, __DEV__ ? '../../..' : '../..', 'public/tmp');
     this.staticFolderURL = 'tmp';
 
     this.ttl = configService.get<number>('NEXTCLOUD_REDIS_TTL') || 900;
@@ -52,7 +52,7 @@ export class FilesService {
       });
 
       if (this.cache.store) {
-        logger.debug!({ message: 'Redis connection: success', context: FilesService.name, function: 'constructor' });
+        logger.debug?.({ message: 'Redis connection: success', context: FilesService.name, function: 'constructor' });
       } else {
         logger.error({ message: 'Redis connection: not connected', context: FilesService.name, function: 'constructor' });
       }
@@ -342,9 +342,9 @@ export class FilesService {
       if (!nc) {
         throw new Error(`Files: not found: ${path}`);
       }
-      await new Promise((res) =>
+      await new Promise((resolve) =>
         nc.on('finish', (callback: () => void) => {
-          res(callback);
+          resolve(callback);
         }),
       );
     }

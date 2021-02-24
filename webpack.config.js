@@ -5,6 +5,7 @@ const { resolve } = require('path');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 const Webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
+const StartServerPlugin = require('start-server-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = (options) => {
@@ -30,6 +31,7 @@ module.exports = (options) => {
       ...options,
       ...config,
       entry,
+      externals: [nodeExternals({ allowlist: ['webpack/hot/poll?100'] })],
       plugins: [
         ...config.plugins,
         new Webpack.DefinePlugin({

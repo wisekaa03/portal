@@ -1,4 +1,5 @@
 /** @format */
+/* eslint @typescript-eslint/no-var-requires:0 */
 
 const React = require('react');
 const reactI18next = require('react-i18next');

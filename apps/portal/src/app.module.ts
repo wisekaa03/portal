@@ -3,7 +3,7 @@
 /// <reference types="../../../typings/global" />
 
 //#region Imports NPM
-import { resolve } from 'path';
+import { resolve as pathResolve } from 'path';
 import { URL } from 'url';
 import type Express from 'express';
 import Next from 'next';
@@ -62,7 +62,7 @@ import { SubscriptionsModule } from '@back/subscriptions/subscriptions.module';
 import { winstonOptions } from './shared/logger.options';
 //#endregion
 
-const environment = resolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
+const environment = pathResolve(__dirname, __DEV__ ? '../../..' : '../..', '.local/.env');
 
 //#region TypeOrm config options
 export const typeOrmPostgres = (configService: ConfigService, logger: LoggerService, redis?: Redis): TypeOrmModuleOptions => ({
@@ -333,20 +333,16 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
           },
           cache,
           installSubscriptionHandlers: true,
-          autoSchemaFile: resolve(process.cwd(), 'apps/portal/src/graphql.gql'),
+          autoSchemaFile: pathResolve(process.cwd(), 'apps/portal/src/graphql.gql'),
           sortSchema: true,
           subscriptions: {
             keepAlive: 0,
-            onConnect: async (
-              connectionParameters: Record<string, any>,
-              websocket: WebSocket,
-              context: ConnectionContext,
-            ): Promise<WebsocketContext> => {
-              const user = await new Promise<User | undefined>((resolveOnConnect) => {
+            onConnect: async (connectionParameters, websocket: WebSocket, context: ConnectionContext): Promise<WebsocketContext> => {
+              const user = await new Promise<User | undefined>((resolve) => {
                 const request = (websocket as Record<string, unknown>)?.upgradeReq as Express.Request;
                 const response = ({} as unknown) as Express.Response;
 
-                auth(request, response, () => resolveOnConnect(request.session?.passport?.user));
+                auth(request, response, () => resolve(request.session?.passport?.user));
               });
 
               if (user) {
@@ -369,8 +365,8 @@ export const typeOrmPostgres = (configService: ConfigService, logger: LoggerServ
               return connection.context;
             }
 
-            const user = await new Promise<User | undefined>((resolveOnConnect) => {
-              auth(req, res, () => resolveOnConnect(req.user || undefined));
+            const user = await new Promise<User | undefined>((resolve) => {
+              auth(req, res, () => resolve(req.user || undefined));
             });
 
             // queries and mutations
