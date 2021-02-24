@@ -52,7 +52,6 @@ module.exports = (options) => {
       output: {
         path: resolve(__dirname, '.next/typeorm'),
         filename: 'ormconfig.js',
-        library: '',
         libraryTarget: 'commonjs2',
         libraryExport: 'default',
       },
