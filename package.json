@@ -146,7 +146,7 @@
     "**/**/domelementtype": "^2",
     "**/**/domhandler": "^4",
     "**/**/domutils": "^2",
-    "**/**/dotenv-webpack": "^5",
+    "**/**/dotenv-webpack": "^6.0.0",
     "**/**/dotenv": "^8",
     "**/**/download": "^8",
     "**/**/eslint": "^7",
