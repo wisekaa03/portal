@@ -306,7 +306,7 @@
     "ioredis": "^4",
     "is-mobile": "^2",
     "is-promise": "^4",
-    "jodit": "~3.5",
+    "jodit": "^3",
     "joi": "^17",
     "jspdf": "^2",
     "libpq": "^1",
