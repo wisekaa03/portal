@@ -212,7 +212,7 @@
     "**/**/pkg-up": "^3",
     "**/**/postcss-sass": "^0",
     "**/**/postcss-scss": "^3",
-    "**/**/postcss-values-parser": "^4",
+    "**/**/postcss-values-parser": "^5.0.0",
     "**/**/prismjs": "^1",
     "**/**/raw-body": "^2",
     "**/**/raw-loader": "^4",
