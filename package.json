@@ -140,7 +140,7 @@
     "**/**/cssom": "^0",
     "**/**/csstype": "^3",
     "**/**/debug": "^4",
-    "**/**/decompress-response": "^6",
+    "**/**/decompress-response": "^7.0.0",
     "**/**/doctrine": "^3",
     "**/**/dom-serializer": "^1",
     "**/**/domelementtype": "^2",
