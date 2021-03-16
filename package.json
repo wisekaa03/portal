@@ -135,7 +135,7 @@
     "**/**/css-loader": "^5",
     "**/**/css-select": "^2",
     "**/**/css-tree": "^1",
-    "**/**/cssnano-preset-simple": "^1",
+    "**/**/cssnano-preset-simple": "^2.0.0",
     "**/**/cssnano-simple": "^1",
     "**/**/cssom": "^0",
     "**/**/csstype": "^3",
