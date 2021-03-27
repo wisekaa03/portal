@@ -97,7 +97,7 @@
     "**/**/@typescript-eslint/typescript-estree": "^4",
     "**/**/@typescript-eslint/visitor-keys": "^4",
     "**/**/acorn": "^8",
-    "**/**/ajv": "^6",
+    "**/**/ajv": "^8.0.0",
     "**/**/ansi-regex": "^5",
     "**/**/ansi-styles": "^4",
     "**/**/anymatch": "^3",
