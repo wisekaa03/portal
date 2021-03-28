@@ -11795,7 +11795,7 @@ nopt@^4.0.3, nopt@^5, nopt@^5.0.0:
   dependencies:
     abbrev "1"
 
-normalize-package-data@^2.5.0, normalize-package-data@^3, normalize-package-data@^3.0.0:
+normalize-package-data@^3, normalize-package-data@^3.0.0, normalize-package-data@^3.0.2:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-3.0.0.tgz#1f8a7c423b3d2e85eb36985eaf81de381d01301a"
   integrity sha512-6lUjEI0d3v6kFrtgA/lOx4zHCWULXsFNIjHolnZCKCTLA6m/G625cdn3O7eNmT0iD3jfo6HZ9cdImGZwf21prw==
@@ -12330,7 +12330,7 @@ parse-headers@^2.0.0:
   resolved "https://registry.yarnpkg.com/parse-headers/-/parse-headers-2.0.3.tgz#5e8e7512383d140ba02f0c7aa9f49b4399c92515"
   integrity sha512-QhhZ+DCCit2Coi2vmAKbq5RGTRcQUOE2+REgv8vdyu7MnYx2eZztegqtTx99TZ86GTIwqiy3+4nQTWZ2tgmdCA==
 
-parse-json@^5.0.0:
+parse-json@^5.0.0, parse-json@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-5.2.0.tgz#c76fc66dee54231c962b22bcc8a72cf2f99753cd"
   integrity sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==
@@ -13607,15 +13607,15 @@ read-pkg-up@^7.0.1:
     read-pkg "^5.2.0"
     type-fest "^0.8.1"
 
-read-pkg@^2.0.0, read-pkg@^5, read-pkg@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/read-pkg/-/read-pkg-5.2.0.tgz#7bf295438ca5a33e56cd30e053b34ee7250c93cc"
-  integrity sha512-Ug69mNOpfvKDAc2Q8DRpMjjzdtrnv9HcSMX+4VsZxD1aZ6ZzrIE7rlzXBtWTyhULSMKg076AW6WR5iZpD0JiOg==
+read-pkg@^2.0.0, read-pkg@^5.2.0, read-pkg@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/read-pkg/-/read-pkg-6.0.0.tgz#a67a7d6a1c2b0c3cd6aa2ea521f40c458a4a504c"
+  integrity sha512-X1Fu3dPuk/8ZLsMhEj5f4wFAF0DWoK7qhGJvgaijocXxBmSToKfbFtqbxMO7bVjNA1dmE5huAzjXj/ey86iw9Q==
   dependencies:
     "@types/normalize-package-data" "^2.4.0"
-    normalize-package-data "^2.5.0"
-    parse-json "^5.0.0"
-    type-fest "^0.6.0"
+    normalize-package-data "^3.0.2"
+    parse-json "^5.2.0"
+    type-fest "^1.0.1"
 
 readable-stream@1.0.31:
   version "1.0.31"
@@ -15634,7 +15634,7 @@ type-detect@4.0.8:
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
   integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
 
-type-fest@^0, type-fest@^0.11.0, type-fest@^0.18.0, type-fest@^0.6.0, type-fest@^0.7.1, type-fest@^0.8.1:
+type-fest@^0, type-fest@^0.11.0, type-fest@^0.18.0, type-fest@^0.7.1, type-fest@^0.8.1, type-fest@^1.0.1:
   version "0.21.2"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.21.2.tgz#43b9dc71d9dc5593ea71bf7b0e013ec10f838249"
   integrity sha512-pvQl0WNazvfQ0rq2XDdhpWv49sohh2t+buFbglaJ9N9+Xj4BhFRpuo+uJxemeARteRxRloJ1m+8gBR6Z2Nfktg==
