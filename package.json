@@ -204,7 +204,7 @@
     "**/**/nopt": "^5",
     "**/**/normalize-package-data": "^3",
     "**/**/normalize-path": "^3",
-    "**/**/normalize-url": "^5",
+    "**/**/normalize-url": "^6.0.0",
     "**/**/ora": "^5",
     "**/**/parse5": "^6",
     "**/**/pg-types": "^3",
