@@ -136,7 +136,7 @@
     "**/**/css-select": "^2",
     "**/**/css-tree": "^1",
     "**/**/cssnano-preset-simple": "^1",
-    "**/**/cssnano-simple": "^1",
+    "**/**/cssnano-simple": "^2.0.0",
     "**/**/cssom": "^0",
     "**/**/csstype": "^3",
     "**/**/debug": "^4",
