@@ -98,7 +98,7 @@
     "**/**/@typescript-eslint/visitor-keys": "^4",
     "**/**/acorn": "^8",
     "**/**/ajv": "^6",
-    "**/**/ansi-regex": "^5",
+    "**/**/ansi-regex": "^6.0.0",
     "**/**/ansi-styles": "^4",
     "**/**/anymatch": "^3",
     "**/**/apollo-graphql": "^0",
