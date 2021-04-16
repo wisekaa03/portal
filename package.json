@@ -226,7 +226,7 @@
     "**/**/stream-browserify": "^3",
     "**/**/stream-http": "^3",
     "**/**/string_decoder": "^1",
-    "**/**/string-width": "^4",
+    "**/**/string-width": "^5.0.0",
     "**/**/sugarss": "^3",
     "**/**/supports-color": "^8",
     "**/**/table": "^6",
