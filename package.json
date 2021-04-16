@@ -99,7 +99,7 @@
     "**/**/acorn": "^8",
     "**/**/ajv": "^6",
     "**/**/ansi-regex": "^5",
-    "**/**/ansi-styles": "^4",
+    "**/**/ansi-styles": "^6.0.0",
     "**/**/anymatch": "^3",
     "**/**/apollo-graphql": "^0",
     "**/**/apollo-server-core": "^2",
