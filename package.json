@@ -228,7 +228,7 @@
     "**/**/string_decoder": "^1",
     "**/**/string-width": "^4",
     "**/**/sugarss": "^3",
-    "**/**/supports-color": "^8",
+    "**/**/supports-color": "^9.0.0",
     "**/**/table": "^6",
     "**/**/tar-stream": "^2",
     "**/**/tar": "^6",
