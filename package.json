@@ -189,7 +189,7 @@
     "**/**/jspdf": "^2",
     "**/**/kind-of": "^6",
     "**/**/loader-utils": "^2",
-    "**/**/log-symbols": "^4",
+    "**/**/log-symbols": "^5.0.0",
     "**/**/lpad-align": "^2",
     "**/**/lru-cache": "^6",
     "**/**/make-dir": "^3",
