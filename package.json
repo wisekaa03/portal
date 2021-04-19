@@ -61,8 +61,8 @@
   },
   "os": [],
   "resolutions": {
-    "**/**/@angular-devkit/core": "^11",
-    "**/**/@angular-devkit/schematics": "^11",
+    "**/**/@angular-devkit/core": "^11.2.2",
+    "**/**/@angular-devkit/schematics": "^11.2.2",
     "**/**/@ardatan/aggregate-error": "^0",
     "**/**/@babel/code-frame": "^7",
     "**/**/@babel/core": "^7",
