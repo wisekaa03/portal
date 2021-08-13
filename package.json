@@ -314,7 +314,7 @@
     "nest-redis": "^1",
     "nest-winston": "^1",
     "nestjs-ldap": "^3",
-    "next": "^10",
+    "next": "^11",
     "next-compose-plugins": "^2",
     "next-fonts": "^1",
     "next-i18next": "^7",
