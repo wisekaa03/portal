@@ -383,7 +383,7 @@
     "@storybook/theming": "^6",
     "@types/anymatch": "^1",
     "@types/apollo-upload-client": "^14",
-    "@types/bcrypt": "^3",
+    "@types/bcrypt": "3.0.1",
     "@types/cache-manager": "^3",
     "@types/cache-manager-ioredis": "^2",
     "@types/cli-color": "^2",
