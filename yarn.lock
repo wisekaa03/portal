@@ -6151,10 +6151,15 @@ core-js@^3, core-js@^3.0.1, core-js@^3.0.4, core-js@^3.4.0, core-js@^3.6.0, core
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.9.0.tgz#790b1bb11553a2272b36e2625c7179db345492f8"
   integrity sha512-PyFBJaLq93FlyYdsndE5VaueA9K5cNB7CGzeCj191YYLhkQM0gdZR2SKihM70oF0wdqKSKClv/tEBOpoRmdOVQ==
 
-core-util-is@1.0.2, core-util-is@~1.0.0:
+core-util-is@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+
+core-util-is@~1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
+  integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
 cors@2.8.5, cors@^2.8.4:
   version "2.8.5"
@@ -10587,10 +10592,18 @@ libphonenumber-js@^1.9.7:
   resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.11.tgz#d7e0f3d967d0376d9c5624e3be007c70d0d6146a"
   integrity sha512-ussVs6j3k0NEU4PNwWmVNGgmZQ88YrqzAw80ztmBfEhIQr55FpjFzPoDk5sWIfOmPuY1jmCKrxWCIemkBKqSPw==
 
-libpq@^1, libpq@^1.7.0:
+libpq@^1:
   version "1.8.9"
   resolved "https://registry.yarnpkg.com/libpq/-/libpq-1.8.9.tgz#6e0c6eecb176f6656ad092d67cc0131980cba897"
   integrity sha512-herU0STiW3+/XBoYRycKKf49O9hBKK0JbdC2QmvdC5pyCSu8prb9idpn5bUSbxj8XwcEsWPWWWwTDZE9ZTwJ7g==
+  dependencies:
+    bindings "1.5.0"
+    nan "^2.14.0"
+
+libpq@^1.8.10:
+  version "1.8.12"
+  resolved "https://registry.yarnpkg.com/libpq/-/libpq-1.8.12.tgz#994b75b9a9ef48fb4e45ebccda937d8a8fadf45c"
+  integrity sha512-4lUY9BD9suz76mVS0kH4rRgRy620g/c9YZH5GYC3smfIpjtj6KiPuQ4IwQSHSZMMMhMM3tBFrYUrw8mHOOZVeg==
   dependencies:
     bindings "1.5.0"
     nan "^2.14.0"
@@ -11417,9 +11430,9 @@ mz@^2.4.0:
     thenify-all "^1.0.0"
 
 nan@^2.14.0:
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
-  integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.16.0.tgz#664f43e45460fb98faf00edca0bb0d7b8dce7916"
+  integrity sha512-UdAqHyFngu7TfQKsCBgAA6pWDkT8MAO7d0jyOecVhN5354xbLqdn8mV9Tat9gepAupm0bt2DbeaSC8vS52MuFA==
 
 nanoid@^2.0.3, nanoid@^3, nanoid@^3.1.16, nanoid@^3.1.20:
   version "3.1.20"
@@ -12502,11 +12515,11 @@ pg-int8@1.0.1:
   integrity sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==
 
 pg-native@^3:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/pg-native/-/pg-native-3.0.0.tgz#20c64e651e20b28f5c060b3823522d1c8c4429c3"
-  integrity sha512-qZZyywXJ8O4lbiIN7mn6vXIow1fd3QZFqzRe+uET/SZIXvCa3HBooXQA4ZU8EQX8Ae6SmaYtDGLp5DwU+8vrfg==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/pg-native/-/pg-native-3.0.1.tgz#84b488a4f3c29c29ea9b4fa8bf03a75a5bc4f353"
+  integrity sha512-LBVNWkNh0fVx/cienARRP2y22J5OpUsKBe0TpxzAx3arEUUdIs77aLSAHS3scS7SMaqc+OkG40CEu5fN0/cjIw==
   dependencies:
-    libpq "^1.7.0"
+    libpq "^1.8.10"
     pg-types "^1.12.1"
     readable-stream "1.0.31"
 
@@ -13620,7 +13633,7 @@ read-pkg@^2.0.0, read-pkg@^5, read-pkg@^5.2.0:
 readable-stream@1.0.31:
   version "1.0.31"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.0.31.tgz#8f2502e0bc9e3b0da1b94520aabb4e2603ecafae"
-  integrity sha1-jyUC4LyeOw2huUUgqrtOJgPsr64=
+  integrity sha512-tco/Dwv1f/sgIgN6CWdj/restacPKNskK6yps1981ivH2ZmLYcs5o5rVzL3qaO/cSkhN8hYOMWs7+glzOLSgRg==
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.1"
