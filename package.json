@@ -472,7 +472,7 @@
     "sqlite3": "^5",
     "start-server-webpack-plugin": "^2",
     "storybook-addon-next-router": "^2",
-    "stylelint": "^13",
+    "stylelint": "^15.0.0",
     "stylelint-config-prettier": "^8",
     "stylelint-prettier": "^1",
     "supertest": "^6",
