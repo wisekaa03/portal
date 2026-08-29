@@ -356,7 +356,7 @@
     "typeorm": "^0",
     "typeorm-graphql-pagination": "^1",
     "url-loader": "^4",
-    "uuid": "^8",
+    "uuid": "^11.0.0",
     "winston": "^3",
     "ws": "^7",
     "yargs-parser": "^20"
