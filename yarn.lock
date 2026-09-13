@@ -2924,14 +2924,19 @@
   integrity sha512-TbH79tcyi9FHwbyboOKeRachRq63mSuWYXOflsNO9ZyE5ClQ/JaozNKl+aWUq87qPNsXasXxi2AbgfwIJ+8GQw==
 
 "@types/cache-manager-ioredis@^2":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@types/cache-manager-ioredis/-/cache-manager-ioredis-2.0.1.tgz#04564ca52ba63bd20ae693ee6185469aab092507"
-  integrity sha512-ggkb4cxAhT4jv/2sZaEvUTQqlTaE76ZFdqUzgv/I/4i3SSjKOYH9yC98wVwALzSkanzXT6psg/+TNyjaWWZZXA==
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager-ioredis/-/cache-manager-ioredis-2.0.8.tgz#c75cbb8ed39e278246fef2c355ed597e79204175"
+  integrity sha512-H/qO70yhxDe7i8QfGIczOEL92au8eRj6gyAYLaNNDgITIlEPwkjsP+iJ8ZQ2KAMv7kTGp8BFsxlDlMr8tbu9Dg==
   dependencies:
-    "@types/cache-manager" "*"
-    "@types/ioredis" "*"
+    "@types/cache-manager" "<3"
+    "@types/ioredis" "^4.28.10"
 
-"@types/cache-manager@*", "@types/cache-manager@^3":
+"@types/cache-manager@<3":
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-2.10.3.tgz#6c5ffb177b45c2e251f32432354ff83bddbd18ec"
+  integrity sha512-PbaxAeU8SZhbVd6+IuepvyWN7KAjEThsrkdvITDxKAlN6/abIr3NW3WPzNLjJekqbVijg4YUYsyrVc84xXUHQw==
+
+"@types/cache-manager@^3":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-3.4.0.tgz#414136ea3807a8cd071b8f20370c5df5dbffd382"
   integrity sha512-XVbn2HS+O+Mk2SKRCjr01/8oD5p2Tv1fxxdBqJ0+Cl+UBNiz0WVY5rusHpMGx+qF6Vc2pnRwPVwSKbGaDApCpw==
@@ -3159,6 +3164,13 @@
   version "4.22.0"
   resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.22.0.tgz#b07cc3405d98bae50a642b20790471b4c3c390a9"
   integrity sha512-BhgyAqt+CIFj/ejdYpWSGYUQzoQr7sFOBYLL8yEExa1tSTi2cy2D3a952zF8Tm4Q1cY3srn8xXZfb2riX6hWjw==
+  dependencies:
+    "@types/node" "*"
+
+"@types/ioredis@^4.28.10":
+  version "4.28.10"
+  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.28.10.tgz#40ceb157a4141088d1394bb87c98ed09a75a06ff"
+  integrity sha512-69LyhUgrXdgcNDv7ogs1qXZomnfOEnSmrmMFqKgt1XMJxmoOSG/u3wYy13yACIfKuMJ8IhKgHafDO3sx19zVQQ==
   dependencies:
     "@types/node" "*"
 
