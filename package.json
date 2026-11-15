@@ -231,7 +231,7 @@
     "**/**/supports-color": "^8",
     "**/**/table": "^6",
     "**/**/tar-stream": "^2",
-    "**/**/tar": "^6",
+    "**/**/tar": "^7.0.0",
     "**/**/terser-webpack-plugin": "^5",
     "**/**/terser": "^5",
     "**/**/timers-browserify": "^2",
