@@ -8992,12 +8992,17 @@ i18next-http-middleware@^3.0.2:
   resolved "https://registry.yarnpkg.com/i18next-http-middleware/-/i18next-http-middleware-3.1.0.tgz#71299ca988a56a96ac0adefe871a967d6b99112d"
   integrity sha512-65rP8bi5b7znBzfgIUy0KE00SWg1X6mL5XEkassgTrjAeLSfSb4vQ2bs9cN3qwHCynKIpmHjmNDu5c8NylTVmw==
 
-i18next@^19, i18next@^19.6.3:
+i18next@^19.6.3:
   version "19.9.0"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.9.0.tgz#0a8cdacac4c8fb384f81f1cfcce823772b37e5d3"
   integrity sha512-5zRG3aFl+e+LsdpVUp0dKkVhYH2iCv+gxyzXP1q2oJUc3BV26fqX87cBE3AHkMOir1X0liOaSoxS/Kg95iEcEQ==
   dependencies:
     "@babel/runtime" "^7.12.0"
+
+i18next@^26.0.0:
+  version "26.7.2"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-26.7.2.tgz#56e7550d479f05d0150479fbb345e6c29b78bbd1"
+  integrity sha512-RsOY3BeaCDdkk52NeJSFAXELQ2rQXBO/tOub6L8ue2ICPfR/FRDWDOfEDg4xMPd1SqO5goVYQ6i72qWEUB/PPw==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
